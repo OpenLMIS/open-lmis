@@ -18,14 +18,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.FacilityTypeApprovedProduct;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -120,7 +113,7 @@ public class FacilityApprovedProductMapperIT {
     facilityTypeApprovedProduct.setMaxMonthsOfStock(3.45);
     facilityTypeApprovedProduct.setEop(8.45);
     facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
-    facilityTypeApprovedProduct = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(programProduct.getId(), "warehouse");
+    facilityTypeApprovedProduct = facilityApprovedProductMapper.getFacilityApprovedProductBy(programProduct.getId(), "warehouse");
 
     facilityTypeApprovedProduct.setFacilityType(facilityType);
     facilityTypeApprovedProduct.setProgramProduct(programProduct);
@@ -128,7 +121,7 @@ public class FacilityApprovedProductMapperIT {
     facilityTypeApprovedProduct.setMinMonthsOfStock(20.98);
     facilityTypeApprovedProduct.setEop(19.85);
     facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityTypeApprovedProduct);
-    FacilityTypeApprovedProduct result = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(programProduct.getId(), "warehouse");
+    FacilityTypeApprovedProduct result = facilityApprovedProductMapper.getFacilityApprovedProductBy(programProduct.getId(), "warehouse");
 
     assertThat(result.getMinMonthsOfStock(), is(20.98));
     assertThat(result.getEop(), is(19.85));
@@ -170,7 +163,7 @@ public class FacilityApprovedProductMapperIT {
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct6);
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct7);
 
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductMapper.getFullSupplyProductsBy(
       facility.getId(), yellowFeverProgram.getId());
 
     assertEquals(3, facilityTypeApprovedProducts.size());
@@ -196,7 +189,7 @@ public class FacilityApprovedProductMapperIT {
     assertEquals("PRO05", facilityTypeApprovedProducts.get(1).getProgramProduct().getProduct().getCode());
     assertEquals("PRO01", facilityTypeApprovedProducts.get(2).getProgramProduct().getProduct().getCode());
 
-    List<FacilityTypeApprovedProduct> nonFullSupplyFacilityTypeApprovedProducts = facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(
+    List<FacilityTypeApprovedProduct> nonFullSupplyFacilityTypeApprovedProducts = facilityApprovedProductMapper.getNonFullSupplyProductsBy(
       facility.getId(), yellowFeverProgram.getId());
 
     assertThat(nonFullSupplyFacilityTypeApprovedProducts.size(), is(1));
@@ -218,7 +211,7 @@ public class FacilityApprovedProductMapperIT {
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);
 
-    FacilityTypeApprovedProduct facilityTypeApprovedProductsFromDB = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(
+    FacilityTypeApprovedProduct facilityTypeApprovedProductsFromDB = facilityApprovedProductMapper.getFacilityApprovedProductBy(
       programProduct.getId(), "warehouse");
 
     assertNotNull(facilityTypeApprovedProductsFromDB);

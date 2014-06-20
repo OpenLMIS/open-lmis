@@ -49,7 +49,7 @@ public class FacilityApprovedProductRepositoryTest {
     facilityTypeApprovedProduct.setProgramProduct(programProduct);
     facilityTypeApprovedProduct.setFacilityType(new FacilityType("warehouse"));
 
-    when(mapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(1L,
+    when(mapper.getFacilityApprovedProductBy(1L,
       "warehouse")).thenReturn(null);
 
     repository.insert(facilityTypeApprovedProduct);
@@ -59,13 +59,13 @@ public class FacilityApprovedProductRepositoryTest {
   @Test
   public void shouldGetFullSupplyFacilityApprovedProducts() {
     repository.getFullSupplyProductsByFacilityAndProgram(5L, 8L);
-    verify(mapper).getFullSupplyProductsByFacilityAndProgram(5L, 8L);
+    verify(mapper).getFullSupplyProductsBy(5L, 8L);
   }
 
   @Test
   public void shouldGetNonFullSupplyFacilityApprovedProducts() {
     repository.getNonFullSupplyProductsByFacilityAndProgram(5L, 8L);
-    verify(mapper).getNonFullSupplyProductsByFacilityAndProgram(5L, 8L);
+    verify(mapper).getNonFullSupplyProductsBy(5L, 8L);
   }
 
   @Test

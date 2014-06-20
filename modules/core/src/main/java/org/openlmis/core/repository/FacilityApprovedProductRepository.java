@@ -29,11 +29,11 @@ public class FacilityApprovedProductRepository {
   private FacilityApprovedProductMapper mapper;
 
   public List<FacilityTypeApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return mapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+    return mapper.getFullSupplyProductsBy(facilityId, programId);
   }
 
   public List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return mapper.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+    return mapper.getNonFullSupplyProductsBy(facilityId, programId);
   }
 
   public void insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
@@ -45,7 +45,7 @@ public class FacilityApprovedProductRepository {
   }
 
   public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
-    return mapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(
+    return mapper.getFacilityApprovedProductBy(
       facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
   }
 
