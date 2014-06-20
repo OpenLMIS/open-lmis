@@ -62,6 +62,9 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
 
   $scope.clearSearch = function () {
     $scope.query = "";
-    $scope.loadProducts(1);
+    $scope.totalItems = 0;
+    $scope.programProducts = [];
+    $scope.showResults = false;
+    angular.element("#searchGeoZone").focus();
   };
 }
