@@ -34,8 +34,8 @@ import java.util.List;
 public interface FacilityApprovedProductMapper {
 
   @Insert("INSERT INTO facility_approved_products(" +
-    "facilityTypeId, programProductId, maxMonthsOfStock, minMonthsOfStock, eop, modifiedBy, modifiedDate) values " +
-    "(#{facilityType.id}, #{programProduct.id}, #{maxMonthsOfStock}, #{minMonthsOfStock}, #{eop}, #{modifiedBy}, #{modifiedDate})")
+    "facilityTypeId, programProductId, maxMonthsOfStock, minMonthsOfStock, eop, createdBy, modifiedBy) values " +
+    "(#{facilityType.id}, #{programProduct.id}, #{maxMonthsOfStock}, #{minMonthsOfStock}, #{eop}, #{createdBy}, #{createdBy})")
   @Options(useGeneratedKeys = true)
   Integer insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 

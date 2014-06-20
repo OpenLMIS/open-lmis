@@ -99,7 +99,6 @@ public class FacilityApprovedProductService {
       public void execute(Object o) {
         FacilityTypeApprovedProduct facilityTypeApprovedProduct = (FacilityTypeApprovedProduct) o;
         facilityTypeApprovedProduct.setCreatedBy(userId);
-        facilityTypeApprovedProduct.setModifiedBy(userId);
         save(facilityTypeApprovedProduct);
       }
     });

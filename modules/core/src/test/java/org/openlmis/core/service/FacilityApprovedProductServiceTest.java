@@ -143,8 +143,6 @@ public class FacilityApprovedProductServiceTest {
   @Test
   public void shouldSaveAll() throws Exception {
     FacilityTypeApprovedProduct facilityTypeApprovedProduct1 = new FacilityTypeApprovedProduct("FT code 1", null, 2.3);
-
-
     FacilityTypeApprovedProduct facilityTypeApprovedProduct2 = new FacilityTypeApprovedProduct("FT code 2", null, 21.5);
 
     FacilityApprovedProductService spyService = spy(service);
@@ -153,9 +151,7 @@ public class FacilityApprovedProductServiceTest {
 
     spyService.saveAll(asList(facilityTypeApprovedProduct1, facilityTypeApprovedProduct2), 1L);
     assertThat(facilityTypeApprovedProduct1.getCreatedBy(), is(1L));
-    assertThat(facilityTypeApprovedProduct1.getModifiedBy(), is(1L));
     assertThat(facilityTypeApprovedProduct2.getCreatedBy(), is(1L));
-    assertThat(facilityTypeApprovedProduct2.getModifiedBy(), is(1L));
 
     verify(spyService).save(facilityTypeApprovedProduct1);
     verify(spyService).save(facilityTypeApprovedProduct1);
