@@ -18,7 +18,14 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -93,6 +100,38 @@ public class FacilityApprovedProductMapperIT {
 
     assertThat(facilityTypeApprovedProduct.getId(), is(notNullValue()));
     assertThat(insertionCount, is(1));
+  }
+
+  @Test
+  public void shouldUpdateFacilityApprovedProduct() {
+    Program program = make(a(ProgramBuilder.defaultProgram));
+    Product product = make(a(ProductBuilder.defaultProduct));
+    programMapper.insert(program);
+    productMapper.insert(product);
+
+    ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
+    programProduct.setProductCategory(category1);
+    programProductMapper.insert(programProduct);
+
+    FacilityType facilityType = new FacilityType();
+    facilityType.setId(FACILITY_TYPE_ID);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct(facilityType,
+      programProduct, MAX_MONTHS_OF_STOCK);
+    facilityTypeApprovedProduct.setMaxMonthsOfStock(3.45);
+    facilityTypeApprovedProduct.setEop(8.45);
+    facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
+    facilityTypeApprovedProduct = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(programProduct.getId(), "warehouse");
+
+    facilityTypeApprovedProduct.setFacilityType(facilityType);
+    facilityTypeApprovedProduct.setProgramProduct(programProduct);
+    facilityTypeApprovedProduct.setMaxMonthsOfStock(MAX_MONTHS_OF_STOCK);
+    facilityTypeApprovedProduct.setMinMonthsOfStock(20.98);
+    facilityTypeApprovedProduct.setEop(19.85);
+    facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityTypeApprovedProduct);
+    FacilityTypeApprovedProduct result = facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(programProduct.getId(), "warehouse");
+
+    assertThat(result.getMinMonthsOfStock(), is(20.98));
+    assertThat(result.getEop(), is(19.85));
   }
 
   @Test

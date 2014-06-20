@@ -148,6 +148,7 @@ public class ProductMapperIT {
     assertThat(returnedProduct.getCode(), is(product.getCode()));
     assertThat(returnedProduct.getProductGroup(), is(product.getProductGroup()));
     assertThat(returnedProduct.getPrimaryName(), is(product.getPrimaryName()));
+    assertThat(returnedProduct.getDosageUnit(), is(product.getDosageUnit()));
   }
 
   @Test

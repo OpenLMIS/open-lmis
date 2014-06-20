@@ -10,7 +10,14 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
@@ -129,17 +136,15 @@ public interface FacilityApprovedProductMapper {
                                                                                  @Param("programId") Long programId);
 
   @Select(
-    {"SELECT fap.id, fap.facilityTypeId, fap.programProductId, fap.maxMonthsOfStock, fap.modifiedDate, fap.modifiedBy",
+    {"SELECT fap.id, fap.facilityTypeId, fap.programProductId, fap.maxMonthsOfStock,fap.minMonthsOfStock,fap.eop, fap.modifiedDate, fap.modifiedBy",
       "FROM facility_approved_products fap, facility_types ft",
       "where fap.programProductId = #{programProductId} and",
       "ft.code = #{facilityTypeCode} and ft.id = fap.facilityTypeId"})
-  FacilityTypeApprovedProduct getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(@Param(
-    "programProductId") Long programProductId,
-                                                                                              @Param(
-                                                                                                "facilityTypeCode") String facilityTypeCode);
+  FacilityTypeApprovedProduct getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(@Param("programProductId") Long programProductId,
+                                                                                              @Param("facilityTypeCode") String facilityTypeCode);
 
   @Update("UPDATE facility_approved_products set " +
-    "facilityTypeId=#{facilityType.id}, programProductId=#{programProduct.id}, maxMonthsOfStock=#{maxMonthsOfStock}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} " +
+    "facilityTypeId=#{facilityType.id}, programProductId=#{programProduct.id}, maxMonthsOfStock=#{maxMonthsOfStock}, minMonthsOfStock=#{minMonthsOfStock}, eop=#{eop}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} " +
     "where id=#{id}")
   void updateFacilityApprovedProduct(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
