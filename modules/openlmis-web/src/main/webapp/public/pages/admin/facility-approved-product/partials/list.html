@@ -109,7 +109,7 @@
     <tbody ng-repeat="facilityApprovedProduct in facilityApprovedProducts">
     <tr>
       <td id="category{{$index}}" class="productCategory" colspan="10"
-          ng-show="showCategory($index)"
+          ng-show="showCategory(facilityApprovedProducts, $index)"
           ng-bind="facilityApprovedProduct.programProduct.productCategory.name"></td>
     </tr>
     <tr>

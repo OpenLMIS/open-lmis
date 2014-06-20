@@ -17,7 +17,7 @@
     <div class="modal-body">
       <div class="row-fluid">
         <div class="span11">
-        <label for="productCategory" openlmis-message="label.category"></label>
+          <label for="productCategory" openlmis-message="label.category"></label>
           <select ui-select2 class="span11 bottom-spacer" id="productCategory"
                   ng-model="productCategorySelected" name="productCategory"
                   openlmis-message="placeholder.select.category"
@@ -114,65 +114,70 @@
             <label openlmis-message="label.emergency.order.point"></label>
           </div>
         </div>
-        <div class="row-fluid" ng-repeat="facilityTypeApprovedProduct in addedFacilityTypeApprovedProducts">
+        <div class="row-fluid"
+             ng-repeat="facilityTypeApprovedProduct in addedFacilityTypeApprovedProducts | orderBy: ['programProduct.productCategory.name', 'programProduct.product.code'] ">
 
-          <div class="span5">
-            <div class="fluid-grid-cell" id="facilityTypeApprovedProductCodeAndName">
-              <label id="facilityTypeApprovedProductNameLabel"
-                     ng-bind="facilityTypeApprovedProduct.programProduct.product.code+' | '+facilityTypeApprovedProduct.programProduct.product.primaryName"></label>
+          <div id="addedProductCategory{{$index}}" class="row-fluid productCategory"
+               ng-show="showCategory(addedFacilityTypeApprovedProducts, $index)"
+               ng-bind="facilityTypeApprovedProduct.programProduct.productCategory.name"></div>
+          <div class="row-fluid">
+
+            <div class="span5">
+              <div class="fluid-grid-cell" id="facilityTypeApprovedProductCodeAndName">
+                <label id="facilityTypeApprovedProductNameLabel"
+                       ng-bind="facilityTypeApprovedProduct.programProduct.product.code+' | '+facilityTypeApprovedProduct.programProduct.product.primaryName"></label>
+              </div>
             </div>
-          </div>
 
-          <div class="span2">
-            <div class="fluid-grid-cell">
-              <input id="facilityTypeApprovedProduct.maxMonthsOfStock{{$index}}" type="text"
-                     ng-class="{'required-error' : (facilityTypeApprovedProduct && !facilityTypeApprovedProduct.maxMonthsOfStock)}"
-                     class="right-justified"
-                     name="addedMaxMonthsOfStock{{$index}}"
-                     numeric-validator="positiveNumericValue,2,2" maxlength="5"
-                     ng-required="true" ng-model="facilityTypeApprovedProduct.maxMonthsOfStock"/>
+            <div class="span2">
+              <div class="fluid-grid-cell">
+                <input id="facilityTypeApprovedProduct.maxMonthsOfStock{{$index}}" type="text"
+                       ng-class="{'required-error' : (facilityTypeApprovedProduct && !facilityTypeApprovedProduct.maxMonthsOfStock)}"
+                       class="right-justified"
+                       name="addedMaxMonthsOfStock{{$index}}"
+                       numeric-validator="positiveNumericValue,2,2" maxlength="5"
+                       ng-required="true" ng-model="facilityTypeApprovedProduct.maxMonthsOfStock"/>
                 <span class="rnr-form-error" style="display:none;"
                       id="addedMaxMonthsOfStock{{$index}}" openlmis-message="error.number.only">
                 </span>
+              </div>
             </div>
-          </div>
 
-          <div class="span2">
-            <div class="fluid-grid-cell">
-              <input id="facilityTypeApprovedProduct.minMonthsOfStock{{$index}}" type="text"
-                     class="right-justified"
-                     name="addedMinMonthsOfStock{{$index}}"
-                     numeric-validator="positiveNumericValue,2,2" maxlength="5"
-                     ng-model="facilityTypeApprovedProduct.minMonthsOfStock"/>
+            <div class="span2">
+              <div class="fluid-grid-cell">
+                <input id="facilityTypeApprovedProduct.minMonthsOfStock{{$index}}" type="text"
+                       class="right-justified"
+                       name="addedMinMonthsOfStock{{$index}}"
+                       numeric-validator="positiveNumericValue,2,2" maxlength="5"
+                       ng-model="facilityTypeApprovedProduct.minMonthsOfStock"/>
                 <span class="rnr-form-error" style="display:none;"
                       id="addedMinMonthsOfStock{{$index}}" openlmis-message="error.number.only">
                 </span>
+              </div>
             </div>
-          </div>
 
-          <div class="span2">
-            <div class="fluid-grid-cell">
-              <input id="facilityTypeApprovedProduct.eop{{$index}}" type="text"
-                     class="right-justified"
-                     name="addedEop{{$index}}"
-                     numeric-validator="positiveNumericValue,2,2" maxlength="5"
-                     ng-model="facilityTypeApprovedProduct.eop"/>
+            <div class="span2">
+              <div class="fluid-grid-cell">
+                <input id="facilityTypeApprovedProduct.eop{{$index}}" type="text"
+                       class="right-justified"
+                       name="addedEop{{$index}}"
+                       numeric-validator="positiveNumericValue,2,2" maxlength="5"
+                       ng-model="facilityTypeApprovedProduct.eop"/>
                 <span class="rnr-form-error" style="display:none;"
                       id="addedEop{{$index}}" openlmis-message="error.number.only">
                 </span>
+              </div>
+            </div>
+
+            <div class="span1">
+              <div class="fluid-grid-cell delete-role">
+                <a href="" class="close" value="delete"
+                   ng-click="removeFacilityTypeApprovedProduct($index)">&times;</a>
+              </div>
             </div>
           </div>
-
-          <div class="span1">
-            <div class="fluid-grid-cell delete-role">
-              <a href="" class="close" value="delete"
-                 ng-click="removeFacilityTypeApprovedProduct($index)">&times;</a>
-            </div>
-          </div>
-
         </div>
       </div>
-
     </div>
     <div class="alert alert-danger" id="modalErrorMessage" ng-show="modalError" openlmis-message="modalError"></div>
 

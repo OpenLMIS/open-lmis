@@ -40,8 +40,8 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
     }
   };
 
-  $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.facilityApprovedProducts[index].programProduct.productCategory.name === $scope.facilityApprovedProducts[index - 1].programProduct.productCategory.name));
+  $scope.showCategory = function (list, index) {
+    return !((index > 0 ) && (list[index].programProduct.productCategory.name === list[index - 1].programProduct.productCategory.name));
   };
 
   $scope.clearSearch = function () {

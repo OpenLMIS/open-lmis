@@ -15,7 +15,7 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
   var fillFacilityTypeApprovedProduct = function (selectedProduct) {
     return {
       "facilityType": $scope.$parent.$parent.facilityType,
-      "programProduct": {"program": $scope.$parent.$parent.program, "product": selectedProduct},
+      "programProduct": {"program": $scope.$parent.$parent.program, "product": selectedProduct, "productCategory": $scope.productCategorySelected},
       "maxMonthsOfStock": $scope.newFacilityTypeApprovedProduct.maxMonthsOfStock,
       "minMonthsOfStock": $scope.newFacilityTypeApprovedProduct.minMonthsOfStock,
       "eop": $scope.newFacilityTypeApprovedProduct.eop
@@ -96,10 +96,18 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
         $scope.productCategorySelected && $scope.productSelected);
   };
 
+  var sortByCategory = function (facilityTypeApprovedProducts) {
+    var sortedData = _.chain(facilityTypeApprovedProducts).sortBy(function (facilityTypeApprovedProduct) {
+      return facilityTypeApprovedProduct.programProduct.productCategory.name;
+    });
+    return sortedData._wrapped;
+  };
+
   $scope.addFacilityTypeApprovedProduct = function () {
     var selectedProduct = $.parseJSON($scope.productSelected);
     var facilityApprovedProgramProduct = fillFacilityTypeApprovedProduct(selectedProduct);
     $scope.addedFacilityTypeApprovedProducts.push(facilityApprovedProgramProduct);
+    $scope.addedFacilityTypeApprovedProducts = sortByCategory($scope.addedFacilityTypeApprovedProducts);
     filterProductsToDisplay(selectedProduct);
     clearFacilityApprovedProductModalData();
   };

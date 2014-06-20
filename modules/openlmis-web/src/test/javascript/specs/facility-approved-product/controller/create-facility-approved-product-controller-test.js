@@ -95,19 +95,37 @@ describe("Create Facility Approved Product Controller", function () {
         scope.productSelected = productSelectedString;
         scope.newFacilityTypeApprovedProduct = {maxMonthsOfStock: 1, minMonthsOfStock: 13, eop: 12};
         scope.programProductList = programProductList;
+        scope.productCategorySelected = productCategory2;
       });
 
       it('should add a new filled product to the added products list and clear modal data', function () {
+
+        scope.addedFacilityTypeApprovedProducts = [
+          {
+            facilityType: facilityType,
+            programProduct: {program: program, product: product1, productCategory: productCategory1},
+            maxMonthsOfStock: 3,
+            minMonthsOfStock: 3,
+            eop: 124
+          }
+        ];
 
         scope.addFacilityTypeApprovedProduct();
 
         expect(scope.addedFacilityTypeApprovedProducts).toEqual([
           {
             facilityType: facilityType,
-            programProduct: {program: program, product: product1},
+            programProduct: {program: program, product: product1, productCategory: productCategory2},
             maxMonthsOfStock: 1,
             minMonthsOfStock: 13,
             eop: 12
+          },
+          {
+            facilityType: facilityType,
+            programProduct: {program: program, product: product1, productCategory: productCategory1},
+            maxMonthsOfStock: 3,
+            minMonthsOfStock: 3,
+            eop: 124
           }
         ]);
         expect(scope.programProductList).toEqual([

@@ -141,5 +141,39 @@ describe("Facility Approved Product", function () {
 
       expect($httpBackend.expectGET).not.toHaveBeenCalled();
     });
+
+    it("should show category of first element", function () {
+      var product1, product2, product3, productCategory1, productCategory2, programProductList;
+
+      product1 = {name: "product1", code: "1"};
+      product2 = {name: "product2", code: "2"};
+      product3 = {name: "product3", code: "3"};
+      productCategory1 = {name: "first product category", id: 1, code: 1};
+      productCategory2 = {name: "second product category", id: 2, code: 2};
+      programProductList = [
+        {"programProduct": {"product": product1, "productCategory": productCategory1}},
+        {"programProduct": {"product": product3, "productCategory": productCategory1}},
+        {"programProduct": {"product": product2, "productCategory": productCategory2}}
+      ];
+
+      expect(scope.showCategory(programProductList, 0)).toBeTruthy();
+    });
+
+    it("should not show category of second element", function () {
+      var product1, product2, product3, productCategory1, productCategory2, programProductList;
+
+      product1 = {name: "product1", code: "1"};
+      product2 = {name: "product2", code: "2"};
+      product3 = {name: "product3", code: "3"};
+      productCategory1 = {name: "first product category", id: 1, code: 1};
+      productCategory2 = {name: "second product category", id: 2, code: 2};
+      programProductList = [
+        {"programProduct": {"product": product1, "productCategory": productCategory1}},
+        {"programProduct": {"product": product3, "productCategory": productCategory1}},
+        {"programProduct": {"product": product2, "productCategory": productCategory2}}
+      ];
+
+      expect(scope.showCategory(programProductList, 1)).toBeFalsy();
+    });
   });
 });
