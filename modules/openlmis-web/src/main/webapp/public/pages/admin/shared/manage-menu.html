@@ -46,5 +46,9 @@
       <a id="facilityApprovedProductTab" href="/public/pages/admin/facility-approved-product/index.html"
          openlmis-message="header.facility.approved.products"></a>
     </li>
+    <li ng-show="hasPermission('MANAGE_PRODUCT')" ng-class="productSelected">
+      <a id="productTab" href="/public/pages/admin/product/index.html"
+         openlmis-message="header.products"></a>
+    </li>
   </ul>
 </div>

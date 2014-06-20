@@ -1,0 +1,105 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+  <h2 id="productsHeader" openlmis-message="header.products"></h2>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="">
+    <span ng-bind="message"></span>.&nbsp;&nbsp;
+    <a id="viewHere" href="" openlmis-message="search.viewHere"></a>
+  </div>
+
+  <div id="searchControl" class="row-fluid">
+    <div class="span5 search-in-category">
+      <div class="input-append input-prepend">
+        <div class="btn-group">
+          <button id='searchOptionButton' class="btn dropdown-toggle">
+            <span id="selectedSearchOption" openlmis-message="selectedSearchOption.name"></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="searchOption in searchOptions">
+              <a id="searchOption{{$index}}" href="" openlmis-message="searchOption.name"
+                 ng-click="selectSearchType(searchOption)"></a>
+            </li>
+          </ul>
+        </div>
+        <input id='searchProgramProduct' type="text" class="span5" ng-model="query" maxlength="50"
+               ng-keydown="triggerSearch($event)"/>
+        <button class="btn" ng-click="search(1)">
+          <i id='searchIcon' class="icon-search"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <table id="programProductTable" class="table table-bordered search-list" ng-show="showResults">
+    <thead>
+    <tr class="gradient-header resultCountHeader">
+      <th colspan="10">
+        <span ng-switch on="totalItems" ng-show="searchedQuery">
+          <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
+          <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
+          <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
+        </span>
+
+        <h3 id="noRecordsMessage" ng-show="!searchedQuery && totalItems === 0"
+            openlmis-message="msg.no.records.found"></h3>
+
+        <h3 id="nRecordsMessage" ng-show="!searchedQuery && totalItems"
+            openlmis-message="msg.records.found|totalItems"></h3>
+      </th>
+    </tr>
+    <tr class="gradient-header" ng-show="programProducts.length">
+      <th id="fullSupply" openlmis-message="header.full.supply"></th>
+      <th id="code" openlmis-message="header.code"></th>
+      <th id="name" openlmis-message="header.name"></th>
+      <th id="program" openlmis-message="option.value.program"></th>
+      <th id="strength" openlmis-message="header.strength"></th>
+      <th id="unitOfMeasure" openlmis-message="header.unit.of.measure"></th>
+      <th id="dispensingUnit" openlmis-message="header.dispensing.unit"></th>
+      <th id="packSize" openlmis-message="header.pack.size"></th>
+      <th id="globalActive" openlmis-message="header.global.active"></th>
+      <th id="activeAtProgram" openlmis-message="header.active.at.program"></th>
+    </tr>
+    </thead>
+    <tbody ng-repeat="programProduct in programProducts">
+    <tr>
+      <td id="category{{$index}}" class="productCategory" colspan="10"
+          ng-show="showCategory(programProducts, $index)"
+          ng-bind="programProduct.productCategory.name"></td>
+    </tr>
+    <tr>
+      <td class="center-justified">
+        <i id="fullSupply{{$index}}"
+           ng-class="{'icon-ok': programProduct.product.fullSupply}"></i>
+      </td>
+      <td id="code{{$index}}" ng-bind="programProduct.product.code"></td>
+      <td id="name{{$index}}" ng-bind="programProduct.product.primaryName"></td>
+      <td id="program{{$index}}" ng-bind="programProduct.program.name"></td>
+      <td id="strength{{$index}}" ng-bind="programProduct.product.strength"></td>
+      <td id="unit{{$index}}" ng-bind="programProduct.product.dosageUnit.code"></td>
+      <td id="dispensingUnit{{$index}}" ng-bind="programProduct.product.dispensingUnit"></td>
+      <td id="packSize{{$index}}" class="right-justified" ng-bind="programProduct.product.packSize"></td>
+      <td class="center-justified">
+        <i id="GlobalActive{{$index}}"
+           ng-class="{'icon-ok': programProduct.product.active}"></i>
+      </td>
+      <td class="center-justified">
+        <i id="activeAtProgram{{$index}}"
+           ng-class="{'icon-ok': programProduct.active}"></i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
+              direction-links="false" ng-show="programProducts.length" class="pagination-sm"></pagination>
+</div>

@@ -77,9 +77,10 @@ public class ProgramProductControllerTest {
     when(service.getTotalSearchResultCount("pro", "Program")).thenReturn(20);
     InOrder order = inOrder(service);
 
-    List<ProgramProduct> programProducts = controller.getByProgram(1, "pro", "Program", "10");
+    ResponseEntity<OpenLmisResponse> programProducts = controller.getByProgram(1, "pro", "Program", "10");
 
     order.verify(service).getTotalSearchResultCount("pro", "Program");
     order.verify(service).search(anyString(), Matchers.any(Pagination.class), anyString());
+    assertThat((List<ProgramProduct>) programProducts.getBody().getData().get(PROGRAM_PRODUCT_LIST), is(expectedProgramProductList));
   }
 }

@@ -363,3 +363,9 @@ services.factory('ProgramProductsFilter', function ($resource) {
 services.factory('FacilityTypeApprovedProducts', function ($resource) {
   return $resource('/facilityApprovedProducts.json', {}, {});
 });
+
+services.factory('ProgramProductsSearch', function ($resource) {
+  return $resource('/programProducts/search.json', {}, {});
+});
+
+

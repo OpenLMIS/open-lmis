@@ -57,12 +57,15 @@ public class ProgramProductController extends BaseController {
   }
 
   @RequestMapping(value = "/search", method = GET, headers = ACCEPT_JSON)
-  public List<ProgramProduct> getByProgram(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                           @RequestParam(value = "searchParam", required = true) String searchParam,
-                                           @RequestParam(value = "column", required = true) String column,
-                                           @Value("${search.page.size}") String limit) {
+  public ResponseEntity<OpenLmisResponse> getByProgram(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                       @RequestParam(value = "searchParam", required = true) String searchParam,
+                                                       @RequestParam(value = "column", required = true, defaultValue = "product") String column,
+                                                       @Value("${search.page.size}") String limit) {
     Pagination pagination = new Pagination(page, parseInt(limit));
     pagination.setTotalRecords(service.getTotalSearchResultCount(searchParam, column));
-    return service.search(searchParam, pagination, column);
+    List<ProgramProduct> programProductList = service.search(searchParam, pagination, column);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProductList);
+    response.getBody().addData("pagination", pagination);
+    return response;
   }
 }
