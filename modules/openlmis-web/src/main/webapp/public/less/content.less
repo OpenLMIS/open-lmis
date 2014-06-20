@@ -297,8 +297,7 @@ span[class^="tpl-"] {
       position: relative;
       border: 1px solid #DDD;
       border-top: 0;
-      border-color: transparent #BBB #DDD
-    ;
+      border-color: transparent #BBB #DDD;
       background: #FCFCFC;
       font-size: 0.9em;
 
@@ -2811,4 +2810,26 @@ input[type="checkbox"].facilityCheckbox {
 #clearProductSearch {
   margin-left: 10px;
   border-radius: 3px !important;
+}
+
+#facilityApprovedProductsModal {
+  margin-top: -250px;
+  margin-left: -425px;
+  max-width: 950px;
+  .modal-body {
+    max-height: 500px;
+  }
+  .product-list {
+    border-radius: 3px;
+    max-height: 225px;
+    .productCategory {
+      padding: 0;
+    }
+    .fluid-grid-cell {
+      padding: 7px 10px;
+    }
+    input[type="text"] {
+      padding: 2px 6px;
+    }
+  }
 }

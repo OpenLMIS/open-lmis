@@ -17,7 +17,9 @@ app.directive('fadeOut', function ($timeout) {
       var message = attrs.openlmisMessage || 'message';
 
       function fadeMessage() {
-        scope[message] = undefined;
+        element.fadeOut("slow", function () {
+          scope[message] = undefined;
+        });
       }
 
       scope.$watch(message, function () {
