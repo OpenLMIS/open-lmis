@@ -13,9 +13,12 @@ package org.openlmis.web.controller;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.ProgramProductService;
@@ -28,8 +31,8 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 import static org.openlmis.web.controller.FacilityProgramProductController.PROGRAM_PRODUCT_LIST;
 
 @Category(UnitTests.class)
@@ -68,4 +71,15 @@ public class ProgramProductControllerTest {
     verify(service).getUnapprovedProgramProducts(facilityTypeId, programId);
   }
 
+  @Test
+  public void shouldSearchProgramProducts() {
+    when(service.search(anyString(), Matchers.any(Pagination.class), anyString())).thenReturn(expectedProgramProductList);
+    when(service.getTotalSearchResultCount("pro", "Program")).thenReturn(20);
+    InOrder order = inOrder(service);
+
+    List<ProgramProduct> programProducts = controller.getByProgram(1, "pro", "Program", "10");
+
+    order.verify(service).getTotalSearchResultCount("pro", "Program");
+    order.verify(service).search(anyString(), Matchers.any(Pagination.class), anyString());
+  }
 }

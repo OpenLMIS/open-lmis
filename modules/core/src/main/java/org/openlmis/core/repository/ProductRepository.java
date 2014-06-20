@@ -127,4 +127,8 @@ public class ProductRepository {
   public boolean isActive(String code) {
     return mapper.isActive(code);
   }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return mapper.getTotalSearchResultCount(searchParam);
+  }
 }

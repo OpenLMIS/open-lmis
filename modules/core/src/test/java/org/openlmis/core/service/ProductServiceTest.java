@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.*;
@@ -108,10 +109,7 @@ public class ProductServiceTest {
     product.setPackSize(5);
 
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, true), with(productActive, true)));
-    List programProductList = new ArrayList() {{
-      add(existingProgramProduct);
-    }};
-    when(programProductService.getByProductCode(productCode)).thenReturn(programProductList);
+    when(programProductService.getByProductCode(productCode)).thenReturn(asList(existingProgramProduct));
 
     productService.save(product);
 
@@ -129,11 +127,7 @@ public class ProductServiceTest {
 
     final ProgramProduct tbProduct = make(a(defaultProgramProduct, with(programCode, "TB"), with(active, true), with(productActive, false)));
     final ProgramProduct hivProduct = make(a(defaultProgramProduct, with(programCode, "HIV"), with(active, true), with(productActive, false)));
-    List programProductList = new ArrayList() {{
-      add(hivProduct);
-      add(tbProduct);
-    }};
-    when(programProductService.getByProductCode(productCode)).thenReturn(programProductList);
+    when(programProductService.getByProductCode(productCode)).thenReturn(asList(hivProduct, tbProduct));
 
     productService.save(product);
 
@@ -165,10 +159,7 @@ public class ProductServiceTest {
     product.setPackSize(5);
 
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, true)));
-    List programProductList = new ArrayList() {{
-      add(existingProgramProduct);
-    }};
-    when(programProductService.getByProductCode(productCode)).thenReturn(programProductList);
+    when(programProductService.getByProductCode(productCode)).thenReturn(asList(existingProgramProduct));
 
     productService.save(product);
 
@@ -185,14 +176,10 @@ public class ProductServiceTest {
     product.setPackSize(5);
 
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, false)));
-    List programProductList = new ArrayList() {{
-      add(existingProgramProduct);
-    }};
-    when(programProductService.getByProductCode(productCode)).thenReturn(programProductList);
+    when(programProductService.getByProductCode(productCode)).thenReturn(asList(existingProgramProduct));
 
     productService.save(product);
 
     verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
   }
-
 }

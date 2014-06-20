@@ -33,8 +33,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.openlmis.core.builder.ProductBuilder.active;
-import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
+import static org.openlmis.core.builder.ProductBuilder.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -48,12 +47,16 @@ public class ProductMapperIT {
 
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
+
   @Autowired
   ProgramProductMapper programProductMapper;
+
   @Autowired
   FacilityMapper facilityMapper;
+
   @Autowired
   ProgramSupportedMapper programSupportedMapper;
+
   @Autowired
   ProductGroupMapper productGroupMapper;
 
@@ -118,7 +121,6 @@ public class ProductMapperIT {
     assertThat(expectedProduct.getDosageUnit().getCode(), is("mg"));
   }
 
-
   @Test
   public void shouldUpdateProduct() {
     Product product = make(a(defaultProduct));
@@ -133,7 +135,6 @@ public class ProductMapperIT {
 
     assertThat(returnedProduct.getPrimaryName(), is("Updated Name"));
     assertThat(returnedProduct.getAlternateItemCode(), is("Alternate Code"));
-
   }
 
   @Test
@@ -167,5 +168,38 @@ public class ProductMapperIT {
     productMapper.insert(product);
 
     assertTrue(productMapper.isActive(product.getCode()));
+  }
+
+  @Test
+  public void shouldGetLWProduct() throws Exception {
+    Product product1 = make(a(defaultProduct, with(active, true), with(code, "Prod1")));
+    Product product2 = make(a(defaultProduct, with(active, true), with(code, "code2")));
+    Product product3 = make(a(defaultProduct, with(active, true), with(code, "Prod3")));
+
+    productMapper.insert(product1);
+    productMapper.insert(product2);
+    productMapper.insert(product3);
+
+    Product product = productMapper.getLWProduct(product1.getId());
+
+    assertThat(product.getCode(), is("Prod1"));
+    assertThat(product.getDosageUnit().getCode(), is("mg"));
+  }
+
+  @Test
+  public void shouldGetTotalSearchResultCount() {
+    String searchParam = "prod";
+    Product prod1 = make(a(defaultProduct, with(primaryName, "prod1"), with(code, "pro")));
+    Product prod2 = make(a(defaultProduct, with(primaryName, "prod2"), with(code, "p1")));
+    Product prod3 = make(a(defaultProduct, with(primaryName, "prod3"), with(code, "p2")));
+    Product prod4 = make(a(defaultProduct, with(primaryName, "diff pro"), with(code, "p3")));
+    productMapper.insert(prod1);
+    productMapper.insert(prod2);
+    productMapper.insert(prod3);
+    productMapper.insert(prod4);
+
+    Integer resultCount = productMapper.getTotalSearchResultCount(searchParam);
+
+    assertThat(resultCount, is(3));
   }
 }

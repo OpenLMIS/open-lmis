@@ -113,13 +113,13 @@ public interface SupplyLineMapper {
           "INNER JOIN programs PGM ON SL.programId = PGM.id ");
 
       if (column.equals("facility")) {
-        sql.append("WHERE LOWER(FAC.name) LIKE '%' || LOWER(#{searchParam} || '%') ");
+        sql.append("WHERE LOWER(FAC.name) LIKE ('%' || LOWER(#{searchParam}) || '%') ");
       }
       if (column.equals("supervisoryNode")) {
-        sql.append("WHERE LOWER(SN.name) LIKE '%' || LOWER(#{searchParam} || '%') ");
+        sql.append("WHERE LOWER(SN.name) LIKE ('%' || LOWER(#{searchParam}) || '%') ");
       }
       if (column.equals("program")) {
-        sql.append("WHERE LOWER(PGM.name) LIKE '%' || LOWER(#{searchParam} || '%') ");
+        sql.append("WHERE LOWER(PGM.name) LIKE ('%' || LOWER(#{searchParam}) || '%') ");
       }
       return sql;
     }

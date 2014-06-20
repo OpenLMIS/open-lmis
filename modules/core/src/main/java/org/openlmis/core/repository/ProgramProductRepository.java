@@ -11,6 +11,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
@@ -122,5 +123,17 @@ public class ProgramProductRepository {
 
   public List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program) {
     return mapper.getNonFullSupplyProductsForProgram(program);
+  }
+
+  public List<ProgramProduct> searchByProgram(String searchParam, Pagination pagination) {
+    return mapper.searchByProgram(searchParam, pagination);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return mapper.getTotalSearchResultCount(searchParam);
+  }
+
+  public List<ProgramProduct> searchByProduct(String searchParam, Pagination pagination) {
+    return mapper.searchByProduct(searchParam, pagination);
   }
 }

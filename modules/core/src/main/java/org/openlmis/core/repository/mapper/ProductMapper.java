@@ -10,13 +10,7 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.One;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductForm;
@@ -114,4 +108,15 @@ public interface ProductMapper {
 
   @Select("SELECT active FROM products WHERE code = #{code}")
   boolean isActive(String code);
+
+  @Select({"SELECT id, fullSupply, code, primaryName, strength, dosageUnitId, dispensingUnit, packSize, active",
+    "FROM products WHERE id = #{id}"})
+  @Results({
+    @Result(property = "dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))})
+  Product getLWProduct(Long id);
+
+  @Select({"SELECT COUNT(*) FROM products WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%')",
+    "OR (LOWER(primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')"})
+  Integer getTotalSearchResultCount(String searchParam);
 }

@@ -384,4 +384,26 @@ public class ProgramProductServiceTest {
     assertThat(unapprovedProgramProducts.get(0).getId(), is(programProduct2.getId()));
     assertThat(unapprovedProgramProducts.get(1).getId(), is(programProduct5.getId()));
   }
+
+  @Test
+  public void shouldCallProgramProductServiceIfColumnNameIsProgram() {
+    String searchParam = "a";
+    String column = "Program";
+    when(programProductRepository.getTotalSearchResultCount(searchParam)).thenReturn(10);
+
+    programProductService.getTotalSearchResultCount(searchParam, column);
+
+    verify(programProductRepository).getTotalSearchResultCount(searchParam);
+  }
+
+  @Test
+  public void shouldCallProductServiceIfColumnNameIsProduct() {
+    String searchParam = "a";
+    String column = "Product";
+    when(productService.getTotalSearchResultCount(searchParam)).thenReturn(10);
+
+    programProductService.getTotalSearchResultCount(searchParam, column);
+
+    verify(productService).getTotalSearchResultCount(searchParam);
+  }
 }

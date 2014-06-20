@@ -37,9 +37,6 @@ public class ProductService {
   private ProductGroupRepository productGroupRepository;
 
   @Autowired
-  private ProductCategoryService categoryService;
-
-  @Autowired
   ProgramProductService programProductService;
 
   @Autowired
@@ -48,7 +45,6 @@ public class ProductService {
   public void save(Product product) {
 
     product.validate();
-//  validateAndSetProductCategory(product);
 
     if (product.getId() == null) {
       repository.insert(product);
@@ -97,5 +93,9 @@ public class ProductService {
 
   public boolean isActive(String code) {
     return repository.isActive(code);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return repository.getTotalSearchResultCount(searchParam);
   }
 }
