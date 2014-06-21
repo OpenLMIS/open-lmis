@@ -8,8 +8,7 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 
-<div id="multipleSearchAndFilter" class="searchAndFilterMultipleFacilities" slider
-     ng-controller="MultipleFacilitySearchFilterController">
+<div id="multipleSearchAndFilter" class="searchAndFilter" ng-controller="MultipleFacilitySearchFilterController">
   <div class="clearfix position-relative">
     <div id="searchMultipleFacilities" class="pull-left">
       <div class="form-group clear-bottom">
@@ -29,7 +28,7 @@
                class="btn btn-primary pull-right" openlmis-message="add.selected.facilities" ng-click="addMembers()">
       </div>
 
-      <div id="searchFacilityList" class="search-list">
+      <div id="searchFacilityList" class="search-list slider" slider="multipleFacilitiesResultCount >= 0">
         <div ng-switch on="multipleFacilitiesResultCount">
           <h3 ng-switch-when="0">
             <span id="noFacilityResultMessage" ng-show="!multipleFacilitiesMessage"

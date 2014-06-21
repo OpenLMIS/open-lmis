@@ -8,52 +8,31 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-app.directive('slider', function ($timeout) {
+app.directive('slider', function () {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
+      var shownExpr = attrs.slider;
 
-      var progressFunc = function () {
+      var scrollWindowToFocusSliderTop = function () {
         var bufferHeight = 200;
-        var searchFilterBoxHeight = $(this).height();
+        var sliderHeight = $(this).height();
 
         var screenViewPort = $(window).height() - bufferHeight;
         var searchFilterTopOffset = $(this).offset().top - $(window).scrollTop();
         var searchFilterViewPort = (screenViewPort - searchFilterTopOffset);
 
-        if (searchFilterViewPort < searchFilterBoxHeight) {
-          var scrollableAmount = searchFilterBoxHeight - searchFilterViewPort;
+        if (searchFilterViewPort < sliderHeight) {
+          var scrollableAmount = sliderHeight - searchFilterViewPort;
           $(window).scrollTop($(window).scrollTop() + scrollableAmount);
         }
       };
 
-      scope.$watch("facilityResultCount", function () {
-        if (scope.facilityResultCount >= 0) {
-          angular.element("#search .search-list").slideDown({duration: "slow", progress: progressFunc});
-        }
-      });
-
-      scope.$watch("multipleFacilitiesResultCount", function () {
-        if (scope.multipleFacilitiesResultCount >= 0) {
-          angular.element("#searchMultipleFacilities .search-list").slideDown({duration: "slow", progress: progressFunc});
-        }
-      });
-
-      scope.$watch('showSlider', function () {
-        if (scope.showSlider) {
-          angular.element(".searchAndFilter").slideDown({duration: "slow", progress: progressFunc});
-        }
-        else {
-          angular.element(".searchAndFilter").slideUp("slow");
-        }
-      });
-
-      scope.$watch("showMultipleFacilitiesSlider", function () {
-        if (scope.showMultipleFacilitiesSlider) {
-          angular.element(".searchAndFilterMultipleFacilities").slideDown({duration: "slow", progress: progressFunc});
-        }
-        else {
-          angular.element(".searchAndFilterMultipleFacilities").slideUp("slow");
+      scope.$watch(shownExpr, function (isShown) {
+        if (isShown) {
+          element.slideDown({duration: "slow", progress: scrollWindowToFocusSliderTop});
+        } else {
+          element.slideUp("slow");
         }
       });
     }

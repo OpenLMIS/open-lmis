@@ -36,17 +36,14 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
   };
 
   $scope.clearMultipleFacilitiesSearch = function () {
-    angular.element("#searchMultipleFacilities .search-list").slideUp("slow", function () {
-      $scope.multipleFacilitiesSearchParam = undefined;
-      $scope.multipleFacilities = undefined;
-      $scope.multipleFacilitiesResultCount = undefined;
-      $scope.type = {};
-      $scope.zone = {};
-      $scope.$apply();
-      angular.element('#searchFacility').focus();
-    });
+    $scope.multipleFacilitiesSearchParam = undefined;
+    $scope.multipleFacilities = undefined;
+    $scope.multipleFacilitiesResultCount = undefined;
+    $scope.type = {};
+    $scope.zone = {};
     $scope.disableAddFacility = true;
     $scope.tempFacilities = [];
+    angular.element('#searchFacility').focus();
   };
 
   $scope.addToFacilityList = function (facility) {

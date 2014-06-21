@@ -31,15 +31,12 @@ function FacilitySearchFilterController($scope, Facilities) {
   };
 
   $scope.clearFacilitySearch = function () {
-    angular.element("#search .search-list").slideUp("slow", function () {
-      $scope.facilitySearchParam = undefined;
-      $scope.facilityList = undefined;
-      $scope.facilityResultCount = undefined;
-      $scope.type = {};
-      $scope.zone = {};
-      $scope.$apply();
-      angular.element('#searchFacility').focus();
-    });
+    $scope.facilitySearchParam = undefined;
+    $scope.facilityList = undefined;
+    $scope.facilityResultCount = undefined;
+    $scope.type = {};
+    $scope.zone = {};
+    angular.element('#searchFacility').focus();
   };
 
   $scope.associate = function (facility) {

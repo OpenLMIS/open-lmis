@@ -8,7 +8,7 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 
-<div id="searchAndFilter" class="searchAndFilter" slider ng-controller="FacilitySearchFilterController">
+<div id="searchAndFilter" class="searchAndFilter" ng-controller="FacilitySearchFilterController">
   <div class="clearfix position-relative">
     <div id="search" class="pull-left">
       <div class="form-group clear-bottom">
@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <div id="searchFacilityList" class="search-list">
+      <div id="searchFacilityList" class="search-list slider" slider="facilityResultCount >= 0">
         <div ng-switch on="facilityResultCount">
           <h3 ng-switch-when="0">
             <span id="noFacilityResultMessage" ng-show="!message"

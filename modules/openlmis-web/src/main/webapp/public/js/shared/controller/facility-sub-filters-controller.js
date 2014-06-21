@@ -20,7 +20,6 @@ function FacilitySubFiltersController($scope, GeographicZoneSearch, FacilityType
       $scope.manyGeoZoneMessage = data.message;
       $scope.levels = _.uniq(_.pluck(_.pluck($scope.geoZoneList, 'level'), 'name'));
       $scope.showResults = true;
-      angular.element("#filter .search-list").show();
     });
   };
 
@@ -65,6 +64,7 @@ function FacilitySubFiltersController($scope, GeographicZoneSearch, FacilityType
     $scope.geoZoneList = [];
     $scope.geoZoneQuery = undefined;
     $scope.geoZoneSearchParam = undefined;
+    angular.element('#geoZoneSearchList').focus();
   };
 
   $scope.cancelFilters = function () {
