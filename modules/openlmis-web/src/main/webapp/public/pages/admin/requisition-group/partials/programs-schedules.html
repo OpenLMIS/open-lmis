@@ -107,10 +107,10 @@
         </span>
         </div>
       </div>
-      <div class="slider-row-fluid">
+      <div class="slider-row-fluid" ng-if="currentSlider === $index">
         <div class="position-relative">
-          <div class="slider" slider="currentSlider === $index" ng-include
-               src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
+          <div class="slider" slider="currentSlider === $index"
+               ng-include src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
         </div>
       </div>
     </div>
@@ -172,10 +172,10 @@
           </span>
         </div>
       </div>
-      <div class="slider-row-fluid">
+      <div class="slider-row-fluid" ng-if="currentSlider === 'add'">
         <div class="position-relative">
-          <div class="slider" slider="currentSlider === 'add'" ng-include
-               src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
+          <div class="slider" slider="currentSlider === 'add'"
+               ng-include src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
         </div>
       </div>
     </div>
