@@ -337,7 +337,7 @@ describe("Requisition Group Controller", function () {
 
     scope.cancelAdd();
 
-    expect(scope.newProgramSchedule).toBeUndefined();
+    expect(scope.newProgramSchedule).toEqual({});
     expect(scope.addNew).toBeFalsy();
   });
 
@@ -413,7 +413,7 @@ describe("Requisition Group Controller", function () {
 
     scope.addProgramSchedules();
     expect(scope.requisitionGroupProgramSchedules.length).toEqual(3);
-    expect(scope.newProgramSchedule).toBeUndefined();
+    expect(scope.newProgramSchedule).toEqual({});
     expect(scope.addNew).toBeFalsy();
     expect(scope.programs.length).toEqual(2);
     expect(scope.programs[0].name).toEqual("ABC");

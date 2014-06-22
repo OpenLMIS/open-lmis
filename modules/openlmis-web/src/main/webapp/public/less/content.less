@@ -2656,6 +2656,19 @@ table.search-list {
   cursor: default;
 }
 
+div.input-div[disabled] {
+  background: #eee;
+  a[disabled] i {
+    color: #333;
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
+  &:hover {
+    cursor: not-allowed;
+  }
+}
+
 .associate-facility.input-div {
   .size(28px, 88.5%);
   padding: 0;
@@ -2762,6 +2775,9 @@ table.search-list {
       }
     }
   }
+  .row-fluid {
+    border-top: 0;
+  }
 }
 
 .select-result-container {
@@ -2834,5 +2850,31 @@ input[type="checkbox"].facilityCheckbox {
     input[type="text"] {
       padding: 2px 6px;
     }
+  }
+}
+
+.program-schedules-btn {
+  margin: 7px 10px 0 0px;
+}
+
+#programSchedulesTable select {
+  margin-bottom: 0;
+}
+
+.add-program-schedule {
+  border-radius: 0 0 3px 3px;
+  #addNewRow {
+    font-size: 1.1em;
+    margin: 5px 2px 0 0;
+  }
+}
+
+.program-schedules-add-new-btn {
+  margin: 12px 10px 0 0px;
+}
+
+.slider-row-fluid {
+  .slider {
+    margin: 10px 0;
   }
 }

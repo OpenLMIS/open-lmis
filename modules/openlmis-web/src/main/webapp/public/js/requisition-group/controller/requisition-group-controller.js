@@ -37,6 +37,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.programs = _.sortBy($scope.programs, function (program) {
       return program.name.toLowerCase();
     });
+    $scope.programMessage = $scope.programs.length ? "label.select.program" : "label.noProgramLeft";
   }
 
   $scope.addNewRow = function () {
@@ -62,11 +63,13 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.requisitionGroupProgramSchedules[index] = currentProgramSchedule;
     $scope.requisitionGroupProgramSchedules[index].underEdit = false;
     currentProgramSchedule = undefined;
+    $scope.toggleSlider();
   };
 
   $scope.cancelAdd = function () {
-    $scope.newProgramSchedule = undefined;
+    $scope.newProgramSchedule = {};
     $scope.addNew = false;
+    $scope.toggleSlider();
   };
 
   $scope.findProgramScheduleUnderEdit = function () {
@@ -77,10 +80,10 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
 
   $scope.saveEditableRow = function (index) {
     $scope.requisitionGroupProgramSchedules[index].underEdit = false;
-    $scope.requisitionGroupProgramSchedules[index].dropOffFacility = programScheduleUnderEdit.dropOffFacility || $scope.requisitionGroupProgramSchedules[index].dropOffFacility;
+    $scope.requisitionGroupProgramSchedules[index].dropOffFacility = (programScheduleUnderEdit && programScheduleUnderEdit.dropOffFacility) || $scope.requisitionGroupProgramSchedules[index].dropOffFacility;
+    $scope.toggleSlider();
   };
 
-  $scope.programMessage = $scope.programs.length ? "label.select.program" : "label.noProgramLeft";
   $scope.schedules = schedules;
   $scope.newProgramSchedule = {};
 
@@ -111,7 +114,8 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     }
   };
 
-  $scope.toggleSlider = function () {
+  $scope.toggleSlider = function (index) {
+    $scope.currentSlider = $scope.showSlider ? undefined : index;
     $scope.showSlider = !$scope.showSlider;
   };
 
@@ -130,7 +134,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     var duplicateMembers = _.intersection(_.pluck(_.pluck($scope.requisitionGroupMembers, 'facility'), 'id'),
       _.pluck(tempFacilities, "id"));
     if (duplicateMembers.length > 0) {
-      $scope.duplicateFacilityName = _.find($scope.requisitionGroupMembers, function (member) {
+      $scope.duplicateFacilityName = _.find($scope.requisitionGroupMembers,function (member) {
         return member.facility.id == duplicateMembers[0];
       }).facility.name;
       $scope.facilitiesAddedSuccesfully = false;
@@ -156,7 +160,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
   $scope.addProgramSchedules = function () {
     $scope.requisitionGroupProgramSchedules.push($scope.newProgramSchedule);
     refreshAndSortPrograms();
-    $scope.newProgramSchedule = undefined;
+    $scope.newProgramSchedule = {};
     $scope.addNew = false;
   };
 
