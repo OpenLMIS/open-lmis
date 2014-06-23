@@ -592,3 +592,7 @@ services.factory('GetProgramWithBudgetingApplies',function($resource){
 services.factory('RegimenDistributionReport',function($resource){
     return $resource('/reports/reportdata/getRegimenDistribution.json',{},{});
 });
+
+services.factory('LabEquipmentListByDonorReport', function ($resource) {
+    return $resource('/reports/reportdata/labEquipmentsByFundingSource.json', {}, {});
+});
