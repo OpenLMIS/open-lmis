@@ -11,6 +11,24 @@
 function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, SettingsByKey, ContactList, $dialog, messageService) {
 
 
+  $scope.default_indicator = "period_over_expected";
+
+  // get configurations
+  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'}, function (data){
+    $scope.sms_template           = data.settings.value;
+  });
+
+  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data){
+    $scope.email_template         = data.settings.value;
+  });
+
+  SettingsByKey.get({key: 'SMS_ENABLED'},function (data){
+    $scope.sms_enabled            = data.settings.value;
+  });
+  // end of configurations
+
+  // show dialog box contents
+
   $scope.showSendEmail = function(facility){
     $scope.selected_facility = facility;
     ContactList.get({type:'email', facilityId: facility.id}, function(data){
@@ -26,19 +44,25 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     });
     $scope.show_sms = !$scope.show_sms;
   };
+  // end of dialog box contents
 
-  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'}, function (data){
-    $scope.sms_template           = data.settings.value;
-  });
+  // start send actions
 
-  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data){
-    $scope.email_template         = data.settings.value;
-  });
+  $scope.sendEmail = function(){
+    // construct the messges here
 
-  SettingsByKey.get({key: 'SMS_ENABLED'},function (data){
-    $scope.sms_enabled            = data.settings.value;
-  });
+    // send it to the server
+  };
 
+  $scope.senSms = function(){
+
+    // construct the messages that go out
+
+    // send the request to the server.
+
+  };
+
+  // end send actions
 
 
   $scope.ReportingFacilities = function(feature, element) {
@@ -109,7 +133,7 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
         name: 'Reported during period / Expected Facilities'
     }];
 
-    $scope.indicator_type = 'period_over_expected';
+
 
     $scope.geojson = {};
 
@@ -120,7 +144,8 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     }
 
     $scope.style = function(feature) {
-        var color = ($scope.indicator_type == 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.indicator_type == 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
+        var color = ($scope.filter.indicator_type == 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.filter.indicator_type == 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
+        console.warn($scope.filter.indicator_type);
         return {
             fillColor:  color,
             weight:     1,
@@ -190,6 +215,7 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     }
 
     $scope.OnFilterChanged = function() {
+
         $.getJSON('/gis/reporting-rate.json', $scope.filter, function(data) {
             $scope.features = data.map;
 

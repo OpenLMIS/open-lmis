@@ -21,8 +21,8 @@
                 <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
                 <div class="form-cell horizontalFilters">
                     <label class="labels">Indicator</label>
-                    <select class="width: 400px;" ui-select2 ng-model="indicator_type" ng-change="OnFilterChanged()" >
-                        <option ng-repeat="type in indicator_types" value="{{type.code}}">{{type.name}}</option>
+                    <select style="width: 400px;" ng-model="filter.indicator_type" ng-change="OnFilterChanged()" >
+                        <option ng-repeat="type in indicator_types" ng-selected="type.code == default_indicator" value="{{type.code}}">{{type.name}}</option>
                     </select>
                 </div>
             </filter-container>
