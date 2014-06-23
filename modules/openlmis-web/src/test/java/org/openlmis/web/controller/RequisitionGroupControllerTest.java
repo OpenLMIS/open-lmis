@@ -58,11 +58,11 @@ public class RequisitionGroupControllerTest {
   @Mock
   private MessageService messageService;
 
-  @InjectMocks
-  private RequisitionGroupController requisitionGroupController;
-
   @Mock
   private RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
+
+  @InjectMocks
+  private RequisitionGroupController requisitionGroupController;
 
   private MockHttpServletRequest request;
 
@@ -99,7 +99,6 @@ public class RequisitionGroupControllerTest {
 
   @Test
   public void shouldGetRequisitionGroupWithMemberById() throws Exception {
-
     RequisitionGroup requisitionGroup = new RequisitionGroup();
     Long requisitionGroupId = 1L;
     List<RequisitionGroupMember> requisitionGroupMembers = asList(new RequisitionGroupMember());
@@ -124,7 +123,7 @@ public class RequisitionGroupControllerTest {
       asList(new RequisitionGroupMember()),
       asList(new RequisitionGroupProgramSchedule()));
 
-    when(messageService.message("message.requisition.group.created.success", null)).thenReturn("save success");
+    when(messageService.message("message.requisition.group.created.success", (Object) null)).thenReturn("save success");
 
     ResponseEntity<OpenLmisResponse> response = requisitionGroupController.insert(requisitionGroupFormDTO, request);
 
@@ -142,7 +141,7 @@ public class RequisitionGroupControllerTest {
       asList(new RequisitionGroupMember()),
       asList(new RequisitionGroupProgramSchedule()));
 
-    when(messageService.message("message.requisition.group.updated.success", null)).thenReturn("updated success");
+    when(messageService.message("message.requisition.group.updated.success", (Object) null)).thenReturn("updated success");
 
     ResponseEntity<OpenLmisResponse> response = requisitionGroupController.update(1L, requisitionGroupFormDTO, request);
 
