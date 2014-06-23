@@ -421,7 +421,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.checkFacilityToBeAssociated(2);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
     testWebDriver.sleep(500);
-    assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
+    assertFalse(requisitionGroupPage.isSearchMultipleFacilitiesIconDisplayed());
     assertNotEquals("F12A", requisitionGroupPage.getMemberFacilityCode(1));
     assertNotEquals("F12A", requisitionGroupPage.getMemberFacilityCode(2));
     assertNotEquals("F12A", requisitionGroupPage.getMemberFacilityCode(3));
@@ -464,7 +464,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.enterSearchMultipleFacilitiesParameter("F10");
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickCloseButton();
-    assertTrue(requisitionGroupPage.isSearchFacilityIconDisplayed());
+    assertTrue(requisitionGroupPage.isSearchMultipleFacilitiesIconDisplayed());
     assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
 
     requisitionGroupPage.clickCancelButton();
@@ -491,23 +491,23 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("Name *", requisitionGroupPage.getNameLabel());
     assertEquals("Supervisory node *", requisitionGroupPage.getSupervisoryNodeLabel());
     assertEquals("Description", requisitionGroupPage.getDescriptionLabel());
-    assertEquals("Program and Schedules", requisitionGroupPage.getProgramsAndScheduleLabel());
+    assertEquals("Programs and schedules", requisitionGroupPage.getProgramsAndScheduleLabel());
     assertEquals("Members", requisitionGroupPage.getMembersLabel());
 
     requisitionGroupPage.clickMembersAccordionLink();
     testWebDriver.sleep(500);
     assertTrue(requisitionGroupPage.isAddMembersButtonDisplayed());
-    assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
+    assertFalse(requisitionGroupPage.isSearchMultipleFacilitiesIconDisplayed());
 
     requisitionGroupPage.clickCollapseAll();
     testWebDriver.sleep(500);
     assertFalse(requisitionGroupPage.isAddMembersButtonDisplayed());
-    assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
+    assertFalse(requisitionGroupPage.isSearchMultipleFacilitiesIconDisplayed());
 
     requisitionGroupPage.clickExpandAll();
     testWebDriver.sleep(500);
     assertTrue(requisitionGroupPage.isAddMembersButtonDisplayed());
-    assertFalse(requisitionGroupPage.isSearchFacilityIconDisplayed());
+    assertFalse(requisitionGroupPage.isSearchMultipleFacilitiesIconDisplayed());
 
     requisitionGroupPage.clickMembersAccordionLink();
     testWebDriver.sleep(500);
@@ -517,7 +517,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     testWebDriver.sleep(500);
     requisitionGroupPage.clickAddMembersButton();
     testWebDriver.sleep(500);
-    assertTrue(requisitionGroupPage.isSearchFacilityIconDisplayed());
+    assertTrue(requisitionGroupPage.isSearchMultipleFacilitiesIconDisplayed());
     assertFalse(requisitionGroupPage.isAddSelectedFacilityButtonEnabled());
     requisitionGroupPage.enterSearchMultipleFacilitiesParameter("F1");
     assertTrue(requisitionGroupPage.isFacilitySearchListDisplayed());
@@ -546,7 +546,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.checkFacilityToBeAssociated(1);
     requisitionGroupPage.clickOnAddSelectedFacilityButton();
     assertEquals("Facility \"Village Dispensary\" is already added", requisitionGroupPage.getDuplicateFacilityMessage());
-    assertTrue(requisitionGroupPage.isSearchFacilityIconDisplayed());
+    assertTrue(requisitionGroupPage.isSearchMultipleFacilitiesIconDisplayed());
   }
 
   @Test(groups = {"admin"})

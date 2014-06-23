@@ -17,10 +17,10 @@
 
     <div class="modal-body">
       <div class="row-fluid">
-        <div class="span7">
-          <label id="categoryLabel" for="productCategory" openlmis-message="label.category"></label>
         <div class="span11">
-          <label for="productCategory" openlmis-message="label.category"></label>
+          <label id="categoryLabel" for="productCategory">
+            <span openlmis-message="label.category"></span>
+          </label>
           <select ui-select2 class="span11 bottom-spacer" id="productCategory"
                   ng-model="productCategorySelected" name="productCategory"
                   openlmis-message="placeholder.select.category"
@@ -33,7 +33,9 @@
 
       <div class="row-fluid">
         <div class="span11">
-          <label id="productLabel" for="product" openlmis-message="label.product.code"></label>
+          <label id="productLabel" for="product">
+            <span openlmis-message="label.product.code"></span>
+          </label>
           <select ui-select2="{formatResult: formatResult, formatSelection: formatSelection}"
                   class="span11 bottom-spacer"
                   id="product"
@@ -53,7 +55,7 @@
       <div class="row-fluid">
         <div class="span3">
           <label id="maxMonthsOfStockLabel" for="facilityTypeApprovedProduct.maxMonthsOfStock">
-          <span openlmis-message="header.max.months.of.stock"></span>
+            <span openlmis-message="header.max.months.of.stock"></span>
             <span class="label-required">*</span>
           </label>
           <input type="text" class="span12 right-justified" name="maxMonthsOfStock"
@@ -160,33 +162,33 @@
                       id="addedMinMonthsOfStock{{$index}}" openlmis-message="error.number.only">
                 </span>
               </div>
-            </div>
 
-            <div class="span2">
-              <div class="fluid-grid-cell">
-                <input id="facilityTypeApprovedProduct.eop{{$index}}" type="text"
-                       class="right-justified"
-                       name="addedEop{{$index}}"
-                       numeric-validator="positiveNumericValue,2,2" maxlength="5"
-                       ng-model="facilityTypeApprovedProduct.eop"/>
+              <div class="span2">
+                <div class="fluid-grid-cell">
+                  <input id="facilityTypeApprovedProduct.eop{{$index}}" type="text"
+                         class="right-justified"
+                         name="addedEop{{$index}}"
+                         numeric-validator="positiveNumericValue,2,2" maxlength="5"
+                         ng-model="facilityTypeApprovedProduct.eop"/>
                 <span class="rnr-form-error" style="display:none;"
                       id="addedEop{{$index}}" openlmis-message="error.number.only">
                 </span>
+                </div>
               </div>
-            </div>
 
-            <div class="span1">
-              <div class="fluid-grid-cell delete-role">
-                <a href="" class="close" value="delete"
-                   ng-click="removeFacilityTypeApprovedProduct($index)">&times;</a>
+              <div class="span1">
+                <div class="fluid-grid-cell delete-role">
+                  <a href="" class="close" value="delete"
+                     ng-click="removeFacilityTypeApprovedProduct($index)">&times;</a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="alert alert-danger" id="modalErrorMessage" ng-show="modalError" openlmis-message="modalError"></div>
+      <div class="alert alert-danger" id="modalErrorMessage" ng-show="modalError" openlmis-message="modalError"></div>
 
+    </div>
     <div class="modal-footer">
       <input type="button" id="doneFacilityApprovedProductAdd" class="btn btn-primary"
              ng-click="addFacilityTypeApprovedProducts()"

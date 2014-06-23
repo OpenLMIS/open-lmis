@@ -93,6 +93,9 @@ public class FilterSearchPage extends Page {
   @FindBy(how = ID, using = "searchFacilityIcon")
   private static WebElement searchFacilityIcon = null;
 
+  @FindBy(how = ID, using = "searchMultipleFacilitiesIcon")
+  private static WebElement searchMultipleFacilitiesIcon = null;
+
   public FilterSearchPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -313,11 +316,22 @@ public class FilterSearchPage extends Page {
     return searchFacilityIcon.isDisplayed();
   }
 
+  public boolean isSearchMultipleFacilitiesIconDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(searchMultipleFacilitiesIcon);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return searchMultipleFacilitiesIcon.isDisplayed();
+  }
+
   public void enterSearchMultipleFacilitiesParameter(String facilityCode) {
     WebElement multipleFacilitiesSearch = testWebDriver.findElement(cssSelector("input[ng-model='multipleFacilitiesSearchParam']"));
     testWebDriver.waitForElementToAppear(multipleFacilitiesSearch);
     sendKeys(multipleFacilitiesSearch, facilityCode);
-    searchFacilityIcon.click();
+    searchMultipleFacilitiesIcon.click();
   }
 
   public void enterSearchFacilityParameter(String facilityCode) {
