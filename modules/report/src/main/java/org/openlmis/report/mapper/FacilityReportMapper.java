@@ -24,17 +24,6 @@ import java.util.List;
 @Repository
 public interface FacilityReportMapper {
 
-    static final String STOR_PROC_FACILITY_REPORT = "select * from facilities_report()";
-    static String SORTED_PAGEGED_FILTERED_REPORT = "";
-
-    @Select(STOR_PROC_FACILITY_REPORT)
-   // @Options(statementType = StatementType.CALLABLE)
-    @Results(value = {
-            @Result(column="code", property="code"),
-            @Result(column="facilityName", property="facilityName"),
-            @Result(column="facilityType", property="facilityType")
-    })
-    public List<FacilityReport> getAllFacilitiesReportData();
 
     @SelectProvider(type=FacilityReportQueryBuilder.class, method="SelectFilteredSortedPagedFacilitiesSql")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
@@ -52,9 +41,7 @@ public interface FacilityReportMapper {
             @Result(column="fax", property="fax")
     })
     public  List<FacilityReport> SelectFilteredSortedPagedFacilities(
-            @Param("filterCriteria") FacilityReportParam filterCriteria,
-            @Param("SortCriteria") ReportData SortCriteria ,
-            @Param("RowBounds")RowBounds rowBounds
+            @Param("filterCriteria") FacilityReportParam filterCriteria
     );
 
 }

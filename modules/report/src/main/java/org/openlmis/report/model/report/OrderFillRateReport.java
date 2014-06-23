@@ -31,14 +31,15 @@ public class OrderFillRateReport implements ReportData {
     private String productcode;
     @Column( name = "product")
     private String product;
-    @Column(name= "err_qty_received")
-    private Integer err_qty_received;
     private Integer item_fill_rate;
-    private Integer ORDER_FILL_RATE;
+    private String ORDER_FILL_RATE;
     @Column(name="facilitytype")
     private String facilityType;
     @Column(name="supplyingfacility")
     private String supplyingFacility ;
     @Column(name="category")
     private String category;
+    private Integer totalproductsreceived;
+    private Integer totalproductsapproved;
+
 }

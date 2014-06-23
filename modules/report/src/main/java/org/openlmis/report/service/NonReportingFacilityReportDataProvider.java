@@ -13,11 +13,13 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
 import org.openlmis.report.mapper.lookup.RequisitionGroupReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.dto.NameCount;
 import org.openlmis.report.model.report.MasterReport;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +36,7 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
   private NonReportingFacilityReportMapper reportMapper;
 
   @Autowired
-  private RequisitionGroupReportMapper requisitionGroupMapper;
+  private GeographicZoneRepository geographicZoneMapper;
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
@@ -94,18 +96,18 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
     result.put("PERCENTAGE_NON_REPORTING", percent.toString());
 
     // Interprate the different reporting parameters that were selected on the UI
-    String period = ((String[]) params.get("period"))[0];
-    String reportingGroup = ((String[]) params.get("rgroup"))[0];
-    String facilityType = ((String[]) params.get("ftype"))[0];
-    String program = ((String[]) params.get("program"))[0];
+    String period = (StringHelper.isBlank(params, "period"))?"" :((String[]) params.get("period"))[0];
+    String zone = (StringHelper.isBlank(params, "zone"))?"" : ((String[]) params.get("zone"))[0];
+    String facilityType = (StringHelper.isBlank(params, "facilityType"))?"" :((String[]) params.get("facilityType"))[0];
+    String program = (StringHelper.isBlank(params, "program"))? "" :((String[]) params.get("program"))[0];
 
     // compose the filter text as would be presented on the pdf reports.
     String header = "";
     if (program != "" && !program.endsWith("undefined")) {
-      header += "Program : " + this.reportMapper.getProgram(Integer.parseInt(program)).get(0).getName();
+      header += "Program: " + this.reportMapper.getProgram(Integer.parseInt(program)).get(0).getName();
     }
-    if (reportingGroup != "" && !reportingGroup.endsWith("undefined")) {
-      header += "\nRequisition Group : " + this.requisitionGroupMapper.getById(Integer.parseInt(reportingGroup)).get(0).getName();
+    if (zone != "" && !zone.endsWith("undefined")) {
+      header += "\nGeographic Zone: " + this.geographicZoneMapper.getById(Integer.parseInt(zone)).getName();
     }
 
     if (facilityType != "" && !facilityType.endsWith("undefined")) {

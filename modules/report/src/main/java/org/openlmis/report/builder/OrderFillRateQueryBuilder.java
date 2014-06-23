@@ -9,7 +9,6 @@
  */
 
 
-
 package org.openlmis.report.builder;
 
 import org.openlmis.report.model.params.OrderFillRateReportParam;
@@ -21,44 +20,60 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 public class OrderFillRateQueryBuilder {
 
-    public static String getOrderFillRateQuery(Map params){
-        return "select (count(receipts)/count(approved)) * 100 as ORDER_FILL_RATE" +
-                "from vw_order_fill_rate where approved !=0";
+    public static String getTotalProductsOrdered(Map params) {
+        OrderFillRateReportParam filter = (OrderFillRateReportParam) params.get("filterCriteria");
+        String sql = " ";
+        sql = "select  Case WHEN COALESCE(totalproductsapproved, 0::numeric) > 0::numeric THEN sum(totalproductsapproved):: NUMERIC END AS totalproductsapproved\n" +
+                "\n" +
+                "from vw_order_fill_rate\n" +
+                writePredicates(filter) +
+                "group by totalproductsapproved ";
+        return sql;
+    }
+
+    public static String getTotalProductsReceived(Map params) {
+        OrderFillRateReportParam filter = (OrderFillRateReportParam) params.get("filterCriteria");
+        String sql = " ";
+        sql = "select Case WHEN COALESCE(totalproductsreceived, 0::numeric) > 0::numeric THEN sum(totalproductsreceived):: NUMERIC END AS totalproductsreceived\n" +
+                "from vw_order_fill_rate\n" +
+                writePredicates(filter) +
+                "group by totalproductsreceived ";
+        return sql;
+    }
+
+    public static String getOrderFillRateQuery(Map params) {
+        OrderFillRateReportParam filter = (OrderFillRateReportParam) params.get("filterCriteria");
+        String sql = " ";
+
+        sql = "select \n" +
+                "      COALESCE( case when COALESCE(totalproductsapproved, 0::numeric) > 0 ::NUMERIC THEN \n" +
+                "      round(((sum(totalproductsreceived)*100)/sum(totalproductsapproved)),0) :: NUMERIC ELSE 0 END ) AS ORDER_FILL_RATE\n" +
+                "      from vw_order_fill_rate\n" +
+                writePredicates(filter) +
+                "      group by totalproductsapproved " +
+                "limit 1 ";
+
+        return sql;
     }
 
     public static String getQuery(Map params) {
         OrderFillRateReportParam filter = (OrderFillRateReportParam) params.get("filterCriteria");
         String sql = " ";
-        sql = "select facilityname facility,productcode,primaryname product,quantityapproved approved,quantityreceived receipts,item_fill_rate\n" +
-                " from vw_order_fill_rate\n " +
-                writePredicates(filter) ;
+        sql = "select distinct facilityname facility,productcode,primaryname product,quantityapproved approved,\n" +
+                "\n" +
+                "                quantityreceived receipts,item_fill_rate\n" +
+                "                from vw_order_fill_rate\n" +
+                writePredicates(filter) +
+                "                group by facilityname,productcode,primaryname,quantityapproved,quantityreceived,item_fill_rate ";
 
         return sql;
     }
-
-
-    /*public static String getQuery(Map params){
-
-        OrderFillRateReportParam filter  = (OrderFillRateReportParam)params.get("filterCriteria");
-        Map sortCriteria = (Map) params.get("SortCriteria");
-        BEGIN();
-        SELECT("distinct supplyingfacility as supplyingFacility ,CASE  WHEN (approved::numeric > 0) AND (err_qty_received > 0) THEN round((receipts)::numeric  / (approved)::numeric * 100::numeric, 0)\n" +
-                "            ELSE 0::numeric\n" +
-                "        END AS item_fill_rate,category,facility,err_qty_received ,productcode,facilitytype as facilityType ,receipts,approved , product");
-
-        FROM("vw_order_fill_rate");
-        writePredicates(filter);
-        ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, OrderFillRateReport.class, "supplyingfacility asc,facilitytype asc, facility asc, product asc"));
-        String sql = SQL();
-        return sql;
-
-    }*/
 
     private static String writePredicates(OrderFillRateReportParam filter) {
         String predicate = "";
 
         if (filter != null) {
-            if (filter.getRgroupId() != 0 && filter.getRgroupId() !=-1) {
+            if (filter.getRgroupId() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " requisitionGroupId = #{filterCriteria.rgroupId}";
             }
@@ -68,15 +83,15 @@ public class OrderFillRateQueryBuilder {
                 predicate = predicate + " scheduleid= #{filterCriteria.scheduleId}";
             }
 
-            if (filter.getProgramId() != 0 && filter.getProgramId() != -1) {
+            if (filter.getProgramId() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " programid = #{filterCriteria.programId}";
             }
-            if (filter.getPeriodId() != 0 && filter.getPeriodId() != -1) {
+            if (filter.getPeriodId() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " periodid= #{filterCriteria.periodId}";
             }
-            if (filter.getProductId() != 0 && filter.getProductId() != -1) {
+            if (filter.getProductId() != 0 && filter.getProductId() !=-1) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " productId = #{filterCriteria.productId}";
             }
@@ -84,11 +99,11 @@ public class OrderFillRateQueryBuilder {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " productCategoryId = #{filterCriteria.productCategoryId}";
             }
-            if (filter.getFacilityId() != 0 && filter.getFacilityId() != -1) {
+            if (filter.getFacilityId() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " facilityid = #{filterCriteria.facilityId}";
             }
-            if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() !=-1) {
+            if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() != -1) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " facilitytypeid = #{filterCriteria.facilityTypeId}";
             }
@@ -97,41 +112,5 @@ public class OrderFillRateQueryBuilder {
 
         return predicate;
     }
-
-
-
-
-/*
-
-    private static void writePredicates1(OrderFillRateReportParam filter){
-
-        WHERE("periodid = cast( #{filterCriteria.periodId} as int4) ");
-        WHERE("scheduleid = cast(#{filterCriteria.scheduleId} as int4) ");//required param
-
-        if(filter != null){
-
-            if (filter.getProgramId() != 0 && filter.getProgramId() != -1) {
-                WHERE("programId = cast(#{filterCriteria.programId} as int4)");
-            }
-            if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() != -1) {
-                WHERE("facilitytypeId = cast(#{filterCriteria.facilityTypeId} as int4)");
-            }
-            if (filter.getFacilityId() != 0 && filter.getFacilityId() != -1) {
-                WHERE("facilityId = cast(#{filterCriteria.facilityId} as int4)");
-            }
-
-            if(filter.getProductCategoryId() != 0 && filter.getProductCategoryId() != -1 ){
-                WHERE("productCategoryId = cast(#{filterCriteria.productCategoryId} as int4)");
-            }
-            if(filter.getRgroupId() != 0 && filter.getRgroupId() != -1){
-                WHERE("requisitionGroupId = cast(#{filterCriteria.rgroupId} as int4)");
-            }
-            if(filter.getProductId() != 0 && filter.getProductId() != -1){
-                WHERE("productId= cast(#{filterCriteria.productId} as int4)");
-            } else if (filter.getProductId() == -1){
-                WHERE("indicator_product = true");
-            }
-        }
-    }*/
 
 }

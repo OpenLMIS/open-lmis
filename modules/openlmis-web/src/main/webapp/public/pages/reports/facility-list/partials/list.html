@@ -12,54 +12,37 @@
 <div class="row-fluid sortable ui-sortable">
     <div class="box span12">
         <div class="box-header">
-            <h2><i class="icon-edit"></i><span class="break"></span>Facility List</h2>
+            <h2>
+              <i class="icon-edit"></i>
+              <span class="break"></span>Facility List</h2>
+              <div class="box-icon">
+                <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                <a id="pdf-button" href="#list" ng-click="exportReport('pdf')" class='btn-small btn-info'>PDF</a>
+                <a id="xls-button" href="#list" ng-click="exportReport('xls')" class='btn-small btn-info'>Excel</a>
+                <a id="mailing-button" href="#list" ng-click="exportReport('mailing-list')" class='btn-small btn-info'>Mailing Label</a>
+              </div>
         </div>
         <div>
             <div class="app-form"  style="padding: 1px;">
-                <form ng-submit="filterGrid()" name="filterForm" novalidate>
-                    <div class="form-row clearfix ">
-                        <div class="form-cell horizontalFilters">
-                            <label class="labels">Zone</label>
-
-                            <div class="form-field">
-                                <select ng-change="filterGrid()" ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone" >
-                                    <option  ng-repeat="option in zones" value="{{ option.id }}">{{ option.name }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Facility Type</label>
-
-                            <div class="form-field">
-                                <select ng-change="filterGrid()" ui-select2 style="width:200px;" name="facilityType"  ng-model="facilityType" >
-                                    <option  ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-cell horizontalFilters" >
-                            <label class="labels">Requisition Groups</label>
-
-                            <div class="form-fields">
-                                <select ui-select2 style="width:200px;" name="requisitionGroup"  ng-model="rgroupId">
-                                    <option ng-repeat="option in requisitionGroups" value="{{option.id}}">{{option.name}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-cell horizontalFilters">
+              <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                  <div filter-container class="clearfix">
+                      <zone-filter class="form-cell horizontalFilters"></zone-filter>
+                      <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
+                      <div class="form-cell horizontalFilters">
                             <label class="labels">Status</label>
-
                             <div class="form-field">
-                                <select ng-change="filterGrid()" ui-select2 style="width:200px;" name="status" ng-model="status"  >
+                                <select ng-model="filter.status" ng-change="filterChanged()" style="width:200px;" name="status"   >
                                     <option  ng-repeat="option in statuses" value="{{ option.value }}">{{ option.name }}</option>
                                 </select>
                             </div>
                         </div>
-                    </div>
-                </form>
+                  </div>
+              </form>
             </div>
         </div>
 
-        <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+        <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
             <tr>
                 <td>No data to show under selected filters</td>
             </tr>

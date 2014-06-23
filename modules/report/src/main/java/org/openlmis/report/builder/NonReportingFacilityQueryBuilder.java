@@ -27,38 +27,38 @@ public class NonReportingFacilityQueryBuilder {
        params = (Map)( params.containsKey("param1")? params.get("param1") : params );
 
         String period           = ((String[])params.get("period"))[0];
-        String reportingGroup   = params.containsKey("rgroup")? ((String[])params.get("rgroup"))[0]: "" ;
-        String facilityType     = params.containsKey("ftype")? ((String[])params.get("ftype"))[0] : "" ;
+        String zone   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
+        String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
         String program          = ((String[])params.get("program"))[0];
         String schedule         = ((String[])params.get("schedule"))[0];
-        return getQueryString(params, program , period , reportingGroup, facilityType, schedule);
+        return getQueryString(params, program , period , zone, facilityType, schedule);
 
     }
 
-     private static String getQueryString(Map params, String program , String period, String reportingGroup, String facilityType, String schedule) {
+     private static String getQueryString(Map params, String program , String period, String zone, String facilityType, String schedule) {
          BEGIN();
          SELECT_DISTINCT("facilities.code, facilities.name");
-         SELECT_DISTINCT("gz.name as location");
+         SELECT_DISTINCT("gz.district_name as location");
          SELECT_DISTINCT("ft.name as facilityType");
 
          FROM("facilities");
          INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
-         INNER_JOIN("geographic_zones gz on gz.id = facilities.geographiczoneid");
+         INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographiczoneid");
          INNER_JOIN("facility_types ft on ft.id = facilities.typeid");
          INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
          INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
          WHERE("facilities.id not in (select r.facilityid from requisitions r where r.status in ('RELEASED','APPROVED') and r.periodid = cast (" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
-         writePredicates(program, period, reportingGroup, facilityType, schedule);
+         writePredicates(program, period, zone, facilityType, schedule);
          ORDER_BY(QueryHelpers.getSortOrder(params, "name"));
          // cache the string query for debugging purposes
          String strQuery = SQL();
          return strQuery;
      }
 
-     private static void writePredicates(String program, String period, String reportingGroup, String facilityType, String schedule) {
+     private static void writePredicates(String program, String period, String zone, String facilityType, String schedule) {
 
-         if(reportingGroup != "" && !reportingGroup.endsWith( "undefined")){
-             WHERE("rgm.requisitiongroupid = cast (" + reportingGroup + " as int4)");
+         if(zone != "" && !zone.endsWith( "undefined")){
+             WHERE(" (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone +" or gz.parent = " + zone + " )");
          }
 
          if(facilityType != "" && !facilityType.endsWith( "undefined")){
@@ -81,8 +81,8 @@ public class NonReportingFacilityQueryBuilder {
       params = (Map)( params.containsKey("param1")? params.get("param1") : params );
 
       String period           = ((String[])params.get("period"))[0];
-      String reportingGroup   = params.containsKey("rgroup")? ((String[])params.get("rgroup"))[0]: "" ;
-      String facilityType     = params.containsKey("ftype")? ((String[])params.get("ftype"))[0] : "" ;
+      String reportingGroup   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
+      String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
       String program          = ((String[])params.get("program"))[0];
       String schedule         = ((String[])params.get("schedule"))[0];
 
@@ -90,6 +90,7 @@ public class NonReportingFacilityQueryBuilder {
         SELECT("COUNT (*)");
         FROM("facilities");
         INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
+        INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
         INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
         INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
         writePredicates(program, period, reportingGroup, facilityType, schedule);
@@ -100,15 +101,16 @@ public class NonReportingFacilityQueryBuilder {
        params = (Map)( params.containsKey("param1")? params.get("param1") : params );
 
        String period           = ((String[])params.get("period"))[0];
-       String reportingGroup   = params.containsKey("rgroup")? ((String[])params.get("rgroup"))[0]: "" ;
-       String facilityType     = params.containsKey("ftype")? ((String[])params.get("ftype"))[0] : "" ;
+       String reportingGroup   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
+       String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
        String program          = ((String[])params.get("program"))[0];
        String schedule         = ((String[])params.get("schedule"))[0];
 
          BEGIN();
          SELECT("COUNT (*)");
          FROM("facilities");
-         INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
+         INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
+         INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
          INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
          INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
          WHERE("facilities.id not in (select r.facilityid from requisitions r where  r.status in ('RELEASED','APPROVED') and r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
@@ -122,8 +124,8 @@ public class NonReportingFacilityQueryBuilder {
       params = (Map)( params.containsKey("param1")? params.get("param1") : params );
 
       String period           = ((String[])params.get("period"))[0];
-      String reportingGroup   = params.containsKey("rgroup")? ((String[])params.get("rgroup"))[0]: "" ;
-      String facilityType     = params.containsKey("ftype")? ((String[])params.get("ftype"))[0] : "" ;
+      String zone             = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
+      String facilityType     = params.containsKey("facilityType")? ((String[])params.get("ftype"))[0] : "" ;
       String program          = ((String[])params.get("program"))[0];
       String schedule         = ((String[])params.get("schedule"))[0];
 
@@ -132,10 +134,11 @@ public class NonReportingFacilityQueryBuilder {
         SELECT("COUNT (*)");
         FROM("facilities");
         INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
+        INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
         INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id") ;
         INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
         WHERE("facilities.id not in (select r.facilityid from requisitions r where  r.status in ('RELEASED','APPROVED') and r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
-        writePredicates(program, period, reportingGroup, facilityType,schedule);
+        writePredicates(program, period, zone, facilityType,schedule);
 
         String query = SQL();
         RESET();
@@ -143,10 +146,11 @@ public class NonReportingFacilityQueryBuilder {
         SELECT("'Reporting for this Program' AS name");
         SELECT("COUNT (*)");
         FROM("facilities");
+        INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
         INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
         INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
         INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
-        writePredicates(program, period, reportingGroup, facilityType, schedule);
+        writePredicates(program, period, zone, facilityType, schedule);
         query += " UNION " + SQL();
         return query;
 

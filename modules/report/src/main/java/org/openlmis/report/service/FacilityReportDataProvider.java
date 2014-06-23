@@ -19,6 +19,7 @@ import org.openlmis.report.model.params.FacilityReportParam;
 import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.sorter.FacilityReportSorter;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,54 +39,25 @@ public class FacilityReportDataProvider extends ReportDataProvider {
 
   private FacilityReportParam facilityReportParam = null;
 
-
-  private ReportData getFacilityReport(Facility facility) {
-    if (facility == null) return null;
-
-    return new FacilityReport(facility.getCode(), facility.getName(), facility.getFacilityType() != null ? facility.getFacilityType().getName() : null, facility.getActive(), facility.getAddress1(), facility.getOperatedBy() != null ? facility.getOperatedBy().getText() : null, null, null, facility.getMainPhone(), null, null, null);
-  }
-
-  private List<ReportData> getListFacilityReport(List<Facility> facilityList) {
-
-    if (facilityList == null) return null;
-
-    List<ReportData> facilityReportList = new ArrayList<>(facilityList.size());
-
-    for (Facility facility : facilityList) {
-      facilityReportList.add(getFacilityReport(facility));
-    }
-
-    return facilityReportList;
-  }
-
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
-    return facilityReportMapper.getAllFacilitiesReportData();
+
+    return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(params));
   }
 
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-
-    FacilityReportSorter facilityReportSorter = null;
-    if (sortCriteria != null) {
-      facilityReportSorter = new FacilityReportSorter();
-      facilityReportSorter.setFacilityName(sortCriteria.get("facilityName") == null ? "" : sortCriteria.get("facilityName")[0]);
-      facilityReportSorter.setCode(sortCriteria.get("code") == null ? "ASC" : sortCriteria.get("code")[0]);
-      facilityReportSorter.setFacilityType(sortCriteria.get("facilityType") == null ? "ASC" : sortCriteria.get("facilityType")[0]);
-    }
-    return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria), facilityReportSorter, rowBounds);
+    return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria));
   }
 
 
   public FacilityReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
     if (filterCriteria != null) {
       facilityReportParam = new FacilityReportParam();
-      facilityReportParam.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-      facilityReportParam.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-      facilityReportParam.setStatusId(filterCriteria.get("statusId") == null || filterCriteria.get("statusId")[0].isEmpty() ? null : Boolean.valueOf(filterCriteria.get("statusId")[0]));
-      facilityReportParam.setRgroup((filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
-      facilityReportParam.setRgId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+      facilityReportParam.setZoneId(StringHelper.isBlank(filterCriteria,"zone") ? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));  //defaults to 0
+      facilityReportParam.setFacilityTypeId(filterCriteria.get("facilityType") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
+      facilityReportParam.setStatusId(StringHelper.isBlank(filterCriteria, "status") ? null : Boolean.valueOf(filterCriteria.get("status")[0]));
     }
     return facilityReportParam;
   }
