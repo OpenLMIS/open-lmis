@@ -122,7 +122,7 @@ public interface ProgramProductMapper {
     "LEFT JOIN product_categories pc ON pp.productCategoryId = pc.id",
     "LEFT JOIN programs prog ON pp.programId = prog.id",
     "WHERE (LOWER(p.code) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(p.primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')",
-    "ORDER BY pc.name NULLS LAST, LOWER(prog.name), LOWER(p.primaryName)"})
+    "ORDER BY LOWER(pc.name) NULLS LAST, LOWER(prog.name), LOWER(p.primaryName)"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "program", column = "programId", javaType = Program.class,
