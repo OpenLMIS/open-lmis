@@ -56,8 +56,8 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
     }
   };
 
-  $scope.showCategory = function (list, index) {
-    return !((index > 0 ) && (list[index].productCategory.name === list[index - 1].productCategory.name));
+  $scope.showCategory = function (index) {
+    return !((index > 0 ) && ($scope.programProducts[index].productCategory.name === $scope.programProducts[index - 1].productCategory.name));
   };
 
   $scope.clearSearch = function () {
@@ -65,6 +65,6 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
     $scope.totalItems = 0;
     $scope.programProducts = [];
     $scope.showResults = false;
-    angular.element("#searchGeoZone").focus();
+    angular.element("#searchProgramProduct").focus();
   };
 }

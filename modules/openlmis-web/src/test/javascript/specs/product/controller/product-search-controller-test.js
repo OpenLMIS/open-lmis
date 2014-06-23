@@ -44,7 +44,7 @@ describe("Product Search Controller", function () {
     var programProduct = {"program": {"code": "pg1", "name": "prog1"}, "product": {"code": "pd1", "name": "prod1"}};
     scope.query = "query";
     scope.totalItems = 100;
-    scope.geoZoneList = [programProduct];
+    scope.programProducts = [programProduct];
     scope.showResults = true;
 
     scope.clearSearch();

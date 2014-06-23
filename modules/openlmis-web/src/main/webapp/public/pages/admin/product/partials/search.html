@@ -33,7 +33,7 @@
         </div>
         <input id='searchProgramProduct' type="text" class="span5" ng-model="query" maxlength="50"
                ng-keydown="triggerSearch($event)"/>
-        <button class="btn" ng-click="search(1)">
+        <button class="btn" ng-click="loadProducts(1)">
           <i id='searchIcon' class="icon-search"></i>
         </button>
       </div>
@@ -49,12 +49,8 @@
           <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
           <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
         </span>
+        <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
 
-        <h3 id="noRecordsMessage" ng-show="!searchedQuery && totalItems === 0"
-            openlmis-message="msg.no.records.found"></h3>
-
-        <h3 id="nRecordsMessage" ng-show="!searchedQuery && totalItems"
-            openlmis-message="msg.records.found|totalItems"></h3>
       </th>
     </tr>
     <tr class="gradient-header" ng-show="programProducts.length">
@@ -71,10 +67,14 @@
     </tr>
     </thead>
     <tbody ng-repeat="programProduct in programProducts">
-    <tr>
+    <tr ng-if="programProduct.productCategory">
       <td id="category{{$index}}" class="productCategory" colspan="10"
-          ng-show="showCategory(programProducts, $index)"
+          ng-show="showCategory($index)"
           ng-bind="programProduct.productCategory.name"></td>
+    <tr ng-if="!programProduct.productCategory">
+      <td id="noCategory{{$index}}" class="productCategory" colspan="10"
+          ng-show="showCategory($index)"
+          openlmis-message="label.no.category"></td>
     </tr>
     <tr>
       <td class="center-justified">
@@ -92,10 +92,11 @@
         <i id="GlobalActive{{$index}}"
            ng-class="{'icon-ok': programProduct.product.active}"></i>
       </td>
-      <td class="center-justified">
+      <td class="center-justified" ng-show="programProduct.active">
         <i id="activeAtProgram{{$index}}"
            ng-class="{'icon-ok': programProduct.active}"></i>
       </td>
+      <td class="center-justified" id="undefinedActive{{$index}}" ng-show="!programProduct.active">NA</td>
     </tr>
     </tbody>
   </table>
