@@ -49,7 +49,7 @@ public class FacilityApprovedProductRepositoryTest {
     facilityTypeApprovedProduct.setProgramProduct(programProduct);
     facilityTypeApprovedProduct.setFacilityType(new FacilityType("warehouse"));
 
-    when(mapper.getFacilityApprovedProductBy(1L,
+    when(mapper.getBy(1L,
       "warehouse")).thenReturn(null);
 
     repository.insert(facilityTypeApprovedProduct);
@@ -72,6 +72,6 @@ public class FacilityApprovedProductRepositoryTest {
   public void shouldUpdateFacilityApprovedProductIfExists() throws Exception {
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct();
     repository.update(facilityTypeApprovedProduct);
-    verify(mapper).updateFacilityApprovedProduct(facilityTypeApprovedProduct);
+    verify(mapper).update(facilityTypeApprovedProduct);
   }
 }

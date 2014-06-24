@@ -32,21 +32,22 @@ public interface FacilityApprovedProductMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
-  @Select({"SELECT fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
-    "p.*, p.code as product_code ",
-    "FROM facility_approved_products fap ",
-    "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
-    "INNER JOIN program_products pp ON pp.id = fap.programProductId",
-    "INNER JOIN products p ON p.id = pp.productId ",
-    "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId ",
-    "INNER JOIN programs pgm ON pp.programId = pgm.id ",
-    "WHERE",
-    "pp.programId = #{programId}",
-    "AND f.id = #{facilityId}",
-    "AND p.fullSupply = TRUE",
-    "AND p.active = TRUE",
-    "AND pp.active = TRUE",
-    "ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code"})
+  @Select(
+    {"SELECT fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
+      "p.*, p.code as product_code ",
+      "FROM facility_approved_products fap ",
+      "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
+      "INNER JOIN program_products pp ON pp.id = fap.programProductId",
+      "INNER JOIN products p ON p.id = pp.productId ",
+      "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId ",
+      "INNER JOIN programs pgm ON pp.programId = pgm.id ",
+      "WHERE",
+      "pp.programId = #{programId}",
+      "AND f.id = #{facilityId}",
+      "AND p.fullSupply = TRUE",
+      "AND p.active = TRUE",
+      "AND pp.active = TRUE",
+      "ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
     @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
@@ -132,23 +133,24 @@ public interface FacilityApprovedProductMapper {
     "FROM facility_approved_products fap, facility_types ft",
     "where fap.programProductId = #{programProductId} and",
     "ft.code = #{facilityTypeCode} and ft.id = fap.facilityTypeId"})
-  FacilityTypeApprovedProduct getFacilityApprovedProductBy(@Param("programProductId") Long programProductId,
-                                                           @Param("facilityTypeCode") String facilityTypeCode);
+  FacilityTypeApprovedProduct getBy(@Param("programProductId") Long programProductId,
+                                    @Param("facilityTypeCode") String facilityTypeCode);
 
   @Update({"UPDATE facility_approved_products SET",
     "facilityTypeId = #{facilityType.id}, programProductId = #{programProduct.id}, maxMonthsOfStock = #{maxMonthsOfStock},",
-    "minMonthsOfStock = #{minMonthsOfStock}, eop = #{eop}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate}",
+    "minMonthsOfStock = #{minMonthsOfStock}, eop = #{eop}, modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)",
     "WHERE id = #{id}"})
-  void updateFacilityApprovedProduct(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
+  void update(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
-  @Select({"SELECT fap.*, pp.active AS active, prod.active AS globalActive, prod.id AS productId, prod.code AS productCode, prod.primaryName AS productName,",
-    "prod.fullSupply AS fullSupply, prod.strength as strength, prod.dosageUnitId as dosageUnitId, pc.id AS categoryId, pc.name AS categoryName FROM facility_approved_products fap",
-    "INNER JOIN program_products pp ON pp.id = fap.programProductId",
-    "INNER JOIN products prod ON prod.id = pp.productId",
-    "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId",
-    "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId} AND",
-    "(LOWER(prod.code) LIKE '%' || LOWER(#{searchParam}) || '%' OR LOWER(prod.primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')",
-    "ORDER BY LOWER(pc.name), LOWER(prod.primaryName), LOWER(prod.code)"})
+  @Select(
+    {"SELECT fap.*, pp.active AS active, prod.active AS globalActive, prod.id AS productId, prod.code AS productCode, prod.primaryName AS productName,",
+      "prod.fullSupply AS fullSupply, prod.strength as strength, prod.dosageUnitId as dosageUnitId, pc.id AS categoryId, pc.name AS categoryName FROM facility_approved_products fap",
+      "INNER JOIN program_products pp ON pp.id = fap.programProductId",
+      "INNER JOIN products prod ON prod.id = pp.productId",
+      "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId",
+      "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId} AND",
+      "(LOWER(prod.code) LIKE '%' || LOWER(#{searchParam}) || '%' OR LOWER(prod.primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')",
+      "ORDER BY LOWER(pc.name), LOWER(prod.primaryName), LOWER(prod.code)"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
     @Result(property = "programProduct.active", column = "active"),

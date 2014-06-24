@@ -113,18 +113,21 @@ public class FacilityApprovedProductMapperIT {
     facilityTypeApprovedProduct.setMaxMonthsOfStock(3.45);
     facilityTypeApprovedProduct.setEop(8.45);
     facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
-    facilityTypeApprovedProduct = facilityApprovedProductMapper.getFacilityApprovedProductBy(programProduct.getId(), "warehouse");
+    facilityTypeApprovedProduct = facilityApprovedProductMapper.getBy(programProduct.getId(), "warehouse");
 
     facilityTypeApprovedProduct.setFacilityType(facilityType);
     facilityTypeApprovedProduct.setProgramProduct(programProduct);
     facilityTypeApprovedProduct.setMaxMonthsOfStock(MAX_MONTHS_OF_STOCK);
     facilityTypeApprovedProduct.setMinMonthsOfStock(20.98);
     facilityTypeApprovedProduct.setEop(19.85);
-    facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityTypeApprovedProduct);
-    FacilityTypeApprovedProduct result = facilityApprovedProductMapper.getFacilityApprovedProductBy(programProduct.getId(), "warehouse");
+    facilityTypeApprovedProduct.setModifiedDate(null);
+    facilityApprovedProductMapper.update(facilityTypeApprovedProduct);
+    FacilityTypeApprovedProduct result = facilityApprovedProductMapper.getBy(programProduct.getId(), "warehouse");
 
     assertThat(result.getMinMonthsOfStock(), is(20.98));
     assertThat(result.getEop(), is(19.85));
+    assertThat(result.getModifiedDate(), is(notNullValue()));
+
   }
 
   @Test
@@ -211,7 +214,7 @@ public class FacilityApprovedProductMapperIT {
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);
 
-    FacilityTypeApprovedProduct facilityTypeApprovedProductsFromDB = facilityApprovedProductMapper.getFacilityApprovedProductBy(
+    FacilityTypeApprovedProduct facilityTypeApprovedProductsFromDB = facilityApprovedProductMapper.getBy(
       programProduct.getId(), "warehouse");
 
     assertNotNull(facilityTypeApprovedProductsFromDB);

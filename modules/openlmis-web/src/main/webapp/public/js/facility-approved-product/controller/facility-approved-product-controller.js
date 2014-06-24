@@ -65,12 +65,14 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
   };
 
   $scope.update = function (facilityApprovedProduct) {
+    facilityApprovedProduct.facilityType = $scope.facilityType;
+    facilityApprovedProduct.programProduct.program = $scope.program;
     FacilityTypeApprovedProducts.update({}, facilityApprovedProduct, function (data) {
       $scope.message = data.success;
     }, function (data) {
       $scope.message = data.data.error;
     });
-  }
+  };
 }
 
 FacilityApprovedProductController.resolve = {
