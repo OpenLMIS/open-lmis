@@ -118,11 +118,11 @@
                 </bean>
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="aggregate_consumption"/>
-                    <property name="template" value="district-consumption.jasper"/>
+                    <property name="template" value="aggregate-consumption.jasper"/>
                     <property name="reportDataProvider" ref="aggregateConsumptionReportDataProvider"/>
-                    <property name="id" value="RP-District_Consumption_Comparison"/>
-                    <property name="name" value="District Consumption Comparison"/>
-                    <property name="title" value="Summary District Consumption Comparison by Product"/>
+                    <property name="id" value="RP-Aggregate_Consumption"/>
+                    <property name="name" value="Aggregate Consumption Report"/>
+                    <property name="title" value="Aggregate Consumption Report"/>
                     <property name="version" value="1.0"/>
                 </bean>
 
@@ -193,6 +193,17 @@
                     <property name="version" value="1.0"/>
                 </bean>
 
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="regimen_distribution"/>
+                    <property name="template" value="regimen-distribution.jasper"/>
+                    <property name="reportDataProvider" ref="regimenDistributionReportDataProvider"/>
+                    <property name="id" value="RP-Regimen-Distribution-report"/>
+                    <property name="name" value="Regimen Distribution by District"/>
+                    <property name="title" value="Regimen Distribution by District"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="district_financial_summary"/>
                     <property name="template" value="district-financial-summary.jasper"/>
@@ -220,7 +231,15 @@
                     <property name="title" value="List of Lab Equipment by Operational Status"/>
                     <property name="version" value="1.0"/>
                 </bean>
-
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="lab_equipments_by_donor"/>
+                    <property name="template" value="lab-equipments-by-donor.jasper"/>
+                    <property name="reportDataProvider" ref="labEquipmentsByDonorReportDataProvider"/>
+                    <property name="id" value="RP-Lab-equipment-list-by-donor"/>
+                    <property name="name" value="List of Equipment by Funding Source"/>
+                    <property name="title" value="List of Equipment by Funding Source"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>

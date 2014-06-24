@@ -16,6 +16,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.report.builder.NonReportingFacilityQueryBuilder;
 import org.openlmis.report.model.dto.NameCount;
 import org.openlmis.report.model.dto.RequisitionGroup;
@@ -54,10 +55,10 @@ public interface NonReportingFacilityReportMapper {
     List<RequisitionGroup> getFacilityType(int id);
 
     //TODO: refactor this out to an appropriate class
-    @Select("SELECT id, name " +
+    @Select("SELECT * " +
             "   FROM " +
             "       processing_periods where id = #{param1}")
-    List<RequisitionGroup> getPeriodId(int id);
+    ProcessingPeriod getPeriodId(int id);
 
     //TODO: refactor this out to an appropriate class
     @Select("SELECT id, name " +

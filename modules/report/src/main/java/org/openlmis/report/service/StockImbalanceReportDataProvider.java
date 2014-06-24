@@ -62,14 +62,9 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
 
       stockImbalanceReportParam.setRgroupId(StringHelper.isBlank( filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
       stockImbalanceReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program")  ? 0 : Integer.parseInt(filterCriteria.get("program")[0]));
-
-
-
       stockImbalanceReportParam.setScheduleId(StringHelper.isBlank(filterCriteria, "schedule") ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0]));
-
       stockImbalanceReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0 : Integer.parseInt(filterCriteria.get("period")[0]));
       stockImbalanceReportParam.setYear(StringHelper.isBlank(filterCriteria, "year") ? 0 : Integer.parseInt(filterCriteria.get("year")[0]));
-
       stockImbalanceReportParam.setSchedule(StringHelper.isBlank(filterCriteria, "schedule") ? "" : filterCriteria.get("schedule")[0]);
       stockImbalanceReportParam.setPeriod(StringHelper.isBlank(filterCriteria,"period") ? "" : filterCriteria.get("period")[0]);
       if (stockImbalanceReportParam.getProductId() == 0) {

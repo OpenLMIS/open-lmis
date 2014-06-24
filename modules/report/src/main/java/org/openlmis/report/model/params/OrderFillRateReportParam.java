@@ -23,19 +23,19 @@ public class OrderFillRateReportParam
   private int facilityTypeId;
   private String facilityType;
   private String productcode;
-  private int productId;
+  private Long productId;
   private String product;
-  private int productCategoryId;
+  private Long productCategoryId;
   private String productCategory;
   private int rgroupId;
   private String rgroup;
   private String facility;
-  private Integer facilityId;
-  private int programId;
+  private Long facilityId;
+  private Long programId;
   private String program;
   private int scheduleId;
   private String schedule;
-  private int periodId;
+  private Long periodId;
   private String period;
   private Integer year;
 

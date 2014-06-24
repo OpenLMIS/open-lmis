@@ -17,6 +17,7 @@ import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.report.*;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.LabEquipmentStatusReportDataProvider;
+import org.openlmis.report.service.LabEquipmentsByDonorReportDataProvider;
 import org.openlmis.report.service.UserSummaryReportProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -303,7 +304,20 @@ public class InteractiveReportController extends BaseController {
                 (List<RegimenSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, regimenSummaryReportList);
     }
+    @RequestMapping(value = "/reportdata/getRegimenDistribution", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REGIMEN_SUMMARY_REPORT')")
+    public Pages getRegimenDistributionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                HttpServletRequest request
 
+    ) {
+
+
+        Report report = reportManager.getReportByKey("regimen_distribution");
+        List<RegimenSummaryReport> regimenSummaryReportList =
+                (List<RegimenSummaryReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        return new Pages(page, max, regimenSummaryReportList);
+    }
 
   @RequestMapping(value = "/reportdata/districtFinancialSummary", method = GET, headers = BaseController.ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT')")
@@ -356,5 +370,20 @@ public class InteractiveReportController extends BaseController {
                 provider.getMainReportData(request.getParameterMap(), request.getParameterMap(),page, max);
 
         return new Pages(page, max, labEquipmentStatusList);
+    }
+
+    @RequestMapping(value = "/reportdata/labEquipmentsByFundingSource", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_LAB_EQUIPMENTS_BY_FUNDING_SOURCE')")
+    public Pages getLabEquipmentListByFundingSource(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                         @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                         HttpServletRequest request) {
+
+        Report report = reportManager.getReportByKey("lab_equipments_by_donor");
+
+        LabEquipmentsByDonorReportDataProvider provider = (LabEquipmentsByDonorReportDataProvider) report.getReportDataProvider();
+        List<LabEquipmentsByDonorReport> labEquipmentsListByDonor = (List<LabEquipmentsByDonorReport>)
+                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(),page, max);
+
+        return new Pages(page, max, labEquipmentsListByDonor);
     }
 }

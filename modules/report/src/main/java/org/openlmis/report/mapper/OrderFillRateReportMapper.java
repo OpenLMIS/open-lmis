@@ -31,6 +31,16 @@ public interface OrderFillRateReportMapper {
 
     @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getOrderFillRateQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<OrderFillRateReport> getReport(Map params);
+    public List<OrderFillRateReport> getReportData(@Param("filterCriteria") ReportParameter filterCriteria,
+                                               @Param("SortCriteria") Map<String, String[]> SortCriteria,
+                                               @Param("RowBounds") RowBounds rowBounds);
+
+    @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getTotalProductsOrdered")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    public List<Integer> getReportTotalQuantityOrdered(Map params);
+
+    @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getTotalProductsReceived")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    public List<Integer> getReportTotalQuantityReceived(Map params);
 
 }

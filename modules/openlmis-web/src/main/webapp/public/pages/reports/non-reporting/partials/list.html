@@ -22,72 +22,19 @@
 
             <div>
                 <div class="app-form">
-                        <form ng-submit="filterGrid()"  name="filterForm" novalidate>
-                            <div class="clearfix ">
 
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Program <span class="label-required">*</span></label>
-
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="program" ng-change="ChangeSchedule()" ng-model="program" >
-                                            <option  ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Schedule <span class="label-required">*</span></label>
-
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule">
-                                            <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Year <span class="label-required"></span></label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:90px;" class="input-small" ng-required="true" ng-change="LoadPeriods();"  name="year" id="year" ng-model="year">
-                                            <option ng-repeat="year in years" value="{{year}}">{{year}}</option>
-                                        </select>
-
-                                    </div>
-                                </div>
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Period <span class="label-required">*</span></label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" ng-change="filterGrid()" class="input-large" ng-required="true"  name="period" ng-model="period">
-                                            <option  ng-repeat="option in periods" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Requisition Groups</label>
-
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:300px;" class="extra-large-input" ng-change="filterGrid()"  name="requisitionGroup"  ng-model="rgroup" >
-                                            <option  ng-repeat="option in requisitionGroups" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Facility Type</label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="facilityTypeElement" ng-change="filterGrid()"   ng-model="facilityType" >
-                                            <option  ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                         </form>
+                  <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                    <div filter-container class="clearfix">
+                      <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                      <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+                      <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+                      <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+                      <zone-filter class="form-cell horizontalFilters"></zone-filter>
+                    </div>
+                  </form>
                 </div>
             </div>
-                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
                     <tr>
                         <td>No data to show under selected filters</td>
                     </tr>

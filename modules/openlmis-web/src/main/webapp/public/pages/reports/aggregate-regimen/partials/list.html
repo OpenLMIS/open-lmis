@@ -55,17 +55,15 @@
                                ng-table="tableParams">
                             <thead>
                             <tr>
-                                <th style="font-size:12px; ">#</th>
+                                <th style="font-size:12px; text-align:right">#</th>
 
                                 <th style="font-size:12px; text-align:left">Regimen</th>
                                 <th style="font-size:12px">No. of Patients <br>On Treatment</th>
-                                <th style="font-size:12px">% of Total</th>
+
                                 <th style="font-size:12px">No. of Patients To <br> Initiate Treatment</th>
-                                <th style="font-size:12px">% of Total</th>
 
                                 <th style="font-size:12px">No. of Patients <br>Stopped Treatment</th>
 
-                                <th style="font-size:12px">% of Total</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -77,24 +75,14 @@
                                 <td style="width:20px;text-align:center" class="number" sortable="patientsontreatment">
                                     {{ row.patientsontreatment | number}}
                                 </td>
-                                <td class="number" style="width:20px;text-align:center"
-                                    sortable="totalOnTreatmentPercentage ">{{ row.totalOnTreatmentPercentage | number
-                                    }}%
-                                </td>
+
                                 <td class="number" style="width:20px;text-align:center"
                                     sortable="patientstoinitiatetreatment">{{ row.patientstoinitiatetreatment | number
                                     }}
                                 </td>
-                                <td class="number" style="width:20px;text-align:center"
-                                    sortable="totalpatientsToInitiateTreatmentPercentage ">{{
-                                    row.totalpatientsToInitiateTreatmentPercentage }}%
-                                </td>
+
                                 <td style="width:20px;text-align:center" class="number"
                                     sortable="patientsstoppedtreatment">{{ row.patientsstoppedtreatment | number}}
-                                </td>
-                                <td class="number" style="width:20px;text-align:center"
-                                    sortable="stoppedTreatmentPercentage ">{{ row.stoppedTreatmentPercentage | number
-                                    }}%
                                 </td>
 
 

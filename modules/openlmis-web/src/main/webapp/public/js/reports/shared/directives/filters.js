@@ -75,6 +75,9 @@ app.directive('programFilter', ['ReportPrograms',
       require: '^filterContainer',
       link: function (scope, elm, attr) {
 
+        if (attr.required) {
+           scope.requiredFilters.program = 'program';
+        }
 
         scope.$evalAsync(function(){
           ReportPrograms.get(function (data) {
@@ -118,11 +121,17 @@ app.directive('facilityTypeFilter', ['ReportFacilityTypes','ReportFacilityTypesB
 
     var onCascadedPVarsChanged = function($scope, newValue){
 
-      ReportFacilityTypesByProgram.get({program: $scope.filter.program}, function(data){
-        $scope.facilityTypes = data.facilityTypes;
-        $scope.facilityTypes.unshift({ 'name': '-- All Facility Types --', id: 0});
-      });
-
+      if($scope.filter.program !== undefined){
+        ReportFacilityTypesByProgram.get({program: $scope.filter.program}, function(data){
+          $scope.facilityTypes = data.facilityTypes;
+          $scope.facilityTypes.unshift({ 'name': '-- All Facility Types --', id: 0});
+        });
+      }else{
+        ReportFacilityTypes.get(function(data){
+            $scope.facilityTypes = data.facilityTypes;
+            $scope.facilityTypes.unshift({ 'name': '-- All Facility Types --', id: 0});
+        });
+      }
     };
 
     return {
@@ -462,8 +471,6 @@ app.directive('programBudgetFilter', ['GetProgramWithBudgetingApplies', function
 
 
 
-
-
 app.directive('productFilter', ['ReportProductsByProgram','$routeParams',
   function (ReportProductsByProgram, $routeParams) {
 
@@ -509,7 +516,6 @@ app.directive('productFilter', ['ReportProductsByProgram','$routeParams',
         scope.productCFilter = function (option) {
           return (!angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) || scope.filter.productCategory === '' || scope.filter.productCategory === '0' || option.categoryId == scope.filter.productCategory);
         };
-
 
         scope.$watch('filter.program', function (value) {
           onPgCascadedVarsChanged(scope, value);

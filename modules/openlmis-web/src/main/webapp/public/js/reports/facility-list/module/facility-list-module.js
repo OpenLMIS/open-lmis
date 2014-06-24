@@ -8,11 +8,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('facilitylist', ['openlmis' , 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('facilitylist', ['openlmis' , 'angularCombine', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
         when('/list', {controller:ListFacilitiesController, templateUrl:'partials/list.html',reloadOnSearch:false}).
         otherwise({redirectTo:'/list'});
     }]).run(function ($rootScope, AuthorizationService) {
         AuthorizationService.preAuthorize('VIEW_FACILITY_REPORT');
-    });
+    }).config(function(angularCombineConfigProvider) {
+    angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+  });

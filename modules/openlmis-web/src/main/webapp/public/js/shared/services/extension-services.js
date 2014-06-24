@@ -589,6 +589,13 @@ services.factory('GetProgramWithBudgetingApplies',function($resource){
     return $resource('/reports/programsWithBudgetApplies.json',{},{});
 
 });
+services.factory('RegimenDistributionReport',function($resource){
+    return $resource('/reports/reportdata/getRegimenDistribution.json',{},{});
+});
+
+services.factory('LabEquipmentListByDonorReport', function ($resource) {
+    return $resource('/reports/reportdata/labEquipmentsByFundingSource.json', {}, {});
+});
 
 services.factory('GetAllUsers',function($resource){
     return $resource('/user/getAll.json',{},{});

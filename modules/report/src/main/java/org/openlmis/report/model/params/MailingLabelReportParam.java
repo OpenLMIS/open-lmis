@@ -25,19 +25,15 @@ public class MailingLabelReportParam
   extends BaseParam implements ReportParameter {
 
   //top filters
-  private int facilityTypeId;
-  private String facilityType;
-  private int rgroupId;
-  private String rgroup;
+  private Long facilityType;
+  private Long zone;
+  private Boolean status;
+
+  private String header;
 
   @Override
   public String toString() {
-    if (this == null) return null;
-    StringBuilder filterDescription = new StringBuilder("");
-    filterDescription.append("Facility Type : ").append(facilityTypeId != 0 ? facilityType : "All Facility Types ").append("\n").
-      append("Requisition Group : ").append(rgroupId != 0 ? rgroup : "All Requisition Groups");
-
-    return filterDescription.toString().isEmpty() ? null : filterDescription.toString();
+    return header;
   }
 
 }

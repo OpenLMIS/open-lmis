@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ProcessingPeriodService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.report.mapper.AdjustmentSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.AdjustmentSummaryReportParam;
@@ -36,6 +37,9 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
 
   @Autowired
   private ProcessingPeriodService processingPeriodService;
+
+  @Autowired
+  private ProgramService programService;
 
   private AdjustmentSummaryReportParam adjustmentSummaryReportParam = null;
 
@@ -62,12 +66,13 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
       adjustmentSummaryReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
       adjustmentSummaryReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
       adjustmentSummaryReportParam.setRgroupId(StringHelper.isBlank(filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
-      adjustmentSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
+      adjustmentSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0])); //defaults to 0
       adjustmentSummaryReportParam.setAdjustmentTypeId(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "" : filterCriteria.get("adjustmentType")[0]);
       adjustmentSummaryReportParam.setAdjustmentType(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
-      adjustmentSummaryReportParam.setPeriod(StringHelper.isBlank(filterCriteria,"period") ? 0 : Long.parseLong(filterCriteria.get("period")[0].toString()));
-      adjustmentSummaryReportParam.setPeriodObject(processingPeriodService.getById(adjustmentSummaryReportParam.getPeriod()));
-
+      adjustmentSummaryReportParam.setPeriod(StringHelper.isBlank(filterCriteria,"period") ? 0 : Long.parseLong( filterCriteria.get("period")[0].toString() ));
+      // set objects
+      adjustmentSummaryReportParam.setPeriodObject( processingPeriodService.getById( adjustmentSummaryReportParam.getPeriod()));
+      adjustmentSummaryReportParam.setProgramObject( programService.getById(adjustmentSummaryReportParam.getProgramId()));
     }
     return adjustmentSummaryReportParam;
 

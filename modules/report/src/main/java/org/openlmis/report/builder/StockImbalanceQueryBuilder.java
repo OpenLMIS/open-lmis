@@ -46,7 +46,7 @@ public class StockImbalanceQueryBuilder {
                 WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
             }
             if(filter.getFacility() != null && !filter.getFacility().isEmpty()){
-                WHERE("facility = #{filterCriteria.facility}");
+                WHERE("facility_id = #{filterCriteria.facility}::numeric");
             }
 
             if(filter.getProductCategoryId() != 0 && filter.getProductCategoryId() != -1 ){

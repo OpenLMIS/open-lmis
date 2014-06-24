@@ -24,21 +24,21 @@ public class MailingLabelReportQueryBuilder {
         MailingLabelReportParam filter  =(MailingLabelReportParam)params.get("filterCriteria");
 
         BEGIN();
-        SELECT("F.id, F.code, F.name, F.active as active, F.address1, F.address2 , FT.name as facilityType, GZ.name as region, FO.code as owner, F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates, CASE WHEN U.officePhone IS NULL THEN '' ELSE U.officePhone || ' ,' END || CASE WHEN U.cellPhone IS NULL THEN '' ELSE U.cellPhone || ' ,' END || F.mainPhone as phoneNumber, U.email email, F.fax as fax, U.firstName || ' ' || U.lastName || ', ' || jobtitle contact ");
+        SELECT("F.id, F.code, F.name, F.active as active, F.address1, F.address2 , FT.name as facilityType, GZ.district_name as region, FO.code as owner, F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates, CASE WHEN U.officePhone IS NULL THEN '' ELSE U.officePhone || ' ,' END || CASE WHEN U.cellPhone IS NULL THEN '' ELSE U.cellPhone || ' ,' END || F.mainPhone as phoneNumber, U.email email, F.fax as fax, U.firstName || ' ' || U.lastName || ', ' || jobtitle contact ");
         FROM("facilities F");
         JOIN("facility_types FT on FT.id = F.typeid");
-        LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
+        LEFT_OUTER_JOIN("vw_districts GZ on GZ.district_id = F.geographiczoneid");
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
         LEFT_OUTER_JOIN("requisition_group_members ON f.id = requisition_group_members.facilityid");
         LEFT_OUTER_JOIN("requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid");
         LEFT_OUTER_JOIN("Users U on U.facilityId = F.id ");
 
         if(filter != null){
-           if (filter.getFacilityTypeId() != 0) {
-                WHERE("F.typeid = "+ filter.getFacilityTypeId());
+           if (filter.getFacilityType() != 0) {
+                WHERE("F.typeid = "+ filter.getFacilityType());
             }
-            if(filter.getRgroupId() != 0){
-                WHERE("requisition_groups.id = "+ filter.getRgroupId());
+            if(filter.getZone() != 0){
+                WHERE("(GZ.district_id = "+ filter.getZone() + " or GZ.region_id = " + filter.getZone()+ " or GZ.zone_id = " + filter.getZone() +" or GZ.parent = " + filter.getZone() +")");
             }
         }
         return SQL();

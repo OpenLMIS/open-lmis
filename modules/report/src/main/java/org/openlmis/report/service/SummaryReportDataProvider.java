@@ -28,7 +28,8 @@ public class SummaryReportDataProvider extends ReportDataProvider {
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.0
+    RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    return reportMapper.getReport(filterCriteria, rowBounds);
   }
 
   @Override
