@@ -26,7 +26,10 @@ public class AdjustmentSummaryQueryBuilder {
     Map<String, String[]> sorter = (Map<String, String[]>) params.get("SortCriteria");
     BEGIN();
     SELECT("processing_periods_name as period, product productDescription, product_category_name category, facility_type_name facilityType,facility_name facilityName, adjustment_type, t.description as adjustmentType, adjutment_qty adjustment, adjutment_qty * case when adjustment_additive  = 't' then 1 else -1 end AS signedadjustment, supplying_facility_name supplyingFacility");
-    FROM("vw_requisition_adjustment join losses_adjustments_types t on t.name = vw_requisition_adjustment.adjustment_type ");
+    FROM("vw_requisition_adjustment " +
+        "join facilities f on f.id = vw_requisition_adjustment.facility_id " +
+        "join vw_districts d on f.geographicZoneId = d.district_id " +
+        "join losses_adjustments_types t on t.name = vw_requisition_adjustment.adjustment_type ");
     writePredicates(filter);
     ORDER_BY(QueryHelpers.getSortOrder(params, " product, adjustment_type, facility_type_name,facility_name, supplying_facility_name, product_category_name "));
     return SQL();
@@ -40,6 +43,10 @@ public class AdjustmentSummaryQueryBuilder {
 
       if (filter.getFacilityTypeId() != 0) {
         WHERE("facility_type_id = #{filterCriteria.facilityTypeId}");
+      }
+
+      if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
+        WHERE("(d.district_id = #{filterCriteria.zoneId} or d.zone_id = #{filterCriteria.zoneId} or d.region_id = #{filterCriteria.zoneId} or d.parent = #{filterCriteria.zoneId})");
       }
 
       if (filter.getProductCategoryId() != 0) {

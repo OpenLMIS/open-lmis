@@ -70,6 +70,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
       adjustmentSummaryReportParam.setAdjustmentTypeId(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "" : filterCriteria.get("adjustmentType")[0]);
       adjustmentSummaryReportParam.setAdjustmentType(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
       adjustmentSummaryReportParam.setPeriod(StringHelper.isBlank(filterCriteria,"period") ? 0 : Long.parseLong( filterCriteria.get("period")[0].toString() ));
+      adjustmentSummaryReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone") ? 0: Long.parseLong(filterCriteria.get("zone")[0]));
       // set objects
       adjustmentSummaryReportParam.setPeriodObject( processingPeriodService.getById( adjustmentSummaryReportParam.getPeriod()));
       adjustmentSummaryReportParam.setProgramObject( programService.getById(adjustmentSummaryReportParam.getProgramId()));

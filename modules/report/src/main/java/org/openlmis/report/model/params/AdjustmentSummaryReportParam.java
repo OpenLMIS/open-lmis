@@ -39,7 +39,7 @@ public class AdjustmentSummaryReportParam
 
     private int facilityTypeId;
     private String facilityType;
-    private int zoneId;
+    private Long zoneId;
     private int productId;
     private int productCategoryId;
     private int rgroupId;
