@@ -929,3 +929,8 @@ INSERT INTO role_rights (roleId, rightName) VALUES ((SELECT
                                                        id
                                                      FROM roles
                                                      WHERE name = 'Admin'), 'MANAGE_FACILITY_APPROVED_PRODUCT');
+
+INSERT INTO role_rights (roleId, rightName) VALUES ((SELECT
+                                                       id
+                                                     FROM roles
+                                                     WHERE name = 'Admin'), 'MANAGE_PRODUCT');
