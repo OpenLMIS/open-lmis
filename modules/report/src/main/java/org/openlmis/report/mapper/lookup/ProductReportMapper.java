@@ -20,7 +20,7 @@ import java.util.List;
 @Repository
 public interface ProductReportMapper {
 
-    @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, p.categoryid, " +
+    @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code,  " +
             "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
             " " +
             "   FROM " +
@@ -35,21 +35,22 @@ public interface ProductReportMapper {
             "       products")
     List<org.openlmis.core.domain.Product> getFullProductList();
 
-  @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, p.categoryid, " +
+  @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, pp.productcategoryid as categoryid, " +
     "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
     " " +
     "   FROM " +
     "       products as p " +
     "             join product_forms as form on form.id = p.formid " +
-    "             join dosage_units as du on du.id = p.dosageunitid" +
-            "WHERE p.categoryid = #{categoryId} " +
+    "             join dosage_units as du on du.id = p.dosageunitid " +
+      "           join program_products pp on pp.productId = p.id " +
+            "WHERE pp.programId = #{programId} and pp.productcategoryid = #{categoryId} " +
             "order by p.tracer, name")
-    List<Product> getProductListByCategory(@Param("categoryId") Integer categoryId);
+    List<Product> getProductListByCategory(@Param("programId") Integer programId ,@Param("categoryId") Integer categoryId);
 
     @Select("SELECT * FROM products WHERE code = #{code}")
     Product getProductByCode(String code);
 
-  @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, p.categoryid, " +
+  @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, p.productcategoryid categoryid, " +
     "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
     " " +
     "   FROM " +

@@ -155,11 +155,11 @@ public class ReportLookupService {
     return productMapper.getProductsForProgram(programId);
   }
 
-  public List<Product> getProductListByCategory(Integer categoryId) {
-    if (categoryId == null || categoryId == -1 || categoryId == 0) {
+  public List<Product> getProductListByCategory(Integer programId, Integer categoryId) {
+    if (categoryId == null || categoryId <= 0) {
       return productMapper.getAll();
     }
-    return productMapper.getProductListByCategory(categoryId);
+    return productMapper.getProductListByCategory(programId, categoryId);
   }
 
   public List<org.openlmis.core.domain.Product> getFullProductList() {

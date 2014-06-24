@@ -143,8 +143,8 @@ public class ReportLookupController extends BaseController {
   }
 
   @RequestMapping(value="/products_by_category", method = GET, headers = BaseController.ACCEPT_JSON)
-  public List<Product> getProductsByCategory(@RequestParam(value = "category", required = true, defaultValue = "0") int category){
-      return this.reportLookupService.getProductListByCategory(category);
+  public List<Product> getProductsByCategory(@RequestParam(value = "category", required = true, defaultValue = "0") int category, @RequestParam(value = "program", required = true, defaultValue = "0") int programId){
+      return this.reportLookupService.getProductListByCategory(programId, category);
   }
 
   @RequestMapping(value="/rgroups", method = GET, headers = BaseController.ACCEPT_JSON)
