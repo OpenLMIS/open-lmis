@@ -62,6 +62,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
       Date originalStart = new Date();
       Date originalEnd = new Date();
 
+      adjustmentSummaryReportParam.setFacilityId(StringHelper.isBlank( filterCriteria, "facility")? 0L : Long.parseLong(filterCriteria.get("facility")[0]));
       adjustmentSummaryReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
       adjustmentSummaryReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
       adjustmentSummaryReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0

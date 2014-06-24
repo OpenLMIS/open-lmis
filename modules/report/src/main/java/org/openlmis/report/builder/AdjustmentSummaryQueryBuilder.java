@@ -49,6 +49,10 @@ public class AdjustmentSummaryQueryBuilder {
         WHERE("(d.district_id = #{filterCriteria.zoneId} or d.zone_id = #{filterCriteria.zoneId} or d.region_id = #{filterCriteria.zoneId} or d.parent = #{filterCriteria.zoneId})");
       }
 
+      if (filter.getFacilityId() != 0) {
+        WHERE("f.id = #{filterCriteria.facilityId}");
+      }
+
       if (filter.getProductCategoryId() != 0) {
         WHERE("product_category_id = #{filterCriteria.productCategoryId}");
       }
