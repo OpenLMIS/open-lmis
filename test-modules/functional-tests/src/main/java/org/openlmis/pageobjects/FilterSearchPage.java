@@ -294,7 +294,7 @@ public class FilterSearchPage extends Page {
   }
 
   public String getSearchFacilityText() {
-    WebElement facilitySearch = testWebDriver.findElement(cssSelector("input[ng-model='multipleFacilitiesSearchParam']"));
+    WebElement facilitySearch = testWebDriver.findElement(cssSelector("input[ng-model='facilitySearchParam']"));
     testWebDriver.waitForElementToAppear(facilitySearch);
     return facilitySearch.getText();
   }
