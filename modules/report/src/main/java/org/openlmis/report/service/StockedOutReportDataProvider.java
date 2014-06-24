@@ -73,6 +73,7 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
       }else{
         stockedOutReportParam.setFacilityId(0);
       }
+      stockedOutReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone")? 0:Integer.parseInt(filterCriteria.get("zone")[0]));
       stockedOutReportParam.setRgroupId(StringHelper.isBlank(filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0]));
       stockedOutReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,"productCategory") ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0]));
       stockedOutReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0]));
