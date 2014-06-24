@@ -95,6 +95,17 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
 
   loadSupervisoryNode();
 
+  var checkAllProgramSchedulesNotDone = function () {
+    var notDone = false;
+    $($scope.requisitionGroupProgramSchedules).each(function (index, programSchedule) {
+      if (programSchedule.underEdit) {
+        notDone = true;
+      }
+      if (notDone) return;
+    });
+    return notDone;
+  };
+
   $scope.save = function () {
     if ($scope.requisitionGroupForm.$error.required || !$scope.requisitionGroup.supervisoryNode) {
       $scope.showError = "true";
@@ -102,6 +113,12 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
       $scope.message = "";
       return;
     }
+
+    if (checkAllProgramSchedulesNotDone()) {
+      $scope.error = 'error.program.schedules.not.done';
+      return;
+    }
+
     if ($scope.requisitionGroup.id) {
       RequisitionGroups.update({id: $scope.requisitionGroup.id},
         {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers, "requisitionGroupProgramSchedules": $scope.requisitionGroupProgramSchedules},
@@ -162,6 +179,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     refreshAndSortPrograms();
     $scope.newProgramSchedule = {};
     $scope.addNew = false;
+    $scope.toggleSlider();
   };
 
   $scope.$watch('showMultipleFacilitiesSlider', function () {

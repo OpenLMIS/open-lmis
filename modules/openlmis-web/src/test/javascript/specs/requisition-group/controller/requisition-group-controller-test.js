@@ -161,6 +161,16 @@ describe("Requisition Group Controller", function () {
     expect(scope.message).toEqual("");
   });
 
+  it('should not save requisition group if at least one program schedule is under edit', function () {
+    scope.requisitionGroup = {"code": "N100", "name": "group 100", "supervisoryNode": {"facility": {"code": "F10", "name": "village dispensary"}}};
+    scope.requisitionGroupForm = {"$error": {"required": false}};
+    scope.requisitionGroupProgramSchedules[0].underEdit = true;
+
+    scope.save();
+
+    expect(scope.error).toEqual('error.program.schedules.not.done');
+  });
+
   it('should insert requisition group', function () {
     scope.requisitionGroup = {"code": "N100", "name": "group 100", "supervisoryNode": {"facility": {"code": "F10", "name": "village dispensary"}}};
     scope.requisitionGroupForm = {"$error": {"required": false}};
