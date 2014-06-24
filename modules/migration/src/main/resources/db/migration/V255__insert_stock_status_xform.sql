@@ -1,4 +1,4 @@
-INSERT INTO odkxform
+INSERT INTO odk_xform
 (formid,
  name,
  version,
