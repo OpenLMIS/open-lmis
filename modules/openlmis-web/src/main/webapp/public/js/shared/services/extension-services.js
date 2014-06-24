@@ -596,3 +596,7 @@ services.factory('RegimenDistributionReport',function($resource){
 services.factory('LabEquipmentListByDonorReport', function ($resource) {
     return $resource('/reports/reportdata/labEquipmentsByFundingSource.json', {}, {});
 });
+
+services.factory('GetAllUsers',function($resource){
+    return $resource('/user/getAll.json',{},{});
+});

@@ -114,3 +114,19 @@ services.factory('GetDonor',function($resource){
 services.factory('RemoveDonor',function($resource){
     return $resource('/donor/remove/:id.json',{},{});
 });
+
+services.factory('UserListForVendor',function($resource){
+    return $resource('/equipment/vendor-user/getAllUsersForVendor/:id.json',{},{});
+});
+
+services.factory('SaveVendorUserAssociation', function($resource){
+    return $resource('/equipment/vendor-user/saveNewUserForVendor',{},{})
+});
+
+services.factory('RemoveVendorUserAssociation', function($resource){
+    return $resource('/equipment/vendor-user/remove/:vendorId/:userId.json',{},{})
+});
+
+services.factory('UserListAvailableForVendor',function($resource){
+    return $resource('/equipment/vendor-user/getAllUsersAvailableForVendor.json',{},{});
+});
