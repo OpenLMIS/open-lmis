@@ -103,21 +103,21 @@
 
       <div class="product-list" ng-show="addedFacilityTypeApprovedProducts.length">
         <div class="row-fluid product-list-header">
-          <div class="span5 fluid-grid-cell">
-            <span openlmis-message="header.product.code"></span>&nbsp;|&nbsp;
+          <div id="addedProductHeader" class="span5 fluid-grid-cell">
+          <span openlmis-message="header.product.code"></span>&nbsp;|&nbsp;
             <span openlmis-message="label.name"></span>
           </div>
           <div class="span2 fluid-grid-cell">
-            <label>
-              <span openlmis-message="header.max.months.of.stock"></span>
+            <label id="addedMaxMonthsOfStockHeader">
+            <span openlmis-message="header.max.months.of.stock"></span>
               <span class="label-required">*</span>
             </label>
           </div>
           <div class="span2 fluid-grid-cell">
-            <label openlmis-message="header.min.months.of.stock"></label>
+            <label id="addedMinMonthsOfStockHeader" openlmis-message="header.min.months.of.stock"></label>
           </div>
           <div class="span2 fluid-grid-cell">
-            <label openlmis-message="label.emergency.order.point"></label>
+            <label id="addedEopHeader" openlmis-message="label.emergency.order.point"></label>
           </div>
         </div>
         <div class="row-fluid"
@@ -132,7 +132,7 @@
 
             <div class="span5">
               <div class="fluid-grid-cell" id="facilityTypeApprovedProductCodeAndName">
-                <label id="facilityTypeApprovedProductNameLabel"
+                <label id="facilityTypeApprovedProductNameLabel{{$index}}"
                        ng-bind="facilityTypeApprovedProduct.programProduct.product.code+' | '+facilityTypeApprovedProduct.programProduct.product.primaryName"></label>
               </div>
             </div>
@@ -162,33 +162,33 @@
                       id="addedMinMonthsOfStock{{$index}}" openlmis-message="error.number.only">
                 </span>
               </div>
+            </div>
 
-              <div class="span2">
-                <div class="fluid-grid-cell">
-                  <input id="facilityTypeApprovedProduct.eop{{$index}}" type="text"
-                         class="right-justified"
-                         name="addedEop{{$index}}"
-                         numeric-validator="positiveNumericValue,2,2" maxlength="5"
-                         ng-model="facilityTypeApprovedProduct.eop"/>
+            <div class="span2">
+              <div class="fluid-grid-cell">
+                <input id="facilityTypeApprovedProduct.eop{{$index}}" type="text"
+                       class="right-justified"
+                       name="addedEop{{$index}}"
+                       numeric-validator="positiveNumericValue,2,2" maxlength="5"
+                       ng-model="facilityTypeApprovedProduct.eop"/>
                 <span class="rnr-form-error" style="display:none;"
                       id="addedEop{{$index}}" openlmis-message="error.number.only">
                 </span>
-                </div>
               </div>
+            </div>
 
-              <div class="span1">
-                <div class="fluid-grid-cell delete-role">
-                  <a href="" class="close" value="delete"
-                     ng-click="removeFacilityTypeApprovedProduct($index)">&times;</a>
-                </div>
+            <div class="span1">
+              <div class="fluid-grid-cell delete-role">
+                <a id="crossButton{{$index}}" href="" class="close" value="delete"
+                   ng-click="removeFacilityTypeApprovedProduct($index)">&times;</a>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="alert alert-danger" id="modalErrorMessage" ng-show="modalError" openlmis-message="modalError"></div>
-
     </div>
+    <div class="alert alert-danger" id="modalErrorMessage" ng-show="modalError" openlmis-message="modalError"></div>
+
     <div class="modal-footer">
       <input type="button" id="doneFacilityApprovedProductAdd" class="btn btn-primary"
              ng-click="addFacilityTypeApprovedProducts()"

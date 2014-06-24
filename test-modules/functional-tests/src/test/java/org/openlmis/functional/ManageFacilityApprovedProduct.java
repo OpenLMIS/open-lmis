@@ -255,6 +255,174 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     assertFalse(facilityApprovedProductPage.isFullSupplyHeaderPresent());
   }
 
+  @Test(groups = {"admin"})
+  public void testAddFacilityTypeApprovedProductsPopUp() throws SQLException {
+    setupData();
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    homePage.navigateToFacilityApprovedProductPage();
+
+    facilityApprovedProductPage.selectProgram("HIV");
+    facilityApprovedProductPage.selectFacilityType("Warehouse");
+    assertEquals("No records found", facilityApprovedProductPage.getNoRecordsMessage());
+
+    facilityApprovedProductPage.clickAddNewButton();
+    assertEquals("Add product(s) for HIV at Warehouse", facilityApprovedProductPage.getAddFacilityApprovedProductHeader());
+    assertEquals("Category:", facilityApprovedProductPage.getAddCategoryLabel());
+    assertEquals("Product code / name:", facilityApprovedProductPage.getAddProductLabel());
+    assertEquals("Max months of stock *", facilityApprovedProductPage.getAddMaxMonthsOfStockLabel());
+    assertEquals("Min months of stock", facilityApprovedProductPage.getAddMinMonthsOfStockLabel());
+    assertEquals("Emergency Order Point", facilityApprovedProductPage.getAddEopLabel());
+    assertFalse(facilityApprovedProductPage.isAddProductButtonEnabled());
+
+    List<String> expectedListOfCategories = asList("", "anaesthetics", "anaesthetics2", "Antibiotics", "Antibiotics4", "category3", "category31", "category4",
+      "category5", "category6");
+    List<String> actualListOfCategories = facilityApprovedProductPage.getListOfCategories();
+    assertTrue(actualListOfCategories.equals(expectedListOfCategories));
+
+    facilityApprovedProductPage.selectCategory("Antibiotics4");
+    List<String> expectedListOfProducts = asList("", "Code | Name | Strength | Unit of measure | Type", "p2 | product3 | 300/200/600 | mg | true");
+    List<String> actualListOfProducts = facilityApprovedProductPage.getListOfProducts();
+    assertTrue(actualListOfProducts.equals(expectedListOfProducts));
+
+    facilityApprovedProductPage.selectCategory("Antibiotics");
+
+    expectedListOfProducts = asList("", "Code | Name | Strength | Unit of measure | Type", "p1 | product1 | 300/200/600 | mg | true", "P3 | product2 | 300/200/600 | mg | false");
+    actualListOfProducts = facilityApprovedProductPage.getListOfProducts();
+    assertTrue(actualListOfProducts.equals(expectedListOfProducts));
+    assertEquals("Full supply", facilityApprovedProductPage.getProductTypeInDropDown(1));
+    assertEquals("Non full supply", facilityApprovedProductPage.getProductTypeInDropDown(2));
+
+    facilityApprovedProductPage.selectProduct("P3 | product2 | 300/200/600 | mg | false");
+    assertFalse(facilityApprovedProductPage.isAddProductButtonEnabled());
+    facilityApprovedProductPage.enterMinMonthsOfStock("23.00");
+    facilityApprovedProductPage.enterEop("99.99");
+    assertFalse(facilityApprovedProductPage.isAddProductButtonEnabled());
+    facilityApprovedProductPage.enterMaxMonthsOfStock("00.00");
+    assertTrue(facilityApprovedProductPage.isAddProductButtonEnabled());
+    facilityApprovedProductPage.clickAddProductButton();
+
+    assertEquals("Product Code |  Name", facilityApprovedProductPage.getAddedProductHeader());
+    assertEquals("Max months of stock *", facilityApprovedProductPage.getAddedMaxMonthsOfStockHeader());
+    assertEquals("Min months of stock", facilityApprovedProductPage.getAddedMinMonthsOfStockHeader());
+    assertEquals("Emergency Order Point", facilityApprovedProductPage.getAddedEopHeader());
+    assertEquals("P3 | product2", facilityApprovedProductPage.getAddedFacilityTypeApprovedProductNameLabel(1));
+    assertEquals("00.00", facilityApprovedProductPage.getAddedMaxMonthsOfStock(1));
+    assertEquals("23.00", facilityApprovedProductPage.getAddedMinMonthsOfStock(1));
+    assertEquals("99.99", facilityApprovedProductPage.getAddedEop(1));
+
+    facilityApprovedProductPage.reenterAddedMaxMonthsOfStock("", 1);
+    assertEquals("", facilityApprovedProductPage.getAddedMaxMonthsOfStock(1));
+    facilityApprovedProductPage.clickAddDoneButton();
+    assertEquals("Please correct the highlighted fields before submitting", facilityApprovedProductPage.getAddModalErrorMessage());
+
+    facilityApprovedProductPage.clickCrossButtonForAddedRow(1);
+    assertFalse(facilityApprovedProductPage.isAddedProductHeaderDisplayed());
+    facilityApprovedProductPage.clickAddDoneButton();
+    facilityApprovedProductPage.clickAddCancelButton();
+    testWebDriver.waitForAjax();
+    assertEquals("No records found", facilityApprovedProductPage.getNoRecordsMessage());
+  }
+
+  @Test(groups = {"admin"})
+  public void testAddingNewFacilityTypeApprovedProductsPopUp() throws SQLException {
+    setupData();
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    homePage.navigateToFacilityApprovedProductPage();
+
+    facilityApprovedProductPage.selectProgram("HIV");
+    facilityApprovedProductPage.selectFacilityType("Warehouse");
+    assertEquals("No records found", facilityApprovedProductPage.getNoRecordsMessage());
+    facilityApprovedProductPage.clickAddNewButton();
+
+    facilityApprovedProductPage.selectCategory("Antibiotics");
+    facilityApprovedProductPage.selectProduct("P3 | product2 | 300/200/600 | mg | false");
+    facilityApprovedProductPage.enterMaxMonthsOfStock("23.00");
+    facilityApprovedProductPage.enterMinMonthsOfStock("00.00");
+    facilityApprovedProductPage.clickAddProductButton();
+    facilityApprovedProductPage.selectCategory("Antibiotics");
+    assertFalse(facilityApprovedProductPage.getListOfProducts().contains("P3 | product2 | 300/200/600 | mg | false"));
+    facilityApprovedProductPage.selectCategory("Antibiotics4");
+    facilityApprovedProductPage.selectProduct("p2 | product3 | 300/200/600 | mg | true");
+    facilityApprovedProductPage.enterMaxMonthsOfStock("99.99");
+    facilityApprovedProductPage.enterEop("0.80");
+    facilityApprovedProductPage.clickAddProductButton();
+
+    facilityApprovedProductPage.selectCategory("Antibiotics");
+    facilityApprovedProductPage.selectProduct("p1 | product1 | 300/200/600 | mg | true");
+    facilityApprovedProductPage.enterMaxMonthsOfStock("99.99");
+    facilityApprovedProductPage.enterEop("0.80");
+    facilityApprovedProductPage.clickAddProductButton();
+    facilityApprovedProductPage.selectCategory("Antibiotics");
+    assertFalse(facilityApprovedProductPage.getListOfProducts().contains("p1 | product1 | 300/200/600 | mg | true"));
+
+    facilityApprovedProductPage.clickCrossButtonForAddedRow(2);
+    facilityApprovedProductPage.selectCategory("Antibiotics");
+    assertTrue(facilityApprovedProductPage.getListOfProducts().contains("p1 | product1 | 300/200/600 | mg | true"));
+
+    assertEquals("P3 | product2", facilityApprovedProductPage.getAddedFacilityTypeApprovedProductNameLabel(1));
+    assertEquals("p2 | product3", facilityApprovedProductPage.getAddedFacilityTypeApprovedProductNameLabel(2));
+    assertEquals("23.00", facilityApprovedProductPage.getAddedMaxMonthsOfStock(1));
+
+    facilityApprovedProductPage.reenterAddedMaxMonthsOfStock("00.00", 1);
+    assertEquals("00.00", facilityApprovedProductPage.getAddedMaxMonthsOfStock(1));
+    facilityApprovedProductPage.clickAddDoneButton();
+    testWebDriver.waitForAjax();
+    assertEquals("2 product(s) added successfully", facilityApprovedProductPage.getSaveSuccessMessage());
+    assertEquals("2 record(s) found", facilityApprovedProductPage.getNRecordsMessage());
+
+    verifyCategoryOrderOnPage(asList("Antibiotics", "Antibiotics4"));
+    verifyCodeOrderOnPage(asList("P3", "p2"));
+    assertEquals("0", facilityApprovedProductPage.getMaxMonthsOfStock(1));
+    assertEquals("99.99", facilityApprovedProductPage.getMaxMonthsOfStock(2));
+    assertEquals("0", facilityApprovedProductPage.getMinMonthsOfStock(1));
+    assertEquals("0.8", facilityApprovedProductPage.getEop(2));
+
+    facilityApprovedProductPage.clickAddNewButton();
+    testWebDriver.sleep(500);
+    assertFalse(facilityApprovedProductPage.getListOfCategories().contains("Antibiotics4"));
+    facilityApprovedProductPage.selectCategory("Antibiotics");
+    assertFalse(facilityApprovedProductPage.getListOfProducts().contains("P3 | product2 | 300/200/600 | mg | false"));
+    facilityApprovedProductPage.selectProduct("p1 | product1 | 300/200/600 | mg | true");
+    facilityApprovedProductPage.enterMaxMonthsOfStock("00.00");
+    facilityApprovedProductPage.clickAddProductButton();
+    facilityApprovedProductPage.clickAddCancelButton();
+    testWebDriver.waitForAjax();
+    assertEquals("2 record(s) found", facilityApprovedProductPage.getNRecordsMessage());
+  }
+
+  private void setupData() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_FACILITY_APPROVED_PRODUCT");
+    dbWrapper.insertProductCategoryWithDisplayOrder("Antibiotic4", "Antibiotics4", 0);
+    dbWrapper.insertProductCategoryWithDisplayOrder("anaesthetics2", "anaesthetics2", 1);
+    dbWrapper.insertProductCategoryWithDisplayOrder("category31", "category31", 1);
+    dbWrapper.insertProductCategoryWithDisplayOrder("category4", "category4", 1);
+    dbWrapper.insertProductCategoryWithDisplayOrder("category5", "category5", 1);
+    dbWrapper.insertProductCategoryWithDisplayOrder("category6", "category6", 2);
+    dbWrapper.insertProduct("p1", "product1");
+    dbWrapper.insertProduct("p2", "product3");
+    dbWrapper.insertProduct("P3", "product2");
+    dbWrapper.insertProduct("p4", "product4");
+    dbWrapper.insertProduct("p5", "product5");
+    dbWrapper.insertProduct("p6", "product6");
+    dbWrapper.insertProduct("p7", "product7");
+    dbWrapper.insertProduct("p8", "product8");
+    dbWrapper.insertProduct("p9", "product9");
+    dbWrapper.insertProduct("p10", "product10");
+    dbWrapper.insertProgramProductsWithCategory("p1", "HIV", "Antibiotic", 2);
+    dbWrapper.insertProgramProductsWithCategory("p2", "HIV", "Antibiotic4", 2);
+    dbWrapper.insertProgramProductsWithCategory("P3", "HIV", "Antibiotic", 1);
+    dbWrapper.insertProgramProductsWithCategory("p4", "HIV", "anaesthetics2", 2);
+    dbWrapper.insertProgramProductsWithCategory("p5", "HIV", "category31", 2);
+    dbWrapper.insertProgramProductsWithCategory("p6", "HIV", "anaesthetics", 2);
+    dbWrapper.insertProgramProductsWithCategory("p7", "HIV", "category4", 2);
+    dbWrapper.insertProgramProductsWithCategory("p8", "HIV", "category5", 2);
+    dbWrapper.insertProgramProductsWithCategory("p9", "HIV", "category6", 2);
+    dbWrapper.insertProgramProductsWithCategory("p10", "HIV", "category3", 2);
+    dbWrapper.updateActiveStatusOfProgramProduct("p1", "HIV", "false");
+    dbWrapper.updateFieldValue("products", "active", "false", "code", "P3");
+    dbWrapper.updateFieldValue("products", "fullSupply", "false", "code", "P3");
+  }
+
   private void verifyCodeOrderOnPage(List<String> codes) {
     for (int i = 1; i <= codes.size(); i++) {
       assertEquals(codes.get(i - 1), facilityApprovedProductPage.getCode(i));

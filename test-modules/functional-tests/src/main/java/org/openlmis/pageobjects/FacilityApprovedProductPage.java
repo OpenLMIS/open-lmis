@@ -102,7 +102,6 @@ public class FacilityApprovedProductPage extends Page {
   @FindBy(how = ID, using = "clearProductSearch")
   private static WebElement clearProductSearchButton = null;
 
-
   @FindBy(how = ID, using = "addFacilityApprovedProductHeader")
   private static WebElement addFacilityApprovedProductHeader = null;
 
@@ -121,10 +120,10 @@ public class FacilityApprovedProductPage extends Page {
   @FindBy(how = ID, using = "eopLabel")
   private static WebElement eopLabel = null;
 
-  @FindBy(how = ID, using = "s2id_productCategory")
+  @FindBy(how = ID, using = "productCategory")
   private static WebElement productCategoryDropDown = null;
 
-  @FindBy(how = ID, using = "s2id_product")
+  @FindBy(how = ID, using = "product")
   private static WebElement productDropDown = null;
 
   @FindBy(how = ID, using = "facilityTypeApprovedProduct.maxMonthsOfStock")
@@ -135,6 +134,18 @@ public class FacilityApprovedProductPage extends Page {
 
   @FindBy(how = ID, using = "facilityTypeApprovedProduct.eop")
   private static WebElement eop = null;
+
+  @FindBy(how = ID, using = "addedProductHeader")
+  private static WebElement addedProductHeader = null;
+
+  @FindBy(how = ID, using = "addedMaxMonthsOfStockHeader")
+  private static WebElement addedMaxMonthsOfStockHeader = null;
+
+  @FindBy(how = ID, using = "addedMinMonthsOfStockHeader")
+  private static WebElement addedMinMonthsOfStockHeader = null;
+
+  @FindBy(how = ID, using = "addedEopHeader")
+  private static WebElement addedEopHeader = null;
 
   @FindBy(how = ID, using = "addFacilityTypeApprovedProduct")
   private static WebElement addFacilityTypeApprovedProductButton = null;
@@ -514,7 +525,7 @@ public class FacilityApprovedProductPage extends Page {
 
   public List<String> getListOfProducts() {
     testWebDriver.waitForElementToAppear(productDropDown);
-    return testWebDriver.getListOfOptionGroupsWithOptions(productDropDown);
+    return testWebDriver.getListOfOptions(productDropDown);
   }
 
   public void selectCategory(String category) {
@@ -551,19 +562,25 @@ public class FacilityApprovedProductPage extends Page {
   public String getAddedMaxMonthsOfStock(int rowNumber) {
     WebElement maxMonthsOfStock = testWebDriver.getElementById("facilityTypeApprovedProduct.maxMonthsOfStock" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(maxMonthsOfStock);
-    return maxMonthsOfStock.getText();
+    return maxMonthsOfStock.getAttribute("value");
   }
 
   public String getAddedMinMonthsOfStock(int rowNumber) {
     WebElement minMonthsOfStock = testWebDriver.getElementById("facilityTypeApprovedProduct.minMonthsOfStock" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(minMonthsOfStock);
-    return minMonthsOfStock.getText();
+    return minMonthsOfStock.getAttribute("value");
   }
 
   public String getAddedEop(int rowNumber) {
     WebElement eop = testWebDriver.getElementById("facilityTypeApprovedProduct.eop" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(eop);
-    return eop.getText();
+    return eop.getAttribute("value");
+  }
+
+  public void reenterAddedMaxMonthsOfStock(String maxMonthsInput, int rowNumber) {
+    WebElement maxMonthsOfStock = testWebDriver.getElementById("facilityTypeApprovedProduct.maxMonthsOfStock" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(maxMonthsOfStock);
+    sendKeys(maxMonthsOfStock, maxMonthsInput);
   }
 
   public void clickCrossButtonForAddedRow(int rowNumber) {
@@ -600,5 +617,45 @@ public class FacilityApprovedProductPage extends Page {
   public String getSaveSuccessMessage() {
     testWebDriver.waitForElementToAppear(saveSuccessMsg);
     return saveSuccessMsg.getText();
+  }
+
+  public String getAddedProductHeader() {
+    testWebDriver.waitForElementToAppear(addedProductHeader);
+    return addedProductHeader.getText();
+  }
+
+  public String getAddedMaxMonthsOfStockHeader() {
+    testWebDriver.waitForElementToAppear(addedMaxMonthsOfStockHeader);
+    return addedMaxMonthsOfStockHeader.getText();
+  }
+
+  public String getAddedMinMonthsOfStockHeader() {
+    testWebDriver.waitForElementToAppear(addedMinMonthsOfStockHeader);
+    return addedMinMonthsOfStockHeader.getText();
+  }
+
+  public String getAddedEopHeader() {
+    testWebDriver.waitForElementToAppear(addedEopHeader);
+    return addedEopHeader.getText();
+  }
+
+  public boolean isAddedProductHeaderDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(addedProductHeader);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return addedProductHeader.isDisplayed();
+  }
+
+  public String getProductTypeInDropDown(int productNumber) {
+    testWebDriver.getElementByXpath("//*[@id='s2id_product']/a/span").click();
+    WebElement type = testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[" + (productNumber + 1) + "]/div/div/div[5]");
+    testWebDriver.waitForElementToAppear(type);
+    String text = type.getText();
+    testWebDriver.getElementByXpath("//*[@id='s2id_product']/a/span").click();
+    return text;
   }
 }
