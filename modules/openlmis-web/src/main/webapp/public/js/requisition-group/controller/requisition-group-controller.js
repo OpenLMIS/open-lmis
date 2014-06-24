@@ -11,6 +11,7 @@
 function RequisitionGroupController($scope, requisitionGroupData, $location, RequisitionGroups, SupervisoryNodesSearch, programs, schedules) {
 
   var currentProgramSchedule, programScheduleUnderEdit;
+
   if (requisitionGroupData) {
     $scope.requisitionGroup = requisitionGroupData.requisitionGroup;
     $scope.requisitionGroupMembers = requisitionGroupData.requisitionGroupMembers;
@@ -24,6 +25,9 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.requisitionGroupMembers = [];
     $scope.requisitionGroupProgramSchedules = [];
   }
+
+  $scope.schedules = schedules;
+  $scope.newProgramSchedule = {};
 
   refreshAndSortPrograms();
   angular.element('.facility-add-success').fadeOut("fast");
@@ -84,9 +88,6 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.toggleSlider();
   };
 
-  $scope.schedules = schedules;
-  $scope.newProgramSchedule = {};
-
   $scope.cancel = function () {
     $scope.$parent.message = "";
     $scope.$parent.requisitionGroupId = undefined;
@@ -95,15 +96,19 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
 
   loadSupervisoryNode();
 
-  var checkAllProgramSchedulesNotDone = function () {
-    var notDone = false;
-    $($scope.requisitionGroupProgramSchedules).each(function (index, programSchedule) {
-      if (programSchedule.underEdit) {
-        notDone = true;
-      }
-      if (notDone) return;
+  $scope.addProgramSchedules = function () {
+    $scope.requisitionGroupProgramSchedules.push($scope.newProgramSchedule);
+    refreshAndSortPrograms();
+    $scope.newProgramSchedule = {};
+    $scope.addNew = false;
+    $scope.toggleSlider();
+  };
+
+  $scope.remove = function (programId) {
+    $scope.requisitionGroupProgramSchedules = _.reject($scope.requisitionGroupProgramSchedules, function (programSchedule) {
+      return programSchedule.program.id === programId;
     });
-    return notDone;
+    refreshAndSortPrograms();
   };
 
   $scope.save = function () {
@@ -114,7 +119,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
       return;
     }
 
-    if (checkAllProgramSchedulesNotDone()) {
+    if ($scope.findProgramScheduleUnderEdit()) {
       $scope.error = 'error.program.schedules.not.done';
       return;
     }
@@ -174,14 +179,6 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     return true;
   };
 
-  $scope.addProgramSchedules = function () {
-    $scope.requisitionGroupProgramSchedules.push($scope.newProgramSchedule);
-    refreshAndSortPrograms();
-    $scope.newProgramSchedule = {};
-    $scope.addNew = false;
-    $scope.toggleSlider();
-  };
-
   $scope.$watch('showMultipleFacilitiesSlider', function () {
     $scope.duplicateFacilityName = undefined;
   });
@@ -190,13 +187,6 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.requisitionGroupMembers = _.filter($scope.requisitionGroupMembers, function (member) {
       return member.facility.id != memberFacilityId;
     });
-  };
-
-  $scope.remove = function (programId) {
-    $scope.requisitionGroupProgramSchedules = _.reject($scope.requisitionGroupProgramSchedules, function (programSchedule) {
-      return programSchedule.program.id === programId;
-    });
-    refreshAndSortPrograms();
   };
 
   var success = function (data) {
