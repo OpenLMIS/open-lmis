@@ -46,9 +46,7 @@ public class TemplateService {
     return repository.getByName(name);
   }
 
-  public void validateFileAndInsertTemplate(Template template, MultipartFile file, Long userId, String type) throws IOException {
-    template.setType(type);
-    template.setCreatedBy(userId);
+  public void validateFileAndInsertTemplate(Template template, MultipartFile file) throws IOException {
     validateFile(template, file);
     repository.insert(template);
   }

@@ -17,14 +17,12 @@ function CreateReportController($scope, $location) {
     $location.path('list');
   };
 
-
   $scope.$on('$viewContentLoaded', function () {
     var options = {
-      beforeSubmit:validate,
-      success:processResponse
+      beforeSubmit: validate,
+      success: processResponse
     };
     $('#reportForm').ajaxForm(options);
-
   });
 
   function validate(formData, jqForm, options) {

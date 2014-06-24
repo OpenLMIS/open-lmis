@@ -41,6 +41,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.web.controller.TemplateController.CONSISTENCY_REPORT;
 import static org.openlmis.web.controller.TemplateController.JASPER_CREATE_REPORT_SUCCESS;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -73,20 +74,23 @@ public class TemplateControllerTest {
   public void shouldUploadJasperTemplateFileIfValid() throws Exception {
     MockMultipartFile reportTemplateFile = new MockMultipartFile("template.jrxml", "template.jrxml", "", new byte[1]);
     Template template = new Template();
+    whenNew(Template.class).withArguments("name", null, null, CONSISTENCY_REPORT, "desc").thenReturn(template);
     when(messageService.message(JASPER_CREATE_REPORT_SUCCESS)).thenReturn("Report created successfully");
 
-    ResponseEntity<OpenLmisResponse> response = controller.createJasperReportTemplate(request, reportTemplateFile, template);
+    ResponseEntity<OpenLmisResponse> response = controller.createJasperReportTemplate(request, reportTemplateFile, "name", "desc");
 
     assertThat(response.getBody().getSuccessMsg(), is("Report created successfully"));
-    verify(templateService).validateFileAndInsertTemplate(template, reportTemplateFile, USER, CONSISTENCY_REPORT);
+    assertThat(template.getCreatedBy(), is(1L));
+    verify(templateService).validateFileAndInsertTemplate(template, reportTemplateFile);
   }
 
   @Test
   public void shouldGiveErrorForInvalidReport() throws Exception {
     Template template = new Template();
-    doThrow(new DataException("Error message")).when(templateService).validateFileAndInsertTemplate(template, null, USER, CONSISTENCY_REPORT);
+    whenNew(Template.class).withArguments("name", null, null, CONSISTENCY_REPORT, "desc").thenReturn(template);
+    doThrow(new DataException("Error message")).when(templateService).validateFileAndInsertTemplate(template, null);
 
-    ResponseEntity<OpenLmisResponse> response = controller.createJasperReportTemplate(request, null, template);
+    ResponseEntity<OpenLmisResponse> response = controller.createJasperReportTemplate(request, null, "name", "desc");
 
     assertThat(response.getBody().getErrorMsg(), is("Error message"));
   }

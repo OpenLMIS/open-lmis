@@ -34,8 +34,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -60,7 +58,7 @@ public class TemplateServiceTest {
     expectedException.expectMessage("report.template.error.file.type");
 
     MockMultipartFile file = new MockMultipartFile("report.pdf", new byte[1]);
-    service.validateFileAndInsertTemplate(new Template(), file, 1L, "Consistency Report");
+    service.validateFileAndInsertTemplate(new Template(), file);
   }
 
   @Test
@@ -69,7 +67,7 @@ public class TemplateServiceTest {
     expectedException.expectMessage("report.template.error.file.empty");
     MockMultipartFile file = new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[0]);
 
-    service.validateFileAndInsertTemplate(new Template(), file, 1L, "Consistency Report");
+    service.validateFileAndInsertTemplate(new Template(), file);
   }
 
   @Test
@@ -77,7 +75,7 @@ public class TemplateServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.error.file.missing");
 
-    service.validateFileAndInsertTemplate(new Template(), null, 1L, "Consistency Report");
+    service.validateFileAndInsertTemplate(new Template(), null);
   }
 
   @Test
@@ -85,7 +83,7 @@ public class TemplateServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.error.file.invalid");
 
-    service.validateFileAndInsertTemplate(new Template(), new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[1]), 1L, "Consistency Report");
+    service.validateFileAndInsertTemplate(new Template(), new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[1]));
   }
 
   @Test
@@ -119,10 +117,8 @@ public class TemplateServiceTest {
     when(byteOutputStream.toByteArray()).thenReturn(byteData);
     Template template = new Template();
 
-    service.validateFileAndInsertTemplate(template, file, 1L, "Consistency Report");
+    service.validateFileAndInsertTemplate(template, file);
 
     verify(repository).insert(template);
-    assertThat(template.getCreatedBy(), is(1L));
-    assertThat(template.getType(), is("Consistency Report"));
   }
 }
