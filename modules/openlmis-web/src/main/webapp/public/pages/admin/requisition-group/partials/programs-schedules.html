@@ -12,16 +12,16 @@
   <div class="fluid-grid">
     <div class="row-fluid fluid-grid-header">
       <div class="span3">
-        <div class="fluid-grid-cell" openlmis-message="label.programs"></div>
+        <div id="programsHeader" class="fluid-grid-cell" openlmis-message="label.programs"></div>
       </div>
       <div class="span3">
-        <div class="fluid-grid-cell" openlmis-message="schedules.header"></div>
+        <div id="schedulesHeader" class="fluid-grid-cell" openlmis-message="schedules.header"></div>
       </div>
       <div class="span1">
-        <div class="fluid-grid-cell" openlmis-message="label.direct.delivery"></div>
+        <div id="directDeliveryHeader" class="fluid-grid-cell" openlmis-message="label.direct.delivery"></div>
       </div>
       <div class="span3">
-        <div class="fluid-grid-cell" openlmis-message="label.drop.off.facility"></div>
+        <div id="dropOffFacilityHeader" class="fluid-grid-cell" openlmis-message="label.drop.off.facility"></div>
       </div>
       <div class="span2">
         <div class="fluid-grid-cell">&nbsp;</div>
@@ -32,13 +32,14 @@
       <div class="row-fluid">
         <div class="span3">
           <div class="fluid-grid-cell">
-            <label ng-bind="programSchedule.program.name"></label>
+            <label id="programName{{$index}}" ng-bind="programSchedule.program.name"></label>
           </div>
         </div>
 
         <div class="span3">
           <div ng-show="!programSchedule.underEdit" class="fluid-grid-cell">
-            <div ng-bind="programSchedule.processingSchedule.code + '-' + programSchedule.processingSchedule.name">
+            <div id="schedule{{$index}}"
+                 ng-bind="programSchedule.processingSchedule.code + '-' + programSchedule.processingSchedule.name">
             </div>
           </div>
 
@@ -56,7 +57,8 @@
         <div class="span1">
           <div class="fluid-grid-cell">
             <div ng-show="!programSchedule.underEdit" ng-model="programSchedule.directDelivery">
-              <span ng-show="programSchedule.directDelivery" class="icon icon-ok"></span>
+              <span id="directDeliverIcon{{$index}}" ng-show="programSchedule.directDelivery"
+                    class="icon icon-ok"></span>
             </div>
             <input ng-show="programSchedule.underEdit" type="checkbox" id="directDelivery{{$index}}"
                    ng-model="programSchedule.directDelivery">
@@ -70,7 +72,7 @@
             {{programSchedule.dropOffFacility.code}} - {{programSchedule.dropOffFacility.name}}
           </span>
 
-            <div ng-show="programSchedule.underEdit"
+            <div id="dropOffFacility{{$index}}" ng-show="programSchedule.underEdit"
                  class="input-div associate-facility suggest-field"
                  ng-model="programSchedule.dropOffFacility">
               <div ng-click="toggleSlider($index)" class="clearfix">
@@ -81,28 +83,31 @@
                   <i class="icon icon-ellipsis-horizontal"></i>
                 </a>
               </div>
-              <a href="" ng-show="programSchedule.dropOffFacility" class="clear-search" style="right: 38px;"
-                 ng-click="clearDropOffFacility($index)"></a>
+              <a id="clearDropOffFacility{{$index}}" href="" ng-show="programSchedule.dropOffFacility"
+                 class="clear-search" style="right: 38px;"
+                 ng-click="clearDropOffFacility"></a>
             </div>
           </div>
         </div>
 
         <div class="span2">
         <span ng-show="!programSchedule.underEdit">
-          <input type="button" class="btn program-schedules-btn btn-small pull-right"
+          <input id="programScheduleRemove" type="button" class="btn program-schedules-btn btn-small pull-right"
                  ng-disabled="(findProgramScheduleUnderEdit() || addNew)"
                  ng-click="remove(programSchedule.program.id)"
                  openlmis-message="button.remove"/>
-          <input ng-disabled="(findProgramScheduleUnderEdit() || addNew)" type="button"
+          <input id="programScheduleEdit" ng-disabled="(findProgramScheduleUnderEdit() || addNew)" type="button"
                  class="btn program-schedules-btn btn-small btn-primary pull-right"
                  ng-click="edit($index)"
                  openlmis-message="button.edit"/>
         </span>
         <span ng-show="programSchedule.underEdit">
-          <input type="button" class="btn program-schedules-add-new-btn btn-small pull-right"
+          <input id="programScheduleEditCancel" type="button"
+                 class="btn program-schedules-add-new-btn btn-small pull-right"
                  ng-click="cancelEdit($index)"
                  openlmis-message="button.cancel"/>
-          <input type="button" class="btn btn-primary program-schedules-add-new-btn btn-small pull-right"
+          <input id="programScheduleEditDone" type="button"
+                 class="btn btn-primary program-schedules-add-new-btn btn-small pull-right"
                  openlmis-message="button.done"
                  ng-disabled="!(programSchedule.processingSchedule)"
                  ng-click="saveEditableRow($index)"/>
@@ -141,7 +146,7 @@
         </div>
 
         <div class="span3 fluid-grid-cell">
-          <div class="input-div associate-facility clearfix suggest-field"
+          <div id="newDropOffFacility{{$index}}" class="input-div associate-facility clearfix suggest-field"
                ng-click="addNew && toggleSlider('add')"
                ng-model="newProgramSchedule.dropOffFacility">
             <div class="facility-associated">
@@ -150,14 +155,16 @@
             <a href="" class="btn">
               <i class="icon icon-ellipsis-horizontal"></i>
             </a>
-            <a href="" ng-show="newProgramSchedule.dropOffFacility" class="clear-search" style="right: 38px;"
+            <a id="clearNewDropOffFacility{{$index}}" href="" ng-show="newProgramSchedule.dropOffFacility"
+               class="clear-search" style="right: 38px;"
                ng-click="clearDropOffFacility($index)"></a>
           </div>
         </div>
 
         <div class="span2">
           <span ng-show="addNew" class="fluid-grid-cell">
-            <input class="btn program-schedules-add-new-btn btn-small pull-right" type="button"
+            <input id="programScheduleAddCancel" class="btn program-schedules-add-new-btn btn-small pull-right"
+                   type="button"
                    openlmis-message="button.cancel"
                    ng-click="cancelAdd()">
             <input type="button" class="btn btn-primary program-schedules-add-new-btn btn-small pull-right"

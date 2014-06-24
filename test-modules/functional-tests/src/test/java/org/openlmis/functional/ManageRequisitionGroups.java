@@ -19,10 +19,12 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertNotEquals;
+import static java.util.Arrays.asList;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
@@ -673,8 +675,73 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("3", requisitionGroupPage.getFacilityCount(1));
   }
 
+  @Test(groups = {"admin"})
+  public void testAddNewRequisitionGroupWithSchedulesAndMembers() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
+    dbWrapper.insertSchedule("M", "monthly", "monthly");
+    dbWrapper.insertSchedule("Q", "quarterly", "quarterly");
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11A", "F11B", 1, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11C", "F11D", 1, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11E", "F11F", 2, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11G", "F11H", 2, 3);
+
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+
+    requisitionGroupPage.clickAddNewButton();
+    requisitionGroupPage.enterRequisitionGroupCode("RG5");
+    requisitionGroupPage.enterRequisitionGroupName("Requisition Group 5");
+    requisitionGroupPage.enterParameterToSearchSupervisoryNode("node");
+    testWebDriver.waitForAjax();
+    requisitionGroupPage.selectSupervisoryNodeSearchResult(1);
+
+    requisitionGroupPage.clickProgramsScheduleAccordion();
+    requisitionGroupPage.clickAddNewProgramScheduleRow();
+    List<String> expectedListOfPrograms = asList("--Select Program--", "ESSENTIAL MEDICINES", "HIV", "MALARIA", "TB");
+    List<String> actualListOfPrograms = requisitionGroupPage.getListOfPrograms();
+    assertTrue(actualListOfPrograms.equals(expectedListOfPrograms));
+
+    List<String> expectedListOfSchedules = asList("--Select schedule--", "M-monthly", "Q-quarterly");
+    List<String> actualListOfSchedules = requisitionGroupPage.getListOfSchedules();
+    assertTrue(actualListOfSchedules.equals(expectedListOfSchedules));
+
+    requisitionGroupPage.selectProgram("HIV");
+    assertFalse(requisitionGroupPage.isAddProgramScheduleEnabled());
+    requisitionGroupPage.selectNewSchedule("M-monthly");
+    assertTrue(requisitionGroupPage.isAddProgramScheduleEnabled());
+    requisitionGroupPage.setNewDirectDelivery();
+    requisitionGroupPage.clickNewDropOffFacility();
+    requisitionGroupPage.enterSearchFacilityParameter("F10");
+    requisitionGroupPage.selectFacility(1);
+    requisitionGroupPage.clickAddProgramSchedule();
+
+    requisitionGroupPage.clickMembersAccordionLink();
+    requisitionGroupPage.clickAddMembersButton();
+    requisitionGroupPage.enterSearchMultipleFacilitiesParameter("F11");
+    testWebDriver.waitForAjax();
+    assertEquals("9 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
+    requisitionGroupPage.clickFilterButton();
+    testWebDriver.waitForAjax();
+    requisitionGroupPage.selectFacilityType("Warehouse");
+    requisitionGroupPage.clickApplyFilterButton();
+    testWebDriver.waitForAjax();
+    assertEquals("4 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
+    requisitionGroupPage.checkFacilityToBeAssociated(1);
+    requisitionGroupPage.clickOnAddSelectedFacilityButton();
+    assertEquals("Facilities added successfully", requisitionGroupPage.getFacilityAddedMessage());
+
+    requisitionGroupPage.clickSaveButton();
+    assertEquals("Requisition Group \"Requisition Group 5\" created successfully.   View Here", requisitionGroupPage.getSuccessMessage());
+    requisitionGroupPage.enterRequisitionGroupSearchParameter("Requisition Group 5");
+    requisitionGroupPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    assertEquals("1", requisitionGroupPage.getFacilityCount(1));
+  }
+
   public void search(String searchParameter) {
-    requisitionGroupPage.enterSearchParameter(searchParameter);
+    requisitionGroupPage.enterRequisitionGroupSearchParameter(searchParameter);
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();
   }

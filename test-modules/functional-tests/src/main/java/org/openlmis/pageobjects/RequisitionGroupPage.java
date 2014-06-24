@@ -17,6 +17,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.openqa.selenium.support.How.ID;
@@ -152,6 +153,54 @@ public class RequisitionGroupPage extends FilterSearchPage {
   @FindBy(how = ID, using = "enabledHeader")
   private static WebElement enabledHeader = null;
 
+  @FindBy(how = ID, using = "programsHeader")
+  private static WebElement programsHeader = null;
+
+  @FindBy(how = ID, using = "schedulesHeader")
+  private static WebElement schedulesHeader = null;
+
+  @FindBy(how = ID, using = "directDeliveryHeader")
+  private static WebElement directDeliveryHeader = null;
+
+  @FindBy(how = ID, using = "dropOffFacilityHeader")
+  private static WebElement dropOffFacilityHeader = null;
+
+  @FindBy(how = ID, using = "programScheduleRemove")
+  private static WebElement programScheduleRemove = null;
+
+  @FindBy(how = ID, using = "programScheduleEdit")
+  private static WebElement programScheduleEdit = null;
+
+  @FindBy(how = ID, using = "programScheduleEditCancel")
+  private static WebElement programScheduleEditCancel = null;
+
+  @FindBy(how = ID, using = "programScheduleEditDone")
+  private static WebElement programScheduleEditDone = null;
+
+  @FindBy(how = ID, using = "programScheduleAddCancel")
+  private static WebElement programScheduleAddCancel = null;
+
+  @FindBy(how = ID, using = "programScheduleAdd")
+  private static WebElement programScheduleAdd = null;
+
+  @FindBy(how = ID, using = "addNewRow")
+  private static WebElement addNewProgramScheduleRow = null;
+
+  @FindBy(how = ID, using = "programs")
+  private static WebElement programsDropDown = null;
+
+  @FindBy(how = ID, using = "newSchedule")
+  private static WebElement newScheduleDropDown = null;
+
+  @FindBy(how = ID, using = "newDirectDelivery")
+  private static WebElement newDirectDelivery = null;
+
+  @FindBy(how = ID, using = "newDropOffFacility")
+  private static WebElement newDropOffFacility = null;
+
+  @FindBy(how = ID, using = "clearNewDropOffFacility")
+  private static WebElement clearNewDropOffFacility = null;
+
   public RequisitionGroupPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -204,7 +253,7 @@ public class RequisitionGroupPage extends FilterSearchPage {
     searchOption2.click();
   }
 
-  public void enterSearchParameter(String searchParameter) {
+  public void enterRequisitionGroupSearchParameter(String searchParameter) {
     testWebDriver.waitForElementToAppear(searchRequisitionGroupParameter);
     sendKeys(searchRequisitionGroupParameter, searchParameter);
   }
@@ -543,5 +592,153 @@ public class RequisitionGroupPage extends FilterSearchPage {
   public String getEditRequisitionGroupHeader() {
     testWebDriver.waitForElementToAppear(editRequisitionGroupHeader);
     return editRequisitionGroupHeader.getText();
+  }
+
+  public String getProgramsHeader() {
+    testWebDriver.waitForElementToAppear(programsHeader);
+    return programsHeader.getText();
+  }
+
+  public String getSchedulesHeader() {
+    testWebDriver.waitForElementToAppear(schedulesHeader);
+    return schedulesHeader.getText();
+  }
+
+  public String getDirectDeliveryHeader() {
+    testWebDriver.waitForElementToAppear(directDeliveryHeader);
+    return directDeliveryHeader.getText();
+  }
+
+  public String getDropOffFacilityHeader() {
+    testWebDriver.waitForElementToAppear(dropOffFacilityHeader);
+    return dropOffFacilityHeader.getText();
+  }
+
+  public void clickRemoveProgramSchedule() {
+    testWebDriver.waitForElementToAppear(searchIcon);
+    programScheduleRemove.click();
+  }
+
+  public void clickEditProgramSchedule() {
+    testWebDriver.waitForElementToAppear(programScheduleEdit);
+    programScheduleEdit.click();
+  }
+
+  public void clickCancelEditProgramSchedule() {
+    testWebDriver.waitForElementToAppear(programScheduleEditCancel);
+    programScheduleEditCancel.click();
+  }
+
+  public void clickAddProgramSchedule() {
+    testWebDriver.waitForElementToAppear(programScheduleAdd);
+    programScheduleAdd.click();
+  }
+
+  public boolean isAddProgramScheduleEnabled() {
+    testWebDriver.waitForElementToAppear(programScheduleAdd);
+    return programScheduleAdd.isEnabled();
+  }
+
+  public void clickCancelAddProgramSchedule() {
+    testWebDriver.waitForElementToAppear(programScheduleAddCancel);
+    programScheduleAddCancel.click();
+  }
+
+  public void clickDoneEditProgramSchedule() {
+    testWebDriver.waitForElementToAppear(programScheduleEditDone);
+    programScheduleEditDone.click();
+  }
+
+  public void clickAddNewProgramScheduleRow() {
+    testWebDriver.waitForElementToAppear(addNewProgramScheduleRow);
+    addNewProgramScheduleRow.click();
+  }
+
+  public void clickProgramsScheduleAccordion() {
+    testWebDriver.waitForElementToAppear(programSchedulesLabel);
+    programSchedulesLabel.click();
+  }
+
+  public void selectProgram(String program) {
+    testWebDriver.waitForElementToAppear(programsDropDown);
+    testWebDriver.selectByVisibleText(programsDropDown, program);
+  }
+
+  public void selectNewSchedule(String schedule) {
+    testWebDriver.waitForElementToAppear(newScheduleDropDown);
+    testWebDriver.selectByVisibleText(newScheduleDropDown, schedule);
+  }
+
+  public String getProgram(int rowNumber) {
+    WebElement program = testWebDriver.getElementById("programName" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(program);
+    return program.getText();
+  }
+
+  public String getSchedule(int rowNumber) {
+    WebElement schedule = testWebDriver.getElementById("schedule" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(schedule);
+    return schedule.getText();
+  }
+
+  public void editSchedules(int rowNumber, String schedule) {
+    WebElement schedules = testWebDriver.getElementById("schedules" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(schedules);
+    testWebDriver.selectByVisibleText(schedules, schedule);
+  }
+
+  public boolean isDirectDeliveryIconDisplay(int rowNumber) {
+    WebElement directDeliveryIcon = testWebDriver.getElementById("directDeliverIcon" + (rowNumber - 1));
+    try {
+      testWebDriver.waitForElementToAppear(directDeliveryIcon);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return directDeliveryIcon.isDisplayed();
+  }
+
+  public void editDirectDelivery(int rowNumber) {
+    WebElement directDelivery = testWebDriver.getElementById("directDelivery" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(directDelivery);
+    directDelivery.click();
+  }
+
+  public String getDropOffFacility(int rowNumber) {
+    WebElement dropOffFacility = testWebDriver.getElementById("dropOffFacility" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(dropOffFacility);
+    return dropOffFacility.getText();
+  }
+
+  public void clearDropOffFacility(int rowNumber) {
+    WebElement clearDropOff = testWebDriver.getElementById("clearDropOffFacility" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(clearDropOff);
+    clearDropOff.click();
+  }
+
+  public void setNewDirectDelivery() {
+    testWebDriver.waitForElementToAppear(newDirectDelivery);
+    newDirectDelivery.click();
+  }
+
+  public void clickClearNewDropOffFacility() {
+    testWebDriver.waitForElementToAppear(clearNewDropOffFacility);
+    clearNewDropOffFacility.click();
+  }
+
+  public void clickNewDropOffFacility() {
+    testWebDriver.waitForElementToAppear(newDropOffFacility);
+    newDropOffFacility.click();
+  }
+
+  public List<String> getListOfPrograms() {
+    testWebDriver.waitForElementToAppear(programsDropDown);
+    return testWebDriver.getListOfOptions(programsDropDown);
+  }
+
+  public List<String> getListOfSchedules() {
+    testWebDriver.waitForElementToAppear(newScheduleDropDown);
+    return testWebDriver.getListOfOptions(newScheduleDropDown);
   }
 }
