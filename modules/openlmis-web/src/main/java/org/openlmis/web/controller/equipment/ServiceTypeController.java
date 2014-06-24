@@ -19,6 +19,7 @@ import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,17 +37,20 @@ public class ServiceTypeController extends BaseController {
   private ServiceTypeService service;
 
   @RequestMapping(method = GET, value = "list")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getAll(){
     return  OpenLmisResponse.response("service_type", service.getAll());
   }
 
   @RequestMapping(method = GET, value = "id")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
     return  OpenLmisResponse.response("service_type", service.getById(id));
   }
 
 
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody ServiceType type){
     service.save(type);
     return OpenLmisResponse.response("status","success");
