@@ -249,14 +249,16 @@ public class ReportLookupController extends BaseController {
       @RequestParam("program") Long program,
       @RequestParam("schedule") Long schedule,
       @RequestParam(value = "type", defaultValue = "0" , required = false) Long type,
-      @RequestParam(value = "requisitionGroup", defaultValue = "0", required = false) Long requisitionGroup
+      @RequestParam(value = "requisitionGroup", defaultValue = "0", required = false) Long requisitionGroup,
+      @RequestParam(value = "zone", defaultValue = "0", required = false) Long zone
+
   ) {
     // set default for optional parameters
     // turns out spring's optional parameter and default config is not cutting it.
     type = (type != null)? type: 0L;
     requisitionGroup = (requisitionGroup != null)?requisitionGroup: 0L;
 
-    return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type, requisitionGroup ));
+    return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type, requisitionGroup,zone ));
   }
 
 /*  @RequestMapping(value = "/facilities/geographicZone/{geographicZoneId}/requisitionGroup/{rgroupId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
