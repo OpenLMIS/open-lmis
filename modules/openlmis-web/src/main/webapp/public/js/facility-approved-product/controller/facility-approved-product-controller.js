@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function FacilityApprovedProductController($scope, programs, facilityTypes, FacilityApprovedProductsSearch) {
+function FacilityApprovedProductController($scope, programs, facilityTypes, FacilityTypeApprovedProducts) {
 
   $scope.programs = programs;
   $scope.facilityTypes = facilityTypes;
@@ -20,7 +20,8 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
     if (!$scope.program || !$scope.facilityType) return;
 
     $scope.searchedQuery = $scope.query || "";
-    FacilityApprovedProductsSearch.get({page: page, searchParam: $scope.searchedQuery, programId: $scope.program.id, facilityTypeId: $scope.facilityType.id}, function (data) {
+    FacilityTypeApprovedProducts.get({page: page, searchParam: $scope.searchedQuery, programId: $scope.program.id,
+      facilityTypeId: $scope.facilityType.id}, function (data) {
       $scope.facilityApprovedProducts = data.facilityApprovedProducts;
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
@@ -48,6 +49,28 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
     $scope.query = "";
     $scope.loadProducts(1);
   };
+
+  $scope.edit = function (facilityApprovedProduct) {
+    facilityApprovedProduct.underEdit = true;
+    facilityApprovedProduct.previousMaxMonthsOfStock = facilityApprovedProduct.maxMonthsOfStock;
+    facilityApprovedProduct.previousMinMonthsOfStock = facilityApprovedProduct.minMonthsOfStock;
+    facilityApprovedProduct.previousEop = facilityApprovedProduct.eop;
+  };
+
+  $scope.cancel = function (facilityApprovedProduct) {
+    facilityApprovedProduct.underEdit = false;
+    facilityApprovedProduct.maxMonthsOfStock = facilityApprovedProduct.previousMaxMonthsOfStock;
+    facilityApprovedProduct.minMonthsOfStock = facilityApprovedProduct.previousMinMonthsOfStock;
+    facilityApprovedProduct.eop = facilityApprovedProduct.previousEop;
+  };
+
+  $scope.update = function (facilityApprovedProduct) {
+    FacilityTypeApprovedProducts.update({}, facilityApprovedProduct, function (data) {
+      $scope.message = data.success;
+    }, function (data) {
+      $scope.message = data.data.error;
+    });
+  }
 }
 
 FacilityApprovedProductController.resolve = {

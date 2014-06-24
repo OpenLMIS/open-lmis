@@ -51,11 +51,6 @@
     </a>
   </h2>
 
-  <!--<div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="facilityApprovedProductId">-->
-  <!--<span id="successMessage" ng-bind="message"></span>.&nbsp;&nbsp;-->
-  <!--<a id="viewHereLink" href="" ng-click="edit(facilityApprovedProductId)" openlmis-message="search.viewHere"></a>-->
-  <!--</div>-->
-
   <div id="searchControl" class="row-fluid" ng-show="showResults">
     <div class="span5 search-in-category">
       <div class="input-append input-prepend">
@@ -77,7 +72,7 @@
   <table id="facilityApprovedProductTable" class="table table-bordered search-list" ng-show="showResults">
     <thead>
     <tr class="gradient-header resultCountHeader">
-      <th colspan="10">
+      <th colspan="11">
         <span ng-switch on="totalItems" ng-show="searchedQuery">
           <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
           <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
@@ -102,11 +97,12 @@
       <th id="eop" openlmis-message="label.emergency.order.point"></th>
       <th id="globalActive" openlmis-message="header.global.active"></th>
       <th id="activeAtProgram" openlmis-message="header.active.at.program"></th>
+      <th></th>
     </tr>
     </thead>
     <tbody ng-repeat="facilityApprovedProduct in facilityApprovedProducts">
     <tr>
-      <td id="category{{$index}}" class="productCategory" colspan="10"
+      <td id="category{{$index}}" class="productCategory" colspan="11"
           ng-show="showCategory(facilityApprovedProducts, $index)"
           ng-bind="facilityApprovedProduct.programProduct.productCategory.name"></td>
     </tr>
@@ -119,11 +115,20 @@
       <td id="name{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.primaryName"></td>
       <td id="strength{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.strength"></td>
       <td id="unit{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.dosageUnit.code"></td>
-      <td id="maxMonthsOfStock{{$index}}" class="right-justified"
-          ng-bind="facilityApprovedProduct.maxMonthsOfStock"></td>
-      <td id="minMonthsOfStock{{$index}}" class="right-justified"
-          ng-bind="facilityApprovedProduct.minMonthsOfStock"></td>
-      <td id="eop{{$index}}" class="right-justified" ng-bind="facilityApprovedProduct.eop"></td>
+      <td id="maxMonthsOfStock{{$index}}" class="right-justified">
+        <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.maxMonthsOfStock"></span>
+        <input type="text" ng-if="facilityApprovedProduct.underEdit"
+               ng-model="facilityApprovedProduct.maxMonthsOfStock"/>
+      </td>
+      <td id="minMonthsOfStock{{$index}}" class="right-justified">
+        <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.minMonthsOfStock"></span>
+        <input type="text" ng-if="facilityApprovedProduct.underEdit"
+               ng-model="facilityApprovedProduct.minMonthsOfStock"/>
+      <td id="eop{{$index}}" class="right-justified">
+        <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.eop"></span>
+        <input type="text" ng-if="facilityApprovedProduct.underEdit"
+               ng-model="facilityApprovedProduct.eop"/>
+      </td>
       <td class="center-justified">
         <i id="GlobalActive{{$index}}"
            ng-class="{'icon-ok': facilityApprovedProduct.programProduct.product.active}"></i>
@@ -131,6 +136,19 @@
       <td class="center-justified">
         <i id="activeAtProgram{{$index}}"
            ng-class="{'icon-ok': facilityApprovedProduct.programProduct.active}"></i>
+      </td>
+      <td><input id="editButton{{$index}}" ng-hide="facilityApprovedProduct.underEdit" type="button"
+                 class="btn btn-mini pull-right"
+                 openlmis-message="button.edit"
+                 ng-click="edit(facilityApprovedProduct)"/>
+      </td>
+    </tr>
+    <tr ng-if="facilityApprovedProduct.underEdit">
+      <td colspan="11">
+        <input id="save" type="submit" class="btn btn-primary btn-small" ng-click="save(facilityApprovedProduct)"
+               openlmis-message="button.save"/>
+        <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
+               ng-click="cancel(facilityApprovedProduct)"/>
       </td>
     </tr>
     </tbody>

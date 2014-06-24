@@ -65,26 +65,6 @@ describe("Services", function () {
     });
   });
 
-  describe("FacilityApprovedProductsSearch", function () {
-
-    var facilityApprovedProductsSearch;
-
-    beforeEach(inject(function (FacilityApprovedProductsSearch) {
-      facilityApprovedProductsSearch = FacilityApprovedProductsSearch;
-    }));
-
-    it('should GET searched FacilityTypeApprovedProducts', function () {
-      var FacilityApprovedProductsResponse = {"facilityApprovedProducts": [], "pagination": {}};
-      httpMock.expect('GET', "/facilityApprovedProducts.json").respond(FacilityApprovedProductsResponse);
-      facilityApprovedProductsSearch.get({}, function (data) {
-        expect(data.facilityApprovedProducts).toEqual(FacilityApprovedProductsResponse.facilityApprovedProducts);
-        expect(data.pagination).toEqual(FacilityApprovedProductsResponse.pagination);
-      }, function () {
-      });
-      httpMock.flush();
-    });
-  });
-
   describe("programProductsFilter", function () {
 
     var programProductsFilter;
@@ -97,16 +77,16 @@ describe("Services", function () {
       var programProductsFilterResponse = {"programProducts": []};
       var programId = 1, facilityTypeId = 2;
       httpMock.expectGET('/programProducts/filter/programId/' + programId + '/facilityTypeId/' + facilityTypeId + '.json')
-          .respond(200, {programProductList: programProductsFilterResponse});
+        .respond(200, {programProductList: programProductsFilterResponse});
 
       programProductsFilter.get({'programId': programId, 'facilityTypeId': facilityTypeId},
-          function (data) {
-            successStub();
-            expect(data.programProductList).toEqual(programProductsFilterResponse);
-          },
-          function () {
-            failureStub();
-          });
+        function (data) {
+          successStub();
+          expect(data.programProductList).toEqual(programProductsFilterResponse);
+        },
+        function () {
+          failureStub();
+        });
       httpMock.flush();
       expect(successStub).toHaveBeenCalled();
       expect(failureStub).not.toHaveBeenCalled();
@@ -116,22 +96,22 @@ describe("Services", function () {
       var programId = 1, facilityTypeId = 2;
 
       httpMock.expectGET('/programProducts/filter/programId/' + programId + '/facilityTypeId/' + facilityTypeId + '.json')
-          .respond(404);
+        .respond(404);
 
       programProductsFilter.get({'programId': programId, 'facilityTypeId': facilityTypeId},
-          function () {
-            successStub();
-          },
-          function () {
-            failureStub();
-          });
+        function () {
+          successStub();
+        },
+        function () {
+          failureStub();
+        });
       httpMock.flush();
       expect(successStub).not.toHaveBeenCalled();
       expect(failureStub).toHaveBeenCalled();
     });
   });
 
-  describe("facility type approved products", function () {
+  describe("Facility type approved products", function () {
 
     var facilityTypeApprovedProducts;
 
@@ -139,33 +119,94 @@ describe("Services", function () {
       facilityTypeApprovedProducts = FacilityTypeApprovedProducts;
     }));
 
-    it('should add facility type approved products', function () {
-      var successMessage = "Saved successfully";
-      httpMock.expectPOST('/facilityApprovedProducts.json').respond(200, {"success": successMessage});
-
-      facilityTypeApprovedProducts.save({}, {},
-          function (data) {
-            successStub();
-            expect(data.success).toEqual(successMessage);
-          },
-          function () {
-            failureStub();
-          });
+    it('should GET searched FacilityTypeApprovedProducts', function () {
+      var FacilityApprovedProductsResponse = {"facilityApprovedProducts": [], "pagination": {}};
+      httpMock.expectGET("/facilityApprovedProducts.json").respond(200, FacilityApprovedProductsResponse);
+      facilityTypeApprovedProducts.get({}, function (data) {
+        expect(data.facilityApprovedProducts).toEqual(FacilityApprovedProductsResponse.facilityApprovedProducts);
+        expect(data.pagination).toEqual(FacilityApprovedProductsResponse.pagination);
+        successStub();
+      }, function () {
+        failureStub();
+      });
       httpMock.flush();
       expect(successStub).toHaveBeenCalled();
       expect(failureStub).not.toHaveBeenCalled();
     });
 
-    it('should raise error if server does not respond with OK status', function () {
+    it('should raise error if server does not respond with OK status while get', function () {
+      httpMock.expectGET("/facilityApprovedProducts.json").respond(400);
+
+      facilityTypeApprovedProducts.get({}, function () {
+        successStub();
+      }, function () {
+        failureStub();
+      });
+
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+
+    it('should add facility type approved product', function () {
+      var successMessage = "Saved successfully";
+      httpMock.expectPOST('/facilityApprovedProducts.json').respond(200, {"success": successMessage});
+
+      facilityTypeApprovedProducts.save({}, {},
+        function (data) {
+          successStub();
+          expect(data.success).toEqual(successMessage);
+        },
+        function () {
+          failureStub();
+        });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status while post', function () {
       httpMock.expectPOST('/facilityApprovedProducts.json').respond(404);
 
       facilityTypeApprovedProducts.save({}, {},
-          function () {
-            successStub();
-          },
-          function () {
-            failureStub();
-          });
+        function () {
+          successStub();
+        },
+        function () {
+          failureStub();
+        });
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+
+    it('should update facility type approved product', function () {
+      var successMessage = "Updated successfully";
+      httpMock.expectPUT('/facilityApprovedProducts.json').respond(200, {"success": successMessage});
+
+      facilityTypeApprovedProducts.update({}, {},
+        function (data) {
+          successStub();
+          expect(data.success).toEqual(successMessage);
+        },
+        function () {
+          failureStub();
+        });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status while updating', function () {
+      httpMock.expectPOST('/facilityApprovedProducts.json').respond(404);
+
+      facilityTypeApprovedProducts.save({}, {},
+        function () {
+          successStub();
+        },
+        function () {
+          failureStub();
+        });
       httpMock.flush();
       expect(successStub).not.toHaveBeenCalled();
       expect(failureStub).toHaveBeenCalled();

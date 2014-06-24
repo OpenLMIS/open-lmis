@@ -59,6 +59,15 @@ describe("Facility Approved Product", function () {
       expect(searchSpy).toHaveBeenCalledWith(1);
     });
 
+    it('should not trigger search on any other key then enter', function () {
+      var event = {"keyCode": 65};
+      var searchSpy = spyOn(scope, 'loadProducts');
+
+      scope.triggerSearch(event);
+
+      expect(searchSpy).not.toHaveBeenCalled();
+    });
+
     it('should get results according to specified page', function () {
       scope.currentPage = 5;
       var searchSpy = spyOn(scope, 'loadProducts');
@@ -174,6 +183,87 @@ describe("Facility Approved Product", function () {
       ];
 
       expect(scope.showCategory(programProductList, 1)).toBeFalsy();
+    });
+
+    it('should edit facility approved product', function () {
+      var facilityApprovedProduct = {
+        facilityType: {},
+        programProduct: {program: {}, product: {}, productCategory: {}},
+        maxMonthsOfStock: 3,
+        minMonthsOfStock: 4,
+        eop: 124
+      };
+
+      scope.edit(facilityApprovedProduct);
+
+      expect(facilityApprovedProduct.underEdit).toBeTruthy();
+      expect(facilityApprovedProduct.previousMaxMonthsOfStock).toEqual(3);
+      expect(facilityApprovedProduct.previousMinMonthsOfStock).toEqual(4);
+      expect(facilityApprovedProduct.previousEop).toEqual(124);
+    });
+
+    it('should cancel editing of facility approved product', function () {
+      var facilityApprovedProduct = {
+        facilityType: {},
+        programProduct: {program: {}, product: {}, productCategory: {}},
+        maxMonthsOfStock: 30,
+        minMonthsOfStock: 40,
+        eop: 120,
+        previousMaxMonthsOfStock: 3,
+        previousMinMonthsOfStock: 4,
+        previousEop: 124
+      };
+
+      scope.cancel(facilityApprovedProduct);
+
+      expect(facilityApprovedProduct.underEdit).toBeFalsy();
+      expect(facilityApprovedProduct.maxMonthsOfStock).toEqual(3);
+      expect(facilityApprovedProduct.minMonthsOfStock).toEqual(4);
+      expect(facilityApprovedProduct.eop).toEqual(124);
+    });
+
+    it('should update facility approved product', function () {
+      var successMessage = "Updated successfully";
+
+      var facilityApprovedProduct = {
+        facilityType: {},
+        programProduct: {program: {}, product: {}, productCategory: {}},
+        maxMonthsOfStock: 30,
+        minMonthsOfStock: 40,
+        eop: 120,
+        previousMaxMonthsOfStock: 3,
+        previousMinMonthsOfStock: 4,
+        previousEop: 124
+      };
+      $httpBackend.expectPUT('/facilityApprovedProducts.json', facilityApprovedProduct).respond(200, {"success": successMessage});
+
+      scope.update(facilityApprovedProduct);
+
+      $httpBackend.flush();
+
+      expect(scope.message).toEqual("Updated successfully");
+    });
+
+    it('should not update facility approved product', function () {
+      var errorMessage = "some error occurred. Please contact system admin.";
+
+      var facilityApprovedProduct = {
+        facilityType: {},
+        programProduct: {program: {}, product: {}, productCategory: {}},
+        maxMonthsOfStock: 30,
+        minMonthsOfStock: 40,
+        eop: 120,
+        previousMaxMonthsOfStock: 3,
+        previousMinMonthsOfStock: 4,
+        previousEop: 124
+      };
+      $httpBackend.expectPUT('/facilityApprovedProducts.json', facilityApprovedProduct).respond(400, {"error": errorMessage});
+
+      scope.update(facilityApprovedProduct);
+
+      $httpBackend.flush();
+
+      expect(scope.message).toEqual("some error occurred. Please contact system admin.");
     });
   });
 });

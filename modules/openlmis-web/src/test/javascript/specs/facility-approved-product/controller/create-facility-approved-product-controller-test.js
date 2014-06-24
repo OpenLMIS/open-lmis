@@ -297,7 +297,7 @@ describe("Create Facility Approved Product Controller", function () {
       }
     ];
     spyOn(scope.$parent.$parent, 'loadProducts');
-    $httpBackend.expectPOST('/facilityApprovedProducts.json').respond(200, {"success": successMessage});
+    $httpBackend.expectPOST('/facilityApprovedProducts.json', scope.addedFacilityTypeApprovedProducts).respond(200, {"success": successMessage});
 
     scope.addFacilityTypeApprovedProducts();
 

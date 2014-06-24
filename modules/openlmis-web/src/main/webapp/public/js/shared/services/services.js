@@ -352,16 +352,13 @@ services.factory('SupplyLinesSearch', function ($resource) {
   return $resource('/supplyLines/search.json', {}, {});
 });
 
-services.factory('FacilityApprovedProductsSearch', function ($resource) {
-  return $resource('/facilityApprovedProducts.json', {}, {});
-});
-
 services.factory('ProgramProductsFilter', function ($resource) {
-  return $resource('/programProducts/filter/programId/:programId/facilityTypeId/:facilityTypeId.json', {programId: '@programId', facilityTypeId: '@facilityTypeId'}, {}, {});
+  return $resource('/programProducts/filter/programId/:programId/facilityTypeId/:facilityTypeId.json',
+    {programId: '@programId', facilityTypeId: '@facilityTypeId'}, {}, {});
 });
 
 services.factory('FacilityTypeApprovedProducts', function ($resource) {
-  return $resource('/facilityApprovedProducts.json', {}, {});
+  return $resource('/facilityApprovedProducts.json', {}, update);
 });
 
 services.factory('ProgramProductsSearch', function ($resource) {
