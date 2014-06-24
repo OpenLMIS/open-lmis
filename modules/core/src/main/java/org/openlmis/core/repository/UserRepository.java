@@ -157,4 +157,8 @@ public class UserRepository {
   public List<LinkedHashMap> getPreferences(Long userId){
     return userMapper.getPreferences(userId);
   }
+
+  public List<User> getAllUsers() {
+    return userMapper.getAllUsers();
+  }
 }

@@ -218,4 +218,8 @@ public class UserService {
     });
     return new ArrayList<>(users);
   }
+
+  public List<User> getAllUsers() {
+    return userRepository.getAllUsers();
+  }
 }

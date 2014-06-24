@@ -120,4 +120,7 @@ public interface UserMapper {
     "INNER JOIN role_rights rr ON f.roleId = rr.roleId",
     "WHERE f.facilityId = #{facilityId} AND rr.rightName = #{rightName}"})
   List<User> getUsersWithRightOnWarehouse(@Param("facilityId") Long facilityId, @Param("rightName") Right right);
+
+  @Select(value = "SELECT id, firstName, lastName, email, username, active FROM users WHERE active = TRUE")
+  List<User> getAllUsers();
 }

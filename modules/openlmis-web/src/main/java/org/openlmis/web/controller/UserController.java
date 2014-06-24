@@ -213,4 +213,9 @@ public class UserController extends BaseController {
     return response("preferences", userService.getPreferences(this.loggedInUserId(request)));
   }
 
+  @RequestMapping(value="/user/getAll", method = GET)
+  public ResponseEntity<OpenLmisResponse> getAllUsers(HttpServletRequest request){
+    return OpenLmisResponse.response("users",userService.getAllUsers());
+  }
+
 }

@@ -17,6 +17,7 @@ import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,21 +37,25 @@ public class EquipmentTypeController extends BaseController {
   private EquipmentOperationalStatusRepository statusRepository;
 
   @RequestMapping(method = GET, value = "list")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getAll(){
     return  OpenLmisResponse.response("equipment_type", service.getAll());
   }
 
   @RequestMapping(method = GET, value = "id")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
     return  OpenLmisResponse.response("equipment_type", service.getTypeById(id));
   }
 
   @RequestMapping(method = GET, value = "operational-status")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getAllStatuses( ){
     return  OpenLmisResponse.response("status", statusRepository.getAll());
   }
 
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentType type){
     service.save(type);
     return OpenLmisResponse.response("status","success");
