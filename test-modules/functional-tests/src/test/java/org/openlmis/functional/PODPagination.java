@@ -261,6 +261,7 @@ public class PODPagination extends TestCaseHelper {
     verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person new openLMIS", " ", "2014-02-25 00:00:00");
     updatePodPage.enterPodData("10", "openlmis", "7", 1);
     updatePodPage.clickSave();
+    testWebDriver.sleep(500);
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
     updatePodPage.enterPodData("5", "openlmis openlmis", null, 1);
