@@ -589,3 +589,7 @@ services.factory('GetProgramWithBudgetingApplies',function($resource){
     return $resource('/reports/programsWithBudgetApplies.json',{},{});
 
 });
+
+services.factory('GetAllUsers',function($resource){
+    return $resource('/user/getAll.json',{},{});
+});
