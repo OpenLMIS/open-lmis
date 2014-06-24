@@ -15,10 +15,10 @@
 package org.openlmis.odkapi.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.odkapi.domain.ODKAccount;
-import org.openlmis.odkapi.domain.ODKSubmission;
-import org.openlmis.odkapi.domain.ODKSubmissionData;
+import org.openlmis.odkapi.domain.*;
 import org.openlmis.odkapi.exception.*;
+import org.openlmis.odkapi.parser.ODKStockStatusSubmissionSAXHandler;
+import org.openlmis.odkapi.parser.ODKSubmissionXFormIDSAXHandler;
 import org.openlmis.odkapi.repository.ODKSubmissionDataRepository;
 import org.openlmis.odkapi.repository.ODKSubmissionRepository;
 import org.slf4j.Logger;
@@ -57,6 +57,9 @@ public class ODKSubmissionService {
     private ODKSubmissionDataRepository odkSubmissionDataRepository;
 
     @Autowired
+    private ODKXFormService odkxFormService;
+
+    @Autowired
     private FacilityService facilityService;
     private String currentDateTime;
     private SimpleDateFormat format;
@@ -73,7 +76,7 @@ public class ODKSubmissionService {
     private String[] pictureSetMethods = {"setFirstPicture", "setSecondPicture", "setThirdPicture", "setFourthPicture", "setFifthPicture"};
 
     private static Logger logger = LoggerFactory.getLogger(ODKSubmissionService.class);
-
+    private String formBuildID;
 
     public void saveODKSubmissionData(Set submissionsFilesSet) throws ODKAccountNotFoundException,
             FacilityPictureNotFoundException, ODKCollectXMLSubmissionFileNotFoundException,
@@ -98,7 +101,110 @@ public class ODKSubmissionService {
             }
         }
 
+        // first parse the xml file only to get the form id
 
+        SAXParserFactory odkXFormIDParserFactory = SAXParserFactory.newInstance();
+        ODKSubmissionXFormIDSAXHandler odkXFormIDHandler = new ODKSubmissionXFormIDSAXHandler();
+
+        try
+        {
+            SAXParser odkXFormIDParser = odkXFormIDParserFactory.newSAXParser();
+            odkXFormIDParser.parse(XMLSubmissionFile.getInputStream(), odkXFormIDHandler);
+        }
+        catch(SAXException exception )
+        {
+            throw new ODKCollectXMLSubmissionSAXException();
+
+        }
+        catch(IOException e)
+        {
+            throw new ODKCollectXMLSubmissionFileNotFoundException();
+        }
+        catch(ParserConfigurationException e)
+        {
+            throw new ODKCollectXMLSubmissionParserConfigurationException();
+        }
+
+        // get the form build id
+
+         formBuildID = odkXFormIDHandler.getFormBuildId();
+
+        // get the xform survey type using the form build id
+
+        ODKXForm tempXForm = odkxFormService.getXFormByFormId(formBuildID);
+
+        ODKXFormSurveyType surveyType = tempXForm.getOdkxFormSurveyType();
+
+        if(surveyType.getSurveyName() == "Facility GPS Location and Pictures")
+        {
+            saveFacilityGPSLocationAndPicturesSurveyData(XMLSubmissionFile);
+        }
+
+        else if (surveyType.getSurveyName() == "Stock Status")
+        {
+
+        }
+
+        else
+        {
+              // To Do Handle
+        }
+
+    }
+
+    public void saveStockStatusSurveyData(MultipartFile XMLSubmissionFile)
+            throws ODKAccountNotFoundException,
+            FacilityPictureNotFoundException, ODKCollectXMLSubmissionFileNotFoundException,
+            ODKCollectXMLSubmissionParserConfigurationException, ODKCollectXMLSubmissionSAXException
+    {
+        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+        ODKStockStatusSubmissionSAXHandler handler;
+        handler = new ODKStockStatusSubmissionSAXHandler();
+
+        try
+        {
+            SAXParser saxParser = saxParserFactory.newSAXParser();
+            saxParser.parse(XMLSubmissionFile.getInputStream(), handler);
+
+        }
+        catch(SAXException exception )
+        {
+            throw new ODKCollectXMLSubmissionSAXException();
+
+        }
+        catch(IOException e)
+        {
+            throw new ODKCollectXMLSubmissionFileNotFoundException();
+        }
+        catch(ParserConfigurationException e)
+        {
+            throw new ODKCollectXMLSubmissionParserConfigurationException();
+        }
+
+        odkSubmission = handler.getOdkSubmission();
+        odkAccount = handler.getOdkAccount();
+
+        ODKAccount tempAccount;
+
+        tempAccount =  odkAccountService.authenticate(odkAccount);
+
+        odkSubmission.setOdkAccountId(tempAccount.getId());
+        odkSubmission.setActive(true);
+        this.insertODKSubmission(odkSubmission);
+
+        List<ODKStockStatusSubmission> listODKStockStatusSubmissions = handler.getListODKStockStatusSubmissions();
+
+        for (ODKStockStatusSubmission odkStockStatusSubmission : listODKStockStatusSubmissions)
+        {
+             this.insertStockStatus(odkStockStatusSubmission);
+        }
+
+    }
+    public void saveFacilityGPSLocationAndPicturesSurveyData(MultipartFile XMLSubmissionFile)
+            throws ODKAccountNotFoundException,
+            FacilityPictureNotFoundException, ODKCollectXMLSubmissionFileNotFoundException,
+            ODKCollectXMLSubmissionParserConfigurationException, ODKCollectXMLSubmissionSAXException, FacilityNotFoundException
+    {
         // parse the xml file
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
         ODKSubmissionSAXHandler handler;
@@ -112,7 +218,7 @@ public class ODKSubmissionService {
         }
         catch(SAXException exception )
         {
-           throw new ODKCollectXMLSubmissionSAXException();
+            throw new ODKCollectXMLSubmissionSAXException();
 
         }
         catch(IOException e)
@@ -142,8 +248,6 @@ public class ODKSubmissionService {
         saveODKSubmissionData();
 
     }
-
-
     public void assignFacilityPictures() throws FacilityPictureNotFoundException
     {
 
@@ -271,5 +375,9 @@ public class ODKSubmissionService {
         odkSubmissionDataRepository.insert(odkSubmissionData);
     }
 
+    private void insertStockStatus(ODKStockStatusSubmission odkStockStatusSubmission)
+    {
+        odkSubmissionRepository.insertStockStatus(odkStockStatusSubmission);
+    }
 
 }
