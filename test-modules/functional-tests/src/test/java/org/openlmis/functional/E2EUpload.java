@@ -85,8 +85,8 @@ public class E2EUpload extends TestCaseHelper {
     verifyInValidFacilityFTPDetailsUpload();
     verifyValidFacilityFTPDetailsUpload();
 
-    verifyInvalidFacilityTypeToProductMappingUpload();
     verifyValidFacilityTypeToProductMappingUpload();
+    verifyInvalidFacilityTypeToProductMappingUpload();
     dbWrapper.allocateFacilityToUser(userName, "F10");
 
     verifyInvalidProgramSupportedByFacilitiesUpload();
@@ -177,6 +177,7 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidSupplyLinesUpload() {
     uploadPage.uploadSupplyLines("QA_Supply_Lines.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadSupplyLines("QA_Supply_Lines_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
@@ -206,6 +207,7 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidRequisitionGroupMembersUpload() {
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
@@ -235,6 +237,7 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidRequisitionGroupProgramScheduleUpload() {
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
@@ -252,17 +255,13 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Schedule Code Does Not Exist in Record No");
 
-    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DDTrue_DropoffFacilityNotNull.csv");
-    uploadPage.verifyErrorMessageOnUploadScreen();
-    uploadPage.validateErrorMessageOnUploadScreen("Incorrect combination of Direct Delivery and Drop off Facility in Record No");
-
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DDFalse_DropoffFacilityNull.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Drop off facility code not defined in Record No");
 
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DropoffFacilityCodeNotPresent.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
-    uploadPage.validateErrorMessageOnUploadScreen("Incorrect combination of Direct Delivery and Drop off Facility in Record No");
+    uploadPage.validateErrorMessageOnUploadScreen("drop off facility code is not present in record no.");
 
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_Subsequent_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
@@ -276,6 +275,7 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidRequisitionGroupUpload() {
     uploadPage.uploadRequisitionGroup("QA_Requisition_Groups.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadRequisitionGroup("QA_Requisition_Groups_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
@@ -293,6 +293,7 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidSupervisoryNodesUpload() {
     uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
@@ -314,16 +315,17 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidProgramSupportedByFacilitiesUpload() {
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInvalidProgramSupportedByFacilitiesUpload() {
-    uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios("QA_program_supported_Invalid_FacilityCode.csv");
+    uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_Invalid_FacilityCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code");
 
-    uploadPage.uploadProgramSupportedByFacilitiesInvalidScenarios("QA_program_supported_Invalid_ProgramCode.csv");
+    uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_Invalid_ProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid program code ");
   }
@@ -331,28 +333,29 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidFacilityTypeToProductMappingUpload() throws SQLException {
     uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInvalidFacilityTypeToProductMappingUpload() {
-    uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_Combination.csv");
+    uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping_Invalid_Combination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate facility approved product. in Record No");
 
-    uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_FacilityType.csv");
+    uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping_Invalid_FacilityType.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility Type in Record No");
 
-    uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_ProductCode.csv");
+    uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping_Invalid_ProductCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid product code");
 
-    uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_ProgramCode.csv");
+    uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping_Invalid_ProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid program code");
 
-    uploadPage.uploadFacilityTypeToProductMappingInvalidScenarios("QA_Facility_Type_To_Product_Mapping_Invalid_Program_Product_Combination.csv");
+    uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping_Invalid_Program_Product_Combination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Product and Program combination");
   }
@@ -360,59 +363,62 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidFacilityUpload() {
     uploadPage.uploadFacilities("QA_facilities.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadFacilities("QA_facilities_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInvalidFacilityUpload() {
-    uploadPage.uploadFacilitiesInvalidScenarios("QA_facilities_Lowest_Code.csv");
+    uploadPage.uploadFacilities("QA_facilities_Lowest_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Geographic Zone Code must be at the lowest administrative level in your hierarchy in Record No");
 
-    uploadPage.uploadFacilitiesInvalidScenarios("QA_facilities_Duplicate_Code.csv");
+    uploadPage.uploadFacilities("QA_facilities_Duplicate_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Facility Code in Record No");
   }
 
   private void verifyValidGeographicZoneUpload() {
-    uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data.csv");
+    uploadPage.uploadGeographicZone("QA_Geographic_Data.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_Subsequent.csv");
+
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_Population_Lat_Long.csv");
+
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_Population_Lat_Long.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInvalidGeographicZoneUpload() {
-    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid.csv");
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_Invalid.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Geographic Zone Code of Record No");
 
-    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Duplicate.csv");
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Geographic Zone Code in Record No");
 
-    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Code.csv");
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_Invalid_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Geographic Zone Parent Code in Record No");
 
-    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Lat.csv");
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_Invalid_Lat.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Incorrect data length in Record No");
 
-    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Long.csv");
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_Invalid_Long.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Incorrect data length in Record No");
 
-    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Parent_Same_Level.csv");
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_Invalid_Parent_Same_Level.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Hierarchy in Record No");
 
-    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Parent_Below_Level.csv");
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_Invalid_Parent_Below_Level.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Hierarchy in Record No");
 
-    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_No_Parent.csv");
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_Invalid_No_Parent.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Hierarchy in Record No");
   }
@@ -420,6 +426,7 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidProductPriceUpload() {
     uploadPage.uploadProgramProductPrice("QA_Product_Price.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadProgramProductPrice("QA_Product_Price_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
@@ -441,27 +448,27 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyValidProgramProductMappingUpload() {
     uploadPage.uploadProgramProductMapping("QA_program_product.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadProgramProductMapping("QA_program_product_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInvalidProgramProductMappingUpload() {
-    uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_Invalid_ProductCode.csv");
+    uploadPage.uploadProgramProductMapping("QA_program_product_Invalid_ProductCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid product code");
 
-    uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_Invalid_ProgramCode.csv");
+    uploadPage.uploadProgramProductMapping("QA_program_product_Invalid_ProgramCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid program code");
 
-    uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_missing_productCategory.csv");
+    uploadPage.uploadProgramProductMapping("QA_program_product_missing_productCategory.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory columns in upload file: [Product Category]");
 
-    uploadPage.uploadProgramProductMappingInvalidScenarios("QA_program_product_Invalid_ProductCategory.csv");
+    uploadPage.uploadProgramProductMapping("QA_program_product_Invalid_ProductCategory.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid reference data Product Category");
-
   }
 
   private void verifyValidUserUpload() throws SQLException {
@@ -486,32 +493,32 @@ public class E2EUpload extends TestCaseHelper {
 
   private void verifyInValidUserUpload() throws SQLException {
     String tableName = "users";
-    uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_Email.csv");
+    uploadPage.uploadUsers("QA_Users_Duplicate_Email.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate email address in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
 
-    uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_EmployeeId.csv");
+    uploadPage.uploadUsers("QA_Users_Duplicate_EmployeeId.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate employee id in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
 
-    uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_UserName.csv");
+    uploadPage.uploadUsers("QA_Users_Duplicate_UserName.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
 
-    uploadPage.uploadInvalidUserScenarios("QA_Users_Invalid_Supervisor.csv");
+    uploadPage.uploadUsers("QA_Users_Invalid_Supervisor.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Supervisor User Name not present in the system in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
 
-    uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_Duplicate_Username.csv");
+    uploadPage.uploadUsers("QA_Users_Subsequent_Duplicate_Username.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
 
-    uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_InvalidCombination.csv");
+    uploadPage.uploadUsers("QA_Users_Subsequent_InvalidCombination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "6");
@@ -543,32 +550,32 @@ public class E2EUpload extends TestCaseHelper {
 
   private void verifyInValidProductUpload() throws SQLException {
     String tableName = "products";
-    uploadPage.uploadProductsInvalidScenarios("QA_products_Duplicate_Code.csv");
+    uploadPage.uploadProducts("QA_products_Duplicate_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Product Code in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
 
-    uploadPage.uploadProductsInvalidScenarios("QA_Products_Invalid_ProductGroupCode.csv");
+    uploadPage.uploadProducts("QA_Products_Invalid_ProductGroupCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid reference data Product Group in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
 
-    uploadPage.uploadProductsInvalidScenarios("QA_Products_Invalid_Packsize_Less_Than_Zero.csv");
+    uploadPage.uploadProducts("QA_Products_Invalid_Packsize_Less_Than_Zero.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Pack size in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
 
-    uploadPage.uploadProductsInvalidScenarios("QA_Products_Invalid_PackSize_Zero.csv");
+    uploadPage.uploadProducts("QA_Products_Invalid_PackSize_Zero.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Pack size in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
 
-    uploadPage.uploadProductsInvalidScenarios("QA_products_Invalid_missingDosesPerDispensingUnit.csv");
+    uploadPage.uploadProducts("QA_products_Invalid_missingDosesPerDispensingUnit.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Doses Per Dispensing Unit of Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
 
-    uploadPage.uploadProductsInvalidScenarios("QA_products_Invalid_missingDispensingUnits.csv");
+    uploadPage.uploadProducts("QA_products_Invalid_missingDispensingUnits.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Dispensing Units of Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
@@ -589,30 +596,32 @@ public class E2EUpload extends TestCaseHelper {
   private void verifyInValidProductGroupUpload() throws SQLException {
     uploadPage.uploadProductGroupsScenarios("QA_Product_Group_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
+
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Product Group Code in Record No");
   }
 
   private void verifyValidProductGroupUpload() throws SQLException {
     uploadPage.uploadProductGroupsScenarios("QA_product_group.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadProductGroupsScenarios("QA_Product_Group_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInValidDeliveryZonesUpload() throws SQLException {
-    uploadPage.uploadDeliveryZonesInvalidScenarios("QA_Delivery_Zones_Duplicate.csv");
+    uploadPage.uploadDeliveryZones("QA_Delivery_Zones_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate delivery zone Code found");
 
-    uploadPage.uploadDeliveryZonesInvalidScenarios("QA_Blank.csv");
+    uploadPage.uploadDeliveryZones("QA_Blank.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("File is empty");
-
   }
 
   private void verifyValidDeliveryZonesUpload() throws SQLException {
     uploadPage.uploadDeliveryZones("QA_Delivery_Zones.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
+
     uploadPage.uploadDeliveryZones("QA_Delivery_Zones_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
@@ -636,10 +645,10 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyValidDeliveryZonesProgramScheduleUpload() throws SQLException {
-    uploadPage.uploadDeliveryZoneProgramScheduleValidScenarios("QA_Delivery_Zone_Program_Schedule.csv");
+    uploadPage.uploadDeliveryZoneProgramSchedule("QA_Delivery_Zone_Program_Schedule.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadDeliveryZoneProgramScheduleValidScenarios("QA_Delivery_Zone_Program_Schedule_Subsequent.csv");
+    uploadPage.uploadDeliveryZoneProgramSchedule("QA_Delivery_Zone_Program_Schedule_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
@@ -662,10 +671,10 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyValidDeliveryZonesMembersUpload() throws SQLException {
-    uploadPage.uploadDeliveryZoneMembersValidScenarios("QA_Delivery_Zone_Members.csv");
+    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadDeliveryZoneMembersValidScenarios("QA_Delivery_Zone_Members_Subsequent.csv");
+    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
@@ -680,10 +689,10 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyValidDeliveryZonesWarehousesUpload() throws SQLException {
-    uploadPage.uploadDeliveryZoneWarehousesValidScenarios("QA_Delivery_zone_warehouses.csv");
+    uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_zone_warehouses.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadDeliveryZoneWarehousesValidScenarios("QA_Delivery_zone_warehouses_Subsequent.csv");
+    uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_zone_warehouses_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
@@ -735,7 +744,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilityFTPDetails("QA_Delivery_Zone_Members.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Headers in upload file");
-
   }
 
   private void verifyValidFacilityFTPDetailsUpload() throws SQLException {

@@ -88,26 +88,13 @@ public class UploadPage extends Page {
     assertTrue("Message Message incorrect : " + "Expected '" + message.toLowerCase() + "' but saw '" + saveSuccessMsgDiv.getText().toLowerCase() + "'.", saveSuccessMsgDiv.getText().trim().toLowerCase().contains(message.trim().toLowerCase()));
   }
 
-  public void uploadAndVerifyGeographicZone(String uploadFileNameWithExtension) {
+  public void uploadGeographicZone(String uploadFileNameWithExtension) {
     selectUploadType("Geographic Zones");
     uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
   }
-
-  public void uploadGeographicZoneInvalidScenarios(String uploadFileNameWithExtension) {
-    selectUploadType("Geographic Zones");
-    uploadFile(uploadFileNameWithExtension);
-    testWebDriver.sleep(250);
-  }
-
 
   public void uploadFacilities(String uploadFileNameWithExtension) {
-    selectUploadType("Facilities");
-    uploadFile(uploadFileNameWithExtension);
-    testWebDriver.sleep(250);
-  }
-
-  public void uploadFacilitiesInvalidScenarios(String uploadFileNameWithExtension) {
     selectUploadType("Facilities");
     uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
@@ -119,19 +106,7 @@ public class UploadPage extends Page {
     testWebDriver.sleep(250);
   }
 
-  public void uploadDeliveryZonesInvalidScenarios(String uploadFileNameWithExtension) {
-    selectUploadType("Delivery Zones");
-    uploadFile(uploadFileNameWithExtension);
-    testWebDriver.sleep(250);
-  }
-
   public void uploadDeliveryZoneProgramSchedule(String uploadFileNameWithExtension) {
-    selectUploadType("Map Delivery Zones To Program Schedules");
-    uploadFile(uploadFileNameWithExtension);
-    testWebDriver.sleep(250);
-  }
-
-  public void uploadDeliveryZoneProgramScheduleValidScenarios(String uploadFileNameWithExtension) {
     selectUploadType("Map Delivery Zones To Program Schedules");
     uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
@@ -143,31 +118,13 @@ public class UploadPage extends Page {
     testWebDriver.sleep(250);
   }
 
-  public void uploadDeliveryZoneMembersValidScenarios(String uploadFileNameWithExtension) {
-    selectUploadType("Delivery Zone Members");
-    uploadFile(uploadFileNameWithExtension);
-    testWebDriver.sleep(250);
-  }
-
   public void uploadDeliveryZoneWarehouses(String uploadFileNameWithExtension) {
     selectUploadType("Delivery Zone Warehouses");
     uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
   }
 
-  public void uploadDeliveryZoneWarehousesValidScenarios(String uploadFileNameWithExtension) {
-    selectUploadType("Delivery Zone Warehouses");
-    uploadFile(uploadFileNameWithExtension);
-    testWebDriver.sleep(250);
-  }
-
   public void uploadProducts(String uploadFileNameWithExtension) {
-    selectUploadType("Products");
-    uploadFile(uploadFileNameWithExtension);
-    testWebDriver.sleep(250);
-  }
-
-  public void uploadProductsInvalidScenarios(String uploadFileNameWithExtension) {
     selectUploadType("Products");
     uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
@@ -191,19 +148,7 @@ public class UploadPage extends Page {
     testWebDriver.sleep(250);
   }
 
-  public void uploadInvalidUserScenarios(String uploadFileNameWithExtension) {
-    selectUploadType("Users");
-    uploadFile(uploadFileNameWithExtension);
-    testWebDriver.sleep(250);
-  }
-
   public void uploadProgramProductMapping(String uploadFileNameWithExtension) {
-    selectUploadType("Program Product");
-    uploadFile(uploadFileNameWithExtension);
-    testWebDriver.sleep(250);
-  }
-
-  public void uploadProgramProductMappingInvalidScenarios(String uploadFileNameWithExtension) {
     selectUploadType("Program Product");
     uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);
@@ -221,19 +166,7 @@ public class UploadPage extends Page {
     testWebDriver.sleep(250);
   }
 
-  public void uploadProgramSupportedByFacilitiesInvalidScenarios(String uploadFileNameWithExtension) {
-    selectUploadType("Programs supported by facilities");
-    uploadFile(uploadFileNameWithExtension);
-    testWebDriver.sleep(250);
-  }
-
   public void uploadFacilityTypeToProductMapping(String uploadFileNameWithExtension) {
-    selectUploadType("Facility Approved Products");
-    uploadFile(uploadFileNameWithExtension);
-    testWebDriver.sleep(250);
-  }
-
-  public void uploadFacilityTypeToProductMappingInvalidScenarios(String uploadFileNameWithExtension) {
     selectUploadType("Facility Approved Products");
     uploadFile(uploadFileNameWithExtension);
     testWebDriver.sleep(250);

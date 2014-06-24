@@ -175,7 +175,7 @@ public class FacilityFeed extends JsonUtility {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
-    uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_WebService.csv");
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_WebService.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadFacilities("QA_facilities_WebService.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
