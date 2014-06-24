@@ -165,18 +165,6 @@ public class RequisitionGroupPage extends FilterSearchPage {
   @FindBy(how = ID, using = "dropOffFacilityHeader")
   private static WebElement dropOffFacilityHeader = null;
 
-  @FindBy(how = ID, using = "programScheduleRemove")
-  private static WebElement programScheduleRemove = null;
-
-  @FindBy(how = ID, using = "programScheduleEdit")
-  private static WebElement programScheduleEdit = null;
-
-  @FindBy(how = ID, using = "programScheduleEditCancel")
-  private static WebElement programScheduleEditCancel = null;
-
-  @FindBy(how = ID, using = "programScheduleEditDone")
-  private static WebElement programScheduleEditDone = null;
-
   @FindBy(how = ID, using = "programScheduleAddCancel")
   private static WebElement programScheduleAddCancel = null;
 
@@ -614,17 +602,32 @@ public class RequisitionGroupPage extends FilterSearchPage {
     return dropOffFacilityHeader.getText();
   }
 
-  public void clickRemoveProgramSchedule() {
-    testWebDriver.waitForElementToAppear(searchIcon);
+  public void clickRemoveProgramSchedule(int rowNumber) {
+    WebElement programScheduleRemove = testWebDriver.getElementById("programScheduleRemove" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(programScheduleRemove);
     programScheduleRemove.click();
   }
 
-  public void clickEditProgramSchedule() {
+  public boolean isRemoveProgramScheduleEnabled(int rowNumber) {
+    WebElement programScheduleRemove = testWebDriver.getElementById("programScheduleRemove" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(programScheduleRemove);
+    return programScheduleRemove.isEnabled();
+  }
+
+  public void clickEditProgramSchedule(int rowNumber) {
+    WebElement programScheduleEdit = testWebDriver.getElementById("programScheduleEdit" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(programScheduleEdit);
     programScheduleEdit.click();
   }
 
-  public void clickCancelEditProgramSchedule() {
+  public boolean isEditProgramScheduleEnabled(int rowNumber) {
+    WebElement programScheduleEdit = testWebDriver.getElementById("programScheduleEdit" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(programScheduleEdit);
+    return programScheduleEdit.isEnabled();
+  }
+
+  public void clickCancelEditProgramSchedule(int rowNumber) {
+    WebElement programScheduleEditCancel = testWebDriver.getElementById("programScheduleEditCancel" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(programScheduleEditCancel);
     programScheduleEditCancel.click();
   }
@@ -644,7 +647,8 @@ public class RequisitionGroupPage extends FilterSearchPage {
     programScheduleAddCancel.click();
   }
 
-  public void clickDoneEditProgramSchedule() {
+  public void clickDoneEditProgramSchedule(int rowNumber) {
+    WebElement programScheduleEditDone = testWebDriver.getElementById("programScheduleEditDone" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(programScheduleEditDone);
     programScheduleEditDone.click();
   }
@@ -709,6 +713,12 @@ public class RequisitionGroupPage extends FilterSearchPage {
     WebElement dropOffFacility = testWebDriver.getElementById("dropOffFacility" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(dropOffFacility);
     return dropOffFacility.getText();
+  }
+
+  public void editDropOffFacility(int rowNumber) {
+    WebElement dropOffFacility = testWebDriver.getElementById("editDropOffFacility" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(dropOffFacility);
+    dropOffFacility.click();
   }
 
   public void clearDropOffFacility(int rowNumber) {

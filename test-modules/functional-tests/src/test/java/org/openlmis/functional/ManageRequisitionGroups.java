@@ -698,6 +698,11 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.selectSupervisoryNodeSearchResult(1);
 
     requisitionGroupPage.clickProgramsScheduleAccordion();
+    assertEquals("Programs", requisitionGroupPage.getProgramsHeader());
+    assertEquals("Schedules", requisitionGroupPage.getSchedulesHeader());
+    assertEquals("Direct delivery", requisitionGroupPage.getDirectDeliveryHeader());
+    assertEquals("Drop off facility", requisitionGroupPage.getDropOffFacilityHeader());
+
     requisitionGroupPage.clickAddNewProgramScheduleRow();
     List<String> expectedListOfPrograms = asList("--Select Program--", "ESSENTIAL MEDICINES", "HIV", "MALARIA", "TB");
     List<String> actualListOfPrograms = requisitionGroupPage.getListOfPrograms();
@@ -714,8 +719,14 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.setNewDirectDelivery();
     requisitionGroupPage.clickNewDropOffFacility();
     requisitionGroupPage.enterSearchFacilityParameter("F10");
+    testWebDriver.waitForAjax();
     requisitionGroupPage.selectFacility(1);
     requisitionGroupPage.clickAddProgramSchedule();
+
+    assertEquals("HIV", requisitionGroupPage.getProgram(1));
+    assertEquals("M-monthly", requisitionGroupPage.getSchedule(1));
+    assertTrue(requisitionGroupPage.isDirectDeliveryIconDisplay(1));
+    assertEquals("F10 - Village Dispensary", requisitionGroupPage.getDropOffFacility(1));
 
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
@@ -738,6 +749,95 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();
     assertEquals("1", requisitionGroupPage.getFacilityCount(1));
+
+    requisitionGroupPage.clickManageRequisitionGroupSearchResult(1);
+    requisitionGroupPage.clickProgramsScheduleAccordion();
+    requisitionGroupPage.clickAddNewProgramScheduleRow();
+    requisitionGroupPage.selectProgram("TB");
+    requisitionGroupPage.selectNewSchedule("M-monthly");
+    requisitionGroupPage.setNewDirectDelivery();
+    requisitionGroupPage.clickAddProgramSchedule();
+    requisitionGroupPage.clickCancelButton();
+  }
+
+  @Test(groups = {"admin"})
+  public void testAddEditAndRemoveSchedules() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
+    dbWrapper.insertSchedule("M", "monthly", "monthly");
+    dbWrapper.insertSchedule("Q", "quarterly", "quarterly");
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11A", "F11B", 1, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11C", "F11D", 1, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11E", "F11F", 2, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11G", "F11H", 2, 3);
+    dbWrapper.insertRequisitionGroup("RG1", "Requisition Group 1", "N1");
+    dbWrapper.insertRequisitionGroupProgramScheduleForProgramWithoutDelete("RG1", "HIV", "M");
+    dbWrapper.insertRequisitionGroupProgramScheduleForProgramWithoutDelete("RG1", "MALARIA", "Q");
+    dbWrapper.insertRequisitionGroupProgramScheduleForProgramWithoutDelete("RG1", "ESS_MEDS", "Q");
+
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+
+    requisitionGroupPage.enterRequisitionGroupSearchParameter("Requisition Group 1");
+    requisitionGroupPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    requisitionGroupPage.clickManageRequisitionGroupSearchResult(1);
+
+    requisitionGroupPage.clickProgramsScheduleAccordion();
+    requisitionGroupPage.clickAddNewProgramScheduleRow();
+    assertFalse(requisitionGroupPage.getListOfPrograms().contains("HIV"));
+    assertFalse(requisitionGroupPage.getListOfPrograms().contains("MALARIA"));
+
+    requisitionGroupPage.selectProgram("TB");
+    requisitionGroupPage.selectNewSchedule("M-monthly");
+    requisitionGroupPage.clickAddProgramSchedule();
+
+    assertEquals("HIV", requisitionGroupPage.getProgram(1));
+    assertEquals("MALARIA", requisitionGroupPage.getProgram(2));
+    assertEquals("ESSENTIAL MEDICINES", requisitionGroupPage.getProgram(3));
+    assertEquals("TB", requisitionGroupPage.getProgram(4));
+    assertFalse(requisitionGroupPage.isDirectDeliveryIconDisplay(4));
+
+    requisitionGroupPage.clickAddNewProgramScheduleRow();
+    assertEquals(asList("--No Program Left--"), requisitionGroupPage.getListOfPrograms());
+    assertFalse(requisitionGroupPage.isEditProgramScheduleEnabled(1));
+    assertFalse(requisitionGroupPage.isRemoveProgramScheduleEnabled(2));
+    requisitionGroupPage.clickCancelAddProgramSchedule();
+
+    requisitionGroupPage.clickRemoveProgramSchedule(1);
+    requisitionGroupPage.clickEditProgramSchedule(1);
+    requisitionGroupPage.editDirectDelivery(1);
+    requisitionGroupPage.editSchedules(1, "M-monthly");
+    requisitionGroupPage.editDropOffFacility(1);
+    requisitionGroupPage.enterSearchFacilityParameter("F10");
+    requisitionGroupPage.selectFacility(1);
+    requisitionGroupPage.clearDropOffFacility(1);
+    requisitionGroupPage.clickDoneEditProgramSchedule(1);
+
+    requisitionGroupPage.clickEditProgramSchedule(2);
+    requisitionGroupPage.clickCancelEditProgramSchedule(2);
+
+    requisitionGroupPage.clickSaveButton();
+    assertEquals("Drop off facility code not defined", requisitionGroupPage.getErrorMessage());
+
+    requisitionGroupPage.clickEditProgramSchedule(3);
+    requisitionGroupPage.editDropOffFacility(3);
+    requisitionGroupPage.enterSearchFacilityParameter("F11");
+    testWebDriver.waitForAjax();
+    assertEquals("9 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
+    requisitionGroupPage.clickFilterButton();
+    testWebDriver.waitForAjax();
+    requisitionGroupPage.selectFacilityType("Warehouse");
+    requisitionGroupPage.clickApplyFilterButton();
+    testWebDriver.waitForAjax();
+    assertEquals("4 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
+    requisitionGroupPage.selectFacility(1);
+    requisitionGroupPage.clickDoneEditProgramSchedule(3);
+
+    requisitionGroupPage.clickSaveButton();
+    testWebDriver.waitForAjax();
+    assertEquals("Requisition Group \"Requisition Group 1\" updated successfully.   View Here", requisitionGroupPage.getSuccessMessage());
   }
 
   public void search(String searchParameter) {
