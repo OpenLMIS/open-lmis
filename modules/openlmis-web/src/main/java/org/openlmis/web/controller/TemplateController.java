@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,10 +50,9 @@ public class TemplateController extends BaseController {
 
   @RequestMapping(value = "/report-templates", method = POST)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REPORT')")
-  public ResponseEntity<OpenLmisResponse> createJasperReportTemplate(HttpServletRequest request, MultipartFile file, String name) {
+  public ResponseEntity<OpenLmisResponse> createJasperReportTemplate(HttpServletRequest request, MultipartFile file, @RequestBody Template template) {
     try {
-      Template template = templateService.validateFileAndCreateTemplate(name, file, loggedInUserId(request), CONSISTENCY_REPORT);
-      templateService.insert(template);
+      templateService.validateFileAndInsertTemplate(template, file, loggedInUserId(request), CONSISTENCY_REPORT);
       return success(messageService.message(JASPER_CREATE_REPORT_SUCCESS), MediaType.TEXT_HTML_VALUE);
     } catch (IOException e) {
       return error(messageService.message(JASPER_CREATE_REPORT_ERROR), OK, MediaType.TEXT_HTML_VALUE);

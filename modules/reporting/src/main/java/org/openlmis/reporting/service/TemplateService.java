@@ -16,6 +16,7 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.model.TemplateParameter;
 import org.openlmis.reporting.repository.TemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,10 +38,6 @@ public class TemplateService {
   @Autowired
   TemplateRepository repository;
 
-  public void insert(Template template) {
-    repository.insert(template);
-  }
-
   public List<Template> getAll() {
     return repository.getAll();
   }
@@ -49,27 +46,28 @@ public class TemplateService {
     return repository.getByName(name);
   }
 
-  public Template validateFileAndCreateTemplate(String name, MultipartFile file, Long userId, String type) throws IOException {
-    Template template = new Template(name, userId, type);
+  public void validateFileAndInsertTemplate(Template template, MultipartFile file, Long userId, String type) throws IOException {
+    template.setType(type);
+    template.setCreatedBy(userId);
     validateFile(template, file);
-    return template;
+    repository.insert(template);
   }
 
   private void validateFile(Template template, MultipartFile file) {
-    if (file == null)
-      throw new DataException("report.template.error.file.missing");
-    if (!file.getOriginalFilename().endsWith(".jrxml"))
-      throw new DataException("report.template.error.file.type");
-    if (file.isEmpty())
-      throw new DataException("report.template.error.file.empty");
+    throwIfFileIsNull(file);
+    throwIfIncorrectFileType(file);
+    throwIfFileIsEmpty(file);
     try {
       JasperReport report = JasperCompileManager.compileReport(file.getInputStream());
       JRParameter[] jrParameters = report.getParameters();
       if (jrParameters != null && jrParameters.length > 0) {
-        ArrayList<String> parameters = new ArrayList<>();
+
+        TemplateParameter templateParameter = new TemplateParameter();
+        ArrayList<TemplateParameter> parameters = new ArrayList<>();
+
         for (JRParameter jrParameter : jrParameters) {
           if (!jrParameter.isSystemDefined()) {
-            parameters.add(jrParameter.getName());
+            parameters.add(createParameter(templateParameter, jrParameter));
           }
         }
         template.setParameters(parameters);
@@ -83,5 +81,27 @@ public class TemplateService {
     } catch (IOException e) {
       throw new DataException("report.template.error.reading.file");
     }
+  }
+
+  private TemplateParameter createParameter(TemplateParameter templateParameter, JRParameter jrParameter) {
+    templateParameter.setName(jrParameter.getName());
+    templateParameter.setDisplayName(jrParameter.getPropertiesMap().getProperty("displayName"));
+    templateParameter.setDescription(jrParameter.getPropertiesMap().getProperty("description"));
+    return templateParameter;
+  }
+
+  private void throwIfFileIsEmpty(MultipartFile file) {
+    if (file.isEmpty())
+      throw new DataException("report.template.error.file.empty");
+  }
+
+  private void throwIfIncorrectFileType(MultipartFile file) {
+    if (!file.getOriginalFilename().endsWith(".jrxml"))
+      throw new DataException("report.template.error.file.type");
+  }
+
+  private void throwIfFileIsNull(MultipartFile file) {
+    if (file == null)
+      throw new DataException("report.template.error.file.missing");
   }
 }

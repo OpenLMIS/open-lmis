@@ -11,6 +11,7 @@
 package org.openlmis.reporting.controller;
 
 import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.model.TemplateParameter;
 import org.openlmis.reporting.repository.mapper.TemplateMapper;
 import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,12 +68,11 @@ public class ReportController {
   private void setReportParameters(HttpServletRequest request,
                                    Template template, Map<String, Object> map) {
     if (template.getParameters() != null) {
-      for (String parameter : template.getParameters()) {
-        if (parameter.equalsIgnoreCase(USER_ID_PARAM)) {
-          map.put(parameter, loggedInUserId(request).intValue());
+      for (TemplateParameter parameter : template.getParameters()) {
+        if (parameter.getName().equalsIgnoreCase(USER_ID_PARAM)) {
+          map.put(parameter.getName(), loggedInUserId(request).intValue());
         }
       }
     }
   }
-
 }

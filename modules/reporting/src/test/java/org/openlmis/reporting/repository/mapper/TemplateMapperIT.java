@@ -15,6 +15,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.model.TemplateParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -59,14 +60,15 @@ public class TemplateMapperIT {
     Template expectedTemplate = new Template();
     expectedTemplate.setType(type);
     expectedTemplate.setName(name);
-    List<String> parameters = new ArrayList<>();
-    parameters.add("rnrId");
+    List<TemplateParameter> parameters = new ArrayList<>();
+    parameters.add(new TemplateParameter());
     expectedTemplate.setParameters(parameters);
     File file = new ClassPathResource("report1.jrxml").getFile();
 
     expectedTemplate.setData(readFileToByteArray(file));
     expectedTemplate.setCreatedDate(new Date());
     expectedTemplate.setCreatedBy(createdBy);
+    expectedTemplate.setDescription("description");
 
     templateMapper.insert(expectedTemplate);
 
@@ -76,6 +78,7 @@ public class TemplateMapperIT {
     assertThat(templateDB.getName(), is(name));
     assertThat(templateDB.getData(), is(readFileToByteArray(file)));
     assertThat(templateDB.getCreatedBy(), is(createdBy));
+    assertThat(templateDB.getDescription(), is("description"));
   }
 
   @Test
@@ -107,7 +110,10 @@ public class TemplateMapperIT {
     template.setType(type);
     template.setData(new byte[1]);
     template.setCreatedBy(1L);
+    template.setDescription("description");
+
     templateMapper.insert(template);
+
     return template;
   }
 }

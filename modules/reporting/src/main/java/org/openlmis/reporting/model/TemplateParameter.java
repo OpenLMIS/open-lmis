@@ -15,25 +15,16 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
-import java.util.List;
-
-/**
- * Template represents an entity that records a byte array of data, type of template, list of parameters and comma
- * separated parameters that are used to configure jasper report views.
- */
-
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Template extends BaseModel {
+public class TemplateParameter extends BaseModel {
+
+  private Long templateId;
 
   private String name;
 
-  private byte[] data;
-
-  private List<TemplateParameter> parameters;
-
-  private String type;
+  private String displayName;
 
   private String description;
 

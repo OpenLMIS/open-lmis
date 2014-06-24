@@ -11,6 +11,7 @@
 package org.openlmis.reporting.service;
 
 import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import org.junit.Rule;
@@ -20,7 +21,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.Template;
@@ -36,11 +36,9 @@ import java.io.ObjectOutputStream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
-import static org.powermock.api.mockito.PowerMockito.spy;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({TemplateService.class, JasperCompileManager.class})
@@ -57,20 +55,12 @@ public class TemplateServiceTest {
   public ExpectedException expectedException = ExpectedException.none();
 
   @Test
-  public void shouldInsertReport() throws Exception {
-    Template template = Mockito.spy(new Template());
-
-    service.insert(template);
-
-    Mockito.verify(repository).insert(template);
-  }
-
-  @Test
   public void shouldThrowErrorIfFileNotOfTypeJasperXML() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.error.file.type");
 
-    service.validateFileAndCreateTemplate("report", new MockMultipartFile("report.pdf", new byte[1]), 1L, "Consistency Report");
+    MockMultipartFile file = new MockMultipartFile("report.pdf", new byte[1]);
+    service.validateFileAndInsertTemplate(new Template(), file, 1L, "Consistency Report");
   }
 
   @Test
@@ -79,7 +69,7 @@ public class TemplateServiceTest {
     expectedException.expectMessage("report.template.error.file.empty");
     MockMultipartFile file = new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[0]);
 
-    service.validateFileAndCreateTemplate("report", file, 1L, "Consistency Report");
+    service.validateFileAndInsertTemplate(new Template(), file, 1L, "Consistency Report");
   }
 
   @Test
@@ -87,7 +77,7 @@ public class TemplateServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.error.file.missing");
 
-    service.validateFileAndCreateTemplate("report", null, 1L, "Consistency Report");
+    service.validateFileAndInsertTemplate(new Template(), null, 1L, "Consistency Report");
   }
 
   @Test
@@ -95,7 +85,7 @@ public class TemplateServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.error.file.invalid");
 
-    service.validateFileAndCreateTemplate("report", new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[1]), 1L, "Consistency Report");
+    service.validateFileAndInsertTemplate(new Template(), new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[1]), 1L, "Consistency Report");
   }
 
   @Test
@@ -107,10 +97,18 @@ public class TemplateServiceTest {
     JasperReport report = mock(JasperReport.class);
     InputStream inputStream = mock(InputStream.class);
     when(file.getInputStream()).thenReturn(inputStream);
+
     JRParameter param1 = mock(JRParameter.class);
     JRParameter param2 = mock(JRParameter.class);
+    JRPropertiesMap propertiesMap = mock(JRPropertiesMap.class);
+
     when(report.getParameters()).thenReturn(new JRParameter[]{param1, param2});
     when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
+
+    when(param1.getPropertiesMap()).thenReturn(propertiesMap);
+    when(propertiesMap.getProperty("displayName")).thenReturn("Param Display Name");
+    when(propertiesMap.getProperty("description")).thenReturn("Param Description");
+    when(param2.getPropertiesMap()).thenReturn(propertiesMap);
 
     ByteArrayOutputStream byteOutputStream = mock(ByteArrayOutputStream.class);
     whenNew(ByteArrayOutputStream.class).withAnyArguments().thenReturn(byteOutputStream);
@@ -119,10 +117,12 @@ public class TemplateServiceTest {
     doNothing().when(objectOutputStream).writeObject(report);
     byte[] byteData = new byte[1];
     when(byteOutputStream.toByteArray()).thenReturn(byteData);
+    Template template = new Template();
 
-    Template template = service.validateFileAndCreateTemplate("report", file, 1L, "Consistency Report");
+    service.validateFileAndInsertTemplate(template, file, 1L, "Consistency Report");
 
-    assertThat(template.getData(), is(byteData));
-    assertThat(template.getParameters().size(), is(2));
+    verify(repository).insert(template);
+    assertThat(template.getCreatedBy(), is(1L));
+    assertThat(template.getType(), is("Consistency Report"));
   }
 }

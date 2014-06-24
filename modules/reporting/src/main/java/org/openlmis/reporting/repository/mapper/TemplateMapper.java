@@ -28,8 +28,8 @@ public interface TemplateMapper {
   @Select("SELECT * FROM templates WHERE id = #{id}")
   Template getById(Long id);
 
-  @Insert("INSERT INTO templates (name, data, type, createdBy) " +
-    "VALUES (#{name}, #{data}, #{type}, #{createdBy})")
+  @Insert("INSERT INTO templates (name, data, type, description, createdBy) " +
+    "VALUES (#{name}, #{data}, #{type}, #{description}, #{createdBy})")
   @Options(useGeneratedKeys = true)
   void insert(Template template);
 
