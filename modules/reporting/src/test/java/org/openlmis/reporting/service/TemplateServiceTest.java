@@ -10,18 +10,40 @@
 
 package org.openlmis.reporting.service;
 
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.repository.TemplateRepository;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
-@RunWith(MockitoJUnitRunner.class)
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.spy;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({TemplateService.class, JasperCompileManager.class})
 @Category(UnitTests.class)
 public class TemplateServiceTest {
 
@@ -30,6 +52,9 @@ public class TemplateServiceTest {
 
   @InjectMocks
   TemplateService service;
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   @Test
   public void shouldInsertReport() throws Exception {
@@ -40,5 +65,64 @@ public class TemplateServiceTest {
     Mockito.verify(repository).insert(template);
   }
 
+  @Test
+  public void shouldThrowErrorIfFileNotOfTypeJasperXML() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("report.template.error.file.type");
 
+    service.validateFileAndCreateTemplate("report", new MockMultipartFile("report.pdf", new byte[1]), 1L, "Consistency Report");
+  }
+
+  @Test
+  public void shouldThrowErrorIfFileEmpty() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("report.template.error.file.empty");
+    MockMultipartFile file = new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[0]);
+
+    service.validateFileAndCreateTemplate("report", file, 1L, "Consistency Report");
+  }
+
+  @Test
+  public void shouldThrowErrorIfFileNotPresent() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("report.template.error.file.missing");
+
+    service.validateFileAndCreateTemplate("report", null, 1L, "Consistency Report");
+  }
+
+  @Test
+  public void shouldThrowErrorIfFileIsInvalid() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("report.template.error.file.invalid");
+
+    service.validateFileAndCreateTemplate("report", new MockMultipartFile("report.jrxml", "report.jrxml", "", new byte[1]), 1L, "Consistency Report");
+  }
+
+  @Test
+  public void shouldValidateFileAndSetData() throws Exception {
+    MultipartFile file = mock(MultipartFile.class);
+    when(file.getOriginalFilename()).thenReturn("file.jrxml");
+
+    mockStatic(JasperCompileManager.class);
+    JasperReport report = mock(JasperReport.class);
+    InputStream inputStream = mock(InputStream.class);
+    when(file.getInputStream()).thenReturn(inputStream);
+    JRParameter param1 = mock(JRParameter.class);
+    JRParameter param2 = mock(JRParameter.class);
+    when(report.getParameters()).thenReturn(new JRParameter[]{param1, param2});
+    when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
+
+    ByteArrayOutputStream byteOutputStream = mock(ByteArrayOutputStream.class);
+    whenNew(ByteArrayOutputStream.class).withAnyArguments().thenReturn(byteOutputStream);
+    ObjectOutputStream objectOutputStream = spy(new ObjectOutputStream(byteOutputStream));
+    whenNew(ObjectOutputStream.class).withArguments(byteOutputStream).thenReturn(objectOutputStream);
+    doNothing().when(objectOutputStream).writeObject(report);
+    byte[] byteData = new byte[1];
+    when(byteOutputStream.toByteArray()).thenReturn(byteData);
+
+    Template template = service.validateFileAndCreateTemplate("report", file, 1L, "Consistency Report");
+
+    assertThat(template.getData(), is(byteData));
+    assertThat(template.getParameters().size(), is(2));
+  }
 }

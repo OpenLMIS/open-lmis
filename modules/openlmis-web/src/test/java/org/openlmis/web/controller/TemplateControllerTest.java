@@ -37,15 +37,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.web.controller.ReportTemplateController.CONSISTENCY_REPORT;
-import static org.openlmis.web.controller.ReportTemplateController.JASPER_CREATE_REPORT_SUCCESS;
+import static org.openlmis.web.controller.TemplateController.CONSISTENCY_REPORT;
+import static org.openlmis.web.controller.TemplateController.JASPER_CREATE_REPORT_SUCCESS;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ReportTemplateController.class)
-public class ReportTemplateControllerTest {
+@PrepareForTest(TemplateController.class)
+public class TemplateControllerTest {
 
   @Mock
   private TemplateService templateService;
@@ -54,7 +53,7 @@ public class ReportTemplateControllerTest {
   private MessageService messageService;
 
   @InjectMocks
-  private ReportTemplateController controller;
+  private TemplateController controller;
 
   private MockHttpServletRequest request;
   private static final Long USER = 1L;
@@ -70,21 +69,26 @@ public class ReportTemplateControllerTest {
 
   @Test
   public void shouldUploadJasperTemplateFileIfValid() throws Exception {
-    MockMultipartFile reportTemplateFile = new MockMultipartFile("template.jrxml","template.jrxml","", new byte[1]);
-    Template report = new Template();
-    whenNew(Template.class).withArguments("reportName", reportTemplateFile, USER, CONSISTENCY_REPORT).thenReturn(report);
+    String reportName = "reportName";
+    MockMultipartFile reportTemplateFile = new MockMultipartFile("template.jrxml", "template.jrxml", "", new byte[1]);
+    Template template = new Template();
+    when(templateService.validateFileAndCreateTemplate(reportName, reportTemplateFile, USER, CONSISTENCY_REPORT))
+      .thenReturn(template);
     when(messageService.message(JASPER_CREATE_REPORT_SUCCESS)).thenReturn("Report created successfully");
-      ResponseEntity < OpenLmisResponse > response = controller.createJasperReportTemplate(request, reportTemplateFile, "reportName");
+
+    ResponseEntity<OpenLmisResponse> response = controller.createJasperReportTemplate(request, reportTemplateFile, reportName);
 
     assertThat(response.getBody().getSuccessMsg(), is("Report created successfully"));
-    verify(templateService).insert(report);
+    verify(templateService).insert(template);
   }
 
   @Test
   public void shouldGiveErrorForInvalidReport() throws Exception {
-    whenNew(Template.class).withAnyArguments().thenThrow(new DataException("Error message"));
+    String name = "template";
+    when(templateService.validateFileAndCreateTemplate(name, null, USER, CONSISTENCY_REPORT))
+      .thenThrow(new DataException("Error message"));
 
-    ResponseEntity<OpenLmisResponse> response = controller.createJasperReportTemplate(request, null, "template");
+    ResponseEntity<OpenLmisResponse> response = controller.createJasperReportTemplate(request, null, name);
 
     assertThat(response.getBody().getErrorMsg(), is("Error message"));
   }
