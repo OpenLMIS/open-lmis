@@ -1,0 +1,1 @@
+ALTER TABLE odk_xform ADD UNIQUE (formid);

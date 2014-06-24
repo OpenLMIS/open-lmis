@@ -12,36 +12,47 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.repository;
+package org.openlmis.odkapi.parser;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
-import org.openlmis.odkapi.domain.ODKStockStatusSubmission;
-import org.openlmis.odkapi.domain.ODKSubmission;
-import org.openlmis.odkapi.repository.mapper.ODKSubmissionMapper;
-import org.springframework.stereotype.Repository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+public class ODKSubmissionXFormIDSAXHandler extends DefaultHandler
+{
+    boolean bdata;
+    String formBuildId;
 
-import java.util.Date;
-import java.util.List;
-
-
-@Repository
-public class ODKSubmissionRepository {
-    @Autowired
-    private ODKSubmissionMapper odkSubmissionMapper;
-
-    public void insert(ODKSubmission odkSubmission)
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes)
+            throws SAXException
     {
-        odkSubmissionMapper.insert(odkSubmission);
+        if (qName.equals("data"))
+        {
+            bdata = true;
+            setFormBuildId(attributes.getValue(0));
+        }
     }
 
-    public Long getLastSubmissionId()
+    @Override
+    public void endElement(String uri, String localName, String qName) throws SAXException
     {
-        return odkSubmissionMapper.getLastSubmissionId();
+
     }
 
-    public void insertStockStatus(ODKStockStatusSubmission odkStockStatusSubmission)
+    @Override
+    public void characters(char ch[], int start, int length) throws SAXException
     {
-        odkSubmissionMapper.insertStockStatus(odkStockStatusSubmission);
+        if(bdata)
+        {
+            bdata = false;
+        }
+    }
+
+    public String getFormBuildId() {
+        return formBuildId;
+    }
+
+    public void setFormBuildId(String formBuildId) {
+        this.formBuildId = formBuildId;
     }
 }
