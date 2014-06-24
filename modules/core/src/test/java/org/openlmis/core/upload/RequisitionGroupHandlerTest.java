@@ -20,10 +20,6 @@ import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.db.categories.UnitTests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -50,7 +46,6 @@ public class RequisitionGroupHandlerTest {
     RequisitionGroup requisitionGroup = new RequisitionGroup();
     requisitionGroup.setModifiedBy(USER);
 
-    RequisitionGroup existing = new RequisitionGroup();
     requisitionGroupHandler.save(requisitionGroup);
 
     verify(requisitionGroupService).save(requisitionGroup);

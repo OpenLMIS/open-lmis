@@ -45,10 +45,12 @@ public class RequisitionGroupService {
   @Transactional
   public void saveWithMembersAndSchedules(RequisitionGroup requisitionGroup,
                                           List<RequisitionGroupMember> requisitionGroupMembers,
-                                          List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules) {
+                                          List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules,
+                                          Long userId) {
+    requisitionGroup.setCreatedBy(userId);
     save(requisitionGroup);
-    saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, requisitionGroup);
-    saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup);
+    saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, requisitionGroup, userId);
+    saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup, userId);
   }
 
   public void save(RequisitionGroup requisitionGroup) {
@@ -61,10 +63,13 @@ public class RequisitionGroupService {
       requisitionGroupRepository.update(requisitionGroup);
   }
 
-  public void saveRequisitionGroupMembers(List<RequisitionGroupMember> requisitionGroupMembers, RequisitionGroup requisitionGroup) {
+  public void saveRequisitionGroupMembers(List<RequisitionGroupMember> requisitionGroupMembers,
+                                          RequisitionGroup requisitionGroup,
+                                          Long userId) {
     for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
       requisitionGroupMember.setRequisitionGroup(requisitionGroup);
-      requisitionGroupMember.setModifiedBy(requisitionGroup.getModifiedBy());
+      requisitionGroupMember.setCreatedBy(userId);
+      requisitionGroupMember.setModifiedBy(userId);
       requisitionGroupMemberService.save(requisitionGroupMember);
     }
   }
@@ -101,31 +106,41 @@ public class RequisitionGroupService {
 
   public void updateWithMembersAndSchedules(RequisitionGroup requisitionGroup,
                                             List<RequisitionGroupMember> requisitionGroupMembers,
-                                            List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules) {
+                                            List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules,
+                                            Long userId) {
+    requisitionGroup.setModifiedBy(userId);
     save(requisitionGroup);
-    deleteAndInsertRequisitionGroupProgramSchedules(requisitionGroup, requisitionGroupProgramSchedules);
-    deleteAndInsertRequisitionGroupMembers(requisitionGroup, requisitionGroupMembers);
+    deleteAndInsertRequisitionGroupProgramSchedules(requisitionGroup, requisitionGroupProgramSchedules, userId);
+    deleteAndInsertRequisitionGroupMembers(requisitionGroup, requisitionGroupMembers, userId);
   }
 
-  private void deleteAndInsertRequisitionGroupMembers(RequisitionGroup requisitionGroup, List<RequisitionGroupMember> requisitionGroupMembers) {
+  private void deleteAndInsertRequisitionGroupMembers(RequisitionGroup requisitionGroup,
+                                                      List<RequisitionGroupMember> requisitionGroupMembers,
+                                                      Long userId) {
     requisitionGroupMemberService.deleteMembersForGroup(requisitionGroup.getId());
     for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
       requisitionGroupMember.setRequisitionGroup(requisitionGroup);
-      requisitionGroupMember.setModifiedBy(requisitionGroup.getModifiedBy());
+      requisitionGroupMember.setCreatedBy(userId);
+      requisitionGroupMember.setModifiedBy(userId);
       requisitionGroupMemberService.insert(requisitionGroupMember);
     }
   }
 
-  private void deleteAndInsertRequisitionGroupProgramSchedules(RequisitionGroup requisitionGroup, List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules) {
+  private void deleteAndInsertRequisitionGroupProgramSchedules(RequisitionGroup requisitionGroup,
+                                                               List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules,
+                                                               Long userId) {
     requisitionGroupProgramScheduleService.deleteRequisitionGroupProgramSchedulesFor(requisitionGroup.getId());
-    saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, requisitionGroup);
+    saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, requisitionGroup, userId);
   }
 
-  public void saveRequisitionGroupProgramSchedules(List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules, RequisitionGroup requisitionGroup) {
+  public void saveRequisitionGroupProgramSchedules(List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules,
+                                                   RequisitionGroup requisitionGroup,
+                                                   Long userId) {
     for (RequisitionGroupProgramSchedule requisitionGroupProgramSchedule : requisitionGroupProgramSchedules) {
       requisitionGroupProgramSchedule.setId(null);
       requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
-      requisitionGroupProgramSchedule.setModifiedBy(requisitionGroup.getModifiedBy());
+      requisitionGroupProgramSchedule.setCreatedBy(userId);
+      requisitionGroupProgramSchedule.setModifiedBy(userId);
       requisitionGroupProgramScheduleService.save(requisitionGroupProgramSchedule);
     }
   }

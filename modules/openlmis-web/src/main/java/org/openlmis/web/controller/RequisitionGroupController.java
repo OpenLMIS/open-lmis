@@ -74,8 +74,10 @@ public class RequisitionGroupController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getById(@PathVariable(value = "id") Long id) {
     RequisitionGroup requisitionGroup = requisitionGroupService.getBy(id);
     List<RequisitionGroupMember> requisitionGroupMembers = requisitionGroupService.getMembersBy(id);
-    List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = requisitionGroupProgramScheduleService.getByRequisitionGroupId(id);
-    RequisitionGroupFormDTO requisitionGroupFormDTO = new RequisitionGroupFormDTO(requisitionGroup, requisitionGroupMembers, requisitionGroupProgramSchedules);
+    List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = requisitionGroupProgramScheduleService.getByRequisitionGroupId(
+      id);
+    RequisitionGroupFormDTO requisitionGroupFormDTO = new RequisitionGroupFormDTO(requisitionGroup,
+      requisitionGroupMembers, requisitionGroupProgramSchedules);
     return OpenLmisResponse.response("requisitionGroupData", requisitionGroupFormDTO);
   }
 
@@ -85,16 +87,16 @@ public class RequisitionGroupController extends BaseController {
                                                  HttpServletRequest request) {
     try {
       Long userId = loggedInUserId(request);
-      requisitionGroupFormDTO.getRequisitionGroup().setModifiedBy(userId);
       requisitionGroupService.saveWithMembersAndSchedules(requisitionGroupFormDTO.getRequisitionGroup(),
         requisitionGroupFormDTO.getRequisitionGroupMembers(),
-        requisitionGroupFormDTO.getRequisitionGroupProgramSchedules());
-
+        requisitionGroupFormDTO.getRequisitionGroupProgramSchedules(), userId);
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
 
-    ResponseEntity<OpenLmisResponse> responseEntity = success(messageService.message("message.requisition.group.created.success", requisitionGroupFormDTO.getRequisitionGroup().getName()));
+    ResponseEntity<OpenLmisResponse> responseEntity = success(
+      messageService.message("message.requisition.group.created.success",
+        requisitionGroupFormDTO.getRequisitionGroup().getName()));
     responseEntity.getBody().addData("requisitionGroupId", requisitionGroupFormDTO.getRequisitionGroup().getId());
     return responseEntity;
   }
@@ -107,15 +109,16 @@ public class RequisitionGroupController extends BaseController {
     try {
       Long userId = loggedInUserId(request);
       requisitionGroupFormDTO.getRequisitionGroup().setId(id);
-      requisitionGroupFormDTO.getRequisitionGroup().setModifiedBy(userId);
       requisitionGroupService.updateWithMembersAndSchedules(requisitionGroupFormDTO.getRequisitionGroup(),
         requisitionGroupFormDTO.getRequisitionGroupMembers(),
-        requisitionGroupFormDTO.getRequisitionGroupProgramSchedules());
+        requisitionGroupFormDTO.getRequisitionGroupProgramSchedules(), userId);
 
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
-    ResponseEntity<OpenLmisResponse> responseEntity = success(messageService.message("message.requisition.group.updated.success", requisitionGroupFormDTO.getRequisitionGroup().getName()));
+    ResponseEntity<OpenLmisResponse> responseEntity = success(
+      messageService.message("message.requisition.group.updated.success",
+        requisitionGroupFormDTO.getRequisitionGroup().getName()));
     responseEntity.getBody().addData("requisitionGroupId", requisitionGroupFormDTO.getRequisitionGroup().getId());
     return responseEntity;
   }
