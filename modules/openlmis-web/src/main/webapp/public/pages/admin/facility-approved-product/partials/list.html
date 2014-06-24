@@ -13,6 +13,8 @@
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" fade-out="3000" ng-bind="message"></div>
 
+  <div class="alert alert-danger" id="saveErrorMsgDiv" ng-show="error" fade-out="3000" openlmis-message="error"></div>
+
   <div class="row-fluid">
     <div class="span12">
       <label id="programLabel" openlmis-message="label.program"></label>
@@ -69,7 +71,7 @@
     </div>
   </div>
 
-  <table id="facilityApprovedProductTable" class="table table-bordered search-list" ng-show="showResults">
+  <table id="facilityApprovedProductTable" class="table table-bordered search-list rnr-table" ng-show="showResults">
     <thead>
     <tr class="gradient-header resultCountHeader">
       <th colspan="11">
@@ -92,7 +94,10 @@
       <th id="name" openlmis-message="header.name"></th>
       <th id="strength" openlmis-message="header.strength"></th>
       <th id="unitOfMeasure" openlmis-message="header.unit.of.measure"></th>
-      <th id="maxMonthStocks" openlmis-message="header.max.months.of.stock"></th>
+      <th id="maxMonthStocks">
+        <span openlmis-message="header.max.months.of.stock"></span>
+        <span class="label-required">*</span>
+      </th>
       <th id="minMonthStocks" openlmis-message="header.min.months.of.stock"></th>
       <th id="eop" openlmis-message="label.emergency.order.point"></th>
       <th id="globalActive" openlmis-message="header.global.active"></th>
@@ -115,19 +120,37 @@
       <td id="name{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.primaryName"></td>
       <td id="strength{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.strength"></td>
       <td id="unit{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.dosageUnit.code"></td>
-      <td id="maxMonthsOfStock{{$index}}" class="right-justified">
+      <td id="maxMonthsOfStock{{$index}}" class="right-justified position-relative">
+
         <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.maxMonthsOfStock"></span>
-        <input type="text" ng-if="facilityApprovedProduct.underEdit"
-               ng-model="facilityApprovedProduct.maxMonthsOfStock"/>
+
+        <input type="text" ng-if="facilityApprovedProduct.underEdit" name="list.maxMonthsOfStock"
+               ng-model="facilityApprovedProduct.maxMonthsOfStock" class="right-justified"
+               ng-class="{'required-error' : (facilityApprovedProduct && !facilityApprovedProduct.maxMonthsOfStock)}"
+               numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
+        <span class="rnr-form-error" style="display:none;" id="list.maxMonthsOfStock"
+              openlmis-message="error.number.only"></span>
+
       </td>
-      <td id="minMonthsOfStock{{$index}}" class="right-justified">
+      <td id="minMonthsOfStock{{$index}}" class="right-justified position-relative">
+
         <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.minMonthsOfStock"></span>
-        <input type="text" ng-if="facilityApprovedProduct.underEdit"
-               ng-model="facilityApprovedProduct.minMonthsOfStock"/>
-      <td id="eop{{$index}}" class="right-justified">
+
+        <input type="text" ng-if="facilityApprovedProduct.underEdit" name="list.minMonthsOfStock"
+               ng-model="facilityApprovedProduct.minMonthsOfStock" class="right-justified"
+               numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
+        <span class="rnr-form-error" style="display:none;" id="list.minMonthsOfStock"
+              openlmis-message="error.number.only"></span>
+
+      <td id="eop{{$index}}" class="right-justified position-relative">
+
         <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.eop"></span>
-        <input type="text" ng-if="facilityApprovedProduct.underEdit"
-               ng-model="facilityApprovedProduct.eop"/>
+
+        <input type="text" ng-if="facilityApprovedProduct.underEdit" name="list.eop"
+               ng-model="facilityApprovedProduct.eop" class="right-justified"
+               numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
+        <span class="rnr-form-error" style="display:none;" id="list.eop" openlmis-message="error.number.only"></span>
+
       </td>
       <td class="center-justified">
         <i id="GlobalActive{{$index}}"

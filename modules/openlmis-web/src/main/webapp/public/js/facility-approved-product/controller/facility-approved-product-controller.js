@@ -65,10 +65,16 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
   };
 
   $scope.update = function (facilityApprovedProduct) {
+    if (isUndefined(facilityApprovedProduct.maxMonthsOfStock)) {
+      $scope.error = 'error.correct.highlighted';
+      return;
+    }
     facilityApprovedProduct.facilityType = $scope.facilityType;
     facilityApprovedProduct.programProduct.program = $scope.program;
+
     FacilityTypeApprovedProducts.update({}, facilityApprovedProduct, function (data) {
       $scope.message = data.success;
+      facilityApprovedProduct.underEdit = false;
     }, function (data) {
       $scope.message = data.data.error;
     });

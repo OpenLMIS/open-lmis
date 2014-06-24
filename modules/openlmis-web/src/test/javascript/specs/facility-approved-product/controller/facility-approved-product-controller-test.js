@@ -224,7 +224,9 @@ describe("Facility Approved Product", function () {
 
     it('should update facility approved product', function () {
       var successMessage = "Updated successfully";
-
+      scope.currentPage = 0;
+      scope.program = {"id": 1};
+      scope.facilityType = {"id": 2};
       var facilityApprovedProduct = {
         facilityType: {},
         programProduct: {program: {}, product: {}, productCategory: {}},
@@ -235,17 +237,24 @@ describe("Facility Approved Product", function () {
         previousMinMonthsOfStock: 4,
         previousEop: 124
       };
+      facilityApprovedProduct.underEdit = true;
       $httpBackend.expectPUT('/facilityApprovedProducts.json', facilityApprovedProduct).respond(200, {"success": successMessage});
 
       scope.update(facilityApprovedProduct);
 
       $httpBackend.flush();
 
+      expect(facilityApprovedProduct.facilityType).toEqual({"id": 2});
+      expect(facilityApprovedProduct.programProduct.program).toEqual({"id": 1});
+      expect(facilityApprovedProduct.underEdit).toBeFalsy();
       expect(scope.message).toEqual("Updated successfully");
     });
 
     it('should not update facility approved product', function () {
       var errorMessage = "some error occurred. Please contact system admin.";
+      scope.currentPage = 0;
+      scope.program = {"id": 1};
+      scope.facilityType = {"id": 2};
 
       var facilityApprovedProduct = {
         facilityType: {},
@@ -263,7 +272,30 @@ describe("Facility Approved Product", function () {
 
       $httpBackend.flush();
 
+      expect(facilityApprovedProduct.facilityType).toEqual({"id": 2});
+      expect(facilityApprovedProduct.programProduct.program).toEqual({"id": 1});
       expect(scope.message).toEqual("some error occurred. Please contact system admin.");
+    });
+
+    it('should not update facility approved product if mandatory field missing', function () {
+      spyOn($httpBackend, 'expectPUT');
+
+      var facilityApprovedProduct = {
+        facilityType: {},
+        programProduct: {program: {}, product: {}, productCategory: {}},
+        minMonthsOfStock: 40,
+        eop: 120,
+        previousMaxMonthsOfStock: 3,
+        previousMinMonthsOfStock: 4,
+        previousEop: 124
+      };
+
+      scope.update(facilityApprovedProduct);
+
+      expect(scope.error).toEqual("error.correct.highlighted");
+      expect(facilityApprovedProduct.facilityType).toEqual({});
+      expect(facilityApprovedProduct.programProduct.program).toEqual({});
+      expect($httpBackend.expectPUT).not.toHaveBeenCalled();
     });
   });
 });
