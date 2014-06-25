@@ -53,7 +53,7 @@ public class ManageFilterSearch extends TestCaseHelper {
 
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
-    requisitionGroupPage.enterSearchMultipleFacilitiesParameter("F10");
+    requisitionGroupPage.searchMultipleFacilities("F10");
     testWebDriver.waitForAjax();
     assertEquals("6 matches found for 'F10'", requisitionGroupPage.getNFacilityResultsMessage());
     requisitionGroupPage.clickFilterButton();
@@ -106,7 +106,7 @@ public class ManageFilterSearch extends TestCaseHelper {
 
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
-    requisitionGroupPage.enterSearchMultipleFacilitiesParameter("F11");
+    requisitionGroupPage.searchMultipleFacilities("F11");
     testWebDriver.waitForAjax();
     assertEquals("Too many results found. Please refine your search.", requisitionGroupPage.getTooManyFacilitySearchResultMessage());
     requisitionGroupPage.clickFilterButton();
@@ -161,7 +161,7 @@ public class ManageFilterSearch extends TestCaseHelper {
     testWebDriver.waitForAjax();
 
     supervisoryNodesPage.clickAssociatedFacilityMemberField();
-    supervisoryNodesPage.enterSearchFacilityParameter("F10");
+    supervisoryNodesPage.searchFacility("F10");
     testWebDriver.waitForAjax();
     assertEquals("6 matches found for 'F10'", supervisoryNodesPage.getNFacilityResultsMessage());
     supervisoryNodesPage.clickFilterButton();

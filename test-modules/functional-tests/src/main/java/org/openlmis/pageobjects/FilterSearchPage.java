@@ -327,14 +327,14 @@ public class FilterSearchPage extends Page {
     return searchMultipleFacilitiesIcon.isDisplayed();
   }
 
-  public void enterSearchMultipleFacilitiesParameter(String facilityCode) {
+  public void searchMultipleFacilities(String facilityCode) {
     WebElement multipleFacilitiesSearch = testWebDriver.findElement(cssSelector("input[ng-model='multipleFacilitiesSearchParam']"));
     testWebDriver.waitForElementToAppear(multipleFacilitiesSearch);
     sendKeys(multipleFacilitiesSearch, facilityCode);
     searchMultipleFacilitiesIcon.click();
   }
 
-  public void enterSearchFacilityParameter(String facilityCode) {
+  public void searchFacility(String facilityCode) {
     WebElement facilitySearch = testWebDriver.findElement(cssSelector("input[ng-model='facilitySearchParam']"));
     testWebDriver.waitForElementToAppear(facilitySearch);
     sendKeys(facilitySearch, facilityCode);

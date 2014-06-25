@@ -152,7 +152,7 @@
                ng-click="addNew && toggleSlider('add')"
                ng-model="newProgramSchedule.dropOffFacility">
             <div class="facility-associated">
-              <span ng-show="newProgramSchedule.dropOffFacility">{{newProgramSchedule.dropOffFacility.code}} - {{newProgramSchedule.dropOffFacility.name}}</span>
+              <span id="selectedDropOffFacility{{$index}}" ng-show="newProgramSchedule.dropOffFacility">{{newProgramSchedule.dropOffFacility.code}} - {{newProgramSchedule.dropOffFacility.name}}</span>
             </div>
             <a href="" class="btn">
               <i class="icon icon-ellipsis-horizontal"></i>

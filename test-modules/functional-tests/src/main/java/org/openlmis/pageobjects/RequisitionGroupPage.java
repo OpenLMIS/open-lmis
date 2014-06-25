@@ -189,6 +189,12 @@ public class RequisitionGroupPage extends FilterSearchPage {
   @FindBy(how = ID, using = "clearNewDropOffFacility")
   private static WebElement clearNewDropOffFacility = null;
 
+  @FindBy(how = ID, using = "selectedDropOffFacility")
+  private static WebElement selectedDropOffFacility = null;
+
+  @FindBy(how = ID, using = "viewHere")
+  private static WebElement viewHereLink = null;
+
   public RequisitionGroupPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -750,5 +756,27 @@ public class RequisitionGroupPage extends FilterSearchPage {
   public List<String> getListOfSchedules() {
     testWebDriver.waitForElementToAppear(newScheduleDropDown);
     return testWebDriver.getListOfOptions(newScheduleDropDown);
+  }
+
+  public String getSelectedDropOffFacility() {
+    testWebDriver.waitForElementToAppear(selectedDropOffFacility);
+    return selectedDropOffFacility.getText();
+  }
+
+  public void clickViewHereLink() {
+    testWebDriver.waitForElementToAppear(viewHereLink);
+    viewHereLink.click();
+  }
+
+  public boolean isDropOffFacilityDisplay(int rowNumber) {
+    WebElement dropOffFacility = testWebDriver.getElementById("dropOffFacility" + (rowNumber - 1));
+    try {
+      testWebDriver.waitForElementToAppear(dropOffFacility);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return dropOffFacility.isDisplayed();
   }
 }

@@ -287,7 +287,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.selectFacilityType("Warehouse");
     supervisoryNodesPage.clickApplyFilterButton();
     testWebDriver.waitForAjax();
-    supervisoryNodesPage.enterSearchFacilityParameter("F11");
+    supervisoryNodesPage.searchFacility("F11");
     testWebDriver.waitForAjax();
     supervisoryNodesPage.selectFacility(1);
     testWebDriver.sleep(500);
@@ -330,7 +330,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.enterSupervisoryNodeName("Node4");
     supervisoryNodesPage.enterSupervisoryNodeDescription("This is Node 4");
     supervisoryNodesPage.clickAssociatedFacilityMemberField();
-    supervisoryNodesPage.enterSearchFacilityParameter("F10");
+    supervisoryNodesPage.searchFacility("F10");
     supervisoryNodesPage.selectFacility(1);
     testWebDriver.sleep(500);
     assertFalse(supervisoryNodesPage.isSearchFacilityIconDisplayed());
@@ -420,7 +420,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F10");
 
     supervisoryNodesPage.clickAssociatedFacilityMemberField();
-    supervisoryNodesPage.enterSearchFacilityParameter("F10");
+    supervisoryNodesPage.searchFacility("F10");
     assertEquals("No matches found for 'F10'", supervisoryNodesPage.getNoFacilityResultMessage());
     supervisoryNodesPage.closeSearchResults();
     assertEquals("", supervisoryNodesPage.getSearchFacilityText());
@@ -473,7 +473,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.selectSupervisoryNodeSearchResult(nodeResultNumber);
     supervisoryNodesPage.clickAssociatedFacilityMemberField();
     testWebDriver.waitForAjax();
-    supervisoryNodesPage.enterSearchFacilityParameter(facilityCodeOrName);
+    supervisoryNodesPage.searchFacility(facilityCodeOrName);
     supervisoryNodesPage.selectFacility(1);
   }
 

@@ -251,7 +251,7 @@ public class ManageSupplyLine extends TestCaseHelper {
 
     supplyLinePage.enterValuesInSupplyLineFields("Malaria", "node", false);
     supplyLinePage.clickSupplyingFacilityField();
-    supplyLinePage.enterSearchFacilityParameter("F11");
+    supplyLinePage.searchFacility("F11");
     testWebDriver.waitForAjax();
     supplyLinePage.clickFilterButton();
     testWebDriver.waitForAjax();
@@ -283,7 +283,7 @@ public class ManageSupplyLine extends TestCaseHelper {
 
     supplyLinePage.enterValuesInSupplyLineFields("HIV", "node", false);
     supplyLinePage.clickSupplyingFacilityField();
-    supplyLinePage.enterSearchFacilityParameter("F11");
+    supplyLinePage.searchFacility("F11");
     testWebDriver.waitForAjax();
     supplyLinePage.selectFacility(1);
     supplyLinePage.clickSaveButton();
@@ -296,7 +296,7 @@ public class ManageSupplyLine extends TestCaseHelper {
     supplyLinePage.enterDescription("Description");
 
     supplyLinePage.clickSupplyingFacilityField();
-    supplyLinePage.enterSearchFacilityParameter("F11A");
+    supplyLinePage.searchFacility("F11A");
     testWebDriver.waitForAjax();
     supplyLinePage.selectFacility(1);
     supplyLinePage.clickSaveButton();
@@ -352,7 +352,7 @@ public class ManageSupplyLine extends TestCaseHelper {
     assertEquals("There are some errors in the form. Please resolve them.", supplyLinePage.getSaveErrorMessage());
 
     supplyLinePage.clickSupplyingFacilityField();
-    supplyLinePage.enterSearchFacilityParameter("F11");
+    supplyLinePage.searchFacility("F11");
     supplyLinePage.selectFacility(1);
     supplyLinePage.clickSaveButton();
     testWebDriver.sleep(1000);
