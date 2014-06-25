@@ -67,13 +67,13 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.requisitionGroupProgramSchedules[index] = currentProgramSchedule;
     $scope.requisitionGroupProgramSchedules[index].underEdit = false;
     currentProgramSchedule = undefined;
-    $scope.toggleSlider();
+    closeSlider();
   };
 
   $scope.cancelAdd = function () {
     $scope.newProgramSchedule = {};
     $scope.addNew = false;
-    $scope.toggleSlider();
+    closeSlider();
   };
 
   $scope.findProgramScheduleUnderEdit = function () {
@@ -84,8 +84,9 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
 
   $scope.saveEditableRow = function (index) {
     $scope.requisitionGroupProgramSchedules[index].underEdit = false;
+    programScheduleUnderEdit = $scope.findProgramScheduleUnderEdit();
     $scope.requisitionGroupProgramSchedules[index].dropOffFacility = (programScheduleUnderEdit && programScheduleUnderEdit.dropOffFacility) || $scope.requisitionGroupProgramSchedules[index].dropOffFacility;
-    $scope.toggleSlider();
+    closeSlider();
   };
 
   $scope.cancel = function () {
@@ -101,7 +102,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     refreshAndSortPrograms();
     $scope.newProgramSchedule = {};
     $scope.addNew = false;
-    $scope.toggleSlider();
+    closeSlider();
   };
 
   $scope.remove = function (programId) {
@@ -141,6 +142,11 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.showSlider = !$scope.showSlider;
   };
 
+  var closeSlider = function () {
+    if ($scope.showSlider === true)
+      $scope.toggleSlider();
+  };
+
   $scope.associate = function (facility) {
     programScheduleUnderEdit = $scope.findProgramScheduleUnderEdit();
     if (programScheduleUnderEdit) {
@@ -149,7 +155,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     else {
       $scope.newProgramSchedule.dropOffFacility = facility;
     }
-    $scope.toggleSlider();
+    closeSlider();
   };
 
   $scope.addMembers = function (tempFacilities) {

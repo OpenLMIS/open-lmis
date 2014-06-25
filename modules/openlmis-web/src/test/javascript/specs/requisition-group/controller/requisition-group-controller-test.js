@@ -377,12 +377,51 @@ describe("Requisition Group Controller", function () {
     expect(scope.requisitionGroupProgramSchedules[index].dropOffFacility).toEqual(programScheduleUnderEditFacility);
   });
 
-  it('should be able to toggle slider', function () {
+  it('should not save drop off facility if no row in editable mode', function () {
+    scope.requisitionGroupProgramSchedules = [
+      {"name": "Malaria", "underEdit": false, "dropOffFacility": {"id": 1}},
+      {"name": "Essential Medicines", "underEdit": false, "dropOffFacility": {"id": 2}}
+    ];
+    var index = 1;
+    var programScheduleUnderEditFacility = {"name": "Fac1"};
+    scope.associate(programScheduleUnderEditFacility);
+
+    scope.saveEditableRow(1);
+
+    expect(scope.requisitionGroupProgramSchedules[index].underEdit).toBeFalsy();
+    expect(scope.requisitionGroupProgramSchedules[index].dropOffFacility).toEqual({id: 2});
+  });
+
+  it('should not save drop off facility if no drop facility selected row in editable mode', function () {
+    scope.requisitionGroupProgramSchedules = [
+      {"name": "Malaria", "underEdit": false, "dropOffFacility": {"id": 1}},
+      {"name": "Essential Medicines", "underEdit": false, "dropOffFacility": {"id": 2}}
+    ];
+    var index = 1;
+    scope.associate();
+
+    scope.saveEditableRow(1);
+
+    expect(scope.requisitionGroupProgramSchedules[index].underEdit).toBeFalsy();
+    expect(scope.requisitionGroupProgramSchedules[index].dropOffFacility).toEqual({id: 2});
+  });
+
+  it('should close slider if already opened', function () {
     scope.showSlider = true;
 
     scope.toggleSlider();
 
+    expect(scope.currentSlider).toBeUndefined();
     expect(scope.showSlider).toBeFalsy();
+  });
+
+  it('should open slider if already closed', function () {
+    scope.showSlider = false;
+
+    scope.toggleSlider(1);
+
+    expect(scope.currentSlider).toEqual(1);
+    expect(scope.showSlider).toBeTruthy();
   });
 
   it('should associate facility to programSchedule Under Edit', function () {
