@@ -154,4 +154,10 @@ public interface FacilityLookupReportMapper {
             "    AND f.virtualFacility = FALSE\n" +
             "order by name")
     List<HashMap>  getFacilitiesForNotifications(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("rgroupId") String requisitionGroupId, @Param("programId") Long programId, @Param("scheduleId") Long scheduleId);
+
+    @Select("SELECt Distinct * \n" +
+            "FROM facilities\n" +
+            "WHERE geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))")
+    List<Facility>  getFacilitiesByGeographicZoneTree(@Param("userId") Long userId, @Param("zoneId") Long zoneId);
+
 }

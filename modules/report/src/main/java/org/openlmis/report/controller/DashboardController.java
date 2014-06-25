@@ -76,16 +76,18 @@ public class DashboardController extends BaseController {
     @RequestMapping(value = "/stockEfficiency", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getStockEfficiencyData(@RequestParam("periodId") Long periodId,
                                                                     @RequestParam("programId") Long programId,
-                                                                    @RequestParam("rgroupId") List<Long> rgroupId,
-                                                                    @RequestParam("productListId")List<Long> productListId){
-        return OpenLmisResponse.response(STOCKING_EFFICIENCY_STATICS, this.lookupService.getStockEfficiencyData(periodId, programId,rgroupId, productListId));
+                                                                    @RequestParam("zoneId") Long zoneId,
+                                                                    @RequestParam("productListId")List<Long> productListId,
+                                                                    HttpServletRequest request){
+        return OpenLmisResponse.response(STOCKING_EFFICIENCY_STATICS, this.lookupService.getStockEfficiencyData(loggedInUserId(request), periodId, programId,zoneId, productListId));
     }
     @RequestMapping(value = "/stockEfficiencyDetail", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getStockEfficiencyDetailData(@RequestParam("periodId") Long periodId,
                                                                     @RequestParam("programId") Long programId,
-                                                                    @RequestParam("rgroupId") List<Long> rgroupId,
-                                                                    @RequestParam("productListId")List<Long> productListId){
-        return OpenLmisResponse.response(STOCKING_EFFICIENCY_DETAIL, this.lookupService.getStockEfficiencyDetailData(periodId, programId,rgroupId, productListId));
+                                                                    @RequestParam("zoneId") Long zoneId,
+                                                                    @RequestParam("productListId")List<Long> productListId,
+                                                                    HttpServletRequest request){
+        return OpenLmisResponse.response(STOCKING_EFFICIENCY_DETAIL, this.lookupService.getStockEfficiencyDetailData(loggedInUserId(request), periodId, programId,zoneId, productListId));
     }
 
     @RequestMapping(value = "/stockedOutFacilities", method = GET, headers = ACCEPT_JSON)
@@ -104,10 +106,16 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response(STOCKED_OUT_FACILITIES, this.lookupService.getStockOutFacilitiesByRequisitionGroup(periodId, programId, productId,requisitionGroupId));
     }
     @RequestMapping(value = "/alerts", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse>  getAlerts(@RequestParam("supervisoryNodeId") Long supervisoryNodeId, @RequestParam("programId") Long programId,
+    public ResponseEntity<OpenLmisResponse>  getAlerts(@RequestParam("zoneId") Long zoneId, @RequestParam("programId") Long programId,
                                                        @RequestParam("periodId") Long periodId,
                                                        HttpServletRequest request){
-        return OpenLmisResponse.response(ALERTS, this.lookupService.getAlerts(loggedInUserId(request), supervisoryNodeId, programId, periodId ));
+        return OpenLmisResponse.response(ALERTS, this.lookupService.getAlerts(loggedInUserId(request), programId, periodId, zoneId ));
+    }
+    @RequestMapping(value = "/stocked-out/alerts", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>  getStockedOutAlerts(@RequestParam("zoneId") Long zoneId, @RequestParam("programId") Long programId,
+                                                       @RequestParam("periodId") Long periodId,
+                                                       HttpServletRequest request){
+        return OpenLmisResponse.response(ALERTS, this.lookupService.getStockedOutAlerts(loggedInUserId(request), programId, periodId, zoneId ));
     }
 
     @RequestMapping(value = "/notification/alerts", method = GET, headers = ACCEPT_JSON)
@@ -115,9 +123,19 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response(NOTIFICATIONS, this.lookupService.getNotificationAlerts());
     }
 
-    @RequestMapping(value = "/notifications/{alertId}/{detailTable}", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getNotificationsByCategory(@PathVariable("alertId") Long id, @PathVariable("detailTable") String detailTable){
-        return OpenLmisResponse.response(NOTIFICATIONS_DETAIL, this.lookupService.getNotificationsByCategory(detailTable, id));
+    @RequestMapping(value = "/notifications/{programId}/{periodId}/{zoneId}/{detailTable}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getNotificationsByCategory(@PathVariable("programId") Long programId,@PathVariable("periodId") Long periodId,
+                                                                       @PathVariable("zoneId") Long zoneId,
+                                                                       @PathVariable("detailTable") String detailTable,
+                                                                       HttpServletRequest request){
+        return OpenLmisResponse.response(NOTIFICATIONS_DETAIL, this.lookupService.getNotificationsByCategory(loggedInUserId(request),programId,periodId,zoneId,detailTable));
+    }
+    @RequestMapping(value = "/notifications/{programId}/{periodId}/{zoneId}/{productId}/{detailTable}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getNotificationsDetail(@PathVariable("programId") Long programId,@PathVariable("periodId") Long periodId,
+                                                                   @PathVariable("zoneId") Long zoneId, @PathVariable("productId") Long productId,
+                                                                   @PathVariable("detailTable") String detailTable,
+                                                                   HttpServletRequest request){
+        return OpenLmisResponse.response(NOTIFICATIONS_DETAIL, this.lookupService.getStockedOutNotificationDetails(loggedInUserId(request),programId,periodId,zoneId,productId,detailTable));
     }
     @RequestMapping(value = "/notification/send", method = POST, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> sendNotification(@RequestBody Notification notification, HttpServletRequest request){
@@ -144,15 +162,17 @@ public class DashboardController extends BaseController {
     @RequestMapping(value = "/reportingPerformance", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getReportingPerformance(@RequestParam("periodId") Long periodId,
                                                                  @RequestParam("programId") Long programId,
-                                                                 @RequestParam("rgroupId") List<Long> requisitionGroupId){
-        return OpenLmisResponse.response(REPORTING_PERFORMANCE, this.lookupService.getReportingPerformance(periodId,programId, requisitionGroupId));
+                                                                 @RequestParam("zoneId") Long zoneId,
+                                                                 HttpServletRequest request){
+        return OpenLmisResponse.response(REPORTING_PERFORMANCE, this.lookupService.getReportingPerformance(loggedInUserId(request), periodId,programId, zoneId));
     }
     @RequestMapping(value = "/reportingPerformance-detail", method = GET, headers = ACCEPT_JSON)
             public ResponseEntity<OpenLmisResponse>  getReportingPerformanceDetail(@RequestParam("periodId") Long periodId,
                    @RequestParam("programId") Long programId,
-                   @RequestParam("rgroupId") List<Long> requisitionGroupId,
-                   @RequestParam("status") String status){
-        return OpenLmisResponse.response(REPORTING_DETAILS, this.lookupService.getReportingPerformanceDetail(periodId,programId, requisitionGroupId,status));
+                   @RequestParam("zoneId") Long zoneId,
+                   @RequestParam("status") String status,
+                   HttpServletRequest request){
+        return OpenLmisResponse.response(REPORTING_DETAILS, this.lookupService.getReportingPerformanceDetail(loggedInUserId(request), periodId,programId, zoneId,status));
     }
     @RequestMapping(value="/requisitionGroup/{requisitionGroupId}/program/{programId}/period/{periodId}/rnrDetails",method = GET,headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>getRnRStatusData(

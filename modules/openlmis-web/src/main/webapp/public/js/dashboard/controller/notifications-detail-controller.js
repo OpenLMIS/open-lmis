@@ -8,6 +8,7 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
     $scope.notificationDetail = {};
     $scope.programId =2;
     $scope.notificationDetail.tableName = $routeParams.detailTable;
+    //alert('details for '+JSON.stringify($routeParams))
 
     if(!isUndefined($routeParams.detailTable)){
         var pageTitleKey =  'title.notification.type.'+ $routeParams.detailTable+'.detail';
@@ -15,8 +16,7 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
         $scope.detailTable = pageTitleKey === pageTitle ? $routeParams.detailTable :pageTitle;
     }
 
-    if(!isUndefined($routeParams.detailTable) &&
-        !isUndefined($routeParams.alertId)){
+    if(!isUndefined($routeParams.detailTable)){
         var columnsToHide =  $routeParams.detailTable+'_HIDDEN_COLUMNS';
         SettingsByKey.get({key: columnsToHide.toUpperCase()},function (data){
             if(!isUndefined(data.settings)){
@@ -24,7 +24,29 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
             }
         });
 
-        DashboardNotificationsDetail.get({alertId:$routeParams.alertId, detailTable:$routeParams.detailTable},function(stockData){
+         DashboardNotificationsDetail.get({programId:$routeParams.programId, periodId:$routeParams.periodId, productId:$routeParams.productId,zoneId:$routeParams.zoneId, detailTable:$routeParams.detailTable},function(stockData){
+         $scope.notificationDetail.datarows = stockData.detail;
+
+         if(!isUndefined($scope.notificationDetail.datarows)){
+
+         var cols =  _.keys(_.first($scope.notificationDetail.datarows));
+         $scope.notificationColumns = [];
+         $.each(cols, function(idx,item){
+         var colTitleKey = 'label.notification.column.'+item;
+         var colTitle = messageService.get(colTitleKey);
+         var hideColumn = false;
+         if(_.indexOf($scope.colsToHide,item) !== -1){
+         hideColumn = true;
+         }
+
+         $scope.notificationColumns.push({name:item, title:colTitle === colTitleKey ? item : colTitle, hide: hideColumn});
+         });
+
+         $scope.notificationDetail.notificationColumns = $scope.notificationColumns;
+         }
+
+         });
+/*        DashboardNotificationsDetail.get({alertId:$routeParams.alertId, detailTable:$routeParams.detailTable},function(stockData){
             $scope.notificationDetail.datarows = stockData.detail;
 
             if(!isUndefined($scope.notificationDetail.datarows)){
@@ -45,7 +67,7 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
                 $scope.notificationDetail.notificationColumns = $scope.notificationColumns;
             }
 
-        });
+        });*/
 
     }
 

@@ -7,18 +7,29 @@
  */
 
 ResolveDashboardFormData = {
-    programsList : function($q, $timeout, $rootScope, ProgramListBySupervisoryNodes){
+    programsList : function($q, $timeout, $rootScope, UserSupervisedActivePrograms){
         var deferred = $q.defer();
         $timeout(function () {
 
-            ProgramListBySupervisoryNodes.get({}, function(data){
+            UserSupervisedActivePrograms.get(function(data){
                 deferred.resolve(data.programs);
+
             });
 
         },100);
 
         return deferred.promise;
 
+    },
+    geographicZoneTree : function($q, $timeout, UserGeographicZoneTree){
+        var deferred = $q.defer();
+        $timeout(function(){
+            UserGeographicZoneTree.get(function(data){
+               deferred.resolve(data.zone);
+            });
+        },100);
+
+        return deferred.promise;
     },
     userPreferredFilterValues : function(localStorageService){
         var preferredFilterValues = {};
@@ -34,7 +45,7 @@ ResolveDashboardFormData = {
                 yearOptionAll : messageService.get('input.year.option.all'),
                 programOptionSelect : messageService.get('input.program.option.select'),
                 scheduleOptionSelect : messageService.get('input.schedule.option.select'),
-                requisitionOptionAll : messageService.get('input.requisition.option.all'),
+                geographicZoneNational : messageService.get('input.geographic.zone.national'),
                 facilityOptionSelect : messageService.get('input.facility.option.select'),
                 periodOptionSelect : messageService.get('input.period.option.select'),
                 supervisoryNodeOptionAll : messageService.get('input.supervisory.node.option.all'),

@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function StockedOutController($scope, $location, programsList, dashboardMenuService, formInputValue,GetPeriod,ReportProgramsBySupervisoryNode,dashboardFiltersHistoryService,userPreferredFilterValues,RequisitionGroupsBySupervisoryNodeProgramSchedule, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
+function StockedOutController($scope, $location,  dashboardMenuService,programsList,geographicZoneTree, formInputValue,GetPeriod,dashboardFiltersHistoryService,userPreferredFilterValues,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -25,14 +25,18 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
         $scope.productSelectOption = {maximumSelectionSize : 1};
 
     }
-    UserSupervisoryNodes.get(function (data){
+    /*UserSupervisoryNodes.get(function (data){
         $scope.supervisoryNodes = data.supervisoryNodes;
         if(!isUndefined( $scope.supervisoryNodes)){
             $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionSelect});
         }
 
-    });
+    });*/
 
+    $scope.programs = programsList;
+    $scope.programs.unshift({'name': formInputValue.programOptionSelect});
+
+    $scope.zones = geographicZoneTree;
 
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -60,7 +64,7 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
         }
 
 
-        if(!isUndefined($scope.formFilter.supervisoryNodeId)){
+        /*if(!isUndefined($scope.formFilter.supervisoryNodeId)){
             RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
                 {programId : $scope.filterObject.programId,
                     scheduleId : isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId ,
@@ -78,17 +82,17 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
                     $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
                 }
             });
-        }
+        }*/
     };
 
-    $scope.processRequisitionFilter = function(){
+   /* $scope.processRequisitionFilter = function(){
         if($scope.formFilter.rgroupId && $scope.formFilter.rgroupId.length > 1) {
             $scope.formFilter.rgroupId = _.reject($scope.formFilter.rgroupId, function(rgroup){return rgroup === ""; });
         }
         $scope.filterObject.rgroupId = $scope.formFilter.rgroupId;
 
         $scope.loadStockedOutData();
-    };
+    };*/
 
     $scope.processProductsFilter = function (){
 
@@ -97,7 +101,7 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
 
     };
 
-    $scope.processSupervisoryNodeChange = function(){
+   /* $scope.processSupervisoryNodeChange = function(){
 
         $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId;
 
@@ -114,7 +118,7 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
 
         $scope.filterProductsByProgram();
 
-    };
+    };*/
 
 
     $scope.changeSchedule = function(){
@@ -136,7 +140,7 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
 
                 });
             }
-            if(!isUndefined($scope.filterObject.programId)){
+           /* if(!isUndefined($scope.filterObject.programId)){
                 if(!isUndefined($scope.filterObject.supervisoryNodeId)){
                     RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
                         {programId: $scope.filterObject.programId,
@@ -157,7 +161,7 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
                     });
                 }
 
-            }
+            }*/
         }
 
         $scope.loadStockedOutData();
@@ -320,7 +324,7 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
                 $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
-                $scope.processSupervisoryNodeChange();
+               // $scope.processSupervisoryNodeChange();
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
@@ -348,7 +352,7 @@ function StockedOutController($scope, $location, programsList, dashboardMenuServ
         }else{
 
             $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
-            $scope.processSupervisoryNodeChange();
+            //$scope.processSupervisoryNodeChange();
             $scope.registerWatches();
             $scope.formFilter = $scope.filterObject = filterHistory;
 

@@ -18,9 +18,8 @@ import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
-import org.openlmis.report.mapper.lookup.AdjustmentTypeReportMapper;
 import org.openlmis.report.mapper.lookup.*;
-import org.openlmis.report.model.GeoZoneReportingRate;
+import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.dto.DosageUnit;
 import org.openlmis.report.model.dto.Facility;
 import org.openlmis.report.model.dto.FacilityType;
@@ -35,7 +34,6 @@ import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.openlmis.report.model.dto.*;
 
 import java.util.*;
 
@@ -316,6 +314,10 @@ public List<Program>getAllProgramsWithBudgeting(){
 
   }
 
+  public List<Facility> getFacilityByGeographicZoneTree(Long userId, Long zoneId){
+      return facilityReportMapper.getFacilitiesByGeographicZoneTree(userId,zoneId);
+  }
+
   public List<HashMap> getFacilitiesForNotifications(Long userId, Long supervisoryNodeId, String requisitionGroup, Long program, Long schedule) {
 
       return facilityReportMapper.getFacilitiesForNotifications(userId,supervisoryNodeId, requisitionGroup, program, schedule);
@@ -419,6 +421,21 @@ public List<Program>getAllProgramsWithBudgeting(){
     for(GeoZoneTree zone : tree.getChildren()){
       populateChildren(zone);
     }
+  }
+
+  public GeoZoneTree getUserGeoZoneTree(Long userId){
+      GeoZoneTree tree = geographicZoneMapper.getParentZoneTree();
+      populateUserGeographicZoneChildren(tree, userId);
+      return tree;
+  }
+
+
+  private void populateUserGeographicZoneChildren(GeoZoneTree tree, Long userId){
+      tree.setChildren(geographicZoneMapper.getUserGeographicZoneChildren(tree.getId(), userId));
+
+      for (GeoZoneTree zone : tree.getChildren()){
+          populateUserGeographicZoneChildren(zone, userId);
+      }
   }
 
 }

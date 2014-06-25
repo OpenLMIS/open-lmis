@@ -10,7 +10,7 @@ function ReportingPerformanceDetailController($scope,$routeParams,$filter, Repor
             !isUndefined($routeParams.periodId)){
             ReportingPerformanceDetail.get({
                 periodId: $routeParams.periodId,
-                rgroupId: $routeParams.rgroupId,
+                zoneId: $routeParams.zoneId,
                 programId: $routeParams.programId,
                 status: $routeParams.status
             },function(data){

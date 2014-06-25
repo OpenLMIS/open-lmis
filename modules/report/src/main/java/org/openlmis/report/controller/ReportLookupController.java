@@ -15,7 +15,6 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.GeographicZoneService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.response.OpenLmisResponse;
@@ -278,15 +277,12 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
 
 
 
-    @RequestMapping(value = "/facilities/supervisory-node/{supervisoryNodeId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value = "/geographic-zone/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilities(
-            @PathVariable("supervisoryNodeId") Long supervisoryNodeId,
-            @PathVariable("programId") Long programId,
-            @PathVariable("scheduleId") Long scheduleId,
-            @RequestParam("rgroupId") List<Long> requisitionGroupId,
+            @RequestParam("zoneId") Long zoneId,
             HttpServletRequest request
     ) {
-        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(loggedInUserId(request),supervisoryNodeId, getCommaSeparatedIds(requisitionGroupId),programId,scheduleId));
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZoneTree(loggedInUserId(request),zoneId));
     }
 
     @RequestMapping(value = "notifications/facilities/supervisory-node/{supervisoryNodeId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -299,6 +295,13 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
     ) {
         return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesForNotifications(loggedInUserId(request),supervisoryNodeId, getCommaSeparatedIds(requisitionGroupId),programId,scheduleId));
     }
+
+  @RequestMapping(value = "/user/geographic-zones/tree", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getUserGeographicZoneTree(HttpServletRequest request) {
+      GeoZoneTree geoZoneTree =  reportLookupService.getUserGeoZoneTree(loggedInUserId(request));
+
+      return OpenLmisResponse.response("zone", geoZoneTree);
+  }
 
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getAll(@PathVariable("scheduleId") Long scheduleId) {
@@ -329,8 +332,8 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
       return OpenLmisResponse.response("periods", periodList);
   }
 
-  @RequestMapping(value = "/supervisory-nodes/programs", method = GET, headers = BaseController.ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getProgramsForAllSupervisoryNodes(HttpServletRequest request){
+  @RequestMapping(value = "/user/programs", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getAllUserSupervisedActivePrograms(HttpServletRequest request){
 
       List<Program> programList = reportLookupService.getAllUserSupervisedActivePrograms(loggedInUserId(request));
       return OpenLmisResponse.response("programs",programList);

@@ -18,6 +18,9 @@ public class AlertSummary {
     private String description;
     private Long supervisoryNodeId;
     private Long periodId;
+    private Long programId;
+    private Long productId;
+    private String zone;
     private String alertType;
     private String displaySection;
     private Boolean email;

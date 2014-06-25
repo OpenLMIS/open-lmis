@@ -33,7 +33,7 @@
                             <tbody >
                             <tr ng-repeat="alert in dataRows.alert" >
                                 <td data-title="Alerts">
-                                    <a href="" ng-click="showAlertDetails(alert.detailTable,alert.id)">{{ alert.staticsValue }}</a>
+                                    <a href="" ng-click="showAlertDetails(alert.detailTable)">{{ alert.staticsValue }}</a>
                                     {{ alert.description}}
                                 </td>
                             </tr>
@@ -63,9 +63,9 @@
                             <tbody >
                             <tr ng-repeat="stock in dataRows.stock" >
                                 <td data-title="'Stock outs'">
-                                    {{stock.description}}
+                                    {{stock.staticsValue}} {{stock.description}}
                                 </td>
-                                <td><a href="" ng-click="showAlertDetails(stock.detailTable,stock.id)" openlmis-message="button.view.detail"></a></td>
+                                <td><a href="" ng-click="showStockedOutAlertDetails(stock.detailTable,stock.productId)" openlmis-message="button.view.detail"></a></td>
                             </tr>
                             </tbody>
                         </table>

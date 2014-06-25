@@ -9,13 +9,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AlertsController($scope, $filter, Alerts,$location, dashboardMenuService, ngTableParams) {
+function AlertsController($scope, $filter, Alerts,StockedOutAlerts,$location, dashboardMenuService, ngTableParams) {
 
     var typeAlert = 'ALERT',
         typeStockOut = 'STOCKOUT',
         typeSummary = 'SUMMARY';
 
-    $scope.$watch('formFilter.supervisoryNodeId', function(){
+    $scope.$watch('formFilter.zoneId', function(){
         $scope.getAlerts();
     });
 
@@ -29,11 +29,10 @@ function AlertsController($scope, $filter, Alerts,$location, dashboardMenuServic
 
     $scope.getAlerts = function(){
 
-        Alerts.get({supervisoryNodeId: $scope.formFilter.supervisoryNodeId, programId: $scope.formFilter.programId, periodId: $scope.formFilter.periodId},function(data){
+        Alerts.get({programId: $scope.formFilter.programId, periodId: $scope.formFilter.periodId, zoneId: $scope.formFilter.zoneId},function(data){
 
             if(!isUndefined(data.alerts)){
                 $scope.alertData = _.filter(data.alerts,function(alertData){if(alertData.displaySection == typeAlert){return alertData;}});
-                $scope.stockOutData = _.filter(data.alerts,function(alertData){if(alertData.displaySection == typeStockOut){return alertData;}});
                 $scope.alertSummary = _.filter(data.alerts,function(alertData){if(alertData.displaySection == typeSummary){return alertData;}});
 
             }else{
@@ -42,7 +41,9 @@ function AlertsController($scope, $filter, Alerts,$location, dashboardMenuServic
 
 
         });
-
+        StockedOutAlerts.get({programId: $scope.formFilter.programId, periodId: $scope.formFilter.periodId, zoneId: $scope.formFilter.zoneId},function(data){
+            $scope.stockOutData = data.alerts;
+        });
     };
 
     var resetAlertsData = function(){
@@ -58,11 +59,19 @@ function AlertsController($scope, $filter, Alerts,$location, dashboardMenuServic
         });
     };
 
-    $scope.showAlertDetails = function(detailTable, alertId){
-        var notificationPath = 'notifications/'+alertId+'/'+detailTable;
+    $scope.showAlertDetails = function(detailTable){
+        var notificationPath = 'notifications/'+$scope.formFilter.programId+'/'+$scope.formFilter.periodId+'/'+$scope.formFilter.zoneId+'/'+detailTable;
         dashboardMenuService.addTab('menu.header.dashboard.notifications.detail','/public/pages/dashboard/index.html#/'+notificationPath,'NOTIFICATIONS-DETAIL',true, 7);
 
-        $location.path(notificationPath).search("programId="+$scope.formFilter.programId);
+        //$location.path(notificationPath).search("programId="+$scope.formFilter.programId);
+        $location.path(notificationPath);
+    };
+
+    $scope.showStockedOutAlertDetails = function(detailTable,productId){
+        var notificationPath = 'notifications/'+$scope.formFilter.programId+'/'+$scope.formFilter.periodId+'/'+$scope.formFilter.zoneId+'/'+productId+'/'+detailTable;
+        dashboardMenuService.addTab('menu.header.dashboard.notifications.detail','/public/pages/dashboard/index.html#/'+notificationPath,'NOTIFICATIONS-DETAIL',true, 7);
+
+        $location.path(notificationPath);
     };
 
 

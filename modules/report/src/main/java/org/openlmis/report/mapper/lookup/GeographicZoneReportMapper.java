@@ -110,6 +110,23 @@ public interface GeographicZoneReportMapper {
   @Select("select * from geographic_zones where parentId is null")
   GeoZoneTree getParentZoneTree();
 
+  @Select("select * from geographic_zones where id = #{zoneId}")
+  GeoZoneTree getGeographicZoneById(int zoneId);
+
   @Select("select * from geographic_zones where parentId = #{parentId} order by name")
   List<GeoZoneTree> getChildrenZoneTree(int parentId);
+
+  @Select("WITH  recursive  userGeographicZonesRec AS \n" +
+          "(SELECT *\n" +
+          "FROM geographic_zones \n" +
+          "WHERE id in  (Select geographiczoneid from vw_user_geographic_zones where userid = #{userId} ) \n" +
+          "UNION \n" +
+          "SELECT sn.* \n" +
+          "FROM geographic_zones sn \n" +
+          "JOIN userGeographicZonesRec \n" +
+          "ON sn.id = userGeographicZonesRec.parentId )\n" +
+          "SELECT * from geographic_zones gz\n" +
+          "INNER JOIN userGeographicZonesRec gzRec on gz.id = gzRec.id\n" +
+          "WHERE gz.parentId = #{parentId} order by gz.name\n")
+  List<GeoZoneTree> getUserGeographicZoneChildren(@Param("parentId")int parentId, @Param("userId")Long userId);
 }

@@ -18,7 +18,9 @@ var dashboard = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.boots
         when('/stock-out', {controller: StockedOutController, templateUrl: 'partials/stocked-out.html', resolve : ResolveDashboardFormData }).
         when('/requisition-group-stock-out/:programId/:periodId/:rgroupId/:productId', {controller: RequisitionGroupStockedOutController, templateUrl: 'partials/requisition-group-stocked-out.html', resolve : ResolveDashboardFormData }).
         when('/stock-out-detail/:programId/:periodId/:rgroupId/:productId', {controller: StockedOutDetailController, templateUrl: 'partials/stocked-out-detail.html', resolve : ResolveDashboardFormData }).
-        when('/notifications/:alertId/:detailTable', {controller: NotificationsDetailController, templateUrl: 'partials/notifications-detail.html', resolve : ResolveDashboardFormData }).
+        when('/notifications/:programId/:periodId/:zoneId/:productId/:detailTable', {controller: NotificationsDetailController, templateUrl: 'partials/notifications-detail.html', resolve : ResolveDashboardFormData }).
+        when('/notifications/:programId/:periodId/:zoneId/:detailTable', {controller: NotificationsDetailController, templateUrl: 'partials/notifications-detail.html', resolve : ResolveDashboardFormData }).
+
         when('/notifications', {controller: SendNotificationController, templateUrl: 'partials/send-notifications.html', resolve : ResolveDashboardFormData }).
         when('/rnr-status-summary', {controller: RequisitionStatusSummaryController, templateUrl: 'partials/rnr-status-summary.html', resolve : ResolveDashboardFormData }).
         when('/reporting-performance/program/:programId/period/:periodId', {controller: ReportingPerformanceDetailController, templateUrl: 'partials/reporting-performance-detail.html', resolve : ResolveDashboardFormData }).

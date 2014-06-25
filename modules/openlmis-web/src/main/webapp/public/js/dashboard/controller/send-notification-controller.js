@@ -1,7 +1,7 @@
 /**
  * Created by issa on 4/24/14.
  */
-function SendNotificationController($scope,$timeout,programsList,SendNotification,dashboardFiltersHistoryService,messageService, NotificationAlerts, GetPeriod, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule,FacilitiesForNotifications, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
+function SendNotificationController($scope,$timeout,SendNotification,dashboardFiltersHistoryService,geographicZoneTree,programsList,messageService, NotificationAlerts, GetPeriod, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule,FacilitiesForNotifications, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -25,12 +25,17 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
         $scope.selectedNotification = notification;
     };
 
-    UserSupervisoryNodes.get(function (data){
+    /*UserSupervisoryNodes.get(function (data){
         $scope.supervisoryNodes = data.supervisoryNodes;
         if(!isUndefined( $scope.supervisoryNodes)){
             $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionSelect});
         }
-    });
+    });*/
+
+    $scope.zones = geographicZoneTree;
+
+    $scope.programs = programsList;
+    $scope.programs.unshift({'name': formInputValue.programOptionSelect});
 
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -124,12 +129,12 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
         $scope.notifications = data.notifications;
     });
 
-    $scope.processSupervisoryNodeChange = function(){
+   /* $scope.processSupervisoryNodeChange = function(){
 
         $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId;
 
         if(isUndefined($scope.formFilter.supervisoryNodeId)){
-            $scope.programs = _.filter(programsList, function(program){ return program.name !== formInputValue.programOptionSelect;});
+         //   $scope.programs = _.filter(programsList, function(program){ return program.name !== formInputValue.programOptionSelect;});
 
             $scope.programs.unshift({'name': formInputValue.programOptionSelect});
         }else if(!isUndefined($scope.formFilter.supervisoryNodeId)){
@@ -140,7 +145,7 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
         }
         $scope.filterProductsByProgram();
     };
-
+*/
     $scope.filterProductsByProgram = function (){
         if(isUndefined($scope.formFilter.programId)){
             return;
@@ -292,7 +297,7 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
                 $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
-                $scope.processSupervisoryNodeChange();
+               // $scope.processSupervisoryNodeChange();
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
@@ -318,7 +323,7 @@ function SendNotificationController($scope,$timeout,programsList,SendNotificatio
         }else{
 
             $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
-            $scope.processSupervisoryNodeChange();
+           // $scope.processSupervisoryNodeChange();
             $scope.registerWatches();
             $scope.formFilter = $scope.filterObject = filterHistory;
 

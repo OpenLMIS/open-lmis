@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMenuService,dashboardFiltersHistoryService,ReportingPerformance,GetPeriod, programsList,userPreferredFilterValues,formInputValue,UserSupervisoryNodes,ReportProgramsBySupervisoryNode,RequisitionGroupsBySupervisoryNodeProgramSchedule, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByProgramAndRequisitionGroupParams, OrderFillRate, ItemFillRate, StockEfficiency) {
+function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMenuService,dashboardFiltersHistoryService,geographicZoneTree,programsList,ReportingPerformance,GetPeriod, userPreferredFilterValues,formInputValue,ReportSchedules, ReportPeriods, RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneTree, OrderFillRate, ItemFillRate, StockEfficiency) {
 
     $scope.filterObject = {};
 
@@ -35,13 +35,10 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     var $lineWidth = 5;
     var barColor = defaultBarColor;
 
-   UserSupervisoryNodes.get(function (data){
-       $scope.supervisoryNodes = data.supervisoryNodes;
-       if(!isUndefined( $scope.supervisoryNodes)){
-           $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionSelect});
-       }
+   $scope.programs = programsList;
+   $scope.programs.unshift({'name': formInputValue.programOptionSelect});
 
-   });
+   $scope.zones = geographicZoneTree;
 
    OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -75,26 +72,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
             $scope.products = data.productList;
         });
-
-        if(!isUndefined($scope.formFilter.supervisoryNodeId)){
-            RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
-                {programId : $scope.filterObject.programId,
-                 scheduleId : isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId ,
-                 supervisoryNodeId : $scope.filterObject.supervisoryNodeId
-            },function(data){
-                $scope.requisitionGroups = data.requisitionGroupList;
-                if(!isUndefined($scope.requisitionGroups)){
-                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                }
-            });
-        }else{
-            RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
-                $scope.requisitionGroups = data.requisitionGroupList;
-                if(!isUndefined($scope.requisitionGroups)){
-                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                }
-            });
-        }
 
         $scope.loadFacilities();
         $scope.loadStockingData();
@@ -205,38 +182,13 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     };
 
     $scope.loadFacilities = function(){
-        FacilitiesByProgramAndRequisitionGroupParams.get({
-            supervisoryNodeId: isUndefined($scope.filterObject.supervisoryNodeId) ? 0 : $scope.filterObject.supervisoryNodeId,
-            programId: isUndefined($scope.filterObject.programId)? 0 : $scope.filterObject.programId ,
-            scheduleId: isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId,
-            rgroupId: $scope.filterObject.rgroupId
-        }, function(data){
+        FacilitiesByGeographicZoneTree.get({zoneId: $scope.filterObject.zoneId}, function(data){
             $scope.allFacilities = data.facilities;
             if(!isUndefined($scope.allFacilities)){
                 $scope.allFacilities.unshift({code:formInputValue.facilityOptionSelect});
             }
 
         });
-
-    };
-
-    $scope.processSupervisoryNodeChange = function(){
-
-        $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId;
-
-        if(isUndefined($scope.formFilter.supervisoryNodeId)){
-            $scope.programs = _.filter(programsList, function(program){ return program.name !== formInputValue.programOptionSelect;});
-
-            $scope.programs.unshift({'name': formInputValue.programOptionSelect});
-
-        }else if(!isUndefined($scope.formFilter.supervisoryNodeId)){
-            ReportProgramsBySupervisoryNode.get({supervisoryNodeId : $scope.filterObject.supervisoryNodeId},function(data){
-                    $scope.programs = data.programs;
-                    $scope.programs.unshift({'name': formInputValue.programOptionSelect});
-                });
-        }
-
-        $scope.filterProductsByProgram();
 
     };
 
@@ -259,41 +211,14 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
 
                 });
             }
-            if(!isUndefined($scope.filterObject.programId)){
-                if(!isUndefined($scope.filterObject.supervisoryNodeId)){
-                    RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
-                        {programId: $scope.filterObject.programId,
-                         scheduleId: $scope.filterObject.scheduleId,
-                         supervisoryNodeId: $scope.filterObject.supervisoryNodeId},function(data){
-                            $scope.requisitionGroups = data.requisitionGroupList;
-                            if(!isUndefined($scope.requisitionGroups)){
-                                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                            }
-
-                    });
-                }else{
-                    RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
-                        $scope.requisitionGroups = data.requisitionGroupList;
-                        if(!isUndefined($scope.requisitionGroups)){
-                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                        }
-                    });
-                }
-
-            }
 
         }
         $scope.loadFacilities();
         $scope.loadStockingData();
     };
 
-    $scope.processRequisitionFilter = function(){
-
-        if($scope.formFilter.rgroupId && $scope.formFilter.rgroupId.length > 1) {
-            $scope.formFilter.rgroupId = _.reject($scope.formFilter.rgroupId, function(rgroup){return rgroup === ""; });
-        }
-
-        $scope.filterObject.rgroupId = $scope.formFilter.rgroupId;
+    $scope.processZoneFilter = function(){
+        $scope.filterObject.zoneId = $scope.formFilter.zoneId;
         $scope.loadFacilities();
         $scope.loadStockingData();
         $scope.loadReportingPerformance();
@@ -472,7 +397,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
             return;
         }
 
-         ReportingPerformance.get({periodId :$scope.filterObject.periodId, rgroupId: $scope.filterObject.rgroupId,programId: $scope.filterObject.programId}, function(data){
+         ReportingPerformance.get({periodId :$scope.filterObject.periodId, zoneId: $scope.filterObject.zoneId,programId: $scope.filterObject.programId}, function(data){
                  $scope.reportingChartData = [];
 
                  if(!isUndefined(data.reportingPerformance)){
@@ -502,19 +427,15 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
             if(!isUndefined($scope.reportingRenderedData.status)){
                  status = $scope.reportingRenderedData.status[item.seriesIndex][1];
             }
-            var reportingPerformanceDetailPath = '/reporting-performance/program/'+$scope.filterObject.programId+'/period/'+$scope.filterObject.periodId;//+'/rgroup/'+$scope.filterObject.rgroupId;
+            var reportingPerformanceDetailPath = '/reporting-performance/program/'+$scope.filterObject.programId+'/period/'+$scope.filterObject.periodId;
             dashboardMenuService.addTab('menu.header.dashboard.reporting.performance.detail','/public/pages/dashboard/index.html#'+reportingPerformanceDetailPath,'REPORTING-PERFORMANCE-DETAIL',true, 7);
-            $location.path(reportingPerformanceDetailPath).search("status="+status+"&rgroupId="+$scope.filterObject.rgroupId);
+            $location.path(reportingPerformanceDetailPath).search("status="+status+"&zoneId="+$scope.filterObject.zoneId);
 
             $scope.$apply();
         }
 
     };
 
-  //  function setupReportingChartOption(){
-
-
-   // }
 
     $scope.resetReportingPerformanceData = function(){
         $scope.reportingChartData = null;
@@ -620,7 +541,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
             StockEfficiency.get({
                 periodId: $scope.filterObject.periodId,
                 programId: $scope.filterObject.programId,
-                rgroupId: $scope.filterObject.rgroupId,
+                zoneId: $scope.filterObject.zoneId,
                 productListId: $scope.filterObject.productIdList
             },function (data){
                 var stockingData =  data.stocking;
@@ -740,8 +661,10 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         if(isUndefined(filterHistory)){
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
-                $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
-                $scope.processSupervisoryNodeChange();
+                //$scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
+               // $scope.processSupervisoryNodeChange();
+
+                alert('preferred filter '+JSON.stringify(userPreferredFilterValues))
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
 
@@ -759,7 +682,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                 }
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
 
-                $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
+                $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
                 $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
                 $scope.filterObject.facilityId = $scope.formFilter.facilityId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY];
 
@@ -770,7 +693,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         }else{
 
             $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
-            $scope.processSupervisoryNodeChange();
+           // $scope.processSupervisoryNodeChange();
             $scope.registerWatches();
             $scope.formFilter = $scope.filterObject = filterHistory;
 
@@ -804,17 +727,15 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                 stockData.scheduleId = $scope.filterObject.scheduleId;
                 stockData.status = item.seriesIndex;
                 stockData.facilityId = $scope.filterObject.facilityId;
-                stockData.supervisoryNodeId = $scope.filterObject.supervisoryNodeId;
 
-                stockData.rgroupId = $scope.filterObject.rgroupId;
+                stockData.zoneId = $scope.filterObject.zoneId;
                  var viewStockPath = '/view-stock-detail/'+stockData.programId+'/'+stockData.periodId+'/'+ stockData.productId;
 
                 var params = {
                     "year": stockData.year,
                     "scheduleId": stockData.scheduleId,
-                    "rgroupId": stockData.rgroupId,
-                    "status":stockData.status,
-                    "supervisoryNodeId" : stockData.supervisoryNodeId
+                    "zoneId": stockData.zoneId,
+                    "status":stockData.status
                 };
                 stockData.isNavigatedBack = true;
                 $scope.setFilterData();

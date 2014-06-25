@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFiltersHistoryService, formInputValue,GetPeriod,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
+function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryService,programsList,geographicZoneTree, formInputValue,GetPeriod,userPreferredFilterValues, ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -22,13 +22,19 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
         $scope.showProductsFilter = false;
         $scope.$parent.currentTab = 'ORDER';
     }
-    UserSupervisoryNodes.get(function (data){
+    /*UserSupervisoryNodes.get(function (data){
         $scope.supervisoryNodes = data.supervisoryNodes;
         if(!isUndefined( $scope.supervisoryNodes)){
             $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionSelect});
         }
 
-    });
+    });*/
+
+    $scope.programs = programsList;
+    $scope.programs.unshift({'name': formInputValue.programOptionSelect});
+
+    $scope.zones = geographicZoneTree;
+
 
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -52,7 +58,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
             $scope.products = data.productList;
         });
 
-        if(!isUndefined($scope.formFilter.supervisoryNodeId)){
+       /* if(!isUndefined($scope.formFilter.supervisoryNodeId)){
             RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
                 {programId : $scope.filterObject.programId,
                     scheduleId : isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId ,
@@ -70,7 +76,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
                     $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
                 }
             });
-        }
+        }*/
         $scope.getShipmentLeadTimeData();
 
     };
@@ -91,7 +97,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
         }
 
     };
-    $scope.processSupervisoryNodeChange = function(){
+    /*$scope.processSupervisoryNodeChange = function(){
 
         $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId;
 
@@ -108,7 +114,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
 
         $scope.filterProductsByProgram();
 
-    };
+    };*/
 
 
     $scope.processPeriodFilter = function (){
@@ -128,7 +134,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
         $scope.getShipmentLeadTimeData();
     };
 
-    $scope.processRequisitionFilter = function(){
+   /* $scope.processRequisitionFilter = function(){
 
         if($scope.formFilter.rgroupId && $scope.formFilter.rgroupId.length > 1) {
             $scope.formFilter.rgroupId = _.reject($scope.formFilter.rgroupId, function(rgroup){return rgroup === ""; });
@@ -137,7 +143,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
         $scope.filterObject.rgroupId = $scope.formFilter.rgroupId;
 
         $scope.getShipmentLeadTimeData();
-    };
+    };*/
 
     $scope.changeSchedule = function(){
 
@@ -159,7 +165,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
                 });
             }
             if(!isUndefined($scope.filterObject.programId)){
-                if(!isUndefined($scope.filterObject.supervisoryNodeId)){
+                /*if(!isUndefined($scope.filterObject.supervisoryNodeId)){
                     RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
                         {programId: $scope.filterObject.programId,
                             scheduleId: $scope.filterObject.scheduleId,
@@ -177,7 +183,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
                             $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
                         }
                     });
-                }
+                }*/
 
             }
         }
@@ -233,7 +239,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
                 $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
-                $scope.processSupervisoryNodeChange();
+               // $scope.processSupervisoryNodeChange();
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
@@ -250,7 +256,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
                 }
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
 
-                $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
+                //$scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
 
                 $scope.registerWatches();
 
@@ -260,7 +266,7 @@ function ShipmentLeadTimeController($scope,$filter, programsList,dashboardFilter
 
         }else{
             $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
-            $scope.processSupervisoryNodeChange();
+           // $scope.processSupervisoryNodeChange();
 
             $scope.registerWatches();
 

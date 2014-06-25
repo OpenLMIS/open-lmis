@@ -443,14 +443,20 @@ services.factory('ContactList', function($resource){
 services.factory('UserSupervisoryNodes', function($resource){
     return $resource('/reports/user/supervisory-nodes.json',{},{});
 });
+services.factory('UserGeographicZoneTree',function ($resource){
+    return $resource('/reports/user/geographic-zones/tree.json', {}, {});
+});
 /*services.factory('UserDefaultSupervisoryNode', function($resource){
    return $resource('/reports/user/default-supervisory-node.json',{},{});
 });*/
-services.factory('ProgramListBySupervisoryNodes', function ($resource) {
+/*services.factory('ProgramListBySupervisoryNodes', function ($resource) {
     return $resource('/reports/supervisory-nodes/programs.json', {}, {});
+});*/
+services.factory('UserSupervisedActivePrograms', function ($resource) {
+    return $resource('/reports/user/programs.json', {}, {});
 });
-services.factory("FacilitiesByProgramAndRequisitionGroupParams",function($resource)  {
-    return   $resource('/reports/facilities/supervisory-node/:supervisoryNodeId/program/:programId/schedule/:scheduleId.json', {}, {});
+services.factory("FacilitiesByGeographicZoneTree",function($resource)  {
+    return   $resource('/reports/geographic-zone/facilities.json', {}, {});
 });
 
 services.factory("FacilitiesForNotifications",function($resource)  {
@@ -496,11 +502,19 @@ services.factory('StockedOutFacilitiesByRequisitionGroup', function($resource){
 services.factory('Alerts', function($resource){
     return $resource('/dashboard/alerts.json',{},{});
 });
+
+services.factory('StockedOutAlerts', function($resource){
+    return $resource('/dashboard/stocked-out/alerts.json',{},{});
+});
+
 services.factory('NotificationAlerts', function($resource) {
     return $resource('/dashboard/notification/alerts.json', {}, {});
 });
-services.factory('DashboardNotificationsDetail', function($resource){
+/*services.factory('DashboardNotificationsDetail', function($resource){
    return $resource('/dashboard/notifications/:alertId/:detailTable.json',{},{});
+});*/
+services.factory('DashboardNotificationsDetail', function($resource){
+    return $resource('/dashboard/notifications/:programId/:periodId/:zoneId/:productId/:detailTable.json',{},{});
 });
 services.factory('SendNotification', function($resource){
    return $resource('/dashboard/notification/send.json',{},{});

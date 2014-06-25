@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RequisitionStatusSummaryController($scope, $filter,RnRStatusByRequisitionGroupAndPeriod,dashboardMenuService,$location ,programsList, GetProgramWithBudgetingApplies,dashboardFiltersHistoryService, formInputValue, GetPeriod, RequisitionGroupsBySupervisoryNodeProgramSchedule, userPreferredFilterValues, ReportProgramsBySupervisoryNode, UserSupervisoryNodes, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram, RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear) {
+function RequisitionStatusSummaryController($scope, $filter,RnRStatusByRequisitionGroupAndPeriod,dashboardMenuService,$location , GetProgramWithBudgetingApplies,dashboardFiltersHistoryService, formInputValue, GetPeriod, RequisitionGroupsBySupervisoryNodeProgramSchedule, userPreferredFilterValues, ReportProgramsBySupervisoryNode, UserSupervisoryNodes, ReportSchedules, ReportPeriods, RequisitionGroupsByProgram, RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear) {
 
     $scope.filterObject = {};
 
@@ -233,14 +233,14 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusByRequisiti
         }
 
     };
-    $scope.processSupervisoryNodeChange = function () {
+   /* $scope.processSupervisoryNodeChange = function () {
 
         $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId;
 
         if (isUndefined($scope.formFilter.supervisoryNodeId)) {
-            $scope.programs = _.filter(programsList, function (program) {
+           *//* $scope.programs = _.filter(programsList, function (program) {
                 return program.name !== formInputValue.programOptionSelect;
-            });
+            });*//*
 
             $scope.programs.unshift({'name': formInputValue.programOptionSelect});
         } else if (!isUndefined($scope.formFilter.supervisoryNodeId)) {
@@ -253,7 +253,7 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusByRequisiti
         $scope.filterProductsByProgram();
 
     };
-
+*/
 
     $scope.processPeriodFilter = function () {
         if ($scope.formFilter.periodId == "All") {
@@ -356,7 +356,7 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusByRequisiti
             if (!_.isEmpty(userPreferredFilterValues)) {
                 var date = new Date();
                 $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
-                $scope.processSupervisoryNodeChange();
+                //$scope.processSupervisoryNodeChange();
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
@@ -383,7 +383,7 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusByRequisiti
 
         } else {
             $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
-            $scope.processSupervisoryNodeChange();
+           // $scope.processSupervisoryNodeChange();
 
             $scope.registerWatches();
 
