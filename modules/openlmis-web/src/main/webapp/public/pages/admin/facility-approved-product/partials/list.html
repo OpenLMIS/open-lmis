@@ -71,111 +71,114 @@
     </div>
   </div>
 
-  <table id="facilityApprovedProductTable" class="table table-bordered search-list rnr-table" ng-show="showResults">
-    <thead>
-    <tr class="gradient-header resultCountHeader">
-      <th colspan="11">
+  <div class="table-container">
+    <table id="facilityApprovedProductTable" class="table table-bordered search-list" ng-show="showResults">
+      <thead>
+      <tr class="gradient-header resultCountHeader">
+        <th colspan="11">
         <span ng-switch on="totalItems" ng-show="searchedQuery">
           <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
           <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
           <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
         </span>
 
-        <h3 id="noRecordsMessage" ng-show="!searchedQuery && totalItems === 0"
-            openlmis-message="msg.no.records.found"></h3>
+          <h3 id="noRecordsMessage" ng-show="!searchedQuery && totalItems === 0"
+              openlmis-message="msg.no.records.found"></h3>
 
-        <h3 id="nRecordsMessage" ng-show="!searchedQuery && totalItems"
-            openlmis-message="msg.records.found|totalItems"></h3>
-      </th>
-    </tr>
-    <tr class="gradient-header" ng-show="facilityApprovedProducts.length">
-      <th id="fullSupply" openlmis-message="header.full.supply"></th>
-      <th id="code" openlmis-message="header.code"></th>
-      <th id="name" openlmis-message="header.name"></th>
-      <th id="strength" openlmis-message="header.strength"></th>
-      <th id="unitOfMeasure" openlmis-message="header.unit.of.measure"></th>
-      <th id="maxMonthStocks">
-        <span openlmis-message="header.max.months.of.stock"></span>
-        <span class="label-required">*</span>
-      </th>
-      <th id="minMonthStocks" openlmis-message="header.min.months.of.stock"></th>
-      <th id="eop" openlmis-message="label.emergency.order.point"></th>
-      <th id="globalActive" openlmis-message="header.global.active"></th>
-      <th id="activeAtProgram" openlmis-message="header.active.at.program"></th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody ng-repeat="facilityApprovedProduct in facilityApprovedProducts">
-    <tr>
-      <td id="category{{$index}}" class="productCategory" colspan="11"
-          ng-show="showCategory(facilityApprovedProducts, $index)"
-          ng-bind="facilityApprovedProduct.programProduct.productCategory.name"></td>
-    </tr>
-    <tr>
-      <td class="center-justified">
-        <i id="fullSupply{{$index}}"
-           ng-class="{'icon-ok': facilityApprovedProduct.programProduct.product.fullSupply}"></i>
-      </td>
-      <td id="code{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.code"></td>
-      <td id="name{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.primaryName"></td>
-      <td id="strength{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.strength"></td>
-      <td id="unit{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.dosageUnit.code"></td>
-      <td id="maxMonthsOfStock{{$index}}" class="right-justified position-relative">
+          <h3 id="nRecordsMessage" ng-show="!searchedQuery && totalItems"
+              openlmis-message="msg.records.found|totalItems"></h3>
+        </th>
+      </tr>
+      <tr class="gradient-header" ng-show="facilityApprovedProducts.length">
+        <th id="fullSupply" class="col-full-supply" openlmis-message="header.full.supply"></th>
+        <th id="code" class="col-product-code" openlmis-message="header.code"></th>
+        <th id="name" class="col-product-name" openlmis-message="header.name"></th>
+        <th id="strength" class="col-strength" openlmis-message="header.strength"></th>
+        <th id="unitOfMeasure" class="col-unit-measure" openlmis-message="header.unit.of.measure"></th>
+        <th id="maxMonthStocks" class="col-max-months-stock">
+          <span openlmis-message="header.max.months.of.stock"></span>
+          <span class="label-required">*</span>
+        </th>
+        <th id="minMonthStocks" class="col-min-months-stock" openlmis-message="header.min.months.of.stock"></th>
+        <th id="eop" class="col-eop" openlmis-message="label.emergency.order.point"></th>
+        <th id="globalActive" class="col-global-active" openlmis-message="header.global.active"></th>
+        <th id="activeAtProgram" class="col-active-at-program" openlmis-message="header.active.at.program"></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody ng-repeat="facilityApprovedProduct in facilityApprovedProducts">
+      <tr>
+        <td id="category{{$index}}" class="productCategory" colspan="11"
+            ng-show="showCategory(facilityApprovedProducts, $index)"
+            ng-bind="facilityApprovedProduct.programProduct.productCategory.name"></td>
+      </tr>
+      <tr ng-class="{'save-row-active': facilityApprovedProduct.underEdit}">
+        <td class="center-justified">
+          <i id="fullSupply{{$index}}"
+             ng-class="{'icon-ok': facilityApprovedProduct.programProduct.product.fullSupply}"></i>
+        </td>
+        <td id="code{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.code"></td>
+        <td id="name{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.primaryName"></td>
+        <td id="strength{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.strength"></td>
+        <td id="unit{{$index}}" ng-bind="facilityApprovedProduct.programProduct.product.dosageUnit.code"></td>
+        <td id="maxMonthsOfStock{{$index}}" class="right-justified position-relative col-max-months-stock">
 
-        <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.maxMonthsOfStock"></span>
+          <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.maxMonthsOfStock"></span>
 
-        <input type="text" ng-if="facilityApprovedProduct.underEdit" name="list.maxMonthsOfStock"
-               ng-model="facilityApprovedProduct.maxMonthsOfStock" class="right-justified"
-               ng-class="{'required-error' : (facilityApprovedProduct && !facilityApprovedProduct.maxMonthsOfStock)}"
-               numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
-        <span class="rnr-form-error" style="display:none;" id="list.maxMonthsOfStock"
+          <input type="text" ng-if="facilityApprovedProduct.underEdit" name="list.maxMonthsOfStock{{$index}}"
+                 ng-model="facilityApprovedProduct.maxMonthsOfStock" class="right-justified"
+                 ng-class="{'required-error' : (facilityApprovedProduct && !facilityApprovedProduct.maxMonthsOfStock)}"
+                 numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
+        <span class="rnr-form-error" style="display:none;" id="list.maxMonthsOfStock{{$index}}"
               openlmis-message="error.number.only"></span>
 
-      </td>
-      <td id="minMonthsOfStock{{$index}}" class="right-justified position-relative">
+        </td>
+        <td id="minMonthsOfStock{{$index}}" class="right-justified position-relative col-min-months-stock">
 
-        <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.minMonthsOfStock"></span>
+          <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.minMonthsOfStock"></span>
 
-        <input type="text" ng-if="facilityApprovedProduct.underEdit" name="list.minMonthsOfStock"
-               ng-model="facilityApprovedProduct.minMonthsOfStock" class="right-justified"
-               numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
-        <span class="rnr-form-error" style="display:none;" id="list.minMonthsOfStock"
+          <input type="text" ng-if="facilityApprovedProduct.underEdit" name="list.minMonthsOfStock{{$index}}"
+                 ng-model="facilityApprovedProduct.minMonthsOfStock" class="right-justified"
+                 numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
+        <span class="rnr-form-error" style="display:none;" id="list.minMonthsOfStock{{$index}}"
               openlmis-message="error.number.only"></span>
 
-      <td id="eop{{$index}}" class="right-justified position-relative">
+        <td id="eop{{$index}}" class="right-justified position-relative col-eop">
 
-        <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.eop"></span>
+          <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.eop"></span>
 
-        <input type="text" ng-if="facilityApprovedProduct.underEdit" name="list.eop"
-               ng-model="facilityApprovedProduct.eop" class="right-justified"
-               numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
-        <span class="rnr-form-error" style="display:none;" id="list.eop" openlmis-message="error.number.only"></span>
+          <input type="text" ng-if="facilityApprovedProduct.underEdit" name="list.eop{{$index}}"
+                 ng-model="facilityApprovedProduct.eop" class="right-justified"
+                 numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
+          <span class="rnr-form-error" style="display:none;" id="list.eop{{$index}}"
+                openlmis-message="error.number.only"></span>
 
-      </td>
-      <td class="center-justified">
-        <i id="GlobalActive{{$index}}"
-           ng-class="{'icon-ok': facilityApprovedProduct.programProduct.product.active}"></i>
-      </td>
-      <td class="center-justified">
-        <i id="activeAtProgram{{$index}}"
-           ng-class="{'icon-ok': facilityApprovedProduct.programProduct.active}"></i>
-      </td>
-      <td><input id="editButton{{$index}}" ng-hide="facilityApprovedProduct.underEdit" type="button"
-                 class="btn btn-mini pull-right"
-                 openlmis-message="button.edit"
-                 ng-click="edit(facilityApprovedProduct)"/>
-      </td>
-    </tr>
-    <tr ng-if="facilityApprovedProduct.underEdit">
-      <td colspan="11">
-        <input id="save" type="submit" class="btn btn-primary btn-small" ng-click="update(facilityApprovedProduct)"
-               openlmis-message="button.save"/>
-        <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
-               ng-click="cancel(facilityApprovedProduct)"/>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+        </td>
+        <td class="center-justified">
+          <i id="GlobalActive{{$index}}"
+             ng-class="{'icon-ok': facilityApprovedProduct.programProduct.product.active}"></i>
+        </td>
+        <td class="center-justified">
+          <i id="activeAtProgram{{$index}}"
+             ng-class="{'icon-ok': facilityApprovedProduct.programProduct.active}"></i>
+        </td>
+        <td><input id="editButton{{$index}}" ng-hide="facilityApprovedProduct.underEdit" type="button"
+                   class="btn btn-primary btn-small"
+                   openlmis-message="button.edit"
+                   ng-click="edit(facilityApprovedProduct)"/>
+        </td>
+      </tr>
+      <tr ng-if="facilityApprovedProduct.underEdit" class="save-cancel-row">
+        <td colspan="11">
+          <input id="save" type="submit" class="btn btn-primary btn-small" ng-click="update(facilityApprovedProduct)"
+                 openlmis-message="button.save"/>
+          <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
+                 ng-click="cancel(facilityApprovedProduct)"/>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 
   <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
               direction-links="false" ng-show="facilityApprovedProducts.length" class="pagination-sm"></pagination>

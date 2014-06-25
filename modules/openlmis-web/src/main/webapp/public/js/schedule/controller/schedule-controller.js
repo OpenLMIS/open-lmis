@@ -26,9 +26,9 @@ function ScheduleController($scope, Schedule, $location, messageService) {
   Schedule.get({}, function (data) {
     $scope.initialSchedules = angular.copy(data.schedules, $scope.initialSchedules);
     $scope.schedules = data.schedules;
-    for(var scheduleIndex in data.schedules){
+    for (var scheduleIndex in data.schedules) {
       var schedule = data.schedules[scheduleIndex];
-      $scope.schedulesBackupMap[schedule.id] =  $scope.getBackupSchedule(schedule);
+      $scope.schedulesBackupMap[schedule.id] = $scope.getBackupSchedule(schedule);
     }
   }, function (data) {
     $location.path($scope.$parent.sourceUrl);
@@ -45,8 +45,8 @@ function ScheduleController($scope, Schedule, $location, messageService) {
       $scope.schedules.unshift(data.schedule);
       $scope.completeAddNewSchedule(data.schedule);
       $scope.message = data.success;
-      setTimeout(function() {
-        $scope.$apply(function() {
+      setTimeout(function () {
+        $scope.$apply(function () {
           $scope.message = "";
         });
       }, 4000);
@@ -57,18 +57,18 @@ function ScheduleController($scope, Schedule, $location, messageService) {
     });
   };
 
-  $scope.startAddNewSchedule = function() {
+  $scope.startAddNewSchedule = function () {
     $scope.$parent.newScheduleMode = true;
-    $scope.$parent.formActive = "schedule-form-active";
+    $scope.$parent.formActive = "save-row-active";
   };
 
-  $scope.completeAddNewSchedule = function(schedule) {
+  $scope.completeAddNewSchedule = function (schedule) {
     $scope.schedulesBackupMap[schedule.id] = $scope.getBackupSchedule(schedule);
     $scope.$parent.newScheduleMode = false;
     $scope.showErrorForCreate = false;
   };
 
-  $scope.cancelAddNewSchedule = function(schedule) {
+  $scope.cancelAddNewSchedule = function (schedule) {
     $scope.$parent.newScheduleMode = false;
     $scope.showErrorForCreate = false;
   };
@@ -96,14 +96,14 @@ function ScheduleController($scope, Schedule, $location, messageService) {
     $scope.schedulesBackupMap[schedule.id].error = '';
     $scope.showErrorForEdit = true;
 
-    Schedule.update({id:schedule.id}, schedule, function (data) {
+    Schedule.update({id: schedule.id}, schedule, function (data) {
       var returnedSchedule = data.schedule;
       $scope.schedulesBackupMap[returnedSchedule.id] = $scope.getBackupSchedule(returnedSchedule);
 
       updateUiData(returnedSchedule);
       $scope.message = data.success;
-      setTimeout(function() {
-        $scope.$apply(function() {
+      setTimeout(function () {
+        $scope.$apply(function () {
           $scope.message = "";
         });
       }, 4000);
@@ -125,7 +125,7 @@ function ScheduleController($scope, Schedule, $location, messageService) {
   };
 
   $scope.startScheduleEdit = function (scheduleUnderEdit) {
-    $scope.schedulesBackupMap[scheduleUnderEdit.id].editFormActive = "schedule-form-active";
+    $scope.schedulesBackupMap[scheduleUnderEdit.id].editFormActive = "save-row-active";
   };
 
   $scope.cancelScheduleEdit = function (scheduleUnderEdit) {
