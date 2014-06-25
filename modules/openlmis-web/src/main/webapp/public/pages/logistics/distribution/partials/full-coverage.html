@@ -8,10 +8,10 @@
   ~   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 <ng-include
-    src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+  src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 <div class="clearfix facility-container">
   <ng-include
-      src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+    src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
   <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
     <div id="coverageContainer" class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
@@ -40,7 +40,7 @@
                 <td id="femaleHeader" openlmis-message="label.coverage.females"></td>
                 <td class="col-health-center">
                   <div>
-                    <span class="input-error-parent-cell">
+                    <span class="position-relative">
                       <input id="femaleHealthCenter" type="text"
                              ng-model="facilityData.fullCoverage.femaleHealthCenterReading.value"
                              name="coverageFemaleHC" ng-trim=false
@@ -60,7 +60,7 @@
                          openlmis-message="label.not.recorded"></label>
                 <td class="col-mobile-brigade">
                   <div>
-                    <span class="input-error-parent-cell">
+                    <span class="position-relative">
                       <input id="femaleMobileBrigade" type="text"
                              ng-model="facilityData.fullCoverage.femaleMobileBrigadeReading.value"
                              name="coverageFemaleMB" ng-trim=false
@@ -84,7 +84,7 @@
                 <td id="maleHeader" openlmis-message="label.coverage.males"></td>
                 <td class="col-health-center">
                   <div>
-                    <span class="input-error-parent-cell">
+                    <span class="position-relative">
                       <input id="maleHealthCenter" type="text"
                              ng-model="facilityData.fullCoverage.maleHealthCenterReading.value"
                              name="coverageMaleHC" ng-trim=false
@@ -104,7 +104,7 @@
                          openlmis-message="label.not.recorded"></label>
                 <td class="col-health-center">
                   <div>
-                    <span class="input-error-parent-cell">
+                    <span class="position-relative">
                       <input id="maleMobileBrigade" type="text"
                              ng-model="facilityData.fullCoverage.maleMobileBrigadeReading.value"
                              name="coverageMaleMB" ng-trim=false

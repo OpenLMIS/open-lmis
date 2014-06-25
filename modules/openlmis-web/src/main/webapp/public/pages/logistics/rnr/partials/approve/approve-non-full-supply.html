@@ -66,7 +66,7 @@
         <tr adjust-height="fixed-body{{ $index }}" class="scrollable-body{{ $index }}">
           <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.nonFullSupply.scrollable">
             <span ng-switch on="column.name">
-              <span ng-switch-when="quantityApproved" class="input-error-parent-cell">
+              <span ng-switch-when="quantityApproved" class="position-relative">
                   <input ng-change="rnr.fillPacksToShip(rnrLineItem)" ng-required="true" type="text"
                          ng-model="rnrLineItem[column.name]" numeric-validator="positiveInteger" maxlength="8"
                          name="quantityApproved{{$parent.$parent.$index}}" ng-trim="false"

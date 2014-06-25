@@ -79,7 +79,7 @@
                        maxlength="250"/>
               </span>
 
-              <span ng-switch-when="quantityRequested" class="input-error-parent-cell">
+              <span ng-switch-when="quantityRequested" class="position-relative">
                 <input ng-disabled="formDisabled" id="{{getId(column.name, $parent)}}" type="text"
                        name="quantityRequested{{rnrLineItem['productCode']}}" ng-model="rnrLineItem.quantityRequested"
                        ng-required="true" ng-class="highlightRequired(showError, rnrLineItem[column.name])"
