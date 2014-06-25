@@ -55,6 +55,7 @@ public class PageObjectFactory {
   private static RequisitionPage instanceOfRequisitionPage;
   private static SupplyLinePage instanceOfSupplyLinePage;
   private static FacilityApprovedProductPage instanceOfFacilityApprovedProductPage;
+  private static ProductPage instanceOfProductPage;
 
   public static ManageFacilityPage getManageFacilityPage(TestWebDriver testWebDriver) {
     if (instanceOfManageFacilityPage == null) {
@@ -343,5 +344,12 @@ public class PageObjectFactory {
       instanceOfFacilityApprovedProductPage = new FacilityApprovedProductPage(testWebDriver);
     }
     return instanceOfFacilityApprovedProductPage;
+  }
+
+  public static ProductPage getProductPage(TestWebDriver testWebDriver) {
+    if (instanceOfProductPage == null) {
+      instanceOfProductPage = new ProductPage(testWebDriver);
+    }
+    return instanceOfProductPage;
   }
 }
