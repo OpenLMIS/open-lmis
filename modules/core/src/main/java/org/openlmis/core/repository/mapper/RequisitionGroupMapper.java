@@ -64,18 +64,18 @@ public interface RequisitionGroupMapper {
   })
   RequisitionGroup getByCode(String code);
 
-  @Update("UPDATE requisition_groups " +
-    "SET code = #{code}, name = #{name}, description =  #{description}, supervisoryNodeId = #{supervisoryNode.id}, modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) " +
-    "WHERE id = #{id}")
+  @Update({"UPDATE requisition_groups",
+    "SET code = #{code}, name = #{name}, description =  #{description}, supervisoryNodeId = #{supervisoryNode.id},",
+    "modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)",
+    "WHERE id = #{id}"})
   void update(RequisitionGroup requisitionGroup);
 
-  @Select(
-    {"SELECT RG.id AS requisitionGroupId, RG.code AS requisitionGroupCode, RG.name AS requisitionGroupName, SN.name AS supervisoryNodeName,",
-      "(SELECT COUNT(*) FROM requisition_group_members RGM INNER JOIN facilities F ON F.id = RGM.facilityId",
-      "WHERE RG.id = RGM.requisitionGroupId AND F.enabled = true GROUP BY requisitionGroupId) AS memberCount",
-      "FROM requisition_groups RG LEFT JOIN supervisory_nodes SN ON SN.id = RG.supervisoryNodeId",
-      "WHERE LOWER(RG.name) LIKE '%'|| LOWER(#{searchParam}) ||'%'",
-      "ORDER BY LOWER(SN.name), LOWER(RG.Name) NULLS LAST"})
+  @Select({"SELECT RG.id AS requisitionGroupId, RG.code AS requisitionGroupCode, RG.name AS requisitionGroupName, SN.name AS supervisoryNodeName,",
+    "(SELECT COUNT(*) FROM requisition_group_members RGM INNER JOIN facilities F ON F.id = RGM.facilityId",
+    "WHERE RG.id = RGM.requisitionGroupId AND F.enabled = true GROUP BY requisitionGroupId) AS memberCount",
+    "FROM requisition_groups RG LEFT JOIN supervisory_nodes SN ON SN.id = RG.supervisoryNodeId",
+    "WHERE LOWER(RG.name) LIKE '%'|| LOWER(#{searchParam}) ||'%'",
+    "ORDER BY LOWER(SN.name), LOWER(RG.Name) NULLS LAST"})
   @Results(value = {
     @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
     @Result(property = "id", column = "requisitionGroupId"),
