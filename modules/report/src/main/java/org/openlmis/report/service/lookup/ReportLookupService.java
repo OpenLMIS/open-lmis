@@ -155,11 +155,11 @@ public class ReportLookupService {
     return productMapper.getProductsForProgram(programId);
   }
 
-  public List<Product> getProductListByCategory(Integer categoryId) {
-    if (categoryId == null || categoryId == -1 || categoryId == 0) {
+  public List<Product> getProductListByCategory(Integer programId, Integer categoryId) {
+    if (categoryId == null || categoryId <= 0) {
       return productMapper.getAll();
     }
-    return productMapper.getProductListByCategory(categoryId);
+    return productMapper.getProductListByCategory(programId, categoryId);
   }
 
   public List<org.openlmis.core.domain.Product> getFullProductList() {
@@ -285,29 +285,29 @@ public List<Program>getAllProgramsWithBudgeting(){
     return facilityReportMapper.getFacilityByCode(code);
   }
 
-  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup) {
+  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup, Long zone) {
     // this method does not work if no program is specified
     if (program == 0) {
       return null;
     }
 
     if (schedule == 0 && type == 0) {
-      return facilityReportMapper.getFacilitiesByProgram(program);
+      return facilityReportMapper.getFacilitiesByProgram(program, zone);
     }
 
     if (type == 0 && requisitionGroup == 0) {
-      return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule);
+      return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule, zone);
     }
 
     if (type == 0 && requisitionGroup != 0) {
-      return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup);
+      return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup, zone);
     }
 
     if(requisitionGroup == 0){
-      facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type);
+      facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type, zone);
     }
 
-    return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup);
+    return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup, zone);
   }
 
   public List<Facility> getFacilitiesBy(Long userId, Long supervisoryNodeId, String requisitionGroup, Long program, Long schedule) {

@@ -36,10 +36,10 @@ public class AdjustmentSummaryReportParam
     private Long programId;
     private Program programObject;
 
-
+    private Long facilityId;
     private int facilityTypeId;
     private String facilityType;
-    private int zoneId;
+    private Long zoneId;
     private int productId;
     private int productCategoryId;
     private int rgroupId;

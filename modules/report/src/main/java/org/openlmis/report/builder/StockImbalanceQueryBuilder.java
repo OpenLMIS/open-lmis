@@ -34,6 +34,7 @@ public class StockImbalanceQueryBuilder {
     private static void writePredicates(StockImbalanceReportParam filter){
         WHERE("status <> 'SP'");
         WHERE("req_status in ('APPROVED','RELEASED')");
+        WHERE("(amc != 0 or stockinhand != 0 )");
         WHERE("periodid = #{filterCriteria.periodId}");//required param
         WHERE("psid = #{filterCriteria.scheduleId}");//required param
 

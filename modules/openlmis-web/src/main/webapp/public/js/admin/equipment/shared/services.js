@@ -120,11 +120,11 @@ services.factory('UserListForVendor',function($resource){
 });
 
 services.factory('SaveVendorUserAssociation', function($resource){
-    return $resource('/equipment/vendor-user/saveNewUserForVendor',{},{})
+    return $resource('/equipment/vendor-user/saveNewUserForVendor',{},{});
 });
 
 services.factory('RemoveVendorUserAssociation', function($resource){
-    return $resource('/equipment/vendor-user/remove/:vendorId/:userId.json',{},{})
+    return $resource('/equipment/vendor-user/remove/:vendorId/:userId.json',{},{});
 });
 
 services.factory('UserListAvailableForVendor',function($resource){

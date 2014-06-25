@@ -26,24 +26,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ODKXForm extends BaseModel {
 
-    private String formId;
-
-    private String name;
-
-    private String version;
-
-    private String hash;
-
-    private String descriptionText;
-
-    private String downloadUrl;
-
-    private String XMLString;
-
+public class ODKXFormSurveyType extends  BaseModel
+{
+    private String surveyName;
+    private int numberOfQuestions;
     private boolean active;
-
-    private ODKXFormSurveyType odkxFormSurveyType;
-
+    private String comment;
 }

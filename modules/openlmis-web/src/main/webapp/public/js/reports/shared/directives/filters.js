@@ -398,12 +398,14 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
       var schedule = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.schedule)) ? $scope.filter.schedule : 0;
       var facilityType = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.facilityType)) ? $scope.filter.facilityType : 0;
       var requisitionGroup = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.requisitionGroup)) ? $scope.filter.requisitionGroup : 0;
+      var zone = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.zone)) ? $scope.filter.zone : 0;
       // load facilities
       FacilitiesByProgramParams.get({
         program: program,
         schedule: schedule,
         type: facilityType,
-        requisitionGroup: requisitionGroup
+        requisitionGroup: requisitionGroup,
+        zone: zone
       }, function (data) {
         $scope.facilities = data.facilities;
         if (isUndefined($scope.facilities)) {
@@ -438,9 +440,15 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
         scope.$watch('filter.program', function (value) {
           onPgCascadedVarsChanged(scope, value);
         });
+
+        scope.$watch('filter.zone', function (value) {
+          onPgCascadedVarsChanged(scope, value);
+        });
+
         scope.$watch('filter.schedule', function (value) {
           onPgCascadedVarsChanged(scope, value);
         });
+
         scope.$watch('filter.facilityType', function (value) {
           onPgCascadedVarsChanged(scope, value);
         });
