@@ -29,7 +29,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 /**
  * This controller handles endpoint related to listing products for a given program.
  */
-
+@RequestMapping(value = "/programProducts")
 @Controller
 public class ProgramProductController extends BaseController {
 
@@ -38,10 +38,18 @@ public class ProgramProductController extends BaseController {
 
   private static final String PROGRAM_PRODUCT_LIST = "programProductList";
 
-  @RequestMapping(value = "/programProducts/programId/{programId}", method = GET, headers = BaseController.ACCEPT_JSON)
+  @RequestMapping(value = "/programId/{programId}", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getProgramProductsByProgram(@PathVariable Long programId) {
     List<ProgramProduct> programProductsByProgram = service.getByProgram(new Program(programId));
     return response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
+  }
+
+  @RequestMapping(value = "/filter/programId/{programId}/facilityTypeId/{facilityTypeId}", method = GET,
+    headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY_APPROVED_PRODUCT')")
+  public List<ProgramProduct> getUnapprovedProgramProducts(@PathVariable(value = "facilityTypeId") Long facilityTypeId,
+                                                           @PathVariable(value = "programId") Long programId) {
+    return service.getUnapprovedProgramProducts(facilityTypeId, programId);
   }
 }

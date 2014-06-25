@@ -28,6 +28,7 @@ function SupplyLineController($scope, $location, supplyLine, TopLevelSupervisory
 
   $scope.associate = function (facility) {
     $scope.supplyLine.supplyingFacility = facility;
+    $scope.showSlider = !$scope.showSlider;
     reset();
   };
 

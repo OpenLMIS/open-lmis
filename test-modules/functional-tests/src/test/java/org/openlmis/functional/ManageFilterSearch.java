@@ -2,6 +2,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -31,6 +32,8 @@ public class ManageFilterSearch extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F10", "F100", 1, 3);
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F100A", "F10A", 2, 3);
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F10B", "F10C", 3, 5);
@@ -48,7 +51,8 @@ public class ManageFilterSearch extends TestCaseHelper {
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
     requisitionGroupPage.clickAddNewButton();
 
-    requisitionGroupPage.clickAssociatedFacilityLink();
+    requisitionGroupPage.clickMembersAccordionLink();
+    requisitionGroupPage.clickAddMembersButton();
     requisitionGroupPage.searchFacilityToBeAssociated("F10");
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();
@@ -74,8 +78,8 @@ public class ManageFilterSearch extends TestCaseHelper {
     assertEquals("Root", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());
     assertTrue(requisitionGroupPage.isSetFilterButtonPresent());
 
-    requisitionGroupPage.clickAssociatedFacilityLink();
-    requisitionGroupPage.clickAssociatedFacilityLink();
+    requisitionGroupPage.clickMembersAccordionLink();
+    requisitionGroupPage.clickMembersAccordionLink();
     assertEquals("No matches found for 'F10'", requisitionGroupPage.getNoFacilitySearchResultMessage());
     assertEquals("Lvl3 Hospital", requisitionGroupPage.getSelectedFacilityTypeLabelOnAddFilterPage());
     assertEquals("Root", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());
@@ -98,7 +102,8 @@ public class ManageFilterSearch extends TestCaseHelper {
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
     requisitionGroupPage.clickAddNewButton();
 
-    requisitionGroupPage.clickAssociatedFacilityLink();
+    requisitionGroupPage.clickMembersAccordionLink();
+    requisitionGroupPage.clickAddMembersButton();
     requisitionGroupPage.searchFacilityToBeAssociated("F11");
     requisitionGroupPage.clickSearchIcon();
     testWebDriver.waitForAjax();
@@ -128,7 +133,8 @@ public class ManageFilterSearch extends TestCaseHelper {
     assertTrue(requisitionGroupPage.isSetFilterButtonPresent());
 
     testWebDriver.refresh();
-    requisitionGroupPage.clickAssociatedFacilityLink();
+    requisitionGroupPage.clickMembersAccordionLink();
+    requisitionGroupPage.clickAddMembersButton();
     assertFalse(requisitionGroupPage.isNoResultMessageDisplayed());
     assertEquals("", requisitionGroupPage.getSelectedFacilityTypeLabelOnAddFilterPage());
     assertEquals("", requisitionGroupPage.getSelectedGeoZoneLabelOnAddFilterPage());
@@ -187,5 +193,15 @@ public class ManageFilterSearch extends TestCaseHelper {
     assertTrue(supervisoryNodesPage.isSetFilterButtonPresent());
     assertEquals("", supervisoryNodesPage.getSelectedFacilityTypeLabelOnAddFilterPage());
     assertEquals("", supervisoryNodesPage.getSelectedGeoZoneLabelOnAddFilterPage());
+  }
+
+  @AfterMethod(groups = {"admin"})
+  public void tearDown() throws SQLException {
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
+    homePage.logout(baseUrlGlobal);
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
+    dbWrapper.deleteData();
+    dbWrapper.closeConnection();
   }
 }

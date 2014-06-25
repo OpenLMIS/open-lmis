@@ -88,7 +88,7 @@ public class DBWrapper {
     update("delete from users where userName like('%s')", userName);
 
     update("INSERT INTO users(userName, password, facilityId, firstName, lastName, email, active, verified) " +
-      "VALUES ('%s', '%s', (SELECT id FROM facilities WHERE code = '%s'), 'Fatima', 'Doe', '%s','true','true')",
+        "VALUES ('%s', '%s', (SELECT id FROM facilities WHERE code = '%s'), 'Fatima', 'Doe', '%s','true','true')",
       userName, password, facilityCode, email
     );
   }
@@ -322,11 +322,6 @@ public class DBWrapper {
       "(select id from geographic_zones where code='%s'))", code, name, parentName);
   }
 
-  public void insertGeographicZoneWithLevel(String code, String name, String parentName, int levelId) throws SQLException {
-    update("insert into geographic_zones (code, name, levelId, parentId) " +
-      "values ('%s','%s',%d, (select id from geographic_zones where code='%s'))", code, name, levelId, parentName);
-  }
-
   public void allocateFacilityToUser(String userName, String facilityCode) throws SQLException {
     update("update users set facilityId = (Select id from facilities where code = '%s') where username = '%s'", facilityCode, userName);
   }
@@ -395,9 +390,6 @@ public class DBWrapper {
     update("delete from facility_ftp_details");
     update("delete from facilities");
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro')");
-    update("delete from role_rights where rightName = 'MANAGE_GEOGRAPHIC_ZONE'");
-    update("delete from role_rights where rightName = 'MANAGE_SUPERVISORY_NODE'");
-    update("delete from role_rights where rightName = 'MANAGE_REQUISITION_GROUP'");
     update("delete from processing_periods");
     update("delete from processing_schedules");
     update("delete from atomfeed.event_records");
@@ -410,10 +402,6 @@ public class DBWrapper {
     update("delete from requisition_line_items");
     update("delete from regimen_line_items");
     update("delete from requisitions");
-  }
-
-  public void deleteGeographicZones() throws SQLException {
-    update("delete from geographic_zones");
   }
 
   public void insertRole(String role, String description) throws SQLException {
@@ -431,8 +419,8 @@ public class DBWrapper {
   public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName,
                                     String supervisoryNodeParentCode) throws SQLException {
     update("INSERT INTO supervisory_nodes" +
-      "  (parentId, facilityId, name, code) VALUES" +
-      "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
+        "  (parentId, facilityId, name, code) VALUES" +
+        "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
       supervisoryNodeParentCode, facilityCode, supervisoryNodeName, supervisoryNodeCode
     );
   }
@@ -555,6 +543,10 @@ public class DBWrapper {
 
   public void insertProductCategory(String categoryCode, String categoryName) throws SQLException {
     update("INSERT INTO product_categories (code, name, displayOrder) values ('" + categoryCode + "', '" + categoryName + "', 1);");
+  }
+
+  public void insertProductCategoryWithDisplayOrder(String categoryCode, String categoryName, int displayOrder) throws SQLException {
+    update("INSERT INTO product_categories (code, name, displayOrder) values ('" + categoryCode + "', '" + categoryName + "', " + displayOrder + ");");
   }
 
   public void insertProduct(String product, String productName) throws SQLException {
@@ -1538,13 +1530,13 @@ public class DBWrapper {
       }
 
       update("INSERT INTO shipment_line_items(orderNumber,productCode,quantityShipped,productName,dispensingUnit,productCategory," +
-        "productDisplayOrder,productCategoryDisplayOrder,packsToShip,fullSupply,orderId) VALUES ('%s', '%s', %d, %s, %s, '%s',%d ," +
-        "%d, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName,
+          "productDisplayOrder,productCategoryDisplayOrder,packsToShip,fullSupply,orderId) VALUES ('%s', '%s', %d, %s, %s, '%s',%d ," +
+          "%d, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'", "'Strip'", categoryName,
         productDisplayOrder, categoryDisplayOrder, packsToShip, fullSupplyFlag, orderID
       );
     } else {
       update("INSERT INTO shipment_line_items(orderNumber,productCode,quantityShipped,productName,dispensingUnit,packsToShip,fullSupply," +
-        "orderId) VALUES ('%s', '%s', %d, %s, %s, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'",
+          "orderId) VALUES ('%s', '%s', %d, %s, %s, %d, %b, %d)", orderNumber, productCode, quantityShipped, "'antibiotic Capsule 300/200/600 mg'",
         "'Strip'", packsToShip, fullSupplyFlag, orderID
       );
     }

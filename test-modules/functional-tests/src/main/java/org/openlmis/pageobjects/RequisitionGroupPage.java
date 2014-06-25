@@ -1,3 +1,13 @@
+/*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ */
+
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
@@ -70,9 +80,6 @@ public class RequisitionGroupPage extends FilterSearchPage {
   @FindBy(how = ID, using = "searchSupervisoryNode")
   private static WebElement searchSupervisoryNodeField = null;
 
-  @FindBy(how = ID, using = "associateFacility")
-  private static WebElement associateFacilityLink = null;
-
   @FindBy(how = ID, using = "searchFacility")
   private static WebElement searchFacility = null;
 
@@ -105,6 +112,51 @@ public class RequisitionGroupPage extends FilterSearchPage {
 
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsg = null;
+
+  @FindBy(how = ID, using = "addMembers")
+  private static WebElement addMembers = null;
+
+  @FindBy(how = ID, using = "addNewRequisitionGroupHeader")
+  private static WebElement addNewRequisitionGroupHeader = null;
+
+  @FindBy(how = ID, using = "programSchedules")
+  private static WebElement programSchedulesLabel = null;
+
+  @FindBy(how = ID, using = "Members")
+  private static WebElement membersLabel = null;
+
+  @FindBy(how = ID, using = "codeLabel")
+  private static WebElement codeLabel = null;
+
+  @FindBy(how = ID, using = "nameLabel")
+  private static WebElement nameLabel = null;
+
+  @FindBy(how = ID, using = "supervisoryNodeLabel")
+  private static WebElement supervisoryNodeLabel = null;
+
+  @FindBy(how = ID, using = "descriptionLabel")
+  private static WebElement descriptionLabel = null;
+
+  @FindBy(how = ID, using = "expandAll")
+  private static WebElement expandAll = null;
+
+  @FindBy(how = ID, using = "collapseAll")
+  private static WebElement collapseAll = null;
+
+  @FindBy(how = ID, using = "facilityAddedMessage")
+  private static WebElement facilityAddedMessage = null;
+
+  @FindBy(how = ID, using = "facilityHeader")
+  private static WebElement facilityHeader = null;
+
+  @FindBy(how = ID, using = "geoZoneHeader")
+  private static WebElement geoZoneHeader = null;
+
+  @FindBy(how = ID, using = "facilityTypeHeader")
+  private static WebElement facilityTypeHeader = null;
+
+  @FindBy(how = ID, using = "enabledHeader")
+  private static WebElement enabledHeader = null;
 
   public RequisitionGroupPage(TestWebDriver driver) {
     super(driver);
@@ -286,9 +338,9 @@ public class RequisitionGroupPage extends FilterSearchPage {
     sendKeys(searchSupervisoryNodeField, supervisoryNode);
   }
 
-  public void clickAssociatedFacilityLink() {
-    testWebDriver.waitForElementToAppear(associateFacilityLink);
-    associateFacilityLink.click();
+  public void clickMembersAccordionLink() {
+    testWebDriver.waitForElementToAppear(membersLabel);
+    membersLabel.click();
   }
 
   public void searchFacilityToBeAssociated(String facilityCode) {
@@ -297,14 +349,12 @@ public class RequisitionGroupPage extends FilterSearchPage {
   }
 
   public boolean isSearchIconDisplayed() {
-    testWebDriver.waitForElementToAppear(searchIcon);
+    try {
+      testWebDriver.waitForElementToAppear(searchIcon);
+    } catch (TimeoutException e) {
+      return false;
+    }
     return searchIcon.isDisplayed();
-  }
-
-  public void selectFacilityToBeAssociated(int rowNumber) {
-    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(facilityResult);
-    facilityResult.click();
   }
 
   public void clickSaveButton() {
@@ -312,10 +362,10 @@ public class RequisitionGroupPage extends FilterSearchPage {
     saveButton.click();
   }
 
-  public void selectRequisitionGroupSearchResult(int rowNumber) {
-    WebElement name = testWebDriver.getElementById("name" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(name);
-    name.click();
+  public void clickManageRequisitionGroupSearchResult(int rowNumber) {
+    WebElement manageButton = testWebDriver.getElementById("manageButton" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(manageButton);
+    manageButton.click();
   }
 
   public void selectSupervisoryNodeSearchResult(int rowNumber) {
@@ -335,10 +385,36 @@ public class RequisitionGroupPage extends FilterSearchPage {
     return saveSuccessMsgDiv.getText();
   }
 
+  public String getFacilityHeader() {
+    testWebDriver.waitForElementToAppear(facilityHeader);
+    return facilityHeader.getText();
+  }
+
+  public String getGeoZoneHeader() {
+    testWebDriver.waitForElementToAppear(geoZoneHeader);
+    return geoZoneHeader.getText();
+  }
+
+  public String getFacilityTypeHeader() {
+    testWebDriver.waitForElementToAppear(facilityTypeHeader);
+    return facilityTypeHeader.getText();
+  }
+
+  public String getFacilityEnabledHeader() {
+    testWebDriver.waitForElementToAppear(enabledHeader);
+    return enabledHeader.getText();
+  }
+
   public String getMemberFacilityCode(int rowNumber) {
     WebElement code = testWebDriver.getElementById("code" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(code);
     return code.getText();
+  }
+
+  public String getMemberGeoZone(int rowNumber) {
+    WebElement type = testWebDriver.getElementById("geoZoneName" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(type);
+    return type.getText();
   }
 
   public String getMemberFacilityType(int rowNumber) {
@@ -351,10 +427,10 @@ public class RequisitionGroupPage extends FilterSearchPage {
     WebElement enableFlag = testWebDriver.getElementById("enabledIcon" + (rowNumber - 1));
     try {
       testWebDriver.waitForElementToAppear(enableFlag);
-      return enableFlag.isDisplayed();
     } catch (TimeoutException e) {
       return false;
     }
+    return enableFlag.isDisplayed();
   }
 
   public void removeRequisitionMember(int rowNumber) {
@@ -411,5 +487,69 @@ public class RequisitionGroupPage extends FilterSearchPage {
   public String getErrorMessage() {
     testWebDriver.waitForElementToAppear(saveErrorMsg);
     return saveErrorMsg.getText();
+  }
+
+  public void clickAddMembersButton() {
+    testWebDriver.waitForElementToAppear(addMembers);
+    addMembers.click();
+  }
+
+  public String getAddRequisitionGroupHeader() {
+    testWebDriver.waitForElementToAppear(addNewRequisitionGroupHeader);
+    return addNewRequisitionGroupHeader.getText();
+  }
+
+  public String getCodeLabel() {
+    testWebDriver.waitForElementToAppear(codeLabel);
+    return codeLabel.getText();
+  }
+
+  public String getNameLabel() {
+    testWebDriver.waitForElementToAppear(nameLabel);
+    return nameLabel.getText();
+  }
+
+  public String getSupervisoryNodeLabel() {
+    testWebDriver.waitForElementToAppear(supervisoryNodeLabel);
+    return supervisoryNodeLabel.getText();
+  }
+
+  public String getDescriptionLabel() {
+    testWebDriver.waitForElementToAppear(descriptionLabel);
+    return descriptionLabel.getText();
+  }
+
+  public String getProgramsAndScheduleLabel() {
+    testWebDriver.waitForElementToAppear(programSchedulesLabel);
+    return programSchedulesLabel.getText();
+  }
+
+  public String getMembersLabel() {
+    testWebDriver.waitForElementToAppear(membersLabel);
+    return membersLabel.getText();
+  }
+
+  public void clickExpandAll() {
+    testWebDriver.waitForElementToAppear(expandAll);
+    expandAll.click();
+  }
+
+  public void clickCollapseAll() {
+    testWebDriver.waitForElementToAppear(collapseAll);
+    collapseAll.click();
+  }
+
+  public boolean isAddMembersButtonDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(addMembers);
+    } catch (TimeoutException e) {
+      return false;
+    }
+    return addMembers.isDisplayed();
+  }
+
+  public String getFacilityAddedMessage() {
+    testWebDriver.waitForElementToAppear(facilityAddedMessage);
+    return facilityAddedMessage.getText();
   }
 }

@@ -63,14 +63,17 @@
       <th id="codeHeader" openlmis-message="header.code"></th>
       <th id="supervisoryNodeHeader" openlmis-message="header.supervisory.node.name"></th>
       <th id="facilityCount" openlmis-message="label.facility.count"></th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="requisitionGroup in requisitionGroupList">
-      <td><a id="name{{$index}}" href="" ng-click="edit(requisitionGroup.id)" ng-bind="requisitionGroup.name"></a></td>
+      <td id="name{{$index}}" ng-bind="requisitionGroup.name"></td>
       <td id="code{{$index}}" ng-bind="requisitionGroup.code"></td>
       <td id="supervisoryName{{$index}}" ng-bind="requisitionGroup.supervisoryNode.name"></td>
       <td id="facilityCount{{$index}}" class="right-justified" ng-bind="requisitionGroup.memberCount"></td>
+      <td class="center-justified"><input id="manageButton{{$index}}" type="button" class="btn btn-primary "
+                                          openlmis-message="link.manage" ng-click="edit(requisitionGroup.id)"></td>
     </tr>
     </tbody>
   </table>

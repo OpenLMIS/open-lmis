@@ -8,7 +8,8 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function RequisitionGroupController($scope, requisitionGroupData, $location, RequisitionGroups, SupervisoryNodesSearch) {
+function RequisitionGroupController($scope, requisitionGroupData, $location, RequisitionGroups, SupervisoryNodesSearch,
+                                    messageService) {
 
   if (requisitionGroupData) {
     $scope.requisitionGroup = requisitionGroupData.requisitionGroup;
@@ -18,6 +19,8 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     $scope.requisitionGroup = {};
     $scope.requisitionGroupMembers = [];
   }
+
+  angular.element('.facility-add-success').fadeOut("fast");
 
   $scope.cancel = function () {
     $scope.$parent.message = "";
@@ -35,28 +38,32 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
       return;
     }
     if ($scope.requisitionGroup.id) {
-      RequisitionGroups.update({id: $scope.requisitionGroup.id}, {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers},
-          success, error);
+      RequisitionGroups.update({id: $scope.requisitionGroup.id},
+        {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers},
+        success, error);
     }
     else {
-      RequisitionGroups.save({}, {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers},
-          success, error);
+      RequisitionGroups.save({},
+        {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers},
+        success, error);
     }
   };
 
-  $scope.associate = function (facility) {
-    var isDuplicate = _.find($scope.requisitionGroupMembers, function (member) {
-      return member.facility.id == facility.id;
-    });
-    if (isDuplicate) {
-      $scope.duplicateFacilityName = facility.name;
-      return;
+  $scope.addMembers = function (tempFacilities) {
+
+    var duplicateMembers = _.intersection(_.pluck(_.pluck($scope.requisitionGroupMembers, 'facility'), 'id'),
+      _.pluck(tempFacilities, "id"));
+    if (duplicateMembers.length > 0) {
+      $scope.duplicateFacilityName = _.find($scope.requisitionGroupMembers,function (member) {
+        return member.facility.id == duplicateMembers[0];
+      }).facility.name;
+      $scope.facilitiesAddedSuccesfully = false;
+      return false;
     }
-    $scope.duplicateFacilityName = undefined;
-
-    var newMember = {"facility": facility, "requisitionGroup": $scope.requisitionGroup};
-    $scope.requisitionGroupMembers.push(newMember);
-
+    $.each(tempFacilities, function (index, tempFacility) {
+      var newMember = {"facility": tempFacility, "requisitionGroup": $scope.requisitionGroup};
+      $scope.requisitionGroupMembers.push(newMember);
+    });
     $scope.requisitionGroupMembers.sort(function (member1, member2) {
       if (member1.facility.code.toLowerCase() > member2.facility.code.toLowerCase())
         return 1;
@@ -64,7 +71,16 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
         return -1;
       return 0;
     });
+    $scope.showSlider = !$scope.showSlider;
+    angular.element('.facility-add-success').fadeIn("slow");
+    $scope.duplicateFacilityName = undefined;
+    angular.element('.facility-add-success').delay(3000).fadeOut("slow");
+    return true;
   };
+
+  $scope.$watch('showSlider', function () {
+    $scope.duplicateFacilityName = undefined;
+  });
 
   $scope.removeMember = function (memberFacilityId) {
     $scope.requisitionGroupMembers = _.filter($scope.requisitionGroupMembers, function (member) {
@@ -129,6 +145,11 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
 
     $scope.nodeSelected = $scope.requisitionGroup.supervisoryNode;
   }
+
+  $scope.getMessage = function (key) {
+    return messageService.get(key);
+  };
+
 }
 
 RequisitionGroupController.resolve = {
@@ -146,3 +167,42 @@ RequisitionGroupController.resolve = {
     return deferred.promise;
   }
 };
+
+
+function expandCollapseToggle(element) {
+  $(element).parents('.accordion-section').siblings('.accordion-section').each(function () {
+    $(this).find('.accordion-body').slideUp();
+    $(this).find('.accordion-heading b').text('+');
+  });
+  $(element).siblings('.accordion-body').stop().slideToggle(function () {
+    if ($(element).siblings('.accordion-body').is(':visible')) {
+      $(element).find('b').text('-');
+    } else {
+      $(element).find('b').text('+');
+    }
+  });
+  var offset = $(element).offset();
+  var offsetTop = offset ? offset.top : undefined;
+  $('body, html').animate({
+    scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
+  });
+}
+
+function expandCollapse(trigger) {
+  var accordion = $('.accordion');
+  if (trigger == 'expand') {
+    accordion.find('.accordion-section').each(function () {
+      $(this).find('.accordion-body').slideDown();
+      $(this).find('b').text('-');
+    });
+    var offsetTop = accordion.offset().top;
+    $('body, html').animate({
+      scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
+    });
+  } else {
+    accordion.find('.accordion-section').each(function () {
+      $(this).find('.accordion-body').slideUp();
+      $(this).find('b').text('+');
+    });
+  }
+}

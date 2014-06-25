@@ -95,4 +95,18 @@ public class RequisitionGroupService {
   public List<RequisitionGroupMember> getMembersBy(Long requisitionGroupId) {
     return requisitionGroupMemberService.getMembersBy(requisitionGroupId);
   }
+
+  public void updateWithMembers(RequisitionGroup requisitionGroup, List<RequisitionGroupMember> requisitionGroupMembers) {
+    save(requisitionGroup);
+    deleteAndInsertRequisitionGroupMembers(requisitionGroup,requisitionGroupMembers);
+  }
+
+  private void deleteAndInsertRequisitionGroupMembers(RequisitionGroup requisitionGroup, List<RequisitionGroupMember> requisitionGroupMembers) {
+    requisitionGroupMemberService.deleteMembersForGroup(requisitionGroup.getId());
+    for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
+      requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+      requisitionGroupMember.setModifiedBy(requisitionGroup.getModifiedBy());
+      requisitionGroupMemberService.insert(requisitionGroupMember);
+    }
+  }
 }

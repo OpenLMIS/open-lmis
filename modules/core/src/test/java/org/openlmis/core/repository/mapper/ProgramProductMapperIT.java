@@ -122,7 +122,8 @@ public class ProgramProductMapperIT {
 
     programProductMapper.updateCurrentPrice(programProduct);
 
-    ProgramProduct returnedProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(), product.getId());
+    ProgramProduct returnedProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(),
+      product.getId());
     assertThat(returnedProgramProduct.getCurrentPrice(), is(price));
     assertThat(returnedProgramProduct.getModifiedBy(), is(1L));
     assertThat(returnedProgramProduct.getModifiedDate(), is(notNullValue()));
@@ -177,9 +178,12 @@ public class ProgramProductMapperIT {
     assertThat(programProducts.size(), is(3));
     assertThat(programProducts.get(0).getId(), is(programProduct2.getId()));
     assertThat(programProducts.get(0).getDisplayOrder(), is(programProduct2.getDisplayOrder()));
+    assertThat(programProducts.get(0).getProductCategory(), is(productCategory));
     assertThat(programProducts.get(1).getId(), is(programProduct3.getId()));
+    assertThat(programProducts.get(1).getProductCategory(), is(productCategory));
     assertThat(programProducts.get(2).getId(), is(programProduct1.getId()));
     assertThat(programProducts.get(2).getProgramProductIsa(), is(programProductISA));
+    assertThat(programProducts.get(2).getProductCategory(), is(productCategory));
   }
 
   @Test
@@ -222,7 +226,8 @@ public class ProgramProductMapperIT {
     programProductMapper.insert(programProduct);
     programProductMapper.insert(programProduct2);
 
-    List<ProgramProduct> returnedProducts = programProductMapper.getByProductCode(programProduct.getProduct().getCode());
+    List<ProgramProduct> returnedProducts = programProductMapper.getByProductCode(
+      programProduct.getProduct().getCode());
 
     assertThat(returnedProducts.size(), is(2));
     assertContainsProgramProduct(returnedProducts, programProduct);
@@ -247,7 +252,8 @@ public class ProgramProductMapperIT {
 
     facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
 
-    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityTypeCode(program.getId(), facilityTypeCode);
+    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityTypeCode(program.getId(),
+      facilityTypeCode);
 
     assertThat(returnedProducts.size(), is(1));
     assertContainsProgramProduct(returnedProducts, programProduct);
@@ -267,7 +273,8 @@ public class ProgramProductMapperIT {
     programProductMapper.insert(programProduct);
     programProductMapper.insert(programProduct2);
 
-    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityTypeCode(program.getId(), null);
+    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityTypeCode(program.getId(),
+      null);
 
     assertThat(returnedProducts.size(), is(2));
     assertContainsProgramProduct(returnedProducts, programProduct);
@@ -275,7 +282,8 @@ public class ProgramProductMapperIT {
   }
 
 
-  private void assertContainsProgramProduct(List<ProgramProduct> returnedProducts, final ProgramProduct programProduct) {
+  private void assertContainsProgramProduct(List<ProgramProduct> returnedProducts,
+                                            final ProgramProduct programProduct) {
     boolean exists = exists(returnedProducts, new Predicate() {
       @Override
       public boolean evaluate(Object o) {

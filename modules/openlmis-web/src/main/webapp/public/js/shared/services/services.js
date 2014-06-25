@@ -355,3 +355,7 @@ services.factory('SupplyLinesSearch', function ($resource) {
 services.factory('FacilityApprovedProductsSearch', function ($resource) {
   return $resource('/facilityApprovedProducts.json', {}, {});
 });
+
+services.factory('ProgramProductsFilter', function ($resource) {
+  return $resource('/programProducts/filter/programId/:programId/facilityTypeId/:facilityTypeId.json', {programId: '@programId', facilityTypeId: '@facilityTypeId'}, {}, {});
+});

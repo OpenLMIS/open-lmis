@@ -34,20 +34,20 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
       $scope.loadProducts($scope.currentPage);
   });
 
-  $scope.clearSearch = function () {
-    $scope.query = "";
-    $scope.totalItems = 0;
-    $scope.supplyLines = [];
-    $scope.showResults = false;
-    angular.element("#searchFacilityApprovedProduct").focus();
-  };
-
   $scope.triggerSearch = function (event) {
     if (event.keyCode === 13) {
       $scope.loadProducts(1);
     }
   };
 
+  $scope.showCategory = function (index) {
+    return !((index > 0 ) && ($scope.facilityApprovedProducts[index].programProduct.productCategory.name === $scope.facilityApprovedProducts[index - 1].programProduct.productCategory.name));
+  };
+
+  $scope.clearSearch = function () {
+    $scope.query = "";
+    $scope.loadProducts(1);
+  };
 }
 
 FacilityApprovedProductController.resolve = {

@@ -233,6 +233,7 @@ public interface FacilityMapper {
   @Results(value = {
     @Result(property = "facilityType.id", column = "facilityTypeId"),
     @Result(property = "facilityType.name", column = "facilityTypeName"),
+    @Result(property = "geographicZone.name", column = "geoZoneName"),
   })
   List<Facility> getEnabledFacilities(@Param(value = "searchParam") String searchParam,
                                       @Param(value = "facilityTypeId") Long facilityTypeId,
@@ -255,7 +256,8 @@ public interface FacilityMapper {
     public static String getEnabledFacilities(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
       sql.append(
-        "SELECT F.*, FT.id AS facilityTypeId, FT.name AS facilityTypeName FROM facilities F INNER JOIN facility_types FT ON F.typeId = FT.id WHERE ");
+        "SELECT F.*, GZ.name as geoZoneName, FT.id AS facilityTypeId, FT.name AS facilityTypeName FROM facilities F INNER JOIN facility_types FT ON F.typeId = FT.id " +
+          "INNER JOIN geographic_zones GZ ON GZ.id = F.geographiczoneid WHERE ");
       sql = createQuery(sql, params);
       sql.append(" ORDER BY LOWER(F.code)");
       return sql.toString();

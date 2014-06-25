@@ -67,7 +67,7 @@ describe("Geographic Zone Search Controller", function () {
   it('should set selected search option', function () {
     var searchOption = "search_option";
 
-    scope.selectSearchType(searchOption)
+    scope.selectSearchType(searchOption);
 
     expect(scope.selectedSearchOption).toEqual(searchOption)
   });

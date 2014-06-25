@@ -602,6 +602,7 @@ public class FacilityMapperIT {
     assertThat(enabledFacilities.get(1).getName(), is(fac1.getName()));
     assertThat(enabledFacilities.get(1).getFacilityType().getId(), is(fac1.getFacilityType().getId()));
     assertThat(enabledFacilities.get(1).getFacilityType().getName(), is(fac1.getFacilityType().getName()));
+    assertThat(enabledFacilities.get(0).getGeographicZone().getName(), is(fac3.getGeographicZone().getName()));
   }
 
   @Test

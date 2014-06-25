@@ -117,9 +117,6 @@ public class SupervisoryNodesPage extends FilterSearchPage {
   @FindBy(how = ID, using = "viewHereLink")
   private static WebElement viewHereLink = null;
 
-  @FindBy(how = ID, using = "tooManyResultsMessage")
-  private static WebElement tooManyResultsMessage = null;
-
   @FindBy(how = ID, using = "editSupervisoryNodeHeader")
   private static WebElement editSupervisoryNodeHeader = null;
 
@@ -279,7 +276,13 @@ public class SupervisoryNodesPage extends FilterSearchPage {
   }
 
   public boolean isSearchIconDisplayed() {
-    testWebDriver.waitForElementToAppear(searchIcon);
+    try {
+      testWebDriver.waitForElementToAppear(searchIcon);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
     return searchIcon.isDisplayed();
   }
 
@@ -397,9 +400,5 @@ public class SupervisoryNodesPage extends FilterSearchPage {
     WebElement parent = testWebDriver.getElementByXpath("//*[@id='supervisoryNodeFormGroup']/div[4]/div/div/div[1]/div[2]/span");
     testWebDriver.waitForElementToAppear(parent);
     return parent.getText();
-  }
-
-  public String getTooManyResultsMessage() {
-    return tooManyResultsMessage.getText();
   }
 }

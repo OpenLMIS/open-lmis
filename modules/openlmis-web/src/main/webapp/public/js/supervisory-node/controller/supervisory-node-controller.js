@@ -27,6 +27,7 @@ function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSup
 
   $scope.associate = function (facility) {
     $scope.supervisoryNode.facility = facility;
+    $scope.showSlider = !$scope.showSlider;
   };
 
   $scope.showParentNodeSearchResults = function () {

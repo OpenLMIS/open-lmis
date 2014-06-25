@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
@@ -23,7 +23,11 @@ import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -31,13 +35,13 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.core.builder.SupervisoryNodeBuilder.defaultSupervisoryNode;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(RequisitionGroupService.class)
 public class RequisitionGroupServiceTest {
 
   @InjectMocks
@@ -138,5 +142,36 @@ public class RequisitionGroupServiceTest {
     requisitionGroupService.saveRequisitionGroupMembers(requisitionGroupMembers, new RequisitionGroup());
 
     verify(requisitionGroupMemberService).save(requisitionGroupMembers.get(0));
+  }
+
+  @Test
+  public void shouldUpdateWithRequisitionGroupMembers() {
+
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    requisitionGroup.setId(1L);
+    requisitionGroup.setCode("RG1");
+    requisitionGroup.setModifiedBy(2L);
+
+    RequisitionGroupMember member1 = new RequisitionGroupMember();
+    member1.setId(1L);
+    RequisitionGroupMember member2 = new RequisitionGroupMember();
+    List<RequisitionGroupMember> requisitionGroupMembers = new ArrayList<>();
+    requisitionGroupMembers.add(member1);
+    requisitionGroupMembers.add(member2);
+
+    RequisitionGroupService spyRequisitionGroup = PowerMockito.spy(requisitionGroupService);
+    doNothing().when(spyRequisitionGroup).save(requisitionGroup);
+
+
+    spyRequisitionGroup.updateWithMembers(requisitionGroup, requisitionGroupMembers);
+
+
+    verify(spyRequisitionGroup).save(requisitionGroup);
+    verify(requisitionGroupMemberService).deleteMembersForGroup(requisitionGroup.getId());
+    verify(requisitionGroupMemberService,times(2)).insert(Matchers.any(RequisitionGroupMember.class));
+    assertThat(member1.getRequisitionGroup(), is(requisitionGroup));
+    assertThat(member1.getModifiedBy(), is(requisitionGroup.getModifiedBy()));
+    assertThat(member2.getRequisitionGroup(), is(requisitionGroup));
+    assertThat(member2.getModifiedBy(), is(requisitionGroup.getModifiedBy()));
   }
 }

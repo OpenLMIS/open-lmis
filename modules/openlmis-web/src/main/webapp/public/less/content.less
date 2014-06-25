@@ -297,7 +297,8 @@ span[class^="tpl-"] {
       position: relative;
       border: 1px solid #DDD;
       border-top: 0;
-      border-color: transparent #BBB #DDD;
+      border-color: transparent #BBB #DDD
+    ;
       background: #FCFCFC;
       font-size: 0.9em;
 
@@ -1021,6 +1022,10 @@ table td.cell-input .display-block, .display-block {
           }
         }
       }
+      > span {
+        padding: 10px;
+        display: block;
+      }
       &:hover > a {
         background-color: #f9f9f9;
       }
@@ -1728,7 +1733,6 @@ td .close {
 }
 
 .prog-role-grid {
-  margin: 10px;
   .fluid-grid {
     border-radius: 3px 3px 0 0;
   }
@@ -2670,7 +2674,7 @@ table.search-list {
 
 .searchAndFilter {
   width: 98%;
-  margin: 0 11px;
+  margin: 0 11px 0 10px;
   background: white;
   border: 1px solid #ccc;
   display: none;
@@ -2722,17 +2726,17 @@ table.search-list {
   }
   #search {
     width: 65%;
-    padding: 4px 22px 22px;
+    padding: 4px 1.5% 22px;
   }
   .separator {
     position: absolute;
     height: 100%;
     border-left: 1px solid #ccc;
-    margin-left: 68.2%;
+    margin-left: 68%;
   }
   #filter {
-    width: 28%;
-    padding: 4px 22px 22px;
+    width: 29%;
+    padding: 4px 1.5% 22px;
     label {
       font-size: 0.9em;
     }
@@ -2768,4 +2772,34 @@ table.search-list {
       }
     }
   }
+}
+
+.bottom-padding {
+  padding-bottom: 20px !important;
+}
+
+input[type="checkbox"].facilityCheckbox {
+  margin-top: 0;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+#addMembers {
+  margin-bottom: 20px;
+}
+
+#multipleSearchAndFilter {
+  margin-bottom: 10px;
+  width: 99%;
+  &:before {
+    left: 21px;
+  }
+  &:after {
+    left: 22px;
+  }
+}
+
+#clearProductSearch {
+  margin-left: 10px;
+  border-radius: 3px !important;
 }

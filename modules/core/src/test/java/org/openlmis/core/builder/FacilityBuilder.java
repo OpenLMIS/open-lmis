@@ -73,7 +73,7 @@ public class FacilityBuilder {
       zone.setLevel(new GeographicLevel(1L, "levelCode", "levelName", 4));
       zone.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
       zone.setCode(lookup.valueOf(geographicZoneCode, GEOGRAPHIC_ZONE_CODE));
-      zone.setName("Lusaka");
+      zone.setName("Arusha");
       GeographicZone parentGeographicZone = new GeographicZone();
       parentGeographicZone.setLevel(new GeographicLevel(2L, "parentLevelCode", "parentLevelName", 3));
       parentGeographicZone.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));

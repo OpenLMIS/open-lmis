@@ -10,33 +10,41 @@
 
 describe("Requisition Group Controller", function () {
 
-  var scope, ctrl, requisitionGroup, element, $httpBackend, location, requisitionGroupData, requisitionGroupMembers;
+  var scope, ctrl, requisitionGroup, element, $httpBackend, location, requisitionGroupData, requisitionGroupMembers, compile;
   var controller;
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $compile) {
+    element = angular.element('<div class="facility-add-success" id="successMessage" style="display: none"></div>');
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
+    compile = $compile;
     location = $location;
     scope.query = "rg";
     controller = $controller;
     requisitionGroup = {code: "RG1", name: "Group 1"};
     requisitionGroupMembers = [];
     requisitionGroupData = {"requisitionGroup": requisitionGroup, "requisitionGroupMembers": requisitionGroupMembers};
+//    compile(element)(scope);
     ctrl = $controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: requisitionGroupData});
   }));
+
+  afterEach(function () {
+    element.remove();
+  });
 
   it('should set requisition group data in scope', function () {
     expect(scope.requisitionGroup).toEqual(requisitionGroup);
     expect(scope.requisitionGroupMembers).toEqual(requisitionGroupMembers);
   });
 
-  it('should set requisition group and members undefined in scope when requisition group data not present', function () {
-    ctrl = controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: undefined});
+  it('should set requisition group and members undefined in scope when requisition group data not present',
+    function () {
+      ctrl = controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: undefined});
 
-    expect(scope.requisitionGroup).toEqual({});
-    expect(scope.requisitionGroupMembers).toEqual([]);
-  });
+      expect(scope.requisitionGroup).toEqual({});
+      expect(scope.requisitionGroupMembers).toEqual([]);
+    });
 
   it('should get all supervisory nodes in scope if query length is greater than 3', function () {
     scope.query = "Nod";
@@ -126,7 +134,8 @@ describe("Requisition Group Controller", function () {
 
     requisitionGroupData = {"requisitionGroup": scope.requisitionGroup, "requisitionGroupMembers": []};
 
-    $httpBackend.expectPOST('/requisitionGroups.json', scope.requisitionGroupData).respond(200, {"success": "Saved successfully", "requisitionGroupId": scope.requisitionGroup.id});
+    $httpBackend.expectPOST('/requisitionGroups.json', scope.requisitionGroupData).respond(200,
+      {"success": "Saved successfully", "requisitionGroupId": scope.requisitionGroup.id});
     scope.save();
     $httpBackend.flush();
 
@@ -143,7 +152,8 @@ describe("Requisition Group Controller", function () {
 
     requisitionGroupData = {"requisitionGroup": scope.requisitionGroup, "requisitionGroupMembers": []};
 
-    $httpBackend.expectPUT('/requisitionGroups/' + requisitionGroup.id + '.json', requisitionGroupData).respond(200, {"success": "Saved successfully", "requisitionGroupId": requisitionGroup.id});
+    $httpBackend.expectPUT('/requisitionGroups/' + requisitionGroup.id + '.json', requisitionGroupData).respond(200,
+      {"success": "Saved successfully", "requisitionGroupId": requisitionGroup.id});
     scope.save();
     $httpBackend.flush();
 
@@ -168,18 +178,60 @@ describe("Requisition Group Controller", function () {
     ]);
   });
 
-  it('should add requisition group member', function () {
-    var facility = {"id": 3, "code": "b"};
-    scope.requisitionGroupMembers = [
-      {"facility": {"id": 1, "code": "a"}},
-      {"facility": {"id": 2, "code": "c"}}
-    ];
-    scope.associate(facility);
+  it('should add facilities to requisition group members', function () {
+    var tempFacilities = [
+      {"name": "fac1", "id": 1, "code": "code2"},
+      {"name": "fac2", "id": 2, "code": "code1"}
+    ]
+    scope.showSlider = false;
+    expect(element.css('display')).toEqual('none');
 
-    expect(scope.requisitionGroupMembers).toEqual([
-      {"facility": {"id": 1, "code": "a"}},
-      {"facility": {"id": 3, "code": "b"}, "requisitionGroup": scope.requisitionGroup},
-      {"facility": {"id": 2, "code": "c"}}
-    ]);
+    var spyElement = spyOn(angular, "element").andCallFake(function (selector) {
+      if (selector == '.facility-add-success') return element;
+    });
+
+    var spyFadeIn = spyOn(element, 'fadeIn').andCallThrough();
+    var spyFadeOut = spyOn(element, "fadeOut").andCallThrough();
+
+    ctrl = controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: requisitionGroupData});
+    expect(spyFadeOut).toHaveBeenCalledWith("fast");
+
+    var result = scope.addMembers(tempFacilities);
+
+    expect(scope.requisitionGroupMembers.length).toEqual(2);
+    expect(scope.requisitionGroupMembers[0].facility).toEqual(tempFacilities[1]);
+    expect(scope.requisitionGroupMembers[0].facility).toEqual(tempFacilities[1]);
+    expect(scope.showSlider).toBeTruthy();
+    expect(scope.duplicateFacilityName).toBeUndefined();
+    expect(result).toBeTruthy();
+    expect(spyElement).toHaveBeenCalledWith('.facility-add-success');
+    expect(spyFadeIn).toHaveBeenCalledWith("slow");
+  });
+
+  it('should not add facilities to requisition group members if duplicate facility', function () {
+    var tempFacilities = [
+      {"name": "fac1", "id": 1, "code": "code2"},
+      {"name": "fac2", "id": 2, "code": "code1"}
+    ]
+    scope.requisitionGroupMembers = [
+      { facility: { name: 'fac2', id: 2, code: 'code1' }, requisitionGroup: { code: 'RG1', name: 'Group 1' } }
+    ]
+
+    var result = scope.addMembers(tempFacilities);
+
+    expect(scope.requisitionGroupMembers.length).toEqual(1);
+    expect(scope.duplicateFacilityName).toEqual("fac2");
+    expect(scope.facilitiesAddedSuccesfully).toBeFalsy();
+    expect(result).toBeFalsy();
+  });
+
+  it('should delete duplicate facility message when slider state changes', function () {
+    scope.duplicateFacilityName = "fac1";
+
+    scope.$apply(function () {
+      scope.showSlider = false;
+    });
+
+    expect(scope.duplicateFacilityName).toBeUndefined();
   });
 });

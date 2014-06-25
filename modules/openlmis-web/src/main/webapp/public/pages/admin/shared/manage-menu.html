@@ -11,47 +11,39 @@
 <div class="manage-nav" ng-controller="ManageMenuController">
   <ul class="clearfix">
     <li ng-show="hasPermission('MANAGE_FACILITY')" ng-class="facilitySelected">
-      <a href="/public/pages/admin/facility/index.html">
-        <span id="facility-tab" openlmis-message="menu.header.facilities"></span>
-      </a>
+      <a id="facility-tab" href="/public/pages/admin/facility/index.html"
+         openlmis-message="menu.header.facilities"></a>
     </li>
     <li ng-show="hasPermission('MANAGE_ROLE')" ng-class="roleSelected">
-      <a id="role-tab" href="/public/pages/admin/role/index.html">
-        <span openlmis-message="menu.header.roles"></span>
-      </a>
+      <a id="role-tab" href="/public/pages/admin/role/index.html"
+         openlmis-message="menu.header.roles"></a>
     </li>
     <li ng-show="hasPermission('MANAGE_SCHEDULE')" ng-class="schedulesSelected">
-      <a href="/public/pages/admin/schedule/index.html">
-        <span id="schedule-tab" openlmis-message="menu.header.schedules"></span>
-      </a>
+      <a id="schedule-tab" href="/public/pages/admin/schedule/index.html"
+         openlmis-message="menu.header.schedules"></a>
     </li>
     <li ng-show="hasPermission('MANAGE_USER')" ng-class="userSelected">
-      <a href="/public/pages/admin/user/index.html">
-        <span id="user-tab" openlmis-message="menu.header.users"></span>
-      </a>
+      <a id="user-tab" href="/public/pages/admin/user/index.html"
+         openlmis-message="menu.header.users"></a>
     </li>
     <li ng-show="hasPermission('MANAGE_SUPERVISORY_NODE')" ng-class="supervisoryNodeSelected">
-      <a href="/public/pages/admin/supervisory-node/index.html">
-        <span id="supervisoryNodeTab" openlmis-message="menu.header.supervisory.nodes"></span>
-      </a>
+      <a id="supervisoryNodeTab" href="/public/pages/admin/supervisory-node/index.html"
+         openlmis-message="menu.header.supervisory.nodes"></a>
     </li>
     <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONE')" ng-class="geoZoneSelected">
-      <a href="/public/pages/admin/geo-zone/index.html">
-        <span id="geoZoneTab" openlmis-message="menu.header.geographic.zones"></span>
-      </a>
+      <a id="geoZoneTab" href="/public/pages/admin/geo-zone/index.html"
+         openlmis-message="menu.header.geographic.zones"></a>
     </li>
     <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')" ng-class="requisitionGroupSelected">
-      <a href="/public/pages/admin/requisition-group/index.html">
-        <span id="requisitionGroupTab" openlmis-message="menu.header.requisition.groups"></span>
-      </a>
+      <a id="requisitionGroupTab" href="/public/pages/admin/requisition-group/index.html"
+         openlmis-message="menu.header.requisition.groups"></a>
     </li>
     <li ng-show="hasPermission('MANAGE_SUPPLY_LINE')" ng-class="supplyLineSelected">
-      <a href="/public/pages/admin/supply-line/index.html">
-        <span id="supplyLineTab" openlmis-message="menu.header.supply.lines"></span>
-      </a>
+      <a id="supplyLineTab" href="/public/pages/admin/supply-line/index.html"
+         openlmis-message="menu.header.supply.lines"></a>
     </li>
     <li ng-show="hasPermission('MANAGE_FACILITY_APPROVED_PRODUCT')" ng-class="facilityApprovedProductSelected">
-      <a id="facilityApprovedProducts" href="/public/pages/admin/facility-approved-product/index.html"
+      <a id="facilityApprovedProductTab" href="/public/pages/admin/facility-approved-product/index.html"
          openlmis-message="header.facility.approved.products"></a>
     </li>
   </ul>

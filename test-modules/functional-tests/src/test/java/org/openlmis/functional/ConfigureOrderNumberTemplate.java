@@ -60,7 +60,6 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
     configureOrderNumberPage.verifyMessage("Order number configuration saved successfully");
 
     testWebDriver.refresh();
-
     configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
     configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
 
@@ -82,7 +81,6 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
     configureOrderNumberPage.verifyMessage("Order number configuration saved successfully");
 
     testWebDriver.refresh();
-
     configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
     configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
 
@@ -106,7 +104,6 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
     configureOrderNumberPage.verifyMessage("Order number configuration saved successfully");
 
     testWebDriver.refresh();
-
     configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
     configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
 
@@ -126,6 +123,5 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
 }

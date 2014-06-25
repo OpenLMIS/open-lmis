@@ -25,22 +25,22 @@ public interface ProductCategoryMapper {
 
 
   @Insert({"INSERT INTO product_categories",
-      "(code, name, displayOrder, createdBy, modifiedBy, modifiedDate)",
-      "VALUES",
-      "(#{code}, #{name}, #{displayOrder}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
+    "(code, name, displayOrder, createdBy, modifiedBy, modifiedDate)",
+    "VALUES",
+    "(#{code}, #{name}, #{displayOrder}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
   @Options(useGeneratedKeys = true)
   public void insert(ProductCategory productCategory);
 
   @Select("SELECT * FROM product_categories WHERE id = #{id}")
-  public ProductCategory getProductCategoryById(Long id);
+  public ProductCategory getById(Long id);
 
   @Select("SELECT * FROM product_categories WHERE LOWER(code) = LOWER(#{code})")
-  public ProductCategory getProductCategoryByCode(String code);
+  public ProductCategory getByCode(String code);
 
   @Update({"UPDATE product_categories SET name = #{name}, modifiedBy = #{modifiedBy},",
-      "displayOrder = #{displayOrder}, modifiedDate =#{modifiedDate} where id = #{id}"})
+    "displayOrder = #{displayOrder}, modifiedDate =#{modifiedDate} where id = #{id}"})
   public void update(ProductCategory category);
 
   @Select("SELECT id FROM product_categories WHERE LOWER(code) = LOWER(#{code})")
-  public Long getProductCategoryIdByCode(String categoryCode);
+  public Long getIdByCode(String categoryCode);
 }
