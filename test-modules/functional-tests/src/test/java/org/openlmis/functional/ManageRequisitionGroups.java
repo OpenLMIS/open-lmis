@@ -788,6 +788,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickAddNewProgramScheduleRow();
     assertFalse(requisitionGroupPage.getListOfPrograms().contains("HIV"));
     assertFalse(requisitionGroupPage.getListOfPrograms().contains("MALARIA"));
+    assertFalse(requisitionGroupPage.getListOfPrograms().contains("ESSENTIAL MEDICINES"));
 
     requisitionGroupPage.selectProgram("TB");
     requisitionGroupPage.selectNewSchedule("M-monthly");
@@ -806,9 +807,14 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickCancelAddProgramSchedule();
 
     requisitionGroupPage.clickRemoveProgramSchedule(1);
+    requisitionGroupPage.clickAddNewProgramScheduleRow();
+    assertTrue(requisitionGroupPage.getListOfPrograms().contains("HIV"));
+    requisitionGroupPage.clickCancelAddProgramSchedule();
+
     requisitionGroupPage.clickEditProgramSchedule(1);
     requisitionGroupPage.editDirectDelivery(1);
     requisitionGroupPage.editSchedules(1, "M-monthly");
+    requisitionGroupPage.editDropOffFacility(1);
     requisitionGroupPage.editDropOffFacility(1);
     requisitionGroupPage.enterSearchFacilityParameter("F10");
     requisitionGroupPage.selectFacility(1);

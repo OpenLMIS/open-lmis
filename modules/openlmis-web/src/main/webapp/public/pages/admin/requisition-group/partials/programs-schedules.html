@@ -75,12 +75,12 @@
             <div ng-show="programSchedule.underEdit"
                  class="input-div associate-facility suggest-field"
                  ng-model="programSchedule.dropOffFacility">
-              <div ng-click="toggleSlider($index)" class="clearfix">
+              <div id="editDropOffFacility{{$index}}" ng-click="toggleSlider($index)" class="clearfix">
                 <div class="facility-associated">
                   <span ng-show="programSchedule.dropOffFacility">{{programSchedule.dropOffFacility.code}} - {{programSchedule.dropOffFacility.name}}</span>
                 </div>
-                <a id="editDropOffFacility{{$index}}" href="" class="btn">
-                <i class="icon icon-ellipsis-horizontal"></i>
+                <a href="" class="btn">
+                  <i class="icon icon-ellipsis-horizontal"></i>
                 </a>
               </div>
               <a id="clearDropOffFacility{{$index}}" href="" ng-show="programSchedule.dropOffFacility"
