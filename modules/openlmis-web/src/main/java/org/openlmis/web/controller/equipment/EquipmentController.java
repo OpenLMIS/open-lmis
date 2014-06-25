@@ -38,7 +38,7 @@ public class EquipmentController extends BaseController {
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "list")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS') or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
   public ResponseEntity<OpenLmisResponse> getList(){
     return OpenLmisResponse.response("equipments", service.getAll());
   }

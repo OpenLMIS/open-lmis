@@ -37,7 +37,7 @@ public class ServiceTypeController extends BaseController {
   private ServiceTypeService service;
 
   @RequestMapping(method = GET, value = "list")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS') or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
   public ResponseEntity<OpenLmisResponse> getAll(){
     return  OpenLmisResponse.response("service_type", service.getAll());
   }
