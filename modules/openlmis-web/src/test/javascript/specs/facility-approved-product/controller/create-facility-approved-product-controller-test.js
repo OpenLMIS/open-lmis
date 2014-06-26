@@ -20,6 +20,8 @@ describe("Create Facility Approved Product Controller", function () {
     grandParentScope = $rootScope.$new();
     grandParentScope.loadProducts = function () {
     };
+    grandParentScope.focusSuccessMessageDiv = function () {
+    };
     scope.$parent = parentScope;
     parentScope.$parent = grandParentScope;
     $httpBackend = _$httpBackend_;
@@ -286,6 +288,7 @@ describe("Create Facility Approved Product Controller", function () {
   });
 
   it("should save facility type approved products", function () {
+    spyOn(grandParentScope, 'focusSuccessMessageDiv');
     var successMessage = "Saved successfully";
     scope.addedFacilityTypeApprovedProducts = [
       {
@@ -307,7 +310,7 @@ describe("Create Facility Approved Product Controller", function () {
     expect(grandParentScope.facilityApprovedProductsModal).toBeFalsy();
     expect(grandParentScope.loadProducts).toHaveBeenCalledWith(1);
     expect(scope.addedFacilityTypeApprovedProducts).toEqual([]);
-
+    expect(grandParentScope.focusSuccessMessageDiv).toHaveBeenCalled();
   });
 
   it("should not save facility type approved products if maxMonthStock is missing", function () {

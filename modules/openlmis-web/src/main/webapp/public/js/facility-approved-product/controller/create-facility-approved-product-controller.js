@@ -156,6 +156,7 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
         $scope.$parent.$parent.message = undefined;
         $scope.modalError = data.data.error;
       });
+      $scope.$parent.$parent.focusSuccessMessageDiv();
     }
   };
 

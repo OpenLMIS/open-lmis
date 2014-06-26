@@ -58,10 +58,18 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
   };
 
   $scope.cancel = function (facilityApprovedProduct) {
-    facilityApprovedProduct.underEdit = false;
     facilityApprovedProduct.maxMonthsOfStock = facilityApprovedProduct.previousMaxMonthsOfStock;
     facilityApprovedProduct.minMonthsOfStock = facilityApprovedProduct.previousMinMonthsOfStock;
     facilityApprovedProduct.eop = facilityApprovedProduct.previousEop;
+    facilityApprovedProduct.underEdit = false;
+    $scope.error = "";
+  };
+
+  $scope.focusSuccessMessageDiv = function () {
+    var searchFacilityApprovedProductLabel = angular.element('#searchFacilityApprovedProductLabel').get(0);
+    if (!isUndefined(searchFacilityApprovedProductLabel)) {
+      searchFacilityApprovedProductLabel.scrollIntoView();
+    }
   };
 
   $scope.update = function (facilityApprovedProduct) {
@@ -76,9 +84,11 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
       $scope.message = data.success;
       facilityApprovedProduct.underEdit = false;
       $scope.loadProducts($scope.currentPage);
+      $scope.error = "";
     }, function (data) {
-      $scope.message = data.data.error;
+      $scope.error = data.data.error;
     });
+    $scope.focusSuccessMessageDiv();
   };
 }
 

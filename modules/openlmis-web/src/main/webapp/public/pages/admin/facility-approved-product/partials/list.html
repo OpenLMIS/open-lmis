@@ -11,10 +11,6 @@
 <div xmlns="http://www.w3.org/1999/html">
   <h2 id="facilityApprovedProductsHeader" openlmis-message="header.facility.approved.products"></h2>
 
-  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" fade-out="3000" ng-bind="message"></div>
-
-  <div class="alert alert-danger" id="saveErrorMsgDiv" ng-show="error" fade-out="3000" openlmis-message="error"></div>
-
   <div class="row-fluid">
     <div class="span12">
       <label id="programLabel" openlmis-message="label.program"></label>
@@ -70,6 +66,9 @@
       </div>
     </div>
   </div>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" fade-out="3000" style="margin: 10px 0 5px;"
+       ng-bind="message"></div>
 
   <div class="table-container">
     <table id="facilityApprovedProductTable" class="table table-bordered search-list" ng-show="showResults">
@@ -174,6 +173,7 @@
                  openlmis-message="button.save"/>
           <input type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
                  ng-click="cancel(facilityApprovedProduct)"/>
+          <span class="toolbar-error clear-floats" id="saveErrorMsgDiv" ng-show="error" openlmis-message="error"></span>
         </td>
       </tr>
       </tbody>

@@ -220,10 +220,12 @@ describe("Facility Approved Product", function () {
       expect(facilityApprovedProduct.maxMonthsOfStock).toEqual(3);
       expect(facilityApprovedProduct.minMonthsOfStock).toEqual(4);
       expect(facilityApprovedProduct.eop).toEqual(124);
+      expect(scope.error).toEqual("");
     });
 
     it('should update facility approved product', function () {
       spyOn(scope, 'loadProducts');
+      spyOn(scope, 'focusSuccessMessageDiv');
       scope.currentPage = 0;
       var successMessage = "Updated successfully";
       scope.program = {"id": 1};
@@ -250,10 +252,13 @@ describe("Facility Approved Product", function () {
       expect(facilityApprovedProduct.underEdit).toBeFalsy();
       expect(scope.message).toEqual("Updated successfully");
       expect(scope.loadProducts).toHaveBeenCalledWith(0);
+      expect(scope.error).toEqual("");
+      expect(scope.focusSuccessMessageDiv).toHaveBeenCalled();
     });
 
     it('should not update facility approved product', function () {
       var errorMessage = "some error occurred. Please contact system admin.";
+      spyOn(scope, 'focusSuccessMessageDiv');
       scope.currentPage = 0;
       scope.program = {"id": 1};
       scope.facilityType = {"id": 2};
@@ -276,7 +281,8 @@ describe("Facility Approved Product", function () {
 
       expect(facilityApprovedProduct.facilityType).toEqual({"id": 2});
       expect(facilityApprovedProduct.programProduct.program).toEqual({"id": 1});
-      expect(scope.message).toEqual("some error occurred. Please contact system admin.");
+      expect(scope.error).toEqual("some error occurred. Please contact system admin.");
+      expect(scope.focusSuccessMessageDiv).toHaveBeenCalled();
     });
 
     it('should not update facility approved product if mandatory field missing', function () {
