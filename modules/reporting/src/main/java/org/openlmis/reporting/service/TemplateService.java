@@ -15,6 +15,8 @@ import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.model.TemplateParameter;
 import org.openlmis.reporting.repository.TemplateRepository;
@@ -28,6 +30,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.openlmis.core.domain.RightType.REPORTING;
+
 /**
  * Exposes the services for handling Template entity.
  */
@@ -37,6 +41,12 @@ public class TemplateService {
 
   @Autowired
   TemplateRepository repository;
+
+  @Autowired
+  MessageService messageService;
+
+  @Autowired
+  RoleRightsService roleRightsService;
 
   public List<Template> getAll() {
     return repository.getAll();
@@ -49,6 +59,7 @@ public class TemplateService {
   public void validateFileAndInsertTemplate(Template template, MultipartFile file) throws IOException {
     validateFile(template, file);
     repository.insert(template);
+    roleRightsService.validateAndInsertRight(template.getName(), REPORTING, template.getDescription());
   }
 
   private void validateFile(Template template, MultipartFile file) {
@@ -82,9 +93,15 @@ public class TemplateService {
   }
 
   private TemplateParameter createParameter(TemplateParameter templateParameter, JRParameter jrParameter) {
+    String displayName = jrParameter.getPropertiesMap().getProperty("displayName");
+    if (displayName == null) {
+      throw new DataException(messageService.message("report.template.parameter.display.name.missing", jrParameter.getName()));
+    }
     templateParameter.setName(jrParameter.getName());
-    templateParameter.setDisplayName(jrParameter.getPropertiesMap().getProperty("displayName"));
+    templateParameter.setDisplayName(displayName);
     templateParameter.setDescription(jrParameter.getPropertiesMap().getProperty("description"));
+    templateParameter.setDataType(jrParameter.getValueClassName());
+    templateParameter.setDefaultValue(jrParameter.getDefaultValueExpression().toString());
     return templateParameter;
   }
 

@@ -84,7 +84,13 @@ public interface RoleRightsMapper {
   @Select({"SELECT R.rightType from rights R INNER JOIN role_rights RR ON RR.rightName = R.name AND RR.roleId = #{roleId} LIMIT 1"})
   RightType getRightTypeForRoleId(Long roleId);
 
-  @Select({"SELECT DISTINCT RR.rightName FROM role_rights RR INNER JOIN fulfillment_role_assignments FRA ON RR.roleId = FRA.roleId " ,
+  @Select({"SELECT DISTINCT RR.rightName FROM role_rights RR INNER JOIN fulfillment_role_assignments FRA ON RR.roleId = FRA.roleId ",
     "WHERE FRA.userId = #{userId} AND FRA.facilityId = #{warehouseId}"})
-  Set<Right> getRightsForUserAndWarehouse(@Param("userId")Long userId, @Param("warehouseId")Long warehouseId);
+  Set<Right> getRightsForUserAndWarehouse(@Param("userId") Long userId, @Param("warehouseId") Long warehouseId);
+
+  @Insert({"INSERT INTO rights(name, rightType, description, createdDate) VALUES ",
+    "(#{templateName}, #{rightType}, #{description}, CURRENT_TIMESTAMP)"})
+  void insertRight(@Param(value = "templateName") String templateName,
+                   @Param(value = "rightType") RightType rightType,
+                   @Param(value = "description") String description);
 }

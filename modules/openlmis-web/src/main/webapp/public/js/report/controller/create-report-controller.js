@@ -29,7 +29,7 @@ function CreateReportController($scope, $location) {
     $scope.showError = false;
     _.each(formData, function (input) {
       $scope.$apply(function () {
-        if (utils.isEmpty(input.value)) {
+        if (input.name !== "description" && utils.isEmpty(input.value)) {
           $scope.showError = true;
           $scope.reportForm[input.name].$error.required = true;
         } else {

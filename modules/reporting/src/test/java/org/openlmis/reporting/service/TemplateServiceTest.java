@@ -10,10 +10,7 @@
 
 package org.openlmis.reporting.service;
 
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.JRPropertiesMap;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -21,7 +18,10 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.domain.RightType;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.repository.TemplateRepository;
@@ -34,9 +34,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.spy;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({TemplateService.class, JasperCompileManager.class})
@@ -45,6 +50,12 @@ public class TemplateServiceTest {
 
   @Mock
   TemplateRepository repository;
+
+  @Mock
+  RoleRightsService roleRightsService;
+
+  @Mock
+  MessageService messageService;
 
   @InjectMocks
   TemplateService service;
@@ -87,6 +98,34 @@ public class TemplateServiceTest {
   }
 
   @Test
+  public void shouldThrowErrorIfDisplayNameOfParameterIsMissing() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Error Message");
+    MultipartFile file = mock(MultipartFile.class);
+    when(file.getOriginalFilename()).thenReturn("file.jrxml");
+
+    mockStatic(JasperCompileManager.class);
+    JasperReport report = mock(JasperReport.class);
+    InputStream inputStream = mock(InputStream.class);
+    when(file.getInputStream()).thenReturn(inputStream);
+
+    JRParameter param1 = mock(JRParameter.class);
+    JRParameter param2 = mock(JRParameter.class);
+    JRPropertiesMap propertiesMap = mock(JRPropertiesMap.class);
+
+    when(messageService.message("report.template.parameter.display.name.missing", param1.getName())).thenReturn("Error Message");
+    when(report.getParameters()).thenReturn(new JRParameter[]{param1, param2});
+    when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
+    when(param1.getPropertiesMap()).thenReturn(propertiesMap);
+    when(propertiesMap.getProperty("displayName")).thenReturn(null);
+    Template template = new Template();
+
+    service.validateFileAndInsertTemplate(template, file);
+
+    verify(repository, never()).insert(template);
+  }
+
+  @Test
   public void shouldValidateFileAndSetData() throws Exception {
     MultipartFile file = mock(MultipartFile.class);
     when(file.getOriginalFilename()).thenReturn("file.jrxml");
@@ -102,11 +141,15 @@ public class TemplateServiceTest {
 
     when(report.getParameters()).thenReturn(new JRParameter[]{param1, param2});
     when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
-
     when(param1.getPropertiesMap()).thenReturn(propertiesMap);
     when(propertiesMap.getProperty("displayName")).thenReturn("Param Display Name");
+    when(param1.getValueClassName()).thenReturn("String");
+    when(param1.getDefaultValueExpression()).thenReturn(mock(JRExpression.class));
     when(propertiesMap.getProperty("description")).thenReturn("Param Description");
+
     when(param2.getPropertiesMap()).thenReturn(propertiesMap);
+    when(param2.getValueClassName()).thenReturn("Integer");
+    when(param2.getDefaultValueExpression()).thenReturn(mock(JRExpression.class));
 
     ByteArrayOutputStream byteOutputStream = mock(ByteArrayOutputStream.class);
     whenNew(ByteArrayOutputStream.class).withAnyArguments().thenReturn(byteOutputStream);
@@ -120,5 +163,8 @@ public class TemplateServiceTest {
     service.validateFileAndInsertTemplate(template, file);
 
     verify(repository).insert(template);
+    verify(roleRightsService).validateAndInsertRight(template.getName(), RightType.REPORTING, template.getDescription());
+    assertThat(template.getParameters().get(0).getDisplayName(), is("Param Display Name"));
+    assertThat(template.getParameters().get(0).getDescription(), is("Param Description"));
   }
 }

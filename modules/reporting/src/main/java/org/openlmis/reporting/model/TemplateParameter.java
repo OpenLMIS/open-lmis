@@ -26,6 +26,10 @@ public class TemplateParameter extends BaseModel {
 
   private String displayName;
 
+  private String defaultValue;
+
+  private String dataType;
+
   private String description;
 
 }

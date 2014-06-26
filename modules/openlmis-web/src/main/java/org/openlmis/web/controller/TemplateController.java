@@ -54,6 +54,7 @@ public class TemplateController extends BaseController {
       Template template = new Template(name, null, null, CONSISTENCY_REPORT, description);
       template.setCreatedBy(loggedInUserId(request));
       templateService.validateFileAndInsertTemplate(template, file);
+
       return success(messageService.message(JASPER_CREATE_REPORT_SUCCESS), MediaType.TEXT_HTML_VALUE);
     } catch (IOException e) {
       return error(messageService.message(JASPER_CREATE_REPORT_ERROR), OK, MediaType.TEXT_HTML_VALUE);

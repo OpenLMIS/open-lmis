@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.builder.UserBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -24,13 +25,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -41,6 +44,7 @@ import static org.openlmis.core.builder.SupervisoryNodeBuilder.code;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightType.REPORTING;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -73,7 +77,8 @@ public class RoleRightsMapperIT {
   @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
 
-
+  @Autowired
+  private QueryExecutor queryExecutor;
 
   @Test
   public void shouldGetAllRightsForAUserByUserId() throws Exception {
@@ -100,7 +105,6 @@ public class RoleRightsMapperIT {
     assertTrue(allRightsForUser.contains(CONFIGURE_RNR));
     assertTrue(allRightsForUser.contains(VIEW_ORDER));
   }
-
 
   @Test
   public void shouldGetRoleAndRights() throws Exception {
@@ -137,8 +141,7 @@ public class RoleRightsMapperIT {
     roleRightsMapper.createRoleRight(role, CONFIGURE_RNR);
     roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
 
-    List<Role> roles = new ArrayList();
-    roles.addAll(roleRightsMapper.getAllRoles());
+    List<Role> roles = roleRightsMapper.getAllRoles();
 
     assertThat(roles.get(0).getName(), is("Admin"));
     Role fetchedRole = roles.get(1);
@@ -188,7 +191,6 @@ public class RoleRightsMapperIT {
     supervisoryNode2.setFacility(facility);
     supervisoryNodeMapper.insert(supervisoryNode2);
 
-
     Role role1 = insertRole("r1", "random description");
     roleRightsMapper.createRoleRight(role1, CREATE_REQUISITION);
     Role role2 = insertRole("r2", "random description");
@@ -237,13 +239,11 @@ public class RoleRightsMapperIT {
   public void shouldGetRightTypeForRoleId() throws Exception {
     Role role = new Role("rolename", "description");
     roleRightsMapper.insertRole(role);
-
     roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
 
     RightType rightTypeForRoleId = roleRightsMapper.getRightTypeForRoleId(role.getId());
 
     assertThat(rightTypeForRoleId, is(CREATE_REQUISITION.getType()));
-
   }
 
   @Test
@@ -263,6 +263,21 @@ public class RoleRightsMapperIT {
     assertThat(rights.contains(MANAGE_POD), is(true));
   }
 
+  @Test
+  public void shouldInsertRight() throws SQLException {
+    String templateName = "Requisition Group Program";
+    String description = "Description";
+
+    roleRightsMapper.insertRight(templateName, REPORTING, description);
+
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM rights WHERE rightType = 'REPORTING'");
+    resultSet.next();
+    assertThat(resultSet.getString("name"), is(templateName));
+    assertThat(resultSet.getString("description"), is(description));
+    assertThat(resultSet.getString("rightType"), is(REPORTING.toString()));
+    assertNotNull(resultSet.getTimestamp("createdDate"));
+  }
+
   private Role insertRole(String name, String description) {
     Role r1 = new Role(name, description);
     roleRightsMapper.insertRole(r1);
@@ -272,7 +287,6 @@ public class RoleRightsMapperIT {
   private void insertFulfillmentRoleAssignment(User user, Facility facility, Role role) {
     fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user, facility.getId(), role.getId());
   }
-
 
   private Program insertProgram(Program program) {
     programMapper.insert(program);

@@ -103,4 +103,12 @@ public class RoleRightsRepository {
   public Set<Right> getRightsForUserAndWarehouse(Long userId, Long warehouseId) {
     return roleRightsMapper.getRightsForUserAndWarehouse(userId, warehouseId);
   }
+
+  public void validateAndInsertRight(String templateName, RightType rightType, String description) {
+    if (roleRightsMapper.isReportNameUnique(templateName)) {
+      roleRightsMapper.insertRight(templateName, rightType, description);
+    } else {
+      throw new DataException("report.template.name.already.exists");
+    }
+  }
 }

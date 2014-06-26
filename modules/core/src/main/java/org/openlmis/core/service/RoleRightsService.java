@@ -112,4 +112,8 @@ public class RoleRightsService {
   public RightType getRightTypeForRoleId(Long roleId) {
     return roleRightsRepository.getRightTypeForRoleId(roleId);
   }
+
+  public void validateAndInsertRight(String templateName, RightType rightType, String description) {
+    roleRightsRepository.validateAndInsertRight(templateName, rightType, description);
+  }
 }
