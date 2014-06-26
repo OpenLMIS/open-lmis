@@ -407,17 +407,33 @@ public List<Program>getAllProgramsWithBudgeting(){
     }
 
 
-  public GeoZoneTree getGeoZoneTree(){
+  public GeoZoneTree getGeoZoneTree(Long userId){
+    List<GeoZoneTree> zones = geographicZoneMapper.getGeoZonesForUser(userId);
     GeoZoneTree tree = geographicZoneMapper.getParentZoneTree();
-    populateChildren(tree);
+    populateChildren(tree, zones);
     return tree;
   }
 
-  private void populateChildren(GeoZoneTree tree){
-    tree.setChildren(geographicZoneMapper.getChildrenZoneTree(tree.getId()));
+  public GeoZoneTree getGeoZoneTree(Long userId, Long programId){
+    List<GeoZoneTree> zones = geographicZoneMapper.getGeoZonesForUserByProgram(userId, programId);
+    GeoZoneTree tree = geographicZoneMapper.getParentZoneTree();
+    populateChildren(tree, zones);
+    return tree;
+  }
+
+  private void populateChildren(GeoZoneTree tree, List<GeoZoneTree> source){
+    // find children from the source
+    List<GeoZoneTree> children = new ArrayList<>();
+    for(GeoZoneTree t  : source){
+      if(t.getParentId() == tree.getId()) {
+        children.add(t);
+      }
+    }
+
+    tree.setChildren(children);
 
     for(GeoZoneTree zone : tree.getChildren()){
-      populateChildren(zone);
+      populateChildren(zone, source);
     }
   }
 

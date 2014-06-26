@@ -131,8 +131,15 @@ public class ReportLookupController extends BaseController {
   }
 
   @RequestMapping(value = "/geographic-zones/tree", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getGeographicZoneTree() {
-    GeoZoneTree geoZoneTree =  reportLookupService.getGeoZoneTree();
+  public ResponseEntity<OpenLmisResponse> getGeographicZoneTree(  HttpServletRequest request) {
+    GeoZoneTree geoZoneTree =  reportLookupService.getGeoZoneTree(loggedInUserId(request));
+
+    return OpenLmisResponse.response("zone", geoZoneTree);
+  }
+
+  @RequestMapping(value = "/geographic-zones/tree-program", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getGeographicZoneTreeByProgram( @RequestParam(value = "program", required = true, defaultValue = "0") long program,  HttpServletRequest request) {
+    GeoZoneTree geoZoneTree =  reportLookupService.getGeoZoneTree(loggedInUserId(request), program);
 
     return OpenLmisResponse.response("zone", geoZoneTree);
   }
