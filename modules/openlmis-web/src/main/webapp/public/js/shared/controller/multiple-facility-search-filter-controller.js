@@ -26,6 +26,7 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
       $scope.multipleFacilities = data.facilityList;
       $scope.multipleFacilitiesResultCount = isUndefined($scope.multipleFacilities) ? 0 : $scope.multipleFacilities.length;
       $scope.multipleFacilitiesMessage = data.message;
+      $scope.resultCount = $scope.multipleFacilitiesResultCount;
     });
   };
 

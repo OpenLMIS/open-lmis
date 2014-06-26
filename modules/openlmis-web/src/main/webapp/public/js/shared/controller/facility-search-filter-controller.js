@@ -20,6 +20,7 @@ function FacilitySearchFilterController($scope, Facilities) {
     Facilities.get({"searchParam": $scope.facilityQuery, "facilityTypeId": $scope.type.id, "geoZoneId": $scope.zone.id}, function (data) {
       $scope.facilityList = data.facilityList;
       $scope.facilityResultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
+      $scope.resultCount = $scope.facilityResultCount;
       $scope.message = data.message;
     });
   };

@@ -29,7 +29,7 @@
       </div>
 
       <div id="searchFacilityList" class="search-list slider" slider="multipleFacilitiesResultCount >= 0">
-        <div ng-switch on="multipleFacilitiesResultCount">
+        <div ng-switch on="resultCount">
           <h3 ng-switch-when="0">
             <span id="noFacilityResultMessage" ng-show="!multipleFacilitiesMessage"
                   openlmis-message="msg.no.matches|multipleFacilitiesQuery"></span>
@@ -41,7 +41,7 @@
               openlmis-message="msg.one.match|multipleFacilitiesQuery"></h3>
 
           <h3 id="nFacilityResultsMessage" ng-switch-default
-              openlmis-message="msg.many.matches|multipleFacilitiesResultCount|multipleFacilitiesQuery"></h3>
+              openlmis-message="msg.many.matches|resultCount|multipleFacilitiesQuery"></h3>
         </div>
         <a class="close-btn" id="closeButton" href="" ng-click="clearMultipleFacilitiesSearch()"></a>
         <ul>
