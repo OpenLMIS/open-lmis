@@ -62,7 +62,7 @@ public class ProductService {
 
   private void notifyProgramCatalogChange(Product product, List<ProgramProduct> existingProgramProducts) {
     for (ProgramProduct existingProgramProduct : existingProgramProducts) {
-      if (existingProgramProduct.isActive() && (existingProgramProduct.getProduct().getActive() != product.getActive())) {
+      if (existingProgramProduct.getActive() && (existingProgramProduct.getProduct().getActive() != product.getActive())) {
         programService.setFeedSendFlag(existingProgramProduct.getProgram(), true);
       }
     }

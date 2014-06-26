@@ -81,11 +81,11 @@ public class ProgramProductService {
     validateAndSetProductCategory(programProduct);
     if (programProduct.getId() == null) {
       boolean globalProductStatus = productService.isActive(programProduct.getProduct().getCode());
-      if (globalProductStatus && programProduct.isActive())
+      if (globalProductStatus && programProduct.getActive())
         programService.setFeedSendFlag(programProduct.getProgram(), true);
     } else {
       ProgramProduct existingProgramProduct = programProductRepository.getById(programProduct.getId());
-      if (existingProgramProduct.getProduct().getActive() && (existingProgramProduct.isActive() != programProduct.isActive())) {
+      if (existingProgramProduct.getProduct().getActive() && (existingProgramProduct.getActive() != programProduct.getActive())) {
         programService.setFeedSendFlag(programProduct.getProgram(), true);
       }
     }

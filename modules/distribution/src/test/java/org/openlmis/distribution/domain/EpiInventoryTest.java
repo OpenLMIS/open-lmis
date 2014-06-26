@@ -46,10 +46,10 @@ public class EpiInventoryTest {
     programSupported.setProgramProducts(asList(facilityProgramProduct1, facilityProgramProduct2));
     facility.setSupportedPrograms(asList(programSupported));
 
-    when(facilityProgramProduct1.isActive()).thenReturn(true);
+    when(facilityProgramProduct1.getActive()).thenReturn(true);
     when(facilityProgramProduct1.getProduct().getActive()).thenReturn(true);
 
-    when(facilityProgramProduct2.isActive()).thenReturn(true);
+    when(facilityProgramProduct2.getActive()).thenReturn(true);
     when(facilityProgramProduct2.getProduct().getActive()).thenReturn(true);
 
     whenNew(EpiInventoryLineItem.class).withAnyArguments().thenReturn(mock(EpiInventoryLineItem.class));

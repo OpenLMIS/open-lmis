@@ -266,7 +266,7 @@ public class FacilityApprovedProductMapperIT {
     assertThat(facilityTypeApprovedProducts.get(3).getProgramProduct().getProduct().getCode(), is("PRO03"));
 
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getId(), is(programProduct6.getId()));
-    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().isActive(), is(programProduct6.isActive()));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getActive(), is(programProduct6.getActive()));
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getId(), is(pro06.getId()));
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getPrimaryName(),
       is(pro06.getPrimaryName()));
@@ -317,7 +317,7 @@ public class FacilityApprovedProductMapperIT {
     assertThat(facilityTypeApprovedProducts.size(), is(1));
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getCode(), is("PRO04"));
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getId(), is(programProduct4.getId()));
-    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().isActive(), is(programProduct4.isActive()));
+    assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getActive(), is(programProduct4.getActive()));
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getId(), is(pro04.getId()));
     assertThat(facilityTypeApprovedProducts.get(0).getProgramProduct().getProduct().getPrimaryName(),
       is(pro04.getPrimaryName()));

@@ -149,7 +149,7 @@ public class ProgramProductMapperIT {
     ProgramProduct dbProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(), product.getId());
 
     assertThat(dbProgramProduct.getDosesPerMonth(), is(10));
-    assertThat(dbProgramProduct.isActive(), is(false));
+    assertThat(dbProgramProduct.getActive(), is(false));
     assertThat(dbProgramProduct.getProductCategory(), is(productCategory));
   }
 
@@ -399,7 +399,7 @@ public class ProgramProductMapperIT {
       public boolean evaluate(Object o) {
         ProgramProduct productFromCollection = (ProgramProduct) o;
         return (productFromCollection.getProgram().getCode().equals(programProduct.getProgram().getCode())) &&
-          (productFromCollection.isActive() == programProduct.isActive()) &&
+          (productFromCollection.getActive() == programProduct.getActive()) &&
           (productFromCollection.getProduct().getActive() == programProduct.getProduct().getActive());
       }
     });

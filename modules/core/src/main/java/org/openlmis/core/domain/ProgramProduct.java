@@ -42,7 +42,7 @@ public class ProgramProduct extends BaseModel implements Importable {
   private Integer dosesPerMonth;
 
   @ImportField(name = "Is Active", type = "boolean", mandatory = true)
-  private boolean active;
+  private Boolean active;
 
   @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
   private ProductCategory productCategory;

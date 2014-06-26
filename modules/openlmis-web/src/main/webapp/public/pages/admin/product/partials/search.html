@@ -92,11 +92,11 @@
         <i id="GlobalActive{{$index}}"
            ng-class="{'icon-ok': programProduct.product.active}"></i>
       </td>
-      <td class="center-justified" ng-show="programProduct.active">
-        <i id="activeAtProgram{{$index}}"
+      <td class="center-justified" ng-show="programProduct.active != undefined">
+      <i id="activeAtProgram{{$index}}"
            ng-class="{'icon-ok': programProduct.active}"></i>
       </td>
-      <td class="center-justified" id="undefinedActive{{$index}}" ng-show="!programProduct.active">NA</td>
+      <td class="center-justified" id="undefinedActive{{$index}}" ng-show="programProduct.active == undefined">NA</td>
     </tr>
     </tbody>
   </table>
