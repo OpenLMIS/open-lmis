@@ -90,17 +90,12 @@ services.factory('SaveMaintenanceRequest', function($resource){
     return $resource('/equipment/maintenance-request/save.json', {}, {});
 });
 
-
 services.factory('EquipmentLogs', function($resource){
    return $resource('/equipment/maintenance-request/full-history.json',{},{});
 });
 
 services.factory('PendingRequests', function($resource){
     return $resource('/equipment/maintenance-request/outstanding-for-user.json',{},{});
-});
-
-services.factory('DonorCompleteList',function($resource){
-    return $resource('/donor/getList.json',{},{});
 });
 
 services.factory('SaveDonor',function($resource){

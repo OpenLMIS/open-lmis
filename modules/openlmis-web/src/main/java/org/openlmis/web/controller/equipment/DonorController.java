@@ -26,7 +26,7 @@ public class DonorController extends BaseController {
   @Autowired
   private DonorService donorService;
 
-  @RequestMapping(value="getList",method= GET, headers = ACCEPT_JSON)
+  @RequestMapping(value="list",method= GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DONOR')")
   public ResponseEntity<OpenLmisResponse> getAll(){
     return OpenLmisResponse.response("donors",donorService.getAllWithDetails());
