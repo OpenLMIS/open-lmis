@@ -79,7 +79,7 @@
                  ng-model="programSchedule.dropOffFacility">
               <div id="editDropOffFacility{{programSchedule.program.name}}" ng-click="toggleSlider($index)"
                    class="clearfix">
-              <div class="facility-associated">
+                <div class="facility-associated">
                   <span ng-show="programSchedule.dropOffFacility">{{programSchedule.dropOffFacility.code}} - {{programSchedule.dropOffFacility.name}}</span>
                 </div>
                 <a href="" class="btn">
@@ -153,21 +153,22 @@
         </div>
 
         <div class="span3 fluid-grid-cell">
-          <div id="newDropOffFacility{{programSchedule.program.name}}"
-               class="input-div associate-facility clearfix suggest-field"
-               ng-click="addNew && toggleSlider('add')"
+          <div class="input-div associate-facility clearfix suggest-field"
                ng-model="newProgramSchedule.dropOffFacility">
-            <div class="facility-associated">
+            <div id="addDropOffFacility{{programSchedule.program.name}}" ng-click="addNew && toggleSlider('add')"
+                 class="clearfix">
+              <div class="facility-associated">
               <span id="selectedDropOffFacility{{programSchedule.program.name}}"
                     ng-show="newProgramSchedule.dropOffFacility">{{newProgramSchedule.dropOffFacility.code}} - {{newProgramSchedule.dropOffFacility.name}}</span>
+              </div>
+              <a href="" class="btn">
+                <i class="icon icon-ellipsis-horizontal"></i>
+              </a>
             </div>
-            <a href="" class="btn">
-              <i class="icon icon-ellipsis-horizontal"></i>
-            </a>
             <a id="clearNewDropOffFacility{{programSchedule.program.name}}" href=""
                ng-show="newProgramSchedule.dropOffFacility"
                class="clear-search" style="right: 38px;"
-               ng-click="clearDropOffFacility($index)"></a>
+               ng-click="newProgramSchedule.dropOffFacility = undefined;"></a>
           </div>
         </div>
 
