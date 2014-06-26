@@ -779,4 +779,16 @@ public class RequisitionGroupPage extends FilterSearchPage {
     }
     return dropOffFacility.isDisplayed();
   }
+
+  public boolean isProgramDisplayed(String programName) {
+    WebElement program = testWebDriver.getElementById("programName" + programName);
+    try {
+      testWebDriver.waitForElementToAppear(program);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return program.isDisplayed();
+  }
 }

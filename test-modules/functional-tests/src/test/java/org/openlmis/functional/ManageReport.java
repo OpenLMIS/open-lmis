@@ -90,7 +90,7 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickAddNewButton();
     reportPage.verifyItemsOnReportUploadScreen();
 
-    fileName = "activefacility.jrxml";
+    fileName = "OrderRoutingConsistencyReport.jrxml";
     reportPage.enterReportName(reportName);
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
