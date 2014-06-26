@@ -28,8 +28,8 @@ import java.util.List;
 public interface RequisitionGroupMapper {
 
   @Insert("INSERT INTO requisition_groups" +
-    "(code, name, description, supervisoryNodeId, createdBy, modifiedBy) " +
-    "VALUES (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{createdBy})")
+    "(code, name, description, supervisoryNodeId, createdBy, modifiedBy, modifiedDate) " +
+    "VALUES (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{createdBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
   @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroup requisitionGroup);
 

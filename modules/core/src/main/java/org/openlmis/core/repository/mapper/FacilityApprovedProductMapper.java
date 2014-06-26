@@ -27,8 +27,8 @@ import java.util.List;
 public interface FacilityApprovedProductMapper {
 
   @Insert("INSERT INTO facility_approved_products(" +
-    "facilityTypeId, programProductId, maxMonthsOfStock, minMonthsOfStock, eop, createdBy, modifiedBy) values " +
-    "(#{facilityType.id}, #{programProduct.id}, #{maxMonthsOfStock}, #{minMonthsOfStock}, #{eop}, #{createdBy}, #{createdBy})")
+    "facilityTypeId, programProductId, maxMonthsOfStock, minMonthsOfStock, eop, createdBy, modifiedBy, modifiedDate) values " +
+    "(#{facilityType.id}, #{programProduct.id}, #{maxMonthsOfStock}, #{minMonthsOfStock}, #{eop}, #{createdBy}, #{createdBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
   @Options(useGeneratedKeys = true)
   Integer insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
