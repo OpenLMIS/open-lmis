@@ -85,8 +85,8 @@ public class E2EUpload extends TestCaseHelper {
     verifyInValidFacilityFTPDetailsUpload();
     verifyValidFacilityFTPDetailsUpload();
 
-    verifyValidFacilityTypeToProductMappingUpload();
     verifyInvalidFacilityTypeToProductMappingUpload();
+    verifyValidFacilityTypeToProductMappingUpload();
     dbWrapper.allocateFacilityToUser(userName, "F10");
 
     verifyInvalidProgramSupportedByFacilitiesUpload();
