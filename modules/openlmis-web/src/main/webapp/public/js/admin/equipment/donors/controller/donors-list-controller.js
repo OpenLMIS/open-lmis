@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function DonorListController($scope, sharedSpace, $location, navigateBackService, DonorCompleteList) {
+function DonorListController($scope, sharedSpace, $location, navigateBackService, Donors) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showDonorsList('txtFilterDonors');
@@ -18,7 +18,7 @@ function DonorListController($scope, sharedSpace, $location, navigateBackService
 
     $scope.showDonorsList = function (id) {
 
-        DonorCompleteList.get(function (data) {
+        Donors.get(function (data) {
             $scope.filteredDonors = data.donors;
             $scope.donorsList = $scope.filteredDonors;
         });
