@@ -57,11 +57,12 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
   };
 
   $scope.showCategory = function (index) {
-    if ((index > 0) && $scope.programProducts[index].productCategory) {
-      return !(($scope.programProducts[index].program.name === $scope.programProducts[index - 1].program.name)
-          && ($scope.programProducts[index].productCategory.name === $scope.programProducts[index - 1].productCategory.name));
+    if ($scope.programProducts[index].productCategory) {
+      return !(((index > 0) && $scope.programProducts[index].program.name === $scope.programProducts[index - 1].program.name) && ($scope.programProducts[index].productCategory.name === $scope.programProducts[index - 1].productCategory.name));
     }
-    return !($scope.programProducts[index].productCategory === $scope.programProducts[index - 1].productCategory);
+    else {
+      return !((index > 0) && $scope.programProducts[index].productCategory === $scope.programProducts[index - 1].productCategory);
+    }
   };
 
   $scope.clearSearch = function () {
