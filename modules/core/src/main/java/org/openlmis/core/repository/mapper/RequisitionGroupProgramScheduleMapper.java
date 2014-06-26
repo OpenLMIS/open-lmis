@@ -62,7 +62,7 @@ public interface RequisitionGroupProgramScheduleMapper {
   @Update({"UPDATE requisition_group_program_schedules SET",
     "programId = #{program.id}, scheduleId = #{processingSchedule.id}, directDelivery = #{directDelivery},",
     "dropOffFacilityId = #{dropOffFacility.id}, modifiedBy = #{modifiedBy},",
-    "modifiedDate = (COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))",
+    "modifiedDate = (COALESCE(#{modifiedDate}, NOW()))",
     "WHERE id = #{id}"})
   void update(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule);
 

@@ -138,7 +138,7 @@ public interface FacilityApprovedProductMapper {
 
   @Update({"UPDATE facility_approved_products SET",
     "facilityTypeId = #{facilityType.id}, programProductId = #{programProduct.id}, maxMonthsOfStock = #{maxMonthsOfStock},",
-    "minMonthsOfStock = #{minMonthsOfStock}, eop = #{eop}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))",
+    "minMonthsOfStock = #{minMonthsOfStock}, eop = #{eop}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW()))",
     "WHERE id = #{id}"})
   void update(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 

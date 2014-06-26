@@ -66,7 +66,7 @@ public interface RequisitionGroupMapper {
 
   @Update({"UPDATE requisition_groups",
     "SET code = #{code}, name = #{name}, description =  #{description}, supervisoryNodeId = #{supervisoryNode.id},",
-    "modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)",
+    "modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate}, NOW())",
     "WHERE id = #{id}"})
   void update(RequisitionGroup requisitionGroup);
 
