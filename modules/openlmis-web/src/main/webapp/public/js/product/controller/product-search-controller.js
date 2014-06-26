@@ -57,7 +57,11 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
   };
 
   $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.programProducts[index].productCategory.name === $scope.programProducts[index - 1].productCategory.name));
+    if ((index > 0) && $scope.programProducts[index].productCategory) {
+      return !(($scope.programProducts[index].program.name === $scope.programProducts[index - 1].program.name)
+          && ($scope.programProducts[index].productCategory.name === $scope.programProducts[index - 1].productCategory.name));
+    }
+    return !($scope.programProducts[index].productCategory === $scope.programProducts[index - 1].productCategory);
   };
 
   $scope.clearSearch = function () {
