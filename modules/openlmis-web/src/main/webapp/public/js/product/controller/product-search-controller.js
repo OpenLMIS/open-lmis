@@ -58,7 +58,7 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
 
   $scope.showCategory = function (index) {
     if ($scope.programProducts[index].productCategory) {
-      return !(((index > 0) && $scope.programProducts[index].program.name === $scope.programProducts[index - 1].program.name) && ($scope.programProducts[index].productCategory.name === $scope.programProducts[index - 1].productCategory.name));
+      return !(((index > 0) && ($scope.programProducts[index].productCategory.name === $scope.programProducts[index - 1].productCategory.name)));
     }
     else {
       return !((index > 0) && $scope.programProducts[index].productCategory === $scope.programProducts[index - 1].productCategory);
