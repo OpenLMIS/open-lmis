@@ -41,7 +41,8 @@ public interface FacilityReportMapper {
             @Result(column="fax", property="fax")
     })
     public  List<FacilityReport> SelectFilteredSortedPagedFacilities(
-            @Param("filterCriteria") FacilityReportParam filterCriteria
+            @Param("filterCriteria") FacilityReportParam filterCriteria,
+            @Param("userId") Long userId
     );
 
 }

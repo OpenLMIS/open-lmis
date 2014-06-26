@@ -19,6 +19,16 @@ import java.util.Map;
 
 public abstract class ReportDataProvider {
 
+  private long userId;
+
+  public void setUserId(Long id){
+    userId = id;
+  }
+
+  public long getUserId(){
+    return userId;
+  }
+
   public final List<? extends ReportData> getReportDataByFilterCriteria(Map<String, String[]> params, DataSourceType dataSourceType){
     return getResultSetReportData(params);
   }

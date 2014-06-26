@@ -54,13 +54,13 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
     RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-    return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds);
+    return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds,this.getUserId());
   }
 
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
+    return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds, this.getUserId());
   }
 
   public StockedOutReportParam getReportFilterData(Map<String, String[]> filterCriteria) {

@@ -29,6 +29,7 @@ public class StockedOutReportQueryBuilder {
         FROM("vw_stock_status join vw_districts d on gz_id = d.district_id");
         WHERE("status = 'SO'" );
         WHERE("reported_figures > 0");
+        WHERE("facility_id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.programId})");
         writePredicates(filter);
         ORDER_BY("supplyingfacility asc, facility asc, product asc");
         // copy the sql over to a variable, this makes the debugging much more possible.

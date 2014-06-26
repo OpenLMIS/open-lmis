@@ -22,6 +22,7 @@ public class FacilityReportQueryBuilder {
     public static String SelectFilteredSortedPagedFacilitiesSql(Map params) {
 
         FacilityReportParam filter  = (FacilityReportParam) params.get("filterCriteria");
+        Long userId = (Long) params.get("userId");
 
         BEGIN();
         SELECT("F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.district_name as region, FO.code as owner,F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates,F.mainphone as phoneNumber, F.fax as fax, U.firstName || ' ' || U.lastName contact ");
@@ -32,6 +33,7 @@ public class FacilityReportQueryBuilder {
         LEFT_OUTER_JOIN("requisition_group_members ON f.id = requisition_group_members.facilityid");
         LEFT_OUTER_JOIN("requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid");
         LEFT_OUTER_JOIN("Users U on U.facilityId = F.id ");
+        WHERE("F.id in (select facility_id from vw_user_facilities where user_id = " + userId+ " )");
         if(filter != null){
             if (filter.getStatusId() != null) {
                 WHERE("F.active = " + filter.getStatusId().toString());
