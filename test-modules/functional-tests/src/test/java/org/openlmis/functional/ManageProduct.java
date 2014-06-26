@@ -104,7 +104,7 @@ public class ManageProduct extends TestCaseHelper {
     verifyPreviousAndFirstPageLinksDisabled();
     verifyNumberOfLineItemsVisibleOnPage(10);
 
-//    verifyCategoryOrderOnPage(asList("anaesthetics", "", "", "", "", "", "", "", "Antibiotics", ""));
+    verifyCategoryOrderOnPage(asList("anaesthetics", "", "", "", "", "", "", "", "Antibiotics", ""));
     verifyProductNameOrderOnPage(asList("Indinavir 400mg Tablets19", "Indinavir 40mg Tablets8", "Indinavir 400mg Tablets13",
       "Indinavir 400mg Tablets17", "Indinavir 400mg Tablets21", "Indinavir 400mg Tablets4", "Indinavir 400mg Tablets6",
       "Indinavir 400mg Tablets15", "AIndinavir 400mg Tablets2", "indinavir 400mg Tablets1"));
@@ -115,7 +115,7 @@ public class ManageProduct extends TestCaseHelper {
     verifyNextAndLastPageLinksEnabled();
     verifyPreviousAndFirstPageLinksEnabled();
     verifyNumberOfLineItemsVisibleOnPage(10);
-//    verifyCategoryOrderOnPage(asList("Antibiotics", "category3", "", "", "", "Uncategorised", "", "", "", ""));
+    verifyCategoryOrderOnPage(asList("Antibiotics", "category3", "", "", "", "Uncategorised", "", "", "", ""));
     verifyProgramOrderOnPage(asList("TB", "hiv", "hiv", "MALARIA", "VACCINES", "", "", "", "", ""));
     verifyProductNameOrderOnPage(asList("Indinavir 400mg Tablets3", "Indinavir 400mg Tablets10", "Indinavir 400mg Tablets11",
       "Indinavir 400mg Tablets12", "Indinavir 400mg Tablets16", "Indinavir 400mg Tablets14", "Indinavir 400mg Tablets18",
@@ -127,7 +127,7 @@ public class ManageProduct extends TestCaseHelper {
     verifyNextAndLastPageLinksDisabled();
     verifyPreviousAndFirstPageLinksEnabled();
     verifyNumberOfLineItemsVisibleOnPage(1);
-//    verifyCategoryOrderOnPage(asList("Uncategorised"));
+    verifyCategoryOrderOnPage(asList("Uncategorised"));
     verifyProductNameOrderOnPage(asList("Indinavir 400mg Tablets9"));
     verifyProgramOrderOnPage(asList(""));
 
@@ -136,7 +136,7 @@ public class ManageProduct extends TestCaseHelper {
     verifyNextAndLastPageLinksEnabled();
     verifyPreviousAndFirstPageLinksDisabled();
     verifyNumberOfLineItemsVisibleOnPage(10);
-//    verifyCategoryOrderOnPage(asList("anaesthetics", "", "", "", "", "", "", "", "Antibiotics", ""));
+    verifyCategoryOrderOnPage(asList("anaesthetics", "", "", "", "", "", "", "", "Antibiotics", ""));
     verifyProductNameOrderOnPage(asList("Indinavir 400mg Tablets19", "Indinavir 40mg Tablets8", "Indinavir 400mg Tablets13",
       "Indinavir 400mg Tablets17", "Indinavir 400mg Tablets21", "Indinavir 400mg Tablets4", "Indinavir 400mg Tablets6",
       "Indinavir 400mg Tablets15", "AIndinavir 400mg Tablets2", "indinavir 400mg Tablets1"));
