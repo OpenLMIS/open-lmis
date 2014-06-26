@@ -105,10 +105,6 @@ public class RoleRightsRepository {
   }
 
   public void validateAndInsertRight(String templateName, RightType rightType, String description) {
-    if (roleRightsMapper.isReportNameUnique(templateName)) {
-      roleRightsMapper.insertRight(templateName, rightType, description);
-    } else {
-      throw new DataException("report.template.name.already.exists");
-    }
+    roleRightsMapper.insertRight(templateName, rightType, description);
   }
 }

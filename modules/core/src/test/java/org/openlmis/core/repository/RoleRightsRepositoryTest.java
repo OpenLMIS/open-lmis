@@ -18,8 +18,10 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.*;
-import org.openlmis.core.exception.DataException;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.openlmis.db.categories.UnitTests;
@@ -182,23 +184,4 @@ public class RoleRightsRepositoryTest {
     verify(roleRightsMapper).getRightsForUserAndWarehouse(userId, warehouseId);
   }
 
-  @Test
-  public void shouldThrowIfTemplateNameAlreadyExists() throws DataException {
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("report.template.name.already.exists");
-    String templateName = "name";
-    when(roleRightsMapper.isReportNameUnique(templateName)).thenReturn(false);
-
-    roleRightsRepository.validateAndInsertRight(templateName, RightType.REPORTING, "desc");
-  }
-
-  @Test
-  public void shouldInsertIfTemplateNameIsNew() throws DataException {
-    String templateName = "name";
-    when(roleRightsMapper.isReportNameUnique(templateName)).thenReturn(true);
-
-    roleRightsRepository.validateAndInsertRight(templateName, RightType.REPORTING, "desc");
-
-    verify(roleRightsMapper).insertRight(templateName, RightType.REPORTING, "desc");
-  }
 }
