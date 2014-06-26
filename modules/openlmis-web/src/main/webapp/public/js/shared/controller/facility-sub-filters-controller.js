@@ -82,6 +82,6 @@ function FacilitySubFiltersController($scope, GeographicZoneSearch, FacilityType
     $scope.selectedGeoZone = undefined;
   }
 
-  $scope.$on('clearFilters', clearFilters);
-  $scope.$on('clearMultipleFilters', clearFilters);
+  $scope.$on('singleSelectSearchCleared', clearFilters);
+  $scope.$on('multiSelectSearchCleared', clearFilters);
 }

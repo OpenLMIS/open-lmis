@@ -10,14 +10,56 @@
 
 describe("Multiple Facility Search Filter Controller", function () {
 
-  var scope, httpBackend, ctrl;
+  var scope, parentScope, httpBackend, ctrl;
   beforeEach(module('openlmis'));
 
   beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
     scope = $rootScope.$new();
+    parentScope = $rootScope.$new();
     httpBackend = _$httpBackend_;
     ctrl = $controller('MultipleFacilitySearchFilterController', {$scope: scope});
   }));
+
+  it('should set searched facilities in scope', function () {
+    scope.$parent = {"$parent": parentScope};
+    scope.multipleFacilitiesSearchParam = "Fac";
+    var facility1 = {code: "F10", name: "Village Dispensary1"};
+    var facility2 = {code: "F11", name: "Village Dispensary2"};
+    var response = {"facilityList": [facility1, facility2]};
+
+    httpBackend.when('GET', '/filter-facilities.json?searchParam=Fac').respond(response);
+    scope.showFacilitySearchResults();
+    httpBackend.flush();
+
+    expect(scope.multipleFacilities).toEqual([facility1, facility2]);
+    expect(scope.multipleFacilitiesMessage).toEqual(undefined);
+    expect(scope.multipleFacilitiesResultCount).toEqual(2);
+    expect(scope.resultCount).toEqual(2);
+  });
+
+  it('should set searched facilities in scope and count as zero if search results empty', function () {
+    scope.$parent = {"$parent": parentScope};
+    scope.multipleFacilitiesSearchParam = "Fac";
+    var response = {"facilityList": undefined};
+
+    httpBackend.when('GET', '/filter-facilities.json?searchParam=Fac').respond(response);
+    scope.showFacilitySearchResults();
+    httpBackend.flush();
+
+    expect(scope.multipleFacilities).toBeUndefined();
+    expect(scope.multipleFacilitiesMessage).toEqual(undefined);
+    expect(scope.multipleFacilitiesResultCount).toEqual(0);
+    expect(scope.resultCount).toEqual(0);
+  });
+
+  it('should not search results if query is undefined', function () {
+    spyOn(httpBackend, 'expectGET');
+    scope.multipleFacilitiesSearchParam = undefined;
+
+    scope.showFacilitySearchResults();
+
+    expect(httpBackend.expectGET).not.toHaveBeenCalledWith('/filter-facilities.json?searchParam=undefined');
+  });
 
   it('should associate facilities', function () {
 
@@ -53,12 +95,36 @@ describe("Multiple Facility Search Filter Controller", function () {
     scope.tempFacilities = [facility];
 
     var spyAddMembers = spyOn(scope.$parent.$parent, "addMembers").andReturn(true);
-    var spyClearFacilitySearch = spyOn(scope, "clearMultipleFacilitiesSearch");
+    var spyClearFacilitySearch = spyOn(scope, "clearMultiSelectFacilitySearch");
+    var spyClearVisibleFilters = spyOn(scope, "clearVisibleFilters");
+    var spyBroadcast = spyOn(scope, "$broadcast");
 
     scope.addMembers();
 
     expect(spyAddMembers).toHaveBeenCalledWith(scope.tempFacilities);
     expect(spyClearFacilitySearch).toHaveBeenCalled();
+    expect(spyClearVisibleFilters).toHaveBeenCalled();
+    expect(spyBroadcast).toHaveBeenCalledWith('multiSelectSearchCleared');
+  });
+
+  it('should not clear facility search on unsuccessful addition of members ', function () {
+    scope.$parent = {"$parent": {"addMembers": function () {
+    }}};
+
+    var facility = {"selected": true, "name": "fac1", "id": 1};
+    scope.tempFacilities = [facility];
+
+    var spyAddMembers = spyOn(scope.$parent.$parent, "addMembers").andReturn(false);
+    var spyClearFacilitySearch = spyOn(scope, "clearMultiSelectFacilitySearch");
+    var spyClearVisibleFilters = spyOn(scope, "clearVisibleFilters");
+    var spyBroadcast = spyOn(scope, "$broadcast");
+
+    scope.addMembers();
+
+    expect(spyAddMembers).toHaveBeenCalledWith(scope.tempFacilities);
+    expect(spyClearFacilitySearch).not.toHaveBeenCalled();
+    expect(spyClearVisibleFilters).not.toHaveBeenCalled();
+    expect(spyBroadcast).not.toHaveBeenCalledWith('multiSelectSearchCleared');
   });
 
   it('should not search results if query is undefined', function () {
@@ -78,7 +144,7 @@ describe("Multiple Facility Search Filter Controller", function () {
     var element = angular.element('<div id="search" class="search-list"></div>');
     spyOn(angular, "element").andReturn(element);
 
-    scope.clearMultipleFacilitiesSearch();
+    scope.clearMultiSelectFacilitySearch();
     element.trigger('slideUp');
 
     expect(scope.multipleFacilitiesResultCount).toBeUndefined();
@@ -86,5 +152,55 @@ describe("Multiple Facility Search Filter Controller", function () {
     expect(scope.multipleFacilitiesSearchParam).toBeUndefined();
     expect(scope.disableAddFacility).toBeTruthy();
     expect(scope.tempFacilities).toEqual([]);
+  });
+
+
+  it('should clear visible filters', function () {
+    scope.type = {name: "type"};
+    scope.zone = {name: "zone"};
+
+    scope.clearVisibleFilters();
+
+    expect(scope.type).toEqual({});
+    expect(scope.zone).toEqual({});
+  });
+
+  it('should clear facility searched results', function () {
+    scope.multipleFacilitiesSearchParam = "F1";
+    scope.multipleFacilities = [
+      {name: "F1"},
+      {name: "F2"}
+    ];
+    scope.multipleFacilitiesResultCount = 34;
+    scope.disableAddFacility = false;
+    scope.tempFacilities = [
+      {name: "F1"}
+    ];
+
+    scope.clearMultiSelectFacilitySearch();
+
+    expect(scope.multipleFacilitiesSearchParam).toBeUndefined();
+    expect(scope.multipleFacilities).toBeUndefined();
+    expect(scope.multipleFacilitiesResultCount).toBeUndefined();
+    expect(scope.disableAddFacility).toBeTruthy();
+    expect(scope.tempFacilities).toEqual([]);
+  });
+
+  it('should trigger fetching facility search results on pressing enter key', function () {
+    var event = {keyCode: 13};
+    spyOn(scope, 'showFacilitySearchResults');
+
+    scope.triggerSearch(event);
+
+    expect(scope.showFacilitySearchResults).toHaveBeenCalled();
+  });
+
+  it('should not trigger fetching facility search results on any key except enter key', function () {
+    var event = {keyCode: 213};
+    spyOn(scope, 'showFacilitySearchResults');
+
+    scope.triggerSearch(event);
+
+    expect(scope.showFacilitySearchResults).not.toHaveBeenCalled();
   });
 });

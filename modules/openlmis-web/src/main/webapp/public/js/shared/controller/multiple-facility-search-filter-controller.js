@@ -15,7 +15,6 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
   $scope.disableAddFacility = true;
   $scope.tempFacilities = [];
 
-//TODO: write specs for this function.
   $scope.showFacilitySearchResults = function () {
     if (!$scope.multipleFacilitiesSearchParam) return;
     $scope.tempFacilities = [];
@@ -36,12 +35,10 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
     }
   };
 
-  $scope.clearMultipleFacilitiesSearch = function () {
+  $scope.clearMultiSelectFacilitySearch = function () {
     $scope.multipleFacilitiesSearchParam = undefined;
     $scope.multipleFacilities = undefined;
     $scope.multipleFacilitiesResultCount = undefined;
-    $scope.type = {};
-    $scope.zone = {};
     $scope.disableAddFacility = true;
     $scope.tempFacilities = [];
     angular.element('#searchFacility').focus();
@@ -60,10 +57,16 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
     $scope.disableAddFacility = $scope.tempFacilities.length <= 0;
   };
 
+  $scope.clearVisibleFilters = function () {
+    $scope.type = {};
+    $scope.zone = {};
+  };
+
   $scope.addMembers = function () {
     if ($scope.$parent.$parent.addMembers($scope.tempFacilities)) {
-      $scope.clearMultipleFacilitiesSearch();
-      $scope.$broadcast('clearMultipleFilters');
+      $scope.clearMultiSelectFacilitySearch();
+      $scope.clearVisibleFilters();
+      $scope.$broadcast('multiSelectSearchCleared');
     }
   };
 }

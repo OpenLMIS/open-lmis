@@ -26,14 +26,63 @@ describe("Facility Search Filter Controller", function () {
   }));
 
   it("should associate a facility", function () {
-    scope.$parent = {"associate": function () { }};
-
+    scope.$parent = {associate: function () {
+    }};
     spyOn(scope.$parent, "associate");
+    spyOn(scope, "clearFacilitySearch");
+    spyOn(scope, "clearVisibleFilters");
+    spyOn(scope, "$broadcast");
     var facility = {code: "F10", name: "Village Dispensary"};
 
     scope.associate(facility);
 
     expect(scope.$parent.associate).toHaveBeenCalledWith(facility);
+    expect(scope.clearFacilitySearch).toHaveBeenCalled();
+    expect(scope.clearVisibleFilters).toHaveBeenCalled();
+    expect(scope.$broadcast).toHaveBeenCalledWith("singleSelectSearchCleared");
+  });
+
+  it('should clear visible filters', function () {
+    scope.type = {name: "type"};
+    scope.zone = {name: "zone"};
+
+    scope.clearVisibleFilters();
+
+    expect(scope.type).toEqual({});
+    expect(scope.zone).toEqual({});
+  });
+
+  it('should clear facility searched results', function () {
+    scope.facilitySearchParam = "F1";
+    scope.facilityList = [
+      {name: "F1"},
+      {name: "F2"}
+    ];
+    scope.facilityResultCount = 34;
+
+    scope.clearFacilitySearch();
+
+    expect(scope.facilitySearchParam).toBeUndefined();
+    expect(scope.facilityList).toBeUndefined();
+    expect(scope.facilityResultCount).toBeUndefined();
+  });
+
+  it('should trigger fetching facility search results on pressing enter key', function () {
+    var event = {keyCode: 13};
+    spyOn(scope, 'showFacilitySearchResults');
+
+    scope.triggerSearch(event);
+
+    expect(scope.showFacilitySearchResults).toHaveBeenCalled();
+  });
+
+  it('should not trigger fetching facility search results on any key except enter key', function () {
+    var event = {keyCode: 213};
+    spyOn(scope, 'showFacilitySearchResults');
+
+    scope.triggerSearch(event);
+
+    expect(scope.showFacilitySearchResults).not.toHaveBeenCalled();
   });
 
   it('should not search results if query is undefined', function () {
@@ -58,6 +107,7 @@ describe("Facility Search Filter Controller", function () {
     expect(scope.facilityList).toEqual([facility1, facility2]);
     expect(scope.message).toEqual(undefined);
     expect(scope.facilityResultCount).toEqual(2);
+    expect(scope.resultCount).toEqual(2);
   });
 
   it('should set search and filtered result facilities in scope', function () {
