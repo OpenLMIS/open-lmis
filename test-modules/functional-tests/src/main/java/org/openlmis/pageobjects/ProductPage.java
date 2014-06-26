@@ -47,14 +47,14 @@ public class ProductPage extends Page {
   @FindBy(how = ID, using = "nResultsMessage")
   private static WebElement nResultsMessage = null;
 
-  @FindBy(how = ID, using = "noResultsMessage")
-  private static WebElement noResultsMessage = null;
+  @FindBy(how = ID, using = "noResultMessage")
+  private static WebElement noResultMessage = null;
 
   @FindBy(how = ID, using = "oneResultMessage")
   private static WebElement oneResultMessage = null;
 
   @FindBy(how = ID, using = "closeButton")
-  private static WebElement closeButton = null;
+  private static WebElement closeSearchResultsButton = null;
 
   @FindBy(how = ID, using = "fullSupply")
   private static WebElement fullSupplyHeader = null;
@@ -115,26 +115,25 @@ public class ProductPage extends Page {
     sendKeys(searchProgramProductParameter, parameter);
   }
 
-  public String getSearchProductParameter() {
-    testWebDriver.waitForElementToAppear(searchProgramProductParameter);
-    return searchProgramProductParameter.getAttribute("value");
-  }
-
   public void clickSearchIcon() {
     testWebDriver.waitForElementToAppear(searchIcon);
     searchIcon.click();
   }
 
-  public void clickCloseButton() {
-    testWebDriver.waitForElementToAppear(closeButton);
-    closeButton.click();
+  public void clickCloseSearchResultsButton() {
+    testWebDriver.waitForElementToAppear(closeSearchResultsButton);
+    closeSearchResultsButton.click();
   }
 
-  public String getSearchOptionProduct() {
-    testWebDriver.waitForElementToAppear(searchOptionButton);
-    searchOptionButton.click();
-    testWebDriver.waitForElementToAppear(searchOptionProduct);
-    return searchOptionProduct.getText();
+  public boolean isCloseSearchResultsButtonDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(closeSearchResultsButton);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return closeSearchResultsButton.isDisplayed();
   }
 
   public void selectSearchOptionProduct() {
@@ -142,13 +141,6 @@ public class ProductPage extends Page {
     searchOptionButton.click();
     testWebDriver.waitForElementToAppear(searchOptionProduct);
     searchOptionProduct.click();
-  }
-
-  public String getSearchOptionProgram() {
-    testWebDriver.waitForElementToAppear(searchOptionButton);
-    searchOptionButton.click();
-    testWebDriver.waitForElementToAppear(searchOptionProgram);
-    return searchOptionProgram.getText();
   }
 
   public void selectSearchOptionProgram() {
@@ -164,8 +156,8 @@ public class ProductPage extends Page {
   }
 
   public String getNoResultsMessage() {
-    testWebDriver.waitForElementToAppear(noResultsMessage);
-    return noResultsMessage.getText();
+    testWebDriver.waitForElementToAppear(noResultMessage);
+    return noResultMessage.getText();
   }
 
   public String getOneResultsMessage() {
@@ -181,6 +173,17 @@ public class ProductPage extends Page {
   public String getCodeHeader() {
     testWebDriver.waitForElementToAppear(codeHeader);
     return codeHeader.getText();
+  }
+
+  public boolean isCodeHeaderDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(codeHeader);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return codeHeader.isDisplayed();
   }
 
   public String getNameHeader() {
@@ -225,13 +228,18 @@ public class ProductPage extends Page {
 
   public String getCategory(int rowNumber) {
     WebElement category = testWebDriver.getElementById("category" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(category);
     return category.getText();
   }
 
   public boolean isFullSupplyDisplayed(int rowNumber) {
     WebElement fullSupply = testWebDriver.getElementById("fullSupply" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(fullSupply);
+    try {
+      testWebDriver.waitForElementToAppear(fullSupply);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
     return fullSupply.isDisplayed();
   }
 
@@ -259,7 +267,7 @@ public class ProductPage extends Page {
     return strength.getText();
   }
 
-  public String getUnit(int rowNumber) {
+  public String getUnitOfMeasure(int rowNumber) {
     WebElement unit = testWebDriver.getElementById("unit" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(unit);
     return unit.getText();
@@ -278,14 +286,26 @@ public class ProductPage extends Page {
   }
 
   public boolean isGlobalActiveDisplayed(int rowNumber) {
-    WebElement globalActive = testWebDriver.getElementById("GlobalActive" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(globalActive);
+    WebElement globalActive = testWebDriver.getElementById("globalActive" + (rowNumber - 1));
+    try {
+      testWebDriver.waitForElementToAppear(globalActive);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
     return globalActive.isDisplayed();
   }
 
   public boolean isActiveAtProgramDisplayed(int rowNumber) {
     WebElement activeAtProgram = testWebDriver.getElementById("activeAtProgram" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(activeAtProgram);
+    try {
+      testWebDriver.waitForElementToAppear(activeAtProgram);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
     return activeAtProgram.isDisplayed();
   }
 
@@ -315,5 +335,10 @@ public class ProductPage extends Page {
       return false;
     }
     return productSearchResults.isDisplayed();
+  }
+
+  public int getSizeOfResultsTable() {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//*[@id='programProductTable']/tbody"));
+    return testWebDriver.getElementsSizeByXpath("//*[@id='programProductTable']/tbody");
   }
 }

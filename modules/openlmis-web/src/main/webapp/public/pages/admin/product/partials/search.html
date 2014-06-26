@@ -72,7 +72,7 @@
           ng-show="showCategory($index)"
           ng-bind="programProduct.productCategory.name"></td>
     <tr ng-if="!programProduct.productCategory">
-      <td id="noCategory{{$index}}" class="productCategory" colspan="10"
+      <td id="category{{$index}}" class="productCategory" colspan="10"
           ng-show="showCategory($index)"
           openlmis-message="label.no.category"></td>
     </tr>
@@ -89,7 +89,7 @@
       <td id="dispensingUnit{{$index}}" ng-bind="programProduct.product.dispensingUnit"></td>
       <td id="packSize{{$index}}" class="right-justified" ng-bind="programProduct.product.packSize"></td>
       <td class="center-justified">
-        <i id="GlobalActive{{$index}}"
+        <i id="globalActive{{$index}}"
            ng-class="{'icon-ok': programProduct.product.active}"></i>
       </td>
       <td class="center-justified" ng-show="programProduct.active != undefined">
