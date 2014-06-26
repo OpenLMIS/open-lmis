@@ -110,7 +110,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     assertFalse(facilityApprovedProductPage.isNoResultMessageDisplayed());
 
     UploadPage uploadPage = homePage.navigateUploads();
-    uploadPage.uploadProducts("QA_Products21.csv");
+    uploadPage.uploadProducts("QA_Products_For_Facility_Approved_Products21.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadProgramProductMapping("QA_Program_Products21.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
@@ -132,8 +132,8 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     verifyCategoryOrderOnPage(asList("anaesthetics", "", "", "", "", "", "", "", "", "Antibiotics"));
     verifyNameOrderOnPage(asList("Indinavir 400mg Tablets", "Indinavir 400mg Tablets", "Indinavir 400mg Tablets",
       "Indinavir 400mg Tablets", "Indinavir 400mg Tablets", "Indinavir 400mg Tablets", "Indinavir 400mg Tablets", "Indinavir 400mg Tablets",
-      "Indinavir 400mg Tablets", "AIndinavir 400mg Tablets"));
-    verifyCodeOrderOnPage(asList("AP12", "AP14", "AP16", "AP18", "AP19", "P13", "P15", "P17", "P20", "P11"));
+      "Indinavir 40mg Tablets", "AIndinavir 400mg Tablets"));
+    verifyCodeOrderOnPage(asList("AP12", "AP14", "AP16", "AP18", "AP19", "P13", "P15", "P20", "P17", "P11"));
 
     navigateToPage(2);
     verifyPageNumberSelected(2);
@@ -157,7 +157,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     verifyPreviousAndFirstPageLinksDisabled();
     verifyNumberOfLineItemsVisibleOnPage(10);
     verifyCategoryOrderOnPage(asList("anaesthetics", "", "", "", "", "", "", "", "", "Antibiotics"));
-    verifyCodeOrderOnPage(asList("AP12", "AP14", "AP16", "AP18", "AP19", "P13", "P15", "P17", "P20", "P11"));
+    verifyCodeOrderOnPage(asList("AP12", "AP14", "AP16", "AP18", "AP19", "P13", "P15", "P20", "P17", "P11"));
 
     navigateToLastPage();
     verifyPageNumberSelected(3);
@@ -181,7 +181,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     dbWrapper.assignRight("Admin", "UPLOADS");
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     UploadPage uploadPage = homePage.navigateUploads();
-    uploadPage.uploadProducts("QA_Products21.csv");
+    uploadPage.uploadProducts("QA_Products_For_Facility_Approved_Products21.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadProgramProductMapping("QA_Program_Products21.csv");
     uploadPage.uploadFacilityTypeToProductMapping("QA_Facility_Type_To_Product_Mapping21.csv");
@@ -221,7 +221,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     assertEquals("Name", facilityApprovedProductPage.getNameHeader());
     assertEquals("Strength", facilityApprovedProductPage.getStrengthHeader());
     assertEquals("Unit of measure", facilityApprovedProductPage.getUnitOfMeasureHeader());
-    assertEquals("Max months of stock", facilityApprovedProductPage.getMaxMonthsOfStockHeader());
+    assertEquals("Max months of stock *", facilityApprovedProductPage.getMaxMonthsOfStockHeader());
     assertEquals("Min months of stock", facilityApprovedProductPage.getMinMonthsOfStockHeader());
     assertEquals("Emergency Order Point", facilityApprovedProductPage.getEopHeader());
     assertEquals("Global active", facilityApprovedProductPage.getGlobalActiveHeader());
@@ -231,7 +231,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     assertFalse(facilityApprovedProductPage.isFullSupply(6));
     assertEquals("300/200/600", facilityApprovedProductPage.getStrength(1));
     assertEquals("mg", facilityApprovedProductPage.getUnitOfMeasure(2));
-    assertEquals("7", facilityApprovedProductPage.getMaxMonthsOfStock(8));
+    assertEquals("7", facilityApprovedProductPage.getMaxMonthsOfStock(9));
     assertEquals("", facilityApprovedProductPage.getMinMonthsOfStock(4));
     assertEquals("", facilityApprovedProductPage.getEop(3));
     assertTrue(facilityApprovedProductPage.isGloballyActive(2));
