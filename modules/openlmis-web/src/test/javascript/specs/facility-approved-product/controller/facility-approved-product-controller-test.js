@@ -223,8 +223,9 @@ describe("Facility Approved Product", function () {
     });
 
     it('should update facility approved product', function () {
-      var successMessage = "Updated successfully";
+      spyOn(scope, 'loadProducts');
       scope.currentPage = 0;
+      var successMessage = "Updated successfully";
       scope.program = {"id": 1};
       scope.facilityType = {"id": 2};
       var facilityApprovedProduct = {
@@ -248,6 +249,7 @@ describe("Facility Approved Product", function () {
       expect(facilityApprovedProduct.programProduct.program).toEqual({"id": 1});
       expect(facilityApprovedProduct.underEdit).toBeFalsy();
       expect(scope.message).toEqual("Updated successfully");
+      expect(scope.loadProducts).toHaveBeenCalledWith(0);
     });
 
     it('should not update facility approved product', function () {

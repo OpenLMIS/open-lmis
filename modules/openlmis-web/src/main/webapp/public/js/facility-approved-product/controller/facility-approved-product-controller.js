@@ -75,6 +75,7 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
     FacilityTypeApprovedProducts.update({}, facilityApprovedProduct, function (data) {
       $scope.message = data.success;
       facilityApprovedProduct.underEdit = false;
+      $scope.loadProducts($scope.currentPage);
     }, function (data) {
       $scope.message = data.data.error;
     });

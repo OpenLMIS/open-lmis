@@ -151,13 +151,13 @@ app.positiveNumericValue = function (value, errorHolder, integerPartLength, frac
   var NUMERIC_REGEXP_FIXED_PRECISION = new RegExp(str);
   str = '\\.\\d{'.concat(fractionalPartLength).concat('}.$');
   var REGEX_FOR_DIGITS_AFTER_DECIMAL = new RegExp(str);
-  str = '^\\d*\\.?\\d{1,'.concat(fractionalPartLength).concat('}$');
+  str = '^\\d*\\.?(\\d{1,'.concat(fractionalPartLength).concat('})?$');
   var NUMBER_REGEXP = new RegExp(str);
 
   var valid = (value === undefined) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
 
   if (errorHolder !== undefined && REGEX_FOR_DIGITS_AFTER_DECIMAL.test(value) === false) {
-    document.getElementById(errorHolder).style.display = ((value === undefined) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
+    document.getElementById(errorHolder).style.display = ((value === undefined || value === "") ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
   }
 
   return valid;
