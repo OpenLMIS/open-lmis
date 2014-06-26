@@ -30,8 +30,7 @@ public interface ProductCategoryReportMapper {
   @Select("SELECT distinct pc.id, pc.name, pc.code " +
       "   FROM " +
       "       product_categories pc " +
-      "       join products p on p.categoryid = pc.id " +
-      "       join program_products pp on pp.productid = p.id " +
+      "       join program_products pp on pp.productcategoryid = pc.id " +
       "   WHERE pp.programid = #{programId} and pp.active = true " +
       " order by name")
 
