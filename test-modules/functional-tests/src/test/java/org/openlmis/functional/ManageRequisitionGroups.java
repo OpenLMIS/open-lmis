@@ -62,8 +62,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     homePage.logout();
 
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
-    loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    homePage.navigateManageFacility();
+    loginAndNavigateToManageRequisitionGroupPage();
     assertTrue(homePage.isRequisitionGroupTabDisplayed());
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
 
@@ -81,8 +80,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+    loginAndNavigateToManageRequisitionGroupPage();
 
     searchRequisitionGroup("re");
     assertEquals("2 matches found for 're'", requisitionGroupPage.getNResultsMessage());
@@ -111,8 +109,8 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F11", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
 
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+    loginAndNavigateToManageRequisitionGroupPage();
+    HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
 
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadRequisitionGroup("QA_RequisitionGroups21.csv");
@@ -257,8 +255,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   public void testRequisitionGroupSearchWhenNoResults() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+    loginAndNavigateToManageRequisitionGroupPage();
 
     assertEquals("Requisition group", requisitionGroupPage.getSelectedSearchOption());
     requisitionGroupPage.clickSearchOptionButton();
@@ -293,8 +290,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertRequisitionGroup("RG1", "Requisition Group 1", "N1");
 
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+    loginAndNavigateToManageRequisitionGroupPage();
     requisitionGroupPage.clickAddNewButton();
     requisitionGroupPage.clickSaveButton();
     assertEquals("There are some errors in the form. Please resolve them.", requisitionGroupPage.getErrorMessage());
@@ -330,8 +326,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11E", "F11F", 2, 3);
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11G", "F11H", 2, 3);
 
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+    loginAndNavigateToManageRequisitionGroupPage();
 
     requisitionGroupPage.clickAddNewButton();
     requisitionGroupPage.enterRequisitionGroupCode("RG5");
@@ -386,9 +381,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertRequisitionGroupProgramScheduleForProgramAfterDelete("RG1", "HIV", "M");
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F12A", "F12B", 1, 3);
 
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
-
+    loginAndNavigateToManageRequisitionGroupPage();
     searchRequisitionGroup("Requisition Group 1");
     requisitionGroupPage.clickManageRequisitionGroupSearchResult(1);
 
@@ -443,9 +436,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertRequisitionGroupMember("RG1", "F11");
     dbWrapper.updateFieldValue("facilities", "enabled", "f", "code", "F11");
 
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
-
+    loginAndNavigateToManageRequisitionGroupPage();
     searchRequisitionGroup("Requisition Group 1");
     testWebDriver.waitForAjax();
     assertEquals("1", requisitionGroupPage.getFacilityCount(1));
@@ -484,8 +475,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertFacilities("F111J", "F1K");
     dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F1K");
 
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+    loginAndNavigateToManageRequisitionGroupPage();
     requisitionGroupPage.clickAddNewButton();
 
     assertEquals("Add requisition group", requisitionGroupPage.getAddRequisitionGroupHeader());
@@ -565,8 +555,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.insertRequisitionGroupMember("RG1", "F10");
     dbWrapper.insertRequisitionGroupMember("RG2", "F11");
 
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+    loginAndNavigateToManageRequisitionGroupPage();
     searchRequisitionGroup("Re");
     requisitionGroupPage.clickManageRequisitionGroupSearchResult(3);
 
@@ -602,8 +591,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     dbWrapper.updateFieldValue("facilities", "enabled", "f", "code", "F11");
     dbWrapper.insertFacilities("F1B", "F1C");
 
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+    loginAndNavigateToManageRequisitionGroupPage();
     searchRequisitionGroup("Requisition Group 1");
     testWebDriver.waitForAjax();
     assertEquals("3", requisitionGroupPage.getFacilityCount(1));
@@ -677,19 +665,8 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
   @Test(groups = {"admin"})
   public void testAddNewRequisitionGroupWithSchedulesAndMembers() throws SQLException {
-    dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
-    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
-    dbWrapper.insertSchedule("M", "monthly", "monthly");
-    dbWrapper.insertSchedule("Q", "quarterly", "quarterly");
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11A", "F11B", 1, 3);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11C", "F11D", 1, 3);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11E", "F11F", 2, 3);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11G", "F11H", 2, 3);
-
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
-
+    setupDataForProgramSchedules();
+    loginAndNavigateToManageRequisitionGroupPage();
     requisitionGroupPage.clickAddNewButton();
     requisitionGroupPage.enterRequisitionGroupCode("RG5");
     requisitionGroupPage.enterRequisitionGroupName("Requisition Group 5");
@@ -730,10 +707,10 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.selectFacility(1);
     requisitionGroupPage.clickAddProgramSchedule();
 
-    assertEquals("HIV", requisitionGroupPage.getProgram(1));
-    assertEquals("M-monthly", requisitionGroupPage.getSchedule(1));
-    assertTrue(requisitionGroupPage.isDirectDeliveryIconDisplay(1));
-    assertEquals("F10 - Village Dispensary", requisitionGroupPage.getDropOffFacility(1));
+    assertEquals("HIV", requisitionGroupPage.getProgram("HIV"));
+    assertEquals("M-monthly", requisitionGroupPage.getSchedule("HIV"));
+    assertTrue(requisitionGroupPage.isDirectDeliveryIconDisplay("HIV"));
+    assertEquals("F10 - Village Dispensary", requisitionGroupPage.getDropOffFacility("HIV"));
 
     requisitionGroupPage.clickMembersAccordionLink();
     requisitionGroupPage.clickAddMembersButton();
@@ -759,10 +736,10 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     requisitionGroupPage.clickManageRequisitionGroupSearchResult(1);
     requisitionGroupPage.clickProgramsScheduleAccordion();
-    assertEquals("HIV", requisitionGroupPage.getProgram(1));
-    assertEquals("M-monthly", requisitionGroupPage.getSchedule(1));
-    assertTrue(requisitionGroupPage.isDirectDeliveryIconDisplay(1));
-    assertEquals("F10 - Village Dispensary", requisitionGroupPage.getDropOffFacility(1));
+    assertEquals("HIV", requisitionGroupPage.getProgram("HIV"));
+    assertEquals("M-monthly", requisitionGroupPage.getSchedule("HIV"));
+    assertTrue(requisitionGroupPage.isDirectDeliveryIconDisplay("HIV"));
+    assertEquals("F10 - Village Dispensary", requisitionGroupPage.getDropOffFacility("HIV"));
     requisitionGroupPage.clickAddNewProgramScheduleRow();
     expectedListOfPrograms = asList("--Select Program--", "ESSENTIAL MEDICINES", "MALARIA", "TB");
     actualListOfPrograms = requisitionGroupPage.getListOfPrograms();
@@ -793,22 +770,13 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
   @Test(groups = {"admin"})
   public void testAddEditAndRemoveSchedules() throws SQLException {
-    dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
-    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
-    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
-    dbWrapper.insertSchedule("M", "monthly", "monthly");
-    dbWrapper.insertSchedule("Q", "quarterly", "quarterly");
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11A", "F11B", 1, 3);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11C", "F11D", 1, 3);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11E", "F11F", 2, 3);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11G", "F11H", 2, 3);
+    setupDataForProgramSchedules();
     dbWrapper.insertRequisitionGroup("RG1", "Requisition Group 1", "N1");
     dbWrapper.insertRequisitionGroupProgramScheduleForProgramWithoutDelete("RG1", "HIV", "M");
     dbWrapper.insertRequisitionGroupProgramScheduleForProgramWithoutDelete("RG1", "MALARIA", "Q");
     dbWrapper.insertRequisitionGroupProgramScheduleForProgramWithoutDelete("RG1", "ESS_MEDS", "Q");
 
-    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
+    loginAndNavigateToManageRequisitionGroupPage();
 
     requisitionGroupPage.enterRequisitionGroupSearchParameter("Requisition Group 1");
     requisitionGroupPage.clickSearchIcon();
@@ -820,40 +788,40 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.selectProgram("TB");
     requisitionGroupPage.selectNewSchedule("M-monthly");
     requisitionGroupPage.clickAddProgramSchedule();
-    assertFalse(requisitionGroupPage.isDirectDeliveryIconDisplay(4));
+    assertFalse(requisitionGroupPage.isDirectDeliveryIconDisplay("TB"));
 
     requisitionGroupPage.clickAddNewProgramScheduleRow();
     assertEquals(asList("--No Program Left--"), requisitionGroupPage.getListOfPrograms());
-    assertFalse(requisitionGroupPage.isEditProgramScheduleEnabled(1));
-    assertFalse(requisitionGroupPage.isRemoveProgramScheduleEnabled(2));
+    assertFalse(requisitionGroupPage.isEditProgramScheduleEnabled("HIV"));
+    assertFalse(requisitionGroupPage.isRemoveProgramScheduleEnabled("ESSENTIAL MEDICINES"));
     requisitionGroupPage.clickCancelAddProgramSchedule();
 
-    requisitionGroupPage.clickRemoveProgramSchedule(1);
+    requisitionGroupPage.clickRemoveProgramSchedule("HIV");
     requisitionGroupPage.clickAddNewProgramScheduleRow();
     assertTrue(requisitionGroupPage.getListOfPrograms().contains("HIV"));
     requisitionGroupPage.clickCancelAddProgramSchedule();
 
-    requisitionGroupPage.clickEditProgramSchedule(1);
+    requisitionGroupPage.clickEditProgramSchedule("MALARIA");
     requisitionGroupPage.clickSaveButton();
     testWebDriver.waitForAjax();
     assertEquals("Mark all program schedules as 'Done' before saving the form", requisitionGroupPage.getErrorMessage());
-    requisitionGroupPage.editSchedules(1, "M-monthly");
-    requisitionGroupPage.editDropOffFacility(1);
+    requisitionGroupPage.editSchedules("MALARIA", "M-monthly");
+    requisitionGroupPage.editDropOffFacility("MALARIA");
     requisitionGroupPage.searchFacility("F10");
     requisitionGroupPage.selectFacility(1);
-    requisitionGroupPage.clearDropOffFacility(1);
-    requisitionGroupPage.clickDoneEditProgramSchedule(1);
+    requisitionGroupPage.clearDropOffFacility("MALARIA");
+    requisitionGroupPage.clickDoneEditProgramSchedule("MALARIA");
 
-    requisitionGroupPage.clickEditProgramSchedule(2);
-    requisitionGroupPage.editDirectDelivery(2);
-    requisitionGroupPage.clickCancelEditProgramSchedule(2);
+    requisitionGroupPage.clickEditProgramSchedule("ESSENTIAL MEDICINES");
+    requisitionGroupPage.editDirectDelivery("ESSENTIAL MEDICINES");
+    requisitionGroupPage.clickCancelEditProgramSchedule("ESSENTIAL MEDICINES");
 
     requisitionGroupPage.clickSaveButton();
     testWebDriver.waitForAjax();
     assertEquals("Drop off facility code not defined", requisitionGroupPage.getErrorMessage());
 
-    requisitionGroupPage.clickEditProgramSchedule(3);
-    requisitionGroupPage.editDropOffFacility(3);
+    requisitionGroupPage.clickEditProgramSchedule("TB");
+    requisitionGroupPage.editDropOffFacility("TB");
     requisitionGroupPage.searchFacility("F11");
     testWebDriver.waitForAjax();
     assertEquals("9 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
@@ -864,7 +832,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     testWebDriver.waitForAjax();
     assertEquals("4 matches found for 'F11'", requisitionGroupPage.getNFacilityResultsMessage());
     requisitionGroupPage.selectFacility(1);
-    requisitionGroupPage.clickDoneEditProgramSchedule(3);
+    requisitionGroupPage.clickDoneEditProgramSchedule("TB");
 
     requisitionGroupPage.clickSaveButton();
     testWebDriver.waitForAjax();
@@ -872,20 +840,37 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickViewHereLink();
     requisitionGroupPage.clickProgramsScheduleAccordion();
 
-    assertEquals("MALARIA", requisitionGroupPage.getProgram(1));
-    assertEquals("M-monthly", requisitionGroupPage.getSchedule(1));
-    assertTrue(requisitionGroupPage.isDirectDeliveryIconDisplay(1));
-    assertFalse(requisitionGroupPage.isDropOffFacilityDisplay(1));
+    assertEquals("MALARIA", requisitionGroupPage.getProgram("MALARIA"));
+    assertEquals("M-monthly", requisitionGroupPage.getSchedule("MALARIA"));
+    assertTrue(requisitionGroupPage.isDirectDeliveryIconDisplay("MALARIA"));
+    assertFalse(requisitionGroupPage.isDropOffFacilityDisplay("MALARIA"));
 
-    assertEquals("ESSENTIAL MEDICINES", requisitionGroupPage.getProgram(2));
-    assertEquals("Q-quarterly", requisitionGroupPage.getSchedule(2));
-    assertTrue(requisitionGroupPage.isDirectDeliveryIconDisplay(2));
-    assertFalse(requisitionGroupPage.isDropOffFacilityDisplay(2));
+    assertEquals("ESSENTIAL MEDICINES", requisitionGroupPage.getProgram("ESSENTIAL MEDICINES"));
+    assertEquals("Q-quarterly", requisitionGroupPage.getSchedule("ESSENTIAL MEDICINES"));
+    assertTrue(requisitionGroupPage.isDirectDeliveryIconDisplay("ESSENTIAL MEDICINES"));
+    assertFalse(requisitionGroupPage.isDropOffFacilityDisplay("ESSENTIAL MEDICINES"));
 
-    assertEquals("TB", requisitionGroupPage.getProgram(3));
-    assertEquals("M-monthly", requisitionGroupPage.getSchedule(3));
-    assertFalse(requisitionGroupPage.isDirectDeliveryIconDisplay(3));
-    assertEquals("F11A - Village Dispensary", requisitionGroupPage.getDropOffFacility(3));
+    assertEquals("TB", requisitionGroupPage.getProgram("TB"));
+    assertEquals("M-monthly", requisitionGroupPage.getSchedule("TB"));
+    assertFalse(requisitionGroupPage.isDirectDeliveryIconDisplay("TB"));
+    assertEquals("F11A - Village Dispensary", requisitionGroupPage.getDropOffFacility("TB"));
+  }
+
+  private void setupDataForProgramSchedules() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_REQUISITION_GROUP");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
+    dbWrapper.insertSchedule("M", "monthly", "monthly");
+    dbWrapper.insertSchedule("Q", "quarterly", "quarterly");
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11A", "F11B", 1, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11C", "F11D", 1, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11E", "F11F", 2, 3);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11G", "F11H", 2, 3);
+  }
+
+  private void loginAndNavigateToManageRequisitionGroupPage() {
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
   }
 
   public void searchRequisitionGroup(String searchParameter) {

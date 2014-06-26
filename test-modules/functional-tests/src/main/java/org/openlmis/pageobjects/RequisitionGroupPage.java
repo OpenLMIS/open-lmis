@@ -608,32 +608,32 @@ public class RequisitionGroupPage extends FilterSearchPage {
     return dropOffFacilityHeader.getText();
   }
 
-  public void clickRemoveProgramSchedule(int rowNumber) {
-    WebElement programScheduleRemove = testWebDriver.getElementById("programScheduleRemove" + (rowNumber - 1));
+  public void clickRemoveProgramSchedule(String programName) {
+    WebElement programScheduleRemove = testWebDriver.getElementById("programScheduleRemove" + programName);
     testWebDriver.waitForElementToAppear(programScheduleRemove);
     programScheduleRemove.click();
   }
 
-  public boolean isRemoveProgramScheduleEnabled(int rowNumber) {
-    WebElement programScheduleRemove = testWebDriver.getElementById("programScheduleRemove" + (rowNumber - 1));
+  public boolean isRemoveProgramScheduleEnabled(String programName) {
+    WebElement programScheduleRemove = testWebDriver.getElementById("programScheduleRemove" + programName);
     testWebDriver.waitForElementToAppear(programScheduleRemove);
     return programScheduleRemove.isEnabled();
   }
 
-  public void clickEditProgramSchedule(int rowNumber) {
-    WebElement programScheduleEdit = testWebDriver.getElementById("programScheduleEdit" + (rowNumber - 1));
+  public void clickEditProgramSchedule(String programName) {
+    WebElement programScheduleEdit = testWebDriver.getElementById("programScheduleEdit" + programName);
     testWebDriver.waitForElementToAppear(programScheduleEdit);
     programScheduleEdit.click();
   }
 
-  public boolean isEditProgramScheduleEnabled(int rowNumber) {
-    WebElement programScheduleEdit = testWebDriver.getElementById("programScheduleEdit" + (rowNumber - 1));
+  public boolean isEditProgramScheduleEnabled(String programName) {
+    WebElement programScheduleEdit = testWebDriver.getElementById("programScheduleEdit" + programName);
     testWebDriver.waitForElementToAppear(programScheduleEdit);
     return programScheduleEdit.isEnabled();
   }
 
-  public void clickCancelEditProgramSchedule(int rowNumber) {
-    WebElement programScheduleEditCancel = testWebDriver.getElementById("programScheduleEditCancel" + (rowNumber - 1));
+  public void clickCancelEditProgramSchedule(String programName) {
+    WebElement programScheduleEditCancel = testWebDriver.getElementById("programScheduleEditCancel" + programName);
     testWebDriver.waitForElementToAppear(programScheduleEditCancel);
     programScheduleEditCancel.click();
   }
@@ -653,8 +653,8 @@ public class RequisitionGroupPage extends FilterSearchPage {
     programScheduleAddCancel.click();
   }
 
-  public void clickDoneEditProgramSchedule(int rowNumber) {
-    WebElement programScheduleEditDone = testWebDriver.getElementById("programScheduleEditDone" + (rowNumber - 1));
+  public void clickDoneEditProgramSchedule(String programName) {
+    WebElement programScheduleEditDone = testWebDriver.getElementById("programScheduleEditDone" + programName);
     testWebDriver.waitForElementToAppear(programScheduleEditDone);
     programScheduleEditDone.click();
   }
@@ -679,26 +679,26 @@ public class RequisitionGroupPage extends FilterSearchPage {
     testWebDriver.selectByVisibleText(newScheduleDropDown, schedule);
   }
 
-  public String getProgram(int rowNumber) {
-    WebElement program = testWebDriver.getElementById("programName" + (rowNumber - 1));
+  public String getProgram(String programName) {
+    WebElement program = testWebDriver.getElementById("programName" + programName);
     testWebDriver.waitForElementToAppear(program);
     return program.getText();
   }
 
-  public String getSchedule(int rowNumber) {
-    WebElement schedule = testWebDriver.getElementById("schedule" + (rowNumber - 1));
+  public String getSchedule(String programName) {
+    WebElement schedule = testWebDriver.getElementById("schedule" + programName);
     testWebDriver.waitForElementToAppear(schedule);
     return schedule.getText();
   }
 
-  public void editSchedules(int rowNumber, String schedule) {
-    WebElement schedules = testWebDriver.getElementById("schedules" + (rowNumber - 1));
+  public void editSchedules(String programName, String schedule) {
+    WebElement schedules = testWebDriver.getElementById("schedules" + programName);
     testWebDriver.waitForElementToAppear(schedules);
     testWebDriver.selectByVisibleText(schedules, schedule);
   }
 
-  public boolean isDirectDeliveryIconDisplay(int rowNumber) {
-    WebElement directDeliveryIcon = testWebDriver.getElementById("directDeliverIcon" + (rowNumber - 1));
+  public boolean isDirectDeliveryIconDisplay(String programName) {
+    WebElement directDeliveryIcon = testWebDriver.getElementById("directDeliverIcon" + programName);
     try {
       testWebDriver.waitForElementToAppear(directDeliveryIcon);
     } catch (TimeoutException e) {
@@ -709,26 +709,26 @@ public class RequisitionGroupPage extends FilterSearchPage {
     return directDeliveryIcon.isDisplayed();
   }
 
-  public void editDirectDelivery(int rowNumber) {
-    WebElement directDelivery = testWebDriver.getElementById("directDelivery" + (rowNumber - 1));
+  public void editDirectDelivery(String programName) {
+    WebElement directDelivery = testWebDriver.getElementById("directDelivery" + programName);
     testWebDriver.waitForElementToAppear(directDelivery);
     directDelivery.click();
   }
 
-  public String getDropOffFacility(int rowNumber) {
-    WebElement dropOffFacility = testWebDriver.getElementById("dropOffFacility" + (rowNumber - 1));
+  public String getDropOffFacility(String programName) {
+    WebElement dropOffFacility = testWebDriver.getElementById("dropOffFacility" + programName);
     testWebDriver.waitForElementToAppear(dropOffFacility);
     return dropOffFacility.getText();
   }
 
-  public void editDropOffFacility(int rowNumber) {
-    WebElement dropOffFacility = testWebDriver.getElementById("editDropOffFacility" + (rowNumber - 1));
+  public void editDropOffFacility(String programName) {
+    WebElement dropOffFacility = testWebDriver.getElementById("editDropOffFacility" + programName);
     testWebDriver.waitForElementToAppear(dropOffFacility);
     dropOffFacility.click();
   }
 
-  public void clearDropOffFacility(int rowNumber) {
-    WebElement clearDropOff = testWebDriver.getElementById("clearDropOffFacility" + (rowNumber - 1));
+  public void clearDropOffFacility(String programName) {
+    WebElement clearDropOff = testWebDriver.getElementById("clearDropOffFacility" + programName);
     testWebDriver.waitForElementToAppear(clearDropOff);
     clearDropOff.click();
   }
@@ -768,8 +768,8 @@ public class RequisitionGroupPage extends FilterSearchPage {
     viewHereLink.click();
   }
 
-  public boolean isDropOffFacilityDisplay(int rowNumber) {
-    WebElement dropOffFacility = testWebDriver.getElementById("dropOffFacility" + (rowNumber - 1));
+  public boolean isDropOffFacilityDisplay(String programName) {
+    WebElement dropOffFacility = testWebDriver.getElementById("dropOffFacility" + programName);
     try {
       testWebDriver.waitForElementToAppear(dropOffFacility);
     } catch (TimeoutException e) {
