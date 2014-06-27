@@ -257,7 +257,8 @@ public class ReportLookupController extends BaseController {
       @RequestParam("schedule") Long schedule,
       @RequestParam(value = "type", defaultValue = "0" , required = false) Long type,
       @RequestParam(value = "requisitionGroup", defaultValue = "0", required = false) Long requisitionGroup,
-      @RequestParam(value = "zone", defaultValue = "0", required = false) Long zone
+      @RequestParam(value = "zone", defaultValue = "0", required = false) Long zone,
+      HttpServletRequest request
 
   ) {
     // set default for optional parameters
@@ -265,7 +266,7 @@ public class ReportLookupController extends BaseController {
     type = (type != null)? type: 0L;
     requisitionGroup = (requisitionGroup != null)?requisitionGroup: 0L;
 
-    return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type, requisitionGroup,zone ));
+    return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type, requisitionGroup, zone, loggedInUserId(request) ));
   }
 
 /*  @RequestMapping(value = "/facilities/geographicZone/{geographicZoneId}/requisitionGroup/{rgroupId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
