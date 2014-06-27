@@ -45,8 +45,8 @@ public class StockedOutReportQueryBuilder {
                 WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
             }
             if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
-            WHERE("(d.district_id = #{filterCriteria.zoneId} or d.zone_id = #{filterCriteria.zoneId} or d.region_id = #{filterCriteria.zoneId} or d.parent = #{filterCriteria.zoneId})");
-          }
+              WHERE("(d.district_id = #{filterCriteria.zoneId} or d.zone_id = #{filterCriteria.zoneId} or d.region_id = #{filterCriteria.zoneId} or d.parent = #{filterCriteria.zoneId})");
+            }
 
             WHERE("periodId = #{filterCriteria.periodId}");
 

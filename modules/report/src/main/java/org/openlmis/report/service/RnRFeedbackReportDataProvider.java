@@ -46,7 +46,7 @@ public class RnRFeedbackReportDataProvider extends ReportDataProvider {
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getRnRFeedbackReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
+    return reportMapper.getRnRFeedbackReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds, this.getUserId());
   }
 
   public RnRFeedbackReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
@@ -71,10 +71,15 @@ public class RnRFeedbackReportDataProvider extends ReportDataProvider {
 
       feedbackReportFilter.setOrderType(StringHelper.isBlank(filterCriteria,"orderType") ? "" : filterCriteria.get("orderType")[0]);
       feedbackReportFilter.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0 : Integer.parseInt(filterCriteria.get("period")[0])); //defaults to 0
+
+      feedbackReportFilter.setZoneId(StringHelper.isBlank(filterCriteria,"zone") ? 0 : Integer.parseInt(filterCriteria.get("zone")[0])); //defaults to 0
+
       feedbackReportFilter.setScheduleId(StringHelper.isBlank(filterCriteria,"schedule")  ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0])); //defaults to 0
       feedbackReportFilter.setSchedule(filterCriteria.get("schedule")[0]);
       feedbackReportFilter.setRgroupId(StringHelper.isBlank(filterCriteria,"requisitionGroup")? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
+
       feedbackReportFilter.setRgroup(StringHelper.isBlank(filterCriteria,"requisitionGroup") ? "All Reporting Groups" : filterCriteria.get("requisitionGroup")[0]);
+
       feedbackReportFilter.setPeriod(filterCriteria.get("period")[0]);
       feedbackReportFilter.setProgramId(StringHelper.isBlank(filterCriteria,"program")? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
       feedbackReportFilter.setProgram(filterCriteria.get("program")[0]);
