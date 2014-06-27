@@ -17,12 +17,18 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
-import static org.openqa.selenium.support.How.XPATH;
-
 
 public class ReportPage extends RequisitionPage {
+
+  @FindBy(how = ID, using = "reportHeader")
+  private static WebElement reportHeader = null;
+
+  @FindBy(how = ID, using = "reportNameHeader")
+  private static WebElement reportNameHeader = null;
+
+  @FindBy(how = ID, using = "viewHeader")
+  private static WebElement viewHeader = null;
 
   @FindBy(how = ID, using = "addNew")
   private static WebElement addNewButton = null;
@@ -30,8 +36,20 @@ public class ReportPage extends RequisitionPage {
   @FindBy(how = ID, using = "addNewHeader")
   private static WebElement addNewReportTitle = null;
 
+  @FindBy(how = ID, using = "nameLabel")
+  private static WebElement reportNameLabel = null;
+
+  @FindBy(how = ID, using = "descriptionLabel")
+  private static WebElement reportDescriptionLabel = null;
+
+  @FindBy(how = ID, using = "uploadFileLabel")
+  private static WebElement uploadFieldLabel = null;
+
   @FindBy(how = ID, using = "name")
   private static WebElement reportNameTextField = null;
+
+  @FindBy(how = ID, using = "description")
+  private static WebElement reportDescriptionTextField = null;
 
   @FindBy(how = ID, using = "file")
   private static WebElement uploadField = null;
@@ -48,22 +66,22 @@ public class ReportPage extends RequisitionPage {
   @FindBy(how = ID, using = "error")
   private static WebElement saveErrorMessage = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'PDF')]")
+  @FindBy(how = ID, using = "pdfLink")
   private static WebElement PDF = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'XLS')]")
+  @FindBy(how = ID, using = "xlsLink")
   private static WebElement XLS = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'CSV')]")
+  @FindBy(how = ID, using = "csvLink")
   private static WebElement CSV = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'HTML')]")
+  @FindBy(how = ID, using = "htmlLink")
   private static WebElement HTML = null;
 
-  @FindBy(how = XPATH, using = "(//span[contains(text(),'Please fill this value')])[1]")
+  @FindBy(how = ID, using = "reportNameError")
   private static WebElement errorReportName = null;
 
-  @FindBy(how = XPATH, using = "(//span[contains(text(),'Please fill this value')])[2]")
+  @FindBy(how = ID, using = "fileError")
   private static WebElement errorFile = null;
 
 
@@ -73,6 +91,36 @@ public class ReportPage extends RequisitionPage {
     testWebDriver.setImplicitWait(10);
   }
 
+  public String getReportHeader() {
+    testWebDriver.waitForElementToAppear(reportHeader);
+    return reportHeader.getText();
+  }
+
+  public String getReportNameHeader() {
+    testWebDriver.waitForElementToAppear(reportNameHeader);
+    return reportNameHeader.getText();
+  }
+
+  public String getViewHeader() {
+    testWebDriver.waitForElementToAppear(viewHeader);
+    return viewHeader.getText();
+  }
+
+  public String getNameLabel() {
+    testWebDriver.waitForElementToAppear(reportNameLabel);
+    return reportNameLabel.getText();
+  }
+
+  public String getDescriptionLabel() {
+    testWebDriver.waitForElementToAppear(reportDescriptionLabel);
+    return reportDescriptionLabel.getText();
+  }
+
+  public String getUploadFileLabel() {
+    testWebDriver.waitForElementToAppear(uploadFieldLabel);
+    return uploadFieldLabel.getText();
+  }
+
   public void clickAddNewButton() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(addNewButton);
@@ -80,31 +128,20 @@ public class ReportPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(addNewReportTitle);
   }
 
-  public void verifyItemsOnReportUploadScreen() {
-    assertTrue("Report Name field missing", reportNameTextField.isDisplayed());
-    //description
-    assertTrue("Upload field missing", uploadField.isDisplayed());
-    assertTrue("Save button missing", saveButton.isDisplayed());
-    assertTrue("Cancel button missing", cancelButton.isDisplayed());
-  }
-
-  public void verifyItemsOnReportListScreen() {
-    assertTrue("PDF link missing", PDF.isDisplayed());
-    assertTrue("XLS link missing", XLS.isDisplayed());
-    assertTrue("CSV link missing", CSV.isDisplayed());
-    assertTrue("HTML link missing", HTML.isDisplayed());
-  }
-
   public void enterReportName(String reportName) {
     testWebDriver.waitForElementToAppear(reportNameTextField);
-    reportNameTextField.clear();
-    reportNameTextField.sendKeys(reportName);
+    sendKeys(reportNameTextField, reportName);
+  }
+
+  public void enterReportDescription(String reportName) {
+    testWebDriver.waitForElementToAppear(reportDescriptionTextField);
+    sendKeys(reportDescriptionTextField, reportName);
   }
 
   public void uploadFile(String fileName) {
     String uploadFilePath;
     uploadFilePath = this.getClass().getClassLoader().getResource(fileName).getFile();
-    uploadField.sendKeys(uploadFilePath);
+    sendKeys(uploadField, uploadFilePath);
   }
 
   public void clickSaveButton() {
@@ -117,29 +154,59 @@ public class ReportPage extends RequisitionPage {
     cancelButton.click();
   }
 
-  public void verifySuccessMessageDiv() {
-    testWebDriver.sleep(500);
-    assertTrue("Report created successfully message not displayed", saveSuccessMessage.isDisplayed());
+  public boolean isSaveButtonDisplayed() {
+    testWebDriver.waitForElementToAppear(saveButton);
+    return saveButton.isDisplayed();
   }
 
-  public void verifyErrorMessageDivFooter() {
-    testWebDriver.sleep(2500);
-    assertTrue("Report with same name already exists message should show up", saveErrorMessage.isDisplayed());
+  public boolean isCancelButtonDisplayed() {
+    testWebDriver.waitForElementToAppear(cancelButton);
+    return cancelButton.isDisplayed();
   }
 
-  public void verifyErrorMessageDivReportName() {
-    testWebDriver.sleep(500);
-    assertTrue("Error message 'Please fill this value' should show up", errorReportName.isDisplayed());
+  public boolean isPDFLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(PDF);
+    return PDF.isDisplayed();
   }
 
-  public void verifyErrorMessageDivUploadFile() {
-    testWebDriver.sleep(500);
-    assertTrue("Error message 'Please fill this value' should show up", errorFile.isDisplayed());
+  public boolean isHTMLLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(HTML);
+    return HTML.isDisplayed();
   }
 
-  public void verifyReportNameInList(String reportName, int reportIndex) {
-    WebElement element = testWebDriver.getElementByXpath("//div[@id='wrap']/div/div/div/table/tbody/tr[" + reportIndex + "]/td[1]/div");
+  public boolean isCSVLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(CSV);
+    return CSV.isDisplayed();
+  }
+
+  public boolean isXLSLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(XLS);
+    return XLS.isDisplayed();
+  }
+
+  public String getSaveSuccessMessage() {
+    testWebDriver.waitForElementToAppear(saveSuccessMessage);
+    return saveSuccessMessage.getText();
+  }
+
+  public String getSaveErrorMessage() {
+    testWebDriver.waitForElementToAppear(saveErrorMessage);
+    return saveErrorMessage.getText();
+  }
+
+  public String getErrorReportNameMessage() {
+    testWebDriver.waitForElementToAppear(errorReportName);
+    return errorReportName.getText();
+  }
+
+  public String getErrorFileMessage() {
+    testWebDriver.waitForElementToAppear(errorFile);
+    return errorFile.getText();
+  }
+
+  public String getReportName(int reportIndex) {
+    WebElement element = testWebDriver.getElementById("reportName" + (reportIndex - 1));
     testWebDriver.waitForElementToAppear(element);
-    assertTrue("Report Name '" + reportName + "' should display in list", element.getText().trim().equalsIgnoreCase(reportName));
+    return element.getText().trim();
   }
 }

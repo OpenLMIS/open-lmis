@@ -22,12 +22,16 @@ import org.testng.annotations.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class ManageReport extends TestCaseHelper {
 
   String reportName, fileName;
   LoginPage loginPage;
+  ReportPage reportPage;
 
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
@@ -40,28 +44,36 @@ public class ManageReport extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void invalidScenariosReports(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    ReportPage reportPage = homePage.navigateReportScreen();
+    reportPage = homePage.navigateReportScreen();
+    assertEquals("Reports", reportPage.getReportHeader());
+    assertEquals("Report name", reportPage.getReportNameHeader());
+    assertEquals("View", reportPage.getViewHeader());
     reportPage.clickAddNewButton();
 
-    reportPage.verifyItemsOnReportUploadScreen();
+    assertEquals("Report name *", reportPage.getNameLabel());
+    assertEquals("Description", reportPage.getDescriptionLabel());
+    assertEquals("Upload file *", reportPage.getUploadFileLabel());
+    assertTrue("Save button missing", reportPage.isSaveButtonDisplayed());
+    assertTrue("Cancel button missing", reportPage.isCancelButtonDisplayed());
+
     reportPage.clickSaveButton();
-    reportPage.verifyErrorMessageDivReportName();
-    reportPage.verifyErrorMessageDivUploadFile();
+    assertEquals("Please fill this value", reportPage.getErrorReportNameMessage());
+    assertEquals("Please fill this value", reportPage.getErrorFileMessage());
 
     reportPage.enterReportName(reportName);
     reportPage.clickSaveButton();
-    reportPage.verifyErrorMessageDivUploadFile();
+    assertEquals("Please fill this value", reportPage.getErrorFileMessage());
 
     reportPage.enterReportName("");
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
-    reportPage.verifyErrorMessageDivReportName();
+    assertEquals("Please fill this value", reportPage.getErrorReportNameMessage());
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void uploadWrongReport(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    ReportPage reportPage = homePage.navigateReportScreen();
+    reportPage = homePage.navigateReportScreen();
     reportPage.clickAddNewButton();
 
     testWebDriver.sleep(1000);
@@ -70,56 +82,71 @@ public class ManageReport extends TestCaseHelper {
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     testWebDriver.sleep(1000);
-    //verifyErrorMessageInvalidFile();
+    assertEquals("File uploaded is invalid", reportPage.getSaveErrorMessage());
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void uploadValidReport(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    ReportPage reportPage = homePage.navigateReportScreen();
+    reportPage = homePage.navigateReportScreen();
 
     reportPage.clickAddNewButton();
     reportPage.enterReportName(reportName);
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
-    reportPage.verifySuccessMessageDiv();
-    reportPage.verifyReportNameInList(reportName, 8);
-    reportPage.verifyItemsOnReportListScreen();
+    assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
+    verifyItemsOnReportListScreen();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyDuplicateReport(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    ReportPage reportPage = homePage.navigateReportScreen();
+    reportPage = homePage.navigateReportScreen();
 
     reportPage.clickAddNewButton();
     reportPage.enterReportName(reportName);
     reportPage.uploadFile(fileName);
+    reportPage.enterReportDescription("describe");
     reportPage.clickSaveButton();
 
     reportPage.clickAddNewButton();
     reportPage.enterReportName(reportName);
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
-
-    reportPage.verifyErrorMessageDivFooter();
+    assertEquals("Report with same name already exists", reportPage.getSaveErrorMessage());
 
     reportPage.clickCancelButton();
-    reportPage.verifyReportNameInList(reportName, 8);
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyDefaultReports(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    ReportPage reportPage = homePage.navigateReportScreen();
+    reportPage = homePage.navigateReportScreen();
 
-    reportPage.verifyReportNameInList("Facilities Missing Supporting Requisition Group", 1);
-    reportPage.verifyReportNameInList("Facilities Missing Create Requisition Role", 2);
-    reportPage.verifyReportNameInList("Facilities Missing Authorize Requisition Role", 3);
-    reportPage.verifyReportNameInList("Supervisory Nodes Missing Approve Requisition Role", 4);
-    reportPage.verifyReportNameInList("Requisition Groups Missing Supply Line", 5);
-    reportPage.verifyReportNameInList("Order Routing Inconsistencies", 6);
-    reportPage.verifyReportNameInList("Delivery Zones Missing Manage Distribution Role", 7);
+    reportName = "Facilities Missing Supporting Requisition Group";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+    reportName = "Facilities Missing Create Requisition Role";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(2).equalsIgnoreCase(reportName));
+    reportName = "Facilities Missing Authorize Requisition Role";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(3).equalsIgnoreCase(reportName));
+    reportName = "Supervisory Nodes Missing Approve Requisition Role";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(4).equalsIgnoreCase(reportName));
+    reportName = "Requisition Groups Missing Supply Line";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(5).equalsIgnoreCase(reportName));
+    reportName = "Order Routing Inconsistencies";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(6).equalsIgnoreCase(reportName));
+    reportName = "Delivery Zones Missing Manage Distribution Role";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(7).equalsIgnoreCase(reportName));
+    reportName = "Test-Report";
+  }
+
+  public void verifyItemsOnReportListScreen() {
+    assertTrue("PDF link missing", reportPage.isPDFLinkDisplayed());
+    assertTrue("XLS link missing", reportPage.isXLSLinkDisplayed());
+    assertTrue("CSV link missing", reportPage.isCSVLinkDisplayed());
+    assertTrue("HTML link missing", reportPage.isHTMLLinkDisplayed());
   }
 
   @AfterMethod(groups = {"admin"})
@@ -127,6 +154,7 @@ public class ManageReport extends TestCaseHelper {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
+    dbWrapper.deleteRowFromTable("report_rights", "rightname", reportName);
     dbWrapper.deleteRowFromTable("templates", "name", reportName);
     dbWrapper.deleteRowFromTable("rights", "name", reportName);
     dbWrapper.closeConnection();
