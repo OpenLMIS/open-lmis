@@ -55,6 +55,9 @@ public class TemplateServiceTest {
   RoleRightsService roleRightsService;
 
   @Mock
+  ReportRightService reportRightService;
+
+  @Mock
   MessageService messageService;
 
   @InjectMocks
@@ -98,6 +101,17 @@ public class TemplateServiceTest {
   }
 
   @Test
+  public void shouldThrowErrorIfTemplateNameAlreadyExists() throws Exception {
+    Template template = new Template();
+    template.setName("Name");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("report.template.name.already.exists");
+    when(repository.getByName(template.getName())).thenThrow(new DataException("report.template.name.already.exists"));
+
+    service.validateFileAndInsertTemplate(template, null);
+  }
+
+  @Test
   public void shouldThrowErrorIfDisplayNameOfParameterIsMissing() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Error Message");
@@ -117,12 +131,44 @@ public class TemplateServiceTest {
     when(report.getParameters()).thenReturn(new JRParameter[]{param1, param2});
     when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
     when(param1.getPropertiesMap()).thenReturn(propertiesMap);
+    String[] propertyNames = {"name1"};
+    when(propertiesMap.getPropertyNames()).thenReturn(propertyNames);
     when(propertiesMap.getProperty("displayName")).thenReturn(null);
     Template template = new Template();
 
     service.validateFileAndInsertTemplate(template, file);
 
-    verify(repository, never()).insert(template);
+    verify(repository, never()).insertWithParameters(template);
+  }
+
+  @Test
+  public void shouldThrowErrorIfThereAreExtraParameterProperties() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Error Message");
+    MultipartFile file = mock(MultipartFile.class);
+    when(file.getOriginalFilename()).thenReturn("file.jrxml");
+
+    mockStatic(JasperCompileManager.class);
+    JasperReport report = mock(JasperReport.class);
+    InputStream inputStream = mock(InputStream.class);
+    when(file.getInputStream()).thenReturn(inputStream);
+
+    JRParameter param1 = mock(JRParameter.class);
+    JRParameter param2 = mock(JRParameter.class);
+    JRPropertiesMap propertiesMap = mock(JRPropertiesMap.class);
+
+    when(messageService.message("report.template.extra.properties", param1.getName())).thenReturn("Error Message");
+    when(report.getParameters()).thenReturn(new JRParameter[]{param1, param2});
+    when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
+    when(param1.getPropertiesMap()).thenReturn(propertiesMap);
+    String[] propertyNames = {"name1", "name2"};
+    when(propertiesMap.getPropertyNames()).thenReturn(propertyNames);
+    when(propertiesMap.getProperty("displayName")).thenReturn("Param Display Name");
+    Template template = new Template();
+
+    service.validateFileAndInsertTemplate(template, file);
+
+    verify(repository, never()).insertWithParameters(template);
   }
 
   @Test
@@ -142,14 +188,19 @@ public class TemplateServiceTest {
     when(report.getParameters()).thenReturn(new JRParameter[]{param1, param2});
     when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
     when(param1.getPropertiesMap()).thenReturn(propertiesMap);
+    String[] propertyNames = {"displayName"};
+    when(propertiesMap.getPropertyNames()).thenReturn(propertyNames);
     when(propertiesMap.getProperty("displayName")).thenReturn("Param Display Name");
     when(param1.getValueClassName()).thenReturn("String");
+    when(param1.getDescription()).thenReturn("desc");
+    when(param1.getName()).thenReturn("name");
     when(param1.getDefaultValueExpression()).thenReturn(mock(JRExpression.class));
-    when(propertiesMap.getProperty("description")).thenReturn("Param Description");
 
     when(param2.getPropertiesMap()).thenReturn(propertiesMap);
     when(param2.getValueClassName()).thenReturn("Integer");
     when(param2.getDefaultValueExpression()).thenReturn(mock(JRExpression.class));
+    when(param2.getDescription()).thenReturn("desc");
+    when(param2.getName()).thenReturn("name");
 
     ByteArrayOutputStream byteOutputStream = mock(ByteArrayOutputStream.class);
     whenNew(ByteArrayOutputStream.class).withAnyArguments().thenReturn(byteOutputStream);
@@ -162,9 +213,57 @@ public class TemplateServiceTest {
 
     service.validateFileAndInsertTemplate(template, file);
 
-    verify(repository).insert(template);
-    verify(roleRightsService).validateAndInsertRight(template.getName(), RightType.REPORTING, template.getDescription());
+    verify(repository).insertWithParameters(template);
+    verify(roleRightsService).insertRight(template.getName(), RightType.REPORTING);
+    verify(reportRightService).insert(template);
     assertThat(template.getParameters().get(0).getDisplayName(), is("Param Display Name"));
-    assertThat(template.getParameters().get(0).getDescription(), is("Param Description"));
+    assertThat(template.getParameters().get(0).getDescription(), is("desc"));
+    assertThat(template.getParameters().get(0).getName(), is("name"));
+    assertThat(template.getParameters().get(0).getCreatedBy(), is(template.getCreatedBy()));
+  }
+
+  @Test
+  public void shouldValidateFileAndSetDataIfDefaultValueExpressionIsNull() throws Exception {
+    MultipartFile file = mock(MultipartFile.class);
+    when(file.getOriginalFilename()).thenReturn("file.jrxml");
+
+    mockStatic(JasperCompileManager.class);
+    JasperReport report = mock(JasperReport.class);
+    InputStream inputStream = mock(InputStream.class);
+    when(file.getInputStream()).thenReturn(inputStream);
+
+    JRParameter param1 = mock(JRParameter.class);
+    JRParameter param2 = mock(JRParameter.class);
+    JRPropertiesMap propertiesMap = mock(JRPropertiesMap.class);
+
+    when(report.getParameters()).thenReturn(new JRParameter[]{param1, param2});
+    when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
+    when(param1.getPropertiesMap()).thenReturn(propertiesMap);
+    String[] propertyNames = {"displayName"};
+    when(propertiesMap.getPropertyNames()).thenReturn(propertyNames);
+    when(propertiesMap.getProperty("displayName")).thenReturn("Param Display Name");
+    when(param1.getValueClassName()).thenReturn("String");
+    when(param1.getDefaultValueExpression()).thenReturn(mock(JRExpression.class));
+
+    when(param2.getPropertiesMap()).thenReturn(propertiesMap);
+    when(param2.getValueClassName()).thenReturn("Integer");
+    when(param2.getDefaultValueExpression()).thenReturn(null);
+
+    ByteArrayOutputStream byteOutputStream = mock(ByteArrayOutputStream.class);
+    whenNew(ByteArrayOutputStream.class).withAnyArguments().thenReturn(byteOutputStream);
+    ObjectOutputStream objectOutputStream = spy(new ObjectOutputStream(byteOutputStream));
+    whenNew(ObjectOutputStream.class).withArguments(byteOutputStream).thenReturn(objectOutputStream);
+    doNothing().when(objectOutputStream).writeObject(report);
+    byte[] byteData = new byte[1];
+    when(byteOutputStream.toByteArray()).thenReturn(byteData);
+    Template template = new Template();
+
+    service.validateFileAndInsertTemplate(template, file);
+
+    verify(repository).insertWithParameters(template);
+    verify(roleRightsService).insertRight(template.getName(), RightType.REPORTING);
+    verify(reportRightService).insert(template);
+    assertThat(template.getParameters().get(0).getDisplayName(), is("Param Display Name"));
+    assertThat(template.getParameters().get(0).getCreatedBy(), is(template.getCreatedBy()));
   }
 }

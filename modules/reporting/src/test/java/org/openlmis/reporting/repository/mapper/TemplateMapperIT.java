@@ -13,6 +13,7 @@ package org.openlmis.reporting.repository.mapper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.model.TemplateParameter;
@@ -24,6 +25,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +43,9 @@ public class TemplateMapperIT {
 
   @Autowired
   TemplateMapper templateMapper;
+
+  @Autowired
+  QueryExecutor queryExecutor;
 
   @Test
   public void shouldGetById() throws Exception {
@@ -102,6 +107,41 @@ public class TemplateMapperIT {
 
     assertThat(returnedTemplate.getName(), is(template.getName()));
     assertThat(returnedTemplate.getData(), is(template.getData()));
+  }
+
+  @Test
+  public void shouldInsertTemplateParameteres() throws Exception{
+    String type = "REPORTING";
+    String name = "Requisition Report Template";
+    Long createdBy = 1L;
+    Template template = new Template();
+    template.setType(type);
+    template.setName(name);
+    template.setCreatedBy(createdBy);
+    template.setDescription("description");
+    template.setData(new byte[]{'a'});
+    templateMapper.insert(template);
+
+    TemplateParameter templateParameter = new TemplateParameter();
+    templateParameter.setName(name);
+    templateParameter.setDescription("desc");
+    templateParameter.setDisplayName("Template");
+    templateParameter.setDefaultValue("value");
+    templateParameter.setCreatedBy(createdBy);
+    templateParameter.setTemplateId(template.getId());
+    templateParameter.setDataType("String");
+
+    templateMapper.insertParameter(templateParameter);
+
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM template_parameters where templateId=?", template.getId());
+    resultSet.next();
+
+    assertThat(resultSet.getString("name"), is("Requisition Report Template"));
+    assertThat(resultSet.getString("displayName"), is("Template"));
+    assertThat(resultSet.getString("description"), is("desc"));
+    assertThat(resultSet.getString("defaultValue"), is("value"));
+    assertThat(resultSet.getString("dataType"), is("String"));
+    assertThat(resultSet.getLong("createdBy"), is(createdBy));
   }
 
   private Template createReportTemplate(String name, String type) {

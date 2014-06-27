@@ -30,6 +30,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.openlmis.core.domain.RightType.REPORTING;
 
 /**
@@ -48,6 +49,9 @@ public class TemplateService {
   @Autowired
   RoleRightsService roleRightsService;
 
+  @Autowired
+  ReportRightService reportRightService;
+
   public List<Template> getAll() {
     return repository.getAll();
   }
@@ -57,9 +61,11 @@ public class TemplateService {
   }
 
   public void validateFileAndInsertTemplate(Template template, MultipartFile file) throws IOException {
+    throwIfTemplateWithSameNameAlreadyExists(template.getName());
     validateFile(template, file);
-    repository.insert(template);
-    roleRightsService.validateAndInsertRight(template.getName(), REPORTING, template.getDescription());
+    repository.insertWithParameters(template);
+    roleRightsService.insertRight(template.getName(), REPORTING);
+    reportRightService.insert(template);
   }
 
   private void validateFile(Template template, MultipartFile file) {
@@ -71,12 +77,11 @@ public class TemplateService {
       JRParameter[] jrParameters = report.getParameters();
       if (jrParameters != null && jrParameters.length > 0) {
 
-        TemplateParameter templateParameter = new TemplateParameter();
         ArrayList<TemplateParameter> parameters = new ArrayList<>();
 
         for (JRParameter jrParameter : jrParameters) {
           if (!jrParameter.isSystemDefined()) {
-            parameters.add(createParameter(templateParameter, jrParameter));
+            parameters.add(createParameter(template.getCreatedBy(), jrParameter));
           }
         }
         template.setParameters(parameters);
@@ -92,17 +97,31 @@ public class TemplateService {
     }
   }
 
-  private TemplateParameter createParameter(TemplateParameter templateParameter, JRParameter jrParameter) {
+  private TemplateParameter createParameter(Long createdBy, JRParameter jrParameter) {
+    String[] propertyNames = jrParameter.getPropertiesMap().getPropertyNames();
+    if (propertyNames.length > 1) {
+      throw new DataException(messageService.message("report.template.extra.properties", jrParameter.getName()));
+    }
     String displayName = jrParameter.getPropertiesMap().getProperty("displayName");
-    if (displayName == null) {
+    if (isBlank(displayName)) {
       throw new DataException(messageService.message("report.template.parameter.display.name.missing", jrParameter.getName()));
     }
+    TemplateParameter templateParameter = new TemplateParameter();
     templateParameter.setName(jrParameter.getName());
     templateParameter.setDisplayName(displayName);
-    templateParameter.setDescription(jrParameter.getPropertiesMap().getProperty("description"));
+    templateParameter.setDescription(jrParameter.getDescription());
     templateParameter.setDataType(jrParameter.getValueClassName());
-    templateParameter.setDefaultValue(jrParameter.getDefaultValueExpression().toString());
+    if (jrParameter.getDefaultValueExpression() != null){
+      templateParameter.setDefaultValue(jrParameter.getDefaultValueExpression().getText());
+    }
+    templateParameter.setCreatedBy(createdBy);
     return templateParameter;
+  }
+
+  private void throwIfTemplateWithSameNameAlreadyExists(String name) {
+    if (repository.getByName(name) != null) {
+      throw new DataException("report.template.name.already.exists");
+    }
   }
 
   private void throwIfFileIsEmpty(MultipartFile file) {

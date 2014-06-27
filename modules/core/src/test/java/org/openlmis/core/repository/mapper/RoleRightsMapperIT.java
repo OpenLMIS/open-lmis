@@ -268,12 +268,11 @@ public class RoleRightsMapperIT {
     String templateName = "Requisition Group Program";
     String description = "Description";
 
-    roleRightsMapper.insertRight(templateName, REPORTING, description);
+    roleRightsMapper.insertRight(templateName, REPORTING);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM rights WHERE rightType = 'REPORTING'");
     resultSet.next();
     assertThat(resultSet.getString("name"), is(templateName));
-    assertThat(resultSet.getString("description"), is(description));
     assertThat(resultSet.getString("rightType"), is(REPORTING.toString()));
     assertNotNull(resultSet.getTimestamp("createdDate"));
   }

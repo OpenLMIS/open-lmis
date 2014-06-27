@@ -113,7 +113,7 @@ public class RoleRightsService {
     return roleRightsRepository.getRightTypeForRoleId(roleId);
   }
 
-  public void validateAndInsertRight(String templateName, RightType rightType, String description) {
-    roleRightsRepository.validateAndInsertRight(templateName, rightType, description);
+  public void insertRight(String templateName, RightType rightType) {
+    roleRightsRepository.insertRight(templateName, rightType);
   }
 }

@@ -12,41 +12,26 @@ package org.openlmis.reporting.repository;
 
 import org.openlmis.core.exception.DataException;
 import org.openlmis.reporting.model.Template;
-import org.openlmis.reporting.model.TemplateParameter;
-import org.openlmis.reporting.repository.mapper.TemplateMapper;
+import org.openlmis.reporting.repository.mapper.ReportRightMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * Repository class for template related database operations.
  */
 
 @Repository
-public class TemplateRepository {
+public class ReportRightRepository {
 
   @Autowired
-  TemplateMapper mapper;
+  ReportRightMapper mapper;
 
-  public void insertWithParameters(Template template) {
+  public void insert(Template template) {
     try {
       mapper.insert(template);
-      for(TemplateParameter parameter : template.getParameters()){
-        parameter.setTemplateId(template.getId());
-        mapper.insertParameter(parameter);
-      }
     } catch (DataIntegrityViolationException integrityViolationException) {
-      throw new DataException("unexpected.exception");
+      throw new DataException("report.template.name.already.exists");
     }
-  }
-
-  public List<Template> getAll() {
-    return mapper.getAllConsistencyReportTemplates();
-  }
-
-  public Template getByName(String name) {
-    return mapper.getByName(name);
   }
 }

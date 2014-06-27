@@ -88,9 +88,8 @@ public interface RoleRightsMapper {
     "WHERE FRA.userId = #{userId} AND FRA.facilityId = #{warehouseId}"})
   Set<Right> getRightsForUserAndWarehouse(@Param("userId") Long userId, @Param("warehouseId") Long warehouseId);
 
-  @Insert({"INSERT INTO rights(name, rightType, description, createdDate) VALUES ",
-    "(#{templateName}, #{rightType}, #{description}, CURRENT_TIMESTAMP)"})
+  @Insert({"INSERT INTO rights(name, rightType, createdDate) VALUES ",
+    "(#{templateName}, #{rightType}, CURRENT_TIMESTAMP)"})
   void insertRight(@Param(value = "templateName") String templateName,
-                   @Param(value = "rightType") RightType rightType,
-                   @Param(value = "description") String description);
+                   @Param(value = "rightType") RightType rightType);
 }

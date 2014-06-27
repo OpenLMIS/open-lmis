@@ -21,47 +21,40 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.Template;
-import org.openlmis.reporting.model.TemplateParameter;
-import org.openlmis.reporting.repository.mapper.TemplateMapper;
+import org.openlmis.reporting.repository.mapper.ReportRightMapper;
 import org.springframework.dao.DataIntegrityViolationException;
-
-import java.util.ArrayList;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
-public class TemplateRepositoryTest {
+public class ReportRightRepositoryTest {
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
   @Mock
-  private TemplateMapper templateMapper;
+  private ReportRightMapper reportRightMapper;
+
   @InjectMocks
-  private TemplateRepository templateRepository;
+  private ReportRightRepository reportRightRepository;
 
   @Test
-  public void shouldInsertReportTemplateWithParameters() throws Exception {
+  public void shouldInsertReportTemplate() throws Exception {
     Template template = new Template();
-    ArrayList<TemplateParameter> templateParameters = new ArrayList<>();
-    TemplateParameter templateParameter1 = new TemplateParameter();
-    templateParameters.add(templateParameter1);
-    template.setParameters(templateParameters);
 
-    templateRepository.insertWithParameters(template);
+    reportRightRepository.insert(template);
 
-    verify(templateMapper).insert(template);
-    verify(templateMapper).insertParameter(templateParameter1);
+    verify(reportRightMapper).insert(template);
   }
 
   @Test
   public void shouldThrowDataExceptionIfReportWithSameNameAlreadyExists() throws Exception {
     Template template = new Template();
-    doThrow(DataIntegrityViolationException.class).when(templateMapper).insert(template);
+    doThrow(DataIntegrityViolationException.class).when(reportRightMapper).insert(template);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("unexpected.exception");
-    templateRepository.insertWithParameters(template);
+    expectedException.expectMessage("report.template.name.already.exists");
+    reportRightRepository.insert(template);
   }
 }

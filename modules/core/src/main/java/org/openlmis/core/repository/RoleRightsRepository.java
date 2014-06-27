@@ -104,7 +104,7 @@ public class RoleRightsRepository {
     return roleRightsMapper.getRightsForUserAndWarehouse(userId, warehouseId);
   }
 
-  public void validateAndInsertRight(String templateName, RightType rightType, String description) {
-    roleRightsMapper.insertRight(templateName, rightType, description);
+  public void insertRight(String templateName, RightType rightType) {
+    roleRightsMapper.insertRight(templateName, rightType);
   }
 }

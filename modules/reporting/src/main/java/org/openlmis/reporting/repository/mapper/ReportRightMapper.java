@@ -11,37 +11,17 @@
 package org.openlmis.reporting.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
 import org.openlmis.reporting.model.Template;
-import org.openlmis.reporting.model.TemplateParameter;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * It maps the Template entity to corresponding representation in database.
  */
 
 @Repository
-public interface TemplateMapper {
+public interface ReportRightMapper {
 
-  @Select("SELECT * FROM templates WHERE id = #{id}")
-  Template getById(Long id);
-
-  @Insert({"INSERT INTO templates (name, data, type, description, createdBy)",
-    "VALUES (#{name}, #{data}, #{type}, #{description}, #{createdBy})"})
-  @Options(useGeneratedKeys = true)
+  //Do not useGeneratedKeys = true
+  @Insert({"INSERT INTO report_rights (templateId, rightName) VALUES (#{id}, #{name})"})
   void insert(Template template);
-
-  @Select("SELECT id, name FROM templates WHERE type = 'Consistency Report' ORDER BY createdDate")
-  List<Template> getAllConsistencyReportTemplates();
-
-  @Select("SELECT * FROM templates WHERE LOWER(name) = LOWER(#{name})")
-  Template getByName(String name);
-
-  @Insert({"INSERT INTO template_parameters(templateId, name, displayName, defaultValue, dataType, description, createdBy)",
-    "VALUES (#{templateId}, #{name}, #{displayName}, #{defaultValue}, #{dataType}, #{description}, #{createdBy})"})
-  @Options(useGeneratedKeys = true)
-  void insertParameter(TemplateParameter parameter);
 }
