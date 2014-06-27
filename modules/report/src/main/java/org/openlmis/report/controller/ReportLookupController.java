@@ -62,8 +62,14 @@ public class ReportLookupController extends BaseController {
 
   @RequestMapping(value="/programs", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getPrograms(){
-      return OpenLmisResponse.response( "programs", this.reportLookupService.getAllPrograms() );
+    return OpenLmisResponse.response( "programs", this.reportLookupService.getAllPrograms() );
   }
+
+  @RequestMapping(value="/user-programs", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getPrograms(HttpServletRequest request){
+    return OpenLmisResponse.response( "programs", this.reportLookupService.getAllPrograms(loggedInUserId(request)) );
+  }
+
   //It Get only programs with regimens
   @RequestMapping(value="/regimenPrograms", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getRegimenPrograms(){

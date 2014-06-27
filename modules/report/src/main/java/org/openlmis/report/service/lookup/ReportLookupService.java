@@ -248,6 +248,10 @@ public class ReportLookupService {
     return programMapper.getAll();
   }
 
+  public List<Program> getAllPrograms(Long userId) {
+    return programMapper.getAll(userId);
+  }
+
   public Program getProgramByCode(String code) {
     return programMapper.getProgramByCode(code);
   }

@@ -68,8 +68,8 @@ app.directive('filterContainer', ['$routeParams', '$location',function ($locatio
 }]);
 
 // now comes the program filter
-app.directive('programFilter', ['ReportPrograms',
-  function (ReportPrograms) {
+app.directive('programFilter', ['ReportUserPrograms',
+  function (ReportUserPrograms) {
     return {
       restrict: 'E',
       require: '^filterContainer',
@@ -80,7 +80,7 @@ app.directive('programFilter', ['ReportPrograms',
         }
 
         scope.$evalAsync(function(){
-          ReportPrograms.get(function (data) {
+          ReportUserPrograms.get(function (data) {
             scope.programs = data.programs;
             scope.programs.unshift({
               'name': '-- Select Programs --'
