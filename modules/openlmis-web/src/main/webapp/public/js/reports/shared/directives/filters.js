@@ -188,8 +188,16 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
 }]);
 
 
-app.directive('zoneFilter', ['TreeGeographicZoneList','$routeParams',
-  function (TreeGeographicZoneList, $routeParams) {
+app.directive('zoneFilter', ['TreeGeographicZoneList','TreeGeographicZoneListByProgram','$routeParams',
+  function (TreeGeographicZoneList, TreeGeographicZoneListByProgram, $routeParams) {
+
+    var onCascadedVarsChanged = function( $scope, newValue){
+      if(!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)){
+          TreeGeographicZoneListByProgram.get($scope.filter.program,function(data){
+          $scope.zones = data.zone;
+        });
+      }
+    }
 
     return {
       restrict: 'E',
@@ -206,6 +214,9 @@ app.directive('zoneFilter', ['TreeGeographicZoneList','$routeParams',
           scope.zones = data.zone;
         });
 
+        scope.$watch('filter.program', function (value) {
+          onCascadedVarsChanged(scope, value);
+        });
       },
       templateUrl: 'filter-zone-template'
     };

@@ -129,6 +129,11 @@ services.factory('FlatGeographicZoneList',function ($resource){
 services.factory('TreeGeographicZoneList',function ($resource){
   return $resource('/reports//geographic-zones/tree.json', {}, {});
 });
+
+services.factory('TreeGeographicZoneListByProgram',function ($resource){
+  return $resource('/reports//geographic-zones/tree-program.json', {}, {});
+});
+
 services.factory('ReportRegimens',function ($resource){
     return $resource('/reports/regiments.json', {}, {}) ;
 });
