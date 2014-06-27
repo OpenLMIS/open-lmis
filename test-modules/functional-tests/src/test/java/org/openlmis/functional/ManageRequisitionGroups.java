@@ -19,7 +19,6 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -681,25 +680,25 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertEquals("Drop off facility", requisitionGroupPage.getDropOffFacilityHeader());
 
     requisitionGroupPage.clickAddNewProgramScheduleRow();
-    List<String> expectedListOfPrograms = asList("--Select Program--", "ESSENTIAL MEDICINES", "HIV", "MALARIA", "TB");
-    List<String> actualListOfPrograms = requisitionGroupPage.getListOfPrograms();
-    assertTrue(actualListOfPrograms.equals(expectedListOfPrograms));
+    assertTrue(requisitionGroupPage.getListOfPrograms().contains("ESSENTIAL MEDICINES"));
+    assertTrue(requisitionGroupPage.getListOfPrograms().contains("HIV"));
+    assertTrue(requisitionGroupPage.getListOfPrograms().contains("MALARIA"));
+    assertTrue(requisitionGroupPage.getListOfPrograms().contains("TB"));
 
-    List<String> expectedListOfSchedules = asList("--Select schedule--", "M-monthly", "Q-quarterly");
-    List<String> actualListOfSchedules = requisitionGroupPage.getListOfSchedules();
-    assertTrue(actualListOfSchedules.equals(expectedListOfSchedules));
+    assertTrue(requisitionGroupPage.getListOfSchedules().contains("M-monthly"));
+    assertTrue(requisitionGroupPage.getListOfSchedules().contains("Q-quarterly"));
 
     requisitionGroupPage.selectProgram("HIV");
     assertFalse(requisitionGroupPage.isAddProgramScheduleEnabled());
     requisitionGroupPage.selectNewSchedule("M-monthly");
     assertTrue(requisitionGroupPage.isAddProgramScheduleEnabled());
     requisitionGroupPage.setNewDirectDelivery();
-//    requisitionGroupPage.clickNewDropOffFacility();
-//    requisitionGroupPage.searchFacility("F10");
-//    testWebDriver.waitForAjax();
-//    requisitionGroupPage.selectFacility(1);
-//    requisitionGroupPage.clickClearNewDropOffFacility();
-//    assertEquals("", requisitionGroupPage.getSelectedDropOffFacility());
+    requisitionGroupPage.clickNewDropOffFacility();
+    requisitionGroupPage.searchFacility("F10");
+    testWebDriver.waitForAjax();
+    requisitionGroupPage.selectFacility(1);
+    requisitionGroupPage.clickClearNewDropOffFacility();
+    assertEquals("", requisitionGroupPage.getSelectedDropOffFacility());
 
     requisitionGroupPage.clickNewDropOffFacility();
     requisitionGroupPage.searchFacility("F10");
@@ -741,9 +740,10 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     assertTrue(requisitionGroupPage.isDirectDeliveryIconDisplay("HIV"));
     assertEquals("F10 - Village Dispensary", requisitionGroupPage.getDropOffFacility("HIV"));
     requisitionGroupPage.clickAddNewProgramScheduleRow();
-    expectedListOfPrograms = asList("--Select Program--", "ESSENTIAL MEDICINES", "MALARIA", "TB");
-    actualListOfPrograms = requisitionGroupPage.getListOfPrograms();
-    assertTrue(actualListOfPrograms.equals(expectedListOfPrograms));
+    assertTrue(requisitionGroupPage.getListOfPrograms().contains("ESSENTIAL MEDICINES"));
+    assertTrue(requisitionGroupPage.getListOfPrograms().contains("MALARIA"));
+    assertTrue(requisitionGroupPage.getListOfPrograms().contains("TB"));
+    assertFalse(requisitionGroupPage.getListOfPrograms().contains("HIV"));
     requisitionGroupPage.clickCancelAddProgramSchedule();
 
     requisitionGroupPage.clickMembersAccordionLink();
@@ -763,9 +763,10 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickManageRequisitionGroupSearchResult(1);
     requisitionGroupPage.clickProgramsScheduleAccordion();
     requisitionGroupPage.clickAddNewProgramScheduleRow();
-    expectedListOfPrograms = asList("--Select Program--", "ESSENTIAL MEDICINES", "MALARIA", "TB");
-    actualListOfPrograms = requisitionGroupPage.getListOfPrograms();
-    assertTrue(actualListOfPrograms.equals(expectedListOfPrograms));
+    assertTrue(requisitionGroupPage.getListOfPrograms().contains("ESSENTIAL MEDICINES"));
+    assertTrue(requisitionGroupPage.getListOfPrograms().contains("MALARIA"));
+    assertTrue(requisitionGroupPage.getListOfPrograms().contains("TB"));
+    assertFalse(requisitionGroupPage.getListOfPrograms().contains("HIV"));
   }
 
   @Test(groups = {"admin"})
@@ -797,6 +798,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickCancelAddProgramSchedule();
 
     requisitionGroupPage.clickRemoveProgramSchedule("HIV");
+    assertFalse(requisitionGroupPage.isProgramDisplayed("HIV"));
     requisitionGroupPage.clickAddNewProgramScheduleRow();
     assertTrue(requisitionGroupPage.getListOfPrograms().contains("HIV"));
     requisitionGroupPage.clickCancelAddProgramSchedule();

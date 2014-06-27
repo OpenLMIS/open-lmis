@@ -183,14 +183,11 @@ public class RequisitionGroupPage extends FilterSearchPage {
   @FindBy(how = ID, using = "newDirectDelivery")
   private static WebElement newDirectDelivery = null;
 
-  @FindBy(how = ID, using = "newDropOffFacility")
-  private static WebElement newDropOffFacility = null;
+  @FindBy(how = ID, using = "addDropOffFacility")
+  private static WebElement addDropOffFacility = null;
 
   @FindBy(how = ID, using = "clearNewDropOffFacility")
   private static WebElement clearNewDropOffFacility = null;
-
-  @FindBy(how = ID, using = "selectedDropOffFacility")
-  private static WebElement selectedDropOffFacility = null;
 
   @FindBy(how = ID, using = "viewHere")
   private static WebElement viewHereLink = null;
@@ -744,8 +741,8 @@ public class RequisitionGroupPage extends FilterSearchPage {
   }
 
   public void clickNewDropOffFacility() {
-    testWebDriver.waitForElementToAppear(newDropOffFacility);
-    newDropOffFacility.click();
+    testWebDriver.waitForElementToAppear(addDropOffFacility);
+    addDropOffFacility.click();
   }
 
   public List<String> getListOfPrograms() {
@@ -759,8 +756,8 @@ public class RequisitionGroupPage extends FilterSearchPage {
   }
 
   public String getSelectedDropOffFacility() {
-    testWebDriver.waitForElementToAppear(selectedDropOffFacility);
-    return selectedDropOffFacility.getText();
+    testWebDriver.waitForElementToAppear(addDropOffFacility);
+    return addDropOffFacility.getText();
   }
 
   public void clickViewHereLink() {
