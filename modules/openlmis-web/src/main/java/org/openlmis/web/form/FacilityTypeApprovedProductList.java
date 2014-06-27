@@ -15,9 +15,7 @@ import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import java.util.ArrayList;
 
 /**
- * FacilityTypeApprovedProduct represents the product approved by the facility type for a particular program. Also defines contract for upload of this
- * mapping. Facility type, program code, product code and maximum months of stock that can be stocked for this product by
- * the facility type is mandatory for upload of such mapping.
+ * This entity represents List of FacilityTypeApprovedProduct.
  */
 public class FacilityTypeApprovedProductList extends ArrayList<FacilityTypeApprovedProduct> {
 

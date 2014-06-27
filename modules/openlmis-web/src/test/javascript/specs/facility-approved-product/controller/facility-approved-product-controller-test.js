@@ -224,13 +224,13 @@ describe("Facility Approved Product", function () {
     });
 
     it('should update facility approved product', function () {
-      spyOn(scope, 'loadProducts');
       spyOn(scope, 'focusSuccessMessageDiv');
       scope.currentPage = 0;
       var successMessage = "Updated successfully";
       scope.program = {"id": 1};
       scope.facilityType = {"id": 2};
-      var facilityApprovedProduct = {
+      var facilityApprovedProduct1 = {
+        id: 1,
         facilityType: {},
         programProduct: {program: {}, product: {}, productCategory: {}},
         maxMonthsOfStock: 30,
@@ -240,18 +240,36 @@ describe("Facility Approved Product", function () {
         previousMinMonthsOfStock: 4,
         previousEop: 124
       };
-      facilityApprovedProduct.underEdit = true;
-      $httpBackend.expectPUT('/facilityApprovedProducts.json', facilityApprovedProduct).respond(200, {"success": successMessage});
+      var facilityApprovedProduct2 = {
+        id: 2,
+        facilityType: {},
+        programProduct: {program: {}, product: {}, productCategory: {}},
+        maxMonthsOfStock: 50,
+        minMonthsOfStock: 60,
+        eop: 180
+      };
+      var updatedFacilityApprovedProduct = {
+        id: 1,
+        facilityType: scope.facilityType,
+        programProduct: {program: scope.program, product: {}, productCategory: {}},
+        maxMonthsOfStock: 30,
+        minMonthsOfStock: 40,
+        eop: 120
+      };
+      scope.facilityApprovedProducts = [facilityApprovedProduct1, facilityApprovedProduct2];
+      facilityApprovedProduct1.underEdit = true;
+      $httpBackend.expectPUT('/facilityApprovedProducts.json', facilityApprovedProduct1).respond(200, {"success": successMessage, "facilityApprovedProduct": updatedFacilityApprovedProduct});
 
-      scope.update(facilityApprovedProduct);
+      scope.update(facilityApprovedProduct1);
 
       $httpBackend.flush();
 
-      expect(facilityApprovedProduct.facilityType).toEqual({"id": 2});
-      expect(facilityApprovedProduct.programProduct.program).toEqual({"id": 1});
-      expect(facilityApprovedProduct.underEdit).toBeFalsy();
+      expect(facilityApprovedProduct1.facilityType).toEqual({"id": 2});
+      expect(facilityApprovedProduct1.programProduct.program).toEqual({"id": 1});
+      expect(facilityApprovedProduct1.underEdit).toBeFalsy();
+      expect(scope.updatedFacilityApprovedProduct).toEqual(updatedFacilityApprovedProduct);
+      expect(scope.facilityApprovedProducts).toEqual([updatedFacilityApprovedProduct, facilityApprovedProduct2]);
       expect(scope.message).toEqual("Updated successfully");
-      expect(scope.loadProducts).toHaveBeenCalledWith(0);
       expect(scope.error).toEqual("");
       expect(scope.focusSuccessMessageDiv).toHaveBeenCalled();
     });

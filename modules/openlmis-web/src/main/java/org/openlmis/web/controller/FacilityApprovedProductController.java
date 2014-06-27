@@ -47,6 +47,7 @@ public class FacilityApprovedProductController extends BaseController {
   public static final String NON_FULL_SUPPLY_PRODUCTS = "nonFullSupplyProducts";
   public static final String FACILITY_APPROVED_PRODUCTS = "facilityApprovedProducts";
   public static final String PAGINATION = "pagination";
+  public static final String FACILITY_TYPE_APPROVED_PRODUCT = "facilityApprovedProduct";
 
   @Autowired
   private FacilityApprovedProductService service;
@@ -103,7 +104,11 @@ public class FacilityApprovedProductController extends BaseController {
     } catch (DataException e) {
       return OpenLmisResponse.error(e, BAD_REQUEST);
     }
-    return OpenLmisResponse.success(messageService.message("message.facility.approved.product.updated.success",
-      facilityTypeApprovedProduct.getProgramProduct().getProduct().getPrimaryName()));
+
+    OpenLmisResponse openLmisResponse = new OpenLmisResponse(FACILITY_TYPE_APPROVED_PRODUCT,
+      facilityTypeApprovedProduct);
+    String successMessage = messageService.message("message.facility.approved.product.updated.success",
+      facilityTypeApprovedProduct.getProgramProduct().getProduct().getPrimaryName());
+    return openLmisResponse.successEntity(successMessage);
   }
 }

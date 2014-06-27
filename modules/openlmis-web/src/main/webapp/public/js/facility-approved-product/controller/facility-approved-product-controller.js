@@ -72,6 +72,14 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
     }
   };
 
+  function updateListToDisplay(updatedFacilityApprovedProduct) {
+    for (var i = 0; i < $scope.facilityApprovedProducts.length; i++) {
+      if ($scope.facilityApprovedProducts[i].id == updatedFacilityApprovedProduct.id) {
+        $scope.facilityApprovedProducts[i] = updatedFacilityApprovedProduct;
+      }
+    }
+  }
+
   $scope.update = function (facilityApprovedProduct) {
     if (isUndefined(facilityApprovedProduct.maxMonthsOfStock)) {
       $scope.error = 'error.correct.highlighted';
@@ -81,10 +89,11 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
     facilityApprovedProduct.programProduct.program = $scope.program;
 
     FacilityTypeApprovedProducts.update({}, facilityApprovedProduct, function (data) {
+      $scope.updatedFacilityApprovedProduct = data.facilityApprovedProduct;
       $scope.message = data.success;
       facilityApprovedProduct.underEdit = false;
-      $scope.loadProducts($scope.currentPage);
       $scope.error = "";
+      updateListToDisplay($scope.updatedFacilityApprovedProduct);
     }, function (data) {
       $scope.error = data.data.error;
     });

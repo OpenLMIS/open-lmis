@@ -39,8 +39,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.web.controller.FacilityApprovedProductController.FACILITY_APPROVED_PRODUCTS;
-import static org.openlmis.web.controller.FacilityApprovedProductController.PAGINATION;
+import static org.openlmis.web.controller.FacilityApprovedProductController.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -76,8 +75,8 @@ public class FacilityApprovedProductControllerTest {
     ArrayList<FacilityTypeApprovedProduct> nonFullSupplyProducts = new ArrayList<>();
     when(service.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId)).thenReturn(
       nonFullSupplyProducts);
-    ResponseEntity<OpenLmisResponse> openLmisResponse =
-      controller.getAllNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+    ResponseEntity<OpenLmisResponse> openLmisResponse = controller.getAllNonFullSupplyProductsByFacilityAndProgram(
+      facilityId, programId);
     verify(service).getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId);
     assertThat((ArrayList<FacilityTypeApprovedProduct>) openLmisResponse.getBody().getData().get(
       FacilityApprovedProductController.NON_FULL_SUPPLY_PRODUCTS), is(nonFullSupplyProducts));
@@ -145,6 +144,8 @@ public class FacilityApprovedProductControllerTest {
 
     ResponseEntity<OpenLmisResponse> response = controller.update(facilityTypeApprovedProduct, request);
 
+    assertThat((FacilityTypeApprovedProduct) response.getBody().getData().get(FACILITY_TYPE_APPROVED_PRODUCT),
+      is(facilityTypeApprovedProduct));
     assertThat(response.getBody().getSuccessMsg(),
       is("Primary Name for facility approved product updated successfully"));
   }
