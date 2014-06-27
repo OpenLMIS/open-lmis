@@ -197,7 +197,7 @@ app.directive('zoneFilter', ['TreeGeographicZoneList','TreeGeographicZoneListByP
           $scope.zones = data.zone;
         });
       }
-    }
+    };
 
     return {
       restrict: 'E',
