@@ -15,24 +15,22 @@ import org.apache.ibatis.type.JdbcType;
 import java.util.Map;
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
- /* Date: 4/11/13
- * Time: 11:34 AM
- */
 public class NonReportingFacilityQueryBuilder {
 
 
 
     public static String getQuery(Map params){
 
-       params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
-       Long userId = (Long) params.get("userId");
+      Long userId = (Long) params.get("userId");
+      params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
 
-        String period           = ((String[])params.get("period"))[0];
-        String zone   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
-        String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
-        String program          = ((String[])params.get("program"))[0];
-        String schedule         = ((String[])params.get("schedule"))[0];
-        return getQueryString(params, program , period , zone, facilityType, schedule, userId);
+
+      String period           = ((String[])params.get("period"))[0];
+      String zone   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
+      String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
+      String program          = ((String[])params.get("program"))[0];
+      String schedule         = ((String[])params.get("schedule"))[0];
+      return getQueryString(params, program , period , zone, facilityType, schedule, userId);
 
     }
 
