@@ -249,7 +249,7 @@ public class ReportLookupService {
   }
 
   public List<Program> getAllPrograms(Long userId) {
-    return programMapper.getAll(userId);
+    return programMapper.getAllForUser(userId);
   }
 
   public Program getProgramByCode(String code) {

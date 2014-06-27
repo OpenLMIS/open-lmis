@@ -193,7 +193,7 @@ app.directive('zoneFilter', ['TreeGeographicZoneList','TreeGeographicZoneListByP
 
     var onCascadedVarsChanged = function( $scope, newValue){
       if(!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)){
-          TreeGeographicZoneListByProgram.get($scope.filter.program,function(data){
+          TreeGeographicZoneListByProgram.get({program: $scope.filter.program},function(data){
           $scope.zones = data.zone;
         });
       }
