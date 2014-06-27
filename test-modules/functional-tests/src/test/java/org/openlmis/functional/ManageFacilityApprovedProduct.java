@@ -390,6 +390,64 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     assertEquals("2 record(s) found", facilityApprovedProductPage.getNRecordsMessage());
   }
 
+  @Test(groups = {"admin"})
+  public void testEditingFacilityTypeApprovedProduct() throws SQLException {
+    setupData();
+    dbWrapper.insertFacilityApprovedProduct("p1", "HIV", "warehouse");
+    dbWrapper.insertFacilityApprovedProduct("p2", "HIV", "warehouse");
+    dbWrapper.insertFacilityApprovedProduct("P3", "HIV", "warehouse");
+    dbWrapper.insertFacilityApprovedProduct("p4", "HIV", "warehouse");
+
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    homePage.navigateToFacilityApprovedProductPage();
+
+    facilityApprovedProductPage.selectProgram("HIV");
+    facilityApprovedProductPage.selectFacilityType("Warehouse");
+    assertTrue(facilityApprovedProductPage.isEditFacilityApprovedProductButtonDisplayed(1));
+    assertTrue(facilityApprovedProductPage.isEditFacilityApprovedProductButtonDisplayed(2));
+    assertTrue(facilityApprovedProductPage.isEditFacilityApprovedProductButtonDisplayed(3));
+    assertTrue(facilityApprovedProductPage.isEditFacilityApprovedProductButtonDisplayed(4));
+
+    facilityApprovedProductPage.clickEditFacilityApprovedProductButton(2);
+    facilityApprovedProductPage.clickEditFacilityApprovedProductButton(1);
+    facilityApprovedProductPage.editMaxMonthsOfStock("0.00", 2);
+    facilityApprovedProductPage.clickCancelButtonForEditProduct(2);
+    assertEquals("3", facilityApprovedProductPage.getMaxMonthsOfStock(2));
+    assertEquals("3", facilityApprovedProductPage.getEditMaxMonthsOfStock(1));
+    assertFalse(facilityApprovedProductPage.isSaveButtonForEditProductDisplayed(2));
+    assertTrue(facilityApprovedProductPage.isEditFacilityApprovedProductButtonDisplayed(2));
+    assertFalse(facilityApprovedProductPage.isCancelButtonForEditProductDisplayed(2));
+    assertTrue(facilityApprovedProductPage.isSaveButtonForEditProductDisplayed(1));
+    assertFalse(facilityApprovedProductPage.isEditFacilityApprovedProductButtonDisplayed(1));
+    assertTrue(facilityApprovedProductPage.isCancelButtonForEditProductDisplayed(1));
+    facilityApprovedProductPage.clickCancelButtonForEditProduct(1);
+    assertEquals("3", facilityApprovedProductPage.getMaxMonthsOfStock(1));
+
+    facilityApprovedProductPage.clickEditFacilityApprovedProductButton(3);
+    facilityApprovedProductPage.clickEditFacilityApprovedProductButton(4);
+    facilityApprovedProductPage.editMaxMonthsOfStock("", 3);
+    facilityApprovedProductPage.editMinMonthsOfStock("", 3);
+    facilityApprovedProductPage.editEop("00.00", 3);
+    facilityApprovedProductPage.editEop("0.", 4);
+    facilityApprovedProductPage.clickSaveButtonForEditProduct(3);
+    assertEquals("Please correct the highlighted fields before submitting", facilityApprovedProductPage.getSaveErrorMessage());
+
+    facilityApprovedProductPage.editMaxMonthsOfStock("99.", 3);
+    facilityApprovedProductPage.clickSaveButtonForEditProduct(3);
+    assertEquals("\"product2\" updated successfully", facilityApprovedProductPage.getSaveSuccessMessage());
+    assertFalse(facilityApprovedProductPage.isSaveButtonForEditProductDisplayed(3));
+    assertTrue(facilityApprovedProductPage.isEditFacilityApprovedProductButtonDisplayed(3));
+    assertEquals("3", facilityApprovedProductPage.getMaxMonthsOfStock(2));
+    assertEquals("99", facilityApprovedProductPage.getMaxMonthsOfStock(3));
+    assertEquals("", facilityApprovedProductPage.getMinMonthsOfStock(3));
+    assertEquals("0", facilityApprovedProductPage.getEop(3));
+    assertEquals("0.", facilityApprovedProductPage.getEditEop(4));
+    assertTrue(facilityApprovedProductPage.isSaveButtonForEditProductDisplayed(4));
+    assertFalse(facilityApprovedProductPage.isEditFacilityApprovedProductButtonDisplayed(4));
+    facilityApprovedProductPage.clickSaveButtonForEditProduct(4);
+    assertEquals("3", facilityApprovedProductPage.getMaxMonthsOfStock(4));
+  }
+
   private void setupData() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_FACILITY_APPROVED_PRODUCT");
     dbWrapper.insertProductCategoryWithDisplayOrder("Antibiotic4", "Antibiotics4", 0);

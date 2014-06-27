@@ -11,6 +11,7 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -18,7 +19,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.openqa.selenium.support.How.ID;
 
@@ -90,9 +90,6 @@ public class FacilityApprovedProductPage extends Page {
   @FindBy(how = ID, using = "noResultMessage")
   private static WebElement noResultMessage = null;
 
-  @FindBy(how = ID, using = "oneResultMessage")
-  private static WebElement oneResultMessage = null;
-
   @FindBy(how = ID, using = "nResultsMessage")
   private static WebElement nResultsMessage = null;
 
@@ -161,6 +158,9 @@ public class FacilityApprovedProductPage extends Page {
 
   @FindBy(how = ID, using = "modalErrorMessage")
   private static WebElement addModalErrorMessage = null;
+
+  @FindBy(how = ID, using = "saveErrorMsgDiv")
+  private static WebElement saveErrorMsg = null;
 
   public FacilityApprovedProductPage(TestWebDriver driver) {
     super(driver);
@@ -422,16 +422,17 @@ public class FacilityApprovedProductPage extends Page {
   }
 
   public boolean isGloballyActive(int rowNumber) {
+    WebElement globalActive;
     try {
-      WebElement GlobalActive = testWebDriver.getElementById("GlobalActive" + (rowNumber - 1));
-      testWebDriver.waitForElementToAppear(GlobalActive);
+      globalActive = testWebDriver.getElementById("GlobalActive" + (rowNumber - 1));
+      testWebDriver.waitForElementToAppear(globalActive);
     } catch (TimeoutException e) {
       return false;
     } catch (NoSuchElementException e) {
       return false;
     }
-    WebElement GlobalActive = testWebDriver.getElementById("GlobalActive" + (rowNumber - 1));
-    return GlobalActive.isDisplayed();
+    globalActive = testWebDriver.getElementById("GlobalActive" + (rowNumber - 1));
+    return globalActive.isDisplayed();
   }
 
   public boolean isActiveAtProgram(int rowNumber) {
@@ -486,7 +487,6 @@ public class FacilityApprovedProductPage extends Page {
     WebElement category = testWebDriver.getElementById("category" + (rowNumber - 1));
     return category.getText();
   }
-
 
   public String getAddFacilityApprovedProductHeader() {
     testWebDriver.waitForElementToAppear(addFacilityApprovedProductHeader);
@@ -657,5 +657,97 @@ public class FacilityApprovedProductPage extends Page {
     String text = type.getText();
     testWebDriver.getElementByXpath("//*[@id='s2id_product']/a/span").click();
     return text;
+  }
+
+  public void clickEditFacilityApprovedProductButton(int rowNumber) {
+    WebElement editButton = testWebDriver.getElementById("editButton" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(editButton);
+    editButton.click();
+  }
+
+  public boolean isEditFacilityApprovedProductButtonDisplayed(int rowNumber) {
+    WebElement editButton;
+    try {
+      editButton = testWebDriver.getElementById("editButton" + (rowNumber - 1));
+      testWebDriver.waitForElementToAppear(editButton);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return editButton.isDisplayed();
+  }
+
+  public void editMaxMonthsOfStock(String maxMonthsInput, int rowNumber) {
+    WebElement maxMonthsOfStock = testWebDriver.getElementById("editMaxMonthsOfStock" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(maxMonthsOfStock);
+    sendKeys(maxMonthsOfStock, maxMonthsInput);
+  }
+
+  public String getEditMaxMonthsOfStock(int rowNumber) {
+    WebElement maxMonthsOfStock = testWebDriver.getElementById("editMaxMonthsOfStock" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(maxMonthsOfStock);
+    return maxMonthsOfStock.getAttribute("value");
+  }
+
+  public void editMinMonthsOfStock(String minMonthsInput, int rowNumber) {
+    WebElement minMonthsOfStock = testWebDriver.getElementById("editMinMonthsOfStock" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(minMonthsOfStock);
+    sendKeys(minMonthsOfStock, minMonthsInput);
+  }
+
+  public void editEop(String eopInput, int rowNumber) {
+    WebElement eop = testWebDriver.getElementById("editEop" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(eop);
+    sendKeys(eop, eopInput);
+  }
+
+  public String getEditEop(int rowNumber) {
+    WebElement eop = testWebDriver.getElementById("editEop" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(eop);
+    return eop.getAttribute("value");
+  }
+
+  public void clickSaveButtonForEditProduct(int rowNumber) {
+    WebElement saveEditButton = testWebDriver.getElementById("save" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(saveEditButton);
+    saveEditButton.click();
+  }
+
+  public boolean isSaveButtonForEditProductDisplayed(int rowNumber) {
+    WebElement saveEditButton;
+    try {
+      saveEditButton = testWebDriver.getElementById("save" + (rowNumber - 1));
+      testWebDriver.waitForElementToAppear(saveEditButton);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return saveEditButton.isDisplayed();
+  }
+
+  public void clickCancelButtonForEditProduct(int rowNumber) {
+    WebElement cancelEditButton = testWebDriver.getElementById("cancel" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(cancelEditButton);
+    cancelEditButton.click();
+  }
+
+  public boolean isCancelButtonForEditProductDisplayed(int rowNumber) {
+    WebElement cancelEditButton;
+    try {
+      cancelEditButton = testWebDriver.getElementById("cancel" + (rowNumber - 1));
+      testWebDriver.waitForElementToAppear(cancelEditButton);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return cancelEditButton.isDisplayed();
+  }
+
+  public String getSaveErrorMessage() {
+    testWebDriver.waitForElementToAppear(saveErrorMsg);
+    return saveErrorMsg.getText();
   }
 }
