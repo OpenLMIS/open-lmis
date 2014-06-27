@@ -47,9 +47,8 @@ public class NonReportingFacilityQueryBuilder {
          INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographiczoneid");
          INNER_JOIN("facility_types ft on ft.id = facilities.typeid");
          INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
-
          INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
-         WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = " + userId+ " and program_id = " + program + ")");
+         WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = cast(" + userId+ " as int4) and program_id = cast(" + program + " as int4))");
          WHERE("facilities.id not in (select r.facilityid from requisitions r where r.status in ('RELEASED','APPROVED') and r.periodid = cast (" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
          writePredicates(program, period, zone, facilityType, schedule);
          ORDER_BY(QueryHelpers.getSortOrder(params, "name"));
@@ -65,15 +64,15 @@ public class NonReportingFacilityQueryBuilder {
          }
 
          if(facilityType != "" && !facilityType.endsWith( "undefined")){
-             WHERE("facilities.typeid = cast(" + facilityType+ " as int4)");
+             WHERE("facilities.typeId = cast(" + facilityType+ " as int4)");
          }
 
          if(program != "" && !program.endsWith("undefined")){
-            WHERE("ps.programid = cast(" + program+ " as int4)");
+            WHERE("ps.programId = cast(" + program+ " as int4)");
          }
 
          if(schedule != "" && !schedule.endsWith("undefined")){
-             WHERE("rgps.scheduleid = cast(" + schedule + " as int4)");
+             WHERE("rgps.scheduleId = cast(" + schedule + " as int4)");
          }
      }
 
