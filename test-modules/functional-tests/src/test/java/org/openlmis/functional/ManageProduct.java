@@ -208,7 +208,7 @@ public class ManageProduct extends TestCaseHelper {
     assertEquals("300/200/600", productPage.getStrength(8));
     assertEquals("P11", productPage.getCode(10));
 
-    verifyCategoryOrderOnPage(asList("anaesthetics", "", "anaesthetics", "", "", "", "", "category3", "", "Antibiotics"));
+    verifyCategoryOrderOnPage(asList("anaesthetics", "", "", "", "", "", "", "category3", "", "Antibiotics"));
     verifyProductNameOrderOnPage(asList("Indinavir 400mg Tablets19", "Indinavir 40mg Tablets8", "Indinavir 400mg Tablets13",
       "Indinavir 400mg Tablets17", "Indinavir 400mg Tablets21", "Indinavir 400mg Tablets4", "Indinavir 400mg Tablets6",
       "Indinavir 400mg Tablets10", "Indinavir 400mg Tablets11", "AIndinavir 400mg Tablets2"));
