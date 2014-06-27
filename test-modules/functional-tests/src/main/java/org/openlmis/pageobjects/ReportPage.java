@@ -82,6 +82,7 @@ public class ReportPage extends RequisitionPage {
 
   public void verifyItemsOnReportUploadScreen() {
     assertTrue("Report Name field missing", reportNameTextField.isDisplayed());
+    //description
     assertTrue("Upload field missing", uploadField.isDisplayed());
     assertTrue("Save button missing", saveButton.isDisplayed());
     assertTrue("Cancel button missing", cancelButton.isDisplayed());

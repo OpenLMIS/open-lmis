@@ -21,8 +21,6 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -31,14 +29,11 @@ public class ManageReport extends TestCaseHelper {
   String reportName, fileName;
   LoginPage loginPage;
 
-  public ManageReport() {
-    reportName = "Test-Report" + getCurrentDateAndTime();
-    fileName = "activefacility.jrxml";
-  }
-
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
+    reportName = "Test-Report";
+    fileName = "OrderRoutingConsistencyReport.jrxml";
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
@@ -46,12 +41,9 @@ public class ManageReport extends TestCaseHelper {
   public void invalidScenariosReports(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
-
     reportPage.clickAddNewButton();
+
     reportPage.verifyItemsOnReportUploadScreen();
-
-    fileName = "invalidActivefacility.jrxml";
-
     reportPage.clickSaveButton();
     reportPage.verifyErrorMessageDivReportName();
     reportPage.verifyErrorMessageDivUploadFile();
@@ -71,7 +63,6 @@ public class ManageReport extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
     reportPage.clickAddNewButton();
-    reportPage.verifyItemsOnReportUploadScreen();
 
     testWebDriver.sleep(1000);
     fileName = "invalidActivefacility.jrxml";
@@ -79,18 +70,15 @@ public class ManageReport extends TestCaseHelper {
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     testWebDriver.sleep(1000);
-    //reportPage.verifyErrorMessageInvalidFile(); --- Flaky
+    //verifyErrorMessageInvalidFile();
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "invalidScenariosReports")
-  public void uploadManageReport(String[] credentials) {
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadValidReport(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
 
     reportPage.clickAddNewButton();
-    reportPage.verifyItemsOnReportUploadScreen();
-
-    fileName = "OrderRoutingConsistencyReport.jrxml";
     reportPage.enterReportName(reportName);
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
@@ -99,14 +87,12 @@ public class ManageReport extends TestCaseHelper {
     reportPage.verifyItemsOnReportListScreen();
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "uploadManageReport")
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyDuplicateReport(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
 
     reportPage.clickAddNewButton();
-    reportPage.verifyItemsOnReportUploadScreen();
-
     reportPage.enterReportName(reportName);
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
@@ -136,19 +122,13 @@ public class ManageReport extends TestCaseHelper {
     reportPage.verifyReportNameInList("Delivery Zones Missing Manage Distribution Role", 7);
   }
 
-  private String getCurrentDateAndTime() {
-    Date dObj = new Date();
-    SimpleDateFormat formatter_date_time = new SimpleDateFormat(
-      "yyyyMMdd-hhmmss");
-    return formatter_date_time.format(dObj);
-  }
-
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws SQLException {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.deleteRowFromTable("templates", "name", reportName);
+    dbWrapper.deleteRowFromTable("rights", "name", reportName);
     dbWrapper.closeConnection();
   }
 
