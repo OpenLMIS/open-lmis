@@ -219,7 +219,7 @@ public class ManageProduct extends TestCaseHelper {
     verifyNextAndLastPageLinksDisabled();
     verifyPreviousAndFirstPageLinksEnabled();
     verifyNumberOfLineItemsVisibleOnPage(2);
-    verifyCategoryOrderOnPage(asList("category3", "category3"));
+    verifyCategoryOrderOnPage(asList("category3", ""));
     verifyProductNameOrderOnPage(asList("Indinavir 400mg Tablets12", "Indinavir 400mg Tablets16"));
     verifyProgramOrderOnPage(asList("MALARIA", "VACCINES"));
 

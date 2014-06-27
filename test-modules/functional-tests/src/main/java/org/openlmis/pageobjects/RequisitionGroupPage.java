@@ -11,6 +11,7 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -18,7 +19,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.openqa.selenium.support.How.ID;
 
@@ -450,8 +450,9 @@ public class RequisitionGroupPage extends FilterSearchPage {
   }
 
   public boolean isMemberFacilityEnableFlagDisplayed(int rowNumber) {
-    WebElement enableFlag = testWebDriver.getElementById("enabledIcon" + (rowNumber - 1));
+    WebElement enableFlag;
     try {
+      enableFlag = testWebDriver.getElementById("enabledIcon" + (rowNumber - 1));
       testWebDriver.waitForElementToAppear(enableFlag);
     } catch (TimeoutException e) {
       return false;
@@ -695,8 +696,9 @@ public class RequisitionGroupPage extends FilterSearchPage {
   }
 
   public boolean isDirectDeliveryIconDisplay(String programName) {
-    WebElement directDeliveryIcon = testWebDriver.getElementById("directDeliverIcon" + programName);
+    WebElement directDeliveryIcon;
     try {
+      directDeliveryIcon = testWebDriver.getElementById("directDeliverIcon" + programName);
       testWebDriver.waitForElementToAppear(directDeliveryIcon);
     } catch (TimeoutException e) {
       return false;
@@ -766,8 +768,9 @@ public class RequisitionGroupPage extends FilterSearchPage {
   }
 
   public boolean isDropOffFacilityDisplay(String programName) {
-    WebElement dropOffFacility = testWebDriver.getElementById("dropOffFacility" + programName);
+    WebElement dropOffFacility;
     try {
+      dropOffFacility = testWebDriver.getElementById("dropOffFacility" + programName);
       testWebDriver.waitForElementToAppear(dropOffFacility);
     } catch (TimeoutException e) {
       return false;
@@ -778,8 +781,9 @@ public class RequisitionGroupPage extends FilterSearchPage {
   }
 
   public boolean isProgramDisplayed(String programName) {
-    WebElement program = testWebDriver.getElementById("programName" + programName);
+    WebElement program;
     try {
+      program = testWebDriver.getElementById("programName" + programName);
       testWebDriver.waitForElementToAppear(program);
     } catch (TimeoutException e) {
       return false;

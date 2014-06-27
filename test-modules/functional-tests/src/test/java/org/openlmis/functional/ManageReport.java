@@ -36,6 +36,9 @@ public class ManageReport extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
+    dbWrapper.deleteRowFromTable("report_rights", "rightName", reportName);
+    dbWrapper.deleteRowFromTable("templates", "name", reportName);
+    dbWrapper.deleteRowFromTable("rights", "name", reportName);
     reportName = "Test-Report";
     fileName = "OrderRoutingConsistencyReport.jrxml";
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
@@ -154,7 +157,7 @@ public class ManageReport extends TestCaseHelper {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
-    dbWrapper.deleteRowFromTable("report_rights", "rightname", reportName);
+    dbWrapper.deleteRowFromTable("report_rights", "rightName", reportName);
     dbWrapper.deleteRowFromTable("templates", "name", reportName);
     dbWrapper.deleteRowFromTable("rights", "name", reportName);
     dbWrapper.closeConnection();

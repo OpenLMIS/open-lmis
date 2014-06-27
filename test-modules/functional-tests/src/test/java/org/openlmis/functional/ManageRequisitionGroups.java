@@ -798,6 +798,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
     requisitionGroupPage.clickCancelAddProgramSchedule();
 
     requisitionGroupPage.clickRemoveProgramSchedule("HIV");
+    testWebDriver.sleep(1000);
     assertFalse(requisitionGroupPage.isProgramDisplayed("HIV"));
     requisitionGroupPage.clickAddNewProgramScheduleRow();
     assertTrue(requisitionGroupPage.getListOfPrograms().contains("HIV"));

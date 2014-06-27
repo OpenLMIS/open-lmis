@@ -410,8 +410,11 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
 
     facilityApprovedProductPage.clickEditFacilityApprovedProductButton(2);
     facilityApprovedProductPage.clickEditFacilityApprovedProductButton(1);
+    testWebDriver.sleep(1000);
     facilityApprovedProductPage.editMaxMonthsOfStock("0.00", 2);
     facilityApprovedProductPage.clickCancelButtonForEditProduct(2);
+    testWebDriver.sleep(1000);
+
     assertEquals("3", facilityApprovedProductPage.getMaxMonthsOfStock(2));
     assertEquals("3", facilityApprovedProductPage.getEditMaxMonthsOfStock(1));
     assertFalse(facilityApprovedProductPage.isSaveButtonForEditProductDisplayed(2));
@@ -420,20 +423,27 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     assertTrue(facilityApprovedProductPage.isSaveButtonForEditProductDisplayed(1));
     assertFalse(facilityApprovedProductPage.isEditFacilityApprovedProductButtonDisplayed(1));
     assertTrue(facilityApprovedProductPage.isCancelButtonForEditProductDisplayed(1));
+
     facilityApprovedProductPage.clickCancelButtonForEditProduct(1);
+    testWebDriver.sleep(1000);
     assertEquals("3", facilityApprovedProductPage.getMaxMonthsOfStock(1));
 
     facilityApprovedProductPage.clickEditFacilityApprovedProductButton(3);
     facilityApprovedProductPage.clickEditFacilityApprovedProductButton(4);
+    testWebDriver.sleep(1000);
     facilityApprovedProductPage.editMaxMonthsOfStock("", 3);
     facilityApprovedProductPage.editMinMonthsOfStock("", 3);
     facilityApprovedProductPage.editEop("00.00", 3);
     facilityApprovedProductPage.editEop("0.", 4);
     facilityApprovedProductPage.clickSaveButtonForEditProduct(3);
+    testWebDriver.sleep(1000);
     assertEquals("Please correct the highlighted fields before submitting", facilityApprovedProductPage.getSaveErrorMessage());
 
     facilityApprovedProductPage.editMaxMonthsOfStock("99.", 3);
+    testWebDriver.sleep(1000);
     facilityApprovedProductPage.clickSaveButtonForEditProduct(3);
+    testWebDriver.waitForAjax();
+
     assertEquals("\"product2\" updated successfully", facilityApprovedProductPage.getSaveSuccessMessage());
     assertFalse(facilityApprovedProductPage.isSaveButtonForEditProductDisplayed(3));
     assertTrue(facilityApprovedProductPage.isEditFacilityApprovedProductButtonDisplayed(3));
@@ -445,7 +455,11 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     assertTrue(facilityApprovedProductPage.isSaveButtonForEditProductDisplayed(4));
     assertFalse(facilityApprovedProductPage.isEditFacilityApprovedProductButtonDisplayed(4));
     facilityApprovedProductPage.clickSaveButtonForEditProduct(4);
+    testWebDriver.waitForAjax();
+
+    assertEquals("\"product3\" updated successfully", facilityApprovedProductPage.getSaveSuccessMessage());
     assertEquals("3", facilityApprovedProductPage.getMaxMonthsOfStock(4));
+    assertEquals("0", facilityApprovedProductPage.getEop(4));
   }
 
   private void setupData() throws SQLException {
