@@ -33,9 +33,9 @@
                             <tbody >
                             <tr ng-repeat="alert in dataRows.alert" >
                                 <td data-title="Alerts">
-                                    <a href="" ng-click="showAlertDetails(alert.detailTable)">{{ alert.staticsValue }}</a>
-                                    {{ alert.description}}
+                                    {{ alert.staticsValue }} {{ alert.description}}
                                 </td>
+                                <td><a href="" ng-click="showAlertDetails(alert.detailTable)" openlmis-message="button.view.detail"></a></td>
                             </tr>
                             </tbody>
                         </table>

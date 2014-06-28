@@ -1,7 +1,7 @@
 /**
  * Created by issa on 4/24/14.
  */
-function SendNotificationController($scope,$timeout,SendNotification,dashboardFiltersHistoryService,geographicZoneTree,programsList,messageService, NotificationAlerts, GetPeriod, formInputValue,RequisitionGroupsBySupervisoryNodeProgramSchedule,userPreferredFilterValues,ReportProgramsBySupervisoryNode, UserSupervisoryNodes,ReportSchedules, ReportPeriods, RequisitionGroupsByProgram,RequisitionGroupsByProgramSchedule,FacilitiesForNotifications, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
+function SendNotificationController($scope,$timeout,SendNotification,dashboardFiltersHistoryService,geographicZoneTree,programsList,messageService, NotificationAlerts, GetPeriod, formInputValue,FacilitiesForNotifications,userPreferredFilterValues,ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -25,12 +25,6 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         $scope.selectedNotification = notification;
     };
 
-    /*UserSupervisoryNodes.get(function (data){
-        $scope.supervisoryNodes = data.supervisoryNodes;
-        if(!isUndefined( $scope.supervisoryNodes)){
-            $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionSelect});
-        }
-    });*/
 
     $scope.zones = geographicZoneTree;
 
@@ -46,6 +40,17 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         $scope.schedules = data.schedules;
         $scope.schedules.unshift({'name': formInputValue.scheduleOptionSelect});
     });
+
+    $scope.loadFacilities = function(){
+        FacilitiesForNotifications.get({zoneId: $scope.filterObject.zoneId}, function(data){
+            $scope.facilities = data.facilities;
+            if($scope.selectedNotification.selectAllFacilities){
+                $scope.selectAllFacilities();
+            }
+
+        });
+
+    };
 
     $scope.sendNotifications = function () {
         $scope.errorMessage = '';
@@ -67,7 +72,8 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
 
             SendNotification.save({},notification, function(data){
                 $scope.error = "";
-                $scope.$parent.message = messageService.get(data.success);
+                $scope.successMessage = messageService.get(data.success);
+               // $scope.$parent.message = messageService.get(data.success);
             });
             return;
         }
@@ -129,48 +135,12 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         $scope.notifications = data.notifications;
     });
 
-   /* $scope.processSupervisoryNodeChange = function(){
-
-        $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId;
-
-        if(isUndefined($scope.formFilter.supervisoryNodeId)){
-         //   $scope.programs = _.filter(programsList, function(program){ return program.name !== formInputValue.programOptionSelect;});
-
-            $scope.programs.unshift({'name': formInputValue.programOptionSelect});
-        }else if(!isUndefined($scope.formFilter.supervisoryNodeId)){
-            ReportProgramsBySupervisoryNode.get({supervisoryNodeId : $scope.filterObject.supervisoryNodeId},function(data){
-                $scope.programs = data.programs;
-                $scope.programs.unshift({'name': formInputValue.programOptionSelect});
-            });
-        }
-        $scope.filterProductsByProgram();
-    };
-*/
     $scope.filterProductsByProgram = function (){
         if(isUndefined($scope.formFilter.programId)){
             return;
         }
         $scope.filterObject.programId = $scope.formFilter.programId;
 
-        if(!isUndefined($scope.formFilter.supervisoryNodeId)){
-            RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
-                {programId : $scope.filterObject.programId,
-                    scheduleId : isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId ,
-                    supervisoryNodeId : $scope.filterObject.supervisoryNodeId
-                },function(data){
-                    $scope.requisitionGroups = data.requisitionGroupList;
-                    if(!isUndefined($scope.requisitionGroups)){
-                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                    }
-                });
-        }else{
-            RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
-                $scope.requisitionGroups = data.requisitionGroupList;
-                if(!isUndefined($scope.requisitionGroups)){
-                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                }
-            });
-        }
     };
 
     $scope.processPeriodFilter = function (){
@@ -186,14 +156,6 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         } else {
             $scope.filterObject.periodId = 0;
         }
-    };
-
-    $scope.processRequisitionFilter = function(){
-        if($scope.formFilter.rgroupId && $scope.formFilter.rgroupId.length > 1) {
-            $scope.formFilter.rgroupId = _.reject($scope.formFilter.rgroupId, function(rgroup){return rgroup === ""; });
-        }
-        $scope.filterObject.rgroupId = $scope.formFilter.rgroupId;
-        $scope.loadFacilities();
     };
 
     $scope.changeSchedule = function(){
@@ -215,28 +177,6 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
 
                 });
             }
-            if(!isUndefined($scope.filterObject.programId)){
-                if(!isUndefined($scope.filterObject.supervisoryNodeId)){
-                    RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
-                        {programId: $scope.filterObject.programId,
-                            scheduleId: $scope.filterObject.scheduleId,
-                            supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function(data){
-                            $scope.requisitionGroups = data.requisitionGroupList;
-                            if(!isUndefined($scope.requisitionGroups)){
-                                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                            }
-
-                        });
-                }else{
-                    RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
-                        $scope.requisitionGroups = data.requisitionGroupList;
-                        if(!isUndefined($scope.requisitionGroups)){
-                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                        }
-                    });
-                }
-
-            }
         }
 
         $scope.loadFacilities();
@@ -252,21 +192,9 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         $scope.changeSchedule();
 
     };
-    $scope.loadFacilities = function(){
-        FacilitiesForNotifications.get({
-            supervisoryNodeId: isUndefined($scope.filterObject.supervisoryNodeId) ? 0 : $scope.filterObject.supervisoryNodeId,
-            programId: isUndefined($scope.filterObject.programId)? 0 : $scope.filterObject.programId ,
-            scheduleId: isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId,
-            rgroupId: $scope.filterObject.rgroupId
-        }, function(data){
-
-            $scope.facilities = data.facilities;
-            if($scope.selectedNotification.selectAllFacilities){
-                $scope.selectAllFacilities();
-            }
-
-        });
-
+    $scope.processZoneFilter = function(){
+        $scope.filterObject.zoneId = $scope.formFilter.zoneId;
+        $scope.loadFacilities();
     };
 
     $scope.selectAllFacilities = function(){
@@ -296,8 +224,6 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         if(isUndefined(filterHistory)){
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
-                $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
-               // $scope.processSupervisoryNodeChange();
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
@@ -313,7 +239,7 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
                 }
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
 
-                $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
+                $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
 
                 $scope.registerWatches();
 
@@ -322,12 +248,12 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
             }
         }else{
 
-            $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
-           // $scope.processSupervisoryNodeChange();
             $scope.registerWatches();
             $scope.formFilter = $scope.filterObject = filterHistory;
 
         }
+
+        alert('zoneId '+$scope.formFilter.zoneId);
 
     });
     $scope.registerWatches = function(){

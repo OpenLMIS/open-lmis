@@ -318,9 +318,9 @@ public List<Program>getAllProgramsWithBudgeting(){
       return facilityReportMapper.getFacilitiesByGeographicZoneTree(userId,zoneId);
   }
 
-  public List<HashMap> getFacilitiesForNotifications(Long userId, Long supervisoryNodeId, String requisitionGroup, Long program, Long schedule) {
+  public List<HashMap> getFacilitiesForNotifications(Long userId, Long zoneId) {
 
-      return facilityReportMapper.getFacilitiesForNotifications(userId,supervisoryNodeId, requisitionGroup, program, schedule);
+      return facilityReportMapper.getFacilitiesForNotifications(userId, zoneId);
 
   }
 

@@ -40,8 +40,8 @@ public class DashboardLookupService {
         return dashboardMapper.getOrderFillRate(periodId, facilityId, programId);
     }
 
-    public List<ShipmentLeadTime> getShipmentLeadTime(Long periodId, Long programId, List<Long> rgroupId){
-        return dashboardMapper.getShipmentLeadTime(periodId,programId, getCommaSeparatedIds(rgroupId));
+    public List<ShipmentLeadTime> getShipmentLeadTime(Long userId,Long periodId, Long programId, Long zoneId){
+        return dashboardMapper.getShipmentLeadTime(userId,periodId,programId, zoneId);
 
     }
 
@@ -54,12 +54,12 @@ public class DashboardLookupService {
 
     }
 
-    public List<StockOut> getStockOutFacilities(Long periodId, Long programId, Long productId, List<Long> requisitionGroupId){
-        return dashboardMapper.getStockOutFacilities(periodId, programId, productId, getCommaSeparatedIds(requisitionGroupId));
+    public List<StockOut> getStockOutFacilities(Long userId, Long periodId, Long programId, Long productId, Long zoneId){
+        return dashboardMapper.getStockOutFacilities(userId, periodId, programId, productId, zoneId);
 
     }
-    public List<StockOut> getStockOutFacilitiesByRequisitionGroup(Long periodId, Long programId, Long productId, Long requisitionGroupId){
-        return dashboardMapper.getStockOutFacilitiesForRequisitionGroup(periodId, programId, productId, requisitionGroupId);
+    public List<StockOut> getStockOutFacilitiesByGeographicZoneFilter(Long userId, Long periodId, Long programId, Long productId, Long requisitionGroupId){
+        return dashboardMapper.getStockOutFacilitiesForGeographicZone(userId, periodId, programId, productId, requisitionGroupId);
 
     }
     public List<AlertSummary> getAlerts(Long userId, Long programId, Long periodId, Long zoneId){

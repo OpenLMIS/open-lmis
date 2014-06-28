@@ -285,15 +285,12 @@ public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
         return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZoneTree(loggedInUserId(request),zoneId));
     }
 
-    @RequestMapping(value = "notifications/facilities/supervisory-node/{supervisoryNodeId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value = "notification/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilitiesForNotifications(
-            @PathVariable("supervisoryNodeId") Long supervisoryNodeId,
-            @PathVariable("programId") Long programId,
-            @PathVariable("scheduleId") Long scheduleId,
-            @RequestParam("rgroupId") List<Long> requisitionGroupId,
+            @RequestParam("zoneId") Long zoneId,
             HttpServletRequest request
     ) {
-        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesForNotifications(loggedInUserId(request),supervisoryNodeId, getCommaSeparatedIds(requisitionGroupId),programId,scheduleId));
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesForNotifications(loggedInUserId(request),zoneId));
     }
 
   @RequestMapping(value = "/user/geographic-zones/tree", method = GET, headers = ACCEPT_JSON)

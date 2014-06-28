@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function StockedOutDetailController($scope,$routeParams,StockedOutFacilitiesByRequisitionGroup) {
+function StockedOutDetailController($scope,$routeParams,StockedOutFacilitiesByDistrict) {
 
     $scope.$parent.currentTab = 'DISTRICT-STOCK-OUT-DETAIL';
 
@@ -14,12 +14,12 @@ function StockedOutDetailController($scope,$routeParams,StockedOutFacilitiesByRe
               if(!isUndefined($routeParams.programId) &&
                 !isUndefined($routeParams.periodId) &&
                 !isUndefined($routeParams.productId) &&
-                !isUndefined($routeParams.rgroupId)){
-                StockedOutFacilitiesByRequisitionGroup.get({
+                !isUndefined($routeParams.zoneId)){
+                  StockedOutFacilitiesByDistrict.get({
                     periodId: $routeParams.periodId,
                     programId: $routeParams.programId,
                     productId: $routeParams.productId,
-                    rgroupId: $routeParams.rgroupId
+                    zoneId: $routeParams.zoneId
                 },function(stockData){
                     $scope.totalStockOuts = 0;
                     if(!isUndefined(stockData.stockOut)){

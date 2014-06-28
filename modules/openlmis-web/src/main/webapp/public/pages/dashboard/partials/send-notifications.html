@@ -39,6 +39,8 @@
                     <td>No data to show under selected filters</td>
                 </tr>
             </table>
+            <div class="alert alert-error" id="sendSuccessMsgDiv" openlmis-message="errorMessage" ng-show="errorMessage"></div>
+            <div class="alert alert-error" id="successMsgDiv" openlmis-message="successMessage" ng-show="successMessage"></div>
             <input type="button" ng-click="sendNotifications()" openlmis-message="button.send" class="btn btn-primary btn-small pull-right" ng-show="facilities.length > 0"/>
 
             <table ng-show="facilities.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams" >
@@ -54,7 +56,7 @@
                 </thead>
                 <tbody >
                 <tr ng-repeat="row in facilities">
-                    <td><input type="checkbox" ng-model="row.selected" ng-change="facilitySelectChange(row.selected)"/></td>
+                    <td><input type="checkbox" ng-model="row.selected" ng-change="facilitySelectChangefacilitySelectChange(row.selected)"/></td>
                     <td data-title="'Facility Code'" style="width:150px" sortable="code" >{{ row.code }}</td>
                     <td data-title="'Facility Name'" style="width:30%" sortable="name">{{ row.name }}</td>
                     <td data-title="'Phone Number'" style="width:30%" sortable="name">{{ row.phonenumber }}</td>
@@ -68,4 +70,3 @@
     </div>
 
 </div>
-<div class="alert alert-error" id="sendSuccessMsgDiv" openlmis-message="errorMessage" ng-show="errorMessage"></div>

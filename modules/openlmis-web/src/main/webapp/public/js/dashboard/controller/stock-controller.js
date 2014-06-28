@@ -60,7 +60,6 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
 
         if(isUndefined($scope.formFilter.programId)){
             $scope.products = null;
-            $scope.requisitionGroups  = null;
             $scope.resetStockingData();
             return;
         }
@@ -70,26 +69,6 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
             $scope.products = data.productList;
         });
 
-        /*if(!isUndefined($scope.formFilter.supervisoryNodeId)){
-            RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
-                {programId : $scope.filterObject.programId,
-                    scheduleId : isUndefined($scope.filterObject.scheduleId) ? 0 : $scope.filterObject.scheduleId ,
-                    supervisoryNodeId : $scope.filterObject.supervisoryNodeId
-                },function(data){
-                    $scope.requisitionGroups = data.requisitionGroupList;
-                    if(!isUndefined($scope.requisitionGroups)){
-                        $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                    }
-                });
-        }else{
-            RequisitionGroupsByProgram.get({program: $scope.filterObject.programId }, function(data){
-                $scope.requisitionGroups = data.requisitionGroupList;
-                if(!isUndefined($scope.requisitionGroups)){
-                    $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                }
-            });
-        }
-*/
     };
 
     $scope.processProductsFilter = function (){
@@ -118,28 +97,7 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
 
                 });
             }
-         /*   if(!isUndefined($scope.filterObject.programId)){
-                if(!isUndefined($scope.filterObject.supervisoryNodeId)){
-                    RequisitionGroupsBySupervisoryNodeProgramSchedule.get(
-                        {programId: $scope.filterObject.programId,
-                            scheduleId: $scope.filterObject.scheduleId,
-                            supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function(data){
-                            $scope.requisitionGroups = data.requisitionGroupList;
-                            if(!isUndefined($scope.requisitionGroups)){
-                                $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                            }
 
-                        });
-                }else{
-                    RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
-                        $scope.requisitionGroups = data.requisitionGroupList;
-                        if(!isUndefined($scope.requisitionGroups)){
-                            $scope.requisitionGroups.unshift({'name':formInputValue.requisitionOptionAll});
-                        }
-                    });
-                }
-
-            }*/
         }
 
         $scope.loadStockingData();
@@ -187,6 +145,7 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
                 productListId: $scope.filterObject.productIdList
             },function (data){
                 $scope.stockingList = data.stocking;
+               // alert('stocking '+JSON.stringify(data.stocking));
 
                 if($scope.formFilter.status && $scope.formFilter.status !== -1){
 
@@ -196,8 +155,6 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
                     }
                 }
                 $scope.stockByProductAndStock = groupStockingByProductAndStock($scope.stockingList);
-
-                //alert('stocking '+JSON.stringify($scope.stockByProductAndStock))
 
             });
         }else{
@@ -233,34 +190,12 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
         return groupedByProductAndStocking;
     };
 
-    /*$scope.processSupervisoryNodeChange = function(){
-
-        $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId;
-
-        if(isUndefined($scope.filterObject.supervisoryNodeId)){
-            $scope.programs = _.filter(programsList, function(program){ return program.name !== formInputValue.programOptionSelect;});
-            $scope.programs.unshift({'name': formInputValue.programOptionSelect});
-
-        }else if(!isUndefined($scope.filterObject.supervisoryNodeId)){
-            ReportProgramsBySupervisoryNode.get({supervisoryNodeId : $scope.filterObject.supervisoryNodeId} ,function(data){
-                    $scope.programs = data.programs;
-                    $scope.programs.unshift({'name': formInputValue.programOptionSelect});
-                });
-        }
-
-        $scope.filterProductsByProgram();
-
-    };*/
-
-    /*$scope.processRequisitionFilter = function(){
-        if($scope.formFilter.rgroupId && $scope.formFilter.rgroupId.length > 1) {
-            $scope.formFilter.rgroupId = _.reject($scope.formFilter.rgroupId, function(rgroup){return rgroup === ""; });
-        }
-
-        $scope.filterObject.rgroupId = $scope.formFilter.rgroupId;
+    $scope.processZoneFilter = function(){
+        $scope.filterObject.zoneId = $scope.formFilter.zoneId;
         $scope.loadStockingData();
     };
-*/
+
+
     $scope.$on('$viewContentLoaded', function () {
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
@@ -268,9 +203,6 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
 
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
-
-                $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
-                //$scope.processSupervisoryNodeChange();
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
@@ -287,7 +219,7 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
                 }
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
 
-                $scope.filterObject.rgroupId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_REQUISITION_GROUP];
+                $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
                 $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
 
                 $scope.registerWatches();
@@ -299,16 +231,13 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
         }else if(!_.isEmpty($routeParams)){
             $scope.alertsPanel.openPanel = false;
 
-            $scope.formFilter.supervisoryNodeId = $routeParams.supervisoryNodeId;
-            //$scope.processSupervisoryNodeChange();
             $scope.registerWatches();
             $scope.formFilter = $scope.filterObject = $routeParams;
             $scope.formFilter.productIdList = $scope.filterObject.productIdList = [$routeParams.productId];
 
             return;
         }else{
-            $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
-            //$scope.processSupervisoryNodeChange();
+
             $scope.registerWatches();
 
             $scope.formFilter = $scope.filterObject = filterHistory;

@@ -81,6 +81,11 @@ function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryServi
 
     };
 
+    $scope.processZoneFilter = function(){
+        $scope.filterObject.zoneId = $scope.formFilter.zoneId;
+        $scope.getShipmentLeadTimeData();
+    };
+
 
     $scope.loadFacilitiesByRequisition = function(){
         if ($scope.formFilter.rgroupId == "All") {

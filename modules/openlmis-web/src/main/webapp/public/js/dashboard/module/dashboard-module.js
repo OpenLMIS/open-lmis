@@ -16,8 +16,8 @@ var dashboard = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.boots
         when('/stock', {controller: StockController, templateUrl: 'partials/stock.html', resolve : ResolveDashboardFormData }).
         when('/leadTime', {controller: ShipmentLeadTimeController, templateUrl: 'partials/shipment-lead-time.html', resolve : ResolveDashboardFormData }).
         when('/stock-out', {controller: StockedOutController, templateUrl: 'partials/stocked-out.html', resolve : ResolveDashboardFormData }).
-        when('/requisition-group-stock-out/:programId/:periodId/:rgroupId/:productId', {controller: RequisitionGroupStockedOutController, templateUrl: 'partials/requisition-group-stocked-out.html', resolve : ResolveDashboardFormData }).
-        when('/stock-out-detail/:programId/:periodId/:rgroupId/:productId', {controller: StockedOutDetailController, templateUrl: 'partials/stocked-out-detail.html', resolve : ResolveDashboardFormData }).
+        when('/district-stock-out/:programId/:periodId/:zoneId/:productId', {controller: DistrictStockedOutController, templateUrl: 'partials/requisition-group-stocked-out.html', resolve : ResolveDashboardFormData }).
+        when('/stock-out-detail/:programId/:periodId/:zoneId/:productId', {controller: StockedOutDetailController, templateUrl: 'partials/stocked-out-detail.html', resolve : ResolveDashboardFormData }).
         when('/notifications/:programId/:periodId/:zoneId/:productId/:detailTable', {controller: NotificationsDetailController, templateUrl: 'partials/notifications-detail.html', resolve : ResolveDashboardFormData }).
         when('/notifications/:programId/:periodId/:zoneId/:detailTable', {controller: NotificationsDetailController, templateUrl: 'partials/notifications-detail.html', resolve : ResolveDashboardFormData }).
 

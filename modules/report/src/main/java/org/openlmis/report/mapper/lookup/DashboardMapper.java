@@ -25,23 +25,23 @@ public interface DashboardMapper {
     @Select("select order_fill_rate as fillRate from dw_order_fill_rate_vw where programid = #{programId} and periodid = #{periodId} and facilityid = #{facilityId}")
     OrderFillRate getOrderFillRate(@Param("periodId")  Long periodId, @Param("facilityId")  Long facilityId, @Param("programId") Long programId);
 
-    @Select("SELECT dw_orders.programid, dw_orders.periodid,\n" +
-            "  facilities.name,facilities.code,dw_orders.facilityid,\n" +
-            "  sum(date_part('day',age(authorizeddate,submitteddate))) AS subToAuth,\n" +
-            "  sum(date_part('day',age(inapprovaldate,authorizeddate))) AS authToInApproval,\n" +
-            "  sum(date_part('day',age(approveddate,inapprovaldate))) AS inApprovalToApproved,\n" +
-            "  sum(date_part('day',age(releaseddate,approveddate))) AS approvedToReleased\n" +
-            "   FROM dw_orders\n" +
-            "   JOIN facilities ON facilities.id = dw_orders.facilityid\n" +
-            "   INNER JOIN requisition_group_program_schedules rgp ON rgp.programid = dw_orders.programId and rgp.requisitionGroupId = dw_orders.requisitionGroupId\n" +
-            "   INNER JOIN requisition_group_members rgm ON dw_orders.facilityid = rgm.facilityid AND dw_orders.requisitiongroupid = rgm.requisitiongroupid\n" +
-            "   WHERE dw_orders.status::text = 'RELEASED'::character varying::text\n" +
-            "   AND dw_orders.programid = #{programId} \n" +
-            "   AND dw_orders.periodid = #{periodId}\n" +
-            "   AND CASE WHEN #{rgroupId}='{}' THEN dw_orders.requisitionGroupId = dw_orders.requisitionGroupId ELSE dw_orders.requisitionGroupId = ANY(#{rgroupId}::int[]) END\n" +
-            "  GROUP BY dw_orders.programid,  dw_orders.periodid, facilities.name, facilities.code, dw_orders.facilityid\n" +
-            " ORDER BY dw_orders.programid,  dw_orders.periodid, facilities.name, facilities.code, dw_orders.facilityid;\n")
-    List<ShipmentLeadTime> getShipmentLeadTime(@Param("periodId")  Long periodId, @Param("programId") Long programId, @Param("rgroupId") String requisitionGroupId);
+    @Select("WITH t as (\n" +
+            "SELECT distinct dw_orders.programid, dw_orders.periodid,\n" +
+            " facilities.name,facilities.code,dw_orders.facilityid,submitteddate,authorizeddate,inapprovaldate,approveddate,releaseddate\n" +
+            "FROM dw_orders\n" +
+            "JOIN facilities ON facilities.id = dw_orders.facilityid\n" +
+            "WHERE dw_orders.status::text = 'RELEASED'::character varying::text\n" +
+            "AND dw_orders.programid = #{programId} \n" +
+            "AND dw_orders.periodid = #{periodId}\n" +
+            "AND dw_orders.geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
+            ")\n" +
+            "SELECT programid,periodid,name,code,sum(date_part('day',age(authorizeddate,submitteddate))) AS subToAuth,\n" +
+            "sum(date_part('day',age(inapprovaldate,authorizeddate))) AS authToInApproval,\n" +
+            "sum(date_part('day',age(approveddate,inapprovaldate))) AS inApprovalToApproved,\n" +
+            "sum(date_part('day',age(releaseddate,approveddate))) AS approvedToReleased\n" +
+            "FROM t \n" +
+            "GROUP BY programid,periodid, name, code")
+    List<ShipmentLeadTime> getShipmentLeadTime(@Param("userId") Long userId, @Param("periodId")  Long periodId, @Param("programId") Long programId, @Param("zoneId") Long zoneId);
 
    @Select("SELECT s.programid, s.periodid, s.productid, s.product,\n" +
            "COALESCE(MAX(CASE WHEN s.stocking = 'A' THEN s.stockingStat END),0) AS adequatelyStocked,\n" +
@@ -66,29 +66,27 @@ public interface DashboardMapper {
 
    List<StockingInfo> getStockEfficiencyDetailData(@Param("userId") Long userId, @Param("periodId")  Long periodId, @Param("programId") Long programId ,@Param("zoneId") Long zoneId, @Param("products") String productIds);
 
-   @Select("select d.requisitionGroupId,d.programId,d.periodId,d.productId,d.requisitionGroupName as location,count(*) totalStockOut\n" +
+   @Select("select d.programId,d.periodId,d.productId, d.geographicZoneId, d.geographiczonename as location, count(*) totalStockOut\n" +
            "from dw_orders d \n" +
-           "INNER JOIN requisition_group_program_schedules rgs ON rgs.requisitionGroupId = d.requisitionGroupId and rgs.programId = d.programId \n"+
            "where d.stockedOutInPast=true \n" +
            "and d.programId = #{programId} \n" +
            "and d.periodId = #{periodId} \n" +
            "and d.productId = #{productId}\n" +
-           "and CASE WHEN #{rgroupId} = '{}' THEN d.requisitionGroupId = d.requisitionGroupId ELSE d.requisitionGroupId = ANY(#{rgroupId}::int[]) END \n" +
-           "group by d.requisitionGroupId,d.programId,d.periodId,d.productId,d.requisitionGroupName \n" +
-           "order by d.requisitionGroupId,d.programId,d.periodId,d.productId,d.requisitionGroupName ")
+           "AND d.geographiczoneId in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
+           "group by d.programId,d.periodId,d.productId,d.geographicZoneId,d.geographiczonename \n" +
+           "order by d.programId,d.periodId,d.productId,d.geographicZoneId, d.geographiczonename")
 
-   List<StockOut> getStockOutFacilities(@Param("periodId")  Long periodId, @Param("programId") Long programId , @Param("productId") Long productId, @Param("rgroupId") String requisitionGroupId);
+   List<StockOut> getStockOutFacilities(@Param("userId") Long userId, @Param("periodId")  Long periodId, @Param("programId") Long programId , @Param("productId") Long productId, @Param("zoneId") Long zoneId);
 
-   @Select("select d.facilityId,d.facilityCode ,d.facilityName,d.requisitionGroupId,d.programId,d.periodId,d.productId,d.productFullName as product, d.suppliedInPast,d.requisitionGroupName as location,d.mosSuppliedInPast \n" +
-           "from dw_orders d \n" +
-           "INNER JOIN requisition_group_program_schedules rgs ON rgs.requisitionGroupId = d.requisitionGroupId and rgs.programId = d.programId \n"+
-           "where d.stockedOutInPast=true \n" +
-           "and  d.programId = #{programId} \n" +
-           "and d.periodId = #{periodId} \n" +
+   @Select("select d.facilityId,d.facilityCode ,d.facilityName,d.programId,d.periodId,d.productId,d.productFullName as product, d.suppliedInPast,d.geographiczonename as location,d.mosSuppliedInPast \n" +
+           "from dw_orders d\n" +
+           "where d.stockedOutInPast=true\n" +
+           "and  d.programId = #{programId}\n" +
+           "and d.periodId = #{periodId}\n" +
            "and d.productId = #{productId}\n" +
-           "and d.requisitionGroupId = #{rgroupId} ")
+           "and d.geographiczoneid = #{zoneId} and d.geographiczoneid in (select geographiczoneid from vw_user_geographic_zones where userid = #{userId} ) ")
 
-    List<StockOut> getStockOutFacilitiesForRequisitionGroup(@Param("periodId")  Long periodId, @Param("programId") Long programId , @Param("productId") Long productId, @Param("rgroupId") Long requisitionGroupId);
+    List<StockOut> getStockOutFacilitiesForGeographicZone(@Param("userId") Long userId, @Param("periodId") Long periodId, @Param("programId") Long programId, @Param("productId") Long productId, @Param("zoneId") Long zoneId);
     @Select("SELECT  s.programId,s.periodId, sum (statics_value) staticsValue ,max(s.description) description,max(alerttype) alerttype,max(display_section) displaySection, max(detail_table) detailTable, max(sms_msg_template_key) smsMessageTemplateKey, max(email_msg_template_key) emailMessageTemplateKey\n" +
             "FROM alert_summary s\n" +
             "JOIN alerts a on s.alertTypeId = a.alertType\n" +
@@ -141,33 +139,42 @@ public interface DashboardMapper {
     @Select("select date_Part('year',startdate) from processing_periods where id = #{id}")
     public String getYearOfPeriodById(@Param("id")Long id);
 
-    @Select("WITH reporting as (select fn_get_reporting_status_by_facilityid_programid_and_periodid(f.id,s.programid,pp.id) status, f.*\n" +
-            "from facilities f\n" +
-            "join geographic_zones gz on gz.id = f.geographiczoneid\n" +
-            "join requisition_group_members m on f.id = m.facilityId\n" +
-            "join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
-            "join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
-            "where gz.id in  (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
-            "AND f.enabled = true\n" +
-            "order by status)\n" +
-            "select status, count(*) total\n" +
-            "from reporting\n" +
-            "group by status")
+    @Select("WITH reportingPerf as(\n" +
+            "select distinct dw.reporting AS status,uf.facilityid,uf.facilityname,uf.geographiczonename,\n" +
+            "(select count(*) > 0 from users where users.active = true and users.facilityId = uf.facilityid) as hasContacts\n" +
+            "from vw_user_facilities uf\n" +
+            "join dw_orders dw on dw.facilityid = uf.facilityid\n" +
+            "where uf.geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
+            "and dw.programid = #{programId} and dw.periodid= #{periodId} and uf.userid = #{userId}\n" +
+            "UNION ALL\n" +
+            "select 'N' AS status, facilityid,facilityname,geographiczonename,\n" +
+            "(select count(*) > 0 from users where users.active = true and users.facilityId = vw_user_facilities.facilityid) as hasContacts\n" +
+            "from vw_user_facilities \n" +
+            "where facilityid not in (select facilityid from dw_orders where programid = #{programId} and periodid = #{periodId} \n" +
+            "and geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children( #{userId}::int,#{zoneId}::int)))\n" +
+            "and userid =  #{userId} and  geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children( #{userId}::int,#{zoneId}::int)))\n" +
+            "SELECT status, count(*) as total\n" +
+            "FROM reportingPerf\n" +
+            "GROUP BY status ")
     List<HashMap> getReportingPerformance(@Param("userId") Long userId,@Param("periodId")  Long periodId, @Param("programId") Long programId, @Param("zoneId") Long zoneId);
 
-    @Select("with t as (select fn_get_reporting_status_by_facilityid_programid_and_periodid(f.id,s.programid,pp.id) as status, gz.name as district, (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, f.*\n" +
-            "from facilities f\n" +
-            "join geographic_zones gz on gz.id = f.geographicZoneId\n" +
-            "join requisition_group_members m on f.id = m.facilityId\n" +
-            "join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
-            "join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
-            "where \n" +
-            " gz.id in  (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
-            "  AND f.enabled = true\n" +
-            " order by status)\n" +
-            " select * \n" +
-            " from t\n" +
-            " where status = #{status}")
+    @Select("WITH reportingPerf as(\n" +
+            "select distinct dw.reporting AS status,uf.facilityid,uf.facilityname as name,uf.geographiczonename as district,\n" +
+            "(select count(*) > 0 from users where users.active = true and users.facilityId = uf.facilityid) as hasContacts\n" +
+            "from vw_user_facilities uf\n" +
+            "join dw_orders dw on dw.facilityid = uf.facilityid\n" +
+            "where uf.geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
+            "and dw.programid = #{programId} and dw.periodid= #{periodId} and uf.userid = #{userId}\n" +
+            "UNION ALL\n" +
+            "select 'N' AS status, facilityid,facilityname,geographiczonename,\n" +
+            "(select count(*) > 0 from users where users.active = true and users.facilityId = vw_user_facilities.facilityid) as hasContacts\n" +
+            "from vw_user_facilities \n" +
+            "where facilityid not in (select facilityid from dw_orders where programid = #{programId} and periodid = #{periodId} \n" +
+            "and geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children( #{userId}::int,#{zoneId}::int)))\n" +
+            "and userid =  #{userId} and  geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children( #{userId}::int,#{zoneId}::int)))\n" +
+            "SELECT * \n" +
+            "FROM reportingPerf\n" +
+            "WHERE status = #{status}")
     List<ReportingPerformance> getReportingPerformanceDetail(@Param("userId") Long userId, @Param("periodId") Long periodId, @Param("programId") Long programId, @Param("zoneId") Long zoneId, @Param("status") String status);
 
 }

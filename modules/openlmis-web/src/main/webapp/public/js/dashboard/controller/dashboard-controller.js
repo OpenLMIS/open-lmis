@@ -380,7 +380,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
             },
             tooltip: true,
             tooltipOpts: {
-                content: "%p.0%, %s",
+                content: getTooltip, //() "%p.0%, %s",
                 shifts: {
                     x: 20,
                     y: 0
@@ -651,6 +651,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     $scope.multiBarsData =[];
 
      function getTooltip(label, xval, yval, flotItem){
+         //alert('tooltip called '+label+', '+ xval+','+ yval+','+ JSON.stringify(flotItem))
 
          return flotItem.series.xaxis.ticks[xval].label+' '+yval+' '+'facilities'+' ' +label;
      }
@@ -663,8 +664,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                 var date = new Date();
                 //$scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
                // $scope.processSupervisoryNodeChange();
-
-                alert('preferred filter '+JSON.stringify(userPreferredFilterValues))
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
 
@@ -692,7 +691,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
             }
         }else{
 
-            $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
+           // $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
            // $scope.processSupervisoryNodeChange();
             $scope.registerWatches();
             $scope.formFilter = $scope.filterObject = filterHistory;

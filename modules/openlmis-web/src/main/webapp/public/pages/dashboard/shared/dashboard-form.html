@@ -90,7 +90,7 @@
 
                         <div class="form-fields">
                             <select class="input-large" ng-change="processZoneFilter();" ng-model="formFilter.zoneId">
-                                <option selected="selected" value="{{zones.id}}">-- National --</option>
+                                <option selected="selected" value="{{zones.id}}" ng-model="formFilter.zoneId">-- National --</option>
                                 <optgroup ng-repeat="value in zones.children"  label="{{value.name}}">
                                     <option value="{{value.id}}"><b class="green">All of {{value.name}}</b></option>
 

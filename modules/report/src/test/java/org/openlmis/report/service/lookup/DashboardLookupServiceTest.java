@@ -104,9 +104,9 @@ public class DashboardLookupServiceTest {
 
     @Test
     public void shouldReturnStockOutFacilitiesByRequisitionGroup() throws Exception {
-        when(mapper.getStockOutFacilitiesForRequisitionGroup(1L,1L,1L,1L)).thenReturn(null);
-        assertThat(lookupService.getStockOutFacilitiesByRequisitionGroup(1L,1L,1L,1L),is(nullValue()));
-        verify(mapper).getStockOutFacilitiesForRequisitionGroup(1L,1L,1L,1L);
+        when(mapper.getStockOutFacilitiesForGeographicZone(1L, 1L, 1L, 1L)).thenReturn(null);
+        assertThat(lookupService.getStockOutFacilitiesByGeographicZoneFilter(1L, 1L, 1L, 1L),is(nullValue()));
+        verify(mapper).getStockOutFacilitiesForGeographicZone(1L, 1L, 1L, 1L);
 
     }
     @Test

@@ -16,6 +16,7 @@ public class StockOut {
     private String facilityName;
     private String facilityCode;
     private Long requisitionGroupId;
+    private Long geographicZoneId;
     private String product;
     private String location;
     private Integer totalStockOut;

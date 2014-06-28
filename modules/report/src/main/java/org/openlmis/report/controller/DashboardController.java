@@ -68,8 +68,9 @@ public class DashboardController extends BaseController {
     @RequestMapping(value = "/shipmentLeadTime", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getShipmentLeadTime(@RequestParam("periodId") Long periodId,
                                                               @RequestParam("programId") Long programId,
-                                                              @RequestParam("rgroupId") List<Long> rgroupId){
-        return OpenLmisResponse.response(SHIPMENT_LEAD_TIME, this.lookupService.getShipmentLeadTime(periodId,programId,rgroupId));
+                                                              @RequestParam("zoneId") Long zoneId,
+                                                              HttpServletRequest request){
+        return OpenLmisResponse.response(SHIPMENT_LEAD_TIME, this.lookupService.getShipmentLeadTime(loggedInUserId(request), periodId,programId,zoneId));
     }
 
 
@@ -94,16 +95,18 @@ public class DashboardController extends BaseController {
     public ResponseEntity<OpenLmisResponse>  getStockedOutFacilities(     @RequestParam("periodId") Long periodId,
                                                                           @RequestParam("programId") Long programId,
                                                                           @RequestParam("productId") Long productId,
-                                                                          @RequestParam("rgroupId") List<Long> requisitionGroupId){
-        return OpenLmisResponse.response(STOCKED_OUT_FACILITIES, this.lookupService.getStockOutFacilities(periodId, programId, productId,requisitionGroupId));
+                                                                          @RequestParam("zoneId") Long zoneId,
+                                                                          HttpServletRequest request){
+        return OpenLmisResponse.response(STOCKED_OUT_FACILITIES, this.lookupService.getStockOutFacilities(loggedInUserId(request), periodId, programId, productId,zoneId));
     }
 
-    @RequestMapping(value = "/requisitionGroup/{rgroupId}/program/{programId}/period/{periodId}/product/{productId}/stockedOutFacilities", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse>  getStockedOutFacilitiesByRequisitionGroupFilter(@PathVariable("periodId") Long periodId,
-                                                                          @PathVariable("programId") Long programId,
-                                                                          @PathVariable("productId") Long productId,
-                                                                          @PathVariable("rgroupId") Long requisitionGroupId){
-        return OpenLmisResponse.response(STOCKED_OUT_FACILITIES, this.lookupService.getStockOutFacilitiesByRequisitionGroup(periodId, programId, productId,requisitionGroupId));
+    @RequestMapping(value = "/geographic-zone/{zoneId}/program/{programId}/period/{periodId}/product/{productId}/stockedOutFacilities", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockedOutFacilitiesByGeographicZoneFilter(@PathVariable("periodId") Long periodId,
+                                                                                          @PathVariable("programId") Long programId,
+                                                                                          @PathVariable("productId") Long productId,
+                                                                                          @PathVariable("zoneId") Long zoneId,
+                                                                                          HttpServletRequest request){
+        return OpenLmisResponse.response(STOCKED_OUT_FACILITIES, this.lookupService.getStockOutFacilitiesByGeographicZoneFilter(loggedInUserId(request), periodId, programId, productId, zoneId));
     }
     @RequestMapping(value = "/alerts", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getAlerts(@RequestParam("zoneId") Long zoneId, @RequestParam("programId") Long programId,

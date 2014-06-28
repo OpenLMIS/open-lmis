@@ -460,7 +460,7 @@ services.factory("FacilitiesByGeographicZoneTree",function($resource)  {
 });
 
 services.factory("FacilitiesForNotifications",function($resource)  {
-    return   $resource('/reports/notifications/facilities/supervisory-node/:supervisoryNodeId/program/:programId/schedule/:scheduleId.json', {}, {});
+    return   $resource('/reports/notification/facilities.json', {}, {});
 });
 
 services.factory('OrderFillRate', function($resource){
@@ -495,8 +495,8 @@ services.factory('RequisitionGroupsBySupervisoryNodeProgramSchedule', function($
     return $resource('/reports/reporting_groups_by_supervisory_node_program_schedule.json', {}, {});
 });
 
-services.factory('StockedOutFacilitiesByRequisitionGroup', function($resource){
-    return $resource('/dashboard/requisitionGroup/:rgroupId/program/:programId/period/:periodId/product/:productId/stockedOutFacilities.json',{},{});
+services.factory('StockedOutFacilitiesByDistrict', function($resource){
+    return $resource('/dashboard/geographic-zone/:zoneId/program/:programId/period/:periodId/product/:productId/stockedOutFacilities.json',{},{});
 
 });
 services.factory('Alerts', function($resource){

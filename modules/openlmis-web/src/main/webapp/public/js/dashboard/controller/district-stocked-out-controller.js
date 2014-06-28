@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function RequisitionGroupStockedOutController($scope,$location,$routeParams,dashboardMenuService,messageService,StockedOutFacilitiesByRequisitionGroup) {
+function DistrictStockedOutController($scope,$location,$routeParams,dashboardMenuService,messageService,StockedOutFacilitiesByDistrict) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -67,12 +67,12 @@ function RequisitionGroupStockedOutController($scope,$location,$routeParams,dash
               if(!isUndefined($routeParams.programId) &&
                 !isUndefined($routeParams.periodId) &&
                 !isUndefined($routeParams.productId) &&
-                !isUndefined($routeParams.rgroupId)){
-                StockedOutFacilitiesByRequisitionGroup.get({
+                !isUndefined($routeParams.zoneId)){
+                  StockedOutFacilitiesByDistrict.get({
                     periodId: $routeParams.periodId,
                     programId: $routeParams.programId,
                     productId: $routeParams.productId,
-                    rgroupId: $routeParams.rgroupId
+                    zoneId: $routeParams.zoneId
                 },function(stockData){
                     $scope.totalStockOuts = 0;
                     if(!isUndefined(stockData.stockOut)){
@@ -116,7 +116,7 @@ function RequisitionGroupStockedOutController($scope,$location,$routeParams,dash
 
     $scope.stockedOutChartClickHandler = function (event, pos, item){
         if(item){
-            var districtStockOutPath = '/stock-out-detail/'+$scope.filterObject.programId+'/'+$scope.filterObject.periodId+'/'+$scope.filterObject.rgroupId+'/'+$scope.filterObject.productId;
+            var districtStockOutPath = '/stock-out-detail/'+$scope.filterObject.programId+'/'+$scope.filterObject.periodId+'/'+$scope.filterObject.zoneId+'/'+$scope.filterObject.productId;
             dashboardMenuService.addTab('menu.header.dashboard.stocked.out.district.detail','/public/pages/dashboard/index.html#'+districtStockOutPath,'DISTRICT-STOCK-OUT-DETAIL',true, 5);
             $location.path(districtStockOutPath);
 

@@ -10,9 +10,10 @@
             <tbody>
                 <tr  ng-repeat="row in content.datarows">
                     <td data-title="'Facility Name'">{{ row.facilityname }}</td>
+                    <td data-title="'Zone'">{{ row.geographiczonename }}</td>
                     <td data-title="'RnR Type'">{{ row.rnrtype }}</td>
                     <td data-title="'Status'">{{ row.status }}</td>
-                    <td><a href="/public/pages/logistics/rnr/indexpop.html#/requisition/{{ row.rnrid }}/1?page=1&supplyType=fullSupply" ng-click="popUp(this.href)" target="newWin">{{ row.rnrid }}</a></td>
+                    <td><a href="/public/pages/logistics/rnr/indexpop.html#/requisition/{{ row.rnrid }}/1?page=1&supplyType=fullSupply" ng-click="popUp(this.href)" target="newWin" openlmis-message="button.view.detail"></a></td>
                 </tr>
             </tbody>
 
