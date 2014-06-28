@@ -142,14 +142,15 @@ public interface FacilityApprovedProductMapper {
     "WHERE id = #{id}"})
   void update(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
-  @Select({"SELECT fap.*, pp.active AS active, prod.active AS globalActive, prod.id AS productId, prod.code AS productCode, prod.primaryName AS productName,",
-    "prod.fullSupply AS fullSupply, prod.strength as strength, prod.dosageUnitId as dosageUnitId, pc.id AS categoryId, pc.name AS categoryName FROM facility_approved_products fap",
-    "INNER JOIN program_products pp ON pp.id = fap.programProductId",
-    "INNER JOIN products prod ON prod.id = pp.productId",
-    "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId",
-    "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId} AND",
-    "(LOWER(prod.code) LIKE '%' || LOWER(#{searchParam}) || '%' OR LOWER(prod.primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')",
-    "ORDER BY LOWER(pc.name), LOWER(prod.primaryName), LOWER(prod.code)"})
+  @Select(
+    {"SELECT fap.*, pp.active AS active, prod.active AS globalActive, prod.id AS productId, prod.code AS productCode, prod.primaryName AS productName,",
+      "prod.fullSupply AS fullSupply, prod.strength as strength, prod.dosageUnitId as dosageUnitId, pc.id AS categoryId, pc.name AS categoryName FROM facility_approved_products fap",
+      "INNER JOIN program_products pp ON pp.id = fap.programProductId",
+      "INNER JOIN products prod ON prod.id = pp.productId",
+      "INNER JOIN product_categories pc ON pc.id = pp.productCategoryId",
+      "WHERE fap.facilityTypeId = #{facilityTypeId} AND pp.programId = #{programId} AND",
+      "(LOWER(prod.code) LIKE '%' || LOWER(#{searchParam}) || '%' OR LOWER(prod.primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')",
+      "ORDER BY LOWER(pc.name), LOWER(prod.primaryName), LOWER(prod.code)"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
     @Result(property = "programProduct.active", column = "active"),
@@ -177,4 +178,7 @@ public interface FacilityApprovedProductMapper {
   Integer getTotalSearchResultCount(@Param(value = "facilityTypeId") Long facilityTypeId,
                                     @Param(value = "programId") Long programId,
                                     @Param(value = "searchParam") String searchParam);
+
+  @Delete({"DELETE FROM facility_approved_products WHERE id = #{id}"})
+  void delete(Long id);
 }

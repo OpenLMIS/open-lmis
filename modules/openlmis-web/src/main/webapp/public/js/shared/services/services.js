@@ -358,7 +358,7 @@ services.factory('ProgramProductsFilter', function ($resource) {
 });
 
 services.factory('FacilityTypeApprovedProducts', function ($resource) {
-  return $resource('/facilityApprovedProducts.json', {}, update);
+  return $resource('/facilityApprovedProducts/:id.json', {id: '@id'}, update);
 });
 
 services.factory('ProgramProductsSearch', function ($resource) {

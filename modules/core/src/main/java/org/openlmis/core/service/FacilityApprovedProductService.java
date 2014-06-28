@@ -71,7 +71,8 @@ public class FacilityApprovedProductService {
     }
   }
 
-  public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
+  public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     fillProgramProductIds(facilityTypeApprovedProduct);
     return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeCode(facilityTypeApprovedProduct);
   }
@@ -102,5 +103,9 @@ public class FacilityApprovedProductService {
         save(facilityTypeApprovedProduct);
       }
     });
+  }
+
+  public void delete(Long id) {
+    repository.delete(id);
   }
 }

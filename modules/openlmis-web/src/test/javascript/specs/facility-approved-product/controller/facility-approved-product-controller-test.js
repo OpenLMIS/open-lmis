@@ -11,14 +11,17 @@
 describe("Facility Approved Product", function () {
 
   beforeEach(module('openlmis'));
+  beforeEach(module('ui.bootstrap.dialog'));
 
   describe("Controller", function () {
-    var scope, ctrl, supplyLine, $httpBackend, location, programs, facilityTypeList;
+    var scope, ctrl, supplyLine, $httpBackend, location, dialog, messageService, programs, facilityTypeList;
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $dialog, _messageService_) {
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       location = $location;
+      dialog = $dialog;
+      messageService = _messageService_;
       scope.query = "P10";
       supplyLine = {"program": {"name": "TB"}, "supplyingFacility": {"name": "supplying"}};
 
@@ -31,7 +34,8 @@ describe("Facility Approved Product", function () {
         {"id": 1, "name": "district1"},
         {"id": 2, "name": "district2"}
       ];
-      ctrl = $controller('FacilityApprovedProductController', {$scope: scope, facilityTypes: facilityTypeList, programs: programs});
+      ctrl = $controller('FacilityApprovedProductController',
+        {$scope: scope, facilityTypes: facilityTypeList, programs: programs, messageService: messageService});
     }));
 
     it("should set currentPage, programs and facility types in scope", function () {
@@ -220,7 +224,7 @@ describe("Facility Approved Product", function () {
       expect(facilityApprovedProduct.maxMonthsOfStock).toEqual(3);
       expect(facilityApprovedProduct.minMonthsOfStock).toEqual(4);
       expect(facilityApprovedProduct.eop).toEqual(124);
-      expect(scope.error).toEqual("");
+      expect(facilityApprovedProduct.error).toEqual("");
     });
 
     it('should update facility approved product', function () {
@@ -258,7 +262,7 @@ describe("Facility Approved Product", function () {
       };
       scope.facilityApprovedProducts = [facilityApprovedProduct1, facilityApprovedProduct2];
       facilityApprovedProduct1.underEdit = true;
-      $httpBackend.expectPUT('/facilityApprovedProducts.json', facilityApprovedProduct1).respond(200, {"success": successMessage, "facilityApprovedProduct": updatedFacilityApprovedProduct});
+      $httpBackend.expectPUT('/facilityApprovedProducts/1.json', facilityApprovedProduct1).respond(200, {"success": successMessage, "facilityApprovedProduct": updatedFacilityApprovedProduct});
 
       scope.update(facilityApprovedProduct1);
 
@@ -270,7 +274,7 @@ describe("Facility Approved Product", function () {
       expect(scope.updatedFacilityApprovedProduct).toEqual(updatedFacilityApprovedProduct);
       expect(scope.facilityApprovedProducts).toEqual([updatedFacilityApprovedProduct, facilityApprovedProduct2]);
       expect(scope.message).toEqual("Updated successfully");
-      expect(scope.error).toEqual("");
+      expect(facilityApprovedProduct1.error).toEqual("");
       expect(scope.focusSuccessMessageDiv).toHaveBeenCalled();
     });
 
@@ -282,6 +286,7 @@ describe("Facility Approved Product", function () {
       scope.facilityType = {"id": 2};
 
       var facilityApprovedProduct = {
+        id: 2,
         facilityType: {},
         programProduct: {program: {}, product: {}, productCategory: {}},
         maxMonthsOfStock: 30,
@@ -291,7 +296,7 @@ describe("Facility Approved Product", function () {
         previousMinMonthsOfStock: 4,
         previousEop: 124
       };
-      $httpBackend.expectPUT('/facilityApprovedProducts.json', facilityApprovedProduct).respond(400, {"error": errorMessage});
+      $httpBackend.expectPUT('/facilityApprovedProducts/2.json', facilityApprovedProduct).respond(400, {"error": errorMessage});
 
       scope.update(facilityApprovedProduct);
 
@@ -299,7 +304,7 @@ describe("Facility Approved Product", function () {
 
       expect(facilityApprovedProduct.facilityType).toEqual({"id": 2});
       expect(facilityApprovedProduct.programProduct.program).toEqual({"id": 1});
-      expect(scope.error).toEqual("some error occurred. Please contact system admin.");
+      expect(facilityApprovedProduct.error).toEqual("some error occurred. Please contact system admin.");
       expect(scope.focusSuccessMessageDiv).toHaveBeenCalled();
     });
 
@@ -318,10 +323,55 @@ describe("Facility Approved Product", function () {
 
       scope.update(facilityApprovedProduct);
 
-      expect(scope.error).toEqual("error.correct.highlighted");
+      expect(facilityApprovedProduct.error).toEqual("error.correct.highlighted");
       expect(facilityApprovedProduct.facilityType).toEqual({});
       expect(facilityApprovedProduct.programProduct.program).toEqual({});
       expect($httpBackend.expectPUT).not.toHaveBeenCalled();
+    });
+
+    it('should delete facility type approved product if confirmed', function () {
+      scope.currentPage = 0;
+      var successMessage = "message";
+      var facilityApprovedProduct = {
+        id: 1,
+        facilityType: {},
+        programProduct: {program: {}, product: {}, productCategory: {}},
+        minMonthsOfStock: 40,
+        eop: 120
+      };
+      spyOn(messageService, 'get').andReturn(successMessage);
+      spyOn(scope, 'loadProducts');
+      spyOn(OpenLmisDialog, 'newDialog');
+      $httpBackend.expectDELETE('/facilityApprovedProducts/1.json').respond(200, {"success": successMessage});
+
+      scope.confirmDelete(facilityApprovedProduct);
+      OpenLmisDialog.newDialog.calls[0].args[1](true);
+
+      $httpBackend.flush();
+
+      expect(scope.message).toEqual(successMessage);
+      expect(scope.loadProducts).toHaveBeenCalledWith(0);
+      expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), dialog);
+    });
+
+    it('should not delete facility type approved product if not confirmed', function () {
+      var facilityApprovedProduct = {
+        id: 1,
+        facilityType: {},
+        programProduct: {program: {}, product: {}, productCategory: {}},
+        minMonthsOfStock: 40,
+        eop: 120
+      };
+      spyOn(scope, 'loadProducts');
+      spyOn(OpenLmisDialog, 'newDialog');
+      spyOn($httpBackend, 'expectDELETE');
+
+      scope.confirmDelete(facilityApprovedProduct);
+      OpenLmisDialog.newDialog.calls[0].args[1](false);
+
+      expect(scope.loadProducts).not.toHaveBeenCalled();
+      expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), dialog);
+      expect($httpBackend.expectDELETE).not.toHaveBeenCalled();
     });
   });
 });

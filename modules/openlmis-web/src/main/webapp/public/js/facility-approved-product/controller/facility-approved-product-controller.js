@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function FacilityApprovedProductController($scope, programs, facilityTypes, FacilityTypeApprovedProducts) {
+function FacilityApprovedProductController($scope, programs, facilityTypes, FacilityTypeApprovedProducts, $dialog, messageService) {
 
   $scope.programs = programs;
   $scope.facilityTypes = facilityTypes;
@@ -57,12 +57,32 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
     facilityApprovedProduct.previousEop = facilityApprovedProduct.eop;
   };
 
+  var deleteFacilityApprovedProduct = function (result) {
+    if (result) {
+      FacilityTypeApprovedProducts.remove({id: $scope.facilityApprovedProductToBeDeleted.id}, $scope.facilityApprovedProductToBeDeleted, function (data) {
+        $scope.message = messageService.get(data.success, $scope.facilityApprovedProductToBeDeleted.programProduct.product.primaryName);
+        $scope.loadProducts($scope.currentPage);
+      }, {});
+    }
+  };
+
+  $scope.confirmDelete = function (facilityApprovedProduct) {
+    $scope.facilityApprovedProductToBeDeleted = facilityApprovedProduct;
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.action",
+      body: messageService.get('msg.delete.facility.approved.product.confirmation',
+        $scope.facilityApprovedProductToBeDeleted.programProduct.product.primaryName, $scope.facilityType.name, $scope.program.name)
+    };
+    OpenLmisDialog.newDialog(options, deleteFacilityApprovedProduct, $dialog);
+  };
+
   $scope.cancel = function (facilityApprovedProduct) {
     facilityApprovedProduct.maxMonthsOfStock = facilityApprovedProduct.previousMaxMonthsOfStock;
     facilityApprovedProduct.minMonthsOfStock = facilityApprovedProduct.previousMinMonthsOfStock;
     facilityApprovedProduct.eop = facilityApprovedProduct.previousEop;
     facilityApprovedProduct.underEdit = false;
-    $scope.error = "";
+    facilityApprovedProduct.error = "";
   };
 
   $scope.focusSuccessMessageDiv = function () {
@@ -82,20 +102,20 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
 
   $scope.update = function (facilityApprovedProduct) {
     if (isUndefined(facilityApprovedProduct.maxMonthsOfStock)) {
-      $scope.error = 'error.correct.highlighted';
+      facilityApprovedProduct.error = 'error.correct.highlighted';
       return;
     }
     facilityApprovedProduct.facilityType = $scope.facilityType;
     facilityApprovedProduct.programProduct.program = $scope.program;
 
-    FacilityTypeApprovedProducts.update({}, facilityApprovedProduct, function (data) {
+    FacilityTypeApprovedProducts.update({id: facilityApprovedProduct.id}, facilityApprovedProduct, function (data) {
       $scope.updatedFacilityApprovedProduct = data.facilityApprovedProduct;
       $scope.message = data.success;
       facilityApprovedProduct.underEdit = false;
-      $scope.error = "";
+      facilityApprovedProduct.error = "";
       updateListToDisplay($scope.updatedFacilityApprovedProduct);
     }, function (data) {
-      $scope.error = data.data.error;
+      facilityApprovedProduct.error = data.data.error;
     });
     $scope.focusSuccessMessageDiv();
   };

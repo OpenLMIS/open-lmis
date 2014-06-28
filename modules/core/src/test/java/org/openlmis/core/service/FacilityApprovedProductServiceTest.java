@@ -67,8 +67,7 @@ public class FacilityApprovedProductServiceTest {
     when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
     when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);
     when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100L);
-    when(facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType())).thenReturn(
-      new FacilityType());
+    when(facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType())).thenReturn(new FacilityType());
 
     service.save(facilityTypeApprovedProduct);
 

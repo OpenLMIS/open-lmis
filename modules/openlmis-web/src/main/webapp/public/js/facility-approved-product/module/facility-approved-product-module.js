@@ -8,13 +8,13 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var facilityApprovedProductModule = angular.module('facilityApprovedProduct', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.modal', 'ui.bootstrap.pagination']);
+var facilityApprovedProductModule = angular.module('facilityApprovedProduct', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.modal', 'ui.bootstrap.pagination', 'ui.bootstrap.dialog']);
 
 facilityApprovedProductModule.config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
+    $routeProvider.
       when('/list', {controller: FacilityApprovedProductController, templateUrl: 'partials/list.html', resolve: FacilityApprovedProductController.resolve}).
       otherwise({redirectTo: '/list'});
-}]).run(function ($rootScope, AuthorizationService) {
-  $rootScope.facilityApprovedProductSelected = "selected";
-  AuthorizationService.preAuthorize('MANAGE_FACILITY_APPROVED_PRODUCT');
-});
+  }]).run(function ($rootScope, AuthorizationService) {
+    $rootScope.facilityApprovedProductSelected = "selected";
+    AuthorizationService.preAuthorize('MANAGE_FACILITY_APPROVED_PRODUCT');
+  });

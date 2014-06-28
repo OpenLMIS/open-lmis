@@ -49,8 +49,7 @@ public class FacilityApprovedProductRepositoryTest {
     facilityTypeApprovedProduct.setProgramProduct(programProduct);
     facilityTypeApprovedProduct.setFacilityType(new FacilityType("warehouse"));
 
-    when(mapper.getBy(1L,
-      "warehouse")).thenReturn(null);
+    when(mapper.getBy(1L, "warehouse")).thenReturn(null);
 
     repository.insert(facilityTypeApprovedProduct);
     verify(mapper).insert(facilityTypeApprovedProduct);

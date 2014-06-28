@@ -55,28 +55,22 @@ public class FacilityApprovedProductController extends BaseController {
   @RequestMapping(value = "/facility/{facilityId}/program/{programId}/nonFullSupply", method = GET,
     headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getAllNonFullSupplyProductsByFacilityAndProgram(@PathVariable(
-    "facilityId") Long facilityId,
-                                                                                          @PathVariable(
-                                                                                            "programId") Long programId) {
-    return response(NON_FULL_SUPPLY_PRODUCTS,
-      service.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId));
+  public ResponseEntity<OpenLmisResponse> getAllNonFullSupplyProductsByFacilityAndProgram(@PathVariable("facilityId") Long facilityId,
+                                                                                          @PathVariable("programId") Long programId) {
+    return response(NON_FULL_SUPPLY_PRODUCTS, service.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId));
   }
 
   @RequestMapping(method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY_APPROVED_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getAllBy(@RequestParam("facilityTypeId") Long facilityTypeId,
                                                    @RequestParam("programId") Long programId,
-                                                   @RequestParam(value = "searchParam", defaultValue = "",
-                                                     required = false) String searchParam,
+                                                   @RequestParam(value = "searchParam", defaultValue = "", required = false) String searchParam,
                                                    @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                    @Value("${search.page.size}") String limit) {
     Pagination pagination = new Pagination(page, parseInt(limit));
     pagination.setTotalRecords(service.getTotalSearchResultCount(facilityTypeId, programId, searchParam));
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = service.getAllBy(facilityTypeId, programId,
-      searchParam, pagination);
-    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(FACILITY_APPROVED_PRODUCTS,
-      facilityTypeApprovedProducts);
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = service.getAllBy(facilityTypeId, programId, searchParam, pagination);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(FACILITY_APPROVED_PRODUCTS, facilityTypeApprovedProducts);
     response.getBody().addData(PAGINATION, pagination);
     return response;
   }
@@ -90,25 +84,31 @@ public class FacilityApprovedProductController extends BaseController {
     } catch (DataException e) {
       return OpenLmisResponse.error(e, BAD_REQUEST);
     }
-    return OpenLmisResponse.success(messageService.message("message.facility.type.approved.products.added.successfully",
-      facilityTypeApprovedProducts.size()));
+    return OpenLmisResponse.success(messageService.message("message.facility.type.approved.products.added.successfully", facilityTypeApprovedProducts.size()));
   }
 
-  @RequestMapping(method = PUT, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY_APPROVED_PRODUCT')")
-  public ResponseEntity<OpenLmisResponse> update(@RequestBody FacilityTypeApprovedProduct facilityTypeApprovedProduct,
+  public ResponseEntity<OpenLmisResponse> update(@PathVariable("id") Long id,
+                                                 @RequestBody FacilityTypeApprovedProduct facilityTypeApprovedProduct,
                                                  HttpServletRequest request) {
+    facilityTypeApprovedProduct.setId(id);
+    facilityTypeApprovedProduct.setModifiedBy(loggedInUserId(request));
     try {
-      facilityTypeApprovedProduct.setModifiedBy(loggedInUserId(request));
       service.save(facilityTypeApprovedProduct);
     } catch (DataException e) {
       return OpenLmisResponse.error(e, BAD_REQUEST);
     }
 
-    OpenLmisResponse openLmisResponse = new OpenLmisResponse(FACILITY_TYPE_APPROVED_PRODUCT,
-      facilityTypeApprovedProduct);
-    String successMessage = messageService.message("message.facility.approved.product.updated.success",
-      facilityTypeApprovedProduct.getProgramProduct().getProduct().getPrimaryName());
+    OpenLmisResponse openLmisResponse = new OpenLmisResponse(FACILITY_TYPE_APPROVED_PRODUCT, facilityTypeApprovedProduct);
+    String successMessage = messageService.message("message.facility.approved.product.updated.success", facilityTypeApprovedProduct.getProgramProduct().getProduct().getPrimaryName());
     return openLmisResponse.successEntity(successMessage);
+  }
+
+  @RequestMapping(value = "/{id}", method = DELETE, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY_APPROVED_PRODUCT')")
+  public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Long id) {
+    service.delete(id);
+    return OpenLmisResponse.success("message.facility.approved.product.deleted.success");
   }
 }

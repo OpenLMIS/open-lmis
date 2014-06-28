@@ -37,11 +37,11 @@ import static java.lang.Integer.parseInt;
 import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.web.controller.FacilityApprovedProductController.*;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Category(UnitTests.class)
@@ -50,6 +50,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class FacilityApprovedProductControllerTest {
 
   private static final String USER_ID = "USER_ID";
+  public static final long userId = 1L;
   private MockHttpServletRequest request;
 
   @Mock
@@ -62,10 +63,10 @@ public class FacilityApprovedProductControllerTest {
   FacilityApprovedProductController controller;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     initMocks(this);
     request = new MockHttpServletRequest();
-    request.getSession().setAttribute(USER_ID, 1L);
+    request.getSession().setAttribute(USER_ID, userId);
   }
 
   @Test
@@ -73,13 +74,12 @@ public class FacilityApprovedProductControllerTest {
     Long facilityId = 1L;
     Long programId = 1L;
     ArrayList<FacilityTypeApprovedProduct> nonFullSupplyProducts = new ArrayList<>();
-    when(service.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId)).thenReturn(
-      nonFullSupplyProducts);
-    ResponseEntity<OpenLmisResponse> openLmisResponse = controller.getAllNonFullSupplyProductsByFacilityAndProgram(
-      facilityId, programId);
+    when(service.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId)).thenReturn(nonFullSupplyProducts);
+
+    ResponseEntity<OpenLmisResponse> openLmisResponse = controller.getAllNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+
     verify(service).getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId);
-    assertThat((ArrayList<FacilityTypeApprovedProduct>) openLmisResponse.getBody().getData().get(
-      FacilityApprovedProductController.NON_FULL_SUPPLY_PRODUCTS), is(nonFullSupplyProducts));
+    assertThat((ArrayList<FacilityTypeApprovedProduct>) openLmisResponse.getBody().getData().get(FacilityApprovedProductController.NON_FULL_SUPPLY_PRODUCTS), is(nonFullSupplyProducts));
   }
 
   @Test
@@ -95,8 +95,7 @@ public class FacilityApprovedProductControllerTest {
     when(service.getTotalSearchResultCount(facilityTypeId, programId, searchParam)).thenReturn(count);
     when(service.getAllBy(facilityTypeId, programId, searchParam, pagination)).thenReturn(EMPTY_LIST);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllBy(facilityTypeId, programId, searchParam, page,
-      limit);
+    ResponseEntity<OpenLmisResponse> response = controller.getAllBy(facilityTypeId, programId, searchParam, page, limit);
 
     assertThat((java.util.List) response.getBody().getData().get(FACILITY_APPROVED_PRODUCTS), is(EMPTY_LIST));
     assertThat((Pagination) response.getBody().getData().get(PAGINATION), is(pagination));
@@ -109,8 +108,7 @@ public class FacilityApprovedProductControllerTest {
   public void shouldSave() {
     FacilityTypeApprovedProductList facilityTypeApprovedProducts = new FacilityTypeApprovedProductList();
     doNothing().when(service).saveAll(facilityTypeApprovedProducts, 1L);
-    when(messageService.message("message.facility.type.approved.products.added.successfully",
-      facilityTypeApprovedProducts.size())).thenReturn("1 product(s) added successfully");
+    when(messageService.message("message.facility.type.approved.products.added.successfully", facilityTypeApprovedProducts.size())).thenReturn("1 product(s) added successfully");
 
     ResponseEntity<OpenLmisResponse> response = controller.insert(facilityTypeApprovedProducts, request);
 
@@ -118,7 +116,7 @@ public class FacilityApprovedProductControllerTest {
   }
 
   @Test
-  public void shouldThrowExceptionOnInsert() throws Exception {
+  public void shouldThrowExceptionOnInsert() {
     FacilityTypeApprovedProductList facilityTypeApprovedProducts = new FacilityTypeApprovedProductList();
     doThrow(new DataException("error")).when(service).saveAll(facilityTypeApprovedProducts, 1l);
 
@@ -139,25 +137,36 @@ public class FacilityApprovedProductControllerTest {
     facilityTypeApprovedProduct.setProgramProduct(programProduct);
     doNothing().when(service).save(facilityTypeApprovedProduct);
 
-    when(messageService.message("message.facility.approved.product.updated.success",
-      productName)).thenReturn(productName + " updated successfully");
+    when(messageService.message("message.facility.approved.product.updated.success", productName)).thenReturn(productName + " updated successfully");
 
-    ResponseEntity<OpenLmisResponse> response = controller.update(facilityTypeApprovedProduct, request);
+    ResponseEntity<OpenLmisResponse> response = controller.update(2L, facilityTypeApprovedProduct, request);
 
-    assertThat((FacilityTypeApprovedProduct) response.getBody().getData().get(FACILITY_TYPE_APPROVED_PRODUCT),
-      is(facilityTypeApprovedProduct));
-    assertThat(response.getBody().getSuccessMsg(),
-      is("Primary Name for facility approved product updated successfully"));
+    assertThat(facilityTypeApprovedProduct.getId(), is(2L));
+    assertThat(facilityTypeApprovedProduct.getModifiedBy(), is(userId));
+    assertThat((FacilityTypeApprovedProduct) response.getBody().getData().get(FACILITY_TYPE_APPROVED_PRODUCT), is(facilityTypeApprovedProduct));
+    assertThat(response.getBody().getSuccessMsg(), is("Primary Name for facility approved product updated successfully"));
   }
 
   @Test
-  public void shouldThrowExceptionOnUpdate() throws Exception {
+  public void shouldThrowExceptionOnUpdate() {
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct();
     doThrow(new DataException("error")).when(service).save(facilityTypeApprovedProduct);
 
-    ResponseEntity<OpenLmisResponse> errorResponse = controller.update(facilityTypeApprovedProduct, request);
+    ResponseEntity<OpenLmisResponse> errorResponse = controller.update(2L, facilityTypeApprovedProduct, request);
 
     assertThat(errorResponse.getBody().getErrorMsg(), is("error"));
     assertThat(errorResponse.getStatusCode(), is(BAD_REQUEST));
+  }
+
+  @Test
+  public void shouldDeleteFacilityApprovedProduct() {
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct();
+    facilityTypeApprovedProduct.setId(3L);
+    doNothing().when(service).delete(3L);
+
+    ResponseEntity<OpenLmisResponse> response = controller.delete(3L);
+
+    assertThat(response.getBody().getSuccessMsg(), is("message.facility.approved.product.deleted.success"));
+    verify(service).delete(3L);
   }
 }

@@ -163,10 +163,15 @@
           <i id="activeAtProgram{{$index}}"
              ng-class="{'icon-ok': facilityApprovedProduct.programProduct.active}"></i>
         </td>
-        <td><input id="editButton{{$index}}" ng-hide="facilityApprovedProduct.underEdit" type="button"
-                   class="btn btn-primary btn-small"
-                   openlmis-message="button.edit"
-                   ng-click="edit(facilityApprovedProduct)"/>
+        <td>
+          <input id="editButton{{$index}}" ng-hide="facilityApprovedProduct.underEdit" type="button"
+                 class="btn btn-primary btn-small"
+                 openlmis-message="button.edit"
+                 ng-click="edit(facilityApprovedProduct)"/>
+          <input id="deleteButton{{$index}}" ng-hide="facilityApprovedProduct.underEdit" type="button"
+                 class="btn btn-danger btn-small"
+                 openlmis-message="button.delete"
+                 ng-click="confirmDelete(facilityApprovedProduct)"/>
         </td>
       </tr>
       <tr ng-if="facilityApprovedProduct.underEdit" class="save-cancel-row">
@@ -176,7 +181,8 @@
                  openlmis-message="button.save"/>
           <input id="cancel{{$index}}" type="button" class="btn btn-cancel btn-small" openlmis-message="button.cancel"
                  ng-click="cancel(facilityApprovedProduct)"/>
-          <span class="toolbar-error clear-floats" id="saveErrorMsgDiv" ng-show="error" openlmis-message="error"></span>
+          <span class="toolbar-error clear-floats" id="saveErrorMsgDiv" ng-show="facilityApprovedProduct.error"
+                openlmis-message="facilityApprovedProduct.error"></span>
         </td>
       </tr>
       </tbody>

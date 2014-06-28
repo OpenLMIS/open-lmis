@@ -32,8 +32,7 @@ public class FacilityApprovedProductRepository {
     return mapper.getFullSupplyProductsBy(facilityId, programId);
   }
 
-  public List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Long facilityId,
-                                                                                        Long programId) {
+  public List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
     return mapper.getNonFullSupplyProductsBy(facilityId, programId);
   }
 
@@ -47,18 +46,18 @@ public class FacilityApprovedProductRepository {
 
   public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(
     FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
-    return mapper.getBy(
-      facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
+    return mapper.getBy(facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
   }
 
-  public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId,
-                                                    Long programId,
-                                                    String searchParam,
-                                                    Pagination pagination) {
+  public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId, Long programId, String searchParam, Pagination pagination) {
     return mapper.getAllBy(facilityTypeId, programId, searchParam, pagination);
   }
 
   public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId, String searchParam) {
     return mapper.getTotalSearchResultCount(facilityTypeId, programId, searchParam);
+  }
+
+  public void delete(Long id) {
+    mapper.delete(id);
   }
 }
