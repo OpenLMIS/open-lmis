@@ -81,14 +81,12 @@ describe("Facility Sub Filters Controller", function () {
     scope.geoZoneList = [
       {"name": "moz"}
     ];
-    scope.geoZoneQuery = "moz";
     scope.geoZoneSearchParam = "moz";
 
     scope.clearGeoZoneSearch();
 
     expect(scope.showResults).toBeFalsy();
     expect(scope.geoZoneList).toEqual([]);
-    expect(scope.geoZoneQuery).toBeUndefined();
     expect(scope.geoZoneSearchParam).toBeUndefined();
   });
 

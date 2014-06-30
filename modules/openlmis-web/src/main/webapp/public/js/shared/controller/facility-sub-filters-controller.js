@@ -62,8 +62,7 @@ function FacilitySubFiltersController($scope, GeographicZoneSearch, FacilityType
   $scope.clearGeoZoneSearch = function () {
     $scope.showResults = false;
     $scope.geoZoneList = [];
-    $scope.geoZoneQuery = undefined;
-    $scope.geoZoneSearchParam = undefined;
+  $scope.geoZoneSearchParam = undefined;
     angular.element('#geoZoneSearchList').focus();
   };
 

@@ -36,14 +36,12 @@
     <div class="modal-body">
       <div class="row-fluid">
         <label>
-          <span openlmis-message="label.facility.type"></span>:&nbsp;
+          <strong openlmis-message="label.facility.type"></strong>:
 
-              <span class="select-result-container rnr-template-head" ng-show="selectedFacilityType.id">
-                <span id="selectedFacilityType" ng-bind="selectedFacilityType.name"></span>
-                <a href="" ng-click="selectedFacilityType = undefined" class="select-result-close" tabindex="-1">
-                  <i id="removeFacilityTypeIcon" class="icon icon-remove"></i>
-                </a>
-              </span>
+          <span ng-show="selectedFacilityType.id" class="selected-text">
+            <span id="selectedFacilityType" ng-bind="selectedFacilityType.name"></span>
+            <a href="" ng-click="selectedFacilityType = undefined" class="select-result-close" tabindex="-1">Clear</a>
+          </span>
         </label>
 
       </div>
@@ -57,14 +55,12 @@
 
       <div class="row-fluid">
         <label>
-          <span openlmis-message="label.geographic.zone"></span>:&nbsp;
+          <strong openlmis-message="label.geographic.zone"></strong>:
 
-              <span class="select-result-container rnr-template-head" ng-show="selectedGeoZone.id">
-                <span id="selectedGeoZone" ng-bind="selectedGeoZone.name"></span>
-                <a href="" ng-click="selectedGeoZone = undefined" class="select-result-close" tabindex="-1">
-                  <i id="removeGeoZoneIcon" class="icon icon-remove"></i>
-                </a>
-              </span>
+          <span ng-show="selectedGeoZone.id" class="selected-text">
+            <span id="selectedGeoZone" ng-bind="selectedGeoZone.name"></span>
+            <a href="" ng-click="selectedGeoZone = undefined" class="select-result-close" tabindex="-1">Clear</a>
+          </span>
         </label>
       </div>
 
