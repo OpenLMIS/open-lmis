@@ -229,6 +229,7 @@ public class ManageProduct extends TestCaseHelper {
     searchProduct("i");
     productPage.selectSearchOptionProduct();
     productPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
     assertEquals("21 matches found for 'i'", productPage.getNResultsMessage());
   }
 
