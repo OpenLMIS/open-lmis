@@ -71,7 +71,8 @@ public class DistrictConsumptionQueryBuilder {
     }
 
   public static String GetAggregateConsumptionReport(Map params){
-    DistrictConsumptionReportParam filter  = (DistrictConsumptionReportParam)params.get("filterCriteria");
+    DistrictConsumptionReportParam filter   = (DistrictConsumptionReportParam)params.get("filterCriteria");
+    Long userId                             = (Long) params.get("userId");
 
     String predicates = "";
 
@@ -87,16 +88,14 @@ public class DistrictConsumptionQueryBuilder {
     }
 
     if(filter.getZoneId() != 0){
-      predicates = predicates + " and ( f.geographicZoneId = " + filter.getZoneId() +" or gz.parentId = " +filter.getZoneId() + " or zone.parentId = " + filter.getZoneId() + " or c.parentId = " + filter.getZoneId() + ") " ;
+      predicates = predicates + " and ( d.zone_id = " + filter.getZoneId() +" or d.parent = " +filter.getZoneId() + " or d.region_id = " + filter.getZoneId() + " or d.district_id = " + filter.getZoneId() + ") " ;
     }
 
     String query = "SELECT li.productCode code, li.product, sum(li.quantityDispensed) dispensed, sum(li.normalizedConsumption) consumption FROM requisition_line_items li \n" +
               " JOIN requisitions r on r.id = li.rnrid " +
 
               " JOIN facilities f on r.facilityid = f.id " +
-              " JOIN geographic_zones gz on gz.id = f.geographicZoneId " +
-              " JOIN geographic_zones zone on gz.parentId = zone.id " +
-              " JOIN geographic_zones c on zone.parentId = c.id " +
+              " JOIN vw_districts d on d.district_id = f.geographicZoneId " +
 
               " JOIN requisition_group_members rgm on rgm.facilityId = r.facilityId\n" +
               " JOIN programs_supported ps  on ps.programId = r.programId and r.facilityId = ps.facilityId\n" +
@@ -104,7 +103,9 @@ public class DistrictConsumptionQueryBuilder {
               " JOIN products p on p.code::text = li.productCode::text " +
               " JOIN program_products ppc on ppc.programId = r.programId and ppc.productId = p.id " +
               " JOIN requisition_group_program_schedules rgps on rgps.requisitionGroupID = rgm.requisitionGroupId and pp.scheduleId = rgps.scheduleId\n" +
-              " WHERE r.periodid = " + filter.getPeriod() + " and r.programId =  " + filter.getProgramId() + predicates +
+              " WHERE " +
+              "   f.id in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = "  + filter.getProgramId() + ") " +
+              "   r.periodid = " + filter.getPeriod() + " and r.programId =  " + filter.getProgramId() + predicates +
               " GROUP BY li.productCode, li.product" +
               " ORDER BY li.product ";
 
