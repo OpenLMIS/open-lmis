@@ -94,18 +94,18 @@ public class DistrictConsumptionQueryBuilder {
     String query = "SELECT li.productCode code, li.product, sum(li.quantityDispensed) dispensed, sum(li.normalizedConsumption) consumption FROM requisition_line_items li \n" +
               " JOIN requisitions r on r.id = li.rnrid " +
 
-              " JOIN facilities f on r.facilityid = f.id " +
+              " JOIN facilities f on r.facilityId = f.id " +
               " JOIN vw_districts d on d.district_id = f.geographicZoneId " +
 
               " JOIN requisition_group_members rgm on rgm.facilityId = r.facilityId\n" +
               " JOIN programs_supported ps  on ps.programId = r.programId and r.facilityId = ps.facilityId\n" +
-              " JOIN processing_periods pp on pp.id = r.periodid " +
+              " JOIN processing_periods pp on pp.id = r.periodId " +
               " JOIN products p on p.code::text = li.productCode::text " +
               " JOIN program_products ppc on ppc.programId = r.programId and ppc.productId = p.id " +
               " JOIN requisition_group_program_schedules rgps on rgps.requisitionGroupID = rgm.requisitionGroupId and pp.scheduleId = rgps.scheduleId\n" +
               " WHERE " +
               "   f.id in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = "  + filter.getProgramId() + ") " +
-              "   r.periodid = " + filter.getPeriod() + " and r.programId =  " + filter.getProgramId() + predicates +
+              "   and r.periodId = " + filter.getPeriod() + " and r.programId =  " + filter.getProgramId() + predicates +
               " GROUP BY li.productCode, li.product" +
               " ORDER BY li.product ";
 
