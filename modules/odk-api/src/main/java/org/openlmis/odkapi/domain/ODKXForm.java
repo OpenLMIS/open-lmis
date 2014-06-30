@@ -44,4 +44,6 @@ public class ODKXForm extends BaseModel {
 
     private boolean active;
 
+    private ODKXFormSurveyType odkxFormSurveyType;
+
 }

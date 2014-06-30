@@ -26,7 +26,10 @@ public class AdjustmentSummaryQueryBuilder {
     Map<String, String[]> sorter = (Map<String, String[]>) params.get("SortCriteria");
     BEGIN();
     SELECT("processing_periods_name as period, product productDescription, product_category_name category, facility_type_name facilityType,facility_name facilityName, adjustment_type, t.description as adjustmentType, adjutment_qty adjustment, adjutment_qty * case when adjustment_additive  = 't' then 1 else -1 end AS signedadjustment, supplying_facility_name supplyingFacility");
-    FROM("vw_requisition_adjustment join losses_adjustments_types t on t.name = vw_requisition_adjustment.adjustment_type ");
+    FROM("vw_requisition_adjustment " +
+        "join facilities f on f.id = vw_requisition_adjustment.facility_id " +
+        "join vw_districts d on f.geographicZoneId = d.district_id " +
+        "join losses_adjustments_types t on t.name = vw_requisition_adjustment.adjustment_type ");
     writePredicates(filter);
     ORDER_BY(QueryHelpers.getSortOrder(params, " product, adjustment_type, facility_type_name,facility_name, supplying_facility_name, product_category_name "));
     return SQL();
@@ -34,12 +37,22 @@ public class AdjustmentSummaryQueryBuilder {
 
   private static void writePredicates(AdjustmentSummaryReportParam filter) {
     WHERE("req_status in ('APPROVED','RELEASED')");
+    WHERE("program_id = #{filterCriteria.programId}");
+    WHERE("f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.programId})");
     if (filter != null) {
 
       WHERE("processing_periods_id  = #{filterCriteria.period}");
 
       if (filter.getFacilityTypeId() != 0) {
         WHERE("facility_type_id = #{filterCriteria.facilityTypeId}");
+      }
+
+      if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
+        WHERE("(d.district_id = #{filterCriteria.zoneId} or d.zone_id = #{filterCriteria.zoneId} or d.region_id = #{filterCriteria.zoneId} or d.parent = #{filterCriteria.zoneId})");
+      }
+
+      if (filter.getFacilityId() != 0) {
+        WHERE("f.id = #{filterCriteria.facilityId}");
       }
 
       if (filter.getProductCategoryId() != 0) {
@@ -51,9 +64,7 @@ public class AdjustmentSummaryQueryBuilder {
       if (filter.getProductId() != -1 && filter.getProductId() != 0) {
         WHERE("product_id= #{filterCriteria.productId}");
       }
-      if (filter.getProgramId() != -1) {  //Unless All programs selected
-        WHERE("program_id = #{filterCriteria.programId}");
-      }
+
       if (!filter.getAdjustmentTypeId().equals("-1") && !filter.getAdjustmentTypeId().equals("0") && !filter.getAdjustmentTypeId().equals("")) {
         WHERE("adjustment_type = #{filterCriteria.adjustmentTypeId}");
       }

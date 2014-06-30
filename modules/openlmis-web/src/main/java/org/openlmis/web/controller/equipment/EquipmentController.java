@@ -17,6 +17,7 @@ import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,16 +32,19 @@ public class EquipmentController extends BaseController {
   private EquipmentService service;
 
   @RequestMapping(method = RequestMethod.GET, value = "id")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getEquipmentById(@RequestParam("id") Long Id){
     return OpenLmisResponse.response("equipment", service.getById(Id));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "list")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS') or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
   public ResponseEntity<OpenLmisResponse> getList(){
     return OpenLmisResponse.response("equipments", service.getAll());
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "save", headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> save( @RequestBody Equipment equipment){
     equipment.setEquipmentType(new EquipmentType());
     equipment.getEquipmentType().setId(equipment.getEquipmentTypeId());

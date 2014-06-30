@@ -29,7 +29,6 @@ public class DistrictConsumptionReportParam
 
 
   private Long period;
-
   private int zoneId;
   private int productId;
   private int productCategoryId;

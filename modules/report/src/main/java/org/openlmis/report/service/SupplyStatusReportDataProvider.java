@@ -35,14 +35,14 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
     RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-    return reportMapper.getSupplyStatus(filterCriteria, rowBounds);
+    return reportMapper.getSupplyStatus(filterCriteria, rowBounds, this.getUserId());
   }
 
   @Override
   @Transactional
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getSupplyStatus(filterCriteria, rowBounds);
+    return reportMapper.getSupplyStatus(filterCriteria, rowBounds,this.getUserId());
   }
 
   @Override

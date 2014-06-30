@@ -95,8 +95,13 @@ services.factory('Months',function($resource){
 });
 
 services.factory('ReportPrograms', function ($resource) {
-    return $resource('/reports/programs.json', {}, {});
+  return $resource('/reports/programs.json', {}, {});
 });
+
+services.factory('ReportUserPrograms', function ($resource) {
+  return $resource('/reports/user-programs.json', {}, {});
+});
+
 
 services.factory('ReportSchedules', function ($resource) {
     return $resource('/reports/schedules.json', {}, {});
@@ -129,6 +134,11 @@ services.factory('FlatGeographicZoneList',function ($resource){
 services.factory('TreeGeographicZoneList',function ($resource){
   return $resource('/reports//geographic-zones/tree.json', {}, {});
 });
+
+services.factory('TreeGeographicZoneListByProgram',function ($resource){
+  return $resource('/reports//geographic-zones/tree-program.json', {}, {});
+});
+
 services.factory('ReportRegimens',function ($resource){
     return $resource('/reports/regiments.json', {}, {}) ;
 });
@@ -601,4 +611,12 @@ services.factory('GetProgramWithBudgetingApplies',function($resource){
 });
 services.factory('RegimenDistributionReport',function($resource){
     return $resource('/reports/reportdata/getRegimenDistribution.json',{},{});
+});
+
+services.factory('LabEquipmentListByDonorReport', function ($resource) {
+    return $resource('/reports/reportdata/labEquipmentsByFundingSource.json', {}, {});
+});
+
+services.factory('GetAllUsers',function($resource){
+    return $resource('/user/getAll.json',{},{});
 });

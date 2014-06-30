@@ -51,7 +51,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getFilteredSortedPagedAdjustmentSummaryReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
+    return reportMapper.getFilteredSortedPagedAdjustmentSummaryReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds, this.getUserId());
   }
 
 
@@ -62,6 +62,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
       Date originalStart = new Date();
       Date originalEnd = new Date();
 
+      adjustmentSummaryReportParam.setFacilityId(StringHelper.isBlank( filterCriteria, "facility")? 0L : Long.parseLong(filterCriteria.get("facility")[0]));
       adjustmentSummaryReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
       adjustmentSummaryReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
       adjustmentSummaryReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
@@ -70,6 +71,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
       adjustmentSummaryReportParam.setAdjustmentTypeId(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "" : filterCriteria.get("adjustmentType")[0]);
       adjustmentSummaryReportParam.setAdjustmentType(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
       adjustmentSummaryReportParam.setPeriod(StringHelper.isBlank(filterCriteria,"period") ? 0 : Long.parseLong( filterCriteria.get("period")[0].toString() ));
+      adjustmentSummaryReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone") ? 0: Long.parseLong(filterCriteria.get("zone")[0]));
       // set objects
       adjustmentSummaryReportParam.setPeriodObject( processingPeriodService.getById( adjustmentSummaryReportParam.getPeriod()));
       adjustmentSummaryReportParam.setProgramObject( programService.getById(adjustmentSummaryReportParam.getProgramId()));

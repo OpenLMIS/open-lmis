@@ -25,6 +25,12 @@ public interface ProgramReportMapper {
             "       programs order by name")
     List<Program> getAll();
 
+  @Select("SELECT id, name, description, code " +
+      "   FROM " +
+      "       programs where id in (select program_id from vw_user_facilities where user_id = #{userId}) " +
+      "order by name")
+  List<Program> getAllForUser(@Param("userId") Long userId);
+
     @Select("SELECT * FROM Programs where code = #{code}")
     Program getProgramByCode(String code);
 

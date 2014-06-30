@@ -31,7 +31,8 @@ public interface RnRFeedbackReportMapper {
   public List<RnRFeedbackReport> getRnRFeedbackReport(
     @Param("filterCriteria") ReportParameter filterCriteria,
     @Param("sortCriteria") Map params,
-    @Param("RowBounds") RowBounds rowBounds
+    @Param("RowBounds") RowBounds rowBounds,
+    @Param("userId") Long userId
   );
 
 

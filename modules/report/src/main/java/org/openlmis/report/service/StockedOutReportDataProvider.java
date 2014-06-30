@@ -54,13 +54,13 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
     RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-    return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds);
+    return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds,this.getUserId());
   }
 
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
+    return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds, this.getUserId());
   }
 
   public StockedOutReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
@@ -73,6 +73,7 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
       }else{
         stockedOutReportParam.setFacilityId(0);
       }
+      stockedOutReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone")? 0:Integer.parseInt(filterCriteria.get("zone")[0]));
       stockedOutReportParam.setRgroupId(StringHelper.isBlank(filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0]));
       stockedOutReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,"productCategory") ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0]));
       stockedOutReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0]));

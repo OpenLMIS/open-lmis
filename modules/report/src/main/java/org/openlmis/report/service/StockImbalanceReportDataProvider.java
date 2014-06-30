@@ -39,13 +39,13 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
     RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-    return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds);
+    return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds, this.getUserId());
   }
 
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
+    return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds, this.getUserId());
   }
 
   public StockImbalanceReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
@@ -62,16 +62,13 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
 
       stockImbalanceReportParam.setRgroupId(StringHelper.isBlank( filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
       stockImbalanceReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program")  ? 0 : Integer.parseInt(filterCriteria.get("program")[0]));
-
-
-
       stockImbalanceReportParam.setScheduleId(StringHelper.isBlank(filterCriteria, "schedule") ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0]));
-
       stockImbalanceReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0 : Integer.parseInt(filterCriteria.get("period")[0]));
       stockImbalanceReportParam.setYear(StringHelper.isBlank(filterCriteria, "year") ? 0 : Integer.parseInt(filterCriteria.get("year")[0]));
-
       stockImbalanceReportParam.setSchedule(StringHelper.isBlank(filterCriteria, "schedule") ? "" : filterCriteria.get("schedule")[0]);
       stockImbalanceReportParam.setPeriod(StringHelper.isBlank(filterCriteria,"period") ? "" : filterCriteria.get("period")[0]);
+      stockImbalanceReportParam.setZoneId(StringHelper.isBlank(filterCriteria,"zone") ? 0 : Long.parseLong(filterCriteria.get("zone")[0]));
+
       if (stockImbalanceReportParam.getProductId() == 0) {
         stockImbalanceReportParam.setProduct("All Products");
       }else if (stockImbalanceReportParam.getProductId() == -1) {//Indicator Products

@@ -16,6 +16,7 @@ import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,16 +31,19 @@ public class EquipmentInventoryController extends BaseController {
   private EquipmentInventoryService service;
 
   @RequestMapping(value="list", method = RequestMethod.GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> getFacilityInventory(@RequestParam("programId") Long programId, @RequestParam("facilityId") Long facilityId ){
     return OpenLmisResponse.response("inventory",service.getInventoryForFacility(facilityId, programId));
   }
 
   @RequestMapping(value="by-id", method = RequestMethod.GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> getInventory(@RequestParam("id") Long id){
     return OpenLmisResponse.response("inventory", service.getInventoryById(id));
   }
 
   @RequestMapping(value="save", method = RequestMethod.POST)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentInventory inventory){
     service.save(inventory);
     return OpenLmisResponse.response("inventory", inventory);

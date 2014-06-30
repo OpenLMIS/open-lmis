@@ -61,8 +61,14 @@ public class ReportLookupController extends BaseController {
 
   @RequestMapping(value="/programs", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getPrograms(){
-      return OpenLmisResponse.response( "programs", this.reportLookupService.getAllPrograms() );
+    return OpenLmisResponse.response( "programs", this.reportLookupService.getAllPrograms() );
   }
+
+  @RequestMapping(value="/user-programs", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getPrograms(HttpServletRequest request){
+    return OpenLmisResponse.response( "programs", this.reportLookupService.getAllPrograms(loggedInUserId(request)) );
+  }
+
   //It Get only programs with regimens
   @RequestMapping(value="/regimenPrograms", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getRegimenPrograms(){
@@ -130,8 +136,15 @@ public class ReportLookupController extends BaseController {
   }
 
   @RequestMapping(value = "/geographic-zones/tree", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getGeographicZoneTree() {
-    GeoZoneTree geoZoneTree =  reportLookupService.getGeoZoneTree();
+  public ResponseEntity<OpenLmisResponse> getGeographicZoneTree(  HttpServletRequest request) {
+    GeoZoneTree geoZoneTree =  reportLookupService.getGeoZoneTree(loggedInUserId(request));
+
+    return OpenLmisResponse.response("zone", geoZoneTree);
+  }
+
+  @RequestMapping(value = "/geographic-zones/tree-program", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getGeographicZoneTreeByProgram( @RequestParam(value = "program", required = true, defaultValue = "0") long program,  HttpServletRequest request) {
+    GeoZoneTree geoZoneTree =  reportLookupService.getGeoZoneTree(loggedInUserId(request), program);
 
     return OpenLmisResponse.response("zone", geoZoneTree);
   }
@@ -142,8 +155,8 @@ public class ReportLookupController extends BaseController {
   }
 
   @RequestMapping(value="/products_by_category", method = GET, headers = BaseController.ACCEPT_JSON)
-  public List<Product> getProductsByCategory(@RequestParam(value = "category", required = true, defaultValue = "0") int category){
-      return this.reportLookupService.getProductListByCategory(category);
+  public List<Product> getProductsByCategory(@RequestParam(value = "category", required = true, defaultValue = "0") int category, @RequestParam(value = "program", required = true, defaultValue = "0") int programId){
+      return this.reportLookupService.getProductListByCategory(programId, category);
   }
 
   @RequestMapping(value="/rgroups", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -228,14 +241,17 @@ public class ReportLookupController extends BaseController {
       @RequestParam("program") Long program,
       @RequestParam("schedule") Long schedule,
       @RequestParam(value = "type", defaultValue = "0" , required = false) Long type,
-      @RequestParam(value = "requisitionGroup", defaultValue = "0", required = false) Long requisitionGroup
+      @RequestParam(value = "requisitionGroup", defaultValue = "0", required = false) Long requisitionGroup,
+      @RequestParam(value = "zone", defaultValue = "0", required = false) Long zone,
+      HttpServletRequest request
+
   ) {
     // set default for optional parameters
     // turns out spring's optional parameter and default config is not cutting it.
     type = (type != null)? type: 0L;
     requisitionGroup = (requisitionGroup != null)?requisitionGroup: 0L;
 
-    return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type, requisitionGroup ));
+    return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type, requisitionGroup, zone, loggedInUserId(request) ));
   }
 
   @RequestMapping(value = "/user/facilities", method = GET, headers = BaseController.ACCEPT_JSON)

@@ -27,7 +27,7 @@ public class StockImbalanceReport implements ReportData {
     private Integer physicalCount;
     private Integer amc;
     @Column(name = "mos")
-    private Integer months;
+    private Float months;
     @Column(name = "required")
     private Integer orderQuantity;
     private String status;

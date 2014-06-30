@@ -68,8 +68,8 @@ app.directive('filterContainer', ['$routeParams', '$location',function ($locatio
 }]);
 
 // now comes the program filter
-app.directive('programFilter', ['ReportPrograms',
-  function (ReportPrograms) {
+app.directive('programFilter', ['ReportUserPrograms',
+  function (ReportUserPrograms) {
     return {
       restrict: 'E',
       require: '^filterContainer',
@@ -80,7 +80,7 @@ app.directive('programFilter', ['ReportPrograms',
         }
 
         scope.$evalAsync(function(){
-          ReportPrograms.get(function (data) {
+          ReportUserPrograms.get(function (data) {
             scope.programs = data.programs;
             scope.programs.unshift({
               'name': '-- Select Programs --'
@@ -188,8 +188,16 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
 }]);
 
 
-app.directive('zoneFilter', ['TreeGeographicZoneList','$routeParams',
-  function (TreeGeographicZoneList, $routeParams) {
+app.directive('zoneFilter', ['TreeGeographicZoneList','TreeGeographicZoneListByProgram','$routeParams',
+  function (TreeGeographicZoneList, TreeGeographicZoneListByProgram, $routeParams) {
+
+    var onCascadedVarsChanged = function( $scope, newValue){
+      if(!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)){
+          TreeGeographicZoneListByProgram.get({program: $scope.filter.program},function(data){
+          $scope.zones = data.zone;
+        });
+      }
+    };
 
     return {
       restrict: 'E',
@@ -206,6 +214,9 @@ app.directive('zoneFilter', ['TreeGeographicZoneList','$routeParams',
           scope.zones = data.zone;
         });
 
+        scope.$watch('filter.program', function (value) {
+          onCascadedVarsChanged(scope, value);
+        });
       },
       templateUrl: 'filter-zone-template'
     };
@@ -398,12 +409,14 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
       var schedule = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.schedule)) ? $scope.filter.schedule : 0;
       var facilityType = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.facilityType)) ? $scope.filter.facilityType : 0;
       var requisitionGroup = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.requisitionGroup)) ? $scope.filter.requisitionGroup : 0;
+      var zone = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.zone)) ? $scope.filter.zone : 0;
       // load facilities
       FacilitiesByProgramParams.get({
         program: program,
         schedule: schedule,
         type: facilityType,
-        requisitionGroup: requisitionGroup
+        requisitionGroup: requisitionGroup,
+        zone: zone
       }, function (data) {
         $scope.facilities = data.facilities;
         if (isUndefined($scope.facilities)) {
@@ -438,9 +451,15 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
         scope.$watch('filter.program', function (value) {
           onPgCascadedVarsChanged(scope, value);
         });
+
+        scope.$watch('filter.zone', function (value) {
+          onPgCascadedVarsChanged(scope, value);
+        });
+
         scope.$watch('filter.schedule', function (value) {
           onPgCascadedVarsChanged(scope, value);
         });
+
         scope.$watch('filter.facilityType', function (value) {
           onPgCascadedVarsChanged(scope, value);
         });
@@ -468,8 +487,6 @@ app.directive('programBudgetFilter', ['GetProgramWithBudgetingApplies', function
         templateUrl: 'filter-program-with-budget-template'
     };
 }]);
-
-
 
 
 
@@ -518,7 +535,6 @@ app.directive('productFilter', ['ReportProductsByProgram','$routeParams',
         scope.productCFilter = function (option) {
           return (!angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) || scope.filter.productCategory === '' || scope.filter.productCategory === '0' || option.categoryId == scope.filter.productCategory);
         };
-
 
         scope.$watch('filter.program', function (value) {
           onPgCascadedVarsChanged(scope, value);

@@ -30,14 +30,14 @@
 
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Order Type:  </label>
-                                    <select ui-select2 style="width:200px;" name="orderType"  ng-model="orderType" ng-options="option.name as option.value for option in orderTypes">
+                                    <select  class="input-large" name="orderType" ng-model="filter.orderType" ng-change="filterChanged()" ng-options="option.name as option.value for option in orderTypes">
                                     </select>
                                 </div>
                               <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
                               <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                               <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
                               <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
-                              <requisition-group-filter class="form-cell horizontalFilters"></requisition-group-filter>
+                              <zone-filter class="form-cell horizontalFilters"></zone-filter>
                               <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
                               <facility-filter class="form-cell horizontalFilters" required="true"></facility-filter>
                               <product-filter class="form-cell horizontalFilters"></product-filter>

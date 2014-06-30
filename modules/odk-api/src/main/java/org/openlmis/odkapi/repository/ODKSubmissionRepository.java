@@ -14,6 +14,7 @@
  */
 package org.openlmis.odkapi.repository;
 
+import org.openlmis.odkapi.domain.ODKStockStatusSubmission;
 import org.openlmis.odkapi.domain.ODKSubmission;
 import org.openlmis.odkapi.repository.mapper.ODKSubmissionMapper;
 import org.springframework.stereotype.Repository;
@@ -37,5 +38,10 @@ public class ODKSubmissionRepository {
     public Long getLastSubmissionId()
     {
         return odkSubmissionMapper.getLastSubmissionId();
+    }
+
+    public void insertStockStatus(ODKStockStatusSubmission odkStockStatusSubmission)
+    {
+        odkSubmissionMapper.insertStockStatus(odkStockStatusSubmission);
     }
 }

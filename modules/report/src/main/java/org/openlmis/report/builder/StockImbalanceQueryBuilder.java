@@ -25,18 +25,20 @@ public class StockImbalanceQueryBuilder {
         Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
         SELECT("distinct supplyingfacility,  facility,  product,  stockinhand physicalCount,  amc,  mos months,  required orderQuantity, CASE WHEN status = 'SO' THEN  'Stocked Out' WHEN status ='US' then  'Below Minimum' WHEN status ='OS' then  'Over Stocked' END AS status ");
-        FROM("vw_stock_status");
+        FROM("vw_stock_status join facilities f on f.id = facility_id join vw_districts d on d.district_id = f.geographicZoneId ");
         writePredicates(filter);
-        ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockImbalanceReport.class, "supplyingfacility asc, facility asc, product asc"));
+        ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockImbalanceReport.class, "supplyingFacility asc, facility asc, product asc"));
         return SQL();
 
         }
     private static void writePredicates(StockImbalanceReportParam filter){
         WHERE("status <> 'SP'");
         WHERE("req_status in ('APPROVED','RELEASED')");
-        WHERE("periodid = #{filterCriteria.periodId}");//required param
-        WHERE("psid = #{filterCriteria.scheduleId}");//required param
-
+        WHERE("(amc != 0 or stockinhand != 0 )");
+        WHERE("periodid = #{filterCriteria.periodId}");
+        WHERE("psid = #{filterCriteria.scheduleId}");
+        // apply user's permission
+        WHERE("facility_id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.programId})");
         if(filter != null){
 
             if (filter.getProgramId() != 0 && filter.getProgramId() != -1) {
@@ -45,8 +47,8 @@ public class StockImbalanceQueryBuilder {
             if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() != -1) {
                 WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
             }
-            if(filter.getFacility() != null && !filter.getFacility().isEmpty()){
-                WHERE("facility = #{filterCriteria.facility}");
+            if(filter.getFacility() != null && !filter.getFacility().isEmpty() && !filter.getFacility().equals("0")){
+                WHERE("facility_id = #{filterCriteria.facility}::numeric");
             }
 
             if(filter.getProductCategoryId() != 0 && filter.getProductCategoryId() != -1 ){
@@ -59,6 +61,10 @@ public class StockImbalanceQueryBuilder {
                 WHERE("productid= #{filterCriteria.productId}");
             } else if (filter.getProductId() == -1){
                 WHERE("indicator_product = true");
+            }
+
+            if(filter.getZoneId() > 0 ){
+              WHERE("( d.district_id = #{filterCriteria.zoneId} or d.zone_id = #{filterCriteria.zoneId} or d.region_id = #{filterCriteria.zoneId} or d.parent = #{filterCriteria.zoneId} )");
             }
         }
     }

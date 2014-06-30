@@ -32,15 +32,21 @@ public interface FacilityLookupReportMapper {
     Facility getFacilityByCode(String code);
 
     @Select("SELECT f.id, f.code, f.name" +
-      "   FROM " +
-      "       facilities f join programs_supported ps " +
-      "          on ps.facilityid = f.id " +
-      "          where ps.programid = #{program} and ps.active = true  order by f.name")
-    List<Facility> getFacilitiesByProgram(@Param("program") Long program);
+        "   FROM " +
+        "       facilities f " +
+        "             join programs_supported ps " +
+        "                   on ps.facilityid = f.id " +
+        "             join vw_districts d on d.district_id = f.geographicZoneId " +
+        "          where " +
+        "               f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{program}) and " +
+        "               (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and " +
+        "               ps.programid = #{program} and ps.active = true  order by f.name")
+    List<Facility> getFacilitiesByProgram(@Param("program") Long program, @Param("zone") Long zone, @Param("userId") Long userId);
 
   @Select("SELECT f.id, f.code, f.name" +
       "   FROM " +
       "       facilities f  " +
+      "             join vw_districts d on d.district_id = f.geographicZoneId " +
       "          join programs_supported ps \n" +
       "            on ps.facilityid = f.id\n" +
       "          join requisition_group_members m \n" +
@@ -48,15 +54,18 @@ public interface FacilityLookupReportMapper {
       "          join requisition_group_program_schedules rps\n" +
       "            on m.requisitionGroupId = rps.requisitionGroupId and ps.programId = rps.programId " +
       "        where " +
+      "               f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{program}) and " +
+      "               (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and " +
       "             ps.programid = #{program} " +
       "             and rps.scheduleid = #{schedule} " +
       "             and ps.active = true  " +
       "        order by f.name")
-    List<Facility> getFacilitiesByProgramSchedule(@Param("program") Long program, @Param("schedule") Long schedule);
+    List<Facility> getFacilitiesByProgramSchedule(@Param("program") Long program, @Param("schedule") Long schedule, @Param("zone") Long zone, @Param("userId") Long userId);
 
   @Select("SELECT f.id, f.code, f.name" +
       "   FROM " +
       "       facilities f  " +
+      "             join vw_districts d on d.district_id = f.geographicZoneId " +
       "          join programs_supported ps \n" +
       "            on ps.facilityid = f.id\n" +
       "          join requisition_group_members m \n" +
@@ -64,17 +73,20 @@ public interface FacilityLookupReportMapper {
       "          join requisition_group_program_schedules rps\n" +
       "            on m.requisitionGroupId = rps.requisitionGroupId and ps.programId = rps.programId " +
       "        where " +
+      "               f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{program}) and " +
+      "               (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and " +
       "             ps.programid = #{program} " +
       "             and rps.scheduleid = #{schedule} " +
       "             and ps.active = true  " +
       "             and f.id in (select facilityId from requisition_group_members where requisitionGroupId = #{requisitionGroup})  " +
       "        order by f.name")
-  List<Facility> getFacilitiesByProgramScheduleAndRG(@Param("program") Long program, @Param("schedule") Long schedule, @Param("requisitionGroup") Long requisitionGroup);
+  List<Facility> getFacilitiesByProgramScheduleAndRG(@Param("program") Long program, @Param("schedule") Long schedule, @Param("requisitionGroup") Long requisitionGroup, @Param("zone") Long zone, @Param("userId") Long userId);
 
 
   @Select("SELECT f.id, f.code, f.name" +
       "   FROM " +
       "       facilities f " +
+      "             join vw_districts d on d.district_id = f.geographicZoneId " +
       "          join programs_supported ps \n" +
       "            on ps.facilityid = f.id\n" +
       "          join requisition_group_members m \n" +
@@ -82,16 +94,19 @@ public interface FacilityLookupReportMapper {
       "          join requisition_group_program_schedules rps\n" +
       "            on m.requisitionGroupId = rps.requisitionGroupId and ps.programId = rps.programId\n" +
       "        where " +
+      "               f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{program}) and" +
+      "               (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and " +
       "             ps.programid = #{program} " +
       "             and rps.scheduleid = #{schedule} " +
       "             and f.typeid = #{type} " +
       "             and ps.active = true  " +
       "        order by f.name")
-    List<Facility> getFacilitiesByPrgraomScheduleType(@Param("program") Long program, @Param("schedule") Long schedule, @Param("type") Long type);
+    List<Facility> getFacilitiesByPrgraomScheduleType(@Param("program") Long program, @Param("schedule") Long schedule, @Param("type") Long type, @Param("zone") Long zone, @Param("userId") Long userId);
 
     @Select("SELECT f.id, f.code, f.name" +
         "   FROM " +
         "       facilities f " +
+        "             join vw_districts d on d.district_id = f.geographicZoneId " +
         "          join programs_supported ps \n" +
         "            on ps.facilityid = f.id\n" +
         "          join requisition_group_members m \n" +
@@ -99,13 +114,15 @@ public interface FacilityLookupReportMapper {
         "          join requisition_group_program_schedules rps\n" +
         "            on m.requisitionGroupId = rps.requisitionGroupId and ps.programId = rps.programId\n" +
         "        where " +
+        "               f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{Program}) and " +
+        "               (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and " +
         "             ps.programid = #{program} " +
         "             and rps.scheduleid = #{schedule} " +
         "             and f.typeid = #{type} " +
         "             and ps.active = true  " +
         "             and f.id in (select facilityid from requisition_group_members where requisitionGroupId = #{requisitionGroup})  " +
         "        order by f.name")
-    List<Facility> getFacilitiesByPrgraomScheduleTypeAndRG(@Param("program") Long program, @Param("schedule") Long schedule, @Param("type") Long type, @Param("requisitionGroup") Long requisitionGroup);
+    List<Facility> getFacilitiesByPrgraomScheduleTypeAndRG(@Param("program") Long program, @Param("schedule") Long schedule, @Param("type") Long type, @Param("requisitionGroup") Long requisitionGroup, @Param("zone") Long zone);
 
 
 

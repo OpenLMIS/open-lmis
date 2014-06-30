@@ -31,7 +31,8 @@ public interface AdjustmentSummaryReportMapper {
     public List<AdjustmentSummaryReport> getFilteredSortedPagedAdjustmentSummaryReport(
             @Param("filterCriteria") AdjustmentSummaryReportParam filterCriteria,
             @Param("SortCriteria") Map<String, String[]> SortCriteria ,
-            @Param("RowBounds")RowBounds rowBounds
+            @Param("RowBounds")RowBounds rowBounds,
+            @Param("userId")Long userId
     );
 
 }

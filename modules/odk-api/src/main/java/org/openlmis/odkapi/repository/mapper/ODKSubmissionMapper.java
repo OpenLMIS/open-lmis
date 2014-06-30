@@ -14,6 +14,7 @@
  */
 package org.openlmis.odkapi.repository.mapper;
 import org.apache.ibatis.annotations.*;
+import org.openlmis.odkapi.domain.ODKStockStatusSubmission;
 import org.openlmis.odkapi.domain.ODKSubmission;
 import org.springframework.stereotype.Repository;
 
@@ -37,4 +38,33 @@ public interface ODKSubmissionMapper {
 
     @Select("SELECT MAX(id) FROM odk_submission")
     public Long getLastSubmissionId();
+
+    @Insert("INSERT INTO odk_stock_status_submission(" +
+            "ODKSubmissionId," +
+            "MSDCode, " +
+            "commodityName, " +
+            "managed, " +
+            "physicalInventory," +
+            "quantityExpiredToday," +
+            "stockCardAvailable," +
+            "stockDataThreeMonths," +
+            "SOSevenDays," +
+            "totalDaysStockedoutThreeMonths," +
+            "issuedThreeMonths," +
+            "daysDataAvailable) " +
+            "VALUES (" +
+            "#{ODKSubmissionId}, " +
+            "#{MSDCode}, " +
+            "#{commodityName}, " +
+            "#{managed}," +
+            "#{physicalInventory}," +
+            "#{quantityExpiredToday}," +
+            "#{stockCardAvailable}," +
+            "#{stockDataThreeMonths}," +
+            "#{SOSevenDays}," +
+            "#{totalDaysStockedoutThreeMonths}," +
+            "#{issuedThreeMonths}," +
+            "#{daysDataAvailable})")
+    @Options(useGeneratedKeys = true)
+    void insertStockStatus(ODKStockStatusSubmission odkStockStatusSubmission);
 }

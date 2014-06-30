@@ -26,9 +26,10 @@ public class StockedOutReportQueryBuilder {
         Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
         SELECT("DISTINCT supplyingfacility, facilitycode, productCode, facility, product, facilitytypename, location, processing_period_name");
-        FROM("vw_stock_status");
+        FROM("vw_stock_status join vw_districts d on gz_id = d.district_id");
         WHERE("status = 'SO'" );
         WHERE("reported_figures > 0");
+        WHERE("facility_id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.programId})");
         writePredicates(filter);
         ORDER_BY("supplyingfacility asc, facility asc, product asc");
         // copy the sql over to a variable, this makes the debugging much more possible.
@@ -44,7 +45,7 @@ public class StockedOutReportQueryBuilder {
                 WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
             }
             if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
-                WHERE("gz_id = #{filterCriteria.zoneId}");
+              WHERE("(d.district_id = #{filterCriteria.zoneId} or d.zone_id = #{filterCriteria.zoneId} or d.region_id = #{filterCriteria.zoneId} or d.parent = #{filterCriteria.zoneId})");
             }
 
             WHERE("periodId = #{filterCriteria.periodId}");
