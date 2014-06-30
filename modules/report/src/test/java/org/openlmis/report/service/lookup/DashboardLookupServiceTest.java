@@ -73,40 +73,40 @@ public class DashboardLookupServiceTest {
     @Test
     public void shouldReturnShipmentLeadTime() throws Exception {
         List<ShipmentLeadTime> expectedShipmentLeadTimeList = new ArrayList<>(1);
-        when(mapper.getShipmentLeadTime(1L,1L,getCommaSeparatedIds(null))).thenReturn(expectedShipmentLeadTimeList);
-        assertThat(lookupService.getShipmentLeadTime(1L,1L, null), is(expectedShipmentLeadTimeList));
-        verify(mapper).getShipmentLeadTime(1L,1L,getCommaSeparatedIds(null));
+        when(mapper.getShipmentLeadTime(1L,1L,1L,1L)).thenReturn(expectedShipmentLeadTimeList);
+        assertThat(lookupService.getShipmentLeadTime(1L,1L,1L,1L), is(expectedShipmentLeadTimeList));
+        verify(mapper).getShipmentLeadTime(1L,1L,1L,1L);
     }
 
     @Test
     public void shouldReturnStockEfficiencyData() throws Exception {
         List<StockingInfo> expectedStockingInfoList = new ArrayList<>(1);
-        when(mapper.getStockEfficiencyData(1L,1L,getCommaSeparatedIds(null),getCommaSeparatedIds(null))).thenReturn(expectedStockingInfoList);
-        assertThat(lookupService.getStockEfficiencyData(1L,1L,null,null),is(expectedStockingInfoList));
-        verify(mapper).getStockEfficiencyData(1L,1L,getCommaSeparatedIds(null),getCommaSeparatedIds(null));
+        when(mapper.getStockEfficiencyData(1L,1L,1L,1L,getCommaSeparatedIds(null))).thenReturn(expectedStockingInfoList);
+        assertThat(lookupService.getStockEfficiencyData(1L,1L,1L,1L,null),is(expectedStockingInfoList));
+        verify(mapper).getStockEfficiencyData(1L,1L,1L,1L,getCommaSeparatedIds(null));
 
     }
 
     @Test
     public void shouldReturnStockEfficiencyDetailData() throws Exception {
         List<StockingInfo> expectedStockingInfoDetailList = new ArrayList<>(1);
-        when(mapper.getStockEfficiencyDetailData(1L,1L,getCommaSeparatedIds(null),getCommaSeparatedIds(null))).thenReturn(expectedStockingInfoDetailList);
-        assertThat(lookupService.getStockEfficiencyDetailData(1L,1L,null,null), is(expectedStockingInfoDetailList));
-        verify(mapper).getStockEfficiencyDetailData(1L,1L,getCommaSeparatedIds(null),getCommaSeparatedIds(null));
+        when(mapper.getStockEfficiencyDetailData(1L,1L,1L,1L,getCommaSeparatedIds(null))).thenReturn(expectedStockingInfoDetailList);
+        assertThat(lookupService.getStockEfficiencyDetailData(1L,1L,1L,1L,null), is(expectedStockingInfoDetailList));
+        verify(mapper).getStockEfficiencyDetailData(1L,1L,1L,1L,getCommaSeparatedIds(null));
     }
 
     @Test
     public void shouldReturnStockOutFacilities() throws Exception {
-        when(mapper.getStockOutFacilities(1L,1L,1L,getCommaSeparatedIds(null))).thenReturn(null);
-        assertThat(lookupService.getStockOutFacilities(1L,1L,1L,null), is(nullValue()));
-        verify(mapper).getStockOutFacilities(1L,1L,1L,getCommaSeparatedIds(null));
+        when(mapper.getStockOutFacilities(1L,1L,1L,1L,1L)).thenReturn(null);
+        assertThat(lookupService.getStockOutFacilities(1L,1L,1L,1L,1L), is(nullValue()));
+        verify(mapper).getStockOutFacilities(1L,1L,1L,1L,1L);
     }
 
     @Test
     public void shouldReturnStockOutFacilitiesByRequisitionGroup() throws Exception {
-        when(mapper.getStockOutFacilitiesForGeographicZone(1L, 1L, 1L, 1L)).thenReturn(null);
-        assertThat(lookupService.getStockOutFacilitiesByGeographicZoneFilter(1L, 1L, 1L, 1L),is(nullValue()));
-        verify(mapper).getStockOutFacilitiesForGeographicZone(1L, 1L, 1L, 1L);
+        when(mapper.getStockOutFacilitiesForGeographicZone(1L,1L, 1L, 1L, 1L)).thenReturn(null);
+        assertThat(lookupService.getStockOutFacilitiesByGeographicZoneFilter(1L,1L, 1L, 1L, 1L),is(nullValue()));
+        verify(mapper).getStockOutFacilitiesForGeographicZone(1L,1L, 1L, 1L, 1L);
 
     }
     @Test
@@ -126,9 +126,9 @@ public class DashboardLookupServiceTest {
     @Test
     public void shouldReturnNotificationsByCategory() throws Exception {
         List<HashMap> expectedFacilityStockedOutList = new ArrayList<>(1);
-        when(mapper.getNotificationDetails("alert_facility_stockedout",1L)).thenReturn(expectedFacilityStockedOutList);
-        assertThat(lookupService.getNotificationsByCategory("alert_facility_stockedout",1L), is(expectedFacilityStockedOutList));
-        verify(mapper).getNotificationDetails("alert_facility_stockedout",1L);
+        when(mapper.getNotificationDetails(1L,1L,1L,1L,"alert_facility_stockedout")).thenReturn(expectedFacilityStockedOutList);
+        assertThat(lookupService.getNotificationsByCategory(1L,1L,1L,1L,"alert_facility_stockedout"), is(expectedFacilityStockedOutList));
+        verify(mapper).getNotificationDetails(1L,1L,1L,1L,"alert_facility_stockedout");
 
     }
 
@@ -141,17 +141,17 @@ public class DashboardLookupServiceTest {
 
     @Test
     public void shouldReturnReportingPerformance() throws Exception {
-        when(mapper.getReportingPerformance(1L,1L,getCommaSeparatedIds(null))).thenReturn(null);
-        assertThat(lookupService.getReportingPerformance(1L,1L,null),is(nullValue()));
-        verify(mapper).getReportingPerformance(1L,1L,getCommaSeparatedIds(null));
+        when(mapper.getReportingPerformance(1L,1L,1L,1L)).thenReturn(null);
+        assertThat(lookupService.getReportingPerformance(1L,1L,1L,1L),is(nullValue()));
+        verify(mapper).getReportingPerformance(1L,1L,1L,1L);
     }
 
     @Test
     public void shouldReportingPerformanceDetail() throws Exception {
         List<ReportingPerformance> expectedNonReportingPerformance = new ArrayList<>(1);
-        when(mapper.getReportingPerformanceDetail(1L,1L,getCommaSeparatedIds(null),"non_reporting")).thenReturn(expectedNonReportingPerformance);
-        assertThat(lookupService.getReportingPerformanceDetail(1L,1L,null,"non_reporting"),is(expectedNonReportingPerformance));
-        verify(mapper).getReportingPerformanceDetail(1L,1L,getCommaSeparatedIds(null),"non_reporting");
+        when(mapper.getReportingPerformanceDetail(1L,1L,1L,1L,"non_reporting")).thenReturn(expectedNonReportingPerformance);
+        assertThat(lookupService.getReportingPerformanceDetail(1L,1L,1L,1L,"non_reporting"),is(expectedNonReportingPerformance));
+        verify(mapper).getReportingPerformanceDetail(1L,1L,1L,1L,"non_reporting");
 
     }
 }
