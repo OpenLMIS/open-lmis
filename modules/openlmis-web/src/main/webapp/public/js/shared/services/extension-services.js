@@ -491,10 +491,6 @@ services.factory('ReportProgramsBySupervisoryNode', function ($resource) {
     return $resource('/reports/supervisory-node/:supervisoryNodeId/programs.json', {}, {});
 });
 
-services.factory('RequisitionGroupsBySupervisoryNodeProgramSchedule', function($resource){
-    return $resource('/reports/reporting_groups_by_supervisory_node_program_schedule.json', {}, {});
-});
-
 services.factory('StockedOutFacilitiesByDistrict', function($resource){
     return $resource('/dashboard/geographic-zone/:zoneId/program/:programId/period/:periodId/product/:productId/stockedOutFacilities.json',{},{});
 
@@ -574,15 +570,15 @@ services.factory("RnRStatusSummary",function($resource){
 services.factory("totalRnRCreatedByRequisitionGroup",function($resource){
     return $resource('/dashboard//RnRCreateForRequisitionGroup',{},{});
 });
-services.factory('RnRStatusByRequisitionGroupAndPeriod',function($resource){
-    return $resource('/dashboard/RnRStatus/:requisitionGroupId/:periodId/:programId/rnrStatus.json',{},{});
+services.factory('RnRStatusSummary',function($resource){
+    return $resource('/dashboard/RnRStatus/:zoneId/:periodId/:programId/rnrStatus.json',{},{});
   });
 
-services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resource){
+/*services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resource){
     $resource('/dashboard/RnRStatusByRequisitionGroupDetails.json',{},{});
-});
+});*/
 
-services.factory('RnRStatusDetailsByRequisitionGroup', function($resource){
+services.factory('RnRStatusDetail', function($resource){
     return $resource('/dashboard/rnrStatus-detail.json',{},{});
 });
 

@@ -9,18 +9,18 @@
  */
 
 
-function RnRStatusDetailsController($scope,$routeParams,RnRStatusDetailsByRequisitionGroup,ngTableParams,$filter) {
+function RnRStatusDetailsController($scope,$routeParams,RnRStatusDetail,ngTableParams,$filter) {
 
     $scope.$parent.currentTab = 'RNR-STATUS-DETAIL';
 
     $scope.$on('$viewContentLoaded', function () {
 
-        if(!isUndefined($routeParams.rgroupId) &&
+        if(!isUndefined($routeParams.zoneId) &&
             !isUndefined($routeParams.programId) &&
             !isUndefined($routeParams.periodId)
             ){
-            RnRStatusDetailsByRequisitionGroup.get({
-                requisitionGroupId: $routeParams.rgroupId,
+            RnRStatusDetail.get({
+                zoneId: $routeParams.zoneId,
                 programId: $routeParams.programId,
                 periodId: $routeParams.periodId,
                 status: $routeParams.status

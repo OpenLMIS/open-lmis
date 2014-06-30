@@ -662,8 +662,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         if(isUndefined(filterHistory)){
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
-                //$scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
-               // $scope.processSupervisoryNodeChange();
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
 
@@ -690,9 +688,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                 $scope.formFilter = $scope.filterObject;
             }
         }else{
-
-           // $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
-           // $scope.processSupervisoryNodeChange();
             $scope.registerWatches();
             $scope.formFilter = $scope.filterObject = filterHistory;
 

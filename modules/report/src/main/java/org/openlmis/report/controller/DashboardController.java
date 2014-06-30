@@ -185,29 +185,31 @@ public class DashboardController extends BaseController {
     ){
         return OpenLmisResponse.response(RNR_STATUS_DETAILS,this.lookupService.getRnRStatusDetails(requisitionGroupId,programId,periodId));
     }
-    @RequestMapping(value="/RnRStatus/{requisitionGroupId}/{periodId}/{programId}/rnrStatus",method = GET,headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse>getRnRStatusByRequisitionGroupAndPeriod(@PathVariable("requisitionGroupId") Long requisitionGroupId,
-                                                                                   @PathVariable("periodId") Long periodId,
-                                                                                   @PathVariable("programId") Long programId ){
+    @RequestMapping(value="/RnRStatus/{zoneId}/{periodId}/{programId}/rnrStatus",method = GET,headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getRnRStatusSummary(@PathVariable("zoneId") Long zoneId,
+                                                                @PathVariable("periodId") Long periodId,
+                                                                @PathVariable("programId") Long programId,
+                                                                HttpServletRequest request){
 
-        return OpenLmisResponse.response(RNR_STATUS_BY_REQUISITION_GROUP,this.lookupService.getRnRStatusByRequisitionGroupAndPeriod(requisitionGroupId,periodId,programId));
+        return OpenLmisResponse.response(RNR_STATUS_BY_REQUISITION_GROUP,this.lookupService.getRnRStatusSummary(loggedInUserId(request), zoneId, periodId, programId));
     }
 
-    @RequestMapping(value="/RnRStatusByRequisitionGroupDetails",method = GET,headers = ACCEPT_JSON)
+    /*@RequestMapping(value="/RnRStatusByRequisitionGroupDetails",method = GET,headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>getRnRStatusDetails(
             @RequestParam("requisitionGroupId") Long requisitionGroupId,
             @RequestParam("periodId") Long periodId
     ){
         return OpenLmisResponse.response(RNR_STATUS_BY_REQUISITION_GROUP_DETAILS,this.lookupService.getRnRStatusByRequisitionGroupAndPeriodData(requisitionGroupId,periodId));
     }
-
+*/
 
     @RequestMapping(value = "/rnrStatus-detail", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>  getRnRStatusDetail(@RequestParam("periodId") Long periodId,
                                                                            @RequestParam("programId") Long programId,
-                                                                           @RequestParam("requisitionGroupId") Long requisitionGroupId,
-                                                                           @RequestParam("status") String status){
-        return OpenLmisResponse.response(RNR_STATUS_DETAILS, this.lookupService.getRnRStatusDetail(periodId,programId, requisitionGroupId,status));
+                                                                           @RequestParam("zoneId") Long zoneId,
+                                                                           @RequestParam("status") String status,
+                                                                           HttpServletRequest request){
+        return OpenLmisResponse.response(RNR_STATUS_DETAILS, this.lookupService.getRnRStatusDetail(loggedInUserId(request), periodId,programId, zoneId,status));
     }
 
 }

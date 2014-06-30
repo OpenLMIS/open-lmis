@@ -189,10 +189,6 @@ public class ReportLookupService {
     return this.rgMapper.getByProgramAndSchedule(program, schedule);
   }
 
-  public List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(Long userId, Long nodeId, Long programId, Long scheduleId){
-      return rgMapper.getBySupervisoryNodesAndProgramAndSchedule(userId,nodeId,programId,scheduleId);
-  }
-
   public List<RequisitionGroup> getRequisitionGroupsByProgram(int program) {
     return this.rgMapper.getByProgram(program);
   }

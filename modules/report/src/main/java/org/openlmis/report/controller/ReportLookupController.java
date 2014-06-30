@@ -45,11 +45,11 @@ public class ReportLookupController extends BaseController {
 
   public static final String OPEN_LMIS_OPERATION_YEARS = "years";
   public static final String OPEN_LMIS_OPERATION_MONTHS = "months";
-
+/*
   private String  getCommaSeparatedIds(List<Long> idList){
 
       return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
-  }
+  }*/
 
   @Autowired
   private ReportLookupService reportLookupService;
@@ -166,26 +166,6 @@ public class ReportLookupController extends BaseController {
       return this.reportLookupService.getRequisitionGroupsByProgramAndSchedule(program,schedule);
   }
 
-  @RequestMapping(value="/reporting_groups_by_supervisory_node_program_schedule", method = GET, headers = BaseController.ACCEPT_JSON)
-  public List<RequisitionGroup> getBySupervisoryNodesAndProgramAndSchedule(
-         @RequestParam(value = "programId") Long programId,
-         @RequestParam(value = "scheduleId") Long scheduleId,
-         @RequestParam(value = "supervisoryNodeId") Long supervisoryNodeId,
-         HttpServletRequest request
-  ){
-      /*List<SupervisoryNode> supervisoryNodeList = reportLookupService.getAllSupervisoryNodesByParentNodeId(supervisoryNodeId);
-
-      List<Long> supervisoryNodeIds = null;
-
-      if (supervisoryNodeList != null && supervisoryNodeList.size() > 0){
-          supervisoryNodeIds = new ArrayList<>(supervisoryNodeList.size());
-          for(SupervisoryNode node : supervisoryNodeList){
-              supervisoryNodeIds.add(node.getId());
-          }
-      }*/
-      return this.reportLookupService.getBySupervisoryNodesAndProgramAndSchedule(loggedInUserId(request), supervisoryNodeId ,programId,scheduleId);
-  }
-
 
   @RequestMapping(value="/productCategories", method = GET, headers = BaseController.ACCEPT_JSON)
   public List<ProductCategory> getProductCategories(){
@@ -258,22 +238,12 @@ public class ReportLookupController extends BaseController {
     return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type, requisitionGroup ));
   }
 
-/*  @RequestMapping(value = "/facilities/geographicZone/{geographicZoneId}/requisitionGroup/{rgroupId}/program/{programId}/schedule/{scheduleId}", method = GET, headers = BaseController.ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getFacilities(
-          @PathVariable("geographicZoneId") Long geographicZoneId,
-          @PathVariable("rgroupId") Long requisitionGroupId,
-          @PathVariable("programId") Long programId,
-          @PathVariable("scheduleId") Long scheduleId,
+  @RequestMapping(value = "/user/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
           HttpServletRequest request
   ) {
-      return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesBy(geographicZoneId,requisitionGroupId,programId,scheduleId));
-  }*/
-@RequestMapping(value = "/user/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
-public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
-        HttpServletRequest request
-) {
-    return OpenLmisResponse.response("facilities", facilityService.getForUserAndRights(loggedInUserId(request),Right.VIEW_REQUISITION));
-}
+      return OpenLmisResponse.response("facilities", facilityService.getForUserAndRights(loggedInUserId(request),Right.VIEW_REQUISITION));
+  }
 
 
 

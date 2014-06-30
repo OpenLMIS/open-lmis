@@ -29,20 +29,47 @@ public interface RnRStatusSummaryReportMapper {
             "            group by facilitycode,facilityname,facilitytypename,createddate,status order by facilityname ")
     public List<RnRStatusSummaryReport>getRnRStatusDetails(@Param("requisitionGroupId") Long requisitionGroupId,@Param("programId") Long programId,@Param("periodId") Long periodId);
 
-    @Select("select facilitycode,facilityname,facilitytypename,createddate,status  from vw_rnr_status_details \n" +
-            "\n" +
-            "             where requisitiongroupid = #{requisitionGroupId} and programid=#{programId} and periodid=#{periodId} and status= #{status}\n" +
-            "                        group by facilitycode,facilityname,facilitytypename,createddate,status order by status\n" +
-            "             ")
-    List<RnRStatusSummaryReport> getRnRStatusDetail(@Param("periodId") Long periodId, @Param("programId") Long programId, @Param("requisitionGroupId") Long requisitionGroupId, @Param("status") String status);
+    @Select("SELECT\n" +
+            "programs.name AS programname,\n" +
+            "programs.id AS programid,\n" +
+            "vw_facility_requisitions.periodid,\n" +
+            "processing_schedules.name AS periodname,\n" +
+            "vw_facility_requisitions.geographiczoneid AS geographiczoneid,\n" +
+            "vw_facility_requisitions.geographiczonename,\n" +
+            "facility_types.name AS facilitytypename,\n" +
+            "vw_facility_requisitions.facilityid,\n" +
+            "vw_facility_requisitions.facilitycode,\n" +
+            "vw_facility_requisitions.facilityname,\n" +
+            "vw_facility_requisitions.rnrid,\n" +
+            "vw_facility_requisitions.status,\n" +
+            "vw_facility_requisitions.createddate\n" +
+            "FROM\n" +
+            "vw_facility_requisitions\n" +
+            "INNER JOIN programs ON programs.id = vw_facility_requisitions.programid\n" +
+            "INNER JOIN facility_types ON facility_types.id = vw_facility_requisitions.typeid\n" +
+            "INNER JOIN processing_periods ON processing_periods.id = vw_facility_requisitions.periodid\n" +
+            "INNER JOIN processing_schedules ON processing_schedules.id = processing_periods.scheduleid\n" +
+            "WHERE vw_facility_requisitions.geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
+            "AND programid = #{programId}\n" +
+            "AND periodid = #{periodId}\n"+
+            "AND  status= #{status}")
+    List<RnRStatusSummaryReport> getRnRStatusDetail(@Param("userId") Long userId, @Param("periodId") Long periodId, @Param("programId") Long programId, @Param("zoneId") Long zoneId, @Param("status") String status);
 
 
 
 
-    @Select("select status, count(rnrid) totalStatus from vw_rnr_status\n" +
-            "where requisitiongroupid = #{requisitionGroupId} and periodid = #{periodId} group by status order by status")
-    public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriod(@Param("requisitionGroupId") Long requisitionGroupId,@Param("periodId") Long periodId,
-                                                                               @Param("programId") Long programId);
+    @Select("SELECT\n" +
+            "vw_facility_requisitions.status,\n" +
+            "count(*) totalStatus\n" +
+            "FROM\n" +
+            "vw_facility_requisitions\n" +
+            "INNER JOIN programs ON programs.id = vw_facility_requisitions.programid\n" +
+            "where vw_facility_requisitions.geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
+            "and vw_facility_requisitions.programid = #{programId}\n" +
+            "and vw_facility_requisitions.periodid = #{periodId}\n" +
+            "GROUP BY vw_facility_requisitions.status \n")
+    public List<RnRStatusSummaryReport> getRnRStatusSummary(@Param("userId") Long userId, @Param("zoneId") Long zoneId, @Param("periodId") Long periodId,
+                                                            @Param("programId") Long programId);
 
     @Select("select programname, status, count(rnrid) totalStatus from vw_rnr_status" +
             "where  requisitiongroupid = #{requisitiongroupId} and periodid = #{periodId} group by programname, status")
