@@ -98,15 +98,14 @@ public class DashboardControllerTest {
     @Test
     public void shouldReturnStockEfficiencyStatics() throws Exception{
         List<Long> productIdList = new ArrayList<>();
-        List<Long> rgIdList = new ArrayList<>();
         List<StockingInfo> expectedStockingInfo = new ArrayList<>(1);
         expectedStockingInfo.add(new StockingInfo());
 
-        when(lookupService.getStockEfficiencyData(1L, 1L, rgIdList, productIdList)).thenReturn(expectedStockingInfo);
+        when(lookupService.getStockEfficiencyData(userId, 1L, 1L, 1L, productIdList)).thenReturn(expectedStockingInfo);
 
-        ResponseEntity<OpenLmisResponse> fetchedStockingInfoStat = dashboardController.getStockEfficiencyData(1L, 1L, rgIdList, productIdList);
+        ResponseEntity<OpenLmisResponse> fetchedStockingInfoStat = dashboardController.getStockEfficiencyData(1L, 1L, 1L, productIdList, httpServletRequest);
 
-        verify(lookupService).getStockEfficiencyData(1L, 1L, rgIdList, productIdList);
+        verify(lookupService).getStockEfficiencyData(userId, 1L, 1L, 1L, productIdList);
 
         assertThat((List<StockingInfo>) fetchedStockingInfoStat.getBody().getData().get(STOCKING_EFFICIENCY_STATICS), is(expectedStockingInfo));
     }
@@ -114,29 +113,27 @@ public class DashboardControllerTest {
     @Test
     public void shouldReturnStockEfficiencyDetail() throws Exception{
         List<Long> productIdList = new ArrayList<>();
-        List<Long> rgIdList = new ArrayList<>();
         List<StockingInfo> expectedStockingDetail = new ArrayList<>(1);
         expectedStockingDetail.add(new StockingInfo());
 
-        when(lookupService.getStockEfficiencyDetailData(1L, 1L, rgIdList , productIdList)).thenReturn(expectedStockingDetail);
+        when(lookupService.getStockEfficiencyDetailData(userId, 1L, 1L, 1L , productIdList)).thenReturn(expectedStockingDetail);
 
-        ResponseEntity<OpenLmisResponse> fetchedStockingInfoStat = dashboardController.getStockEfficiencyDetailData(1L,1L, rgIdList,productIdList);
+        ResponseEntity<OpenLmisResponse> fetchedStockingInfoStat = dashboardController.getStockEfficiencyDetailData(1L,1L, 1L,productIdList, httpServletRequest);
 
-        verify(lookupService).getStockEfficiencyDetailData(1L,1L, rgIdList,productIdList);
+        verify(lookupService).getStockEfficiencyDetailData(userId,1L,1L, 1L,productIdList);
 
         assertThat((List<StockingInfo>) fetchedStockingInfoStat.getBody().getData().get(STOCKING_EFFICIENCY_DETAIL), is(expectedStockingDetail));
     }
     @Test
     public void shouldReturnStockOutFacilities() throws Exception{
-        List<Long> rgIdList = new ArrayList<>();
-        Long programId = 1L, periodId = 1L, productId = 1L;
+        Long programId = 1L, periodId = 1L, productId = 1L, zoneId = 1L;
         List<StockOut> expectedStockedOutFacilityList = new ArrayList<>(1);
 
-        when(lookupService.getStockOutFacilities(periodId,programId,productId,rgIdList)).thenReturn(expectedStockedOutFacilityList);
+        when(lookupService.getStockOutFacilities(userId,periodId,programId,productId,zoneId)).thenReturn(expectedStockedOutFacilityList);
 
-        ResponseEntity<OpenLmisResponse> fetchedStockedOutFacilityList = dashboardController.getStockedOutFacilities(periodId,programId,productId,rgIdList);
+        ResponseEntity<OpenLmisResponse> fetchedStockedOutFacilityList = dashboardController.getStockedOutFacilities(periodId,programId,productId,zoneId, httpServletRequest);
 
-        verify(lookupService).getStockOutFacilities(periodId,programId,productId,rgIdList);
+        verify(lookupService).getStockOutFacilities(userId,periodId,programId,productId,zoneId);
 
         assertThat((List<StockOut>) fetchedStockedOutFacilityList.getBody().getData().get(STOCKED_OUT_FACILITIES), is(expectedStockedOutFacilityList));
     }
@@ -155,8 +152,8 @@ public class DashboardControllerTest {
     @Test
     public void shouldReturnNotificationTypeAlerts() throws Exception{
         List<AlertSummary> expectedNotificationAlerts = new ArrayList<>(2);
-        expectedNotificationAlerts.add(new AlertSummary(1L,"10",null,1L,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
-        expectedNotificationAlerts.add(new AlertSummary(2L,"20",null,1L,1L,"NOTIFICATION","SUMMARY",false,true,null,null,null));
+        expectedNotificationAlerts.add(new AlertSummary(1L,"10",null,1L,1L,1L,1L,"Muheza","NOTIFICATION","SUMMARY",false,true,null,null,null));
+        expectedNotificationAlerts.add(new AlertSummary(2L,"20",null,1L,1L,1L,1L,"Muheza","NOTIFICATION","SUMMARY",false,true,null,null,null));
 
         when(lookupService.getNotificationAlerts()).thenReturn(expectedNotificationAlerts);
 
@@ -171,10 +168,10 @@ public class DashboardControllerTest {
     public void shouldReturnNotificationsByCategory() throws Exception{
         String alertFacilityStockOut = "alert_facility_stockout";
         List<HashMap> alertFacilityStockOutList = new ArrayList<>(1);
-        when(lookupService.getNotificationsByCategory(alertFacilityStockOut,1L)).thenReturn(alertFacilityStockOutList);
+        when(lookupService.getNotificationsByCategory(userId,1L,1L,1L,alertFacilityStockOut)).thenReturn(alertFacilityStockOutList);
 
-        ResponseEntity<OpenLmisResponse> fetchedNotificationsByCategory = dashboardController.getNotificationsByCategory(1L,alertFacilityStockOut);
-        verify(lookupService).getNotificationsByCategory(alertFacilityStockOut,1L);
+        ResponseEntity<OpenLmisResponse> fetchedNotificationsByCategory = dashboardController.getNotificationsByCategory(1L,1L,1L,alertFacilityStockOut,httpServletRequest);
+        verify(lookupService).getNotificationsByCategory(userId,1L,1L,1L,alertFacilityStockOut);
         assertThat((List<HashMap>) fetchedNotificationsByCategory.getBody().getData().get(NOTIFICATIONS_DETAIL), is(alertFacilityStockOutList));
     }
 
@@ -192,26 +189,24 @@ public class DashboardControllerTest {
 
     @Test
     public void shouldReturnReportingPerformance() throws Exception {
-        List<Long> rgIdList = new ArrayList<>();
-        List<HashMap> expectedReportingPerformance = new ArrayList<>(1);
+       List<HashMap> expectedReportingPerformance = new ArrayList<>(1);
 
-        when(lookupService.getReportingPerformance(1L,1L, rgIdList)).thenReturn(expectedReportingPerformance);
-        ResponseEntity<OpenLmisResponse> fetchedReportingPerformance = dashboardController.getReportingPerformance(1L,1L,rgIdList);
+        when(lookupService.getReportingPerformance(userId,1L,1L, 1L)).thenReturn(expectedReportingPerformance);
+        ResponseEntity<OpenLmisResponse> fetchedReportingPerformance = dashboardController.getReportingPerformance(1L,1L,1L,httpServletRequest);
         assertThat((List<HashMap>) fetchedReportingPerformance.getBody().getData().get(REPORTING_PERFORMANCE), is(expectedReportingPerformance));
-        verify(lookupService).getReportingPerformance(1L,1L,rgIdList);
+        verify(lookupService).getReportingPerformance(userId,1L,1L,1L);
 
     }
 
     @Test
     public void shouldReturnReportingPerformanceDetail() throws Exception {
-        List<Long> rgIdList = new ArrayList<>();
         List<ReportingPerformance> expectedReportingPerformanceDetail = new ArrayList<>(1);
-        when(lookupService.getReportingPerformanceDetail(1L,1L,rgIdList,"non-reporting")).thenReturn(expectedReportingPerformanceDetail);
+        when(lookupService.getReportingPerformanceDetail(userId,1L,1L,1L,"non-reporting")).thenReturn(expectedReportingPerformanceDetail);
 
-        ResponseEntity<OpenLmisResponse> fetchedReportingPerformanceDetailList = dashboardController.getReportingPerformanceDetail(1L,1L,rgIdList,"non-reporting");
+        ResponseEntity<OpenLmisResponse> fetchedReportingPerformanceDetailList = dashboardController.getReportingPerformanceDetail(1L,1L,1L,"non-reporting",httpServletRequest);
 
         assertThat((List<ReportingPerformance>) fetchedReportingPerformanceDetailList.getBody().getData().get(REPORTING_DETAILS), is(expectedReportingPerformanceDetail));
-        verify(lookupService).getReportingPerformanceDetail(1L,1L,rgIdList,"non-reporting");
+        verify(lookupService).getReportingPerformanceDetail(userId,1L,1L,1L,"non-reporting");
 
     }
 
