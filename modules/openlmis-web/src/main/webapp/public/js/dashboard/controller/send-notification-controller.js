@@ -253,8 +253,6 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
 
         }
 
-        alert('zoneId '+$scope.formFilter.zoneId);
-
     });
     $scope.registerWatches = function(){
 
