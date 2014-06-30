@@ -47,9 +47,7 @@ ResolveDashboardFormData = {
                 scheduleOptionSelect : messageService.get('input.schedule.option.select'),
                 geographicZoneNational : messageService.get('input.geographic.zone.national'),
                 facilityOptionSelect : messageService.get('input.facility.option.select'),
-                periodOptionSelect : messageService.get('input.period.option.select'),
-                supervisoryNodeOptionAll : messageService.get('input.supervisory.node.option.all'),
-                supervisoryNodeOptionSelect: messageService.get('input.supervisory.node.option.select')
+                periodOptionSelect : messageService.get('input.period.option.select')
             };
     }
 };

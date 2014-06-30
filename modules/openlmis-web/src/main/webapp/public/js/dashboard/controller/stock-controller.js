@@ -32,13 +32,7 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
         $scope.showStockStatusFilter = true;
         $scope.stockStatusMapping.unshift({'name':'-- All --','value':-1});
     }
-    /*UserSupervisoryNodes.get(function (data){
-        $scope.supervisoryNodes = data.supervisoryNodes;
-        if(!isUndefined( $scope.supervisoryNodes)){
-            $scope.supervisoryNodes.unshift({'name': formInputValue.supervisoryNodeOptionSelect});
-        }
 
-    });*/
     $scope.programs = programsList;
     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
 

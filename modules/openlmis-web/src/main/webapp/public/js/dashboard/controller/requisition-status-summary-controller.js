@@ -319,8 +319,6 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
             }
 
         } else {
-            $scope.formFilter.supervisoryNodeId = filterHistory.supervisoryNodeId;
-           // $scope.processSupervisoryNodeChange();
 
             $scope.registerWatches();
 

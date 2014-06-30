@@ -166,8 +166,6 @@ function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryServi
         if(isUndefined(filterHistory)){
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
-                $scope.filterObject.supervisoryNodeId = $scope.formFilter.supervisoryNodeId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SUPERVISORY_NODE];
-               // $scope.processSupervisoryNodeChange();
 
                 $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
