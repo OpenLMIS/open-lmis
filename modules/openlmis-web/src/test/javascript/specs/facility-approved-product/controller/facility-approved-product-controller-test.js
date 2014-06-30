@@ -331,15 +331,17 @@ describe("Facility Approved Product", function () {
 
     it('should delete facility type approved product if confirmed', function () {
       scope.currentPage = 0;
+      scope.facilityType = {name: "FT"};
+      scope.program = {name: "Program"};
       var successMessage = "message";
       var facilityApprovedProduct = {
         id: 1,
         facilityType: {},
-        programProduct: {program: {}, product: {}, productCategory: {}},
+        programProduct: {program: {}, product: {primaryName: "Product Name"}, productCategory: {}},
         minMonthsOfStock: 40,
         eop: 120
       };
-      spyOn(messageService, 'get').andReturn(successMessage);
+      spyOn(messageService, 'get').andCallThrough();
       spyOn(scope, 'loadProducts');
       spyOn(OpenLmisDialog, 'newDialog');
       $httpBackend.expectDELETE('/facilityApprovedProducts/1.json').respond(200, {"success": successMessage});
@@ -351,18 +353,23 @@ describe("Facility Approved Product", function () {
 
       expect(scope.message).toEqual(successMessage);
       expect(scope.loadProducts).toHaveBeenCalledWith(0);
+      expect(messageService.get).toHaveBeenCalledWith('msg.delete.facility.approved.product.confirmation', 'Product Name', 'FT', 'Program');
+      expect(messageService.get).toHaveBeenCalledWith('message', 'Product Name');
       expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), dialog);
     });
 
     it('should not delete facility type approved product if not confirmed', function () {
+      scope.facilityType = {name: "FT"};
+      scope.program = {name: "Program"};
       var facilityApprovedProduct = {
         id: 1,
         facilityType: {},
-        programProduct: {program: {}, product: {}, productCategory: {}},
+        programProduct: {program: {}, product: {primaryName: "Product Name"}, productCategory: {}},
         minMonthsOfStock: 40,
         eop: 120
       };
       spyOn(scope, 'loadProducts');
+      spyOn(messageService, 'get').andCallThrough();
       spyOn(OpenLmisDialog, 'newDialog');
       spyOn($httpBackend, 'expectDELETE');
 
@@ -370,6 +377,7 @@ describe("Facility Approved Product", function () {
       OpenLmisDialog.newDialog.calls[0].args[1](false);
 
       expect(scope.loadProducts).not.toHaveBeenCalled();
+      expect(messageService.get).toHaveBeenCalledWith('msg.delete.facility.approved.product.confirmation', 'Product Name', 'FT', 'Program');
       expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), dialog);
       expect($httpBackend.expectDELETE).not.toHaveBeenCalled();
     });
