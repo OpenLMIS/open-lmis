@@ -78,8 +78,9 @@ public class NonReportingFacilityQueryBuilder {
 
 
     public static String getTotalFacilities(Map params){
-      params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
       Long userId = (Long) params.get("userId");
+      params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
+
       String period           = ((String[])params.get("period"))[0];
       String reportingGroup   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
       String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
@@ -99,8 +100,9 @@ public class NonReportingFacilityQueryBuilder {
     }
 
      public static String getTotalNonReportingFacilities(Map params){
-       params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
        Long userId = (Long) params.get("userId");
+       params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
+
        String period           = ((String[])params.get("period"))[0];
        String reportingGroup   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
        String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
@@ -123,8 +125,9 @@ public class NonReportingFacilityQueryBuilder {
 
 
     public static String getSummaryQuery(Map params){
-      params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
       Long userId = (Long) params.get("userId");
+      params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
+
 
       String period           = ((String[])params.get("period"))[0];
       String zone             = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
