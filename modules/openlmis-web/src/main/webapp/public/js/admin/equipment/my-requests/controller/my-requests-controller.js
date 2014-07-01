@@ -9,7 +9,12 @@
  */
 
 
-function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, messageService, $routeParams, $location) {
+function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, SaveAndLogMaintenanceRequest, messageService, $routeParams, $location) {
+
+    //The following variables store information for the currently selected maintenance request
+    $scope.servicePerformedForCurrent = null;
+    $scope.findingForCurrent = null;
+    $scope.nextDateOfServiceForCurrent = null;
 
     PendingRequests.get(function(data){
        $scope.list  = data.logs;
@@ -25,7 +30,7 @@ function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, m
         $scope.currentRequest = null;
     };
 
-    $scope.saveResponse = function(){
+    $scope.saveResponse = function () {
         var successHandler = function (response) {
             $scope.error = "";
             $location.path('#/');
@@ -35,7 +40,9 @@ function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, m
         var errorHandler = function (response) {
             $scope.error = messageService.get(response.data.error);
         };
-        SaveMaintenanceRequest.save($scope.currentRequest,successHandler,errorHandler);
+        $scope.currentRequest.resolved = true;
+        SaveMaintenanceRequest.save($scope.currentRequest, successHandler, errorHandler);
+        SaveAndLogMaintenanceRequest.save($scope.currentRequest, successHandler, errorHandler);
     };
 
 }
