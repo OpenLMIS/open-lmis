@@ -8,14 +8,11 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-\i src/main/resources/seed/dosage_units.sql
-\i src/main/resources/seed/facility_operators.sql
-\i src/main/resources/seed/facility_types.sql
-\i src/main/resources/seed/geographic_levels.sql
-\i src/main/resources/seed/geographic_zones.sql
-\i src/main/resources/seed/product_forms.sql
-\i src/main/resources/seed/product_groups.sql
-\i src/main/resources/seed/programs.sql
-\i src/main/resources/seed/regimen_categories.sql
-\i src/main/resources/seed/consistency_reports.sql
-\i src/main/resources/seed/report_rights.sql
+
+INSERT INTO rights (name, rightType, createdDate) SELECT name,'REPORTING',CURRENT_TIMESTAMP FROM templates;
+
+INSERT INTO report_rights (templateId, rightName)
+  SELECT t.id , r.name FROM templates t
+  INNER JOIN rights r on t.name = r.name;
+
+

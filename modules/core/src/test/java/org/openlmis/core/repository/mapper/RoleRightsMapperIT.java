@@ -270,7 +270,7 @@ public class RoleRightsMapperIT {
 
     roleRightsMapper.insertRight(templateName, REPORTING);
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM rights WHERE rightType = 'REPORTING'");
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM rights WHERE name = 'Requisition Group Program'");
     resultSet.next();
     assertThat(resultSet.getString("name"), is(templateName));
     assertThat(resultSet.getString("rightType"), is(REPORTING.toString()));
