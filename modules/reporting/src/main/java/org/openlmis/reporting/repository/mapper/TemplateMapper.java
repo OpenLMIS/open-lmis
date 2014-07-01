@@ -12,6 +12,7 @@ package org.openlmis.reporting.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.model.TemplateParameter;
@@ -44,4 +45,10 @@ public interface TemplateMapper {
     "VALUES (#{templateId}, #{name}, #{displayName}, #{defaultValue}, #{dataType}, #{description}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   void insertParameter(TemplateParameter parameter);
+
+  @Select({"SELECT t.id, t.name FROM templates t",
+    "INNER JOIN report_rights rt ON rt.templateId = t.id",
+    "INNER JOIN role_rights rr ON rr.rightName = rt.rightName",
+    "INNER JOIN role_assignments ra ON ra.roleId = rr.roleId WHERE ra.userId = #{userId} ORDER BY LOWER(t.name)"})
+  List<Template> getAllTemplatesForUser(@Param("userId") Long userId);
 }

@@ -13,7 +13,10 @@ package org.openlmis.reporting.repository.mapper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.RightType;
+import org.openlmis.core.domain.Role;
 import org.openlmis.core.query.QueryExecutor;
+import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.model.TemplateParameter;
@@ -26,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,6 +47,12 @@ public class TemplateMapperIT {
 
   @Autowired
   TemplateMapper templateMapper;
+
+  @Autowired
+  ReportRightMapper reportRightMapper;
+
+  @Autowired
+  RoleRightsMapper roleRightsMapper;
 
   @Autowired
   QueryExecutor queryExecutor;
@@ -110,7 +120,7 @@ public class TemplateMapperIT {
   }
 
   @Test
-  public void shouldInsertTemplateParameteres() throws Exception{
+  public void shouldInsertTemplateParameteres() throws Exception {
     String type = "REPORTING";
     String name = "Requisition Report Template";
     Long createdBy = 1L;
@@ -144,12 +154,47 @@ public class TemplateMapperIT {
     assertThat(resultSet.getLong("createdBy"), is(createdBy));
   }
 
+  @Test
+  public void shouldGetAllTemplatesForUserOrderedByName() throws SQLException {
+    Long userId = 1L;
+    Template reportTemplate1 = createReportTemplate("DFacility Template1", RightType.REPORTING.toString());
+    Template reportTemplate2 = createReportTemplate("AFacility Template2", RightType.REPORTING.toString());
+    Template reportTemplate3 = createReportTemplate("CFacility Template3", RightType.REPORTING.toString());
+    Template reportTemplate4 = createReportTemplate("EFacility Template4", RightType.REPORTING.toString());
+
+    roleRightsMapper.insertRight(reportTemplate1.getName(), RightType.REPORTING);
+    roleRightsMapper.insertRight(reportTemplate2.getName(), RightType.REPORTING);
+    roleRightsMapper.insertRight(reportTemplate3.getName(), RightType.REPORTING);
+    roleRightsMapper.insertRight(reportTemplate4.getName(), RightType.REPORTING);
+
+    reportRightMapper.insert(reportTemplate1);
+    reportRightMapper.insert(reportTemplate2);
+    reportRightMapper.insert(reportTemplate3);
+    reportRightMapper.insert(reportTemplate4);
+
+    Role role = new Role();
+    role.setName("Reporting User Role");
+    roleRightsMapper.insertRole(role);
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), reportTemplate1.getName());
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), reportTemplate2.getName());
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), reportTemplate3.getName());
+
+    queryExecutor.executeUpdate("INSERT INTO role_assignments(userId, roleId) VALUES (?,?)", userId, role.getId());
+
+    List<Template> templateList = templateMapper.getAllTemplatesForUser(userId);
+
+    assertThat(templateList.size(),is(3));
+    assertThat(templateList.get(0).getName(),is(reportTemplate2.getName()));
+    assertThat(templateList.get(1).getName(),is(reportTemplate3.getName()));
+    assertThat(templateList.get(2).getName(),is(reportTemplate1.getName()));
+  }
+
   private Template createReportTemplate(String name, String type) {
     Template template = new Template();
     template.setName(name);
     template.setType(type);
     template.setData(new byte[1]);
-    template.setCreatedBy(1L);
+    template.setCreatedBy(2L);
     template.setDescription("description");
 
     templateMapper.insert(template);

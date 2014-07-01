@@ -98,9 +98,9 @@ public class TemplateControllerTest {
   @Test
   public void shouldGetAllReportTemplates() throws Exception {
     List<Template> expected = new ArrayList<>();
-    when(templateService.getAll()).thenReturn(expected);
+    when(templateService.getAllTemplatesForUser(USER)).thenReturn(expected);
 
-    assertThat(controller.getAll(), is(expected));
+    assertThat(controller.getAllTemplatesForUser(request), is(expected));
   }
 
 }

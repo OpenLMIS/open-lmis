@@ -65,7 +65,7 @@ public class TemplateController extends BaseController {
 
   @RequestMapping(value = "/report-templates", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REPORT')")
-  public List<Template> getAll() {
-    return templateService.getAll();
+  public List<Template> getAllTemplatesForUser(HttpServletRequest request) {
+    return templateService.getAllTemplatesForUser(loggedInUserId(request));
   }
 }

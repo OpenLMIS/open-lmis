@@ -42,8 +42,8 @@ public class TemplateRepository {
     }
   }
 
-  public List<Template> getAll() {
-    return mapper.getAllConsistencyReportTemplates();
+  public List<Template> getAllTemplatesForUser(Long userId) {
+    return mapper.getAllTemplatesForUser(userId);
   }
 
   public Template getByName(String name) {

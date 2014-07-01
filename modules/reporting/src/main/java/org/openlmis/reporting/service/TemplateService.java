@@ -52,8 +52,8 @@ public class TemplateService {
   @Autowired
   ReportRightService reportRightService;
 
-  public List<Template> getAll() {
-    return repository.getAll();
+  public List<Template> getAllTemplatesForUser(Long userId) {
+    return repository.getAllTemplatesForUser(userId);
   }
 
   public Template getByName(String name) {
