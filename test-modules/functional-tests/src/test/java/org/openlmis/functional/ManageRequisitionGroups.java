@@ -11,7 +11,11 @@
 package org.openlmis.functional;
 
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.PageObjectFactory;
+import org.openlmis.pageobjects.RequisitionGroupPage;
+import org.openlmis.pageobjects.UploadPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -821,7 +825,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
     requisitionGroupPage.clickSaveButton();
     testWebDriver.waitForAjax();
-    assertEquals("Drop off facility code not defined", requisitionGroupPage.getErrorMessage());
+    assertEquals("Drop off facility not defined for programs with direct delivery as false", requisitionGroupPage.getErrorMessage());
 
     requisitionGroupPage.clickEditProgramSchedule("TB");
     requisitionGroupPage.editDropOffFacility("TB");
