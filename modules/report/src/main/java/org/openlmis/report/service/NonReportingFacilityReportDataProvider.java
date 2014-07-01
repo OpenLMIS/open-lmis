@@ -41,7 +41,7 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
     RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-    return reportMapper.getReport(filterCriteria, rowBounds);
+    return reportMapper.getReport(filterCriteria, rowBounds, this.getUserId());
   }
 
   @Override
@@ -50,15 +50,15 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
     List<MasterReport> reportList = new ArrayList<MasterReport>();
     MasterReport report = new MasterReport();
-    report.details = reportMapper.getReport(filterCriteria, rowBounds);
-    List<NameCount> summary = reportMapper.getReportSummary(filterCriteria);
+    report.details = reportMapper.getReport(filterCriteria, rowBounds, this.getUserId());
+    List<NameCount> summary = reportMapper.getReportSummary(filterCriteria, this.getUserId());
 
     // TODO: move this to other section of the application
     NameCount percentage = new NameCount();
     percentage.setName("Percentage not-reporting");
 
-    String totalFacilities = reportMapper.getTotalFacilities(filterCriteria).get(0).toString();
-    String nonReporting = reportMapper.getNonReportingTotalFacilities(filterCriteria).get(0).toString();
+    String totalFacilities = reportMapper.getTotalFacilities(filterCriteria, this.getUserId()).get(0).toString();
+    String nonReporting = reportMapper.getNonReportingTotalFacilities(filterCriteria, this.getUserId()).get(0).toString();
 
     // Assume by default that the 100% of facilities didn't report
     Long percent = Long.parseLong("100");
@@ -83,8 +83,8 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
     HashMap<String, String> result = new HashMap<String, String>();
 
     // spit out the summary section on the report.
-    String totalFacilities = reportMapper.getTotalFacilities(params).get(0).toString();
-    String nonReporting = reportMapper.getNonReportingTotalFacilities(params).get(0).toString();
+    String totalFacilities = reportMapper.getTotalFacilities(params, this.getUserId()).get(0).toString();
+    String nonReporting = reportMapper.getNonReportingTotalFacilities(params, this.getUserId()).get(0).toString();
     result.put("TOTAL_FACILITIES", totalFacilities);
     result.put("TOTAL_NON_REPORTING", nonReporting);
 

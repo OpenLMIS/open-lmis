@@ -36,7 +36,9 @@ public interface StockedOutReportMapper {
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<StockedOutReport> getReport( @Param("filterCriteria") ReportParameter filterCriteria,
                                                  @Param("SortCriteria") Map<String, String[]> SortCriteria ,
-                                                 @Param("RowBounds")RowBounds rowBounds);
+                                                 @Param("RowBounds")RowBounds rowBounds,
+                                                 @Param("userId") Long userId
+    );
 
     // Gets the count of the total facility count under the selection criteria
     @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getTotalFacilities")

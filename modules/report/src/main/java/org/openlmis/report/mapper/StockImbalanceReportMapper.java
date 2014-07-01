@@ -31,6 +31,7 @@ public interface StockImbalanceReportMapper {
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<StockImbalanceReport> getReport( @Param("filterCriteria") ReportParameter filterCriteria,
                                                  @Param("SortCriteria") Map<String, String[]> SortCriteria ,
-                                                 @Param("RowBounds")RowBounds rowBounds);
+                                                 @Param("RowBounds")RowBounds rowBounds,
+                                                 @Param("userId") Long userId );
 
 }

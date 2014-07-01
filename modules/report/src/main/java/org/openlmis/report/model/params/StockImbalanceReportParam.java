@@ -38,6 +38,7 @@ public class StockImbalanceReportParam
   private int scheduleId;
   private String schedule;
   private int periodId;
+  private Long zoneId;
   private String period;
   private Integer year;
 

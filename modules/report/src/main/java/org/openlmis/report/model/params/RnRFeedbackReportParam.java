@@ -25,22 +25,23 @@ public class RnRFeedbackReportParam
   extends BaseParam implements ReportParameter {
 
   private int facilityTypeId;
-  private String facilityType;
-  private String facility;
+  private long zoneId;
   private int facilityId;
   private int productId;
-  private String product;
   private int productCategoryId;
   private int programId;
-  private String program;
-  private String orderType;
   private int periodId;
-  private String period;
   private int scheduleId;
-  private String schedule;
   private int rgroupId;
-  private String rgroup;
 
+  private String rgroup;
+  private String facilityType;
+  private String facility;
+  private String orderType;
+  private String product;
+  private String program;
+  private String period;
+  private String schedule;
 
   @Override
   public String toString() {

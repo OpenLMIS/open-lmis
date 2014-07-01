@@ -17,27 +17,31 @@ import java.util.Map;
 public class SupplyStatusQueryBuilder {
 
     public String getSupplyStatus(Map params){
+
         Map filterCriteria = (Map) params.get("filterCriteria");
+        Long userId = (Long) params.get("userId");
+
         String query = "SELECT facility,facility_type_name facilityType,li_productcode code,li_productcategory category, li_product product, li_beginningbalance openingBalance,\n" +
                 "  li_quantityreceived receipts," +
                 "  li_quantitydispensed issues," +
                 "  li_totallossesandadjustments adjustments," +
                 "  li_stockinhand closingBalance," +
-                "  CASE li_amc when 0 then 0 else li_stockinhand/li_amc end monthsOfStock," +
+                "  CASE li_amc when 0 then 0 else li_stockinhand / li_amc end monthsOfStock," +
                 "  li_amc averageMonthlyConsumption," +
                 "  li_amc * fp_maxmonthsofstock maximumStock, " +
                 "  li_calculatedorderquantity reorderAmount, " +
                 "  supplyingfacility supplyingFacility," +
                 "  fp_maxmonthsofstock MaxMOS," +
                 "  fp_minmonthsofstock  minMOS   \n " +
-                " from vw_supply_status \n"+
-                writePredicates(filterCriteria)+ "\n"+
+                " from vw_supply_status join vw_districts d on d.district_id = f_zoneid \n"+
+                writePredicates(filterCriteria, userId)+ "\n"+
 
                 " order by " + QueryHelpers.getSortOrder(filterCriteria,SupplyStatusReport.class, "facility asc,li_productcode asc,  li_product asc, li_productcategory asc ");
         return query;
     }
 
-    private static String writePredicates(Map params){
+    private static String writePredicates(Map params, Long userId){
+
         String predicate = "WHERE r_status in ('APPROVED', 'RELEASED') ";
         String facilityTypeId =  params.get("facilityType") == null ? null :((String[])params.get("facilityType"))[0];
         String facilityId = params.get("facility") == null ? null : ((String[])params.get("facility"))[0];
@@ -47,7 +51,7 @@ public class SupplyStatusQueryBuilder {
         String zone =     params.get("zone") == null ? null : ((String[])params.get("zone"))[0];
         String rgroup =     params.get("requisitionGroup") == null ? null : ((String[])params.get("requisitionGroup"))[0];
         String schedule = params.get("schedule") == null ? null : ((String[])params.get("schedule"))[0];
-
+        predicate += " and f_id in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = " + program + ")";
         predicate += " and pp_id = "+ period;
 
         predicate += " and pg_id = "+ program;
@@ -56,9 +60,9 @@ public class SupplyStatusQueryBuilder {
 
         predicate += " and f_id = "+ facilityId;
 
-        if (zone != null &&  !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
+        if (zone != null && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
 
-            predicate += " and f_zoneid = "+ zone;
+            predicate += " and (d.district_id = " + zone + " or d.zone_id =  " + zone + "  or d.region_id =  " + zone + "  or d.parent =  " + zone + " ) ";
         }
         if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
 

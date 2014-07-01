@@ -248,6 +248,10 @@ public class ReportLookupService {
     return programMapper.getAll();
   }
 
+  public List<Program> getAllPrograms(Long userId) {
+    return programMapper.getAllForUser(userId);
+  }
+
   public Program getProgramByCode(String code) {
     return programMapper.getProgramByCode(code);
   }
@@ -285,26 +289,26 @@ public List<Program>getAllProgramsWithBudgeting(){
     return facilityReportMapper.getFacilityByCode(code);
   }
 
-  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup, Long zone) {
+  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup, Long zone, Long userId) {
     // this method does not work if no program is specified
     if (program == 0) {
       return null;
     }
 
     if (schedule == 0 && type == 0) {
-      return facilityReportMapper.getFacilitiesByProgram(program, zone);
+      return facilityReportMapper.getFacilitiesByProgram(program, zone, userId);
     }
 
     if (type == 0 && requisitionGroup == 0) {
-      return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule, zone);
+      return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule, zone, userId);
     }
 
     if (type == 0 && requisitionGroup != 0) {
-      return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup, zone);
+      return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup, zone, userId);
     }
 
     if(requisitionGroup == 0){
-      facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type, zone);
+      facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type, zone, userId);
     }
 
     return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup, zone);
@@ -407,17 +411,33 @@ public List<Program>getAllProgramsWithBudgeting(){
     }
 
 
-  public GeoZoneTree getGeoZoneTree(){
+  public GeoZoneTree getGeoZoneTree(Long userId){
+    List<GeoZoneTree> zones = geographicZoneMapper.getGeoZonesForUser(userId);
     GeoZoneTree tree = geographicZoneMapper.getParentZoneTree();
-    populateChildren(tree);
+    populateChildren(tree, zones);
     return tree;
   }
 
-  private void populateChildren(GeoZoneTree tree){
-    tree.setChildren(geographicZoneMapper.getChildrenZoneTree(tree.getId()));
+  public GeoZoneTree getGeoZoneTree(Long userId, Long programId){
+    List<GeoZoneTree> zones = geographicZoneMapper.getGeoZonesForUserByProgram(userId, programId);
+    GeoZoneTree tree = geographicZoneMapper.getParentZoneTree();
+    populateChildren(tree, zones);
+    return tree;
+  }
+
+  private void populateChildren(GeoZoneTree tree, List<GeoZoneTree> source){
+    // find children from the source
+    List<GeoZoneTree> children = new ArrayList<>();
+    for(GeoZoneTree t  : source){
+      if(t.getParentId() == tree.getId()) {
+        children.add(t);
+      }
+    }
+
+    tree.setChildren(children);
 
     for(GeoZoneTree zone : tree.getChildren()){
-      populateChildren(zone);
+      populateChildren(zone, source);
     }
   }
 

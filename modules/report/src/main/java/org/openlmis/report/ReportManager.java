@@ -89,6 +89,7 @@ public class ReportManager {
 
 
        User currentUser = userService.getById(Long.parseLong(String.valueOf(userId)));
+       report.getReportDataProvider().setUserId(userId.longValue());
        List<? extends ReportData> dataSource = report.getReportDataProvider().getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
 
 

@@ -32,38 +32,41 @@ public interface NonReportingFacilityReportMapper {
 
     @SelectProvider(type=NonReportingFacilityQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<NonReportingFacilityDetail> getReport(Map params, @Param("RowBounds") RowBounds rowBounds);
+    public List<NonReportingFacilityDetail> getReport(@Param("filterCriteria") Map params,
+                                                      @Param("RowBounds") RowBounds rowBounds,
+                                                      @Param("userId") Long userId
+    );
 
     @SelectProvider(type=NonReportingFacilityQueryBuilder.class, method="getSummaryQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<NameCount> getReportSummary(Map params);
+    public List<NameCount> getReportSummary(@Param("filterCriteria") Map params, @Param("userId") Long userId);
 
     // Gets the count of the total facility count under the selection criteria
     @SelectProvider(type=NonReportingFacilityQueryBuilder.class, method="getTotalFacilities")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<Integer> getTotalFacilities(Map params);
+    public List<Integer> getTotalFacilities(@Param("filterCriteria") Map params, @Param("userId") Long userId);
 
     // Gets the count of the total facility count that did not report under the selection criteria
     @SelectProvider(type=NonReportingFacilityQueryBuilder.class, method="getTotalNonReportingFacilities")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<Integer> getNonReportingTotalFacilities(Map params);
+    public List<Integer> getNonReportingTotalFacilities(@Param("filterCriteria") Map params, @Param("userId") Long userId);
 
     //TODO: refactor this out to an appropriate class
     @Select("SELECT id, name " +
             "   FROM " +
-            "       facility_types where id = #{param1}")
-    List<RequisitionGroup> getFacilityType(int id);
+            "       facility_types where id = #{id}")
+    List<RequisitionGroup> getFacilityType(@Param("id")int id);
 
     //TODO: refactor this out to an appropriate class
     @Select("SELECT * " +
             "   FROM " +
-            "       processing_periods where id = #{param1}")
-    ProcessingPeriod getPeriodId(int id);
+            "       processing_periods where id = #{id}")
+    ProcessingPeriod getPeriodId(@Param("id")int id);
 
     //TODO: refactor this out to an appropriate class
     @Select("SELECT id, name " +
             "   FROM " +
-            "       programs where id = #{param1}")
-    List<RequisitionGroup> getProgram(int id);
+            "       programs where id = #{id}")
+    List<RequisitionGroup> getProgram(@Param("id")int id);
 
 }

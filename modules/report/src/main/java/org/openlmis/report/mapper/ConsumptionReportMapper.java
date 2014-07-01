@@ -32,7 +32,8 @@ public interface ConsumptionReportMapper {
   public List<DistrictConsumptionReport> getFilteredSortedPagedAdjustmentSummaryReport(
     @Param("filterCriteria") ReportParameter filterCriteria,
     @Param("SortCriteria") Map<String, String[]> SortCriteria,
-    @Param("RowBounds") RowBounds rowBounds
+    @Param("RowBounds") RowBounds rowBounds,
+    @Param("userId") Long userId
   );
 
   @SelectProvider(type = DistrictConsumptionQueryBuilder.class, method = "GetAggregateConsumptionReport")
@@ -40,7 +41,8 @@ public interface ConsumptionReportMapper {
   public List<DistrictConsumptionReport> getAggregateConsumptionReport(
       @Param("filterCriteria") ReportParameter filterCriteria,
       @Param("SortCriteria") Map<String, String[]> SortCriteria,
-      @Param("RowBounds") RowBounds rowBounds
+      @Param("RowBounds") RowBounds rowBounds,
+      @Param("userId") Long userId
   );
 
 }
