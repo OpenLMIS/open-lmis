@@ -18,6 +18,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/*
+The ServiceContractMapper contains mappers for the following tables:
+    * Equipment_Service_Contracts
+    * Equipment_Service_Contract_Facilities
+    * Equipment_Service_Contract_Equipments
+ */
+
 @Repository
 public interface ServiceContractMapper {
 
@@ -56,6 +63,9 @@ public interface ServiceContractMapper {
 
   @Select("select * from equipment_service_contracts where vendorId = #{vendorId}")
   List<ServiceContract> getAllForVendor(@Param("vendorId") Long vendorId);
+
+  @Select("SELECT * FROM equipment_service_contracts WHERE id IN (SELECT contractId FROM equipment_service_contract_equipments WHERE equipmentId = #{equipmentId})")
+  List<ServiceContract> getAllForEquipment(@Param("equipmentId") Long equipmentId);
 
   @Insert("insert into equipment_service_contracts (vendorId, identifier, startDate, endDate,description, terms, coverage, contractDate, createdBy, createdDate, modifiedBy, modifiedDate) " +
       " values " +

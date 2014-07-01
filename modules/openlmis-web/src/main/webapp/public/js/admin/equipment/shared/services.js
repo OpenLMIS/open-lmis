@@ -90,6 +90,10 @@ services.factory('SaveMaintenanceRequest', function($resource){
     return $resource('/equipment/maintenance-request/save.json', {}, {});
 });
 
+services.factory('SaveAndLogMaintenanceRequest', function($resource){
+    return $resource('/equipment/maintenance-log/saveAndLogMaintenance',{},{});
+});
+
 services.factory('EquipmentLogs', function($resource){
    return $resource('/equipment/maintenance-request/full-history.json',{},{});
 });

@@ -42,6 +42,10 @@ public class ServiceContractService {
     return repository.getAllForVendor(vendorId);
   }
 
+  public List<ServiceContract> getAllForEquipment(Long equipmentId){
+    return repository.getAllForEquipment(equipmentId);
+  }
+
   public ServiceContract getById(Long id){
     return repository.getById(id);
   }

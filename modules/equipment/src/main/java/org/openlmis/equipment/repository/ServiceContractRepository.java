@@ -35,6 +35,10 @@ public class ServiceContractRepository {
     return mapper.getAllForVendor(vendorId);
   }
 
+  public List<ServiceContract> getAllForEquipment(Long equipmentId){
+    return mapper.getAllForEquipment(equipmentId);
+  }
+
   public List<ServiceContract> getAll(){
     return mapper.getAll();
   }

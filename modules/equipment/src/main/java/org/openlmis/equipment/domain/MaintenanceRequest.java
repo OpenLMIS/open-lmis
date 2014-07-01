@@ -43,6 +43,7 @@ public class MaintenanceRequest extends BaseModel {
   // these variables are for display purposes only
   private String equipmentName;
   private String facilityName;
+  private MaintenanceLog maintenanceDetails;
   // end of hack
 
   private String formatDate(Date date){

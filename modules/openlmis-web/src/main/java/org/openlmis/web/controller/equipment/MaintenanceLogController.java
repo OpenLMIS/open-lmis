@@ -11,16 +11,17 @@
 package org.openlmis.web.controller.equipment;
 
 import org.openlmis.equipment.domain.MaintenanceLog;
+import org.openlmis.equipment.domain.MaintenanceRequest;
 import org.openlmis.equipment.service.MaintenanceLogService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @Controller
 @RequestMapping(value="/equipment/maintenance-log/")
@@ -49,8 +50,25 @@ public class MaintenanceLogController extends BaseController {
   }
 
   @RequestMapping(value = "save", method = RequestMethod.POST, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody MaintenanceLog type){
-    service.save(type);
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody MaintenanceLog log){
+    service.save(log);
     return OpenLmisResponse.response("status","success");
   }
+
+  @RequestMapping(value = "saveAndLogMaintenance", method = RequestMethod.POST, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody MaintenanceRequest maintenanceRequest, HttpServletRequest request){
+    if(maintenanceRequest.getId() == null) {
+      maintenanceRequest.setCreatedBy(loggedInUserId(request));
+      maintenanceRequest.setUserId(loggedInUserId(request));
+      maintenanceRequest.setResolved(false);
+      maintenanceRequest.setRequestDate(new Date());
+    }
+
+    maintenanceRequest.setModifiedBy(loggedInUserId(request));
+    maintenanceRequest.setModifiedDate(new Date());
+    service.save(maintenanceRequest);
+    return OpenLmisResponse.response("status","success");
+  }
+
+
 }
