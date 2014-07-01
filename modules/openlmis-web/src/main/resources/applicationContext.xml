@@ -297,6 +297,15 @@
                         <property name="recordHandler" ref="productFormPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="program">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.programs"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.Program</value>
+                        </property>
+                        <property name="recordHandler" ref="programPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

@@ -34,6 +34,12 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
   @Autowired
   MessageService messageService;
 
+  /**
+   * Implementations should return an existing record, if there is one, based on however the record's
+   * identity is determined.
+   * @param record the record an implementation should use to look for an "existing" record.
+   * @return the record that exists that has the same identity as the given record.
+   */
   abstract BaseModel getExisting(BaseModel record);
 
   abstract void save(BaseModel record);

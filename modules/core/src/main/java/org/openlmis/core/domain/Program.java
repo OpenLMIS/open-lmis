@@ -39,19 +39,17 @@ public class Program extends BaseModel implements Importable {
   @ImportField(name="Description")
   private String description;
 
-  @ImportField(name="Is Active", mandatory=true)
-  private Boolean active;
+  @ImportField(name="Active", mandatory=true, type="boolean")
+  private Boolean active = true;
 
-  @ImportField(name="Does Budgeting Apply")
-  private Boolean budgetingApplies;
+  @ImportField(name="Budgeting Applies", type="boolean")
+  private Boolean budgetingApplies = false;
 
-  @ImportField(name="Is Template Configured")
   private boolean templateConfigured;
 
-  @ImportField(name="Is Regimen Template Configured")
   private boolean regimenTemplateConfigured;
 
-  @ImportField(name="Is Push", mandatory=false)
+  @ImportField(name="Push", mandatory=true, type="boolean")
   private boolean push;
 
   public Program(Long id) {
