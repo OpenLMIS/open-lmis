@@ -1,4 +1,4 @@
-- Function: fn_populate_alert_requisition_rejected()
+-- Function: fn_populate_alert_requisition_rejected()
 
 DROP FUNCTION IF EXISTS fn_populate_alert_requisition_rejected();
 
