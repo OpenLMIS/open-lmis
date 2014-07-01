@@ -142,14 +142,14 @@ public interface DashboardMapper {
     @Select("WITH reportingPerf as(\n" +
             "select distinct dw.reporting AS status,uf.facilityid,uf.facilityname,uf.geographiczonename,\n" +
             "(select count(*) > 0 from users where users.active = true and users.facilityId = uf.facilityid) as hasContacts\n" +
-            "from vw_user_facilities uf\n" +
+            "from vw_user_geo_facilities uf\n" +
             "join dw_orders dw on dw.facilityid = uf.facilityid\n" +
             "where uf.geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
             "and dw.programid = #{programId} and dw.periodid= #{periodId} and uf.userid = #{userId}\n" +
             "UNION ALL\n" +
             "select 'N' AS status, facilityid,facilityname,geographiczonename,\n" +
-            "(select count(*) > 0 from users where users.active = true and users.facilityId = vw_user_facilities.facilityid) as hasContacts\n" +
-            "from vw_user_facilities \n" +
+            "(select count(*) > 0 from users where users.active = true and users.facilityId = vw_user_geo_facilities.facilityid) as hasContacts\n" +
+            "from vw_user_geo_facilities \n" +
             "where facilityid not in (select facilityid from dw_orders where programid = #{programId} and periodid = #{periodId} \n" +
             "and geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children( #{userId}::int,#{zoneId}::int)))\n" +
             "and userid =  #{userId} and  geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children( #{userId}::int,#{zoneId}::int)))\n" +
@@ -161,14 +161,14 @@ public interface DashboardMapper {
     @Select("WITH reportingPerf as(\n" +
             "select distinct dw.reporting AS status,uf.facilityid,uf.facilityname as name,uf.geographiczonename as district,\n" +
             "(select count(*) > 0 from users where users.active = true and users.facilityId = uf.facilityid) as hasContacts\n" +
-            "from vw_user_facilities uf\n" +
+            "from vw_user_geo_facilities uf\n" +
             "join dw_orders dw on dw.facilityid = uf.facilityid\n" +
             "where uf.geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
             "and dw.programid = #{programId} and dw.periodid= #{periodId} and uf.userid = #{userId}\n" +
             "UNION ALL\n" +
             "select 'N' AS status, facilityid,facilityname,geographiczonename,\n" +
-            "(select count(*) > 0 from users where users.active = true and users.facilityId = vw_user_facilities.facilityid) as hasContacts\n" +
-            "from vw_user_facilities \n" +
+            "(select count(*) > 0 from users where users.active = true and users.facilityId = vw_user_geo_facilities.facilityid) as hasContacts\n" +
+            "from vw_user_geo_facilities \n" +
             "where facilityid not in (select facilityid from dw_orders where programid = #{programId} and periodid = #{periodId} \n" +
             "and geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children( #{userId}::int,#{zoneId}::int)))\n" +
             "and userid =  #{userId} and  geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children( #{userId}::int,#{zoneId}::int)))\n" +
