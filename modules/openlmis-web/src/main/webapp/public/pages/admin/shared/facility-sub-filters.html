@@ -40,7 +40,8 @@
 
           <span ng-show="selectedFacilityType.id" class="selected-text">
             <span id="selectedFacilityType" ng-bind="selectedFacilityType.name"></span>
-            <a href="" ng-click="selectedFacilityType = undefined" class="select-result-close" tabindex="-1">Clear</a>
+            <a href="" id="removeFacilityTypeIcon" ng-click="selectedFacilityType = undefined"
+               openlmis-message="link.clear">Clear</a>
           </span>
         </label>
 
@@ -59,7 +60,8 @@
 
           <span ng-show="selectedGeoZone.id" class="selected-text">
             <span id="selectedGeoZone" ng-bind="selectedGeoZone.name"></span>
-            <a href="" ng-click="selectedGeoZone = undefined" class="select-result-close" tabindex="-1">Clear</a>
+            <a href="" id="removeGeoZoneIcon" ng-click="selectedGeoZone = undefined"
+               openlmis-message="link.clear"></a>
           </span>
         </label>
       </div>
