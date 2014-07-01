@@ -439,18 +439,18 @@ public List<Program>getAllProgramsWithBudgeting(){
     }
   }
 
-  public GeoZoneTree getUserGeoZoneTree(Long userId){
+  public GeoZoneTree getUserGeoZoneTree(Long userId, Long programId){
       GeoZoneTree tree = geographicZoneMapper.getParentZoneTree();
-      populateUserGeographicZoneChildren(tree, userId);
+      populateUserGeographicZoneChildren(tree, userId, programId);
       return tree;
   }
 
 
-  private void populateUserGeographicZoneChildren(GeoZoneTree tree, Long userId){
-      tree.setChildren(geographicZoneMapper.getUserGeographicZoneChildren(tree.getId(), userId));
+  private void populateUserGeographicZoneChildren(GeoZoneTree tree, Long userId, Long programId){
+      tree.setChildren(geographicZoneMapper.getUserGeographicZoneChildren(programId,tree.getId(), userId));
 
       for (GeoZoneTree zone : tree.getChildren()){
-          populateUserGeographicZoneChildren(zone, userId);
+          populateUserGeographicZoneChildren(zone, userId, programId);
       }
   }
 

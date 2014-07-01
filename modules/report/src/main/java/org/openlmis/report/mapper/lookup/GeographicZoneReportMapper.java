@@ -134,7 +134,7 @@ public interface GeographicZoneReportMapper {
   @Select("WITH  recursive  userGeographicZonesRec AS \n" +
           "(SELECT *\n" +
           "FROM geographic_zones \n" +
-          "WHERE id in  (Select geographiczoneid from vw_user_geographic_zones where userid = #{userId} ) \n" +
+          "WHERE id in  (Select geographiczoneid from vw_user_geographic_zones where userid = #{userId}  and case when COALESCE(programid,0) > 0 THEN programId = #{programId} END ) \n" +
           "UNION \n" +
           "SELECT sn.* \n" +
           "FROM geographic_zones sn \n" +
@@ -143,5 +143,5 @@ public interface GeographicZoneReportMapper {
           "SELECT * from geographic_zones gz\n" +
           "INNER JOIN userGeographicZonesRec gzRec on gz.id = gzRec.id\n" +
           "WHERE gz.parentId = #{parentId} order by gz.name\n")
-  List<GeoZoneTree> getUserGeographicZoneChildren(@Param("parentId")int parentId, @Param("userId")Long userId);
+  List<GeoZoneTree> getUserGeographicZoneChildren(@Param("programId") Long programId, @Param("parentId")int parentId, @Param("userId")Long userId);
 }
