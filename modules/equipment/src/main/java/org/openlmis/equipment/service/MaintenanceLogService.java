@@ -10,14 +10,19 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.domain.MaintenanceLog;
 import org.openlmis.equipment.domain.MaintenanceRequest;
+import org.openlmis.equipment.domain.ServiceContract;
+import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.openlmis.equipment.repository.MaintenanceLogRepository;
 import org.openlmis.equipment.repository.MaintenanceRequestRepository;
+import org.openlmis.equipment.repository.ServiceContractRepository;
 import org.openlmis.equipment.repository.mapper.MaintenanceLogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -26,6 +31,11 @@ public class MaintenanceLogService {
   @Autowired
   private MaintenanceLogRepository repository;
 
+  @Autowired
+  EquipmentInventoryRepository equipmentInventoryRepository;
+
+  @Autowired
+  ServiceContractRepository serviceContractRepository;
 
   public List<MaintenanceLog> getAll(){
     return repository.getAll();
@@ -49,5 +59,24 @@ public class MaintenanceLogService {
     }else{
       repository.update(log);
     }
+  }
+
+  public void save(MaintenanceRequest maintenanceRequest){
+    EquipmentInventory equipmentInventory = equipmentInventoryRepository.getInventoryById(maintenanceRequest.getInventoryId());
+    ServiceContract serviceContract = serviceContractRepository.getAllForEquipment(equipmentInventory.getEquipmentId()).get(0);
+    MaintenanceLog log;
+    log = new MaintenanceLog(
+        maintenanceRequest.getUserId(),
+        maintenanceRequest.getFacilityId(),
+        equipmentInventory.getEquipmentId(),
+        maintenanceRequest.getVendorId(),
+        serviceContract.getId(),
+        maintenanceRequest.getModifiedDate(),
+        maintenanceRequest.getMaintenanceDetails().getServicePerformed(),
+        maintenanceRequest.getMaintenanceDetails().getFinding(),
+        maintenanceRequest.getVendorComment(),
+        maintenanceRequest.getId(),
+        maintenanceRequest.getMaintenanceDetails().getNextVisitDate());
+    this.save(log);
   }
 }
