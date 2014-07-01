@@ -35,6 +35,10 @@ public class PermissionEvaluator {
     return CollectionUtils.containsAny(roleRightService.getRights(userId), getRightList(commaSeparatedRights));
   }
 
+  public Boolean hasReportingPermission(Long userId){
+    return roleRightService.hasReportingRight(userId);
+  }
+
   private List<Right> getRightList(String commaSeparatedRights) {
     List<Right> rights = new ArrayList<>();
     String[] permissions = commaSeparatedRights.split(",");

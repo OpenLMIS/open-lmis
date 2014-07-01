@@ -92,4 +92,10 @@ public interface RoleRightsMapper {
     "(#{templateName}, #{rightType}, CURRENT_TIMESTAMP)"})
   void insertRight(@Param(value = "templateName") String templateName,
                    @Param(value = "rightType") RightType rightType);
+
+  @Select({"SELECT COUNT(*) FROM rights r",
+    "INNER JOIN role_rights rt ON rt.rightName = r.name",
+    "INNER JOIN role_assignments ra ON ra.roleId = rt.roleId WHERE ra.userId = #{userId}",
+    "AND r.rightType='REPORTING'"})
+  Integer totalReportingRightsFor(Long userId);
 }

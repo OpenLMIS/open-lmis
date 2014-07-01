@@ -25,6 +25,7 @@ import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
@@ -52,4 +53,23 @@ public class PermissionEvaluatorTest {
     assertThat(evaluator.hasPermission(userId, "MANAGE_FACILITY"), is(false));
   }
 
+  @Test
+  public void shouldReturnTrueIfUserHasReportingRight(){
+
+    Long userId = 1L;
+    when(roleRightsService.hasReportingRight(userId)).thenReturn(true);
+
+    assertThat(evaluator.hasReportingPermission(userId),is(true));
+    verify(roleRightsService).hasReportingRight(userId);
+  }
+
+  @Test
+  public void shouldReturnFalseIfUserDoesNotHaveReportingRight(){
+
+    Long userId = 1L;
+    when(roleRightsService.hasReportingRight(userId)).thenReturn(false);
+
+    assertThat(evaluator.hasReportingPermission(userId), is(false));
+    verify(roleRightsService).hasReportingRight(userId);
+  }
 }

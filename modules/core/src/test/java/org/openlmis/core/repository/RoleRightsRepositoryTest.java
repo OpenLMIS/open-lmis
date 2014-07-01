@@ -184,4 +184,22 @@ public class RoleRightsRepositoryTest {
     verify(roleRightsMapper).getRightsForUserAndWarehouse(userId, warehouseId);
   }
 
+  @Test
+  public void shouldReturnTrueIfUserHasReportingRight(){
+    Long userId =1L;
+    when(roleRightsMapper.totalReportingRightsFor(userId)).thenReturn(1);
+
+    assertThat(roleRightsRepository.hasReportingRight(userId),is(true));
+    verify(roleRightsMapper).totalReportingRightsFor(userId);
+  }
+
+  @Test
+  public void shouldReturnFalseIfUserDoesNotHaveReportingRight(){
+    Long userId =1L;
+    when(roleRightsMapper.totalReportingRightsFor(userId)).thenReturn(0);
+
+    assertThat(roleRightsRepository.hasReportingRight(userId), is(false));
+    verify(roleRightsMapper).totalReportingRightsFor(userId);
+  }
+
 }

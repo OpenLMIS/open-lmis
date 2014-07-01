@@ -116,4 +116,8 @@ public class RoleRightsService {
   public void insertRight(String templateName, RightType rightType) {
     roleRightsRepository.insertRight(templateName, rightType);
   }
+
+  public Boolean hasReportingRight(Long userId) {
+    return roleRightsRepository.hasReportingRight(userId);
+  }
 }

@@ -107,4 +107,8 @@ public class RoleRightsRepository {
   public void insertRight(String templateName, RightType rightType) {
     roleRightsMapper.insertRight(templateName, rightType);
   }
+
+  public Boolean hasReportingRight(Long userId) {
+    return roleRightsMapper.totalReportingRightsFor(userId) > 0;
+  }
 }

@@ -277,6 +277,47 @@ public class RoleRightsMapperIT {
     assertNotNull(resultSet.getTimestamp("createdDate"));
   }
 
+  @Test
+  public void shouldReturnCountOfReportingRightOfUser() throws SQLException {
+    Long userId = 1L;
+    roleRightsMapper.insertRight("template1", RightType.REPORTING);
+    roleRightsMapper.insertRight("template2", RightType.REPORTING);
+    roleRightsMapper.insertRight("template3", RightType.REPORTING);
+    roleRightsMapper.insertRight("admin", RightType.ADMIN);
+
+    Role role = new Role();
+    role.setName("New Role");
+    roleRightsMapper.insertRole(role);
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "template1");
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "template2");
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "template3");
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "admin");
+
+    queryExecutor.executeUpdate("INSERT INTO role_assignments(userId, roleId) VALUES (?,?)", userId, role.getId());
+
+    Integer count = roleRightsMapper.totalReportingRightsFor(userId);
+
+    assertThat(count,is(3));
+  }
+
+  @Test
+  public void shouldReturnZeroIfThereAreNoReportingRightForUser() throws SQLException {
+    Long userId = 1L;
+    roleRightsMapper.insertRight("template1", RightType.REPORTING);
+    roleRightsMapper.insertRight("admin", RightType.ADMIN);
+
+    Role role = new Role();
+    role.setName("New Role");
+    roleRightsMapper.insertRole(role);
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), "admin");
+
+    queryExecutor.executeUpdate("INSERT INTO role_assignments(userId, roleId) VALUES (?,?)", userId, role.getId());
+
+    Integer count = roleRightsMapper.totalReportingRightsFor(userId);
+
+    assertThat(count,is(0));
+  }
+
   private Role insertRole(String name, String description) {
     Role r1 = new Role(name, description);
     roleRightsMapper.insertRole(r1);
