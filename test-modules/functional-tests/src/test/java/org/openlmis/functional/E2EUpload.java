@@ -257,7 +257,7 @@ public class E2EUpload extends TestCaseHelper {
 
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DDFalse_DropoffFacilityNull.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
-    uploadPage.validateErrorMessageOnUploadScreen("Drop off facility code not defined in Record No");
+    uploadPage.validateErrorMessageOnUploadScreen("drop off facility not defined for programs with direct delivery as false in record no.");
 
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_DropoffFacilityCodeNotPresent.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
