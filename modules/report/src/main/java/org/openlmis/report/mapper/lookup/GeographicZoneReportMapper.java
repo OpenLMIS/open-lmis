@@ -134,7 +134,8 @@ public interface GeographicZoneReportMapper {
   @Select("WITH  recursive  userGeographicZonesRec AS \n" +
           "(SELECT *\n" +
           "FROM geographic_zones \n" +
-          "WHERE id in  (Select geographiczoneid from vw_user_geographic_zones where userid = #{userId}  and case when COALESCE(programid,0) > 0 THEN programId = #{programId} END ) \n" +
+          "WHERE id in  (Select geographiczoneid from vw_user_geographic_zones where userid = #{userId}  " +
+          "and case when COALESCE(#{programId},0) > 0 THEN programId = #{programId} ELSE programId = programId END ) \n" +
           "UNION \n" +
           "SELECT sn.* \n" +
           "FROM geographic_zones sn \n" +

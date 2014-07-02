@@ -291,6 +291,13 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
         angular.extend(data, $scope.filterObject);
         dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
     });
+
+    var isItemWithIdExists = function(id, listObject){
+        angular.forEach(listObject,function(item,idx){
+            if(!isUndefined(item) && item.id === id) return true;
+        });
+        return false;
+    };
     
     $scope.$on('$viewContentLoaded', function () {
 
@@ -299,8 +306,9 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
         if (isUndefined(filterHistory)) {
             if (!_.isEmpty(userPreferredFilterValues)) {
                 var date = new Date();
+                $scope.filterObject.programId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM], $scope.programs) ?
+                    userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
 
-                $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
 
                 if (!isUndefined($scope.filterObject.periodId)) {

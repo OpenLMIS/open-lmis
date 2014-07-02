@@ -193,6 +193,13 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
         $scope.loadStockingData();
     };
 
+    var isItemWithIdExists = function(id, listObject){
+        angular.forEach(listObject,function(item,idx){
+            if(!isUndefined(item) && item.id === id) return true;
+        });
+        return false;
+    };
+
 
     $scope.$on('$viewContentLoaded', function () {
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
@@ -202,7 +209,9 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
 
-                $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
+                $scope.filterObject.programId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM], $scope.programs) ?
+                    userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
+
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
 
                 if(!isUndefined($scope.filterObject.periodId)){

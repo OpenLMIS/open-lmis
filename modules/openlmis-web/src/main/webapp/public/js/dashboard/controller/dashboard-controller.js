@@ -682,8 +682,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                      userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
 
 
-                $scope.filterObject.periodId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD],$scope.periods) ?
-                     userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD] : $scope.filterObject.periodId;
+                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
 
                 if(!isUndefined($scope.filterObject.periodId)){
 
@@ -696,8 +695,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                     });
                 }
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
-
-
 
                 $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
 
