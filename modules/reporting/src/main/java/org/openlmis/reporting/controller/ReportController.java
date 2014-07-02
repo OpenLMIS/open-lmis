@@ -12,8 +12,8 @@ package org.openlmis.reporting.controller;
 
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.model.TemplateParameter;
-import org.openlmis.reporting.repository.mapper.TemplateMapper;
 import org.openlmis.reporting.service.JasperReportsViewFactory;
+import org.openlmis.reporting.service.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +23,7 @@ import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiForm
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -41,10 +42,15 @@ public class ReportController {
   private JasperReportsViewFactory jasperReportsViewFactory;
 
   @Autowired
-  private TemplateMapper templateMapper;
+  private TemplateService templateService;
 
   private Long loggedInUserId(HttpServletRequest request) {
     return (Long) request.getSession().getAttribute(USER_ID);
+  }
+
+  @RequestMapping(method = GET, value = "/reports/{id}/parameters")
+  public List<TemplateParameter> getReportParameters(@PathVariable("id") Long id) {
+    return templateService.getParametersByTemplateId(id);
   }
 
   @RequestMapping(method = GET, value = "/reports/{id}/{format}")
@@ -53,7 +59,7 @@ public class ReportController {
 
     String viewFormat = format == null ? PDF_VIEW : format;
 
-    Template template = templateMapper.getById(id);
+    Template template = templateService.getById(id);
 
     JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(template);
 

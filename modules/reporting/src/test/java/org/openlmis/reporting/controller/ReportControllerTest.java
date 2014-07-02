@@ -18,8 +18,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.Template;
-import org.openlmis.reporting.repository.mapper.TemplateMapper;
+import org.openlmis.reporting.model.TemplateParameter;
 import org.openlmis.reporting.service.JasperReportsViewFactory;
+import org.openlmis.reporting.service.TemplateService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -29,7 +30,9 @@ import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiForm
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -43,7 +46,7 @@ public class ReportControllerTest {
 
 
   @Mock
-  TemplateMapper templateMapper;
+  TemplateService templateService;
 
   @Mock
   private JasperReportsViewFactory viewFactory;
@@ -52,7 +55,7 @@ public class ReportControllerTest {
   private DataSource dataSource;
 
   @InjectMocks
-  ReportController reportController;
+  ReportController controller;
 
   private MockHttpServletRequest httpServletRequest;
   private MockHttpSession session;
@@ -70,19 +73,27 @@ public class ReportControllerTest {
   @Test
   public void shouldGenerateReportInRequestedFormat() throws Exception {
     Template template = new Template();
-    when(templateMapper.getById(1L)).thenReturn(template);
+    when(templateService.getById(1L)).thenReturn(template);
     JasperReportsMultiFormatView mockView = mock(JasperReportsMultiFormatView.class);
     HashMap<String, Object> parameterMap = new HashMap<>();
     parameterMap.put("createdBy", userId);
     when(viewFactory.getJasperReportsView(template)).thenReturn(mockView);
     whenNew(HashMap.class).withNoArguments().thenReturn(parameterMap);
 
-    ModelAndView modelAndView = reportController.generateReport(httpServletRequest, 1L, "pdf");
+    ModelAndView modelAndView = controller.generateReport(httpServletRequest, 1L, "pdf");
 
     assertThat((JasperReportsMultiFormatView) modelAndView.getView(), is(mockView));
     verify(viewFactory).getJasperReportsView(template);
-    verify(templateMapper).getById(1L);
+    verify(templateService).getById(1L);
   }
 
+  @Test
+  public void shouldGetReportParameters() throws Exception {
+    Long templateId = 2L;
+    when(templateService.getParametersByTemplateId(templateId)).thenReturn(EMPTY_LIST);
 
+    List<TemplateParameter> parameters = controller.getReportParameters(templateId);
+
+    assertThat(parameters, is(EMPTY_LIST));
+  }
 }

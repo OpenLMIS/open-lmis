@@ -60,6 +60,14 @@ public class TemplateService {
     return repository.getByName(name);
   }
 
+  public Template getById(Long id) {
+    return repository.getById(id);
+  }
+
+  public List<TemplateParameter> getParametersByTemplateId(Long templateId) {
+    return repository.getParametersByTemplateId(templateId);
+  }
+
   public void validateFileAndInsertTemplate(Template template, MultipartFile file) throws IOException {
     throwIfTemplateWithSameNameAlreadyExists(template.getName());
     validateFile(template, file);

@@ -49,4 +49,12 @@ public class TemplateRepository {
   public Template getByName(String name) {
     return mapper.getByName(name);
   }
+
+  public Template getById(Long id) {
+    return mapper.getById(id);
+  }
+
+  public List<TemplateParameter> getParametersByTemplateId(Long templateId) {
+    return mapper.getParametersByTemplateId(templateId);
+  }
 }
