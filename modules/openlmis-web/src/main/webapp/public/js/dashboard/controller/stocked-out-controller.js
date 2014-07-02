@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function StockedOutController($scope, $location,  dashboardMenuService,programsList,geographicZoneTree, formInputValue,GetPeriod,dashboardFiltersHistoryService,userPreferredFilterValues,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
+function StockedOutController($scope, $location,  dashboardMenuService,programsList,UserGeographicZoneTree, formInputValue,GetPeriod,dashboardFiltersHistoryService,userPreferredFilterValues,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -29,7 +29,11 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
     $scope.programs = programsList;
     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
 
-    $scope.zones = geographicZoneTree;
+    $scope.loadGeoZones = function(){
+        UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
+            $scope.zones = data.zone;
+        });
+    };
 
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -44,6 +48,7 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
     });
 
     $scope.filterProductsByProgram = function (){
+        $scope.loadGeoZones();
 
         $scope.filterObject.programId = $scope.formFilter.programId;
         if(!isUndefined($scope.formFilter.programId)){

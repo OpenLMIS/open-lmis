@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,programsList,geographicZoneTree,dashboardMenuService,$location ,dashboardFiltersHistoryService, formInputValue, GetPeriod, userPreferredFilterValues, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
+function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,programsList,UserGeographicZoneTree,dashboardMenuService,$location ,dashboardFiltersHistoryService, formInputValue, GetPeriod, userPreferredFilterValues, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
 
     $scope.filterObject = {};
 
@@ -28,7 +28,11 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
     $scope.programs = programsList;
     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
 
-    $scope.zones = geographicZoneTree;
+    $scope.loadGeoZones = function(){
+        UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
+            $scope.zones = data.zone;
+        });
+    };
 
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -42,6 +46,7 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
     });
 
     $scope.filterProductsByProgram = function () {
+        $scope.loadGeoZones();
         if (isUndefined($scope.formFilter.programId)) {
 
             return;

@@ -21,16 +21,6 @@ ResolveDashboardFormData = {
         return deferred.promise;
 
     },
-    geographicZoneTree : function($q, $timeout, UserGeographicZoneTree){
-        var deferred = $q.defer();
-        $timeout(function(){
-            UserGeographicZoneTree.get(function(data){
-               deferred.resolve(data.zone);
-            });
-        },100);
-
-        return deferred.promise;
-    },
     userPreferredFilterValues : function(localStorageService){
         var preferredFilterValues = {};
         for(var prefKey in localStorageKeys.PREFERENCE){

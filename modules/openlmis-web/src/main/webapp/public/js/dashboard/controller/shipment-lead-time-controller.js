@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryService,programsList,geographicZoneTree, formInputValue,GetPeriod,userPreferredFilterValues, ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
+function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryService,programsList,UserGeographicZoneTree, formInputValue,GetPeriod,userPreferredFilterValues, ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -26,7 +26,11 @@ function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryServi
     $scope.programs = programsList;
     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
 
-    $scope.zones = geographicZoneTree;
+    $scope.loadGeoZones = function(){
+        UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
+            $scope.zones = data.zone;
+        });
+    };
 
 
     OperationYears.get(function (data) {
@@ -41,6 +45,7 @@ function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryServi
     });
 
     $scope.filterProductsByProgram = function (){
+        $scope.loadGeoZones();
         if(isUndefined($scope.formFilter.programId)){
             $scope.resetShipmentLeadTimeData();
             return;

@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMenuService,dashboardFiltersHistoryService,geographicZoneTree,programsList,ReportingPerformance,GetPeriod, userPreferredFilterValues,formInputValue,ReportSchedules, ReportPeriods, RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneTree, OrderFillRate, ItemFillRate, StockEfficiency) {
+function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMenuService,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,ReportingPerformance,GetPeriod, userPreferredFilterValues,formInputValue,ReportSchedules, ReportPeriods, RequisitionGroupsByProgramSchedule, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneTree, OrderFillRate, ItemFillRate, StockEfficiency) {
 
     $scope.filterObject = {};
 
@@ -38,7 +38,12 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
    $scope.programs = programsList;
    $scope.programs.unshift({'name': formInputValue.programOptionSelect});
 
-   $scope.zones = geographicZoneTree;
+   $scope.loadGeoZones = function(){
+      UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
+         $scope.zones = data.zone;
+      });
+   };
+
 
    OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -59,6 +64,9 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     };
 
     $scope.filterProductsByProgram = function (){
+
+        $scope.loadGeoZones();
+
         if(isUndefined($scope.formFilter.programId)){
             $scope.products = null;
             $scope.requisitionGroups  = null;
@@ -656,6 +664,13 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
          return flotItem.series.xaxis.ticks[xval].label+' '+yval+' '+'facilities'+' ' +label;
      }
 
+    var isItemWithIdExists = function(id, listObject){
+        angular.forEach(listObject,function(item,idx){
+            if(!isUndefined(item) && item.id === id) return true;
+        });
+        return false;
+    };
+
     $scope.$on('$viewContentLoaded', function () {
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
@@ -663,9 +678,12 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
 
-                $scope.filterObject.programId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM];
+                $scope.filterObject.programId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM], $scope.programs) ?
+                     userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
 
-                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
+
+                $scope.filterObject.periodId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD],$scope.periods) ?
+                     userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD] : $scope.filterObject.periodId;
 
                 if(!isUndefined($scope.filterObject.periodId)){
 
@@ -679,9 +697,13 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                 }
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
 
+
+
                 $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
+
                 $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
-                $scope.filterObject.facilityId = $scope.formFilter.facilityId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY];
+                $scope.filterObject.facilityId = $scope.formFilter.facilityId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY],$scope.allFacilities) ?
+                    userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY] : $scope.formFilter.facilityId;
 
                 $scope.registerWatches();
 

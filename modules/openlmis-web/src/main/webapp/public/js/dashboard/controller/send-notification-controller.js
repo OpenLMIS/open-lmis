@@ -1,7 +1,7 @@
 /**
  * Created by issa on 4/24/14.
  */
-function SendNotificationController($scope,$timeout,SendNotification,dashboardFiltersHistoryService,geographicZoneTree,programsList,messageService, NotificationAlerts, GetPeriod, formInputValue,FacilitiesForNotifications,userPreferredFilterValues,ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
+function SendNotificationController($scope,$timeout,SendNotification,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,messageService, NotificationAlerts, GetPeriod, formInputValue,FacilitiesForNotifications,userPreferredFilterValues,ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -25,8 +25,11 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         $scope.selectedNotification = notification;
     };
 
-
-    $scope.zones = geographicZoneTree;
+    $scope.loadGeoZones = function(){
+        UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
+            $scope.zones = data.zone;
+        });
+    };
 
     $scope.programs = programsList;
     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
@@ -136,6 +139,7 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
     });
 
     $scope.filterProductsByProgram = function (){
+        $scope.loadGeoZones();
         if(isUndefined($scope.formFilter.programId)){
             return;
         }

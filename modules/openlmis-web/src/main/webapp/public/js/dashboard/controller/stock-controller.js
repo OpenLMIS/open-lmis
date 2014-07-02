@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockController($scope, $routeParams,dashboardFiltersHistoryService,programsList,geographicZoneTree, formInputValue,GetPeriod,userPreferredFilterValues, ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
+function StockController($scope, $routeParams,dashboardFiltersHistoryService,programsList,UserGeographicZoneTree, formInputValue,GetPeriod,userPreferredFilterValues, ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
 
     $scope.filterObject = {};
 
@@ -36,8 +36,11 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
     $scope.programs = programsList;
     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
 
-    $scope.zones = geographicZoneTree;
-
+    $scope.loadGeoZones = function(){
+        UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
+            $scope.zones = data.zone;
+        });
+    };
 
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
@@ -51,6 +54,7 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
     });
 
     $scope.filterProductsByProgram = function (){
+        $scope.loadGeoZones();
 
         if(isUndefined($scope.formFilter.programId)){
             $scope.products = null;
