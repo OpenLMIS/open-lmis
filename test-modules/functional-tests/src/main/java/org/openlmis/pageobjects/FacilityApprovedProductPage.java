@@ -162,6 +162,15 @@ public class FacilityApprovedProductPage extends Page {
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsg = null;
 
+  @FindBy(how = ID, using = "dialogMessage")
+  private static WebElement dialogMessage = null;
+
+  @FindBy(how = ID, using = "button_Cancel")
+  private static WebElement cancelDeleteButton = null;
+
+  @FindBy(how = ID, using = "button_OK")
+  private static WebElement okDeleteButton = null;
+
   public FacilityApprovedProductPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -749,5 +758,39 @@ public class FacilityApprovedProductPage extends Page {
   public String getSaveErrorMessage() {
     testWebDriver.waitForElementToAppear(saveErrorMsg);
     return saveErrorMsg.getText();
+  }
+
+  public boolean isDeleteFacilityApprovedProductButtonDisplayed(int rowNumber) {
+    WebElement deleteButton;
+    try {
+      deleteButton = testWebDriver.getElementById("deleteButton" + (rowNumber - 1));
+      testWebDriver.waitForElementToAppear(deleteButton);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return deleteButton.isDisplayed();
+  }
+
+  public void clickDeleteButton(int rowNumber) {
+    WebElement deleteButton = testWebDriver.getElementById("deleteButton" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(deleteButton);
+    deleteButton.click();
+  }
+
+  public String getDialogBoxMessage() {
+    testWebDriver.waitForElementToAppear(dialogMessage);
+    return dialogMessage.getText();
+  }
+
+  public void clickCancelDeleteButton() {
+    testWebDriver.waitForElementToAppear(cancelDeleteButton);
+    cancelDeleteButton.click();
+  }
+
+  public void clickOkDeleteButton() {
+    testWebDriver.waitForElementToAppear(okDeleteButton);
+    okDeleteButton.click();
   }
 }
