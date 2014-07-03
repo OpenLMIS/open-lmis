@@ -306,6 +306,15 @@
                         <property name="recordHandler" ref="programPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="geographicLevel">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.geographic.levels"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.GeographicLevel</value>
+                        </property>
+                        <property name="recordHandler" ref="geographicLevelPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
