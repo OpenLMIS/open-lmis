@@ -36,6 +36,8 @@ public class GeographicLevelRepository {
 
   public int getLowestGeographicLevel() {return mapper.getLowestGeographicLevel();}
 
+  public GeographicLevel getGeographicLevelByCode(String code) {return mapper.getGeographicLevelByCode(code);}
+
   public List<GeographicLevel> getAll() {return mapper.getAll();}
 
   public GeographicLevel getByCode(String code) {return mapper.getByCode(code);}

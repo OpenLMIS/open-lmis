@@ -21,7 +21,6 @@ import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.db.categories.UnitTests;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)

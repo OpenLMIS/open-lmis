@@ -34,6 +34,9 @@ public interface GeographicLevelMapper {
   @Select("SELECT * FROM geographic_levels WHERE LOWER(code) = LOWER(#{code})")
   GeographicLevel getByCode(String code);
 
+  @Select("SELECT * FROM geographic_levels WHERE LOWER(code) = LOWER(#{code})")
+  GeographicLevel getGeographicLevelByCode(String code);
+
   @Insert({"INSERT INTO geographic_levels (code"
     , ", name"
     , ", levelNumber"

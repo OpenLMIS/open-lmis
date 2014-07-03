@@ -70,6 +70,13 @@ public class GeographicLevelMapperIT {
   }
 
   @Test
+  public void shouldGetGeographicLevelByCode() throws Exception {
+    String code = provGeoLevel.getCode();
+    GeographicLevel geographicLevel = mapper.getGeographicLevelByCode(code);
+    assertThat(geographicLevel, is(provGeoLevel));
+  }
+
+  @Test
   public void shouldReturnAllTheGeoLevels() {
     List<GeographicLevel> levels = mapper.getAll();
     assertThat(levels.size(), not(0));
