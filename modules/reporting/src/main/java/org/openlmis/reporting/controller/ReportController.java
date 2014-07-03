@@ -23,7 +23,6 @@ import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiForm
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -34,6 +33,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 public class ReportController {
+
   public static final String PDF_VIEW = "pdf";
   public static final String USER_ID = "USER_ID";
   public static final String USER_ID_PARAM = "userId";
@@ -48,9 +48,9 @@ public class ReportController {
     return (Long) request.getSession().getAttribute(USER_ID);
   }
 
-  @RequestMapping(method = GET, value = "/reports/{id}/parameters")
-  public List<TemplateParameter> getReportParameters(@PathVariable("id") Long id) {
-    return templateService.getParametersByTemplateId(id);
+  @RequestMapping(method = GET, value = "/reports/{id}")
+  public Template getReportWithParameters(@PathVariable("id") Long id) {
+    return templateService.getLWById(id);
   }
 
   @RequestMapping(method = GET, value = "/reports/{id}/{format}")

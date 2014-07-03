@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -65,6 +66,23 @@ public class TemplateMapperIT {
 
     assertThat(returnedTemplate.getName(), is(template.getName()));
     assertThat(returnedTemplate.getData(), is(template.getData()));
+  }
+
+  @Test
+  public void shouldGetLWById() {
+    Template template = createReportTemplate("Sample Report", "Consistency Report");
+    TemplateParameter parameter = new TemplateParameter(template.getId(), "Parameter", "Parameter", "value", "String", "desc");
+    parameter.setCreatedBy(CREATED_BY);
+
+    mapper.insertParameter(parameter);
+
+    Template returnedTemplate = mapper.getLWById(template.getId());
+
+    assertThat(returnedTemplate.getId(), is(template.getId()));
+    assertThat(returnedTemplate.getName(), is(template.getName()));
+    assertThat(returnedTemplate.getData(), is(nullValue()));
+    assertThat(returnedTemplate.getParameters().size(), is(1));
+    assertTrue(returnedTemplate.getParameters().contains(parameter));
   }
 
   @Test

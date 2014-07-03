@@ -24,23 +24,32 @@ import java.util.List;
 @Repository
 public interface TemplateMapper {
 
-  @Select("SELECT * FROM templates WHERE id = #{id}")
-  @Results(value = {
-    @Result(property = "parameters", javaType = List.class, column = "id",
-      many = @Many(select = "getParametersByTemplateId"))
-  })
-  Template getById(Long id);
-
   @Insert({"INSERT INTO templates (name, data, type, description, createdBy)",
     "VALUES (#{name}, #{data}, #{type}, #{description}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   void insert(Template template);
 
-  @Select("SELECT id, name FROM templates WHERE type = 'Consistency Report' ORDER BY createdDate")
-  List<Template> getAllConsistencyReportTemplates();
+  @Select("SELECT * FROM templates WHERE id = #{id}")
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "parameters", javaType = List.class, column = "id",
+      many = @Many(select = "getParametersByTemplateId"))
+  })
+  Template getById(Long id);
+
+  @Select("SELECT id, name FROM templates WHERE id = #{id}")
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "parameters", javaType = List.class, column = "id",
+      many = @Many(select = "getParametersByTemplateId"))
+  })
+  Template getLWById(Long id);
 
   @Select("SELECT * FROM templates WHERE LOWER(name) = LOWER(#{name})")
   Template getByName(String name);
+
+  @Select("SELECT id, name FROM templates WHERE type = 'Consistency Report' ORDER BY createdDate")
+  List<Template> getAllConsistencyReportTemplates();
 
   @Select({"SELECT t.id, t.name FROM templates t",
     "INNER JOIN report_rights rt ON rt.templateId = t.id",

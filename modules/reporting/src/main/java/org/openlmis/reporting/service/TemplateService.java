@@ -64,8 +64,8 @@ public class TemplateService {
     return repository.getById(id);
   }
 
-  public List<TemplateParameter> getParametersByTemplateId(Long templateId) {
-    return repository.getParametersByTemplateId(templateId);
+  public Template getLWById(Long id) {
+    return repository.getLWById(id);
   }
 
   public void validateFileAndInsertTemplate(Template template, MultipartFile file) throws IOException {
@@ -120,7 +120,7 @@ public class TemplateService {
     templateParameter.setDescription(jrParameter.getDescription());
     templateParameter.setDataType(jrParameter.getValueClassName());
     if (jrParameter.getDefaultValueExpression() != null){
-      templateParameter.setDefaultValue(jrParameter.getDefaultValueExpression().getText());
+      templateParameter.setDefaultValue(jrParameter.getDefaultValueExpression().getText().replace("\"", ""));
     }
     templateParameter.setCreatedBy(createdBy);
     return templateParameter;

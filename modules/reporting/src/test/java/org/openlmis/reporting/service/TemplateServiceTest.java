@@ -191,16 +191,20 @@ public class TemplateServiceTest {
     String[] propertyNames = {"displayName"};
     when(propertiesMap.getPropertyNames()).thenReturn(propertyNames);
     when(propertiesMap.getProperty("displayName")).thenReturn("Param Display Name");
+
     when(param1.getValueClassName()).thenReturn("String");
     when(param1.getDescription()).thenReturn("desc");
     when(param1.getName()).thenReturn("name");
-    when(param1.getDefaultValueExpression()).thenReturn(mock(JRExpression.class));
+    JRExpression jrExpression = mock(JRExpression.class);
+    when(param1.getDefaultValueExpression()).thenReturn(jrExpression);
+    when(jrExpression.getText()).thenReturn("text");
 
     when(param2.getPropertiesMap()).thenReturn(propertiesMap);
     when(param2.getValueClassName()).thenReturn("Integer");
-    when(param2.getDefaultValueExpression()).thenReturn(mock(JRExpression.class));
+    when(param2.getDefaultValueExpression()).thenReturn(jrExpression);
     when(param2.getDescription()).thenReturn("desc");
     when(param2.getName()).thenReturn("name");
+    when(jrExpression.getText()).thenReturn("text");
 
     ByteArrayOutputStream byteOutputStream = mock(ByteArrayOutputStream.class);
     whenNew(ByteArrayOutputStream.class).withAnyArguments().thenReturn(byteOutputStream);
@@ -243,7 +247,9 @@ public class TemplateServiceTest {
     when(propertiesMap.getPropertyNames()).thenReturn(propertyNames);
     when(propertiesMap.getProperty("displayName")).thenReturn("Param Display Name");
     when(param1.getValueClassName()).thenReturn("String");
-    when(param1.getDefaultValueExpression()).thenReturn(mock(JRExpression.class));
+    JRExpression jrExpression = mock(JRExpression.class);
+    when(param1.getDefaultValueExpression()).thenReturn(jrExpression);
+    when(jrExpression.getText()).thenReturn("text");
 
     when(param2.getPropertiesMap()).thenReturn(propertiesMap);
     when(param2.getValueClassName()).thenReturn("Integer");

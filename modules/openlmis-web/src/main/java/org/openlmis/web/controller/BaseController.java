@@ -49,7 +49,6 @@ public class BaseController {
     return "redirect:/public/pages/index.html";
   }
 
-
   @ExceptionHandler(Exception.class)
   public ResponseEntity<OpenLmisResponse> handleException(Exception ex) {
     logger.error("something broke with following exception... ", ex);

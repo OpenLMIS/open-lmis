@@ -212,4 +212,50 @@ describe("Services", function () {
       expect(failureStub).toHaveBeenCalled();
     });
   });
+
+  describe("reportParameters", function () {
+
+    var reportParameters;
+
+    beforeEach(inject(function (ReportParameters) {
+      reportParameters = ReportParameters;
+    }));
+
+    it('should get report parameters', function () {
+      var templateResponse = {"template": {}};
+      var templateId = 1;
+      httpMock.expectGET('/reports/' + templateId + '.json')
+          .respond(200, {template: templateResponse});
+
+      reportParameters.get({'id': templateId},
+          function (data) {
+            successStub();
+            expect(data.template).toEqual(templateResponse);
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status', function () {
+      var templateId = 1;
+
+      httpMock.expectGET('/reports/' + templateId + '.json')
+          .respond(404);
+
+      reportParameters.get({'id': templateId},
+          function () {
+            successStub();
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+  });
 });

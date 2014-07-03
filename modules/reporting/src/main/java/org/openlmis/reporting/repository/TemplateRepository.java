@@ -54,7 +54,7 @@ public class TemplateRepository {
     return mapper.getById(id);
   }
 
-  public List<TemplateParameter> getParametersByTemplateId(Long templateId) {
-    return mapper.getParametersByTemplateId(templateId);
+  public Template getLWById(Long id) {
+    return mapper.getLWById(id);
   }
 }
