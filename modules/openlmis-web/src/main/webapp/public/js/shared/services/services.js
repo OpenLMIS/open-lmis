@@ -354,7 +354,7 @@ services.factory('SupplyLinesSearch', function ($resource) {
 
 services.factory('ProgramProductsFilter', function ($resource) {
   return $resource('/programProducts/filter/programId/:programId/facilityTypeId/:facilityTypeId.json',
-    {programId: '@programId', facilityTypeId: '@facilityTypeId'}, {}, {});
+      {programId: '@programId', facilityTypeId: '@facilityTypeId'}, {}, {});
 });
 
 services.factory('FacilityTypeApprovedProducts', function ($resource) {
@@ -363,6 +363,10 @@ services.factory('FacilityTypeApprovedProducts', function ($resource) {
 
 services.factory('ProgramProductsSearch', function ($resource) {
   return $resource('/programProducts/search.json', {}, {});
+});
+
+services.factory('ReportParameters', function ($resource) {
+  return $resource('/reports/:id.json', {}, {});
 });
 
 
