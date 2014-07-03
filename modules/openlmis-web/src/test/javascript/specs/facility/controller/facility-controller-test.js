@@ -267,7 +267,6 @@ describe("Facility Controller", function () {
       expect(scope.originalFacilityName).toEqual(scope.facility.name);
     });
 
-
     it('should enable the facility', function () {
       httpBackend.expect('PUT', '/facilities/1/restore.json').respond(200, {"success": "Enabled successfully", "facility": scope.facility});
 
@@ -280,7 +279,5 @@ describe("Facility Controller", function () {
       expect(scope.originalFacilityCode).toEqual(scope.facility.code);
       expect(scope.originalFacilityName).toEqual(scope.facility.name);
     });
-
-
   });
 });

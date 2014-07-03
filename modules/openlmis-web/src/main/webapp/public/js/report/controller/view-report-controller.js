@@ -8,13 +8,25 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-angular.module('report', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-    config(['$routeProvider', function ($routeProvider) {
-      $routeProvider.
-          when('/create', {controller: CreateReportController, templateUrl: 'partials/create.html'}).
-          when('/list', {controller: ListReportController, templateUrl: 'partials/list.html', resolve: ListReportController.resolve}).
-          when('/reports/:id', {controller: ViewReportController, templateUrl: 'partials/view.html', resolve: ViewReportController.resolve}).
-          otherwise({redirectTo: '/list'});
-    }]).run(function ($rootScope, AuthorizationService) {
-      AuthorizationService.preAuthorize('VIEW_REPORT');
-    });
+function ViewReportController($scope, template) {
+  $scope.template = template;
+  $scope.parameters = template.parameters;
+  $scope.map = {};
+  angular.forEach($scope.parameters, function (parameter) {
+    $scope.map[parameter.name] = parameter.defaultValue;
+  });
+}
+
+ViewReportController.resolve = {
+
+  template: function ($q, $timeout, $route, ReportParameters) {
+    var deferred = $q.defer();
+    var templateId = $route.current.params.id;
+    $timeout(function () {
+      ReportParameters.get({id: templateId}, function (data) {
+        deferred.resolve(data.template);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  }
+};
