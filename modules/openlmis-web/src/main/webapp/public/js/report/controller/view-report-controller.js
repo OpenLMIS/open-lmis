@@ -19,11 +19,11 @@ function ViewReportController($scope, template) {
 
 ViewReportController.resolve = {
 
-  template: function ($q, $timeout, $route, ReportParameters) {
+  template: function ($q, $timeout, $route, Reports) {
     var deferred = $q.defer();
-    var templateId = $route.current.params.id;
+    var id = $route.current.params.id;
     $timeout(function () {
-      ReportParameters.get({id: templateId}, function (data) {
+      Reports.get({id: id}, function (data) {
         deferred.resolve(data.template);
       }, {});
     }, 100);

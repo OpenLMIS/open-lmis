@@ -365,7 +365,7 @@ services.factory('ProgramProductsSearch', function ($resource) {
   return $resource('/programProducts/search.json', {}, {});
 });
 
-services.factory('ReportParameters', function ($resource) {
+services.factory('Reports', function ($resource) {
   return $resource('/reports/:id.json', {}, {});
 });
 

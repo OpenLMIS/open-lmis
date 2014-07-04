@@ -213,12 +213,12 @@ describe("Services", function () {
     });
   });
 
-  describe("reportParameters", function () {
+  describe("Reports", function () {
 
-    var reportParameters;
+    var reports;
 
-    beforeEach(inject(function (ReportParameters) {
-      reportParameters = ReportParameters;
+    beforeEach(inject(function (Reports) {
+      reports = Reports;
     }));
 
     it('should get report parameters', function () {
@@ -227,7 +227,7 @@ describe("Services", function () {
       httpMock.expectGET('/reports/' + templateId + '.json')
           .respond(200, {template: templateResponse});
 
-      reportParameters.get({'id': templateId},
+      reports.get({'id': templateId},
           function (data) {
             successStub();
             expect(data.template).toEqual(templateResponse);
@@ -246,7 +246,7 @@ describe("Services", function () {
       httpMock.expectGET('/reports/' + templateId + '.json')
           .respond(404);
 
-      reportParameters.get({'id': templateId},
+      reports.get({'id': templateId},
           function () {
             successStub();
           },

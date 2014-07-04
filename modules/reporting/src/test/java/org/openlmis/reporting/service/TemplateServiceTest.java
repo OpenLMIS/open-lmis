@@ -173,6 +173,7 @@ public class TemplateServiceTest {
 
   @Test
   public void shouldValidateFileAndSetData() throws Exception {
+    String[] propertyNames = {"displayName"};
     MultipartFile file = mock(MultipartFile.class);
     when(file.getOriginalFilename()).thenReturn("file.jrxml");
 
@@ -184,27 +185,25 @@ public class TemplateServiceTest {
     JRParameter param1 = mock(JRParameter.class);
     JRParameter param2 = mock(JRParameter.class);
     JRPropertiesMap propertiesMap = mock(JRPropertiesMap.class);
+    JRExpression jrExpression = mock(JRExpression.class);
 
     when(report.getParameters()).thenReturn(new JRParameter[]{param1, param2});
     when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
-    when(param1.getPropertiesMap()).thenReturn(propertiesMap);
-    String[] propertyNames = {"displayName"};
     when(propertiesMap.getPropertyNames()).thenReturn(propertyNames);
     when(propertiesMap.getProperty("displayName")).thenReturn("Param Display Name");
 
+    when(param1.getPropertiesMap()).thenReturn(propertiesMap);
     when(param1.getValueClassName()).thenReturn("String");
-    when(param1.getDescription()).thenReturn("desc");
     when(param1.getName()).thenReturn("name");
-    JRExpression jrExpression = mock(JRExpression.class);
+    when(param1.getDescription()).thenReturn("desc");
     when(param1.getDefaultValueExpression()).thenReturn(jrExpression);
     when(jrExpression.getText()).thenReturn("text");
 
     when(param2.getPropertiesMap()).thenReturn(propertiesMap);
     when(param2.getValueClassName()).thenReturn("Integer");
-    when(param2.getDefaultValueExpression()).thenReturn(jrExpression);
-    when(param2.getDescription()).thenReturn("desc");
     when(param2.getName()).thenReturn("name");
-    when(jrExpression.getText()).thenReturn("text");
+    when(param2.getDescription()).thenReturn("desc");
+    when(param2.getDefaultValueExpression()).thenReturn(jrExpression);
 
     ByteArrayOutputStream byteOutputStream = mock(ByteArrayOutputStream.class);
     whenNew(ByteArrayOutputStream.class).withAnyArguments().thenReturn(byteOutputStream);
@@ -239,15 +238,16 @@ public class TemplateServiceTest {
     JRParameter param1 = mock(JRParameter.class);
     JRParameter param2 = mock(JRParameter.class);
     JRPropertiesMap propertiesMap = mock(JRPropertiesMap.class);
+    JRExpression jrExpression = mock(JRExpression.class);
+    String[] propertyNames = {"displayName"};
 
     when(report.getParameters()).thenReturn(new JRParameter[]{param1, param2});
     when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
-    when(param1.getPropertiesMap()).thenReturn(propertiesMap);
-    String[] propertyNames = {"displayName"};
     when(propertiesMap.getPropertyNames()).thenReturn(propertyNames);
     when(propertiesMap.getProperty("displayName")).thenReturn("Param Display Name");
+
+    when(param1.getPropertiesMap()).thenReturn(propertiesMap);
     when(param1.getValueClassName()).thenReturn("String");
-    JRExpression jrExpression = mock(JRExpression.class);
     when(param1.getDefaultValueExpression()).thenReturn(jrExpression);
     when(jrExpression.getText()).thenReturn("text");
 
