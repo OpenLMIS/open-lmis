@@ -38,44 +38,37 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog)
     $scope.showRightError = false;
 
     if (checked) {
-      if ($scope.contains(right.right)) return;
+      if ($scope.contains(right.name)) return;
 
       $scope.role.rights.push(right);
-      if (right.right == 'MANAGE_REPORT') {
-        $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REPORT"));
-      }
-      if (right.right == 'CREATE_REQUISITION' || right.right == 'AUTHORIZE_REQUISITION' ||
-        right.right == 'APPROVE_REQUISITION') {
+      if (right.name == 'CREATE_REQUISITION' || right.name == 'AUTHORIZE_REQUISITION' ||
+        right.name == 'APPROVE_REQUISITION') {
         $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REQUISITION"));
       }
-      if (right.right == 'CONVERT_TO_ORDER' || right.right == 'MANAGE_POD' || right.right == 'FACILITY_FILL_SHIPMENT') {
+      if (right.name == 'CONVERT_TO_ORDER' || right.name == 'MANAGE_POD' || right.name == 'FACILITY_FILL_SHIPMENT') {
         $scope.updateRights(true, $scope.getRightFromRightList("VIEW_ORDER"));
       }
     } else {
       $scope.role.rights = $.grep($scope.role.rights, function (rightObj) {
-        return (rightObj.right != right.right);
+        return (rightObj.name != right.name);
       });
     }
   };
 
   $scope.getRightFromRightList = function (rightName) {
     return _.find($scope.rights, function (right) {
-      return right.right == rightName;
+      return right.name == rightName;
     });
   };
 
   $scope.areRelatedFieldsSelected = function (right) {
-    if (right.right == 'VIEW_REQUISITION') {
+    if (right.name == 'VIEW_REQUISITION') {
       return ($scope.contains('CREATE_REQUISITION') ||
         $scope.contains('AUTHORIZE_REQUISITION') ||
         $scope.contains('APPROVE_REQUISITION'));
     }
 
-    if (right.right == 'VIEW_REPORT') {
-      return ($scope.contains('MANAGE_REPORT'));
-    }
-
-    if (right.right == 'VIEW_ORDER') {
+    if (right.name == 'VIEW_ORDER') {
       return ($scope.contains('CONVERT_TO_ORDER') || $scope.contains('MANAGE_POD') || $scope.contains('FACILITY_FILL_SHIPMENT'));
     }
   };
@@ -83,7 +76,7 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog)
   $scope.contains = function (right) {
     var containFlag = false;
     $($scope.role.rights).each(function (index, assignedRight) {
-      if (assignedRight.right == right) {
+      if (assignedRight.name == right) {
         containFlag = true;
         return false;
       }

@@ -14,9 +14,10 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
-import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.core.service.RightService;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.model.TemplateParameter;
 import org.openlmis.reporting.repository.TemplateRepository;
@@ -47,7 +48,7 @@ public class TemplateService {
   MessageService messageService;
 
   @Autowired
-  RoleRightsService roleRightsService;
+  RightService rightService;
 
   @Autowired
   ReportRightService reportRightService;
@@ -72,7 +73,9 @@ public class TemplateService {
     throwIfTemplateWithSameNameAlreadyExists(template.getName());
     validateFile(template, file);
     repository.insertWithParameters(template);
-    roleRightsService.insertRight(template.getName(), REPORTING);
+
+    Right right = new Right(template.getName(), REPORTING);
+    rightService.insertRight(right);
     reportRightService.insert(template);
   }
 

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.commaSeparateRightNames;
+import static org.openlmis.core.domain.RightName.commaSeparateRightNames;
 
 /**
  * FacilityRepository is repository class for Facility related database operations.
@@ -157,8 +157,8 @@ public class FacilityRepository {
     return mapper.searchFacilitiesByCodeOrName(searchParam);
   }
 
-  public Facility getHomeFacilityForRights(Long userId, Right... rights) {
-    return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rights));
+  public Facility getHomeFacilityForRights(Long userId, String... rightNames) {
+    return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rightNames));
   }
 
   public FacilityType getFacilityTypeByCode(FacilityType facilityType) {

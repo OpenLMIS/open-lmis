@@ -102,8 +102,8 @@ public class FacilityService {
     notify(asList(facility));
   }
 
-  public List<Facility> getUserSupervisedFacilities(Long userId, Long programId, Right... rights) {
-    List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, rights);
+  public List<Facility> getUserSupervisedFacilities(Long userId, Long programId, String... rightNames) {
+    List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, rightNames);
     List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
     return facilityRepository.getFacilitiesBy(programId, requisitionGroups);
   }
@@ -149,11 +149,11 @@ public class FacilityService {
     }
   }
 
-  public List<Facility> getForUserAndRights(Long userId, Right... rights) {
-    List<SupervisoryNode> supervisoryNodesInHierarchy = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, rights);
+  public List<Facility> getForUserAndRights(Long userId, String... rightNames) {
+    List<SupervisoryNode> supervisoryNodesInHierarchy = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, rightNames);
     List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodesInHierarchy);
     final Set<Facility> userFacilities = new HashSet<>(facilityRepository.getAllInRequisitionGroups(requisitionGroups));
-    final Facility homeFacility = facilityRepository.getHomeFacilityForRights(userId, rights);
+    final Facility homeFacility = facilityRepository.getHomeFacilityForRights(userId, rightNames);
 
     if (homeFacility != null) userFacilities.add(homeFacility);
 

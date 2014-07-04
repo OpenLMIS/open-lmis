@@ -10,100 +10,27 @@
 
 package org.openlmis.core.domain;
 
-import lombok.Getter;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.serializer.RightDeSerializer;
-import org.openlmis.core.serializer.RightSerializer;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static org.openlmis.core.domain.RightType.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Right represents the rights available in the system along with their type.
  */
-@JsonSerialize(using = RightSerializer.class)
-@JsonDeserialize(using = RightDeSerializer.class)
-public enum Right {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Right {
 
-  CONFIGURE_RNR("right.configure.rnr", ADMIN, "Permission to create and edit r&r template for any program", 1),
-  MANAGE_FACILITY("right.manage.facility", ADMIN, "Permission to manage facility(crud)", 2),
-  MANAGE_ROLE("right.manage.role", ADMIN, "Permission to create and edit roles in the system", 5),
-  MANAGE_SCHEDULE("right.manage.schedule", ADMIN, "Permission to create and edit schedules in the system", 6),
-  MANAGE_USER("right.manage.user", ADMIN, "Permission to manage users(crud)", 7),
-  MANAGE_SUPERVISORY_NODE("right.manage.supervisory.node", ADMIN, "Permission to manage supervisory nodes", 8),
-  UPLOADS("right.upload", ADMIN, "Permission to upload", 21),
-  UPLOAD_REPORT("right.upload.report", ADMIN, "Permission to upload reports", 22),
-  VIEW_REPORT("right.view.report", ADMIN, "Permission to view reports", 11),
-  MANAGE_REPORT("right.manage.report", ADMIN, "Permission to manage reports", 10, VIEW_REPORT),
-  VIEW_REQUISITION("right.view.requisition", REQUISITION, "Permission to view requisitions", 16),
-  CREATE_REQUISITION("right.create.requisition", REQUISITION, "Permission to create, edit, submit and recall requisitions", 15, VIEW_REQUISITION),
-  AUTHORIZE_REQUISITION("right.authorize.requisition", REQUISITION, "Permission to edit, authorize and recall requisitions", 13, VIEW_REQUISITION),
-  APPROVE_REQUISITION("right.approve.requisition", REQUISITION, "Permission to approve requisitions", 12, VIEW_REQUISITION),
-  CONVERT_TO_ORDER("right.convert.to.order", FULFILLMENT, "Permission to convert requisitions to order", 14),
-  VIEW_ORDER("right.view.order", FULFILLMENT, "Permission to view orders", 17),
-  MANAGE_PROGRAM_PRODUCT("right.manage.program.product", ADMIN, "Permission to manage program products", 3),
-  MANAGE_DISTRIBUTION("right.manage.distribution", ALLOCATION, "Permission to manage an distribution", 9),
-  SYSTEM_SETTINGS("right.system.settings", ADMIN, "Permission to configure Electronic Data Interchange (EDI)", 18),
-  MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage System Settings", 4),
-  FACILITY_FILL_SHIPMENT("right.fulfillment.fill.shipment", FULFILLMENT, "Permission to fill shipment data for facility", 19),
-  MANAGE_POD("right.fulfillment.manage.pod", FULFILLMENT, "Permission to manage proof of delivery", 20),
-  MANAGE_GEOGRAPHIC_ZONE("right.manage.geo.zone", ADMIN, "Permission to manage geographic zones", 23),
-  MANAGE_REQUISITION_GROUP("right.manage.requisition.group", ADMIN, "Permission to manage requisition groups", 24),
-  MANAGE_SUPPLY_LINE("right.manage.supply.line", ADMIN, "Permission to manage supply lines", 25),
-  MANAGE_FACILITY_APPROVED_PRODUCT("right.manage.facility.approved.products", ADMIN, "Permission to manage facility approved products", 26),
-  MANAGE_PRODUCT("right.manage.products", ADMIN, "Permission to manage products", 27);
-
-  @Getter
-  private final String rightName;
-
-  @Getter
+  private String name;
   private RightType type;
+  private String description;
+  private String displayNameKey;
+  private Integer displayOrder;
 
-  @Getter
-  private final String description;
 
-  @Getter
-  private List<Right> defaultRights;
-
-  @Getter
-  private final Integer displayOrder;
-
-  private Right(String rightName, RightType type, String description, Integer displayOrder) {
-    this(rightName, type, description, displayOrder, new Right[0]);
-  }
-
-  private Right(String rightName, RightType type, String description, Integer displayOrder, Right... rights) {
-    this.rightName = rightName;
+  public Right(String name, RightType type) {
+    this.name = name;
     this.type = type;
-    this.description = description;
-    this.displayOrder = displayOrder;
-    this.defaultRights = asList(rights);
-  }
-
-  public static String commaSeparateRightNames(Right... rights) {
-    List<String> rightNames = new ArrayList<>();
-    for (Right right : rights) {
-      rightNames.add(right.name());
-    }
-    return rightNames.toString().replace("[", "{").replace("]", "}");
-  }
-
-  public static class RightComparator implements Comparator<Right> {
-    @Override
-    public int compare(Right right1, Right right2) {
-      if (right1 == right2) return 0;
-      if (right1 == null) {
-        return 1;
-      }
-      if (right2 == null) {
-        return -1;
-      }
-      return right1.getDisplayOrder().compareTo(right2.getDisplayOrder());
-    }
   }
 }

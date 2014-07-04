@@ -30,7 +30,7 @@
           <td><a ng-href="#/edit/{{role.id}}">{{role.name}}</a></td>
           <td ng-bind="role.description"></td>
           <td>
-            <div ng-repeat="right in role.rights"><span openlmis-message="right.rightName"></span></div>
+            <div ng-repeat="right in role.rights"><span openlmis-message="right.displayNameKey"></span></div>
           </td>
         </tr>
         </tbody>

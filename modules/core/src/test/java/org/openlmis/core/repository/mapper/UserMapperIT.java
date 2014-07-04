@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
@@ -42,9 +41,7 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.UserBuilder.*;
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CONVERT_TO_ORDER;
+import static org.openlmis.core.domain.RightName.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -155,7 +152,7 @@ public class UserMapperIT {
 
     roleAssignmentMapper.insertRoleAssignment(someUser.getId(), program.getId(), supervisoryNode.getId(), role.getId());
 
-    final List<User> users = userMapper.getUsersWithRightInNodeForProgram(program, supervisoryNode, Right.APPROVE_REQUISITION);
+    final List<User> users = userMapper.getUsersWithRightInNodeForProgram(program, supervisoryNode, APPROVE_REQUISITION);
     someUser.setPassword(null);
     someUser.getSupervisor().setModifiedDate(null);
     someUser.setModifiedDate(null);
@@ -185,7 +182,7 @@ public class UserMapperIT {
     roleAssignmentMapper.insertRoleAssignment(someUser.getId(), program.getId(), supervisoryNode.getId(), role.getId());
     roleAssignmentMapper.insertRoleAssignment(someOtherUser.getId(), program.getId(), supervisoryNode1.getId(), role.getId());
 
-    final List<User> users = userMapper.getUsersWithRightInHierarchyUsingBaseNode(supervisoryNode1.getId(), program.getId(), Right.AUTHORIZE_REQUISITION);
+    final List<User> users = userMapper.getUsersWithRightInHierarchyUsingBaseNode(supervisoryNode1.getId(), program.getId(), AUTHORIZE_REQUISITION);
     someUser.setSupervisor(null);
     someUser.setPassword(null);
     someUser.setModifiedDate(null);

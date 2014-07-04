@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static java.util.Arrays.asList;
-
 /**
  * Exposes the services for handling Role and Right entities.
  */
@@ -38,12 +36,6 @@ public class RoleRightsService {
     this.roleRightsRepository = roleRightsRepository;
     this.supervisoryNodeService = supervisoryNodeService;
     this.facilityService = facilityService;
-  }
-
-  public Set<Right> getAllRights() {
-    TreeSet<Right> rights = new TreeSet<>(new Right.RightComparator());
-    rights.addAll(asList(Right.values()));
-    return rights;
   }
 
   @Transactional
@@ -77,18 +69,18 @@ public class RoleRightsService {
     roleRightsRepository.updateRole(role);
   }
 
-  public Set<Right> getRights(Long userId) {
+  public List<Right> getRights(Long userId) {
     return roleRightsRepository.getAllRightsForUser(userId);
   }
 
-  public Set<Right> getRightsForUserAndFacilityProgram(Long userId, Facility facility, Program program) {
-    Set<Right> result = new HashSet<>();
+  public List<Right> getRightsForUserAndFacilityProgram(Long userId, Facility facility, Program program) {
+    List<Right> result = new ArrayList<>();
     result.addAll(getHomeFacilityRights(userId, facility, program));
     result.addAll(getSupervisoryRights(userId, facility, program));
     return result;
   }
 
-  public Set<Right> getRightsForUserAndWarehouse(Long userId, Long warehouseId) {
+  public List<Right> getRightsForUserAndWarehouse(Long userId, Long warehouseId) {
     return roleRightsRepository.getRightsForUserAndWarehouse(userId, warehouseId);
   }
 
@@ -111,13 +103,5 @@ public class RoleRightsService {
 
   public RightType getRightTypeForRoleId(Long roleId) {
     return roleRightsRepository.getRightTypeForRoleId(roleId);
-  }
-
-  public void insertRight(String templateName, RightType rightType) {
-    roleRightsRepository.insertRight(templateName, rightType);
-  }
-
-  public Boolean hasReportingRight(Long userId) {
-    return roleRightsRepository.hasReportingRight(userId);
   }
 }

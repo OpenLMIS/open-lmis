@@ -77,10 +77,6 @@ INSERT INTO role_rights
   ((SELECT
       id
     FROM roles
-    WHERE name = 'View-Report'), 'VIEW_REPORT'),
-  ((SELECT
-      id
-    FROM roles
     WHERE name = 'API testing'), 'VIEW_REQUISITION'),
   ((SELECT
       id

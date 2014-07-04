@@ -11,7 +11,7 @@
 
 describe("NavigationController", function () {
 
-  var scope, ctrl, $httpBackend, $location, window;
+  var scope, ctrl, $httpBackend, $location, window, rights;
   beforeEach(module('openlmis'));
 
   beforeEach(inject(function ($rootScope, $controller, _localStorageService_, _$httpBackend_, _$location_) {
@@ -20,7 +20,8 @@ describe("NavigationController", function () {
     window = {};
     scope = $rootScope.$new();
     localStorageService = _localStorageService_;
-    spyOn(localStorageService, 'get').andReturn('MANAGE_FACILITY,UPLOADS');
+    rights = [{name:'MANAGE_FACILITY',type:'ADMIN'},{name:'UPLOADS', type: 'REPORTING'}];
+    spyOn(localStorageService, 'get').andReturn(JSON.stringify(rights));
     ctrl = $controller(NavigationController, {$scope: scope, localStorageService: localStorageService, $window: window});
   }));
 
@@ -29,8 +30,12 @@ describe("NavigationController", function () {
     expect(false).toEqual(scope.hasPermission("CREATE_REQUISITION"));
   });
 
+  it('should check reporting permission', function(){
+    expect(scope.hasReportingPermission()).toBeTruthy();
+  });
+
   it('should set user rights into scope', function () {
-    expect(scope.rights).toEqual('MANAGE_FACILITY,UPLOADS');
+    expect(scope.rights).toEqual(JSON.stringify(rights));
   });
 
   describe("go online", function () {

@@ -34,10 +34,9 @@ import org.springframework.security.core.session.SessionRegistry;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -114,11 +113,11 @@ public class UserControllerTest {
   public void shouldGetAllPrivilegesForTheLoggedInUser() throws Exception {
     Long userId = 1234L;
     session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, userId);
-    Set<Right> rights = new HashSet<>();
+    List<Right> rights = new ArrayList<>();
     when(roleRightService.getRights(userId)).thenReturn(rights);
     ResponseEntity<OpenLmisResponse> response = userController.user(httpServletRequest);
     verify(roleRightService).getRights(userId);
-    assertThat((Set<Right>) response.getBody().getData().get("rights"), is(rights));
+    assertThat((List<Right>) response.getBody().getData().get("rights"), is(rights));
   }
 
   @Test

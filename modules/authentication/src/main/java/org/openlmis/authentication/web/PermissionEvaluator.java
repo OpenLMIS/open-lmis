@@ -11,14 +11,18 @@
 package org.openlmis.authentication.web;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.service.RightService;
 import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.core.utils.RightUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.google.common.collect.Iterables.any;
 
 /**
  * This class is responsible for checking if the user has the given rights.
@@ -31,21 +35,19 @@ public class PermissionEvaluator {
   @Autowired
   private RoleRightsService roleRightService;
 
+  @Autowired
+  private RightService rightService;
+
   public Boolean hasPermission(Long userId, String commaSeparatedRights) {
-    return CollectionUtils.containsAny(roleRightService.getRights(userId), getRightList(commaSeparatedRights));
+    List<Right> userRights = roleRightService.getRights(userId);
+    return any(userRights, RightUtil.contains(getRightNamesList(commaSeparatedRights)));
   }
 
   public Boolean hasReportingPermission(Long userId){
-    return roleRightService.hasReportingRight(userId);
+    return rightService.hasReportingRight(userId);
   }
 
-  private List<Right> getRightList(String commaSeparatedRights) {
-    List<Right> rights = new ArrayList<>();
-    String[] permissions = commaSeparatedRights.split(",");
-    for (String permission : permissions) {
-      rights.add(Right.valueOf(permission.trim()));
-    }
-
-    return rights;
+  private List<String> getRightNamesList(String commaSeparatedRights) {
+    return new ArrayList<>(Arrays.asList(commaSeparatedRights.split(",")));
   }
 }

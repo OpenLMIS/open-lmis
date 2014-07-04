@@ -40,8 +40,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.apache.commons.lang.ArrayUtils.contains;
-import static org.openlmis.core.domain.Right.FACILITY_FILL_SHIPMENT;
-import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.core.domain.RightName.FACILITY_FILL_SHIPMENT;
+import static org.openlmis.core.domain.RightName.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
 
 /**
@@ -101,7 +101,7 @@ public class OrderService {
       order = new Order(rnr);
       SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram());
       order.setSupplyLine(supplyLine);
-      if (!fulfillmentPermissionService.hasPermissionOnWarehouse(userId, supplyLine.getSupplyingFacility().getId(), Right.CONVERT_TO_ORDER)) {
+      if (!fulfillmentPermissionService.hasPermissionOnWarehouse(userId, supplyLine.getSupplyingFacility().getId(), RightName.CONVERT_TO_ORDER)) {
         throw new AccessDeniedException("user.not.authorized");
       }
       OrderStatus status;
@@ -137,8 +137,8 @@ public class OrderService {
       requisition.getProgram(), requisition.getPeriod(), order.getStatus().toString());
   }
 
-  public List<Order> getOrdersForPage(int page, Long userId, Right right) {
-    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right);
+  public List<Order> getOrdersForPage(int page, Long userId, String rightName) {
+    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, rightName);
     return fillOrders(orders);
   }
 
@@ -218,8 +218,8 @@ public class OrderService {
     return pageSize;
   }
 
-  public List<Order> searchByStatusAndRight(Long userId, Right right, List<OrderStatus> statuses) {
-    List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, right);
+  public List<Order> searchByStatusAndRight(Long userId, String rightName, List<OrderStatus> statuses) {
+    List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, rightName);
 
     List<Order> orders = orderRepository.searchByWarehousesAndStatuses((List<Long>) collect(fulfilmentRolesWithRight, new Transformer() {
       @Override

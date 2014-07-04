@@ -18,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
@@ -35,6 +34,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.domain.RightName.VIEW_ORDER;
 import static org.openlmis.order.domain.OrderStatus.READY_TO_PACK;
 import static org.openlmis.order.domain.OrderStatus.RELEASED;
 
@@ -61,11 +61,11 @@ public class OrderRepositoryTest {
   @Test
   public void shouldGetOrdersGivenPageNumberAndSize() {
     List<Order> expectedOrders = new ArrayList<>();
-    when(orderMapper.getOrders(3, 3, 1l, Right.VIEW_ORDER)).thenReturn(expectedOrders);
+    when(orderMapper.getOrders(3, 3, 1l, VIEW_ORDER)).thenReturn(expectedOrders);
 
-    List<Order> orders = orderRepository.getOrdersForPage(2, 3, 1l, Right.VIEW_ORDER);
+    List<Order> orders = orderRepository.getOrdersForPage(2, 3, 1l, VIEW_ORDER);
 
-    verify(orderMapper).getOrders(3, 3, 1l, Right.VIEW_ORDER);
+    verify(orderMapper).getOrders(3, 3, 1l, VIEW_ORDER);
     assertThat(orders, is(expectedOrders));
   }
 

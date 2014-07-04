@@ -17,16 +17,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.RightName;
+import org.openlmis.core.service.RightService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.UnitTests;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.openlmis.core.domain.RightType.ADMIN;
+import static org.openlmis.core.domain.RightType.REQUISITION;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -35,16 +40,18 @@ public class PermissionEvaluatorTest {
   @Mock
   RoleRightsService roleRightsService;
 
+  @Mock
+  RightService rightService;
+
   @InjectMocks
   PermissionEvaluator evaluator;
 
   @Test
   public void shouldReturnTrueIfUserHasRequiredPermission() throws Exception {
 
-    Set<Right> rights = new HashSet<Right>() {{
-      add(Right.CONFIGURE_RNR);
-      add(Right.AUTHORIZE_REQUISITION);
-    }};
+    Right right1 = new Right(RightName.CONFIGURE_RNR, ADMIN);
+    Right right2 = new Right(RightName.AUTHORIZE_REQUISITION, REQUISITION);
+    List<Right> rights = new ArrayList<>(asList(right1,right2));
     Long userId = 1L;
     when(roleRightsService.getRights(userId)).thenReturn(rights);
 
@@ -57,19 +64,19 @@ public class PermissionEvaluatorTest {
   public void shouldReturnTrueIfUserHasReportingRight(){
 
     Long userId = 1L;
-    when(roleRightsService.hasReportingRight(userId)).thenReturn(true);
+    when(rightService.hasReportingRight(userId)).thenReturn(true);
 
     assertThat(evaluator.hasReportingPermission(userId),is(true));
-    verify(roleRightsService).hasReportingRight(userId);
+    verify(rightService).hasReportingRight(userId);
   }
 
   @Test
   public void shouldReturnFalseIfUserDoesNotHaveReportingRight(){
 
     Long userId = 1L;
-    when(roleRightsService.hasReportingRight(userId)).thenReturn(false);
+    when(rightService.hasReportingRight(userId)).thenReturn(false);
 
     assertThat(evaluator.hasReportingPermission(userId), is(false));
-    verify(roleRightsService).hasReportingRight(userId);
+    verify(rightService).hasReportingRight(userId);
   }
 }

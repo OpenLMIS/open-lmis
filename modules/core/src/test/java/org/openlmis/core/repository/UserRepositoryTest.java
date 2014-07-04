@@ -39,7 +39,7 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.email;
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
 import static org.openlmis.core.repository.UserRepository.*;
 
 @Category(UnitTests.class)
@@ -153,7 +153,7 @@ public class UserRepositoryTest {
   public void shouldReturnUserIfUserExistsWithSearchCriteria() throws Exception {
     String userSearchParam = "abc";
     User user = new User();
-    List<User> listOfUsers = new ArrayList<User>();
+    List<User> listOfUsers = new ArrayList<>();
     listOfUsers.add(user);
 
     when(userMapper.getUserWithSearchedName(userSearchParam)).thenReturn(listOfUsers);

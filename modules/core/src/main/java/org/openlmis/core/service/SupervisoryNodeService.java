@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
 
 /**
  * Exposes the services for handling SupervisoryNode entity.
@@ -75,12 +75,12 @@ public class SupervisoryNodeService {
       supervisoryNode.validateParent();
     }
   }
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Long programId, Right... rights) {
-    return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, programId, rights);
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Long programId, String... rightNames) {
+    return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, programId, rightNames);
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Right... rights) {
-    return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, rights);
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, String... rightNames) {
+    return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, rightNames);
   }
 
   public SupervisoryNode getFor(Facility facility, Program program) {

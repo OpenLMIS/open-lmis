@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.commaSeparateRightNames;
+import static org.openlmis.core.domain.RightName.commaSeparateRightNames;
 
 /**
  * SupervisoryNodeRepository is Repository class for SupervisoryNode related database operations.
@@ -51,9 +51,9 @@ public class SupervisoryNodeRepository {
     }
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Long programId, Right... rights) {
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Long programId, String... rightNames) {
     return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyBy(userId, programId,
-      commaSeparateRightNames(rights));
+      commaSeparateRightNames(rightNames));
   }
 
   public Long getIdForCode(String code) {
@@ -83,9 +83,9 @@ public class SupervisoryNodeRepository {
     return supervisoryNodeMapper.getAll();
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Right... rights) {
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, String... rightNames) {
     return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByUserAndRights(userId,
-      commaSeparateRightNames(rights));
+      commaSeparateRightNames(rightNames));
   }
 
   public List<SupervisoryNode> getAllParentSupervisoryNodesInHierarchy(SupervisoryNode node) {

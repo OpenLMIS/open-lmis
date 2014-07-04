@@ -62,7 +62,7 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessin
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.numberOfMonths;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
@@ -967,7 +967,7 @@ public class RequisitionServiceTest {
     when(savedRnr.getFacility()).thenReturn(submittedRnr.getFacility());
     when(savedRnr.getSupervisoryNodeId()).thenReturn(1L);
     when(userService.getUsersWithRightInNodeForProgram(submittedRnr.getProgram(), new SupervisoryNode(1L),
-      Right.APPROVE_REQUISITION)).thenReturn(users);
+      APPROVE_REQUISITION)).thenReturn(users);
     when(supervisoryNodeService.getFor(submittedRnr.getFacility(), submittedRnr.getProgram())).thenReturn(
       new SupervisoryNode(1L));
 
@@ -1010,9 +1010,9 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getFor(initiatedRnr.getFacility(), initiatedRnr.getProgram())).thenReturn(
       new SupervisoryNode(1L));
     when(userService.getUsersWithRightInHierarchyUsingBaseNode(1L, initiatedRnr.getProgram(),
-      Right.AUTHORIZE_REQUISITION)).thenReturn(EMPTY_LIST);
+      AUTHORIZE_REQUISITION)).thenReturn(EMPTY_LIST);
     when(userService.getUsersWithRightInNodeForProgram(eq(initiatedRnr.getProgram()), any(SupervisoryNode.class),
-      eq(Right.AUTHORIZE_REQUISITION))).thenReturn(EMPTY_LIST);
+      eq(AUTHORIZE_REQUISITION))).thenReturn(EMPTY_LIST);
     when(rnrTemplateService.fetchAllRnRColumns(PROGRAM.getId())).thenReturn(rnrColumns);
 
     requisitionService.submit(initiatedRnr);
@@ -1188,18 +1188,18 @@ public class RequisitionServiceTest {
     String sortBy = "sortBy";
     String sortDirection = "asc";
     Rnr rnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(make(a(defaultRequisition)),
-      Right.CONVERT_TO_ORDER);
+      CONVERT_TO_ORDER);
     List<Rnr> filteredRnrList = Arrays.asList(rnr);
 
     when(requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-      pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(filteredRnrList);
+      pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(filteredRnrList);
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
     List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-      pageNumber, 6, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageNumber, 6, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     verify(requisitionRepository).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-      pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
     assertThat(rnrList, is(filteredRnrList));
   }
 
@@ -1211,7 +1211,7 @@ public class RequisitionServiceTest {
     String sortDirection = "asc";
     String sortBy = "program";
     requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 4, 1, 1l,
-      Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      CONVERT_TO_ORDER, sortBy, sortDirection);
   }
 
   @Test
@@ -1220,7 +1220,7 @@ public class RequisitionServiceTest {
     String sortBy = "program";
     List<Rnr> requisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType",
       "searchVal",
-      1, 0, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      1, 0, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(0));
   }
@@ -1233,12 +1233,12 @@ public class RequisitionServiceTest {
     String searchType = "searchType";
     String searchVal = "search";
     when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l,
-      Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
+      CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
     Integer pageSize = 3;
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
     Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l,
-      Right.CONVERT_TO_ORDER);
+      CONVERT_TO_ORDER);
 
     assertThat(count, is(2));
   }
@@ -1249,12 +1249,12 @@ public class RequisitionServiceTest {
     String searchType = "searchType";
     String searchVal = "search";
     when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l,
-      Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
+      CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
     Integer pageSize = 3;
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
     Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l,
-      Right.CONVERT_TO_ORDER);
+      CONVERT_TO_ORDER);
 
     assertThat(count, is(2));
   }
@@ -1521,11 +1521,11 @@ public class RequisitionServiceTest {
     when(regimenColumnService.getRegimenTemplateByProgramId(PROGRAM.getId())).thenReturn(new RegimenTemplate());
   }
 
-  private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
+  private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, String rightName) {
     Rnr savedRnr = spy(rnr);
     doNothing().when(savedRnr).calculateForApproval();
     when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
-    when(requisitionPermissionService.hasPermission(USER_ID, savedRnr, right)).thenReturn(true);
+    when(requisitionPermissionService.hasPermission(USER_ID, savedRnr, rightName)).thenReturn(true);
     when(programService.getById(savedRnr.getProgram().getId())).thenReturn(PROGRAM);
     when(facilityService.getById(savedRnr.getFacility().getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(savedRnr.getProgram().getId())).thenReturn(PERIOD);

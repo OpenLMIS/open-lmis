@@ -105,16 +105,16 @@
               <tr>
                 <td ng-class="{'is-disabled': currentRightType != 'ADMIN'}">
                   <div>
-                    <div id="rights-{{right.right}}"
+                    <div id="rights-{{right.name}}"
                          class="checkbox-list clearfix"
                          ng-repeat="right in adminRights" tab-scroll>
-                      <input id="{{right.right}}" type="checkbox"
-                             ng-checked="contains(right.right)"
+                      <input id="{{right.name}}" type="checkbox"
+                             ng-checked="contains(right.name)"
                              ng-change="updateRights(checked,right)"
                              ng-model="checked"
                              ng-disabled="areRelatedFieldsSelected(right) || currentRightType != 'ADMIN'"/>
-                      <label for="{{right.right}}"><span
-                        openlmis-message="right.rightName"></span></label>
+                      <label for="{{right.name}}"><span
+                        openlmis-message="right.displayNameKey"></span></label>
                     </div>
                   </div>
                     <span class="field-error"
@@ -125,18 +125,18 @@
 
                 <td ng-class="{'is-disabled': currentRightType != 'ALLOCATION'}">
                   <div>
-                    <div id="allocationRights-{{allocationRight.right}}"
+                    <div id="allocationRights-{{allocationRight.name}}"
                          class="checkbox-list clearfix"
                          ng-repeat="allocationRight in allocationRights"
                          tab-scroll>
-                      <input id="{{allocationRight.right}}"
+                      <input id="{{allocationRight.name}}"
                              type="checkbox"
-                             ng-checked="contains(allocationRight.right)"
+                             ng-checked="contains(allocationRight.name)"
                              ng-change="updateRights(checked,allocationRight)"
                              ng-model="checked"
                              ng-disabled="areRelatedFieldsSelected(allocationRight) || currentRightType != 'ALLOCATION'"/>
-                      <label for="{{allocationRight.right}}"><span
-                        openlmis-message="allocationRight.rightName"></span></label>
+                      <label for="{{allocationRight.name}}"><span
+                        openlmis-message="allocationRight.displayNameKey"></span></label>
                     </div>
                   </div>
                     <span class="field-error"
@@ -147,18 +147,18 @@
 
                 <td ng-class="{'is-disabled': currentRightType != 'REQUISITION'}">
                   <div>
-                    <div id="requisitionRights-{{requisitionRight.right}}"
+                    <div id="requisitionRights-{{requisitionRight.name}}"
                          class="checkbox-list clearfix"
                          ng-repeat="requisitionRight in requisitionRights"
                          tab-scroll>
-                      <input id="{{requisitionRight.right}}"
+                      <input id="{{requisitionRight.name}}"
                              type="checkbox"
-                             ng-checked="contains(requisitionRight.right)"
+                             ng-checked="contains(requisitionRight.name)"
                              ng-change="updateRights(checked,requisitionRight)"
                              ng-model="checked"
                              ng-disabled="areRelatedFieldsSelected(requisitionRight) || currentRightType != 'REQUISITION'"/>
-                      <label for="{{requisitionRight.right}}"><span
-                        openlmis-message="requisitionRight.rightName"></span></label>
+                      <label for="{{requisitionRight.name}}"><span
+                        openlmis-message="requisitionRight.displayNameKey"></span></label>
                     </div>
                   </div>
                     <span class="field-error"
@@ -169,17 +169,17 @@
 
                 <td ng-class="{'is-disabled': currentRightType != 'FULFILLMENT'}">
                   <div>
-                    <div id="fulfillmentRights-{{fulfillmentRight.right}}"
+                    <div id="fulfillmentRights-{{fulfillmentRight.name}}"
                          class="checkbox-list clearfix"
                          ng-repeat="fulfillmentRight in fulfillmentRights"
                          tab-scroll>
-                      <input id="{{fulfillmentRight.right}}" type="checkbox"
-                             ng-checked="contains(fulfillmentRight.right)"
+                      <input id="{{fulfillmentRight.name}}" type="checkbox"
+                             ng-checked="contains(fulfillmentRight.name)"
                              ng-change="updateRights(checked,fulfillmentRight)"
                              ng-model="checked"
                              ng-disabled="areRelatedFieldsSelected(fulfillmentRight) || currentRightType != 'FULFILLMENT'"/>
-                      <label for="{{fulfillmentRight.right}}"><span
-                        openlmis-message="fulfillmentRight.rightName"></span></label>
+                      <label for="{{fulfillmentRight.name}}"><span
+                        openlmis-message="fulfillmentRight.displayNameKey"></span></label>
                     </div>
                   </div>
                     <span class="field-error"

@@ -8,33 +8,36 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.core.serializer;
+package org.openlmis.core.service;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.SerializerProvider;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.repository.RightRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.util.List;
 
 /**
- * RightSerializer class represents the serializer for Right.
+ * Exposes the services for handling Right entity.
  */
 
-public class RightSerializer extends JsonSerializer<Right> {
+@Service
+@NoArgsConstructor
+public class RightService {
 
-  @Override
-  public void serialize(Right right, JsonGenerator generator,
-                        SerializerProvider provider) throws IOException {
+  @Autowired
+  private RightRepository rightRepository;
 
-    generator.writeStartObject();
-    generator.writeFieldName("right");
-    generator.writeString(right.name());
-    generator.writeFieldName("rightName");
-    generator.writeString(right.getRightName());
-    generator.writeFieldName("type");
-    generator.writeString(right.getType().name());
-    generator.writeEndObject();
+  public void insertRight(Right right) {
+    rightRepository.insertRight(right);
+  }
+
+  public Boolean hasReportingRight(Long userId) {
+    return rightRepository.hasReportingRight(userId);
+  }
+
+  public List<Right> getAll(){
+    return rightRepository.getAll();
   }
 }
-

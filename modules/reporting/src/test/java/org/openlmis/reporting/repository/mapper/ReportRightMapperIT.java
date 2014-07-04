@@ -13,9 +13,9 @@ package org.openlmis.reporting.repository.mapper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.RightType;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.query.QueryExecutor;
-import org.openlmis.core.repository.mapper.RoleRightsMapper;
+import org.openlmis.core.repository.mapper.RightMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.reporting.model.Template;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +29,7 @@ import java.sql.SQLException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.domain.RightType.REPORTING;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,7 +42,7 @@ public class ReportRightMapperIT {
   ReportRightMapper mapper;
 
   @Autowired
-  RoleRightsMapper roleRightsMapper;
+  RightMapper rightMapper;
 
   @Autowired
   TemplateMapper templateMapper;
@@ -54,9 +55,10 @@ public class ReportRightMapperIT {
 
     String templateName = "name";
     String description = "desc";
-    Template template = new Template(templateName, new byte[]{'a'}, null, RightType.REPORTING.toString(), description);
+    Template template = new Template(templateName, new byte[]{'a'}, null, REPORTING.toString(), description);
     templateMapper.insert(template);
-    roleRightsMapper.insertRight(templateName, RightType.REPORTING);
+    Right right = new Right(templateName, REPORTING);
+    rightMapper.insertRight(right);
 
     mapper.insert(template);
 

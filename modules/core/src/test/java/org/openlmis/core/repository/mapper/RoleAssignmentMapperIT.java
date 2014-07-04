@@ -38,7 +38,7 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -231,7 +231,7 @@ public class RoleAssignmentMapperIT {
     roleRightsMapper.insertRole(r1);
     Role r2 = new Role("r2", "random description");
     roleRightsMapper.insertRole(r2);
-    roleRightsMapper.createRoleRight(r2, Right.CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(r2, CREATE_REQUISITION);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     supervisoryNode.setFacility(facility);

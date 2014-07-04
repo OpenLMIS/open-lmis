@@ -18,26 +18,22 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.Role;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.CONFIGURE_RNR;
+import static org.openlmis.core.domain.RightName.CREATE_REQUISITION;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
@@ -64,25 +60,13 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldSaveRoleWithMappings() throws Exception {
-    role.setRights(new HashSet<>(asList(CONFIGURE_RNR, CREATE_REQUISITION)));
+    role.setRights(asList(new Right(CONFIGURE_RNR, RightType.ADMIN), new Right(CREATE_REQUISITION, RightType.REQUISITION)));
     role.setId(1L);
     roleRightsRepository.createRole(role);
 
     verify(roleRightsMapper).insertRole(role);
     verify(roleRightsMapper).createRoleRight(role, CONFIGURE_RNR);
     verify(roleRightsMapper).createRoleRight(role, CREATE_REQUISITION);
-  }
-
-  @Test
-  public void shouldSaveRoleWithMappingsAndTheirDependentMappings() throws Exception {
-    role.setRights(new HashSet<>(asList(CONFIGURE_RNR, CREATE_REQUISITION)));
-    role.setId(1L);
-    roleRightsRepository.createRole(role);
-
-    verify(roleRightsMapper).insertRole(role);
-    verify(roleRightsMapper).createRoleRight(role, CONFIGURE_RNR);
-    verify(roleRightsMapper).createRoleRight(role, CREATE_REQUISITION);
-    verify(roleRightsMapper, times(1)).createRoleRight(role, VIEW_REQUISITION);
   }
 
   @Test
@@ -128,25 +112,12 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldUpdateRole() {
-    role.setRights(new HashSet<>(asList(CONFIGURE_RNR)));
+    role.setRights(asList(new Right(CONFIGURE_RNR, RightType.ADMIN)));
     role.setId(100L);
     roleRightsRepository.updateRole(role);
     verify(roleRightsMapper).updateRole(role);
     verify(roleRightsMapper).deleteAllRightsForRole(100L);
     verify(roleRightsMapper).createRoleRight(role, CONFIGURE_RNR);
-  }
-
-  @Test
-  public void shouldUpdateRoleAlongWithDependentRights() {
-    role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
-    role.setId(100L);
-
-    roleRightsRepository.updateRole(role);
-
-    verify(roleRightsMapper).updateRole(role);
-    verify(roleRightsMapper).deleteAllRightsForRole(100L);
-    verify(roleRightsMapper).createRoleRight(role, CREATE_REQUISITION);
-    verify(roleRightsMapper).createRoleRight(role, VIEW_REQUISITION);
   }
 
   @Test
@@ -173,33 +144,14 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldGetRightsForUserAndWarehouse() {
-    Set<Right> expectedRights = new HashSet<>();
+    List<Right> expectedRights = new ArrayList<>();
     Long userId = 1l;
     Long warehouseId = 2l;
     when(roleRightsMapper.getRightsForUserAndWarehouse(userId, warehouseId)).thenReturn(expectedRights);
 
-    Set<Right> rights = roleRightsRepository.getRightsForUserAndWarehouse(userId, warehouseId);
+    List<Right> rights = roleRightsRepository.getRightsForUserAndWarehouse(userId, warehouseId);
 
     assertThat(rights, is(expectedRights));
     verify(roleRightsMapper).getRightsForUserAndWarehouse(userId, warehouseId);
   }
-
-  @Test
-  public void shouldReturnTrueIfUserHasReportingRight(){
-    Long userId =1L;
-    when(roleRightsMapper.totalReportingRightsFor(userId)).thenReturn(1);
-
-    assertThat(roleRightsRepository.hasReportingRight(userId),is(true));
-    verify(roleRightsMapper).totalReportingRightsFor(userId);
-  }
-
-  @Test
-  public void shouldReturnFalseIfUserDoesNotHaveReportingRight(){
-    Long userId =1L;
-    when(roleRightsMapper.totalReportingRightsFor(userId)).thenReturn(0);
-
-    assertThat(roleRightsRepository.hasReportingRight(userId), is(false));
-    verify(roleRightsMapper).totalReportingRightsFor(userId);
-  }
-
 }

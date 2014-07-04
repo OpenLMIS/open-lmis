@@ -15,6 +15,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.RightService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class RoleRightsController extends BaseController {
   @Autowired
   private RoleRightsService roleRightsService;
 
+  @Autowired
+  private RightService rightService;
+
   public static final String ROLE = "role";
   public static final String ROLES_MAP = "roles_map";
   public static final String RIGHTS = "rights";
@@ -49,7 +53,7 @@ public class RoleRightsController extends BaseController {
   @RequestMapping(value = "/rights", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
   public ResponseEntity<OpenLmisResponse> getAllRights() {
-    return OpenLmisResponse.response(RIGHTS, roleRightsService.getAllRights());
+    return OpenLmisResponse.response(RIGHTS, rightService.getAll());
   }
 
   @RequestMapping(value = "/roles", method = POST, headers = ACCEPT_JSON)

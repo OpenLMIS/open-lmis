@@ -12,7 +12,6 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.springframework.stereotype.Repository;
@@ -35,7 +34,7 @@ public interface RoleAssignmentMapper {
     "AND RR.rightName = #{right}"})
   @Results(value = {@Result(property = "supervisoryNode", column = "supervisoryNodeId", javaType = SupervisoryNode.class,
     one = @One(select = "org.openlmis.core.repository.mapper.SupervisoryNodeMapper.getSupervisoryNode"))})
-  List<RoleAssignment> getRoleAssignmentsWithGivenRightForAUser(@Param(value = "right") Right right,
+  List<RoleAssignment> getRoleAssignmentsWithGivenRightForAUser(@Param(value = "right") String rightName,
                                                                 @Param(value = "userId") Long userId);
 
   @Insert("INSERT INTO role_assignments" +

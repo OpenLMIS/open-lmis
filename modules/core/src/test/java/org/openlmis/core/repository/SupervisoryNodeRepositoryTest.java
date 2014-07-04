@@ -37,8 +37,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.code;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RightName.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.RightName.CREATE_REQUISITION;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)

@@ -17,50 +17,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.FacilityApprovedProductBuilder;
-import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.builder.ProcessingPeriodBuilder;
-import org.openlmis.core.builder.ProcessingScheduleBuilder;
-import org.openlmis.core.builder.ProductBuilder;
-import org.openlmis.core.builder.ProgramBuilder;
-import org.openlmis.core.builder.SupervisoryNodeBuilder;
-import org.openlmis.core.builder.SupplyLineBuilder;
-import org.openlmis.core.builder.UserBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityTypeApprovedProduct;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProcessingSchedule;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.Role;
-import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.SupplyLine;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.builder.*;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
-import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
-import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
-import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
-import org.openlmis.core.repository.mapper.ProductCategoryMapper;
-import org.openlmis.core.repository.mapper.ProductMapper;
-import org.openlmis.core.repository.mapper.ProgramMapper;
-import org.openlmis.core.repository.mapper.ProgramProductMapper;
-import org.openlmis.core.repository.mapper.RoleRightsMapper;
-import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
-import org.openlmis.core.repository.mapper.SupplyLineMapper;
-import org.openlmis.core.repository.mapper.UserMapper;
+import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.domain.Comment;
-import org.openlmis.rnr.domain.RequisitionStatusChange;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -74,7 +37,6 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -92,6 +54,8 @@ import static org.openlmis.core.builder.ProgramBuilder.programName;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.core.builder.UserBuilder.active;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.domain.RightName.CONVERT_TO_ORDER;
+import static org.openlmis.core.domain.RightType.FULFILLMENT;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -415,7 +379,7 @@ public class RequisitionMapperIT {
     String sortDirection = "asc";
     String sortBy = "submittedDate";
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "F10", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -442,7 +406,7 @@ public class RequisitionMapperIT {
     String sortBy = "submittedDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Apollo", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -468,7 +432,7 @@ public class RequisitionMapperIT {
     String sortDirection = "asc";
     String sortBy = "submittedDate";
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "apollo", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -493,7 +457,7 @@ public class RequisitionMapperIT {
     String sortDirection = "asc";
     String sortBy = "submittedDate";
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Yellow", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -554,7 +518,7 @@ public class RequisitionMapperIT {
     String sortBy = "programName";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -581,7 +545,7 @@ public class RequisitionMapperIT {
     String sortBy = "facilityName";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -608,7 +572,7 @@ public class RequisitionMapperIT {
     String sortBy = "facilityCode";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -643,7 +607,7 @@ public class RequisitionMapperIT {
     String sortBy = "supplyingDepotName";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -671,7 +635,7 @@ public class RequisitionMapperIT {
     String sortBy = "modifiedDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -695,7 +659,7 @@ public class RequisitionMapperIT {
     String sortBy = "emergency";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -732,7 +696,7 @@ public class RequisitionMapperIT {
     String sortBy = "periodStartDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -769,7 +733,7 @@ public class RequisitionMapperIT {
     String sortBy = "periodEndDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -825,11 +789,13 @@ public class RequisitionMapperIT {
   }
 
   private Role insertRole() {
-    Role role = new Role("r1", "random description", new HashSet<>(asList(Right.CONVERT_TO_ORDER, Right.VIEW_ORDER)));
+    Right right1 = new Right(CONVERT_TO_ORDER, FULFILLMENT);
+    Right right2 = new Right(RightName.VIEW_ORDER, FULFILLMENT);
+    Role role = new Role("r1", "random description", asList(right1,right2));
     Long roleId = Long.valueOf(roleRightsMapper.insertRole(role));
     role.setId(roleId);
     for (Right right : role.getRights()) {
-      roleRightsMapper.createRoleRight(role, right);
+      roleRightsMapper.createRoleRight(role, right.getName());
     }
     return role;
   }

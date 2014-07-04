@@ -21,8 +21,22 @@ function NavigationController($scope, localStorageService, Locales, $location, $
     });
   }();
 
+  $scope.hasReportingPermission = function () {
+    if ($scope.rights !== undefined && $scope.rights !== null) {
+      var rights = JSON.parse($scope.rights);
+      var rightTypes = _.pluck(rights, 'type');
+      return rightTypes.indexOf('REPORTING') > -1;
+    }
+    return false;
+  };
+
   $scope.hasPermission = function (permission) {
-    return ($scope.rights && ($scope.rights.split(",").indexOf(permission) > -1));
+    if ($scope.rights !== undefined && $scope.rights !== null) {
+      var rights = JSON.parse($scope.rights);
+      var rightNames = _.pluck(rights, 'name');
+      return rightNames.indexOf(permission) > -1;
+    }
+    return false;
   };
 
   $scope.goOnline = function () {

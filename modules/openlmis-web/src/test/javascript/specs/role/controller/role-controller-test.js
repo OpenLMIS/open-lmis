@@ -117,14 +117,14 @@ describe("Role", function () {
 
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller) {
       role = {"id": 1, "name": "Admin", "adminRole": 'true', "rights": [
-        {"right": "CONFIGURE_RNR", "name": "configure rnr"},
-        {"right": "MANAGE_FACILITY", "name": "manage facility"}
+        {"name": "CONFIGURE_RNR", "displayNameKey": "configure rnr"},
+        {"name": "MANAGE_FACILITY", "displayNameKey": "manage facility"}
       ]};
       rightList = [
-        {"right": "CONFIGURE_RNR", "name": "configure rnr"},
-        {"right": "MANAGE_FACILITY", "name": "manage facility"},
-        {"right": "CREATE_REQUISITION", "name": "create requisition"},
-        {"right": "VIEW_REQUISITION", "name": "view requisition"}
+        {"name": "CONFIGURE_RNR", "displayNameKey": "configure rnr"},
+        {"name": "MANAGE_FACILITY", "displayNameKey": "manage facility"},
+        {"name": "CREATE_REQUISITION", "displayNameKey": "create requisition"},
+        {"name": "VIEW_REQUISITION", "displayNameKey": "view requisition"}
       ];
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;

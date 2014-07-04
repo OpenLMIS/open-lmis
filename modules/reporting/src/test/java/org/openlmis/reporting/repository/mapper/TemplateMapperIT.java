@@ -13,9 +13,11 @@ package org.openlmis.reporting.repository.mapper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RightType;
 import org.openlmis.core.domain.Role;
 import org.openlmis.core.query.QueryExecutor;
+import org.openlmis.core.repository.mapper.RightMapper;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.reporting.model.Template;
@@ -51,6 +53,9 @@ public class TemplateMapperIT {
 
   @Autowired
   ReportRightMapper reportRightMapper;
+
+  @Autowired
+  RightMapper rightMapper;
 
   @Autowired
   RoleRightsMapper roleRightsMapper;
@@ -159,10 +164,15 @@ public class TemplateMapperIT {
     Template reportTemplate3 = createReportTemplate("CFacility Template3", RightType.REPORTING.toString());
     Template reportTemplate4 = createReportTemplate("EFacility Template4", RightType.REPORTING.toString());
 
-    roleRightsMapper.insertRight(reportTemplate1.getName(), RightType.REPORTING);
-    roleRightsMapper.insertRight(reportTemplate2.getName(), RightType.REPORTING);
-    roleRightsMapper.insertRight(reportTemplate3.getName(), RightType.REPORTING);
-    roleRightsMapper.insertRight(reportTemplate4.getName(), RightType.REPORTING);
+    Right right1 = new Right(reportTemplate1.getName(), RightType.REPORTING);
+    Right right2 = new Right(reportTemplate2.getName(), RightType.REPORTING);
+    Right right3 = new Right(reportTemplate3.getName(), RightType.REPORTING);
+    Right right4 = new Right(reportTemplate4.getName(), RightType.REPORTING);
+
+    rightMapper.insertRight(right1);
+    rightMapper.insertRight(right2);
+    rightMapper.insertRight(right3);
+    rightMapper.insertRight(right4);
 
     reportRightMapper.insert(reportTemplate1);
     reportRightMapper.insert(reportTemplate2);

@@ -319,7 +319,7 @@ public class FacilityRepositoryTest {
   public void shouldGetHomeFacilityForUserWithRight() throws Exception {
     Facility expectedFacility = new Facility();
     when(mapper.getHomeFacilityWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}")).thenReturn(expectedFacility);
-    Facility userHomeFacility = repository.getHomeFacilityForRights(1L, Right.APPROVE_REQUISITION, Right.CREATE_REQUISITION);
+    Facility userHomeFacility = repository.getHomeFacilityForRights(1L, RightName.APPROVE_REQUISITION, RightName.CREATE_REQUISITION);
 
     assertThat(userHomeFacility, is(expectedFacility));
     verify(mapper).getHomeFacilityWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}");

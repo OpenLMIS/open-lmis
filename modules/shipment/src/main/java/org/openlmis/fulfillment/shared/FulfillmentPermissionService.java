@@ -12,12 +12,15 @@ package org.openlmis.fulfillment.shared;
 
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.RoleRightsService;
+import org.openlmis.core.utils.RightUtil;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
+
+import static com.google.common.collect.Iterables.any;
 
 /**
  * This class is responsible for checking if the user has the given right on a warehouse.
@@ -34,14 +37,14 @@ public class FulfillmentPermissionService {
   private OrderService orderService;
 
 
-  public Boolean hasPermission(Long userId, Long orderId, Right right) {
+  public Boolean hasPermission(Long userId, Long orderId, String rightName) {
     Order order = orderService.getOrder(orderId);
-    Set<Right> userRights = roleRightsService.getRightsForUserAndWarehouse(userId, order.getSupplyingFacility().getId());
-    return userRights.contains(right);
+    List<Right> userRights = roleRightsService.getRightsForUserAndWarehouse(userId, order.getSupplyingFacility().getId());
+    return any(userRights, RightUtil.with(rightName));
   }
 
-  public Boolean hasPermissionOnWarehouse(Long userId, Long warehouseId, Right right) {
-    Set<Right> userRights = roleRightsService.getRightsForUserAndWarehouse(userId, warehouseId);
-    return userRights.contains(right);
+  public Boolean hasPermissionOnWarehouse(Long userId, Long warehouseId, String rightName) {
+    List<Right> userRights = roleRightsService.getRightsForUserAndWarehouse(userId, warehouseId);
+    return any(userRights, RightUtil.with(rightName));
   }
 }

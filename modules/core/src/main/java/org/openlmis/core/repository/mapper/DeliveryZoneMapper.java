@@ -12,7 +12,6 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -42,7 +41,7 @@ public interface DeliveryZoneMapper {
   @Select({"SELECT DZ.* FROM delivery_zones DZ INNER JOIN role_assignments RA ON RA.deliveryZoneId = DZ.id",
     "INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
     "WHERE RR.rightName = #{right} AND RA.userId = #{userId}"})
-  List<DeliveryZone> getByUserForRight(@Param("userId") long userId, @Param("right") Right right);
+  List<DeliveryZone> getByUserForRight(@Param("userId") long userId, @Param("right") String right);
 
   @Select({"SELECT programId as id FROM delivery_zone_program_schedules WHERE deliveryZoneId = #{id}"})
   List<Program> getPrograms(long id);

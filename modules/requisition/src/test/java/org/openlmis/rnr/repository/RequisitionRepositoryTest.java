@@ -19,7 +19,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
@@ -39,6 +42,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.domain.RightName.CONVERT_TO_ORDER;
 import static org.openlmis.rnr.builder.RegimenLineItemBuilder.code;
 import static org.openlmis.rnr.builder.RegimenLineItemBuilder.defaultRegimenLineItem;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
@@ -373,14 +377,14 @@ public class RequisitionRepositoryTest {
     String sortBy = "program";
     Integer pageSize = 2;
     when(requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize,
-        1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expected);
+        1l, CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expected);
 
     List<Rnr> rnrList = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-        pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageNumber, pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(rnrList, is(expected));
     verify(requisitionMapper).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-        pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, 1l, CONVERT_TO_ORDER, sortBy, sortDirection);
   }
 
   @Test
@@ -389,12 +393,12 @@ public class RequisitionRepositoryTest {
     Integer requisitionCount = 5;
     String searchType = SEARCH_ALL;
     String searchVal = "test";
-    when(requisitionMapper.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER)).thenReturn(requisitionCount);
+    when(requisitionMapper.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, CONVERT_TO_ORDER)).thenReturn(requisitionCount);
 
-    Integer result = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER);
+    Integer result = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, CONVERT_TO_ORDER);
 
     assertThat(result, is(requisitionCount));
-    verify(requisitionMapper).getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER);
+    verify(requisitionMapper).getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, CONVERT_TO_ORDER);
   }
 
   @Test

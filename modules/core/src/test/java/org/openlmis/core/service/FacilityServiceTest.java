@@ -50,7 +50,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.spy;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RightName.*;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -284,25 +284,25 @@ public class FacilityServiceTest {
   @Test
   public void shouldGetAllFacilitiesForUserAndRights() throws Exception {
     //Arrange
-    Right[] rights = {Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION};
+    String[] rightNames = {VIEW_REQUISITION, APPROVE_REQUISITION};
     Facility homeFacility = new Facility();
     List<Facility> supervisedFacilities = new ArrayList<>();
     supervisedFacilities.add(homeFacility);
     List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
     List<RequisitionGroup> requisitionGroups = new ArrayList<>();
-    when(facilityRepository.getHomeFacilityForRights(1L, rights)).thenReturn(homeFacility);
-    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1L, rights)).thenReturn(supervisoryNodes);
+    when(facilityRepository.getHomeFacilityForRights(1L, rightNames)).thenReturn(homeFacility);
+    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1L, rightNames)).thenReturn(supervisoryNodes);
     when(requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes)).thenReturn(requisitionGroups);
     when(facilityRepository.getAllInRequisitionGroups(requisitionGroups)).thenReturn(supervisedFacilities);
 
     //Act
-    List<Facility> actualFacilities = facilityService.getForUserAndRights(1L, rights);
+    List<Facility> actualFacilities = facilityService.getForUserAndRights(1L, rightNames);
 
     //Assert
     assertThat(actualFacilities, is(supervisedFacilities));
     assertThat(actualFacilities.contains(homeFacility), is(true));
-    verify(facilityRepository).getHomeFacilityForRights(1L, rights);
-    verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1L, rights);
+    verify(facilityRepository).getHomeFacilityForRights(1L, rightNames);
+    verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1L, rightNames);
     verify(requisitionGroupService).getRequisitionGroupsBy(supervisoryNodes);
     verify(facilityRepository).getAllInRequisitionGroups(requisitionGroups);
   }
@@ -310,25 +310,25 @@ public class FacilityServiceTest {
   @Test
   public void shouldNotGetHomeFacilityWhenItIsNull() throws Exception {
     //Arrange
-    Right[] rights = {Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION};
+    String[] rightNames = {VIEW_REQUISITION, APPROVE_REQUISITION};
     Facility supervisedFacility = new Facility();
     List<Facility> supervisedFacilities = new ArrayList<>();
     supervisedFacilities.add(supervisedFacility);
     List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
     List<RequisitionGroup> requisitionGroups = new ArrayList<>();
-    when(facilityRepository.getHomeFacilityForRights(1L, rights)).thenReturn(null);
-    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1L, rights)).thenReturn(supervisoryNodes);
+    when(facilityRepository.getHomeFacilityForRights(1L, rightNames)).thenReturn(null);
+    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1L, rightNames)).thenReturn(supervisoryNodes);
     when(requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes)).thenReturn(requisitionGroups);
     when(facilityRepository.getAllInRequisitionGroups(requisitionGroups)).thenReturn(supervisedFacilities);
 
     //Act
-    List<Facility> actualFacilities = facilityService.getForUserAndRights(1L, rights);
+    List<Facility> actualFacilities = facilityService.getForUserAndRights(1L, rightNames);
 
     //Assert
     assertThat(actualFacilities, is(supervisedFacilities));
     assertThat(actualFacilities.size(), is(1));
-    verify(facilityRepository).getHomeFacilityForRights(1L, rights);
-    verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1L, rights);
+    verify(facilityRepository).getHomeFacilityForRights(1L, rightNames);
+    verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1L, rightNames);
     verify(requisitionGroupService).getRequisitionGroupsBy(supervisoryNodes);
     verify(facilityRepository).getAllInRequisitionGroups(requisitionGroups);
   }

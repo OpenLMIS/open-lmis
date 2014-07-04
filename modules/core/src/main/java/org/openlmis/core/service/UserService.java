@@ -13,7 +13,6 @@ package org.openlmis.core.service;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
@@ -138,16 +137,16 @@ public class UserService {
     userRepository.deletePasswordResetTokenForUser(userId);
   }
 
-  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, Right right) {
-    return userRepository.getUsersWithRightInNodeForProgram(program, node, right);
+  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, String rightName) {
+    return userRepository.getUsersWithRightInNodeForProgram(program, node, rightName);
   }
 
-  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Program program, Right right) {
-    return userRepository.getUsersWithRightInHierarchyUsingBaseNode(nodeId, program.getId(), right);
+  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Program program, String rightName) {
+    return userRepository.getUsersWithRightInHierarchyUsingBaseNode(nodeId, program.getId(), rightName);
   }
 
-  public List<User> getUsersWithRightOnWarehouse(Long id, Right right) {
-    return userRepository.getUsersWithRightOnWarehouse(id, right);
+  public List<User> getUsersWithRightOnWarehouse(Long id, String rightName) {
+    return userRepository.getUsersWithRightOnWarehouse(id, rightName);
   }
 
   private void sendUserCreationEmail(User user, String resetPasswordLink) {

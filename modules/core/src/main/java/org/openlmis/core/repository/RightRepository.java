@@ -8,26 +8,36 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.core.serializer;
+package org.openlmis.core.repository;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.ObjectCodec;
-import org.codehaus.jackson.map.DeserializationContext;
-import org.codehaus.jackson.map.JsonDeserializer;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.repository.mapper.RightMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
+import java.util.List;
 
 /**
- * RightDeSerializer class represents the deserializer for Right.
+ * RightsRepository is Repository class for Rights related database operations.
  */
 
-public class RightDeSerializer extends JsonDeserializer<Right> {
-    @Override
-    public Right deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
-        ObjectCodec oc = jsonParser.getCodec();
-        JsonNode node = oc.readTree(jsonParser);
-        return Right.valueOf(node.get("right").getTextValue());
-    }
+@Repository
+@NoArgsConstructor
+public class RightRepository {
+
+  @Autowired
+  private RightMapper rightsMapper;
+
+  public void insertRight(Right right) {
+    rightsMapper.insertRight(right);
+  }
+
+  public Boolean hasReportingRight(Long userId) {
+    return rightsMapper.totalReportingRightsFor(userId) > 0;
+  }
+
+  public List<Right> getAll() {
+    return rightsMapper.getAll();
+  }
 }

@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RequisitionRepository;
@@ -52,11 +51,11 @@ public class FacilityProgramDateRangeSearch extends RequisitionSearchStrategy {
   }
 
   @Override
-  boolean isSearchable(Right right) {
+  boolean isSearchable(String rightName) {
     Facility facility = new Facility(criteria.getFacilityId());
     Program program = new Program(criteria.getProgramId());
 
-    return requisitionPermissionService.hasPermission(criteria.getUserId(), facility, program, right);
+    return requisitionPermissionService.hasPermission(criteria.getUserId(), facility, program, rightName);
   }
 
   @Override

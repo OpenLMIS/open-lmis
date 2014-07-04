@@ -12,7 +12,6 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.springframework.stereotype.Repository;
@@ -57,7 +56,7 @@ public interface UserMapper {
     "WHERE RA.programId = #{program.id} AND COALESCE(RA.supervisoryNodeId, -1) = COALESCE(#{supervisoryNode.id}, -1) AND RR.rightName = #{right}"})
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   List<User> getUsersWithRightInNodeForProgram(@Param("program") Program program, @Param("supervisoryNode") SupervisoryNode supervisoryNode,
-                                               @Param("right") Right right);
+                                               @Param("right") String right);
 
   @Select(value = "SELECT id, firstName, lastName, email, username, active FROM users WHERE LOWER(firstName) LIKE '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(lastName) LIKE '%'|| " +
     "LOWER(#{userSearchParam}) ||'%' OR LOWER(email) LIKE '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(username) LIKE '%'|| LOWER(#{userSearchParam}) ||'%'")
@@ -106,11 +105,11 @@ public interface UserMapper {
     "SELECT c.id, c.parentId  FROM supervisoryNodesRec AS p, supervisory_nodes AS c WHERE p.parentId = c.id)",
     "SELECT id FROM supervisoryNodesRec) ",
     "AND programId = #{programId} AND role_rights.rightName = #{rightName}"})
-  List<User> getUsersWithRightInHierarchyUsingBaseNode(@Param(value = "nodeId") Long nodeId, @Param(value = "programId") Long programId, @Param(value = "rightName") Right right);
+  List<User> getUsersWithRightInHierarchyUsingBaseNode(@Param(value = "nodeId") Long nodeId, @Param(value = "programId") Long programId, @Param(value = "rightName") String right);
 
   @Select({"SELECT id, userName, u.facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod," +
     "officePhone, cellPhone, email, supervisorId, verified, active FROM users u INNER JOIN fulfillment_role_assignments f ON u.id = f.userId " +
     "INNER JOIN role_rights rr ON f.roleId = rr.roleId",
     "WHERE f.facilityId = #{facilityId} AND rr.rightName = #{rightName}"})
-  List<User> getUsersWithRightOnWarehouse(@Param("facilityId") Long facilityId, @Param("rightName") Right right);
+  List<User> getUsersWithRightOnWarehouse(@Param("facilityId") Long facilityId, @Param("rightName") String rightName);
 }

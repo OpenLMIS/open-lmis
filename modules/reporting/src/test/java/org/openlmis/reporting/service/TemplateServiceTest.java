@@ -18,9 +18,10 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.RightType;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.RightService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.Template;
@@ -53,6 +54,9 @@ public class TemplateServiceTest {
 
   @Mock
   RoleRightsService roleRightsService;
+
+  @Mock
+  RightService rightService;
 
   @Mock
   ReportRightService reportRightService;
@@ -213,11 +217,13 @@ public class TemplateServiceTest {
     byte[] byteData = new byte[1];
     when(byteOutputStream.toByteArray()).thenReturn(byteData);
     Template template = new Template();
+    Right right = new Right();
+    whenNew(Right.class).withAnyArguments().thenReturn(right);
 
     service.validateFileAndInsertTemplate(template, file);
 
     verify(repository).insertWithParameters(template);
-    verify(roleRightsService).insertRight(template.getName(), RightType.REPORTING);
+    verify(rightService).insertRight(right);
     verify(reportRightService).insert(template);
     assertThat(template.getParameters().get(0).getDisplayName(), is("Param Display Name"));
     assertThat(template.getParameters().get(0).getDescription(), is("desc"));
@@ -263,11 +269,13 @@ public class TemplateServiceTest {
     byte[] byteData = new byte[1];
     when(byteOutputStream.toByteArray()).thenReturn(byteData);
     Template template = new Template();
+    Right right = new Right();
+    whenNew(Right.class).withAnyArguments().thenReturn(right);
 
     service.validateFileAndInsertTemplate(template, file);
 
     verify(repository).insertWithParameters(template);
-    verify(roleRightsService).insertRight(template.getName(), RightType.REPORTING);
+    verify(rightService).insertRight(right);
     verify(reportRightService).insert(template);
     assertThat(template.getParameters().get(0).getDisplayName(), is("Param Display Name"));
     assertThat(template.getParameters().get(0).getCreatedBy(), is(template.getCreatedBy()));
