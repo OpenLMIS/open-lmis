@@ -11,24 +11,9 @@
 <h2 ng-bind="template.name"></h2>
 <div class="app-form">
   <div ng-repeat="parameter in parameters" class="form-row">
-    <label class="short" style="margin-bottom: 2px; font-size: 0.9em;">{{ parameter.displayName }}</label>:
+    <label class="short" style="margin-bottom: 2px; font-size: 0.9em;" ng-bind="parameter.displayName"></label>:
 
     <ng-switch on="parameter.dataType">
-      <span ng-switch-when="java.lang.Integer" class="clearfix form-inline row-fluid">
-        <input type="text"
-               name="{{parameter.name}}"
-               ng-model="map[parameter.name]" class="right-justified"
-               numeric-validator="integer" ng-trim="false"/>
-
-      <span class="rnr-form-error" style="display:none;" id="{{parameter.name}}"
-            openlmis-message="error.number.only"></span>
-      </span>
-
-      <div ng-switch-when="java.lang.String">
-        <input type="text" name="{{parameter.name}}" ng-trim="false"
-               ng-model="map[parameter.name]"/>
-      </div>
-
       <div ng-switch-when="java.lang.Boolean">
         <input type="radio" name="{{parameter.name}}" ng-value="'true'" ng-model="map[parameter.name]"/>
         <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
@@ -44,18 +29,22 @@
       </div>
 
       <div ng-switch-default>
-        <input type="text" name="{{parameter.name}}" ng-trim="false"
+        <input type="text" id="{{parameter.name}}" ng-trim="false"
                ng-model="map[parameter.name]"/>
       </div>
     </ng-switch>
-    <label class="short">{{ parameter.description }}</label>
+
+    <label class="short" ng-bind="parameter.description"></label>
   </div>
-  <a id="pdfLink" href="/reports/{{template.id}}/pdf" target="_blank"
-     openlmis-message="report.type.pdf"></a>
-  <a id="xlsLink" href="/reports/{{template.id}}/xls" target="_blank"
-     openlmis-message="report.type.xls"></a>
-  <a id="csvLink" href="/reports/{{template.id}}/csv" target="_blank"
-     openlmis-message="report.type.csv"></a>
-  <a id="htmlLink" href="/reports/{{template.id}}/html" target="_blank"
-     openlmis-message="report.type.html"></a>
+
+  <div>
+    <a id="pdfLink" href="/reports/{{template.id}}/pdf" target="_blank"
+       openlmis-message="report.type.pdf"></a>
+    <a id="xlsLink" href="/reports/{{template.id}}/xls" target="_blank"
+       openlmis-message="report.type.xls"></a>
+    <a id="csvLink" href="/reports/{{template.id}}/csv" target="_blank"
+       openlmis-message="report.type.csv"></a>
+    <a id="htmlLink" href="/reports/{{template.id}}/html" target="_blank"
+       openlmis-message="report.type.html"></a>
+  </div>
 </div>
