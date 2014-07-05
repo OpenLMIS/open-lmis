@@ -48,11 +48,9 @@ public class ManageReport extends TestCaseHelper {
   public void invalidScenariosReports(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
-    assertEquals("Reports", reportPage.getReportHeader());
-    assertEquals("Report name", reportPage.getReportNameHeader());
-    assertEquals("View", reportPage.getViewHeader());
-    reportPage.clickAddNewButton();
+    assertEquals("No Reports", reportPage.getNoReportsMessage());
 
+    reportPage.clickAddNewButton();
     assertEquals("Report name *", reportPage.getNameLabel());
     assertEquals("Description", reportPage.getDescriptionLabel());
     assertEquals("Upload file *", reportPage.getUploadFileLabel());
@@ -89,20 +87,6 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadValidReport(String[] credentials) {
-    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    reportPage = homePage.navigateReportScreen();
-
-    reportPage.clickAddNewButton();
-    reportPage.enterReportName(reportName);
-    reportPage.uploadFile(fileName);
-    reportPage.clickSaveButton();
-    assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
-    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
-    verifyItemsOnReportListScreen();
-  }
-
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyDuplicateReport(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
@@ -120,10 +104,10 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("Report with same name already exists", reportPage.getSaveErrorMessage());
 
     reportPage.clickCancelButton();
-    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
+//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+//  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyDefaultReports(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
@@ -145,11 +129,267 @@ public class ManageReport extends TestCaseHelper {
     reportName = "Test-Report";
   }
 
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadValidNoParameterReport(String[] credentials) throws SQLException {
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertFacilities("F12", "F13");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "noParameterReport.jrxml";
+    reportName = "noParameterReport";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
+    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", "noParameterReport"));
+    assertEquals("noParameterReport", dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", "noParameterReport")));
+    assertEquals("0", dbWrapper.getRowsCountFromDB("template_parameters"));
+
+//    assertEquals("Reports", reportPage.getReportHeader());
+//    assertEquals("Report name", reportPage.getReportNameHeader());
+//    assertEquals("View", reportPage.getViewHeader());
+//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
+//    verifyItemsOnReportListScreen();
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadValidSingleBooleanParameterReportWithAllProperties(String[] credentials) throws SQLException {
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertFacilities("F12", "F13");
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F11");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "validSingleBooleanParameterReport.jrxml";
+    reportName = "valid Single Boolean Parameter Report";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
+    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
+    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
+    assertEquals("isEnabled", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
+      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    verifyParameterDetails("isEnabled", "isEnable","true","is facility enabled","java.lang.Boolean");
+//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
+//    verifyItemsOnReportListScreen();
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadValidSingleIntParameterReportWithAllProperties(String[] credentials) throws SQLException {
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertFacilities("F12", "F13");
+    dbWrapper.updateFieldValue("facilities", "typeId", dbWrapper.getAttributeFromTable("facility_types", "id", "code", "warehouse"),"code","F11");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "validSingleIntParameterReport.jrxml";
+    reportName = "valid Single Int Parameter Report";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
+    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
+    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
+    assertEquals("typeId", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
+      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    verifyParameterDetails("typeId", "facilityTypeId","2","id for facility type","java.lang.Integer");
+//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
+//    verifyItemsOnReportListScreen();
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadValidSingleStringParameterReportWithAllProperties(String[] credentials) throws SQLException {
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertFacilities("F12", "F13");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "validSingleStringParameterReport.jrxml";
+    reportName = "valid Single String Parameter Report";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
+    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
+    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
+    assertEquals("code", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
+      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    verifyParameterDetails("code", "facilityCode","'F10'","facility code","java.lang.String");
+//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
+//    verifyItemsOnReportListScreen();
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadValidSingleDateParameterReportWithAllProperties(String[] credentials) throws SQLException {
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertFacilities("F12", "F13");
+    dbWrapper.updateFieldValue("facilities", "goLiveDate","2014-07-01","code","F11");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "validSingleDateParameterReport.jrxml";
+    reportName = "valid Single Date Parameter Report";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
+    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
+    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
+    assertEquals("goLiveDate", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
+      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    verifyParameterDetails("goLiveDate", "facilityGoLiveDate","01/07/2014","go live date of facility","java.util.Date");
+//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
+//    verifyItemsOnReportListScreen();
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadReportWithoutDisplayNameOfParameter(String[] credentials) throws SQLException {
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertFacilities("F12", "F13");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    int numberOfExistingReportRights = Integer.parseInt(dbWrapper.getRowsCountFromDB("report_rights"));
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "noDisplayNameOfParameterInReport.jrxml";
+    reportName = "no Display Name Of Parameter In Report";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("Display name is missing for parameter \"code\"", reportPage.getSaveErrorMessage());
+    assertEquals(numberOfExistingReportRights, Integer.parseInt(dbWrapper.getRowsCountFromDB("report_rights")));
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadReportWithoutOptionalPropertiesOfParameter(String[] credentials) throws SQLException {
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertFacilities("F12", "F13");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "onlyMandatoryPropertiesOfParameter.jrxml";
+    reportName = "only Mandatory Properties Of Parameter";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
+    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
+    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
+    assertEquals("code", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
+      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    verifyParameterDetails("code", "facilityCode",null,null,"java.lang.String");
+//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
+//    verifyItemsOnReportListScreen();
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadReportWithExtraPropertiesOfParameter(String[] credentials) throws SQLException {
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertFacilities("F12", "F13");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    int numberOfExistingReportRights = Integer.parseInt(dbWrapper.getRowsCountFromDB("report_rights"));
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "extraPropertiesOfParameter.jrxml";
+    reportName = "extra Properties Of Parameter";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("Unidentified property found for parameter \"code\"", reportPage.getSaveErrorMessage());
+    assertEquals(numberOfExistingReportRights, Integer.parseInt(dbWrapper.getRowsCountFromDB("report_rights")));
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadReportWithExtraParameters(String[] credentials) throws SQLException {
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertFacilities("F12", "F13");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "extraParametersInReport.jrxml";
+    reportName = "extra Parameters In Report";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
+    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
+    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    assertEquals("2", dbWrapper.getRowsCountFromDB("template_parameters"));
+    verifyParameterDetails("code", "facilityCode", "'F10'", null, "java.lang.String");
+    verifyParameterDetails("name", "facilityName",null, null,"java.lang.String");
+//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
+//    verifyItemsOnReportListScreen();
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadReportWithMissingParameters(String[] credentials) throws SQLException {
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertFacilities("F12", "F13");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    int numberOfExistingReportRights = Integer.parseInt(dbWrapper.getRowsCountFromDB("report_rights"));
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "missingParametersInReport.jrxml";
+    reportName = "missing Parameters In Report";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("File uploaded is invalid", reportPage.getSaveErrorMessage());
+    assertEquals(numberOfExistingReportRights, Integer.parseInt(dbWrapper.getRowsCountFromDB("report_rights")));
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadReportWithDefaultValueAndTypeOfParameterMismatch(String[] credentials) throws SQLException {
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertFacilities("F12", "F13");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "defaultValueAndTypeOfParameterMismatch.jrxml";
+    reportName = "default Value And Type Of Parameter Mismatch";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
+    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
+    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
+    assertEquals("id", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
+      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
+    verifyParameterDetails("id", "fCode","abc",null,"java.lang.Integer");
+//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
+//    verifyItemsOnReportListScreen();
+  }
+
   public void verifyItemsOnReportListScreen() {
     assertTrue("PDF link missing", reportPage.isPDFLinkDisplayed());
     assertTrue("XLS link missing", reportPage.isXLSLinkDisplayed());
     assertTrue("CSV link missing", reportPage.isCSVLinkDisplayed());
     assertTrue("HTML link missing", reportPage.isHTMLLinkDisplayed());
+  }
+
+  public void verifyParameterDetails(String parameterName, String displayName, String defaultValue, String description, String parameterType) throws SQLException {
+    assertEquals(displayName, dbWrapper.getAttributeFromTable("template_parameters", "displayName", "name", parameterName));
+    assertEquals(defaultValue, dbWrapper.getAttributeFromTable("template_parameters", "defaultValue", "name", parameterName));
+    assertEquals(description, dbWrapper.getAttributeFromTable("template_parameters", "description", "name", parameterName));
+    assertEquals(parameterType, dbWrapper.getAttributeFromTable("template_parameters", "dataType", "name", parameterName));
   }
 
   @AfterMethod(groups = {"admin"})
@@ -158,8 +398,11 @@ public class ManageReport extends TestCaseHelper {
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
     dbWrapper.deleteRowFromTable("report_rights", "rightName", reportName);
-    dbWrapper.deleteRowFromTable("templates", "name", reportName);
     dbWrapper.deleteRowFromTable("rights", "name", reportName);
+    if(Integer.parseInt(dbWrapper.getRowsCountFromDB("template_parameters"))>0) {
+      dbWrapper.deleteRowFromTable("template_parameters", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName));
+    }
+    dbWrapper.deleteRowFromTable("templates", "name", reportName);
     dbWrapper.closeConnection();
   }
 

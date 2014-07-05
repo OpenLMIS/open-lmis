@@ -19,10 +19,13 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import static org.openqa.selenium.support.How.ID;
 
-public class ReportPage extends RequisitionPage {
+public class ReportPage extends Page {
 
   @FindBy(how = ID, using = "reportHeader")
   private static WebElement reportHeader = null;
+
+  @FindBy(how = ID, using = "noReportsMessage")
+  private static WebElement noReportsMessage = null;
 
   @FindBy(how = ID, using = "reportNameHeader")
   private static WebElement reportNameHeader = null;
@@ -208,5 +211,10 @@ public class ReportPage extends RequisitionPage {
     WebElement element = testWebDriver.getElementById("reportName" + (reportIndex - 1));
     testWebDriver.waitForElementToAppear(element);
     return element.getText().trim();
+  }
+
+  public String getNoReportsMessage() {
+    testWebDriver.waitForElementToAppear(noReportsMessage);
+    return noReportsMessage.getText();
   }
 }
