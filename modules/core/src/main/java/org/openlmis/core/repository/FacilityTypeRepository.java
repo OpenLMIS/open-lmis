@@ -55,7 +55,7 @@ public class FacilityTypeRepository {
       if(facilityType.hasId()) mapper.update(facilityType);
       else mapper.insert(facilityType);
     } catch(DuplicateKeyException dke) {
-      throw new DataException("error.duplicate.facility.type.code", dke);
+      throw new DataException("error.duplicate.facility.type", dke);
     } catch(DataIntegrityViolationException dive) {
       throw new DataException("error.incorrect.length", dive);
     }

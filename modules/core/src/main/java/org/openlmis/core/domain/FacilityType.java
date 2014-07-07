@@ -29,7 +29,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 public class FacilityType extends BaseModel implements Importable {
 
-  @ImportField(name="Facilty Type Code", mandatory=true)
+  @ImportField(name="Facility Type Code", mandatory=true)
   private String code;
 
   @ImportField(name="Name", mandatory=true)
@@ -49,7 +49,7 @@ public class FacilityType extends BaseModel implements Importable {
   @ImportField(name="Display Order", mandatory=true)
   private Integer displayOrder;
 
-  @ImportField(name="Active", mandatory=true)
+  @ImportField(name="Active", mandatory=true, type="boolean")
   private boolean active;
 
   public FacilityType(String code) {

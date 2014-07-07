@@ -324,6 +324,15 @@
                         <property name="recordHandler" ref="facilityOperatorPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="facilityType">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.facility.types"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityType</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityTypePersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
