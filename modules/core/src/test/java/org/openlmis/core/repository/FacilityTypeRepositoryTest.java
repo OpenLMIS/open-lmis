@@ -56,6 +56,11 @@ public class FacilityTypeRepositoryTest {
     verify(mapper).insert(facType);
   }
 
+  @Test(expected = NullPointerException.class)
+  public void shouldThrowNullPointerExceptionOnSaveWithNull() {
+    repo.save(null);
+  }
+
   @Test
   public void shouldReturnNullWhenGetByCodeIsNull() {
     assertThat(repo.getByCode(null), nullValue());
