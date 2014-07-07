@@ -117,6 +117,11 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
                     type: 'google'
                 }
             }
+        },
+        legend: {
+            position: 'bottomleft',
+            colors: [ '#FF0000', '#FFFF00', '#5eb95e' ],
+            labels: [ 'Non Reporting', 'Partial Reporting ', 'Fully Reporting']
         }
     });
 
@@ -163,6 +168,7 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     };
 
     $scope.centerJSON = function() {
+
         leafletData.getMap().then(function(map) {
             var latlngs = [];
             for (var c = 0; c < $scope.features.length; c++) {
