@@ -32,6 +32,8 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", "SYSTEM_SETTINGS");
     dbWrapper.setupOrderNumberConfiguration("O", true, true, true, true);
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
@@ -117,6 +119,8 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);

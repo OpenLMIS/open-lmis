@@ -48,6 +48,9 @@ public class ManageISA extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", "MANAGE_PROGRAM_PRODUCT");
+    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
   }
 
   @Given("^I have the following data for override ISA:$")
@@ -175,6 +178,8 @@ public class ManageISA extends TestCaseHelper {
       HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
     }
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
@@ -184,8 +189,6 @@ public class ManageISA extends TestCaseHelper {
     return new Object[][]{
       {"Admin123", "Admin123", "VACCINES"}
     };
-
   }
-
 }
 

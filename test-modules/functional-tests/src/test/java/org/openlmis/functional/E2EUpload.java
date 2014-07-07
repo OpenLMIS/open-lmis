@@ -50,9 +50,14 @@ public class E2EUpload extends TestCaseHelper {
     assertTrue(rolesPage.isCreateNewRoleButtonDisplayed());
     List<String> userRoleList = asList("Create Requisition");
     rolesPage.createRole("User", "User", userRoleList, "Requisition");
+    homePage.logout();
 
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", "UPLOADS");
+    loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.verifyUploadPage();
+
     verifyValidUserUpload();
     verifyInValidUserUpload();
 
@@ -773,6 +778,8 @@ public class E2EUpload extends TestCaseHelper {
   public void tearDown() throws SQLException {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

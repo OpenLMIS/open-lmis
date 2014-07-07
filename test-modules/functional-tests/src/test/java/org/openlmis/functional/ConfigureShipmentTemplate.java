@@ -88,6 +88,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.setupShipmentFileConfiguration("false");
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", "SYSTEM_SETTINGS");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
@@ -226,6 +228,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
 
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);

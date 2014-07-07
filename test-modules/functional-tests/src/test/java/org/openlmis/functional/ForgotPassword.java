@@ -36,6 +36,7 @@ public class ForgotPassword extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws Exception {
     super.setup();
+    dbWrapper.removeAllExistingRights("Admin");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     forgotPasswordPage = PageObjectFactory.getForgotPasswordPage(testWebDriver);
   }
@@ -173,6 +174,7 @@ public class ForgotPassword extends TestCaseHelper {
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
+    dbWrapper.insertAllAdminRightsAsSeedData();
     try {
       if (!testWebDriver.getElementById("username").isDisplayed()) {
         HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);

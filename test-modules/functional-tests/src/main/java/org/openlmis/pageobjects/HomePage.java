@@ -23,7 +23,6 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.NoSuchElementException;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
@@ -243,14 +242,6 @@ public class HomePage extends Page {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(addNewFacilityHeader);
     assertEquals(addNewFacilityHeader.getText().trim(), headingToVerify);
-  }
-
-  public void verifyAdminTabs() {
-    testWebDriver.waitForElementToAppear(facilitiesTab);
-    assertTrue(facilitiesTab.isDisplayed());
-    assertTrue(rolesTab.isDisplayed());
-    assertTrue(schedulesTab.isDisplayed());
-    assertTrue(usersTab.isDisplayed());
   }
 
   public boolean isSupervisoryNodeTabDisplayed() {
