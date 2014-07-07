@@ -52,7 +52,7 @@
                      ng-click="addToFacilityList(facility)"
                      ng-model="facility.selected"
                      ng-checked="false">
-              <span class="vertical-middle-aligned">{{facility.code}} - {{facility.name}}</span>
+              <label for="facilityCheckBox{{$index}}" class="vertical-middle-aligned short">{{facility.code}} - {{facility.name}}</label>
             </span>
           </li>
         </ul>

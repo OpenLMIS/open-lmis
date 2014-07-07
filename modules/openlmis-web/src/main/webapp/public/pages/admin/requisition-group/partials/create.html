@@ -128,13 +128,13 @@
                          ng-click="showMultipleFacilitiesSlider = !showMultipleFacilitiesSlider"
                          openlmis-message="label.add.members">
 
-                  <div class="position-relative">
+                  <div class="position-relative clearfix">
                     <div class="slider" slider="showMultipleFacilitiesSlider" ng-include
                          src="'/public/pages/admin/shared/select-filter-multiple-facilities.html'"></div>
-                    <div class="toolbar-error" id="duplicateFacilityMessage"
+                    <div class="alert alert-error" id="duplicateFacilityMessage"
                          openlmis-message="error.duplicate.facility|duplicateFacilityName"
                          ng-show="duplicateFacilityName"></div>
-                    <div id="facilityAddedMessage" class="toolbar-success facility-add-success"
+                    <div id="facilityAddedMessage" class="alert alert-success facility-add-success"
                          openlmis-message="facilities.added.successfully"></div>
                     <ng-include src="'/public/pages/admin/requisition-group/partials/members.html'"></ng-include>
                   </div>
