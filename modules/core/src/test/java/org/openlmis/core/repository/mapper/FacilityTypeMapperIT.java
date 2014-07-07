@@ -10,6 +10,7 @@
 
 package org.openlmis.core.repository.mapper;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.is;
@@ -34,10 +36,13 @@ public class FacilityTypeMapperIT {
   @Autowired
   private FacilityTypeMapper mapper;
 
-  @Test
-  public void shouldInsertAndUpdateByCodeCaseInsensitive() {
-    FacilityType facType = new FacilityType();
-    facType.setCode("someCode");
+  private FacilityType facType;
+
+  @Before
+  public void setup() {
+    // seed a facility type to use for testing
+    facType = new FacilityType();
+    facType.setCode("someCode");  // this code is used for later testing, don't change
     facType.setName("someName");
     facType.setDescription("someDescription");
     facType.setNominalMaxMonth(1);
@@ -45,16 +50,30 @@ public class FacilityTypeMapperIT {
     facType.setDisplayOrder(1);
     facType.setActive(true);
 
-    // insert and test get by code
     mapper.insert(facType);
-    FacilityType retFacType = mapper.getByCode("someCode");
+  }
+
+  @Test
+  public void shouldUpdateByCodeCaseInsensitive() {
+    // test get by code
+    FacilityType retFacType = mapper.getByCode(facType.getCode());
     assertThat(retFacType, notNullValue());
     assertThat(retFacType, is(facType));
 
     // update and test get by code case insensitive
-    retFacType.setCode("someOtherCode");
+    retFacType.setName("someOtherName");
     mapper.update(retFacType);
-    FacilityType updatedFacType = mapper.getByCode("SOMEOTHERCODE");
+    FacilityType updatedFacType = mapper.getByCode(facType.getCode().toUpperCase());
     assertThat(updatedFacType, is(retFacType));
+  }
+
+  @Test
+  public void shouldReturnNullIfGetByCodeIsNull() {
+    assertThat(mapper.getByCode(null), nullValue());
+  }
+
+  @Test
+  public void shouldReturnNullIfGetByCodeIsEmptyString() {
+    assertThat(mapper.getByCode(""), nullValue());
   }
 }
