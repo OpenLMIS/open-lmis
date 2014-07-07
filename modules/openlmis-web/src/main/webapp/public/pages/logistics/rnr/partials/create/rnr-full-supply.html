@@ -129,6 +129,7 @@
                  error-holder="expirationDate{{rnrLineItem['id']}}"
                  maxlength="7"
                  ng-model="rnrLineItem[column.name]"
+                 showError="showError"
                  date-validator="date"/>
           <span class="rnr-form-error" id="expirationDate{{rnrLineItem['id']}}"
                 style="display:none;" openlmis-message="error.invalid.date.format"

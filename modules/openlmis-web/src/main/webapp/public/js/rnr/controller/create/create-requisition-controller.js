@@ -41,7 +41,7 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
   }
   $scope.hasPermission = function (permission) {
     return _.find($scope.requisitionRights, function (right) {
-      return right.right === permission;
+      return right.name === permission;
     });
   };
 

@@ -97,8 +97,8 @@ describe('CreateRequisitionController', function () {
     rnrLineItem = new RegularRnrLineItem({"fullSupply": true});
 
     requisitionRights = [
-      {right: 'CREATE_REQUISITION'},
-      {right: 'AUTHORIZE_REQUISITION'}
+      {name: 'CREATE_REQUISITION'},
+      {name: 'AUTHORIZE_REQUISITION'}
     ];
 
     pageSize = "2";
@@ -645,8 +645,8 @@ describe('CreateRequisitionController', function () {
 
   it('should set requisition rights in scope', function () {
     expect(scope.requisitionRights).toEqual([
-      {right: 'CREATE_REQUISITION'},
-      {right: 'AUTHORIZE_REQUISITION'}
+      {name: 'CREATE_REQUISITION'},
+      {name: 'AUTHORIZE_REQUISITION'}
     ]);
   });
 
