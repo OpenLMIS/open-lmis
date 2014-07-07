@@ -59,10 +59,6 @@ public interface FacilityMapper {
   @Select("SELECT * FROM facility_types WHERE id = #{id}")
   public FacilityType getFacilityTypeById(Long id);
 
-  @Select("SELECT code FROM facility_operators WHERE id = #{id}")
-  @SuppressWarnings("unused")
-  public String getFacilityOperatorCodeFor(Long id);
-
   @Select("SELECT id FROM facility_operators WHERE LOWER(code) = LOWER(#{code})")
   Long getOperatedByIdForCode(String code);
 
