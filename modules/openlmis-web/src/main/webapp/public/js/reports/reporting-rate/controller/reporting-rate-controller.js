@@ -144,8 +144,14 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     }
 
     $scope.style = function(feature) {
-        var color = ($scope.filter.indicator_type == 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.filter.indicator_type == 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
-        console.warn($scope.filter.indicator_type);
+        if($scope.filter !== undefined && $scope.filter.indicator_type !== undefined){
+            $scope.indicator_type = $scope.filter.indicator_type;
+        }
+        else{
+            $scope.indicator_type = $scope.default_indicator;
+        }
+        var color = ($scope.indicator_type == 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.indicator_type == 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
+
         return {
             fillColor:  color,
             weight:     1,
