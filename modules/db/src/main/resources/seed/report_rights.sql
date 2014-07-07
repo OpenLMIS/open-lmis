@@ -9,7 +9,9 @@
 --
 
 
-INSERT INTO rights (name, rightType, createdDate) SELECT name,'REPORTING',CURRENT_TIMESTAMP FROM templates;
+INSERT INTO rights (name, rightType, createdDate) SELECT t.name,'REPORTING',CURRENT_TIMESTAMP
+  FROM templates t
+  WHERE t.name <> 'Print POD';
 
 INSERT INTO report_rights (templateId, rightName)
   SELECT t.id , r.name FROM templates t

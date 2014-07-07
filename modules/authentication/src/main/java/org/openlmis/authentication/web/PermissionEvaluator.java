@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.google.common.collect.Iterables.any;
@@ -43,11 +42,16 @@ public class PermissionEvaluator {
     return any(userRights, RightUtil.contains(getRightNamesList(commaSeparatedRights)));
   }
 
-  public Boolean hasReportingPermission(Long userId){
+  public Boolean hasReportingPermission(Long userId) {
     return rightService.hasReportingRight(userId);
   }
 
   private List<String> getRightNamesList(String commaSeparatedRights) {
-    return new ArrayList<>(Arrays.asList(commaSeparatedRights.split(",")));
+    List<String> rights = new ArrayList<>();
+    String[] permissions = commaSeparatedRights.split(",");
+    for (String permission : permissions) {
+      rights.add(permission.trim());
+    }
+    return rights;
   }
 }
