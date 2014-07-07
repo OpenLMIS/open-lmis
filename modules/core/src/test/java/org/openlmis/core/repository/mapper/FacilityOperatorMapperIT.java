@@ -22,7 +22,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 
 @Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
@@ -57,5 +58,19 @@ public class FacilityOperatorMapperIT {
     // test update
     FacilityOperator updatedFacOp = mapper.getByCode(retFacOp.getCode());
     assertThat(updatedFacOp, is(retFacOp));
+  }
+
+  @Test
+  public void shouldIgnoreCaseWhenFindByCode() {
+    FacilityOperator facOp = new FacilityOperator();
+    facOp.setCode("somecode");
+    facOp.setText("sometext");
+    facOp.setDisplayOrder(1);
+
+    mapper.insert(facOp);
+    
+    FacilityOperator retFacOp = mapper.getByCode("SOMECODE");
+    assertThat(retFacOp, notNullValue());
+    assertThat(retFacOp, is(facOp));
   }
 }

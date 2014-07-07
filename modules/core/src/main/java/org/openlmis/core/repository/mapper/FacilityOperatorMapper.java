@@ -25,6 +25,6 @@ public interface FacilityOperatorMapper {
   @Update("UPDATE facility_operators SET code=#{code}, text=#{text}, displayOrder=#{displayOrder} WHERE id=#{id}")
   void update(FacilityOperator facilityOperator);
 
-  @Select("SELECT * FROM facility_operators WHERE code = #{code}")
+  @Select("SELECT * FROM facility_operators WHERE LOWER(code) = LOWER(#{code})")
   FacilityOperator getByCode(String code);
 }

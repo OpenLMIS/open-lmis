@@ -315,6 +315,15 @@
                         <property name="recordHandler" ref="geographicLevelPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="facilityOperator">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.facility.operators"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityOperator</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityOperatorPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
