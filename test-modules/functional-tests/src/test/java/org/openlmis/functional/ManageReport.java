@@ -36,6 +36,8 @@ public class ManageReport extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", "MANAGE_REPORT");
     dbWrapper.deleteRowFromTable("report_rights", "rightName", reportName);
     dbWrapper.deleteRowFromTable("templates", "name", reportName);
     dbWrapper.deleteRowFromTable("rights", "name", reportName);
@@ -87,7 +89,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void verifyDuplicateReport(String[] credentials) {
+  public void verifyDuplicateReport(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
 
@@ -104,29 +106,36 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("Report with same name already exists", reportPage.getSaveErrorMessage());
 
     reportPage.clickCancelButton();
-//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
+    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
+    homePage.logout();
+
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", reportName);
+    loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
   }
 
-//  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void verifyDefaultReports(String[] credentials) {
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void verifyDefaultReports(String[] credentials) throws SQLException {
+    dbWrapper.insertConsistencyReportsViewRights("Admin");
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
 
-    reportName = "Facilities Missing Supporting Requisition Group";
-    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
-    reportName = "Facilities Missing Create Requisition Role";
-    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(2).equalsIgnoreCase(reportName));
-    reportName = "Facilities Missing Authorize Requisition Role";
-    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(3).equalsIgnoreCase(reportName));
-    reportName = "Supervisory Nodes Missing Approve Requisition Role";
-    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(4).equalsIgnoreCase(reportName));
-    reportName = "Requisition Groups Missing Supply Line";
-    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(5).equalsIgnoreCase(reportName));
-    reportName = "Order Routing Inconsistencies";
-    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(6).equalsIgnoreCase(reportName));
     reportName = "Delivery Zones Missing Manage Distribution Role";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+    reportName = "Facilities Missing Authorize Requisition Role";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(2).equalsIgnoreCase(reportName));
+    reportName = "Facilities Missing Create Requisition Role";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(3).equalsIgnoreCase(reportName));
+    reportName = "Facilities Missing Supporting Requisition Group";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(4).equalsIgnoreCase(reportName));
+    reportName = "Order Routing Inconsistencies";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(5).equalsIgnoreCase(reportName));
+    reportName = "Requisition Groups Missing Supply Line";
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(6).equalsIgnoreCase(reportName));
+    reportName = "Supervisory Nodes Missing Approve Requisition Role";
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(7).equalsIgnoreCase(reportName));
-    reportName = "Test-Report";
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -146,12 +155,17 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", "noParameterReport"));
     assertEquals("noParameterReport", dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", "noParameterReport")));
     assertEquals("0", dbWrapper.getRowsCountFromDB("template_parameters"));
+    homePage.logout();
 
-//    assertEquals("Reports", reportPage.getReportHeader());
-//    assertEquals("Report name", reportPage.getReportNameHeader());
-//    assertEquals("View", reportPage.getViewHeader());
-//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
-//    verifyItemsOnReportListScreen();
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", reportName);
+    loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+    assertEquals("Reports", reportPage.getReportHeader());
+    assertEquals("Report name", reportPage.getReportNameHeader());
+    assertEquals("View", reportPage.getViewHeader());
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+    verifyItemsOnReportListScreen();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -175,8 +189,13 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("isEnabled", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
       dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
     verifyParameterDetails("isEnabled", "isEnable","true","is facility enabled","java.lang.Boolean");
-//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
-//    verifyItemsOnReportListScreen();
+    homePage.logout();
+
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", reportName);
+    loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -199,9 +218,14 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
     assertEquals("typeId", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
       dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    verifyParameterDetails("typeId", "facilityTypeId","2","id for facility type","java.lang.Integer");
-//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
-//    verifyItemsOnReportListScreen();
+    verifyParameterDetails("typeId", "facilityTypeId", "2", "id for facility type", "java.lang.Integer");
+    homePage.logout();
+
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", reportName);
+    loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -223,9 +247,14 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
     assertEquals("code", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
       dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    verifyParameterDetails("code", "facilityCode","'F10'","facility code","java.lang.String");
-//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
-//    verifyItemsOnReportListScreen();
+    verifyParameterDetails("code", "facilityCode", "'F10'", "facility code", "java.lang.String");
+    homePage.logout();
+
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", reportName);
+    loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -248,9 +277,14 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
     assertEquals("goLiveDate", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
       dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    verifyParameterDetails("goLiveDate", "facilityGoLiveDate","01/07/2014","go live date of facility","java.util.Date");
-//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
-//    verifyItemsOnReportListScreen();
+    verifyParameterDetails("goLiveDate", "facilityGoLiveDate", "01/07/2014", "go live date of facility", "java.util.Date");
+    homePage.logout();
+
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", reportName);
+    loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -290,9 +324,14 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
     assertEquals("code", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
       dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    verifyParameterDetails("code", "facilityCode",null,null,"java.lang.String");
-//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
-//    verifyItemsOnReportListScreen();
+    verifyParameterDetails("code", "facilityCode", null, null, "java.lang.String");
+    homePage.logout();
+
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", reportName);
+    loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -331,9 +370,14 @@ public class ManageReport extends TestCaseHelper {
     assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
     assertEquals("2", dbWrapper.getRowsCountFromDB("template_parameters"));
     verifyParameterDetails("code", "facilityCode", "'F10'", null, "java.lang.String");
-    verifyParameterDetails("name", "facilityName",null, null,"java.lang.String");
-//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
-//    verifyItemsOnReportListScreen();
+    verifyParameterDetails("name", "facilityName", null, null, "java.lang.String");
+    homePage.logout();
+
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", reportName);
+    loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -374,8 +418,13 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("id", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
       dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
     verifyParameterDetails("id", "fCode","abc",null,"java.lang.Integer");
-//    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(8).equalsIgnoreCase(reportName));
-//    verifyItemsOnReportListScreen();
+    homePage.logout();
+
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", reportName);
+    loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
   }
 
   public void verifyItemsOnReportListScreen() {
@@ -397,12 +446,14 @@ public class ManageReport extends TestCaseHelper {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     dbWrapper.deleteData();
+    dbWrapper.removeAllExistingRights("Admin");
     dbWrapper.deleteRowFromTable("report_rights", "rightName", reportName);
     dbWrapper.deleteRowFromTable("rights", "name", reportName);
     if(Integer.parseInt(dbWrapper.getRowsCountFromDB("template_parameters"))>0) {
       dbWrapper.deleteRowFromTable("template_parameters", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName));
     }
     dbWrapper.deleteRowFromTable("templates", "name", reportName);
+    dbWrapper.insertAllAdminRightsAsSeedData();
     dbWrapper.closeConnection();
   }
 

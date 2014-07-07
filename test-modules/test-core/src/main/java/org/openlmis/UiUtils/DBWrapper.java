@@ -1656,9 +1656,19 @@ public class DBWrapper {
       " ((select id from roles where name='Admin'), 'MANAGE_SCHEDULE')," +
       " ((select id from roles where name='Admin'), 'CONFIGURE_RNR')," +
       " ((select id from roles where name='Admin'), 'MANAGE_USER')," +
-      " ((select id from roles where name='Admin'), 'VIEW_REPORT')," +
       " ((select id from roles where name='Admin'), 'MANAGE_REPORT')," +
       " ((select id from roles where name='Admin'), 'SYSTEM_SETTINGS')," +
       " ((select id from roles where name='Admin'), 'MANAGE_REGIMEN_TEMPLATE');");
+  }
+
+  public void insertConsistencyReportsViewRights(String roleName) throws SQLException {
+    update("INSERT INTO role_rights (roleId, rightName) VALUES" +
+      " ((select id from roles where name='" + roleName + "'), 'Facilities Missing Supporting Requisition Group')," +
+      " ((select id from roles where name='" + roleName + "'), 'Facilities Missing Create Requisition Role')," +
+      " ((select id from roles where name='" + roleName + "'), 'Facilities Missing Authorize Requisition Role')," +
+      " ((select id from roles where name='" + roleName + "'), 'Supervisory Nodes Missing Approve Requisition Role')," +
+      " ((select id from roles where name='" + roleName + "'), 'Requisition Groups Missing Supply Line')," +
+      " ((select id from roles where name='" + roleName + "'), 'Order Routing Inconsistencies')," +
+      " ((select id from roles where name='" + roleName + "'), 'Delivery Zones Missing Manage Distribution Role');");
   }
 }
