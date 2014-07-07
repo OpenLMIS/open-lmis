@@ -13,6 +13,7 @@ package org.openlmis.core.repository.mapper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.greaterThan;
 
 @Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
@@ -72,5 +77,26 @@ public class FacilityOperatorMapperIT {
     FacilityOperator retFacOp = mapper.getByCode("SOMECODE");
     assertThat(retFacOp, notNullValue());
     assertThat(retFacOp, is(facOp));
+  }
+
+  @Test
+  public void shouldReturnNullWithInvalidId() {
+    assertThat(mapper.getById(9919L), nullValue());
+  }
+
+  @Test
+  public void shouldGetAllByDisplayOrder() {
+    List<FacilityOperator> allManualSort = mapper.getAll();
+
+    Collections.sort(allManualSort, new Comparator<FacilityOperator>() {
+      @Override
+      public int compare(FacilityOperator o1, FacilityOperator o2) {
+        return o1.getDisplayOrder().compareTo(o2.getDisplayOrder());
+      }
+    });
+
+    List<FacilityOperator> all = mapper.getAll();
+    assertThat(all.size(), greaterThan(1));
+    assertThat(all, equalTo(allManualSort));
   }
 }

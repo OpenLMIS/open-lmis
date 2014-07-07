@@ -16,6 +16,8 @@ import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.FacilityOperator;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface FacilityOperatorMapper {
 
@@ -27,4 +29,10 @@ public interface FacilityOperatorMapper {
 
   @Select("SELECT * FROM facility_operators WHERE LOWER(code) = LOWER(#{code})")
   FacilityOperator getByCode(String code);
+
+  @Select("SELECT * FROM facility_operators ORDER BY displayOrder")
+  List<FacilityOperator> getAll();
+
+  @Select("SELECT * FROM facility_operators WHERE id = #{id}")
+  FacilityOperator getById(Long id);
 }

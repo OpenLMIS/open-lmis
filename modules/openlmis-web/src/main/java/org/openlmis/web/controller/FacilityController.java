@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.FacilityOperatorRepository;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.model.FacilityReferenceData;
@@ -56,6 +57,9 @@ public class FacilityController extends BaseController {
   private FacilityService facilityService;
 
   @Autowired
+  private FacilityOperatorRepository facilityOperatorRepository;
+
+  @Autowired
   private ProgramService programService;
 
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
@@ -94,7 +98,7 @@ public class FacilityController extends BaseController {
   public Map getReferenceData() {
     FacilityReferenceData facilityReferenceData = new FacilityReferenceData();
     return facilityReferenceData.addFacilityTypes(facilityService.getAllTypes()).
-      addFacilityOperators(facilityService.getAllOperators()).
+      addFacilityOperators(facilityOperatorRepository.getAll()).
       addGeographicZones(facilityService.getAllZones()).
       addPrograms(programService.getAll()).get();
   }

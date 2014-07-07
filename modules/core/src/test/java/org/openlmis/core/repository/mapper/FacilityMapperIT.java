@@ -165,16 +165,6 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldGetAllOperators() throws Exception {
-    List<FacilityOperator> allOperators = mapper.getAllOperators();
-    assertThat(allOperators.size(), is(4));
-    FacilityOperator facilityOperator = allOperators.get(0);
-    assertThat(facilityOperator.getCode(), is("MoH"));
-    assertThat(facilityOperator.getText(), is("MoH"));
-    assertThat(facilityOperator.getDisplayOrder(), is(1));
-  }
-
-  @Test
   public void shouldReturnFacilityForAUser() throws Exception {
     mapper.insert(make(a(defaultFacility)));
     Facility facility = mapper.getAll().get(0);
@@ -318,15 +308,6 @@ public class FacilityMapperIT {
     assertThat(facilityType, is(notNullValue()));
     assertThat(facilityType.getId(), is(facilityTypeWithId.getId()));
     assertThat(facilityType.getCode(), is(FACILITY_TYPE_CODE));
-  }
-
-  @Test
-  public void shouldReturnFacilityOperatorById() throws Exception {
-    Long id = mapper.getOperatedByIdForCode(OPERATED_BY_MOH);
-
-    FacilityOperator operator = mapper.getFacilityOperatorById(id);
-    assertThat(operator.getId(), is(id));
-    assertThat(operator.getCode(), is(OPERATED_BY_MOH));
   }
 
   @Test

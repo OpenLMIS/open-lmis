@@ -78,10 +78,6 @@ public class FacilityService {
     return facilityRepository.getAllTypes();
   }
 
-  public List<FacilityOperator> getAllOperators() {
-    return facilityRepository.getAllOperators();
-  }
-
   public List<GeographicZone> getAllZones() {
     return geographicZoneRepository.getAllGeographicZones();
   }

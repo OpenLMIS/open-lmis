@@ -19,6 +19,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Repository for managing {@link org.openlmis.core.domain.FacilityOperator} entities and related operations.
  */
@@ -61,5 +63,22 @@ public class FacilityOperatorRepository {
     } catch(DataIntegrityViolationException dive) {
       throw new DataException("error.incorrect.length");
     }
+  }
+
+  /**
+   * Gets the FacilityOperator by it's persistence id.
+   * @param id the id of the FacilityOperator to find
+   * @return the FacilityOperator with the given id or null if no such FacilityOperator exists with given id.
+   */
+  public FacilityOperator getById(long id) {
+    return facilityOperatorMapper.getById(id);
+  }
+
+  /**
+   * Gets all the FacilityOperators in descending order by their display order.
+   * @return a list of all persisted FacilityOperator entities.
+   */
+  public List<FacilityOperator> getAll() {
+    return facilityOperatorMapper.getAll();
   }
 }

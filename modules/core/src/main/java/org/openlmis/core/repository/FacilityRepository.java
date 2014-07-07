@@ -42,6 +42,9 @@ public class FacilityRepository {
   @Autowired
   private GeographicZoneRepository geographicZoneRepository;
 
+  @Autowired
+  private FacilityOperatorRepository facilityOperatorRepository;
+
   public List<Facility> getAll() {
     return mapper.getAll();
   }
@@ -111,15 +114,11 @@ public class FacilityRepository {
     if (operatedById == null)
       throw new DataException("error.reference.data.invalid.operated.by");
 
-    facility.setOperatedBy(mapper.getFacilityOperatorById(operatedById));
+    facility.setOperatedBy(facilityOperatorRepository.getById(operatedById));
   }
 
   public List<FacilityType> getAllTypes() {
     return mapper.getAllTypes();
-  }
-
-  public List<FacilityOperator> getAllOperators() {
-    return mapper.getAllOperators();
   }
 
   public Facility getHomeFacility(Long userId) {

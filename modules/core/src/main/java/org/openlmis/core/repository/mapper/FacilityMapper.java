@@ -12,7 +12,6 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
 import org.springframework.stereotype.Repository;
 
@@ -60,12 +59,6 @@ public interface FacilityMapper {
   @Select("SELECT * FROM facility_types WHERE id = #{id}")
   public FacilityType getFacilityTypeById(Long id);
 
-  @Select("SELECT * FROM facility_operators ORDER BY displayOrder")
-  List<FacilityOperator> getAllOperators();
-
-  @Select("SELECT * FROM facility_operators WHERE id = #{id}")
-  public FacilityOperator getFacilityOperatorById(Long id);
-
   @Select("SELECT code FROM facility_operators WHERE id = #{id}")
   @SuppressWarnings("unused")
   public String getFacilityOperatorCodeFor(Long id);
@@ -80,7 +73,7 @@ public interface FacilityMapper {
     @Result(property = "facilityType", column = "typeId", javaType = Long.class,
       one = @One(select = "getFacilityTypeById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
-      one = @One(select = "getFacilityOperatorById"))
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityOperatorMapper.getById"))
   })
   Facility getById(Long id);
 
@@ -95,7 +88,7 @@ public interface FacilityMapper {
     @Result(property = "facilityType", column = "typeId", javaType = Long.class,
       one = @One(select = "getFacilityTypeById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
-      one = @One(select = "getFacilityOperatorById")),
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityOperatorMapper.getById")),
     @Result(property = "supportedPrograms", column = "id", javaType = List.class,
       many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))
   })
@@ -140,7 +133,7 @@ public interface FacilityMapper {
     @Result(property = "facilityType", column = "typeId", javaType = Long.class,
       one = @One(select = "getFacilityTypeById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
-      one = @One(select = "getFacilityOperatorById"))
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityOperatorMapper.getById"))
   })
   List<Facility> getFacilitiesBy(@Param(value = "programId") Long programId,
                                  @Param(value = "requisitionGroupIds") String requisitionGroupIds);
@@ -164,7 +157,7 @@ public interface FacilityMapper {
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
     @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
+    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "org.openlmis.core.repository.mapper.FacilityOperatorMapper.getById"))
   })
   Facility getHomeFacilityWithRights(@Param("userId") Long userId,
                                      @Param("commaSeparatedRights") String commaSeparatedRights);
@@ -177,7 +170,7 @@ public interface FacilityMapper {
     @Result(property = "facilityType", column = "typeId", javaType = Long.class,
       one = @One(select = "getFacilityTypeById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
-      one = @One(select = "getFacilityOperatorById"))
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityOperatorMapper.getById"))
   })
   List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
 

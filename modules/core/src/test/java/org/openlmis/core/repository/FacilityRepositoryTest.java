@@ -58,6 +58,9 @@ public class FacilityRepositoryTest {
   private FacilityMapper mapper;
 
   @Mock
+  private FacilityOperatorRepository facilityOperatorRepository;
+
+  @Mock
   private GeographicZoneRepository geographicZoneRepository;
 
   @Mock
@@ -154,7 +157,7 @@ public class FacilityRepositoryTest {
     facilityOperator.setId(1l);
     facilityOperator.setCode(operatedByCode);
     facilityOperator.setText(operatedByName);
-    when(mapper.getFacilityOperatorById(1l)).thenReturn(facilityOperator);
+    when(facilityOperatorRepository.getById(1l)).thenReturn(facilityOperator);
 
     repository.save(facility);
     assertThat(facility.getOperatedBy().getId(), is(facilityOperatorId));
