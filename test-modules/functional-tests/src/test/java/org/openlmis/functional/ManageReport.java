@@ -17,8 +17,10 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.ReportPage;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -32,6 +34,8 @@ public class ManageReport extends TestCaseHelper {
   String reportName, fileName;
   LoginPage loginPage;
   ReportPage reportPage;
+  static String separator = System.getProperty("file.separator");
+  private static String downloadedFilePath = new File(System.getProperty("user.dir")).getParent() + separator + "csv";
 
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
@@ -117,7 +121,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void verifyDefaultReports(String[] credentials) throws SQLException {
+  public void verifyDefaultReports(String[] credentials) throws SQLException, IOException, InterruptedException {
     dbWrapper.insertConsistencyReportsViewRights("Admin");
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
@@ -136,6 +140,9 @@ public class ManageReport extends TestCaseHelper {
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(6).equalsIgnoreCase(reportName));
     reportName = "Supervisory Nodes Missing Approve Requisition Role";
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(7).equalsIgnoreCase(reportName));
+
+//    getReportData(1);
+//    deleteFile(downloadedFilePath);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -439,6 +446,13 @@ public class ManageReport extends TestCaseHelper {
     assertEquals(defaultValue, dbWrapper.getAttributeFromTable("template_parameters", "defaultValue", "name", parameterName));
     assertEquals(description, dbWrapper.getAttributeFromTable("template_parameters", "description", "name", parameterName));
     assertEquals(parameterType, dbWrapper.getAttributeFromTable("template_parameters", "dataType", "name", parameterName));
+  }
+
+  public String[] getReportData(int reportNumber) throws InterruptedException, IOException, SQLException {
+    WebElement reportLink = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + reportNumber + "]/td[2]/div/a[3]");
+    reportLink.click();
+    Thread.sleep(2500);
+    return (readCSVFile(downloadedFilePath));
   }
 
   @AfterMethod(groups = {"admin"})
