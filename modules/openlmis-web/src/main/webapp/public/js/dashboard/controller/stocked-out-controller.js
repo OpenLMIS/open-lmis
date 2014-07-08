@@ -50,7 +50,7 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
     $scope.filterProductsByProgram = function (){
         $scope.loadGeoZones();
 
-        alert(getSelectedItemName($scope.formFilter.programId,$scope.programs));
+       // alert(getSelectedItemName($scope.formFilter.programId,$scope.programs));
 
         $scope.filterObject.programId = $scope.formFilter.programId;
         if(!isUndefined($scope.formFilter.programId)){
