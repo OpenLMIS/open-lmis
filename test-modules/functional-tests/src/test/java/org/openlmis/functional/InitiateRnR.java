@@ -266,7 +266,7 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-RnR")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testOnlyCreateRight(String program, String userSIC, String password) throws SQLException {
     List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, rightsList);

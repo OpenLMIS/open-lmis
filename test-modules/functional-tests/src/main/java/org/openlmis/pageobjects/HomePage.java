@@ -118,7 +118,7 @@ public class HomePage extends Page {
   private static WebElement requisitionsLink = null;
 
   @FindBy(how = XPATH, using = "//div[@class='submenu']")
-  private static WebElement SubMenuItem = null;
+  private static WebElement subMenuItem = null;
 
   @FindBy(how = ID, using = "createRnr")
   private static WebElement createLink = null;
@@ -358,7 +358,7 @@ public class HomePage extends Page {
   }
 
   public void verifySubMenuItems(String[] expectedSubMenuItem) {
-    String[] subMenuItem = SubMenuItem.getText().split("\n");
+    String[] subMenuItem = HomePage.subMenuItem.getText().split("\n");
     assertEquals(subMenuItem, expectedSubMenuItem);
   }
 
