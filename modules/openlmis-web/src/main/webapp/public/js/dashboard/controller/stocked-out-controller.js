@@ -50,6 +50,8 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
     $scope.filterProductsByProgram = function (){
         $scope.loadGeoZones();
 
+       // alert(getSelectedItemName($scope.formFilter.programId,$scope.programs));
+
         $scope.filterObject.programId = $scope.formFilter.programId;
         if(!isUndefined($scope.formFilter.programId)){
             ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
@@ -249,12 +251,6 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
     function bindChartEvent(elementSelector, eventType, callback){
         $(elementSelector).bind(eventType, callback);
     }
-    var isItemWithIdExists = function(id, listObject){
-        angular.forEach(listObject,function(item,idx){
-            if(!isUndefined(item) && item.id === id) return true;
-        });
-        return false;
-    };
 
     $scope.$on('$viewContentLoaded', function () {
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);

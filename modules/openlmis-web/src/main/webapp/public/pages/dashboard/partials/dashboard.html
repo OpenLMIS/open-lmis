@@ -58,15 +58,24 @@
         <div class="row-fluid">
             <div class="app-form span6">
                 <h2 openlmis-message="label.order.fill.rate"></h2>
+                <div class="filter-value">
+                    <span class="labels" openlmis-message="label.program"></span><span ng-model="formFilter.programName"></span>
+
+                </div>
                 <div ng-show="orderFillChart.data == undefined">
                     <label class="chart-note">
                         No data to render chart
                     </label>
                 </div>
+
                 <div ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:360px;height:300px;" ng-show="showOrderFill"></div>
             </div>
             <div class="app-form span6">
                 <h2 openlmis-message="label.item.fill.rate"></h2>
+                <div class="filter-value">
+                    <span class="labels" openlmis-message="label.program"></span><span ng-model="formFilter.programName"></span>
+
+                </div>
                 <div ng-show="productItemFillRates == undefined || productItemFillRates.length == 0">
                     <label class="chart-note">No data to render chart</label>
                 </div>
@@ -101,8 +110,10 @@
                             </div>
                         </div>
                     </accordion-heading>
+                    <div class="filter-value">
+                        <span class="labels" openlmis-message="label.program"></span><span>{{formFilter.programName}}</span>
 
-            <!--<h2>District Reporting Performance</h2>-->
+                    </div>
                     <div ng-hide="reportingChartData"><label class="chart-note">No data to render chart</label></div>
                     <div  ng-show="reportingChartData">
                         <a-float id="district-reporting" af-option="reportingPieChartOption" af-data="reportingChartData" class="chart"></a-float>
@@ -126,6 +137,10 @@
                             </div>
                         </div>
                     </accordion-heading>
+                    <div class="filter-value">
+                        <span class="labels" openlmis-message="label.program"></span><span ng-model="formFilter.programName"></span>
+
+                    </div>
                     <div ng-hide="multiBarsData"><label class="chart-note">No data to render chart</label></div>
                     <div  ng-show="multiBarsData">
                         <a-float id="stocking-efficiency" af-option="multipleBarsOption" af-data="multiBarsData" class="chart"> </a-float>

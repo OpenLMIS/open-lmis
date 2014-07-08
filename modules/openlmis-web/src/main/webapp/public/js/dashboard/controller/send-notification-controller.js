@@ -221,13 +221,6 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         }
     };
 
-    var isItemWithIdExists = function(id, listObject){
-        angular.forEach(listObject,function(item,idx){
-            if(!isUndefined(item) && item.id === id) return true;
-        });
-        return false;
-    };
-
 
     $scope.$on('$viewContentLoaded', function () {
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);

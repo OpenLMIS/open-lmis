@@ -193,14 +193,6 @@ function StockController($scope, $routeParams,dashboardFiltersHistoryService,pro
         $scope.loadStockingData();
     };
 
-    var isItemWithIdExists = function(id, listObject){
-        angular.forEach(listObject,function(item,idx){
-            if(!isUndefined(item) && item.id === id) return true;
-        });
-        return false;
-    };
-
-
     $scope.$on('$viewContentLoaded', function () {
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 

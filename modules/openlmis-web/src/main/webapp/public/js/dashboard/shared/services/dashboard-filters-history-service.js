@@ -32,3 +32,25 @@ services.factory('dashboardFiltersHistoryService',function(localStorageService){
     return dashboardFiltersHistoryService;
 
 });
+
+var getSelectedItemName = function(id,itemList){
+    var selectedItem = "None";
+    angular.forEach(itemList, function(item, idx){
+        if(item.id == id){
+            selectedItem = item.name;
+        }
+    });
+
+    return selectedItem;
+
+};
+var isItemWithIdExists = function(id, listObject){
+    var isEq = false;
+    angular.forEach(listObject,function(item,idx){
+        if(!isUndefined(item)){
+            isEq = item.id == id;
+        }
+    });
+    return isEq;
+};
+
