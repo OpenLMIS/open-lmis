@@ -76,6 +76,10 @@ public class ProcessingPeriodRepository {
       mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
   }
 
+  public List<ProcessingPeriod> getOpenPeriods(Long facilityId, Long programId, Long startingPeriodId){
+    return mapper.getOpenPeriods(facilityId, programId, startingPeriodId);
+  }
+
   public ProcessingPeriod getById(Long id) {
     return mapper.getById(id);
   }
