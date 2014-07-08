@@ -51,10 +51,7 @@ public class DistrictConsumptionQueryBuilder {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " product_category_id = #{filterCriteria.productCategoryId}";
             }
-            if(filter.getRgroupId() != 0){
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " requisition_group_id = #{filterCriteria.rgroupId}";
-            }
+
             if(filter.getProductId() != 0){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " product_id= #{filterCriteria.productId}";
@@ -76,9 +73,7 @@ public class DistrictConsumptionQueryBuilder {
 
     String predicates = "";
 
-    if(filter.getRgroupId() != 0){
-      predicates = " and rgps.requisitionGroupID = " + filter.getRgroupId();
-    }
+
     if(filter.getProductId() > 0 ){
         predicates = predicates + " and p.id = " + filter.getProductId();
     }

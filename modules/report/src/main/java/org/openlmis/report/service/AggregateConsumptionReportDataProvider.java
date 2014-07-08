@@ -15,6 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.ConsumptionReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.DistrictConsumptionReportParam;
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,9 @@ import java.util.Map;
 @Component
 @NoArgsConstructor
 public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
+
+  @Autowired
+  private SelectedFilterHelper filterHelper;
 
   @Autowired
   private ConsumptionReportMapper reportMapper;
@@ -48,7 +52,6 @@ public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
       districtConsumptionReportParam = new DistrictConsumptionReportParam();
       districtConsumptionReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
       districtConsumptionReportParam.setProductId(StringHelper.isBlank(filterCriteria,("product")) ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
-      districtConsumptionReportParam.setRgroupId(StringHelper.isBlank(filterCriteria,("requisitionGroup")) ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
       districtConsumptionReportParam.setProgramId(StringHelper.isBlank(filterCriteria,("program")) ? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
       districtConsumptionReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone")? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));
       // a required field
@@ -61,7 +64,7 @@ public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    return getReportFilterData(params).toString();
+    return filterHelper.getProgramPeriodGeoZone(params);
   }
 
 }
