@@ -16,11 +16,16 @@ import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.FacilityType;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface FacilityTypeMapper {
 
   @Select("SELECT * FROM facility_types WHERE LOWER(code) = LOWER(#{lower})")
-  public FacilityType getByCode(String code);
+  FacilityType getByCode(String code);
+
+  @Select("SELECT * FROM facility_types WHERE id = #{id}")
+  public FacilityType getById(Long id);
 
   @Insert({"INSERT INTO facility_types (code"
     , ", name"
@@ -47,7 +52,7 @@ public interface FacilityTypeMapper {
     , ", #{modifiedBy}"
     , ", NOW()"
     , ")"})
-  public void insert(FacilityType facilityType);
+  void insert(FacilityType facilityType);
 
   @Update({"UPDATE facility_types SET code = #{code}"
     , ", name = #{name}"
@@ -60,5 +65,8 @@ public interface FacilityTypeMapper {
     , ", modifiedBy = #{modifiedBy}"
     , ", modifiedDate = NOW()"
     , "WHERE id = #{id}"})
-  public void update(FacilityType facilityType);
+  void update(FacilityType facilityType);
+
+  @Select("SELECT * FROM facility_types ORDER BY displayOrder NULLS LAST, LOWER(name)")
+  List<FacilityType> getAll();
 }

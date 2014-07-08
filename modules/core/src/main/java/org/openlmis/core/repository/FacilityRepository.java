@@ -33,17 +33,27 @@ import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 @NoArgsConstructor
 public class FacilityRepository {
 
-  @Autowired
   private FacilityMapper mapper;
+
+  private FacilityTypeRepository facilityTypeRepository;
 
   @Autowired
   private CommaSeparator commaSeparator;
 
-  @Autowired
   private GeographicZoneRepository geographicZoneRepository;
 
-  @Autowired
   private FacilityOperatorRepository facilityOperatorRepository;
+
+  @Autowired
+  public FacilityRepository(FacilityMapper facilityMapper,
+                            FacilityTypeRepository facilityTypeRepository,
+                            GeographicZoneRepository geographicZoneRepository,
+                            FacilityOperatorRepository facilityOperatorRepository) {
+    this.mapper = facilityMapper;
+    this.facilityTypeRepository = facilityTypeRepository;
+    this.geographicZoneRepository = geographicZoneRepository;
+    this.facilityOperatorRepository = facilityOperatorRepository;
+  }
 
   public List<Facility> getAll() {
     return mapper.getAll();
@@ -96,7 +106,7 @@ public class FacilityRepository {
       throw new DataException("error.reference.data.facility.type.missing");
 
     String facilityTypeCode = facilityType.getCode();
-    FacilityType existingFacilityType = mapper.getFacilityTypeForCode(facilityTypeCode);
+    FacilityType existingFacilityType = facilityTypeRepository.getByCode(facilityTypeCode);
 
     if (existingFacilityType == null)
       throw new DataException("error.reference.data.invalid.facility.type");
@@ -115,10 +125,6 @@ public class FacilityRepository {
       throw new DataException("error.reference.data.invalid.operated.by");
 
     facility.setOperatedBy(facilityOperatorRepository.getById(operatedById));
-  }
-
-  public List<FacilityType> getAllTypes() {
-    return mapper.getAllTypes();
   }
 
   public Facility getHomeFacility(Long userId) {
@@ -160,13 +166,6 @@ public class FacilityRepository {
     return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rights));
   }
 
-  public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
-    facilityType = mapper.getFacilityTypeForCode(facilityType.getCode());
-    if (facilityType == null) {
-      throw new DataException("error.facility.type.code.invalid");
-    }
-    return facilityType;
-  }
 
   public Facility getByCode(String code) {
     return mapper.getByCode(code);

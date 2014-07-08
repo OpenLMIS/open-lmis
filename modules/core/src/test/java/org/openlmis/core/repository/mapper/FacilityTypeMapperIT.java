@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.hamcrest.CoreMatchers.nullValue;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.greaterThan;
 
 @Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
@@ -54,6 +58,14 @@ public class FacilityTypeMapperIT {
   }
 
   @Test
+  public void shouldGetById() {
+    FacilityType persistentFacType = mapper.getByCode(facType.getCode());
+    FacilityType facTypeFoundById = mapper.getById(persistentFacType.getId());
+    assertThat(facTypeFoundById, notNullValue());
+    assertThat(facTypeFoundById, is(persistentFacType));
+  }
+
+  @Test
   public void shouldUpdateByCodeCaseInsensitive() {
     // test get by code
     FacilityType retFacType = mapper.getByCode(facType.getCode());
@@ -65,6 +77,12 @@ public class FacilityTypeMapperIT {
     mapper.update(retFacType);
     FacilityType updatedFacType = mapper.getByCode(facType.getCode().toUpperCase());
     assertThat(updatedFacType, is(retFacType));
+  }
+
+  @Test
+  public void shouldGetAll() {
+    List<FacilityType> all = mapper.getAll();
+    assertThat(all.size(), greaterThan(0));
   }
 
   @Test

@@ -12,7 +12,6 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityType;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -53,12 +52,6 @@ public interface FacilityMapper {
   @Results(value = {@Result(property = "id", column = "facilityId")})
   Facility getHomeFacility(Long userId);
 
-  @Select("SELECT * FROM facility_types ORDER BY displayOrder NULLS LAST, LOWER(name)")
-  List<FacilityType> getAllTypes();
-
-  @Select("SELECT * FROM facility_types WHERE id = #{id}")
-  public FacilityType getFacilityTypeById(Long id);
-
   @Select("SELECT id FROM facility_operators WHERE LOWER(code) = LOWER(#{code})")
   Long getOperatedByIdForCode(String code);
 
@@ -67,7 +60,7 @@ public interface FacilityMapper {
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
     @Result(property = "facilityType", column = "typeId", javaType = Long.class,
-      one = @One(select = "getFacilityTypeById")),
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityTypeMapper.getById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityOperatorMapper.getById"))
   })
@@ -82,7 +75,7 @@ public interface FacilityMapper {
     @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
     @Result(property = "facilityType", column = "typeId", javaType = Long.class,
-      one = @One(select = "getFacilityTypeById")),
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityTypeMapper.getById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityOperatorMapper.getById")),
     @Result(property = "supportedPrograms", column = "id", javaType = List.class,
@@ -104,9 +97,6 @@ public interface FacilityMapper {
     "comment = #{comment}, enabled = #{enabled}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);
 
-  @Select("SELECT * FROM facility_types WHERE LOWER(code) = LOWER(#{code})")
-  FacilityType getFacilityTypeForCode(String facilityTypeCode);
-
   @Update({"UPDATE facilities SET enabled = #{enabled}, active=#{active}, " +
     "modifiedBy=#{modifiedBy}, modifiedDate = NOW() WHERE id =#{id}"})
   void updateEnabledAndActiveFor(Facility facility);
@@ -127,7 +117,7 @@ public interface FacilityMapper {
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
     @Result(property = "facilityType", column = "typeId", javaType = Long.class,
-      one = @One(select = "getFacilityTypeById")),
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityTypeMapper.getById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityOperatorMapper.getById"))
   })
@@ -152,7 +142,7 @@ public interface FacilityMapper {
     "WHERE U.id = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[]) AND RA.supervisoryNodeId IS NULL"})
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
-    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "org.openlmis.core.repository.mapper.FacilityTypeMapper.getById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "org.openlmis.core.repository.mapper.FacilityOperatorMapper.getById"))
   })
   Facility getHomeFacilityWithRights(@Param("userId") Long userId,
@@ -164,7 +154,7 @@ public interface FacilityMapper {
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
     @Result(property = "facilityType", column = "typeId", javaType = Long.class,
-      one = @One(select = "getFacilityTypeById")),
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityTypeMapper.getById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
       one = @One(select = "org.openlmis.core.repository.mapper.FacilityOperatorMapper.getById"))
   })
@@ -201,7 +191,7 @@ public interface FacilityMapper {
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
     @Result(property = "facilityType", column = "typeId", javaType = Long.class,
-      one = @One(select = "getFacilityTypeById"))
+      one = @One(select = "org.openlmis.core.repository.mapper.FacilityTypeMapper.getById"))
   })
   List<Facility> getChildFacilities(Facility facility);
 

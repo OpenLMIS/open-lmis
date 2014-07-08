@@ -61,6 +61,9 @@ public class FacilityMapperIT {
   FacilityMapper mapper;
 
   @Autowired
+  FacilityTypeMapper facilityTypeMapper;
+
+  @Autowired
   RequisitionGroupMapper requisitionGroupMapper;
 
   @Autowired
@@ -121,25 +124,6 @@ public class FacilityMapperIT {
 
     assertEquals(facilities.get(0).getCode(), trz001.getCode());
     assertEquals(facilities.get(1).getCode(), trz002.getCode());
-  }
-
-  @Test
-  public void shouldGetAllFacilityTypes() throws Exception {
-    List<FacilityType> facilityTypes = mapper.getAllTypes();
-
-    assertThat(facilityTypes.size(), is(11));
-    FacilityType facilityType = facilityTypes.get(0);
-    assertThat(facilityType.getCode(), is("lvl3_hospital"));
-    assertThat(facilityType.getName(), is("Lvl3 Hospital"));
-    assertThat(facilityType.getDescription(), is("State Hospital"));
-    assertThat(facilityType.getLevelId(), is(nullValue()));
-    assertThat(facilityType.getNominalMaxMonth(), is(3));
-    assertThat(facilityType.getNominalEop(), is(0.5));
-    assertThat(facilityType.isActive(), is(true));
-
-    for (int index = 0; index < facilityTypes.size(); index++) {
-      assertThat(facilityTypes.get(index).getDisplayOrder(), is(index + 1));
-    }
   }
 
   @Test
@@ -289,25 +273,6 @@ public class FacilityMapperIT {
 
     id = mapper.getOperatedByIdForCode("InValid");
     assertThat(id, is(nullValue()));
-  }
-
-  @Test
-  public void shouldReturnFacilityTypeForCode() {
-    FacilityType facilityType = mapper.getFacilityTypeForCode(FACILITY_TYPE_CODE);
-    assertThat(facilityType.getId(), is(1L));
-
-    facilityType = mapper.getFacilityTypeForCode("InValid");
-    assertThat(facilityType, is(nullValue()));
-  }
-
-  @Test
-  public void shouldReturnFacilityTypeById() {
-    FacilityType facilityTypeWithId = mapper.getFacilityTypeForCode(FACILITY_TYPE_CODE);
-
-    FacilityType facilityType = mapper.getFacilityTypeById(facilityTypeWithId.getId());
-    assertThat(facilityType, is(notNullValue()));
-    assertThat(facilityType.getId(), is(facilityTypeWithId.getId()));
-    assertThat(facilityType.getCode(), is(FACILITY_TYPE_CODE));
   }
 
   @Test
@@ -529,7 +494,7 @@ public class FacilityMapperIT {
     GeographicZone zone1 = new GeographicZone(1000L, "Z1", "Z1", level, zone0);
     geographicZoneMapper.insert(zone1);
 
-    List<FacilityType> allTypes = mapper.getAllTypes();
+    List<FacilityType> allTypes = facilityTypeMapper.getAll();
     FacilityType facilityType = allTypes.get(1);
 
     Facility facility = insertFacility("CODE123", facilityType, zone1, null);
@@ -882,7 +847,7 @@ public class FacilityMapperIT {
     GeographicZone zone2 = new GeographicZone(2000L, "Z2", "Z2", level, zone1);
     geographicZoneMapper.insert(zone2);
 
-    List<FacilityType> allTypes = mapper.getAllTypes();
+    List<FacilityType> allTypes = facilityTypeMapper.getAll();
     FacilityType facilityType1 = allTypes.get(1);
     FacilityType facilityType2 = allTypes.get(2);
 

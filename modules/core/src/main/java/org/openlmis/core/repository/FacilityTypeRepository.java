@@ -11,6 +11,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.FacilityTypeMapper;
@@ -19,12 +20,17 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Repository for managing persistence of {@link org.openlmis.core.domain.FacilityType} entities and related operations.
  */
 @Repository
 @NoArgsConstructor
 public class FacilityTypeRepository {
+
+  public static final String ERROR_FACILITY_TYPE_CODE_INVALID = "error.facility.type.code.invalid";
+
   private FacilityTypeMapper mapper;
 
   @Autowired
@@ -40,6 +46,26 @@ public class FacilityTypeRepository {
   public FacilityType getByCode(String code) {
     if(code == null) return null;
     return mapper.getByCode(code);
+  }
+
+  /**
+   * Gets a FacilityType by it's associated code, will throw an exception if no such code exists.
+   * @param code the code to find by
+   * @return the FacilityType with the given code
+   * @throws DataException if no such code exists.
+   */
+  public FacilityType getByCodeOrThrowException(String code) throws DataException {
+    FacilityType facType = getByCode(code);
+    if(facType == null) throw new DataException(ERROR_FACILITY_TYPE_CODE_INVALID);
+    return facType;
+  }
+
+  /**
+   * Gets all persisted FacilityType entities ordered by display order (ascending) and then name.
+   * @return all FacilityType entities.
+   */
+  public List<FacilityType> getAll() {
+    return mapper.getAll();
   }
 
   /**
@@ -59,5 +85,13 @@ public class FacilityTypeRepository {
     } catch(DataIntegrityViolationException dive) {
       throw new DataException("error.incorrect.length", dive);
     }
+  }
+
+  public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
+    facilityType = mapper.getByCode(facilityType.getCode());
+    if (facilityType == null) {
+      throw new DataException("error.facility.type.code.invalid");
+    }
+    return facilityType;
   }
 }
