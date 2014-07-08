@@ -397,7 +397,7 @@ public class HomePage extends Page {
     return ManageFacilityPage.getInstance(testWebDriver);
   }
 
-  public RolesPage navigateRoleAssignments() {
+  public RolesPage navigateToRolePage() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);

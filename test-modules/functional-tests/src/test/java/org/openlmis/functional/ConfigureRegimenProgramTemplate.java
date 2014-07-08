@@ -92,7 +92,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     List<Map<String, String>> data = regimenTable.asMaps();
     regimenTemplateConfigPage = PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
     for (Map map : data)
-      regimenTemplateConfigPage.AddNewRegimen(map.get("Category").toString(), map.get("Code").toString(),
+      regimenTemplateConfigPage.addNewRegimen(map.get("Category").toString(), map.get("Code").toString(),
         map.get("Name").toString(), Boolean.parseBoolean(map.get("Active").toString()));
   }
 
@@ -171,7 +171,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(adminUser, adminUser);
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, false);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE1, NAME1, false);
     regimenTemplateConfigPage.clickReportingFieldTab();
     regimenTemplateConfigPage.setValueRemarksTextField(newRemarksHeading);
     regimenTemplateConfigPage.SaveRegime();
@@ -204,8 +204,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
 
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
-    regimenTemplateConfigPage.AddNewRegimen(paediatricsRegimen, CODE2, NAME1, true);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.addNewRegimen(paediatricsRegimen, CODE2, NAME1, true);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage();
     verifyProgramConfigured(program);
@@ -218,8 +218,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
 
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
-    regimenTemplateConfigPage.AddNewRegimen(paediatricsRegimen, CODE1, NAME2, true);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.addNewRegimen(paediatricsRegimen, CODE1, NAME2, true);
     verifyErrorMessage(duplicateErrorMessageSave);
   }
 
@@ -231,8 +231,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
 
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME2, true);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE1, NAME2, true);
     verifyErrorMessage(duplicateErrorMessageSave);
   }
 
@@ -243,13 +243,13 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
 
     regimenTemplateConfigPage.configureProgram(program1);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage();
     verifyProgramConfigured(program1);
 
     regimenTemplateConfigPage.configureProgram(program2);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE1, NAME1, true);
     regimenTemplateConfigPage.SaveRegime();
     verifySuccessMessage();
     verifyProgramConfigured(program2);
@@ -262,7 +262,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
 
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, false);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE1, NAME1, false);
     regimenTemplateConfigPage.SaveRegime();
     regimenTemplateConfigPage.clickEditProgram(program);
     verifyNonEditableRegimenAdded(CODE1, NAME1, true, 1);
@@ -287,8 +287,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
 
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, false);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE2, NAME1, true);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE1, NAME1, false);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE2, NAME1, true);
     verifyNonEditableRegimenAdded(CODE1, NAME1, true, 1);
     verifyNonEditableRegimenAdded(CODE2, NAME1, false, 2);
     regimenTemplateConfigPage.clickEditButton();
@@ -304,8 +304,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     RegimenTemplateConfigPage regimenTemplateConfigPage = homePage.navigateToRegimenConfigTemplate();
 
     regimenTemplateConfigPage.configureProgram(program);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE1, NAME1, true);
-    regimenTemplateConfigPage.AddNewRegimen(adultsRegimen, CODE2, NAME1, true);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE1, NAME1, true);
+    regimenTemplateConfigPage.addNewRegimen(adultsRegimen, CODE2, NAME1, true);
     regimenTemplateConfigPage.clickEditButton();
     regimenTemplateConfigPage.clickSaveButton();
     String errorMessageONSaveBeforeDone = "Mark all regimens as 'Done' before saving the form";

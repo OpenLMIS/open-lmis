@@ -504,7 +504,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String roleType) {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
-    RolesPage rolesPage = homePage.navigateRoleAssignments();
+    RolesPage rolesPage = homePage.navigateToRolePage();
     rolesPage.createRole(roleName, roleDescription, userRoleList, roleType);
     rolesPage.verifyCreatedRoleMessage(roleName);
   }

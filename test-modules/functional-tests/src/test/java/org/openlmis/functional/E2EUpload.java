@@ -46,7 +46,7 @@ public class E2EUpload extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void uploadCSVFiles(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    RolesPage rolesPage = homePage.navigateRoleAssignments();
+    RolesPage rolesPage = homePage.navigateToRolePage();
     assertTrue(rolesPage.isCreateNewRoleButtonDisplayed());
     List<String> userRoleList = asList("Create Requisition");
     rolesPage.createRole("User", "User", userRoleList, "Requisition");
