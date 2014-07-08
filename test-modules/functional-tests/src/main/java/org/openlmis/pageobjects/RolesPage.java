@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
 public class RolesPage extends Page {
@@ -184,9 +183,9 @@ public class RolesPage extends Page {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
   }
 
-  public void verifyCreatedRoleMessage(String roleName) {
+  public String getSuccessMessage() {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-    assertEquals(saveSuccessMsgDiv.getText().trim(), "\"" + roleName + "\" created successfully");
+    return saveSuccessMsgDiv.getText().trim();
   }
 
   public void createFacilityBasedRole(String roleName, String roleDesc) {
@@ -282,5 +281,15 @@ public class RolesPage extends Page {
   public boolean isCreateNewRoleButtonDisplayed() {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     return createNewRoleButton.isDisplayed();
+  }
+
+  public void enterRoleName(String roleName) {
+    testWebDriver.waitForElementToAppear(roleNameField);
+    sendKeys(roleNameField, roleName);
+  }
+
+  public void selectRight(String rightName) {
+    testWebDriver.sleep(500);
+    webElementMap.get(rightName).click();
   }
 }

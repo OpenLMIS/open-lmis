@@ -27,6 +27,7 @@ import java.util.List;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -38,6 +39,7 @@ public class ManageRole extends TestCaseHelper {
   public static final String ADMIN = "admin";
 
   LoginPage loginPage;
+  RolesPage rolesPage;
 
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
@@ -46,10 +48,11 @@ public class ManageRole extends TestCaseHelper {
     dbWrapper.assignRight("Admin", "MANAGE_ROLE");
     dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    rolesPage = PageObjectFactory.getRolesPage(testWebDriver);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
-  public void testVerifyRightsUponOK(String[] credentials) {
+  public void testVerifyRightsUponOK(String[] credentials) throws SQLException {
     String UPLOADS = "Uploads";
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
@@ -69,10 +72,16 @@ public class ManageRole extends TestCaseHelper {
     assertFalse(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled());
     assertFalse(rolesPage.getWebElementMap().get(UPLOADS).isEnabled());
     assertTrue(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled());
+
+    rolesPage.selectRight("Manage Distribution");
+    rolesPage.enterRoleName("DistributionRole");
+    rolesPage.clickSaveButton();
+    testWebDriver.sleep(500);
+    assertEquals(dbWrapper.getListOfRightsForRole("DistributionRole"), asList("MANAGE_DISTRIBUTION"));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
-  public void testVerifyRightsUponCancel(String[] credentials) {
+  public void testVerifyRightsUponCancel(String[] credentials) throws SQLException {
     String UPLOADS = "Uploads";
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
@@ -85,6 +94,10 @@ public class ManageRole extends TestCaseHelper {
     assertFalse(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled());
     assertTrue(rolesPage.getWebElementMap().get(UPLOADS).isEnabled());
     assertFalse(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled());
+    rolesPage.enterRoleName("new role");
+    rolesPage.clickSaveButton();
+    testWebDriver.sleep(500);
+    assertEquals(dbWrapper.getListOfRightsForRole("new role"), asList("UPLOADS"));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
@@ -98,11 +111,31 @@ public class ManageRole extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
-  public void testVerifyFacilityBasedRole(String[] credentials) {
+  public void testVerifyFacilityBasedRole(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
     rolesPage.createFacilityBasedRole("Facility Based Role Name", "Facility Based Role Description");
-    rolesPage.verifyCreatedRoleMessage("Facility Based Role Name");
+    verifyCreatedRoleMessage("Facility Based Role Name");
+    assertEquals(dbWrapper.getListOfRightsForRole("Facility Based Role Name"), asList("FACILITY_FILL_SHIPMENT", "VIEW_ORDER"));
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+  public void testVerifyEditRole(String[] credentials) throws SQLException {
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RolesPage rolesPage = homePage.navigateToRolePage();
+    rolesPage.createFacilityBasedRole("Facility Role", "Facility Based Role Description");
+    verifyCreatedRoleMessage("Facility Role");
+    rolesPage.clickARole("Facility Role");
+    rolesPage.clickProgramRole();
+    rolesPage.clickContinueButton();
+    rolesPage.selectRight("Approve Requisition");
+    rolesPage.clickSaveButton();
+    assertEquals(rolesPage.getSuccessMessage(), "\"Facility Role\" updated successfully");
+    assertEquals(dbWrapper.getListOfRightsForRole("Facility Role"), asList("APPROVE_REQUISITION", "VIEW_REQUISITION"));
+  }
+
+  public void verifyCreatedRoleMessage(String roleName) {
+    assertEquals(rolesPage.getSuccessMessage(), "\"" + roleName + "\" created successfully");
   }
 
   @AfterMethod(groups = {"admin"})

@@ -506,7 +506,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     RolesPage rolesPage = homePage.navigateToRolePage();
     rolesPage.createRole(roleName, roleDescription, userRoleList, roleType);
-    rolesPage.verifyCreatedRoleMessage(roleName);
+    assertEquals(rolesPage.getSuccessMessage(), "\"" + roleName + "\" created successfully");
   }
 
   private void verifyOrderedList(boolean downloadFlag) throws SQLException {

@@ -370,7 +370,7 @@ public class ManageUser extends TestCaseHelper {
   private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String programDependent) {
     RolesPage rolesPage = homePage.navigateToRolePage();
     rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
-    rolesPage.verifyCreatedRoleMessage(roleName);
+    assertEquals(rolesPage.getSuccessMessage(), "\"" + roleName + "\" created successfully");
   }
 
   private void verifyPushProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles() throws SQLException {

@@ -1671,4 +1671,13 @@ public class DBWrapper {
       " ((select id from roles where name='" + roleName + "'), 'Order Routing Inconsistencies')," +
       " ((select id from roles where name='" + roleName + "'), 'Delivery Zones Missing Manage Distribution Role');");
   }
+
+  public List<String> getListOfRightsForRole(String roleName) throws SQLException {
+    ResultSet rs = query("SELECT rightName FROM role_rights WHERE roleId = (select id from roles where name = '%s');", roleName);
+    List<String> rights = new ArrayList<>();
+    while (rs.next()) {
+      rights.add(rs.getString(1));
+    }
+    return rights;
+  }
 }
