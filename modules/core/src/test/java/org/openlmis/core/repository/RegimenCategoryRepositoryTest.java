@@ -65,4 +65,10 @@ public class RegimenCategoryRepositoryTest {
   public void shouldThrowNullPointerExceptionOnSaveNull() {
     repo.save(null);
   }
+
+  @Test
+  public void shouldUseGetAllInMapper() {
+    repo.getAll();
+    verify(mapper).getAll();
+  }
 }

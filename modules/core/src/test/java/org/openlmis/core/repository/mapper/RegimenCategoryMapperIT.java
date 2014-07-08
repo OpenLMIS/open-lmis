@@ -21,10 +21,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTests.class)
@@ -42,6 +45,24 @@ public class RegimenCategoryMapperIT {
     List<RegimenCategory> regimenCategories = regimenCategoryMapper.getAll();
     assertThat(regimenCategories.size(), is(2));
     assertThat(regimenCategories.get(0).getCode(), is("ADULTS"));
+  }
+
+  @Test
+  public void shouldGetAllRegimenCategoriesSorted() {
+    List<RegimenCategory> all = regimenCategoryMapper.getAll();
+    assertThat(all.size(), greaterThan(1));
+
+    // manually sort by display order and then name
+    Collections.sort(all, new Comparator<RegimenCategory>() {
+      public int compare(RegimenCategory o1, RegimenCategory o2) {
+        int onDispOrd = o1.getDisplayOrder().compareTo(o2.getDisplayOrder());
+        if(onDispOrd != 0) return onDispOrd;
+        return o1.getName().compareTo(o2.getName());
+      }
+    });
+
+    List<RegimenCategory> allFromDb = regimenCategoryMapper.getAll();
+    assertThat(allFromDb, is(all));
   }
 
   @Test

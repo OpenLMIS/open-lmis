@@ -19,6 +19,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @NoArgsConstructor
 public class RegimenCategoryRepository {
@@ -27,6 +29,14 @@ public class RegimenCategoryRepository {
   @Autowired
   public RegimenCategoryRepository(RegimenCategoryMapper regimenCategoryMapper) {
     this.mapper = regimenCategoryMapper;
+  }
+
+  /**
+   * Gets a list of all stored RegimenCategory entities.
+   * @return an sorted list by display order and then name, ascending.
+   */
+  public List<RegimenCategory> getAll() {
+    return mapper.getAll();
   }
 
   /**
