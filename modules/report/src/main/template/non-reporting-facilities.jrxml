@@ -41,9 +41,8 @@
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<title>
-		<band height="151" splitType="Prevent">
-			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+	<pageHeader>
+		<band height="80">
 			<subreport>
 				<reportElement x="0" y="0" width="751" height="80" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
@@ -69,82 +68,8 @@
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
 				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
 			</subreport>
-			<staticText>
-				<reportElement positionType="Float" x="520" y="108" width="130" height="18" uuid="3b6f5146-5666-479f-8599-f96a777ff1a1">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[Total facilities]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="520" y="90" width="130" height="18" uuid="39bfa835-3843-4a7e-b0fe-490bc28542b7">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[Non reporting facilities]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="520" y="126" width="130" height="18" uuid="9fe61c81-10fb-4cb5-ba23-160a2c0f6251">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[% not reporting]]></text>
-			</staticText>
-			<textField>
-				<reportElement positionType="Float" x="650" y="108" width="70" height="18" uuid="fb3ab7d7-934e-4cd0-8160-ea2cac22a950">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{TOTAL_FACILITIES}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement positionType="Float" x="650" y="126" width="70" height="18" uuid="99455f3c-df11-4c3a-9a3e-848247730957">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{PERCENTAGE_NON_REPORTING} + " %"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement positionType="Float" x="650" y="90" width="70" height="18" uuid="0067e3dd-de5b-4f43-8089-8b96f2e6c951">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{TOTAL_NON_REPORTING}]]></textFieldExpression>
-			</textField>
 		</band>
-	</title>
+	</pageHeader>
 	<columnHeader>
 		<band height="26" splitType="Prevent">
 			<staticText>

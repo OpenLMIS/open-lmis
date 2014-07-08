@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version last-->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stocked-out" language="groovy" pageWidth="812" pageHeight="595" orientation="Landscape" columnWidth="772" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stocked-out" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="772" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -52,7 +52,7 @@ WHERE
 			<band height="40">
 				<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} == null]]></printWhenExpression>
 				<staticText>
-					<reportElement mode="Opaque" x="1" y="20" width="751" height="20" forecolor="#FFFFFF" backcolor="#3D9297" uuid="d28eb1aa-5ce3-4073-8f47-4d16cb4774c8">
+					<reportElement mode="Opaque" x="1" y="20" width="779" height="20" forecolor="#FFFFFF" backcolor="#3D9297" uuid="d28eb1aa-5ce3-4073-8f47-4d16cb4774c8">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					</reportElement>
 					<text><![CDATA[]]></text>
@@ -121,7 +121,7 @@ WHERE
 					<text><![CDATA[Location]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="550" y="20" width="200" height="20" forecolor="#000000" backcolor="#003333" uuid="07a6ede6-7b80-42c0-9f61-e5307f47f3b8">
+					<reportElement mode="Transparent" x="550" y="20" width="230" height="20" forecolor="#000000" backcolor="#003333" uuid="07a6ede6-7b80-42c0-9f61-e5307f47f3b8">
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -208,10 +208,12 @@ WHERE
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<title>
-		<band height="81" splitType="Stretch">
+	<pageHeader>
+		<band height="80">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<subreport>
-				<reportElement x="0" y="0" width="752" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
+				<reportElement x="0" y="1" width="780" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
@@ -236,19 +238,19 @@ WHERE
 				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-	</title>
+	</pageHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="752" height="20" backcolor="#F4F4F4" uuid="fd7f9ba5-9b59-4cec-945b-626add06919f">
+				<reportElement mode="Opaque" x="0" y="0" width="780" height="20" backcolor="#F4F4F4" uuid="fd7f9ba5-9b59-4cec-945b-626add06919f">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 1]]></printWhenExpression>
 				</reportElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="39" y="0" width="711" height="20" forecolor="#006666" uuid="ca833fd0-e53a-4415-8fdb-597028f18f08">
+				<reportElement x="39" y="0" width="741" height="20" forecolor="#006666" uuid="ca833fd0-e53a-4415-8fdb-597028f18f08">
 					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Top">
@@ -288,7 +290,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="550" y="0" width="200" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="07a735d4-b5a1-4657-8d96-904364422795">
+				<reportElement mode="Transparent" x="550" y="0" width="230" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="07a735d4-b5a1-4657-8d96-904364422795">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>

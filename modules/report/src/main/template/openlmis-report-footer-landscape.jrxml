@@ -25,7 +25,7 @@
 				<reportElement x="100" y="4" width="173" height="20" forecolor="#8A8A8A" uuid="47940a15-7803-44db-8779-a04d40a9ee2a"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="false"/>
-					<paragraph leftIndent="2"/>
+					<paragraph leftIndent="1"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{GENERATED_BY}]]></textFieldExpression>
 			</textField>
@@ -84,6 +84,7 @@
 				<reportElement x="100" y="20" width="173" height="20" forecolor="#8A8A8A" uuid="01d7c438-ad8a-4465-a35d-cdb42682bfcf"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9"/>
+					<paragraph leftIndent="1"/>
 				</textElement>
 				<text><![CDATA[e-LMIS]]></text>
 			</staticText>
