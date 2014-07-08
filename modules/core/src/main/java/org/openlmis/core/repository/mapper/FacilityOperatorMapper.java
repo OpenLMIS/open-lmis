@@ -21,10 +21,28 @@ import java.util.List;
 @Repository
 public interface FacilityOperatorMapper {
 
-  @Insert("INSERT INTO facility_operators (code, text, displayOrder) VALUES (#{code}, #{text}, #{displayOrder})")
+  @Insert({"INSERT INTO facility_operators (code"
+    , ", text"
+    , ", displayOrder"
+    , ", createdBy"
+    , ", createdDate"
+    , ", modifiedBy"
+    , ", modifiedDate"
+    , ") VALUES (#{code}"
+    , ", #{text}"
+    , ", #{displayOrder}"
+    , ", #{createdBy}"
+    , ", NOW()"
+    , ", #{modifiedBy}"
+    , ", NOW() )"})
   void insert(FacilityOperator facilityOperator);
 
-  @Update("UPDATE facility_operators SET code=#{code}, text=#{text}, displayOrder=#{displayOrder} WHERE id=#{id}")
+  @Update({"UPDATE facility_operators SET code = #{code}"
+    , ", text = #{text}"
+    , ", displayOrder = #{displayOrder}"
+    , ", modifiedBy = #{modifiedBy}"
+    , ", modifiedDate = NOW()"
+    , "WHERE id = #{id}"})
   void update(FacilityOperator facilityOperator);
 
   @Select("SELECT * FROM facility_operators WHERE LOWER(code) = LOWER(#{code})")
