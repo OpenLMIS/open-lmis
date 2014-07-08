@@ -333,6 +333,15 @@
                         <property name="recordHandler" ref="facilityTypePersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="regimenCategory">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.regimen.categories"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.RegimenCategory</value>
+                        </property>
+                        <property name="recordHandler" ref="regimenCategoryPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
