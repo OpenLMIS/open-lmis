@@ -15,6 +15,7 @@ import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -777,15 +778,16 @@ public class InitiateRnRPage extends RequisitionPage {
     assertTrue("RnR Fail message not displayed", submitErrorMessage.isDisplayed());
   }
 
-  public void verifyAuthorizeButtonNotPresent() {
-    boolean authorizeButtonPresent;
+  public boolean isAuthorizeButtonPresent() {
     try {
-      authorizeButton.click();
-      authorizeButtonPresent = true;
-    } catch (ElementNotVisibleException e) {
-      authorizeButtonPresent = false;
+      testWebDriver.waitForElementToAppear(authorizeButton);
+      authorizeButton.isDisplayed();
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
     }
-    assertFalse(authorizeButtonPresent);
+    return authorizeButton.isDisplayed();
   }
 
   public void verifyApproveButtonNotPresent() {

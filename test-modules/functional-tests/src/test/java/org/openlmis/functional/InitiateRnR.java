@@ -284,7 +284,8 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.enterValueIfNotNull(10, "quantityDispensedFirstProduct");
     initiateRnRPage.enterValueIfNotNull(10, "quantityReceivedFirstProduct");
     initiateRnRPage.submitRnR();
-    initiateRnRPage.verifyAuthorizeButtonNotPresent();
+    initiateRnRPage.clickOk();
+    assertFalse(initiateRnRPage.isAuthorizeButtonPresent());
 
     initiateRnRPage.verifyBeginningBalanceForFirstProduct(10);
     initiateRnRPage.verifyQuantityReceivedForFirstProduct(10);
