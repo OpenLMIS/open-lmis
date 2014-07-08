@@ -72,6 +72,14 @@
                     </label>
                   </div>
                 </th>
+                <th ng-click='showRoleTypeModal("REPORTING")'>
+                  <div class="form-inline"
+                       ng-class="{'is-selected': currentRightType == 'REPORTING'}">
+                    <label id="reportingRoleType"><h4
+                      openlmis-message="create.role.reporting.rights"></h4>
+                    </label>
+                  </div>
+                </th>
 
                 <th ng-click='showRoleTypeModal("ALLOCATION")'>
                   <div class="form-inline"
@@ -108,10 +116,11 @@
                     <div id="rights-{{right.name}}"
                          class="checkbox-list clearfix"
                          ng-repeat="right in adminRights" tab-scroll>
+
                       <input id="{{right.name}}" type="checkbox"
-                             ng-checked="contains(right.name)"
-                             ng-change="updateRights(checked,right)"
-                             ng-model="checked"
+                             ng-click="updateRights(right)"
+                             ng-model="right.selected"
+                             ng-checked="false"
                              ng-disabled="areRelatedFieldsSelected(right) || currentRightType != 'ADMIN'"/>
                       <label for="{{right.name}}"><span
                         openlmis-message="right.displayNameKey"></span></label>
@@ -123,18 +132,48 @@
                     </span>
                 </td>
 
+                <td ng-class="{'is-disabled': currentRightType != 'REPORTING'}">
+                  <div>
+                    <div id="reportingRights-{{reportingRight.name}}"
+                         class="checkbox-list clearfix"
+                         ng-repeat="reportingRight in reportingRights" tab-scroll>
+
+                      <input id="{{reportingRight.name}}" type="checkbox"
+                             ng-click="updateRights(reportingRight)"
+                             ng-model="reportingRight.selected"
+                             ng-checked="false">
+                      <label for="{{reportingRight.name}}">
+                        <span ng-if="reportingRight.name === 'MANAGE_REPORT'" openlmis-message="reportingRight.displayNameKey"></span>
+                        <span ng-if="reportingRight.name !== 'MANAGE_REPORT'">
+                          <span openlmis-message="label.reporting.right.view"></span>
+                          <span ng-bind="reportingRight.name"></span>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                    <span class="field-error"
+                          ng-show="showRightError && currentRightType=='REPORTING'"
+                          openlmis-message="create.role.selectRightWarning">
+                    </span>
+                </td>
+
                 <td ng-class="{'is-disabled': currentRightType != 'ALLOCATION'}">
                   <div>
                     <div id="allocationRights-{{allocationRight.name}}"
                          class="checkbox-list clearfix"
                          ng-repeat="allocationRight in allocationRights"
                          tab-scroll>
-                      <input id="{{allocationRight.name}}"
-                             type="checkbox"
-                             ng-checked="contains(allocationRight.name)"
-                             ng-change="updateRights(checked,allocationRight)"
-                             ng-model="checked"
+                      <input id="{{allocationRight.name}}" type="checkbox"
+                             ng-click="updateRights(allocationRight)"
+                             ng-model="allocationRight.selected"
+                             ng-checked="false"
                              ng-disabled="areRelatedFieldsSelected(allocationRight) || currentRightType != 'ALLOCATION'"/>
+                      <!--<input id="{{allocationRight.name}}"-->
+                             <!--type="checkbox"-->
+                             <!--ng-checked="contains(allocationRight.name)"-->
+                             <!--ng-change="updateRights(checked,allocationRight)"-->
+                             <!--ng-model="checked"-->
+                             <!--ng-disabled="areRelatedFieldsSelected(allocationRight) || currentRightType != 'ALLOCATION'"/>-->
                       <label for="{{allocationRight.name}}"><span
                         openlmis-message="allocationRight.displayNameKey"></span></label>
                     </div>
@@ -151,12 +190,17 @@
                          class="checkbox-list clearfix"
                          ng-repeat="requisitionRight in requisitionRights"
                          tab-scroll>
-                      <input id="{{requisitionRight.name}}"
-                             type="checkbox"
-                             ng-checked="contains(requisitionRight.name)"
-                             ng-change="updateRights(checked,requisitionRight)"
-                             ng-model="checked"
+                      <input id="{{requisitionRight.name}}" type="checkbox"
+                             ng-click="updateRights(requisitionRight)"
+                             ng-model="requisitionRight.selected"
+                             ng-checked="false"
                              ng-disabled="areRelatedFieldsSelected(requisitionRight) || currentRightType != 'REQUISITION'"/>
+                      <!--<input id="{{requisitionRight.name}}"-->
+                             <!--type="checkbox"-->
+                             <!--ng-checked="contains(requisitionRight.name)"-->
+                             <!--ng-change="updateRights(checked,requisitionRight)"-->
+                             <!--ng-model="checked"-->
+                             <!--ng-disabled="areRelatedFieldsSelected(requisitionRight) || currentRightType != 'REQUISITION'"/>-->
                       <label for="{{requisitionRight.name}}"><span
                         openlmis-message="requisitionRight.displayNameKey"></span></label>
                     </div>
@@ -174,10 +218,15 @@
                          ng-repeat="fulfillmentRight in fulfillmentRights"
                          tab-scroll>
                       <input id="{{fulfillmentRight.name}}" type="checkbox"
-                             ng-checked="contains(fulfillmentRight.name)"
-                             ng-change="updateRights(checked,fulfillmentRight)"
-                             ng-model="checked"
+                             ng-click="updateRights(fulfillmentRight)"
+                             ng-model="fulfillmentRight.selected"
+                             ng-checked="false"
                              ng-disabled="areRelatedFieldsSelected(fulfillmentRight) || currentRightType != 'FULFILLMENT'"/>
+                      <!--<input id="{{fulfillmentRight.name}}" type="checkbox"-->
+                             <!--ng-checked="contains(fulfillmentRight.name)"-->
+                             <!--ng-change="updateRights(checked,fulfillmentRight)"-->
+                             <!--ng-model="checked"-->
+                             <!--ng-disabled="areRelatedFieldsSelected(fulfillmentRight) || currentRightType != 'FULFILLMENT'"/>-->
                       <label for="{{fulfillmentRight.name}}"><span
                         openlmis-message="fulfillmentRight.displayNameKey"></span></label>
                     </div>

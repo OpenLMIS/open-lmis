@@ -197,7 +197,9 @@ public class UserServiceTest {
     List<FulfillmentRoleAssignment> fulfillmentRoleAssignments = asList(new FulfillmentRoleAssignment());
     when(roleAssignmentService.getFulfilmentRoles(userId)).thenReturn(fulfillmentRoleAssignments);
     RoleAssignment adminRole = new RoleAssignment();
+    RoleAssignment reportingRole = new RoleAssignment();
     when(roleAssignmentService.getAdminRole(userId)).thenReturn(adminRole);
+    when(roleAssignmentService.getReportingRole(userId)).thenReturn(reportingRole);
 
     User returnedUser = userService.getUserWithRolesById(userId);
 
@@ -206,6 +208,7 @@ public class UserServiceTest {
     assertThat(returnedUser.getSupervisorRoles(), is(supervisorRoles));
     assertThat(returnedUser.getAllocationRoles(), is(allocationRoles));
     assertThat(returnedUser.getAdminRole(), is(adminRole));
+    assertThat(returnedUser.getReportingRole(), is(reportingRole));
     assertThat(returnedUser.getFulfillmentRoles(), is(fulfillmentRoleAssignments));
   }
 

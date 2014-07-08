@@ -62,10 +62,10 @@ public class RoleAssignmentRepository {
   }
 
   public void insert(List<RoleAssignment> roleAssignments, final Long userId) {
-    if(roleAssignments == null) return;
+    if (roleAssignments == null) return;
 
     for (final RoleAssignment roleAssignment : roleAssignments) {
-      if(roleAssignment == null) continue;
+      if (roleAssignment == null) continue;
       forAllDo(roleAssignment.getRoleIds(), new Closure() {
         @Override
         public void execute(Object o) {
@@ -79,5 +79,9 @@ public class RoleAssignmentRepository {
 
   public List<RoleAssignment> getAllocationRoles(Long userId) {
     return mapper.getAllocationRoles(userId);
+  }
+
+  public RoleAssignment getReportingRole(Long userId) {
+    return mapper.getReportingRole(userId);
   }
 }

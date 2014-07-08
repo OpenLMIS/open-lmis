@@ -31,11 +31,13 @@ public interface RoleRightsMapper {
 
   //used below
   @SuppressWarnings("unused")
-  @Select({"SELECT rightName, displayNameKey FROM role_rights RR",
+  @Select({"SELECT rightName, displayNameKey,rightType FROM role_rights RR",
     "INNER JOIN rights R on R.name = RR.rightName",
     "WHERE roleId = #{roleId}"})
   @Results(value = {
-    @Result(property = "name", column = "rightName")})
+    @Result(property = "name", column = "rightName"),
+    @Result(property = "type", column = "rightType"),
+  })
   List<Right> getAllRightsForRole(Long roleId);
 
   @Insert({"INSERT INTO roles",

@@ -43,6 +43,7 @@ import static org.openlmis.core.builder.SupervisoryNodeBuilder.code;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.RightName.*;
+import static org.openlmis.core.domain.RightType.ADMIN;
 import static org.openlmis.core.domain.RightType.REQUISITION;
 import static org.openlmis.core.utils.RightUtil.*;
 
@@ -152,6 +153,7 @@ public class RoleRightsMapperIT {
     assertTrue(com.google.common.collect.Iterables.any(fetchedRole.getRights(), withDisplayNameKey("right.create.requisition")));
     assertTrue(com.google.common.collect.Iterables.any(fetchedRole.getRights(), with(CONFIGURE_RNR)));
     assertTrue(com.google.common.collect.Iterables.any(fetchedRole.getRights(), withDisplayNameKey("right.configure.rnr")));
+    assertTrue(com.google.common.collect.Iterables.any(fetchedRole.getRights(), withType(ADMIN)));
   }
 
   @Test
@@ -160,7 +162,7 @@ public class RoleRightsMapperIT {
     roleRightsMapper.insertRole(role);
 
     role.setName("Right2");
-    Right right = new Right(CREATE_REQUISITION, RightType.ADMIN);
+    Right right = new Right(CREATE_REQUISITION, ADMIN);
     role.setRights(new ArrayList<>(asList(right)));
     role.setDescription("Right Description Changed");
     role.setModifiedBy(222L);

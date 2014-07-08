@@ -85,6 +85,14 @@ public class RoleAssignmentRepositoryTest {
   }
 
   @Test
+  public void shouldGetReportingRoles() throws Exception {
+    RoleAssignment expected = new RoleAssignment();
+    when(mapper.getReportingRole(1L)).thenReturn(expected);
+    RoleAssignment actual = repository.getReportingRole(1L);
+    assertThat(actual, is(expected));
+  }
+
+  @Test
   public void shouldGetAllocationRoles() throws Exception {
     List<RoleAssignment> expected = new ArrayList<>();
     when(mapper.getAllocationRoles(1L)).thenReturn(expected);

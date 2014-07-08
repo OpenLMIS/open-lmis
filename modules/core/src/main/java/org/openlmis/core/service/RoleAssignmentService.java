@@ -66,6 +66,7 @@ public class RoleAssignmentService {
     roleAssignmentRepository.insert(user.getSupervisorRoles(), user.getId());
     roleAssignmentRepository.insert(user.getAllocationRoles(), user.getId());
     roleAssignmentRepository.insert(asList(user.getAdminRole()), user.getId());
+    roleAssignmentRepository.insert(asList(user.getReportingRole()), user.getId());
     fulfillmentRoleService.saveFulfillmentRoles(user);
   }
 
@@ -75,5 +76,9 @@ public class RoleAssignmentService {
 
   public List<FulfillmentRoleAssignment> getFulfilmentRolesWithRight(Long userId, String rightName) {
     return fulfillmentRoleService.getRolesWithRight(userId, rightName);
+  }
+
+  public RoleAssignment getReportingRole(Long userId) {
+    return roleAssignmentRepository.getReportingRole(userId);
   }
 }

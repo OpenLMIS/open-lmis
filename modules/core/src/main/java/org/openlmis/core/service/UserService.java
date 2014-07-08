@@ -89,6 +89,7 @@ public class UserService {
     user.setHomeFacilityRoles(roleAssignmentService.getHomeFacilityRoles(id));
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
     user.setAdminRole(roleAssignmentService.getAdminRole(id));
+    user.setReportingRole(roleAssignmentService.getReportingRole(id));
     user.setAllocationRoles(roleAssignmentService.getAllocationRoles(id));
     user.setFulfillmentRoles(roleAssignmentService.getFulfilmentRoles(id));
     return user;

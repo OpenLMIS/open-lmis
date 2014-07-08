@@ -79,6 +79,7 @@ public class User extends BaseModel implements Importable {
   private List<FulfillmentRoleAssignment> fulfillmentRoles;
 
   private RoleAssignment adminRole;
+  private RoleAssignment reportingRole;
 
   private Boolean verified;
 

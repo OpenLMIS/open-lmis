@@ -91,4 +91,12 @@ public interface RoleAssignmentMapper {
     "GROUP BY RA.userId, RA.programId, RA.deliveryZoneId"})
   @Results(value = {@Result(property = "deliveryZone.id", column = "deliveryZoneId")})
   List<RoleAssignment> getAllocationRoles(Long userId);
+
+  @Select({"SELECT DISTINCT RA.userId, array_agg(RA.roleId) as roleIdsAsString",
+    "FROM role_assignments RA",
+    "INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
+    "INNER JOIN rights RT ON RT.name = RR.rightName",
+    "WHERE userId = #{userId} AND RT.rightType = 'REPORTING'",
+    "GROUP BY userId, supervisoryNodeId, programId"})
+  RoleAssignment getReportingRole(Long userId);
 }
