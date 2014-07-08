@@ -123,7 +123,8 @@ public interface DashboardMapper {
     @Select("select a.*, ecs.value emailMessageTemplate,scs.value smsMessageTemplate\n" +
             "from alerts a\n" +
             "left outer join configuration_settings ecs on ecs.key = a.email_msg_template_key\n" +
-            "left outer join configuration_settings scs on scs.key = a.sms_msg_template_key ")
+            "left outer join configuration_settings scs on scs.key = a.sms_msg_template_key \n" +
+            "where sms = true or email = true ")
     public List<AlertSummary> getNotificationAlerts();
 
     @Select("select * from fn_populate_dw_orders(1)")

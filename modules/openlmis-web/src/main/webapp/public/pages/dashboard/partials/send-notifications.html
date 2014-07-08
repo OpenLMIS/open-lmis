@@ -4,16 +4,16 @@
         <table>
             <thead>
             <tr>
-                <th><span openlmis-message="notification"></span></th>
-                <th colspan="3"><span openlmis-message="email"></span></th>
-                <th colspan="3"><span openlmis-message="sms"></span></th>
+                <th><span openlmis-message="Notification"></span></th>
+                <th><span openlmis-message="Email"></span></th>
+                <th ><span openlmis-message="SMS" style="padding-left: 25px"></span></th>
             </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="notification in notifications">
                     <td><div><input name="notificationTypeName" ng-value="notification.alertType" ng-model="notification.type" type="radio" ng-change="notificationMethodsChange(notification)" /><span style="padding-left: 3px" openlmis-message="label.alertType.{{ notification.alertType }}"></span></div></td>
-                    <td colspan="3"><input  type="checkbox" ng-disabled="!notification.email" ng-model="notification.emailMethod" ng-change="notificationMethodsChange(notification)"  /></td>
-                    <td colspan="3"><input  type="checkbox" ng-disabled="!notification.sms" ng-model="notification.smsMethod" ng-change="notificationMethodsChange(notification)" /></td>
+                    <td><input  type="checkbox" ng-disabled="!notification.email" ng-model="notification.emailMethod" ng-change="notificationMethodsChange(notification)"  /></td>
+                    <td class="pull-right"><input  type="checkbox" ng-disabled="!notification.sms" ng-model="notification.smsMethod" ng-change="notificationMethodsChange(notification)" /></td>
                 </tr>
 
             </tbody>
@@ -21,9 +21,9 @@
         </table>
     </div>
     <div class="span6">
-        <span><label>email</label></span>
+        <span><label>Email</label></span>
         <textarea required="" ng-model="selectedNotification.emailMessageTemplate" cols="500" rows="5" style="width:400px"></textarea>
-        <span><label>sms</label></span>
+        <span><label>SMS</label></span>
         <textarea required="" ng-model="selectedNotification.smsMessageTemplate" cols="500" rows="5" style="width:400px"></textarea>
 
     </div>
@@ -49,7 +49,7 @@
                         <th><div openlmis-message="label.select.all"></div><div><input type="checkbox" ng-model="selectedNotification.selectAllFacilities" ng-change="selectAllFacilities()"/></div></th>
                         <th openlmis-message="label.facility.code"></th>
                         <th openlmis-message="label.facility.name"></th>
-                        <th openlmis-message="label.phonenumber"></th>
+                        <th openlmis-message="label.phone"></th>
                         <th openlmis-message="label.email"></th>
                     </tr>
 
