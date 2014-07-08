@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTests.class)
@@ -47,5 +48,27 @@ public class RegimenCategoryMapperIT {
   public void shouldGetRegimenById() {
     RegimenCategory adultCategory = regimenCategoryMapper.getById(1L);
     assertThat(adultCategory.getCode(), is("ADULTS"));
+  }
+
+
+  @Test
+  public void shouldInsertAndUpdateWithCaseInsensitiveCode() {
+    RegimenCategory regCat = new RegimenCategory();
+    regCat.setCode("somecode");
+    regCat.setName("someName");
+    regCat.setDisplayOrder(1);
+
+    // insert and test case insensitive get by code
+    regimenCategoryMapper.insert(regCat);
+    RegimenCategory retRegCat = regimenCategoryMapper.getByCode("SOMECODE");
+    assertThat(retRegCat, notNullValue());
+    assertThat(retRegCat, is(regCat));
+
+    // update something and test it
+    retRegCat.setName("some other name");
+    retRegCat.setDisplayOrder(2);
+    regimenCategoryMapper.update(retRegCat);
+    RegimenCategory updatedRegCat = regimenCategoryMapper.getByCode("SOMECODE");
+    assertThat(updatedRegCat, is(retRegCat));
   }
 }
