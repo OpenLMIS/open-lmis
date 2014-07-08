@@ -32,13 +32,12 @@
     <div class="clear-both"></div>
     &nbsp;
     <div class="row">
-        <div class="span8">
+        <div class="span7">
             <div style="padding-left: 30px;">
-                <leaflet  width="100%" height="600px" geojson="geojson" layers="layers"></leaflet>
+                <leaflet  width="100%" height="600px" legend="legend" geojson="geojson" layers="layers"></leaflet>
             </div>
         </div>
-        <div class="span4">
-
+        <div class="span5" >
           <div style="max-height: 600px;overflow-y:scroll;" ng-show="features && (features | filter:expectedFilter).length > 0">
               <p class="grey pull-right">
               You can click on the chart to see list of facilities

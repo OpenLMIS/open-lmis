@@ -94,10 +94,12 @@ L.Google = L.Class.extend({
 			this._container.style.zIndex = "auto";
 		}
 
-		tilePane.insertBefore(this._container, first);
+		if (true) {
+			tilePane.insertBefore(this._container, first);
 
-		this.setOpacity(this.options.opacity);
-		this.setElementSize(this._container, this._map.getSize());
+			this.setOpacity(this.options.opacity);
+			this.setElementSize(this._container, this._map.getSize());
+		}
 	},
 
 	_initMapObject: function() {
