@@ -8,33 +8,36 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<h2 ng-bind="template.name"></h2>
+<h2 id="reportName" ng-bind="template.name"></h2>
 <div class="app-form">
   <div ng-repeat="parameter in parameters" class="form-row">
-    <label class="short" style="margin-bottom: 2px; font-size: 0.9em;" ng-bind="parameter.displayName"></label>:
+    <label id="displayName_{{parameter.name}}" class="short" style="margin-bottom: 2px; font-size: 0.9em;"
+           ng-bind="parameter.displayName"></label>:
 
     <ng-switch on="parameter.dataType">
       <div ng-switch-when="java.lang.Boolean">
-        <input type="radio" name="{{parameter.name}}" ng-value="'true'" ng-model="map[parameter.name]"/>
+        <input id="true_{{parameter.name}}" type="radio" name="{{parameter.name}}" ng-value="'true'"
+               ng-model="map[parameter.name]"/>
         <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-        <input type="radio" name="{{parameter.name}}" ng-value="'false'" ng-model="map[parameter.name]"/>
+        <input id="false_{{parameter.name}}" type="radio" name="{{parameter.name}}" ng-value="'false'"
+               ng-model="map[parameter.name]"/>
         <strong openlmis-message="button.no"></strong>
       </div>
 
       <div ng-switch-when="java.util.Date">
-        <input name="startDate" id="startDate" type="text"
+        <input name="startDate" id="startDate_{{parameter.name}}" type="text"
                ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
                ui-date-format="dd/mm/y"
                ng-model="map[parameter.name]" readonly/>
       </div>
 
       <div ng-switch-default>
-        <input type="text" id="{{parameter.name}}" ng-trim="false"
+        <input type="text" id="input_{{parameter.name}}" ng-trim="false"
                ng-model="map[parameter.name]"/>
       </div>
     </ng-switch>
 
-    <label class="short" ng-bind="parameter.description"></label>
+    <label id="description_{{parameter.name}}" class="short" ng-bind="parameter.description"></label>
   </div>
 
   <div>

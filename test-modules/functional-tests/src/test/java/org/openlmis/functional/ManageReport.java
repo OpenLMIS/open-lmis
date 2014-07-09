@@ -24,8 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -156,11 +155,11 @@ public class ManageReport extends TestCaseHelper {
     fileName = "noParameterReport.jrxml";
     reportName = "noParameterReport";
     reportPage.enterReportName(reportName);
+    reportPage.enterReportDescription("no Parameter Reports#");
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
     assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", "noParameterReport"));
-    assertEquals("noParameterReport", dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", "noParameterReport")));
     assertEquals("0", dbWrapper.getRowsCountFromDB("template_parameters"));
     homePage.logout();
 
@@ -170,8 +169,12 @@ public class ManageReport extends TestCaseHelper {
     reportPage = homePage.navigateReportScreen();
     assertEquals("Reports", reportPage.getReportHeader());
     assertEquals("Report name", reportPage.getReportNameHeader());
-    assertEquals("View", reportPage.getViewHeader());
+    assertEquals("Description", reportPage.getDescriptionHeader());
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+    assertTrue(reportPage.getReportDescription(1).equalsIgnoreCase("no Parameter Reports#"));
+
+    reportPage.clickReport(1);
+    assertEquals(reportName, reportPage.getReportName());
     verifyItemsOnReportListScreen();
   }
 
@@ -190,12 +193,9 @@ public class ManageReport extends TestCaseHelper {
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
-    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
-    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
     assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
-    assertEquals("isEnabled", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
-      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    verifyParameterDetails("isEnabled", "isEnable","true","is facility enabled","java.lang.Boolean");
+    String parameterName = "isEnabled";
+    verifyParameterDetails(parameterName, "isEnable", "true", "is facility enabled", "java.lang.Boolean");
     homePage.logout();
 
     dbWrapper.removeAllExistingRights("Admin");
@@ -203,6 +203,14 @@ public class ManageReport extends TestCaseHelper {
     loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+    assertEquals("", reportPage.getReportDescription(1));
+
+    reportPage.clickReport(1);
+    assertEquals("isEnable", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("is facility enabled", reportPage.getParameterDescription(parameterName));
+    assertTrue(reportPage.isParameterTrueOptionSelected(parameterName));
+    assertFalse(reportPage.isParameterFalseOptionSelected(parameterName));
+    verifyItemsOnReportListScreen();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -221,10 +229,6 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
     assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
-    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
-    assertEquals("typeId", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
-      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
     verifyParameterDetails("typeId", "facilityTypeId", "2", "id for facility type", "java.lang.Integer");
     homePage.logout();
 
@@ -233,6 +237,12 @@ public class ManageReport extends TestCaseHelper {
     loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+
+    reportPage.clickReport(1);
+    String parameterName = "typeId";
+    assertEquals("facilityTypeId", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("id for facility type", reportPage.getParameterDescription(parameterName));
+    assertEquals("2", reportPage.getParameterText(parameterName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -250,10 +260,6 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
     assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
-    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
-    assertEquals("code", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
-      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
     verifyParameterDetails("code", "facilityCode", "'F10'", "facility code", "java.lang.String");
     homePage.logout();
 
@@ -262,6 +268,12 @@ public class ManageReport extends TestCaseHelper {
     loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+
+    reportPage.clickReport(1);
+    String parameterName = "code";
+    assertEquals("facilityCode", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("facility code", reportPage.getParameterDescription(parameterName));
+    assertEquals("'F10'", reportPage.getParameterText(parameterName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -280,11 +292,7 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
     assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
-    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
-    assertEquals("goLiveDate", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
-      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    verifyParameterDetails("goLiveDate", "facilityGoLiveDate", "01/07/2014", "go live date of facility", "java.util.Date");
+    verifyParameterDetails("goLiveDate", "facilityGoLiveDate", "01/07/14", "go live date of facility", "java.util.Date");
     homePage.logout();
 
     dbWrapper.removeAllExistingRights("Admin");
@@ -292,6 +300,12 @@ public class ManageReport extends TestCaseHelper {
     loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+
+    reportPage.clickReport(1);
+    String parameterName = "goLiveDate";
+    assertEquals("facilityGoLiveDate", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("go live date of facility", reportPage.getParameterDescription(parameterName));
+    assertEquals("01/07/2014", reportPage.getParameterDate(parameterName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -327,10 +341,6 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
     assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
-    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
-    assertEquals("code", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
-      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
     verifyParameterDetails("code", "facilityCode", null, null, "java.lang.String");
     homePage.logout();
 
@@ -339,6 +349,12 @@ public class ManageReport extends TestCaseHelper {
     loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+
+    reportPage.clickReport(1);
+    String parameterName = "code";
+    assertEquals("facilityCode", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("", reportPage.getParameterDescription(parameterName));
+    assertEquals("", reportPage.getParameterText(parameterName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -373,11 +389,8 @@ public class ManageReport extends TestCaseHelper {
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
-    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
-    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    assertEquals("2", dbWrapper.getRowsCountFromDB("template_parameters"));
     verifyParameterDetails("code", "facilityCode", "'F10'", null, "java.lang.String");
-    verifyParameterDetails("name", "facilityName", null, null, "java.lang.String");
+    verifyParameterDetails("name", "facilityName", "'Facility'", null, "java.lang.String");
     homePage.logout();
 
     dbWrapper.removeAllExistingRights("Admin");
@@ -385,6 +398,22 @@ public class ManageReport extends TestCaseHelper {
     loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+
+    reportPage.clickReport(1);
+    String parameterName = "za";
+    assertEquals("za", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("", reportPage.getParameterDescription(parameterName));
+    assertEquals("", reportPage.getParameterText(parameterName));
+
+    parameterName = "code";
+    assertEquals("facilityCode", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("", reportPage.getParameterDescription(parameterName));
+    assertEquals("'F10'", reportPage.getParameterText(parameterName));
+
+    parameterName = "name";
+    assertEquals("facilityName", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("", reportPage.getParameterDescription(parameterName));
+    assertEquals("'Facility'", reportPage.getParameterText(parameterName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -419,11 +448,6 @@ public class ManageReport extends TestCaseHelper {
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
-    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
-    assertEquals(reportName, dbWrapper.getAttributeFromTable("report_rights", "rightName", "templateId", dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
-    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
-    assertEquals("id", dbWrapper.getAttributeFromTable("template_parameters", "name", "templateId",
-      dbWrapper.getAttributeFromTable("templates", "id", "name", reportName)));
     verifyParameterDetails("id", "fCode","abc",null,"java.lang.Integer");
     homePage.logout();
 
@@ -432,6 +456,12 @@ public class ManageReport extends TestCaseHelper {
     loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+
+    reportPage.clickReport(1);
+    String parameterName = "id";
+    assertEquals("fCode", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("", reportPage.getParameterDescription(parameterName));
+    assertEquals("abc", reportPage.getParameterText(parameterName));
   }
 
   public void verifyItemsOnReportListScreen() {

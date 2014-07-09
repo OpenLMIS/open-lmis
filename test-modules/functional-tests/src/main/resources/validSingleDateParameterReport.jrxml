@@ -6,7 +6,7 @@
 	<parameter name="goLiveDate" class="java.util.Date">
 		<property name="displayName" value="facilityGoLiveDate"/>
 		<parameterDescription><![CDATA[go live date of facility]]></parameterDescription>
-		<defaultValueExpression><![CDATA[01/07/2014]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[01/07/14]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[select * from processing_periods where startdate < $P{goLiveDate};]]>

@@ -14,6 +14,7 @@ package org.openlmis.pageobjects;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
@@ -30,8 +31,8 @@ public class ReportPage extends Page {
   @FindBy(how = ID, using = "reportNameHeader")
   private static WebElement reportNameHeader = null;
 
-  @FindBy(how = ID, using = "viewHeader")
-  private static WebElement viewHeader = null;
+  @FindBy(how = ID, using = "descriptionHeader")
+  private static WebElement descriptionHeader = null;
 
   @FindBy(how = ID, using = "addNew")
   private static WebElement addNewButton = null;
@@ -87,6 +88,14 @@ public class ReportPage extends Page {
   @FindBy(how = ID, using = "fileError")
   private static WebElement errorFile = null;
 
+  @FindBy(how = ID, using = "reportName")
+  private static WebElement reportName = null;
+
+  @FindBy(how = How.XPATH, using = "//span[contains(text(),'Prev')]")
+  private static WebElement prevCalender = null;
+
+  @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'1')]")
+  private static WebElement dateInCalender = null;
 
   public ReportPage(TestWebDriver driver) {
     super(driver);
@@ -104,9 +113,9 @@ public class ReportPage extends Page {
     return reportNameHeader.getText();
   }
 
-  public String getViewHeader() {
-    testWebDriver.waitForElementToAppear(viewHeader);
-    return viewHeader.getText();
+  public String getDescriptionHeader() {
+    testWebDriver.waitForElementToAppear(descriptionHeader);
+    return descriptionHeader.getText();
   }
 
   public String getNameLabel() {
@@ -216,5 +225,92 @@ public class ReportPage extends Page {
   public String getNoReportsMessage() {
     testWebDriver.waitForElementToAppear(noReportsMessage);
     return noReportsMessage.getText();
+  }
+
+  public String getReportDescription(int reportIndex) {
+    WebElement element = testWebDriver.getElementById("reportDescription" + (reportIndex - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText().trim();
+  }
+
+  public void clickReport(int reportIndex) {
+    WebElement element = testWebDriver.getElementById("reportName" + (reportIndex - 1));
+    testWebDriver.waitForElementToAppear(element);
+    element.click();
+  }
+
+  public String getReportName() {
+    testWebDriver.waitForElementToAppear(reportName);
+    return reportName.getText();
+  }
+
+  public String getParameterDisplayName(String displayName) {
+    WebElement element = testWebDriver.getElementById("displayName_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText().trim();
+  }
+
+  public String getParameterDescription(String displayName) {
+    WebElement element = testWebDriver.getElementById("description_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText().trim();
+  }
+
+  public String getParameterDate(String displayName) {
+    WebElement element = testWebDriver.getElementById("startDate_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getAttribute("value");
+  }
+
+  public boolean isParameterTrueOptionSelected(String displayName) {
+    WebElement element = testWebDriver.getElementById("true_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.isSelected();
+  }
+
+  public boolean isParameterFalseOptionSelected(String displayName) {
+    WebElement element = testWebDriver.getElementById("false_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.isSelected();
+  }
+
+  public String getParameterText(String displayName) {
+    WebElement element = testWebDriver.getElementById("input_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getAttribute("value");
+  }
+
+  public void selectParameterDate(String displayName) {
+    WebElement element = testWebDriver.getElementById("startDate_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    element.click();
+    testWebDriver.sleep(100);
+    prevCalender.click();
+    testWebDriver.sleep(100);
+    dateInCalender.click();
+    testWebDriver.sleep(100);
+  }
+
+  public void selectParameterTrueOption(String displayName) {
+    WebElement element = testWebDriver.getElementById("true_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    element.click();
+  }
+
+  public void selectParameterFalseOption(String displayName) {
+    WebElement element = testWebDriver.getElementById("false_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    element.click();
+  }
+
+  public void enterParameterInput(String displayName, String input) {
+    WebElement element = testWebDriver.getElementById("input_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    sendKeys(element, input);
+  }
+
+  public void clickCsvLink() {
+    testWebDriver.waitForElementToAppear(CSV);
+    CSV.click();
   }
 }

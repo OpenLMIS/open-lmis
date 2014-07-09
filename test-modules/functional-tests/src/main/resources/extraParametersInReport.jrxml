@@ -3,12 +3,16 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="za" class="java.lang.String">
+		<property name="displayName" value="za"/>
+	</parameter>
 	<parameter name="code" class="java.lang.String">
 		<property name="displayName" value="facilityCode"/>
 		<defaultValueExpression><![CDATA['F10']]></defaultValueExpression>
 	</parameter>
 	<parameter name="name" class="java.lang.String">
 		<property name="displayName" value="facilityName"/>
+		<defaultValueExpression><![CDATA['Facility']]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[select * from facilities where code = $P{code}]]>
