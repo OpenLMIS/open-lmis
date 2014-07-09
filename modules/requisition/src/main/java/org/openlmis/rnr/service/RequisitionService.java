@@ -394,7 +394,7 @@ public class RequisitionService {
     Collections.sort(periods, new Comparator<ProcessingPeriod>() {
 
       public int compare(ProcessingPeriod o1, ProcessingPeriod o2) {
-        return o2.getStartDate().compareTo(o1.getStartDate());
+        return o1.getStartDate().compareTo(o2.getStartDate());
       }
     });
 
