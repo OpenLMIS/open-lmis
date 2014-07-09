@@ -181,4 +181,13 @@ public class ProgramProductService {
     }
     return productService.getTotalSearchResultCount(searchParam);
   }
+
+  public void saveProduct(ProgramProduct programProduct) {
+    if(programProduct.getProduct() != null){
+      productService.save(programProduct.getProduct());
+    }
+    else {
+      throw new DataException("message.product.null");
+    }
+  }
 }

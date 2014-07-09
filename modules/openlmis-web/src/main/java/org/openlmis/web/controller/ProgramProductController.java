@@ -13,6 +13,7 @@ package org.openlmis.web.controller;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
-import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller handles endpoint related to listing products for a given program.
@@ -68,4 +72,16 @@ public class ProgramProductController extends BaseController {
     response.getBody().addData("pagination", pagination);
     return response;
   }
+
+  @RequestMapping(method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody ProgramProduct programProduct) {
+    try {
+      service.saveProduct(programProduct);
+    } catch (DataException e) {
+      return error(e, BAD_REQUEST);
+    }
+    return success(messageService.message("message.product.created.success", programProduct.getProduct().getName()));
+  }
 }
+

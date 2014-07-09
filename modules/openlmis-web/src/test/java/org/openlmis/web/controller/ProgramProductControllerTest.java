@@ -19,8 +19,11 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -44,6 +47,9 @@ public class ProgramProductControllerTest {
 
   @InjectMocks
   ProgramProductController controller;
+
+  @Mock
+  private MessageService messageService;
 
   private List<ProgramProduct> expectedProgramProductList = new ArrayList<>();
 
@@ -82,5 +88,29 @@ public class ProgramProductControllerTest {
     order.verify(service).getTotalSearchResultCount("pro", "Program");
     order.verify(service).search(anyString(), Matchers.any(Pagination.class), anyString());
     assertThat((List<ProgramProduct>) programProducts.getBody().getData().get(PROGRAM_PRODUCT_LIST), is(expectedProgramProductList));
+  }
+
+  @Test
+  public void shouldSaveProgramProduct(){
+    ProgramProduct programProduct = new ProgramProduct();
+    programProduct.setProduct(new Product());
+    when(messageService.message("message.product.created.success", programProduct.getProduct().getName())).thenReturn("save success");
+
+    ResponseEntity<OpenLmisResponse> response = controller.save(programProduct);
+
+    assertThat(response.getBody().getSuccessMsg(), is("save success"));
+    verify(service).saveProduct(programProduct);
+  }
+
+  @Test
+  public void shouldReturnBadRequestWhenServiceThrowsExceptionOnSave(){
+    ProgramProduct programProduct = new ProgramProduct();
+    programProduct.setProduct(new Product());
+    doThrow(new DataException("error message")).when(service).saveProduct(programProduct);
+
+    ResponseEntity<OpenLmisResponse> response = controller.save(programProduct);
+
+    assertThat(response.getBody().getErrorMsg(), is("error message"));
+    verify(service).saveProduct(programProduct);
   }
 }

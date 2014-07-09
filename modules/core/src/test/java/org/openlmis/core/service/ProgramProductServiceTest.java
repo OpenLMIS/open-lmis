@@ -406,4 +406,26 @@ public class ProgramProductServiceTest {
 
     verify(productService).getTotalSearchResultCount(searchParam);
   }
+
+  @Test
+  public void shouldSaveProductIfItIsNotNull() throws Exception{
+    ProgramProduct programProduct = new ProgramProduct();
+    programProduct.setProduct(new Product());
+
+    programProductService.saveProduct(programProduct);
+
+    verify(productService).save(programProduct.getProduct());
+  }
+
+  @Test
+  public void shouldThrowIfProductIsNull() throws Exception{
+    ProgramProduct programProduct = new ProgramProduct();
+
+    expectException.expect(DataException.class);
+    expectException.expectMessage("message.product.null");
+
+    programProductService.saveProduct(programProduct);
+
+    verify(productService, never()).save(programProduct.getProduct());
+  }
 }
