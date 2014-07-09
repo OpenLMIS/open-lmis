@@ -31,11 +31,13 @@
       <td id="description{{$index}}" ng-bind="role.description"></td>
       <td>
         <div ng-repeat="right in role.rights">
-          <span ng-if="right.displayNameKey != null" openlmis-message="right.displayNameKey"></span>
-          <span ng-if="right.type === 'REPORTING' && right.name !== 'MANAGE_REPORT'">
-            <span openlmis-message="label.reporting.right.view"></span>
-            <span ng-bind="right.name"></span>
-          </span>
+          <div id="right{{$parent.$index}}{{$index}}">
+            <span ng-if="right.displayNameKey != null" openlmis-message="right.displayNameKey"></span>
+            <span ng-if="right.type === 'REPORTING' && right.name !== 'MANAGE_REPORT'">
+              <span openlmis-message="label.reporting.right.view"></span>
+              <span ng-bind="right.name"></span>
+            </span>
+          </div>
         </div>
       </td>
     </tr>

@@ -65,6 +65,7 @@ public class ManageRole extends TestCaseHelper {
     assertEquals(rolesPage.getRoleMixWarning(), "Note: Individual roles cannot be a mix of these types");
 
     assertEquals(rolesPage.getAdminRoleLabel(), "Admin and general operations rights");
+    assertEquals(rolesPage.getReportingRoleLabel(), "Reporting rights");
     assertEquals(rolesPage.getAllocationRoleLabel(), "Allocation program based rights");
     assertEquals(rolesPage.getRequisitionRoleLabel(), "Request program based rights");
     assertEquals(rolesPage.getFulfilmentRoleLabel(), "Fulfillment based rights");
@@ -135,12 +136,27 @@ public class ManageRole extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
-  public void testVerifyFacilityBasedRole(String[] credentials) throws SQLException {
+  public void testVerifyFulfilmentRole(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
     rolesPage.createRoleWithFillShipmentRight("Facility Based Role Name", "Facility Based Role Description");
     verifyCreatedRoleMessage("Facility Based Role Name");
     assertEquals(dbWrapper.getListOfRightsForRole("Facility Based Role Name"), asList("FACILITY_FILL_SHIPMENT", "VIEW_ORDER"));
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+  public void testVerifyReportingRole(String[] credentials) throws SQLException {
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RolesPage rolesPage = homePage.navigateToRolePage();
+    rolesPage.clickCreateNewRoleButton();
+    rolesPage.clickReportingTypeRole();
+    rolesPage.clickContinueButton();
+    testWebDriver.sleep(1000);
+    rolesPage.enterRoleName("Reporting role");
+    rolesPage.selectRight("Manage Report");
+    rolesPage.clickSaveButton();
+    verifyCreatedRoleMessage("Reporting role");
+    assertEquals(dbWrapper.getListOfRightsForRole("Reporting role"), asList("MANAGE_REPORT"));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")

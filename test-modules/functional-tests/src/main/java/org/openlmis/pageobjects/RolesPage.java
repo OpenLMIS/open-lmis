@@ -91,6 +91,9 @@ public class RolesPage extends Page {
   @FindBy(how = ID, using = "allocationRoleType")
   private static WebElement allocationRoleType = null;
 
+  @FindBy(how = ID, using = "reportingRoleType")
+  private static WebElement reportingRoleType = null;
+
   @FindBy(how = ID, using = "button_OK")
   private static WebElement continueButton = null;
 
@@ -133,6 +136,9 @@ public class RolesPage extends Page {
   @FindBy(how = ID, using = "MANAGE_POD")
   private static WebElement rightManagePOD = null;
 
+  @FindBy(how = ID, using = "MANAGE_REPORT")
+  private static WebElement rightManageReport = null;
+
   private Map<String, WebElement> webElementMap = new HashMap<>();
 
   public RolesPage(TestWebDriver driver) {
@@ -152,6 +158,7 @@ public class RolesPage extends Page {
     webElementMap.put("View Orders Requisition", rightViewOrders);
     webElementMap.put("Manage Distribution", rightManageDistribution);
     webElementMap.put("Manage POD", rightManagePOD);
+    webElementMap.put("Manage Report", rightManageReport);
   }
 
   public String getRolesHeader() {
@@ -207,6 +214,11 @@ public class RolesPage extends Page {
   public String getAdminRoleLabel() {
     testWebDriver.waitForElementToAppear(adminRoleType);
     return adminRoleType.getText();
+  }
+
+  public String getReportingRoleLabel() {
+    testWebDriver.waitForElementToAppear(reportingRoleType);
+    return reportingRoleType.getText();
   }
 
   public String getAllocationRoleLabel() {
@@ -399,5 +411,11 @@ public class RolesPage extends Page {
   public boolean isRightEnabled(String right) {
     testWebDriver.sleep(500);
     return webElementMap.get(right).isEnabled();
+  }
+
+  public void clickReportingTypeRole() {
+    testWebDriver.waitForElementToAppear(reportingRoleType);
+    reportingRoleType.click();
+    testWebDriver.sleep(100);
   }
 }
