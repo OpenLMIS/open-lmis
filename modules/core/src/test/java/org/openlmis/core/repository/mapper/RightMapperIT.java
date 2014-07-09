@@ -88,7 +88,7 @@ public class RightMapperIT {
 
     Integer count = rightMapper.totalReportingRightsFor(userId);
 
-    assertThat(count, is(5));
+    assertThat(count, is(4));
   }
 
   @Test

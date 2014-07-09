@@ -25,26 +25,17 @@
     <tr class="gradient-header">
       <th id="reportNameHeader" class="col-desc" openlmis-message="report.name.label">
       </th>
-      <th id="viewHeader" class="col-right" openlmis-message="view.label">
+      <th id="viewHeader" class="col-right" openlmis-message="create.report.description">
       </th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="reportTemplate in reportTemplates">
+    <tr ng-repeat="reportTemplate in reportTemplates | orderBy : 'name'">
       <td>
-        <div id="reportName{{$index}}">{{reportTemplate.name}}</div>
+        <a id="reportName{{$index}}" ng-href="#/reports/{{reportTemplate.id}}">{{reportTemplate.name}}</a>
       </td>
       <td>
-        <div>
-          <a id="pdfLink" href="/reports/{{reportTemplate.id}}/pdf" target="_blank"
-             openlmis-message="report.type.pdf"></a>
-          <a id="xlsLink" href="/reports/{{reportTemplate.id}}/xls" target="_blank"
-             openlmis-message="report.type.xls"></a>
-          <a id="csvLink" href="/reports/{{reportTemplate.id}}/csv" target="_blank"
-             openlmis-message="report.type.csv"></a>
-          <a id="htmlLink" href="/reports/{{reportTemplate.id}}/html" target="_blank"
-             openlmis-message="report.type.html"></a>
-        </div>
+        <div id="reportDescription{{$index}}">{{reportTemplate.description}}</div>
       </td>
     </tr>
     </tbody>

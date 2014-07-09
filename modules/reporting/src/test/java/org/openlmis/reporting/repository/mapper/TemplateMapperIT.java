@@ -10,6 +10,7 @@
 
 package org.openlmis.reporting.repository.mapper;
 
+import com.google.common.base.Predicate;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -32,6 +33,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.google.common.collect.Iterables.any;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -179,21 +182,35 @@ public class TemplateMapperIT {
     reportRightMapper.insert(reportTemplate3);
     reportRightMapper.insert(reportTemplate4);
 
-    Role role = new Role();
-    role.setName("Reporting User Role");
-    roleRightsMapper.insertRole(role);
-    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), reportTemplate1.getName());
-    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), reportTemplate2.getName());
-    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role.getId(), reportTemplate3.getName());
+    Role role1 = new Role();
+    role1.setName("Reporting User Role");
+    roleRightsMapper.insertRole(role1);
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role1.getId(), reportTemplate1.getName());
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role1.getId(), reportTemplate2.getName());
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role1.getId(), reportTemplate3.getName());
 
-    queryExecutor.executeUpdate("INSERT INTO role_assignments(userId, roleId) VALUES (?,?)", userId, role.getId());
+    queryExecutor.executeUpdate("INSERT INTO role_assignments(userId, roleId) VALUES (?,?)", userId, role1.getId());
+
+    Role role2 = new Role();
+    role2.setName("Reporting User Role 2");
+    roleRightsMapper.insertRole(role2);
+    queryExecutor.executeUpdate("INSERT INTO role_rights(roleId, rightName) VALUES (?,?)", role2.getId(), reportTemplate1.getName());
+
+    queryExecutor.executeUpdate("INSERT INTO role_assignments(userId, roleId) VALUES (?,?)", userId, role2.getId());
 
     List<Template> templateList = mapper.getAllTemplatesForUser(userId);
 
     assertThat(templateList.size(), is(3));
-    assertThat(templateList.get(0).getName(), is(reportTemplate2.getName()));
-    assertThat(templateList.get(1).getName(), is(reportTemplate3.getName()));
-    assertThat(templateList.get(2).getName(), is(reportTemplate1.getName()));
+    assertTrue(any(templateList, contains(asList(reportTemplate1.getName(), reportTemplate2.getName(), reportTemplate3.getName()))));
+  }
+
+  private static Predicate<Template> contains(final List<String> names) {
+    return new Predicate<Template>() {
+      @Override
+      public boolean apply(Template template) {
+        return names.contains(template.getName());
+      }
+    };
   }
 
   @Test

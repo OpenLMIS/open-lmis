@@ -51,10 +51,10 @@ public interface TemplateMapper {
   @Select("SELECT id, name FROM templates WHERE type = 'Consistency Report' ORDER BY createdDate")
   List<Template> getAllConsistencyReportTemplates();
 
-  @Select({"SELECT t.id, t.name FROM templates t",
+  @Select({"SELECT DISTINCT t.name, t.id, t.description FROM templates t",
     "INNER JOIN report_rights rt ON rt.templateId = t.id",
     "INNER JOIN role_rights rr ON rr.rightName = rt.rightName",
-    "INNER JOIN role_assignments ra ON ra.roleId = rr.roleId WHERE ra.userId = #{userId} ORDER BY LOWER(t.name)"})
+    "INNER JOIN role_assignments ra ON ra.roleId = rr.roleId WHERE ra.userId = #{userId}"})
   List<Template> getAllTemplatesForUser(@Param("userId") Long userId);
 
   @Insert({"INSERT INTO template_parameters(templateId, name, displayName, defaultValue, dataType, description, createdBy)",
