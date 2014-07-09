@@ -384,8 +384,14 @@ public class RequisitionService {
     List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
 
     List<ProcessingPeriod> rejected = processingScheduleService.getOpenPeriods(facilityId, programId, periodIdOfLastRequisitionToEnterPostSubmitFlow);
-    periods.addAll(rejected);
 
+    if(periods == null || periods.isEmpty()){
+      periods = rejected;
+    }else {
+      if(rejected != null && !rejected.isEmpty()){
+        periods.addAll(rejected);
+      }
+    }
 
     // find the distinct list
     Set<ProcessingPeriod> finalList = new HashSet<ProcessingPeriod> (periods);
