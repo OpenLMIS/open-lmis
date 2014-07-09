@@ -56,22 +56,32 @@ public class ManageRole extends TestCaseHelper {
     String UPLOADS = "Uploads";
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
-    rolesPage.getCreateNewRoleButton().click();
-    testWebDriver.waitForElementToAppear(rolesPage.getAllocationRoleType());
-    assertFalse(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled());
-    assertTrue(rolesPage.getWebElementMap().get(UPLOADS).isEnabled());
-    assertFalse(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled());
+    rolesPage.clickCreateNewRoleButton();
+
+    assertEquals(rolesPage.getAddNewRoleHeader(), "Add new role");
+    assertEquals(rolesPage.getRoleNameLabel(), "Role name *");
+    assertEquals(rolesPage.getRoleDescriptionLabel(), "Role description");
+    assertEquals(rolesPage.getAssignRightsLabel(), "Assigned rights *");
+    assertEquals(rolesPage.getRoleMixWarning(), "Note: Individual roles cannot be a mix of these types");
+
+    assertEquals(rolesPage.getAdminRoleLabel(), "Admin and general operations rights");
+    assertEquals(rolesPage.getAllocationRoleLabel(), "Allocation program based rights");
+    assertEquals(rolesPage.getRequisitionRoleLabel(), "Request program based rights");
+    assertEquals(rolesPage.getFulfilmentRoleLabel(), "Fulfillment based rights");
+
+    assertFalse(rolesPage.isRightEnabled(MANAGE_DISTRIBUTION));
+    assertTrue(rolesPage.isRightEnabled(UPLOADS));
+    assertFalse(rolesPage.isRightEnabled(APPROVE_REQUISITION));
 
     testWebDriver.handleScrollByPixels(0, 3000);
-    testWebDriver.waitForElementToAppear(rolesPage.getWebElementMap().get(UPLOADS));
-
-    rolesPage.getWebElementMap().get(UPLOADS).click();
-    rolesPage.getAllocationRoleType().click();
+    rolesPage.selectRight(UPLOADS);
+    rolesPage.selectAllocationRoleType();
     rolesPage.clickContinueButton();
-    assertFalse(rolesPage.getWebElementMap().get(UPLOADS).isSelected());
-    assertFalse(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled());
-    assertFalse(rolesPage.getWebElementMap().get(UPLOADS).isEnabled());
-    assertTrue(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled());
+
+    assertFalse(rolesPage.isRightSelected(UPLOADS));
+    assertFalse(rolesPage.isRightEnabled(APPROVE_REQUISITION));
+    assertFalse(rolesPage.isRightEnabled(UPLOADS));
+    assertTrue(rolesPage.isRightEnabled(MANAGE_DISTRIBUTION));
 
     rolesPage.selectRight("Manage Distribution");
     rolesPage.enterRoleName("DistributionRole");
@@ -85,15 +95,18 @@ public class ManageRole extends TestCaseHelper {
     String UPLOADS = "Uploads";
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
-    rolesPage.getCreateNewRoleButton().click();
-    testWebDriver.waitForElementToAppear(rolesPage.getAllocationRoleType());
-    rolesPage.getWebElementMap().get(UPLOADS).click();
-    rolesPage.getAllocationRoleType().click();
+    assertTrue(rolesPage.isCreateNewRoleButtonDisplayed());
+
+    rolesPage.clickCreateNewRoleButton();
+    rolesPage.selectRight(UPLOADS);
+    rolesPage.selectAllocationRoleType();
     rolesPage.clickCancelButtonOnModal();
-    assertTrue(rolesPage.getWebElementMap().get(UPLOADS).isSelected());
-    assertFalse(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled());
-    assertTrue(rolesPage.getWebElementMap().get(UPLOADS).isEnabled());
-    assertFalse(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled());
+
+    assertTrue(rolesPage.isRightSelected(UPLOADS));
+    assertFalse(rolesPage.isRightEnabled(APPROVE_REQUISITION));
+    assertTrue(rolesPage.isRightEnabled(UPLOADS));
+    assertFalse(rolesPage.isRightEnabled(MANAGE_DISTRIBUTION));
+
     rolesPage.enterRoleName("new role");
     rolesPage.clickSaveButton();
     testWebDriver.sleep(500);
@@ -104,17 +117,28 @@ public class ManageRole extends TestCaseHelper {
   public void testVerifyDuplicateRoleName(String[] credentials) {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
+
+    assertEquals(rolesPage.getRolesHeader(), "Roles");
+    assertEquals(rolesPage.getNameHeader(), "Name");
+    assertEquals(rolesPage.getDescriptionHeader(), "Description");
+    assertEquals(rolesPage.getRightsHeader(), "Rights");
+
+    assertEquals(rolesPage.getName(1), "Admin");
+    assertEquals(rolesPage.getDescription(1), "Admin");
+    assertEquals(rolesPage.getRights(1, 1), "Admin - Manage Facilities");
+    assertEquals(rolesPage.getRights(1, 2), "Admin - Manage Roles");
+
     List<String> userRoleList = new ArrayList<>();
     userRoleList.add("Uploads");
     rolesPage.createRole(ADMIN, ADMIN, userRoleList, false);
-    assertEquals("Duplicate Role found", rolesPage.getSaveErrorMsgDiv().getText().trim());
+    assertEquals("Duplicate Role found", rolesPage.getSaveErrorMsg());
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testVerifyFacilityBasedRole(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
-    rolesPage.createFacilityBasedRole("Facility Based Role Name", "Facility Based Role Description");
+    rolesPage.createRoleWithFillShipmentRight("Facility Based Role Name", "Facility Based Role Description");
     verifyCreatedRoleMessage("Facility Based Role Name");
     assertEquals(dbWrapper.getListOfRightsForRole("Facility Based Role Name"), asList("FACILITY_FILL_SHIPMENT", "VIEW_ORDER"));
   }
@@ -123,15 +147,21 @@ public class ManageRole extends TestCaseHelper {
   public void testVerifyEditRole(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
-    rolesPage.createFacilityBasedRole("Facility Role", "Facility Based Role Description");
+    rolesPage.createRoleWithFillShipmentRight("Facility Role", "Facility Based Role Description");
     verifyCreatedRoleMessage("Facility Role");
-    rolesPage.clickARole("Facility Role");
-    rolesPage.clickProgramRole();
+    rolesPage.clickRole("Facility Role");
+    assertEquals(rolesPage.getEditRoleHeader(), "Edit role");
+    rolesPage.clickRequisitionTypeRole();
     rolesPage.clickContinueButton();
     rolesPage.selectRight("Approve Requisition");
     rolesPage.clickSaveButton();
     assertEquals(rolesPage.getSuccessMessage(), "\"Facility Role\" updated successfully");
     assertEquals(dbWrapper.getListOfRightsForRole("Facility Role"), asList("APPROVE_REQUISITION", "VIEW_REQUISITION"));
+
+    assertEquals(rolesPage.getName(2), "Facility Role");
+    assertEquals(rolesPage.getDescription(2), "Facility Based Role Description");
+    assertEquals(rolesPage.getRights(2, 1), "Requisition - View");
+    assertEquals(rolesPage.getRights(2, 2), "Requisition - Approve");
   }
 
   public void verifyCreatedRoleMessage(String roleName) {

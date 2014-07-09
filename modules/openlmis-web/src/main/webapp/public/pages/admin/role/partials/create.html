@@ -20,8 +20,8 @@
 
       <div class="row-fluid clearfix">
         <div class="span5">
-          <label for="name">
-            <span openlmis-message="create.role.roleName"></span>
+          <label id="roleNameLabel" for="name">
+          <span openlmis-message="create.role.roleName"></span>
             <span class="label-required"> *</span></label>
 
           <div>
@@ -38,7 +38,7 @@
 
       <div class="row-fluid clearfix">
         <div class="span5">
-          <label for="description"
+          <label id="roleDescriptionLabel" for="description"
                  openlmis-message="create.role.description"></label>
 
           <div>
@@ -50,12 +50,12 @@
       </div>
 
       <div class="form-group clearfix">
-        <h3>
-          <span openlmis-message="create.role.assignRights"></span>
+        <h3 id="assignRightsLabel">
+        <span openlmis-message="create.role.assignRights"></span>
           <span class="label-required"> *</span>
         </h3>
 
-        <label class="role-mixed-warning"><span class="roles-note"
+        <label id="roleMixedWarning" class="role-mixed-warning"><span class="roles-note"
                                                 openlmis-message="create.role.mixed.warning"></span></label>
 
         <div class="row-fluid">

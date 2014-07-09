@@ -270,9 +270,12 @@ public class ManageUser extends TestCaseHelper {
     createRoleAndAssignRights(userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, "Requisition");
 
     RolesPage rolesPage = PageObjectFactory.getRolesPage(testWebDriver);
-    rolesPage.clickARole(LAB_IN_CHARGE);
-    rolesPage.verifyAdminRoleRadioNonEditable();
-    rolesPage.verifyRoleSelected(userRoleList);
+    rolesPage.clickRole(LAB_IN_CHARGE);
+    assertTrue(rolesPage.isAdminRoleRadioEnabled());
+    for (String right : userRoleList) {
+      testWebDriver.sleep(500);
+      assertTrue(rolesPage.isRightSelected(right));
+    }
     homePage.navigateToRolePage();
 
     dbWrapper.insertSupervisoryNode(facility_code, "N1", "Node 1", "null");

@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 
 public class RolesPage extends Page {
@@ -101,11 +100,32 @@ public class RolesPage extends Page {
   @FindBy(how = ID, using = "rolesHeader")
   private static WebElement rolesHeader = null;
 
+  @FindBy(how = ID, using = "nameHeader")
+  private static WebElement nameHeader = null;
+
+  @FindBy(how = ID, using = "descriptionHeader")
+  private static WebElement descriptionHeader = null;
+
+  @FindBy(how = ID, using = "rightsHeader")
+  private static WebElement rightsHeader = null;
+
   @FindBy(how = ID, using = "addNewRoleHeader")
   private static WebElement addNewRoleHeader = null;
 
+  @FindBy(how = ID, using = "roleNameLabel")
+  private static WebElement roleNameLabel = null;
+
+  @FindBy(how = ID, using = "roleDescriptionLabel")
+  private static WebElement roleDescriptionLabel = null;
+
+  @FindBy(how = ID, using = "assignRightsLabel")
+  private static WebElement assignRightsLabel = null;
+
+  @FindBy(how = ID, using = "roleMixedWarning")
+  private static WebElement roleMixedWarning = null;
+
   @FindBy(how = ID, using = "fulfillmentRoleType")
-  private static WebElement facilityBasedRoleType = null;
+  private static WebElement fulfilmentRoleType = null;
 
   @FindBy(how = ID, using = "FACILITY_FILL_SHIPMENT")
   private static WebElement rightFillShipment = null;
@@ -134,20 +154,105 @@ public class RolesPage extends Page {
     webElementMap.put("Manage POD", rightManagePOD);
   }
 
-  public Map<String, WebElement> getWebElementMap() {
-    return webElementMap;
+  public String getRolesHeader() {
+    testWebDriver.waitForElementToAppear(rolesHeader);
+    return rolesHeader.getText();
   }
 
-  public WebElement getCreateNewRoleButton() {
-    return createNewRoleButton;
+  public String getNameHeader() {
+    testWebDriver.waitForElementToAppear(nameHeader);
+    return nameHeader.getText();
   }
 
-  public WebElement getSaveErrorMsgDiv() {
-    return saveErrorMsgDiv;
+  public String getDescriptionHeader() {
+    testWebDriver.waitForElementToAppear(descriptionHeader);
+    return descriptionHeader.getText();
   }
 
-  public WebElement getAllocationRoleType() {
-    return allocationRoleType;
+  public String getRightsHeader() {
+    testWebDriver.waitForElementToAppear(rightsHeader);
+    return rightsHeader.getText();
+  }
+
+  public String getAddNewRoleHeader() {
+    testWebDriver.waitForElementToAppear(addNewRoleHeader);
+    return addNewRoleHeader.getText();
+  }
+
+  public String getEditRoleHeader() {
+    testWebDriver.waitForElementToAppear(editRoleHeader);
+    return editRoleHeader.getText();
+  }
+
+  public String getRoleNameLabel() {
+    testWebDriver.waitForElementToAppear(roleNameLabel);
+    return roleNameLabel.getText();
+  }
+
+  public String getRoleDescriptionLabel() {
+    testWebDriver.waitForElementToAppear(roleDescriptionLabel);
+    return roleDescriptionLabel.getText();
+  }
+
+  public String getAssignRightsLabel() {
+    testWebDriver.waitForElementToAppear(assignRightsLabel);
+    return assignRightsLabel.getText();
+  }
+
+  public String getRoleMixWarning() {
+    testWebDriver.waitForElementToAppear(roleMixedWarning);
+    return roleMixedWarning.getText();
+  }
+
+  public String getAdminRoleLabel() {
+    testWebDriver.waitForElementToAppear(adminRoleType);
+    return adminRoleType.getText();
+  }
+
+  public String getAllocationRoleLabel() {
+    testWebDriver.waitForElementToAppear(allocationRoleType);
+    return allocationRoleType.getText();
+  }
+
+  public String getRequisitionRoleLabel() {
+    testWebDriver.waitForElementToAppear(requisitionRoleType);
+    return requisitionRoleType.getText();
+  }
+
+  public String getFulfilmentRoleLabel() {
+    testWebDriver.waitForElementToAppear(fulfilmentRoleType);
+    return fulfilmentRoleType.getText();
+  }
+
+  public String getName(int rowNumber) {
+    WebElement name = testWebDriver.getElementById("role" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(name);
+    return name.getText();
+  }
+
+  public String getDescription(int rowNumber) {
+    WebElement description = testWebDriver.getElementById("description" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(description);
+    return description.getText();
+  }
+
+  public String getRights(int rowNumber, int rightNumber) {
+    WebElement right = testWebDriver.getElementById("right" + (rowNumber - 1) + (rightNumber - 1));
+    testWebDriver.waitForElementToAppear(right);
+    return right.getText();
+  }
+
+  public void clickCreateNewRoleButton() {
+    createNewRoleButton.click();
+  }
+
+  public String getSaveErrorMsg() {
+    return saveErrorMsgDiv.getText().trim();
+  }
+
+  public void selectAllocationRoleType() {
+    testWebDriver.waitForElementToAppear(allocationRoleType);
+    allocationRoleType.click();
   }
 
   public void createRole(String roleName, String roleDesc, List<String> rights, String roleType) {
@@ -155,14 +260,14 @@ public class RolesPage extends Page {
     createNewRoleButton.click();
     switch (roleType) {
       case "Requisition":
-        clickProgramRole();
+        clickRequisitionTypeRole();
         break;
       case "Admin":
-        clickAdminRole();
+        clickAdminTypeRole();
         break;
       case "Fulfillment":
-        testWebDriver.waitForElementToAppear(facilityBasedRoleType);
-        facilityBasedRoleType.click();
+        testWebDriver.waitForElementToAppear(fulfilmentRoleType);
+        fulfilmentRoleType.click();
         testWebDriver.sleep(100);
         break;
     }
@@ -188,10 +293,10 @@ public class RolesPage extends Page {
     return saveSuccessMsgDiv.getText().trim();
   }
 
-  public void createFacilityBasedRole(String roleName, String roleDesc) {
+  public void createRoleWithFillShipmentRight(String roleName, String roleDesc) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
-    facilityBasedRoleType.click();
+    fulfilmentRoleType.click();
     clickContinueButton();
     testWebDriver.sleep(1000);
     roleNameField.sendKeys(roleName);
@@ -201,11 +306,11 @@ public class RolesPage extends Page {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
   }
 
-  public void createRole(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
+  public void createRole(String roleName, String roleDesc, List<String> rights, boolean isRequisitionType) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
-    if (programDependant) {
-      clickProgramRole();
+    if (isRequisitionType) {
+      clickRequisitionTypeRole();
       clickContinueButton();
     }
     testWebDriver.sleep(1000);
@@ -223,35 +328,28 @@ public class RolesPage extends Page {
     testWebDriver.sleep(1000);
   }
 
-  public void clickARole(String roleName) {
+  public void clickRole(String roleName) {
     WebElement role = testWebDriver.getElementByXpath("//a[contains(text(),'" + roleName + "')]");
     testWebDriver.waitForElementToAppear(role);
     role.click();
     testWebDriver.waitForElementToAppear(editRoleHeader);
   }
 
-  public void clickProgramRole() {
+  public void clickRequisitionTypeRole() {
     testWebDriver.waitForElementToAppear(requisitionRoleType);
     requisitionRoleType.click();
     testWebDriver.sleep(100);
   }
 
-  public void clickAdminRole() {
+  public void clickAdminTypeRole() {
     testWebDriver.waitForElementToAppear(adminRoleType);
     adminRoleType.click();
     testWebDriver.sleep(100);
   }
 
-  public void verifyAdminRoleRadioNonEditable() {
+  public boolean isAdminRoleRadioEnabled() {
     testWebDriver.waitForElementToAppear(adminRoleType);
-    assertTrue(testWebDriver.getAttribute(adminRoleType, "disabled"), true);
-  }
-
-  public void verifyRoleSelected(List<String> roleList) {
-    for (String right : roleList) {
-      testWebDriver.sleep(500);
-      assertTrue(webElementMap.get(right).isSelected());
-    }
+    return adminRoleType.isEnabled();
   }
 
   public void clickContinueButton() {
@@ -291,5 +389,15 @@ public class RolesPage extends Page {
   public void selectRight(String rightName) {
     testWebDriver.sleep(500);
     webElementMap.get(rightName).click();
+  }
+
+  public boolean isRightSelected(String right) {
+    testWebDriver.sleep(500);
+    return webElementMap.get(right).isSelected();
+  }
+
+  public boolean isRightEnabled(String right) {
+    testWebDriver.sleep(500);
+    return webElementMap.get(right).isEnabled();
   }
 }
