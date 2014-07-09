@@ -71,7 +71,7 @@ public interface ProcessingPeriodMapper {
                                                    @Param("endDate") Date endDate);
 
   @Select({"SELECT * FROM processing_periods where id in " +
-                                                  " ( select periodId from requisitions where facilityId = #{facilityId} and programId = #{programId} and status = 'INITIATED') " +
+                                                  " ( select periodId from requisitions where facilityId = #{facilityId} and programId = #{programId} and emergency = false and status in ( 'INITIATED' , 'SUBMITTED' ) ) " +
                                                  " "})
   List<ProcessingPeriod> getOpenPeriods(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("startPeriodId") Long startPeriodId);
 
