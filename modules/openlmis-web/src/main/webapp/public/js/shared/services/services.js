@@ -369,4 +369,9 @@ services.factory('Reports', function ($resource) {
   return $resource('/reports/:id.json', {}, {});
 });
 
+services.factory('AddEditProgramProducts', function ($resource) {
+  return $resource('/programProducts/:id.json', {id: '@id'}, update);
+});
+
+
 

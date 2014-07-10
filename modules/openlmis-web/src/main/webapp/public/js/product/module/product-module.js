@@ -11,12 +11,12 @@
 var productModule = angular.module('product', ['openlmis', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.modal', 'ui.bootstrap.pagination']);
 
 productModule.config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-      when('/search', {controller: ProductSearchController, templateUrl: 'partials/search.html'}).
-//      when('/create', {controller: ProductController, templateUrl: 'partials/create.html'}).
+      $routeProvider.
+          when('/search', {controller: ProductSearchController, templateUrl: 'partials/search.html'}).
+          when('/create', {controller: ProductController, templateUrl: 'partials/create.html'}).
 //      when('/edit/:id', {controller: ProductController, templateUrl: 'partials/create.html'}).
-      otherwise({redirectTo: '/search'});
-}]).run(function ($rootScope, AuthorizationService) {
-  $rootScope.productSelected = "selected";
-  AuthorizationService.preAuthorize('MANAGE_PRODUCT');
-});
+          otherwise({redirectTo: '/search'});
+    }]).run(function ($rootScope, AuthorizationService) {
+      $rootScope.productSelected = "selected";
+      AuthorizationService.preAuthorize('MANAGE_PRODUCT');
+    });
