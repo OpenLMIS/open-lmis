@@ -30,11 +30,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.collect.Iterables.any;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -103,10 +104,10 @@ public class RoleRightsMapperIT {
     allRightsForUser = roleRightsMapper.getAllRightsForUserById(user.getId());
 
     assertThat(allRightsForUser.size(), is(3));
-    assertTrue(com.google.common.collect.Iterables.any(allRightsForUser, with(CREATE_REQUISITION)));
-    assertTrue(com.google.common.collect.Iterables.any(allRightsForUser, withType(REQUISITION)));
-    assertTrue(com.google.common.collect.Iterables.any(allRightsForUser, with(CONFIGURE_RNR)));
-    assertTrue(com.google.common.collect.Iterables.any(allRightsForUser, with(VIEW_ORDER)));
+    assertTrue(any(allRightsForUser, with(CREATE_REQUISITION)));
+    assertTrue(any(allRightsForUser, withType(REQUISITION)));
+    assertTrue(any(allRightsForUser, with(CONFIGURE_RNR)));
+    assertTrue(any(allRightsForUser, with(VIEW_ORDER)));
   }
 
   @Test
@@ -119,13 +120,11 @@ public class RoleRightsMapperIT {
 
     Role resultRole = roleRightsMapper.getRole(role.getId());
 
-    assertThat(resultRole.getId(), is(not(111L)));
-    assertThat(resultRole.getId(), is(notNullValue()));
+    assertThat(resultRole.getId(), is(role.getId()));
     assertThat(resultRole.getName(), is(role.getName()));
     assertThat(resultRole.getDescription(), is(role.getDescription()));
-    assertThat(resultRole.getModifiedBy(), is(role.getModifiedBy()));
-    assertTrue(com.google.common.collect.Iterables.any(resultRole.getRights(), with(CREATE_REQUISITION)));
-    assertTrue(com.google.common.collect.Iterables.any(resultRole.getRights(), with(MANAGE_FACILITY)));
+    assertTrue(any(resultRole.getRights(), with(CREATE_REQUISITION)));
+    assertTrue(any(resultRole.getRights(), with(MANAGE_FACILITY)));
   }
 
   @Test(expected = DuplicateKeyException.class)
@@ -149,11 +148,11 @@ public class RoleRightsMapperIT {
     assertThat(roles.get(0).getName(), is("Admin"));
     Role fetchedRole = roles.get(1);
     assertThat(fetchedRole.getName(), is("role name"));
-    assertTrue(com.google.common.collect.Iterables.any(fetchedRole.getRights(), with(CREATE_REQUISITION)));
-    assertTrue(com.google.common.collect.Iterables.any(fetchedRole.getRights(), withDisplayNameKey("right.create.requisition")));
-    assertTrue(com.google.common.collect.Iterables.any(fetchedRole.getRights(), with(CONFIGURE_RNR)));
-    assertTrue(com.google.common.collect.Iterables.any(fetchedRole.getRights(), withDisplayNameKey("right.configure.rnr")));
-    assertTrue(com.google.common.collect.Iterables.any(fetchedRole.getRights(), withType(ADMIN)));
+    assertTrue(any(fetchedRole.getRights(), with(CREATE_REQUISITION)));
+    assertTrue(any(fetchedRole.getRights(), withDisplayNameKey("right.create.requisition")));
+    assertTrue(any(fetchedRole.getRights(), with(CONFIGURE_RNR)));
+    assertTrue(any(fetchedRole.getRights(), withDisplayNameKey("right.configure.rnr")));
+    assertTrue(any(fetchedRole.getRights(), withType(ADMIN)));
   }
 
   @Test
@@ -209,8 +208,8 @@ public class RoleRightsMapperIT {
 
     List<Right> results = roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(user.getId(), "{" + supervisoryNode1.getId() + ", " + supervisoryNode2.getId() + "}", program);
     assertThat(results.size(), is(2));
-    assertTrue(com.google.common.collect.Iterables.any(results, with(CREATE_REQUISITION)));
-    assertTrue(com.google.common.collect.Iterables.any(results, with(AUTHORIZE_REQUISITION)));
+    assertTrue(any(results, with(CREATE_REQUISITION)));
+    assertTrue(any(results, with(AUTHORIZE_REQUISITION)));
   }
 
   @Test
@@ -231,8 +230,8 @@ public class RoleRightsMapperIT {
     List<Right> results = roleRightsMapper.getRightsForUserOnHomeFacilityAndProgram(user.getId(), program);
 
     assertThat(results.size(), is(2));
-    assertTrue(com.google.common.collect.Iterables.any(results, with(CREATE_REQUISITION)));
-    assertTrue(com.google.common.collect.Iterables.any(results, with(AUTHORIZE_REQUISITION)));
+    assertTrue(any(results, with(CREATE_REQUISITION)));
+    assertTrue(any(results, with(AUTHORIZE_REQUISITION)));
   }
 
   @Test
@@ -271,7 +270,7 @@ public class RoleRightsMapperIT {
     List<Right> rights = roleRightsMapper.getRightsForUserAndWarehouse(user.getId(), facility.getId());
 
     assertThat(rights.size(), is(1));
-    assertTrue(com.google.common.collect.Iterables.any(rights, with(MANAGE_POD)));
+    assertTrue(any(rights, with(MANAGE_POD)));
   }
 
   private Role insertRole(String name, String description) {
