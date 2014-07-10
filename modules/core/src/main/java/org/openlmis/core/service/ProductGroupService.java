@@ -16,6 +16,8 @@ import org.openlmis.core.repository.ProductGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Exposes the services for handling ProductGroup entity.
  */
@@ -42,4 +44,7 @@ public class ProductGroupService {
     return productGroupRepository.getByCode(code);
   }
 
+  public List<ProductGroup> getAll() {
+    return productGroupRepository.getAll();
+  }
 }

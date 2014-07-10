@@ -11,11 +11,10 @@
 package org.openlmis.core.repository.mapper;
 
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.core.domain.ProductForm;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,62 +32,15 @@ import static org.junit.Assert.assertThat;
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class ProductGroupMapperIT {
+public class ProductFormMapperIT {
 
   @Autowired
-  ProductGroupMapper mapper;
-
-  ProductGroup productGroup;
-
-  @Before
-  public void setUp() throws Exception {
-    productGroup = new ProductGroup();
-    productGroup.setCode("PG1");
-    productGroup.setName("Vaccines");
-  }
+  ProductFormMapper mapper;
 
   @Test
-  public void shouldInsertProductGroup() throws Exception {
-    mapper.insert(productGroup);
+  public void shouldGetAllProductForms() throws Exception {
+    List<ProductForm> result = mapper.getAll();
 
-    ProductGroup returnedProductGroup = mapper.getByCode(productGroup.getCode());
-
-    assertThat(returnedProductGroup.getName(), is("Vaccines"));
-  }
-
-  @Test
-  public void shouldUpdateProductGroup() throws Exception {
-    mapper.insert(productGroup);
-
-    productGroup.setName("Medicines");
-    mapper.update(productGroup);
-    ProductGroup returnedProductGroup = mapper.getByCode(productGroup.getCode());
-
-    assertThat(returnedProductGroup.getName(), is("Medicines"));
-  }
-
-  @Test
-  public void shouldGetProductGroupByCode() throws Exception {
-    mapper.insert(productGroup);
-
-    ProductGroup returnedProductGroup = mapper.getByCode(productGroup.getCode());
-
-    assertThat(returnedProductGroup.getName(), is("Vaccines"));
-  }
-
-  @Test
-  public void shouldGetProductGroupById() throws Exception {
-    mapper.insert(productGroup);
-
-    ProductGroup returnedProductGroup = mapper.getById(productGroup.getId());
-
-    assertThat(returnedProductGroup.getName(), is("Vaccines"));
-  }
-
-  @Test
-  public void shouldGetAllProductGroups() throws Exception {
-    List<ProductGroup> result = mapper.getAll();
-
-    assertThat(result.size(), is(1));
+    assertThat(result.size(), is(17));
   }
 }

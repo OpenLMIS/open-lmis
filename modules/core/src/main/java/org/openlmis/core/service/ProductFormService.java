@@ -8,25 +8,28 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.core.repository.mapper;
+package org.openlmis.core.service;
 
-import org.apache.ibatis.annotations.Select;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProductForm;
-import org.springframework.stereotype.Repository;
+import org.openlmis.core.repository.ProductFormRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * ProductFormMapper maps the ProductForm entity to corresponding representation in database.
+ * Exposes the services for handling ProductForm entity.
  */
-@Repository
-public interface ProductFormMapper {
 
-  // Used by ProductMapper
-  @SuppressWarnings("unused")
-  @Select("SELECT * FROM product_forms WHERE id = #{id}")
-  ProductForm getById(Integer id);
+@Service
+@NoArgsConstructor
+public class ProductFormService {
 
-  @Select("SELECT * FROM product_forms")
-  List<ProductForm> getAll();
+  @Autowired
+  private ProductFormRepository repository;
+
+  public List<ProductForm> getAll() {
+    return repository.getAll();
+  }
 }

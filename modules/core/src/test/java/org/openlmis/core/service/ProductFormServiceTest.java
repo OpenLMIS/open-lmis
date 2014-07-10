@@ -10,52 +10,28 @@
 
 package org.openlmis.core.service;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.repository.ProductGroupRepository;
+import org.openlmis.core.repository.ProductFormRepository;
 
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProductGroupServiceTest {
+public class ProductFormServiceTest {
 
   @Mock
-  private ProductGroupRepository productGroupRepository;
+  private ProductFormRepository repository;
 
   @InjectMocks
-  private ProductGroupService service;
-  private ProductGroup productGroup;
-
-  @Before
-  public void setup() {
-    productGroup = new ProductGroup();
-  }
-
-  @Test
-  public void shouldSaveProductGroup() throws Exception {
-    service.save(productGroup);
-
-    verify(productGroupRepository).insert(productGroup);
-  }
-
-  @Test
-  public void shouldUpdateProductGroup() throws Exception {
-    productGroup.setId(1L);
-
-    service.save(productGroup);
-
-    verify(productGroupRepository).update(productGroup);
-  }
+  private ProductFormService service;
 
   @Test
   public void shouldGetAll() {
     service.getAll();
 
-    verify(productGroupRepository).getAll();
+    verify(repository).getAll();
   }
 }

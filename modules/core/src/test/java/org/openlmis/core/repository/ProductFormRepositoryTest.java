@@ -8,54 +8,37 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.core.service;
+package org.openlmis.core.repository;
 
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.repository.ProductGroupRepository;
+import org.openlmis.core.repository.mapper.ProductFormMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.mockito.Mockito.verify;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class ProductGroupServiceTest {
+public class ProductFormRepositoryTest {
 
-  @Mock
-  private ProductGroupRepository productGroupRepository;
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
   @InjectMocks
-  private ProductGroupService service;
-  private ProductGroup productGroup;
+  ProductFormRepository repository;
 
-  @Before
-  public void setup() {
-    productGroup = new ProductGroup();
-  }
-
-  @Test
-  public void shouldSaveProductGroup() throws Exception {
-    service.save(productGroup);
-
-    verify(productGroupRepository).insert(productGroup);
-  }
-
-  @Test
-  public void shouldUpdateProductGroup() throws Exception {
-    productGroup.setId(1L);
-
-    service.save(productGroup);
-
-    verify(productGroupRepository).update(productGroup);
-  }
+  @Mock
+  ProductFormMapper mapper;
 
   @Test
   public void shouldGetAll() {
-    service.getAll();
-
-    verify(productGroupRepository).getAll();
+    repository.getAll();
+    verify(mapper).getAll();
   }
 }
