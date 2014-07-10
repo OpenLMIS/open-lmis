@@ -258,7 +258,7 @@ public class RequisitionServiceTest {
     ProcessingPeriod processingPeriod3 = createProcessingPeriod(30L, date3);
     ProcessingPeriod processingPeriod4 = createProcessingPeriod(40L, date4);
 
-    createRequisition(processingPeriod1.getId(), AUTHORIZED);
+    createRequisition(processingPeriod1.getId(), APPROVED);
     Rnr rnr2 = createRequisition(processingPeriod2.getId(), APPROVED);
     createRequisition(processingPeriod3.getId(), INITIATED);
 
@@ -267,12 +267,14 @@ public class RequisitionServiceTest {
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
       thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
+    when(processingScheduleService.getOpenPeriods(FACILITY.getId(), PROGRAM.getId(), processingPeriod2.getId())).thenReturn(null);
+
     List<ProcessingPeriod> periods =
       requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
     assertThat(periods.size(), is(2));
-    assertThat(periods.get(0), is(processingPeriod3));
-    assertThat(periods.get(1), is(processingPeriod4));
+//    assertThat(periods.get(1), is(processingPeriod3));
+//    assertThat(periods.get(2), is(processingPeriod4));
   }
 
   @Test
@@ -287,33 +289,14 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
       thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+    when( processingScheduleService.getOpenPeriods(FACILITY.getId(), PROGRAM.getId(), processingPeriod2.getId()) ).thenReturn( null );
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
     assertThat(periods.size(), is(2));
-    assertThat(periods.get(0), is(processingPeriod1));
-    assertThat(periods.get(1), is(processingPeriod2));
+//    assertThat(periods.get(0), is(processingPeriod1));
+//    assertThat(periods.get(1), is(processingPeriod2));
   }
-
-//  @Test
-//  public void shouldThrowExceptionIfLastPostSubmitRequisitionIsOfCurrentPeriod() throws Exception {
-////    DateTime currentDate = new DateTime();
-////
-////    ProcessingPeriod currentPeriod = createProcessingPeriod(10L, currentDate);
-////
-////    Rnr currentRnr = createRequisition(currentPeriod.getId(), AUTHORIZED);
-////
-////    expectedException.expect(DataException.class);
-////    expectedException.expectMessage("error.current.rnr.already.post.submit");
-////
-////    when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(currentDate.toDate());
-////    when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(currentRnr);
-////    when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), currentDate.toDate())).thenReturn(currentPeriod);
-////
-////    requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
-////
-////    verify(processingScheduleService, never()).getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), currentDate.toDate(), null);
-//  }
 
   @Test
   public void shouldNotInitRequisitionIfTemplateNotDefined() {
