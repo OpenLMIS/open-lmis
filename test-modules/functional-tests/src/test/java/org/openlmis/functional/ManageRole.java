@@ -131,30 +131,24 @@ public class ManageRole extends TestCaseHelper {
 
     List<String> userRoleList = new ArrayList<>();
     userRoleList.add("Uploads");
-    rolesPage.createRole(ADMIN, ADMIN, userRoleList, false);
-    assertEquals("Duplicate Role found", rolesPage.getSaveErrorMsg());
+    rolesPage.createRole(ADMIN, ADMIN, userRoleList, "Admin");
+    assertEquals(rolesPage.getSaveErrorMsg(), "Duplicate Role found");
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testVerifyFulfilmentRole(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
-    rolesPage.createRoleWithFillShipmentRight("Facility Based Role Name", "Facility Based Role Description");
-    verifyCreatedRoleMessage("Facility Based Role Name");
-    assertEquals(dbWrapper.getListOfRightsForRole("Facility Based Role Name"), asList("FACILITY_FILL_SHIPMENT", "VIEW_ORDER"));
+    rolesPage.createRole("Facility Role", "Facility Based Role Description", asList("Fill shipment"), "Fulfillment");
+    verifyCreatedRoleMessage("Facility Role");
+    assertEquals(dbWrapper.getListOfRightsForRole("Facility Role"), asList("FACILITY_FILL_SHIPMENT", "VIEW_ORDER"));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testVerifyReportingRole(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
-    rolesPage.clickCreateNewRoleButton();
-    rolesPage.clickReportingTypeRole();
-    rolesPage.clickContinueButton();
-    testWebDriver.sleep(1000);
-    rolesPage.enterRoleName("Reporting role");
-    rolesPage.selectRight("Manage Report");
-    rolesPage.clickSaveButton();
+    rolesPage.createRole("Reporting role", null, asList("Manage Report"), "Reporting");
     verifyCreatedRoleMessage("Reporting role");
     assertEquals(dbWrapper.getListOfRightsForRole("Reporting role"), asList("MANAGE_REPORT"));
   }
@@ -163,7 +157,7 @@ public class ManageRole extends TestCaseHelper {
   public void testVerifyEditRole(String[] credentials) throws SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateToRolePage();
-    rolesPage.createRoleWithFillShipmentRight("Facility Role", "Facility Based Role Description");
+    rolesPage.createRole("Facility Role", "Facility Based Role Description", asList("Fill shipment"), "Fulfillment");
     verifyCreatedRoleMessage("Facility Role");
     rolesPage.clickRole("Facility Role");
     assertEquals(rolesPage.getEditRoleHeader(), "Edit role");
