@@ -17,6 +17,9 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
     function initialize() {
         $scope.$parent.currentTab = 'NOTIFICATION';
         $scope.showProductsFilter = false;
+        $scope.hideScheduleFilter = true;
+        $scope.hideYearFilter = true;
+        $scope.hidePeriodFilter = true;
         $scope.showStockStatusFilter = false;
         $scope.showFacilitiesFilter = false;
     }
