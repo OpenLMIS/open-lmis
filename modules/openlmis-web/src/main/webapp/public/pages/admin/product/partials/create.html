@@ -106,11 +106,10 @@
       <label id="productFormLabel" for="form" openlmis-message="label.product.form"></label>
 
       <div class="form-field">
-        <select class="ui-select-width" id="form" ui-select2 ng-model="product.productForm"
+        <select class="ui-select-width" id="form" ui-select2 ng-model="product.form"
                 ng-options="productForm as productForm.code for productForm in productForms | orderBy: 'code'"
                 openlmis-message="placeholder.select.product.form">
           <option value=""></option>
-        </select>
         </select>
       </div>
     </div>
@@ -129,7 +128,10 @@
       <label id="dosageUnitLabel" for="dosageUnit" openlmis-message="label.product.dosageUnit"></label>
 
       <div class="form-field">
-        <select class="ui-select-width" id="dosageUnit" ui-select2>
+        <select class="ui-select-width" id="dosageUnit" ui-select2 ng-model="product.dosageUnit"
+                ng-options="dosageUnit as dosageUnit.code for dosageUnit in dosageUnits | orderBy: 'code'"
+                openlmis-message="placeholder.select.product.dosageUnit">
+          <option value=""></option>
         </select>
       </div>
     </div>

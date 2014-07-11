@@ -373,4 +373,41 @@ describe("Services", function () {
       expect(failureStub).toHaveBeenCalled();
     });
   });
+
+  describe("DosageUnitService", function () {
+
+    var dosageUnitService;
+
+    beforeEach(inject(function (DosageUnits) {
+      dosageUnitService = DosageUnits;
+    }));
+
+    it('should GET dosage Units', function () {
+      var dosageUnits = {"units": []};
+      httpMock.expectGET("/products/dosageUnits.json").respond(200, dosageUnits);
+      dosageUnitService.get({}, function (data) {
+        expect(data.forms).toEqual(dosageUnits.forms);
+        successStub();
+      }, function () {
+        failureStub();
+      });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status while get', function () {
+      httpMock.expectGET("/products/dosageUnits.json").respond(400);
+
+      dosageUnitService.get({}, function () {
+        successStub();
+      }, function () {
+        failureStub();
+      });
+
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+  });
 });

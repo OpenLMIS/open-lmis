@@ -45,5 +45,13 @@ describe("Product Controller", function () {
       $httpBackend.flush();
       expect(deferredObject.resolve).toHaveBeenCalled();
     });
+
+    it('should get dosage units', function () {
+      $httpBackend.expect('GET', '/products/dosageUnits.json').respond({unit: {'id': '23', 'code': 'DU'}});
+      ctrl(ProductController.resolve.dosageUnits, {$q: $q});
+      $timeout.flush();
+      $httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalled();
+    });
   });
 });
