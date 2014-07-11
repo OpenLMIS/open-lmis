@@ -10,10 +10,12 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductGroupService;
+import org.openlmis.core.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,6 +37,9 @@ public class ProductController extends BaseController {
   @Autowired
   private ProductFormService formService;
 
+  @Autowired
+  private ProductService service;
+
   public static final String GROUPS = "groups";
   public static final String FORMS = "forms";
 
@@ -48,6 +53,12 @@ public class ProductController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
   public List<ProductForm> getAllForms() {
     return formService.getAll();
+  }
+
+  @RequestMapping(value = "/dosageUnits", method = RequestMethod.GET, headers = "Accept=application/json")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+  public List<DosageUnit> getAllDosageUnits() {
+    return service.getAllDosageUnits();
   }
 }
 

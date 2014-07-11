@@ -16,12 +16,15 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.mapper.DosageUnitMapper;
 import org.openlmis.core.repository.mapper.ProductGroupMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * ProductRepository is Repository class for Product related database operations.
@@ -31,15 +34,14 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class ProductRepository {
 
+  @Autowired
   ProductMapper mapper;
 
+  @Autowired
   ProductGroupMapper productGroupMapper;
 
   @Autowired
-  public ProductRepository(ProductMapper mapper, ProductGroupMapper productGroupMapper) {
-    this.mapper = mapper;
-    this.productGroupMapper = productGroupMapper;
-  }
+  DosageUnitMapper dosageUnitMapper;
 
   public void insert(Product product) {
     try {
@@ -130,5 +132,9 @@ public class ProductRepository {
 
   public Integer getTotalSearchResultCount(String searchParam) {
     return mapper.getTotalSearchResultCount(searchParam);
+  }
+
+  public List<DosageUnit> getAllDosageUnits() {
+    return dosageUnitMapper.getAll();
   }
 }

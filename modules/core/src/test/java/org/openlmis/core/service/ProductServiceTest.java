@@ -182,4 +182,11 @@ public class ProductServiceTest {
 
     verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
   }
+
+  @Test
+  public void shouldGetAll() {
+    productService.getAllDosageUnits();
+
+    verify(productRepository).getAllDosageUnits();
+  }
 }

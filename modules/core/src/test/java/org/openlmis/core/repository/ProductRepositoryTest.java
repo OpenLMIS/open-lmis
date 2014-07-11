@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -23,6 +24,7 @@ import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.mapper.DosageUnitMapper;
 import org.openlmis.core.repository.mapper.ProductGroupMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.db.categories.UnitTests;
@@ -49,14 +51,17 @@ public class ProductRepositoryTest {
   ProductMapper mockedMapper;
 
   @Mock
-  ProductGroupMapper mockedProductGroupMapper;
+  DosageUnitMapper dosageUnitMapper;
 
+  @Mock
+  ProductGroupMapper mockedProductGroupMapper;
+  @InjectMocks
   ProductRepository repository;
+
   Product product;
 
   @Before
   public void setUp() {
-    repository = new ProductRepository(mockedMapper, mockedProductGroupMapper);
     product = make(a(ProductBuilder.defaultProduct));
     Mockito.when(mockedProductGroupMapper.getByCode(product.getProductGroup().getCode())).thenReturn(product.getProductGroup());
   }
@@ -192,5 +197,11 @@ public class ProductRepositoryTest {
     Product product = new Product();
     repository.update(product);
     verify(mockedMapper).update(product);
+  }
+
+  @Test
+  public void shouldGetAllDosageUnits() {
+    repository.getAllDosageUnits();
+    verify(dosageUnitMapper).getAll();
   }
 }

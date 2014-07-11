@@ -14,6 +14,8 @@ import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.DosageUnit;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * DosageUnitMapper maps the DosageUnit entity to corresponding representation in database.
  */
@@ -24,4 +26,6 @@ public interface DosageUnitMapper {
   @Select("SELECT * FROM dosage_units WHERE id = #{id}")
   DosageUnit getById(Long id);
 
+  @Select("SELECT * FROM dosage_units")
+  List<DosageUnit> getAll();
 }

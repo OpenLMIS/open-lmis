@@ -16,10 +16,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductGroupService;
+import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
@@ -35,8 +37,12 @@ public class ProductControllerTest {
 
   @Mock
   ProductGroupService groupService;
+
   @Mock
   ProductFormService formService;
+
+  @Mock
+  ProductService service;
 
   @InjectMocks
   ProductController controller;
@@ -59,5 +65,15 @@ public class ProductControllerTest {
     List<ProductForm> productForms = controller.getAllForms();
 
     assertThat(productForms, is(forms));
+  }
+
+  @Test
+  public void shouldGetAllDosageUnits() throws Exception {
+    List<DosageUnit> dosageUnits = new ArrayList<>();
+    when(service.getAllDosageUnits()).thenReturn(dosageUnits);
+
+    List<DosageUnit> result = controller.getAllDosageUnits();
+
+    assertThat(result, is(dosageUnits));
   }
 }

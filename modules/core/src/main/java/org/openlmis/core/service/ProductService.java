@@ -11,6 +11,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.domain.ProgramProduct;
@@ -97,5 +98,9 @@ public class ProductService {
 
   public Integer getTotalSearchResultCount(String searchParam) {
     return repository.getTotalSearchResultCount(searchParam);
+  }
+
+  public List<DosageUnit> getAllDosageUnits() {
+    return repository.getAllDosageUnits();
   }
 }
