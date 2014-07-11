@@ -23,6 +23,7 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
 
     $scope.notificationMethodsChange = function(notification){
         $scope.selectedNotification = notification;
+        processNotificationChange($scope.selectedNotification);
     };
 
     $scope.loadGeoZones = function(){
@@ -45,11 +46,9 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
     });
 
     $scope.loadFacilities = function(){
-        FacilitiesForNotifications.get({zoneId: $scope.filterObject.zoneId}, function(data){
+        FacilitiesForNotifications.get({zoneId: $scope.filterObject.zoneId}, function(data) {
             $scope.facilities = data.facilities;
-            if($scope.selectedNotification.selectAllFacilities){
-                $scope.selectAllFacilities();
-            }
+            $scope.selectAllFacilities();
 
         });
 
@@ -67,8 +66,8 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
                 {return facility.email;}
             });
             var notification = {
-                emailMessage:  $scope.selectedNotification.emailMessageTemplate,
-                smsMessage : $scope.selectedNotification.smsMessageTemplate,
+                emailMessage:  $scope.emailTemplate,
+                smsMessage : $scope.smsTemplate,
                 phoneNumbers : phoneNumbers,
                 emails : emails
             };
@@ -82,6 +81,30 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         }
     };
 
+    var processNotificationChange = function(selectedNotification){
+        if(!isUndefined(selectedNotification)){
+
+            if(selectedNotification.emailMethod){
+                $scope.emailTemplate = selectedNotification.emailMessageTemplate;
+            }else{
+                $scope.emailTemplate = null;
+            }
+
+            if(selectedNotification.smsMethod){
+                $scope.smsTemplate = selectedNotification.smsMessageTemplate;
+            }else{
+                $scope.smsTemplate = null;
+            }
+
+        }
+    };
+
+    $scope.$watch("formFilter.selectedAlert", function(newVal){
+        $scope.selectedNotification = $scope.formFilter.selectedAlert;
+        processNotificationChange($scope.selectedNotification);
+
+    });
+
     $scope.$watch("errorMessage", function (errorMsg) {
         $timeout(function () {
             if (errorMsg) {
@@ -91,14 +114,14 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
     });
 
     $scope.facilitySelectChange = function(selected){
-        if(!selected && $scope.selectedNotification.selectAllFacilities){
-            $scope.selectedNotification.selectAllFacilities = false;
+        if(!selected && $scope.formFilter.selectAll){
+            $scope.formFilter.selectAll = false;
         }
     };
 
     $scope.validateSendNotification = function () {
 
-        if(isUndefined($scope.selectedNotification) || isUndefined($scope.selectedNotification.type)){
+        if(isUndefined($scope.selectedNotification) || isUndefined($scope.selectedNotification.alertType)){
             $scope.errorMessage = messageService.get('errorMessage.send.notification.select.notification.type');
             return false;
         }
@@ -118,11 +141,11 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
             return false;
         }
 
-        if($scope.selectedNotification.emailMethod && isUndefined($scope.selectedNotification.emailMessageTemplate)){
+        if($scope.selectedNotification.emailMethod && isUndefined($scope.emailTemplate)){
             $scope.errorMessage = messageService.get('errorMessage.send.notification.empty.email.message');
             return false;
         }
-        if($scope.selectedNotification.smsMethod && isUndefined($scope.selectedNotification.smsMessageTemplate)){
+        if($scope.selectedNotification.smsMethod && isUndefined($scope.smsTemplate)){
             $scope.errorMessage = messageService.get('errorMessage.send.notification.empty.sms.message');
             return false;
         }
@@ -202,10 +225,10 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
     };
 
     $scope.selectAllFacilities = function(){
-        if($scope.selectedNotification.selectAllFacilities === true){
+        if($scope.formFilter.selectAll === true){
             if(!isUndefined($scope.facilities)){
                 var markAllFacilities = _.map($scope.facilities,function(facility){
-                    facility.selected = true;
+                    facility.selected = (facility.email || facility.phonenumber) ? true : false;
                     return facility;
                 });
                 $scope.facilities = markAllFacilities;
@@ -221,13 +244,6 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         }
     };
 
-    var isItemWithIdExists = function(id, listObject){
-        angular.forEach(listObject,function(item,idx){
-            if(!isUndefined(item) && item.id === id) return true;
-        });
-        return false;
-    };
-
 
     $scope.$on('$viewContentLoaded', function () {
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
@@ -238,7 +254,6 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
 
                 $scope.filterObject.programId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM], $scope.programs) ?
                     userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
-
 
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
                 if(!isUndefined($scope.filterObject.periodId)){
@@ -270,12 +285,23 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
     });
     $scope.registerWatches = function(){
 
+        $scope.$watch('formFilter.programId',function(){
+            $scope.filterProductsByProgram();
+
+        });
+
         $scope.$watch('formFilter.scheduleId', function(){
             $scope.changeSchedule();
 
         });
 
     };
+
+    $scope.$on('$routeChangeStart', function(){
+        var data = {};
+        angular.extend(data,$scope.filterObject);
+        dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
+    });
 
     // the grid options
     $scope.tableParams = new ngTableParams({

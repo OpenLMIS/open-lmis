@@ -117,7 +117,7 @@ public class GeographicZoneController extends BaseController {
   }
 
   @RequestMapping(value = "/geographicZone/getList", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES, MANAGE_REQUISITION_GROUP')")
   public ResponseEntity<OpenLmisResponse> getGeographicZoneList(HttpServletRequest request) {
     return OpenLmisResponse.response("geographicZones", service.getAll());
   }

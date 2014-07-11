@@ -21,7 +21,7 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
 
     function initialize() {
         $scope.showProductsFilter = false;
-        $scope.$parent.currentTab = "label.rnr.status.current.tab";
+        $scope.$parent.currentTab = "RNR-STATUS-SUMMARY";
 
     }
 
@@ -292,13 +292,6 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
         dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
     });
 
-    var isItemWithIdExists = function(id, listObject){
-        angular.forEach(listObject,function(item,idx){
-            if(!isUndefined(item) && item.id === id) return true;
-        });
-        return false;
-    };
-    
     $scope.$on('$viewContentLoaded', function () {
 
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);

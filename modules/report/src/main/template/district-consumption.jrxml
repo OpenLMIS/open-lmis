@@ -119,8 +119,8 @@
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<title>
-		<band height="79" splitType="Stretch">
+	<pageHeader>
+		<band height="79">
 			<subreport>
 				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
@@ -150,7 +150,7 @@
 				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-	</title>
+	</pageHeader>
 	<columnHeader>
 		<band height="19"/>
 	</columnHeader>

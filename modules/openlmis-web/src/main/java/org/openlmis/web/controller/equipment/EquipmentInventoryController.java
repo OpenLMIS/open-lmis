@@ -31,7 +31,6 @@ public class EquipmentInventoryController extends BaseController {
   private EquipmentInventoryService service;
 
   @RequestMapping(value="list", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> getFacilityInventory(@RequestParam("programId") Long programId, @RequestParam("facilityId") Long facilityId ){
     return OpenLmisResponse.response("inventory",service.getInventoryForFacility(facilityId, programId));
   }

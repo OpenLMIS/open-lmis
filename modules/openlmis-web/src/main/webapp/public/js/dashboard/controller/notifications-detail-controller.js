@@ -6,7 +6,7 @@ function NotificationsDetailController($scope,$routeParams,messageService,Settin
 
     $scope.$parent.currentTab = 'NOTIFICATIONS-DETAIL';
     $scope.notificationDetail = {};
-    $scope.programId =2;
+
     $scope.notificationDetail.tableName = $routeParams.detailTable;
     //alert('details for '+JSON.stringify($routeParams))
 

@@ -85,6 +85,10 @@ public class ProcessingScheduleService {
       startingPeriodId, programStartDate, new Date());
   }
 
+  public List<ProcessingPeriod> getOpenPeriods(Long facilityId, Long programId, Long startingPeriodId){
+    return periodRepository.getOpenPeriods(facilityId, programId, startingPeriodId);
+  };
+
   private RequisitionGroupProgramSchedule getSchedule(Facility facility, Program program) {
     RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility);
     if (requisitionGroup == null)

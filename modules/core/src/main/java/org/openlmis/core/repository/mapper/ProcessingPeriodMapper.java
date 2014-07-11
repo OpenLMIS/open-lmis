@@ -70,6 +70,11 @@ public interface ProcessingPeriodMapper {
                                                    @Param("startDate") Date startDate,
                                                    @Param("endDate") Date endDate);
 
+  @Select({"SELECT * FROM processing_periods where id in " +
+                                                  " ( select periodId from requisitions where facilityId = #{facilityId} and programId = #{programId} and emergency = false and status in ( 'INITIATED' , 'SUBMITTED' ) ) " +
+                                                 " "})
+  List<ProcessingPeriod> getOpenPeriods(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("startPeriodId") Long startPeriodId);
+
 
   @Select({"SELECT * FROM processing_periods",
     "WHERE scheduleId = #{scheduleId}",

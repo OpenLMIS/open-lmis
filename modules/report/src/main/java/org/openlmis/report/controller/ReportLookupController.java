@@ -281,7 +281,7 @@ public class ReportLookupController extends BaseController {
 
   @RequestMapping(value = "/user/geographic-zones/tree", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getUserGeographicZoneTree(@RequestParam("programId") Long programId, HttpServletRequest request) {
-      GeoZoneTree geoZoneTree =  reportLookupService.getUserGeoZoneTree(loggedInUserId(request), programId);
+          GeoZoneTree geoZoneTree =  reportLookupService.getUserGeoZoneTree(loggedInUserId(request), programId);
 
       return OpenLmisResponse.response("zone", geoZoneTree);
   }
