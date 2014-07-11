@@ -261,7 +261,7 @@ public class ManageProduct extends TestCaseHelper {
     assertEquals("Active product *", productPage.getProductActiveLabel());
     assertEquals("Full supply *", productPage.getProductFullSupplyLabel());
     assertEquals("Tracer *", productPage.getProductTracerLabel());
-    assertEquals("Archived *", productPage.getProductArchivedLabel());
+    assertEquals("Archived", productPage.getProductArchivedLabel());
 
 //    assertEquals(asList(""), productPage.getAllProductGroups());
 //    assertEquals(asList(""), productPage.getAllForms());
