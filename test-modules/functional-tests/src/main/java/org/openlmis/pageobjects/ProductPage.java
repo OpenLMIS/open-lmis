@@ -18,6 +18,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.util.List;
+
 import static org.openqa.selenium.support.How.ID;
 
 public class ProductPage extends Page {
@@ -87,6 +89,150 @@ public class ProductPage extends Page {
 
   @FindBy(how = ID, using = "programProductTable")
   private static WebElement productSearchResults = null;
+
+  @FindBy(how = ID, using = "productAddNew")
+  private static WebElement productAddNewButton = null;
+
+  @FindBy(how = ID, using = "addNewProductHeader")
+  private static WebElement addNewProductHeader = null;
+
+  @FindBy(how = ID, using = "editProductHeader")
+  private static WebElement editProductHeader = null;
+
+  @FindBy(how = ID, using = "basicInformationLabel")
+  private static WebElement basicInformationLabel = null;
+
+  @FindBy(how = ID, using = "productCodeLabel")
+  private static WebElement productCodeLabel = null;
+
+  @FindBy(how = ID, using = "code")
+  private static WebElement codeInputField = null;
+
+  @FindBy(how = ID, using = "productPrimaryNameLabel")
+  private static WebElement productPrimaryNameLabel = null;
+
+  @FindBy(how = ID, using = "primaryName")
+  private static WebElement primaryNameInputField = null;
+
+  @FindBy(how = ID, using = "productTypeLabel")
+  private static WebElement productTypeLabel = null;
+
+  @FindBy(how = ID, using = "type")
+  private static WebElement typeInputField = null;
+
+  @FindBy(how = ID, using = "productFullNameLabel")
+  private static WebElement productFullNameLabel = null;
+
+  @FindBy(how = ID, using = "fullName")
+  private static WebElement fullNameInputField = null;
+
+  @FindBy(how = ID, using = "productGroupLabel")
+  private static WebElement productGroupLabel = null;
+
+  @FindBy(how = ID, using = "s2id_productGroup")
+  private static WebElement productGroupDropDown = null;
+
+  @FindBy(how = ID, using = "productDescriptionLabel")
+  private static WebElement productDescriptionLabel = null;
+
+  @FindBy(how = ID, using = "description")
+  private static WebElement descriptionInputField = null;
+
+  @FindBy(how = ID, using = "productFormLabel")
+  private static WebElement productFormLabel = null;
+
+  @FindBy(how = ID, using = "s2id_form")
+  private static WebElement formDropDown = null;
+
+  @FindBy(how = ID, using = "productStrengthLabel")
+  private static WebElement productStrengthLabel = null;
+
+  @FindBy(how = ID, using = "strength")
+  private static WebElement strengthInputField = null;
+
+  @FindBy(how = ID, using = "dosageUnitLabel")
+  private static WebElement dosageUnitLabel = null;
+
+  @FindBy(how = ID, using = "s2id_dosageUnit")
+  private static WebElement dosageUnitDropDown = null;
+
+  @FindBy(how = ID, using = "productDispensingUnitLabel")
+  private static WebElement productDispensingUnitLabel = null;
+
+  @FindBy(how = ID, using = "dispensingUnit")
+  private static WebElement dispensingUnitInputField = null;
+
+  @FindBy(how = ID, using = "productDosesPerDispensingUnitLabel")
+  private static WebElement productDosesPerDispensingUnitLabel = null;
+
+  @FindBy(how = ID, using = "dosesPerDispensingUnit")
+  private static WebElement dosesPerDispensingUnitInputField = null;
+
+  @FindBy(how = ID, using = "productPackSizeLabel")
+  private static WebElement productPackSizeLabel = null;
+
+  @FindBy(how = ID, using = "packSize")
+  private static WebElement packSizeInputField = null;
+
+  @FindBy(how = ID, using = "productPackRoundingThresholdLabel")
+  private static WebElement productPackRoundingThresholdLabel = null;
+
+  @FindBy(how = ID, using = "packRoundingThreshold")
+  private static WebElement packRoundingThresholdInputField = null;
+
+  @FindBy(how = ID, using = "productRoundToZeroLabel")
+  private static WebElement productRoundToZeroLabel = null;
+
+  @FindBy(how = ID, using = "roundToZeroTrue")
+  private static WebElement roundToZeroTrue = null;
+
+  @FindBy(how = ID, using = "roundToZeroFalse")
+  private static WebElement roundToZeroFalse = null;
+
+  @FindBy(how = ID, using = "productActiveLabel")
+  private static WebElement productActiveLabel = null;
+
+  @FindBy(how = ID, using = "activeTrue")
+  private static WebElement activeTrue = null;
+
+  @FindBy(how = ID, using = "activeFalse")
+  private static WebElement activeFalse = null;
+
+  @FindBy(how = ID, using = "productFullSupplyLabel")
+  private static WebElement productFullSupplyLabel = null;
+
+  @FindBy(how = ID, using = "fullSupplyTrue")
+  private static WebElement fullSupplyTrue = null;
+
+  @FindBy(how = ID, using = "fullSupplyFalse")
+  private static WebElement fullSupplyFalse = null;
+
+  @FindBy(how = ID, using = "productTracerLabel")
+  private static WebElement productTracerLabel = null;
+
+  @FindBy(how = ID, using = "tracerTrue")
+  private static WebElement tracerTrue = null;
+
+  @FindBy(how = ID, using = "tracerFalse")
+  private static WebElement tracerFalse = null;
+
+  @FindBy(how = ID, using = "productArchivedLabel")
+  private static WebElement productArchivedLabel = null;
+
+  @FindBy(how = ID, using = "archivedTrue")
+  private static WebElement archivedTrue = null;
+
+  @FindBy(how = ID, using = "archivedFalse")
+  private static WebElement archivedFalse = null;
+
+  @FindBy(how = ID, using = "saveButton")
+  private static WebElement saveButton = null;
+
+  @FindBy(how = ID, using = "cancelButton")
+  private static WebElement cancelButton = null;
+
+  @FindBy(how = ID, using = "saveErrorMsgDiv")
+  private static WebElement saveErrorMsg = null;
 
   public ProductPage(TestWebDriver driver) {
     super(driver);
@@ -340,4 +486,260 @@ public class ProductPage extends Page {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//*[@id='programProductTable']/tbody"));
     return testWebDriver.getElementsSizeByXpath("//*[@id='programProductTable']/tbody");
   }
+
+  public String getAddNewProductHeader() {
+    testWebDriver.waitForElementToAppear(addNewProductHeader);
+    return addNewProductHeader.getText();
+  }
+
+  public String getEditProductHeader() {
+    testWebDriver.waitForElementToAppear(editProductHeader);
+    return editProductHeader.getText();
+  }
+
+  public String getBasicInformationLabel() {
+    testWebDriver.waitForElementToAppear(basicInformationLabel);
+    return basicInformationLabel.getText();
+  }
+
+  public String getProductCodeLabel() {
+    testWebDriver.waitForElementToAppear(productCodeLabel);
+    return productCodeLabel.getText();
+  }
+
+  public String getProductPrimaryNameLabel() {
+    testWebDriver.waitForElementToAppear(productPrimaryNameLabel);
+    return productPrimaryNameLabel.getText();
+  }
+
+  public String getProductTypeLabel() {
+    testWebDriver.waitForElementToAppear(productTypeLabel);
+    return productTypeLabel.getText();
+  }
+
+  public String getProductFullNameLabel() {
+    testWebDriver.waitForElementToAppear(productFullNameLabel);
+    return productFullNameLabel.getText();
+  }
+
+  public String getProductGroupLabel() {
+    testWebDriver.waitForElementToAppear(productGroupLabel);
+    return productGroupLabel.getText();
+  }
+
+  public String getProductDescriptionLabel() {
+    testWebDriver.waitForElementToAppear(productDescriptionLabel);
+    return productDescriptionLabel.getText();
+  }
+
+  public String getProductFormLabel() {
+    testWebDriver.waitForElementToAppear(productFormLabel);
+    return productFormLabel.getText();
+  }
+
+  public String getProductStrengthLabel() {
+    testWebDriver.waitForElementToAppear(productStrengthLabel);
+    return productStrengthLabel.getText();
+  }
+
+  public String getDosageUnitLabel() {
+    testWebDriver.waitForElementToAppear(dosageUnitLabel);
+    return dosageUnitLabel.getText();
+  }
+
+  public String getProductDispensingUnitLabel() {
+    testWebDriver.waitForElementToAppear(productDispensingUnitLabel);
+    return productDispensingUnitLabel.getText();
+  }
+
+  public String getProductDosesPerDispensingUnitLabel() {
+    testWebDriver.waitForElementToAppear(productDosesPerDispensingUnitLabel);
+    return productDosesPerDispensingUnitLabel.getText();
+  }
+
+  public String getProductPackSizeLabel() {
+    testWebDriver.waitForElementToAppear(productPackSizeLabel);
+    return productPackSizeLabel.getText();
+  }
+
+  public String getProductPackRoundingThresholdLabel() {
+    testWebDriver.waitForElementToAppear(productPackRoundingThresholdLabel);
+    return productPackRoundingThresholdLabel.getText();
+  }
+
+  public String getProductRoundToZeroLabel() {
+    testWebDriver.waitForElementToAppear(productRoundToZeroLabel);
+    return productRoundToZeroLabel.getText();
+  }
+
+  public String getProductActiveLabel() {
+    testWebDriver.waitForElementToAppear(productActiveLabel);
+    return productActiveLabel.getText();
+  }
+
+  public String getProductFullSupplyLabel() {
+    testWebDriver.waitForElementToAppear(productFullSupplyLabel);
+    return productFullSupplyLabel.getText();
+  }
+
+  public String getProductTracerLabel() {
+    testWebDriver.waitForElementToAppear(productTracerLabel);
+    return productTracerLabel.getText();
+  }
+
+  public String getProductArchivedLabel() {
+    testWebDriver.waitForElementToAppear(productArchivedLabel);
+    return productArchivedLabel.getText();
+  }
+
+  public void clickProductAddNewButton() {
+    testWebDriver.waitForElementToAppear(productAddNewButton);
+    productAddNewButton.click();
+  }
+
+  public void enterCodeInput(String code) {
+    testWebDriver.waitForElementToAppear(codeInputField);
+    sendKeys(codeInputField, code);
+  }
+
+  public void enterPrimaryNameInput(String name) {
+    testWebDriver.waitForElementToAppear(primaryNameInputField);
+    sendKeys(primaryNameInputField, name);
+  }
+
+  public void enterTypeInput(String type) {
+    testWebDriver.waitForElementToAppear(typeInputField);
+    sendKeys(typeInputField, type);
+  }
+
+  public void enterFullNameInput(String fullName) {
+    testWebDriver.waitForElementToAppear(fullNameInputField);
+    sendKeys(fullNameInputField, fullName);
+  }
+
+  public void selectProductGroup(String productGroup) {
+    testWebDriver.waitForElementToAppear(productGroupDropDown);
+    testWebDriver.selectByVisibleText(productGroupDropDown, productGroup);
+  }
+
+  public List<String> getAllProductGroups() {
+    testWebDriver.waitForElementToAppear(productGroupDropDown);
+    return testWebDriver.getListOfOptions(productGroupDropDown);
+  }
+
+  public void selectForm(String form) {
+    testWebDriver.waitForElementToAppear(formDropDown);
+    testWebDriver.selectByVisibleText(formDropDown, form);
+  }
+
+  public List<String> getAllForms() {
+    testWebDriver.waitForElementToAppear(formDropDown);
+    return testWebDriver.getListOfOptions(formDropDown);
+  }
+
+  public void enterDescriptionInput(String description) {
+    testWebDriver.waitForElementToAppear(descriptionInputField);
+    sendKeys(descriptionInputField, description);
+  }
+
+  public void enterStrengthInput(String strength) {
+    testWebDriver.waitForElementToAppear(strengthInputField);
+    sendKeys(strengthInputField, strength);
+  }
+
+  public void selectDosageUnit(String dosageUnit) {
+    testWebDriver.waitForElementToAppear(dosageUnitDropDown);
+    testWebDriver.selectByVisibleText(dosageUnitDropDown, dosageUnit);
+  }
+
+  public List<String> getAllDosageUnits() {
+    testWebDriver.waitForElementToAppear(dosageUnitDropDown);
+    return testWebDriver.getListOfOptions(dosageUnitDropDown);
+  }
+
+  public void enterDispensingUnitInput(String dispensingUnit) {
+    testWebDriver.waitForElementToAppear(dispensingUnitInputField);
+    sendKeys(dispensingUnitInputField, dispensingUnit);
+  }
+
+  public void enterDosesPerDispensingUnitInput(String dosesPerDispensingUnit) {
+    testWebDriver.waitForElementToAppear(dosesPerDispensingUnitInputField);
+    sendKeys(dosesPerDispensingUnitInputField, dosesPerDispensingUnit);
+  }
+
+  public void enterPackSizeInput(String packSize) {
+    testWebDriver.waitForElementToAppear(packSizeInputField);
+    sendKeys(packSizeInputField, packSize);
+  }
+
+  public void enterPackRoundingThresholdInput(String packRoundingThreshold) {
+    testWebDriver.waitForElementToAppear(packRoundingThresholdInputField);
+    sendKeys(packRoundingThresholdInputField, packRoundingThreshold);
+  }
+
+  public void clickRoundToZeroTrueButton() {
+    testWebDriver.waitForElementToAppear(roundToZeroTrue);
+    roundToZeroTrue.click();
+  }
+
+  public void clickRoundToZeroFalseButton() {
+    testWebDriver.waitForElementToAppear(roundToZeroFalse);
+    roundToZeroFalse.click();
+  }
+
+  public void clickActiveTrueButton() {
+    testWebDriver.waitForElementToAppear(activeTrue);
+    activeTrue.click();
+  }
+
+  public void clickActiveFalseButton() {
+    testWebDriver.waitForElementToAppear(activeFalse);
+    activeFalse.click();
+  }
+
+  public void clickFullSupplyTrueButton() {
+    testWebDriver.waitForElementToAppear(fullSupplyTrue);
+    fullSupplyTrue.click();
+  }
+
+  public void clickFullSupplyFalseButton() {
+    testWebDriver.waitForElementToAppear(fullSupplyFalse);
+    fullSupplyFalse.click();
+  }
+
+  public void clickTracerTrueButton() {
+    testWebDriver.waitForElementToAppear(tracerTrue);
+    tracerTrue.click();
+  }
+
+  public void clickTracerFalseButton() {
+    testWebDriver.waitForElementToAppear(tracerFalse);
+    tracerFalse.click();
+  }
+
+  public void clickArchivedTrueButton() {
+    testWebDriver.waitForElementToAppear(archivedTrue);
+    archivedTrue.click();
+  }
+
+  public void clickArchivedFalseButton() {
+    testWebDriver.waitForElementToAppear(archivedFalse);
+    archivedFalse.click();
+  }
+
+  public void clickSaveButton() {
+    testWebDriver.waitForElementToAppear(saveButton);
+    saveButton.click();
+  }
+
+  public void clickCancelButton() {
+    testWebDriver.waitForElementToAppear(cancelButton);
+    cancelButton.click();
+  }
+
+  public String getSaveErrorMsg() {
+    testWebDriver.waitForElementToAppear(saveErrorMsg);
+    return saveErrorMsg.getText();
+  }
+
 }

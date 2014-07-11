@@ -233,6 +233,66 @@ public class ManageProduct extends TestCaseHelper {
     assertEquals("21 matches found for 'i'", productPage.getNResultsMessage());
   }
 
+  @Test(groups = {"admin"})
+  public void testAddNewProduct() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_PRODUCT");
+    dbWrapper.assignRight("Admin", "UPLOADS");
+    dbWrapper.updateFieldValue("programs", "name", "hiv", "code", "HIV");
+
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    productPage = homePage.navigateToProductPage();
+    productPage.clickProductAddNewButton();
+    assertEquals("Add Product", productPage.getAddNewProductHeader());
+    assertEquals("Basic Information", productPage.getBasicInformationLabel());
+    assertEquals("Product Code *", productPage.getProductCodeLabel());
+    assertEquals("Product primary name *", productPage.getProductPrimaryNameLabel());
+    assertEquals("Product type", productPage.getProductTypeLabel());
+    assertEquals("Product full name", productPage.getProductFullNameLabel());
+    assertEquals("Product group", productPage.getProductGroupLabel());
+    assertEquals("Description", productPage.getProductDescriptionLabel());
+    assertEquals("Product form", productPage.getProductFormLabel());
+    assertEquals("Strength", productPage.getProductStrengthLabel());
+    assertEquals("Dosage unit", productPage.getDosageUnitLabel());
+    assertEquals("Dispensing unit *", productPage.getProductDispensingUnitLabel());
+    assertEquals("Doses per dispensing unit *", productPage.getProductDosesPerDispensingUnitLabel());
+    assertEquals("Pack size *", productPage.getProductPackSizeLabel());
+    assertEquals("Pack rounding threshold *", productPage.getProductPackRoundingThresholdLabel());
+    assertEquals("Round to zero *", productPage.getProductRoundToZeroLabel());
+    assertEquals("Active product *", productPage.getProductActiveLabel());
+    assertEquals("Full supply *", productPage.getProductFullSupplyLabel());
+    assertEquals("Tracer *", productPage.getProductTracerLabel());
+    assertEquals("Archived *", productPage.getProductArchivedLabel());
+
+//    assertEquals(asList(""), productPage.getAllProductGroups());
+//    assertEquals(asList(""), productPage.getAllForms());
+//    assertEquals(asList(""), productPage.getAllDosageUnits());
+//
+//    productPage.clickSaveButton();
+//    assertEquals("", productPage.getSaveErrorMsg());
+//
+//    productPage.enterCodeInput("Product1");
+//    productPage.enterPrimaryNameInput("product");
+//    productPage.enterTypeInput("type");
+//    productPage.enterFullNameInput("name");
+//    productPage.enterDescriptionInput("desc");
+//    productPage.enterStrengthInput("strength");
+//    productPage.enterDispensingUnitInput("unit");
+//    productPage.enterDosesPerDispensingUnitInput("10");
+//    productPage.enterPackSizeInput("10");
+//    productPage.enterPackRoundingThresholdInput("1");
+//    productPage.clickRoundToZeroTrueButton();
+//    productPage.clickActiveTrueButton();
+//    productPage.clickFullSupplyTrueButton();
+//    productPage.clickTracerTrueButton();
+//    productPage.clickArchivedFalseButton();
+//    productPage.selectProductGroup("");
+//    productPage.selectForm("");
+//    productPage.selectDosageUnit("");
+//    productPage.clickSaveButton();
+
+    dbWrapper.updateFieldValue("programs", "name", "HIV", "code", "HIV");
+  }
+
   public void searchProduct(String searchParameter) {
     productPage.enterSearchProductParameter(searchParameter);
     productPage.clickSearchIcon();
