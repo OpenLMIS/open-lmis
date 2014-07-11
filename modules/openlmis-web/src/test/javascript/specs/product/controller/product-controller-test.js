@@ -8,14 +8,36 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-describe("Product Controller", function () {
+describe("Product", function () {
 
   beforeEach(module('openlmis'));
 
-  describe("Product resolve", function () {
+  describe("Controller", function () {
+
+    var ctrl, scope, $httpBackend, location;
+    describe("Save", function () {
+
+      beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+        scope = $rootScope.$new();
+        $httpBackend = _$httpBackend_;
+        location = $location;
+        ctrl = $controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: []});
+      }));
+
+      it('should not save product if invalid', function () {
+        scope.productForm = {"$error": {"required": true}};
+
+        scope.save();
+
+        expect(scope.error).toEqual("form.error");
+        expect(scope.showError).toBeTruthy();
+      });
+    });
+  });
+
+  describe("Resolve", function () {
     var $httpBackend, ctrl, $timeout, $route, $q;
     var deferredObject;
-    beforeEach(module('openlmis'));
 
     beforeEach(inject(function (_$httpBackend_, $controller, _$timeout_, _$route_) {
       $httpBackend = _$httpBackend_;

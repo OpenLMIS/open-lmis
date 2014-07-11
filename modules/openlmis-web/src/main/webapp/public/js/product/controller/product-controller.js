@@ -2,6 +2,13 @@ function ProductController($scope, productGroups, productForms, dosageUnits, Add
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
+
+  $scope.save = function () {
+    if ($scope.productForm.$error.required) {
+      $scope.showError = true;
+      $scope.error = "form.error";
+    }
+  };
 }
 
 ProductController.resolve = {
