@@ -11,6 +11,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
@@ -145,19 +146,6 @@ public interface FacilityMapper {
   List<Facility> getFacilitiesBy(@Param(value = "programId") Long programId,
                                  @Param(value = "requisitionGroupIds") String requisitionGroupIds);
 
-  @Select({"SELECT id, code, name FROM facilities WHERE virtualFacility = #{virtualFacility} AND",
-    "(LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%'",
-    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')",
-    "ORDER BY code"})
-  List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(@Param("searchParam") String searchParam,
-                                                                    @Param("virtualFacility") Boolean includeVirtualFacility);
-
-  @Select({"SELECT id, code, name FROM facilities WHERE",
-    "(LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%'",
-    "OR LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')",
-    "ORDER BY code"})
-  List<Facility> searchFacilitiesByCodeOrName(String searchParam);
-
   @Select({"SELECT DISTINCT F.* FROM facilities F INNER JOIN users U ON U.facilityId = F.id",
     "INNER JOIN role_assignments RA ON RA.userId = U.id INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
     "WHERE U.id = #{userId} AND RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[]) AND RA.supervisoryNodeId IS NULL"})
@@ -244,6 +232,26 @@ public interface FacilityMapper {
                                     @Param(value = "facilityTypeId") Long facilityTypeId,
                                     @Param(value = "geoZoneId") Long geoZoneId);
 
+
+  @Select({"SELECT COUNT(*) FROM facilities",
+    "WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%')",
+    "OR (LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')"})
+  Integer getTotalSearchResultCount(String searchParam);
+
+  @Select({"SELECT COUNT(*) FROM facilities F",
+    "INNER JOIN geographic_zones GZ on GZ.id = F.geographicZoneId",
+    "WHERE (LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam}) || '%')"})
+  Integer getTotalSearchResultCountByGeographicZone(String searchParam);
+
+  @SelectProvider(type = SelectFacilities.class, method = "getFacilitiesBySearchParam")
+  @Results(value = {
+    @Result(property = "geographicZone.name", column = "geoZoneName"),
+    @Result(property = "facilityType.name", column = "facilityTypeName"),
+  })
+  List<Facility> search(@Param(value = "searchParam") String searchParam,
+                          @Param(value = "column") String column,
+                          RowBounds rowBounds);
+
   public class SelectFacilities {
     @SuppressWarnings(value = "unused")
     public static String getEnabledFacilitiesCount(Map<String, Object> params) {
@@ -253,6 +261,24 @@ public interface FacilityMapper {
     }
 
     @SuppressWarnings(value = "unused")
+    public static String getFacilitiesBySearchParam(Map<String, Object> params){
+      StringBuilder sql = new StringBuilder();
+      String column = (String) params.get("column");
+      sql.append("SELECT F.id, F.code, F.name, GZ.name as geoZoneName, FT.name as facilityTypeName, F.active, F.enabled FROM facilities F ");
+      sql.append("INNER JOIN geographic_zones GZ on GZ.id = F.geographicZoneId ");
+      sql.append("INNER JOIN facility_types FT on FT.id = F.typeId WHERE ");
+
+      if(column.equalsIgnoreCase("facility")){
+        sql.append("(LOWER(F.code) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(F.name) LIKE '%' || LOWER(#{searchParam}) || '%') ");
+        sql.append("ORDER BY LOWER(F.name), LOWER(F.code)");
+      }
+      else if(column.equalsIgnoreCase("geographicZone")){
+        sql.append("(LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam}) || '%') ");
+        sql.append("ORDER BY LOWER(GZ.name), LOWER(F.name), LOWER(F.code)");
+      }
+      return sql.toString();
+    }
+
     public static String getEnabledFacilities(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
       sql.append(

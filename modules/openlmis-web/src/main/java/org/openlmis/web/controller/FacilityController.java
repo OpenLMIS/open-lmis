@@ -13,6 +13,7 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
@@ -35,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Integer.parseInt;
 import static org.openlmis.core.domain.Facility.createFacilityToBeDeleted;
 import static org.openlmis.core.domain.Facility.createFacilityToBeRestored;
 import static org.openlmis.core.domain.RightName.*;
@@ -52,6 +54,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class FacilityController extends BaseController {
 
+  public static final String FACILITIES = "facilities";
   @Autowired
   private FacilityService facilityService;
 
@@ -60,13 +63,16 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_USER')")
-  public List<Facility> get(@RequestParam(value = "searchParam", required = false) String searchParam,
-                            @RequestParam(value = "virtualFacility", required = false) Boolean virtualFacility) {
-    if (searchParam != null) {
-      return facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam, virtualFacility);
-    } else {
-      return facilityService.getAll();
-    }
+  public ResponseEntity<OpenLmisResponse> get(@RequestParam(value = "searchParam", required = false) String searchParam,
+                                              @RequestParam(value = "columnName") String columnName,
+                                              @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                              @Value("${search.page.size}") String limit) {
+    Pagination pagination = new Pagination(page, parseInt(limit));
+    pagination.setTotalRecords(facilityService.getTotalSearchResultCountByColumnName(searchParam, columnName));
+    List<Facility> facilities = facilityService.searchBy(searchParam, columnName ,pagination );
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(FACILITIES, facilities);
+    response.getBody().addData("pagination", pagination);
+    return response;
   }
 
   @RequestMapping(value = "/filter-facilities", method = GET, headers = ACCEPT_JSON)

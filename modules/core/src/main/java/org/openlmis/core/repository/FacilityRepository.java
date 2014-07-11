@@ -42,10 +42,6 @@ public class FacilityRepository {
   @Autowired
   private GeographicZoneRepository geographicZoneRepository;
 
-  public List<Facility> getAll() {
-    return mapper.getAll();
-  }
-
   public void save(Facility facility) {
     try {
       validateAndSetFacilityOperatedBy(facility);
@@ -153,10 +149,6 @@ public class FacilityRepository {
     return facilityId;
   }
 
-  public List<Facility> searchFacilitiesByCodeOrName(String searchParam) {
-    return mapper.searchFacilitiesByCodeOrName(searchParam);
-  }
-
   public Facility getHomeFacilityForRights(Long userId, String... rightNames) {
     return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rightNames));
   }
@@ -181,10 +173,6 @@ public class FacilityRepository {
     return mapper.getAllByProgramSupportedModifiedDate(dateModified);
   }
 
-  public List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(String query, Boolean virtualFacility) {
-    return mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
-  }
-
   public List<Facility> getEnabledWarehouses() {
     return mapper.getEnabledWarehouses();
   }
@@ -205,11 +193,23 @@ public class FacilityRepository {
     return mapper.getAllParentsByModifiedDate(modifiedDate);
   }
 
-  public Integer getCountOfEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId){
+  public Integer getCountOfEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId) {
     return mapper.getEnabledFacilitiesCount(searchParam, facilityTypeId, geoZoneId);
   }
 
   public List<Facility> getEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId) {
     return mapper.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return mapper.getTotalSearchResultCount(searchParam);
+  }
+
+  public Integer getTotalSearchResultCountByGeographicZone(String searchParam) {
+    return mapper.getTotalSearchResultCountByGeographicZone(searchParam);
+  }
+
+  public List<Facility> searchBy(String searchParam, String columnName, Pagination pagination) {
+    return mapper.search(searchParam,columnName,pagination);
   }
 }

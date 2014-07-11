@@ -16,7 +16,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
@@ -35,22 +34,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Integer.parseInt;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.RightName.*;
 import static org.openlmis.web.model.FacilityReferenceData.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Facility.class)
+@PrepareForTest({FacilityController.class, Facility.class})
 public class FacilityControllerTest {
 
   private static final Long userId = 1L;
@@ -72,6 +75,7 @@ public class FacilityControllerTest {
 
   @Before
   public void setUp() {
+    initMocks(this);
     request = new MockHttpServletRequest(USER, USER);
     request.getSession().setAttribute(USER_ID, userId);
   }
@@ -191,15 +195,26 @@ public class FacilityControllerTest {
   }
 
   @Test
-  public void shouldSearchFacilitiesByCodeOrName() {
-    List<Facility> facilities = asList(new Facility());
-    Boolean virtualFacility = false;
-    when(facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("searchParam", virtualFacility)).thenReturn(
-      facilities);
+  public void shouldSearchFacilitiesBySearchParam() throws Exception {
+    String searchParam = "FAC";
+    String columnName = "facility";
+    Integer page = 1;
+    String limit = "5";
+    List<Facility> facilities = new ArrayList<>();
+    Integer totalResultCount = 10;
+    Pagination pagination = new Pagination(0, 0);
 
-    List<Facility> returnedFacilities = facilityController.get("searchParam", virtualFacility);
+    whenNew(Pagination.class).withArguments(page, parseInt(limit)).thenReturn(pagination);
+    when(facilityService.getTotalSearchResultCountByColumnName(searchParam, columnName)).thenReturn(totalResultCount);
+    when(facilityService.searchBy(searchParam, columnName, pagination)).thenReturn(facilities);
 
-    assertThat(returnedFacilities, is(facilities));
+    ResponseEntity<OpenLmisResponse> response = facilityController.get(searchParam, columnName, page, limit);
+
+    assertThat((List<Facility>) response.getBody().getData().get(FacilityController.FACILITIES), is(facilities));
+    assertThat((Pagination) response.getBody().getData().get("pagination"), is(pagination));
+    assertThat(pagination.getTotalRecords(), is(totalResultCount));
+    verify(facilityService).getTotalSearchResultCountByColumnName(searchParam, columnName);
+    verify(facilityService).searchBy(searchParam, columnName, pagination);
   }
 
   @Test
@@ -288,7 +303,7 @@ public class FacilityControllerTest {
   public void shouldGetFacilitiesForDeliveryZoneAndProgram() {
     mockStatic(Facility.class);
     List<Facility> facilities = new ArrayList<>();
-    Mockito.when(facilityService.getAllForDeliveryZoneAndProgram(1l, 1l)).thenReturn(facilities);
+    when(facilityService.getAllForDeliveryZoneAndProgram(1l, 1l)).thenReturn(facilities);
     when(Facility.filterForActiveProducts(facilities)).thenReturn(facilities);
 
     ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFacilitiesForDeliveryZoneAndProgram(1l, 1l);

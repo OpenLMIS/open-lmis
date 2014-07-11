@@ -70,10 +70,6 @@ public class FacilityService {
     programSupportedService.updateSupportedPrograms(facility);
   }
 
-  public List<Facility> getAll() {
-    return facilityRepository.getAll();
-  }
-
   public List<FacilityType> getAllTypes() {
     return facilityRepository.getAllTypes();
   }
@@ -186,11 +182,8 @@ public class FacilityService {
     return getById(facilityId);
   }
 
-  public List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(String query, Boolean virtualFacility) {
-    if (virtualFacility == null) {
-      return facilityRepository.searchFacilitiesByCodeOrName(query);
-    }
-    return facilityRepository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
+  public List<Facility> searchBy(String searchParam, String columnName, Pagination pagination) {
+    return facilityRepository.searchBy(searchParam,columnName,pagination);
   }
 
   public List<Facility> getEnabledWarehouses() {
@@ -246,5 +239,13 @@ public class FacilityService {
 
   public List<Facility> getEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId) {
     return facilityRepository.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+  }
+
+  public Integer getTotalSearchResultCountByColumnName(String searchParam, String columnName) {
+    if(columnName.equalsIgnoreCase("Facility"))
+    {
+      return facilityRepository.getTotalSearchResultCount(searchParam);
+    }
+    return facilityRepository.getTotalSearchResultCountByGeographicZone(searchParam);
   }
 }

@@ -36,7 +36,10 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -163,27 +166,6 @@ public class FacilityServiceTest {
     verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(userId, programId, CREATE_REQUISITION);
     verify(requisitionGroupService).getRequisitionGroupsBy(supervisoryNodes);
     assertThat(result, is(facilities));
-  }
-
-
-  @Test
-  public void shouldSearchFacilitiesByCodeOrNameAndVirtualFacilityFlag() throws Exception {
-    List<Facility> facilityList = Arrays.asList(new Facility());
-    when(facilityRepository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true)).thenReturn(facilityList);
-
-    List<Facility> returnedFacilities = facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true);
-
-    assertThat(returnedFacilities, is(facilityList));
-  }
-
-  @Test
-  public void shouldSearchFacilitiesByCodeOrNameIfVirtualFacilityFlagIsNotPresenr() throws Exception {
-    List<Facility> facilityList = Arrays.asList(new Facility());
-    when(facilityRepository.searchFacilitiesByCodeOrName("query")).thenReturn(facilityList);
-
-    List<Facility> returnedFacilities = facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", null);
-
-    assertThat(returnedFacilities, is(facilityList));
   }
 
   @Test
@@ -491,5 +473,29 @@ public class FacilityServiceTest {
     facilityService.getOperativeFacilityByCode("code");
 
     verify(facilityRepository, never()).getById(anyLong());
+  }
+
+  @Test
+  public void shouldGetTotalSearchResultCountByFacility(){
+    String columnName = "facility";
+    String searchParam = "searchParam";
+    int count = 10;
+    when(facilityRepository.getTotalSearchResultCount(searchParam)).thenReturn(count);
+
+    assertThat(facilityService.getTotalSearchResultCountByColumnName(searchParam, columnName),is(count));
+
+    verify(facilityRepository).getTotalSearchResultCount(searchParam);
+  }
+
+  @Test
+  public void shouldGetTotalSearchResultCountByGeographicZone(){
+    String columnName = "geographicZone";
+    String searchParam = "searchParam";
+    int count = 10;
+    when(facilityRepository.getTotalSearchResultCountByGeographicZone(searchParam)).thenReturn(count);
+
+    assertThat(facilityService.getTotalSearchResultCountByColumnName(searchParam, columnName), is(count));
+
+    verify(facilityRepository).getTotalSearchResultCountByGeographicZone(searchParam);
   }
 }
