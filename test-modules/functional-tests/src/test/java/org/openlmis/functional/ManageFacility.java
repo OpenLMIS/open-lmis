@@ -12,9 +12,9 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.pageobjects.FacilityPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.ManageFacilityPage;
 import org.openlmis.pageobjects.PageObjectFactory;
 import org.testng.annotations.*;
 
@@ -44,7 +44,7 @@ public class ManageFacility extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
+    FacilityPage facilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
     homePage.verifyHeader("Add new facility");
 
@@ -58,37 +58,37 @@ public class ManageFacility extends TestCaseHelper {
     String longitudeValue = "644.4444";
     String altitudeValue = "6545.4545";
 
-    String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
+    String date_time = facilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, "500000");
-    manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    facilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
     assertEquals("f", dbWrapper.getAttributeFromTable("facilities", "virtualFacility", "code", facilityCodePrefix + date_time));
 
-    homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility(date_time);
-    manageFacilityPage.clickFacilityList(date_time);
-    manageFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    manageFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    HomePage homePageRestore = manageFacilityPage.enableFacility();
-    manageFacilityPage.verifyEnabledFacility();
-    ManageFacilityPage manageFacilityPageRestore = homePageRestore.navigateSearchFacility();
-    manageFacilityPageRestore.searchFacility(date_time);
-    manageFacilityPageRestore.clickFacilityList(date_time);
-    manageFacilityPageRestore.verifyEditFacilityHeader("Edit facility");
-    HomePage homePageEdit = manageFacilityPageRestore.editFacility("ESSENTIAL MEDICINES", catchmentPopulationValue, latitudeValue, longitudeValue, altitudeValue);
+    homePage.navigateManageFacility();
+    facilityPage.searchFacility(date_time);
+    facilityPage.clickFacilityList(date_time);
+    facilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    facilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    HomePage homePageRestore = facilityPage.enableFacility();
+    assertEquals(facilityPage.getEnabledFacilityText(), "Yes");
+    FacilityPage facilityPageRestore = homePageRestore.navigateManageFacility();
+    facilityPageRestore.searchFacility(date_time);
+    facilityPageRestore.clickFacilityList(date_time);
+    assertEquals("Edit facility", facilityPageRestore.getEditFacilityHeader());
+    HomePage homePageEdit = facilityPageRestore.editFacility("ESSENTIAL MEDICINES", catchmentPopulationValue, latitudeValue, longitudeValue, altitudeValue);
 
-    manageFacilityPageRestore.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "updated");
-    homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility(date_time);
-    manageFacilityPage.clickFacilityList(date_time);
-    manageFacilityPageRestore.verifyEditedFacility(catchmentPopulationValue, latitudeValue, longitudeValue, altitudeValue);
+    facilityPageRestore.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "updated");
+    homePage.navigateManageFacility();
+    facilityPage.searchFacility(date_time);
+    facilityPage.clickFacilityList(date_time);
+    facilityPageRestore.verifyEditedFacility(catchmentPopulationValue, latitudeValue, longitudeValue, altitudeValue);
 
-    ManageFacilityPage manageFacilityPageEdit = homePageEdit.navigateSearchFacility();
-    manageFacilityPageEdit.searchFacility(date_time);
-    manageFacilityPageEdit.clickFacilityList(date_time);
+    FacilityPage facilityPageEdit = homePageEdit.navigateManageFacility();
+    facilityPageEdit.searchFacility(date_time);
+    facilityPageEdit.clickFacilityList(date_time);
     ArrayList<String> programsSupported = new ArrayList<>();
     programsSupported.add("HIV");
     programsSupported.add("ESSENTIAL MEDICINES");
-    manageFacilityPageEdit.verifyProgramSupported(programsSupported);
+    facilityPageEdit.verifyProgramSupported(programsSupported);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -107,18 +107,18 @@ public class ManageFacility extends TestCaseHelper {
     dbWrapper.insertGeographicZone("District 1", "District 1", "Dodoma");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility("F10");
-    manageFacilityPage.clickFacilityList("F10");
-    manageFacilityPage.editFacilityType(facilityType);
-    manageFacilityPage.editGeographicZone(geoZone);
-    manageFacilityPage.saveFacility();
+    FacilityPage facilityPage = homePage.navigateManageFacility();
+    facilityPage.searchFacility("F10");
+    facilityPage.clickFacilityList("F10");
+    facilityPage.editFacilityType(facilityType);
+    facilityPage.editGeographicZone(geoZone);
+    facilityPage.saveFacility();
 
-    manageFacilityPage.searchFacility("V10");
-    manageFacilityPage.clickFacilityList("V10");
+    facilityPage.searchFacility("V10");
+    facilityPage.clickFacilityList("V10");
 
-    assertEquals(facilityType, manageFacilityPage.getFacilityType());
-    assertEquals(geoZone, manageFacilityPage.getGeographicZone());
+    assertEquals(facilityType, facilityPage.getFacilityType());
+    assertEquals(geoZone, facilityPage.getGeographicZone());
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -133,59 +133,59 @@ public class ManageFacility extends TestCaseHelper {
     dbWrapper.insertGeographicZone("District 1", "District 1", "Dodoma");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility("F10");
-    manageFacilityPage.clickFacilityList("F10");
-    manageFacilityPage.removeFirstProgram();
-    manageFacilityPage.saveFacility();
+    FacilityPage facilityPage = homePage.navigateManageFacility();
+    facilityPage.searchFacility("F10");
+    facilityPage.clickFacilityList("F10");
+    facilityPage.removeFirstProgram();
+    facilityPage.saveFacility();
 
-    manageFacilityPage.searchFacility("V10");
-    manageFacilityPage.clickFacilityList("V10");
+    facilityPage.searchFacility("V10");
+    facilityPage.clickFacilityList("V10");
 
-    assertEquals("ESSENTIAL MEDICINES", manageFacilityPage.getProgramSupported(1));
-    assertEquals("VACCINES", manageFacilityPage.getProgramSupported(2));
+    assertEquals("ESSENTIAL MEDICINES", facilityPage.getProgramSupported(1));
+    assertEquals("VACCINES", facilityPage.getProgramSupported(2));
 
-    homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility("F10");
-    manageFacilityPage.clickFacilityList("F10");
-    manageFacilityPage.removeFirstProgram();
-    manageFacilityPage.activeInactiveFirstProgram();
-    manageFacilityPage.saveFacility();
+    homePage.navigateManageFacility();
+    facilityPage.searchFacility("F10");
+    facilityPage.clickFacilityList("F10");
+    facilityPage.removeFirstProgram();
+    facilityPage.activeInactiveFirstProgram();
+    facilityPage.saveFacility();
 
-    manageFacilityPage.searchFacility("V10");
-    manageFacilityPage.clickFacilityList("V10");
+    facilityPage.searchFacility("V10");
+    facilityPage.clickFacilityList("V10");
 
-    assertEquals("VACCINES", manageFacilityPage.getProgramSupported(1));
-    assertFalse("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
+    assertEquals("VACCINES", facilityPage.getProgramSupported(1));
+    assertFalse("Program supported flag incorrect", facilityPage.getProgramSupportedActive(1));
 
-    manageFacilityPage.activeInactiveFirstProgram();
-    manageFacilityPage.saveFacility();
-    manageFacilityPage.clickFacilityList("V10");
-    assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
+    facilityPage.activeInactiveFirstProgram();
+    facilityPage.saveFacility();
+    facilityPage.clickFacilityList("V10");
+    assertTrue("Program supported flag incorrect", facilityPage.getProgramSupportedActive(1));
 
-    homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility("F10");
-    manageFacilityPage.clickFacilityList("F10");
-    manageFacilityPage.saveFacility();
+    homePage.navigateManageFacility();
+    facilityPage.searchFacility("F10");
+    facilityPage.clickFacilityList("F10");
+    facilityPage.saveFacility();
 
-    manageFacilityPage.searchFacility("V10");
-    manageFacilityPage.clickFacilityList("V10");
+    facilityPage.searchFacility("V10");
+    facilityPage.clickFacilityList("V10");
 
-    assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
+    assertTrue("Program supported flag incorrect", facilityPage.getProgramSupportedActive(1));
 
-    homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility("F10");
-    manageFacilityPage.clickFacilityList("F10");
-    manageFacilityPage.addProgram("HIV", false);
-    manageFacilityPage.saveFacility();
+    homePage.navigateManageFacility();
+    facilityPage.searchFacility("F10");
+    facilityPage.clickFacilityList("F10");
+    facilityPage.addProgram("HIV", false);
+    facilityPage.saveFacility();
 
-    manageFacilityPage.searchFacility("V10");
-    manageFacilityPage.clickFacilityList("V10");
+    facilityPage.searchFacility("V10");
+    facilityPage.clickFacilityList("V10");
 
-    assertEquals("HIV", manageFacilityPage.getProgramSupported(1));
-    assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
-    assertEquals("VACCINES", manageFacilityPage.getProgramSupported(2));
-    assertFalse("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(2));
+    assertEquals("HIV", facilityPage.getProgramSupported(1));
+    assertTrue("Program supported flag incorrect", facilityPage.getProgramSupportedActive(1));
+    assertEquals("VACCINES", facilityPage.getProgramSupported(2));
+    assertFalse("Program supported flag incorrect", facilityPage.getProgramSupportedActive(2));
     assertEquals(dbWrapper.getRequisitionGroupId("F10"), dbWrapper.getRequisitionGroupId("V10"));
   }
 

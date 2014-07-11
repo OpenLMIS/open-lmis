@@ -72,7 +72,7 @@ public class FacilityFeed extends JsonUtility {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
+    FacilityPage facilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
     String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
@@ -81,8 +81,8 @@ public class FacilityFeed extends JsonUtility {
     String facilityNamePrefix = "FCname";
     String catchmentPopulationValue = "100";
 
-    String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, catchmentPopulationValue);
-    manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    String date_time = facilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, catchmentPopulationValue);
+    facilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
     ResponseEntity responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + date_time + "\""));
@@ -111,13 +111,13 @@ public class FacilityFeed extends JsonUtility {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringGoLiveDate\":\"25-" + new SimpleDateFormat("MM-yyyy").format(new Date()) + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringGoDownDate\":\"26-" + new SimpleDateFormat("MM-yyyy").format(new Date()) + "\""));
 
-    homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility(date_time);
-    manageFacilityPage.clickFacilityList(date_time);
-    manageFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    manageFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    manageFacilityPage.enableFacility();
-    manageFacilityPage.verifyEnabledFacility();
+    homePage.navigateManageFacility();
+    facilityPage.searchFacility(date_time);
+    facilityPage.clickFacilityList(date_time);
+    facilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    facilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    facilityPage.enableFacility();
+    assertEquals(facilityPage.getEnabledFacilityText(), "Yes");
     responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -138,19 +138,19 @@ public class FacilityFeed extends JsonUtility {
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"facilityType\":\"" + facilityType + "\""));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"operatedBy\":\"" + operatedBy + "\""));
 
-    manageFacilityPage = homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility(date_time);
-    manageFacilityPage.clickFacilityList(date_time);
-    manageFacilityPage.addProgram("VACCINES", true);
-    manageFacilityPage.saveFacility();
+    facilityPage = homePage.navigateManageFacility();
+    facilityPage.searchFacility(date_time);
+    facilityPage.clickFacilityList(date_time);
+    facilityPage.addProgram("VACCINES", true);
+    facilityPage.saveFacility();
     Thread.sleep(5000);
     assertEquals(3, feedJSONList.size());
 
-    manageFacilityPage = homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility(date_time);
-    manageFacilityPage.clickFacilityList(date_time);
-    manageFacilityPage.removeFirstProgram();
-    manageFacilityPage.saveFacility();
+    facilityPage = homePage.navigateManageFacility();
+    facilityPage.searchFacility(date_time);
+    facilityPage.clickFacilityList(date_time);
+    facilityPage.removeFirstProgram();
+    facilityPage.saveFacility();
 
     Thread.sleep(5000);
     assertEquals(3, feedJSONList.size());

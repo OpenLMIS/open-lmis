@@ -85,10 +85,10 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     String expectedISAValue = programProductISAPage.fillProgramProductISA(epiInventoryData.get(VACCINES_PROGRAM), "100", "1", "50", "30", "0", "100", "2000", "333");
 
     homePage.navigateHomePage();
-    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
-    manageFacilityPage.overrideISA("567", 3, epiInventoryData.get(FIRST_FACILITY_CODE));
+    FacilityPage facilityPage = homePage.navigateManageFacility();
+    facilityPage.overrideISA("567", 3, epiInventoryData.get(FIRST_FACILITY_CODE));
 
-    loginPage = manageFacilityPage.logout();
+    loginPage = facilityPage.logout();
 
     homePage = loginPage.loginAs(epiInventoryData.get(USER), epiInventoryData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();

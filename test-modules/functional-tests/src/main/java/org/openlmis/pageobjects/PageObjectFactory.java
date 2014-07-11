@@ -14,7 +14,7 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.edi.*;
 
 public class PageObjectFactory {
-  private static ManageFacilityPage instanceOfManageFacilityPage;
+  private static FacilityPage instanceOfFacilityPage;
   private static DistributionPage instanceOfDistributionPage;
   private static FacilityListPage instanceOfFacilityListPage;
   private static RefrigeratorPage instanceOfRefrigeratorPage;
@@ -57,11 +57,11 @@ public class PageObjectFactory {
   private static FacilityApprovedProductPage instanceOfFacilityApprovedProductPage;
   private static ProductPage instanceOfProductPage;
 
-  public static ManageFacilityPage getManageFacilityPage(TestWebDriver testWebDriver) {
-    if (instanceOfManageFacilityPage == null) {
-      instanceOfManageFacilityPage = new ManageFacilityPage(testWebDriver);
+  public static FacilityPage getFacilityPage(TestWebDriver testWebDriver) {
+    if (instanceOfFacilityPage == null) {
+      instanceOfFacilityPage = new FacilityPage(testWebDriver);
     }
-    return instanceOfManageFacilityPage;
+    return instanceOfFacilityPage;
   }
 
   public static GeographicZonePage getGeographicZonePage(TestWebDriver testWebDriver) {

@@ -253,13 +253,13 @@ public class ManageUser extends TestCaseHelper {
     dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
+    FacilityPage facilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
-    String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
+    String date_time = facilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, "500000");
     String facility_code = facilityCodePrefix + date_time;
     String facility_name = facilityNamePrefix + date_time;
-    manageFacilityPage.verifyMessageOnFacilityScreen(facility_name, "created");
+    facilityPage.verifyMessageOnFacilityScreen(facility_name, "created");
     homePage.logout();
 
     dbWrapper.removeAllExistingRights("Admin");

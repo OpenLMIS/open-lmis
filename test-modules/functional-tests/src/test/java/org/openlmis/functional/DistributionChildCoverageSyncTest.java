@@ -169,12 +169,12 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
     programProductISAPage.fillProgramProductISA(childCoverageData.get(VACCINES_PROGRAM), "90", "1", "50", "30", "0", "100", "2000", "333");
 
-    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
-    homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility("F10");
-    manageFacilityPage.clickFacilityList("F10");
-    manageFacilityPage.editPopulation("");
-    manageFacilityPage.saveFacility();
+    FacilityPage facilityPage = homePage.navigateManageFacility();
+    homePage.navigateManageFacility();
+    facilityPage.searchFacility("F10");
+    facilityPage.clickFacilityList("F10");
+    facilityPage.editPopulation("");
+    facilityPage.saveFacility();
     homePage.logout();
 
     loginPage.loginAs(childCoverageData.get(USER), childCoverageData.get(PASSWORD));

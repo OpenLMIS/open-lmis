@@ -10,10 +10,8 @@
 
 package org.openlmis.pageobjects;
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.apache.commons.lang.StringUtils;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -26,11 +24,10 @@ import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-import static java.lang.String.valueOf;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
-public class ManageFacilityPage extends Page {
+public class FacilityPage extends Page {
 
   @FindBy(how = ID, using = "searchFacility")
   private static WebElement searchFacilityTextField = null;
@@ -119,20 +116,20 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = ID, using = "facilitySdpTrue")
   private static WebElement serviceDeliveryPoint = null;
 
-  @FindBy(how = XPATH, using = "//input[@name='has-electricity' and @value='true']")
-  private static WebElement hasElectricity = null;
+  @FindBy(how = ID, using = "hasElectricityTrue")
+  private static WebElement hasElectricityTrue = null;
 
-  @FindBy(how = XPATH, using = "//input[@name='is-online' and @value='true']")
-  private static WebElement isOnline = null;
+  @FindBy(how = ID, using = "isOnlineTrue")
+  private static WebElement isOnlineTrue = null;
 
-  @FindBy(how = XPATH, using = "//input[@name='has-electronic-scc' and @value='true']")
-  private static WebElement hasElectronicScc = null;
+  @FindBy(how = ID, using = "hasElectronicSccTrue")
+  private static WebElement hasElectronicSccTrue = null;
 
-  @FindBy(how = XPATH, using = "//input[@name='has-electronic-dar' and @value='true']")
-  private static WebElement hasElectronicDar = null;
+  @FindBy(how = ID, using = "hasElectronicDARTrue")
+  private static WebElement hasElectronicDarTrue = null;
 
-  @FindBy(how = XPATH, using = "//input[@name='isActive' and @value='true']")
-  private static WebElement isActive = null;
+  @FindBy(how = ID, using = "facilityActiveTrue")
+  private static WebElement isActiveTrue = null;
 
   @FindBy(how = ID, using = "go-live-date")
   private static WebElement goLiveDate = null;
@@ -170,7 +167,7 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = ID, using = "saveButton")
   public static WebElement saveButton = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMsgDiv = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'25')]")
@@ -209,34 +206,24 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = ID, using = "remove0")
   private static WebElement removeFirstProgramSupportedLink = null;
 
-  private static ManageFacilityPage instance;
-
-  public void verifyNewFacilityHeader(String headerToBeVerified) {
-    testWebDriver.waitForElementToAppear(facilityHeader);
-    assertEquals(facilityHeader.getText().trim(), headerToBeVerified);
-  }
-
-  public static ManageFacilityPage getInstance(TestWebDriver testWebDriver) {
-    if (instance == null) {
-      instance = PageObjectFactory.getManageFacilityPage(testWebDriver);
-    }
-    return instance;
-  }
-
-  public ManageFacilityPage(TestWebDriver driver) {
+  public FacilityPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
   }
 
-  public void verifyEditFacilityHeader(String headerToBeVerified) {
-    testWebDriver.waitForElementToAppear(editFacilityHeader);
-    assertEquals(editFacilityHeader.getText().trim(), headerToBeVerified);
+  public String getNewFacilityHeader() {
+    testWebDriver.waitForElementToAppear(facilityHeader);
+    return facilityHeader.getText().trim();
   }
 
-  public String enterValuesInFacilityAndClickSave(String facilityCodePrefix, String facilityNamePrefix,
-                                                  String program, String geoZone, String facilityTypeValue, String operatedByValue,
-                                                  String population) {
+  public String getEditFacilityHeader() {
+    testWebDriver.waitForElementToAppear(editFacilityHeader);
+    return editFacilityHeader.getText().trim();
+  }
+
+  public String enterValuesInFacilityAndClickSave(String facilityCodePrefix, String facilityNamePrefix, String program, String geoZone,
+                                                  String facilityTypeValue, String operatedByValue, String population) {
     String date_time = enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityTypeValue,
       operatedByValue, population, false);
     saveButton.click();
@@ -247,28 +234,26 @@ public class ManageFacilityPage extends Page {
                                       String geoZone, String facilityTypeValue, String operatedByValue,
                                       String population, boolean push) {
     Date dObj = new Date();
-    SimpleDateFormat formatter_date_time = new SimpleDateFormat(
-      "yyyyMMdd-hhmmss");
+    SimpleDateFormat formatter_date_time = new SimpleDateFormat("yyyyMMdd-hhmmss");
     String date_time = formatter_date_time.format(dObj);
 
     String facilityCodeText = facilityCodePrefix + date_time;
     String facilityNameText = facilityNamePrefix + date_time;
-    verifyNewFacilityHeader("Add new facility");
     testWebDriver.waitForElementToAppear(facilityCode);
-    facilityCode.clear();
-    facilityCode.sendKeys(facilityCodeText);
-    facilityName.sendKeys(facilityNameText);
+    sendKeys(facilityCode, facilityCodeText);
+    sendKeys(facilityName, facilityNameText);
+
     testWebDriver.selectByVisibleText(operatedBy, operatedByValue);
 
     testWebDriver.clickForRadio(serviceDeliveryPoint);
-    testWebDriver.clickForRadio(isActive);
+    testWebDriver.clickForRadio(isActiveTrue);
 
-    facilityDescription.sendKeys("Testing description");
-    gln.sendKeys("Testing Gln");
-    phoneNumber.sendKeys("9711231305");
-    faxNumber.sendKeys("9711231305");
-    address1.sendKeys("Address1");
-    address2.sendKeys("Address2");
+    sendKeys(facilityDescription, "Testing description");
+    sendKeys(gln, "Testing Gln");
+    sendKeys(phoneNumber, "9711231305");
+    sendKeys(faxNumber, "9711231305");
+    sendKeys(address1, "Address1");
+    sendKeys(address2, "Address2");
 
     testWebDriver.selectByVisibleText(geographicZone, geoZone);
     testWebDriver.selectByVisibleText(facilityType, facilityTypeValue);
@@ -285,23 +270,23 @@ public class ManageFacilityPage extends Page {
     testWebDriver.handleScrollByPixels(0, 1000);
     addProgram(program, push);
 
-    catchmentPopulation.sendKeys(population);
-    latitude.sendKeys("-555.5555");
-    longitude.sendKeys("444.4444");
-    altitude.sendKeys("4545.4545");
+    sendKeys(catchmentPopulation, population);
+    sendKeys(latitude, "-555.5555");
+    sendKeys(longitude, "444.4444");
+    sendKeys(altitude, "4545.4545");
 
-    coldStorageGrossCapacity.sendKeys("3434.3434");
-    coldStorageNetCapacity.sendKeys("3535.3535");
+    sendKeys(coldStorageGrossCapacity, "3434.3434");
+    sendKeys(coldStorageNetCapacity, "3535.3535");
     coldStorageNetCapacity.sendKeys(Keys.TAB);
 
-    hasElectricity.click();
-    isOnline.click();
+    hasElectricityTrue.click();
+    isOnlineTrue.click();
     testWebDriver.handleScrollByPixels(0, 2000);
 
-    hasElectronicScc.click();
-    hasElectronicDar.click();
+    hasElectronicSccTrue.click();
+    hasElectronicDarTrue.click();
     facilitySuppliesOthersYes.click();
-    comments.sendKeys("Comments");
+    sendKeys(comments, "Comments");
     return date_time;
   }
 
@@ -335,6 +320,7 @@ public class ManageFacilityPage extends Page {
   }
 
   public void verifyMessageOnFacilityScreen(String facilityName, String status) {
+    testWebDriver.sleep(500);
     String message;
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
     if (saveSuccessMsgDiv.isDisplayed()) {
@@ -342,13 +328,12 @@ public class ManageFacilityPage extends Page {
     } else {
       message = testWebDriver.getText(saveErrorMsgDiv);
     }
-    assertEquals(message, String.format("Facility \"%s\" %s successfully", facilityName, status));
-    testWebDriver.sleep(500);
+    assertEquals(message, String.format("Facility \"%s\" %s successfully.  View Here", facilityName, status));
   }
 
-  public void verifySuccessMessage() {
+  public boolean isSuccessMessageDisplayed() {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-    assertTrue("Save success message should show up", saveSuccessMsgDiv.isDisplayed());
+    return saveSuccessMsgDiv.isDisplayed();
   }
 
   public void overrideIsa(String overriddenIsa, int rowNumber) {
@@ -356,18 +341,17 @@ public class ManageFacilityPage extends Page {
     testWebDriver.waitForElementToAppear(overrideIsaTable);
     while (!StringUtils.isEmpty(overrideIsaTable.getAttribute("value")))
       overrideIsaTable.sendKeys("\u0008"); // "\u0008" - is backspace char
-    testWebDriver.findElement(By.id("override-isa" + (rowNumber - 1))).sendKeys(overriddenIsa);
+    sendKeys(testWebDriver.getElementById("override-isa" + (rowNumber - 1)), overriddenIsa);
   }
 
   public void editPopulation(String population) {
     testWebDriver.waitForElementToAppear(catchmentPopulation);
-    while (!StringUtils.isEmpty(catchmentPopulation.getAttribute("value")))
-      catchmentPopulation.sendKeys("\u0008"); // "\u0008" - is backspace char
-    catchmentPopulation.sendKeys(valueOf(population));
+    sendKeys(catchmentPopulation, population);
   }
 
-  public void verifyCalculatedIsa(int calculatedIsa) {
-    assertEquals(calculatedIsaTextField.getText(), valueOf(calculatedIsa));
+  public String getCalculatedIsa() {
+    testWebDriver.waitForElementToAppear(calculatedIsaTextField);
+    return calculatedIsaTextField.getText();
   }
 
   public void clickIsaDoneButton() {
@@ -399,7 +383,6 @@ public class ManageFacilityPage extends Page {
   public void saveFacility() {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
-    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
   }
 
   public void searchFacility(String facilityCodeValue) {
@@ -416,9 +399,9 @@ public class ManageFacilityPage extends Page {
 
   public void disableFacility(String facilityCodeValue, String facilityNameValue) {
     String expectedMessageOnAlert = String.format("\"%s\" / \"%s\" will be disabled in the system.", facilityNameValue, facilityCodeValue);
-    verifyEditFacilityHeader("Edit facility");
+    testWebDriver.waitForElementToAppear(editFacilityHeader);
     clickDisableButtonOnFacilityScreen();
-    verifyDisableAlert(expectedMessageOnAlert);
+    assertEquals(getDisableAlertMessage(), expectedMessageOnAlert);
     clickOkButtonOnAlert();
   }
 
@@ -432,34 +415,27 @@ public class ManageFacilityPage extends Page {
     okButton.click();
   }
 
-  private void verifyDisableAlert(String expectedMessageOnAlert) {
+  private String getDisableAlertMessage() {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(dialogMessageOnAlert);
-
-    String disableMessageOnAlertValue = dialogMessageOnAlert.getText();
-    assertEquals(disableMessageOnAlertValue, expectedMessageOnAlert);
+    return dialogMessageOnAlert.getText();
   }
 
   public void verifyDisabledFacility(String facilityCodeValue, String facilityNameValue) {
     String expectedMessageOnFacilityScreenAfterDisable = "\"" + facilityNameValue + "\" / \"" + facilityCodeValue + "\" is now disabled";
-
     testWebDriver.waitForElementToAppear(successMessageDiv);
-
     testWebDriver.sleep(1000);
+
     String disableMessageOnFacilityScreenValue = successMessageDiv.getText();
     assertEquals(disableMessageOnFacilityScreenValue, expectedMessageOnFacilityScreenAfterDisable);
-
     String enableValue = enabledFlag.getText();
     assertEquals(enableValue.trim(), "No");
-
-    SeleneseTestNgHelper.assertTrue(isActiveRadioNoOption.isSelected());
+    assertTrue(isActiveRadioNoOption.isSelected());
   }
 
-  public void verifyEnabledFacility() {
+  public String getEnabledFacilityText() {
     testWebDriver.sleep(1000);
-    String enableValue = enabledFlag.getText();
-    assertEquals(enableValue.trim(), "Yes");
-    verifyEditFacilityHeader("Edit facility");
+    return enabledFlag.getText();
   }
 
   public HomePage enableFacility() {
@@ -467,28 +443,21 @@ public class ManageFacilityPage extends Page {
     testWebDriver.sleep(1000);
     enableButton.click();
     testWebDriver.waitForElementToAppear(dialogMessageOnAlert);
-
     testWebDriver.sleep(1000);
     okButton.click();
     testWebDriver.sleep(1000);
-
     return PageObjectFactory.getHomePage(testWebDriver);
   }
 
-  public HomePage editFacility(String program, String catchmentPopulationValue,
-                               String latitudeValue,
-                               String longitudeValue, String altitudeValue) {
+  public HomePage editFacility(String program, String catchmentPopulationValue, String latitudeValue, String longitudeValue,
+                               String altitudeValue) {
     testWebDriver.waitForElementToAppear(disableButton);
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(facilityCode);
-    ManageFacilityPage.catchmentPopulation.clear();
-    ManageFacilityPage.catchmentPopulation.sendKeys(catchmentPopulationValue);
-    ManageFacilityPage.latitude.clear();
-    ManageFacilityPage.latitude.sendKeys(latitudeValue);
-    ManageFacilityPage.longitude.clear();
-    ManageFacilityPage.longitude.sendKeys(longitudeValue);
-    ManageFacilityPage.altitude.clear();
-    ManageFacilityPage.altitude.sendKeys(altitudeValue);
+    sendKeys(catchmentPopulation, catchmentPopulationValue);
+    sendKeys(latitude, latitudeValue);
+    sendKeys(longitude, longitudeValue);
+    sendKeys(altitude, altitudeValue);
 
     testWebDriver.selectByVisibleText(programsSupported, program);
     programsSupportedActiveFlag.click();
@@ -500,7 +469,6 @@ public class ManageFacilityPage extends Page {
     testWebDriver.sleep(500);
     addSupportedProgram.click();
     saveButton.click();
-
     return PageObjectFactory.getHomePage(testWebDriver);
   }
 
@@ -513,8 +481,7 @@ public class ManageFacilityPage extends Page {
   }
 
   public HomePage verifyProgramSupported(List<String> programsSupported) {
-    verifyEditFacilityHeader("Edit facility");
-    testWebDriver.waitForElementToAppear(disableButton);
+    testWebDriver.waitForElementToAppear(editFacilityHeader);
     testWebDriver.sleep(1500);
     String program;
     for (int i = 0; i < programsSupported.size(); i++) {
@@ -525,7 +492,6 @@ public class ManageFacilityPage extends Page {
       assertTrue("Program " + (i + 1) + " should be active", programsActiveElement.isSelected());
     }
     assertTrue(removeSupportedProgram.isDisplayed());
-
     return PageObjectFactory.getHomePage(testWebDriver);
   }
 

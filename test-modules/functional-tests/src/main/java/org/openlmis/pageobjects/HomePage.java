@@ -214,12 +214,14 @@ public class HomePage extends Page {
     return PageObjectFactory.getLoginPage(testWebDriver, baseUrl);
   }
 
-  public ManageFacilityPage navigateManageFacility() {
+  public FacilityPage navigateManageFacility() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
-    AdministrationMenuItem.click();
+    testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
-    manageLink.click();
-    return ManageFacilityPage.getInstance(testWebDriver);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(facilitiesTab);
+    facilitiesTab.click();
+    return PageObjectFactory.getFacilityPage(testWebDriver);
   }
 
   public GeographicZonePage navigateManageGeographicZonesPage() {
@@ -385,16 +387,6 @@ public class HomePage extends Page {
     testWebDriver.keyPress(reportMenuItem);
     testWebDriver.waitForElementToAppear(reportsTitle);
     return PageObjectFactory.getReportPage(testWebDriver);
-  }
-
-  public ManageFacilityPage navigateSearchFacility() {
-    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
-    testWebDriver.keyPress(AdministrationMenuItem);
-    testWebDriver.waitForElementToAppear(manageLink);
-    testWebDriver.keyPress(manageLink);
-    testWebDriver.waitForElementToAppear(facilitiesTab);
-    facilitiesTab.click();
-    return ManageFacilityPage.getInstance(testWebDriver);
   }
 
   public RolesPage navigateToRolePage() {

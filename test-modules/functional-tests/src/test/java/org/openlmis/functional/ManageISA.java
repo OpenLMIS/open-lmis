@@ -18,9 +18,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.pageobjects.FacilityPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.ManageFacilityPage;
 import org.openlmis.pageobjects.PageObjectFactory;
 import org.testng.annotations.*;
 
@@ -29,8 +29,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.lang.String.valueOf;
-import static org.openlmis.pageobjects.ManageFacilityPage.saveButton;
+import static org.openlmis.pageobjects.FacilityPage.saveButton;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -43,7 +45,7 @@ public class ManageISA extends TestCaseHelper {
   private static String facilityNamePrefix = "FCname";
   public String user, program, product, productName, category, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue,
     maximumValue, adjustmentValue, date_time;
-  static ManageFacilityPage manageFacilityPage;
+  static FacilityPage facilityPage;
 
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
@@ -78,24 +80,24 @@ public class ManageISA extends TestCaseHelper {
 
   @When("^I create facility$")
   public void createFacility() {
-    manageFacilityPage = PageObjectFactory.getManageFacilityPage(testWebDriver);
-    date_time = ManageFacilityPage.getInstance(testWebDriver).enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
+    facilityPage = PageObjectFactory.getFacilityPage(testWebDriver);
+    date_time = PageObjectFactory.getFacilityPage(testWebDriver).enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
       program, geoZone, facilityType, operatedBy, valueOf(333), true);
   }
 
   @And("^I override ISA \"([^\"]*)\"$")
   public void overrideISA(String isaValue) {
-    PageObjectFactory.getManageFacilityPage(testWebDriver).overrideIsa(isaValue, 1);
+    PageObjectFactory.getFacilityPage(testWebDriver).overrideIsa(isaValue, 1);
   }
 
   @Then("^I should see calculated ISA \"([^\"]*)\"$")
   public void verifyCalculatedISA(String isaValue) {
-    PageObjectFactory.getManageFacilityPage(testWebDriver).verifyCalculatedIsa(Integer.parseInt(isaValue));
+    assertEquals(Integer.parseInt(isaValue), PageObjectFactory.getFacilityPage(testWebDriver).getCalculatedIsa());
   }
 
   @When("^I click ISA done$")
   public void clickISADone() {
-    PageObjectFactory.getManageFacilityPage(testWebDriver).clickIsaDoneButton();
+    PageObjectFactory.getFacilityPage(testWebDriver).clickIsaDoneButton();
   }
 
   @When("^I save facility$")
@@ -105,21 +107,20 @@ public class ManageISA extends TestCaseHelper {
 
   @Then("^I should see save successfully$")
   public void verifySaveSuccessfully() {
-    ManageFacilityPage.getInstance(testWebDriver).verifySuccessMessage();
+    assertTrue(PageObjectFactory.getFacilityPage(testWebDriver).isSuccessMessageDisplayed());
   }
 
   @When("^I search facility$")
   public void searchFacility() {
-    manageFacilityPage = ManageFacilityPage.getInstance(testWebDriver);
-    manageFacilityPage = PageObjectFactory.getManageFacilityPage(testWebDriver);
-    manageFacilityPage.searchFacility(date_time);
-    manageFacilityPage.clickFacilityList(date_time);
+    facilityPage = PageObjectFactory.getFacilityPage(testWebDriver);
+    facilityPage.searchFacility(date_time);
+    facilityPage.clickFacilityList(date_time);
   }
 
   @Then("^I should see overridden ISA \"([^\"]*)\"$")
   public void verifyOverriddenISA(String isa) {
-    manageFacilityPage = PageObjectFactory.getManageFacilityPage(testWebDriver);
-    manageFacilityPage.verifyOverriddenIsa(isa);
+    facilityPage = PageObjectFactory.getFacilityPage(testWebDriver);
+    facilityPage.verifyOverriddenIsa(isa);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
@@ -129,46 +130,47 @@ public class ManageISA extends TestCaseHelper {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(userSIC, password);
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
-    manageFacilityPage = homePage.navigateManageFacility();
+    facilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
+    assertEquals("Add new facility", facilityPage.getNewFacilityHeader());
 
-    String date_time = manageFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone,
+    String date_time = facilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone,
       facilityType, operatedBy, valueOf(333), true);
     saveButton.click();
-    manageFacilityPage.searchFacility(date_time);
-    manageFacilityPage.clickFacilityList(date_time);
+    facilityPage.searchFacility(date_time);
+    facilityPage.clickFacilityList(date_time);
 
-    manageFacilityPage.overrideIsa("24", 1);
-    manageFacilityPage.verifyCalculatedIsa(100);
-    manageFacilityPage.clickIsaDoneButton();
-    manageFacilityPage.verifyOverriddenIsa("24");
+    facilityPage.overrideIsa("24", 1);
+    assertEquals("100", facilityPage.getCalculatedIsa());
+    facilityPage.clickIsaDoneButton();
+    facilityPage.verifyOverriddenIsa("24");
 
-    manageFacilityPage.overrideIsa("30", 1);
-    manageFacilityPage.clickIsaCancelButton();
-    manageFacilityPage.verifyOverriddenIsa("24");
+    facilityPage.overrideIsa("30", 1);
+    facilityPage.clickIsaCancelButton();
+    facilityPage.verifyOverriddenIsa("24");
 
-    manageFacilityPage.overrideIsa("30", 1);
-    manageFacilityPage.clickUseCalculatedIsaButton();
-    manageFacilityPage.clickIsaDoneButton();
-    manageFacilityPage.verifyOverriddenIsa("");
+    facilityPage.overrideIsa("30", 1);
+    facilityPage.clickUseCalculatedIsaButton();
+    facilityPage.clickIsaDoneButton();
+    facilityPage.verifyOverriddenIsa("");
 
-    manageFacilityPage.editPopulation(valueOf("30"));
-    manageFacilityPage.overrideIsa("24", 1);
-    manageFacilityPage.verifyCalculatedIsa(100);
-    manageFacilityPage.clickIsaCancelButton();
+    facilityPage.editPopulation(valueOf("30"));
+    facilityPage.overrideIsa("24", 1);
+    assertEquals("100", facilityPage.getCalculatedIsa());
+    facilityPage.clickIsaCancelButton();
 
-    manageFacilityPage.editPopulation(valueOf(3000000));
-    manageFacilityPage.overrideIsa("124", 1);
-    manageFacilityPage.verifyCalculatedIsa(1000);
-    manageFacilityPage.clickIsaCancelButton();
-    manageFacilityPage.verifyOverriddenIsa("");
+    facilityPage.editPopulation(valueOf(3000000));
+    facilityPage.overrideIsa("124", 1);
+    assertEquals("1000", facilityPage.getCalculatedIsa());
+    facilityPage.clickIsaCancelButton();
+    facilityPage.verifyOverriddenIsa("");
 
-    manageFacilityPage.overrideIsa("24", 1);
-    manageFacilityPage.clickIsaDoneButton();
+    facilityPage.overrideIsa("24", 1);
+    facilityPage.clickIsaDoneButton();
     saveButton.click();
-    manageFacilityPage.verifySuccessMessage();
-    manageFacilityPage.clickFacilityList(date_time);
-    manageFacilityPage.verifyOverriddenIsa("24");
+    assertTrue(facilityPage.isSuccessMessageDisplayed());
+    facilityPage.clickFacilityList(date_time);
+    facilityPage.verifyOverriddenIsa("24");
   }
 
   @AfterMethod(groups = "admin")

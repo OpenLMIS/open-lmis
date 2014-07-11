@@ -252,7 +252,6 @@ public class TestWebDriver {
       Actions action = new Actions(driver);
       action.click(element).perform();
     }
-
   }
 
   public void keyPress(final WebElement element) {
