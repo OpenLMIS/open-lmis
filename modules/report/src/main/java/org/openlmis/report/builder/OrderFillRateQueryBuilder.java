@@ -22,24 +22,23 @@ public class OrderFillRateQueryBuilder {
         Long userId = (Long) params.get("userId");
 
         params = (Map) (params.containsKey("param1") ? params.get("param1") : params);
-        String zone   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
+        String zone = params.containsKey("zone") ? ((String[]) params.get("zone"))[0] : "";
         String period = ((String[]) params.get("period"))[0];
         String facility = params.containsKey("facility") ? ((String[]) params.get("facility"))[0] : "";
         String facilityType = params.containsKey("facilityType") ? ((String[]) params.get("facilityType"))[0] : "";
         String program = ((String[]) params.get("program"))[0];
         String schedule = ((String[]) params.get("schedule"))[0];
         String product = ((String[]) params.get("product"))[0];
-      //  String requisitionGroup = params.containsKey("requisitionGroup") ? ((String[]) params.get("requisitionGroup"))[0] : "";
         String productCategory = params.containsKey("productCategory") ? ((String[]) params.get("productCategory"))[0] : "";
 
-        return getQueryString(params,zone, program, period, schedule, facility, product, facilityType, productCategory,userId);
+        return getQueryString(params, zone, program, period, schedule, facility, product, facilityType, productCategory, userId);
 
     }
 
     private static void writePredicates(String zone, String program, String period, String schedule, String facility, String product, String facilityType, String productCategory) {
 
-        if(zone != "" && !zone.endsWith( "undefined")){
-            WHERE(" (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone +" or gz.parent = " + zone + " )");
+        if (zone != "" && !zone.endsWith("undefined")) {
+            WHERE(" (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone + " or gz.parent = " + zone + " )");
         }
 
         if (facility != "" && !facility.endsWith("undefined")) {
@@ -69,7 +68,7 @@ public class OrderFillRateQueryBuilder {
         }
     }
 
-    private static String getQueryString(Map params, String zone,String program, String period, String schedule, String facility, String product, String facilityType, String productCategory,Long userId) {
+    private static String getQueryString(Map params, String zone, String program, String period, String schedule, String facility, String product, String facilityType, String productCategory, Long userId) {
         BEGIN();
         SELECT_DISTINCT("facilityname facility,fn_previous_period(programid,facilityid,periodid,\n" +
                 "    productcode) as Approved,quantityreceived receipts ,productcode, product, CASE\n" +
@@ -79,11 +78,11 @@ public class OrderFillRateQueryBuilder {
                 "    productcode),0) * 100::numeric\n" +
                 "                                     END AS item_fill_rate ");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = vw_order_fill_rate.zoneId");
-        WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId+ " as int4) and program_id = cast(" + program + " as int4))");
+        WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId + " as int4) and program_id = cast(" + program + " as int4))");
         WHERE(" status in ('RELEASED') and fn_previous_period(programid,facilityid,periodid,productcode)>0 and periodid = cast (" + period + " as int4)" +
                 "and facilityid= cast(" + facility + " as int4) and programid = cast(" + program + " as int4)");
 
-        writePredicates( zone,program, period, schedule, facility, product, facilityType, productCategory);
+        writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
         GROUP_BY("product, approved, \n" +
                 "  quantityreceived,  productcode, \n" +
                 "  facilityname ");
@@ -105,13 +104,12 @@ public class OrderFillRateQueryBuilder {
         String schedule = ((String[]) params.get("schedule"))[0];
         String product = ((String[]) params.get("product"))[0];
         String productCategory = ((String[]) params.get("productCategory"))[0];
-       // String requisitionGroup = ((String[]) params.get("requisitionGroup"))[0];
         BEGIN();
         SELECT("count(totalproductsreceived) quantityreceived");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = zoneId");
-        WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId+ " as int4) and program_id = cast(" + program + " as int4))");
+        WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId + " as int4) and program_id = cast(" + program + " as int4))");
         WHERE("totalproductsreceived>0 and fn_previous_period(programid,facilityid,periodid,productcode) >0  and status in ('RELEASED') and periodId= cast(" + period + " as int4) and programId= cast(" + program + " as int4) and facilityId= cast(" + facility + " as int4)");
-        writePredicates(zone, program, period, schedule, facility, product, facilityType,  productCategory);
+        writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
         GROUP_BY("totalproductsreceived");
         String sql = SQL();
         return sql;
@@ -130,14 +128,13 @@ public class OrderFillRateQueryBuilder {
         String schedule = ((String[]) params.get("schedule"))[0];
         String product = ((String[]) params.get("product"))[0];
         String productCategory = ((String[]) params.get("productCategory"))[0];
-        //String requisitionGroup = ((String[]) params.get("requisitionGroup"))[0];
 
         BEGIN();
         SELECT("count(fn_previous_period(programid,facilityid,periodid,productcode)) quantityapproved");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = zoneId");
-        WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId+ " as int4) and program_id = cast(" + program + " as int4))");
+        WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId + " as int4) and program_id = cast(" + program + " as int4))");
         WHERE("fn_previous_period(programid,facilityid,periodid,productcode) > 0  and status in ('RELEASED') and periodId= cast(" + period + " as int4) and programId= cast(" + program + " as int4) and facilityId= cast(" + facility + " as int4) ");
-        writePredicates(zone, program, period, schedule, facility, product, facilityType,  productCategory);
+        writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
         String sql = SQL();
         return sql;
 
@@ -146,7 +143,7 @@ public class OrderFillRateQueryBuilder {
 
     public static String getSummaryQuery(Map params) {
 
-        Long userId = (Long)params.get("userId");
+        Long userId = (Long) params.get("userId");
         params = (Map) (params.containsKey("param1") ? params.get("param1") : params);
         String program = ((String[]) params.get("program"))[0];
         String period = ((String[]) params.get("period"))[0];
@@ -156,12 +153,11 @@ public class OrderFillRateQueryBuilder {
         String schedule = ((String[]) params.get("schedule"))[0];
         String product = ((String[]) params.get("product"))[0];
         String productCategory = ((String[]) params.get("productCategory"))[0];
-        //String requisitionGroup = ((String[]) params.get("requisitionGroup"))[0];
         BEGIN();
 
         SELECT("count(totalproductsreceived) quantityreceived");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = zoneId");
-        WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId+ " as int4) and program_id = cast(" + program + " as int4))");
+        WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId + " as int4) and program_id = cast(" + program + " as int4))");
         WHERE("totalproductsreceived>0 and fn_previous_period(programid,facilityid,periodid,productcode)>0 and  status in ('RELEASED') and periodId= cast(" + period + " as int4) and programId= cast(" + program + " as int4) and facilityId= cast(" + facility + " as int4)");
         writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
         GROUP_BY("totalproductsreceived");
