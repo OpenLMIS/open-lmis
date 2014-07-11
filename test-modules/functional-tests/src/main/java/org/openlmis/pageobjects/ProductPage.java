@@ -24,7 +24,7 @@ import static org.openqa.selenium.support.How.ID;
 
 public class ProductPage extends Page {
 
-  @FindBy(how = ID, using = "productsHeader")
+  @FindBy(how = ID, using = "searchProductsHeaderLabel")
   private static WebElement searchProductsHeader = null;
 
   @FindBy(how = ID, using = "searchOptionButton")
