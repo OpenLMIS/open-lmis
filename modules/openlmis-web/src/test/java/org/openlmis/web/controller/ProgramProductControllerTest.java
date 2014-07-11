@@ -28,6 +28,7 @@ import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +38,12 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.openlmis.web.controller.FacilityProgramProductController.PROGRAM_PRODUCT_LIST;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProgramProductControllerTest {
+  private MockHttpServletRequest request = new MockHttpServletRequest();
 
   @Mock
   ProgramProductService service;
@@ -113,6 +116,51 @@ public class ProgramProductControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.save(programProduct);
 
     assertThat(response.getBody().getErrorMsg(), is("error message"));
+    verify(service).saveProduct(programProduct);
+  }
+
+  @Test
+  public void shouldGetById() {
+    Product product = new Product();
+    product.setCode("p10");
+    Long productId = 1l;
+    product.setId(productId);
+    ProgramProduct programProduct = new ProgramProduct();
+    programProduct.setProduct(product);
+
+    when(service.getById(1l)).thenReturn(programProduct);
+
+    controller.getById(1l);
+
+    verify(service).getById(1l);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfInvalidProgramProductBeingUpdated() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct();
+    Product product = new Product();
+    programProduct.setProduct(product);
+    doThrow(new DataException("error")).when(service).saveProduct(programProduct);
+
+    ResponseEntity<OpenLmisResponse> errorResponse = controller.update(programProduct, 9L, request);
+
+    assertThat(errorResponse.getBody().getErrorMsg(), is("error"));
+    assertThat(errorResponse.getStatusCode(), is(BAD_REQUEST));
+  }
+
+  @Test
+  public void shouldUpdateProgramProduct() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct();
+    Product product = new Product();
+    programProduct.setProduct(product);
+    doNothing().when(service).saveProduct(programProduct);
+    when(messageService.message("message.product.updated.success", programProduct.getProduct().getName())).thenReturn("updated");
+
+    ResponseEntity<OpenLmisResponse> response = controller.update(programProduct, 1L, request);
+
+    assertThat((Long) response.getBody().getData().get("productId"), is(programProduct.getProduct().getId()));
+    assertThat(programProduct.getProduct().getId(), is(1L));
+    assertThat(response.getBody().getSuccessMsg(), is("updated"));
     verify(service).saveProduct(programProduct);
   }
 }

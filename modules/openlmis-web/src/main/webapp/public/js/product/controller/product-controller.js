@@ -1,8 +1,8 @@
-function ProductController($scope, productGroups, productForms, dosageUnits, AddEditProgramProducts, $location) {
+function ProductController($scope, productGroups, productForms, dosageUnits, programProduct, AddEditProgramProducts, $location) {
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
-  $scope.programProduct = {};
+  $scope.programProduct = programProduct || {};
 
   var success = function (data) {
     $scope.error = "";
@@ -25,12 +25,19 @@ function ProductController($scope, productGroups, productForms, dosageUnits, Add
       return;
     }
     if ($scope.programProduct.product.id) {
-      AddEditProgramProducts.update({id: $scope.programProduct.id}, $scope.programProduct, success, error);
+      AddEditProgramProducts.update({id: $scope.programProduct.product.id}, $scope.programProduct, success, error);
     }
     else {
       AddEditProgramProducts.save({}, $scope.programProduct, success, error);
     }
   };
+
+  $scope.cancel = function () {
+    $scope.$parent.productId = undefined;
+    $scope.$parent.message = "";
+    $location.path('#/search');
+  };
+
 }
 
 ProductController.resolve = {
@@ -62,6 +69,20 @@ ProductController.resolve = {
     $timeout(function () {
       DosageUnits.get({}, function (data) {
         deferred.resolve(data.dosageUnitList);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  programProduct: function ($q, $route, $timeout, AddEditProgramProducts) {
+    if ($route.current.params.id === undefined) return undefined;
+
+    var deferred = $q.defer();
+    var productId = $route.current.params.id;
+
+    $timeout(function () {
+      AddEditProgramProducts.get({id: productId}, function (data) {
+        deferred.resolve(data.programProduct);
       }, {});
     }, 100);
     return deferred.promise;

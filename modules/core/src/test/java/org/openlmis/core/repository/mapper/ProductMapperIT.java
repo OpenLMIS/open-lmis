@@ -150,6 +150,7 @@ public class ProductMapperIT {
     assertThat(returnedProduct.getProductGroup(), is(product.getProductGroup()));
     assertThat(returnedProduct.getPrimaryName(), is(product.getPrimaryName()));
     assertThat(returnedProduct.getDosageUnit(), is(product.getDosageUnit()));
+    assertThat(returnedProduct.getForm(), is(product.getForm()));
   }
 
   @Test

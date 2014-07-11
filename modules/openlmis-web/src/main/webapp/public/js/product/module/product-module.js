@@ -14,7 +14,7 @@ productModule.config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
           when('/search', {controller: ProductSearchController, templateUrl: 'partials/search.html'}).
           when('/create', {controller: ProductController, templateUrl: 'partials/create.html', resolve: ProductController.resolve}).
-//      when('/edit/:id', {controller: ProductController, templateUrl: 'partials/create.html'}).
+      when('/edit/:id', {controller: ProductController, templateUrl: 'partials/create.html', resolve: ProductController.resolve}).
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.productSelected = "selected";

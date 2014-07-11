@@ -204,4 +204,10 @@ public class ProductRepositoryTest {
     repository.getAllDosageUnits();
     verify(dosageUnitMapper).getAll();
   }
+
+  @Test
+  public void shouldGetById() {
+    repository.getById(1l);
+    verify(mockedMapper).getById(1l);
+  }
 }

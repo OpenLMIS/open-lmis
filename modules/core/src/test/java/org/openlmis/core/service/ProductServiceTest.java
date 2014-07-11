@@ -189,4 +189,11 @@ public class ProductServiceTest {
 
     verify(productRepository).getAllDosageUnits();
   }
+
+  @Test
+  public void shouldGetById() {
+    productService.getById(1l);
+
+    verify(productRepository).getById(1l);
+  }
 }

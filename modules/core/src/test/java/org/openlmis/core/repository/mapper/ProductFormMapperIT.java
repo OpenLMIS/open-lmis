@@ -38,6 +38,14 @@ public class ProductFormMapperIT {
   ProductFormMapper mapper;
 
   @Test
+  public void shouldGetProductFormById() throws Exception {
+
+    ProductForm returnedProductForm = mapper.getById(1l);
+
+    assertThat(returnedProductForm.getCode(), is("Tablet"));
+  }
+
+  @Test
   public void shouldGetAllProductForms() throws Exception {
     List<ProductForm> result = mapper.getAll();
 

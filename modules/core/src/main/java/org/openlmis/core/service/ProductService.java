@@ -103,4 +103,8 @@ public class ProductService {
   public List<DosageUnit> getAllDosageUnits() {
     return repository.getAllDosageUnits();
   }
+
+  public Product getById(long id) {
+    return repository.getById(id);
+  }
 }

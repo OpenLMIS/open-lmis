@@ -12,7 +12,14 @@ package org.openlmis.core.service;
 
 import com.google.common.base.Predicate;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
@@ -183,11 +190,17 @@ public class ProgramProductService {
   }
 
   public void saveProduct(ProgramProduct programProduct) {
-    if(programProduct.getProduct() != null){
+    if (programProduct.getProduct() != null) {
       productService.save(programProduct.getProduct());
-    }
-    else {
+    } else {
       throw new DataException("message.product.null");
     }
+  }
+
+  public ProgramProduct getById(Long id) {
+    Product product = productService.getById(id);
+    ProgramProduct programProduct = new ProgramProduct();
+    programProduct.setProduct(product);
+    return programProduct;
   }
 }

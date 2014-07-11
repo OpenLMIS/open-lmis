@@ -10,7 +10,13 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductForm;
@@ -103,7 +109,10 @@ public interface ProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById")),
     @Result(
       property = "dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))})
+      one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
+    @Result(
+      property = "form", column = "formId", javaType = DosageUnit.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById"))})
   Product getById(Long id);
 
   @Select("SELECT active FROM products WHERE code = #{code}")

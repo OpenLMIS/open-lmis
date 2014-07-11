@@ -61,6 +61,7 @@ public class ProductBuilder {
       product.setRoundToZero(true);
       product.setDosesPerDispensingUnit(10);
       ProductForm form = new ProductForm();
+      form.setDisplayOrder(1);
       form.setCode("Tablet");
       form.setId(1L);
       product.setForm(form);

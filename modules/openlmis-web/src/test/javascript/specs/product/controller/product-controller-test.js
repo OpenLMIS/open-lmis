@@ -15,14 +15,14 @@ describe("Product", function () {
   describe("Controller", function () {
 
     var ctrl, scope, $httpBackend, location;
-    describe("Save", function () {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+      scope = $rootScope.$new();
+      $httpBackend = _$httpBackend_;
+      location = $location;
+      ctrl = $controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programProduct: undefined});
+    }));
 
-      beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
-        scope = $rootScope.$new();
-        $httpBackend = _$httpBackend_;
-        location = $location;
-        ctrl = $controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: []});
-      }));
+    describe("Save", function () {
 
       it('should not save product if invalid', function () {
         scope.productForm = {"$error": {"required": true}};
@@ -59,6 +59,13 @@ describe("Product", function () {
         expect(scope.showError).toBeTruthy();
         expect(scope.$parent.message).toEqual("");
       });
+    });
+
+    it('should take to search page on cancel', function () {
+      scope.cancel();
+      expect(scope.$parent.parentId).toBeUndefined();
+      expect(scope.$parent.message).toEqual("");
+      expect(location.path()).toEqual('/#/search');
     });
   });
 
@@ -101,6 +108,13 @@ describe("Product", function () {
       $timeout.flush();
       $httpBackend.flush();
       expect(deferredObject.resolve).toHaveBeenCalled();
+    });
+
+    it('should get product if edit route contains id', function () {
+      $route = {current: {params: {id: 1}}};
+      $httpBackend.expect('GET', '/programProducts/1.json').respond({'id': '23'});
+      ctrl(ProductController.resolve.programProduct, {$route: $route});
+      $timeout.flush();
     });
   });
 });

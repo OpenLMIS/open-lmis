@@ -137,4 +137,8 @@ public class ProductRepository {
   public List<DosageUnit> getAllDosageUnits() {
     return dosageUnitMapper.getAll();
   }
+
+  public Product getById(Long id) {
+    return mapper.getById(id);
+  }
 }
