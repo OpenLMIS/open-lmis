@@ -1,49 +1,47 @@
 <!--
-  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
-  ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
-  ~
-  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
-  -->
+~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+~
+~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+~
+~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+~
+~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+-->
 
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 <div class="container-fluid">
     <div class="box row-fluid">
         <div class="box-header">
-            <h2><i class="icon-edit"></i><span class="break"></span>Order and item fill rate</h2>
+            <h2><i class="icon-edit"></i><span class="break"></span>Order and Item Fill Rate Report by Facility</h2>
+
             <div class="box-icon">
                 <a id="pdf-button" href="#list" ng-click="exportReport('PDF')" class='btn-small btn-info'>PDF</a>
                 <a id="xls-button" href="#list" ng-click="exportReport('XLS')" class='btn-small btn-info'>Excel</a>
+                <span ng-show="pusheditems.length>0"> <a id="mailing-button" href="#list"
+                                                         ng-click="exportReport('pushed-product-list')"
+                                                         class='btn-small btn-info'>Pushed ITEMS</a></span>
             </div>
         </div>
-        <div >
+        <div>
             <div class="row-fluid">
                 <div class="sidebar">
                     <div class="app-form" style="padding: 5px;">
-                        <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                        <form ng-submit="filterGrid()" name="filterForm" novalidate>
                             <div filter-container class="clearfix">
                                 <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
                                 <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                                 <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
                                 <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+                                <zone-filter class="form-cell horizontalFilters"></zone-filter>
+                                <!--<requisition-group-filter
+                                         class="form-cell horizontalFilters"></requisition-group-filter> -->
+                                <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
+                                <facility-filter class="form-cell horizontalFilters"
+                                                 required="true"></facility-filter>
+                                <product-category-filter
+                                        class="form-cell horizontalFilters"></product-category-filter>
+                                <product-filter class="form-cell horizontalFilters"></product-filter>
 
-                                <div ng-hide="showMoreFilters"  class="clearfix form-cell horizontalFilters" >
-                                    <br />
-                                    <a ng-click="toggleMoreFilters()" class="button" >Show More Filters</a>
-                                </div>
-                                <div ng-hide="!showMoreFilters">
-                                    <requisition-group-filter class="form-cell horizontalFilters"></requisition-group-filter>
-                                    <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
-                                    <facility-filter class="form-cell horizontalFilters"></facility-filter>
-                                    <product-category-filter class="form-cell horizontalFilters" ></product-category-filter>
-                                    <product-filter class="form-cell horizontalFilters"></product-filter>
-                                    <div  class="clearfix form-cell horizontalFilters" >
-                                        <br />
-                                        <a class="button" ng-click="toggleMoreFilters()">Less Filters</a>
-                                    </div>
-                                </div>
 
                             </div>
                         </form>
@@ -51,31 +49,52 @@
                 </div>
                 <div class="content-body">
 
-                    <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                    <table client-side-sort-pagination class="table table-bordered"
+                           ng-show="data == undefined || data.length == 0">
                         <tr>
                             <td>No data to show under selected filters</td>
                         </tr>
                     </table>
 
                     <div ng-show="datarows.length>0">
-                       <div></div>
-                       <div class="pull-left legend" style="height: 30px; text-align:justify; font-weight: bold;font-size: 20px; vertical-align: bottom;" ng-repeat="summary in summaries" ng-show="summaries.length > 0"> Order Fill Rate:{{summary.order_FILL_RATE}}% </div>
 
-                        <div class="pull-right legend"  >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
 
-                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
+                        <div ng-repeat="summary in summaries track by $index" class="pull-right">
+
+                            {{summary.nameLabel}} {{summary.facility}}
+                            <span class="report-label "> {{summary.name}}</span><span class="report-data">{{summary.count}}</span>
+
+
+                        </div>
+                        <br/>
+
+                        <div class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page
+                            - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of
+                            {{tableParams.total}}
+
+                        </div>
+
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
+                               ng-table="tableParams">
                             <tbody>
-                            <tr ng-repeat="row in datarows">
+                            <tr ng-repeat="row in datarows"><!--ng-if = "row.item_fill_rate >0">-->
 
-                                <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                                <td data-title="'Facility Name'" style="width:25%" sortable="facility" >{{ row.facility }}</td>
-                                <td data-title="'Product Code'" style="width:80px" sortable="productcode" >{{ row.productcode }}</td>
-                                <td data-title="'Product Name'" style="width:30%" sortable="product"  >{{ row.product }}</td>
-                                <td data-title="'Quantity Ordered'" class="number" style="width:80px" sortable="approved"  >{{ row.approved | number }}</td>
-                                <td data-title="'Quantity Received'" class="number" style="width:80px" sortable="receipts"  >{{ row.receipts | number }}</td>
-                                <td data-title="'Item Fill Rate'" class="number" ng-class="{ red:'Item Fill Rate'}"  style="width:120px" sortable="item_fill_rate">
+                                <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
+                                <td data-title="'Product Code'" style="width:80px" sortable="productcode">{{
+                                    row.productcode }}
+                                </td>
+                                <td data-title="'Product Name'" style="width:30%" sortable="product">{{ row.product }}
+                                </td>
+                                <td data-title="'Quantity Ordered'" class="number" style="width:80px"
+                                    sortable="approved">{{ row.approved | number }}
+                                </td>
+                                <td data-title="'Quantity Received'" class="number" style="width:80px"
+                                    sortable="receipts">{{ row.receipts | number }}
+                                </td>
+                                <td data-title="'Item Fill Rate'" class="number" ng-class="{ red:'Item Fill Rate'}"
+                                    style="width:120px" sortable="item_fill_rate">
                                     <div class="{{(row.item_fill_rate == 'Item Fill rate')?'red':(row.item_fill_rate < 50)?'red':(row.item_fill_rate > 110)?'blue':'black'}}">
-                                        {{ row.item_fill_rate | number }}  %
+                                        {{ row.item_fill_rate | number}} %
                                     </div>
                                 </td>
                             </tr>
@@ -91,5 +110,6 @@
     </div>
 
 </div>
+
 
 

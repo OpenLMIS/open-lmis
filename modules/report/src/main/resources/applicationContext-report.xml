@@ -240,6 +240,15 @@
                     <property name="title" value="List of Equipment by Funding Source"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="pushed_product_list"/>
+                    <property name="template" value="pushed-product-list.jasper"/>
+                    <property name="reportDataProvider" ref="pushedProductReportDataProvider"/>
+                    <property name="id" value="RP-pushed-product-list"/>
+                    <property name="name" value="Pushed Product List by Facility Report"/>
+                    <property name="title" value="Pushed Product List by Facility Report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>
