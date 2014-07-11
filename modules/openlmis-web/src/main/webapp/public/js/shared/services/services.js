@@ -381,5 +381,9 @@ services.factory('ProductForms', function ($resource) {
   return $resource('/products/forms.json', {}, {});
 });
 
+services.factory('DosageUnits', function ($resource) {
+  return $resource('/products/dosageUnits.json', {}, {});
+});
+
 
 

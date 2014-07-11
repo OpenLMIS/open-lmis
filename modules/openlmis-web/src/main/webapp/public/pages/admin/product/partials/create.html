@@ -34,7 +34,7 @@
       </label>
 
       <div class="form-field">
-        <input ng-model="product.code" name="code" id="code" type="text" maxlength="150"/>
+        <input ng-model="product.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
         <span class="field-error" ng-show="!product.code && showError" openlmis-message="select.value"></span>
       </div>
     </div>
@@ -47,7 +47,8 @@
       </label>
 
       <div class="form-field">
-        <input ng-model="product.primaryName" name="primaryName" id="primaryName" type="text" maxlength="20"/>
+        <input ng-model="product.primaryName" name="primaryName" id="primaryName" type="text" maxlength="150"
+               ng-required="true"/>
         <span class="field-error" ng-show="!product.primaryName && showError" openlmis-message="select.value"></span>
       </div>
     </div>
@@ -106,11 +107,10 @@
       <label id="productFormLabel" for="form" openlmis-message="label.product.form"></label>
 
       <div class="form-field">
-        <select class="ui-select-width" id="form" ui-select2 ng-model="product.productForm"
+        <select class="ui-select-width" id="form" ui-select2 ng-model="product.form"
                 ng-options="productForm as productForm.code for productForm in productForms | orderBy: 'code'"
                 openlmis-message="placeholder.select.product.form">
           <option value=""></option>
-        </select>
         </select>
       </div>
     </div>
@@ -120,7 +120,7 @@
       <label id="productStrengthLabel" for="strength" openlmis-message="label.product.strength"></label>
 
       <div class="form-field">
-        <input ng-model="product.strength" name="strength" id="strength" type="text" maxlength="250"/>
+        <input ng-model="product.strength" name="strength" id="strength" type="text" maxlength="14"/>
       </div>
     </div>
   </div>
@@ -129,7 +129,10 @@
       <label id="dosageUnitLabel" for="dosageUnit" openlmis-message="label.product.dosageUnit"></label>
 
       <div class="form-field">
-        <select class="ui-select-width" id="dosageUnit" ui-select2>
+        <select class="ui-select-width" id="dosageUnit" ui-select2 ng-model="product.dosageUnit"
+                ng-options="dosageUnit as dosageUnit.code for dosageUnit in dosageUnits | orderBy: 'code'"
+                openlmis-message="placeholder.select.product.dosageUnit">
+          <option value=""></option>
         </select>
       </div>
     </div>
@@ -145,7 +148,9 @@
       </label>
 
       <div class="form-field">
-        <input ng-model="product.dispensingUnit" name="dispensingUnit" id="dispensingUnit" type="text" maxlength="250"/>
+        <input ng-model="product.dispensingUnit" name="dispensingUnit" id="dispensingUnit" type="text" maxlength="20"
+               ng-required="true"/>
+        <span class="field-error" ng-show="!product.dispensingUnit && showError" openlmis-message="select.value"></span>
       </div>
     </div>
   </div>
@@ -157,20 +162,34 @@
       </label>
 
       <div class="form-field">
-        <input ng-model="product.dosesPerDispensingUnit" name="dosesPerDispensingUnit" id="dosesPerDispensingUnit"
-               type="text" maxlength="250"/>
+        <div class="position-relative">
+          <input ng-model="product.dosesPerDispensingUnit" name="dosesPerDispensingUnit"
+                 id="product.dosesPerDispensingUnit"
+                 type="text" maxlength="5" ng-required="true" numeric-validator="positiveInteger"/>
+       <span class="rnr-form-error" style="display:none;" id="dosesPerDispensingUnit"
+             openlmis-message="error.number.only"></span>
+        </div>
+        <span class="field-error" ng-show="!product.dosesPerDispensingUnit && showError"
+              openlmis-message="select.value"></span>
       </div>
     </div>
   </div>
   <div class="span2">
     <div class="form-cell">
-      <label id="productPackSizeLabel" for="packSize">
+      <label id="productPackSizeLabel" for="product.packSize">
         <span openlmis-message="label.product.packSize"></span>
         <span class="label-required"> *</span>
       </label>
 
       <div class="form-field">
-        <input ng-model="product.packSize" name="packSize" id="packSize" type="text" maxlength="250"/>
+        <div class="position-relative">
+          <input ng-model="product.packSize" name="packSize" id="product.packSize" type="text" maxlength="5"
+                 ng-required="true" numeric-validator="positiveInteger"/>
+          <span class="rnr-form-error" style="display:none;" id="packSize"
+                openlmis-message="error.number.only"></span>
+        </div>
+        <span class="field-error" ng-show="!product.dosesPerDispensingUnit && showError"
+              openlmis-message="select.value"></span>
       </div>
     </div>
   </div>
@@ -182,8 +201,15 @@
       </label>
 
       <div class="form-field">
-        <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold"
-               type="text" maxlength="250"/>
+        <div class="position-relative">
+          <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold"
+                 id="product.packRoundingThreshold"
+                 type="text" maxlength="5" ng-required="true" numeric-validator="positiveInteger"/>
+          <span class="rnr-form-error" style="display:none;" id="packRoundingThreshold"
+                openlmis-message="error.number.only"></span>
+        </div>
+        <span class="field-error" ng-show="!product.packRoundingThreshold && showError"
+              openlmis-message="select.value"></span>
       </div>
     </div>
   </div>
@@ -264,19 +290,13 @@
   </div>
   <div class="span2">
     <div class="form-cell">
-      <label id="productArchivedLabel">
-        <span openlmis-message="label.product.archived"></span>
-        <span class="label-required"> *</span>
-      </label>
+      <label id="productArchivedLabel" openlmis-message="label.product.archived"></label>
 
       <div class="form-field">
-        <input id="archivedTrue" ng-model="product.archived" type="radio" name="archived" ng-value="true"
-               ng-required="true"/>
+        <input id="archivedTrue" ng-model="product.archived" type="radio" name="archived" ng-value="true"/>
         <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
         <input id="archivedFalse" ng-model="product.archived" type="radio" name="archived" ng-value="false"/>
         <strong openlmis-message="button.no"></strong>
-        <span class="field-error" ng-show="(product.archived === undefined || product.archived === null) && showError"
-              openlmis-message="select.value"></span>
       </div>
     </div>
   </div>

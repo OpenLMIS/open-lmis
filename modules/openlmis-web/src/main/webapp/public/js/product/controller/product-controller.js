@@ -1,6 +1,14 @@
-function ProductController($scope, productGroups, productForms, AddEditProgramProducts, $location) {
+function ProductController($scope, productGroups, productForms, dosageUnits, AddEditProgramProducts, $location) {
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
+  $scope.dosageUnits = dosageUnits;
+
+  $scope.save = function () {
+    if ($scope.productForm.$error.required) {
+      $scope.showError = true;
+      $scope.error = "form.error";
+    }
+  };
 }
 
 ProductController.resolve = {
@@ -21,6 +29,17 @@ ProductController.resolve = {
     $timeout(function () {
       ProductForms.get({}, function (data) {
         deferred.resolve(data.productFormList);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  dosageUnits: function ($q, $timeout, DosageUnits) {
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      DosageUnits.get({}, function (data) {
+        deferred.resolve(data.dosageUnitList);
       }, {});
     }, 100);
     return deferred.promise;
