@@ -15,9 +15,9 @@
     </a>
   </h2>
 
-  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="">
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message">
     <span ng-bind="message"></span>.&nbsp;&nbsp;
-    <a id="viewHere" href="" openlmis-message="search.viewHere"></a>
+    <a id="viewHereLink" href="" ng-click="edit(productId)" openlmis-message="search.viewHere"></a>
   </div>
 
   <div id="searchControl" class="row-fluid">

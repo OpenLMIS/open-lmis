@@ -2,11 +2,33 @@ function ProductController($scope, productGroups, productForms, dosageUnits, Add
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
+  $scope.programProduct = {};
+
+  var success = function (data) {
+    $scope.error = "";
+    $scope.$parent.message = data.success;
+    $scope.$parent.productId = data.productId;
+    $scope.showError = false;
+    $location.path('');
+  };
+
+  var error = function (data) {
+    $scope.$parent.message = "";
+    $scope.error = data.data.error;
+    $scope.showError = true;
+  };
 
   $scope.save = function () {
     if ($scope.productForm.$error.required) {
       $scope.showError = true;
       $scope.error = "form.error";
+      return;
+    }
+    if ($scope.programProduct.product.id) {
+      AddEditProgramProducts.update({id: $scope.programProduct.id}, $scope.programProduct, success, error);
+    }
+    else {
+      AddEditProgramProducts.save({}, $scope.programProduct, success, error);
     }
   };
 }

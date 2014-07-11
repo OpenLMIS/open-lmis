@@ -91,19 +91,21 @@ public class ProgramProductControllerTest {
   }
 
   @Test
-  public void shouldSaveProgramProduct(){
+  public void shouldSaveProgramProduct() {
     ProgramProduct programProduct = new ProgramProduct();
-    programProduct.setProduct(new Product());
+    Product product = new Product();
+    programProduct.setProduct(product);
     when(messageService.message("message.product.created.success", programProduct.getProduct().getName())).thenReturn("save success");
 
     ResponseEntity<OpenLmisResponse> response = controller.save(programProduct);
 
     assertThat(response.getBody().getSuccessMsg(), is("save success"));
+    assertThat((Long) response.getBody().getData().get("productId"), is(product.getId()));
     verify(service).saveProduct(programProduct);
   }
 
   @Test
-  public void shouldReturnBadRequestWhenServiceThrowsExceptionOnSave(){
+  public void shouldReturnBadRequestWhenServiceThrowsExceptionOnSave() {
     ProgramProduct programProduct = new ProgramProduct();
     programProduct.setProduct(new Product());
     doThrow(new DataException("error message")).when(service).saveProduct(programProduct);

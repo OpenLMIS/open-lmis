@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
-import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -76,12 +76,17 @@ public class ProgramProductController extends BaseController {
   @RequestMapping(method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody ProgramProduct programProduct) {
+    ResponseEntity<OpenLmisResponse> response;
+
     try {
       service.saveProduct(programProduct);
     } catch (DataException e) {
-      return error(e, BAD_REQUEST);
+      response = OpenLmisResponse.error(e, BAD_REQUEST);
+      return response;
     }
-    return success(messageService.message("message.product.created.success", programProduct.getProduct().getName()));
+    response = OpenLmisResponse.success(messageService.message("message.product.created.success", programProduct.getProduct().getName()));
+    response.getBody().addData("productId", programProduct.getProduct().getId());
+    return response;
   }
 }
 

@@ -32,6 +32,33 @@ describe("Product", function () {
         expect(scope.error).toEqual("form.error");
         expect(scope.showError).toBeTruthy();
       });
+
+      it('should insert product', function () {
+        scope.programProduct.product = {"code": 'P10'};
+        scope.productForm = {"$error": {"required": false}};
+
+        $httpBackend.expectPOST('/programProducts.json', scope.programProduct).respond(200, {"success": "Saved successfully", "productId": 5});
+        scope.save();
+        $httpBackend.flush();
+
+        expect(scope.error).toEqual("");
+        expect(scope.showError).toBeFalsy();
+        expect(scope.$parent.productId).toEqual(5);
+        expect(scope.$parent.message).toEqual("Saved successfully");
+      });
+
+      it('should not insert product', function () {
+        scope.programProduct.product = {"code": 'P10'};
+        scope.productForm = {"$error": {"required": false}};
+
+        $httpBackend.expectPOST('/programProducts.json', scope.programProduct).respond(400, {"error": "Some error occurred"});
+        scope.save();
+        $httpBackend.flush();
+
+        expect(scope.error).toEqual("Some error occurred");
+        expect(scope.showError).toBeTruthy();
+        expect(scope.$parent.message).toEqual("");
+      });
     });
   });
 
