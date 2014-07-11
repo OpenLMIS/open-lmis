@@ -373,5 +373,13 @@ services.factory('AddEditProgramProducts', function ($resource) {
   return $resource('/programProducts/:id.json', {id: '@id'}, update);
 });
 
+services.factory('ProductGroups', function ($resource) {
+  return $resource('/products/groups.json', {}, {});
+});
+
+services.factory('ProductForms', function ($resource) {
+  return $resource('/products/forms.json', {}, {});
+});
+
 
 

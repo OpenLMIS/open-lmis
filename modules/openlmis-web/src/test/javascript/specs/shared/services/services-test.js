@@ -299,4 +299,78 @@ describe("Services", function () {
       expect(failureStub).toHaveBeenCalled();
     });
   });
+
+  describe("ProductGroupService", function () {
+
+    var productGroupService;
+
+    beforeEach(inject(function (ProductGroups) {
+      productGroupService = ProductGroups;
+    }));
+
+    it('should GET product groups', function () {
+      var productGroups = {"groups": []};
+      httpMock.expectGET("/products/groups.json").respond(200, productGroups);
+      productGroupService.get({}, function (data) {
+        expect(data.groups).toEqual(productGroups.groups);
+        successStub();
+      }, function () {
+        failureStub();
+      });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status while get', function () {
+      httpMock.expectGET("/products/groups.json").respond(400);
+
+      productGroupService.get({}, function () {
+        successStub();
+      }, function () {
+        failureStub();
+      });
+
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+  });
+
+  describe("ProductFormService", function () {
+
+    var productFormService;
+
+    beforeEach(inject(function (ProductForms) {
+      productFormService = ProductForms;
+    }));
+
+    it('should GET product forms', function () {
+      var productForms = {"forms": []};
+      httpMock.expectGET("/products/forms.json").respond(200, productForms);
+      productFormService.get({}, function (data) {
+        expect(data.forms).toEqual(productForms.forms);
+        successStub();
+      }, function () {
+        failureStub();
+      });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status while get', function () {
+      httpMock.expectGET("/products/forms.json").respond(400);
+
+      productFormService.get({}, function () {
+        successStub();
+      }, function () {
+        failureStub();
+      });
+
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+  });
 });

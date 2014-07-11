@@ -81,7 +81,10 @@
       <label id="productGroupLabel" for="productGroup" openlmis-message="label.product.group"></label>
 
       <div class="form-field">
-        <select class="ui-select-width" id="productGroup" ui-select2>
+        <select class="ui-select-width" id="productGroup" ui-select2 ng-model="product.productGroup"
+                ng-options="productGroup as productGroup.name for productGroup in productGroups | orderBy: 'name'"
+                openlmis-message="placeholder.select.product.group">
+          <option value=""></option>
         </select>
       </div>
     </div>
@@ -103,7 +106,11 @@
       <label id="productFormLabel" for="form" openlmis-message="label.product.form"></label>
 
       <div class="form-field">
-        <select class="ui-select-width" id="form" ui-select2>
+        <select class="ui-select-width" id="form" ui-select2 ng-model="product.productForm"
+                ng-options="productForm as productForm.code for productForm in productForms | orderBy: 'code'"
+                openlmis-message="placeholder.select.product.form">
+          <option value=""></option>
+        </select>
         </select>
       </div>
     </div>

@@ -10,15 +10,17 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.core.domain.ProductForm;
+import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductGroupService;
-import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.List;
 
 /**
  * This controller handles endpoint related to listing products.
@@ -38,14 +40,14 @@ public class ProductController extends BaseController {
 
   @RequestMapping(value = "/groups", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-  public ResponseEntity<OpenLmisResponse> getAllGroups() {
-    return OpenLmisResponse.response(GROUPS, groupService.getAll());
+  public List<ProductGroup> getAllGroups() {
+    return groupService.getAll();
   }
 
   @RequestMapping(value = "/forms", method = RequestMethod.GET, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-  public ResponseEntity<OpenLmisResponse> getAllForms() {
-    return OpenLmisResponse.response(FORMS, formService.getAll());
+  public List<ProductForm> getAllForms() {
+    return formService.getAll();
   }
 }
 

@@ -21,18 +21,13 @@ import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.web.response.OpenLmisResponse;
-import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static org.openlmis.web.controller.ProductController.FORMS;
-import static org.openlmis.web.controller.ProductController.GROUPS;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -51,10 +46,9 @@ public class ProductControllerTest {
     List<ProductGroup> groups = new ArrayList<>();
     when(groupService.getAll()).thenReturn(groups);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = controller.getAllGroups();
+    List<ProductGroup> productGroups = controller.getAllGroups();
 
-    Map<String, Object> responseEntityData = responseEntity.getBody().getData();
-    assertThat((List<ProductGroup>) responseEntityData.get(GROUPS), is(groups));
+    assertThat(productGroups, is(groups));
   }
 
   @Test
@@ -62,9 +56,8 @@ public class ProductControllerTest {
     List<ProductForm> forms = new ArrayList<>();
     when(formService.getAll()).thenReturn(forms);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = controller.getAllForms();
+    List<ProductForm> productForms = controller.getAllForms();
 
-    Map<String, Object> responseEntityData = responseEntity.getBody().getData();
-    assertThat((List<ProductForm>) responseEntityData.get(FORMS), is(forms));
+    assertThat(productForms, is(forms));
   }
 }

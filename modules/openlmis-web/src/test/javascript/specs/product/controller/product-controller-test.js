@@ -10,98 +10,40 @@
 
 describe("Product Controller", function () {
 
-  var scope, httpBackend, ctrl, location, product, response;
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
-    scope = $rootScope.$new();
-    httpBackend = _$httpBackend_;
-    location = $location;
+  describe("Product resolve", function () {
+    var $httpBackend, ctrl, $timeout, $route, $q;
+    var deferredObject;
+    beforeEach(module('openlmis'));
 
-    product = {"id": 1, "code": "state", "name": "state", "level": {"code": "state", "name": "state"}};
+    beforeEach(inject(function (_$httpBackend_, $controller, _$timeout_, _$route_) {
+      $httpBackend = _$httpBackend_;
+      deferredObject = {promise: {id: 1}, resolve: function () {
+      }};
+      spyOn(deferredObject, 'resolve');
+      $q = {defer: function () {
+        return deferredObject
+      }};
+      $timeout = _$timeout_;
+      ctrl = $controller;
+      $route = _$route_;
+    }));
 
-    response = {"ProductList": [
-      {"id": 2, "code": "Mozambique", "name": "Mozambique", "level": {"name": "Country", "levelNumber": 1}},
-      {"id": 1, "code": "Root", "name": "Root", "level": {"name": "Country", "levelNumber": 1}}
-    ]};
+    it('should get product groups', function () {
+      $httpBackend.expect('GET', '/products/groups.json').respond({productGroup: {'id': '23', 'code': 'PG'}});
+      ctrl(ProductController.resolve.productGroups, {$q: $q});
+      $timeout.flush();
+      $httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalled();
+    });
 
-    ctrl = $controller;
-    ctrl('ProductController', {$scope: scope, product: product});
-
-    httpBackend.when("GET", '/products/id.json').respond(response);
-    httpBackend.flush();
-  }));
-
-  xit('should set product in scope', function () {
-    expect(scope.product).toEqual(product);
+    it('should get product forms', function () {
+      $httpBackend.expect('GET', '/products/forms.json').respond({productForm: {'id': '23', 'code': 'PF'}});
+      ctrl(ProductController.resolve.productForms, {$q: $q});
+      $timeout.flush();
+      $httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalled();
+    });
   });
-
-  xit('should take to search page on cancel', function () {
-    scope.cancel();
-    expect(scope.$parent.productId).toBeUndefined();
-    expect(scope.$parent.message).toEqual("");
-    expect(location.path()).toEqual('/#/search');
-  });
-
-  xit('should save product', function () {
-    ctrl('ProductController', {$scope: scope, product: undefined});
-    var newProduct = {"code": "state", "name": "state", "level": {"code": "state", "name": "state"}};
-    scope.product = newProduct;
-    scope.productForm = {"$error": {"pattern": false, "required": false}};
-
-    httpBackend.expectPOST('/products.json', newProduct).respond(200, {"success": "Saved successfully", "product": product});
-    scope.save();
-    httpBackend.flush();
-
-    expect(scope.error).toEqual("");
-    expect(scope.showError).toBeFalsy();
-    expect(scope.$parent.message).toEqual("Saved successfully");
-    expect(scope.$parent.productId).toEqual(product.id);
-  });
-
-  xit('should update product', function () {
-    scope.productForm = {"$error": {"pattern": false, "required": false}};
-
-    httpBackend.expectPUT('/products/' + product.id + '.json', product).respond(200, {"success": "Saved successfully", "product": product});
-    scope.save();
-    httpBackend.flush();
-
-    expect(scope.error).toEqual("");
-    expect(scope.showError).toBeFalsy();
-    expect(scope.$parent.message).toEqual("Saved successfully");
-    expect(scope.$parent.productId).toEqual(product.id);
-  });
-
-  xit('should throw error if product invalid', function () {
-    scope.productForm = {"$error": {"pattern": false, "required": false}};
-
-    httpBackend.expectPUT('/products/' + product.id + '.json', product).respond(400, {"error": "failed to update"});
-    scope.save();
-    httpBackend.flush();
-
-    expect(scope.error).toEqual("failed to update");
-    expect(scope.showError).toBeTruthy();
-    expect(scope.$parent.message).toEqual("");
-  });
-
-  xit('should not save product if invalid', function () {
-    scope.productForm = {"$error": {"pattern": true, "required": false}};
-
-    scope.save();
-
-    expect(scope.error).toEqual("form.error");
-    expect(scope.showError).toBeTruthy();
-    expect(scope.message).toEqual("");
-  });
-
-  xit('should not save product if invalid', function () {
-    scope.productForm = {"$error": {"pattern": false, "required": true}};
-
-    scope.save();
-
-    expect(scope.error).toEqual("form.error");
-    expect(scope.showError).toBeTruthy();
-    expect(scope.message).toEqual("");
-  });
-
 });
