@@ -10,14 +10,14 @@
 
 describe("Requisition Group Controller", function () {
 
-  var scope, ctrl, requisitionGroup, element, $httpBackend, location, requisitionGroupData, requisitionGroupMembers, compile;
+  var scope, ctrl, requisitionGroup, messageService, $httpBackend, location, requisitionGroupData, requisitionGroupMembers, compile;
   var controller, schedules, programs, requisitionGroupProgramSchedules;
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $compile) {
-    element = angular.element('<div class="facility-add-success" id="successMessage" style="display: none"></div>');
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $compile, _messageService_) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
+    messageService = _messageService_;
     compile = $compile;
     location = $location;
     scope.query = "rg";
@@ -43,10 +43,6 @@ describe("Requisition Group Controller", function () {
     requisitionGroupData = {"requisitionGroup": requisitionGroup, "requisitionGroupMembers": requisitionGroupMembers, "requisitionGroupProgramSchedules": requisitionGroupProgramSchedules};
     ctrl = $controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: requisitionGroupData, programs: programs, schedules: schedules});
   }));
-
-  afterEach(function () {
-    element.remove();
-  });
 
   it('should set requisition group data in scope', function () {
     expect(scope.requisitionGroup).toEqual(requisitionGroup);
@@ -131,22 +127,22 @@ describe("Requisition Group Controller", function () {
 
   it('should take to search page on cancel', function () {
     scope.cancel();
-    expect(scope.$parent.message).toEqual("");
+    expect(scope.$parent.successMessage).toEqual("");
     expect(scope.$parent.requisitionGroupId).toBeUndefined();
     expect(location.path()).toEqual('/#/search');
   });
 
-  it('should not save requisition group if invalid', function () {
+  it('should not save requisition group if required fields not filled', function () {
     scope.requisitionGroupForm = {"$error": {"required": true}};
 
     scope.save();
 
     expect(scope.error).toEqual("form.error");
     expect(scope.showError).toBeTruthy();
-    expect(scope.message).toEqual("");
+    expect(scope.successMessage).toEqual("");
   });
 
-  it('should not save requisition group if invalid', function () {
+  it('should not save requisition group if error occurs while save', function () {
     scope.requisitionGroup = {"code": "N100", "name": "group 100", "supervisoryNode": {"facility": {"code": "F10", "name": "village dispensary"}}};
     scope.requisitionGroupForm = {"$error": {"required": false}};
 
@@ -158,7 +154,7 @@ describe("Requisition Group Controller", function () {
 
     expect(scope.error).toEqual("error");
     expect(scope.showError).toBeTruthy();
-    expect(scope.message).toEqual("");
+    expect(scope.successMessage).toEqual("");
   });
 
   it('should not save requisition group if at least one program schedule is under edit', function () {
@@ -184,7 +180,7 @@ describe("Requisition Group Controller", function () {
 
     expect(scope.error).toEqual("");
     expect(scope.showError).toBeFalsy();
-    expect(scope.$parent.message).toEqual("Saved successfully");
+    expect(scope.$parent.successMessage).toEqual("Saved successfully");
     expect(scope.$parent.requisitionGroupId).toEqual(requisitionGroup.id);
   });
 
@@ -202,7 +198,7 @@ describe("Requisition Group Controller", function () {
 
     expect(scope.error).toEqual("");
     expect(scope.showError).toBeFalsy();
-    expect(scope.$parent.message).toEqual("Saved successfully");
+    expect(scope.$parent.successMessage).toEqual("Saved successfully");
     expect(scope.$parent.requisitionGroupId).toEqual(requisitionGroup.id);
   });
 
@@ -227,17 +223,9 @@ describe("Requisition Group Controller", function () {
       {"name": "fac2", "id": 2, "code": "code1"}
     ];
     scope.showSlider = false;
-    expect(element.css('display')).toEqual('none');
-
-    var spyElement = spyOn(angular, "element").andCallFake(function (selector) {
-      if (selector == '.facility-add-success') return element;
-    });
-
-    var spyFadeIn = spyOn(element, 'fadeIn').andCallThrough();
-    var spyFadeOut = spyOn(element, "fadeOut").andCallThrough();
+    spyOn(messageService, 'get').andReturn('facilities added sucessfully');
 
     ctrl = controller('RequisitionGroupController', {$scope: scope, requisitionGroupData: requisitionGroupData, programs: programs, schedules: schedules});
-    expect(spyFadeOut).toHaveBeenCalledWith("fast");
 
     var result = scope.addMembers(tempFacilities);
 
@@ -245,10 +233,9 @@ describe("Requisition Group Controller", function () {
     expect(scope.requisitionGroupMembers[0].facility).toEqual(tempFacilities[1]);
     expect(scope.requisitionGroupMembers[1].facility).toEqual(tempFacilities[0]);
     expect(scope.showMultipleFacilitiesSlider).toBeTruthy();
+    expect(scope.message).toEqual('facilities added sucessfully');
     expect(scope.duplicateFacilityName).toBeUndefined();
     expect(result).toBeTruthy();
-    expect(spyElement).toHaveBeenCalledWith('.facility-add-success');
-    expect(spyFadeIn).toHaveBeenCalledWith("slow");
   });
 
   it('should not add facilities to requisition group members if duplicate facility', function () {
@@ -264,7 +251,7 @@ describe("Requisition Group Controller", function () {
 
     expect(scope.requisitionGroupMembers.length).toEqual(1);
     expect(scope.duplicateFacilityName).toEqual("fac2");
-    expect(scope.facilitiesAddedSuccesfully).toBeFalsy();
+    expect(scope.message).toBeUndefined();
     expect(result).toBeFalsy();
   });
 

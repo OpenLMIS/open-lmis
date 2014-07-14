@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function RequisitionGroupController($scope, requisitionGroupData, $location, RequisitionGroups, SupervisoryNodesSearch, programs, schedules) {
+function RequisitionGroupController($scope, requisitionGroupData, messageService, $location, RequisitionGroups, SupervisoryNodesSearch, programs, schedules) {
 
   var currentProgramSchedule, programScheduleUnderEdit;
 
@@ -30,7 +30,6 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
   $scope.newProgramSchedule = {};
 
   refreshAndSortPrograms();
-  angular.element('.facility-add-success').fadeOut("fast");
 
   function refreshAndSortPrograms() {
     var selectedProgramIds = _.pluck(_.pluck($scope.requisitionGroupProgramSchedules, 'program'), 'id');
@@ -90,7 +89,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
   };
 
   $scope.cancel = function () {
-    $scope.$parent.message = "";
+    $scope.$parent.successMessage = "";
     $scope.$parent.requisitionGroupId = undefined;
     $location.path('#/search');
   };
@@ -116,7 +115,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     if ($scope.requisitionGroupForm.$error.required || !$scope.requisitionGroup.supervisoryNode) {
       $scope.showError = "true";
       $scope.error = 'form.error';
-      $scope.message = "";
+      $scope.successMessage = "";
       return;
     }
 
@@ -165,7 +164,7 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
       $scope.duplicateFacilityName = _.find($scope.requisitionGroupMembers,function (member) {
         return member.facility.id == duplicateMembers[0];
       }).facility.name;
-      $scope.facilitiesAddedSuccesfully = false;
+      $scope.message = undefined;
       return false;
     }
 
@@ -179,9 +178,8 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
     });
 
     $scope.showMultipleFacilitiesSlider = !$scope.showMultipleFacilitiesSlider;
-    angular.element('.facility-add-success').fadeIn("slow");
+    $scope.message = messageService.get('facilities.added.successfully');
     $scope.duplicateFacilityName = undefined;
-    angular.element('.facility-add-success').delay(3000).fadeOut("slow");
     return true;
   };
 
@@ -197,14 +195,14 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
 
   var success = function (data) {
     $scope.error = "";
-    $scope.$parent.message = data.success;
+    $scope.$parent.successMessage = data.success;
     $scope.$parent.requisitionGroupId = data.requisitionGroupId;
     $scope.showError = false;
     $location.path('#/search');
   };
 
   var error = function (data) {
-    $scope.$parent.message = "";
+    $scope.$parent.successMessage = "";
     $scope.error = data.data.error;
     $scope.showError = true;
   };
