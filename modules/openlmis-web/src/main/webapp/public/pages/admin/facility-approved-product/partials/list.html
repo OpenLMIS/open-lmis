@@ -75,11 +75,11 @@
       <thead>
       <tr class="gradient-header resultCountHeader">
         <th colspan="11">
-        <span ng-switch on="totalItems" ng-show="searchedQuery">
-          <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
-          <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
-          <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
-        </span>
+          <span ng-switch on="totalItems" ng-show="searchedQuery">
+            <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
+            <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
+            <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
+          </span>
 
           <h3 id="noRecordsMessage" ng-show="!searchedQuery && totalItems === 0"
               openlmis-message="msg.no.records.found"></h3>
@@ -148,7 +148,8 @@
           <span class="position-relative">
             <span ng-if="!facilityApprovedProduct.underEdit" ng-bind="facilityApprovedProduct.eop"></span>
 
-            <input id="editEop{{$index}}" type="text" ng-if="facilityApprovedProduct.underEdit" name="list.eop{{$index}}"
+            <input id="editEop{{$index}}" type="text" ng-if="facilityApprovedProduct.underEdit"
+                   name="list.eop{{$index}}"
                    ng-model="facilityApprovedProduct.eop" class="right-justified"
                    numeric-validator="positiveNumericValue,2,2" ng-trim="false" maxlength="5"/>
             <span class="rnr-form-error" style="display:none;" id="list.eop{{$index}}"

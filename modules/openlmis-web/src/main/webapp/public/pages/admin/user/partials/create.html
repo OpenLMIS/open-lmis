@@ -10,9 +10,7 @@
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
 <div ng-hide="user.id"><h2 openlmis-message="create.user.label"></h2></div>
-<div ng-show="user.id">
-  <h2 id="editUserLabel" openlmis-message="edit.user.label"></h2>
-</div>
+<div ng-show="user.id"><h2 id="editUserLabel" openlmis-message="edit.user.label"></h2></div>
 
 <form ng-submit="saveUser()" id="create-user" name="userForm" novalidate select2-blur>
 <div class="app-form">
@@ -227,7 +225,7 @@
         <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                     <span><b>+</b><a
                       id="supervisoryRoles"
-                      href="javascript:void(0);">{{getMessage('create.user.superVisoryRoles')}}</a></span>
+                      href="javascript:void(0);">{{getMessage('create.user.supervisoryRoles')}}</a></span>
         </div>
         <div class="accordion-body prog-role-grid">
           <ng-include
@@ -292,8 +290,8 @@
            openlmis-message="button.enable"
            ng-click="showConfirmUserRestoreModal()"/>
   </div>
-  <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
-  <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"/>
+  <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+  <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
 </div>
 
 </div>

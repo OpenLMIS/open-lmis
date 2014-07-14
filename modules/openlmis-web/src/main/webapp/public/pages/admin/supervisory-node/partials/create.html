@@ -9,10 +9,12 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-  <div ng-hide="supervisoryNode.id"><h2 id="addNewSupervisoryNodeHeader"
-                                        openlmis-message="header.supervisory.node.add.new"></h2></div>
-  <div ng-show="supervisoryNode.id"><h2 id="editSupervisoryNodeHeader"
-                                        openlmis-message="header.supervisory.node.edit"></h2></div>
+  <div ng-hide="supervisoryNode.id">
+    <h2 id="addNewSupervisoryNodeHeader" openlmis-message="header.supervisory.node.add.new"></h2>
+  </div>
+  <div ng-show="supervisoryNode.id">
+    <h2 id="editSupervisoryNodeHeader" openlmis-message="header.supervisory.node.edit"></h2>
+  </div>
 
   <form ng-submit="saveSupervisoryNode()" name="supervisoryNodeForm" novalidate>
     <div class="app-form">
@@ -77,7 +79,7 @@
                 <div id="search_list" class="search-list" ng-show="query.length > 2">
                   <ul>
                     <li ng-repeat="node in filteredNodes">
-                      <a href="" id="result{{$index}}" ng-click="setSelectedParentNode(node)">{{node.name}}</a>
+                      <a href="" id="result{{$index}}" ng-click="setSelectedParentNode(node)" ng-bind="node.name"></a>
                     </li>
                     <li ng-show="resultCount == 0">
                       <a href="" openlmis-message="msg.no.matches|query"></a>
@@ -133,7 +135,7 @@
                  ng-click="cancel()"/>
         </div>
 
-        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
+        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
       </div>
 
     </div>
