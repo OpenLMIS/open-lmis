@@ -172,7 +172,7 @@ public class DistributionChildCoverageSyncTest extends TestCaseHelper {
     FacilityPage facilityPage = homePage.navigateManageFacility();
     homePage.navigateManageFacility();
     facilityPage.searchFacility("F10");
-    facilityPage.clickFacilityList("F10");
+    facilityPage.clickFirstFacilityList();
     facilityPage.editPopulation("");
     facilityPage.saveFacility();
     homePage.logout();

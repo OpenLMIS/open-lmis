@@ -113,7 +113,7 @@ public class FacilityFeed extends JsonUtility {
 
     homePage.navigateManageFacility();
     facilityPage.searchFacility(date_time);
-    facilityPage.clickFacilityList(date_time);
+    facilityPage.clickFirstFacilityList();
     facilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     facilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     facilityPage.enableFacility();
@@ -140,7 +140,7 @@ public class FacilityFeed extends JsonUtility {
 
     facilityPage = homePage.navigateManageFacility();
     facilityPage.searchFacility(date_time);
-    facilityPage.clickFacilityList(date_time);
+    facilityPage.clickFirstFacilityList();
     facilityPage.addProgram("VACCINES", true);
     facilityPage.saveFacility();
     Thread.sleep(5000);
@@ -148,7 +148,7 @@ public class FacilityFeed extends JsonUtility {
 
     facilityPage = homePage.navigateManageFacility();
     facilityPage.searchFacility(date_time);
-    facilityPage.clickFacilityList(date_time);
+    facilityPage.clickFirstFacilityList();
     facilityPage.removeFirstProgram();
     facilityPage.saveFacility();
 

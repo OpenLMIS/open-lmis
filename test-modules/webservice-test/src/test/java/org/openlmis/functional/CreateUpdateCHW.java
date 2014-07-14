@@ -121,7 +121,7 @@ public class CreateUpdateCHW extends JsonUtility {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     FacilityPage facilityPage = homePage.navigateManageFacility();
     facilityPage.searchFacility(agentCode);
-    facilityPage.clickFacilityList(agentCode);
+    facilityPage.clickFirstFacilityList();
     facilityPage.disableFacility(agentCode, DEFAULT_AGENT_NAME);
 
     facilityPage.verifyDisabledFacility(agentCode, DEFAULT_AGENT_NAME);
@@ -129,7 +129,7 @@ public class CreateUpdateCHW extends JsonUtility {
     assertEquals(facilityPage.getEnabledFacilityText(), "Yes");
     FacilityPage facilityPageRestore = homePageRestore.navigateManageFacility();
     facilityPageRestore.searchFacility(agentCode);
-    facilityPageRestore.clickFacilityList(agentCode);
+    facilityPageRestore.clickFirstFacilityList();
     facilityPage.saveFacility();
     facilityPage.verifyMessageOnFacilityScreen(DEFAULT_AGENT_NAME, "updated");
     assertEquals(TRUE_FLAG, dbWrapper.getAttributeFromTable("facilities", "virtualFacility", "code", agentCode));

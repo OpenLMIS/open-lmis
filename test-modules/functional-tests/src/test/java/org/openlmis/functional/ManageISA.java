@@ -114,7 +114,7 @@ public class ManageISA extends TestCaseHelper {
   public void searchFacility() {
     facilityPage = PageObjectFactory.getFacilityPage(testWebDriver);
     facilityPage.searchFacility(date_time);
-    facilityPage.clickFacilityList(date_time);
+    facilityPage.clickFirstFacilityList();
   }
 
   @Then("^I should see overridden ISA \"([^\"]*)\"$")
@@ -138,7 +138,7 @@ public class ManageISA extends TestCaseHelper {
       facilityType, operatedBy, valueOf(333), true);
     saveButton.click();
     facilityPage.searchFacility(date_time);
-    facilityPage.clickFacilityList(date_time);
+    facilityPage.clickFirstFacilityList();
 
     facilityPage.overrideIsa("24", 1);
     assertEquals("100", facilityPage.getCalculatedIsa());
@@ -169,7 +169,7 @@ public class ManageISA extends TestCaseHelper {
     facilityPage.clickIsaDoneButton();
     saveButton.click();
     assertTrue(facilityPage.isSuccessMessageDisplayed());
-    facilityPage.clickFacilityList(date_time);
+    facilityPage.clickFirstFacilityList();
     facilityPage.verifyOverriddenIsa("24");
   }
 

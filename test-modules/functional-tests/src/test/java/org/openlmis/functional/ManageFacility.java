@@ -65,26 +65,26 @@ public class ManageFacility extends TestCaseHelper {
 
     homePage.navigateManageFacility();
     facilityPage.searchFacility(date_time);
-    facilityPage.clickFacilityList(date_time);
+    facilityPage.clickFirstFacilityList();
     facilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     facilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     HomePage homePageRestore = facilityPage.enableFacility();
     assertEquals(facilityPage.getEnabledFacilityText(), "Yes");
     FacilityPage facilityPageRestore = homePageRestore.navigateManageFacility();
     facilityPageRestore.searchFacility(date_time);
-    facilityPageRestore.clickFacilityList(date_time);
+    facilityPageRestore.clickFirstFacilityList();
     assertEquals("Edit facility", facilityPageRestore.getEditFacilityHeader());
     HomePage homePageEdit = facilityPageRestore.editFacility("ESSENTIAL MEDICINES", catchmentPopulationValue, latitudeValue, longitudeValue, altitudeValue);
 
     facilityPageRestore.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "updated");
     homePage.navigateManageFacility();
     facilityPage.searchFacility(date_time);
-    facilityPage.clickFacilityList(date_time);
+    facilityPage.clickFirstFacilityList();
     facilityPageRestore.verifyEditedFacility(catchmentPopulationValue, latitudeValue, longitudeValue, altitudeValue);
 
     FacilityPage facilityPageEdit = homePageEdit.navigateManageFacility();
     facilityPageEdit.searchFacility(date_time);
-    facilityPageEdit.clickFacilityList(date_time);
+    facilityPageEdit.clickFirstFacilityList();
     ArrayList<String> programsSupported = new ArrayList<>();
     programsSupported.add("HIV");
     programsSupported.add("ESSENTIAL MEDICINES");
@@ -109,13 +109,13 @@ public class ManageFacility extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     FacilityPage facilityPage = homePage.navigateManageFacility();
     facilityPage.searchFacility("F10");
-    facilityPage.clickFacilityList("F10");
+    facilityPage.clickFirstFacilityList();
     facilityPage.editFacilityType(facilityType);
     facilityPage.editGeographicZone(geoZone);
     facilityPage.saveFacility();
 
     facilityPage.searchFacility("V10");
-    facilityPage.clickFacilityList("V10");
+    facilityPage.clickFirstFacilityList();
 
     assertEquals(facilityType, facilityPage.getFacilityType());
     assertEquals(geoZone, facilityPage.getGeographicZone());
@@ -135,52 +135,52 @@ public class ManageFacility extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     FacilityPage facilityPage = homePage.navigateManageFacility();
     facilityPage.searchFacility("F10");
-    facilityPage.clickFacilityList("F10");
+    facilityPage.clickFirstFacilityList();
     facilityPage.removeFirstProgram();
     facilityPage.saveFacility();
 
     facilityPage.searchFacility("V10");
-    facilityPage.clickFacilityList("V10");
+    facilityPage.clickFirstFacilityList();
 
     assertEquals("ESSENTIAL MEDICINES", facilityPage.getProgramSupported(1));
     assertEquals("VACCINES", facilityPage.getProgramSupported(2));
 
     homePage.navigateManageFacility();
     facilityPage.searchFacility("F10");
-    facilityPage.clickFacilityList("F10");
+    facilityPage.clickFirstFacilityList();
     facilityPage.removeFirstProgram();
     facilityPage.activeInactiveFirstProgram();
     facilityPage.saveFacility();
 
     facilityPage.searchFacility("V10");
-    facilityPage.clickFacilityList("V10");
+    facilityPage.clickFirstFacilityList();
 
     assertEquals("VACCINES", facilityPage.getProgramSupported(1));
     assertFalse("Program supported flag incorrect", facilityPage.getProgramSupportedActive(1));
 
     facilityPage.activeInactiveFirstProgram();
     facilityPage.saveFacility();
-    facilityPage.clickFacilityList("V10");
+    facilityPage.clickFirstFacilityList();
     assertTrue("Program supported flag incorrect", facilityPage.getProgramSupportedActive(1));
 
     homePage.navigateManageFacility();
     facilityPage.searchFacility("F10");
-    facilityPage.clickFacilityList("F10");
+    facilityPage.clickFirstFacilityList();
     facilityPage.saveFacility();
 
     facilityPage.searchFacility("V10");
-    facilityPage.clickFacilityList("V10");
+    facilityPage.clickFirstFacilityList();
 
     assertTrue("Program supported flag incorrect", facilityPage.getProgramSupportedActive(1));
 
     homePage.navigateManageFacility();
     facilityPage.searchFacility("F10");
-    facilityPage.clickFacilityList("F10");
+    facilityPage.clickFirstFacilityList();
     facilityPage.addProgram("HIV", false);
     facilityPage.saveFacility();
 
     facilityPage.searchFacility("V10");
-    facilityPage.clickFacilityList("V10");
+    facilityPage.clickFirstFacilityList();
 
     assertEquals("HIV", facilityPage.getProgramSupported(1));
     assertTrue("Program supported flag incorrect", facilityPage.getProgramSupportedActive(1));

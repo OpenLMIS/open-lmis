@@ -32,6 +32,9 @@ public class FacilityPage extends Page {
   @FindBy(how = ID, using = "searchFacility")
   private static WebElement searchFacilityTextField = null;
 
+  @FindBy(how = ID, using = "searchIcon")
+  private static WebElement searchIcon = null;
+
   @FindBy(how = ID, using = "disableButton")
   private static WebElement disableButton = null;
 
@@ -388,13 +391,14 @@ public class FacilityPage extends Page {
   public void searchFacility(String facilityCodeValue) {
     testWebDriver.waitForElementToAppear(searchFacilityTextField);
     sendKeys(searchFacilityTextField, facilityCodeValue);
+    searchIcon.click();
+    testWebDriver.waitForAjax();
   }
 
-  public void clickFacilityList(String facility) {
-    testWebDriver.sleep(3000);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'" + facility + "')]"));
-    testWebDriver.getElementByXpath("//a[contains(text(),'" + facility + "')]").click();
-    testWebDriver.waitForElementToAppear(facilityCode);
+  public void clickFirstFacilityList() {
+    WebElement facilityName = testWebDriver.getElementById("name0");
+    testWebDriver.waitForElementToAppear(facilityName);
+    facilityName.click();
   }
 
   public void disableFacility(String facilityCodeValue, String facilityNameValue) {
@@ -527,7 +531,7 @@ public class FacilityPage extends Page {
 
   public void overrideISA(String overriddenIsa, int productRowNumber, String facilityCode) {
     searchFacility(facilityCode);
-    clickFacilityList(facilityCode);
+    clickFirstFacilityList();
     overrideIsa(overriddenIsa, productRowNumber);
     clickIsaDoneButton();
     saveFacility();

@@ -108,7 +108,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
 
     homePage.navigateManageFacility();
     facilityPage.searchFacility(date_time);
-    facilityPage.clickFacilityList(date_time);
+    facilityPage.clickFirstFacilityList();
     facilityPage.addProgram("VACCINES", true);
     facilityPage.saveFacility();
 
@@ -121,7 +121,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
 
     facilityPage = homePage.navigateManageFacility();
     facilityPage.searchFacility(date_time);
-    facilityPage.clickFacilityList(date_time);
+    facilityPage.clickFirstFacilityList();
     facilityPage.removeFirstProgram();
     facilityPage.saveFacility();
 
@@ -134,7 +134,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
 
     facilityPage = homePage.navigateManageFacility();
     facilityPage.searchFacility(date_time);
-    facilityPage.clickFacilityList(date_time);
+    facilityPage.clickFirstFacilityList();
     facilityPage.activeInactiveFirstProgram();
     facilityPage.saveFacility();
 
