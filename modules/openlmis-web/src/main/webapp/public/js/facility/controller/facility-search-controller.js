@@ -10,62 +10,58 @@
 
 function FacilitySearchController($scope, Facility, $location, navigateBackService) {
 
+  $scope.searchOptions = [
+    {value: "facility", name: "option.value.facility"},
+    {value: "geographicZone", name: "option.value.geo.zone"}
+  ];
+
+  $scope.showResults = false;
+  $scope.currentPage = 1;
+  $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
+
+  $scope.selectSearchType = function (searchOption) {
+    $scope.selectedSearchOption = searchOption;
+  };
+
   $scope.$on('$viewContentLoaded', function () {
     $scope.query = navigateBackService.query;
-    $scope.updateFilteredQueryList();
   });
-  $scope.previousQuery = '';
 
-  $scope.editFacility = function (id) {
-    var data = {query: $scope.query};
+  $scope.edit = function (id) {
+    var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
     navigateBackService.setData(data);
     $location.path('edit/' + id);
   };
 
+  $scope.$watch('currentPage', function () {
+    if ($scope.currentPage !== 0)
+      $scope.loadFacilities($scope.currentPage);
+  });
+
+  $scope.loadFacilities = function (page) {
+    if (!$scope.query) return;
+    $scope.query = $scope.query.trim();
+    $scope.searchedQuery = $scope.query;
+    Facility.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
+      $scope.facilityList = data.facilities;
+      $scope.pagination = data.pagination;
+      $scope.totalItems = $scope.pagination.totalRecords;
+      $scope.currentPage = $scope.pagination.page;
+      $scope.showResults = true;
+    }, {});
+  };
+
+  $scope.triggerSearch = function (event) {
+    if (event.keyCode === 13) {
+      $scope.loadFacilities(1);
+    }
+  };
+
   $scope.clearSearch = function () {
     $scope.query = "";
-    $scope.resultCount = 0;
-    angular.element("#searchFacility").focus();
-  };
-
-  $scope.updateFilteredQueryList = function () {
-
-    if (!$scope.query) return;
-
-    $scope.query = $scope.query.trim();
-    var queryLength = $scope.query.length;
-    if (queryLength >= 3) {
-      if (compareQuery()) {
-        Facility.get({"searchParam": $scope.query.substring(0, 3)}, function (data) {
-          $scope.filteredFacilities = data.facilityList;
-          $scope.facilityList = $scope.filteredFacilities;
-          $scope.previousQuery = $scope.query;
-          if (queryLength > 3) {
-            filterFacilities();
-          }
-          $scope.resultCount = $scope.facilityList.length;
-        }, {});
-      }
-      else {
-        filterFacilities();
-        $scope.resultCount = $scope.facilityList.length;
-      }
-    }
-  };
-
-  var compareQuery = function () {
-    if ($scope.previousQuery.substring(0, 3) != $scope.query.substring(0, 3)) {
-      return true;
-    }
-  };
-
-  var filterFacilities = function () {
+    $scope.totalItems = 0;
     $scope.facilityList = [];
-    angular.forEach($scope.filteredFacilities, function (facility) {
-      var searchString = $scope.query.toLowerCase();
-      if (facility.code.toLowerCase().indexOf(searchString) >= 0 || facility.name.toLowerCase().indexOf(searchString) >= 0) {
-        $scope.facilityList.push(facility);
-      }
-    });
+    $scope.showResults = false;
+    angular.element("#searchFacility").focus();
   };
 }
