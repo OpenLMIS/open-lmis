@@ -186,15 +186,15 @@ public class ManageUser extends TestCaseHelper {
 
     homePage.navigateToUser();
     userPage.searchUser(email);
-    userPage.verifyUserOnList(email);
+    assertTrue("User not available in list.", userPage.getUserOnList().contains(email));
 
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
-    userPage.verifyUserOnList(LAB_IN_CHARGE);
+    assertTrue("User not available in list.", userPage.getUserOnList().contains(LAB_IN_CHARGE));
 
     homePage.navigateToUser();
     userPage.searchUser("Jasmine Doe");
-    userPage.verifyUserOnList("Jasmine Doe");
+    assertTrue("User not available in list.", userPage.getUserOnList().contains("Jasmine Doe"));
 
     userPage.focusOnFirstUserLink();
     userPage.clickEditUser();
@@ -209,7 +209,7 @@ public class ManageUser extends TestCaseHelper {
 
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
-    userPage.verifyUserOnList(LAB_IN_CHARGE);
+    assertTrue("User not available in list.", userPage.getUserOnList().contains(LAB_IN_CHARGE));
 
     userPage.focusOnFirstUserLink();
 
@@ -218,7 +218,8 @@ public class ManageUser extends TestCaseHelper {
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
     userPage.focusOnFirstUserLink();
-    userPage.verifyDisabledResetPassword();
+    assertTrue("Reset password link not disabled.", userPage.isDisabledResetPassword());
+    userPage.isDisabledResetPassword();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
@@ -230,7 +231,7 @@ public class ManageUser extends TestCaseHelper {
 
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
-    userPage.verifyUserOnList(LAB_IN_CHARGE);
+    assertTrue("User not available in list.", userPage.getUserOnList().contains(LAB_IN_CHARGE));
 
     userPage.focusOnFirstUserLink();
     testWebDriver.sleep(1000);
@@ -268,6 +269,8 @@ public class ManageUser extends TestCaseHelper {
     loginPage.loginAs(credentials[0], credentials[1]);
     List<String> userRoleList = asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
     createRoleAndAssignRights(userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, "Requisition");
+    createRoleAndAssignRights(asList("Manage Facilities"), "AdminRole", "", "Admin");
+    createRoleAndAssignRights(asList("Manage Report"), "ReportingRole", "", "Reporting");
 
     RolesPage rolesPage = PageObjectFactory.getRolesPage(testWebDriver);
     rolesPage.clickRole(LAB_IN_CHARGE);
@@ -292,6 +295,8 @@ public class ManageUser extends TestCaseHelper {
 
     createUserAndAssignRoles(passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION");
     userPage.assignWarehouse(warehouseName, warehouseRole);
+    userPage.assignAdminRole("AdminRole");
+    userPage.assignReportingRole("ReportingRole");
     userPage.clickSaveButton();
     userPage.verifyUserUpdated("Jasmine", "Doe");
     setupDeliveryZoneRolesAndRightsAfterWarehouse(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst,
@@ -357,22 +362,28 @@ public class ManageUser extends TestCaseHelper {
                                         String roleType) throws SQLException {
     UserPage userPage = homePage.navigateToUser();
     userPage.enterUserDetails(userUserName, userEmail, userFirstName, userLastName);
-    userPage.verifyUserCreated(userFirstName, userLastName);
+    String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
+      " password link has been sent on registered Email address. View Here", userFirstName, userLastName);
+    assertEquals(expectedMessage, userPage.getUserCreatedMessage());
     userPage.clickViewHere();
     dbWrapper.updateUser(passwordUsers, userEmail);
 
     userPage.ExpandAll();
-    userPage.verifyExpandAll();
+    assertTrue(userPage.isProgramsToSuperviseDisplayed());
+    assertTrue(userPage.isProgramToDeliverDisplayed());
+
     userPage.collapseAll();
     testWebDriver.sleep(500);
-    userPage.verifyCollapseAll();
+    assertFalse(userPage.isProgramsToSuperviseDisplayed());
+    assertFalse(userPage.isProgramToDeliverDisplayed());
+    assertFalse(userPage.isWarehouseToSelectDisplayed());
 
     userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program, supervisoryNode, role, roleType);
   }
 
-  private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String programDependent) {
+  private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String roleType) {
     RolesPage rolesPage = homePage.navigateToRolePage();
-    rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
+    rolesPage.createRole(roleName, roleDescription, userRoleList, roleType);
     assertEquals(rolesPage.getSuccessMessage(), "\"" + roleName + "\" created successfully");
   }
 
