@@ -18,6 +18,7 @@ import org.openlmis.report.model.report.*;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.LabEquipmentStatusReportDataProvider;
 import org.openlmis.report.service.LabEquipmentsByDonorReportDataProvider;
+import org.openlmis.report.service.PushedProductReportDataProvider;
 import org.openlmis.report.service.UserSummaryReportProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -286,8 +287,8 @@ public class InteractiveReportController extends BaseController {
 
     Report report = reportManager.getReportByKey("order_fill_rate");
     report.getReportDataProvider().setUserId(loggedInUserId(request));
-    List<OrderFillRateReport> orderFillRateReportList =
-      (List<OrderFillRateReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+    List<MasterReport> orderFillRateReportList =
+      (List<MasterReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
     return new Pages(page, max, orderFillRateReportList);
   }
 
@@ -405,5 +406,20 @@ public class InteractiveReportController extends BaseController {
                 provider.getMainReportData(request.getParameterMap(), request.getParameterMap(),page, max);
 
         return new Pages(page, max, labEquipmentsListByDonor);
+    }
+
+    @RequestMapping(value = "/reportdata/pushedProductList", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_FILL_RATE_REPORT')")
+    public Pages getPushedProductsReport(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                           @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                           HttpServletRequest request) {
+
+        Report report = reportManager.getReportByKey("pushed_product_list");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        PushedProductReportDataProvider provider = (PushedProductReportDataProvider) report.getReportDataProvider();
+        List<OrderFillRateReport> pushedProductList = (List<OrderFillRateReport>)
+                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(),page, max);
+
+        return new Pages(page, max, pushedProductList);
     }
 }

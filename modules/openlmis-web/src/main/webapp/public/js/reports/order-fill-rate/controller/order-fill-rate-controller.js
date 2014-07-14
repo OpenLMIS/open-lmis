@@ -8,18 +8,25 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function OrderFillRateController($scope, $window,OrderFillRateReport) {
+function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushedProductList) {
     //to minimize and maximize the filter section
 
-    $scope.OnFilterChanged = function(){
+    $scope.OnFilterChanged = function () {
         // clear old data if there was any
-        $scope.data = $scope.datarows = $scope.summaries=[];
+        $scope.pusheditems = $scope.data = $scope.datarows = $scope.summaries = [];
+        $scope.filter.max = 10000;
         OrderFillRateReport.get($scope.filter, function (data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.summaries    =  data.pages.rows[0].summary;
+                $scope.summaries = data.pages.rows[0].summary;
                 $scope.data = data.pages.rows[0].details;
-               // $scope.data = data.pages.rows;
+
                 $scope.paramsChanged($scope.tableParams);
+            }
+        });
+
+        GetPushedProductList.get($scope.filter, function (data) {
+            if (data.pages !== undefined && data.pages.rows !== undefined) {
+                $scope.pusheditems = data.pages.rows;
             }
         });
     };
@@ -28,10 +35,9 @@ function OrderFillRateController($scope, $window,OrderFillRateReport) {
         $scope.filter.pdformat = 1;
         var params = jQuery.param($scope.filter);
         var url = '/reports/download/order_fill_rate/' + type + '?' + params;
+        if (type == "pushed-product-list") {
+            url = '/reports/download/pushed_product_list/' + "pdf" + '?' + params;
+        }
         $window.open(url);
     };
-
-
-
-
 }

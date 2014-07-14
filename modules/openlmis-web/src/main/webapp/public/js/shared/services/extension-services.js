@@ -620,3 +620,7 @@ services.factory('LabEquipmentListByDonorReport', function ($resource) {
 services.factory('GetAllUsers',function($resource){
     return $resource('/user/getAll.json',{},{});
 });
+
+services.factory('GetPushedProductList', function($resource){
+    return $resource('/reports/reportdata/pushedProductList.json',{},{});
+});

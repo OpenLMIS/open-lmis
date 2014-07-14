@@ -41,5 +41,8 @@ public class OrderFillRateReport implements ReportData {
     private String category;
     private Integer totalproductsreceived;
     private Integer totalproductsapproved;
+    private String name;
+    private String nameLabel;
+    private String count;
 
 }

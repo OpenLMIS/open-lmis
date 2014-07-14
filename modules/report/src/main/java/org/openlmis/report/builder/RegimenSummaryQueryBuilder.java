@@ -16,6 +16,8 @@ import org.openlmis.report.model.params.RegimenSummaryReportParam;
 
 import java.util.Map;
 
+import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
+
 public class RegimenSummaryQueryBuilder {
 
     public static String getData(Map params) {
@@ -52,9 +54,9 @@ public class RegimenSummaryQueryBuilder {
         String predicate = "";
         predicate = " WHERE status in ('APPROVED','RELEASED') ";
         if (filter != null) {
-            if (filter.getRgroupId() != 0) {
+            if (filter.getZoneId() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " rgroupid = #{filterCriteria.rgroupId}";
+                predicate = predicate + " zoneId = #{filterCriteria.zoneId}";
             }
 
             if (filter.getScheduleId() != 0 && filter.getScheduleId() != -1) {
