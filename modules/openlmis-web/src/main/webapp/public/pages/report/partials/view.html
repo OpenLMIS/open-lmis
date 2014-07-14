@@ -8,46 +8,92 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<h2 id="reportName" ng-bind="template.name"></h2>
-<div class="app-form">
-  <div ng-repeat="parameter in parameters" class="form-row">
-    <label id="displayName_{{parameter.name}}" class="short" style="margin-bottom: 2px; font-size: 0.9em;"
-           ng-bind="parameter.displayName"></label>:
+<div id="parameterizedReport">
+  <h2 id="reportName" ng-bind="template.name"></h2>
 
-    <ng-switch on="parameter.dataType">
-      <div ng-switch-when="java.lang.Boolean">
-        <input id="true_{{parameter.name}}" type="radio" name="{{parameter.name}}" ng-value="'true'"
-               ng-model="map[parameter.name]"/>
-        <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-        <input id="false_{{parameter.name}}" type="radio" name="{{parameter.name}}" ng-value="'false'"
-               ng-model="map[parameter.name]"/>
-        <strong openlmis-message="button.no"></strong>
-      </div>
+  <div class="table-container">
+    <table id="reportParametersTable" ng-if="parameters.length" class="table table-bordered table-striped">
+      <tbody>
+        <tr ng-repeat="parameter in parameters" class="form-row">
+          <td id="displayName_{{parameter.name}}" class="span4" ng-bind="parameter.displayName"></td>
 
-      <div ng-switch-when="java.util.Date">
-        <input name="startDate" id="startDate_{{parameter.name}}" type="text"
-               ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-               ui-date-format="dd/mm/y"
-               ng-model="map[parameter.name]" readonly/>
-      </div>
+          <td class="span4">
+            <div ng-if="parameter.dataType === 'java.lang.Integer' ||
+                  parameter.dataType === 'java.lang.Short' ||
+                  parameter.dataType === 'java.lang.Long'">
+              <input type="text" name="integer_{{parameter.name}}" class="right-justified"
+                     ng-model="parameterMap[parameter.name]" ng-change="refreshParams()"
+                     numeric-validator="integer,100" ng-trim="false"/>
+              <span id="integer_{{parameter.name}}" class="rnr-form-error" style="display:none;"
+                    openlmis-message="error.number.only"></span>
+            </div>
 
-      <div ng-switch-default>
-        <input type="text" id="input_{{parameter.name}}" ng-trim="false"
-               ng-model="map[parameter.name]"/>
-      </div>
-    </ng-switch>
+            <div ng-if="parameter.dataType === 'java.lang.Boolean'">
+              <input id="true_{{parameter.name}}" type="radio" name="{{parameter.name}}" ng-value="'true'"
+                     ng-model="parameterMap[parameter.name]" ng-change="refreshParams()"/>
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
 
-    <label id="description_{{parameter.name}}" class="short" ng-bind="parameter.description"></label>
-  </div>
+              <input id="false_{{parameter.name}}" type="radio" name="{{parameter.name}}" ng-value="'false'"
+                     ng-model="parameterMap[parameter.name]" ng-change="refreshParams()"/>
+              <strong openlmis-message="button.no"></strong>
+            </div>
 
-  <div>
-    <a id="pdfLink" href="/reports/{{template.id}}/pdf" target="_blank"
-       openlmis-message="report.type.pdf"></a>
-    <a id="xlsLink" href="/reports/{{template.id}}/xls" target="_blank"
-       openlmis-message="report.type.xls"></a>
-    <a id="csvLink" href="/reports/{{template.id}}/csv" target="_blank"
-       openlmis-message="report.type.csv"></a>
-    <a id="htmlLink" href="/reports/{{template.id}}/html" target="_blank"
-       openlmis-message="report.type.html"></a>
+            <div ng-if="parameter.dataType === 'java.util.Date'">
+              <input id="date_{{parameter.name}}" type="text" name="date" ng-change="refreshParams()"
+                     ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                     ui-date-format="yy-mm-dd"
+                     ng-model="parameterMap[parameter.name]" readonly/>
+            </div>
+
+            <div ng-if="parameter.dataType === 'java.lang.Float' ||
+                  parameter.dataType === 'java.lang.Double' ||
+                  parameter.dataType === 'java.math.BigDecimal'">
+              <input type="text" numeric-validator="numericValue,100,100" class="right-justified"
+                     name="float_{{parameter.name}}"
+                     ng-model="parameterMap[parameter.name]" ng-change="refreshParams()"/>
+              <span class="rnr-form-error" style="display:none;" id="float_{{parameter.name}}"
+                    openlmis-message="error.number.only"></span>
+            </div>
+
+            <div ng-if="parameter.dataType === 'java.lang.String'">
+              <input type="text" id="string_{{parameter.name}}" ng-trim="false"
+                     ng-model="parameterMap[parameter.name]" ng-change="refreshParams()"/>
+            </div>
+
+            <div ng-if="isInvalid(parameter.dataType)">
+              <span id="unSupportedDataType" class="note label-required">Unsupported data type</span>
+            </div>
+          </td>
+
+          <td id="description_{{parameter.name}}" class="span5"><em ng-bind="parameter.description"></em></td>
+        </tr>
+        <tr>
+          <td class="action-row"></td>
+          <td class="center-justified action-row">
+            <a class="btn btn-primary" id="pdfTableButton" ng-href="/reports/{{template.id}}/pdf?{{params}}" target="_blank"
+               openlmis-message="report.type.pdf"></a>
+            <a class="btn btn-primary" id="xlsTableButton" ng-href="/reports/{{template.id}}/xls?{{params}}" target="_blank"
+               openlmis-message="report.type.xls"></a>
+            <a class="btn btn-primary" id="csvTableButton" ng-href="/reports/{{template.id}}/csv?{{params}}" target="_blank"
+               openlmis-message="report.type.csv"></a>
+            <a class="btn btn-primary" id="htmlTableButton" ng-href="/reports/{{template.id}}/html?{{params}}" target="_blank"
+               openlmis-message="report.type.html"></a>
+          </td>
+          <td class="action-row"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <span ng-if="!parameters.length">
+      <a class="btn btn-primary" id="pdfButton" ng-href="/reports/{{template.id}}/pdf?{{params}}" target="_blank"
+         openlmis-message="report.type.pdf"></a>
+      <a class="btn btn-primary" id="xlsButton" ng-href="/reports/{{template.id}}/xls?{{params}}" target="_blank"
+         openlmis-message="report.type.xls"></a>
+      <a class="btn btn-primary" id="csvButton" ng-href="/reports/{{template.id}}/csv?{{params}}" target="_blank"
+         openlmis-message="report.type.csv"></a>
+      <a class="btn btn-primary" id="htmlButton" ng-href="/reports/{{template.id}}/html?{{params}}" target="_blank"
+         openlmis-message="report.type.html"></a>
+    </span>
+
   </div>
 </div>
