@@ -16,11 +16,24 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class TemplateParameter extends BaseModel {
+
+  public static final String INTEGER = "java.lang.Integer";
+  public static final String SHORT = "java.lang.Short";
+  public static final String LONG = "java.lang.Long";
+  public static final String BOOLEAN = "java.lang.Boolean";
+  public static final String DATE = "java.util.Date";
+  public static final String FLOAT = "java.lang.Float";
+  public static final String DOUBLE = "java.lang.Double";
+  public static final String BIG_DECIMAL = "java.math.BigDecimal";
 
   private Long templateId;
 
@@ -34,4 +47,36 @@ public class TemplateParameter extends BaseModel {
 
   private String description;
 
+  public Object getParsedValueOf(String value) throws ParseException {
+    Object objectValue = value;
+
+    switch (this.getDataType()) {
+      case INTEGER:
+        objectValue = Integer.parseInt(value);
+        break;
+      case SHORT:
+        objectValue = Short.parseShort(value);
+        break;
+      case LONG:
+        objectValue = Long.parseLong(value);
+        break;
+      case BOOLEAN:
+        objectValue = Boolean.parseBoolean(value);
+        break;
+      case DATE:
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        objectValue = dateFormat.parse(value);
+        break;
+      case FLOAT:
+        objectValue = Float.parseFloat(value);
+        break;
+      case DOUBLE:
+        objectValue = Double.parseDouble(value);
+        break;
+      case BIG_DECIMAL:
+        objectValue = BigDecimal.valueOf(Double.parseDouble(value));
+        break;
+    }
+    return objectValue;
+  }
 }

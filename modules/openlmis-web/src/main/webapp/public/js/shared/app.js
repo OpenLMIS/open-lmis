@@ -164,9 +164,11 @@ app.positiveNumericValue = function (value, errorHolder, integerPartLength, frac
 };
 
 
-app.integer = function (value, errorHolder) {
-  var INTEGER_REGEXP_FIXED_LENGTH = /^[-]?\d{0,6}$/;
-  var REGEX_FOR_SIX_DIGITS = /\d{6}.$/;
+app.integer = function (value, errorHolder, length) {
+  var str = '^[-]?\\d{0,'.concat(length).concat('}$');
+  var INTEGER_REGEXP_FIXED_LENGTH = new RegExp(str);
+  str = '\\d{'.concat(length).concat('}.$');
+  var REGEX_FOR_SIX_DIGITS = new RegExp(str);
   var INTEGER_REGEXP = /^[-]?\d*$/;
   var valid = (value === undefined) ? true : INTEGER_REGEXP_FIXED_LENGTH.test(value);
 

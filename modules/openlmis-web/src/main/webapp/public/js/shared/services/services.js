@@ -366,7 +366,7 @@ services.factory('ProgramProductsSearch', function ($resource) {
 });
 
 services.factory('Reports', function ($resource) {
-  return $resource('/reports/:id.json', {}, {});
+  return $resource('/reports/:id/:format.json', {}, {});
 });
 
 services.factory('AddEditProgramProducts', function ($resource) {

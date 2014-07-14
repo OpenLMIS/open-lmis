@@ -25,16 +25,21 @@ import org.openlmis.core.service.RightService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.model.TemplateParameter;
 import org.openlmis.reporting.repository.TemplateRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -279,5 +284,53 @@ public class TemplateServiceTest {
     verify(reportRightService).insert(template);
     assertThat(template.getParameters().get(0).getDisplayName(), is("Param Display Name"));
     assertThat(template.getParameters().get(0).getCreatedBy(), is(template.getCreatedBy()));
+  }
+
+  @Test
+  public void shouldSetParametersMapWithValueOfTemplateParameters() throws Exception {
+    Template template = new Template();
+
+    TemplateParameter parameter1 = new TemplateParameter();
+    parameter1.setName("param1");
+    parameter1.setDataType("java.lang.Integer");
+
+    TemplateParameter parameter2 = new TemplateParameter();
+    parameter2.setName("param2");
+    parameter2.setDataType("java.lang.Float");
+
+    TemplateParameter parameter3 = new TemplateParameter();
+    parameter3.setName("param3");
+    parameter3.setDataType("java.lang.Float");
+
+    template.setParameters(asList(parameter1, parameter2, parameter3));
+
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    Map<String, String> requestParamMap = new HashMap<>();
+    requestParamMap.put("param1", "2");
+    requestParamMap.put("param2", "23.2");
+    requestParamMap.put("param3", "");
+
+    when(request.getParameterMap()).thenReturn(requestParamMap);
+    when(request.getParameter("param1")).thenReturn("2");
+    when(request.getParameter("param2")).thenReturn("23.2");
+    when(request.getParameter("param3")).thenReturn("");
+
+    Map<String,Object> parametersMap = service.getParametersMap(template, 1, request, "pdf");
+
+    assertThat(parametersMap.size(), is(3));
+    assertThat(parametersMap.get("param1"), is((Object) 2));
+    assertThat(parametersMap.get("param2"), is((Object) 23.2f));
+    assertThat(parametersMap.get("format"), is((Object) "pdf"));
+  }
+
+  @Test
+  public void shouldSetOnlyFormatInMapIfTemplateParametersNotPresent() throws Exception {
+    Template template = new Template();
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    Map<String,Object> parametersMap = service.getParametersMap(template, 1, request, "pdf");
+
+    assertThat(parametersMap.size(), is(1));
+    assertThat((String) parametersMap.get("format"), is("pdf"));
   }
 }

@@ -30,15 +30,24 @@ describe('View Report Controller', function () {
     expect(scope.parameters).toEqual(template.parameters);
   });
 
-  it('should set default values of template parameters in a map in scope', function () {
-    expect(scope.map).toEqual({"Parameter1": 12, "Parameter2": "param2"});
+  it('should set default values of template parameters in a map and params string in scope', function () {
+    expect(scope.parameterMap).toEqual({"Parameter1": 12, "Parameter2": "param2"});
+  });
+
+  it('should set params string in scope', function () {
+    expect(scope.params).toEqual("Parameter1=12&&Parameter2=param2&&");
+  });
+
+  it('should check if parameter data type is invalid or not', function () {
+    expect(scope.isInvalid("java.sql.Timestamp")).toBeTruthy();
   });
 });
 
 describe('View Report Resolve', function () {
+  var $httpBackend, deferredObject, $q, $timeout, ctrl, route;
 
   beforeEach(module('openlmis'));
-  beforeEach(inject(function (_$httpBackend_, $controller, _$timeout_, _$route_) {
+  beforeEach(inject(function (_$httpBackend_, $controller, _$timeout_) {
     $httpBackend = _$httpBackend_;
     deferredObject = {promise: {id: 1}, resolve: function () {
     }};
@@ -48,11 +57,10 @@ describe('View Report Resolve', function () {
     }};
     $timeout = _$timeout_;
     ctrl = $controller;
-    $route = _$route_;
   }));
 
   it('should fetch template with parameters', function () {
-    $route = {current: {params: {id: 1}}};
+    var $route = {current: {params: {id: 1}}};
     var response = {template: {}};
     $httpBackend.expect('GET', '/reports/1.json').respond(response);
     ctrl(ViewReportController.resolve.template, {$q: $q, $route: $route});

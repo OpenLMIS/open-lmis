@@ -25,11 +25,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.openlmis.core.domain.RightType.REPORTING;
@@ -40,6 +44,9 @@ import static org.openlmis.core.domain.RightType.REPORTING;
 
 @Service
 public class TemplateService {
+
+  public static final String PDF_VIEW = "pdf";
+  public static final String USER_ID_PARAM = "userId";
 
   @Autowired
   TemplateRepository repository;
@@ -122,8 +129,8 @@ public class TemplateService {
     templateParameter.setDisplayName(displayName);
     templateParameter.setDescription(jrParameter.getDescription());
     templateParameter.setDataType(jrParameter.getValueClassName());
-    if (jrParameter.getDefaultValueExpression() != null){
-      templateParameter.setDefaultValue(jrParameter.getDefaultValueExpression().getText().replace("\"", ""));
+    if (jrParameter.getDefaultValueExpression() != null) {
+      templateParameter.setDefaultValue(jrParameter.getDefaultValueExpression().getText().replace("\"", "").replace("\'", ""));
     }
     templateParameter.setCreatedBy(createdBy);
     return templateParameter;
@@ -148,5 +155,36 @@ public class TemplateService {
   private void throwIfFileIsNull(MultipartFile file) {
     if (file == null)
       throw new DataException("report.template.error.file.missing");
+  }
+
+  public Map<String, Object> getParametersMap(Template template, int userId, HttpServletRequest request, String format) throws ParseException {
+    List<TemplateParameter> templateParameters = template.getParameters();
+    Map<String, String> requestParameterMap = request.getParameterMap();
+    Map<String, Object> map = new HashMap<>();
+
+    if (templateParameters != null) {
+      for (TemplateParameter templateParameter : templateParameters) {
+        String templateParameterName = templateParameter.getName();
+
+        if (templateParameterName.equalsIgnoreCase(USER_ID_PARAM)) {
+          map.put(templateParameterName, userId);
+        }
+
+        for (String requestParamName : requestParameterMap.keySet()) {
+
+          if (templateParameterName.equalsIgnoreCase(requestParamName)) {
+            String requestParamValue = request.getParameter(templateParameterName);
+
+            if (!isBlank(requestParamValue)) {
+              map.put(templateParameterName, templateParameter.getParsedValueOf(requestParamValue));
+            }
+          }
+        }
+      }
+    }
+    String viewFormat = format == null ? PDF_VIEW : format;
+    map.put("format", viewFormat);
+
+    return map;
   }
 }

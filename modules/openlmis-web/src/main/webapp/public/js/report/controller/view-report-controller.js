@@ -9,12 +9,28 @@
  */
 
 function ViewReportController($scope, template) {
+  $scope.parameterMap = {};
   $scope.template = template;
   $scope.parameters = template.parameters;
-  $scope.map = {};
+  $scope.validDataTypes = ["java.lang.Integer", "java.lang.Short", "java.lang.Long", "java.lang.Boolean", "java.lang.String",
+                           "java.util.Date", "java.lang.Float", "java.lang.Double", "java.math.BigDecimal"];
+
   angular.forEach($scope.parameters, function (parameter) {
-    $scope.map[parameter.name] = parameter.defaultValue;
+    $scope.parameterMap[parameter.name] = parameter.defaultValue;
   });
+
+  $scope.refreshParams = function () {
+    $scope.params = "";
+    angular.forEach($scope.parameters, function (parameter) {
+      $scope.params = $scope.params + parameter.name + "=" + $scope.parameterMap[parameter.name] + "&&";
+    });
+  };
+
+  $scope.refreshParams();
+
+  $scope.isInvalid = function(dataType) {
+    return _.indexOf($scope.validDataTypes, dataType) === -1;
+  };
 }
 
 ViewReportController.resolve = {
