@@ -29,7 +29,7 @@ public interface FacilityLookupReportMapper {
     @Select("SELECT * " +
             "   FROM " +
             "       facilities where code = #{code}")
-    Facility getFacilityByCode(String code);
+    Facility getFacilityByCode(@Param("code") String code);
 
     @Select("SELECT f.id, f.code, f.name" +
         "   FROM " +
