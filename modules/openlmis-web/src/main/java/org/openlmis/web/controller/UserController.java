@@ -11,6 +11,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
+import static java.lang.Integer.parseInt;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.web.response.OpenLmisResponse.*;
@@ -62,9 +64,10 @@ public class UserController extends BaseController {
   private SessionRegistry sessionRegistry;
 
   @Value("${mail.base.url}")
-  private String baseUrl;
+  public String baseUrl;
 
   public static final String TOKEN_VALID = "TOKEN_VALID";
+  public static final String USERS = "userList";
 
   private static final String RESET_PASSWORD_PATH = "/public/pages/reset-password.html#/token/";
 
@@ -132,8 +135,16 @@ public class UserController extends BaseController {
 
   @RequestMapping(value = "/users", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
-  public List<User> searchUser(@RequestParam(required = true) String param) {
-    return userService.searchUser(param);
+  public ResponseEntity<OpenLmisResponse> searchUser(@RequestParam(value = "searchParam", required = false) String searchParam,
+                                                     @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                     @Value("${search.page.size}") String limit) {
+
+    Pagination pagination = new Pagination(page, parseInt(limit));
+    pagination.setTotalRecords(userService.getTotalSearchResultCount(searchParam));
+    List<User> users = userService.searchUser(searchParam, pagination);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(USERS, users);
+    response.getBody().addData("pagination", pagination);
+    return response;
   }
 
   @RequestMapping(value = "/users/{id}", method = GET)

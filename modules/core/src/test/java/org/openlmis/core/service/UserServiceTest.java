@@ -20,10 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.FulfillmentRoleAssignment;
-import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
@@ -39,7 +36,6 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
@@ -234,18 +230,23 @@ public class UserServiceTest {
     verify(emailService).send(any(SimpleMailMessage.class));
   }
 
+  @Test
+  public void shouldReturnSearchResults() {
+    String searchParam = "abc";
+    Pagination pagination = new Pagination(1,2);
+
+    userService.searchUser(searchParam,pagination);
+
+    verify(userRepository).searchUser(searchParam,pagination);
+  }
 
   @Test
-  public void shouldReturnSearchResultsWhenUserExists() throws Exception {
-    User user = new User();
-    String userSearchParam = "abc";
-    List<User> listOfUsers = asList(new User());
+  public void shouldReturnTotalResultCount(){
+    String searchParam = "abc";
 
-    when(userRepository.searchUser(userSearchParam)).thenReturn(listOfUsers);
+    userService.getTotalSearchResultCount(searchParam);
 
-    List<User> listOfReturnedUsers = userService.searchUser(userSearchParam);
-
-    assertTrue(listOfReturnedUsers.contains(user));
+    verify(userRepository).getTotalSearchResultCount(searchParam);
   }
 
   @Test

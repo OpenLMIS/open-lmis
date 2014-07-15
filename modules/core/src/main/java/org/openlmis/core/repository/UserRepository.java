@@ -11,6 +11,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
@@ -104,8 +105,8 @@ public class UserRepository {
     return userMapper.getByEmail(email);
   }
 
-  public List<User> searchUser(String userSearchParam) {
-    return userMapper.getUserWithSearchedName(userSearchParam);
+  public List<User> searchUser(String searchParam, Pagination pagination) {
+    return userMapper.search(searchParam, pagination);
   }
 
   public User getById(Long id) {
@@ -150,5 +151,9 @@ public class UserRepository {
 
   public List<User> getUsersWithRightOnWarehouse(Long id, String rightName) {
     return userMapper.getUsersWithRightOnWarehouse(id, rightName);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return userMapper.getTotalSearchResultCount(searchParam);
   }
 }

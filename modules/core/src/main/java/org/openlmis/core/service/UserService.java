@@ -12,6 +12,7 @@ package org.openlmis.core.service;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
@@ -80,8 +81,8 @@ public class UserService {
     sendEmail(emailMessage);
   }
 
-  public List<User> searchUser(String userSearchParam) {
-    return userRepository.searchUser(userSearchParam);
+  public List<User> searchUser(String searchParam, Pagination pagination) {
+    return userRepository.searchUser(searchParam,pagination);
   }
 
   public User getUserWithRolesById(Long id) {
@@ -209,5 +210,9 @@ public class UserService {
       }
     });
     return new ArrayList<>(users);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return userRepository.getTotalSearchResultCount(searchParam);
   }
 }

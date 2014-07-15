@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
@@ -25,42 +26,43 @@ import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.session.SessionRegistry;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.lang.Integer.parseInt;
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
-import static org.openlmis.web.controller.UserController.*;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.doThrow;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
+@PrepareForTest(UserController.class)
 public class UserControllerTest {
 
   private Long userId;
 
-  @Mock
-  private MockHttpSession session;
-
-  @Mock
-  private MockHttpServletRequest httpServletRequest;
+  private MockHttpServletRequest request = new MockHttpServletRequest();
 
   @Mock
   private RoleRightsService roleRightService;
@@ -77,24 +79,22 @@ public class UserControllerTest {
   @InjectMocks
   private UserController userController;
 
-  @Mock
-  String baseUrl = "http://localhost:9091";
-
   @Before
   public void setUp() {
+    userController.baseUrl = "http://localhost:9091";
     userId = 3L;
-    httpServletRequest = new MockHttpServletRequest();
-    session = new MockHttpSession();
-    httpServletRequest.setSession(session);
+    initMocks(this);
   }
 
   @Test
   public void shouldReturnUserInfoOfLoggedInUser() {
     String username = "Foo";
-    long userId = 1234L;
-    session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
-    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, userId);
-    ResponseEntity<OpenLmisResponse> response = userController.user(httpServletRequest);
+    Long userId = 1234L;
+    request.getSession().setAttribute(UserAuthenticationSuccessHandler.USER, username);
+    request.getSession().setAttribute(UserAuthenticationSuccessHandler.USER_ID, userId);
+
+    ResponseEntity<OpenLmisResponse> response = userController.user(request);
+
     assertThat(response.getBody().getData().get("name").toString(), is("Foo"));
     assertThat((Boolean) response.getBody().getData().get("authenticated"), is(true));
   }
@@ -102,20 +102,22 @@ public class UserControllerTest {
   @Test
   public void shouldNotReturnUserInfoWhenNotLoggedIn() {
     when(messageService.message("user.login.error")).thenReturn("The username or password you entered is incorrect. Please try again.");
-    session.setAttribute(UserAuthenticationSuccessHandler.USER, null);
+    request.getSession().setAttribute(UserAuthenticationSuccessHandler.USER, null);
 
+    ResponseEntity<OpenLmisResponse> response = userController.user(request);
 
-    ResponseEntity<OpenLmisResponse> response = userController.user(httpServletRequest);
     assertThat(response.getBody().getErrorMsg(), is("The username or password you entered is incorrect. Please try again."));
   }
 
   @Test
   public void shouldGetAllPrivilegesForTheLoggedInUser() throws Exception {
     Long userId = 1234L;
-    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, userId);
+    request.getSession().setAttribute(UserAuthenticationSuccessHandler.USER_ID, userId);
     List<Right> rights = new ArrayList<>();
     when(roleRightService.getRights(userId)).thenReturn(rights);
-    ResponseEntity<OpenLmisResponse> response = userController.user(httpServletRequest);
+
+    ResponseEntity<OpenLmisResponse> response = userController.user(request);
+
     verify(roleRightService).getRights(userId);
     assertThat((List<Right>) response.getBody().getData().get("rights"), is(rights));
   }
@@ -143,25 +145,25 @@ public class UserControllerTest {
   @Test
   public void shouldSaveUser() throws Exception {
     User user = new User();
-    httpServletRequest.getSession().setAttribute(USER_ID, userId);
-    httpServletRequest.getSession().setAttribute(USER, USER);
-    ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
+    request.getSession().setAttribute(USER_ID, userId);
+    request.getSession().setAttribute(USER, USER);
+    ResponseEntity<OpenLmisResponse> response = userController.create(user, request);
 
     verify(userService).create(eq(user), eq("http://localhost:9091/public/pages/reset-password.html#/token/"));
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat((User) response.getBody().getData().get("user"), is(user));
-    assertThat(response.getBody().getSuccessMsg(), is(USER_CREATED_SUCCESS_MSG));
+    assertThat(response.getBody().getSuccessMsg(), is(UserController.USER_CREATED_SUCCESS_MSG));
   }
 
   @Test
   public void shouldUpdateUser() throws Exception {
     User user = make(a(defaultUser));
     user.setId(userId);
-    httpServletRequest.getSession().setAttribute(USER_ID, userId);
-    httpServletRequest.getSession().setAttribute(USER, USER);
+    request.getSession().setAttribute(USER_ID, userId);
+    request.getSession().setAttribute(USER, USER);
 
-    ResponseEntity<OpenLmisResponse> response = userController.update(user, userId, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = userController.update(user, userId, request);
 
     verify(userService).update(user);
 
@@ -173,23 +175,30 @@ public class UserControllerTest {
   public void shouldReturnErrorIfSaveUserFails() throws Exception {
     User user = new User();
     doThrow(new DataException("Save user failed")).when(userService).create(eq(user), anyString());
-    ResponseEntity<OpenLmisResponse> response = userController.create(user, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = userController.create(user, request);
 
     assertThat(response.getStatusCode(), is(BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("Save user failed"));
   }
 
   @Test
-  public void shouldReturnUserDetailsIfUserExists() throws Exception {
-    String userSearchParam = "Admin";
-    List<User> listOfUsers = Arrays.asList(new User());
-    User userReturned = new User();
+  public void shouldReturnPaginatedUsersBySearchParam() throws Exception {
+    String searchParam = "Admin";
+    Integer page = 1;
+    String limit = "4";
+    Pagination pagination = new Pagination(1, 2);
+    whenNew(Pagination.class).withArguments(page, parseInt(limit)).thenReturn(pagination);
+    when(userService.getTotalSearchResultCount(searchParam)).thenReturn(100);
+    List<User> userList = asList(new User());
+    when(userService.searchUser(searchParam, pagination)).thenReturn(userList);
 
-    when(userService.searchUser(userSearchParam)).thenReturn(listOfUsers);
+    ResponseEntity<OpenLmisResponse> responseEntity = userController.searchUser(searchParam, page, limit);
 
-    List<User> userList = userController.searchUser(userSearchParam);
-
-    assertTrue(userList.contains(userReturned));
+    assertThat((List<User>)responseEntity.getBody().getData().get(UserController.USERS),is(userList));
+    assertThat(pagination.getTotalRecords(),is(100));
+    assertThat((Pagination) responseEntity.getBody().getData().get("pagination"), is(pagination));
+    verify(userService).getTotalSearchResultCount(searchParam);
+    verify(userService).searchUser(searchParam,pagination);
   }
 
   @Test
@@ -222,7 +231,7 @@ public class UserControllerTest {
 
     verify(userService).getUserIdByPasswordResetToken(validToken);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat((Boolean) response.getBody().getData().get(TOKEN_VALID), is(true));
+    assertThat((Boolean) response.getBody().getData().get(UserController.TOKEN_VALID), is(true));
   }
 
   @Test
@@ -240,14 +249,14 @@ public class UserControllerTest {
   @Test
   public void shouldDisableUser() throws Exception {
     Long modifiedBy = 1L;
-    httpServletRequest.getSession().setAttribute(USER_ID, modifiedBy);
+    request.getSession().setAttribute(USER_ID, modifiedBy);
     doNothing().when(userService).disable(userId, modifiedBy);
 
-    ResponseEntity<OpenLmisResponse> response = userController.disable(userId, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = userController.disable(userId, request);
 
     String successMsg = response.getBody().getSuccessMsg();
 
-    assertThat(successMsg, is(MSG_USER_DISABLE_SUCCESS));
+    assertThat(successMsg, is(UserController.MSG_USER_DISABLE_SUCCESS));
     verify(userService).disable(userId, modifiedBy);
   }
 }
