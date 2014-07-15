@@ -71,4 +71,8 @@
             org.springframework.security.web.session.HttpSessionEventPublisher
         </listener-class>
     </listener>
+    <error-page>
+        <exception-type>net.sf.jasperreports.engine.JRException</exception-type>
+        <location>/public/pages/report/partials/invalid-report.html</location>
+    </error-page>
 </web-app>
