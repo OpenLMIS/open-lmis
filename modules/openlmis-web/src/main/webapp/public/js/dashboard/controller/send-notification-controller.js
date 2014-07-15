@@ -22,6 +22,7 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         $scope.hidePeriodFilter = true;
         $scope.showStockStatusFilter = false;
         $scope.showFacilitiesFilter = false;
+        $scope.maxSmsText = 160;
     }
 
     $scope.notificationMethodsChange = function(notification){
@@ -60,29 +61,34 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
     $scope.sendNotifications = function () {
         $scope.errorMessage = '';
         if($scope.validateSendNotification()){
-            var phoneNumbers = _.map($scope.facilityForNotifications, function(facility){
-                if(!isUndefined(facility.phonenumber))
-                {return facility.phonenumber;}
+            var receivers = _.map($scope.facilityForNotifications, function(facility){
+                return {id: facility.userid,
+                         cellPhone: facility.phonenumber,
+                         email: facility.email,
+                         primaryNotificationMethod: facility.primarynotificationmethod};
             });
-            var emails = _.map($scope.facilityForNotifications, function(facility){
-                if(!isUndefined(facility.email))
-                {return facility.email;}
-            });
+
             var notification = {
                 emailMessage:  $scope.emailTemplate,
                 smsMessage : $scope.smsTemplate,
-                phoneNumbers : phoneNumbers,
-                emails : emails
+                receivers : receivers,
+                notificationMethods :$scope.notificationMethods
             };
 
             SendNotification.save({},notification, function(data){
                 $scope.error = "";
                 $scope.successMessage = messageService.get(data.success);
-               // $scope.$parent.message = messageService.get(data.success);
             });
             return;
         }
     };
+    $scope.$watch('smsTemplate', function(){
+        if($scope.smsTemplate.length > $scope.maxSmsText){
+            $scope.smsTemplate = $scope.smsTemplate.substring(0,$scope.maxSmsText);
+        }
+
+    });
+
 
     var processNotificationChange = function(selectedNotification){
         if(!isUndefined(selectedNotification)){
@@ -123,6 +129,7 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
     };
 
     $scope.validateSendNotification = function () {
+        $scope.notificationMethods = [];
 
         if(isUndefined($scope.selectedNotification) || isUndefined($scope.selectedNotification.alertType)){
             $scope.errorMessage = messageService.get('errorMessage.send.notification.select.notification.type');
@@ -132,7 +139,14 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
             $scope.errorMessage = messageService.get('errorMessage.send.notification.select.notification.method');
             return false;
         }
-        $scope.facilityForNotifications = [];
+        if(!isUndefined($scope.selectedNotification.emailMethod) && $scope.selectedNotification.emailMethod === true){
+            $scope.notificationMethods.push("email");
+
+        }
+        if(!isUndefined($scope.selectedNotification.smsMethod) && $scope.selectedNotification.smsMethod === true){
+            $scope.notificationMethods.push("sms");
+        }
+            $scope.facilityForNotifications = [];
         angular.forEach($scope.facilities, function(itm,idx){
             if(itm.selected){
                 $scope.facilityForNotifications.push(itm);

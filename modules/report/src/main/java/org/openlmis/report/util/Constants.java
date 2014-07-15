@@ -52,6 +52,10 @@ public class Constants {
     public static String PERIOD_TYPE_QUARTERLY = "quarterly";
     public static String PERIOD_TYPE_SEMI_ANNUAL = "semi-anual";
     public static String PERIOD_TYPE_ANNUAL = "annual";
+    public static String NOTIFICATION_METHOD_EMAIL = "email";
+    public static String NOTIFICATION_METHOD_SMS = "sms";
+    public static String USER_PRIMARY_NOTIFICATION_METHOD_CELL_PHONE = "Cell Phone";
+    public static String USER_PRIMARY_NOTIFICATION_METHOD_EMAIL = "email";
 
 
 }

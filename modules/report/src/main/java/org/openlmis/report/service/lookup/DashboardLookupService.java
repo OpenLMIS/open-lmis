@@ -1,8 +1,10 @@
 package org.openlmis.report.service.lookup;
 
+import org.openlmis.core.domain.User;
 import org.openlmis.report.mapper.lookup.DashboardMapper;
 import org.openlmis.report.mapper.lookup.RnRStatusSummaryReportMapper;
 import org.openlmis.report.model.dto.*;
+import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -89,21 +91,27 @@ public class DashboardLookupService {
     public void sendNotification(Notification notification){
         if(notification == null) return;
 
-        if(notification.getEmails()!= null && !notification.getEmails().isEmpty()){
-            for (String email : notification.getEmails()){
-                if(email != null && !email.isEmpty()){
-                    dashboardMapper.saveEmailNotification(email,notification.getEmailMessage());
+        for(String notificationMethod : notification.getNotificationMethods()){
+            if(notificationMethod.equalsIgnoreCase(Constants.NOTIFICATION_METHOD_EMAIL)){
+                for(User receiver: notification.getReceivers()){
+                    if(receiver.getPrimaryNotificationMethod() == null || receiver.getPrimaryNotificationMethod().equalsIgnoreCase(Constants.USER_PRIMARY_NOTIFICATION_METHOD_EMAIL)){
+                        if (receiver.getEmail() != null && !receiver.getEmail().isEmpty()){
+                            dashboardMapper.saveEmailNotification(receiver.getEmail(),notification.getEmailMessage());
+                        }
+                    }
+                }
+
+            }else if (notificationMethod.equalsIgnoreCase(Constants.NOTIFICATION_METHOD_SMS)){
+                for(User receiver: notification.getReceivers()){
+                    if(receiver.getPrimaryNotificationMethod() == null || receiver.getPrimaryNotificationMethod().equalsIgnoreCase(Constants.USER_PRIMARY_NOTIFICATION_METHOD_CELL_PHONE)){
+                        if (receiver.getCellPhone() != null && !receiver.getCellPhone().isEmpty()){
+                            dashboardMapper.saveSmsNotification(notification.getSmsMessage(),receiver.getCellPhone(),"O");
+                        }
+                    }
                 }
             }
         }
 
-        if (notification.getPhoneNumbers() != null && !notification.getPhoneNumbers().isEmpty()){
-            for (String phoneNumber : notification.getPhoneNumbers()){
-                if(phoneNumber !=null && !phoneNumber.isEmpty()){
-                    dashboardMapper.saveSmsNotification(notification.getSmsMessage(),phoneNumber,"O");
-                }
-            }
-        }
     }
 
     public String getYearOfPeriodById(Long id){

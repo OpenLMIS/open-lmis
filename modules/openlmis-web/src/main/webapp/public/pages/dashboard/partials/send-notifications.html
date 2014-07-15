@@ -24,7 +24,8 @@
         <span><label>Email</label></span>
         <textarea required="" ng-model="emailTemplate" cols="500" rows="5" style="width:400px"></textarea>
         <span><label>SMS</label></span>
-        <textarea required="" ng-model="smsTemplate" cols="500" rows="5" style="width:400px"></textarea>
+        <textarea required="" ng-model="smsTemplate" cols="500" rows="5" style="width:400px"></textarea><br/>
+        <div>SMS length {{smsTemplate.length || 0}} of {{maxSmsText}} characters.</div>
 
     </div>
 </div>
@@ -40,7 +41,7 @@
                 </tr>
             </table>
             <div class="alert alert-error" id="sendSuccessMsgDiv" openlmis-message="errorMessage" ng-show="errorMessage"></div>
-            <div class="alert alert-error" id="successMsgDiv" openlmis-message="successMessage" ng-show="successMessage"></div>
+            <div class="alert  alert-success" id="successMsgDiv" openlmis-message="successMessage" ng-show="successMessage"></div>
             <input type="button" ng-click="sendNotifications()" openlmis-message="button.send" class="btn btn-primary btn-small pull-right" ng-show="facilities.length > 0"/>
 
             <table ng-show="facilities.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams" >
