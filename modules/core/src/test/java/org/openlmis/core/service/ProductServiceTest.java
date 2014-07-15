@@ -10,12 +10,15 @@
 
 package org.openlmis.core.service;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
@@ -27,20 +30,26 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProgramProductBuilder.*;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProductServiceTest {
 
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+
   @Mock
   private ProductCategoryService categoryService;
 
   @Mock
-  private ProductRepository productRepository;
+  private ProductRepository repository;
 
   @Mock
   private ProgramService programService;
@@ -48,17 +57,32 @@ public class ProductServiceTest {
   @Mock
   ProgramProductService programProductService;
 
+  @Mock
+  private ProductGroupService productGroupService;
+
+  @Mock
+  private ProductFormService productFormService;
+
   @InjectMocks
-  private ProductService productService;
+  private ProductService service;
 
   @Test
   public void shouldStoreProduct() throws Exception {
     Product product = new Product();
     product.setPackSize(5);
+    DosageUnit unit = new DosageUnit("code", 1);
+    product.setDosageUnit(unit);
+    DosageUnit newUnit = new DosageUnit("code",40);
 
-    productService.save(product);
+    when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
+    when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
+    when(repository.getDosageUnitByCode("code")).thenReturn(newUnit);
+    service.save(product);
 
-    verify(productRepository).insert(product);
+    assertThat(product.getDosageUnit(), is(newUnit));
+    verify(repository).insert(product);
+    verify(productGroupService).validateAndReturn(null);
+    verify(productFormService).validateAndReturn(null);
   }
 
   @Test
@@ -66,37 +90,65 @@ public class ProductServiceTest {
     Product spyProduct = spy(new Product());
     doNothing().when(spyProduct).validate();
 
-    productService.save(spyProduct);
+    service.save(spyProduct);
 
     verify(spyProduct).validate();
   }
 
   @Test
-  public void shouldInsertProductIfNotPresent() throws Exception {
+  public void shouldThrowExceptionIfDosageUnitReturnedIsNull() throws Exception {
     Product product = new Product();
-    product.setCode("P1");
     product.setPackSize(5);
+    product.setDosageUnit(new DosageUnit("code", 98));
 
-    when(productRepository.getByCode("P1")).thenReturn(null);
+    when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
+    when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
+    when(repository.getDosageUnitByCode("code")).thenReturn(null);
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.dosage.unit"));
 
-    productService.save(product);
+    service.save(product);
 
-    verify(productRepository).insert(product);
+    verify(repository, never()).insert(product);
+    verify(productGroupService).validateAndReturn(null);
+    verify(productFormService).validateAndReturn(null);
+    verify(repository).getDosageUnitByCode("code");
   }
 
   @Test
-  public void shouldUpdateProductIfPresent() {
+  public void shouldValidateAndInsertProductIfNotPresentAndDosageUnitCodeNotPresent() throws Exception {
+    Product product = new Product();
+    product.setCode("P1");
+    product.setPackSize(5);
+    product.setDosageUnit(new DosageUnit(null, 23));
+    when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
+    when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
+    when(repository.getByCode("P1")).thenReturn(null);
+
+    service.save(product);
+
+    verify(productGroupService).validateAndReturn(null);
+    verify(productFormService).validateAndReturn(null);
+    verify(repository, never()).getDosageUnitByCode(any(String.class));
+    verify(repository).insert(product);
+  }
+
+  @Test
+  public void shouldValidateAndUpdateProductIfPresentAndDosageUnitNotPresent() {
     Product product = new Product();
     product.setId(2L);
     product.setCode("proCode");
     product.setPackSize(5);
 
+    when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
+    when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
     List<ProgramProduct> programProducts = new ArrayList<>();
     when(programProductService.getByProductCode("proCode")).thenReturn(programProducts);
 
-    productService.save(product);
+    service.save(product);
 
-    verify(productRepository).update(product);
+    verify(repository).update(product);
+    verify(productGroupService).validateAndReturn(null);
+    verify(productFormService).validateAndReturn(null);
   }
 
   @Test
@@ -109,11 +161,15 @@ public class ProductServiceTest {
     product.setPackSize(5);
 
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, true), with(productActive, true)));
+    when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
+    when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
     when(programProductService.getByProductCode(productCode)).thenReturn(asList(existingProgramProduct));
 
-    productService.save(product);
+    service.save(product);
 
     verify(programService).setFeedSendFlag(existingProgramProduct.getProgram(), true);
+    verify(productGroupService).validateAndReturn(null);
+    verify(productFormService).validateAndReturn(null);
   }
 
   @Test
@@ -127,12 +183,16 @@ public class ProductServiceTest {
 
     final ProgramProduct tbProduct = make(a(defaultProgramProduct, with(programCode, "TB"), with(active, true), with(productActive, false)));
     final ProgramProduct hivProduct = make(a(defaultProgramProduct, with(programCode, "HIV"), with(active, true), with(productActive, false)));
+    when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
+    when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
     when(programProductService.getByProductCode(productCode)).thenReturn(asList(hivProduct, tbProduct));
 
-    productService.save(product);
+    service.save(product);
 
     verify(programService).setFeedSendFlag(tbProduct.getProgram(), true);
     verify(programService).setFeedSendFlag(hivProduct.getProgram(), true);
+    verify(productGroupService).validateAndReturn(null);
+    verify(productFormService).validateAndReturn(null);
   }
 
   @Test
@@ -142,11 +202,14 @@ public class ProductServiceTest {
     product.setActive(true);
     product.setCode(productCode);
     product.setPackSize(5);
-
-    productService.save(product);
+    when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
+    when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
+    service.save(product);
 
     verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
     verify(programProductService, never()).getByProductCode(anyString());
+    verify(productGroupService).validateAndReturn(null);
+    verify(productFormService).validateAndReturn(null);
   }
 
   @Test
@@ -158,12 +221,16 @@ public class ProductServiceTest {
     product.setId(2L);
     product.setPackSize(5);
 
+    when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
+    when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, true)));
     when(programProductService.getByProductCode(productCode)).thenReturn(asList(existingProgramProduct));
 
-    productService.save(product);
+    service.save(product);
 
     verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
+    verify(productGroupService).validateAndReturn(null);
+    verify(productFormService).validateAndReturn(null);
   }
 
   @Test
@@ -175,25 +242,29 @@ public class ProductServiceTest {
     product.setId(2L);
     product.setPackSize(5);
 
+    when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
+    when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, false)));
     when(programProductService.getByProductCode(productCode)).thenReturn(asList(existingProgramProduct));
 
-    productService.save(product);
+    service.save(product);
 
     verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
+    verify(productGroupService).validateAndReturn(null);
+    verify(productFormService).validateAndReturn(null);
   }
 
   @Test
   public void shouldGetAll() {
-    productService.getAllDosageUnits();
+    service.getAllDosageUnits();
 
-    verify(productRepository).getAllDosageUnits();
+    verify(repository).getAllDosageUnits();
   }
 
   @Test
   public void shouldGetById() {
-    productService.getById(1l);
+    service.getById(1l);
 
-    verify(productRepository).getById(1l);
+    verify(repository).getById(1l);
   }
 }

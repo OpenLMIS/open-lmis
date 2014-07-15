@@ -32,4 +32,8 @@ public class ProductFormRepository {
   public List<ProductForm> getAll() {
     return mapper.getAll();
   }
+
+  public ProductForm getByCode(String code) {
+    return mapper.getByCode(code);
+  }
 }

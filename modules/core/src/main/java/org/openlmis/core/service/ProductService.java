@@ -13,6 +13,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
@@ -38,21 +39,34 @@ public class ProductService {
   private ProductGroupRepository productGroupRepository;
 
   @Autowired
-  ProgramProductService programProductService;
+  private ProgramProductService programProductService;
 
   @Autowired
-  ProgramService programService;
+  private ProductGroupService productGroupService;
+
+  @Autowired
+  private ProgramService programService;
+
+  @Autowired
+  private ProductFormService productFormService;
 
   public void save(Product product) {
 
     product.validate();
 
+    ProductGroup productGroup = productGroupService.validateAndReturn(product.getProductGroup());
+    product.setProductGroup(productGroup);
+
+    ProductForm productForm = productFormService.validateAndReturn(product.getForm());
+    product.setForm(productForm);
+
+    DosageUnit dosageUnit = validateAndReturnDosageUnit(product.getDosageUnit());
+    product.setDosageUnit(dosageUnit);
+
     if (product.getId() == null) {
       repository.insert(product);
       return;
     }
-
-    setReferenceDataForProduct(product);
 
     List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
 
@@ -61,26 +75,24 @@ public class ProductService {
     notifyProgramCatalogChange(product, existingProgramProducts);
   }
 
+  private DosageUnit validateAndReturnDosageUnit(DosageUnit dosageUnit) {
+    if (dosageUnit == null) return null;
+
+    String dosageUnitCode = dosageUnit.getCode();
+    if (dosageUnitCode == null || dosageUnitCode.isEmpty()) return null;
+
+    dosageUnit = repository.getDosageUnitByCode(dosageUnitCode);
+    if (dosageUnit == null)
+      throw new DataException("error.reference.data.invalid.dosage.unit");
+
+    return dosageUnit;
+  }
+
   private void notifyProgramCatalogChange(Product product, List<ProgramProduct> existingProgramProducts) {
     for (ProgramProduct existingProgramProduct : existingProgramProducts) {
       if (existingProgramProduct.getActive() && (existingProgramProduct.getProduct().getActive() != product.getActive())) {
         programService.setFeedSendFlag(existingProgramProduct.getProgram(), true);
       }
-    }
-  }
-
-  private void setReferenceDataForProduct(Product product) {
-    if (product.getForm() != null) {
-      product.getForm().setId(repository.getProductFormIdForCode(product.getForm().getCode()));
-    }
-    if (product.getDosageUnit() != null) {
-      product.getDosageUnit().setId(repository.getDosageUnitIdForCode(product.getDosageUnit().getCode()));
-    }
-    if (product.getProductGroup() != null) {
-      ProductGroup productGroup = productGroupRepository.getByCode(product.getProductGroup().getCode());
-      if (productGroup == null) throw new DataException("error.reference.data.invalid.product.group");
-      product.getProductGroup().setId(productGroup.getId());
-
     }
   }
 

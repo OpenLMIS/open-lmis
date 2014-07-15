@@ -41,4 +41,11 @@ public class ProductFormRepositoryTest {
     repository.getAll();
     verify(mapper).getAll();
   }
+
+  @Test
+  public void ShouldGetByCode()
+  {
+    repository.getByCode("code");
+    verify(mapper).getByCode("code");
+  }
 }

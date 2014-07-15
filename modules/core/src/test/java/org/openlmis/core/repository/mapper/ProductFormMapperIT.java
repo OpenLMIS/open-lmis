@@ -51,4 +51,13 @@ public class ProductFormMapperIT {
 
     assertThat(result.size(), is(17));
   }
+
+  @Test
+  public void shouldReturnProductFormIdForCode() {
+    ProductForm form = mapper.getByCode("Capsule");
+
+    assertThat(form.getCode(), is("Capsule"));
+    assertThat(form.getDisplayOrder(), is(2));
+  }
+
 }

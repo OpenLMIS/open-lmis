@@ -12,6 +12,7 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,25 +27,36 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductGroupService {
 
-  private ProductGroupRepository productGroupRepository;
+  private ProductGroupRepository repository;
 
   @Autowired
-  public ProductGroupService(ProductGroupRepository productGroupRepository) {
-    this.productGroupRepository = productGroupRepository;
+  public ProductGroupService(ProductGroupRepository repository) {
+    this.repository = repository;
   }
 
   public void save(ProductGroup productGroup) {
     if (productGroup.getId() == null) {
-      productGroupRepository.insert(productGroup);
+      repository.insert(productGroup);
     }
-    productGroupRepository.update(productGroup);
+    repository.update(productGroup);
   }
 
   public ProductGroup getByCode(String code) {
-    return productGroupRepository.getByCode(code);
+    return repository.getByCode(code);
   }
 
   public List<ProductGroup> getAll() {
-    return productGroupRepository.getAll();
+    return repository.getAll();
+  }
+
+  public ProductGroup validateAndReturn(ProductGroup group) {
+    if (group == null) return null;
+
+    String productGroupCode = group.getCode();
+    if (productGroupCode == null || productGroupCode.isEmpty()) return null;
+
+    group = repository.getByCode(productGroupCode);
+    if (group == null) throw new DataException("error.reference.data.invalid.product.group");
+    return group;
   }
 }

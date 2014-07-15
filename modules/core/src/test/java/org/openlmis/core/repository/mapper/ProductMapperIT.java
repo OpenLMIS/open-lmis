@@ -11,12 +11,12 @@
 package org.openlmis.core.repository.mapper;
 
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,6 @@ import static org.openlmis.core.builder.ProductBuilder.*;
 public class ProductMapperIT {
 
   public static final String PRODUCT_DOSAGE_UNIT_MG = "mg";
-  private static final String PRODUCT_FORM_TABLET = "Tablet";
 
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
@@ -77,21 +76,11 @@ public class ProductMapperIT {
   }
 
   @Test
-  public void shouldReturnDosageUnitIdForCode() {
-    Long id = productMapper.getDosageUnitIdForCode(PRODUCT_DOSAGE_UNIT_MG);
-    assertThat(id, CoreMatchers.is(1L));
+  public void shouldReturnDosageUnitByCode() {
+    DosageUnit dosageUnit = productMapper.getDosageUnitByCode(PRODUCT_DOSAGE_UNIT_MG);
 
-    id = productMapper.getDosageUnitIdForCode("invalid dosage unit");
-    assertThat(id, CoreMatchers.is(nullValue()));
-  }
-
-  @Test
-  public void shouldReturnProductFormIdForCode() {
-    Long id = productMapper.getProductFormIdForCode(PRODUCT_FORM_TABLET);
-    assertThat(id, CoreMatchers.is(1L));
-
-    id = productMapper.getProductFormIdForCode("invalid product form");
-    assertThat(id, CoreMatchers.is(nullValue()));
+    assertThat(dosageUnit.getCode(), is("mg"));
+    assertThat(dosageUnit.getDisplayOrder(), is(1));
   }
 
   @Test
@@ -126,6 +115,7 @@ public class ProductMapperIT {
     Product product = make(a(defaultProduct));
     productMapper.insert(product);
 
+    product.setCode("Product Code Updated");
     product.setPrimaryName("Updated Name");
     product.setAlternateItemCode("Alternate Code");
 
@@ -133,6 +123,7 @@ public class ProductMapperIT {
 
     Product returnedProduct = productMapper.getByCode(product.getCode());
 
+    assertThat(returnedProduct.getCode(), is("Product Code Updated"));
     assertThat(returnedProduct.getPrimaryName(), is("Updated Name"));
     assertThat(returnedProduct.getAlternateItemCode(), is("Alternate Code"));
   }

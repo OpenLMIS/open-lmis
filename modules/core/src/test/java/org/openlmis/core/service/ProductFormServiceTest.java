@@ -10,17 +10,30 @@
 
 package org.openlmis.core.service;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.repository.ProductFormRepository;
+import org.openlmis.db.categories.UnitTests;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProductFormServiceTest {
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
   @Mock
   private ProductFormRepository repository;
@@ -33,5 +46,37 @@ public class ProductFormServiceTest {
     service.getAll();
 
     verify(repository).getAll();
+  }
+
+  @Test
+  public void shouldValidateAndReturnNullIfFormEmpty() throws Exception {
+    assertThat(service.validateAndReturn(null), is(nullValue()));
+  }
+
+  @Test
+  public void shouldValidateAndReturnNullIfFormCodeEmpty() throws Exception {
+    assertThat(service.validateAndReturn(new ProductForm(null, 1)), is(nullValue()));
+  }
+
+  @Test
+  public void shouldValidateAndSetProductForm() throws Exception {
+    ProductForm form1 = new ProductForm("code1", 1);
+    ProductForm form2 = new ProductForm("code1", 2);
+
+    when(repository.getByCode("code1")).thenReturn(form2);
+
+    ProductForm response = service.validateAndReturn(form1);
+
+    assertThat(response, is(form2));
+  }
+
+  @Test
+  public void shouldRaiseInvalidReferenceDataProductFormError() throws Exception {
+    ProductForm form = new ProductForm("invalid product form code", 1);
+    when(repository.getByCode("invalid product form code")).thenReturn(null);
+
+    expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.product.form"));
+
+    service.validateAndReturn(form);
   }
 }

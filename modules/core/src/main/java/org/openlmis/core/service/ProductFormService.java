@@ -12,6 +12,7 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProductForm;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductFormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,17 @@ public class ProductFormService {
 
   public List<ProductForm> getAll() {
     return repository.getAll();
+  }
+
+  public ProductForm validateAndReturn(ProductForm form) {
+    if (form == null) return null;
+
+    String productFormCode = form.getCode();
+    if (productFormCode == null || productFormCode.isEmpty()) return null;
+
+    form = repository.getByCode(productFormCode);
+    if (form == null) throw new DataException("error.reference.data.invalid.product.form");
+
+    return form;
   }
 }

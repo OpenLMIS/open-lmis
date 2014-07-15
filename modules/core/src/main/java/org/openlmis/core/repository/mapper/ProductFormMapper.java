@@ -29,4 +29,7 @@ public interface ProductFormMapper {
 
   @Select("SELECT * FROM product_forms")
   List<ProductForm> getAll();
+
+  @Select("SELECT * FROM product_forms WHERE LOWER(code) = LOWER(#{code})")
+  ProductForm getByCode(String code);
 }
