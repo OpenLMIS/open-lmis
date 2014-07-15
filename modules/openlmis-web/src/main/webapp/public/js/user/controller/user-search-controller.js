@@ -9,94 +9,78 @@
  */
 
 function UserSearchController($scope, $location, Users, navigateBackService, UpdatePassword, messageService) {
-  $scope.showUserSearchResults = function () {
-    var query = $scope.query;
+  $scope.showResults = false;
+  $scope.currentPage = 1;
+  $scope.query = navigateBackService.query;
 
-    var len = (query === undefined) ? 0 : query.length;
+  $scope.loadUsers = function (page) {
+    if (!$scope.query) return;
+    $scope.query = $scope.query.trim();
+    $scope.searchedQuery = $scope.query;
+    Users.get({"searchParam": $scope.searchedQuery,"page": page}, function (data) {
+      $scope.userList = data.userList;
+      $scope.pagination = data.pagination;
+      $scope.totalItems = $scope.pagination.totalRecords;
+      $scope.currentPage = $scope.pagination.page;
+      $scope.showResults = true;
+    }, {});
+  };
 
-    if (len >= 3) {
-      if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3)) {
-        $scope.previousQuery = query;
-        filterUserByName(query);
-        return true;
-      }
-      $scope.previousQuery = query;
-      Users.get({param: $scope.query.substr(0, 3)}, function (data) {
-        $scope.userList = data.userList;
-        filterUserByName(query);
-      }, {});
-
-      return true;
-    } else {
-      return false;
+  $scope.triggerSearch = function (event) {
+    if (event.keyCode === 13) {
+      $scope.loadUsers(1);
     }
   };
 
-  $scope.previousQuery = '';
-  $scope.query = navigateBackService.query;
-  $scope.showUserSearchResults();
+  $scope.clearSearch = function () {
+    $scope.query = "";
+    $scope.totalItems = 0;
+    $scope.userList = [];
+    $scope.showResults = false;
+    angular.element("#searchUser").focus();
+  };
 
-
-  $scope.editUser = function (id) {
+  $scope.edit = function (id) {
     var data = {query: $scope.query};
     navigateBackService.setData(data);
     $location.path('edit/' + id);
   };
 
-  $scope.changePassword = function (user) {
-    if (user.active) {
-      $scope.userId = undefined;
-      $scope.password1 = $scope.password2 = $scope.message = $scope.error = "";
-      $scope.changePasswordModal = true;
-      $scope.user = user;
-    }
-  };
+  $scope.$watch('currentPage', function () {
+    if ($scope.currentPage !== 0)
+      $scope.loadUsers($scope.currentPage);
+  });
 
-  $scope.updatePassword = function () {
-    var reWhiteSpace = new RegExp("\\s");
-    var digits = new RegExp("\\d");
-    if ($scope.password1.length < 8 || $scope.password1.length > 16 || !digits.test($scope.password1) ||
-        reWhiteSpace.test($scope.password1)) {
-      $scope.error = messageService.get("error.password.invalid");
-      return;
-    }
-
-    if ($scope.password1 != $scope.password2) {
-      $scope.error = messageService.get('error.password.mismatch');
-      return;
-    }
-
-    UpdatePassword.update({userId: $scope.user.id}, $scope.password1, function (data) {
-      $scope.message = data.success;
-    }, {});
-  };
-
-  $scope.resetPasswordModal = function () {
-    $scope.changePasswordModal = false;
-    $scope.user = undefined;
-  };
-
-  $scope.clearSearch = function () {
-    $scope.query = "";
-    $scope.resultCount = 0;
-    angular.element("#searchUser").focus();
-  };
-
-  var filterUserByName = function (query) {
-    $scope.filteredUsers = [];
-    query = query || "";
-
-    angular.forEach($scope.userList, function (user) {
-      var fullName = user.firstName.toLowerCase() + ' ' + user.lastName.toLowerCase();
-
-      if (user.firstName.toLowerCase().indexOf() >= 0 ||
-          user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
-          fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
-          user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
-          user.userName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
-        $scope.filteredUsers.push(user);
-      }
-    });
-    $scope.resultCount = $scope.filteredUsers.length;
-  };
+//  $scope.changePassword = function (user) {
+//    if (user.active) {
+//      $scope.userId = undefined;
+//      $scope.password1 = $scope.password2 = $scope.message = $scope.error = "";
+//      $scope.changePasswordModal = true;
+//      $scope.user = user;
+//    }
+//  };
+//
+//  $scope.updatePassword = function () {
+//    var reWhiteSpace = new RegExp("\\s");
+//    var digits = new RegExp("\\d");
+//    if ($scope.password1.length < 8 || $scope.password1.length > 16 || !digits.test($scope.password1) ||
+//        reWhiteSpace.test($scope.password1)) {
+//      $scope.error = messageService.get("error.password.invalid");
+//      return;
+//    }
+//
+//    if ($scope.password1 != $scope.password2) {
+//      $scope.error = messageService.get('error.password.mismatch');
+//      return;
+//    }
+//
+//    UpdatePassword.update({userId: $scope.user.id}, $scope.password1, function (data) {
+//      $scope.message = data.success;
+//    }, {});
+//  };
+//
+//  $scope.resetPasswordModal = function () {
+//    $scope.changePasswordModal = false;
+//    $scope.user = undefined;
+//  };
 }
