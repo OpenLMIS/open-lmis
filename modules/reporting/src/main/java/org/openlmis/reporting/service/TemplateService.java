@@ -175,7 +175,7 @@ public class TemplateService {
           if (templateParameterName.equalsIgnoreCase(requestParamName)) {
             String requestParamValue = request.getParameter(templateParameterName);
 
-            if (!isBlank(requestParamValue)) {
+            if (!(isBlank(requestParamValue) || requestParamValue.equals("null") || requestParamValue.equals("undefined"))) {
               map.put(templateParameterName, templateParameter.getParsedValueOf(requestParamValue));
             }
           }

@@ -13,6 +13,13 @@
 
   <div class="table-container">
     <table id="reportParametersTable" ng-if="parameters.length" class="table table-bordered table-striped">
+      <thead>
+        <tr class="gradient-header">
+          <th openlmis-message="header.parameter"></th>
+          <th openlmis-message="header.parameter.value"></th>
+          <th openlmis-message="header.parameter.description"></th>
+        </tr>
+      </thead>
       <tbody>
         <tr ng-repeat="parameter in parameters" class="form-row">
           <td id="displayName_{{parameter.name}}" class="span4" ng-bind="parameter.displayName"></td>
@@ -40,8 +47,7 @@
 
             <div ng-if="parameter.dataType === 'java.util.Date'">
               <input id="date_{{parameter.name}}" type="text" name="date" ng-change="refreshParams()"
-                     ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                     ui-date-format="yy-mm-dd"
+                     ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" ui-date-format="dd/mm/yy"
                      ng-model="parameterMap[parameter.name]" readonly/>
             </div>
 
@@ -67,9 +73,9 @@
 
           <td id="description_{{parameter.name}}" class="span5"><em ng-bind="parameter.description"></em></td>
         </tr>
-        <tr>
-          <td class="action-row"></td>
-          <td class="center-justified action-row">
+        <tr class="action-row">
+          <td></td>
+          <td class="center-justified">
             <a class="btn btn-primary" id="pdfTableButton" ng-href="/reports/{{template.id}}/pdf?{{params}}" target="_blank"
                openlmis-message="report.type.pdf"></a>
             <a class="btn btn-primary" id="xlsTableButton" ng-href="/reports/{{template.id}}/xls?{{params}}" target="_blank"
@@ -79,7 +85,7 @@
             <a class="btn btn-primary" id="htmlTableButton" ng-href="/reports/{{template.id}}/html?{{params}}" target="_blank"
                openlmis-message="report.type.html"></a>
           </td>
-          <td class="action-row"></td>
+          <td></td>
         </tr>
       </tbody>
     </table>

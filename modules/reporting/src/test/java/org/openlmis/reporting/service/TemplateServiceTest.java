@@ -298,6 +298,37 @@ public class TemplateServiceTest {
     parameter2.setName("param2");
     parameter2.setDataType("java.lang.Float");
 
+    template.setParameters(asList(parameter1, parameter2));
+
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    Map<String, String> requestParamMap = new HashMap<>();
+    requestParamMap.put("param1", "2");
+    requestParamMap.put("param2", "23.2");
+
+    when(request.getParameterMap()).thenReturn(requestParamMap);
+    when(request.getParameter("param1")).thenReturn("2");
+    when(request.getParameter("param2")).thenReturn("23.2");
+
+    Map<String,Object> parametersMap = service.getParametersMap(template, 1, request, "pdf");
+
+    assertThat(parametersMap.size(), is(3));
+    assertThat(parametersMap.get("param1"), is((Object) 2));
+    assertThat(parametersMap.get("param2"), is((Object) 23.2f));
+    assertThat(parametersMap.get("format"), is((Object) "pdf"));
+  }
+
+  @Test
+  public void shouldNotSetParametersMapIfParamValueIsNullOrUndefinedOrBlank() throws Exception {
+    Template template = new Template();
+
+    TemplateParameter parameter1 = new TemplateParameter();
+    parameter1.setName("param1");
+    parameter1.setDataType("java.lang.Integer");
+
+    TemplateParameter parameter2 = new TemplateParameter();
+    parameter2.setName("param2");
+    parameter2.setDataType("java.lang.Float");
+
     TemplateParameter parameter3 = new TemplateParameter();
     parameter3.setName("param3");
     parameter3.setDataType("java.lang.Float");
@@ -306,20 +337,18 @@ public class TemplateServiceTest {
 
     HttpServletRequest request = mock(HttpServletRequest.class);
     Map<String, String> requestParamMap = new HashMap<>();
-    requestParamMap.put("param1", "2");
-    requestParamMap.put("param2", "23.2");
+    requestParamMap.put("param1", "null");
+    requestParamMap.put("param2", "undefined");
     requestParamMap.put("param3", "");
 
     when(request.getParameterMap()).thenReturn(requestParamMap);
-    when(request.getParameter("param1")).thenReturn("2");
-    when(request.getParameter("param2")).thenReturn("23.2");
+    when(request.getParameter("param1")).thenReturn("null");
+    when(request.getParameter("param2")).thenReturn("undefined");
     when(request.getParameter("param3")).thenReturn("");
 
     Map<String,Object> parametersMap = service.getParametersMap(template, 1, request, "pdf");
 
-    assertThat(parametersMap.size(), is(3));
-    assertThat(parametersMap.get("param1"), is((Object) 2));
-    assertThat(parametersMap.get("param2"), is((Object) 23.2f));
+    assertThat(parametersMap.size(), is(1));
     assertThat(parametersMap.get("format"), is((Object) "pdf"));
   }
 

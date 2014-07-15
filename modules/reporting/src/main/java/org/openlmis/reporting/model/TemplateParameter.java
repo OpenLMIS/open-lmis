@@ -19,6 +19,7 @@ import org.openlmis.core.domain.BaseModel;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -64,8 +65,11 @@ public class TemplateParameter extends BaseModel {
         objectValue = Boolean.parseBoolean(value);
         break;
       case DATE:
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        objectValue = dateFormat.parse(value);
+        SimpleDateFormat clientFormat = new SimpleDateFormat("dd/MM/yy");
+        Date dateInClientFormat = clientFormat.parse(value);
+
+        SimpleDateFormat dbFormat = new SimpleDateFormat("yyyy-MM-dd");
+        objectValue = dbFormat.parse(dbFormat.format(dateInClientFormat));
         break;
       case FLOAT:
         objectValue = Float.parseFloat(value);

@@ -63,7 +63,7 @@ public class TemplateParameterTest {
   public void shouldGetParsedValueForDateDataType() throws Exception {
     parameter.setDataType("java.util.Date");
     Date date = new Date(66600000L);
-    assertThat(parameter.getParsedValueOf("1970-01-02"), is((Object) date));
+    assertThat(parameter.getParsedValueOf("02/01/1970"), is((Object) date));
   }
 
   @Test
