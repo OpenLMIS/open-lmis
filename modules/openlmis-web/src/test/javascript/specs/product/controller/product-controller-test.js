@@ -14,15 +14,60 @@ describe("Product", function () {
 
   describe("Controller", function () {
 
-    var ctrl, scope, $httpBackend, location;
+    var ctrl, scope, $httpBackend, location, controller;
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       location = $location;
+      controller = $controller;
       ctrl = $controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programProduct: undefined});
     }));
 
+    it('should not set selected product form, group and dosage unit in scope if progrm product is undefined', function () {
+      expect(scope.selectedProductFormCode).toBeUndefined();
+      expect(scope.selectedProductGroupCode).toBeUndefined();
+      expect(scope.selectedProductDosageUnitCode).toBeUndefined();
+    });
+
+    it('should not set selected product form, group and dosage unit in scope if product values are undefined', function () {
+      var programProduct = {product: {form: undefined, productGroup: undefined, dosageUnit: undefined}};
+
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programProduct: programProduct});
+
+      expect(scope.selectedProductFormCode).toBeUndefined();
+      expect(scope.selectedProductGroupCode).toBeUndefined();
+      expect(scope.selectedProductDosageUnitCode).toBeUndefined();
+    });
+
+    it('should set selected product form, group and dosage unit in scope if product values are defined', function () {
+      var programProduct = {product: {form: {code: "Form"}, productGroup: {code: "Group"}, dosageUnit: {code: "Unit"}}};
+
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programProduct: programProduct});
+
+      expect(scope.selectedProductFormCode).toEqual("Form");
+      expect(scope.selectedProductGroupCode).toEqual("Group");
+      expect(scope.selectedProductDosageUnitCode).toEqual("Unit");
+    });
+
     describe("Save", function () {
+      beforeEach(function () {
+        scope.productGroups = [
+          {code: 'group1'},
+          {code: 'group2'},
+          {code: 'group3'}
+        ];
+        scope.productForms = [
+          {code: 'form1'},
+          {code: 'form2'},
+          {code: 'form3'}
+        ];
+        scope.dosageUnits = [
+          {code: 'unit1'},
+          {code: 'unit2'},
+          {code: 'unit3'}
+        ];
+        scope.programProduct = {product: {id: 1, code: 'code'}};
+      });
 
       it('should not save product if invalid', function () {
         scope.productForm = {"$error": {"required": true}};
@@ -34,13 +79,19 @@ describe("Product", function () {
       });
 
       it('should insert product', function () {
-        scope.programProduct.product = {"code": 'P10'};
+        scope.programProduct = {product: {"code": 'P10'}};
+        scope.selectedProductFormCode = "form2";
+        scope.selectedProductGroupCode = "group2";
+        scope.selectedProductDosageUnitCode = "unit2";
         scope.productForm = {"$error": {"required": false}};
 
         $httpBackend.expectPOST('/programProducts.json', scope.programProduct).respond(200, {"success": "Saved successfully", "productId": 5});
         scope.save();
         $httpBackend.flush();
 
+        expect(scope.programProduct.product.productGroup.code).toEqual("group2");
+        expect(scope.programProduct.product.form.code).toEqual("form2");
+        expect(scope.programProduct.product.dosageUnit.code).toEqual("unit2");
         expect(scope.error).toEqual("");
         expect(scope.showError).toBeFalsy();
         expect(scope.$parent.productId).toEqual(5);
@@ -52,6 +103,39 @@ describe("Product", function () {
         scope.productForm = {"$error": {"required": false}};
 
         $httpBackend.expectPOST('/programProducts.json', scope.programProduct).respond(400, {"error": "Some error occurred"});
+        scope.save();
+        $httpBackend.flush();
+
+        expect(scope.error).toEqual("Some error occurred");
+        expect(scope.showError).toBeTruthy();
+        expect(scope.$parent.message).toEqual("");
+      });
+
+      it('should update product', function () {
+        scope.programProduct.product = {"id": 1, "code": 'P10'};
+        scope.selectedProductFormCode = "form3";
+        scope.selectedProductGroupCode = "group3";
+        scope.selectedProductDosageUnitCode = "unit3";
+        scope.productForm = {"$error": {"required": false}};
+
+        $httpBackend.expectPUT('/programProducts/1.json', scope.programProduct).respond(200, {"success": "Updated successfully", "productId": 5});
+        scope.save();
+        $httpBackend.flush();
+
+        expect(scope.programProduct.product.productGroup.code).toEqual("group3");
+        expect(scope.programProduct.product.form.code).toEqual("form3");
+        expect(scope.programProduct.product.dosageUnit.code).toEqual("unit3");
+        expect(scope.error).toEqual("");
+        expect(scope.showError).toBeFalsy();
+        expect(scope.$parent.productId).toEqual(5);
+        expect(scope.$parent.message).toEqual("Updated successfully");
+      });
+
+      it('should not update product', function () {
+        scope.programProduct.product = {"id": 1, "code": 'P10'};
+        scope.productForm = {"$error": {"required": false}};
+
+        $httpBackend.expectPUT('/programProducts/1.json', scope.programProduct).respond(400, {"error": "Some error occurred"});
         scope.save();
         $httpBackend.flush();
 
@@ -111,10 +195,22 @@ describe("Product", function () {
     });
 
     it('should get product if edit route contains id', function () {
+      var programProduct = {'id': '23'};
       $route = {current: {params: {id: 1}}};
-      $httpBackend.expect('GET', '/programProducts/1.json').respond({'id': '23'});
-      ctrl(ProductController.resolve.programProduct, {$route: $route});
+      $httpBackend.expect('GET', '/programProducts/1.json').respond(programProduct);
+      ctrl(ProductController.resolve.programProduct, {$q: $q, $route: $route});
       $timeout.flush();
+      $httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalled();
+    });
+
+    it('should not get product if edit route does not contains id', function () {
+      var httpBackendSpy = spyOn($httpBackend, 'expectGET');
+
+      $route = {current: {params: {id: undefined}}};
+      ctrl(ProductController.resolve.programProduct, {$route: $route});
+
+      expect(httpBackendSpy).not.toHaveBeenCalled();
     });
   });
 });

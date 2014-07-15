@@ -87,7 +87,7 @@
              ng-class="{'icon-ok': programProduct.product.fullSupply}"></i>
         </td>
         <td id="code{{$index}}" ng-bind="programProduct.product.code"></td>
-        <td id="name{{$index}}" ng-bind="programProduct.product.primaryName"></td>
+        <td><a id="name{{$index}}" href="" ng-click="edit(programProduct.product.id)" ng-bind="programProduct.product.primaryName"></a></td>
         <td id="program{{$index}}" ng-bind="programProduct.program.name"></td>
         <td id="strength{{$index}}" ng-bind="programProduct.product.strength"></td>
         <td id="unit{{$index}}" ng-bind="programProduct.product.dosageUnit.code"></td>

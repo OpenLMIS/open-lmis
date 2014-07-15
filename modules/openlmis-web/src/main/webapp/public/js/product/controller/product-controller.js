@@ -3,6 +3,9 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
   $scope.programProduct = programProduct || {};
+  $scope.selectedProductGroupCode = isUndefined(programProduct) || isUndefined(programProduct.product.productGroup) ? undefined : programProduct.product.productGroup.code;
+  $scope.selectedProductFormCode = isUndefined(programProduct) || isUndefined(programProduct.product.form) ? undefined : programProduct.product.form.code;
+  $scope.selectedProductDosageUnitCode = isUndefined(programProduct) || isUndefined(programProduct.product.dosageUnit) ? undefined : programProduct.product.dosageUnit.code;
 
   var success = function (data) {
     $scope.error = "";
@@ -18,12 +21,20 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     $scope.showError = true;
   };
 
+  var setProductReferenceData = function() {
+    $scope.programProduct.product.productGroup = _.where($scope.productGroups, {code: $scope.selectedProductGroupCode})[0];
+    $scope.programProduct.product.form = _.where($scope.productForms, {code: $scope.selectedProductFormCode})[0];
+    $scope.programProduct.product.dosageUnit = _.where($scope.dosageUnits, {code: $scope.selectedProductDosageUnitCode})[0];
+  };
+
   $scope.save = function () {
     if ($scope.productForm.$error.required) {
       $scope.showError = true;
       $scope.error = "form.error";
       return;
     }
+    setProductReferenceData();
+
     if ($scope.programProduct.product.id) {
       AddEditProgramProducts.update({id: $scope.programProduct.product.id}, $scope.programProduct, success, error);
     }
