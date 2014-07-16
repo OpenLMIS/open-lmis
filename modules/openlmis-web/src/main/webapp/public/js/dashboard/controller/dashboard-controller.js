@@ -82,8 +82,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
             $scope.products = data.productList;
         });
-
-        $scope.loadFacilities();
+        //$scope.loadFacilities();
         $scope.loadStockingData();
         $scope.loadReportingPerformance();
 
@@ -225,7 +224,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
             }
 
         }
-        $scope.loadFacilities();
+        //$scope.loadFacilities();
         $scope.loadStockingData();
     };
 
@@ -674,6 +673,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         if(isUndefined(filterHistory)){
             if(!_.isEmpty(userPreferredFilterValues)){
                 var date = new Date();
+
                 $scope.filterObject.programId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM], $scope.programs) ?
                      userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
 

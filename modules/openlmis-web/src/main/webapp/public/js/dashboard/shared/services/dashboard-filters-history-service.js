@@ -48,7 +48,9 @@ var isItemWithIdExists = function(id, listObject){
     var isEq = false;
     angular.forEach(listObject,function(item,idx){
         if(!isUndefined(item)){
-            isEq = item.id == id;
+            if(item.id == id){
+                isEq = true;
+            }
         }
     });
     return isEq;
