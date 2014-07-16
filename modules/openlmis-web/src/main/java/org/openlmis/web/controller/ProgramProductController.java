@@ -80,10 +80,13 @@ public class ProgramProductController extends BaseController {
 
   @RequestMapping(method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody ProgramProduct programProduct) {
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody ProgramProduct programProduct, HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> response;
 
     try {
+      Long userId = loggedInUserId(request);
+      programProduct.getProduct().setCreatedBy(userId);
+      programProduct.getProduct().setModifiedBy(userId);
       service.saveProduct(programProduct);
     } catch (DataException e) {
       response = OpenLmisResponse.error(e, BAD_REQUEST);
@@ -99,10 +102,10 @@ public class ProgramProductController extends BaseController {
   public ResponseEntity<OpenLmisResponse> update(@RequestBody ProgramProduct programProduct,
                                                  @PathVariable(value = "id") Long id,
                                                  HttpServletRequest request) {
-    Long userId = loggedInUserId(request);
-    programProduct.getProduct().setId(id);
-    programProduct.getProduct().setModifiedBy(userId);
     try {
+      Long userId = loggedInUserId(request);
+      programProduct.getProduct().setId(id);
+      programProduct.getProduct().setModifiedBy(userId);
       service.saveProduct(programProduct);
     } catch (DataException e) {
       return OpenLmisResponse.error(e, BAD_REQUEST);

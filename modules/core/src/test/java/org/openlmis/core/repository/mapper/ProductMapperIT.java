@@ -29,8 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.ProductBuilder.*;
@@ -108,6 +107,7 @@ public class ProductMapperIT {
     assertThat(expectedProduct.getPrimaryName(), is(product.getPrimaryName()));
     assertThat(expectedProduct.getForm().getCode(), is("Tablet"));
     assertThat(expectedProduct.getDosageUnit().getCode(), is("mg"));
+    assertThat(expectedProduct.getModifiedDate(), is(not(nullValue())));
   }
 
   @Test
@@ -126,6 +126,7 @@ public class ProductMapperIT {
     assertThat(returnedProduct.getCode(), is("Product Code Updated"));
     assertThat(returnedProduct.getPrimaryName(), is("Updated Name"));
     assertThat(returnedProduct.getAlternateItemCode(), is("Alternate Code"));
+    assertThat(returnedProduct.getModifiedDate(), is(not(nullValue())));
   }
 
   @Test

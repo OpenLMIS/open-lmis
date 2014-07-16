@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -18,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
@@ -43,18 +45,24 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProgramProductControllerTest {
+
   private MockHttpServletRequest request = new MockHttpServletRequest();
 
   @Mock
   ProgramProductService service;
 
-  @InjectMocks
-  ProgramProductController controller;
-
   @Mock
   private MessageService messageService;
 
+  @InjectMocks
+  ProgramProductController controller;
+
   private List<ProgramProduct> expectedProgramProductList = new ArrayList<>();
+
+  @Before
+  public void setUp() throws Exception {
+    request.getSession().setAttribute(UserAuthenticationSuccessHandler.USER_ID, 11L);
+  }
 
   @Test
   public void shouldGetProgramProductsByProgram() throws Exception {
@@ -100,8 +108,10 @@ public class ProgramProductControllerTest {
     programProduct.setProduct(product);
     when(messageService.message("message.product.created.success", programProduct.getProduct().getName())).thenReturn("save success");
 
-    ResponseEntity<OpenLmisResponse> response = controller.save(programProduct);
+    ResponseEntity<OpenLmisResponse> response = controller.save(programProduct, request);
 
+    assertThat(product.getCreatedBy(), is(11L));
+    assertThat(product.getModifiedBy(), is(11L));
     assertThat(response.getBody().getSuccessMsg(), is("save success"));
     assertThat((Long) response.getBody().getData().get("productId"), is(product.getId()));
     verify(service).saveProduct(programProduct);
@@ -113,7 +123,7 @@ public class ProgramProductControllerTest {
     programProduct.setProduct(new Product());
     doThrow(new DataException("error message")).when(service).saveProduct(programProduct);
 
-    ResponseEntity<OpenLmisResponse> response = controller.save(programProduct);
+    ResponseEntity<OpenLmisResponse> response = controller.save(programProduct, request);
 
     assertThat(response.getBody().getErrorMsg(), is("error message"));
     verify(service).saveProduct(programProduct);
@@ -160,6 +170,7 @@ public class ProgramProductControllerTest {
 
     assertThat((Long) response.getBody().getData().get("productId"), is(programProduct.getProduct().getId()));
     assertThat(programProduct.getProduct().getId(), is(1L));
+    assertThat(programProduct.getProduct().getModifiedBy(), is(11L));
     assertThat(response.getBody().getSuccessMsg(), is("updated"));
     verify(service).saveProduct(programProduct);
   }
