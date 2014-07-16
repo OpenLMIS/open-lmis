@@ -17,7 +17,6 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.ReportPage;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
 import java.io.File;
@@ -140,7 +139,9 @@ public class ManageReport extends TestCaseHelper {
     reportName = "Supervisory Nodes Missing Approve Requisition Role";
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(7).equalsIgnoreCase(reportName));
 
-//    getReportData(1);
+    reportPage.clickReport(1);
+    reportPage.clickCsvLink();
+//    getReportData();
 //    deleteFile(downloadedFilePath);
   }
 
@@ -175,7 +176,7 @@ public class ManageReport extends TestCaseHelper {
 
     reportPage.clickReport(1);
     assertEquals(reportName, reportPage.getReportName());
-    verifyItemsOnReportListScreen();
+    verifyLinksOnReportView();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -210,7 +211,7 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("is facility enabled", reportPage.getParameterDescription(parameterName));
     assertTrue(reportPage.isParameterTrueOptionSelected(parameterName));
     assertFalse(reportPage.isParameterFalseOptionSelected(parameterName));
-    verifyItemsOnReportListScreen();
+    verifyLinksOnReportTableView();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -242,7 +243,7 @@ public class ManageReport extends TestCaseHelper {
     String parameterName = "typeId";
     assertEquals("facilityTypeId", reportPage.getParameterDisplayName(parameterName));
     assertEquals("id for facility type", reportPage.getParameterDescription(parameterName));
-    assertEquals("2", reportPage.getParameterText(parameterName));
+    assertEquals("2", reportPage.getParameterInt(parameterName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -260,7 +261,7 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
     assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
-    verifyParameterDetails("code", "facilityCode", "'F10'", "facility code", "java.lang.String");
+    verifyParameterDetails("code", "facilityCode", "F10", "facility code", "java.lang.String");
     homePage.logout();
 
     dbWrapper.removeAllExistingRights("Admin");
@@ -273,7 +274,7 @@ public class ManageReport extends TestCaseHelper {
     String parameterName = "code";
     assertEquals("facilityCode", reportPage.getParameterDisplayName(parameterName));
     assertEquals("facility code", reportPage.getParameterDescription(parameterName));
-    assertEquals("'F10'", reportPage.getParameterText(parameterName));
+    assertEquals("F10", reportPage.getParameterString(parameterName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -354,7 +355,7 @@ public class ManageReport extends TestCaseHelper {
     String parameterName = "code";
     assertEquals("facilityCode", reportPage.getParameterDisplayName(parameterName));
     assertEquals("", reportPage.getParameterDescription(parameterName));
-    assertEquals("", reportPage.getParameterText(parameterName));
+    assertEquals("", reportPage.getParameterString(parameterName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -389,8 +390,8 @@ public class ManageReport extends TestCaseHelper {
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
-    verifyParameterDetails("code", "facilityCode", "'F10'", null, "java.lang.String");
-    verifyParameterDetails("name", "facilityName", "'Facility'", null, "java.lang.String");
+    verifyParameterDetails("code", "facilityCode", "F10", null, "java.lang.String");
+    verifyParameterDetails("name", "facilityName", "Facility", null, "java.lang.String");
     homePage.logout();
 
     dbWrapper.removeAllExistingRights("Admin");
@@ -403,17 +404,17 @@ public class ManageReport extends TestCaseHelper {
     String parameterName = "za";
     assertEquals("za", reportPage.getParameterDisplayName(parameterName));
     assertEquals("", reportPage.getParameterDescription(parameterName));
-    assertEquals("", reportPage.getParameterText(parameterName));
+    assertEquals("", reportPage.getParameterString(parameterName));
 
     parameterName = "code";
     assertEquals("facilityCode", reportPage.getParameterDisplayName(parameterName));
     assertEquals("", reportPage.getParameterDescription(parameterName));
-    assertEquals("'F10'", reportPage.getParameterText(parameterName));
+    assertEquals("F10", reportPage.getParameterString(parameterName));
 
     parameterName = "name";
     assertEquals("facilityName", reportPage.getParameterDisplayName(parameterName));
     assertEquals("", reportPage.getParameterDescription(parameterName));
-    assertEquals("'Facility'", reportPage.getParameterText(parameterName));
+    assertEquals("Facility", reportPage.getParameterString(parameterName));
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -461,14 +462,21 @@ public class ManageReport extends TestCaseHelper {
     String parameterName = "id";
     assertEquals("fCode", reportPage.getParameterDisplayName(parameterName));
     assertEquals("", reportPage.getParameterDescription(parameterName));
-    assertEquals("abc", reportPage.getParameterText(parameterName));
+    assertEquals("abc", reportPage.getParameterInt(parameterName));
   }
 
-  public void verifyItemsOnReportListScreen() {
+  public void verifyLinksOnReportView() {
     assertTrue("PDF link missing", reportPage.isPDFLinkDisplayed());
     assertTrue("XLS link missing", reportPage.isXLSLinkDisplayed());
     assertTrue("CSV link missing", reportPage.isCSVLinkDisplayed());
     assertTrue("HTML link missing", reportPage.isHTMLLinkDisplayed());
+  }
+
+  public void verifyLinksOnReportTableView() {
+    assertTrue("PDF link missing", reportPage.isPDFTableLinkDisplayed());
+    assertTrue("XLS link missing", reportPage.isXLSTableLinkDisplayed());
+    assertTrue("CSV link missing", reportPage.isCSVTableLinkDisplayed());
+    assertTrue("HTML link missing", reportPage.isHTMLTableLinkDisplayed());
   }
 
   public void verifyParameterDetails(String parameterName, String displayName, String defaultValue, String description, String parameterType) throws SQLException {
@@ -478,9 +486,7 @@ public class ManageReport extends TestCaseHelper {
     assertEquals(parameterType, dbWrapper.getAttributeFromTable("template_parameters", "dataType", "name", parameterName));
   }
 
-  public String[] getReportData(int reportNumber) throws InterruptedException, IOException, SQLException {
-    WebElement reportLink = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + reportNumber + "]/td[2]/div/a[3]");
-    reportLink.click();
+  public String[] getReportData() throws InterruptedException, IOException, SQLException {
     Thread.sleep(2500);
     return (readCSVFile(downloadedFilePath));
   }

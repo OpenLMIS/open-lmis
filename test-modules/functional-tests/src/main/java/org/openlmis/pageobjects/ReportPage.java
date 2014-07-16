@@ -70,17 +70,29 @@ public class ReportPage extends Page {
   @FindBy(how = ID, using = "error")
   private static WebElement saveErrorMessage = null;
 
-  @FindBy(how = ID, using = "pdfLink")
-  private static WebElement PDF = null;
+  @FindBy(how = ID, using = "pdfButton")
+  private static WebElement pdfButton = null;
 
-  @FindBy(how = ID, using = "xlsLink")
-  private static WebElement XLS = null;
+  @FindBy(how = ID, using = "xlsButton")
+  private static WebElement xlsButton = null;
 
-  @FindBy(how = ID, using = "csvLink")
-  private static WebElement CSV = null;
+  @FindBy(how = ID, using = "csvButton")
+  private static WebElement csvButton = null;
 
-  @FindBy(how = ID, using = "htmlLink")
-  private static WebElement HTML = null;
+  @FindBy(how = ID, using = "htmlButton")
+  private static WebElement htmlButton = null;
+
+  @FindBy(how = ID, using = "pdfTableButton")
+  private static WebElement pdfTableButton = null;
+
+  @FindBy(how = ID, using = "xlsTableButton")
+  private static WebElement xlsTableButton = null;
+
+  @FindBy(how = ID, using = "csvTableButton")
+  private static WebElement csvTableButton = null;
+
+  @FindBy(how = ID, using = "htmlTableButton")
+  private static WebElement htmlTableButton = null;
 
   @FindBy(how = ID, using = "reportNameError")
   private static WebElement errorReportName = null;
@@ -177,23 +189,43 @@ public class ReportPage extends Page {
   }
 
   public boolean isPDFLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(PDF);
-    return PDF.isDisplayed();
+    testWebDriver.waitForElementToAppear(pdfButton);
+    return pdfButton.isDisplayed();
   }
 
   public boolean isHTMLLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(HTML);
-    return HTML.isDisplayed();
+    testWebDriver.waitForElementToAppear(htmlButton);
+    return htmlButton.isDisplayed();
   }
 
   public boolean isCSVLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(CSV);
-    return CSV.isDisplayed();
+    testWebDriver.waitForElementToAppear(csvButton);
+    return csvButton.isDisplayed();
   }
 
   public boolean isXLSLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(XLS);
-    return XLS.isDisplayed();
+    testWebDriver.waitForElementToAppear(xlsButton);
+    return xlsButton.isDisplayed();
+  }
+
+  public boolean isPDFTableLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(pdfTableButton);
+    return pdfTableButton.isDisplayed();
+  }
+
+  public boolean isHTMLTableLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(htmlTableButton);
+    return htmlTableButton.isDisplayed();
+  }
+
+  public boolean isCSVTableLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(csvTableButton);
+    return csvTableButton.isDisplayed();
+  }
+
+  public boolean isXLSTableLinkDisplayed() {
+    testWebDriver.waitForElementToAppear(xlsTableButton);
+    return xlsTableButton.isDisplayed();
   }
 
   public String getSaveSuccessMessage() {
@@ -257,7 +289,7 @@ public class ReportPage extends Page {
   }
 
   public String getParameterDate(String displayName) {
-    WebElement element = testWebDriver.getElementById("startDate_" + displayName);
+    WebElement element = testWebDriver.getElementById("date_" + displayName);
     testWebDriver.waitForElementToAppear(element);
     return element.getAttribute("value");
   }
@@ -274,14 +306,32 @@ public class ReportPage extends Page {
     return element.isSelected();
   }
 
-  public String getParameterText(String displayName) {
-    WebElement element = testWebDriver.getElementById("input_" + displayName);
+  public String getParameterString(String displayName) {
+    WebElement element = testWebDriver.getElementById("string_" + displayName);
     testWebDriver.waitForElementToAppear(element);
     return element.getAttribute("value");
   }
 
+  public String getParameterInt(String displayName) {
+    WebElement element = testWebDriver.getElementById("integer_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getAttribute("value");
+  }
+
+  public String getParameterFloat(String displayName) {
+    WebElement element = testWebDriver.getElementById("float_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getAttribute("value");
+  }
+
+  public String getUnSupportedDataTypeText(String displayName) {
+    WebElement element = testWebDriver.getElementById("unSupportedDataType_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
   public void selectParameterDate(String displayName) {
-    WebElement element = testWebDriver.getElementById("startDate_" + displayName);
+    WebElement element = testWebDriver.getElementById("date_" + displayName);
     testWebDriver.waitForElementToAppear(element);
     element.click();
     testWebDriver.sleep(100);
@@ -303,14 +353,31 @@ public class ReportPage extends Page {
     element.click();
   }
 
-  public void enterParameterInput(String displayName, String input) {
-    WebElement element = testWebDriver.getElementById("input_" + displayName);
+  public void enterStringParameterInput(String displayName, String input) {
+    WebElement element = testWebDriver.getElementById("string_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    sendKeys(element, input);
+  }
+
+  public void enterIntParameterInput(String displayName, String input) {
+    WebElement element = testWebDriver.getElementById("integer_" + displayName);
+    testWebDriver.waitForElementToAppear(element);
+    sendKeys(element, input);
+  }
+
+  public void enterFloatParameterInput(String displayName, String input) {
+    WebElement element = testWebDriver.getElementById("float_" + displayName);
     testWebDriver.waitForElementToAppear(element);
     sendKeys(element, input);
   }
 
   public void clickCsvLink() {
-    testWebDriver.waitForElementToAppear(CSV);
-    CSV.click();
+    testWebDriver.waitForElementToAppear(csvButton);
+    csvButton.click();
+  }
+
+  public void clickCsvTableLink() {
+    testWebDriver.waitForElementToAppear(csvTableButton);
+    csvTableButton.click();
   }
 }

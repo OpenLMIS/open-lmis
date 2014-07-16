@@ -28,10 +28,10 @@
             <div ng-if="parameter.dataType === 'java.lang.Integer' ||
                   parameter.dataType === 'java.lang.Short' ||
                   parameter.dataType === 'java.lang.Long'">
-              <input type="text" name="integer_{{parameter.name}}" class="right-justified"
+              <input id="integer_{{parameter.name}}" type="text" name="int_{{parameter.name}}" class="right-justified"
                      ng-model="parameterMap[parameter.name]" ng-change="refreshParams()"
                      numeric-validator="integer,100" ng-trim="false"/>
-              <span id="integer_{{parameter.name}}" class="rnr-form-error" style="display:none;"
+              <span id="int_{{parameter.name}}" class="rnr-form-error" style="display:none;"
                     openlmis-message="error.number.only"></span>
             </div>
 
@@ -54,10 +54,11 @@
             <div ng-if="parameter.dataType === 'java.lang.Float' ||
                   parameter.dataType === 'java.lang.Double' ||
                   parameter.dataType === 'java.math.BigDecimal'">
-              <input type="text" numeric-validator="numericValue,100,100" class="right-justified"
-                     name="float_{{parameter.name}}"
+              <input id="float_{{parameter.name}}" type="text" numeric-validator="numericValue,100,100"
+                     class="right-justified"
+                     name="f_{{parameter.name}}"
                      ng-model="parameterMap[parameter.name]" ng-change="refreshParams()"/>
-              <span class="rnr-form-error" style="display:none;" id="float_{{parameter.name}}"
+              <span class="rnr-form-error" style="display:none;" id="f_{{parameter.name}}"
                     openlmis-message="error.number.only"></span>
             </div>
 
@@ -67,7 +68,7 @@
             </div>
 
             <div ng-if="isInvalid(parameter.dataType)">
-              <span id="unSupportedDataType" class="note label-required">Unsupported data type</span>
+              <span id="unSupportedDataType_{{parameter.name}}" class="note label-required unSupportedDataType">Unsupported data type</span>
             </div>
           </td>
 
