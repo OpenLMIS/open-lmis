@@ -32,7 +32,7 @@ public interface ProgramReportMapper {
   List<Program> getAllForUser(@Param("userId") Long userId);
 
     @Select("SELECT * FROM Programs where code = #{code}")
-    Program getProgramByCode(String code);
+    Program getProgramByCode(@Param("code") String code);
 
     @Select("SELECT p.id id, p.name as name, p.description description,p.code code \n" +
             "             FROM programs p\n" +

@@ -47,8 +47,8 @@ public interface ProductReportMapper {
             "order by p.tracer, name")
     List<Product> getProductListByCategory(@Param("programId") Integer programId ,@Param("categoryId") Integer categoryId);
 
-    @Select("SELECT * FROM products WHERE code = #{code}")
-    Product getProductByCode(String code);
+    @Select("SELECT primaryname as name, * FROM products WHERE LOWER(code) = LOWER(#{code})")
+    Product getProductByCode( String code);
 
   @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, pp.productcategoryid categoryid, " +
     "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
