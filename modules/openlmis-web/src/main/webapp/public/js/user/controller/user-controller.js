@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, enabledWarehouses, $timeout) {
+function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, enabledWarehouses, $timeout, UpdatePassword) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
@@ -133,29 +133,18 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.userNameInvalid = $scope.user.userName !== null && $scope.user.userName.trim().indexOf(' ') >= 0;
   };
 
-  $scope.showFacilitySearchResults = function () {
-    var query = $scope.query;
-    var len = (query === undefined) ? 0 : query.length;
-
-    if (len >= 3) {
-      if (len == 3) {
-        Facility.get({searchParam: query, virtualFacility: false}, function (data) {
-          $scope.facilityList = data.facilityList;
-          $scope.filteredFacilities = $scope.facilityList;
-          $scope.resultCount = $scope.filteredFacilities.length;
-        }, {});
-      }
-      else {
-        filterFacilitiesByCodeOrName();
-      }
+  $scope.toggleSlider = function(){
+    if(!$scope.facilitySelected){
+      $scope.showSlider = !$scope.showSlider;
     }
   };
 
-  $scope.setSelectedFacility = function (facility) {
+  $scope.associate = function (facility) {
     $scope.user.facilityId = facility.id;
     $scope.facilitySelected = facility;
     loadUserFacility();
     $scope.query = null;
+    $scope.showSlider = !$scope.showSlider;
   };
 
   $scope.clearSelectedFacility = function (result) {
@@ -195,17 +184,6 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
       }
     }
   }
-
-  var filterFacilitiesByCodeOrName = function () {
-    $scope.filteredFacilities = [];
-
-    angular.forEach($scope.facilityList, function (facility) {
-      if (facility.code.toLowerCase().indexOf($scope.query.toLowerCase()) >= 0 || facility.name.toLowerCase().indexOf($scope.query.toLowerCase()) >= 0) {
-        $scope.filteredFacilities.push(facility);
-      }
-      $scope.resultCount = $scope.filteredFacilities.length;
-    });
-  };
 
   $scope.cancel = function () {
     $scope.$parent.message = "";
@@ -262,6 +240,37 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
   $scope.getMessage = function (key) {
     return messageService.get(key);
+  };
+
+    $scope.changePassword = function (user) {
+    if (user.active) {
+      $scope.user.password1 = $scope.user.password2 = $scope.message = $scope.passwordError = "";
+      $scope.changePasswordModal = true;
+    }
+  };
+
+  $scope.updatePassword = function () {
+    var reWhiteSpace = new RegExp("\\s");
+    var digits = new RegExp("\\d");
+    if ($scope.user.password1.length < 8 || $scope.user.password1.length > 16 || !digits.test($scope.user.password1) ||
+        reWhiteSpace.test($scope.user.password1)) {
+      $scope.passwordError = messageService.get("error.password.invalid");
+      return;
+    }
+
+    if ($scope.user.password1 != $scope.user.password2) {
+      $scope.passwordError = messageService.get('error.password.mismatch');
+      return;
+    }
+
+    UpdatePassword.update({userId: $scope.user.id}, $scope.user.password1, function (data) {
+      $scope.message = data.success;
+      $scope.resetPasswordModal();
+    }, {});
+  };
+
+  $scope.resetPasswordModal = function () {
+    $scope.changePasswordModal = false;
   };
 
   var restoreSuccessFunc = function (data) {

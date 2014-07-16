@@ -12,7 +12,7 @@
 <div ng-hide="user.id"><h2 openlmis-message="create.user.label"></h2></div>
 <div ng-show="user.id"><h2 id="editUserLabel" openlmis-message="edit.user.label"></h2></div>
 
-<form ng-submit="saveUser()" id="create-user" name="userForm" novalidate select2-blur>
+<form id="create-user" name="userForm" novalidate select2-blur>
 <div class="app-form">
 
 <div class="form-group">
@@ -158,34 +158,29 @@
 
   <div class="form-row clearfix">
     <div class="form-cell">
-      <label for="searchFacility" openlmis-message="create.user.homeFacility"> </label>
+      <label id="associatedFacilityLabel">
+        <span openlmis-message="label.associated.facility"></span>
+      </label>
 
-      <div class="form-field autosuggest-input">
-        <div class="suggest-field">
-          <input id="searchFacility" type="text" ng-change="showFacilitySearchResults()" ng-model="query"
-                 openlmis-message="placeholder.facility.search" ng-hide="facilitySelected"/>
-
-          <div class="search-list" ng-show="query.length > 2">
-            <ul>
-              <li ng-repeat="facility in filteredFacilities">
-                <a href="" id="result{{$index}}" ng-click="setSelectedFacility(facility)">{{facility.code}}
-                  -
-                  {{facility.name}}</a>
-              </li>
-              <li ng-show="resultCount == 0">
-                <a href="" openlmis-message="msg.no.matches|query"></a>
-              </li>
-            </ul>
+      <div class="form-field input-div associate-facility suggest-field">
+        <div id="associatedFacilityField" ng-click="toggleSlider()" class="clearfix">
+          <div class="facility-associated">
+            <span class="placeholder" ng-show="!facilitySelected" openlmis-message="label.no.facility.selected"></span>
+            <span ng-show="facilitySelected">{{facilitySelected.code}} - {{facilitySelected.name}}</span>
           </div>
-          <div ng-show="facilitySelected">
-            <span ng-bind="facilitySelected.name"></span>
-            <a href="" class="clear-search" ng-click="confirmFacilityDelete()"></a>
-          </div>
+          <a href="" class="btn" ng-show="!facilitySelected">
+            <i class="icon icon-ellipsis-horizontal"></i>
+          </a>
         </div>
-        <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+        <a id="clearFacility" ng-show="facilitySelected"
+           href="" class="clear-search" ng-click="confirmFacilityDelete()"></a>
       </div>
-
     </div>
+  </div>
+
+  <div class="position-relative">
+    <div class="slider" slider="showSlider" ng-include
+         src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
   </div>
 
   <div class="form-row clearfix">
@@ -279,7 +274,8 @@
 
 <div form-toolbar id="action_buttons" class="action-buttons">
   <div class="form-cell button-row">
-    <input id="userSaveButton" type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+    <input id="userSaveButton" type="submit" class="btn btn-primary save-button" openlmis-message="button.save"
+           ng-click="saveUser()"/>
     <input id="userCancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
            ng-click="cancel()"/>
     <input id="userDisableButton" type="button" class="btn btn-danger delete-button"
@@ -289,13 +285,14 @@
            ng-show="(!user.active && user.id!=null)"
            openlmis-message="button.enable"
            ng-click="showConfirmUserRestoreModal()"/>
+    <input id="resetPassword" type="button" class="btn btn-primary enable-button"
+           openlmis-message="button.reset.password"
+           ng-click="changePassword(user)"/>
   </div>
   <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
   <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
 </div>
-
 </div>
 </form>
 </div>
-
-
+<ng-include src="'/public/pages/admin/user/partials/user-reset-password.html'"></ng-include>

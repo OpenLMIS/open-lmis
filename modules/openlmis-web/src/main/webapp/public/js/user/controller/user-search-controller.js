@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UserSearchController($scope, $location, Users, navigateBackService, UpdatePassword, messageService) {
+function UserSearchController($scope, $location, Users, navigateBackService) {
   $scope.showResults = false;
   $scope.currentPage = 1;
   $scope.query = navigateBackService.query;
@@ -50,37 +50,4 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
     if ($scope.currentPage !== 0)
       $scope.loadUsers($scope.currentPage);
   });
-
-//  $scope.changePassword = function (user) {
-//    if (user.active) {
-//      $scope.userId = undefined;
-//      $scope.password1 = $scope.password2 = $scope.message = $scope.error = "";
-//      $scope.changePasswordModal = true;
-//      $scope.user = user;
-//    }
-//  };
-//
-//  $scope.updatePassword = function () {
-//    var reWhiteSpace = new RegExp("\\s");
-//    var digits = new RegExp("\\d");
-//    if ($scope.password1.length < 8 || $scope.password1.length > 16 || !digits.test($scope.password1) ||
-//        reWhiteSpace.test($scope.password1)) {
-//      $scope.error = messageService.get("error.password.invalid");
-//      return;
-//    }
-//
-//    if ($scope.password1 != $scope.password2) {
-//      $scope.error = messageService.get('error.password.mismatch');
-//      return;
-//    }
-//
-//    UpdatePassword.update({userId: $scope.user.id}, $scope.password1, function (data) {
-//      $scope.message = data.success;
-//    }, {});
-//  };
-//
-//  $scope.resetPasswordModal = function () {
-//    $scope.changePasswordModal = false;
-//    $scope.user = undefined;
-//  };
 }
