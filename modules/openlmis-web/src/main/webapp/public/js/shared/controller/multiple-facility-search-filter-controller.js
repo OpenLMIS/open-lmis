@@ -21,12 +21,18 @@ function MultipleFacilitySearchFilterController($scope, Facilities) {
     $scope.$parent.$parent.duplicateFacilityName = undefined;
     $scope.disableAddFacility = true;
     $scope.multipleFacilitiesQuery = $scope.multipleFacilitiesSearchParam.trim();
-    Facilities.get({"searchParam": $scope.multipleFacilitiesQuery, "facilityTypeId": $scope.type.id, "geoZoneId": $scope.zone.id}, function (data) {
-      $scope.multipleFacilities = data.facilityList;
-      $scope.multipleFacilitiesResultCount = isUndefined($scope.multipleFacilities) ? 0 : $scope.multipleFacilities.length;
-      $scope.multipleFacilitiesMessage = data.message;
-      $scope.resultCount = $scope.multipleFacilitiesResultCount;
-    });
+    Facilities.get({
+        "searchParam": $scope.multipleFacilitiesQuery,
+        "facilityTypeId": $scope.type.id,
+        "geoZoneId": $scope.zone.id,
+        "virtualFacility": $scope.extraMultipleParams.virtualFacility,
+        "enabled": $scope.extraMultipleParams.enabled},
+      function (data) {
+        $scope.multipleFacilities = data.facilityList;
+        $scope.multipleFacilitiesResultCount = isUndefined($scope.multipleFacilities) ? 0 : $scope.multipleFacilities.length;
+        $scope.multipleFacilitiesMessage = data.message;
+        $scope.resultCount = $scope.multipleFacilitiesResultCount;
+      });
   };
 
   $scope.triggerSearch = function (event) {

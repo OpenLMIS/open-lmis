@@ -400,6 +400,18 @@ describe("Requisition Group Controller", function () {
 
     expect(scope.currentSlider).toBeUndefined();
     expect(scope.showSlider).toBeFalsy();
+    expect(scope.extraParams.virtualFacility).toBeNull();
+    expect(scope.extraParams.enabled).toBeTruthy();
+  });
+
+  it('should toggle multiple facilities slider', function () {
+    scope.showMultipleFacilitiesSlider = true;
+
+    scope.toggleMultipleFacilitiesSlider();
+
+    expect(scope.showMultipleFacilitiesSlider).toBeFalsy();
+    expect(scope.extraMultipleParams.virtualFacility).toBeNull();
+    expect(scope.extraMultipleParams.enabled).toBeTruthy();
   });
 
   it('should open slider if already closed', function () {
@@ -409,6 +421,8 @@ describe("Requisition Group Controller", function () {
 
     expect(scope.currentSlider).toEqual(1);
     expect(scope.showSlider).toBeTruthy();
+    expect(scope.extraParams.virtualFacility).toBeNull();
+    expect(scope.extraParams.enabled).toBeTruthy();
   });
 
   it('should associate facility to programSchedule Under Edit', function () {

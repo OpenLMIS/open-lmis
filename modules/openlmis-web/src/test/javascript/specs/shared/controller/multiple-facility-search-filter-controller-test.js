@@ -26,8 +26,9 @@ describe("Multiple Facility Search Filter Controller", function () {
     var facility1 = {code: "F10", name: "Village Dispensary1"};
     var facility2 = {code: "F11", name: "Village Dispensary2"};
     var response = {"facilityList": [facility1, facility2]};
+    scope.extraMultipleParams = {"virtualFacility": null, "enabled": true };
 
-    httpBackend.when('GET', '/filter-facilities.json?searchParam=Fac').respond(response);
+    httpBackend.when('GET', '/filter-facilities.json?enabled=true&searchParam=Fac').respond(response);
     scope.showFacilitySearchResults();
     httpBackend.flush();
 
@@ -41,8 +42,9 @@ describe("Multiple Facility Search Filter Controller", function () {
     scope.$parent = {"$parent": parentScope};
     scope.multipleFacilitiesSearchParam = "Fac";
     var response = {"facilityList": undefined};
+    scope.extraMultipleParams = {"virtualFacility": null, "enabled": true };
 
-    httpBackend.when('GET', '/filter-facilities.json?searchParam=Fac').respond(response);
+    httpBackend.when('GET', '/filter-facilities.json?enabled=true&searchParam=Fac').respond(response);
     scope.showFacilitySearchResults();
     httpBackend.flush();
 

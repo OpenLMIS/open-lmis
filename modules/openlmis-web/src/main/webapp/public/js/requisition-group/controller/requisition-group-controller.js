@@ -139,6 +139,7 @@ function RequisitionGroupController($scope, requisitionGroupData, messageService
   $scope.toggleSlider = function (index) {
     $scope.currentSlider = $scope.showSlider ? undefined : index;
     $scope.showSlider = !$scope.showSlider;
+    $scope.extraParams = {"virtualFacility": null, "enabled": true};
   };
 
   var closeSlider = function () {
@@ -157,11 +158,16 @@ function RequisitionGroupController($scope, requisitionGroupData, messageService
     closeSlider();
   };
 
+  $scope.toggleMultipleFacilitiesSlider = function () {
+    $scope.showMultipleFacilitiesSlider = !$scope.showMultipleFacilitiesSlider;
+    $scope.extraMultipleParams = {"virtualFacility": null, "enabled": true};
+  };
+
   $scope.addMembers = function (tempFacilities) {
     var duplicateMembers = _.intersection(_.pluck(_.pluck($scope.requisitionGroupMembers, 'facility'), 'id'),
       _.pluck(tempFacilities, "id"));
     if (duplicateMembers.length > 0) {
-      $scope.duplicateFacilityName = _.find($scope.requisitionGroupMembers,function (member) {
+      $scope.duplicateFacilityName = _.find($scope.requisitionGroupMembers, function (member) {
         return member.facility.id == duplicateMembers[0];
       }).facility.name;
       $scope.message = undefined;

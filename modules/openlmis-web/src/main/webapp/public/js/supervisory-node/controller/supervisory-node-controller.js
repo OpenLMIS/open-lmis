@@ -25,6 +25,11 @@ function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSup
     return true;
   };
 
+  $scope.toggleSlider = function(){
+    $scope.showSlider = !$scope.showSlider;
+    $scope.extraParams = {"virtualFacility": null, "enabled": true};
+  };
+
   $scope.associate = function (facility) {
     $scope.supervisoryNode.facility = facility;
     $scope.showSlider = !$scope.showSlider;

@@ -26,6 +26,11 @@ function SupplyLineController($scope, $location, supplyLine, TopLevelSupervisory
     return true;
   };
 
+  $scope.toggleSlider = function () {
+    $scope.showSlider = !$scope.showSlider;
+    $scope.extraParams = {"virtualFacility": null, "enabled": true};
+  };
+
   $scope.associate = function (facility) {
     $scope.supplyLine.supplyingFacility = facility;
     $scope.showSlider = !$scope.showSlider;

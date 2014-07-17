@@ -99,8 +99,9 @@ describe("Facility Search Filter Controller", function () {
     var facility1 = {code: "F10", name: "Village Dispensary1"};
     var facility2 = {code: "F11", name: "Village Dispensary2"};
     var response = {"facilityList": [facility1, facility2]};
+    scope.extraParams = {"virtualFacility": null, "enabled": true };
 
-    $httpBackend.when('GET', '/filter-facilities.json?searchParam=Fac').respond(response);
+    $httpBackend.when('GET', '/filter-facilities.json?enabled=true&searchParam=Fac').respond(response);
     scope.showFacilitySearchResults();
     $httpBackend.flush();
 
@@ -118,8 +119,9 @@ describe("Facility Search Filter Controller", function () {
     var facility1 = {code: "F10", name: "Village Dispensary1"};
     var facility2 = {code: "F11", name: "Village Dispensary2"};
     var response = {"facilityList": [facility1, facility2]};
+    scope.extraParams = {"virtualFacility": true, "enabled": null };
 
-    $httpBackend.when('GET', '/filter-facilities.json?facilityTypeId=2&geoZoneId=6&searchParam=Fac').respond(response);
+    $httpBackend.when('GET', '/filter-facilities.json?facilityTypeId=2&geoZoneId=6&searchParam=Fac&virtualFacility=true').respond(response);
     scope.showFacilitySearchResults();
     $httpBackend.flush();
 
@@ -131,8 +133,9 @@ describe("Facility Search Filter Controller", function () {
   it('should set message if too many searched facilities found', function () {
     scope.facilitySearchParam = "Fac";
     var response = {"facilityList": [], "message": "Too may results found"};
+    scope.extraParams = {"virtualFacility": null, "enabled": true };
 
-    $httpBackend.when('GET', '/filter-facilities.json?searchParam=Fac').respond(response);
+    $httpBackend.when('GET', '/filter-facilities.json?enabled=true&searchParam=Fac').respond(response);
     scope.showFacilitySearchResults();
     $httpBackend.flush();
 

@@ -286,9 +286,11 @@ describe("User", function () {
 
     it("should not open reset password modal if user is inactive", function () {
       var user = {id: 1, firstName: "User", active: false};
+      spyOn(messageService, 'get');
 
       scope.changePassword(user);
 
+      expect(messageService.get).toHaveBeenCalledWith("user.is.disabled");
       expect(scope.changePasswordModal).toBeUndefined();
     });
 
@@ -347,6 +349,8 @@ describe("User", function () {
       scope.toggleSlider();
 
       expect(scope.showSlider).toBeFalsy();
+      expect(scope.extraParams.virtualFacility).toBeFalsy();
+      expect(scope.extraParams.enabled).toBeNull();
     });
 
     it('should clear selected facility if the result is true', function () {

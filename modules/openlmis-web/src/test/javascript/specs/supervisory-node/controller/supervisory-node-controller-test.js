@@ -151,4 +151,14 @@ describe("Supervisory Node Controller", function () {
     expect(scope.$parent.supervisoryNodeId).toEqual(supervisoryNode.id);
   });
 
+  it('should toggle slider', function () {
+    scope.showSlider = true;
+
+    scope.toggleSlider();
+
+    expect(scope.showSlider).toBeFalsy();
+    expect(scope.extraParams.virtualFacility).toBeNull();
+    expect(scope.extraParams.enabled).toBeTruthy();
+  });
+
 });

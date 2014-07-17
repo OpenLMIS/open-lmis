@@ -133,9 +133,10 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.userNameInvalid = $scope.user.userName !== null && $scope.user.userName.trim().indexOf(' ') >= 0;
   };
 
-  $scope.toggleSlider = function(){
-    if(!$scope.facilitySelected){
+  $scope.toggleSlider = function () {
+    if (!$scope.facilitySelected) {
       $scope.showSlider = !$scope.showSlider;
+      $scope.extraParams = {"virtualFacility": false, "enabled": null };
     }
   };
 
@@ -242,10 +243,13 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     return messageService.get(key);
   };
 
-    $scope.changePassword = function (user) {
+  $scope.changePassword = function (user) {
     if (user.active) {
       $scope.user.password1 = $scope.user.password2 = $scope.message = $scope.passwordError = "";
       $scope.changePasswordModal = true;
+    }
+    else {
+      $scope.error = messageService.get("user.is.disabled");
     }
   };
 
@@ -253,7 +257,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     var reWhiteSpace = new RegExp("\\s");
     var digits = new RegExp("\\d");
     if ($scope.user.password1.length < 8 || $scope.user.password1.length > 16 || !digits.test($scope.user.password1) ||
-        reWhiteSpace.test($scope.user.password1)) {
+      reWhiteSpace.test($scope.user.password1)) {
       $scope.passwordError = messageService.get("error.password.invalid");
       return;
     }

@@ -17,12 +17,18 @@ function FacilitySearchFilterController($scope, Facilities) {
     if (!$scope.facilitySearchParam) return;
 
     $scope.facilityQuery = $scope.facilitySearchParam.trim();
-    Facilities.get({"searchParam": $scope.facilityQuery, "facilityTypeId": $scope.type.id, "geoZoneId": $scope.zone.id}, function (data) {
-      $scope.facilityList = data.facilityList;
-      $scope.facilityResultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
-      $scope.resultCount = $scope.facilityResultCount;
-      $scope.message = data.message;
-    });
+    Facilities.get({
+        "searchParam": $scope.facilityQuery,
+        "facilityTypeId": $scope.type.id,
+        "geoZoneId": $scope.zone.id,
+        "virtualFacility": $scope.extraParams.virtualFacility,
+        "enabled": $scope.extraParams.enabled},
+      function (data) {
+        $scope.facilityList = data.facilityList;
+        $scope.facilityResultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
+        $scope.resultCount = $scope.facilityResultCount;
+        $scope.message = data.message;
+      });
   };
 
   $scope.triggerSearch = function (event) {

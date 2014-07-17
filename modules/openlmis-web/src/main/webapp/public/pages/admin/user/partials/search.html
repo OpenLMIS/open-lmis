@@ -22,8 +22,8 @@
   <div id="searchControl" class="row-fluid">
     <div class="span5 search-in-category">
       <div class="input-append input-prepend">
-        <input id='searchUser' type="text" class="span5" ng-model="query" maxlength="50"
-               ng-keydown="triggerSearch($event)"/>
+        <input id='searchUser' type="text" class="span7" ng-model="query" maxlength="50"
+               ng-keydown="triggerSearch($event)" openlmis-message="placeholder.user.search"/>
         <button class="btn">
           <i id='searchIcon' class="icon-search" ng-click="loadUsers(1)"></i>
         </button>
@@ -59,7 +59,7 @@
       </td>
       <td id="userName{{$index}}" ng-bind="user.userName"></td>
       <td id="email{{$index}}" ng-bind="user.email"></td>
-      <td id="verified{{$index}}" ng-show="user.verified != undefined" class="center-justified">
+      <td id="verified{{$index}}" ng-show="user.verified != false" class="center-justified">
         <i id="verifiedUser{{$index}}"
            ng-class="{'icon-ok': user.verified}"></i>
       </td>
