@@ -14,8 +14,9 @@ describe("Product", function () {
 
   describe("Controller", function () {
 
-    var ctrl, scope, $httpBackend, location, controller;
+    var ctrl, scope, $httpBackend, location, controller, rootScope;
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location) {
+      rootScope = $rootScope;
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       location = $location;
@@ -52,6 +53,14 @@ describe("Product", function () {
       expect(scope.selectedProductFormCode).toEqual("Form");
       expect(scope.selectedProductGroupCode).toEqual("Group");
       expect(scope.selectedProductDosageUnitCode).toEqual("Unit");
+    });
+
+    it('should not set programProduct and productLastUpdated in scope if programProductData is undefined', function () {
+      scope = rootScope.$new();
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programProductData: undefined});
+
+      expect(scope.programProduct).toBeUndefined();
+      expect(scope.productLastUpdated).toBeUndefined();
     });
 
     describe("Save", function () {

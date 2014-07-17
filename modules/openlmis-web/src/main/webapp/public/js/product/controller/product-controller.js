@@ -2,11 +2,20 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
-  $scope.productLastUpdated = programProductData.productLastUpdated;
-  $scope.programProduct = programProductData.programProduct || {};
-  $scope.selectedProductGroupCode = isUndefined(programProductData.programProduct) || isUndefined($scope.programProduct.product.productGroup) ? undefined : $scope.programProduct.product.productGroup.code;
-  $scope.selectedProductFormCode = isUndefined(programProductData.programProduct) || isUndefined($scope.programProduct.product.form) ? undefined : $scope.programProduct.product.form.code;
-  $scope.selectedProductDosageUnitCode = isUndefined(programProductData.programProduct) || isUndefined($scope.programProduct.product.dosageUnit) ? undefined : $scope.programProduct.product.dosageUnit.code;
+
+  if (!isUndefined(programProductData)) {
+    if (!isUndefined(programProductData.programProduct)) {
+      $scope.programProduct = programProductData.programProduct;
+      var product = $scope.programProduct.product;
+      $scope.selectedProductGroupCode = isUndefined(product.productGroup) ? undefined : product.productGroup.code;
+      $scope.selectedProductFormCode = isUndefined(product.form) ? undefined : product.form.code;
+      $scope.selectedProductDosageUnitCode = isUndefined(product.dosageUnit) ? undefined : product.dosageUnit.code;
+    }
+    else {
+      $scope.programProduct = {};
+    }
+    $scope.productLastUpdated = programProductData.productLastUpdated;
+  }
 
   var success = function (data) {
     $scope.error = "";
@@ -22,7 +31,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     $scope.showError = true;
   };
 
-  var setProductReferenceData = function() {
+  var setProductReferenceData = function () {
     $scope.programProduct.product.productGroup = _.where($scope.productGroups, {code: $scope.selectedProductGroupCode})[0];
     $scope.programProduct.product.form = _.where($scope.productForms, {code: $scope.selectedProductFormCode})[0];
     $scope.programProduct.product.dosageUnit = _.where($scope.dosageUnits, {code: $scope.selectedProductDosageUnitCode})[0];
