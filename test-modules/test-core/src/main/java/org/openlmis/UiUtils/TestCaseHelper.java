@@ -366,7 +366,7 @@ public class TestCaseHelper {
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
-      assertFalse("Order file not downloaded", true);
+      assertFalse("File not downloaded", true);
     } finally {
       if (br != null) {
         try {

@@ -297,4 +297,14 @@ public class TestWebDriver {
       driver.switchTo().window(base);
     }
   }
+
+  public void switchWindow() {
+    String base = driver.getWindowHandle();
+    Set<String> set = driver.getWindowHandles();
+    set.remove(base);
+
+    if (set.size() >= 1) {
+      driver.switchTo().window((String) set.toArray()[0]);
+    }
+  }
 }

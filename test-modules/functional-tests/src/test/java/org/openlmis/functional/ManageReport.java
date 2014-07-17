@@ -19,7 +19,6 @@ import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.ReportPage;
 import org.testng.annotations.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -32,8 +31,6 @@ public class ManageReport extends TestCaseHelper {
   String reportName, fileName;
   LoginPage loginPage;
   ReportPage reportPage;
-  static String separator = System.getProperty("file.separator");
-  private static String downloadedFilePath = new File(System.getProperty("user.dir")).getParent() + separator + "csv";
 
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
@@ -139,14 +136,17 @@ public class ManageReport extends TestCaseHelper {
     reportName = "Supervisory Nodes Missing Approve Requisition Role";
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(7).equalsIgnoreCase(reportName));
 
-    reportPage.clickReport(1);
+    reportPage.clickReport(2);
     reportPage.clickCsvLink();
-//    getReportData();
-//    deleteFile(downloadedFilePath);
+    String fileName = "csv";
+    String[] csvFileData = getReportData(fileName);
+    assertEquals("Facilities Missing Authorize Requisition Role", csvFileData[0]);
+    assertEquals("No problems found.", csvFileData[1]);
+    deleteFile(fileName);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadValidNoParameterReport(String[] credentials) throws SQLException {
+  public void uploadValidNoParameterReport(String[] credentials) throws SQLException, IOException, InterruptedException {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.insertFacilities("F12", "F13");
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -160,7 +160,7 @@ public class ManageReport extends TestCaseHelper {
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
-    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", "noParameterReport"));
+    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
     assertEquals("0", dbWrapper.getRowsCountFromDB("template_parameters"));
     homePage.logout();
 
@@ -177,10 +177,21 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickReport(1);
     assertEquals(reportName, reportPage.getReportName());
     verifyLinksOnReportView();
+
+    reportPage.clickCsvLink();
+    String fileName = "csv";
+    String[] csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("Facility"));
+    assertTrue(csvFileData[1].contains("Facility Code"));
+    assertTrue(csvFileData[2].contains("F10"));
+    assertTrue(csvFileData[3].contains("F11"));
+    assertTrue(csvFileData[4].contains("F12"));
+    assertTrue(csvFileData[5].contains("F13"));
+    deleteFile(fileName);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadValidSingleBooleanParameterReportWithAllProperties(String[] credentials) throws SQLException {
+  public void uploadValidSingleBooleanParameterReportWithAllProperties(String[] credentials) throws SQLException, IOException, InterruptedException {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.insertFacilities("F12", "F13");
     dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F11");
@@ -194,7 +205,6 @@ public class ManageReport extends TestCaseHelper {
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
-    assertEquals("1", dbWrapper.getRowsCountFromDB("template_parameters"));
     String parameterName = "isEnabled";
     verifyParameterDetails(parameterName, "isEnable", "true", "is facility enabled", "java.lang.Boolean");
     homePage.logout();
@@ -212,25 +222,41 @@ public class ManageReport extends TestCaseHelper {
     assertTrue(reportPage.isParameterTrueOptionSelected(parameterName));
     assertFalse(reportPage.isParameterFalseOptionSelected(parameterName));
     verifyLinksOnReportTableView();
+
+    reportPage.clickCsvTableLink();
+    String fileName = "csv";
+    String[] csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("F10"));
+    assertTrue(csvFileData[1].contains("F12"));
+    assertTrue(csvFileData[2].contains("F13"));
+    deleteFile(fileName);
+
+    reportPage.selectParameterFalseOption(parameterName);
+
+    reportPage.clickCsvTableLink();
+    csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("F11"));
+    deleteFile(fileName);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadValidSingleIntParameterReportWithAllProperties(String[] credentials) throws SQLException {
+  public void uploadValidIntAndLongParameterReportWithAllProperties(String[] credentials) throws SQLException, IOException, InterruptedException {
     dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.updateFieldValue("facilities", "typeId", 1);
     dbWrapper.insertFacilities("F12", "F13");
-    dbWrapper.updateFieldValue("facilities", "typeId", dbWrapper.getAttributeFromTable("facility_types", "id", "code", "warehouse"),"code","F11");
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     reportPage = homePage.navigateReportScreen();
 
     reportPage.clickAddNewButton();
-    fileName = "validSingleIntParameterReport.jrxml";
-    reportName = "valid Single Int Parameter Report";
+    fileName = "validLongAndIntParameterReport.jrxml";
+    reportName = "valid Long And Int Parameter Report";
     reportPage.enterReportName(reportName);
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
     assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
     verifyParameterDetails("typeId", "facilityTypeId", "2", "id for facility type", "java.lang.Integer");
+    verifyParameterDetails("population", "population", "333", "population of facility", "java.lang.Long");
     homePage.logout();
 
     dbWrapper.removeAllExistingRights("Admin");
@@ -244,10 +270,29 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("facilityTypeId", reportPage.getParameterDisplayName(parameterName));
     assertEquals("id for facility type", reportPage.getParameterDescription(parameterName));
     assertEquals("2", reportPage.getParameterInt(parameterName));
+
+    parameterName = "population";
+    assertEquals("population", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("population of facility", reportPage.getParameterDescription(parameterName));
+    assertEquals("333", reportPage.getParameterInt(parameterName));
+
+    reportPage.clickCsvTableLink();
+    String fileName = "csv";
+    String[] csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("F12"));
+    assertTrue(csvFileData[1].contains("F13"));
+    deleteFile(fileName);
+
+    reportPage.enterIntParameterInput("typeId", "1");
+    reportPage.clickCsvTableLink();
+    csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("F10"));
+    assertTrue(csvFileData[1].contains("F11"));
+    deleteFile(fileName);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadValidSingleStringParameterReportWithAllProperties(String[] credentials) throws SQLException {
+  public void uploadValidSingleStringParameterReportWithAllProperties(String[] credentials) throws SQLException, IOException, InterruptedException {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.insertFacilities("F12", "F13");
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -275,10 +320,22 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("facilityCode", reportPage.getParameterDisplayName(parameterName));
     assertEquals("facility code", reportPage.getParameterDescription(parameterName));
     assertEquals("F10", reportPage.getParameterString(parameterName));
+
+    reportPage.clickCsvTableLink();
+    String fileName = "csv";
+    String[] csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("F10"));
+    deleteFile(fileName);
+
+    reportPage.enterStringParameterInput(parameterName, "");
+    reportPage.clickCsvTableLink();
+    csvFileData = getReportData(fileName);
+//    assertTrue(csvFileData[0] == null);
+    deleteFile(fileName);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadValidSingleDateParameterReportWithAllProperties(String[] credentials) throws SQLException {
+  public void uploadValidSingleDateParameterReportWithAllProperties(String[] credentials) throws SQLException, IOException, InterruptedException {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.insertFacilities("F12", "F13");
     dbWrapper.updateFieldValue("facilities", "goLiveDate","2014-07-01","code","F11");
@@ -307,6 +364,74 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("facilityGoLiveDate", reportPage.getParameterDisplayName(parameterName));
     assertEquals("go live date of facility", reportPage.getParameterDescription(parameterName));
     assertEquals("01/07/2014", reportPage.getParameterDate(parameterName));
+
+    reportPage.clickCsvTableLink();
+    String fileName = "csv";
+    String[] csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("F11"));
+    deleteFile(fileName);
+
+    reportPage.selectParameterDate(parameterName);
+    reportPage.clickCsvTableLink();
+    csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0] == null);
+    deleteFile(fileName);
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadValidSmallIntFloatAndBigDecimalParametersReportWithAllProperties(String[] credentials) throws SQLException, IOException, InterruptedException {
+    dbWrapper.insertProduct("P10", "product10");
+    dbWrapper.updateFieldValue("products", "packSize", 12);
+    dbWrapper.insertProduct("P11", "product11");
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+
+    reportPage.clickAddNewButton();
+    fileName = "validSmallIntFloatAndBigDecimalParametersReport.jrxml";
+    reportName = "valid Small Int Float And BigDecimal Parameters";
+    reportPage.enterReportName(reportName);
+    reportPage.uploadFile(fileName);
+    reportPage.clickSaveButton();
+    assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
+    assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
+    verifyParameterDetails("packSize", "pack size", "10", null, "java.lang.Short");
+    verifyParameterDetails("packLength", "pack length", "2.2", null, "java.lang.Double");
+    verifyParameterDetails("packWidth", "pack width", "2.0", null, "java.math.BigDecimal");
+    homePage.logout();
+
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", reportName);
+    loginPage.loginAs(credentials[0], credentials[1]);
+    reportPage = homePage.navigateReportScreen();
+    assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
+
+    reportPage.clickReport(1);
+    String parameterName = "packSize";
+    assertEquals("pack size", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("", reportPage.getParameterDescription(parameterName));
+    assertEquals("10", reportPage.getParameterInt(parameterName));
+
+    parameterName = "packLength";
+    assertEquals("pack length", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("", reportPage.getParameterDescription(parameterName));
+    assertEquals("2.2", reportPage.getParameterFloat(parameterName));
+
+    parameterName = "packWidth";
+    assertEquals("pack width", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("", reportPage.getParameterDescription(parameterName));
+    assertEquals("2.0", reportPage.getParameterFloat(parameterName));
+
+    reportPage.clickCsvTableLink();
+    String fileName = "csv";
+    String[] csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("P11"));
+    deleteFile(fileName);
+
+    reportPage.enterIntParameterInput("packSize", "12");
+    reportPage.clickCsvTableLink();
+    csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("P10"));
+    deleteFile(fileName);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -328,7 +453,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadReportWithoutOptionalPropertiesOfParameter(String[] credentials) throws SQLException {
+  public void uploadReportWithoutOptionalPropertiesOfParameter(String[] credentials) throws SQLException, InterruptedException, IOException {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.insertFacilities("F12", "F13");
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -342,7 +467,8 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickSaveButton();
     assertEquals("Report created successfully", reportPage.getSaveSuccessMessage());
     assertEquals("REPORTING", dbWrapper.getAttributeFromTable("rights", "rightType", "name", reportName));
-    verifyParameterDetails("code", "facilityCode", null, null, "java.lang.String");
+    String parameterName = "latitude";
+    verifyParameterDetails(parameterName, "facility latitude", null, null, "java.lang.Float");
     homePage.logout();
 
     dbWrapper.removeAllExistingRights("Admin");
@@ -352,10 +478,23 @@ public class ManageReport extends TestCaseHelper {
     assertTrue("Report Name '" + reportName + "' should display in list", reportPage.getReportName(1).equalsIgnoreCase(reportName));
 
     reportPage.clickReport(1);
-    String parameterName = "code";
-    assertEquals("facilityCode", reportPage.getParameterDisplayName(parameterName));
+    assertEquals("facility latitude", reportPage.getParameterDisplayName(parameterName));
     assertEquals("", reportPage.getParameterDescription(parameterName));
-    assertEquals("", reportPage.getParameterString(parameterName));
+    assertEquals("", reportPage.getParameterFloat(parameterName));
+
+    reportPage.clickCsvTableLink();
+    String fileName = "csv";
+    String[] csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("code"));
+    deleteFile(fileName);
+
+    reportPage.enterFloatParameterInput(parameterName, "22.1");
+    reportPage.clickCsvTableLink();
+    csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("code"));
+    assertTrue(csvFileData[1].contains("F10"));
+    assertTrue(csvFileData[2].contains("F12"));
+    deleteFile(fileName);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -377,7 +516,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadReportWithExtraParameters(String[] credentials) throws SQLException {
+  public void uploadReportWithExtraParametersAndUnsupportedTypeParameter(String[] credentials) throws SQLException, IOException, InterruptedException {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.insertFacilities("F12", "F13");
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -404,7 +543,7 @@ public class ManageReport extends TestCaseHelper {
     String parameterName = "za";
     assertEquals("za", reportPage.getParameterDisplayName(parameterName));
     assertEquals("", reportPage.getParameterDescription(parameterName));
-    assertEquals("", reportPage.getParameterString(parameterName));
+    assertEquals("Unsupported data type", reportPage.getUnSupportedDataTypeText(parameterName));
 
     parameterName = "code";
     assertEquals("facilityCode", reportPage.getParameterDisplayName(parameterName));
@@ -415,6 +554,12 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("facilityName", reportPage.getParameterDisplayName(parameterName));
     assertEquals("", reportPage.getParameterDescription(parameterName));
     assertEquals("Facility", reportPage.getParameterString(parameterName));
+
+    reportPage.clickCsvTableLink();
+    String fileName = "csv";
+    String[] csvFileData = getReportData(fileName);
+    assertTrue(csvFileData[0].contains("F10"));
+    deleteFile(fileName);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -436,7 +581,7 @@ public class ManageReport extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void uploadReportWithDefaultValueAndTypeOfParameterMismatch(String[] credentials) throws SQLException {
+  public void uploadReportWithDefaultValueAndTypeOfParameterMismatch(String[] credentials) throws SQLException, IOException, InterruptedException {
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.insertFacilities("F12", "F13");
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -463,6 +608,12 @@ public class ManageReport extends TestCaseHelper {
     assertEquals("fCode", reportPage.getParameterDisplayName(parameterName));
     assertEquals("", reportPage.getParameterDescription(parameterName));
     assertEquals("abc", reportPage.getParameterInt(parameterName));
+
+    reportPage.clickCsvTableLink();
+    testWebDriver.switchWindow();
+    assertEquals("Invalid report specification, please contact your admin", testWebDriver.getElementById("invalidReportError").getText());  //not defined in page object, as element is present on switched window
+    testWebDriver.switchWindow();
+    testWebDriver.closeBrowser();
   }
 
   public void verifyLinksOnReportView() {
@@ -486,9 +637,9 @@ public class ManageReport extends TestCaseHelper {
     assertEquals(parameterType, dbWrapper.getAttributeFromTable("template_parameters", "dataType", "name", parameterName));
   }
 
-  public String[] getReportData() throws InterruptedException, IOException, SQLException {
+  public String[] getReportData(String fileName) throws InterruptedException, IOException, SQLException {
     Thread.sleep(2500);
-    return (readCSVFile(downloadedFilePath));
+    return (readCSVFile(fileName));
   }
 
   @AfterMethod(groups = {"admin"})

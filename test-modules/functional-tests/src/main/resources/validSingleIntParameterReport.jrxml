@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="validSingleIntParameterReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="66f3b609-261e-4079-8afb-a4ad691e016c">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="validLongAndIntParameterReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="66f3b609-261e-4079-8afb-a4ad691e016c">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -8,8 +8,13 @@
 		<parameterDescription><![CDATA[id for facility type]]></parameterDescription>
 		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
 	</parameter>
+	<parameter name="population" class="java.lang.Long">
+		<property name="displayValue" value="population"/>
+		<parameterDescription><![CDATA[population of facility]]></parameterDescription>
+		<defaultValueExpression><![CDATA[333]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select * from facilities where typeId = $P{typeId}]]>
+		<![CDATA[select * from facilities where typeId = $P{typeId} and catchmentpopulation = $P{population};]]>
 	</queryString>
 	<field name="id" class="java.lang.Integer"/>
 	<field name="code" class="java.lang.String"/>
@@ -53,11 +58,7 @@
 	<detail>
 		<band height="27">
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="14df2c79-fb7f-4210-80bc-1e46558f2536"/>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="100" y="0" width="100" height="20" uuid="9bec0567-0e69-4926-8cc8-e876924026ad"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="9bec0567-0e69-4926-8cc8-e876924026ad"/>
 				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
 			</textField>
 		</band>

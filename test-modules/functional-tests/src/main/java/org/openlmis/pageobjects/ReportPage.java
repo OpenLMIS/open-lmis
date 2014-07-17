@@ -333,18 +333,13 @@ public class ReportPage extends Page {
   public void selectParameterDate(String displayName) {
     WebElement element = testWebDriver.getElementById("date_" + displayName);
     testWebDriver.waitForElementToAppear(element);
+    testWebDriver.sleep(1500);
     element.click();
-    testWebDriver.sleep(100);
+    testWebDriver.waitForElementToAppear(prevCalender);
     prevCalender.click();
-    testWebDriver.sleep(100);
+    testWebDriver.waitForElementToAppear(dateInCalender);
     dateInCalender.click();
-    testWebDriver.sleep(100);
-  }
-
-  public void selectParameterTrueOption(String displayName) {
-    WebElement element = testWebDriver.getElementById("true_" + displayName);
-    testWebDriver.waitForElementToAppear(element);
-    element.click();
+    testWebDriver.sleep(500);
   }
 
   public void selectParameterFalseOption(String displayName) {

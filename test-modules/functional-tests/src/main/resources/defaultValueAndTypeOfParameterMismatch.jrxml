@@ -52,11 +52,7 @@
 	<detail>
 		<band height="30" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="b66f0ae0-c357-46eb-b85a-8fdc96dbd0fe"/>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="100" y="0" width="100" height="20" uuid="46bb24f3-4330-46cd-a72b-1b7b6c40bb05"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="46bb24f3-4330-46cd-a72b-1b7b6c40bb05"/>
 				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
 			</textField>
 		</band>

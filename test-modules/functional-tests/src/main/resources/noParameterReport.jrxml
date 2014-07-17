@@ -15,18 +15,14 @@
 		<band height="35" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="100" height="20" uuid="98a06a32-8dee-4582-bd7d-9035300b8072"/>
-				<text><![CDATA[Facilty]]></text>
+				<text><![CDATA[Facility]]></text>
 			</staticText>
 		</band>
 	</title>
 	<columnHeader>
 		<band height="26" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="100" height="20" uuid="12bbaead-0eff-42ed-8812-72d698cf0f77"/>
-				<text><![CDATA[Facility Id]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="100" y="0" width="100" height="20" uuid="e9f4a286-2e37-4e90-b36b-3c1991a2fa1f"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="e9f4a286-2e37-4e90-b36b-3c1991a2fa1f"/>
 				<text><![CDATA[Facility Code]]></text>
 			</staticText>
 		</band>
@@ -34,11 +30,7 @@
 	<detail>
 		<band height="27">
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="257a3844-481c-4b57-baab-c122e3be7019"/>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="100" y="0" width="100" height="20" uuid="264af11f-661b-40b8-b39f-97ee364afd6b"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="264af11f-661b-40b8-b39f-97ee364afd6b"/>
 				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
 			</textField>
 		</band>
