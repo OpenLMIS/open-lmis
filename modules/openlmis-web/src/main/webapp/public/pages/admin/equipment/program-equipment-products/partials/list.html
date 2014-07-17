@@ -1,0 +1,195 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+  <h2><span>Associate Products to Equipments and Programs</span>
+  </h2>
+
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="showMessage">
+    <span ng-bind="message"></span>.
+  </div>
+
+
+  <form ng-submit="saveProgramEquipmentChanges()" id="manipulate-program-equipment-product"
+        name="programEquipmentProduct" novalidate select2-blur>
+    <div> <!-- class="app-form">-->
+      <div>
+        <select class="large-input"
+                ng-change="listEquipmentsForProgram()"
+                ng-model="currentProgramEquipment.program" ng-options="option as option.name for option in programs">
+          <option value="">Choose Programs</option>
+          <option ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
+        </select>
+      </div>
+
+      <table class="table" style="vertical-align: top">
+        <tr>
+          <td>
+            <div><p><a ng-click="addNewEquipment()"  ng-show="equipmentsLoaded" class="pull-right btn btn-primary"><span
+                  id="equipment-add-new">Add New</span></a></p></div>
+            <table class="table table-hover table-bordered">
+              <thead>
+              <tr class="gradient-header">
+                <th>Name Of Equipment
+                </th>
+                <th>Test Count
+                </th>
+                <th>Total Count
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="programEquipment in programEquipments"
+                  ng-click="setSelectedProgramEquipment(programEquipment)"
+                  style="{{getProgramEquipmentColor(programEquipment)}}">
+                <td>
+                  <div>{{programEquipment.equipment.name}}</div>
+                </td>
+                <td>
+                  <div>
+                    <input type="checkbox" name="testCount-enabled"
+                              ng-model="programEquipment.enableTestCount" ng-change="setDataChanged(programEquipment)"/>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <input type="checkbox" name="totalCount-enabled"
+                           ng-model="programEquipment.enableTotalCount" ng-change="setDataChanged(programEquipment)"/>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </td>
+          <td>&nbsp;</td>
+          <td>
+            <div><a ng-click="addNewProduct()"  ng-show="productsLoaded" class="pull-right btn btn-primary"><span
+                  id="product-add-new">Add New</span></a></div>
+            <table class="table table-hover table-bordered">
+              <thead>
+              <tr class="gradient-header">
+                <th>Name of Product
+                </th>
+                <th>Action
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="programEquipmentProduct in programEquipmentProducts">
+                <td>
+                  <div>{{programEquipmentProduct.product.primaryName.concat('(').concat(programEquipmentProduct.product.fullName).concat(')')}}</div>
+                </td>
+                <td>
+                  <div>
+                    <input type="button" class="btn btn-danger delete-button" value="Delete"
+                         ng-click="showRemoveProgramEquipmentProductConfirmDialog()"/>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <div form-toolbar id="action_buttons" class="action-buttons">
+        <div class="form-cell button-row">
+          <input type="submit" class="btn btn-primary save-button" ng-disabled="!isDataChanged" value="Save"/>
+        </div>
+        <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
+      </div>
+    </div>
+  </form>
+
+  <!-- modal for adding equipment -->
+  <div id="equipmentDialogDiv" modal="equipmentDialogModal"
+       options="{'backdrop':'static', 'escape':false}">
+    <div class="modal-header">
+      <h3>
+        <span>Add Equipment</span>
+      </h3>
+    </div>
+
+    <div class="modal-body">
+      <form name="addEquipmentForm">
+        <div>
+          <div class="row-fluid">
+            <div class="span6">
+              <label for="equipmentValue"><span>Equipment</span></label>
+            </div>
+            <div class="span4">
+              <select style="width:200px;" ng-required="true" size="7" name="equipmentValue"
+                      id="equipmentValue" ng-model="currentProgramEquipment.equipment.id"
+                      ng-options="option.id as option.name for option in allEquipments">
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+      </form>
+      <div class="alert alert-error" id="equipmentSaveFailMessage" openlmis-message="equipmentErrorMessage" ng-show="equipmentError">
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <input type="button" class="btn btn-primary save-button" value="Add"
+             ng-click="saveEquipment()"/>
+      <input type="button"
+             ng-click="closeModal();equipmentError=''"
+             class="btn btn-cancel" openlmis-message="button.cancel"/>
+    </div>
+
+  </div>
+
+  <!-- modal for adding products -->
+
+  <div id="productsDialogDiv" modal="productDialogModal"
+       options="{'backdrop':'static', 'escape':false}">
+    <div class="modal-header">
+      <h3>
+        <span>Add a Product</span>
+      </h3>
+    </div>
+
+    <div class="modal-body">
+      <form name="addProductForm">
+        <div>
+          <div class="row-fluid">
+            <div class="span6">
+              <label for="productValue"><span>Product</span></label>
+            </div>
+            <div class="span4">
+              <select style="width:200px;" ng-required="true" size="7" name="productValue"
+                      id="productValue" ng-model="currentProgramEquipmentProduct.product.id"
+                      ng-options="option.id as option.name for option in allProducts">
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+      </form>
+      <div class="alert alert-error" id="productSaveFailMessage" openlmis-message="productErrorMessage" ng-show="productError">
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <input type="button" class="btn btn-primary save-button" value="Add"
+             ng-click="saveProgramEquipmentProduct()"/>
+      <input type="button"
+             ng-click="closeModal();productError=''"
+             class="btn btn-cancel" openlmis-message="button.cancel"/>
+    </div>
+
+  </div>
+
+</div>
