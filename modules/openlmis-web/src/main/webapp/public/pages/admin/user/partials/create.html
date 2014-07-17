@@ -287,7 +287,7 @@
            ng-click="showConfirmUserRestoreModal()"/>
     <input id="resetPassword" type="button" class="btn btn-primary enable-button"
            openlmis-message="button.reset.password"
-           ng-click="changePassword(user)"/>
+           ng-click="changePassword(user)" ng-show="user.id!=null"/>
   </div>
   <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
   <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>

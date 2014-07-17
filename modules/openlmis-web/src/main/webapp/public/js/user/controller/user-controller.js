@@ -249,6 +249,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
       $scope.changePasswordModal = true;
     }
     else {
+      $scope.message = "";
       $scope.error = messageService.get("user.is.disabled");
     }
   };
@@ -269,6 +270,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     UpdatePassword.update({userId: $scope.user.id}, $scope.user.password1, function (data) {
       $scope.message = data.success;
+      $scope.error = "";
       $scope.resetPasswordModal();
     }, {});
   };

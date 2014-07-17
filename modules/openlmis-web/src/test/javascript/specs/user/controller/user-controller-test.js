@@ -292,6 +292,7 @@ describe("User", function () {
 
       expect(messageService.get).toHaveBeenCalledWith("user.is.disabled");
       expect(scope.changePasswordModal).toBeUndefined();
+      expect(scope.message).toEqual("");
     });
 
     it("should reset password modal", function () {
