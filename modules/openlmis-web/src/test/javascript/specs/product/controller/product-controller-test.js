@@ -20,19 +20,24 @@ describe("Product", function () {
       $httpBackend = _$httpBackend_;
       location = $location;
       controller = $controller;
-      ctrl = $controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programProduct: undefined});
+      var programProductData = {programProduct: undefined, productLastUpdated: "23/12/2014"};
+      ctrl = $controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programProductData: programProductData});
     }));
 
-    it('should not set selected product form, group and dosage unit in scope if progrm product is undefined', function () {
+    it('should set product last updated date in scope', function() {
+      expect(scope.productLastUpdated).toEqual("23/12/2014");
+    });
+
+    it('should not set selected product form, group and dosage unit in scope if program product is undefined', function () {
       expect(scope.selectedProductFormCode).toBeUndefined();
       expect(scope.selectedProductGroupCode).toBeUndefined();
       expect(scope.selectedProductDosageUnitCode).toBeUndefined();
     });
 
     it('should not set selected product form, group and dosage unit in scope if product values are undefined', function () {
-      var programProduct = {product: {form: undefined, productGroup: undefined, dosageUnit: undefined}};
+      var programProductData = {programProduct: {product: {form: undefined, productGroup: undefined, dosageUnit: undefined}}};
 
-      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programProduct: programProduct});
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programProductData: programProductData});
 
       expect(scope.selectedProductFormCode).toBeUndefined();
       expect(scope.selectedProductGroupCode).toBeUndefined();
@@ -40,9 +45,9 @@ describe("Product", function () {
     });
 
     it('should set selected product form, group and dosage unit in scope if product values are defined', function () {
-      var programProduct = {product: {form: {code: "Form"}, productGroup: {code: "Group"}, dosageUnit: {code: "Unit"}}};
+      var programProductData = {programProduct: {product: {form: {code: "Form"}, productGroup: {code: "Group"}, dosageUnit: {code: "Unit"}}}};
 
-      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programProduct: programProduct});
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programProductData: programProductData});
 
       expect(scope.selectedProductFormCode).toEqual("Form");
       expect(scope.selectedProductGroupCode).toEqual("Group");
@@ -195,10 +200,10 @@ describe("Product", function () {
     });
 
     it('should get product if edit route contains id', function () {
-      var programProduct = {'id': '23'};
+      var programProductData = {programProduct: {'id': '23'}, productLastUpdated: undefined};
       $route = {current: {params: {id: 1}}};
-      $httpBackend.expect('GET', '/programProducts/1.json').respond(programProduct);
-      ctrl(ProductController.resolve.programProduct, {$q: $q, $route: $route});
+      $httpBackend.expect('GET', '/programProducts/1.json').respond(programProductData);
+      ctrl(ProductController.resolve.programProductData, {$q: $q, $route: $route});
       $timeout.flush();
       $httpBackend.flush();
       expect(deferredObject.resolve).toHaveBeenCalled();
@@ -208,7 +213,7 @@ describe("Product", function () {
       var httpBackendSpy = spyOn($httpBackend, 'expectGET');
 
       $route = {current: {params: {id: undefined}}};
-      ctrl(ProductController.resolve.programProduct, {$route: $route});
+      ctrl(ProductController.resolve.programProductData, {$route: $route});
 
       expect(httpBackendSpy).not.toHaveBeenCalled();
     });

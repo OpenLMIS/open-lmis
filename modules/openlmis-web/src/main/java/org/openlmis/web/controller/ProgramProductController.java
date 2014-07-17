@@ -118,8 +118,11 @@ public class ProgramProductController extends BaseController {
 
   @RequestMapping(value = "/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-  public ProgramProduct getById(@PathVariable(value = "id") Long id) {
-    return service.getById(id);
+  public ResponseEntity<OpenLmisResponse> getById(@PathVariable(value = "id") Long id) {
+    ProgramProduct programProduct = service.getById(id);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("programProduct", programProduct);
+    response.getBody().addData("productLastUpdated", programProduct.getProduct().getModifiedDate());
+    return response;
   }
 }
 

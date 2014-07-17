@@ -1,11 +1,12 @@
-function ProductController($scope, productGroups, productForms, dosageUnits, programProduct, AddEditProgramProducts, $location) {
+function ProductController($scope, productGroups, productForms, dosageUnits, programProductData, AddEditProgramProducts, $location) {
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
-  $scope.programProduct = programProduct || {};
-  $scope.selectedProductGroupCode = isUndefined(programProduct) || isUndefined(programProduct.product.productGroup) ? undefined : programProduct.product.productGroup.code;
-  $scope.selectedProductFormCode = isUndefined(programProduct) || isUndefined(programProduct.product.form) ? undefined : programProduct.product.form.code;
-  $scope.selectedProductDosageUnitCode = isUndefined(programProduct) || isUndefined(programProduct.product.dosageUnit) ? undefined : programProduct.product.dosageUnit.code;
+  $scope.productLastUpdated = programProductData.productLastUpdated;
+  $scope.programProduct = programProductData.programProduct || {};
+  $scope.selectedProductGroupCode = isUndefined(programProductData.programProduct) || isUndefined($scope.programProduct.product.productGroup) ? undefined : $scope.programProduct.product.productGroup.code;
+  $scope.selectedProductFormCode = isUndefined(programProductData.programProduct) || isUndefined($scope.programProduct.product.form) ? undefined : $scope.programProduct.product.form.code;
+  $scope.selectedProductDosageUnitCode = isUndefined(programProductData.programProduct) || isUndefined($scope.programProduct.product.dosageUnit) ? undefined : $scope.programProduct.product.dosageUnit.code;
 
   var success = function (data) {
     $scope.error = "";
@@ -85,7 +86,7 @@ ProductController.resolve = {
     return deferred.promise;
   },
 
-  programProduct: function ($q, $route, $timeout, AddEditProgramProducts) {
+  programProductData: function ($q, $route, $timeout, AddEditProgramProducts) {
     if ($route.current.params.id === undefined) return undefined;
 
     var deferred = $q.defer();
@@ -93,7 +94,7 @@ ProductController.resolve = {
 
     $timeout(function () {
       AddEditProgramProducts.get({id: productId}, function (data) {
-        deferred.resolve(data.programProduct);
+        deferred.resolve(data);
       }, {});
     }, 100);
     return deferred.promise;

@@ -33,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -133,16 +134,20 @@ public class ProgramProductControllerTest {
   public void shouldGetById() {
     Product product = new Product();
     product.setCode("p10");
-    Long productId = 1l;
+    Long productId = 1L;
     product.setId(productId);
+    Date modifiedDate = new Date();
+    product.setModifiedDate(modifiedDate);
     ProgramProduct programProduct = new ProgramProduct();
     programProduct.setProduct(product);
 
-    when(service.getById(1l)).thenReturn(programProduct);
+    when(service.getById(1L)).thenReturn(programProduct);
 
-    controller.getById(1l);
+    ResponseEntity<OpenLmisResponse> response = controller.getById(1L);
 
-    verify(service).getById(1l);
+    assertThat((ProgramProduct) response.getBody().getData().get("programProduct"), is(programProduct));
+    assertThat((Date) response.getBody().getData().get("productLastUpdated"), is(modifiedDate));
+    verify(service).getById(1L);
   }
 
   @Test
