@@ -129,3 +129,23 @@ services.factory('RemoveVendorUserAssociation', function($resource){
 services.factory('UserListAvailableForVendor',function($resource){
     return $resource('/equipment/vendor-user/getAllUsersAvailableForVendor.json',{},{});
 });
+
+/* Program Equipments */
+
+services.factory('SaveProgramEquipment',function($resource){
+    return $resource('/program-equipment/save.json',{},{});
+});
+
+services.factory('GetProgramEquipmentByProgramId', function($resource){
+    return $resource('/program-equipment/getByProgram/:programId.json',{},{});
+});
+
+/* Program Equipment Products */
+
+services.factory('SaveProgramEquipmentProduct',function($resource){
+    return $resource('/program-equipment-product/save.json',{},{});
+});
+
+services.factory('GetProgramEquipmentProductByProgramEquipment', function($resource){
+    return $resource('/program-equipment-product/getByProgramEquipment/:programEquipmentId',{},{});
+});
