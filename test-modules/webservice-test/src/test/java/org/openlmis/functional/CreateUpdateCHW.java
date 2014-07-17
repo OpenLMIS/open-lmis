@@ -78,7 +78,7 @@ public class CreateUpdateCHW extends JsonUtility {
     userPage.enterUserDetails("storeInCharge", userEmail, "Fatim", "Doe");
     userPage.clickViewHere();
     userPage.enterUserHomeFacility(DEFAULT_PARENT_FACILITY_CODE);
-    assertTrue("No match found link should show up", userPage.isNoMatchedFoundMessage());
+    assertTrue("No match found link should show up", userPage.isNoFacilityResultMessageDisplayed());
     homePage.logout(baseUrlGlobal);
 
     HttpClient client = new HttpClient();

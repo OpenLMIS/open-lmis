@@ -76,7 +76,8 @@ public class ManageUser extends TestCaseHelper {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
-    userPage.clickEditUserButton();
+    userPage.clickSearchIcon();
+    userPage.clickUserName(1);
     userPage.clickDisableButton();
   }
 
@@ -97,7 +98,8 @@ public class ManageUser extends TestCaseHelper {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
-    userPage.clickUserList();
+    userPage.clickSearchIcon();
+    userPage.clickUserName(1);
     assertEquals(userPage.getVerifiedLabel(), "Yes");
   }
 
@@ -106,7 +108,8 @@ public class ManageUser extends TestCaseHelper {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
-    userPage.clickUserList();
+    userPage.clickSearchIcon();
+    userPage.clickUserName(1);
     userPage.clickEnableButton();
   }
 

@@ -26,7 +26,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
-public class UserPage extends Page {
+public class UserPage extends FilterSearchPage {
 
   @FindBy(how = ID, using = "userAddNew")
   private static WebElement addNewButton = null;
@@ -88,7 +88,7 @@ public class UserPage extends Page {
   @FindBy(how = ID, using = "result0")
   private static WebElement selectFacility = null;
 
-  @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")
+  @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[8]/div/ng-switch/span")
   private static WebElement verifiedLabel = null;
 
   @FindBy(how = ID, using = "expandAll")
@@ -181,9 +181,6 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[6]/div[2]/ng-include/div/div[1]/div[2]/div[1]/div/label[@class='ng-binding']")
   private static WebElement addedDeliveryZoneLabel = null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'No matches found for')]")
-  private static WebElement noMatchFoundLink = null;
-
   @FindBy(how = ID, using = "restrictLoginYes")
   private static WebElement restrictLoginYesOption = null;
 
@@ -192,6 +189,15 @@ public class UserPage extends Page {
 
   @FindBy(how = ID, using = "resetPasswordOk")
   private static WebElement resetPasswordOkButton = null;
+
+  @FindBy(how = ID, using = "associatedFacilityField")
+  private static WebElement associatedFacilityField = null;
+
+  @FindBy(how = ID, using = "searchIcon")
+  private static WebElement searchIcon = null;
+
+  @FindBy(how = ID, using = "clearFacility")
+  private static WebElement clearFacility = null;
 
   public UserPage(TestWebDriver driver) {
     super(driver);
@@ -274,19 +280,9 @@ public class UserPage extends Page {
   }
 
   public void enterUserHomeFacility(String facilityCode) {
-    searchFacility.clear();
     testWebDriver.handleScrollByPixels(0, 5000);
-    searchFacility.sendKeys(facilityCode);
-    for (int i = 0; i < facilityCode.length(); i++) {
-      searchFacility.sendKeys(Keys.ARROW_LEFT);
-      searchFacility.sendKeys(Keys.DELETE);
-    }
-    searchFacility.sendKeys(facilityCode);
-  }
-
-  public boolean isNoMatchedFoundMessage() {
-    testWebDriver.waitForElementToAppear(noMatchFoundLink);
-    return noMatchFoundLink.isDisplayed();
+    associatedFacilityField.click();
+    searchFacility(facilityCode);
   }
 
   public void ExpandAll() {
@@ -622,9 +618,14 @@ public class UserPage extends Page {
     assertFalse(getAllWarehouseToSelect().contains(warehouse1));
   }
 
-  public void clickEditUserButton() {
-    focusOnFirstUserLink();
-    testWebDriver.waitForElementToAppear(selectFirstEditUser);
-    selectFirstEditUser.click();
+  public void clickSearchIcon() {
+    testWebDriver.waitForElementToAppear(searchIcon);
+    searchIcon.click();
+  }
+
+  public void clickUserName(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("name" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    element.click();
   }
 }
