@@ -35,5 +35,4 @@ public class ProductDTO {
   private Date productLastUpdated;
 
   private List<ProgramProduct> programProducts;
-
 }
