@@ -20,6 +20,11 @@
                 <span id="equipment-list">Equipment List</span>
             </a>
         </li>
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageProgramEquipmentProductSelected">
+          <a href="/public/pages/admin/equipment/program-equipment-products/index.html">
+            <span id="programEquipmentProduct-list">Products for Equipments</span>
+          </a>
+        </li>
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageServiceTypeSelected">
           <a href="/public/pages/admin/equipment/service-type/index.html">
             <span id="equipment-service-type">Service Types</span>
