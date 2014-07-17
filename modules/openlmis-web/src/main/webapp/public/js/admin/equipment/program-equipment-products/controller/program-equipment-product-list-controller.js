@@ -170,7 +170,7 @@ function ProgramEquipmentProductController($scope,$dialog,messageService, $locat
             $scope.programEquipmentProducts.splice($scope.index,1);
             $scope.removeProgramEquipmentProduct();
         }
-        $scope.selectedFacility = undefined;
+        $scope.selectedProgramEquipmentProduct = undefined;
     };
 
     $scope.removeProgramEquipmentProduct = function(){
