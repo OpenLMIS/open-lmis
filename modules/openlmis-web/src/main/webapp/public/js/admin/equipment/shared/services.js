@@ -149,3 +149,7 @@ services.factory('SaveProgramEquipmentProduct',function($resource){
 services.factory('GetProgramEquipmentProductByProgramEquipment', function($resource){
     return $resource('/program-equipment-product/getByProgramEquipment/:programEquipmentId',{},{});
 });
+
+services.factory('RemoveProgramEquipmentProduct',function($resource){
+    return $resource('/program-equipment-product/remove/:id.json',{},{});
+});
