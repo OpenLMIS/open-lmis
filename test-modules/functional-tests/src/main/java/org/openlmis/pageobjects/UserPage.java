@@ -28,7 +28,7 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class UserPage extends Page {
 
-  @FindBy(how = ID, using = "user-add-new")
+  @FindBy(how = ID, using = "userAddNew")
   private static WebElement addNewButton = null;
 
   @FindBy(how = ID, using = "userName")

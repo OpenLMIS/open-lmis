@@ -11,13 +11,13 @@
 <div xmlns="http://www.w3.org/1999/html">
   <h2>
     <span openlmis-message="search.facility.header"></span>
-    <a id="add-new-facility" href="#/create-facility" class="pull-right btn btn-primary"
+    <a id="facilityAddNew" href="#/create-facility" class="pull-right btn btn-primary"
        openlmis-message="button.add.new"></a>
   </h2>
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="facilityId">
-    <span ng-bind="message"></span>.&nbsp;&nbsp;<a ng-href="#/edit/{{facilityId}}"
-                                                   openlmis-message="search.viewHere"></a>
+    <span ng-bind="message"></span>.&nbsp;&nbsp;
+    <a ng-href="#/edit/{{facilityId}}" openlmis-message="search.viewHere"></a>
   </div>
 
   <div id="searchControl" class="row-fluid">
@@ -43,48 +43,47 @@
       </div>
     </div>
   </div>
-  <table name="searchResultTable" class="table table-striped table-bordered search-list" ng-show="showResults">
-    <thead>
-    <tr class="gradient-header resultCountHeader">
-      <th colspan="6">
-          <span ng-switch on="totalItems">
-          <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
-          <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
-          <h3 id="nResultsMessage" ng-switch-default
-              openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
-            </span>
-        <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
-      </th>
-    </tr>
-    <tr id="nullResultCounter" class="gradient-header" ng-show="facilityList.length">
-      <th id="nameHeader" openlmis-message="header.name"></th>
-      <th id="codeHeader" openlmis-message="header.code"></th>
-      <th id="geographicZoneHeader" openlmis-message="header.geographic.zone"></th>
-      <th id="facilityTypeHeader" openlmis-message="header.facility.type"></th>
-      <th id="activeHeader" openlmis-message="header.facility.active"></th>
-      <th id="enabledHeader" openlmis-message="header.facility.enabled"></th>
-    </tr>
-    </thead>
-    <tbody id="facilityList">
-    <tr id="searchResult" ng-repeat="facility in facilityList">
-      <td>
-        <a id="name{{$index}}" href="" ng-click="edit(facility.id)" ng-bind="facility.name"></a>
-      </td>
-      <td id="code{{$index}}" ng-bind="facility.code"></td>
-      <td id="geographicZone{{$index}}" ng-bind="facility.geographicZone.name"></td>
-      <td id="type{{$index}}" ng-bind="facility.facilityType.name"></td>
-      <td id="active{{$index}}" ng-show="facility.active != undefined" class="center-justified">
-        <i id="activeFacility{{$index}}"
-           ng-class="{'icon-ok': facility.active}"></i>
-      </td>
-      <td id="enabled{{$index}}" ng-show="facility.enabled != undefined" class="center-justified">
-        <i id="enabledFacility{{$index}}"
-           ng-class="{'icon-ok': facility.enabled}"></i>
-      </td>
-    </tr>
-    </tbody>
-  </table>
 
+  <div class="table-container">
+    <table id="facilitySearchResultTable" class="table table-striped table-bordered search-list" ng-show="showResults">
+      <thead>
+        <tr class="gradient-header resultCountHeader">
+          <th colspan="6">
+            <span ng-switch on="totalItems">
+              <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
+              <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
+              <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
+            </span>
+            <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
+          </th>
+        </tr>
+        <tr class="gradient-header" ng-show="facilityList.length">
+          <th id="nameHeader" openlmis-message="header.name"></th>
+          <th id="codeHeader" openlmis-message="header.code"></th>
+          <th id="geographicZoneHeader" openlmis-message="header.geographic.zone"></th>
+          <th id="facilityTypeHeader" openlmis-message="header.facility.type"></th>
+          <th id="activeHeader" class="col-icon-ok" openlmis-message="header.facility.active"></th>
+          <th id="enabledHeader" class="col-icon-ok" openlmis-message="header.facility.enabled"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="facility in facilityList">
+          <td>
+            <a id="name{{$index}}" href="" ng-click="edit(facility.id)" ng-bind="facility.name"></a>
+          </td>
+          <td id="code{{$index}}" ng-bind="facility.code"></td>
+          <td id="geographicZone{{$index}}" ng-bind="facility.geographicZone.name"></td>
+          <td id="type{{$index}}" ng-bind="facility.facilityType.name"></td>
+          <td id="active{{$index}}" class="center-justified">
+            <i id="activeIconOk{{$index}}" ng-class="{'icon-ok': facility.active}"></i>
+          </td>
+          <td id="enabled{{$index}}" class="center-justified">
+            <i id="enabledIconOk{{$index}}" ng-class="{'icon-ok': facility.enabled}"></i>
+          </td>
+        </tr>
+      </tbody>
+  </table>
+  </div>
   <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
               direction-links="false" ng-show="facilityList.length" class="pagination-sm"></pagination>
 </div>

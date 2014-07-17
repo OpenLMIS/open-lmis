@@ -2895,7 +2895,17 @@ input[type="checkbox"].facilityCheckbox {
   overflow: auto;
   table {
     max-width: 100%;
+    word-wrap: break-word;
   }
+}
+
+.col-icon-ok {
+  max-width: 50px;
+  min-width: 50px;
+}
+
+.col-name {
+  min-width: 250px;
 }
 
 #facilityApprovedProductTable {
@@ -2910,16 +2920,9 @@ input[type="checkbox"].facilityCheckbox {
     min-width: 100px;
     max-width: 125px;
   }
-  .col-product-name {
-    min-width: 250px;
-  }
   .col-strength, .col-unit-measure {
     min-width: 80px;
     max-width: 100px;
-  }
-  .col-global-active, .col-active-at-program {
-    max-width: 50px;
-    min-width: 50px;
   }
   .col-action {
     min-width: 125px;

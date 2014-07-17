@@ -9,14 +9,14 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html">
-  <h2><span openlmis-message="label.search.user"></span>
-    <a href="#/create-user" class="pull-right btn btn-primary"><span id="user-add-new"
-                                                                     openlmis-message="button.add.new"></span></a>
+  <h2>
+    <span openlmis-message="label.search.user"></span>
+    <a href="#/create-user" id="userAddNew" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
   </h2>
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="userId">
-    <span ng-bind="message"></span>.&nbsp;<a id="viewHereLink" href="" ng-click="edit(userId)"
-                                             openlmis-message="search.viewHere"></a>
+    <span ng-bind="message"></span>.&nbsp;
+    <a id="viewHereLink" href="" ng-click="edit(userId)" openlmis-message="search.viewHere"></a>
   </div>
 
   <div id="searchControl" class="row-fluid">
@@ -31,45 +31,44 @@
     </div>
   </div>
 
-  <table name="searchResultTable" class="table table-striped table-bordered search-list" ng-show="showResults">
-    <thead>
-    <tr class="gradient-header resultCountHeader">
-      <th colspan="5">
-          <span ng-switch on="totalItems">
-          <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
-          <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
-          <h3 id="nResultsMessage" ng-switch-default
-              openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
+  <div class="table-container">
+    <table id="userSearchResultTable" class="table table-striped table-bordered search-list" ng-show="showResults">
+      <thead>
+        <tr class="gradient-header resultCountHeader">
+          <th colspan="5">
+            <span ng-switch on="totalItems">
+              <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
+              <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
+              <h3 id="nResultsMessage" ng-switch-default openlmis-message="msg.many.matches|totalItems|searchedQuery"></h3>
             </span>
-        <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
-      </th>
-    </tr>
-    <tr id="nullResultCounter" class="gradient-header" ng-show="userList.length">
-      <th id="nameHeader" openlmis-message="header.user.name"></th>
-      <th id="userNameHeader" openlmis-message="header.user.userName"></th>
-      <th id="emailHeader" openlmis-message="header.user.email"></th>
-      <th id="verifiedHeader" openlmis-message="header.user.verified"></th>
-      <th id="activeHeader" openlmis-message="header.user.active"></th>
-    </tr>
-    </thead>
-    <tbody id="userList">
-    <tr id="searchResult" ng-repeat="user in userList">
-      <td>
-        <a id="name{{$index}}" href="" ng-click="edit(user.id)">{{user.firstName}} {{user.lastName}}</a>
-      </td>
-      <td id="userName{{$index}}" ng-bind="user.userName"></td>
-      <td id="email{{$index}}" ng-bind="user.email"></td>
-      <td id="verified{{$index}}" ng-show="user.verified != false" class="center-justified">
-        <i id="verifiedUser{{$index}}"
-           ng-class="{'icon-ok': user.verified}"></i>
-      </td>
-      <td id="active{{$index}}" ng-show="user.active != undefined" class="center-justified">
-        <i id="activeUser{{$index}}"
-           ng-class="{'icon-ok': user.active}"></i>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+            <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
+          </th>
+        </tr>
+        <tr class="gradient-header" ng-show="userList.length">
+          <th id="nameHeader" class="col-name" openlmis-message="header.user.name"></th>
+          <th id="userNameHeader" class="col-name" openlmis-message="header.user.userName"></th>
+          <th id="emailHeader" openlmis-message="header.user.email"></th>
+          <th id="verifiedHeader" class="col-icon-ok" openlmis-message="header.user.verified"></th>
+          <th id="activeHeader" class="col-icon-ok" openlmis-message="header.user.active"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="user in userList">
+          <td>
+            <a id="name{{$index}}" href="" ng-click="edit(user.id)">{{user.firstName}} {{user.lastName}}</a>
+          </td>
+          <td id="userName{{$index}}" ng-bind="user.userName"></td>
+          <td id="email{{$index}}" ng-bind="user.email"></td>
+          <td id="verified{{$index}}" class="center-justified">
+            <i id="verifiedIconOk{{$index}}" ng-class="{'icon icon-ok': user.verified}"></i>
+          </td>
+          <td id="active{{$index}}" class="center-justified">
+            <i id="activeIconOk{{$index}}" ng-class="{'icon-ok': user.active}"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
               direction-links="false" ng-show="userList.length" class="pagination-sm"></pagination>

@@ -93,7 +93,7 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "viewOrderHeader")
   private static WebElement viewOrdersHeader = null;
 
-  @FindBy(how = ID, using = "add-new-facility")
+  @FindBy(how = ID, using = "facilityAddNew")
   private static WebElement createFacility = null;
 
   @FindBy(how = ID, using = "addNewFacilityHeader")
