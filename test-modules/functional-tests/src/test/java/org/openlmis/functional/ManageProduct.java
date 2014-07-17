@@ -234,10 +234,12 @@ public class ManageProduct extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testAddNewProduct() throws SQLException {
+  public void testCancelAddNewProduct() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_PRODUCT");
-    dbWrapper.assignRight("Admin", "UPLOADS");
-    dbWrapper.updateFieldValue("programs", "name", "hiv", "code", "HIV");
+    dbWrapper.insertProductGroup("ProductGroup3");
+    dbWrapper.insertProductGroup("ProductGroup1");
+    dbWrapper.insertProductGroup("productGroup2");
+    dbWrapper.updateFieldValue("product_forms", "code", "capsule", "code", "Capsule");
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     productPage = homePage.navigateToProductPage();
@@ -263,34 +265,96 @@ public class ManageProduct extends TestCaseHelper {
     assertEquals("Tracer *", productPage.getProductTracerLabel());
     assertEquals("Archived", productPage.getProductArchivedLabel());
 
-//    assertEquals(asList(""), productPage.getAllProductGroups());
-//    assertEquals(asList(""), productPage.getAllForms());
-//    assertEquals(asList(""), productPage.getAllDosageUnits());
-//
-//    productPage.clickSaveButton();
-//    assertEquals("", productPage.getSaveErrorMsg());
-//
-//    productPage.enterCodeInput("Product1");
-//    productPage.enterPrimaryNameInput("product");
-//    productPage.enterTypeInput("type");
-//    productPage.enterFullNameInput("name");
-//    productPage.enterDescriptionInput("desc");
-//    productPage.enterStrengthInput("strength");
-//    productPage.enterDispensingUnitInput("unit");
-//    productPage.enterDosesPerDispensingUnitInput("10");
-//    productPage.enterPackSizeInput("10");
-//    productPage.enterPackRoundingThresholdInput("1");
-//    productPage.clickRoundToZeroTrueButton();
-//    productPage.clickActiveTrueButton();
-//    productPage.clickFullSupplyTrueButton();
-//    productPage.clickTracerTrueButton();
-//    productPage.clickArchivedFalseButton();
-//    productPage.selectProductGroup("");
-//    productPage.selectForm("");
-//    productPage.selectDosageUnit("");
-//    productPage.clickSaveButton();
+    assertEquals(asList("--Select product group--", "ProductGroup1-Name", "productGroup2-Name", "ProductGroup3-Name"),
+      productPage.getAllProductGroups());
+    assertEquals(asList("--Select product form--", "Ampule", "Bottle", "capsule", "Device", "Drops", "Each", "Implant", "Inhaler",
+      "Injectable", "Other", "Patch", "Powder", "Sachet", "Solution", "Tablet", "Tube", "Vial"), productPage.getAllForms());
+    assertEquals(asList("--Select dosage Unit--", "cc", "each", "gm", "IU", "mcg", "mg", "ml"), productPage.getAllDosageUnits());
 
-    dbWrapper.updateFieldValue("programs", "name", "HIV", "code", "HIV");
+    productPage.clickSaveButton();
+    assertEquals("There are some errors in the form. Please resolve them.", productPage.getSaveErrorMsg());
+
+    productPage.enterCodeInput("P11");
+    productPage.clickCancelButton();
+
+    productPage.enterSearchProductParameter("P11");
+    productPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    assertEquals("No matches found for 'P11'", productPage.getNoResultsMessage());
+
+    dbWrapper.updateFieldValue("product_forms", "code", "Capsule", "code", "capsule");
+  }
+
+  @Test(groups = {"admin"})
+  public void testAddNewProduct() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_PRODUCT");
+    dbWrapper.insertProduct("P10", "product10");
+    dbWrapper.insertProductGroup("ProductGroup1");
+
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    productPage = homePage.navigateToProductPage();
+    productPage.clickProductAddNewButton();
+
+    productPage.enterTypeInput("type");
+    productPage.enterFullNameInput("name");
+    productPage.enterDescriptionInput("desc");
+    productPage.enterStrengthInput("strength");
+    productPage.enterDispensingUnitInput("unit");
+    productPage.enterDosesPerDispensingUnitInput("10");
+    productPage.enterPackSizeInput("10");
+    productPage.enterPackRoundingThresholdInput("1");
+    productPage.clickRoundToZeroTrueButton();
+    productPage.clickActiveTrueButton();
+    productPage.clickFullSupplyTrueButton();
+    productPage.clickTracerTrueButton();
+    productPage.clickArchivedFalseButton();
+    productPage.selectProductGroup("ProductGroup1-Name");
+    productPage.selectForm("Bottle");
+    productPage.selectDosageUnit("mcg");
+    productPage.enterCodeInput("P10");
+    productPage.enterPrimaryNameInput("product");
+    productPage.clickSaveButton();
+    assertEquals("Duplicate Product Code", productPage.getSaveErrorMsg());
+
+    productPage.enterCodeInput("P11");
+    productPage.clickSaveButton();
+
+    assertEquals("Product \"product Bottle strength mcg\" created successfully.   View Here", productPage.getSaveSuccessMsg());
+    productPage.enterSearchProductParameter("P11");
+    productPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    productPage.clickName(1);
+    assertEquals("product", productPage.getPrimaryNameOnEditPage());
+  }
+
+  @Test(groups = {"admin"})
+  public void testEditExistingProduct() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_PRODUCT");
+    dbWrapper.assignRight("Admin", "UPLOADS");
+    dbWrapper.insertProduct("P10", "product10");
+    dbWrapper.insertProductGroup("ProductGroup1");
+
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    productPage = homePage.navigateToProductPage();
+    productPage.enterSearchProductParameter("P10");
+    productPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    productPage.clickName(1);
+
+    assertEquals("Edit Product", productPage.getEditProductHeader());
+    productPage.enterTypeInput("type");
+    productPage.enterPrimaryNameInput("product");
+    productPage.clickCancelButton();
+    productPage.clickName(1);
+    assertEquals("product10", productPage.getPrimaryNameOnEditPage());
+
+    productPage.enterTypeInput("type");
+    productPage.enterPrimaryNameInput("product");
+    productPage.clickSaveButton();
+
+    assertEquals("Product \"product Capsule 300/200/600 mg\" updated successfully.   View Here", productPage.getSaveSuccessMsg());
+    productPage.clickViewHere();
+    assertEquals("product", productPage.getPrimaryNameOnEditPage());
   }
 
   public void searchProduct(String searchParameter) {

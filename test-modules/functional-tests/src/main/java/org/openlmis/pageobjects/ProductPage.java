@@ -129,7 +129,7 @@ public class ProductPage extends Page {
   @FindBy(how = ID, using = "productGroupLabel")
   private static WebElement productGroupLabel = null;
 
-  @FindBy(how = ID, using = "s2id_productGroup")
+  @FindBy(how = ID, using = "productGroup")
   private static WebElement productGroupDropDown = null;
 
   @FindBy(how = ID, using = "productDescriptionLabel")
@@ -141,7 +141,7 @@ public class ProductPage extends Page {
   @FindBy(how = ID, using = "productFormLabel")
   private static WebElement productFormLabel = null;
 
-  @FindBy(how = ID, using = "s2id_form")
+  @FindBy(how = ID, using = "form")
   private static WebElement formDropDown = null;
 
   @FindBy(how = ID, using = "productStrengthLabel")
@@ -153,7 +153,7 @@ public class ProductPage extends Page {
   @FindBy(how = ID, using = "dosageUnitLabel")
   private static WebElement dosageUnitLabel = null;
 
-  @FindBy(how = ID, using = "s2id_dosageUnit")
+  @FindBy(how = ID, using = "dosageUnit")
   private static WebElement dosageUnitDropDown = null;
 
   @FindBy(how = ID, using = "productDispensingUnitLabel")
@@ -165,19 +165,19 @@ public class ProductPage extends Page {
   @FindBy(how = ID, using = "productDosesPerDispensingUnitLabel")
   private static WebElement productDosesPerDispensingUnitLabel = null;
 
-  @FindBy(how = ID, using = "dosesPerDispensingUnit")
+  @FindBy(how = ID, using = "product.dosesPerDispensingUnit")
   private static WebElement dosesPerDispensingUnitInputField = null;
 
   @FindBy(how = ID, using = "productPackSizeLabel")
   private static WebElement productPackSizeLabel = null;
 
-  @FindBy(how = ID, using = "packSize")
+  @FindBy(how = ID, using = "product.packSize")
   private static WebElement packSizeInputField = null;
 
   @FindBy(how = ID, using = "productPackRoundingThresholdLabel")
   private static WebElement productPackRoundingThresholdLabel = null;
 
-  @FindBy(how = ID, using = "packRoundingThreshold")
+  @FindBy(how = ID, using = "product.packRoundingThreshold")
   private static WebElement packRoundingThresholdInputField = null;
 
   @FindBy(how = ID, using = "productRoundToZeroLabel")
@@ -186,17 +186,11 @@ public class ProductPage extends Page {
   @FindBy(how = ID, using = "roundToZeroTrue")
   private static WebElement roundToZeroTrue = null;
 
-  @FindBy(how = ID, using = "roundToZeroFalse")
-  private static WebElement roundToZeroFalse = null;
-
   @FindBy(how = ID, using = "productActiveLabel")
   private static WebElement productActiveLabel = null;
 
   @FindBy(how = ID, using = "activeTrue")
   private static WebElement activeTrue = null;
-
-  @FindBy(how = ID, using = "activeFalse")
-  private static WebElement activeFalse = null;
 
   @FindBy(how = ID, using = "productFullSupplyLabel")
   private static WebElement productFullSupplyLabel = null;
@@ -204,23 +198,14 @@ public class ProductPage extends Page {
   @FindBy(how = ID, using = "fullSupplyTrue")
   private static WebElement fullSupplyTrue = null;
 
-  @FindBy(how = ID, using = "fullSupplyFalse")
-  private static WebElement fullSupplyFalse = null;
-
   @FindBy(how = ID, using = "productTracerLabel")
   private static WebElement productTracerLabel = null;
 
   @FindBy(how = ID, using = "tracerTrue")
   private static WebElement tracerTrue = null;
 
-  @FindBy(how = ID, using = "tracerFalse")
-  private static WebElement tracerFalse = null;
-
   @FindBy(how = ID, using = "productArchivedLabel")
   private static WebElement productArchivedLabel = null;
-
-  @FindBy(how = ID, using = "archivedTrue")
-  private static WebElement archivedTrue = null;
 
   @FindBy(how = ID, using = "archivedFalse")
   private static WebElement archivedFalse = null;
@@ -233,6 +218,12 @@ public class ProductPage extends Page {
 
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement saveErrorMsg = null;
+
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
+  private static WebElement saveSuccessMsg = null;
+
+  @FindBy(how = ID, using = "viewHereLink")
+  private static WebElement viewHereLink = null;
 
   public ProductPage(TestWebDriver driver) {
     super(driver);
@@ -682,19 +673,9 @@ public class ProductPage extends Page {
     roundToZeroTrue.click();
   }
 
-  public void clickRoundToZeroFalseButton() {
-    testWebDriver.waitForElementToAppear(roundToZeroFalse);
-    roundToZeroFalse.click();
-  }
-
   public void clickActiveTrueButton() {
     testWebDriver.waitForElementToAppear(activeTrue);
     activeTrue.click();
-  }
-
-  public void clickActiveFalseButton() {
-    testWebDriver.waitForElementToAppear(activeFalse);
-    activeFalse.click();
   }
 
   public void clickFullSupplyTrueButton() {
@@ -702,24 +683,9 @@ public class ProductPage extends Page {
     fullSupplyTrue.click();
   }
 
-  public void clickFullSupplyFalseButton() {
-    testWebDriver.waitForElementToAppear(fullSupplyFalse);
-    fullSupplyFalse.click();
-  }
-
   public void clickTracerTrueButton() {
     testWebDriver.waitForElementToAppear(tracerTrue);
     tracerTrue.click();
-  }
-
-  public void clickTracerFalseButton() {
-    testWebDriver.waitForElementToAppear(tracerFalse);
-    tracerFalse.click();
-  }
-
-  public void clickArchivedTrueButton() {
-    testWebDriver.waitForElementToAppear(archivedTrue);
-    archivedTrue.click();
   }
 
   public void clickArchivedFalseButton() {
@@ -742,4 +708,24 @@ public class ProductPage extends Page {
     return saveErrorMsg.getText();
   }
 
+  public String getSaveSuccessMsg() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsg);
+    return saveSuccessMsg.getText();
+  }
+
+  public void clickViewHere() {
+    testWebDriver.waitForElementToAppear(viewHereLink);
+    viewHereLink.click();
+  }
+
+  public String getPrimaryNameOnEditPage() {
+    testWebDriver.waitForElementToAppear(primaryNameInputField);
+    return primaryNameInputField.getAttribute("value");
+  }
+
+  public void clickName(int rowNumber) {
+    WebElement name = testWebDriver.getElementById("name" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(name);
+    name.click();
+  }
 }
