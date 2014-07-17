@@ -34,4 +34,7 @@ public class ProgramEquipmentProductRepository {
     programEquipmentProductMapper.update(programEquipmentProduct);
   }
 
+  public void remove(Long programEquipmentId) {
+    programEquipmentProductMapper.remove(programEquipmentId);
+  }
 }
