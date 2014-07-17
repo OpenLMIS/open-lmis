@@ -11,20 +11,27 @@
 function UserSearchController($scope, $location, Users, navigateBackService) {
   $scope.showResults = false;
   $scope.currentPage = 1;
-  $scope.query = navigateBackService.query;
 
-  $scope.loadUsers = function (page) {
-    if (!$scope.query) return;
-    $scope.query = $scope.query.trim();
-    $scope.searchedQuery = $scope.query;
-    Users.get({"searchParam": $scope.searchedQuery,"page": page}, function (data) {
+  $scope.loadUsers = function (page, lastQuery) {
+    if (!($scope.query || lastQuery)) return;
+    lastQuery ? getUsers(page,lastQuery) : getUsers(page, $scope.query);
+  };
+
+  function getUsers(page, query) {
+    query = query.trim();
+    $scope.searchedQuery = query;
+    Users.get({"searchParam": $scope.searchedQuery, "page": page}, function (data) {
       $scope.userList = data.userList;
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
     }, {});
-  };
+  }
+
+  $scope.$on('$viewContentLoaded', function () {
+    $scope.query = navigateBackService.query;
+  });
 
   $scope.triggerSearch = function (event) {
     if (event.keyCode === 13) {
@@ -47,7 +54,8 @@ function UserSearchController($scope, $location, Users, navigateBackService) {
   };
 
   $scope.$watch('currentPage', function () {
-    if ($scope.currentPage !== 0)
-      $scope.loadUsers($scope.currentPage);
+    if ($scope.currentPage !== 0) {
+      $scope.loadUsers($scope.currentPage, $scope.searchedQuery);
+    }
   });
 }

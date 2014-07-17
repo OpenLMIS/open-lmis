@@ -43,6 +43,24 @@ describe("User Search Controller", function () {
     expect(scope.totalItems).toEqual(100);
   });
 
+  it('should get all users in a page depending on search criteria and lastQuery', function () {
+    var user = {"id": 1, "firstName": "john", "lastName": "Doe", "email": "john_doe@gmail.com"};
+    var pagination = {"page": 1, "pageSize": 10, "numberOfPages": 10, "totalRecords": 100};
+    var response = {"userList": [user], "pagination": pagination};
+    scope.query = "j";
+    var lastQuery = "anotherQuery";
+    $httpBackend.when('GET', '/users.json?page=1&searchParam=' + lastQuery).respond(response);
+
+    scope.loadUsers(1, "anotherQuery");
+    $httpBackend.flush();
+
+    expect(scope.userList).toEqual([user]);
+    expect(scope.pagination).toEqual(pagination);
+    expect(scope.currentPage).toEqual(1);
+    expect(scope.showResults).toEqual(true);
+    expect(scope.totalItems).toEqual(100);
+  });
+
   it('should return if query is null', function () {
     scope.query = "";
     var httpBackendSpy = spyOn($httpBackend, 'expectGET');
@@ -68,6 +86,15 @@ describe("User Search Controller", function () {
     expect(scope.userList).toEqual([]);
   });
 
+  it('should set query according to navigate back service', function () {
+    scope.query = '';
+    navigateBackService.query = 'query';
+
+    scope.$emit('$viewContentLoaded');
+
+    expect(scope.query).toEqual("query");
+  });
+
   it('should trigger search on enter key', function () {
     var event = {"keyCode": 13};
     var searchSpy = spyOn(scope, 'loadUsers');
@@ -79,13 +106,14 @@ describe("User Search Controller", function () {
 
   it('should get results according to specified page', function () {
     scope.currentPage = 5;
+    scope.searchedQuery = "query";
     var searchSpy = spyOn(scope, 'loadUsers');
 
     scope.$apply(function () {
       scope.currentPage = 6;
     });
 
-    expect(searchSpy).toHaveBeenCalledWith(6);
+    expect(searchSpy).toHaveBeenCalledWith(6,scope.searchedQuery);
   });
 
   it("should save query into shared service on clicking edit link",function(){
