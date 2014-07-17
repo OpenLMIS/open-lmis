@@ -18,6 +18,7 @@ INSERT INTO roles
   ('View-Report', ''),
   ('API testing', ''),
   ('API testing Order', ''),
+  ('Reporting', ''),
   ('Shipment', '');
 
 INSERT INTO role_rights
@@ -82,6 +83,10 @@ INSERT INTO role_rights
       id
     FROM roles
     WHERE name = 'API testing Order'), 'VIEW_ORDER'),
+  ((SELECT
+      id
+    FROM roles
+    WHERE name = 'Reporting'), 'MANAGE_REPORT'),
   ((SELECT
       id
     FROM roles
@@ -623,6 +628,15 @@ INSERT INTO role_assignments
                                       id
                                     FROM roles
                                     WHERE name = 'Admin'), NULL, NULL),
+
+  ((SELECT
+      ID
+    FROM USERS
+    WHERE username = 'superuser'), (SELECT
+                                      id
+                                    FROM roles
+                                    WHERE name = 'Reporting'), NULL, NULL),
+
   ((SELECT
       ID
     FROM USERS
