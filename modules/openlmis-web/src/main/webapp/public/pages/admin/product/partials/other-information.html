@@ -13,7 +13,7 @@
       <div class="form-cell">
         <label id="productGenericNameLabel" openlmis-message="label.product.generic.name"></label>
         <div class="form-field">
-          <input ng-model="programProduct.product.genericName" name="genericName" id="genericName" type="text"
+          <input ng-model="product.genericName" name="genericName" id="genericName" type="text"
                  maxlength="100"/>
         </div>
       </div>
@@ -24,7 +24,7 @@
         </label>
 
         <div class="form-field">
-          <input ng-model="programProduct.product.alternateName" name="alternateName" id="alternateName" type="text"
+          <input ng-model="product.alternateName" name="alternateName" id="alternateName" type="text"
                  maxlength="100"/>
         </div>
       </div>
@@ -38,7 +38,7 @@
         </label>
 
         <div class="form-field">
-          <input ng-model="programProduct.product.alternateItemCode" name="alternateItemCode" id="alternateItemCode"
+          <input ng-model="product.alternateItemCode" name="alternateItemCode" id="alternateItemCode"
                  type="text" maxlength="20"/>
         </div>
       </div>
@@ -50,7 +50,7 @@
 
         <div class="form-field">
           <div class="position-relative short">
-            <input ng-model="programProduct.product.alternatePackSize" name="alternatePackSize" id="product.alternatePackSize"
+            <input ng-model="product.alternatePackSize" name="alternatePackSize" id="product.alternatePackSize"
                    type="text" maxlength="5" class="full-width right-justified" numeric-validator="positiveInteger"
                    ng-trim="false"/>
             <span class="rnr-form-error" style="display:none;" id="alternatePackSize"
@@ -65,7 +65,7 @@
         </label>
 
         <div class="form-field">
-          <input ng-model="programProduct.product.manufacturer" name="manufacturer" id="manufacturer" type="text"
+          <input ng-model="product.manufacturer" name="manufacturer" id="manufacturer" type="text"
                  maxlength="100"/>
         </div>
       </div>
@@ -79,7 +79,7 @@
         </label>
 
         <div class="form-field">
-          <input ng-model="programProduct.product.manufacturerCode" name="manufacturerCode" id="manufacturerCode"
+          <input ng-model="product.manufacturerCode" name="manufacturerCode" id="manufacturerCode"
                  type="text" maxlength="30"/>
         </div>
       </div>
@@ -90,7 +90,7 @@
         </label>
 
         <div class="form-field">
-          <input ng-model="programProduct.product.manufacturerBarCode" name="manufacturerBarCode"
+          <input ng-model="product.manufacturerBarCode" name="manufacturerBarCode"
                  id="manufacturerBarCode" type="text" maxlength="20" class="short"/>
         </div>
       </div>
@@ -100,7 +100,7 @@
         <label id="productGTINLabel" openlmis-message="label.product.GTIN"></label>
 
         <div class="form-field">
-          <input ng-model="programProduct.product.gtin" name="gtin" id="gtin" type="text" maxlength="20"/>
+          <input ng-model="product.gtin" name="gtin" id="gtin" type="text" maxlength="20"/>
         </div>
       </div>
     </div>
@@ -110,7 +110,7 @@
 
         <div class="form-field">
           <div class="position-relative short">
-            <input ng-model="programProduct.product.expectedShelfLife" name="expectedShelfLife" id="product.expectedShelfLife"
+            <input ng-model="product.expectedShelfLife" name="expectedShelfLife" id="product.expectedShelfLife"
                    type="text" maxlength="5" class="full-width right-justified" numeric-validator="positiveInteger"
                    ng-trim="false"/>
             <span class="rnr-form-error" style="display:none;" id="expectedShelfLife"
@@ -136,7 +136,7 @@
         <label id="productAlternateMoHBarCodeLabel" openlmis-message="label.product.alternate.MoH.bar.code"></label>
 
         <div class="form-field">
-          <input ng-model="programProduct.product.mohBarCode" name="mohBarCode" id="mohBarCode"
+          <input ng-model="product.mohBarCode" name="mohBarCode" id="mohBarCode"
                  type="text" maxlength="20" class="short"/>
         </div>
       </div>
@@ -149,7 +149,7 @@
 
         <div class="form-field">
           <div class="position-relative half-width">
-            <input ng-model="programProduct.product.contraceptiveCYP" name="contraceptiveCYP" id="product.contraceptiveCYP"
+            <input ng-model="product.contraceptiveCYP" name="contraceptiveCYP" id="product.contraceptiveCYP"
                    type="text" maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified full-width"
                    ng-trim="false"/>
             <span class="rnr-form-error" style="display:none;" id="contraceptiveCYP"
@@ -168,10 +168,10 @@
             <label id="productStoreRefrigeratedLabel" openlmis-message="label.product.store.refrigerated"></label>
 
             <div class="form-field">
-              <input id="storeRefrigeratedTrue" ng-model="programProduct.product.storeRefrigerated" type="radio" name="storeRefrigerated"
+              <input id="storeRefrigeratedTrue" ng-model="product.storeRefrigerated" type="radio" name="storeRefrigerated"
                      ng-value="true" />
               <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-              <input id="storeRefrigeratedFalse" ng-model="programProduct.product.storeRefrigerated" type="radio" name="storeRefrigerated"
+              <input id="storeRefrigeratedFalse" ng-model="product.storeRefrigerated" type="radio" name="storeRefrigerated"
                      ng-value="false"/>
               <strong openlmis-message="button.no"></strong>
             </div>
@@ -182,10 +182,10 @@
             <label id="productStoreAtRoomTemperatureLabel" openlmis-message="label.product.store.at.room.temperature"></label>
 
             <div class="form-field">
-              <input id="storeRoomTemperatureTrue" ng-model="programProduct.product.storeRoomTemperature" type="radio" name="storeRoomTemperature"
+              <input id="storeRoomTemperatureTrue" ng-model="product.storeRoomTemperature" type="radio" name="storeRoomTemperature"
                      ng-value="true" />
               <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-              <input id="storeRoomTemperatureFalse" ng-model="programProduct.product.storeRoomTemperature" type="radio" name="storeRoomTemperature"
+              <input id="storeRoomTemperatureFalse" ng-model="product.storeRoomTemperature" type="radio" name="storeRoomTemperature"
                      ng-value="false"/>
               <strong openlmis-message="button.no"></strong>
             </div>
@@ -198,10 +198,10 @@
             <label id="productHazardousLabel" openlmis-message="label.product.hazardous"></label>
 
             <div class="form-field">
-              <input id="hazardousTrue" ng-model="programProduct.product.hazardous" type="radio" name="hazardous"
+              <input id="hazardousTrue" ng-model="product.hazardous" type="radio" name="hazardous"
                      ng-value="true" />
               <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-              <input id="hazardousFalse" ng-model="programProduct.product.hazardous" type="radio" name="hazardous"
+              <input id="hazardousFalse" ng-model="product.hazardous" type="radio" name="hazardous"
                      ng-value="false"/>
               <strong openlmis-message="button.no"></strong>
             </div>
@@ -211,10 +211,10 @@
           <div class="form-cell">
             <label id="productFlammableLabel" openlmis-message="label.product.flammable"></label>
             <div class="form-field">
-              <input id="flammableTrue" ng-model="programProduct.product.flammable" type="radio" name="flammable"
+              <input id="flammableTrue" ng-model="product.flammable" type="radio" name="flammable"
                      ng-value="true"/>
               <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-              <input id="flammableFalse" ng-model="programProduct.product.flammable" type="radio" name="flammable"
+              <input id="flammableFalse" ng-model="product.flammable" type="radio" name="flammable"
                      ng-value="false"/>
               <strong openlmis-message="button.no"></strong>
             </div>
@@ -230,10 +230,10 @@
             </label>
 
             <div class="form-field">
-              <input id="controlledSubstanceTrue" ng-model="programProduct.product.controlledSubstance" type="radio" name="controlledSubstance"
+              <input id="controlledSubstanceTrue" ng-model="product.controlledSubstance" type="radio" name="controlledSubstance"
                      ng-value="true"/>
               <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-              <input id="controlledSubstanceFalse" ng-model="programProduct.product.controlledSubstance" type="radio" name="controlledSubstance"
+              <input id="controlledSubstanceFalse" ng-model="product.controlledSubstance" type="radio" name="controlledSubstance"
                      ng-value="false"/>
               <strong openlmis-message="button.no"></strong>
             </div>
@@ -243,10 +243,10 @@
           <div class="form-cell">
             <label id="productLightSensitiveLabel" openlmis-message="label.product.light.sensitive"></label>
             <div class="form-field">
-              <input id="lightSensitiveTrue" ng-model="programProduct.product.lightSensitive" type="radio" name="lightSensitive"
+              <input id="lightSensitiveTrue" ng-model="product.lightSensitive" type="radio" name="lightSensitive"
                      ng-value="true"/>
               <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-              <input id="lightSensitiveFalse" ng-model="programProduct.product.lightSensitive" type="radio" name="lightSensitive"
+              <input id="lightSensitiveFalse" ng-model="product.lightSensitive" type="radio" name="lightSensitive"
                      ng-value="false"/>
               <strong openlmis-message="button.no"></strong>
             </div>
@@ -260,10 +260,10 @@
             <label id="productApprovedByWHOLabel" openlmis-message="label.product.Approved.by.WHO"></label>
 
             <div class="form-field">
-              <input id="approvedByWHOTrue" ng-model="programProduct.product.approvedByWHO" type="radio" name="approvedByWHO"
+              <input id="approvedByWHOTrue" ng-model="product.approvedByWHO" type="radio" name="approvedByWHO"
                      ng-value="true"/>
               <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-              <input id="approvedByWHOFalse" ng-model="programProduct.product.approvedByWHO" type="radio" name="approvedByWHO"
+              <input id="approvedByWHOFalse" ng-model="product.approvedByWHO" type="radio" name="approvedByWHO"
                      ng-value="false"/>
               <strong openlmis-message="button.no"></strong>
             </div>
@@ -281,7 +281,7 @@
           <label id="productPackLengthLabel" openlmis-message="label.product.pack.length"></label>
 
           <div class="form-field">
-            <input ng-model="programProduct.product.packLength" name="packLength" id="product.packLength" type="text"
+            <input ng-model="product.packLength" name="packLength" id="product.packLength" type="text"
                    maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified"
                    ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="packLength"
@@ -294,7 +294,7 @@
           <label id="productPackWidthLabel" openlmis-message="label.product.pack.width"></label>
 
           <div class="form-field">
-            <input ng-model="programProduct.product.packWidth" name="packWidth" id="product.packWidth" type="text"
+            <input ng-model="product.packWidth" name="packWidth" id="product.packWidth" type="text"
                    maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified"
                    ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="packWidth"
@@ -310,7 +310,7 @@
           <label id="productPackHeightLabel" openlmis-message="label.product.pack.height"></label>
 
           <div class="form-field">
-            <input ng-model="programProduct.product.packHeight" name="packHeight" id="product.packHeight" type="text"
+            <input ng-model="product.packHeight" name="packHeight" id="product.packHeight" type="text"
                    maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified"
                    ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="packHeight"
@@ -323,7 +323,7 @@
           <label id="productPackWeightLabel" openlmis-message="label.product.pack.weight"></label>
 
           <div class="form-field">
-            <input ng-model="programProduct.product.packWeight" name="packWeight" id="product.packWeight" type="text"
+            <input ng-model="product.packWeight" name="packWeight" id="product.packWeight" type="text"
                    maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified"
                    ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="packWeight"
@@ -339,7 +339,7 @@
           <label id="productPackPerCartonLabel" openlmis-message="label.product.pack.per.carton"></label>
 
           <div class="form-field">
-            <input ng-model="programProduct.product.packsPerCarton" name="packsPerCarton" id="product.packsPerCarton" type="text"
+            <input ng-model="product.packsPerCarton" name="packsPerCarton" id="product.packsPerCarton" type="text"
                    maxlength="5" numeric-validator="positiveInteger" class="right-justified" ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="packsPerCarton"
                       openlmis-message="error.number.only"></span>
@@ -351,7 +351,7 @@
           <label id="productCartonLengthLabel" openlmis-message="label.product.carton.length"></label>
 
           <div class="form-field">
-            <input ng-model="programProduct.product.cartonLength" name="cartonLength" id="product.cartonLength" type="text"
+            <input ng-model="product.cartonLength" name="cartonLength" id="product.cartonLength" type="text"
                    maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified" ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="cartonLength"
                       openlmis-message="error.number.only"></span>
@@ -366,7 +366,7 @@
           <label id="productCartonWidthLabel" openlmis-message="label.product.carton.width"></label>
 
           <div class="form-field">
-            <input ng-model="programProduct.product.cartonWidth" name="cartonWidth" id="product.cartonWidth" type="text"
+            <input ng-model="product.cartonWidth" name="cartonWidth" id="product.cartonWidth" type="text"
                    maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified" ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="cartonWidth"
                       openlmis-message="error.number.only"></span>
@@ -378,7 +378,7 @@
           <label id="productCartonHeightLabel" openlmis-message="label.product.carton.height"></label>
 
           <div class="form-field">
-            <input ng-model="programProduct.product.cartonHeight" name="cartonHeight" id="product.cartonHeight" type="text"
+            <input ng-model="product.cartonHeight" name="cartonHeight" id="product.cartonHeight" type="text"
                    maxlength="9" numeric-validator="positiveNumericValue,4,4" class="right-justified" ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="cartonHeight"
                       openlmis-message="error.number.only"></span>
@@ -393,7 +393,7 @@
           <label id="productCartonsPerPalletLabel" openlmis-message="label.product.cartons.per.pallet"></label>
 
           <div class="form-field">
-            <input ng-model="programProduct.product.cartonsPerPallet" name="cartonsPerPallet" id="product.cartonsPerPallet" type="text"
+            <input ng-model="product.cartonsPerPallet" name="cartonsPerPallet" id="product.cartonsPerPallet" type="text"
                    maxlength="5" numeric-validator="positiveInteger" class="right-justified" ng-trim="false"/>
                 <span class="rnr-form-error" style="display:none;" id="cartonsPerPallet"
                       openlmis-message="error.number.only"></span>
@@ -408,7 +408,7 @@
     <div class="span12">
       <label id="productSpecialStorageInstructionsLabel" openlmis-message="label.product.special.storage.instructions"></label>
       <textarea id="specialStorageInstructions" name="specialStorageInstructions"
-                ng-model ="programProduct.product.specialStorageInstructions"></textarea>
+                ng-model ="product.specialStorageInstructions"></textarea>
     </div>
   </div>
 
@@ -416,7 +416,7 @@
   <div class="span12">
     <label id="productSpecialTransportInstructionsLabel" openlmis-message="label.product.special.transport.instructions"></label>
     <textarea id="specialTransportInstructions" name="specialTransportInstructions"
-              ng-model ="programProduct.product.specialTransportInstructions"></textarea>
+              ng-model ="product.specialTransportInstructions"></textarea>
   </div>
 </div>
 

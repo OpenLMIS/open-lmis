@@ -369,10 +369,6 @@ services.factory('Reports', function ($resource) {
   return $resource('/reports/:id/:format.json', {}, {});
 });
 
-services.factory('AddEditProgramProducts', function ($resource) {
-  return $resource('/programProducts/:id.json', {id: '@id'}, update);
-});
-
 services.factory('ProductGroups', function ($resource) {
   return $resource('/products/groups.json', {}, {});
 });
@@ -384,6 +380,11 @@ services.factory('ProductForms', function ($resource) {
 services.factory('DosageUnits', function ($resource) {
   return $resource('/products/dosageUnits.json', {}, {});
 });
+
+services.factory('Products', function ($resource) {
+  return $resource('/products/:id.json', {id: '@id'}, update);
+});
+
 
 
 

@@ -10,42 +10,62 @@
 
 package org.openlmis.web.controller;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.DosageUnit;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.web.form.ProductDTO;
+import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProductControllerTest {
+  private MockHttpServletRequest request = new MockHttpServletRequest();
 
   @Mock
-  ProductGroupService groupService;
+  private ProductGroupService groupService;
 
   @Mock
-  ProductFormService formService;
+  private ProductFormService formService;
 
   @Mock
-  ProductService service;
+  private ProductService service;
+
+  @Mock
+  private MessageService messageService;
 
   @InjectMocks
-  ProductController controller;
+  private ProductController controller;
+
+  @Before
+  public void setUp() throws Exception {
+    request.getSession().setAttribute(UserAuthenticationSuccessHandler.USER_ID, 11L);
+  }
 
   @Test
   public void shouldGetAllProductGroups() throws Exception {
@@ -75,5 +95,84 @@ public class ProductControllerTest {
     List<DosageUnit> result = controller.getAllDosageUnits();
 
     assertThat(result, is(dosageUnits));
+  }
+
+  @Test
+  public void shouldGetById() {
+    Long productId = 1L;
+    Date modifiedDate = new Date();
+
+    Product product = new Product();
+    product.setCode("p10");
+    product.setId(productId);
+    product.setModifiedDate(modifiedDate);
+
+    when(service.getById(1L)).thenReturn(product);
+
+    ProductDTO productDTO = controller.getById(1L);
+
+    assertThat(productDTO.getProduct(), is(product));
+    assertThat(productDTO.getProductLastUpdated(), is(modifiedDate));
+    verify(service).getById(1L);
+  }
+
+  @Test
+  public void shouldSaveProgramProduct() {
+    ProductDTO productDTO = new ProductDTO();
+    Product product = new Product();
+    productDTO.setProduct(product);
+    doNothing().when(service).save(product);
+    when(messageService.message("message.product.created.success", productDTO.getProduct().getName())).thenReturn("save success");
+
+    ResponseEntity<OpenLmisResponse> response = controller.save(productDTO, request);
+
+    assertThat(product.getCreatedBy(), is(11L));
+    assertThat(product.getModifiedBy(), is(11L));
+    assertThat(response.getBody().getSuccessMsg(), is("save success"));
+    assertThat((Long) response.getBody().getData().get("productId"), is(product.getId()));
+    verify(service).save(product);
+  }
+
+  @Test
+  public void shouldReturnBadRequestWhenServiceThrowsExceptionOnSave() {
+    ProductDTO productDTO = new ProductDTO();
+    Product product = new Product();
+    productDTO.setProduct(product);
+    doThrow(new DataException("error message")).when(service).save(product);
+
+    ResponseEntity<OpenLmisResponse> response = controller.save(productDTO, request);
+
+    assertThat(response.getBody().getErrorMsg(), is("error message"));
+    verify(service).save(product);
+  }
+
+  @Test
+  public void shouldThrowExceptionIfInvalidProgramProductBeingUpdated() throws Exception {
+    ProductDTO productDTO = new ProductDTO();
+    Product product = new Product();
+    productDTO.setProduct(product);
+    doThrow(new DataException("error")).when(service).save(product);
+
+    ResponseEntity<OpenLmisResponse> errorResponse = controller.update(productDTO, 9L, request);
+
+    assertThat(errorResponse.getBody().getErrorMsg(), is("error"));
+    assertThat(errorResponse.getStatusCode(), is(BAD_REQUEST));
+  }
+
+  @Test
+  public void shouldUpdateProgramProduct() throws Exception {
+    ProductDTO productDTO = new ProductDTO();
+    Product product = new Product();
+    productDTO.setProduct(product);
+    doNothing().when(service).save(product);
+    when(messageService.message("message.product.updated.success", productDTO.getProduct().getName())).thenReturn("updated");
+
+    ResponseEntity<OpenLmisResponse> response = controller.update(productDTO, 1L, request);
+
+    assertThat((Long) response.getBody().getData().get("productId"), is(productDTO.getProduct().getId()));
+    assertThat(productDTO.getProduct().getId(), is(1L));
+    assertThat(productDTO.getProduct().getModifiedBy(), is(11L));
+    assertThat(response.getBody().getSuccessMsg(), is("updated"));
+    verify(service).save(product);
   }
 }

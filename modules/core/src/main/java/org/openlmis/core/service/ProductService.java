@@ -116,7 +116,7 @@ public class ProductService {
     return repository.getAllDosageUnits();
   }
 
-  public Product getById(long id) {
+  public Product getById(Long id) {
     return repository.getById(id);
   }
 }

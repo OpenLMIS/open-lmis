@@ -23,7 +23,6 @@ import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
@@ -413,43 +412,5 @@ public class ProgramProductServiceTest {
     programProductService.getTotalSearchResultCount(searchParam, column);
 
     verify(productService).getTotalSearchResultCount(searchParam);
-  }
-
-  @Test
-  public void shouldSaveProductIfItIsNotNull() throws Exception {
-    ProgramProduct programProduct = new ProgramProduct();
-    programProduct.setProduct(new Product());
-
-    programProductService.saveProduct(programProduct);
-
-    verify(productService).save(programProduct.getProduct());
-  }
-
-  @Test
-  public void shouldThrowIfProductIsNull() throws Exception {
-    ProgramProduct programProduct = new ProgramProduct();
-
-    expectException.expect(DataException.class);
-    expectException.expectMessage("message.product.null");
-
-    programProductService.saveProduct(programProduct);
-
-    verify(productService, never()).save(programProduct.getProduct());
-  }
-
-  @Test
-  public void shouldGetById() {
-
-    Product product = new Product();
-    product.setCode("p10");
-    Long productId = 1l;
-    product.setId(productId);
-
-    when(productService.getById(productId)).thenReturn(product);
-
-    ProgramProduct programProduct = programProductService.getById(productId);
-
-    assertThat(programProduct.getProduct(), is(product));
-    verify(productService).getById(productId);
   }
 }

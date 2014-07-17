@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
@@ -187,20 +186,5 @@ public class ProgramProductService {
       return programProductRepository.getTotalSearchResultCount(searchParam);
     }
     return productService.getTotalSearchResultCount(searchParam);
-  }
-
-  public void saveProduct(ProgramProduct programProduct) {
-    if (programProduct.getProduct() != null) {
-      productService.save(programProduct.getProduct());
-    } else {
-      throw new DataException("message.product.null");
-    }
-  }
-
-  public ProgramProduct getById(Long id) {
-    Product product = productService.getById(id);
-    ProgramProduct programProduct = new ProgramProduct();
-    programProduct.setProduct(product);
-    return programProduct;
   }
 }

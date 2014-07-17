@@ -263,8 +263,8 @@ public class ProductServiceTest {
 
   @Test
   public void shouldGetById() {
-    service.getById(1l);
+    service.getById(1L);
 
-    verify(repository).getById(1l);
+    verify(repository).getById(1L);
   }
 }

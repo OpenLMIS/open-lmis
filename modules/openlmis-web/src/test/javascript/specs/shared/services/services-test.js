@@ -259,79 +259,6 @@ describe("Services", function () {
     });
   });
 
-  describe("program Products", function () {
-
-    var addEditProgramProducts;
-
-    beforeEach(inject(function (AddEditProgramProducts) {
-      addEditProgramProducts = AddEditProgramProducts;
-    }));
-
-    it('should add program Product', function () {
-      var successMessage = "Saved successfully";
-      httpMock.expectPOST('/programProducts.json').respond(200, {"success": successMessage});
-
-      addEditProgramProducts.save({}, {},
-          function (data) {
-            successStub();
-            expect(data.success).toEqual(successMessage);
-          },
-          function () {
-            failureStub();
-          });
-      httpMock.flush();
-      expect(successStub).toHaveBeenCalled();
-      expect(failureStub).not.toHaveBeenCalled();
-    });
-
-    it('should raise error if server does not respond with OK status while post', function () {
-      httpMock.expectPOST('/programProducts.json').respond(404);
-
-      addEditProgramProducts.save({}, {},
-          function () {
-            successStub();
-          },
-          function () {
-            failureStub();
-          });
-      httpMock.flush();
-      expect(successStub).not.toHaveBeenCalled();
-      expect(failureStub).toHaveBeenCalled();
-    });
-
-    it('should update program Product', function () {
-      var successMessage = "Saved successfully";
-      httpMock.expectPUT('/programProducts.json').respond(200, {"success": successMessage});
-
-      addEditProgramProducts.update({}, {},
-          function (data) {
-            successStub();
-            expect(data.success).toEqual(successMessage);
-          },
-          function () {
-            failureStub();
-          });
-      httpMock.flush();
-      expect(successStub).toHaveBeenCalled();
-      expect(failureStub).not.toHaveBeenCalled();
-    });
-
-    it('should raise error if server does not respond with OK status while update', function () {
-      httpMock.expectPUT('/programProducts.json').respond(404);
-
-      addEditProgramProducts.update({}, {},
-          function () {
-            successStub();
-          },
-          function () {
-            failureStub();
-          });
-      httpMock.flush();
-      expect(successStub).not.toHaveBeenCalled();
-      expect(failureStub).toHaveBeenCalled();
-    });
-  });
-
   describe("ProductGroupService", function () {
 
     var productGroupService;
@@ -437,6 +364,115 @@ describe("Services", function () {
         failureStub();
       });
 
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+  });
+
+  describe("Products", function () {
+
+    var products;
+
+    beforeEach(inject(function (Products) {
+      products = Products;
+    }));
+
+    it('should get product', function () {
+      var productId = 1;
+      httpMock.expectGET('/products/' + productId + '.json')
+          .respond(200, {productDTO: {}});
+
+      products.get({'id': productId},
+          function (data) {
+            successStub();
+            expect(data.productDTO).toEqual({});
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status', function () {
+      var productId = 1;
+
+      httpMock.expectGET('/products/' + productId + '.json')
+          .respond(404);
+
+      products.get({'id': productId},
+          function () {
+            successStub();
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+
+    it('should add Product', function () {
+      var successMessage = "Saved successfully";
+      httpMock.expectPOST('/products.json').respond(200, {"success": successMessage});
+
+      products.save({}, {},
+          function (data) {
+            successStub();
+            expect(data.success).toEqual(successMessage);
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status while post', function () {
+      httpMock.expectPOST('/products.json').respond(404);
+
+      products.save({}, {},
+          function () {
+            successStub();
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+
+    it('should update Product', function () {
+      var successMessage = "Saved successfully";
+      httpMock.expectPUT('/products.json').respond(200, {"success": successMessage});
+
+      products.update({}, {},
+          function (data) {
+            successStub();
+            expect(data.success).toEqual(successMessage);
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status while update', function () {
+      httpMock.expectPUT('/products.json').respond(404);
+
+      products.update({}, {},
+          function () {
+            successStub();
+          },
+          function () {
+            failureStub();
+          });
       httpMock.flush();
       expect(successStub).not.toHaveBeenCalled();
       expect(failureStub).toHaveBeenCalled();

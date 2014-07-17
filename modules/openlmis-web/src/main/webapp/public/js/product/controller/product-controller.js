@@ -1,20 +1,20 @@
-function ProductController($scope, productGroups, productForms, dosageUnits, programProductData, AddEditProgramProducts, $location) {
+function ProductController($scope, productGroups, productForms, dosageUnits, productDTO, Products, $location) {
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
 
-  if (!isUndefined(programProductData)) {
-    if (!isUndefined(programProductData.programProduct)) {
-      $scope.programProduct = programProductData.programProduct;
-      var product = $scope.programProduct.product;
-      $scope.selectedProductGroupCode = isUndefined(product.productGroup) ? undefined : product.productGroup.code;
-      $scope.selectedProductFormCode = isUndefined(product.form) ? undefined : product.form.code;
-      $scope.selectedProductDosageUnitCode = isUndefined(product.dosageUnit) ? undefined : product.dosageUnit.code;
+  if (!isUndefined(productDTO)) {
+    if (!isUndefined(productDTO.product)) {
+      $scope.product = productDTO.product;
+      $scope.programProducts = productDTO.programProductList;
+      $scope.selectedProductGroupCode = isUndefined($scope.product.productGroup) ? undefined : $scope.product.productGroup.code;
+      $scope.selectedProductFormCode = isUndefined($scope.product.form) ? undefined : $scope.product.form.code;
+      $scope.selectedProductDosageUnitCode = isUndefined($scope.product.dosageUnit) ? undefined : $scope.product.dosageUnit.code;
     }
     else {
-      $scope.programProduct = {};
+      $scope.product = {};
     }
-    $scope.productLastUpdated = programProductData.productLastUpdated;
+    $scope.productLastUpdated = productDTO.productLastUpdated;
   }
 
   var success = function (data) {
@@ -32,9 +32,9 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   };
 
   var setProductReferenceData = function () {
-    $scope.programProduct.product.productGroup = _.where($scope.productGroups, {code: $scope.selectedProductGroupCode})[0];
-    $scope.programProduct.product.form = _.where($scope.productForms, {code: $scope.selectedProductFormCode})[0];
-    $scope.programProduct.product.dosageUnit = _.where($scope.dosageUnits, {code: $scope.selectedProductDosageUnitCode})[0];
+    $scope.product.productGroup = _.where($scope.productGroups, {code: $scope.selectedProductGroupCode})[0];
+    $scope.product.form = _.where($scope.productForms, {code: $scope.selectedProductFormCode})[0];
+    $scope.product.dosageUnit = _.where($scope.dosageUnits, {code: $scope.selectedProductDosageUnitCode})[0];
   };
 
   $scope.save = function () {
@@ -45,11 +45,11 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     }
     setProductReferenceData();
 
-    if ($scope.programProduct.product.id) {
-      AddEditProgramProducts.update({id: $scope.programProduct.product.id}, $scope.programProduct, success, error);
+    if ($scope.product.id) {
+      Products.update({id: $scope.product.id}, {product: $scope.product}, success, error);
     }
     else {
-      AddEditProgramProducts.save({}, $scope.programProduct, success, error);
+      Products.save({}, {product: $scope.product}, success, error);
     }
   };
 
@@ -95,15 +95,15 @@ ProductController.resolve = {
     return deferred.promise;
   },
 
-  programProductData: function ($q, $route, $timeout, AddEditProgramProducts) {
+  productDTO: function ($q, $route, $timeout, Products) {
     if ($route.current.params.id === undefined) return undefined;
 
     var deferred = $q.defer();
     var productId = $route.current.params.id;
 
     $timeout(function () {
-      AddEditProgramProducts.get({id: productId}, function (data) {
-        deferred.resolve(data);
+      Products.get({id: productId}, function (data) {
+        deferred.resolve(data.productDTO);
       }, {});
     }, 100);
     return deferred.promise;
