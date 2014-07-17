@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ProgramEquipmentProductController($scope, $location, navigateBackService, Equipments, ProgramCompleteList,Products, GetProgramEquipmentByProgramId, SaveProgramEquipment, GetProgramEquipmentProductByProgramEquipment, SaveProgramEquipmentProduct) {
+function ProgramEquipmentProductController($scope,$dialog,messageService, $location, navigateBackService, Equipments, ProgramCompleteList,Products, GetProgramEquipmentByProgramId, SaveProgramEquipment, GetProgramEquipmentProductByProgramEquipment, SaveProgramEquipmentProduct, RemoveProgramEquipmentProduct) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.getAllEquipments();
@@ -151,5 +151,29 @@ function ProgramEquipmentProductController($scope, $location, navigateBackServic
     $scope.setDataChanged = function(programEquipment){
         programEquipment.isDataChanged = true;
         $scope.isDataChanged = true;
+    };
+
+    $scope.showRemoveProgramEquipmentProductConfirmDialog = function (index) {
+        var programEquipmentProduct = $scope.programEquipmentProducts[index];
+        $scope.index = index;
+        $scope.selectedProgramEquipmentProduct = programEquipmentProduct;
+        var options = {
+            id: "removeProgramEquipmentProductConfirmDialog",
+            header: "Confirmation",
+            body: "Please confirm that you want to remove the product: " + $scope.selectedProgramEquipmentProduct.product.fullName.concat('(').concat($scope.selectedProgramEquipmentProduct.product.primaryName).concat(')')
+        };
+        OpenLmisDialog.newDialog(options, $scope.removeProgramEquipmentProductConfirm, $dialog, messageService);
+    };
+
+    $scope.removeProgramEquipmentProductConfirm = function (result) {
+        if (result) {
+            $scope.programEquipmentProducts.splice($scope.index,1);
+            $scope.removeProgramEquipmentProduct();
+        }
+        $scope.selectedFacility = undefined;
+    };
+
+    $scope.removeProgramEquipmentProduct = function(){
+        RemoveProgramEquipmentProduct.get({id: $scope.selectedProgramEquipmentProduct.id});
     };
 }
