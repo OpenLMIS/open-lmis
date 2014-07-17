@@ -66,4 +66,20 @@ public class ProgramEquipmentProductController extends BaseController{
     return successResponse;
   }
 
+  @RequestMapping(value="remove/{programEquipmentId}")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
+  public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value = "programEquipmentId") Long programEquipmentId){
+    ResponseEntity<OpenLmisResponse> successResponse;
+
+    try{
+      programEquipmentProductService.remove(programEquipmentId);
+    }
+    catch(DataException e){
+      return OpenLmisResponse.error(e,HttpStatus.BAD_REQUEST);
+    }
+
+    successResponse = OpenLmisResponse.success("Product successfully removed.");
+    return successResponse;
+  }
+
 }
