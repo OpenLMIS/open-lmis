@@ -217,21 +217,12 @@ public interface FacilityMapper {
     "id IN(SELECT DISTINCT(parentFacilityId) FROM facilities)"})
   List<Facility> getAllParentsByModifiedDate(Date modifiedDate);
 
-  @SelectProvider(type = SelectFacilities.class, method = "getEnabledFacilities")
-  @Results(value = {
-    @Result(property = "facilityType.id", column = "facilityTypeId"),
-    @Result(property = "facilityType.name", column = "facilityTypeName"),
-    @Result(property = "geographicZone.name", column = "geoZoneName"),
-  })
-  List<Facility> getEnabledFacilities(@Param(value = "searchParam") String searchParam,
-                                      @Param(value = "facilityTypeId") Long facilityTypeId,
-                                      @Param(value = "geoZoneId") Long geoZoneId);
-
-  @SelectProvider(type = SelectFacilities.class, method = "getEnabledFacilitiesCount")
-  Integer getEnabledFacilitiesCount(@Param(value = "searchParam") String searchParam,
-                                    @Param(value = "facilityTypeId") Long facilityTypeId,
-                                    @Param(value = "geoZoneId") Long geoZoneId);
-
+  @SelectProvider(type = SelectFacilities.class, method = "getFacilitiesCountBy")
+  Integer getFacilitiesCountBy(@Param(value = "searchParam") String searchParam,
+                               @Param(value = "facilityTypeId") Long facilityTypeId,
+                               @Param(value = "geoZoneId") Long geoZoneId,
+                               @Param(value = "virtualFacility") Boolean virtualFacility,
+                               @Param(value = "enabled") Boolean enabled);
 
   @Select({"SELECT COUNT(*) FROM facilities",
     "WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%')",
@@ -252,9 +243,21 @@ public interface FacilityMapper {
                           @Param(value = "column") String column,
                           RowBounds rowBounds);
 
+  @SelectProvider(type = SelectFacilities.class, method = "searchFacilitiesBy")
+  @Results(value = {
+    @Result(property = "facilityType.id", column = "facilityTypeId"),
+    @Result(property = "facilityType.name", column = "facilityTypeName"),
+    @Result(property = "geographicZone.name", column = "geoZoneName"),
+  })
+  List<Facility> searchFacilitiesBy(@Param(value = "searchParam") String searchParam,
+                                    @Param(value = "facilityTypeId") Long facilityTypeId,
+                                    @Param(value = "geoZoneId") Long geoZoneId,
+                                    @Param(value = "virtualFacility") Boolean virtualFacility,
+                                    @Param(value = "enabled") Boolean enabled);
+
   public class SelectFacilities {
     @SuppressWarnings(value = "unused")
-    public static String getEnabledFacilitiesCount(Map<String, Object> params) {
+    public static String getFacilitiesCountBy(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
       sql.append("SELECT COUNT(*) FROM facilities F WHERE ");
       return createQuery(sql, params).toString();
@@ -279,11 +282,12 @@ public interface FacilityMapper {
       return sql.toString();
     }
 
-    public static String getEnabledFacilities(Map<String, Object> params) {
+    @SuppressWarnings(value = "unused")
+    public static String searchFacilitiesBy(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
       sql.append(
         "SELECT F.*, GZ.name as geoZoneName, FT.id AS facilityTypeId, FT.name AS facilityTypeName FROM facilities F INNER JOIN facility_types FT ON F.typeId = FT.id " +
-          "INNER JOIN geographic_zones GZ ON GZ.id = F.geographiczoneid WHERE ");
+          "INNER JOIN geographic_zones GZ ON GZ.id = F.geographicZoneId WHERE ");
       sql = createQuery(sql, params);
       sql.append(" ORDER BY LOWER(F.code)");
       return sql.toString();
@@ -293,6 +297,8 @@ public interface FacilityMapper {
       String facilityCodeName = (String) params.get("searchParam");
       Long facilityTypeId = (Long) params.get("facilityTypeId");
       Long geographicZoneId = (Long) params.get("geoZoneId");
+      Boolean virtualFacility = (Boolean) params.get("virtualFacility");
+      Boolean enabled = (Boolean) params.get("enabled");
 
       if (facilityTypeId != null) {
         sql.append("F.typeId = " + facilityTypeId + " AND ");
@@ -302,8 +308,12 @@ public interface FacilityMapper {
       }
       sql.append(
         "(LOWER(F.code) LIKE LOWER('%" + facilityCodeName + "%') OR LOWER(F.name) LIKE LOWER('%" + facilityCodeName + "%'))");
-      sql.append(" AND F.enabled = true");
-
+      if(virtualFacility != null){
+        sql.append(" AND F.virtualFacility = " + virtualFacility);
+      }
+      if(enabled != null){
+        sql.append(" AND F.enabled = " + enabled);
+      }
       return sql;
     }
   }

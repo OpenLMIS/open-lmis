@@ -193,12 +193,12 @@ public class FacilityRepository {
     return mapper.getAllParentsByModifiedDate(modifiedDate);
   }
 
-  public Integer getCountOfEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId) {
-    return mapper.getEnabledFacilitiesCount(searchParam, facilityTypeId, geoZoneId);
+  public Integer getFacilitiesCountBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled) {
+    return mapper.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
   }
 
-  public List<Facility> getEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId) {
-    return mapper.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+  public List<Facility> searchFacilitiesBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled) {
+    return mapper.searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
   }
 
   public Integer getTotalSearchResultCount(String searchParam) {

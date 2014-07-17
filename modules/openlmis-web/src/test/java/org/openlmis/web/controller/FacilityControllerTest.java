@@ -223,15 +223,20 @@ public class FacilityControllerTest {
     Long facilityTypeId = 1L;
     Long geoZoneId = 2L;
     Integer count = 1;
+    Boolean virtualFacility = false;
+    Boolean enabled = true;
     List<Facility> facilities = asList(new Facility());
-    when(facilityService.getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId)).thenReturn(count);
-    when(facilityService.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId)).thenReturn(facilities);
+    when(facilityService.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled)).thenReturn(count);
+    when(facilityService.searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled)).thenReturn(facilities);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFilteredFacilities(searchParam, facilityTypeId, geoZoneId, "2");
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFilteredFacilities(
+      searchParam,
+      facilityTypeId, geoZoneId,
+      virtualFacility, enabled, "2");
 
     assertThat((List<Facility>) responseEntity.getBody().getData().get("facilityList"), is(facilities));
-    verify(facilityService).getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
-    verify(facilityService).getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+    verify(facilityService).getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId,virtualFacility ,enabled );
+    verify(facilityService).searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
   }
 
   @Test
@@ -240,13 +245,15 @@ public class FacilityControllerTest {
     Long facilityTypeId = 1L;
     Long geoZoneId = 2L;
     Integer count = 3;
-    when(facilityService.getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId)).thenReturn(count);
+    Boolean virtualFacility = false;
+    Boolean enabled = true;
+    when(facilityService.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId,virtualFacility ,enabled)).thenReturn(count);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFilteredFacilities(searchParam, facilityTypeId, geoZoneId, "2");
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.getFilteredFacilities(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled, "2");
 
     assertThat((String) responseEntity.getBody().getData().get("message"), is("too.many.results.found"));
-    verify(facilityService).getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
-    verify(facilityService, never()).getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+    verify(facilityService).getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
+    verify(facilityService, never()).searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
   }
 
   @Test

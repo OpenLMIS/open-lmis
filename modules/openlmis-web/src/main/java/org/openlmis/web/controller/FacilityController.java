@@ -69,21 +69,23 @@ public class FacilityController extends BaseController {
                                               @Value("${search.page.size}") String limit) {
     Pagination pagination = new Pagination(page, parseInt(limit));
     pagination.setTotalRecords(facilityService.getTotalSearchResultCountByColumnName(searchParam, columnName));
-    List<Facility> facilities = facilityService.searchBy(searchParam, columnName ,pagination );
+    List<Facility> facilities = facilityService.searchBy(searchParam, columnName, pagination);
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(FACILITIES, facilities);
     response.getBody().addData("pagination", pagination);
     return response;
   }
 
   @RequestMapping(value = "/filter-facilities", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE, MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getFilteredFacilities(@RequestParam(value = "searchParam", required = false) String searchParam,
                                                                 @RequestParam(value = "facilityTypeId", required = false) Long facilityTypeId,
                                                                 @RequestParam(value = "geoZoneId", required = false) Long geoZoneId,
+                                                                @RequestParam(value = "virtualFacility", required = false) Boolean virtualFacility,
+                                                                @RequestParam(value = "enabled", required = false) Boolean enabled,
                                                                 @Value("${search.results.limit}") String facilitySearchLimit) {
-    Integer count = facilityService.getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+    Integer count = facilityService.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
     if (count <= Integer.parseInt(facilitySearchLimit)) {
-      List<Facility> facilities = facilityService.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+      List<Facility> facilities = facilityService.searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
       return OpenLmisResponse.response("facilityList", facilities);
     } else {
       return OpenLmisResponse.response("message", "too.many.results.found");
@@ -209,7 +211,7 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facility-types", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE, MANAGE_FACILITY_APPROVED_PRODUCT')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE, MANAGE_FACILITY_APPROVED_PRODUCT, MANAGE_USER')")
   public List<FacilityType> getFacilityTypes() {
     return facilityService.getAllTypes();
   }

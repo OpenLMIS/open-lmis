@@ -233,12 +233,12 @@ public class FacilityService {
     return facility;
   }
 
-  public Integer getCountOfEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId){
-    return facilityRepository.getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+  public Integer getFacilitiesCountBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled){
+    return facilityRepository.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
   }
 
-  public List<Facility> getEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId) {
-    return facilityRepository.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+  public List<Facility> searchFacilitiesBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled) {
+    return facilityRepository.searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
   }
 
   public Integer getTotalSearchResultCountByColumnName(String searchParam, String columnName) {
