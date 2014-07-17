@@ -32,7 +32,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-cell horizontalFilters" >
+                    <div class="form-cell horizontalFilters" ng-if="!hideScheduleFilter">
                         <label class="labels" openlmis-message="label.schedule"></label>
 
                         <div class="form-fields">
@@ -42,7 +42,7 @@
                         </div>
                     </div>
 
-                    <div class="form-cell horizontalFilters">
+                    <div class="form-cell horizontalFilters" ng-if="!hideYearFilter">
                         <label class="labels" openlmis-message="label.year"></label>
 
                         <div class="form-field">
@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <div class="form-cell horizontalFilters">
+                    <div class="form-cell horizontalFilters" ng-if="!hidePeriodFilter">
                         <label class="labels" openlmis-message="label.period"></label>
 
                         <div class="form-field">
@@ -74,22 +74,11 @@
                         <div class="clearfix"></div>
                     </div>
 
-
-                    <!--<div class="form-cell horizontalFilters" >
-                        <label class="labels" openlmis-message="label.requisition.groups"></label>
-
-                        <div class="form-fields">
-                            <select ui-select2 style="width:170px;" name="requisitionGroup"  ng-model="formFilter.rgroupId" ng-change="processRequisitionFilter()" multiple openlmis-message="placeholder.select.requisition">
-                                <option ng-repeat="option in requisitionGroups" value="{{option.id}}">{{option.name}}</option>
-                            </select>
-                        </div>
-                    </div>-->
-
                     <div class="form-cell horizontalFilters" >
                         <label class="labels" openlmis-message="label.geographic.zones"></label>
 
                         <div class="form-fields">
-                            <select class="input-large" ng-change="processZoneFilter();" ng-model="formFilter.zoneId">
+                            <select class="input-large"  ng-change="processZoneFilter();" ng-model="formFilter.zoneId">
                                 <option selected="selected" value="{{zones.id}}" ng-model="formFilter.zoneId">-- National --</option>
                                 <optgroup ng-repeat="value in zones.children"  label="{{value.name}}">
                                     <option value="{{value.id}}"><b class="green">All of {{value.name}}</b></option>

@@ -29,7 +29,7 @@ public interface FacilityLookupReportMapper {
     @Select("SELECT * " +
             "   FROM " +
             "       facilities where code = #{code}")
-    Facility getFacilityByCode(String code);
+    Facility getFacilityByCode(@Param("code") String code);
 
     @Select("SELECT f.id, f.code, f.name" +
         "   FROM " +
@@ -150,8 +150,7 @@ public interface FacilityLookupReportMapper {
           "order by name")
     List<Facility>  getFacilitiesBy(@Param("userId") Long userId, @Param("supervisoryNodeId") Long supervisoryNodeId, @Param("rgroupId") String requisitionGroupId, @Param("programId") Long programId, @Param("scheduleId") Long scheduleId);
 
-    @Select("SELECT DISTINCT  f.id, f.code, f.name,\n" +
-            "CASE WHEN U.officePhone IS NULL THEN '' ELSE U.officePhone || ' ,' END || CASE WHEN U.cellPhone IS NULL THEN '' ELSE U.cellPhone || ' ,' END || F.mainPhone as phoneNumber,U.email email\n" +
+    @Select("SELECT DISTINCT  U.id userId, U.primarynotificationmethod, f.id facilityId, f.code, f.name, U.cellPhone  as phoneNumber,U.email email\n" +
             "FROM facilities f\n" +
             "LEFT OUTER JOIN Users U ON U.facilityId =  f.id\n" +
             "WHERE geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
@@ -160,7 +159,7 @@ public interface FacilityLookupReportMapper {
             "order by name")
     List<HashMap>  getFacilitiesForNotifications(@Param("userId") Long userId, @Param("zoneId") Long zoneId);
 
-    @Select("SELECt Distinct * \n" +
+    @Select("SELECT facilities.id, facilities.code, facilities.name\n" +
             "FROM facilities\n" +
             "WHERE geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))")
     List<Facility>  getFacilitiesByGeographicZoneTree(@Param("userId") Long userId, @Param("zoneId") Long zoneId);

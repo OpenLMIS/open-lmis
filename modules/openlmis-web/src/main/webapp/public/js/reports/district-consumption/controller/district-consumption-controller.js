@@ -14,7 +14,8 @@ function DistrictConsumptionReportController($scope,  DistrictConsumptionReport)
 
     $scope.OnFilterChanged = function(){
       $scope.data = $scope.datarows = [];
-
+      $scope.filter.page = 1;
+      $scope.filter.max = 10000;
       DistrictConsumptionReport.get($scope.filter, function(data) {
         if(data.pages !== undefined){
           $scope.data = data.pages.rows;

@@ -37,7 +37,6 @@ public class EquipmentTypeController extends BaseController {
   private EquipmentOperationalStatusRepository statusRepository;
 
   @RequestMapping(method = GET, value = "list")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getAll(){
     return  OpenLmisResponse.response("equipment_type", service.getAll());
   }
@@ -49,7 +48,6 @@ public class EquipmentTypeController extends BaseController {
   }
 
   @RequestMapping(method = GET, value = "operational-status")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getAllStatuses( ){
     return  OpenLmisResponse.response("status", statusRepository.getAll());
   }

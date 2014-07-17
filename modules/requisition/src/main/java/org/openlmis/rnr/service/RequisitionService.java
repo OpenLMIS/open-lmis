@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -383,8 +381,30 @@ public class RequisitionService {
 //        throw new DataException("error.current.rnr.already.post.submit");
 //      }
     }
+    List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
 
-    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+    List<ProcessingPeriod> rejected = processingScheduleService.getOpenPeriods(facilityId, programId, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+
+    if(periods == null || periods.isEmpty()){
+      periods = rejected;
+    }else {
+      if(rejected != null && !rejected.isEmpty()){
+        periods.addAll(rejected);
+      }
+    }
+
+    // find the distinct list
+    Set<ProcessingPeriod> finalList = new HashSet<ProcessingPeriod> (periods);
+    periods = new ArrayList<ProcessingPeriod>(finalList);
+    // sort the list of periods by start date
+    Collections.sort(periods, new Comparator<ProcessingPeriod>() {
+
+      public int compare(ProcessingPeriod o1, ProcessingPeriod o2) {
+        return o1.getStartDate().compareTo(o2.getStartDate());
+      }
+    });
+
+    return periods;
   }
 
   private Rnr fillSupportingInfo(Rnr requisition) {

@@ -37,26 +37,5 @@ public class StockedOutReportParam
   private int zoneId;
   private Long periodId;
 
-  @Override
-  public String toString() {
-
-    DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
-
-    StringBuilder filtersValue = new StringBuilder("");
-
-//    filtersValue.
-//      append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
-//      append("Program : ").append(this.getProgram()).append("\n").
-//      append("Requisition Group : ").append(this.getRgroup()).append("\n").
-//      append("Product Category : ").append(this.getProductCategory()).append("\n").
-//      append("Product : ").append(this.getProduct()).append("\n").
-//      append("Zone : ").append(this.getZone()).append("\n").
-//      append("Facility Types : ").append(this.getFacilityType()).append("\n").
-//      append("Facility : ").append(this.getFacility()).append("\n");
-    return filtersValue.toString();
-
-
-  }
-
 
 }

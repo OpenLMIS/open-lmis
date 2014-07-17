@@ -4,16 +4,16 @@
         <table>
             <thead>
             <tr>
-                <th><span openlmis-message="notification"></span></th>
-                <th colspan="3"><span openlmis-message="email"></span></th>
-                <th colspan="3"><span openlmis-message="sms"></span></th>
+                <th><span openlmis-message="Notification"></span></th>
+                <th><span openlmis-message="Email"></span></th>
+                <th ><span openlmis-message="SMS" style="padding-left: 25px"></span></th>
             </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="notification in notifications">
-                    <td><div><input name="notificationTypeName" ng-value="notification.alertType" ng-model="notification.type" type="radio" ng-change="notificationMethodsChange(notification)" /><span style="padding-left: 3px" openlmis-message="label.alertType.{{ notification.alertType }}"></span></div></td>
-                    <td colspan="3"><input  type="checkbox" ng-disabled="!notification.email" ng-model="notification.emailMethod" ng-change="notificationMethodsChange(notification)"  /></td>
-                    <td colspan="3"><input  type="checkbox" ng-disabled="!notification.sms" ng-model="notification.smsMethod" ng-change="notificationMethodsChange(notification)" /></td>
+                    <td><div><input type="radio" name="notificationTypeName" ng-value="notification" ng-model="formFilter.selectedAlert"  /><span style="padding-left: 3px" openlmis-message="label.alertType.{{ notification.alertType }}"></span></div></td>
+                    <td><input  type="checkbox" ng-disabled="!notification.email" ng-model="notification.emailMethod" ng-change="notificationMethodsChange(notification)"   /></td>
+                    <td class="pull-right"><input  type="checkbox" ng-disabled="!notification.sms" ng-model="notification.smsMethod" ng-change="notificationMethodsChange(notification)"/></td>
                 </tr>
 
             </tbody>
@@ -21,10 +21,11 @@
         </table>
     </div>
     <div class="span6">
-        <span><label>email</label></span>
-        <textarea required="" ng-model="selectedNotification.emailMessageTemplate" cols="500" rows="5" style="width:400px"></textarea>
-        <span><label>sms</label></span>
-        <textarea required="" ng-model="selectedNotification.smsMessageTemplate" cols="500" rows="5" style="width:400px"></textarea>
+        <span><label>Email</label></span>
+        <textarea required="" ng-model="emailTemplate" cols="500" rows="5" style="width:400px"></textarea>
+        <span><label>SMS</label></span>
+        <textarea required="" ng-model="smsTemplate" cols="500" rows="5" style="width:400px"></textarea><br/>
+        <div>SMS length {{smsTemplate.length || 0}} of {{maxSmsText}} characters.</div>
 
     </div>
 </div>
@@ -40,25 +41,25 @@
                 </tr>
             </table>
             <div class="alert alert-error" id="sendSuccessMsgDiv" openlmis-message="errorMessage" ng-show="errorMessage"></div>
-            <div class="alert alert-error" id="successMsgDiv" openlmis-message="successMessage" ng-show="successMessage"></div>
+            <div class="alert  alert-success" id="successMsgDiv" openlmis-message="successMessage" ng-show="successMessage"></div>
             <input type="button" ng-click="sendNotifications()" openlmis-message="button.send" class="btn btn-primary btn-small pull-right" ng-show="facilities.length > 0"/>
 
             <table ng-show="facilities.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams" >
                 <thead>
                     <tr>
-                        <th><div openlmis-message="label.select.all"></div><div><input type="checkbox" ng-model="selectedNotification.selectAllFacilities" ng-change="selectAllFacilities()"/></div></th>
+                        <th><div openlmis-message="label.select.all"></div><div><input type="checkbox" ng-model="formFilter.selectAll" ng-change="selectAllFacilities()"/></div></th>
                         <th openlmis-message="label.facility.code"></th>
                         <th openlmis-message="label.facility.name"></th>
-                        <th openlmis-message="label.phonenumber"></th>
+                        <th openlmis-message="label.phone"></th>
                         <th openlmis-message="label.email"></th>
                     </tr>
 
                 </thead>
                 <tbody >
                 <tr ng-repeat="row in facilities">
-                    <td><input type="checkbox" ng-model="row.selected" ng-change="facilitySelectChangefacilitySelectChange(row.selected)"/></td>
-                    <td data-title="'Facility Code'" style="width:150px" sortable="code" >{{ row.code }}</td>
-                    <td data-title="'Facility Name'" style="width:30%" sortable="name">{{ row.name }}</td>
+                    <td><input type="checkbox" ng-disabled="!row.phonenumber && !row.email" ng-model="row.selected" ng-change="facilitySelectChange(row.selected)"  class="{{(!row.phonenumber && !row.email)?'highlight':''}}"/></td>
+                    <td data-title="'Facility Code'" style="width:150px" sortable="code"  class="{{(!row.phonenumber && !row.email)?'highlight':''}}">{{ row.code }}</td>
+                    <td data-title="'Facility Name'" style="width:30%" sortable="name"  class="{{(!row.phonenumber && !row.email)?'highlight':''}}">{{ row.name }}</td>
                     <td data-title="'Phone Number'" style="width:30%" sortable="name">{{ row.phonenumber }}</td>
                     <td data-title="'Email'" style="width:30%" sortable="name">{{ row.email }}</td>
                 </tr>

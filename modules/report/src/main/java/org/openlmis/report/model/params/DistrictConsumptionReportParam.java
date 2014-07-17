@@ -32,31 +32,6 @@ public class DistrictConsumptionReportParam
   private int zoneId;
   private int productId;
   private int productCategoryId;
-  private int rgroupId;
-
   private int programId;
-
-
-  @Override
-  public String toString() {
-
-    DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
-    String periodFilterLabel = "Period : ";
-    String zoneFilterLabel = "Zone : ";
-    String productCategoryFilterLabel = "Product Category : ";
-    String productFilterLabel = "Product : ";
-    String rggroupFilterLabel = "Requisition Group : ";
-
-
-    //TODO: fix the summary text.
-    StringBuilder filtersValue = new StringBuilder("");
-//    filtersValue.append(String.format("%" + 42 + "s", periodFilterLabel)).append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
-//      append(String.format("%" + 35 + "s", zoneFilterLabel)).append(this.getZone()).append("\n").
-//      append(String.format("%" + 29 + "s", productCategoryFilterLabel)).append(this.getProductCategory()).append("\n").
-//      append(String.format("%" + 19 + "s", productFilterLabel)).append(this.getProduct()).append("\n").
-//      append(String.format("%" + 29 + "s", rggroupFilterLabel)).append(this.getRgroup());
-
-    return filtersValue.toString();
-  }
 
 }

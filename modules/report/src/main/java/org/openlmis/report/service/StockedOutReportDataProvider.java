@@ -20,6 +20,7 @@ import org.openlmis.report.mapper.StockedOutReportMapper;
 import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.StockedOutReportParam;
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,10 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
   private StockedOutReportMapper reportMapper;
 
   private StockedOutReportParam stockedOutReportParam = null;
-  
+
+  @Autowired
+  private SelectedFilterHelper selectedFilterHelper;
+
   @Autowired
   private ProcessingPeriodService periodService;
   
@@ -80,27 +84,13 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
       stockedOutReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
       stockedOutReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0L : Long.parseLong(filterCriteria.get("period")[0]));
 
-      ProcessingPeriod pPeriod = periodService.getById( stockedOutReportParam.getPeriodId());
-      // summarize the filters now. 
-      String summary = "Period: " + pPeriod.getName()
-                          .concat(" - ")
-                          .concat(pPeriod.getStringYear())
-                          .concat("\nProgram: ")
-                          .concat(programService.getById(stockedOutReportParam.getProgramId()).getName());
-      if(stockedOutReportParam.getFacilityTypeId() != 0){
-        summary.concat("\nFacility Types: ")
-            .concat(facilityType.getById(stockedOutReportParam.getFacilityTypeId()).getName());
-      }
-
-
-
     }
     return stockedOutReportParam;
   }
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    return getReportFilterData(params).toString();
+    return selectedFilterHelper.getProgramPeriodGeoZone(params);
   }
 
   @Override

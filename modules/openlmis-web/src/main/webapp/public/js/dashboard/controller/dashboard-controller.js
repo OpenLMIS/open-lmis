@@ -67,6 +67,8 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
 
         $scope.loadGeoZones();
 
+        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId,$scope.programs);
+
         if(isUndefined($scope.formFilter.programId)){
             $scope.products = null;
             $scope.requisitionGroups  = null;
@@ -80,10 +82,11 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
             $scope.products = data.productList;
         });
-
-        $scope.loadFacilities();
+        //$scope.loadFacilities();
         $scope.loadStockingData();
         $scope.loadReportingPerformance();
+
+
     };
 
     $scope.processProductsFilter = function (){
@@ -221,7 +224,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
             }
 
         }
-        $scope.loadFacilities();
+        //$scope.loadFacilities();
         $scope.loadStockingData();
     };
 
@@ -664,14 +667,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
          return flotItem.series.xaxis.ticks[xval].label+' '+yval+' '+'facilities'+' ' +label;
      }
 
-    var isItemWithIdExists = function(id, listObject){
-        angular.forEach(listObject,function(item,idx){
-            if(!isUndefined(item) && item.id === id) return true;
-        });
-        return false;
-    };
-
-    $scope.$on('$viewContentLoaded', function () {
+     $scope.$on('$viewContentLoaded', function () {
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
         if(isUndefined(filterHistory)){
@@ -680,7 +676,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
 
                 $scope.filterObject.programId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM], $scope.programs) ?
                      userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
-
 
                 $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
 

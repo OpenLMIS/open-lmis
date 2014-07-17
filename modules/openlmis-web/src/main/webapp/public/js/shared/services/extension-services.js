@@ -454,7 +454,7 @@ services.factory('UserSupervisoryNodes', function($resource){
     return $resource('/reports/user/supervisory-nodes.json',{},{});
 });
 services.factory('UserGeographicZoneTree',function ($resource){
-    return $resource('/reports/user/geographic-zones/tree.json', {}, {});
+    return $resource('/reports/geographic-zones/tree.json', {}, {});
 });
 /*services.factory('UserDefaultSupervisoryNode', function($resource){
    return $resource('/reports/user/default-supervisory-node.json',{},{});
@@ -619,4 +619,8 @@ services.factory('LabEquipmentListByDonorReport', function ($resource) {
 
 services.factory('GetAllUsers',function($resource){
     return $resource('/user/getAll.json',{},{});
+});
+
+services.factory('GetPushedProductList', function($resource){
+    return $resource('/reports/reportdata/pushedProductList.json',{},{});
 });

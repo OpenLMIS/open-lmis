@@ -3,6 +3,7 @@ package org.openlmis.report.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.User;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class Notification {
     private String emailMessage;
     private String smsMessage;
-    private List<String> phoneNumbers;
-    private List<String> emails;
+    private List<User> receivers;
+    private List<String> notificationMethods;
 }
+
