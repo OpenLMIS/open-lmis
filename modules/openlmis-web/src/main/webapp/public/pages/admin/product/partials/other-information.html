@@ -1,0 +1,406 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+<div id="productOtherInfoGroup" class="form-group">
+  <div class="form-row clearfix row-fluid">
+    <div class="span6">
+      <div class="form-cell">
+        <label id="productGenericNameLabel" openlmis-message="label.product.generic.name"></label>
+        <div class="form-field">
+          <input ng-model="programProduct.product.genericName" name="genericName" id="genericName" type="text"
+                 maxlength="100"/>
+        </div>
+      </div>
+    </div>
+    <div class="span6">
+      <div class="form-cell">
+        <label id="productAlternateNameLabel" openlmis-message="label.product.alternate.name">
+        </label>
+
+        <div class="form-field">
+          <input ng-model="programProduct.product.alternateName" name="alternateName" id="alternateName" type="text"
+                 maxlength="100"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row clearfix row-fluid">
+    <div class="span3">
+      <div class="form-cell">
+        <label id="productAlternateProductCodeLabel" openlmis-message="label.product.alternate.product.code">
+        </label>
+
+        <div class="form-field">
+          <input ng-model="programProduct.product.alternateItemCode" name="alternateItemCode" id="alternateItemCode"
+                 type="text" maxlength="20"/>
+        </div>
+      </div>
+    </div>
+    <div class="span3">
+      <div class="form-cell">
+        <label id="productAlternatePackSizeLabel" openlmis-message="label.product.alternate.pack.size">
+        </label>
+
+        <div class="form-field">
+          <input ng-model="programProduct.product.alternatePackSize" name="alternatePackSize" id="alternatePackSize"
+                 type="text" maxlength="5" class="shortInput"/>
+        </div>
+      </div>
+    </div>
+    <div class="span6">
+      <div class="form-cell">
+        <label id="productManufacturerLabel" openlmis-message="label.product.manufacturer">
+        </label>
+
+        <div class="form-field">
+          <input ng-model="programProduct.product.manufacturer" name="manufacturer" id="manufacturer" type="text"
+                 maxlength="100"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row clearfix row-fluid">
+    <div class="span3">
+      <div class="form-cell">
+        <label id="productManufacturerProductCodeLabel" openlmis-message="label.product.manufacturer.product.code">
+        </label>
+
+        <div class="form-field">
+          <input ng-model="programProduct.product.manufacturerCode" name="manufacturerCode" id="manufacturerCode"
+                 type="text" maxlength="30"/>
+        </div>
+      </div>
+    </div>
+    <div class="span3">
+      <div class="form-cell">
+        <label id="productManufacturerBarCodeLabel" openlmis-message="label.product.manufacturer.bar.code">
+        </label>
+
+        <div class="form-field">
+          <input ng-model="programProduct.product.manufacturerBarCode" name="manufacturerBarCode"
+                 id="manufacturerBarCode" type="text" maxlength="20" class="shortInput"/>
+        </div>
+      </div>
+    </div>
+    <div class="span3">
+      <div class="form-cell">
+        <label id="productGTINLabel" openlmis-message="label.product.GTIN"></label>
+
+        <div class="form-field">
+          <input ng-model="programProduct.product.gtin" name="gtin" id="gtin" type="text" maxlength="20"/>
+        </div>
+      </div>
+    </div>
+    <div class="span3">
+      <div class="form-cell">
+        <label id="productExpectedShelfLifeLabel" openlmis-message="label.product.expected.shelf.life"></label>
+
+        <div class="form-field">
+          <input ng-model="programProduct.product.expectedShelfLife" name="expectedShelfLife" id="expectedShelfLife"
+                 type="text" maxlength="5" class="shortInput"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row clearfix row-fluid">
+    <div class="span3">
+      <div class="form-cell">
+        <label id="productRecordLastUpdatedLabel" openlmis-message="label.product.record.last.updated"></label>
+
+        <div class="form-field">
+          <input ng-model="programProduct.product.modifiedDate" name="modifiedDate" id="modifiedDate" type="text" ng-disabled="true"/>
+        </div>
+      </div>
+    </div>
+    <div class="span3">
+      <div class="form-cell">
+        <label id="productAlternateMoHBarCodeLabel" openlmis-message="label.product.alternate.MoH.bar.code"></label>
+
+        <div class="form-field">
+          <input ng-model="programProduct.product.mohBarCode" name="mohBarCode" id="mohBarCode"
+                 type="text" maxlength="20" class="shortInput"/>
+        </div>
+      </div>
+    </div>
+    <div class="span3">
+      <div class="form-cell">
+        <label id="productContraceptiveCoupleYearsOfProtectionLabel"
+               openlmis-message="label.product.contraceptive.couple.years.of.protection">
+        </label>
+
+        <div class="form-field">
+          <input ng-model="programProduct.product.contraceptiveCYP" name="contraceptiveCYPInput" id="contraceptiveCYP"
+                 type="text" maxlength="9" numeric-validator="positiveNumericValue,3,5"/>
+            <span class="rnr-form-error" style="display:none;" id="contraceptiveCYPInput"
+                  openlmis-message="error.number.only"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="packsAndCartonGroup" class="form-row clearfix row-fluid position-relative">
+    <div class="span6">
+      <div class="form-row clearfix row-fluid">
+        <div class="span6">
+          <div class="form-cell">
+            <label id="productStoreRefrigeratedLabel" openlmis-message="label.product.store.refrigerated"></label>
+
+            <div class="form-field">
+              <input id="storeRefrigeratedTrue" ng-model="programProduct.product.storeRefrigerated" type="radio" name="storeRefrigerated"
+                     ng-value="true" />
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="storeRefrigeratedFalse" ng-model="programProduct.product.storeRefrigerated" type="radio" name="storeRefrigerated"
+                     ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+            </div>
+          </div>
+        </div>
+        <div class="span6">
+          <div class="form-cell">
+            <label id="productStoreAtRoomTemperatureLabel" openlmis-message="label.product.store.at.room.temperature"></label>
+
+            <div class="form-field">
+              <input id="storeRoomTemperatureTrue" ng-model="programProduct.product.storeRoomTemperature" type="radio" name="storeRoomTemperature"
+                     ng-value="true" />
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="storeRoomTemperatureFalse" ng-model="programProduct.product.storeRoomTemperature" type="radio" name="storeRoomTemperature"
+                     ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row clearfix row-fluid">
+        <div class="span6">
+          <div class="form-cell">
+            <label id="productHazardousLabel" openlmis-message="label.product.hazardous"></label>
+
+            <div class="form-field">
+              <input id="hazardousTrue" ng-model="programProduct.product.hazardous" type="radio" name="hazardous"
+                     ng-value="true" />
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="hazardousFalse" ng-model="programProduct.product.hazardous" type="radio" name="hazardous"
+                     ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+            </div>
+          </div>
+        </div>
+        <div class="span6">
+          <div class="form-cell">
+            <label id="productFlammableLabel" openlmis-message="label.product.flammable"></label>
+            <div class="form-field">
+              <input id="flammableTrue" ng-model="programProduct.product.flammable" type="radio" name="flammable"
+                     ng-value="true"/>
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="flammableFalse" ng-model="programProduct.product.flammable" type="radio" name="flammable"
+                     ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row clearfix row-fluid">
+        <div class="span6">
+          <div class="form-cell">
+            <label id="productControlledSubstanceLabel">
+              <span openlmis-message="label.product.controlled.substance"></span>
+            </label>
+
+            <div class="form-field">
+              <input id="controlledSubstanceTrue" ng-model="programProduct.product.controlledSubstance" type="radio" name="controlledSubstance"
+                     ng-value="true"/>
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="controlledSubstanceFalse" ng-model="programProduct.product.controlledSubstance" type="radio" name="controlledSubstance"
+                     ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+            </div>
+          </div>
+        </div>
+        <div class="span6">
+          <div class="form-cell">
+            <label id="productLightSensitiveLabel" openlmis-message="label.product.light.sensitive"></label>
+            <div class="form-field">
+              <input id="lightSensitiveTrue" ng-model="programProduct.product.lightSensitive" type="radio" name="lightSensitive"
+                     ng-value="true"/>
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="lightSensitiveFalse" ng-model="programProduct.product.lightSensitive" type="radio" name="lightSensitive"
+                     ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row clearfix row-fluid">
+        <div class="span6">
+          <div class="form-cell">
+            <label id="productApprovedByWHOLabel" openlmis-message="label.product.Approved.by.WHO"></label>
+
+            <div class="form-field">
+              <input id="approvedByWHOTrue" ng-model="programProduct.product.approvedByWHO" type="radio" name="approvedByWHO"
+                     ng-value="true"/>
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="approvedByWHOFalse" ng-model="programProduct.product.approvedByWHO" type="radio" name="approvedByWHO"
+                     ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div class="separator"></div>
+
+  <div class="span6">
+    <div class="form-row clearfix row-fluid">
+      <div class="span3">
+        <div class="form-cell">
+          <label id="productPackLengthLabel" openlmis-message="label.product.pack.length"></label>
+
+          <div class="form-field">
+            <input ng-model="programProduct.product.packLength" name="packLengthInput" id="packLength" type="text"
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4"/>
+                <span class="rnr-form-error" style="display:none;" id="packLengthInput"
+                      openlmis-message="error.number.only"></span>
+          </div>
+        </div>
+      </div>
+      <div class="span3 offset3">
+        <div class="form-cell">
+          <label id="productPackWidthLabel" openlmis-message="label.product.pack.width"></label>
+
+          <div class="form-field">
+            <input ng-model="programProduct.product.packWidth" name="packWidthInput" id="packWidth" type="text"
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4"/>
+                <span class="rnr-form-error" style="display:none;" id="packWidthInput"
+                      openlmis-message="error.number.only"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row clearfix row-fluid">
+      <div class="span3">
+        <div class="form-cell">
+          <label id="productPackHeightLabel" openlmis-message="label.product.pack.height"></label>
+
+          <div class="form-field">
+            <input ng-model="programProduct.product.packHeight" name="packHeightInput" id="packHeight" type="text"
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4"/>
+                <span class="rnr-form-error" style="display:none;" id="packHeightInput"
+                      openlmis-message="error.number.only"></span>
+          </div>
+        </div>
+      </div>
+      <div class="span3 offset3">
+        <div class="form-cell">
+          <label id="productPackWeightLabel" openlmis-message="label.product.pack.weight"></label>
+
+          <div class="form-field">
+            <input ng-model="programProduct.product.packWeight" name="packWeightInput" id="packWeight" type="text"
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4"/>
+                <span class="rnr-form-error" style="display:none;" id="packWeightInput"
+                      openlmis-message="error.number.only"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row clearfix row-fluid">
+      <div class="span3">
+        <div class="form-cell">
+          <label id="productPackPerCartonLabel" openlmis-message="label.product.pack.per.carton"></label>
+
+          <div class="form-field">
+            <input ng-model="programProduct.product.packsPerCarton" name="packsPerCartonInput" id="packsPerCarton" type="text"
+                   maxlength="5"/>
+                <span class="rnr-form-error" style="display:none;" id="packsPerCartonInput"
+                      openlmis-message="error.number.only"></span>
+          </div>
+        </div>
+      </div>
+      <div class="span3 offset3">
+        <div class="form-cell">
+          <label id="productCartonLengthLabel" openlmis-message="label.product.carton.length"></label>
+
+          <div class="form-field">
+            <input ng-model="programProduct.product.cartonLength" name="cartonLengthInput" id="cartonLength" type="text"
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4"/>
+                <span class="rnr-form-error" style="display:none;" id="cartonLengthInput"
+                      openlmis-message="error.number.only"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row clearfix row-fluid">
+      <div class="span3">
+        <div class="form-cell">
+          <label id="productCartonWidthLabel" openlmis-message="label.product.carton.width"></label>
+
+          <div class="form-field">
+            <input ng-model="programProduct.product.cartonWidth" name="cartonWidthInput" id="cartonWidth" type="text"
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4"/>
+                <span class="rnr-form-error" style="display:none;" id="cartonWidthInput"
+                      openlmis-message="error.number.only"></span>
+          </div>
+        </div>
+      </div>
+      <div class="span3 offset3">
+        <div class="form-cell">
+          <label id="productCartonHeightLabel" openlmis-message="label.product.carton.height"></label>
+
+          <div class="form-field">
+            <input ng-model="label.product.carton.height" name="cartonHeightInput" id="cartonHeight" type="text"
+                   maxlength="9" numeric-validator="positiveNumericValue,4,4"/>
+                <span class="rnr-form-error" style="display:none;" id="cartonHeightInput"
+                      openlmis-message="error.number.only"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row clearfix row-fluid">
+      <div class="span3">
+        <div class="form-cell">
+          <label id="productCartonsPerPalletLabel" openlmis-message="label.product.cartons.per.pallet"></label>
+
+          <div class="form-field">
+            <input ng-model="programProduct.product.cartonsPerPallet" name="cartonsPerPalletInput" id="cartonsPerPallet" type="text"
+                   maxlength="5"/>
+                <span class="rnr-form-error" style="display:none;" id="cartonsPerPalletInput"
+                      openlmis-message="error.number.only"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="form-row clearfix row-fluid">
+    <div class="span12">
+      <label id="productSpecialStorageInstructionsLabel" openlmis-message="label.product.special.storage.instructions"></label>
+      <textarea id="specialStorageInstructions" name="specialStorageInstructions"
+                ng-model ="programProduct.product.specialStorageInstructions"></textarea>
+    </div>
+  </div>
+
+  <div class="form-row clearfix row-fluid">
+  <div class="span12">
+    <label id="productSpecialTransportInstructionsLabel" openlmis-message="label.product.special.transport.instructions"></label>
+    <textarea id="specialTransportInstructions" name="specialTransportInstructions"
+              ng-model ="programProduct.product.specialTransportInstructions"></textarea>
+  </div>
+</div>
+
+</div>
