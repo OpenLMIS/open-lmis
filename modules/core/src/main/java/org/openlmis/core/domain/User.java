@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
@@ -33,6 +34,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, name = "User Name")

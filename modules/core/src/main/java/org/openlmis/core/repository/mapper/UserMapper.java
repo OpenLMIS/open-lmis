@@ -122,6 +122,6 @@ public interface UserMapper {
     "OR LOWER(lastName) LIKE '%' || LOWER(#{searchParam}) ||'%' ",
     "OR LOWER(email) LIKE '%'|| LOWER(#{searchParam}) || '%' ",
     "OR LOWER(username) LIKE '%'|| LOWER(#{searchParam}) ||'%'",
-    "ORDER BY firstName, lastName"})
+    "ORDER BY LOWER(firstName), LOWER(lastName)"})
   List<User> search(String searchParam, RowBounds rowBounds);
 }
