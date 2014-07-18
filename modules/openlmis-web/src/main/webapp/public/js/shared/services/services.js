@@ -385,6 +385,10 @@ services.factory('Products', function ($resource) {
   return $resource('/products/:id.json', {id: '@id'}, update);
 });
 
+services.factory('ProductCategories', function ($resource) {
+  return $resource('/products/categories.json', {}, {});
+});
+
 
 
 

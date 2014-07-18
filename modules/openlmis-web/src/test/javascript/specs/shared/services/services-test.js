@@ -478,4 +478,83 @@ describe("Services", function () {
       expect(failureStub).toHaveBeenCalled();
     });
   });
+
+  describe("Program", function () {
+
+    var program;
+
+    beforeEach(inject(function (Program) {
+      program = Program;
+    }));
+
+    it('should get program', function () {
+      httpMock.expectGET('/programs.json')
+          .respond(200, {programs: []});
+
+      program.get({},
+          function (data) {
+            successStub();
+            expect(data.programs).toEqual({});
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status', function () {
+      httpMock.expectGET('/programs.json')
+          .respond(400, {});
+
+      program.get({},
+          function (data) {
+            successStub();
+          },
+          function () {
+            failureStub();
+          });
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+  });
+
+  describe("ProductCategoryService", function () {
+
+    var productCategoryService;
+
+    beforeEach(inject(function (ProductCategories) {
+      productCategoryService = ProductCategories;
+    }));
+
+    it('should GET product categories', function () {
+      var productCategories = {"categories": []};
+      httpMock.expectGET("/products/categories.json").respond(200, productCategories);
+      productCategoryService.get({}, function (data) {
+        expect(data.categories).toEqual(productCategories.categories);
+        successStub();
+      }, function () {
+        failureStub();
+      });
+      httpMock.flush();
+      expect(successStub).toHaveBeenCalled();
+      expect(failureStub).not.toHaveBeenCalled();
+    });
+
+    it('should raise error if server does not respond with OK status while get', function () {
+      httpMock.expectGET("/products/categories.json").respond(400);
+
+      productCategoryService.get({}, function () {
+        successStub();
+      }, function () {
+        failureStub();
+      });
+
+      httpMock.flush();
+      expect(successStub).not.toHaveBeenCalled();
+      expect(failureStub).toHaveBeenCalled();
+    });
+  });
 });
