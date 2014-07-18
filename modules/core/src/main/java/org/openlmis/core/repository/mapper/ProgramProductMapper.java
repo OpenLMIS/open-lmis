@@ -10,9 +10,21 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductISA;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -72,12 +84,16 @@ public interface ProgramProductMapper {
   })
   ProgramProduct getById(Long id);
 
-  @Select("SELECT pp.*, pr.code AS programCode, p.active AS productActive FROM program_products pp " +
+  @Select("SELECT pp.*, pr.code AS programCode, pr.name as programName, p.active AS productActive FROM " +
+    "program_products pp " +
     "INNER JOIN products p ON pp.productId = p.id INNER JOIN programs pr ON pp.programId = pr.id WHERE p.code = #{code}")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "program.code", column = "programCode"),
-    @Result(property = "product.active", column = "productActive")
+    @Result(property = "program.name", column = "programName"),
+    @Result(property = "product.active", column = "productActive"),
+    @Result(property = "productCategory", column = "productCategoryId", javaType = ProductCategory.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getById"))
   })
   List<ProgramProduct> getByProductCode(String code);
 

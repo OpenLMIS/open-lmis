@@ -16,7 +16,15 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProductBuilder;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -224,6 +232,7 @@ public class ProgramProductMapperIT {
     programProduct.setProductCategory(productCategory);
     Program hiv = new Program(1L);
     hiv.setCode("HIV");
+    hiv.setName("HIV");
 
     ProgramProduct programProduct2 = new ProgramProduct(hiv, product, 10, true);
     programProduct2.setProductCategory(productCategory);
@@ -399,6 +408,10 @@ public class ProgramProductMapperIT {
       public boolean evaluate(Object o) {
         ProgramProduct productFromCollection = (ProgramProduct) o;
         return (productFromCollection.getProgram().getCode().equals(programProduct.getProgram().getCode())) &&
+          (productFromCollection.getProgram().getName().equals(programProduct.getProgram().getName())) &&
+          (productFromCollection.getProductCategory().getCode().equals(programProduct.getProductCategory().getCode())) &&
+          (productFromCollection.getProductCategory().getName().equals(programProduct.getProductCategory().getName())) &&
+          (productFromCollection.getProductCategory().getDisplayOrder().equals(programProduct.getProductCategory().getDisplayOrder())) &&
           (productFromCollection.getActive() == programProduct.getActive()) &&
           (productFromCollection.getProduct().getActive() == programProduct.getProduct().getActive());
       }

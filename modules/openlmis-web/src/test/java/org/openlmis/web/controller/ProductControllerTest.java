@@ -23,12 +23,14 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProductCategoryService;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.form.ProductDTO;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -39,7 +41,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -57,6 +61,9 @@ public class ProductControllerTest {
 
   @Mock
   private ProductService service;
+
+  @Mock
+  private ProgramProductService programProductService;
 
   @Mock
   private ProductCategoryService productCategoryService;
@@ -112,13 +119,27 @@ public class ProductControllerTest {
     product.setId(productId);
     product.setModifiedDate(modifiedDate);
 
+    List<ProgramProduct> programProducts = asList(new ProgramProduct());
+
     when(service.getById(1L)).thenReturn(product);
+    when(programProductService.getByProductCode("p10")).thenReturn(programProducts);
 
     ProductDTO productDTO = controller.getById(1L);
 
     assertThat(productDTO.getProduct(), is(product));
+    assertThat(productDTO.getProgramProducts(), is(programProducts));
     assertThat(productDTO.getProductLastUpdated(), is(modifiedDate));
     verify(service).getById(1L);
+    verify(programProductService).getByProductCode("p10");
+  }
+
+  @Test
+  public void shouldReturnNullIfProductDoesNotExists() {
+    when(service.getById(2L)).thenReturn(null);
+
+    ProductDTO productDTO = controller.getById(2L);
+
+    assertThat(productDTO, is(nullValue()));
   }
 
   @Test

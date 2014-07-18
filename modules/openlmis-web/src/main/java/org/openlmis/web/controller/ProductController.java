@@ -21,6 +21,7 @@ import org.openlmis.core.service.ProductCategoryService;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.web.form.ProductDTO;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.success;
@@ -55,6 +55,9 @@ public class ProductController extends BaseController {
 
   @Autowired
   private ProductCategoryService productCategoryService;
+
+  @Autowired
+  private ProgramProductService programProductService;
 
   @Autowired
   private ProductService service;
@@ -81,7 +84,10 @@ public class ProductController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
   public ProductDTO getById(@PathVariable(value = "id") Long id) {
     Product product = service.getById(id);
-    List<ProgramProduct> programProducts = new ArrayList<>();
+
+    if(product == null) return null;
+
+    List<ProgramProduct> programProducts = programProductService.getByProductCode(product.getCode());
     return new ProductDTO(product, product.getModifiedDate(), programProducts);
   }
 
