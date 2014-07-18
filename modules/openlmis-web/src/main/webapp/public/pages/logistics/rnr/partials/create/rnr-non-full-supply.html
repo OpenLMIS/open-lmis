@@ -136,7 +136,9 @@
 
       <div class="row-fluid">
         <div class="span7">
-          <label for="nonFullSupplyProductsCategory" openlmis-message="label.category"></label>
+          <label for="nonFullSupplyProductsCategory">
+            <span openlmis-message="label.category"></span>&colon;
+          </label>
           <select ui-select2 class="span11 bottom-spacer" id="nonFullSupplyProductsCategory"
                   ng-model="nonFullSupplyProductCategory" name="productName"
                   openlmis-message="placeholder.select.category"
