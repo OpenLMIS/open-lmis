@@ -272,7 +272,10 @@ public class UserPage extends FilterSearchPage {
   }
 
   public void enterUserHomeFacility(String facilityCode) {
-    testWebDriver.handleScrollByPixels(0, 5000);
+    if (clearFacility.isDisplayed()) {
+      clearFacility.click();
+    }
+    testWebDriver.handleScrollByPixels(0, 600);
     associatedFacilityField.click();
     searchFacility(facilityCode);
   }
