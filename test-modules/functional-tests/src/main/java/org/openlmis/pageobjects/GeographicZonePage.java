@@ -218,7 +218,7 @@ public class GeographicZonePage extends Page {
   }
 
   public void verifyNumberOfItemsPerPage(int numberOfItemsPerPage) {
-    assertEquals(numberOfItemsPerPage, testWebDriver.getElementsSizeByXpath("//*[@id='searchResult']"));
+    assertEquals(numberOfItemsPerPage, testWebDriver.getElementsSizeByXpath("//*[@id='wrap']/div/div/div/div[3]/table/tbody/tr"));
   }
 
   public boolean isSuccessMessageDisplayed() {
