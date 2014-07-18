@@ -47,6 +47,8 @@ public class ManageFilterSearch extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F10", "N1", "Super1", null);
     dbWrapper.insertSupervisoryNode("F100A", "N2", "Super2", null);
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N2", "N1");
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F10B");
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F10C");
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     requisitionGroupPage = homePage.navigateToRequisitionGroupPage();
     requisitionGroupPage.clickAddNewButton();
@@ -55,7 +57,7 @@ public class ManageFilterSearch extends TestCaseHelper {
     requisitionGroupPage.clickAddMembersButton();
     requisitionGroupPage.searchMultipleFacilities("F10");
     testWebDriver.waitForAjax();
-    assertEquals("6 matches found for 'F10'", requisitionGroupPage.getNFacilityResultsMessage());
+    assertEquals("5 matches found for 'F10'", requisitionGroupPage.getNFacilityResultsMessage());
     requisitionGroupPage.clickFilterButton();
 
     requisitionGroupPage.selectFacilityType("Lvl3 Hospital");
@@ -98,6 +100,7 @@ public class ManageFilterSearch extends TestCaseHelper {
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11H", "F11I", 3, 5);
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F110", "F111", 3, 5);
     dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F11A");
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F11");
     dbWrapper.setupDataForGeoZones();
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
