@@ -340,4 +340,10 @@ public class FilterSearchPage extends Page {
     sendKeys(facilitySearch, facilityCode);
     searchFacilityIcon.click();
   }
+
+  public String getFacilityResult(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
 }

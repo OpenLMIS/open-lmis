@@ -145,7 +145,7 @@ public class UserPage extends FilterSearchPage {
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[21]")
   private static WebElement rolesInputFieldMDeliveryZone = null;
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[21]")
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[18]")
   private static WebElement rolesInputFieldDeliveryZone = null;
 
   @FindBy(how = ID, using = "addAllocationRole")
@@ -217,6 +217,9 @@ public class UserPage extends FilterSearchPage {
   @FindBy(how = ID, using = "dialogMessage")
   private static WebElement dialogMessage = null;
 
+  @FindBy(how = ID, using = "searchUserLabel")
+  private static WebElement searchUserLabel = null;
+
   public UserPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -255,6 +258,9 @@ public class UserPage extends FilterSearchPage {
     sendKeys(lastNameField, lastName);
     testWebDriver.handleScroll();
     clickRestrictLoginNo();
+    assertFalse(resetPasswordButton.isDisplayed());
+    assertFalse(disableButton.isDisplayed());
+
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
     testWebDriver.waitForElementToAppear(viewHereLink);
@@ -325,6 +331,7 @@ public class UserPage extends FilterSearchPage {
   }
 
   public void enterMyFacilityAndMySupervisedFacilityData(String facilityCode, String program1, String node, String role, String roleType) {
+    assertFalse(homeFacilityRolesAccordion.isDisplayed());
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
       testWebDriver.waitForAjax();
@@ -685,18 +692,45 @@ public class UserPage extends FilterSearchPage {
 
   public boolean getIsVerified(int rowNumber) {
     WebElement element = testWebDriver.getElementById("verifiedIconOk" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(element);
     return element.isDisplayed();
   }
 
   public boolean getIsActive(int rowNumber) {
     WebElement element = testWebDriver.getElementById("activeIconOk" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(element);
     return element.isDisplayed();
   }
 
   public void clickCrossIcon() {
     testWebDriver.waitForElementToAppear(closeButton);
     closeButton.click();
+  }
+
+  public void clickHomeFacilityField() {
+    testWebDriver.waitForElementToAppear(associatedFacilityField);
+    associatedFacilityField.click();
+  }
+
+  public void clearFacility() {
+    testWebDriver.waitForElementToAppear(clearFacility);
+    clearFacility.click();
+    okButton.click();
+  }
+
+  public boolean isHomeFacilityAccordionDisplayed() {
+    return homeFacilityRolesAccordion.isDisplayed();
+  }
+
+  public boolean isNameHeaderPresent() {
+    return nameHeader.isDisplayed();
+  }
+
+  public String getSearchUserLabel() {
+    testWebDriver.waitForElementToAppear(searchUserLabel);
+    return searchUserLabel.getText();
+  }
+
+  public String getSearchPlaceHolder() {
+    testWebDriver.waitForElementToAppear(searchUserTextField);
+    return searchUserTextField.getAttribute("placeholder");
   }
 }

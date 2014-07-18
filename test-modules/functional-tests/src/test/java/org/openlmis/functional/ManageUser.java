@@ -128,6 +128,89 @@ public class ManageUser extends TestCaseHelper {
     dbWrapper.updateUser("abc123", email);
   }
 
+  @Test(groups = {"admin"})
+  public void testUserSearchSortAndPagination() throws SQLException {
+    dbWrapper.assignRight("Admin", "UPLOADS");
+    HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
+    UploadPage uploadPage = homePage.navigateUploads();
+    uploadPage.uploadUsers("QA_Users21.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+
+    userPage = homePage.navigateToUser();
+    assertEquals("Search user", userPage.getSearchUserLabel());
+    assertEquals(userPage.getSearchPlaceHolder(), "Enter username, firstname, lastname or email");
+
+    userPage.searchUser("userA");
+    userPage.clickSearchIcon();
+    assertEquals("No matches found for 'userA'", userPage.getNoResultMessage());
+
+    userPage.searchUser("user2");
+    userPage.clickSearchIcon();
+    assertEquals("3 matches found for 'user2'", userPage.getNResultsMessage());
+    assertEquals("Name", userPage.getNameHeader());
+    assertEquals("User Name", userPage.getUserNameHeader());
+    assertEquals("Email", userPage.getEmailHeader());
+    assertEquals("Verified", userPage.getVerifiedHeader());
+    assertEquals("Active", userPage.getActiveHeader());
+
+    assertEquals("William2 Doe", userPage.getName(1));
+    assertEquals("User2", userPage.getUserName(1));
+    assertEquals("openlmisUser2@open.com", userPage.getEmail(1));
+    assertFalse(userPage.getIsVerified(1));
+    assertTrue(userPage.getIsActive(1));
+
+    userPage.searchUser("user");
+    userPage.clickSearchIcon();
+    assertEquals("21 matches found for 'user'", userPage.getNResultsMessage());
+
+    verifyNumberOFPageLinksDisplayed(21, 10);
+    verifyPageNumberLinksDisplayed();
+    verifyPageNumberSelected(1);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+    verifyUserNameOrderOnPage(new String[]{"William10 Doe", "William11 Doe", "William12 Doe", "William13 Doe", "William14 Doe",
+      "William15 Doe", "William16 Doe", "William17 Doe", "William18 Doe", "William19 Doe"});
+
+    navigateToPage(2);
+    verifyPageNumberSelected(2);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+    verifyUserNameOrderOnPage(new String[]{"William2 Doe", "William2 IDoe", "William20 Doe", "William21 Doe", "William3 Doe",
+      "William4 Doe", "William5 Doe", "William6 Doe", "William71 Doe", "William8 Doe"});
+
+    navigateToNextPage();
+    verifyPageNumberSelected(3);
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(1);
+    verifyUserNameOrderOnPage(new String[]{"William9 Doe"});
+
+    navigateToFirstPage();
+    verifyPageNumberSelected(1);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+    verifyUserNameOrderOnPage(new String[]{"William10 Doe", "William11 Doe", "William12 Doe", "William13 Doe", "William14 Doe",
+      "William15 Doe", "William16 Doe", "William17 Doe", "William18 Doe", "William19 Doe"});
+    navigateToLastPage();
+    verifyPageNumberSelected(3);
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(1);
+
+    navigateToPreviousPage();
+    verifyPageNumberSelected(2);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+
+    userPage.clickCrossIcon();
+    testWebDriver.sleep(500);
+    assertFalse(userPage.isNameHeaderPresent());
+  }
+
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testCreateUserAndVerifyOnManageDistributionScreen(String user, String program, String[] credentials, String deliveryZoneCodeFirst,
                                                                 String deliveryZoneCodeSecond, String deliveryZoneNameFirst, String deliveryZoneNameSecond,
@@ -353,7 +436,6 @@ public class ManageUser extends TestCaseHelper {
       roleName);
 
     userPage.clickViewHere();
-
     userPage.enterDeliveryZoneData(deliveryZoneNameFirst, programFirst, roleName);
     userPage.clickSaveButton();
 
@@ -432,6 +514,19 @@ public class ManageUser extends TestCaseHelper {
     assertFalse(userPage.isProgramToDeliverDisplayed());
     assertFalse(userPage.isWarehouseToSelectDisplayed());
 
+    dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F10");
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", "true", "code", "F11");
+    assertFalse(userPage.isHomeFacilityAccordionDisplayed());
+    userPage.clickHomeFacilityField();
+    userPage.searchFacility("F1");
+    assertEquals(userPage.getOneFacilityResultMessage(), "1 match found for 'F1'");
+    assertEquals(userPage.getFacilityResult(1), "F10 - Village Dispensary");
+    userPage.selectFacility(1);
+    userPage.clearFacility();
+
+    dbWrapper.updateFieldValue("facilities", "enabled", "true", "code", "F10");
+    dbWrapper.updateFieldValue("facilities", "virtualFacility", "false", "code", "F11");
+
     userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program, supervisoryNode, role, roleType);
   }
 
@@ -463,6 +558,16 @@ public class ManageUser extends TestCaseHelper {
     userPage.clickViewHere();
     userPage.clickWarehouseRolesAccordion();
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
+  }
+
+  private void verifyUserNameOrderOnPage(String[] nodeNames) {
+    for (int i = 1; i < nodeNames.length; i++) {
+      assertEquals(nodeNames[i - 1], userPage.getName(i));
+    }
+  }
+
+  private void verifyNumberOfLineItemsVisibleOnPage(int numberOfLineItems) {
+    assertEquals(numberOfLineItems, testWebDriver.getElementsSizeByXpath("//table[@id='userSearchResultTable']/tbody/tr"));
   }
 
   @AfterMethod(groups = {"admin"})
