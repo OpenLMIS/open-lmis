@@ -209,6 +209,48 @@ public class FacilityPage extends Page {
   @FindBy(how = ID, using = "remove0")
   private static WebElement removeFirstProgramSupportedLink = null;
 
+  @FindBy(how = ID, using = "oneResultMessage")
+  private static WebElement oneResultMessage = null;
+
+  @FindBy(how = ID, using = "noResultMessage")
+  private static WebElement noResultMessage = null;
+
+  @FindBy(how = ID, using = "nResultsMessage")
+  private static WebElement nResultsMessage = null;
+
+  @FindBy(how = ID, using = "closeButton")
+  private static WebElement closeButton = null;
+
+  @FindBy(how = ID, using = "facilitySearchLabel")
+  private static WebElement searchFacilityLabel = null;
+
+  @FindBy(how = ID, using = "searchOptionButton")
+  private static WebElement searchOptionButton = null;
+
+  @FindBy(how = ID, using = "searchOption0")
+  private static WebElement searchOption1 = null;
+
+  @FindBy(how = ID, using = "searchOption1")
+  private static WebElement searchOption2 = null;
+
+  @FindBy(how = ID, using = "nameHeader")
+  private static WebElement nameHeader = null;
+
+  @FindBy(how = ID, using = "codeHeader")
+  private static WebElement codeHeader = null;
+
+  @FindBy(how = ID, using = "geographicZoneHeader")
+  private static WebElement geographicZoneHeader = null;
+
+  @FindBy(how = ID, using = "facilityTypeHeader")
+  private static WebElement facilityTypeHeader = null;
+
+  @FindBy(how = ID, using = "activeHeader")
+  private static WebElement activeHeader = null;
+
+  @FindBy(how = ID, using = "enabledHeader")
+  private static WebElement enabledHeader = null;
+
   public FacilityPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -535,5 +577,118 @@ public class FacilityPage extends Page {
     overrideIsa(overriddenIsa, productRowNumber);
     clickIsaDoneButton();
     saveFacility();
+  }
+
+  public String getSearchFacilityLabel() {
+    testWebDriver.waitForElementToAppear(searchFacilityLabel);
+    return searchFacilityLabel.getText();
+  }
+
+  public String getNResultsMessage() {
+    testWebDriver.waitForElementToAppear(nResultsMessage);
+    return nResultsMessage.getText();
+  }
+
+  public String getNoResultMessage() {
+    testWebDriver.waitForElementToAppear(noResultMessage);
+    return noResultMessage.getText();
+  }
+
+  public String getOneResultMessage() {
+    testWebDriver.waitForElementToAppear(oneResultMessage);
+    return oneResultMessage.getText();
+  }
+
+  public void closeSearchResults() {
+    testWebDriver.waitForElementToAppear(closeButton);
+    closeButton.click();
+  }
+
+  public void clickSearchOptionButton() {
+    testWebDriver.waitForElementToAppear(searchOptionButton);
+    searchOptionButton.click();
+  }
+
+  public String getSelectedSearchOption() {
+    testWebDriver.waitForElementToAppear(searchOptionButton);
+    return searchOptionButton.getText();
+  }
+
+  public void selectFacilityAsSearchOption() {
+    testWebDriver.waitForElementToAppear(searchOption1);
+    searchOption1.click();
+  }
+
+  public void selectGeographicZoneAsSearchOption() {
+    testWebDriver.waitForElementToAppear(searchOption2);
+    searchOption2.click();
+  }
+
+  public String getNameHeader() {
+    testWebDriver.waitForElementToAppear(nameHeader);
+    return nameHeader.getText();
+  }
+
+  public String getCodeHeader() {
+    testWebDriver.waitForElementToAppear(codeHeader);
+    return codeHeader.getText();
+  }
+
+  public String getGeographicZoneHeader() {
+    testWebDriver.waitForElementToAppear(geographicZoneHeader);
+    return geographicZoneHeader.getText();
+  }
+
+  public String getTypeHeader() {
+    testWebDriver.waitForElementToAppear(facilityTypeHeader);
+    return facilityTypeHeader.getText();
+  }
+
+  public String getEnabledHeader() {
+    testWebDriver.waitForElementToAppear(enabledHeader);
+    return enabledHeader.getText();
+  }
+
+  public String getActiveHeader() {
+    testWebDriver.waitForElementToAppear(activeHeader);
+    return activeHeader.getText();
+  }
+
+  public String getName(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("name" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public String getCode(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("code" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public String getGeographicZone(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("geographicZone" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public String getFacilityType(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("type" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public boolean getIsEnabled(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("enabledIconOk" + (rowNumber - 1));
+    return element.isDisplayed();
+  }
+
+  public boolean getIsActive(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("activeIconOk" + (rowNumber - 1));
+    return element.isDisplayed();
+  }
+
+  public boolean isNameHeaderPresent() {
+    return nameHeader.isDisplayed();
   }
 }

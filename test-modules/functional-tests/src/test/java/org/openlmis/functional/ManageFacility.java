@@ -12,23 +12,23 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.FacilityPage;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.PageObjectFactory;
+import org.openlmis.pageobjects.*;
 import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class ManageFacility extends TestCaseHelper {
 
   LoginPage loginPage;
+  FacilityPage facilityPage;
 
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
@@ -36,6 +36,179 @@ public class ManageFacility extends TestCaseHelper {
     dbWrapper.removeAllExistingRights("Admin");
     dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    facilityPage = PageObjectFactory.getFacilityPage(testWebDriver);
+  }
+
+  @Test(groups = {"admin"})
+  public void testUserSearchSortAndPagination() throws SQLException {
+    dbWrapper.assignRight("Admin", "UPLOADS");
+    dbWrapper.insertGeographicZone("Ngorongoro1", "Ngorongoro1", "Root");
+    HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
+    UploadPage uploadPage = homePage.navigateUploads();
+    uploadPage.uploadFacilities("QA_Facilities21.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+
+    FacilityPage facilityPage = homePage.navigateManageFacility();
+    assertEquals("Search facility", facilityPage.getSearchFacilityLabel());
+    facilityPage.searchFacility("fac");
+    assertEquals("No matches found for 'fac'", facilityPage.getNoResultMessage());
+
+    facilityPage.searchFacility("F14 Village Dispensary");
+    assertEquals("14 matches found for 'F14 Village Dispensary'", facilityPage.getNResultsMessage());
+    facilityPage.searchFacility("Village Dispensary");
+    assertEquals("21 matches found for 'Village Dispensary'", facilityPage.getNResultsMessage());
+
+    assertEquals("Name", facilityPage.getNameHeader());
+    assertEquals("Code", facilityPage.getCodeHeader());
+    assertEquals("Geographic Zone", facilityPage.getGeographicZoneHeader());
+    assertEquals("Type", facilityPage.getTypeHeader());
+    assertEquals("Active", facilityPage.getActiveHeader());
+    assertEquals("Enabled", facilityPage.getEnabledHeader());
+
+    assertEquals("Lvl3 Hospital", facilityPage.getFacilityType(1));
+    assertTrue(facilityPage.getIsActive(1));
+    assertTrue(facilityPage.getIsEnabled(1));
+
+    verifyNumberOFPageLinksDisplayed(21, 10);
+    verifyPageNumberLinksDisplayed();
+    verifyPageNumberSelected(1);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+    verifyNameOrderOnPage(new String[]{"F10 Village Dispensary", "F11 Village Dispensary", "F12 Village Dispensary",
+      "F13 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary",
+      "F14 Village Dispensary", "F14 Village Dispensary"});
+    verifyCodeOrderOnPage(new String[]{"F10", "F11", "F12", "F13", "F14", "F17", "F19", "F20", "F21", "F22"});
+    verifyGeographicZoneOrderOnPage(new String[]{"Ngorongoro1", "Ngorongoro", "Ngorongoro1", "Ngorongoro", "Ngorongoro1",
+      "Ngorongoro", "Ngorongoro1", "Ngorongoro", "Ngorongoro1", "Ngorongoro"});
+
+    navigateToPage(2);
+    verifyPageNumberSelected(2);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+    verifyNameOrderOnPage(new String[]{"F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary",
+      "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary",
+      "F14a Village Dispensary", "F14d Village Dispensary"});
+    verifyCodeOrderOnPage(new String[]{"F23", "F24", "F25", "F26", "F27", "F28", "F29", "F30", "F16", "F18"});
+    verifyGeographicZoneOrderOnPage(new String[]{"Ngorongoro1", "Ngorongoro", "Ngorongoro1", "Ngorongoro1", "Ngorongoro",
+      "Ngorongoro1", "Ngorongoro", "Ngorongoro1", "Ngorongoro1", "Ngorongoro"});
+
+    navigateToNextPage();
+    verifyPageNumberSelected(3);
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(1);
+    verifyNameOrderOnPage(new String[]{"F14s Village Dispensary"});
+    verifyCodeOrderOnPage(new String[]{"F15"});
+    verifyGeographicZoneOrderOnPage(new String[]{"Ngorongoro"});
+
+    navigateToFirstPage();
+    verifyPageNumberSelected(1);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+    verifyNameOrderOnPage(new String[]{"F10 Village Dispensary", "F11 Village Dispensary", "F12 Village Dispensary",
+      "F13 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary",
+      "F14 Village Dispensary", "F14 Village Dispensary"});
+    verifyCodeOrderOnPage(new String[]{"F10", "F11", "F12", "F13", "F14", "F17", "F19", "F20", "F21", "F22"});
+    verifyGeographicZoneOrderOnPage(new String[]{"Ngorongoro1", "Ngorongoro", "Ngorongoro1", "Ngorongoro", "Ngorongoro1",
+      "Ngorongoro", "Ngorongoro1", "Ngorongoro", "Ngorongoro1", "Ngorongoro"});
+
+    navigateToLastPage();
+    verifyPageNumberSelected(3);
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(1);
+
+    navigateToPreviousPage();
+    verifyPageNumberSelected(2);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+
+    facilityPage.closeSearchResults();
+    assertFalse(facilityPage.isNameHeaderPresent());
+  }
+
+  @Test(groups = {"admin"})
+  public void testFacilitySearchSortAndPaginationByGeographicZone() throws SQLException {
+    dbWrapper.assignRight("Admin", "UPLOADS");
+    dbWrapper.insertGeographicZone("Ngorongoro1", "Ngorongoro1", "Root");
+
+    HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
+    UploadPage uploadPage = homePage.navigateUploads();
+    uploadPage.uploadFacilities("QA_Facilities21.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+
+    facilityPage = homePage.navigateManageFacility();
+    assertEquals("Facility", facilityPage.getSelectedSearchOption());
+    facilityPage.clickSearchOptionButton();
+    facilityPage.selectGeographicZoneAsSearchOption();
+    assertEquals("Geographic zone", facilityPage.getSelectedSearchOption());
+
+    facilityPage.searchFacility("Ngorongoro1");
+    assertEquals("11 matches found for 'Ngorongoro1'", facilityPage.getNResultsMessage());
+    facilityPage.searchFacility("Ngorongoro");
+    assertEquals("21 matches found for 'Ngorongoro'", facilityPage.getNResultsMessage());
+
+    verifyNumberOFPageLinksDisplayed(21, 10);
+    verifyPageNumberLinksDisplayed();
+    verifyPageNumberSelected(1);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+    verifyNameOrderOnPage(new String[]{"F11 Village Dispensary", "F13 Village Dispensary", "F14 Village Dispensary",
+      "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary",
+      "F14d Village Dispensary", "F14s Village Dispensary"});
+    verifyCodeOrderOnPage(new String[]{"F11", "F13", "F17", "F20", "F22", "F24", "F27", "F29", "F18", "F15"});
+    verifyGeographicZoneOrderOnPage(new String[]{"Ngorongoro", "Ngorongoro", "Ngorongoro", "Ngorongoro", "Ngorongoro",
+      "Ngorongoro", "Ngorongoro", "Ngorongoro", "Ngorongoro", "Ngorongoro"});
+
+    navigateToPage(2);
+    verifyPageNumberSelected(2);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+    verifyNameOrderOnPage(new String[]{"F10 Village Dispensary", "F12 Village Dispensary", "F14 Village Dispensary",
+      "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary",
+      "F14 Village Dispensary", "F14 Village Dispensary"});
+    verifyCodeOrderOnPage(new String[]{"F10", "F12", "F14", "F19", "F21", "F23", "F25", "F26", "F28", "F30"});
+    verifyGeographicZoneOrderOnPage(new String[]{"Ngorongoro1", "Ngorongoro1", "Ngorongoro1", "Ngorongoro1", "Ngorongoro1",
+      "Ngorongoro1", "Ngorongoro1", "Ngorongoro1", "Ngorongoro1", "Ngorongoro1"});
+
+    navigateToNextPage();
+    verifyPageNumberSelected(3);
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(1);
+    verifyNameOrderOnPage(new String[]{"F14a Village Dispensary"});
+    verifyCodeOrderOnPage(new String[]{"F16"});
+    verifyGeographicZoneOrderOnPage(new String[]{"Ngorongoro1"});
+
+    navigateToFirstPage();
+    verifyPageNumberSelected(1);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
+    verifyNameOrderOnPage(new String[]{"F11 Village Dispensary", "F13 Village Dispensary", "F14 Village Dispensary",
+      "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary", "F14 Village Dispensary",
+      "F14d Village Dispensary", "F14s Village Dispensary"});
+    verifyCodeOrderOnPage(new String[]{"F11", "F13", "F17", "F20", "F22", "F24", "F27", "F29", "F18", "F15"});
+    verifyGeographicZoneOrderOnPage(new String[]{"Ngorongoro", "Ngorongoro", "Ngorongoro", "Ngorongoro", "Ngorongoro",
+      "Ngorongoro", "Ngorongoro", "Ngorongoro", "Ngorongoro", "Ngorongoro"});
+
+    navigateToLastPage();
+    verifyPageNumberSelected(3);
+    verifyNextAndLastPageLinksDisabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(1);
+
+    navigateToPreviousPage();
+    verifyPageNumberSelected(2);
+    verifyNextAndLastPageLinksEnabled();
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -187,6 +360,28 @@ public class ManageFacility extends TestCaseHelper {
     assertEquals("VACCINES", facilityPage.getProgramSupported(2));
     assertFalse("Program supported flag incorrect", facilityPage.getProgramSupportedActive(2));
     assertEquals(dbWrapper.getRequisitionGroupId("F10"), dbWrapper.getRequisitionGroupId("V10"));
+  }
+
+  private void verifyNameOrderOnPage(String[] nodeNames) {
+    for (int i = 1; i < nodeNames.length; i++) {
+      assertEquals(nodeNames[i - 1], facilityPage.getName(i));
+    }
+  }
+
+  private void verifyCodeOrderOnPage(String[] nodeNames) {
+    for (int i = 1; i < nodeNames.length; i++) {
+      assertEquals(nodeNames[i - 1], facilityPage.getCode(i));
+    }
+  }
+
+  private void verifyGeographicZoneOrderOnPage(String[] parentNames) {
+    for (int i = 1; i < parentNames.length; i++) {
+      assertEquals(parentNames[i - 1], facilityPage.getGeographicZone(i));
+    }
+  }
+
+  private void verifyNumberOfLineItemsVisibleOnPage(int numberOfLineItems) {
+    assertEquals(numberOfLineItems, testWebDriver.getElementsSizeByXpath("//table[@id='facilitySearchResultTable']/tbody/tr"));
   }
 
   @AfterMethod(groups = {"admin"})
