@@ -12,10 +12,12 @@ package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ProductCategoryService;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.core.service.ProductService;
@@ -50,6 +52,9 @@ public class ProductController extends BaseController {
 
   @Autowired
   private ProductFormService formService;
+
+  @Autowired
+  private ProductCategoryService productCategoryService;
 
   @Autowired
   private ProductService service;
@@ -116,6 +121,12 @@ public class ProductController extends BaseController {
     ResponseEntity<OpenLmisResponse> success = success(messageService.message("message.product.updated.success", product.getName()));
     success.getBody().addData("productId", product.getId());
     return success;
+  }
+
+  @RequestMapping(value = "/categories", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+  public List<ProductCategory> getAllCategories() {
+    return productCategoryService.getAll();
   }
 }
 

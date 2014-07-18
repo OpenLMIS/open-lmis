@@ -25,6 +25,9 @@ import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -35,26 +38,26 @@ import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 public class ProductCategoryRepositoryTest {
 
   @Mock
-  private ProductCategoryMapper productCategoryMapper;
+  private ProductCategoryMapper mapper;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
-  private ProductCategoryRepository productCategoryRepository;
+  private ProductCategoryRepository repository;
 
 
   @Before
   public void setUp() throws Exception {
-    productCategoryRepository = new ProductCategoryRepository(productCategoryMapper);
+    repository = new ProductCategoryRepository(mapper);
   }
 
   @Test
   public void shouldThrowExceptionIfInsertingProductCategoryWithDuplicateName() {
     ProductCategory productCategory = new ProductCategory();
-    doThrow(new DuplicateKeyException("some exception")).when(productCategoryMapper).insert(productCategory);
+    doThrow(new DuplicateKeyException("some exception")).when(mapper).insert(productCategory);
     expectedException.expect(DataException.class);
     expectedException.expectMessage("product.category.name.duplicate");
 
-    productCategoryRepository.insert(productCategory);
+    repository.insert(productCategory);
 
   }
 
@@ -62,40 +65,50 @@ public class ProductCategoryRepositoryTest {
   @Test
   public void shouldThrowExceptionIfDataLengthIsIncorrectWhileInsertingProductCategory() {
     ProductCategory productCategory = new ProductCategory();
-    doThrow(new DataIntegrityViolationException("some error")).when(productCategoryMapper).insert(productCategory);
+    doThrow(new DataIntegrityViolationException("some error")).when(mapper).insert(productCategory);
 
     expectedException.expect(dataExceptionMatcher("error.incorrect.length"));
 
-    productCategoryRepository.insert(productCategory);
+    repository.insert(productCategory);
   }
 
   @Test
   public void shouldThrowExceptionIfMissingCategoryNameWhileInsertingProductCategory() {
     ProductCategory productCategory = new ProductCategory();
-    doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(productCategoryMapper).insert(
+    doThrow(new DataIntegrityViolationException("violates not-null constraint")).when(mapper).insert(
       productCategory);
 
     expectedException.expect(dataExceptionMatcher("error.reference.data.missing"));
 
-    productCategoryRepository.insert(productCategory);
+    repository.insert(productCategory);
   }
 
   @Test
   public void shouldInsertProductCategoryIfDoesNotExist() {
     ProductCategory productCategory = new ProductCategory();
-    when(productCategoryMapper.getByCode(productCategory.getCode())).thenReturn(null);
-    productCategoryRepository.insert(productCategory);
-    verify(productCategoryMapper).insert(productCategory);
+    when(mapper.getByCode(productCategory.getCode())).thenReturn(null);
+    repository.insert(productCategory);
+    verify(mapper).insert(productCategory);
   }
 
   @Test
   public void shouldGetCategoryIdByCode() {
     String categoryCode = "category code";
     Long categoryId = 1L;
-    when(productCategoryMapper.getIdByCode(categoryCode)).thenReturn(categoryId);
-    Long returnedCategoryId = productCategoryRepository.getIdByCode(categoryCode);
+    when(mapper.getIdByCode(categoryCode)).thenReturn(categoryId);
+    Long returnedCategoryId = repository.getIdByCode(categoryCode);
 
-    verify(productCategoryMapper).getIdByCode(categoryCode);
+    verify(mapper).getIdByCode(categoryCode);
     assertThat(returnedCategoryId, is(categoryId));
+  }
+
+  @Test
+  public void shouldGetAll() {
+    List<ProductCategory> categories = asList(new ProductCategory());
+    when(mapper.getAll()).thenReturn(categories);
+    List<ProductCategory> returnedCategories = repository.getAll();
+
+    verify(mapper).getAll();
+    assertThat(returnedCategories, is(categories));
   }
 }

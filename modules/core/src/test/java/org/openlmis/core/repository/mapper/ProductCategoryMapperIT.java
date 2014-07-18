@@ -21,6 +21,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -32,17 +34,14 @@ import static org.junit.Assert.assertThat;
 public class ProductCategoryMapperIT {
 
   @Autowired
-  ProductCategoryMapper productCategoryMapper;
+  ProductCategoryMapper mapper;
 
   @Test
   public void shouldInsertProductCategoryCode() {
-    ProductCategory productCategory = new ProductCategory();
-    productCategory.setCode("category code");
-    productCategory.setName("category name");
-    productCategory.setDisplayOrder(1);
-    productCategoryMapper.insert(productCategory);
+    ProductCategory productCategory = new ProductCategory("category code", "category name", 1);
+    mapper.insert(productCategory);
 
-    ProductCategory returnedProductCategory = productCategoryMapper.getById(productCategory.getId());
+    ProductCategory returnedProductCategory = mapper.getById(productCategory.getId());
 
     assertThat(returnedProductCategory.getId(), is(productCategory.getId()));
     assertThat(returnedProductCategory.getCode(), is(productCategory.getCode()));
@@ -52,13 +51,10 @@ public class ProductCategoryMapperIT {
 
   @Test
   public void shouldGetProductCategoryByCode() {
-    ProductCategory productCategory = new ProductCategory();
-    productCategory.setCode("category code");
-    productCategory.setName("category name");
-    productCategory.setDisplayOrder(1);
-    productCategoryMapper.insert(productCategory);
+    ProductCategory productCategory = new ProductCategory("category code", "category name", 1);
+    mapper.insert(productCategory);
 
-    ProductCategory returnedProductCategory = productCategoryMapper.getByCode(productCategory.getCode());
+    ProductCategory returnedProductCategory = mapper.getByCode(productCategory.getCode());
 
     assertThat(returnedProductCategory.getId(), is(productCategory.getId()));
     assertThat(returnedProductCategory.getName(), is(productCategory.getName()));
@@ -67,19 +63,16 @@ public class ProductCategoryMapperIT {
 
   @Test
   public void shouldUpdateProductCategory() {
-    ProductCategory productCategory = new ProductCategory();
-    productCategory.setCode("category code");
-    productCategory.setName("category name");
+    ProductCategory productCategory = new ProductCategory("category code", "category name", 1);
     productCategory.setModifiedBy(1L);
-    productCategory.setDisplayOrder(1);
-    productCategoryMapper.insert(productCategory);
+    mapper.insert(productCategory);
 
     productCategory.setName("updated category name");
     productCategory.setModifiedBy(2L);
     productCategory.setDisplayOrder(2);
-    productCategoryMapper.update(productCategory);
+    mapper.update(productCategory);
 
-    ProductCategory returnedProductCategory = productCategoryMapper.getByCode(productCategory.getCode());
+    ProductCategory returnedProductCategory = mapper.getByCode(productCategory.getCode());
 
     assertThat(returnedProductCategory.getName(), is(productCategory.getName()));
     assertThat(returnedProductCategory.getModifiedBy(), is(productCategory.getModifiedBy()));
@@ -88,17 +81,25 @@ public class ProductCategoryMapperIT {
 
   @Test
   public void shouldReturnProductCategoryIdByCode() {
-    ProductCategory productCategory = new ProductCategory();
-    productCategory.setCode("category code");
-    productCategory.setName("category name");
-    productCategory.setDisplayOrder(1);
-    productCategoryMapper.insert(productCategory);
+    ProductCategory productCategory = new ProductCategory("category code", "category name", 1);
+    mapper.insert(productCategory);
 
-    Long categoryId = productCategoryMapper.getIdByCode(productCategory.getCode());
+    Long categoryId = mapper.getIdByCode(productCategory.getCode());
 
     assertThat(categoryId, is(productCategory.getId()));
   }
 
+  @Test
+  public void shouldGetAll() {
+    ProductCategory productCategory = new ProductCategory("category code", "category name", 1);
+    mapper.insert(productCategory);
+
+    List<ProductCategory> allCategories = mapper.getAll();
+
+    assertThat(allCategories.size(), is(1));
+    assertThat(allCategories.get(0).getName(), is(productCategory.getName()));
+    assertThat(allCategories.get(0).getDisplayOrder(), is(productCategory.getDisplayOrder()));
+  }
 }
 
 

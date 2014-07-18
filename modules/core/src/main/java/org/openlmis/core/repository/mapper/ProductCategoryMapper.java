@@ -17,6 +17,8 @@ import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.ProductCategory;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * ProductCategoryMapper maps the ProductCategory entity to corresponding representation in database.
  */
@@ -43,4 +45,7 @@ public interface ProductCategoryMapper {
 
   @Select("SELECT id FROM product_categories WHERE LOWER(code) = LOWER(#{code})")
   public Long getIdByCode(String categoryCode);
+
+  @Select("SELECT * FROM product_categories")
+  public List<ProductCategory> getAll();
 }

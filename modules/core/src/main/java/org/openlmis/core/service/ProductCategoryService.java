@@ -16,6 +16,8 @@ import org.openlmis.core.repository.ProductCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Exposes the services for handling ProductCategory entity.
  */
@@ -23,7 +25,6 @@ import org.springframework.stereotype.Service;
 @Service
 @NoArgsConstructor
 public class ProductCategoryService {
-
 
   private ProductCategoryRepository repository;
 
@@ -52,4 +53,7 @@ public class ProductCategoryService {
     return repository.getExisting(productCategory);
   }
 
+  public List<ProductCategory> getAll() {
+    return repository.getAll();
+  }
 }

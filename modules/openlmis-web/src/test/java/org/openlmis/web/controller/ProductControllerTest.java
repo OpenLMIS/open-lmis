@@ -20,10 +20,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.ProductCategoryService;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.core.service.ProductService;
@@ -55,6 +57,9 @@ public class ProductControllerTest {
 
   @Mock
   private ProductService service;
+
+  @Mock
+  private ProductCategoryService productCategoryService;
 
   @Mock
   private MessageService messageService;
@@ -174,5 +179,15 @@ public class ProductControllerTest {
     assertThat(productDTO.getProduct().getModifiedBy(), is(11L));
     assertThat(response.getBody().getSuccessMsg(), is("updated"));
     verify(service).save(product);
+  }
+
+  @Test
+  public void shouldGetAllProductCategories() throws Exception {
+    List<ProductCategory> categories = new ArrayList<>();
+    when(productCategoryService.getAll()).thenReturn(categories);
+
+    List<ProductCategory> result = controller.getAllCategories();
+
+    assertThat(result, is(categories));
   }
 }

@@ -20,6 +20,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * ProductCategoryRepository is Repository class for ProductCategory related database operations.
  */
@@ -28,16 +30,16 @@ import org.springframework.stereotype.Repository;
 @NoArgsConstructor
 public class ProductCategoryRepository {
 
-  private ProductCategoryMapper categoryMapper;
+  private ProductCategoryMapper mapper;
 
   @Autowired
-  public ProductCategoryRepository(ProductCategoryMapper categoryMapper) {
-    this.categoryMapper = categoryMapper;
+  public ProductCategoryRepository(ProductCategoryMapper mapper) {
+    this.mapper = mapper;
   }
 
   public void insert(ProductCategory productCategory) {
     try {
-      categoryMapper.insert(productCategory);
+      mapper.insert(productCategory);
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("product.category.name.duplicate");
     } catch (DataIntegrityViolationException dataIntegrityViolationException) {
@@ -51,18 +53,22 @@ public class ProductCategoryRepository {
   }
 
   public void update(ProductCategory productCategory) {
-    categoryMapper.update(productCategory);
+    mapper.update(productCategory);
   }
 
   public ProductCategory getExisting(ProductCategory productCategory) {
-    return categoryMapper.getByCode(productCategory.getCode());
+    return mapper.getByCode(productCategory.getCode());
   }
 
   public Long getIdByCode(String categoryCode) {
-    return categoryMapper.getIdByCode(categoryCode);
+    return mapper.getIdByCode(categoryCode);
   }
 
   public ProductCategory getByCode(String code) {
-    return categoryMapper.getByCode(code);
+    return mapper.getByCode(code);
+  }
+
+  public List<ProductCategory> getAll() {
+    return mapper.getAll();
   }
 }
