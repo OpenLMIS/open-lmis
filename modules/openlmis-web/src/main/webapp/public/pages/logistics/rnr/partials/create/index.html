@@ -10,11 +10,10 @@
 
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div xmlns="http://www.w3.org/1999/html">
-
+    
     <div class="rnr-tabs clearfix">
         <ul class="clearfix" set-focus>
-            <li
-                    ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
+            <li ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
                 <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
                    openlmis-message="label.full.supply.products"></a></li>
             <li ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
@@ -24,7 +23,7 @@
                 ng-show="regimenCount">
                 <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a>
             </li>
-            <li ng-class="{'selected': visibleTab == 'equipment', 'has-error': equipmentLineItemInValid}"
+            <li ng-class="{'selected': visibleTab == 'equipment', 'has-error': equipmentTabError}"
                 ng-show="equipmentCount">
                 <a href="" ng-click="switchSupplyType('equipment')" id="equipmentTab" >Equipments</a>
             </li>

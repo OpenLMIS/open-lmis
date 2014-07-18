@@ -13,7 +13,9 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
   var thisRnr = this;
   this.skipAll = false;
   this.numberOfMonths = numberOfMonths;
-
+  
+  
+  
   var getInvalidLineItemIndexes = function (lineItems) {
     var errorLineItems = [];
     $(lineItems).each(function (i, lineItem) {
@@ -89,14 +91,42 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
       return false;
     }
 
+    function validateEquipmentStatus(lineItem){
+      lineItem.isEquipmentValid = true;
+      if(lineItem.equipments !== undefined && lineItem.calculatedOrderQuantity > 0){
+        //TODO: remove the hardcoded status
+        //TODO: iterate through all the equipments and check if all are not functional
+        if(lineItem.equipments[0].operationalStatusId == 3 && (lineItem.equipments[0].remarks === '' || lineItem.equipments[0].remarks === undefined)){
+          lineItem.isEquipmentValid = false;
+          //errorMessage = "error.rnr.validation";
+          this.equipmentErrorMessage = lineItem.equipments[0].equipmentName + " is not operational but you are placing order for " + lineItem.product  + '<br />'; 
+          console.error(this.equipmentErrorMessage);
+          return false;
+        }
+      }
+      return true;
+    }
+    this.equipmentErrorMessage = "";
     $(this.fullSupplyLineItems).each(function (i, lineItem) {
       if (lineItem.skipped) return;
       if (!validateRequiredFields(lineItem)) return false;
       if (!validateFormula(lineItem)) return false;
+      if (!validateEquipmentStatus(lineItem)) return false;
     });
     return errorMessage;
   };
 
+  Rnr.prototype.validateEquipments = function(){
+    errorMessage = null;
+    $(this.equipmentLineItems).each(function(i,lineItem){
+      if(lineItem.operationalStatusId == 3 && lineItem.remarks === undefined || lineItem.remarks === ''){
+        lineItem.IsRemarkRequired = true;
+        errorMessage = 'Remarks are required for equipments that are not operational';
+      }
+    });
+    return errorMessage;
+  };
+  
   Rnr.prototype.validateNonFullSupply = function () {
     var errorMessage = "";
 
@@ -201,6 +231,27 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
     return rnr;
   };
 
+  Rnr.prototype.initEquipments = function(){
+  
+    
+    for(var i= 0; this.equipmentLineItems !== undefined && i < this.equipmentLineItems.length; i++){
+      var eqli = this.equipmentLineItems[i];
+      for(var j = 0; j < eqli.relatedProducts.length;j++){
+        var prod = eqli.relatedProducts[j];
+        for(var n= 0; i < this.fullSupplyLineItems.length; n++){
+          if(this.fullSupplyLineItems[n].id == prod.id){
+            if(this.fullSupplyLineItems[n].equipments === undefined){
+              this.fullSupplyLineItems[n].equipments = [];
+            }
+            this.fullSupplyLineItems[n].equipments.push(eqli);
+            break;
+          }
+        }
+      }
+    }
+    
+  };
+  
   Rnr.prototype.init = function () {
     var thisRnr = this;
 
@@ -226,4 +277,5 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
   };
 
   this.init();
+  this.initEquipments();
 };

@@ -14,6 +14,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.domain.Product;
+
+import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -23,17 +26,25 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class EquipmentLineItem extends LineItem  {
 
+  private Long id;
   private String code;
   private String equipmentName;
   private String equipmentCategory;
   private String equipmentModel;
   private String equipmentSerial;
   private Long equipmentInventoryId;
-
   private Long operationalStatusId;
   private Long testCount;
   private Long totalCount;
   private Long daysOutOfUse;
+
+  private Long programEquipmentId;
+
+  private Boolean enableTestCount;
+  private Boolean enableTotalCount;
+
+  private List<Product> relatedProducts;
+
   private String remarks;
 
   @Override

@@ -188,16 +188,18 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
     $scope.showError = true;
     var fullSupplyError = $scope.rnr.validateFullSupply();
     var nonFullSupplyError = $scope.rnr.validateNonFullSupply();
+    var equipmentError = $scope.rnr.validateEquipments();
     $scope.fullSupplyTabError = !!fullSupplyError;
     $scope.nonFullSupplyTabError = !!nonFullSupplyError;
-
+    $scope.equipmentTabError = !!equipmentError;
+    
     if ($scope.rnr.regimenLineItems)
       validateRegimenLineItems();
     var regimenError;
     if ($scope.regimenLineItemInValid) {
       regimenError = "error.rnr.validation";
     }
-    var errorMessage = fullSupplyError || nonFullSupplyError || regimenError;
+    var errorMessage = fullSupplyError || nonFullSupplyError || regimenError || equipmentError;
     if (errorMessage) {
       requisitionService.setErrorPages($scope);
       $scope.submitError = errorMessage;
@@ -311,7 +313,7 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
     var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": [], "regimenLineItems": []};
     if (!$scope.page[$scope.visibleTab].length) return rnr;
 
-    var nonLineItemFields = ['rnr', 'programRnrColumnList', 'numberOfMonths', 'rnrStatus', 'cost', 'productName', 'hasError'];
+    var nonLineItemFields = ['rnr', 'programRnrColumnList', 'numberOfMonths', 'rnrStatus', 'cost', 'productName', 'hasError','equipments','IsRemarkRequired','isEquipmentValid','isEquipmentValid' ];
 
     function transform(copyFrom) {
       return _.map(copyFrom, function (lineItem) {

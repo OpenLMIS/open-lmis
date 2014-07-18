@@ -10,10 +10,8 @@
 
 package org.openlmis.rnr.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Product;
 import org.openlmis.rnr.domain.EquipmentLineItem;
 import org.springframework.stereotype.Repository;
 
@@ -32,6 +30,31 @@ public interface EquipmentLineItemMapper {
       " where id = #{id}")
   public void update(EquipmentLineItem item);
 
-  @Select("SELECT * from equipment_status_line_items where rnrId = #{rnrId}")
+  @Select("SELECT esli.id, sq.id as programEquipmentId, esli.* from equipment_status_line_items esli " +
+      "JOIN facility_program_equipments inv ON esli.equipmentInventoryId = inv.id " +
+      " LEFT JOIN ( select * from program_equipments e where e.programId in " +
+      " (select max(programId) from requisitions where id = #{rnrId} ) ) sq" +
+      " ON sq.equipmentId = inv.equipmentId" +
+      " where " +
+      " rnrId = #{rnrId} ")
+  @Results(
+      value = {
+          @Result(property = "id", column = "id"),
+          @Result(property = "relatedProducts", javaType = List.class, column = "id", many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getRelatedRnrLineItems"))
+  })
+
   public List<EquipmentLineItem> getEquipmentLineItemsByRnrId(@Param("rnrId") Long rnrId);
+
+
+  @Select("select rli.id, p.primaryName from " +
+                " requisitions r " +
+      "         JOIN requisition_line_items rli on r.id = rli.rnrId " +
+      "         JOIN products p on p.code::text = rli.productCode::text " +
+      "         JOIN equipment_status_line_items esli on esli.rnrId = r.id " +
+      "         JOIN program_equipments pe on pe.programId = r.programId " +
+      "         JOIN program_equipment_products ep on pe.id = ep.programEquipmentId " +
+      "               and p.id = ep.productId " +
+      " WHERE " +
+      "       esli.id = #{id}")
+  public List<Product> getRelatedRnrLineItems(@Param("id") Long id);
 }

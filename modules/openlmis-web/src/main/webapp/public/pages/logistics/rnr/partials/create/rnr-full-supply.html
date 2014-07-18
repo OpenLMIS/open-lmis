@@ -55,6 +55,10 @@
                    id="skip_{{$parent.$parent.$index}}" type="checkbox"
                    ng-change="rnr.calculateFullSupplyItemsSubmittedCost()"/>
           </span>
+          <span ng-switch-when="product">
+            <span ng-bind="rnrLineItem[column.name]" id="{{column.name}}_{{$parent.$parent.$index}}" class="cell-text"></span>
+            <span class="label label-warning glyphicon glyphicon-search" ng-show="rnrLineItem.isEquipmentValid === false" title="An Equipment related with this product is not operational. Please fill the remarks section on the equipment to continue.">Warning</span>
+          </span>
           <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{column.name}}_{{$parent.$parent.$index}}"
                 class="cell-text">
           </span>
