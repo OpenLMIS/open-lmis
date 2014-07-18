@@ -68,6 +68,7 @@ public class ManageUser extends TestCaseHelper {
     for (Map map : data)
       userPage.enterUserDetails(map.get("UserName").toString(), map.get("Email").toString(),
         map.get("FirstName").toString(), map.get("LastName").toString());
+    testWebDriver.waitForAjax();
     userPage.clickViewHere();
   }
 
@@ -78,7 +79,8 @@ public class ManageUser extends TestCaseHelper {
     userPage.searchUser(user);
     userPage.clickSearchIcon();
     userPage.clickUserName(1);
-    userPage.clickDisableButton();
+    testWebDriver.waitForAjax();
+    userPage.disableUser(user);
   }
 
   @Then("^I should see disable user \"([^\"]*)\" message$")
@@ -100,6 +102,7 @@ public class ManageUser extends TestCaseHelper {
     userPage.searchUser(user);
     userPage.clickSearchIcon();
     userPage.clickUserName(1);
+    testWebDriver.waitForAjax();
     assertEquals(userPage.getVerifiedLabel(), "Yes");
   }
 
@@ -110,6 +113,7 @@ public class ManageUser extends TestCaseHelper {
     userPage.searchUser(user);
     userPage.clickSearchIcon();
     userPage.clickUserName(1);
+    testWebDriver.waitForAjax();
     userPage.clickEnableButton();
   }
 
@@ -131,19 +135,20 @@ public class ManageUser extends TestCaseHelper {
                                                                 String programFirst, String programSecond, String schedule, String roleName) throws SQLException {
     setupDeliveryZoneRolesAndRights(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, roleName);
-    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    UserPage userPage = homePage.navigateToUser();
     String email = "Jasmine_Doe@openlmis.com";
+
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    UserPage userPage = homePage.navigateToUser();
     userPage.enterUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
+
     userPage.clickViewHere();
     dbWrapper.updateUser(passwordUsers, email);
-
     userPage.enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(deliveryZoneNameFirst, programFirst, FIELD_COORDINATOR);
     userPage.clickSaveButton();
-    userPage.clickViewHere();
 
+    testWebDriver.waitForAjax();
+    userPage.clickViewHere();
     assertEquals(deliveryZoneNameFirst, dbWrapper.getDeliveryZoneNameAssignedToUser(LAB_IN_CHARGE));
     assertEquals(FIELD_COORDINATOR, dbWrapper.getRoleNameAssignedToUser(LAB_IN_CHARGE));
   }
@@ -151,23 +156,31 @@ public class ManageUser extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testRestrictLogin(String[] credentials) throws SQLException {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+    String email = "Jasmine_Doe@openlmis.com";
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UserPage userPage = homePage.navigateToUser();
-    String email = "Jasmine_Doe@openlmis.com";
+
     userPage.enterUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
     dbWrapper.updateUser(passwordUsers, email);
     userPage.clickViewHere();
+
     userPage.clickRestrictLoginYes();
     userPage.clickSaveButton();
     homePage.logout(baseUrlGlobal);
+
     loginPage.loginAs(LAB_IN_CHARGE, credentials[1]);
+    testWebDriver.sleep(500);
     assertEquals(loginPage.getLoginErrorMessage(), "The username or password you entered is incorrect. Please try again.");
+
     loginPage.clearUserName();
     loginPage.loginAs(credentials[0], credentials[1]);
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
-    userPage.clickUserList();
+    userPage.clickSearchIcon();
+    userPage.clickUserName(1);
+    testWebDriver.waitForAjax();
+
     userPage.clickRestrictLoginNo();
     userPage.clickSaveButton();
     homePage.logout(baseUrlGlobal);
@@ -177,11 +190,11 @@ public class ManageUser extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testSearchUserFunctionality(String[] credentials) throws SQLException {
-    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    UserPage userPage = homePage.navigateToUser();
     String email = "Jasmine_Doe@openlmis.com";
+
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    UserPage userPage = homePage.navigateToUser();
     userPage.enterUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
 
     userPage.clickViewHere();
@@ -189,58 +202,88 @@ public class ManageUser extends TestCaseHelper {
 
     homePage.navigateToUser();
     userPage.searchUser(email);
-    assertTrue("User not available in list.", userPage.getUserOnList().contains(email));
+    userPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    assertEquals("1 match found for '" + email + "'", userPage.getOneResultMessage());
+    assertEquals("Jasmine Doe", userPage.getName(1));
 
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
-    assertTrue("User not available in list.", userPage.getUserOnList().contains(LAB_IN_CHARGE));
+    userPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    assertEquals("1 match found for '" + LAB_IN_CHARGE + "'", userPage.getOneResultMessage());
+    assertEquals("Jasmine Doe", userPage.getName(1));
+
+    homePage.navigateToUser();
+    userPage.searchUser("Doe");
+    userPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    assertEquals("2 matches found for 'Doe'", userPage.getNResultsMessage());
+    assertEquals("Jasmine Doe", userPage.getName(1));
+
+    homePage.navigateToUser();
+    userPage.searchUser("Jasmine");
+    userPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    assertEquals("1 match found for 'Jasmine'", userPage.getOneResultMessage());
+    assertEquals("Jasmine Doe", userPage.getName(1));
 
     homePage.navigateToUser();
     userPage.searchUser("Jasmine Doe");
-    assertTrue("User not available in list.", userPage.getUserOnList().contains("Jasmine Doe"));
-
-    userPage.focusOnFirstUserLink();
-    userPage.clickEditUser();
+    userPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    assertEquals("1 match found for 'Jasmine Doe'", userPage.getOneResultMessage());
+    assertEquals("Jasmine Doe", userPage.getName(1));
+    userPage.clickUserName(1);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testResetPasswordLinkForDisabledUser(String[] credentials) throws SQLException {
+    String email = "Jasmine_Doe@openlmis.com";
+
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UserPage userPage = homePage.navigateToUser();
-    String email = "Jasmine_Doe@openlmis.com";
     userPage.enterUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
 
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
-    assertTrue("User not available in list.", userPage.getUserOnList().contains(LAB_IN_CHARGE));
+    userPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
 
-    userPage.focusOnFirstUserLink();
+    userPage.clickUserName(1);
+    testWebDriver.waitForAjax();
 
-    userPage.clickEditUser();
-    userPage.clickDisableButton();
+    userPage.disableUser("Jasmine Doe");
+
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
-    userPage.focusOnFirstUserLink();
-    assertTrue("Reset password link not disabled.", userPage.isDisabledResetPassword());
-    userPage.isDisabledResetPassword();
+    userPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+
+    userPage.clickUserName(1);
+    testWebDriver.waitForAjax();
+
+    userPage.clickResetPasswordButton();
+    assertEquals("User is disabled. Password cannot be reset", userPage.getSaveErrorMessage());
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testResetPassword(String[] credentials) throws SQLException {
+    String email = "Jasmine_Doe@openlmis.com";
+
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UserPage userPage = homePage.navigateToUser();
-    String email = "Jasmine_Doe@openlmis.com";
     userPage.enterUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
 
     homePage.navigateToUser();
     userPage.searchUser(LAB_IN_CHARGE);
-    assertTrue("User not available in list.", userPage.getUserOnList().contains(LAB_IN_CHARGE));
-
-    userPage.focusOnFirstUserLink();
-    testWebDriver.sleep(1000);
+    userPage.clickSearchIcon();
+    userPage.clickUserName(1);
+    testWebDriver.waitForAjax();
     userPage.resetPassword("abcd1234", "abcd1234");
-
+    assertEquals("Password has been reset successfully", userPage.getSuccessMessage());
     homePage.logout(baseUrlGlobal);
+
     dbWrapper.updateFieldValue("users", "verified", true);
     loginPage.loginAs(LAB_IN_CHARGE, "abcd1234");
     homePage.verifyLoggedInUser(LAB_IN_CHARGE);
@@ -259,16 +302,19 @@ public class ManageUser extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     FacilityPage facilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
+
     String date_time = facilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, "500000");
     String facility_code = facilityCodePrefix + date_time;
     String facility_name = facilityNamePrefix + date_time;
+
     facilityPage.verifyMessageOnFacilityScreen(facility_name, "created");
     homePage.logout();
 
     dbWrapper.removeAllExistingRights("Admin");
     dbWrapper.assignRight("Admin", "MANAGE_ROLE");
     dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
+
     loginPage.loginAs(credentials[0], credentials[1]);
     List<String> userRoleList = asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
     createRoleAndAssignRights(userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, "Requisition");
@@ -285,7 +331,6 @@ public class ManageUser extends TestCaseHelper {
     homePage.navigateToRolePage();
 
     dbWrapper.insertSupervisoryNode(facility_code, "N1", "Node 1", "null");
-
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     setupWarehouseRolesAndRights(facilityCodeFirst, facilityCodeSecond, programFirst, schedule, "SHIPMENT");
     String warehouseName = dbWrapper.getAttributeFromTable("facilities", "name", "code", facilityCodeFirst);
@@ -301,13 +346,17 @@ public class ManageUser extends TestCaseHelper {
     userPage.assignAdminRole("AdminRole");
     userPage.assignReportingRole("ReportingRole");
     userPage.clickSaveButton();
+
     userPage.verifyUserUpdated("Jasmine", "Doe");
     setupDeliveryZoneRolesAndRightsAfterWarehouse(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst,
       deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule,
       roleName);
+
     userPage.clickViewHere();
+
     userPage.enterDeliveryZoneData(deliveryZoneNameFirst, programFirst, roleName);
     userPage.clickSaveButton();
+
     userPage.clickViewHere();
     userPage.clickDeliveryZonesAccordion();
     testWebDriver.sleep(1000);
@@ -316,6 +365,7 @@ public class ManageUser extends TestCaseHelper {
     userPage.clickHomeFacilityRolesAccordion();
     testWebDriver.sleep(500);
     userPage.removeRole(1, false);
+
     userPage.clickSupervisoryRolesAccordion();
     testWebDriver.sleep(500);
     userPage.verifyRolePresent(LAB_IN_CHARGE);
@@ -332,30 +382,31 @@ public class ManageUser extends TestCaseHelper {
     userPage.clickHomeFacilityRolesAccordion();
     testWebDriver.sleep(500);
     userPage.clickRemoveButtonWithOk(1);
+
     userPage.clickSaveButton();
+    testWebDriver.waitForAjax();
     userPage.clickViewHere();
+    testWebDriver.waitForAjax();
+
     userPage.clickHomeFacilityRolesAccordion();
     testWebDriver.sleep(500);
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.verifyRemoveNotPresent();
     verifyPushProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles();
+
     userPage.clickWarehouseRolesAccordion();
     testWebDriver.sleep(500);
     userPage.verifyRoleNotPresent(warehouseRole);
     userPage.verifyRemoveNotPresent();
-
     verifyWarehouseAvailableForWarehouseRoles(facilityCodeFirst, warehouseName);
 
     userPage.clickDeliveryZonesAccordion();
     testWebDriver.sleep(500);
     userPage.clickRemoveButtonWithOk(1);
     userPage.clickSaveButton();
-    testVerifyTabsForUserWithoutRights(LAB_IN_CHARGE, "Admin123");
-  }
 
-  public void testVerifyTabsForUserWithoutRights(String userName, String password) {
     LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userName, password);
+    homePage = loginPage.loginAs(LAB_IN_CHARGE, "Admin123");
     assertTrue(homePage.isHomeMenuTabDisplayed());
     assertFalse(homePage.isRequisitionsMenuTabDisplayed());
   }
@@ -366,8 +417,8 @@ public class ManageUser extends TestCaseHelper {
     UserPage userPage = homePage.navigateToUser();
     userPage.enterUserDetails(userUserName, userEmail, userFirstName, userLastName);
     String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
-      " password link has been sent on registered Email address. View Here", userFirstName, userLastName);
-    assertEquals(expectedMessage, userPage.getUserCreatedMessage());
+      " password link has been sent on registered Email address.  View Here", userFirstName, userLastName);
+    assertEquals(expectedMessage, userPage.getSuccessMessage());
     userPage.clickViewHere();
     dbWrapper.updateUser(passwordUsers, userEmail);
 
@@ -401,12 +452,14 @@ public class ManageUser extends TestCaseHelper {
     assertFalse(userPage.getAllWarehouseToSelect().contains(facilityNamePrefix));
     dbWrapper.updateFieldValue("facilities", "enabled", "false", "name", warehouseName);
     userPage.clickSaveButton();
+
     userPage.clickViewHere();
     userPage.clickWarehouseRolesAccordion();
     assertFalse(userPage.getAllWarehouseToSelect().contains(warehouseName));
     dbWrapper.updateFieldValue("facilities", "enabled", "true", "name", warehouseName);
     dbWrapper.updateFieldValue("facilities", "active", "true", "code", FacilityCode);
     userPage.clickSaveButton();
+
     userPage.clickViewHere();
     userPage.clickWarehouseRolesAccordion();
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));

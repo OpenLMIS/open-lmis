@@ -58,8 +58,8 @@ public class UserPage extends FilterSearchPage {
   @FindBy(how = ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
-  @FindBy(how = XPATH, using = "//a[@ng-click='changePassword(user)']")
-  private static WebElement selectFirstResetPassword = null;
+  @FindBy(how = ID, using = "resetPassword")
+  private static WebElement resetPasswordButton = null;
 
   @FindBy(how = ID, using = "password1")
   private static WebElement newPasswordField = null;
@@ -73,20 +73,8 @@ public class UserPage extends FilterSearchPage {
   @FindBy(how = ID, using = "button_OK")
   private static WebElement okButton = null;
 
-  @FindBy(how = ID, using = "user0")
-  private static WebElement firstUserLink = null;
-
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='editUser(user.id)']")
-  private static WebElement selectFirstEditUser = null;
-
   @FindBy(how = ID, using = "editUserLabel")
   private static WebElement editUserHeader = null;
-
-  @FindBy(how = ID, using = "searchFacility")
-  private static WebElement searchFacility = null;
-
-  @FindBy(how = ID, using = "result0")
-  private static WebElement selectFacility = null;
 
   @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[8]/div/ng-switch/span")
   private static WebElement verifiedLabel = null;
@@ -103,7 +91,7 @@ public class UserPage extends FilterSearchPage {
   @FindBy(how = ID, using = "programSelected")
   private static WebElement homeFacilityPrograms = null;
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[12]")
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[15]")
   private static WebElement roleInputFieldHomeFacility = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
@@ -121,7 +109,7 @@ public class UserPage extends FilterSearchPage {
   @FindBy(how = ID, using = "supervisoryNodeToSupervise")
   private static WebElement supervisoryNodeToSupervise = null;
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
   private static WebElement rolesInputFieldSupervisoryRole = null;
 
   @FindBy(how = ID, using = "addSupervisoryRole")
@@ -133,7 +121,7 @@ public class UserPage extends FilterSearchPage {
   @FindBy(how = ID, using = "reportingRoles")
   private static WebElement reportingRolesAccordion = null;
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[19]")
   private static WebElement rolesInputFieldWarehouse = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_reportingRoles']/ul/li[@class='select2-search-field']/input")
@@ -154,10 +142,10 @@ public class UserPage extends FilterSearchPage {
   @FindBy(how = ID, using = "programToDelivery")
   private static WebElement programToDeliver = null;
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[18]")
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[21]")
   private static WebElement rolesInputFieldMDeliveryZone = null;
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[15]")
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[21]")
   private static WebElement rolesInputFieldDeliveryZone = null;
 
   @FindBy(how = ID, using = "addAllocationRole")
@@ -187,9 +175,6 @@ public class UserPage extends FilterSearchPage {
   @FindBy(how = ID, using = "restrictLoginNo")
   private static WebElement restrictLoginNoOption = null;
 
-  @FindBy(how = ID, using = "resetPasswordOk")
-  private static WebElement resetPasswordOkButton = null;
-
   @FindBy(how = ID, using = "associatedFacilityField")
   private static WebElement associatedFacilityField = null;
 
@@ -198,6 +183,39 @@ public class UserPage extends FilterSearchPage {
 
   @FindBy(how = ID, using = "clearFacility")
   private static WebElement clearFacility = null;
+
+  @FindBy(how = ID, using = "saveErrorMsgDiv")
+  private static WebElement saveErrorMsg = null;
+
+  @FindBy(how = ID, using = "oneResultMessage")
+  private static WebElement oneResultMessage = null;
+
+  @FindBy(how = ID, using = "noResultMessage")
+  private static WebElement noResultMessage = null;
+
+  @FindBy(how = ID, using = "nResultsMessage")
+  private static WebElement nResultsMessage = null;
+
+  @FindBy(how = ID, using = "closeButton")
+  private static WebElement closeButton = null;
+
+  @FindBy(how = ID, using = "nameHeader")
+  private static WebElement nameHeader = null;
+
+  @FindBy(how = ID, using = "userNameHeader")
+  private static WebElement userNameHeader = null;
+
+  @FindBy(how = ID, using = "emailHeader")
+  private static WebElement emailHeader = null;
+
+  @FindBy(how = ID, using = "verifiedHeader")
+  private static WebElement verifiedHeader = null;
+
+  @FindBy(how = ID, using = "activeHeader")
+  private static WebElement activeHeader = null;
+
+  @FindBy(how = ID, using = "dialogMessage")
+  private static WebElement dialogMessage = null;
 
   public UserPage(TestWebDriver driver) {
     super(driver);
@@ -210,39 +228,9 @@ public class UserPage extends FilterSearchPage {
     sendKeys(searchUserTextField, user);
   }
 
-  public void clickUserList() {
-    testWebDriver.waitForElementToAppear(firstUserLink);
-    firstUserLink.click();
-    testWebDriver.waitForElementToAppear(userNameField);
-  }
-
-  public void focusOnFirstUserLink() {
-    testWebDriver.waitForElementToAppear(firstUserLink);
-    testWebDriver.moveToElement(firstUserLink);
-    testWebDriver.waitForElementToAppear(selectFirstEditUser);
-  }
-
-  public void clickEditUser() {
-    testWebDriver.waitForElementToAppear(selectFirstEditUser);
-    selectFirstEditUser.click();
-  }
-
-  public String getUserOnList() {
-    testWebDriver.waitForElementToAppear(firstUserLink);
-    return firstUserLink.getText();
-  }
-
-  public boolean isDisabledResetPassword() {
-    testWebDriver.waitForElementToAppear(firstUserLink);
-    return selectFirstResetPassword.getAttribute("class").contains("disabled");
-  }
-
   public void resetPassword(String newPassword, String confirmPassword) {
-    testWebDriver.waitForElementToAppear(selectFirstResetPassword);
-    testWebDriver.sleep(300);
-    JavascriptExecutor jse = (JavascriptExecutor) testWebDriver.getDriver();
-    jse.executeScript("document.getElementById('resetPassword0').focus();");
-    selectFirstResetPassword.click();
+    testWebDriver.waitForElementToAppear(resetPasswordButton);
+    resetPasswordButton.click();
 
     testWebDriver.waitForElementToAppear(newPasswordField);
     sendKeys(newPasswordField, newPassword);
@@ -252,8 +240,6 @@ public class UserPage extends FilterSearchPage {
 
     testWebDriver.waitForElementToBeEnabled(resetPasswordDone);
     resetPasswordDone.click();
-    testWebDriver.waitForElementToBeEnabled(resetPasswordOkButton);
-    resetPasswordOkButton.click();
   }
 
   public void enterUserDetails(String userName, String email, String firstName, String lastName) {
@@ -274,7 +260,7 @@ public class UserPage extends FilterSearchPage {
     testWebDriver.waitForElementToAppear(viewHereLink);
   }
 
-  public String getUserCreatedMessage() {
+  public String getSuccessMessage() {
     testWebDriver.waitForElementToAppear(successMessage);
     return successMessage.getText();
   }
@@ -339,12 +325,10 @@ public class UserPage extends FilterSearchPage {
   }
 
   public void enterMyFacilityAndMySupervisedFacilityData(String facilityCode, String program1, String node, String role, String roleType) {
-    testWebDriver.waitForElementToAppear(searchFacility);
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
-      testWebDriver.sleep(500);
-      testWebDriver.waitForElementToAppear(selectFacility);
-      testWebDriver.scrollAndClick(selectFacility);
+      testWebDriver.waitForAjax();
+      selectFacility(1);
       testWebDriver.waitForAjax();
       testWebDriver.scrollAndClick(homeFacilityRolesAccordion);
       testWebDriver.sleep(500);
@@ -502,9 +486,11 @@ public class UserPage extends FilterSearchPage {
     saveButton.click();
   }
 
-  public void clickDisableButton() {
+  public void disableUser(String userName) {
     testWebDriver.waitForElementToBeEnabled(disableButton);
     disableButton.click();
+    assertEquals(testWebDriver.getElementByXpath("//*[@id='disableUserDialog']/div[1]/h3").getText(), "Disable user");
+    assertEquals(dialogMessage.getText(), "User \"" + userName + "\" will be disabled");
     clickOk();
   }
 
@@ -627,5 +613,90 @@ public class UserPage extends FilterSearchPage {
     WebElement element = testWebDriver.getElementById("name" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(element);
     element.click();
+  }
+
+  public void clickResetPasswordButton() {
+    testWebDriver.waitForElementToAppear(resetPasswordButton);
+    resetPasswordButton.click();
+  }
+
+  public String getSaveErrorMessage() {
+    testWebDriver.waitForElementToAppear(saveErrorMsg);
+    return saveErrorMsg.getText();
+  }
+
+  public String getOneResultMessage() {
+    testWebDriver.waitForElementToAppear(oneResultMessage);
+    return oneResultMessage.getText();
+  }
+
+  public String getNResultsMessage() {
+    testWebDriver.waitForElementToAppear(nResultsMessage);
+    return nResultsMessage.getText();
+  }
+
+  public String getNoResultMessage() {
+    testWebDriver.waitForElementToAppear(noResultMessage);
+    return noResultMessage.getText();
+  }
+
+  public String getNameHeader() {
+    testWebDriver.waitForElementToAppear(nameHeader);
+    return nameHeader.getText();
+  }
+
+  public String getUserNameHeader() {
+    testWebDriver.waitForElementToAppear(userNameHeader);
+    return userNameHeader.getText();
+  }
+
+  public String getEmailHeader() {
+    testWebDriver.waitForElementToAppear(emailHeader);
+    return emailHeader.getText();
+  }
+
+  public String getVerifiedHeader() {
+    testWebDriver.waitForElementToAppear(verifiedHeader);
+    return verifiedHeader.getText();
+  }
+
+  public String getActiveHeader() {
+    testWebDriver.waitForElementToAppear(activeHeader);
+    return activeHeader.getText();
+  }
+
+  public String getName(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("name" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public String getUserName(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("userName" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public String getEmail(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("email" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public boolean getIsVerified(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("verifiedIconOk" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.isDisplayed();
+  }
+
+  public boolean getIsActive(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("activeIconOk" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.isDisplayed();
+  }
+
+  public void clickCrossIcon() {
+    testWebDriver.waitForElementToAppear(closeButton);
+    closeButton.click();
   }
 }

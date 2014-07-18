@@ -331,7 +331,7 @@ public class FacilityPage extends Page {
     } else {
       message = testWebDriver.getText(saveErrorMsgDiv);
     }
-    assertEquals(message, String.format("Facility \"%s\" %s successfully.  View Here", facilityName, status));
+    assertEquals(message, String.format("Facility \"%s\" %s successfully.   View Here", facilityName, status));
   }
 
   public boolean isSuccessMessageDisplayed() {
