@@ -63,6 +63,37 @@ describe("Product", function () {
       expect(scope.productLastUpdated).toBeUndefined();
     });
 
+    it('should set product groups, forms, dosage units, programs and catgeories in scope', function () {
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [
+        {code: 'group1'}
+      ], productForms: [
+        {code: 'form1'}
+      ],
+        dosageUnits: [
+          {code: 'unit1'}
+        ], programs: [
+          {code: 'program1'}
+        ], categories: [
+          {code: 'category1'}
+        ], productDTO: undefined});
+
+      expect(scope.productGroups).toEqual([
+        {code: 'group1'}
+      ]);
+      expect(scope.productForms).toEqual([
+        {code: 'form1'}
+      ]);
+      expect(scope.dosageUnits).toEqual([
+        {code: 'unit1'}
+      ]);
+      expect(scope.programs).toEqual([
+        {code: 'program1'}
+      ]);
+      expect(scope.categories).toEqual([
+        {code: 'category1'}
+      ]);
+    });
+
     describe("Save", function () {
       beforeEach(function () {
         scope.productGroups = [
@@ -146,7 +177,7 @@ describe("Product", function () {
       });
 
       it('should not update product', function () {
-        scope.product.product = {"id": 1, "code": 'P10'};
+        scope.product = {"id": 1, "code": 'P10'};
         scope.productForm = {"$error": {"required": false}};
 
         $httpBackend.expectPUT('/products/1.json', {product: scope.product}).respond(400, {"error": "Some error occurred"});
@@ -164,6 +195,64 @@ describe("Product", function () {
       expect(scope.$parent.parentId).toBeUndefined();
       expect(scope.$parent.message).toEqual("");
       expect(location.path()).toEqual('/#/search');
+    });
+
+    describe('Edit', function () {
+      it('should edit program product and retain all previous values', function () {
+        var productCategory = {name: "Category1"};
+        var program = {name: "Vaccines"};
+        scope.programProducts = [
+          {program: program, productCategory: productCategory, active: true,
+            displayOrder: 23, dosesPerMonth: 1234, currentPrice: "67.67"}
+        ];
+
+        scope.edit(0);
+
+        expect(scope.programProducts[0].underEdit).toBeTruthy();
+        expect(scope.currentProgramProduct.program).toEqual(program);
+        expect(scope.currentProgramProduct.productCategory).toEqual(productCategory);
+        expect(scope.currentProgramProduct.active).toBeTruthy();
+        expect(scope.currentProgramProduct.displayOrder).toEqual(23);
+        expect(scope.currentProgramProduct.dosesPerMonth).toEqual(1234);
+        expect(scope.currentProgramProduct.currentPrice).toEqual("67.67");
+      });
+
+      it('should cancel editing', function () {
+        var productCategory1 = {name: "Category1"};
+        var productCategory2 = {name: "Category2"};
+        var hivProgram = {name: "HIV"};
+        scope.programProducts = [
+          {program: {name: "Vaccines"}, productCategory: productCategory1, active: true,
+            displayOrder: 23, dosesPerMonth: 1234, currentPrice: "67.67"}
+        ];
+        scope.currentProgramProduct = {program: hivProgram, productCategory: productCategory2, active: false,
+          displayOrder: 22, dosesPerMonth: 333, currentPrice: "12.5"};
+
+        scope.cancelEdit(0);
+
+        expect(scope.programProducts[0].underEdit).toBeFalsy();
+        expect(scope.programProducts[0].program).toEqual(hivProgram);
+        expect(scope.programProducts[0].productCategory).toEqual(productCategory2);
+        expect(scope.programProducts[0].active).toBeFalsy();
+        expect(scope.programProducts[0].displayOrder).toEqual(22);
+        expect(scope.programProducts[0].dosesPerMonth).toEqual(333);
+        expect(scope.programProducts[0].currentPrice).toEqual("12.5");
+        expect(scope.currentProgramProduct).toBeUndefined();
+      });
+
+      it("should update category", function () {
+        var productCategory1 = {id: 12, name: "Category1"};
+        var productCategory2 = {id: 23, name: "Category2"};
+        scope.categories = [productCategory1, productCategory2];
+        scope.programProducts = [
+          {program: {name: "Vaccines"}, productCategory: {id: 23, name: "other category"}, active: true,
+            displayOrder: 23, dosesPerMonth: 1234, currentPrice: "67.67"}
+        ];
+
+        scope.updateCategory(0);
+
+        expect(scope.programProducts[0].productCategory).toEqual(productCategory2);
+      });
     });
   });
 

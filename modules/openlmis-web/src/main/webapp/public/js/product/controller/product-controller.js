@@ -2,11 +2,13 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
+  $scope.programs = programs;
+  $scope.categories = categories;
 
   if (!isUndefined(productDTO)) {
     if (!isUndefined(productDTO.product)) {
       $scope.product = productDTO.product;
-      $scope.programProducts = productDTO.programProductList;
+      $scope.programProducts = productDTO.programProducts;
       $scope.selectedProductGroupCode = isUndefined($scope.product.productGroup) ? undefined : $scope.product.productGroup.code;
       $scope.selectedProductFormCode = isUndefined($scope.product.form) ? undefined : $scope.product.form.code;
       $scope.selectedProductDosageUnitCode = isUndefined($scope.product.dosageUnit) ? undefined : $scope.product.dosageUnit.code;
@@ -59,6 +61,22 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     $location.path('#/search');
   };
 
+  $scope.edit = function (index) {
+    $scope.currentProgramProduct = angular.copy($scope.programProducts[index]);
+    $scope.programProducts[index].underEdit = true;
+  };
+
+  $scope.cancelEdit = function (index) {
+    $scope.programProducts[index] = $scope.currentProgramProduct;
+    $scope.programProducts[index].underEdit = false;
+    $scope.currentProgramProduct = undefined;
+  };
+
+  $scope.updateCategory = function (index) {
+    $scope.programProducts[index].productCategory = _.find($scope.categories, function (category) {
+      return category.id === $scope.programProducts[index].productCategory.id;
+    });
+  };
 }
 
 ProductController.resolve = {
