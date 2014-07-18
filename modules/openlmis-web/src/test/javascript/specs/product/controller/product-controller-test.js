@@ -22,10 +22,10 @@ describe("Product", function () {
       location = $location;
       controller = $controller;
       var productDTO = {product: undefined, productLastUpdated: "23/12/2014"};
-      ctrl = $controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], productDTO: productDTO});
+      ctrl = $controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], productDTO: productDTO});
     }));
 
-    it('should set product last updated date in scope', function() {
+    it('should set product last updated date in scope', function () {
       expect(scope.productLastUpdated).toEqual("23/12/2014");
     });
 
@@ -38,7 +38,7 @@ describe("Product", function () {
     it('should not set selected product form, group and dosage unit in scope if product values are undefined', function () {
       var productDTO = {product: {form: undefined, productGroup: undefined, dosageUnit: undefined}};
 
-      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], productDTO: productDTO});
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], productDTO: productDTO});
 
       expect(scope.selectedProductFormCode).toBeUndefined();
       expect(scope.selectedProductGroupCode).toBeUndefined();
@@ -48,7 +48,7 @@ describe("Product", function () {
     it('should set selected product form, group and dosage unit in scope if product values are defined', function () {
       var productDTO = {product: {form: {code: "Form"}, productGroup: {code: "Group"}, dosageUnit: {code: "Unit"}}};
 
-      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], productDTO: productDTO});
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], productDTO: productDTO});
 
       expect(scope.selectedProductFormCode).toEqual("Form");
       expect(scope.selectedProductGroupCode).toEqual("Group");
@@ -57,7 +57,7 @@ describe("Product", function () {
 
     it('should not set product and productLastUpdated in scope if productDTO is undefined', function () {
       scope = rootScope.$new();
-      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], productDTO: undefined});
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], productDTO: undefined});
 
       expect(scope.product).toBeUndefined();
       expect(scope.productLastUpdated).toBeUndefined();
@@ -203,6 +203,17 @@ describe("Product", function () {
     it('should get dosage units', function () {
       $httpBackend.expect('GET', '/products/dosageUnits.json').respond({unit: {'id': '23', 'code': 'DU'}});
       ctrl(ProductController.resolve.dosageUnits, {$q: $q});
+      $timeout.flush();
+      $httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalled();
+    });
+
+    it('should get programs', function () {
+      $httpBackend.expect('GET', '/programs.json').respond({programs: [
+        {code: 'p1'},
+        {code: 'p2'}
+      ]});
+      ctrl(ProductController.resolve.programs, {$q: $q});
       $timeout.flush();
       $httpBackend.flush();
       expect(deferredObject.resolve).toHaveBeenCalled();
