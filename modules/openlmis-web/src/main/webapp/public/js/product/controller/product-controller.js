@@ -1,4 +1,4 @@
-function ProductController($scope, productGroups, productForms, dosageUnits, programs, productDTO, Products, $location) {
+function ProductController($scope, productGroups, productForms, dosageUnits, programs, categories, productDTO, Products, $location) {
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
@@ -101,6 +101,17 @@ ProductController.resolve = {
     $timeout(function () {
       Program.get({}, function (data) {
         deferred.resolve(data.programs);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  categories: function ($q, $timeout, ProductCategories) {
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      ProductCategories.get({}, function (data) {
+        deferred.resolve(data.productCategoryList);
       }, {});
     }, 100);
     return deferred.promise;
