@@ -38,6 +38,24 @@ describe("Facility Search Controller", function () {
     expect(scope.totalItems).toEqual(100);
   });
 
+  it('should get all facilities in a page depending on last query', function () {
+    var facilitiesList = [{"code": "F1", "name": "FAC1"},{"code": "F2", "name": "FAC2"}];
+    var pagination = {"page": 1, "pageSize": 10, "numberOfPages": 10, "totalRecords": 100};
+    var response = {"facilities": facilitiesList, "pagination": pagination};
+    scope.query = "F";
+    var lastQuery = "fac";
+    scope.selectedSearchOption = {"value": 'facility'};
+    $httpBackend.when('GET', '/facilities.json?columnName=facility&page=1&searchParam=' + lastQuery).respond(response);
+    scope.loadFacilities(1,lastQuery);
+    $httpBackend.flush();
+
+    expect(scope.facilityList).toEqual(facilitiesList);
+    expect(scope.pagination).toEqual(pagination);
+    expect(scope.currentPage).toEqual(1);
+    expect(scope.showResults).toEqual(true);
+    expect(scope.totalItems).toEqual(100);
+  });
+
   it('should return if query is null', function () {
     scope.query = "";
     var httpBackendSpy = spyOn($httpBackend, 'expectGET');
@@ -90,13 +108,14 @@ describe("Facility Search Controller", function () {
 
   it('should get results according to specified page', function () {
     scope.currentPage = 5;
+    scope.searchedQuery = "fac";
     var searchSpy = spyOn(scope, 'loadFacilities');
 
     scope.$apply(function () {
       scope.currentPage = 6;
     });
 
-    expect(searchSpy).toHaveBeenCalledWith(6);
+    expect(searchSpy).toHaveBeenCalledWith(6,scope.searchedQuery);
   });
 
   it("should save query into shared service on clicking edit link",function(){

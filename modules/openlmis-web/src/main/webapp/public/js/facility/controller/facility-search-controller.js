@@ -35,13 +35,17 @@ function FacilitySearchController($scope, Facility, $location, navigateBackServi
 
   $scope.$watch('currentPage', function () {
     if ($scope.currentPage !== 0)
-      $scope.loadFacilities($scope.currentPage);
+      $scope.loadFacilities($scope.currentPage, $scope.searchedQuery);
   });
 
-  $scope.loadFacilities = function (page) {
-    if (!$scope.query) return;
-    $scope.query = $scope.query.trim();
-    $scope.searchedQuery = $scope.query;
+  $scope.loadFacilities = function (page, lastQuery) {
+    if (!($scope.query || lastQuery)) return;
+    lastQuery ? getFacilities(page, lastQuery) : getFacilities(page, $scope.query);
+  };
+
+  function getFacilities(page, query) {
+    query = query.trim();
+    $scope.searchedQuery = query;
     Facility.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
       $scope.facilityList = data.facilities;
       $scope.pagination = data.pagination;
@@ -49,7 +53,7 @@ function FacilitySearchController($scope, Facility, $location, navigateBackServi
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
     }, {});
-  };
+  }
 
   $scope.triggerSearch = function (event) {
     if (event.keyCode === 13) {
