@@ -24,8 +24,8 @@
       <div class="input-append input-prepend">
         <input id='searchUser' type="text" class="span7" ng-model="query" maxlength="50"
                ng-keydown="triggerSearch($event)" openlmis-message="placeholder.user.search"/>
-        <button class="btn">
-          <i id='searchIcon' class="icon-search" ng-click="loadUsers(1)"></i>
+        <button class="btn" ng-click="loadUsers(1)">
+          <i id='searchIcon' class="icon-search"></i>
         </button>
       </div>
     </div>
