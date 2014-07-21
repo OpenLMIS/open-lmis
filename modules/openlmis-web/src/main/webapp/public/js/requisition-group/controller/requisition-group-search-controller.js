@@ -35,13 +35,17 @@ function RequisitionGroupSearchController($scope, RequisitionGroups, $location, 
 
   $scope.$watch('currentPage', function () {
     if ($scope.currentPage !== 0)
-      $scope.search($scope.currentPage);
+      $scope.search($scope.currentPage, $scope.searchedQuery);
   });
 
-  $scope.search = function (page) {
-    if (!$scope.query) return;
-    $scope.query = $scope.query.trim();
-    $scope.searchedQuery = $scope.query;
+  $scope.search = function (page, lastQuery) {
+    if (!($scope.query || lastQuery)) return;
+    lastQuery ? getRequisitionGroups(page, lastQuery) : getRequisitionGroups(page, $scope.query);
+  };
+
+  function getRequisitionGroups(page, query) {
+    query = query.trim();
+    $scope.searchedQuery = query;
     RequisitionGroups.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
       $scope.requisitionGroupList = data.requisitionGroupList;
       $scope.pagination = data.pagination;
@@ -49,7 +53,7 @@ function RequisitionGroupSearchController($scope, RequisitionGroups, $location, 
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
     }, {});
-  };
+  }
 
   $scope.clearSearch = function () {
     $scope.query = "";

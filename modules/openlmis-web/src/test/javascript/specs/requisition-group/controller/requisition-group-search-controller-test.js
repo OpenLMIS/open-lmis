@@ -41,6 +41,24 @@ describe("Requisition Group Search Controller", function () {
     expect(scope.totalItems).toEqual(100);
   });
 
+  it('should get all requisition Groups in a page depending on last query', function () {
+    var requisitionGroup = {"code": "N1", "name": "Node 1", "supervisoryNode": {"name": "NodeName"}};
+    var pagination = {"page": 1, "pageSize": 10, "numberOfPages": 10, "totalRecords": 100};
+    var response = {"requisitionGroupList": [requisitionGroup], "pagination": pagination};
+    scope.query = "Nod";
+    var lastQuery = "Req";
+    scope.selectedSearchOption.value = 'requisitionGroup';
+    $httpBackend.when('GET', '/requisitionGroups.json?columnName=requisitionGroup&page=1&searchParam=' + lastQuery).respond(response);
+    scope.search(1, lastQuery);
+    $httpBackend.flush();
+
+    expect(scope.requisitionGroupList).toEqual([requisitionGroup]);
+    expect(scope.pagination).toEqual(pagination);
+    expect(scope.currentPage).toEqual(1);
+    expect(scope.showResults).toEqual(true);
+    expect(scope.totalItems).toEqual(100);
+  });
+
   it('should clear search param and result list', function () {
     var requisitionGroup = {"code": "N1", "name": "Node 1"};
     scope.query = "query";
@@ -85,12 +103,34 @@ describe("Requisition Group Search Controller", function () {
   it('should get results according to specified page', function () {
     scope.currentPage = 5;
     var searchSpy = spyOn(scope, 'search');
+    scope.searchedQuery = "nod";
 
     scope.$apply(function () {
       scope.currentPage = 6;
     });
 
-    expect(searchSpy).toHaveBeenCalledWith(6);
+    expect(searchSpy).toHaveBeenCalledWith(6, scope.searchedQuery);
+  });
+
+  it('should return if query is null', function () {
+    scope.query = "";
+    var httpBackendSpy = spyOn($httpBackend, 'expectGET');
+
+    scope.search(1);
+
+    expect(httpBackendSpy).not.toHaveBeenCalled();
+  });
+
+  it("should save query into shared service on clicking edit link",function(){
+    spyOn(navigateBackService, 'setData');
+    spyOn(location, 'path');
+    scope.query = "r1";
+    scope.selectedSearchOption = "req";
+
+    scope.edit(1);
+
+    expect(navigateBackService.setData).toHaveBeenCalledWith({query: "r1", selectedSearchOption: "req" });
+    expect(location.path).toHaveBeenCalledWith('edit/1');
   });
 
 });
