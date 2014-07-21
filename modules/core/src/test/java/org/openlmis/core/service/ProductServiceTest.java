@@ -72,7 +72,7 @@ public class ProductServiceTest {
     product.setPackSize(5);
     DosageUnit unit = new DosageUnit("code", 1);
     product.setDosageUnit(unit);
-    DosageUnit newUnit = new DosageUnit("code",40);
+    DosageUnit newUnit = new DosageUnit("code", 40);
 
     when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
     when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
@@ -266,5 +266,33 @@ public class ProductServiceTest {
     service.getById(1L);
 
     verify(repository).getById(1L);
+  }
+
+  @Test
+  public void shouldGetIdForCode() {
+    service.getIdForCode("code");
+
+    verify(repository).getIdByCode("code");
+  }
+
+  @Test
+  public void shouldGetByCode() {
+    service.getByCode("code");
+
+    verify(repository).getByCode("code");
+  }
+
+  @Test
+  public void shouldReturnIsActive() {
+    service.isActive("code");
+
+    verify(repository).isActive("code");
+  }
+
+  @Test
+  public void shouldGetTotalSearchResultCount() {
+    service.getTotalSearchResultCount("search-param");
+
+    verify(repository).getTotalSearchResultCount("search-param");
   }
 }
