@@ -12,20 +12,14 @@ package org.openlmis.core.service;
 
 import com.google.common.base.Predicate;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.FacilityTypeApprovedProduct;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -189,9 +183,12 @@ public class ProgramProductService {
     return productService.getTotalSearchResultCount(searchParam);
   }
 
+  @Transactional
   public void saveAll(List<ProgramProduct> programProducts, Product product) {
     for (ProgramProduct programProduct : programProducts) {
       programProduct.setProduct(product);
+      programProduct.setCreatedBy(product.getCreatedBy());
+      programProduct.setModifiedBy(product.getModifiedBy());
       save(programProduct);
     }
   }

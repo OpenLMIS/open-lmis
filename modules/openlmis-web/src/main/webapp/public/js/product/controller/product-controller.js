@@ -7,6 +7,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.programs = programs;
   $scope.programProducts = [];
   $scope.product = {};
+  $scope.$parent.message = "";
   setProgramMessage();
 
   if (!isUndefined(productDTO)) {
@@ -38,6 +39,12 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     $scope.showError = true;
   };
 
+  var findProgramProductsUnderEdit = function () {
+    return _.find($scope.programProducts, function (programProduct) {
+      return programProduct.underEdit === true;
+    });
+  };
+
   var setProductReferenceData = function () {
     $scope.product.productGroup = _.where($scope.productGroups, {code: $scope.selectedProductGroupCode})[0];
     $scope.product.form = _.where($scope.productForms, {code: $scope.selectedProductFormCode})[0];
@@ -50,6 +57,11 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
       $scope.error = "form.error";
       return;
     }
+    if (findProgramProductsUnderEdit()) {
+      $scope.error = 'error.program.products.not.done';
+      return;
+    }
+
     setProductReferenceData();
 
     if ($scope.product.id) {
@@ -67,14 +79,14 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   };
 
   $scope.edit = function (index) {
-    $scope.currentProgramProduct = angular.copy($scope.programProducts[index]);
+    $scope.programProducts[index].previousProgramProduct = angular.copy($scope.programProducts[index]);
     $scope.programProducts[index].underEdit = true;
   };
 
   $scope.cancelEdit = function (index) {
-    $scope.programProducts[index] = $scope.currentProgramProduct;
+    $scope.programProducts[index] = $scope.programProducts[index].previousProgramProduct;
     $scope.programProducts[index].underEdit = false;
-    $scope.currentProgramProduct = undefined;
+    $scope.programProducts[index].previousProgramProduct = undefined;
   };
 
   $scope.updateCategory = function (index) {
@@ -93,16 +105,13 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
       return _.contains(selectedProgramCodes, program.code);
     });
 
-    $scope.programs = _.sortBy($scope.programs, function (program) {
-      return program.name.toLowerCase();
-    });
     setProgramMessage();
   }
 
   $scope.addNewProgramProduct = function () {
     $scope.programProducts.push($scope.newProgramProduct);
     refreshAndSortPrograms();
-    $scope.newProgramProduct = {};
+    $scope.newProgramProduct = {active: false};
   };
 
   $scope.mandatoryFieldsNotFilled = function (programProduct) {

@@ -18,6 +18,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   $scope.deliveryZones = deliveryZones;
   $scope.$parent.userId = null;
   $scope.message = "";
+  $scope.$parent.message = "";
 
   var originalUser = $.extend(true, {}, user);
 

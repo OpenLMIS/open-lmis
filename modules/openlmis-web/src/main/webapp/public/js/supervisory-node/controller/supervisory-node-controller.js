@@ -10,6 +10,7 @@
 
 function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes) {
   $scope.supervisoryNode = supervisoryNode || {};
+  $scope.$parent.message = "";
 
   var reset = function () {
     $scope.query = undefined;

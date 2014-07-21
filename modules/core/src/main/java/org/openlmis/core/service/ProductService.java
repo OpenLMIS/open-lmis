@@ -11,16 +11,13 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.DosageUnit;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductForm;
-import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,6 +47,7 @@ public class ProductService {
   @Autowired
   private ProductFormService productFormService;
 
+  @Transactional
   public void save(Product product) {
 
     product.validate();

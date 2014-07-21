@@ -11,6 +11,7 @@
 function RequisitionGroupController($scope, requisitionGroupData, messageService, $location, RequisitionGroups, SupervisoryNodesSearch, programs, schedules) {
 
   var currentProgramSchedule, programScheduleUnderEdit;
+  $scope.$parent.message = "";
 
   if (requisitionGroupData) {
     $scope.requisitionGroup = requisitionGroupData.requisitionGroup;

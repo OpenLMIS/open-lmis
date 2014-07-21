@@ -19,15 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProgramProductBuilder;
-import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.FacilityTypeApprovedProduct;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
@@ -422,6 +414,8 @@ public class ProgramProductServiceTest {
     ProgramProduct programProduct2 = new ProgramProduct();
     programProduct2.setActive(false);
     Product product = new Product();
+    product.setCreatedBy(1L);
+    product.setModifiedBy(2L);
 
     ProgramProductService spyService = spy(service);
 
@@ -431,7 +425,12 @@ public class ProgramProductServiceTest {
     spyService.saveAll(asList(programProduct1, programProduct2), product);
 
     assertThat(programProduct1.getProduct(), is(product));
+    assertThat(programProduct1.getCreatedBy(), is(1L));
+    assertThat(programProduct1.getModifiedBy(), is(2L));
+
     assertThat(programProduct2.getProduct(), is(product));
+    assertThat(programProduct2.getCreatedBy(), is(1L));
+    assertThat(programProduct2.getModifiedBy(), is(2L));
 
     verify(spyService).save(programProduct1);
     verify(spyService).save(programProduct2);

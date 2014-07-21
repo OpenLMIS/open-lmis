@@ -11,6 +11,7 @@
 function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, $q, $dialog, messageService) {
   $scope.$parent.facilityId = null;
   $scope.message = "";
+  $scope.$parent.message = "";
   initialize();
 
   function initialize() {

@@ -49,7 +49,7 @@ describe("Product", function () {
       expect(scope.selectedProductDosageUnitCode).toBeUndefined();
     });
 
-    it('should filter already added programs from the list and sort by name', function () {
+    it('should filter already added programs from the list', function () {
       var vaccineProgram = {id: 1, code: 'Vaccines', name: 'Vaccines'};
       var TBProgram = {id: 2, code: 'TB', name: "TB"};
       var hivProgram = {id: 3, code: 'HIV', name: "HIV"};
@@ -59,7 +59,7 @@ describe("Product", function () {
 
       ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [vaccineProgram, hivProgram, TBProgram], categories: [], productDTO: productDTO});
 
-      expect(scope.programs).toEqual([TBProgram, vaccineProgram]);
+      expect(scope.programs).toEqual([vaccineProgram, TBProgram]);
     });
 
     it('should set selected product form, group and dosage unit in scope if product values are defined', function () {
@@ -131,6 +131,18 @@ describe("Product", function () {
 
         expect(scope.error).toEqual("form.error");
         expect(scope.showError).toBeTruthy();
+      });
+
+      it('should not save product if program products are under edit', function () {
+        scope.productForm = {"$error": {"required": false}};
+        scope.programProducts = [
+          {program: {code: 'P1'}, underEdit: true},
+          {program: {code: 'P2'}, underEdit: false}
+        ];
+
+        scope.save();
+
+        expect(scope.error).toEqual("error.program.products.not.done");
       });
 
       it('should insert product', function () {
@@ -225,16 +237,16 @@ describe("Product", function () {
         scope.edit(0);
 
         expect(scope.programProducts[0].underEdit).toBeTruthy();
-        expect(scope.currentProgramProduct.program).toEqual(vaccineProgram);
-        expect(scope.currentProgramProduct.productCategory).toEqual(productCategory1);
-        expect(scope.currentProgramProduct.active).toBeTruthy();
-        expect(scope.currentProgramProduct.displayOrder).toEqual(23);
-        expect(scope.currentProgramProduct.dosesPerMonth).toEqual(1234);
-        expect(scope.currentProgramProduct.currentPrice).toEqual("67.67");
+        expect(scope.programProducts[0].previousProgramProduct.program).toEqual(vaccineProgram);
+        expect(scope.programProducts[0].previousProgramProduct.productCategory).toEqual(productCategory1);
+        expect(scope.programProducts[0].previousProgramProduct.active).toBeTruthy();
+        expect(scope.programProducts[0].previousProgramProduct.displayOrder).toEqual(23);
+        expect(scope.programProducts[0].previousProgramProduct.dosesPerMonth).toEqual(1234);
+        expect(scope.programProducts[0].previousProgramProduct.currentPrice).toEqual("67.67");
       });
 
       it('should cancel editing', function () {
-        scope.currentProgramProduct = {program: hivProgram, productCategory: productCategory2, active: false,
+        scope.programProducts[0].previousProgramProduct = {program: hivProgram, productCategory: productCategory2, active: false,
           displayOrder: 22, dosesPerMonth: 333, currentPrice: "12.5"};
 
         scope.cancelEdit(0);
@@ -246,7 +258,7 @@ describe("Product", function () {
         expect(scope.programProducts[0].displayOrder).toEqual(22);
         expect(scope.programProducts[0].dosesPerMonth).toEqual(333);
         expect(scope.programProducts[0].currentPrice).toEqual("12.5");
-        expect(scope.currentProgramProduct).toBeUndefined();
+        expect(scope.programProducts[0].previousProgramProduct).toBeUndefined();
       });
 
       it("should update category", function () {
@@ -285,7 +297,7 @@ describe("Product", function () {
 
         expect(scope.programProducts).toEqual([programProduct1, programProduct2]);
         expect(scope.programs).toEqual([TBProgram]);
-        expect(scope.newProgramProduct).toEqual({});
+        expect(scope.newProgramProduct).toEqual({active: false});
       });
     });
 

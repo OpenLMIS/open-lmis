@@ -11,6 +11,7 @@
 function SupplyLineController($scope, $location, supplyLine, TopLevelSupervisoryNodes, SupplyLines, programs) {
   $scope.supplyLine = supplyLine || {};
   $scope.programs = programs;
+  $scope.$parent.message = "";
 
   var reset = function () {
     $scope.query = undefined;
