@@ -6,7 +6,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.newProgramProduct = {active: false};
   $scope.programs = programs;
   $scope.programProducts = [];
-  $scope.falseValue = false;
+  $scope.product = {};
   setProgramMessage();
 
   if (!isUndefined(productDTO)) {

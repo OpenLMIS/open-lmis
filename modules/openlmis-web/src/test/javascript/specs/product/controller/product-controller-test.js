@@ -72,13 +72,13 @@ describe("Product", function () {
       expect(scope.selectedProductDosageUnitCode).toEqual("Unit");
     });
 
-    it('should not set product and productLastUpdated in scope if productDTO is undefined', function () {
+    it('should not set productLastUpdated and initialize product, programProducts in scope if productDTO is undefined', function () {
       scope = rootScope.$new();
       ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], categories: [], productDTO: undefined});
 
-      expect(scope.product).toBeUndefined();
       expect(scope.productLastUpdated).toBeUndefined();
       expect(scope.programProducts).toEqual([]);
+      expect(scope.product).toEqual({});
     });
 
     it('should set product groups, forms, dosage units, programs and categories in scope', function () {
