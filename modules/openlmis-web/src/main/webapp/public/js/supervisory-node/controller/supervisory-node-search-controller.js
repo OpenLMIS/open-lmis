@@ -33,10 +33,14 @@ function SupervisoryNodeSearchController($scope, navigateBackService, Supervisor
     $location.path('edit/' + id);
   };
 
-  $scope.search = function (page) {
-    if (!$scope.query) return;
-    $scope.query = $scope.query.trim();
-    $scope.searchedQuery = $scope.query;
+  $scope.search = function (page, lastQuery) {
+    if (!($scope.query || lastQuery)) return;
+    lastQuery ? getSupervisoryNodes(page, lastQuery) : getSupervisoryNodes(page, $scope.query);
+  };
+
+  function getSupervisoryNodes(page, query) {
+    query = query.trim();
+    $scope.searchedQuery = query;
     var searchOption = $scope.selectedSearchOption.value === 'parent';
 
     SupervisoryNodesPagedSearch.get({page: page, param: $scope.searchedQuery, parent: searchOption}, function (data) {
@@ -46,11 +50,12 @@ function SupervisoryNodeSearchController($scope, navigateBackService, Supervisor
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
     }, {});
-  };
+  }
 
   $scope.$watch('currentPage', function () {
-    if ($scope.currentPage !== 0)
-      $scope.search($scope.currentPage);
+    if ($scope.currentPage !== 0) {
+      $scope.search($scope.currentPage, $scope.searchedQuery);
+    }
   });
 
   $scope.clearSearch = function () {
