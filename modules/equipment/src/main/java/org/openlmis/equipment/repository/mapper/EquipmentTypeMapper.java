@@ -26,7 +26,7 @@ public interface EquipmentTypeMapper {
   @Select("select * from equipment_types where id = #{id}")
   EquipmentType getEquipmentTypeById(Long id);
 
-  @Select("select * from equipment_types")
+  @Select("select * from equipment_types order by name")
   List<EquipmentType> getAll();
 
   @Insert("insert into equipment_types (code, name, createdBy, createdDate, modifiedBy, modifiedDate) " +

@@ -36,10 +36,9 @@ public interface ServiceContractMapper {
   })
   ServiceContract getById(Long id);
 
-  //TODO: remove the hardcoded 1 from program supported
   @Select("select id,code || ' - ' || name as name, true as isActive from facilities where id in (select facilityId from equipment_service_contract_facilities where contractId = #{id}) " +
       " UNION " +
-      " select f.id, f.code || ' - ' || f.name as name, false as isActive from facilities f join programs_supported s on s.facilityId = f.id where s.programId = 1 and f.id not in (select facilityId from equipment_service_contract_facilities where contractId = #{id}) " +
+      " select f.id, f.code || ' - ' || f.name as name, false as isActive from facilities f where  f.id not in (select facilityId from equipment_service_contract_facilities where contractId = #{id}) " +
       " ORDER BY name ")
   List<ContractDetail> getFacilityOptions(Long id);
 

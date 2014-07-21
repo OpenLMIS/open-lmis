@@ -26,7 +26,7 @@ public interface VendorMapper {
   @Select("select * from equipment_service_vendors where id = #{id}")
   Vendor getById(Long id);
 
-  @Select("select * from equipment_service_vendors")
+  @Select("select * from equipment_service_vendors order by name")
   List<Vendor> getAll();
 
   @Insert("insert into equipment_service_vendors (name, website, contactPerson, primaryPhone, email, description, specialization, geographicCoverage, registrationDate, createdBy, createdDate, modifiedBy, modifiedDate) " +
