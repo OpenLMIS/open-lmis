@@ -18,6 +18,8 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -271,6 +273,41 @@ public class ManageProduct extends TestCaseHelper {
       "Injectable", "Other", "Patch", "Powder", "Sachet", "Solution", "Tablet", "Tube", "Vial"), productPage.getAllForms());
     assertEquals(asList("--Select dosage Unit--", "cc", "each", "gm", "IU", "mcg", "mg", "ml"), productPage.getAllDosageUnits());
 
+    productPage.clickOtherInfoAccordion();
+    assertEquals("Other Information", productPage.getProductOtherInformationLabel());
+    assertEquals("Generic product name", productPage.getProductGenericNameLabel());
+    assertEquals("Alternate product name", productPage.getProductAlternateNameLabel());
+    assertEquals("Alternate product code", productPage.getProductAlternateProductCodeLabel());
+    assertEquals("Alternate pack size", productPage.getProductAlternatePackSizeLabel());
+    assertEquals("Manufacturer", productPage.getProductManufacturerLabel());
+    assertEquals("Manufacturer product code", productPage.getProductManufacturerProductCodeLabel());
+    assertEquals("Manufacturer bar code", productPage.getProductManufacturerBarCodeLabel());
+    assertEquals("GTIN", productPage.getProductGTINLabel());
+    assertEquals("Expected shelf life (months)", productPage.getProductExpectedShelfLifeLabel());
+    assertEquals("Product record last updated", productPage.getProductRecordLastUpdatedLabel());
+    assertEquals("Alternate Moh bar code", productPage.getProductAlternateMoHBarCodeLabel());
+    assertEquals("Contraceptive couple-years of protection", productPage.getProductContraceptiveCoupleYearsOfProtectionLabel());
+    assertEquals("Store refrigerated", productPage.getProductStoreRefrigeratedLabel());
+    assertEquals("Store at room temperature", productPage.getProductStoreAtRoomTemperatureLabel());
+    assertEquals("Pack length (cm)", productPage.getProductPackLengthLabel());
+    assertEquals("Pack width (cm)", productPage.getProductPackWidthLabel());
+    assertEquals("Hazardous", productPage.getProductHazardousLabel());
+    assertEquals("Flammable", productPage.getProductFlammableLabel());
+    assertEquals("Pack height (cm)", productPage.getProductPackHeightLabel());
+    assertEquals("Pack weight (cm)", productPage.getProductPackWeightLabel());
+    assertEquals("Controlled substance", productPage.getProductControlledSubstanceLabel());
+    assertEquals("Light sensitive", productPage.getProductLightSensitiveLabel());
+    assertEquals("Pack per carton", productPage.getProductPackPerCartonLabel());
+    assertEquals("Carton length (cm)", productPage.getProductCartonLengthLabel());
+    assertEquals("Approved by WHO", productPage.getProductApprovedByWHOLabel());
+    assertEquals("Carton width (cm)", productPage.getProductCartonWidthLabel());
+    assertEquals("Carton height (cm)", productPage.getProductCartonHeightLabel());
+    assertEquals("Carton per pallet", productPage.getProductCartonsPerPalletLabel());
+    assertEquals("Special storage instructions", productPage.getProductSpecialStorageInstructionsLabel());
+    assertEquals("Special transport instructions", productPage.getProductSpecialTransportInstructionsLabel());
+    assertEquals("", productPage.getProductLastUpdated());
+    productPage.collapseAll();
+
     productPage.clickSaveButton();
     assertEquals("There are some errors in the form. Please resolve them.", productPage.getSaveErrorMsg());
 
@@ -286,7 +323,7 @@ public class ManageProduct extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
-  public void testAddNewProduct() throws SQLException {
+  public void testAddNewProductWithOnlyBasicInfo() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_PRODUCT");
     dbWrapper.insertProduct("P10", "product10");
     dbWrapper.insertProductGroup("ProductGroup1");
@@ -328,11 +365,77 @@ public class ManageProduct extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
+  public void testAddNewProductWithOtherInfo() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_PRODUCT");
+
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    productPage = homePage.navigateToProductPage();
+    productPage.clickProductAddNewButton();
+    productPage.expandAll();
+
+    productPage.enterGenericName("generic name");
+    productPage.enterAlternateName("alternate name");
+    productPage.enterAlternateItemCode("alternate code");
+    productPage.enterAlternatePackSize("10");
+    productPage.enterManufacturer("manufacturer");
+    productPage.enterManufacturerCode("code123");
+    productPage.enterManufacturerBarCode("bar!234||");
+    productPage.enterGtin("gtin");
+    productPage.enterExpectedShelfLife("3");
+    productPage.enterMohBarCode("!234|");
+    productPage.enterContraceptiveCYP("5");
+    productPage.enterPackLength("10.00");
+    productPage.enterPackWidth("99.99");
+    productPage.enterPackHeight(".9");
+    productPage.enterPackWeight("0.9");
+    productPage.enterPacksPerCarton("100");
+    productPage.enterCartonLength("45");
+    productPage.enterCartonWidth("90");
+    productPage.enterCartonsPerPallet("8");
+    productPage.enterCartonHeight("67");
+    productPage.enterSpecialStorageInstructions("storage instructions * storage instructions * storage instructions * " +
+      "storage instructions * storage instructions * storage instructions * storage instructions * storage instructions * ");
+    productPage.enterSpecialTransportInstructions("transport instruction * transport instruction * transport instruction * " +
+      "transport instruction * transport instruction * transport instruction * transport instruction * transport instruction * " +
+      "transport instruction * transport instruction * transport instruction");
+    productPage.clickStoreRefrigeratedTrueButton();
+    productPage.clickStoreRoomTemperatureFalseButton();
+    productPage.clickHazardousTrueButton();
+    productPage.clickFlammableFalseButton();
+    productPage.clickControlledSubstanceTrueButton();
+    productPage.clickLightSensitiveFalseButton();
+    productPage.clickApprovedByWHOTrueButton();
+    productPage.clickSaveButton();
+    assertEquals("There are some errors in the form. Please resolve them.", productPage.getSaveErrorMsg());
+
+    productPage.enterDispensingUnitInput("unit");
+    productPage.enterDosesPerDispensingUnitInput("10");
+    productPage.enterPackSizeInput("10");
+    productPage.enterPackRoundingThresholdInput("1");
+    productPage.clickRoundToZeroTrueButton();
+    productPage.clickActiveTrueButton();
+    productPage.clickFullSupplyTrueButton();
+    productPage.clickTracerTrueButton();
+    productPage.enterCodeInput("P11");
+    productPage.enterPrimaryNameInput("product");
+    productPage.clickSaveButton();
+
+    assertEquals("Product \"product \" created successfully.   View Here", productPage.getSaveSuccessMsg());
+    productPage.enterSearchProductParameter("P11");
+    productPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    productPage.clickName(1);
+    assertEquals("product", productPage.getPrimaryNameOnEditPage());
+    productPage.clickOtherInfoAccordion();
+    assertEquals("generic name", productPage.getGenericNameOnEditPage());
+    assertEquals("0.9", productPage.getPackHeightOnEditPage());
+  }
+
+  @Test(groups = {"admin"})
   public void testEditExistingProduct() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_PRODUCT");
-    dbWrapper.assignRight("Admin", "UPLOADS");
     dbWrapper.insertProduct("P10", "product10");
-    dbWrapper.insertProductGroup("ProductGroup1");
+    dbWrapper.updateFieldValue("products", "modifiedDate", "07-20-2014", "code", "P10");
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     productPage = homePage.navigateToProductPage();
@@ -344,17 +447,30 @@ public class ManageProduct extends TestCaseHelper {
     assertEquals("Edit Product", productPage.getEditProductHeader());
     productPage.enterTypeInput("type");
     productPage.enterPrimaryNameInput("product");
+    productPage.expandAll();
+    productPage.enterGenericName("generic");
+    assertEquals("20/07/2014", productPage.getProductLastUpdated());
     productPage.clickCancelButton();
     productPage.clickName(1);
     assertEquals("product10", productPage.getPrimaryNameOnEditPage());
+    productPage.clickOtherInfoAccordion();
+    assertEquals("20/07/2014", productPage.getProductLastUpdated());
+    assertEquals("TDF/FTC/EFV", productPage.getGenericNameOnEditPage());
+    assertEquals("2", productPage.getPackHeightOnEditPage());
 
     productPage.enterTypeInput("type");
     productPage.enterPrimaryNameInput("product");
+    productPage.expandAll();
+    productPage.enterGenericName("generic");
     productPage.clickSaveButton();
 
     assertEquals("Product \"product Capsule 300/200/600 mg\" updated successfully.   View Here", productPage.getSaveSuccessMsg());
     productPage.clickViewHere();
     assertEquals("product", productPage.getPrimaryNameOnEditPage());
+    productPage.clickOtherInfoAccordion();
+    assertEquals("generic", productPage.getGenericNameOnEditPage());
+    assertEquals("2", productPage.getPackHeightOnEditPage());
+    assertEquals((new SimpleDateFormat("dd/MM/yyyy")).format(new Date()), productPage.getProductLastUpdated());
   }
 
   public void searchProduct(String searchParameter) {

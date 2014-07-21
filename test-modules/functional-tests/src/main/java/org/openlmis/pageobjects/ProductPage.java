@@ -225,6 +225,216 @@ public class ProductPage extends Page {
   @FindBy(how = ID, using = "viewHereLink")
   private static WebElement viewHereLink = null;
 
+  @FindBy(how = ID, using = "productOtherInformation")
+  private static WebElement productOtherInformationLabel = null;
+
+  @FindBy(how = ID, using = "productGenericNameLabel")
+  private static WebElement productGenericNameLabel = null;
+
+  @FindBy(how = ID, using = "productAlternateNameLabel")
+  private static WebElement productAlternateNameLabel = null;
+
+  @FindBy(how = ID, using = "productAlternateProductCodeLabel")
+  private static WebElement productAlternateProductCodeLabel = null;
+
+  @FindBy(how = ID, using = "productAlternatePackSizeLabel")
+  private static WebElement productAlternatePackSizeLabel = null;
+
+  @FindBy(how = ID, using = "productManufacturerLabel")
+  private static WebElement productManufacturerLabel = null;
+
+  @FindBy(how = ID, using = "productManufacturerProductCodeLabel")
+  private static WebElement productManufacturerProductCodeLabel = null;
+
+  @FindBy(how = ID, using = "productManufacturerBarCodeLabel")
+  private static WebElement productManufacturerBarCodeLabel = null;
+
+  @FindBy(how = ID, using = "productGTINLabel")
+  private static WebElement productGTINLabel = null;
+
+  @FindBy(how = ID, using = "productExpectedShelfLifeLabel")
+  private static WebElement productExpectedShelfLifeLabel = null;
+
+  @FindBy(how = ID, using = "productRecordLastUpdatedLabel")
+  private static WebElement productRecordLastUpdatedLabel = null;
+
+  @FindBy(how = ID, using = "productAlternateMoHBarCodeLabel")
+  private static WebElement productAlternateMoHBarCodeLabel = null;
+
+  @FindBy(how = ID, using = "productContraceptiveCoupleYearsOfProtectionLabel")
+  private static WebElement productContraceptiveCoupleYearsOfProtectionLabel = null;
+
+  @FindBy(how = ID, using = "productStoreRefrigeratedLabel")
+  private static WebElement productStoreRefrigeratedLabel = null;
+
+  @FindBy(how = ID, using = "productStoreAtRoomTemperatureLabel")
+  private static WebElement productStoreAtRoomTemperatureLabel = null;
+
+  @FindBy(how = ID, using = "productPackLengthLabel")
+  private static WebElement productPackLengthLabel = null;
+
+  @FindBy(how = ID, using = "productPackWidthLabel")
+  private static WebElement productPackWidthLabel = null;
+
+  @FindBy(how = ID, using = "productHazardousLabel")
+  private static WebElement productHazardousLabel = null;
+
+  @FindBy(how = ID, using = "productFlammableLabel")
+  private static WebElement productFlammableLabel = null;
+
+  @FindBy(how = ID, using = "productPackHeightLabel")
+  private static WebElement productPackHeightLabel = null;
+
+  @FindBy(how = ID, using = "productPackWeightLabel")
+  private static WebElement productPackWeightLabel = null;
+
+  @FindBy(how = ID, using = "productControlledSubstanceLabel")
+  private static WebElement productControlledSubstanceLabel = null;
+
+  @FindBy(how = ID, using = "productLightSensitiveLabel")
+  private static WebElement productLightSensitiveLabel = null;
+
+  @FindBy(how = ID, using = "productPackPerCartonLabel")
+  private static WebElement productPackPerCartonLabel = null;
+
+  @FindBy(how = ID, using = "productCartonLengthLabel")
+  private static WebElement productCartonLengthLabel = null;
+
+  @FindBy(how = ID, using = "productApprovedByWHOLabel")
+  private static WebElement productApprovedByWHOLabel = null;
+
+  @FindBy(how = ID, using = "productCartonWidthLabel")
+  private static WebElement productCartonWidthLabel = null;
+
+  @FindBy(how = ID, using = "productCartonHeightLabel")
+  private static WebElement productCartonHeightLabel = null;
+
+  @FindBy(how = ID, using = "productCartonsPerPalletLabel")
+  private static WebElement productCartonsPerPalletLabel = null;
+
+  @FindBy(how = ID, using = "productSpecialStorageInstructionsLabel")
+  private static WebElement productSpecialStorageInstructionsLabel = null;
+
+  @FindBy(how = ID, using = "productSpecialTransportInstructionsLabel")
+  private static WebElement productSpecialTransportInstructionsLabel = null;
+
+  @FindBy(how = ID, using = "genericName")
+  private static WebElement genericName = null;
+
+  @FindBy(how = ID, using = "alternateName")
+  private static WebElement alternateName = null;
+
+  @FindBy(how = ID, using = "alternateItemCode")
+  private static WebElement alternateItemCode = null;
+
+  @FindBy(how = ID, using = "product.alternatePackSize")
+  private static WebElement alternatePackSize = null;
+
+  @FindBy(how = ID, using = "manufacturer")
+  private static WebElement manufacturer = null;
+
+  @FindBy(how = ID, using = "manufacturerCode")
+  private static WebElement manufacturerCode = null;
+
+  @FindBy(how = ID, using = "manufacturerBarCode")
+  private static WebElement manufacturerBarCode = null;
+
+  @FindBy(how = ID, using = "gtin")
+  private static WebElement gtin = null;
+
+  @FindBy(how = ID, using = "product.expectedShelfLife")
+  private static WebElement expectedShelfLife = null;
+
+  @FindBy(how = ID, using = "productLastUpdated")
+  private static WebElement productLastUpdated = null;
+
+  @FindBy(how = ID, using = "mohBarCode")
+  private static WebElement mohBarCode = null;
+
+  @FindBy(how = ID, using = "product.contraceptiveCYP")
+  private static WebElement contraceptiveCYP = null;
+
+  @FindBy(how = ID, using = "storeRefrigeratedTrue")
+  private static WebElement storeRefrigeratedTrue = null;
+
+  @FindBy(how = ID, using = "storeRefrigeratedFalse")
+  private static WebElement storeRefrigeratedFalse = null;
+
+  @FindBy(how = ID, using = "storeRoomTemperatureTrue")
+  private static WebElement storeRoomTemperatureTrue = null;
+
+  @FindBy(how = ID, using = "storeRoomTemperatureFalse")
+  private static WebElement storeRoomTemperatureFalse = null;
+
+  @FindBy(how = ID, using = "product.packLength")
+  private static WebElement packLength = null;
+
+  @FindBy(how = ID, using = "product.packWidth")
+  private static WebElement packWidth = null;
+
+  @FindBy(how = ID, using = "hazardousTrue")
+  private static WebElement hazardousTrue = null;
+
+  @FindBy(how = ID, using = "hazardousFalse")
+  private static WebElement hazardousFalse = null;
+
+  @FindBy(how = ID, using = "flammableTrue")
+  private static WebElement flammableTrue = null;
+
+  @FindBy(how = ID, using = "flammableFalse")
+  private static WebElement flammableFalse = null;
+
+  @FindBy(how = ID, using = "product.packHeight")
+  private static WebElement packHeight = null;
+
+  @FindBy(how = ID, using = "product.packWeight")
+  private static WebElement packWeight = null;
+
+  @FindBy(how = ID, using = "controlledSubstanceTrue")
+  private static WebElement controlledSubstanceTrue = null;
+
+  @FindBy(how = ID, using = "controlledSubstanceFalse")
+  private static WebElement controlledSubstanceFalse = null;
+
+  @FindBy(how = ID, using = "lightSensitiveTrue")
+  private static WebElement lightSensitiveTrue = null;
+
+  @FindBy(how = ID, using = "lightSensitiveFalse")
+  private static WebElement lightSensitiveFalse = null;
+
+  @FindBy(how = ID, using = "product.packsPerCarton")
+  private static WebElement packsPerCarton = null;
+
+  @FindBy(how = ID, using = "product.cartonLength")
+  private static WebElement cartonLength = null;
+
+  @FindBy(how = ID, using = "approvedByWHOTrue")
+  private static WebElement approvedByWHOTrue = null;
+
+  @FindBy(how = ID, using = "approvedByWHOFalse")
+  private static WebElement approvedByWHOFalse = null;
+
+  @FindBy(how = ID, using = "product.cartonWidth")
+  private static WebElement cartonWidth = null;
+
+  @FindBy(how = ID, using = "product.cartonHeight")
+  private static WebElement cartonHeight = null;
+
+  @FindBy(how = ID, using = "product.cartonsPerPallet")
+  private static WebElement cartonsPerPallet = null;
+
+  @FindBy(how = ID, using = "specialStorageInstructions")
+  private static WebElement specialStorageInstructions = null;
+
+  @FindBy(how = ID, using = "specialTransportInstructions")
+  private static WebElement specialTransportInstructions = null;
+
+  @FindBy(how = ID, using = "expandAll")
+  private static WebElement expandAllOption = null;
+
+  @FindBy(how = ID, using = "collapseAll")
+  private static WebElement collapseAllOption = null;
+
   public ProductPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -727,5 +937,335 @@ public class ProductPage extends Page {
     WebElement name = testWebDriver.getElementById("name" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(name);
     name.click();
+  }
+
+  public String getProductOtherInformationLabel() {
+    testWebDriver.waitForElementToAppear(productOtherInformationLabel);
+    return productOtherInformationLabel.getText();
+  }
+
+  public String getProductGenericNameLabel() {
+    testWebDriver.waitForElementToAppear(productGenericNameLabel);
+    return productGenericNameLabel.getText();
+  }
+
+  public String getProductAlternateNameLabel() {
+    testWebDriver.waitForElementToAppear(productAlternateNameLabel);
+    return productAlternateNameLabel.getText();
+  }
+
+  public String getProductAlternateProductCodeLabel() {
+    testWebDriver.waitForElementToAppear(productAlternateProductCodeLabel);
+    return productAlternateProductCodeLabel.getText();
+  }
+
+  public String getProductAlternatePackSizeLabel() {
+    testWebDriver.waitForElementToAppear(productAlternatePackSizeLabel);
+    return productAlternatePackSizeLabel.getText();
+  }
+
+  public String getProductManufacturerLabel() {
+    testWebDriver.waitForElementToAppear(productManufacturerLabel);
+    return productManufacturerLabel.getText();
+  }
+
+  public String getProductManufacturerProductCodeLabel() {
+    testWebDriver.waitForElementToAppear(productManufacturerProductCodeLabel);
+    return productManufacturerProductCodeLabel.getText();
+  }
+
+  public String getProductManufacturerBarCodeLabel() {
+    testWebDriver.waitForElementToAppear(productManufacturerBarCodeLabel);
+    return productManufacturerBarCodeLabel.getText();
+  }
+
+  public String getProductGTINLabel() {
+    testWebDriver.waitForElementToAppear(productGTINLabel);
+    return productGTINLabel.getText();
+  }
+
+  public String getProductExpectedShelfLifeLabel() {
+    testWebDriver.waitForElementToAppear(productExpectedShelfLifeLabel);
+    return productExpectedShelfLifeLabel.getText();
+  }
+
+  public String getProductRecordLastUpdatedLabel() {
+    testWebDriver.waitForElementToAppear(productRecordLastUpdatedLabel);
+    return productRecordLastUpdatedLabel.getText();
+  }
+
+  public String getProductAlternateMoHBarCodeLabel() {
+    testWebDriver.waitForElementToAppear(productAlternateMoHBarCodeLabel);
+    return productAlternateMoHBarCodeLabel.getText();
+  }
+
+  public String getProductContraceptiveCoupleYearsOfProtectionLabel() {
+    testWebDriver.waitForElementToAppear(productContraceptiveCoupleYearsOfProtectionLabel);
+    return productContraceptiveCoupleYearsOfProtectionLabel.getText();
+  }
+
+  public String getProductStoreRefrigeratedLabel() {
+    testWebDriver.waitForElementToAppear(productStoreRefrigeratedLabel);
+    return productStoreRefrigeratedLabel.getText();
+  }
+
+  public String getProductStoreAtRoomTemperatureLabel() {
+    testWebDriver.waitForElementToAppear(productStoreAtRoomTemperatureLabel);
+    return productStoreAtRoomTemperatureLabel.getText();
+  }
+
+  public String getProductPackLengthLabel() {
+    testWebDriver.waitForElementToAppear(productPackLengthLabel);
+    return productPackLengthLabel.getText();
+  }
+
+  public String getProductPackWidthLabel() {
+    testWebDriver.waitForElementToAppear(productPackWidthLabel);
+    return productPackWidthLabel.getText();
+  }
+
+  public String getProductHazardousLabel() {
+    testWebDriver.waitForElementToAppear(productHazardousLabel);
+    return productHazardousLabel.getText();
+  }
+
+  public String getProductFlammableLabel() {
+    testWebDriver.waitForElementToAppear(productFlammableLabel);
+    return productFlammableLabel.getText();
+  }
+
+  public String getProductPackHeightLabel() {
+    testWebDriver.waitForElementToAppear(productPackHeightLabel);
+    return productPackHeightLabel.getText();
+  }
+
+  public String getProductPackWeightLabel() {
+    testWebDriver.waitForElementToAppear(productPackWeightLabel);
+    return productPackWeightLabel.getText();
+  }
+
+  public String getProductControlledSubstanceLabel() {
+    testWebDriver.waitForElementToAppear(productControlledSubstanceLabel);
+    return productControlledSubstanceLabel.getText();
+  }
+
+  public String getProductLightSensitiveLabel() {
+    testWebDriver.waitForElementToAppear(productLightSensitiveLabel);
+    return productLightSensitiveLabel.getText();
+  }
+
+  public String getProductPackPerCartonLabel() {
+    testWebDriver.waitForElementToAppear(productPackPerCartonLabel);
+    return productPackPerCartonLabel.getText();
+  }
+
+  public String getProductCartonLengthLabel() {
+    testWebDriver.waitForElementToAppear(productCartonLengthLabel);
+    return productCartonLengthLabel.getText();
+  }
+
+  public String getProductApprovedByWHOLabel() {
+    testWebDriver.waitForElementToAppear(productApprovedByWHOLabel);
+    return productApprovedByWHOLabel.getText();
+  }
+
+  public String getProductCartonWidthLabel() {
+    testWebDriver.waitForElementToAppear(productCartonWidthLabel);
+    return productCartonWidthLabel.getText();
+  }
+
+  public String getProductCartonHeightLabel() {
+    testWebDriver.waitForElementToAppear(productCartonHeightLabel);
+    return productCartonHeightLabel.getText();
+  }
+
+  public String getProductCartonsPerPalletLabel() {
+    testWebDriver.waitForElementToAppear(productCartonsPerPalletLabel);
+    return productCartonsPerPalletLabel.getText();
+  }
+
+  public String getProductSpecialStorageInstructionsLabel() {
+    testWebDriver.waitForElementToAppear(productSpecialStorageInstructionsLabel);
+    return productSpecialStorageInstructionsLabel.getText();
+  }
+
+  public String getProductSpecialTransportInstructionsLabel() {
+    testWebDriver.waitForElementToAppear(productSpecialTransportInstructionsLabel);
+    return productSpecialTransportInstructionsLabel.getText();
+  }
+
+  public void enterGenericName(String genericNameInput) {
+    testWebDriver.waitForElementToAppear(genericName);
+    sendKeys(genericName, genericNameInput);
+  }
+
+  public void enterAlternateName(String alternateNameInput) {
+    testWebDriver.waitForElementToAppear(alternateName);
+    sendKeys(alternateName, alternateNameInput);
+  }
+
+  public void enterAlternateItemCode(String alternateItemCodeInput) {
+    testWebDriver.waitForElementToAppear(alternateItemCode);
+    sendKeys(alternateItemCode, alternateItemCodeInput);
+  }
+
+  public void enterAlternatePackSize(String alternatePackSizeInput) {
+    testWebDriver.waitForElementToAppear(alternatePackSize);
+    sendKeys(alternatePackSize, alternatePackSizeInput);
+  }
+
+  public void enterManufacturer(String manufacturerInput) {
+    testWebDriver.waitForElementToAppear(manufacturer);
+    sendKeys(manufacturer, manufacturerInput);
+  }
+
+  public void enterManufacturerCode(String manufacturerCodeInput) {
+    testWebDriver.waitForElementToAppear(manufacturerCode);
+    sendKeys(manufacturerCode, manufacturerCodeInput);
+  }
+
+  public void enterManufacturerBarCode(String manufacturerBarCodeInput) {
+    testWebDriver.waitForElementToAppear(manufacturerBarCode);
+    sendKeys(manufacturerBarCode, manufacturerBarCodeInput);
+  }
+
+  public void enterGtin(String gtinInput) {
+    testWebDriver.waitForElementToAppear(gtin);
+    sendKeys(gtin, gtinInput);
+  }
+
+  public void enterExpectedShelfLife(String expectedShelfLifeInput) {
+    testWebDriver.waitForElementToAppear(expectedShelfLife);
+    sendKeys(expectedShelfLife, expectedShelfLifeInput);
+  }
+
+  public void enterMohBarCode(String mohBarCodeInput) {
+    testWebDriver.waitForElementToAppear(mohBarCode);
+    sendKeys(mohBarCode, mohBarCodeInput);
+  }
+
+  public void enterContraceptiveCYP(String contraceptiveCYPInput) {
+    testWebDriver.waitForElementToAppear(contraceptiveCYP);
+    sendKeys(contraceptiveCYP, contraceptiveCYPInput);
+  }
+
+  public void enterPackLength(String packLengthInput) {
+    testWebDriver.waitForElementToAppear(packLength);
+    sendKeys(packLength, packLengthInput);
+  }
+
+  public void enterPackWidth(String packWidthInput) {
+    testWebDriver.waitForElementToAppear(packWidth);
+    sendKeys(packWidth, packWidthInput);
+  }
+
+  public void enterPackHeight(String packHeightInput) {
+    testWebDriver.waitForElementToAppear(packHeight);
+    sendKeys(packHeight, packHeightInput);
+  }
+
+  public void enterPackWeight(String packWeightInput) {
+    testWebDriver.waitForElementToAppear(packWeight);
+    sendKeys(packWeight, packWeightInput);
+  }
+
+  public void enterPacksPerCarton(String packsPerCartonInput) {
+    testWebDriver.waitForElementToAppear(packsPerCarton);
+    sendKeys(packsPerCarton, packsPerCartonInput);
+  }
+
+  public void enterCartonLength(String cartonLengthInput) {
+    testWebDriver.waitForElementToAppear(cartonLength);
+    sendKeys(cartonLength, cartonLengthInput);
+  }
+
+  public void enterCartonWidth(String cartonWidthInput) {
+    testWebDriver.waitForElementToAppear(cartonWidth);
+    sendKeys(cartonWidth, cartonWidthInput);
+  }
+
+  public void enterCartonsPerPallet(String cartonsPerPalletInput) {
+    testWebDriver.waitForElementToAppear(cartonsPerPallet);
+    sendKeys(cartonsPerPallet, cartonsPerPalletInput);
+  }
+
+  public void enterCartonHeight(String cartonHeightInput) {
+    testWebDriver.waitForElementToAppear(cartonHeight);
+    sendKeys(cartonHeight, cartonHeightInput);
+  }
+
+  public void enterSpecialStorageInstructions(String specialStorageInstructionsInput) {
+    testWebDriver.waitForElementToAppear(specialStorageInstructions);
+    sendKeys(specialStorageInstructions, specialStorageInstructionsInput);
+  }
+
+  public void enterSpecialTransportInstructions(String specialTransportInstructionsInput) {
+    testWebDriver.waitForElementToAppear(specialTransportInstructions);
+    sendKeys(specialTransportInstructions, specialTransportInstructionsInput);
+  }
+
+  public void clickStoreRefrigeratedTrueButton() {
+    testWebDriver.waitForElementToAppear(storeRefrigeratedTrue);
+    storeRefrigeratedTrue.click();
+  }
+
+  public void clickStoreRoomTemperatureFalseButton() {
+    testWebDriver.waitForElementToAppear(storeRoomTemperatureFalse);
+    storeRoomTemperatureFalse.click();
+  }
+
+  public void clickHazardousTrueButton() {
+    testWebDriver.waitForElementToAppear(hazardousTrue);
+    hazardousTrue.click();
+  }
+
+  public void clickFlammableFalseButton() {
+    testWebDriver.waitForElementToAppear(flammableFalse);
+    flammableFalse.click();
+  }
+
+  public void clickControlledSubstanceTrueButton() {
+    testWebDriver.waitForElementToAppear(controlledSubstanceTrue);
+    controlledSubstanceTrue.click();
+  }
+
+  public void clickLightSensitiveFalseButton() {
+    testWebDriver.waitForElementToAppear(lightSensitiveFalse);
+    lightSensitiveFalse.click();
+  }
+
+  public void clickApprovedByWHOTrueButton() {
+    testWebDriver.waitForElementToAppear(approvedByWHOTrue);
+    approvedByWHOTrue.click();
+  }
+
+  public String getProductLastUpdated() {
+    testWebDriver.waitForElementToAppear(productLastUpdated);
+    return productLastUpdated.getText();
+  }
+
+  public void clickOtherInfoAccordion() {
+    testWebDriver.waitForElementToAppear(productOtherInformationLabel);
+    productOtherInformationLabel.click();
+  }
+
+  public void expandAll() {
+    testWebDriver.waitForElementToAppear(expandAllOption);
+    expandAllOption.click();
+  }
+
+  public void collapseAll() {
+    testWebDriver.waitForElementToAppear(collapseAllOption);
+    collapseAllOption.click();
+  }
+
+  public String getGenericNameOnEditPage() {
+    testWebDriver.waitForElementToAppear(genericName);
+    return genericName.getAttribute("value");
+  }
+
+  public String getPackHeightOnEditPage() {
+    testWebDriver.waitForElementToAppear(packHeight);
+    return packHeight.getAttribute("value");
   }
 }
