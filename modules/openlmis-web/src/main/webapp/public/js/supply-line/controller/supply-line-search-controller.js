@@ -33,10 +33,14 @@ function SupplyLineSearchController($scope, $location, navigateBackService, Supp
     $location.path('edit/' + id);
   };
 
-  $scope.search = function (page) {
-    if (!$scope.query) return;
-    $scope.query = $scope.query.trim();
-    $scope.searchedQuery = $scope.query;
+  $scope.search = function (page, lastQuery) {
+    if (!($scope.query || lastQuery)) return;
+    lastQuery ? getSupplyLines(page, lastQuery) : getSupplyLines(page, $scope.query);
+  };
+
+  function getSupplyLines(page, query){
+    query = query.trim();
+    $scope.searchedQuery = query;
     SupplyLinesSearch.get({page: page, searchParam: $scope.searchedQuery, column: $scope.selectedSearchOption.value}, function (data) {
       $scope.supplyLines = data.supplyLines;
       $scope.pagination = data.pagination;
@@ -44,11 +48,11 @@ function SupplyLineSearchController($scope, $location, navigateBackService, Supp
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
     }, {});
-  };
+  }
 
   $scope.$watch('currentPage', function () {
     if ($scope.currentPage !== 0)
-      $scope.search($scope.currentPage);
+      $scope.search($scope.currentPage, $scope.searchedQuery);
   });
 
   $scope.clearSearch = function () {
