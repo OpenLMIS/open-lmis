@@ -23,6 +23,7 @@ import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
@@ -43,8 +44,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProgramProductBuilder.*;
 
-@RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ProgramProductServiceTest {
 
   @Rule
@@ -75,7 +76,7 @@ public class ProgramProductServiceTest {
   public ExpectedException expectedException = ExpectedException.none();
 
   @InjectMocks
-  private ProgramProductService programProductService;
+  private ProgramProductService service;
 
   @Test
   public void shouldUpdateCurrentPriceOfProgramProductCodeCombinationAndUpdatePriceHistory() throws Exception {
@@ -87,7 +88,7 @@ public class ProgramProductServiceTest {
     returnedProgramProduct.setId(123L);
     when(programProductRepository.getByProgramAndProductCode(programProduct)).thenReturn(returnedProgramProduct);
 
-    programProductService.updateProgramProductPrice(programProductPrice);
+    service.updateProgramProductPrice(programProductPrice);
 
     assertThat(programProductPrice.getProgramProduct().getId(), is(123L));
     assertThat(programProductPrice.getProgramProduct().getModifiedBy(), is(1L));
@@ -104,7 +105,7 @@ public class ProgramProductServiceTest {
     ProgramProductPrice programProductPrice = mock(ProgramProductPrice.class);
     doThrow(new DataException("error-code")).when(programProductPrice).validate();
 
-    programProductService.updateProgramProductPrice(programProductPrice);
+    service.updateProgramProductPrice(programProductPrice);
   }
 
   @Test
@@ -118,14 +119,14 @@ public class ProgramProductServiceTest {
     expectException.expect(DataException.class);
     expectException.expectMessage("programProduct.product.program.invalid");
 
-    programProductService.updateProgramProductPrice(programProductPrice);
+    service.updateProgramProductPrice(programProductPrice);
   }
 
   @Test
   public void shouldInsertProgramProduct() throws Exception {
     ProgramProduct programProduct = make(a(defaultProgramProduct));
 
-    programProductService.save(programProduct);
+    service.save(programProduct);
 
     verify(programProductRepository).save(programProduct);
   }
@@ -139,7 +140,7 @@ public class ProgramProductServiceTest {
     programProduct.setId(null);
     when(productService.isActive(product)).thenReturn(true);
 
-    programProductService.save(programProduct);
+    service.save(programProduct);
 
     verify(programService).setFeedSendFlag(programProduct.getProgram(), true);
   }
@@ -152,7 +153,7 @@ public class ProgramProductServiceTest {
         with(active, true)));
     when(productService.isActive(product)).thenReturn(false);
 
-    programProductService.save(programProduct);
+    service.save(programProduct);
 
     verify(programService, never()).setFeedSendFlag(programProduct.getProgram(), false);
   }
@@ -165,7 +166,7 @@ public class ProgramProductServiceTest {
         with(active, false)));
     when(productService.isActive(product)).thenReturn(true);
 
-    programProductService.save(programProduct);
+    service.save(programProduct);
 
     verify(programService, never()).setFeedSendFlag(programProduct.getProgram(), false);
   }
@@ -178,7 +179,7 @@ public class ProgramProductServiceTest {
         with(active, false)));
     when(productService.isActive(product)).thenReturn(false);
 
-    programProductService.save(programProduct);
+    service.save(programProduct);
 
     verify(programService, never()).setFeedSendFlag(programProduct.getProgram(), false);
   }
@@ -196,7 +197,7 @@ public class ProgramProductServiceTest {
       a(defaultProgramProduct, with(active, true), with(productActive, true)));
     when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
 
-    programProductService.save(programProductForUpdate);
+    service.save(programProductForUpdate);
 
     verify(programService).setFeedSendFlag(programProductForUpdate.getProgram(), true);
   }
@@ -214,7 +215,7 @@ public class ProgramProductServiceTest {
       a(defaultProgramProduct, with(active, false), with(productActive, true)));
     when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
 
-    programProductService.save(programProductForUpdate);
+    service.save(programProductForUpdate);
 
     verify(programService).setFeedSendFlag(programProductForUpdate.getProgram(), true);
   }
@@ -232,7 +233,7 @@ public class ProgramProductServiceTest {
       a(defaultProgramProduct, with(active, false), with(productActive, false)));
     when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
 
-    programProductService.save(programProductForUpdate);
+    service.save(programProductForUpdate);
 
     verify(programService, never()).setFeedSendFlag(programProductForUpdate.getProgram(), true);
   }
@@ -250,7 +251,7 @@ public class ProgramProductServiceTest {
       a(defaultProgramProduct, with(active, true), with(productActive, false)));
     when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
 
-    programProductService.save(programProductForUpdate);
+    service.save(programProductForUpdate);
 
     verify(programService, never()).setFeedSendFlag(programProductForUpdate.getProgram(), true);
   }
@@ -268,7 +269,7 @@ public class ProgramProductServiceTest {
       a(defaultProgramProduct, with(active, true), with(productActive, false)));
     when(programProductRepository.getById(existingProgramProductId)).thenReturn(existingProgramProduct);
 
-    programProductService.save(programProductForUpdate);
+    service.save(programProductForUpdate);
 
     verify(programService, never()).setFeedSendFlag(programProductForUpdate.getProgram(), true);
   }
@@ -279,7 +280,7 @@ public class ProgramProductServiceTest {
     List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
     when(programProductRepository.getByProgram(program)).thenReturn(expectedProgramProducts);
 
-    List<ProgramProduct> programProducts = programProductService.getByProgram(program);
+    List<ProgramProduct> programProducts = service.getByProgram(program);
 
     assertThat(programProducts, is(expectedProgramProducts));
     verify(programProductRepository).getByProgram(program);
@@ -290,7 +291,7 @@ public class ProgramProductServiceTest {
     List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
     when(programProductRepository.getByProductCode("code")).thenReturn(expectedProgramProducts);
 
-    List<ProgramProduct> programProducts = programProductService.getByProductCode("code");
+    List<ProgramProduct> programProducts = service.getByProductCode("code");
 
     assertThat(programProducts, is(expectedProgramProducts));
     verify(programProductRepository).getByProductCode("code");
@@ -304,7 +305,7 @@ public class ProgramProductServiceTest {
     when(facilityRepository.getFacilityTypeByCode(warehouse)).thenReturn(warehouse);
     when(programProductRepository.getProgramProductsBy(10L, "warehouse")).thenReturn(expectedProgramProducts);
 
-    List<ProgramProduct> programProducts = programProductService.getProgramProductsBy(" P1", " warehouse");
+    List<ProgramProduct> programProducts = service.getProgramProductsBy(" P1", " warehouse");
 
     assertThat(programProducts, is(expectedProgramProducts));
     verify(facilityRepository).getFacilityTypeByCode(warehouse);
@@ -319,7 +320,7 @@ public class ProgramProductServiceTest {
     when(programRepository.getIdByCode("P1")).thenReturn(10L);
     when(programProductRepository.getProgramProductsBy(10L, "warehouse")).thenReturn(expectedProgramProducts);
 
-    List<ProgramProduct> programProducts = programProductService.getProgramProductsBy("P1", null);
+    List<ProgramProduct> programProducts = service.getProgramProductsBy("P1", null);
 
     assertThat(programProducts, is(expectedProgramProducts));
     verify(facilityRepository, never()).getFacilityTypeByCode(any(FacilityType.class));
@@ -338,7 +339,7 @@ public class ProgramProductServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.reference.data.invalid.product");
 
-    programProductService.save(programProduct);
+    service.save(programProduct);
   }
 
   @Test
@@ -350,7 +351,7 @@ public class ProgramProductServiceTest {
     programProduct.setProductCategory(category);
     when(categoryService.getProductCategoryIdByCode("Code")).thenReturn(categoryId);
 
-    programProductService.save(programProduct);
+    service.save(programProduct);
 
     assertThat(category.getId(), is(categoryId));
   }
@@ -384,7 +385,7 @@ public class ProgramProductServiceTest {
     when(facilityApprovedProductService.getAllBy(facilityTypeId, programId, "", new Pagination())).thenReturn(
       approvedProducts);
 
-    List<ProgramProduct> unapprovedProgramProducts = programProductService.getUnapprovedProgramProducts(
+    List<ProgramProduct> unapprovedProgramProducts = service.getUnapprovedProgramProducts(
       facilityTypeId, programId);
 
     assertThat(unapprovedProgramProducts.size(), is(2));
@@ -398,7 +399,7 @@ public class ProgramProductServiceTest {
     String column = "Program";
     when(programProductRepository.getTotalSearchResultCount(searchParam)).thenReturn(10);
 
-    programProductService.getTotalSearchResultCount(searchParam, column);
+    service.getTotalSearchResultCount(searchParam, column);
 
     verify(programProductRepository).getTotalSearchResultCount(searchParam);
   }
@@ -409,8 +410,30 @@ public class ProgramProductServiceTest {
     String column = "Product";
     when(productService.getTotalSearchResultCount(searchParam)).thenReturn(10);
 
-    programProductService.getTotalSearchResultCount(searchParam, column);
+    service.getTotalSearchResultCount(searchParam, column);
 
     verify(productService).getTotalSearchResultCount(searchParam);
+  }
+
+  @Test
+  public void shouldSaveAll() throws Exception {
+    ProgramProduct programProduct1 = new ProgramProduct();
+    programProduct1.setActive(true);
+    ProgramProduct programProduct2 = new ProgramProduct();
+    programProduct2.setActive(false);
+    Product product = new Product();
+
+    ProgramProductService spyService = spy(service);
+
+    doNothing().when(spyService).save(programProduct1);
+    doNothing().when(spyService).save(programProduct2);
+
+    spyService.saveAll(asList(programProduct1, programProduct2), product);
+
+    assertThat(programProduct1.getProduct(), is(product));
+    assertThat(programProduct2.getProduct(), is(product));
+
+    verify(spyService).save(programProduct1);
+    verify(spyService).save(programProduct2);
   }
 }

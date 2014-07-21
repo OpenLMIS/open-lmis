@@ -29,6 +29,10 @@ describe("Product", function () {
       expect(scope.productLastUpdated).toEqual("23/12/2014");
     });
 
+    it('should set newProgramProduct as empty object in scope', function () {
+      expect(scope.newProgramProduct).toEqual({active: false});
+    });
+
     it('should not set selected product form, group and dosage unit in scope if program product is undefined', function () {
       expect(scope.selectedProductFormCode).toBeUndefined();
       expect(scope.selectedProductGroupCode).toBeUndefined();
@@ -43,6 +47,19 @@ describe("Product", function () {
       expect(scope.selectedProductFormCode).toBeUndefined();
       expect(scope.selectedProductGroupCode).toBeUndefined();
       expect(scope.selectedProductDosageUnitCode).toBeUndefined();
+    });
+
+    it('should filter already added programs from the list and sort by name', function () {
+      var vaccineProgram = {id: 1, code: 'Vaccines', name: 'Vaccines'};
+      var TBProgram = {id: 2, code: 'TB', name: "TB"};
+      var hivProgram = {id: 3, code: 'HIV', name: "HIV"};
+      var productDTO = {product: {form: {code: "p10"}}, programProducts: [
+        {program: hivProgram}
+      ]};
+
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [vaccineProgram, hivProgram, TBProgram], categories: [], productDTO: productDTO});
+
+      expect(scope.programs).toEqual([TBProgram, vaccineProgram]);
     });
 
     it('should set selected product form, group and dosage unit in scope if product values are defined', function () {
@@ -61,37 +78,30 @@ describe("Product", function () {
 
       expect(scope.product).toBeUndefined();
       expect(scope.productLastUpdated).toBeUndefined();
+      expect(scope.programProducts).toEqual([]);
     });
 
-    it('should set product groups, forms, dosage units, programs and catgeories in scope', function () {
-      ctrl = controller('ProductController', {$scope: scope, productGroups: [
-        {code: 'group1'}
-      ], productForms: [
-        {code: 'form1'}
-      ],
-        dosageUnits: [
-          {code: 'unit1'}
-        ], programs: [
-          {code: 'program1'}
-        ], categories: [
-          {code: 'category1'}
-        ], productDTO: undefined});
+    it('should set product groups, forms, dosage units, programs and categories in scope', function () {
+      var productGroup1 = {code: 'group1'};
+      var productForm1 = {code: 'form1'};
+      var dosageUnit1 = {code: 'unit1'};
+      var vaccineProgram = {id: 1, code: 'Vaccines', name: 'Vaccines'};
+      var hivProgram = {id: 2, code: 'HIV', name: "HIV"};
 
-      expect(scope.productGroups).toEqual([
-        {code: 'group1'}
-      ]);
-      expect(scope.productForms).toEqual([
-        {code: 'form1'}
-      ]);
-      expect(scope.dosageUnits).toEqual([
-        {code: 'unit1'}
-      ]);
-      expect(scope.programs).toEqual([
-        {code: 'program1'}
-      ]);
-      expect(scope.categories).toEqual([
-        {code: 'category1'}
-      ]);
+      var productCategory1 = {code: 'category1'};
+      var programProduct1 = {program: vaccineProgram, productCategory: productCategory1, active: true,
+        displayOrder: 23, dosesPerMonth: 1234, currentPrice: "67.67"};
+
+      var productDTO = {product: {code: 'p10'}, productLastUpdated: "23/12/2014", programProducts: [programProduct1]};
+
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [productGroup1], productForms: [ productForm1],
+        dosageUnits: [dosageUnit1], programs: [hivProgram, vaccineProgram ], categories: [ productCategory1], productDTO: productDTO});
+
+      expect(scope.productGroups).toEqual([productGroup1]);
+      expect(scope.productForms).toEqual([productForm1]);
+      expect(scope.dosageUnits).toEqual([dosageUnit1]);
+      expect(scope.programs).toEqual([hivProgram]);
+      expect(scope.categories).toEqual([productCategory1]);
     });
 
     describe("Save", function () {
@@ -130,7 +140,7 @@ describe("Product", function () {
         scope.selectedProductDosageUnitCode = "unit2";
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPOST('/products.json', {product: scope.product}).respond(200, {"success": "Saved successfully", "productId": 5});
+        $httpBackend.expectPOST('/products.json', {product: scope.product, programProducts: scope.programProducts}).respond(200, {"success": "Saved successfully", "productId": 5});
         scope.save();
         $httpBackend.flush();
 
@@ -147,7 +157,7 @@ describe("Product", function () {
         scope.product = {"code": 'P10'};
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPOST('/products.json', {product: scope.product}).respond(400, {"error": "Some error occurred"});
+        $httpBackend.expectPOST('/products.json', {product: scope.product, programProducts: scope.programProducts}).respond(400, {"error": "Some error occurred"});
         scope.save();
         $httpBackend.flush();
 
@@ -163,7 +173,7 @@ describe("Product", function () {
         scope.selectedProductDosageUnitCode = "unit3";
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPUT('/products/1.json', {product: scope.product}).respond(200, {"success": "Updated successfully", "productId": 5});
+        $httpBackend.expectPUT('/products/1.json', {product: scope.product, programProducts: scope.programProducts}).respond(200, {"success": "Updated successfully", "productId": 5});
         scope.save();
         $httpBackend.flush();
 
@@ -180,7 +190,7 @@ describe("Product", function () {
         scope.product = {"id": 1, "code": 'P10'};
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPUT('/products/1.json', {product: scope.product}).respond(400, {"error": "Some error occurred"});
+        $httpBackend.expectPUT('/products/1.json', {product: scope.product, programProducts: scope.programProducts}).respond(400, {"error": "Some error occurred"});
         scope.save();
         $httpBackend.flush();
 
@@ -198,19 +208,25 @@ describe("Product", function () {
     });
 
     describe('Edit', function () {
-      it('should edit program product and retain all previous values', function () {
-        var productCategory = {name: "Category1"};
-        var program = {name: "Vaccines"};
+      var productCategory1, productCategory2, vaccineProgram, hivProgram;
+
+      beforeEach(function () {
+        productCategory1 = {id: 12, name: "Category1"};
+        productCategory2 = {id: 23, name: "Category2"};
+        vaccineProgram = {name: "Vaccines"};
+        hivProgram = {name: "HIV"};
         scope.programProducts = [
-          {program: program, productCategory: productCategory, active: true,
+          {program: vaccineProgram, productCategory: productCategory1, active: true,
             displayOrder: 23, dosesPerMonth: 1234, currentPrice: "67.67"}
         ];
+      });
 
+      it('should edit vaccineProgram product and retain all previous values', function () {
         scope.edit(0);
 
         expect(scope.programProducts[0].underEdit).toBeTruthy();
-        expect(scope.currentProgramProduct.program).toEqual(program);
-        expect(scope.currentProgramProduct.productCategory).toEqual(productCategory);
+        expect(scope.currentProgramProduct.program).toEqual(vaccineProgram);
+        expect(scope.currentProgramProduct.productCategory).toEqual(productCategory1);
         expect(scope.currentProgramProduct.active).toBeTruthy();
         expect(scope.currentProgramProduct.displayOrder).toEqual(23);
         expect(scope.currentProgramProduct.dosesPerMonth).toEqual(1234);
@@ -218,13 +234,6 @@ describe("Product", function () {
       });
 
       it('should cancel editing', function () {
-        var productCategory1 = {name: "Category1"};
-        var productCategory2 = {name: "Category2"};
-        var hivProgram = {name: "HIV"};
-        scope.programProducts = [
-          {program: {name: "Vaccines"}, productCategory: productCategory1, active: true,
-            displayOrder: 23, dosesPerMonth: 1234, currentPrice: "67.67"}
-        ];
         scope.currentProgramProduct = {program: hivProgram, productCategory: productCategory2, active: false,
           displayOrder: 22, dosesPerMonth: 333, currentPrice: "12.5"};
 
@@ -241,8 +250,6 @@ describe("Product", function () {
       });
 
       it("should update category", function () {
-        var productCategory1 = {id: 12, name: "Category1"};
-        var productCategory2 = {id: 23, name: "Category2"};
         scope.categories = [productCategory1, productCategory2];
         scope.programProducts = [
           {program: {name: "Vaccines"}, productCategory: {id: 23, name: "other category"}, active: true,
@@ -252,6 +259,67 @@ describe("Product", function () {
         scope.updateCategory(0);
 
         expect(scope.programProducts[0].productCategory).toEqual(productCategory2);
+      });
+    });
+
+    describe('Add', function () {
+
+      it('should add new program product', function () {
+        var productCategory1 = {name: "Category1"};
+        var productCategory2 = {name: "Category2"};
+        var hivProgram = {name: "HIV"};
+        var TBProgram = {id: 2, code: 'TB', name: "TB"};
+        var vaccineProgram = {name: "Vaccines"};
+        scope.programs = [hivProgram, vaccineProgram, TBProgram];
+        var programProduct1 = {program: vaccineProgram, productCategory: productCategory1, active: true,
+          displayOrder: 23, dosesPerMonth: 1234, currentPrice: "67.67"};
+
+        var programProduct2 = {program: hivProgram, productCategory: productCategory2, active: false,
+          displayOrder: 22, dosesPerMonth: 333, currentPrice: "12.5"};
+
+        scope.newProgramProduct = programProduct2;
+
+        scope.programProducts = [programProduct1];
+
+        scope.addNewProgramProduct();
+
+        expect(scope.programProducts).toEqual([programProduct1, programProduct2]);
+        expect(scope.programs).toEqual([TBProgram]);
+        expect(scope.newProgramProduct).toEqual({});
+      });
+    });
+
+    describe('Mandatory fields', function () {
+      it('should return false if all mandatory fields are filled', function () {
+        var programProduct = {program: {name: "Vaccines"}, productCategory: {name: "Category1"}, active: true, dosesPerMonth: 1234};
+
+        var areMandatoryFieldsNotFilled = scope.mandatoryFieldsNotFilled(programProduct);
+
+        expect(areMandatoryFieldsNotFilled).toBeFalsy();
+      });
+
+      it('should return true if program not selected', function () {
+        var programProduct = {productCategory: {name: "Category1"}, active: true, dosesPerMonth: 1234};
+
+        var areMandatoryFieldsNotFilled = scope.mandatoryFieldsNotFilled(programProduct);
+
+        expect(areMandatoryFieldsNotFilled).toBeTruthy();
+      });
+
+      it('should return true if category not selected', function () {
+        var programProduct = {program: {name: "Vaccines"}, active: false, dosesPerMonth: 1234};
+
+        var areMandatoryFieldsNotFilled = scope.mandatoryFieldsNotFilled(programProduct);
+
+        expect(areMandatoryFieldsNotFilled).toBeTruthy();
+      });
+
+      it('should return true if dosesPerMonth is undefined', function () {
+        var programProduct = {program: {name: "Vaccines"}, active: false};
+
+        var areMandatoryFieldsNotFilled = scope.mandatoryFieldsNotFilled(programProduct);
+
+        expect(areMandatoryFieldsNotFilled).toBeTruthy();
       });
     });
   });

@@ -147,7 +147,11 @@ public class ProductControllerTest {
     ProductDTO productDTO = new ProductDTO();
     Product product = new Product();
     productDTO.setProduct(product);
+    List<ProgramProduct> programProducts = asList(new ProgramProduct());
+    productDTO.setProgramProducts(programProducts);
+
     doNothing().when(service).save(product);
+    doNothing().when(programProductService).saveAll(programProducts, product);
     when(messageService.message("message.product.created.success", productDTO.getProduct().getName())).thenReturn("save success");
 
     ResponseEntity<OpenLmisResponse> response = controller.save(productDTO, request);
@@ -190,7 +194,11 @@ public class ProductControllerTest {
     ProductDTO productDTO = new ProductDTO();
     Product product = new Product();
     productDTO.setProduct(product);
+    List<ProgramProduct> programProducts = asList(new ProgramProduct());
+    productDTO.setProgramProducts(programProducts);
+
     doNothing().when(service).save(product);
+    doNothing().when(programProductService).saveAll(programProducts, product);
     when(messageService.message("message.product.updated.success", productDTO.getProduct().getName())).thenReturn("updated");
 
     ResponseEntity<OpenLmisResponse> response = controller.update(productDTO, 1L, request);

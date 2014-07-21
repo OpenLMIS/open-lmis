@@ -2,8 +2,12 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
-  $scope.programs = programs;
   $scope.categories = categories;
+  $scope.newProgramProduct = {active: false};
+  $scope.programs = programs;
+  $scope.programProducts = [];
+  $scope.falseValue = false;
+  setProgramMessage();
 
   if (!isUndefined(productDTO)) {
     if (!isUndefined(productDTO.product)) {
@@ -12,6 +16,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
       $scope.selectedProductGroupCode = isUndefined($scope.product.productGroup) ? undefined : $scope.product.productGroup.code;
       $scope.selectedProductFormCode = isUndefined($scope.product.form) ? undefined : $scope.product.form.code;
       $scope.selectedProductDosageUnitCode = isUndefined($scope.product.dosageUnit) ? undefined : $scope.product.dosageUnit.code;
+      refreshAndSortPrograms();
     }
     else {
       $scope.product = {};
@@ -48,10 +53,10 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     setProductReferenceData();
 
     if ($scope.product.id) {
-      Products.update({id: $scope.product.id}, {product: $scope.product}, success, error);
+      Products.update({id: $scope.product.id}, {product: $scope.product, programProducts: $scope.programProducts}, success, error);
     }
     else {
-      Products.save({}, {product: $scope.product}, success, error);
+      Products.save({}, {product: $scope.product, programProducts: $scope.programProducts}, success, error);
     }
   };
 
@@ -76,6 +81,32 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     $scope.programProducts[index].productCategory = _.find($scope.categories, function (category) {
       return category.id === $scope.programProducts[index].productCategory.id;
     });
+  };
+
+  function setProgramMessage() {
+    $scope.programMessage = $scope.programs.length ? "label.select.program" : "label.noProgramLeft";
+  }
+
+  function refreshAndSortPrograms() {
+    var selectedProgramCodes = _.pluck(_.pluck($scope.programProducts, 'program'), 'code');
+    $scope.programs = _.reject($scope.programs, function (program) {
+      return _.contains(selectedProgramCodes, program.code);
+    });
+
+    $scope.programs = _.sortBy($scope.programs, function (program) {
+      return program.name.toLowerCase();
+    });
+    setProgramMessage();
+  }
+
+  $scope.addNewProgramProduct = function () {
+    $scope.programProducts.push($scope.newProgramProduct);
+    refreshAndSortPrograms();
+    $scope.newProgramProduct = {};
+  };
+
+  $scope.mandatoryFieldsNotFilled = function (programProduct) {
+    return !(programProduct && programProduct.program && programProduct.productCategory && programProduct.dosesPerMonth);
   };
 }
 

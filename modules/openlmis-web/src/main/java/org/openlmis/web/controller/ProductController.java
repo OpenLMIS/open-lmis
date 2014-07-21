@@ -95,13 +95,15 @@ public class ProductController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody ProductDTO productDTO, HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> response;
-
     Product product = productDTO.getProduct();
+    List<ProgramProduct> programProducts = productDTO.getProgramProducts();
+
     try {
       Long userId = loggedInUserId(request);
       product.setCreatedBy(userId);
       product.setModifiedBy(userId);
       service.save(product);
+      programProductService.saveAll(programProducts, product);
     } catch (DataException e) {
       response = OpenLmisResponse.error(e, BAD_REQUEST);
       return response;
@@ -116,11 +118,14 @@ public class ProductController extends BaseController {
   public ResponseEntity<OpenLmisResponse> update(@RequestBody ProductDTO productDTO, @PathVariable(value = "id") Long id,
                                                  HttpServletRequest request) {
     Product product = productDTO.getProduct();
+    List<ProgramProduct> programProducts = productDTO.getProgramProducts();
+
     try {
       Long userId = loggedInUserId(request);
       product.setId(id);
       product.setModifiedBy(userId);
       service.save(product);
+      programProductService.saveAll(programProducts, product);
     } catch (DataException e) {
       return OpenLmisResponse.error(e, BAD_REQUEST);
     }

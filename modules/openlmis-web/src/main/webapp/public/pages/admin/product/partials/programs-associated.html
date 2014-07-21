@@ -70,8 +70,13 @@
         <div class="fluid-grid-cell">
           <span id="displayOrderLabel{{$index}}" ng-bind="programProduct.displayOrder"
                 ng-show="!programProduct.underEdit"></span>
-          <input id="displayOrderInput{{$index}}" type="text" ng-model="programProduct.displayOrder"
-                 class="full-width" ng-show="programProduct.underEdit" />
+          <div class="position-relative">
+            <input id="displayOrderInput{{$index}}" type="text" ng-model="programProduct.displayOrder"
+                   name="displayOrder" numeric-validator="positiveInteger" maxlength="10"
+                   class="full-width right-justified" ng-show="programProduct.underEdit" />
+            <span class="rnr-form-error" style="display:none;" id="displayOrder"
+                  openlmis-message="error.number.only"></span>
+          </div>
         </div>
       </div>
 
@@ -79,8 +84,13 @@
         <div class="fluid-grid-cell">
           <span id="dosesPerMonthLabel{{$index}}" ng-bind="programProduct.dosesPerMonth"
                 ng-show="!programProduct.underEdit"></span>
-          <input id="dosesPerMonthInput{{$index}}" type="text" ng-model="programProduct.dosesPerMonth"
-                 class="full-width" ng-show="programProduct.underEdit"/>
+          <div class="position-relative">
+            <input id="dosesPerMonthInput{{$index}}" type="text" ng-model="programProduct.dosesPerMonth"
+                   numeric-validator="positiveInteger" maxlength="10" name="dosesPerMonth"
+                   class="full-width right-justified" ng-show="programProduct.underEdit"/>
+            <span class="rnr-form-error" style="display:none;" id="dosesPerMonth"
+                  openlmis-message="error.number.only"></span>
+          </div>
         </div>
       </div>
 
@@ -88,8 +98,13 @@
         <div class="fluid-grid-cell">
           <span id="pricePerPackLabel{{$index}}" ng-bind="programProduct.currentPrice"
                 ng-show="!programProduct.underEdit"></span>
-          <input id="pricePerPackInput{{$index}}" type="text" ng-model="programProduct.currentPrice"
-                 class="full-width" ng-show="programProduct.underEdit" />
+          <div class="position-relative">
+            <input id="pricePerPackInput{{$index}}" type="text" ng-model="programProduct.currentPrice"
+                 numeric-validator="positiveNumericValue,18,2" maxlength="21" name="currentPrice"
+                 class="full-width right-justified" ng-show="programProduct.underEdit" />
+            <span class="rnr-form-error" style="display:none;" id="currentPrice"
+                  openlmis-message="error.number.only"></span>
+          </div>
         </div>
       </div>
 
@@ -109,7 +124,7 @@
 
           <input id="programProductEditDone{{$index}}" type="button"
                  class="btn btn-primary program-schedules-add-new-btn btn-small pull-right"
-                 ng-click="programProduct.underEdit = false;"
+                 ng-click="programProduct.underEdit = false;" ng-disabled="mandatoryFieldsNotFilled(programProduct)"
                  openlmis-message="button.done" />
         </span>
       </div>
@@ -120,7 +135,7 @@
         <select class="select2-container span10" id="addProgramSelect"
                 ng-options="program as program.name for program in programs"
                 ng-model="newProgramProduct.program">
-          <option value="" openlmis-message="label.select.program"></option>
+          <option value="" openlmis-message="programMessage"></option>
         </select>
       </div>
 
@@ -133,24 +148,40 @@
       </div>
 
       <div class="span1 fluid-grid-cell">
-        <input type="checkbox" id="activeAdd" ng-model="newProgramProduct.active" />
+        <input type="checkbox" id="activeAdd" ng-model="newProgramProduct.active" ng-false-value="false" />
       </div>
 
       <div class="span1 fluid-grid-cell">
-        <input type="text" id="displayOrderAdd" ng-model="newProgramProduct.displayOrder" class="full-width" />
+        <div class="position-relative">
+          <input type="text" id="displayOrderAdd" ng-model="newProgramProduct.displayOrder" class="full-width right-justified"
+                 name="addDisplayOrder" numeric-validator="positiveInteger" maxlength="10" />
+          <span class="rnr-form-error" style="display:none;" id="addDisplayOrder"
+                openlmis-message="error.number.only"></span>
+        </div>
       </div>
 
       <div class="span1 fluid-grid-cell">
-        <input type="text" id="dosesPerMonthAdd" ng-model="newProgramProduct.dosesPerMonth" class="full-width" />
+        <div class="position-relative">
+          <input type="text" id="dosesPerMonthAdd" ng-model="newProgramProduct.dosesPerMonth" class="full-width right-justified"
+                 numeric-validator="positiveInteger" maxlength="10" name="addDosesPerMonth"/>
+          <span class="rnr-form-error" style="display:none;" id="addDosesPerMonth"
+                openlmis-message="error.number.only"></span>
+        </div>
       </div>
 
       <div class="span1 fluid-grid-cell">
-        <input type="text" id="pricePerPackAdd" ng-model="newProgramProduct.currentPrice" class="full-width" />
+        <div class="position-relative">
+          <input type="text" id="pricePerPackAdd" ng-model="newProgramProduct.currentPrice" class="full-width right-justified"
+               numeric-validator="positiveNumericValue,18,2" maxlength="21" name="addCurrentPrice" />
+          <span class="rnr-form-error" style="display:none;" id="addCurrentPrice"
+                openlmis-message="error.number.only"></span>
+        </div>
       </div>
 
       <div class="span2 fluid-grid-cell">
-        <input type="button" class="btn btn-primary"
+        <input type="button" class="btn btn-primary btn-small pull-right"
                id="programProductAdd"
+               ng-click="addNewProgramProduct()" ng-disabled="mandatoryFieldsNotFilled(newProgramProduct)"
                openlmis-message="button.add" />
       </div>
     </div>

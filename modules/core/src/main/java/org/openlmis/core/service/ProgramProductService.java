@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
@@ -186,5 +187,12 @@ public class ProgramProductService {
       return programProductRepository.getTotalSearchResultCount(searchParam);
     }
     return productService.getTotalSearchResultCount(searchParam);
+  }
+
+  public void saveAll(List<ProgramProduct> programProducts, Product product) {
+    for (ProgramProduct programProduct : programProducts) {
+      programProduct.setProduct(product);
+      save(programProduct);
+    }
   }
 }
