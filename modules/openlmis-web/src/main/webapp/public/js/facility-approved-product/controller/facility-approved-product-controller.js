@@ -16,10 +16,17 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
   $scope.showResults = false;
   $scope.currentPage = 1;
 
-  $scope.loadProducts = function (page) {
+  $scope.loadProducts = function (page, lastQuery) {
     if (!$scope.program || !$scope.facilityType) return;
+    if (lastQuery !== undefined) {
+      getProducts(page, lastQuery);
+    } else {
+      getProducts(page, $scope.query);
+    }
+  };
 
-    $scope.searchedQuery = $scope.query || "";
+  function getProducts(page, query) {
+    $scope.searchedQuery = query || "";
     FacilityTypeApprovedProducts.get({page: page, searchParam: $scope.searchedQuery, programId: $scope.program.id,
       facilityTypeId: $scope.facilityType.id}, function (data) {
       $scope.facilityApprovedProducts = data.facilityApprovedProducts;
@@ -28,11 +35,11 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
     }, {});
-  };
+  }
 
   $scope.$watch('currentPage', function () {
     if ($scope.currentPage !== 0)
-      $scope.loadProducts($scope.currentPage);
+      $scope.loadProducts($scope.currentPage, $scope.searchedQuery);
   });
 
   $scope.triggerSearch = function (event) {

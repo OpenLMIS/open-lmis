@@ -74,13 +74,14 @@ describe("Facility Approved Product", function () {
 
     it('should get results according to specified page', function () {
       scope.currentPage = 5;
+      scope.searchedQuery = "query";
       var searchSpy = spyOn(scope, 'loadProducts');
 
       scope.$apply(function () {
         scope.currentPage = 6;
       });
 
-      expect(searchSpy).toHaveBeenCalledWith(6);
+      expect(searchSpy).toHaveBeenCalledWith(6, scope.searchedQuery);
     });
 
     it('should not get results if specified page is 0', function () {
@@ -104,6 +105,28 @@ describe("Facility Approved Product", function () {
 
       $httpBackend.when("GET", '/facilityApprovedProducts.json?facilityTypeId=6&page=1&programId=2&searchParam=P10').respond(response);
       scope.loadProducts(1);
+      $httpBackend.flush();
+
+      expect(scope.facilityApprovedProducts).toEqual([
+        {"name": "fap"}
+      ]);
+      expect(scope.pagination).toEqual(response.pagination);
+      expect(scope.currentPage).toEqual(1);
+      expect(scope.totalItems).toEqual(2);
+      expect(scope.showResults).toEqual(true);
+    });
+
+    it("should load products based on facilityType, program and last query", function () {
+      scope.program = {"id": 2};
+      scope.facilityType = {"id": 6};
+      var lastQuery = "P10";
+
+      var response = {"facilityApprovedProducts": [
+        {"name": "fap"}
+      ], "pagination": {"totalRecords": 2, "page": 1}};
+
+      $httpBackend.when("GET", '/facilityApprovedProducts.json?facilityTypeId=6&page=1&programId=2&searchParam=' + lastQuery).respond(response);
+      scope.loadProducts(1, lastQuery);
       $httpBackend.flush();
 
       expect(scope.facilityApprovedProducts).toEqual([
