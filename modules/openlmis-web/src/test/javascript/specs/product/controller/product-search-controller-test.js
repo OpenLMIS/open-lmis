@@ -10,15 +10,16 @@
 
 describe("Product Search Controller", function () {
 
-  var scope, $httpBackend, ctrl, navigateBackService;
+  var scope, $httpBackend, ctrl, navigateBackService, location;
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_, $location) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
     scope.query = "Nod";
     navigateBackService = _navigateBackService_;
     navigateBackService.query = '';
+    location = $location;
     ctrl = $controller;
     ctrl('ProductSearchController', {$scope: scope});
   }));
@@ -31,6 +32,24 @@ describe("Product Search Controller", function () {
     scope.selectedSearchOption = {"value": 'program'};
     $httpBackend.when('GET', '/programProducts/search.json?column=program&page=1&searchParam=' + scope.query).respond(response);
     scope.loadProducts(1);
+    $httpBackend.flush();
+
+    expect(scope.programProducts).toEqual([programProduct]);
+    expect(scope.pagination).toEqual(pagination);
+    expect(scope.currentPage).toEqual(1);
+    expect(scope.showResults).toEqual(true);
+    expect(scope.totalItems).toEqual(100);
+  });
+
+  it('should get all programs in a page depending on last query', function () {
+    var programProduct = {"program": {"code": "pg1", "name": "prog1"}, "product": {"code": "pd1", "name": "prod1"}};
+    var pagination = {"page": 1, "pageSize": 10, "numberOfPages": 10, "totalRecords": 100};
+    var response = {"programProductList": [programProduct], "pagination": pagination};
+    scope.query = "pro";
+    var lastQuery = "essential";
+    scope.selectedSearchOption = {"value": 'program'};
+    $httpBackend.when('GET', '/programProducts/search.json?column=program&page=1&searchParam=' + lastQuery).respond(response);
+    scope.loadProducts(1, lastQuery);
     $httpBackend.flush();
 
     expect(scope.programProducts).toEqual([programProduct]);
@@ -83,13 +102,65 @@ describe("Product Search Controller", function () {
 
   it('should get results according to specified page', function () {
     scope.currentPage = 5;
+    scope.searchedQuery = "ess";
     var searchSpy = spyOn(scope, 'loadProducts');
 
     scope.$apply(function () {
       scope.currentPage = 6;
     });
 
-    expect(searchSpy).toHaveBeenCalledWith(6);
+    expect(searchSpy).toHaveBeenCalledWith(6, scope.searchedQuery);
   });
 
+  it("should save query into shared service on clicking edit link", function () {
+    spyOn(navigateBackService, 'setData');
+    spyOn(location, 'path');
+    scope.query = "p1";
+    scope.selectedSearchOption = "product";
+
+    scope.edit(1);
+
+    expect(navigateBackService.setData).toHaveBeenCalledWith({query: "p1", selectedSearchOption: "product" });
+    expect(location.path).toHaveBeenCalledWith('edit/1');
+  });
+
+  it('should return if query is null', function () {
+    scope.query = "";
+    var httpBackendSpy = spyOn($httpBackend, 'expectGET');
+
+    scope.loadProducts(1);
+
+    expect(httpBackendSpy).not.toHaveBeenCalled();
+  });
+
+  it('should show category if index is zero and product category is there', function () {
+    scope.programProducts = [
+      {"productCategory": "Analgesics"}
+    ];
+    expect(scope.showCategory(0)).toBeTruthy();
+  });
+
+  it('should not show category if current and before category is same', function () {
+    scope.programProducts = [
+      {"productCategory": {name: "Analgesics"}},
+      {"productCategory": {name: "Analgesics"}}
+    ];
+    expect(scope.showCategory(1)).toBeFalsy();
+  });
+
+  it('should not show category if current and before category do not have a category', function () {
+    scope.programProducts = [
+      { name: "essential"},
+      { name: "essential"}
+    ];
+    expect(scope.showCategory(1)).toBeFalsy();
+  });
+
+  it('should show category if current category is null but not before', function () {
+    scope.programProducts = [
+      { name: "essential", "productCategory": {name: "Analgesics"}},
+      { name: "essential"}
+    ];
+    expect(scope.showCategory(1)).toBeTruthy();
+  });
 });

@@ -33,9 +33,14 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
     $location.path('edit/' + id);
   };
 
-  $scope.loadProducts = function (page) {
-    if (!$scope.query) return;
-    $scope.searchedQuery = $scope.query.trim() || "";
+  $scope.loadProducts = function (page, lastQuery) {
+    if (!($scope.query || lastQuery)) return;
+    lastQuery ? getProducts(page, lastQuery) : getProducts(page, $scope.query);
+  };
+
+  function getProducts(page, query) {
+    query = query.trim();
+    $scope.searchedQuery = query;
     ProgramProductsSearch.get({page: page, searchParam: $scope.searchedQuery, column: $scope.selectedSearchOption.value}, function (data) {
       $scope.programProducts = data.programProductList;
       $scope.pagination = data.pagination;
@@ -43,11 +48,11 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
     }, {});
-  };
+  }
 
   $scope.$watch('currentPage', function () {
     if ($scope.currentPage !== 0)
-      $scope.loadProducts($scope.currentPage);
+      $scope.loadProducts($scope.currentPage, $scope.searchedQuery);
   });
 
   $scope.triggerSearch = function (event) {
