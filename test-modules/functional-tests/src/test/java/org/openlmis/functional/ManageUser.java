@@ -72,15 +72,15 @@ public class ManageUser extends TestCaseHelper {
     userPage.clickViewHere();
   }
 
-  @When("^I disable user \"([^\"]*)\"$")
-  public void disableUser(String user) {
+  @When("^I disable user \"([^\"]*)\" and \"([^\"]*)\"$")
+  public void disableUser(String firstName, String lastName) {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
-    userPage.searchUser(user);
+    userPage.searchUser(firstName);
     userPage.clickSearchIcon();
     userPage.clickUserName(1);
     testWebDriver.waitForAjax();
-    userPage.disableUser(user);
+    userPage.disableUser(firstName + " " + lastName);
   }
 
   @Then("^I should see disable user \"([^\"]*)\" message$")
