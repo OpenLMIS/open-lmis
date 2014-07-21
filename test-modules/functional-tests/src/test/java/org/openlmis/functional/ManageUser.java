@@ -206,6 +206,7 @@ public class ManageUser extends TestCaseHelper {
     verifyPreviousAndFirstPageLinksEnabled();
     verifyNumberOfLineItemsVisibleOnPage(10);
 
+    testWebDriver.sleep(500);
     userPage.clickCrossIcon();
     testWebDriver.sleep(500);
     assertFalse(userPage.isNameHeaderPresent());
@@ -309,13 +310,6 @@ public class ManageUser extends TestCaseHelper {
     userPage.clickSearchIcon();
     testWebDriver.waitForAjax();
     assertEquals("1 match found for 'Jasmine'", userPage.getOneResultMessage());
-    assertEquals("Jasmine Doe", userPage.getName(1));
-
-    homePage.navigateToUser();
-    userPage.searchUser("Jasmine Doe");
-    userPage.clickSearchIcon();
-    testWebDriver.waitForAjax();
-    assertEquals("1 match found for 'Jasmine Doe'", userPage.getOneResultMessage());
     assertEquals("Jasmine Doe", userPage.getName(1));
     userPage.clickUserName(1);
   }
