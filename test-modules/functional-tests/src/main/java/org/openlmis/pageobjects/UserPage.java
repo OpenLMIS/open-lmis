@@ -275,7 +275,9 @@ public class UserPage extends FilterSearchPage {
     if (clearFacility.isDisplayed()) {
       clearFacility.click();
     }
-    testWebDriver.handleScrollByPixels(0, 600);
+    testWebDriver.sleep(500);
+    testWebDriver.handleScrollByPixels(0, 1600);
+    testWebDriver.sleep(500);
     associatedFacilityField.click();
     searchFacility(facilityCode);
   }
