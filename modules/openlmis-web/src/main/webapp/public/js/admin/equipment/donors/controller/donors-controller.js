@@ -39,7 +39,9 @@ function DonorController($scope, sharedSpace, $routeParams, $location, SaveDonor
             $scope.error = messageService.get(response.data.error);
         };
 
-        SaveDonor.save($scope.donor,successHandler,errorHandler);
+      if($scope.donorForm.$invalid){
+        SaveDonor.save($scope.donor, successHandler, errorHandler);
+      }
 
         return true;
     };
