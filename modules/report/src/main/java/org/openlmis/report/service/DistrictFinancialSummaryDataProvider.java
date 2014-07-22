@@ -55,7 +55,7 @@ public class DistrictFinancialSummaryDataProvider extends ReportDataProvider {
     if (filterCriteria != null) {
 
             districtSummaryReportParam = new DistrictSummaryReportParam();
-            districtSummaryReportParam.setRgroupId(StringUtils.isBlank(filterCriteria.get("requisitionGroup")[0]) ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
+            districtSummaryReportParam.setZoneId(StringUtils.isBlank(filterCriteria.get("zone")[0]) ? 0 : Integer.parseInt(filterCriteria.get("zone")[0])); //defaults to 0
             districtSummaryReportParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0 : Integer.parseInt(filterCriteria.get("program")[0]));
             districtSummaryReportParam.setPeriodId(StringUtils.isBlank(filterCriteria.get("period")[0]) ? 0 : Integer.parseInt(filterCriteria.get("period")[0]));
     }

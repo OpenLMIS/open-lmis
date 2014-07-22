@@ -35,6 +35,8 @@ public class DistrictSummaryReportParam
   private int periodId;
   private String period;
   private Integer year;
+  private int zoneId;
+  private String zone;
 
 
 
