@@ -435,6 +435,42 @@ public class ProductPage extends Page {
   @FindBy(how = ID, using = "collapseAll")
   private static WebElement collapseAllOption = null;
 
+  @FindBy(how = ID, using = "programAssociation")
+  private static WebElement programAssociation = null;
+
+  @FindBy(how = ID, using = "programHeader")
+  private static WebElement programHeaderOnEditPage = null;
+
+  @FindBy(how = ID, using = "categoryHeader")
+  private static WebElement categoryHeaderOnEditPage = null;
+
+  @FindBy(how = ID, using = "activeHeader")
+  private static WebElement activeHeaderOnEditPage = null;
+
+  @FindBy(how = ID, using = "displayOrderHeader")
+  private static WebElement displayOrderHeaderOnEditPage = null;
+
+  @FindBy(how = ID, using = "dosesPerMonthHeader")
+  private static WebElement dosesPerMonthHeaderOnEditPage = null;
+
+  @FindBy(how = ID, using = "addProgramSelect")
+  private static WebElement addProgramSelect = null;
+
+  @FindBy(how = ID, using = "addCategorySelect")
+  private static WebElement addCategorySelect = null;
+
+  @FindBy(how = ID, using = "activeAdd")
+  private static WebElement activeAdd = null;
+
+  @FindBy(how = ID, using = "displayOrderAdd")
+  private static WebElement displayOrderAdd = null;
+
+  @FindBy(how = ID, using = "dosesPerMonthAdd")
+  private static WebElement dosesPerMonthAdd = null;
+
+  @FindBy(how = ID, using = "programProductAdd")
+  private static WebElement programProductAdd = null;
+
   public ProductPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -1267,5 +1303,142 @@ public class ProductPage extends Page {
   public String getPackHeightOnEditPage() {
     testWebDriver.waitForElementToAppear(packHeight);
     return packHeight.getAttribute("value");
+  }
+
+  public String getProgramAssociationLabel() {
+    testWebDriver.waitForElementToAppear(programAssociation);
+    return programAssociation.getText();
+  }
+
+  public String getProgramHeaderOnEditPage() {
+    testWebDriver.waitForElementToAppear(programHeaderOnEditPage);
+    return programHeaderOnEditPage.getText();
+  }
+
+  public String getCategoryHeaderOnEditPage() {
+    testWebDriver.waitForElementToAppear(categoryHeaderOnEditPage);
+    return categoryHeaderOnEditPage.getText();
+  }
+
+  public String getActiveHeaderOnEditPage() {
+    testWebDriver.waitForElementToAppear(activeHeaderOnEditPage);
+    return activeHeaderOnEditPage.getText();
+  }
+
+  public String getDisplayOrderHeaderOnEditPage() {
+    testWebDriver.waitForElementToAppear(displayOrderHeaderOnEditPage);
+    return displayOrderHeaderOnEditPage.getText();
+  }
+
+  public String getDosesPerMonthHeaderOnEditPage() {
+    testWebDriver.waitForElementToAppear(dosesPerMonthHeaderOnEditPage);
+    return dosesPerMonthHeaderOnEditPage.getText();
+  }
+
+  public void clickProgramAssociationAccordion() {
+    testWebDriver.waitForElementToAppear(programAssociation);
+    programAssociation.click();
+  }
+
+  public void clickActiveAdd() {
+    testWebDriver.waitForElementToAppear(activeAdd);
+    activeAdd.click();
+  }
+
+  public void clickProgramProductAdd() {
+    testWebDriver.waitForElementToAppear(programProductAdd);
+    programProductAdd.click();
+  }
+
+  public List<String> getAllAddProgramSelect() {
+    testWebDriver.waitForElementToAppear(addProgramSelect);
+    return testWebDriver.getListOfOptions(addProgramSelect);
+  }
+
+  public List<String> getAllAddCategorySelect() {
+    testWebDriver.waitForElementToAppear(addCategorySelect);
+    return testWebDriver.getListOfOptions(addCategorySelect);
+  }
+
+  public void enterDisplayOrderAdd(String displayOrderAddInput) {
+    testWebDriver.waitForElementToAppear(displayOrderAdd);
+    sendKeys(displayOrderAdd, displayOrderAddInput);
+  }
+
+  public void enterDosesPerMonthAdd(String dosesPerMonthAddInput) {
+    testWebDriver.waitForElementToAppear(dosesPerMonthAdd);
+    sendKeys(dosesPerMonthAdd, dosesPerMonthAddInput);
+  }
+
+  public String getProgramSelected(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("programSelected" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public String getCategorySelected(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("categorySelected" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public boolean isProgramProductActive(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("activeIcon" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.isDisplayed();
+  }
+
+  public String getDisplayOrder(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("displayOrderLabel" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public String getDosesPerMonth(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("dosesPerMonthLabel" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
+  }
+
+  public void clickProgramProductEdit(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("programProductEdit" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    element.click();
+  }
+
+  public void clickProgramProductEditDone(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("programProductEditDone" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    element.click();
+  }
+
+  public void clickProgramProductEditCancel(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("programProductEditCancel" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    element.click();
+  }
+
+  public List<String> getAllCategory(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("category" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return testWebDriver.getListOfOptions(element);
+  }
+
+  public void clickActiveProgramProductEdit(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("active" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    element.click();
+  }
+
+  public void enterDisplayOrderNewInput(int rowNumber, String input) {
+    WebElement element = testWebDriver.getElementById("displayOrderInput" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    sendKeys(element, input);
+  }
+
+  public void enterDosesPerMonthNewInput(int rowNumber, String input) {
+    WebElement element = testWebDriver.getElementById("dosesPerMonthInput" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    sendKeys(element, input);
   }
 }
