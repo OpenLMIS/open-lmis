@@ -55,7 +55,6 @@ public class FacilityProgramDateRangeSearch extends RequisitionSearchStrategy {
   boolean isSearchable(Right right) {
     Facility facility = new Facility(criteria.getFacilityId());
     Program program = new Program(criteria.getProgramId());
-
     return requisitionPermissionService.hasPermission(criteria.getUserId(), facility, program, right);
   }
 
@@ -66,7 +65,7 @@ public class FacilityProgramDateRangeSearch extends RequisitionSearchStrategy {
     Date dateRangeStart = criteria.getRangeStart();
     Date dateRangeEnd = criteria.getRangeEnd();
 
-    List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsForDateRange(facility, program,
+    List<ProcessingPeriod> periods = processingScheduleService.getUsedPeriodsForDateRange(facility, program,
       dateRangeStart, dateRangeEnd);
 
     return requisitionRepository.getPostSubmitRequisitions(facility, program, periods);

@@ -106,6 +106,11 @@ public class ProcessingScheduleService {
     return periodRepository.getAllPeriodsForDateRange(requisitionGroupProgramSchedule.getProcessingSchedule().getId(), startDate, endDate);
   }
 
+  public List<ProcessingPeriod> getUsedPeriodsForDateRange(Facility facility, Program program, Date startDate, Date endDate) {
+
+    return periodRepository.getRnrPeriodsForDateRange(facility.getId(),program.getId(), startDate, endDate);
+  }
+
   public ProcessingSchedule getByCode(String code) {
     return repository.getByCode(code);
   }
