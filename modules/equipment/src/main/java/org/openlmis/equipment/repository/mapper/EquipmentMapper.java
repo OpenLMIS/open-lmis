@@ -24,7 +24,9 @@ public interface EquipmentMapper {
   @Results({
       @Result(
           property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
-          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById"))
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
+      @Result(property = "equipmentTypeId", column = "equipmentTypeId")
+
   })
   List<Equipment> getAll();
 
@@ -32,7 +34,8 @@ public interface EquipmentMapper {
   @Results({
       @Result(
           property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
-          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById"))
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
+      @Result(property = "equipmentTypeId", column = "equipmentTypeId")
   })
   Equipment getById(@Param("id") Long id);
 
