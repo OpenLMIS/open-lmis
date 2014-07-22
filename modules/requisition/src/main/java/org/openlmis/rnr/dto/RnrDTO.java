@@ -37,6 +37,8 @@ public class RnrDTO {
   private String programCode;
   private Long programId;
   private String facilityName;
+  private String districtName;
+  private String facilityType;
   private String facilityCode;
   private String agentCode;
   private boolean emergency;
@@ -95,6 +97,9 @@ public class RnrDTO {
     rnrDTO.programName = requisition.getProgram().getName();
     rnrDTO.facilityCode = requisition.getFacility().getCode();
     rnrDTO.facilityName = requisition.getFacility().getName();
+
+    rnrDTO.facilityType = requisition.getFacility().getFacilityType().getName();
+    rnrDTO.districtName = requisition.getFacility().getGeographicZone().getName();
 
     rnrDTO.submittedDate = requisition.getSubmittedDate();
     rnrDTO.modifiedDate = requisition.getModifiedDate();
