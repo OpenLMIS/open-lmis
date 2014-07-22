@@ -14,7 +14,8 @@ function DonorController($scope, sharedSpace, $routeParams, $location, SaveDonor
 
     if ($routeParams.donorId) {
         GetDonor.get({id: $routeParams.donorId}, function (data) {
-            $scope.donor = data.donor;
+          $scope.donor = data.donor;
+          $scope.showError = true;
         }, {});
     }
 
@@ -39,7 +40,7 @@ function DonorController($scope, sharedSpace, $routeParams, $location, SaveDonor
             $scope.error = messageService.get(response.data.error);
         };
 
-      if($scope.donorForm.$invalid){
+      if(!$scope.donorForm.$invalid){
         SaveDonor.save($scope.donor, successHandler, errorHandler);
       }
 

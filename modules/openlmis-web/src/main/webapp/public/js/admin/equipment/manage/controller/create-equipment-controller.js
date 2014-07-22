@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentController($scope, $routeParams, $location, Equipment, EquipmentTypes, SaveEquipment) {
+function CreateEquipmentController($scope, $routeParams, $location, Equipment, EquipmentTypes, SaveEquipment, messageService) {
 
   EquipmentTypes.get(function (data) {
     $scope.equipmentTypes = data.equipment_type;
@@ -21,17 +21,25 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment, E
       id: $routeParams.id
     }, function (data) {
       $scope.equipment = data.equipment;
+      $scope.showError = true;
     });
   }
 
   $scope.saveEquipment = function () {
-    SaveEquipment.save($scope.equipment, function (data) {
-      // success
+
+    var onSuccess = function(data){
       $location.path('');
-    }, function (data) {
-      // error
-      $scope.error = data.messages;
-    });
+    };
+
+    var onError = function(data){
+      $scope.showError = true;
+      $scope.error = messageService.get(response.data.error);
+    };
+
+    if(!$scope.equipmentForm.$invalid){
+      SaveEquipment.save($scope.equipment, onSuccess, onError);
+    }
+
   };
 
   $scope.cancelCreateEquipment = function () {
