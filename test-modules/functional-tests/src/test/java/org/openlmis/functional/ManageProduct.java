@@ -241,6 +241,7 @@ public class ManageProduct extends TestCaseHelper {
     dbWrapper.insertProductGroup("ProductGroup3");
     dbWrapper.insertProductGroup("ProductGroup1");
     dbWrapper.insertProductGroup("productGroup2");
+    dbWrapper.updateFieldValue("programs", "name", "hiv", "code", "HIV");
     dbWrapper.updateFieldValue("product_forms", "code", "capsule", "code", "Capsule");
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
@@ -285,7 +286,7 @@ public class ManageProduct extends TestCaseHelper {
     assertEquals("GTIN", productPage.getProductGTINLabel());
     assertEquals("Expected shelf life (months)", productPage.getProductExpectedShelfLifeLabel());
     assertEquals("Product record last updated", productPage.getProductRecordLastUpdatedLabel());
-    assertEquals("Alternate Moh bar code", productPage.getProductAlternateMoHBarCodeLabel());
+    assertEquals("Alternate MoH bar code", productPage.getProductAlternateMoHBarCodeLabel());
     assertEquals("Contraceptive couple-years of protection", productPage.getProductContraceptiveCoupleYearsOfProtectionLabel());
     assertEquals("Store refrigerated", productPage.getProductStoreRefrigeratedLabel());
     assertEquals("Store at room temperature", productPage.getProductStoreAtRoomTemperatureLabel());
@@ -306,6 +307,17 @@ public class ManageProduct extends TestCaseHelper {
     assertEquals("Special storage instructions", productPage.getProductSpecialStorageInstructionsLabel());
     assertEquals("Special transport instructions", productPage.getProductSpecialTransportInstructionsLabel());
     assertEquals("", productPage.getProductLastUpdated());
+
+    productPage.clickProgramAssociationAccordion();
+    assertEquals("Programs Associated", productPage.getProgramAssociationLabel());
+    assertEquals("Program", productPage.getProgramHeaderOnEditPage());
+    assertEquals("Category", productPage.getCategoryHeaderOnEditPage());
+    assertEquals("Active", productPage.getActiveHeaderOnEditPage());
+    assertEquals("Display order", productPage.getDisplayOrderHeaderOnEditPage());
+    assertEquals("Doses per month", productPage.getDosesPerMonthHeaderOnEditPage());
+
+    assertEquals(asList("-- Select category --", "anaesthetics", "Antibiotics", "category3"), productPage.getAllAddCategorySelect());
+    assertEquals(asList("--Select Program--", "ESSENTIAL MEDICINES", "hiv", "MALARIA", "TB", "VACCINES"), productPage.getAllAddProgramSelect());
     productPage.collapseAll();
 
     productPage.clickSaveButton();
@@ -320,6 +332,7 @@ public class ManageProduct extends TestCaseHelper {
     assertEquals("No matches found for 'P11'", productPage.getNoResultsMessage());
 
     dbWrapper.updateFieldValue("product_forms", "code", "Capsule", "code", "capsule");
+    dbWrapper.updateFieldValue("programs", "name", "HIV", "code", "HIV");
   }
 
   @Test(groups = {"admin"})
@@ -432,9 +445,59 @@ public class ManageProduct extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"})
+  public void testAddNewProductWithProgramAssociation() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_PRODUCT");
+    dbWrapper.insertProduct("P10", "product10");
+    dbWrapper.insertProductGroup("ProductGroup1");
+
+    HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
+    productPage = homePage.navigateToProductPage();
+    productPage.clickProductAddNewButton();
+
+    productPage.expandAll();
+    productPage.selectAddProgram("VACCINES");
+    productPage.selectAddCategory("Antibiotics");
+    productPage.enterDisplayOrderAdd("32");
+    productPage.enterDosesPerMonthAdd("23");
+    productPage.clickActiveAdd();
+    productPage.clickProgramProductAdd();
+
+    assertEquals(asList("--Select Program--", "ESSENTIAL MEDICINES", "HIV", "MALARIA", "TB"), productPage.getAllAddProgramSelect());
+    assertEquals(asList("-- Select category --", "anaesthetics", "Antibiotics", "category3"), productPage.getAllAddCategorySelect());
+    productPage.clickSaveButton();
+    assertEquals("There are some errors in the form. Please resolve them.", productPage.getSaveErrorMsg());
+
+    productPage.enterDispensingUnitInput("unit");
+    productPage.enterDosesPerDispensingUnitInput("10");
+    productPage.enterPackSizeInput("10");
+    productPage.enterPackRoundingThresholdInput("1");
+    productPage.clickRoundToZeroTrueButton();
+    productPage.clickActiveTrueButton();
+    productPage.clickFullSupplyTrueButton();
+    productPage.clickTracerTrueButton();
+    productPage.enterCodeInput("P11");
+    productPage.enterPrimaryNameInput("product");
+    productPage.clickSaveButton();
+
+    assertEquals("Product \"product \" created successfully.   View Here", productPage.getSaveSuccessMsg());
+    productPage.enterSearchProductParameter("P11");
+    productPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
+    productPage.clickName(1);
+    assertEquals("product", productPage.getPrimaryNameOnEditPage());
+    productPage.clickProgramAssociationAccordion();
+    assertEquals("VACCINES", productPage.getProgramSelected(1));
+    assertEquals("Antibiotics", productPage.getCategorySelected(1));
+    assertEquals("32", productPage.getDisplayOrder(1));
+    assertEquals("23", productPage.getDosesPerMonth(1));
+    assertTrue(productPage.isProgramProductActive(1));
+  }
+
+  @Test(groups = {"admin"})
   public void testEditExistingProduct() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_PRODUCT");
     dbWrapper.insertProduct("P10", "product10");
+    dbWrapper.insertProgramProductsWithCategory("P10", "HIV", "anaesthetics", 1);
     dbWrapper.updateFieldValue("products", "modifiedDate", "07-20-2014", "code", "P10");
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
@@ -450,7 +513,16 @@ public class ManageProduct extends TestCaseHelper {
     productPage.expandAll();
     productPage.enterGenericName("generic");
     assertEquals("20/07/2014", productPage.getProductLastUpdated());
+    productPage.clickProgramProductEdit(1);
+    productPage.clickActiveProgramProductEdit(1);
+    assertEquals(asList("-- Select category --", "anaesthetics", "Antibiotics", "category3"), productPage.getAllCategory(1));
+    productPage.clickProgramProductEditDone(1);
+    productPage.selectAddProgram("MALARIA");
+    productPage.selectAddCategory("Antibiotics");
+    productPage.enterDosesPerMonthAdd("21");
+    productPage.clickProgramProductAdd();
     productPage.clickCancelButton();
+
     productPage.clickName(1);
     assertEquals("product10", productPage.getPrimaryNameOnEditPage());
     productPage.clickOtherInfoAccordion();
@@ -458,10 +530,26 @@ public class ManageProduct extends TestCaseHelper {
     assertEquals("TDF/FTC/EFV", productPage.getGenericNameOnEditPage());
     assertEquals("2", productPage.getPackHeightOnEditPage());
 
+    productPage.clickProgramAssociationAccordion();
+    assertTrue(productPage.isProgramProductActive(1));
     productPage.enterTypeInput("type");
     productPage.enterPrimaryNameInput("product");
     productPage.expandAll();
     productPage.enterGenericName("generic");
+    productPage.clickProgramProductEdit(1);
+    productPage.clickActiveProgramProductEdit(1);
+    productPage.selectAddProgram("MALARIA");
+    productPage.selectAddCategory("Antibiotics");
+    productPage.enterDosesPerMonthAdd("21");
+    productPage.clickSaveButton();
+    productPage.clickProgramProductAdd();
+    assertEquals("Mark all program products as 'Done' before saving the form", productPage.getSaveErrorMsg());
+
+    productPage.clickProgramProductEditDone(1);
+    productPage.clickProgramProductEdit(1);
+    productPage.enterDisplayOrderNewInput(1, "999");
+    productPage.enterDosesPerMonthNewInput(1, "000");
+    productPage.clickProgramProductEditCancel(1);
     productPage.clickSaveButton();
 
     assertEquals("Product \"product Capsule 300/200/600 mg\" updated successfully.   View Here", productPage.getSaveSuccessMsg());
@@ -471,6 +559,17 @@ public class ManageProduct extends TestCaseHelper {
     assertEquals("generic", productPage.getGenericNameOnEditPage());
     assertEquals("2", productPage.getPackHeightOnEditPage());
     assertEquals((new SimpleDateFormat("dd/MM/yyyy")).format(new Date()), productPage.getProductLastUpdated());
+    productPage.clickProgramAssociationAccordion();
+    assertEquals("HIV", productPage.getProgramSelected(1));
+    assertEquals("anaesthetics", productPage.getCategorySelected(1));
+    assertEquals("1", productPage.getDisplayOrder(1));
+    assertEquals("30", productPage.getDosesPerMonth(1));
+    assertFalse(productPage.isProgramProductActive(1));
+    assertEquals("MALARIA", productPage.getProgramSelected(2));
+    assertEquals("Antibiotics", productPage.getCategorySelected(2));
+    assertEquals("", productPage.getDisplayOrder(2));
+    assertEquals("21", productPage.getDosesPerMonth(2));
+    assertFalse(productPage.isProgramProductActive(2));
   }
 
   public void searchProduct(String searchParameter) {

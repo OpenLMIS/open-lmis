@@ -357,12 +357,6 @@ public class ProductPage extends Page {
   @FindBy(how = ID, using = "storeRefrigeratedTrue")
   private static WebElement storeRefrigeratedTrue = null;
 
-  @FindBy(how = ID, using = "storeRefrigeratedFalse")
-  private static WebElement storeRefrigeratedFalse = null;
-
-  @FindBy(how = ID, using = "storeRoomTemperatureTrue")
-  private static WebElement storeRoomTemperatureTrue = null;
-
   @FindBy(how = ID, using = "storeRoomTemperatureFalse")
   private static WebElement storeRoomTemperatureFalse = null;
 
@@ -374,12 +368,6 @@ public class ProductPage extends Page {
 
   @FindBy(how = ID, using = "hazardousTrue")
   private static WebElement hazardousTrue = null;
-
-  @FindBy(how = ID, using = "hazardousFalse")
-  private static WebElement hazardousFalse = null;
-
-  @FindBy(how = ID, using = "flammableTrue")
-  private static WebElement flammableTrue = null;
 
   @FindBy(how = ID, using = "flammableFalse")
   private static WebElement flammableFalse = null;
@@ -393,12 +381,6 @@ public class ProductPage extends Page {
   @FindBy(how = ID, using = "controlledSubstanceTrue")
   private static WebElement controlledSubstanceTrue = null;
 
-  @FindBy(how = ID, using = "controlledSubstanceFalse")
-  private static WebElement controlledSubstanceFalse = null;
-
-  @FindBy(how = ID, using = "lightSensitiveTrue")
-  private static WebElement lightSensitiveTrue = null;
-
   @FindBy(how = ID, using = "lightSensitiveFalse")
   private static WebElement lightSensitiveFalse = null;
 
@@ -410,9 +392,6 @@ public class ProductPage extends Page {
 
   @FindBy(how = ID, using = "approvedByWHOTrue")
   private static WebElement approvedByWHOTrue = null;
-
-  @FindBy(how = ID, using = "approvedByWHOFalse")
-  private static WebElement approvedByWHOFalse = null;
 
   @FindBy(how = ID, using = "product.cartonWidth")
   private static WebElement cartonWidth = null;
@@ -1360,6 +1339,16 @@ public class ProductPage extends Page {
     return testWebDriver.getListOfOptions(addCategorySelect);
   }
 
+  public void selectAddProgram(String program) {
+    testWebDriver.waitForElementToAppear(addProgramSelect);
+    testWebDriver.selectByVisibleText(addProgramSelect, program);
+  }
+
+  public void selectAddCategory(String category) {
+    testWebDriver.waitForElementToAppear(addCategorySelect);
+    testWebDriver.selectByVisibleText(addCategorySelect, category);
+  }
+
   public void enterDisplayOrderAdd(String displayOrderAddInput) {
     testWebDriver.waitForElementToAppear(displayOrderAdd);
     sendKeys(displayOrderAdd, displayOrderAddInput);
@@ -1384,7 +1373,6 @@ public class ProductPage extends Page {
 
   public boolean isProgramProductActive(int rowNumber) {
     WebElement element = testWebDriver.getElementById("activeIcon" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(element);
     return element.isDisplayed();
   }
 
