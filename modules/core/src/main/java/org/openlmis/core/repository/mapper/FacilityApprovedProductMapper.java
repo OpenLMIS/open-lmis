@@ -181,4 +181,7 @@ public interface FacilityApprovedProductMapper {
 
   @Delete({"DELETE FROM facility_approved_products WHERE id = #{id}"})
   void delete(Long id);
+
+  @Select("SELECT * from facility_approved_products WHERE id=#{id}")
+  FacilityTypeApprovedProduct get(Long id);
 }

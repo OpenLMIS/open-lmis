@@ -32,6 +32,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.*;
+import static org.openlmis.core.service.FacilityApprovedProductService.FACILITY_APPROVED_PRODUCT_DOES_NOT_EXIST;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -79,6 +80,53 @@ public class FacilityApprovedProductServiceTest {
     assertThat(facilityTypeApprovedProduct.getProgramProduct().getProgram().getId(), is(programId));
     assertThat(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId(), is(productId));
     assertThat(facilityTypeApprovedProduct.getProgramProduct().getId(), is(programProductId));
+  }
+
+  @Test
+  public void shouldUpdateFacilityApprovedProduct() throws Exception {
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
+    facilityTypeApprovedProduct.setId(2L);
+    Long programId = 45L;
+    Long productId = 10L;
+    Long programProductId = 100L;
+    when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
+    when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);
+    when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100L);
+    when(facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType())).thenReturn(new FacilityType());
+    when(repository.get(facilityTypeApprovedProduct.getId())).thenReturn(facilityTypeApprovedProduct);
+
+    service.save(facilityTypeApprovedProduct);
+
+    verify(programService).getIdForCode(defaultProgramCode);
+    verify(productService).getIdForCode(defaultProductCode);
+    verify(programProductService).getIdByProgramIdAndProductId(programId, productId);
+    verify(repository).update(facilityTypeApprovedProduct);
+
+    assertThat(facilityTypeApprovedProduct.getProgramProduct().getProgram().getId(), is(programId));
+    assertThat(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId(), is(productId));
+    assertThat(facilityTypeApprovedProduct.getProgramProduct().getId(), is(programProductId));
+  }
+
+  @Test
+  public void shouldNotUpdateFacilityApprovedProductWhenItDoesNotExist() throws Exception {
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = make(a(defaultFacilityApprovedProduct));
+    facilityTypeApprovedProduct.setId(2L);
+    Long programId = 45L;
+    Long productId = 10L;
+    when(programService.getIdForCode(defaultProgramCode)).thenReturn(programId);
+    when(productService.getIdForCode(defaultProductCode)).thenReturn(productId);
+    when(programProductService.getIdByProgramIdAndProductId(programId, productId)).thenReturn(100L);
+    when(facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType())).thenReturn(new FacilityType());
+    when(repository.get(facilityTypeApprovedProduct.getId())).thenReturn(null);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(FACILITY_APPROVED_PRODUCT_DOES_NOT_EXIST);
+
+    service.save(facilityTypeApprovedProduct);
+
+    verify(programService).getIdForCode(defaultProgramCode);
+    verify(productService).getIdForCode(defaultProductCode);
+    verify(programProductService).getIdByProgramIdAndProductId(programId, productId);
+    verify(repository, never()).update(facilityTypeApprovedProduct);
   }
 
   @Test

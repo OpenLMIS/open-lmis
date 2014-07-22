@@ -60,4 +60,8 @@ public class FacilityApprovedProductRepository {
   public void delete(Long id) {
     mapper.delete(id);
   }
+
+  public FacilityTypeApprovedProduct get(Long id){
+    return mapper.get(id);
+  }
 }

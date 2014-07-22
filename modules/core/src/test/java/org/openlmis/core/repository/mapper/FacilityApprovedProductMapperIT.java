@@ -407,6 +407,20 @@ public class FacilityApprovedProductMapperIT {
     assertThat(deletedFacilityTypeApprovedProduct, is(nullValue()));
   }
 
+  @Test
+  public void shouldGetFacilityTypeApprovedProduct(){
+    Program yellowFeverProgram = make(a(defaultProgram));
+    programMapper.insert(yellowFeverProgram);
+
+    Product product = product("PRO01", "Primary Name", true);
+    ProgramProduct programProduct = addToProgramProduct(yellowFeverProgram, product, true, category1, 6);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);
+
+    FacilityTypeApprovedProduct facilityTAProduct = mapper.get(facilityTypeApprovedProduct.getId());
+
+    assertThat(facilityTAProduct.getMaxMonthsOfStock(),is(MAX_MONTHS_OF_STOCK));
+  }
+
   private ProductCategory category(String categoryCode, String categoryName, int categoryDisplayOrder) {
     ProductCategory productCategory = new ProductCategory(categoryCode, categoryName, categoryDisplayOrder);
     productCategoryMapper.insert(productCategory);

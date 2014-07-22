@@ -73,4 +73,10 @@ public class FacilityApprovedProductRepositoryTest {
     repository.update(facilityTypeApprovedProduct);
     verify(mapper).update(facilityTypeApprovedProduct);
   }
+
+  @Test
+  public void shouldGetFacilityApprovedProduct(){
+    repository.get(2L);
+    verify(mapper).get(2L);
+  }
 }
