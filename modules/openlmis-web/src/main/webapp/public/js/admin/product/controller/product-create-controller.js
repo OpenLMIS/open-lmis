@@ -56,7 +56,7 @@ function ProductCreateController($scope, $location,messageService, SettingsByKey
     };
 
     var errorCallback = function(data){
-
+      $scope.showError = true;
       $scope.errorMessage = messageService.get(data.data.error);
     };
 

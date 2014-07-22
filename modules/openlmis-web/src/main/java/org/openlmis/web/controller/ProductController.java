@@ -19,6 +19,7 @@ import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -157,7 +158,11 @@ public class ProductController extends BaseController {
       response.getBody().addData(PRODUCT, productListService.get(product.getId()));
       response.getBody().addData(PRODUCTLIST, productListService.getProductList());
       return response;
-    } catch (DataException e) {
+    }
+    catch(DuplicateKeyException exp){
+      return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
+    }
+    catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
   }

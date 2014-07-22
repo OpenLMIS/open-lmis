@@ -298,7 +298,7 @@
         <a ng-click="cancelAddNewProduct()" class="btn btn-cancel cancel-button"><span
                 openlmis-message="button.cancel"></span></a>
     </div>
-    <div class="toolbar-error" id="saveErrorMsgDiv" ng-show="error">{{ errorMessage }}</div>
+    <div class="toolbar-error" id="saveErrorMsgDiv" ng-show="showError || error">{{ errorMessage }}</div>
 </div>
 
 </div>
