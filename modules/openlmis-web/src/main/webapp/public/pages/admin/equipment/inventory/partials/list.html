@@ -34,6 +34,7 @@
 
   <br>
 
+
   <div ng-show="selectedType == 0">
     <div class="row-fluid">
       <div class="span12">
@@ -89,6 +90,10 @@
         </option>
       </select>
     </div>
+  </div>
+
+  <div class="alert alert-success" ng-show="message">
+    <span ng-bind="message"></span>
   </div>
 
   <div ng-show="selectedFacilityId != undefined && selectedProgram != undefined">

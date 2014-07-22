@@ -14,10 +14,14 @@
     <a id="add-new-equipment-type" href="#/create" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
   </h2>
 
+  <div class="alert alert-success" ng-show="message">
+    <span ng-bind="message"></span>
+  </div>
+
   <div class="content-body">
     <table class="table table-bordered table-striped">
       <thead>
-        <tr>
+        <tr class="gradient-header">
           <th style="width: 30px;">#</th>
           <th>Code</th>
           <th>Name</th>
