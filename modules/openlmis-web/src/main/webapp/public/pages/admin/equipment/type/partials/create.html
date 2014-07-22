@@ -12,7 +12,7 @@
   <h2>
     <span>{{(equipment_type.id == undefined)?'New': 'Edit'}} Equipment Types</span>
   </h2>
-  <form ng-submit="saveEquipmentType()" id="create-equipment-type" name="equipmentTypeForm" novalidate>
+  <form ng-submit="saveEquipmentType()" id="equipmentTypeForm" name="equipmentTypeForm" >
     <div class="form-group">
       <div class="form-row clearfix">
         <div class="form-cell">
@@ -42,15 +42,12 @@
 
     <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
-        <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button" openlmis-message="button.save" />
+        <input ng-disabled="equipmentTypeForm.$invalid" id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button" openlmis-message="button.save" />
         <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancelCreateEquipmentType()" />
       </div>
 
 
-      <div class="toolbar-error" id="saveErrorMsgDiv">
-        <span openlmis-message="error" ng-show="error"></span>&nbsp;
-        <span ng-show="errorMessage" ng-bind="errorMessage"></span>
-      </div>
+      <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
       <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
     </div>
 

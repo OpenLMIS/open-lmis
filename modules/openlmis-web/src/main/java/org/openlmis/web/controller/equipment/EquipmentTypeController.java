@@ -16,6 +16,8 @@ import org.openlmis.equipment.service.EquipmentTypeService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -55,7 +57,11 @@ public class EquipmentTypeController extends BaseController {
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentType type){
-    service.save(type);
+    try {
+      service.save(type);
+    }catch(DuplicateKeyException exp){
+      return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
+    }
     return OpenLmisResponse.response("status","success");
   }
 

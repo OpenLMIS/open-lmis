@@ -24,13 +24,21 @@ function CreateEquipmentTypeController($scope, $routeParams, $location, Equipmen
   $scope.saveEquipmentType = function () {
     // clear the error message
     $scope.error = undefined;
-    SaveEquipmentType.save($scope.equipment_type, function (data) {
-      // on success
+
+    var onSuccess = function(data){
+      $scope.$parent.message = 'Your changes have been saved!';
       $location.path('');
-    }, function (data) {
-      // on error
-      $scope.error = data.message;
-    });
+    };
+
+    var onError = function(data){
+      $scope.showError = true;
+      $scope.error = data.data.error;
+    };
+
+    if(!$scope.equipmentTypeForm.$invalid){
+      SaveEquipmentType.save( $scope.equipment_type, onSuccess, onError );
+    }
+
   };
 
   $scope.cancelCreateEquipmentType = function () {
