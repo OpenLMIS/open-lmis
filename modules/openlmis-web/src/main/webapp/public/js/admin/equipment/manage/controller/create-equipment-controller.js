@@ -28,12 +28,13 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment, E
   $scope.saveEquipment = function () {
 
     var onSuccess = function(data){
+      $scope.$parent.message = 'Your changes have been saved!';
       $location.path('');
     };
 
     var onError = function(data){
       $scope.showError = true;
-      $scope.error = messageService.get(response.data.error);
+      $scope.error = messageService.get(data.data.error);
     };
 
     if(!$scope.equipmentForm.$invalid){

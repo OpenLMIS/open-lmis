@@ -18,6 +18,8 @@ import org.openlmis.equipment.service.VendorService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,7 +49,11 @@ public class VendorController extends BaseController {
 
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> save(@RequestBody Vendor vendor){
+    try{
     service.save(vendor);
+    }catch(DuplicateKeyException exp){
+      return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
+    }
     return OpenLmisResponse.response("status","success");
   }
 }
