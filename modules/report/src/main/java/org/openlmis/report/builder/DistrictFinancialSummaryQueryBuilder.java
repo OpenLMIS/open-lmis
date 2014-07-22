@@ -9,7 +9,6 @@
  */
 
 
-
 package org.openlmis.report.builder;
 
 import org.openlmis.report.model.params.DistrictSummaryReportParam;
@@ -19,51 +18,48 @@ import java.util.Map;
 
 public class DistrictFinancialSummaryQueryBuilder {
 
-    public static String getQuery(Map params){
+    public static String getQuery(Map params) {
 
-        DistrictSummaryReportParam filter  = (DistrictSummaryReportParam)params.get("filterCriteria");
+        DistrictSummaryReportParam filter = (DistrictSummaryReportParam) params.get("filterCriteria");
 
-        String sql="";
+        String sql = "";
+        sql = " WITH temp as (select facilitycode,facility,facilitytype,region,                     \n" +
+                "  sum(fullsupplyitemssubmittedcost) fullsupplyitemssubmittedcost,\n" +
+                "  sum(nonfullsupplyitemssubmittedcost) nonfullsupplyitemssubmittedcost\n" +
+                "  from vw_district_financial_summary join vw_districts d on d.district_id = zoneId " +
+                writePredicates(filter) +
+                "    Group by region,facilitycode,facility,facilitytype order by region)    \n" +
+                "    select t.facilitycode,t.facility,t.facilitytype ,\n" +
+                "    (t.fullsupplyitemssubmittedcost+t.nonfullsupplyitemssubmittedcost) totalcost,t.region                             \n" +
+                "     from temp t INNER JOIN (select region from temp GROUP BY region order by region) temp2 ON t.region= temp2.region";
 
-        sql = "\n" +
-                "\n" +
-                "  WITH temp as (\n" +
-                "                     select facilitycode,facility,facilitytype,rgroup,region,\n" +
-                "                     sum(fullsupplyitemssubmittedcost) fullsupplyitemssubmittedcost,sum(nonfullsupplyitemssubmittedcost) nonfullsupplyitemssubmittedcost\n" +
-                "                     from vw_district_financial_summary\n" +
-                writePredicates(filter)+
-                "        \n" +
-                "                  Group by rgroup,facilitycode,facility,facilitytype,region\n" +
-                "                             order by rgroup)\n" +
-                "                            select t.facilitycode,t.facility,t.facilitytype,t.rgroup ,(t.fullsupplyitemssubmittedcost+t.nonfullsupplyitemssubmittedcost) totalcost,t.region\n" +
-                "                              from temp t\n" +
-                "                               INNER JOIN (select rgroup from temp GROUP BY rgroup order by rgroup) temp2 ON t.rgroup= temp2.rgroup ";
         return sql;
     }
 
-    private static String writePredicates(DistrictSummaryReportParam filter){
-        String predicate="";
+    private static String writePredicates(DistrictSummaryReportParam filter) {
+        String predicate = "";
         predicate = " WHERE status in ('IN_APPROVAL','APPROVED','RELEASED') ";
 
-        if(filter != null){
+        if (filter != null) {
 
 
-            if (filter.getRgroupId() != 0 ) {
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " rgroupid = #{filterCriteria.rgroupId}";
+            if (filter.getZoneId() != 0 && filter.getZoneId() !=-1) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + "d.district_id = #{filterCriteria.zoneId} or " +
+                        "d.region_id=#{filterCriteria.zoneId} or d.parent=#{filterCriteria.zoneId} ";
             }
 
-            if(filter.getPeriodId() != 0 ){
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
+            if (filter.getPeriodId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " periodid= #{filterCriteria.periodId}";
             }
-            if(filter.getScheduleId() != 0 ){
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
+            if (filter.getScheduleId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " scheduleid= #{filterCriteria.scheduleId}";
             }
 
-            if(filter.getProgramId() != 0 ){
-                predicate = predicate.isEmpty() ?" where " : predicate +  " and ";
+            if (filter.getProgramId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " programid = #{filterCriteria.programId}";
             }
         }
