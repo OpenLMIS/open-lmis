@@ -155,6 +155,7 @@ app.positiveNumericValue = function (value, errorHolder, integerPartLength, frac
   var NUMBER_REGEXP = new RegExp(str);
 
   var valid = (value === undefined) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
+  if (value === '.') valid = false;
 
   if (errorHolder !== undefined && REGEX_FOR_DIGITS_AFTER_DECIMAL.test(value) === false) {
     document.getElementById(errorHolder).style.display = ((value === undefined || value === "") ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
