@@ -2699,33 +2699,11 @@ div.input-div[disabled] {
   border: 1px solid #ccc;
   .box-shadow(0 0 7px rgba(0, 0, 0, 0.25));
 
-  &:after {
-    .square(0px);
-    position: absolute;
-    border-bottom: 16px solid white;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    content: "";
-    top: -15px;
-    left: 267px;
-    z-index: 10;
-  }
-
-  &:before {
-    .square(0px);
-    position: absolute;
-    border-bottom: 17px solid #bbb;
-    border-left: 13px solid transparent;
-    border-right: 13px solid transparent;
-    content: "";
-    top: -16px;
-    left: 266px;
-  }
   .search-list {
     margin-bottom: 0;
     ul {
       height: 282px;
-      overflow-y: scroll;
+      overflow-y: auto;
       li {
         &:last-child {
           border-bottom: 1px solid #CCC;
@@ -2776,6 +2754,29 @@ div.input-div[disabled] {
   .row-fluid {
     border-top: 0;
   }
+}
+
+.searchAndFilter:after, .slider-beak:after {
+  .square(0px);
+  position: absolute;
+  border-bottom: 16px solid white;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  content: "";
+  top: -15px;
+  left: 267px;
+  z-index: 10;
+}
+
+.searchAndFilter:before, .slider-beak:before {
+  .square(0px);
+  position: absolute;
+  border-bottom: 17px solid #bbb;
+  border-left: 13px solid transparent;
+  border-right: 13px solid transparent;
+  content: "";
+  top: -16px;
+  left: 266px;
 }
 
 .select-result-container {
@@ -2863,13 +2864,33 @@ input[type="checkbox"].facilityCheckbox {
   margin: 7px 10px 0 0px;
 }
 
-#programSchedulesTable select {
-  margin-bottom: 0;
-}
+#programSchedulesTable {
+  min-width: 1200px;
 
-#programSchedulesTable{
-  .clear-search{
+  .searchAndFilter {
+    &:after, &:before {
+      display: none;
+    }
+  }
+  .slider-beak:after {
+    top: 34px;
+    left: 21px;
+  }
+  .slider-beak:before {
+    top: 33px;
+    left: 20px;
+  }
+  .associate-facility.input-div {
+    width: 100%;
+    .facility-associated {
+      max-width: 75%;
+    }
+  }
+  .clear-search {
     right: 38px;
+  }
+  select {
+    margin-bottom: 0;
   }
 }
 
@@ -2992,6 +3013,7 @@ input[type="checkbox"].facilityCheckbox {
     width: 87%;
   }
   #programAssociationTable {
+    min-width: 1100px;
     input, select.select2-container {
       margin-bottom: 0;
     }
