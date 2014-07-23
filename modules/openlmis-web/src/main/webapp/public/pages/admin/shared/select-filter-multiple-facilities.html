@@ -18,7 +18,7 @@
       <div id="searchControl" class="row-fluid">
         <div class="span3 input-append input-prepend">
           <input id="searchFacility" type="text" ng-model="multipleFacilitiesSearchParam" maxlength="50"
-                 ng-keydown="triggerSearch($event)"
+                 ng-keydown="triggerSearch($event)" autocomplete="off"
                  openlmis-message="placeholder.facility.search"/>
           <button id="searchButton" class="btn" ng-click="showFacilitySearchResults()">
             <i id="searchMultipleFacilitiesIcon" class="icon-search"></i>

@@ -55,7 +55,7 @@
         <div class="btn-group">
         </div>
         <input id='searchFacilityApprovedProduct' type="text" class="span5" ng-model="query" maxlength="50"
-               openlmis-message="msg.enter.product.code.name"
+               openlmis-message="msg.enter.product.code.name" autocomplete="off"
                ng-keydown="triggerSearch($event)"/>
         <button class="btn" ng-click="loadProducts(1)">
           <i id='searchIcon' class="icon-search"></i>
