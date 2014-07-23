@@ -135,11 +135,11 @@ app.numericValue = function (value, errorHolder, integerPartLength, fractionalPa
   str = '^-?\\d*\\.?\\d{1,' + fractionalPartLength + '}$';
   var NUMBER_REGEXP = new RegExp(str);
 
-  var valid = (value === undefined || value.length === 0) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
+  var valid = (value === undefined || value === null || value.length === 0) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
 
   if (errorHolder !== undefined && REGEX_FOR_DIGITS_AFTER_DECIMAL.test(value) === false) {
     document.getElementById(errorHolder).style.display =
-      ((value === undefined || value.length === 0) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
+      ((value === undefined || value === null || value.length === 0) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
   }
 
   return valid;
@@ -171,10 +171,10 @@ app.integer = function (value, errorHolder, length) {
   str = '\\d{'.concat(length).concat('}.$');
   var REGEX_FOR_SIX_DIGITS = new RegExp(str);
   var INTEGER_REGEXP = /^[-]?\d*$/;
-  var valid = (value === undefined) ? true : INTEGER_REGEXP_FIXED_LENGTH.test(value);
+  var valid = (value === undefined || value === null) ? true : INTEGER_REGEXP_FIXED_LENGTH.test(value);
 
   if (errorHolder !== undefined && REGEX_FOR_SIX_DIGITS.test(value) === false) {
-    document.getElementById(errorHolder).style.display = ((value === undefined) ? true : (INTEGER_REGEXP.test(value))) ? 'none' : 'block';
+    document.getElementById(errorHolder).style.display = ((value === undefined || value === null) ? true : (INTEGER_REGEXP.test(value))) ? 'none' : 'block';
   }
 
   return valid;

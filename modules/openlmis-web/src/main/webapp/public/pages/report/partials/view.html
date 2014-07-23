@@ -27,7 +27,7 @@
           <td class="span4">
             <div ng-if="parameter.dataType === 'java.lang.Integer' ||
                   parameter.dataType === 'java.lang.Short' ||
-                  parameter.dataType === 'java.lang.Long'">
+                  parameter.dataType === 'java.lang.Long'" class="position-relative">
               <input id="integer_{{parameter.name}}" type="text" name="int_{{parameter.name}}" class="right-justified"
                      ng-model="parameterMap[parameter.name]" ng-change="refreshParams()"
                      numeric-validator="integer,100" ng-trim="false"/>
@@ -53,7 +53,7 @@
 
             <div ng-if="parameter.dataType === 'java.lang.Float' ||
                   parameter.dataType === 'java.lang.Double' ||
-                  parameter.dataType === 'java.math.BigDecimal'">
+                  parameter.dataType === 'java.math.BigDecimal'" class="position-relative">
               <input id="float_{{parameter.name}}" type="text" numeric-validator="numericValue,100,100"
                      class="right-justified"
                      name="f_{{parameter.name}}"
