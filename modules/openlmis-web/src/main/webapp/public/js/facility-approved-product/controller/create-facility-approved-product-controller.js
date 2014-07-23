@@ -107,10 +107,11 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
   };
 
   var sortByCategory = function (facilityTypeApprovedProducts) {
-    var sortedData = _.chain(facilityTypeApprovedProducts).sortBy(function (facilityTypeApprovedProduct) {
-      return facilityTypeApprovedProduct.programProduct.productCategory.name.toLowerCase();
-    });
-    return sortedData._wrapped;
+    return _(facilityTypeApprovedProducts).chain().sortBy(function (facilityApprovedProduct) {
+      return facilityApprovedProduct.programProduct.product.code.toLowerCase();
+    }).sortBy(function (facilityApprovedProduct) {
+      return facilityApprovedProduct.programProduct.productCategory.name.toLowerCase();
+    }).value();
   };
 
   $scope.addFacilityTypeApprovedProduct = function () {

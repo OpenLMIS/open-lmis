@@ -127,7 +127,7 @@
       </div>
     </div>
     <div class="row-fluid"
-         ng-repeat="facilityTypeApprovedProduct in addedFacilityTypeApprovedProducts | orderBy: ['programProduct.productCategory.name', 'programProduct.product.code'] ">
+         ng-repeat="facilityTypeApprovedProduct in addedFacilityTypeApprovedProducts">
 
       <div id="addedProductCategory{{$index}}" class="row-fluid productCategory"
            ng-show="showCategory(addedFacilityTypeApprovedProducts, $index)">
