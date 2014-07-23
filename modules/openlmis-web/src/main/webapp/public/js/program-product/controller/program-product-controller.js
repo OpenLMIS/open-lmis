@@ -52,14 +52,14 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     if (programProduct.programProductIsa === undefined || programProduct.programProductIsa.id === undefined)
       programProduct.programProductIsa = new ProgramProductISA();
 
-    $scope.previousProgramProduct = angular.copy(programProduct);
+    $scope.currentProgramProduct = angular.copy(programProduct);
     $scope.programProductISAModal = true;
   };
 
   $scope.clearAndCloseProgramProductISAModal = function () {
     $scope.population = 0;
     $scope.inputClass = false;
-    $scope.previousProgramProduct = null;
+    $scope.currentProgramProduct = null;
     $scope.programProductISAModal = false;
   };
 
@@ -72,13 +72,13 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
 
 
   $scope.saveProductISA = function () {
-    if (validateForm($scope.previousProgramProduct.programProductIsa)) {
+    if (validateForm($scope.currentProgramProduct.programProductIsa)) {
       $scope.inputClass = false;
-      if ($scope.previousProgramProduct.programProductIsa.id)
-        ProgramProductsISA.update({programProductId: $scope.previousProgramProduct.id, isaId: $scope.previousProgramProduct.programProductIsa.id},
-            $scope.previousProgramProduct.programProductIsa, successCallBack, {});
+      if ($scope.currentProgramProduct.programProductIsa.id)
+        ProgramProductsISA.update({programProductId: $scope.currentProgramProduct.id, isaId: $scope.currentProgramProduct.programProductIsa.id},
+            $scope.currentProgramProduct.programProductIsa, successCallBack, {});
       else
-        ProgramProductsISA.save({programProductId: $scope.previousProgramProduct.id}, $scope.previousProgramProduct.programProductIsa, successCallBack, {});
+        ProgramProductsISA.save({programProductId: $scope.currentProgramProduct.id}, $scope.currentProgramProduct.programProductIsa, successCallBack, {});
     }
   };
 
