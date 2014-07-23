@@ -209,9 +209,6 @@ public class FacilityPage extends Page {
   @FindBy(how = ID, using = "remove0")
   private static WebElement removeFirstProgramSupportedLink = null;
 
-  @FindBy(how = ID, using = "oneResultMessage")
-  private static WebElement oneResultMessage = null;
-
   @FindBy(how = ID, using = "noResultMessage")
   private static WebElement noResultMessage = null;
 
@@ -226,9 +223,6 @@ public class FacilityPage extends Page {
 
   @FindBy(how = ID, using = "searchOptionButton")
   private static WebElement searchOptionButton = null;
-
-  @FindBy(how = ID, using = "searchOption0")
-  private static WebElement searchOption1 = null;
 
   @FindBy(how = ID, using = "searchOption1")
   private static WebElement searchOption2 = null;
@@ -594,11 +588,6 @@ public class FacilityPage extends Page {
     return noResultMessage.getText();
   }
 
-  public String getOneResultMessage() {
-    testWebDriver.waitForElementToAppear(oneResultMessage);
-    return oneResultMessage.getText();
-  }
-
   public void closeSearchResults() {
     testWebDriver.waitForElementToAppear(closeButton);
     closeButton.click();
@@ -612,11 +601,6 @@ public class FacilityPage extends Page {
   public String getSelectedSearchOption() {
     testWebDriver.waitForElementToAppear(searchOptionButton);
     return searchOptionButton.getText();
-  }
-
-  public void selectFacilityAsSearchOption() {
-    testWebDriver.waitForElementToAppear(searchOption1);
-    searchOption1.click();
   }
 
   public void selectGeographicZoneAsSearchOption() {

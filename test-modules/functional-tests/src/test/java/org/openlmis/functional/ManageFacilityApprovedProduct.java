@@ -355,7 +355,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     facilityApprovedProductPage.selectCategory("Antibiotics");
     assertFalse(facilityApprovedProductPage.getListOfProducts().contains("p1 | Product1 | 300/200/600 | mg | true"));
 
-    facilityApprovedProductPage.clickCrossButtonForAddedRow(2);
+    facilityApprovedProductPage.clickCrossButtonForAddedRow(1);
     facilityApprovedProductPage.selectCategory("Antibiotics");
     assertTrue(facilityApprovedProductPage.getListOfProducts().contains("p1 | Product1 | 300/200/600 | mg | true"));
 
