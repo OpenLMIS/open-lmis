@@ -23,7 +23,8 @@ public interface ProgramEquipmentMapper {
       "from program_equipments pe " +
       "join equipments e on e.id = pe.equipmentId " +
       "join programs p on p.id = pe.programId " +
-      "where programId=#{programId}")
+      "where programId=#{programId} " +
+      "ORDER BY displayOrder ")
   @Results(value = {
       @Result(property = "program.id", column = "programId"),
       @Result(property = "equipment.id", column = "equipmentId"),
