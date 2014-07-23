@@ -32,7 +32,7 @@ import static org.springframework.http.HttpStatus.*;
 public class BaseController {
   public static final String ACCEPT_JSON = "Accept=application/json";
   public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
-  public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
+  public static final String FORBIDDEN_EXCEPTION = "error.authorisation";
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<RestResponse> handleException(Exception ex) {

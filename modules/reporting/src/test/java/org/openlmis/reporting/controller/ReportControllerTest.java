@@ -101,7 +101,7 @@ public class ReportControllerTest {
 
     ModelAndView modelAndView = controller.generateReport(request, 1L, format);
 
-    assertThat(modelAndView.getViewName(), is("report/partials/invalid-report"));
+    assertThat(modelAndView.getViewName(), is("error-page"));
     verify(viewFactory).getJasperReportsView(template);
     verify(templateService).getById(1L);
   }

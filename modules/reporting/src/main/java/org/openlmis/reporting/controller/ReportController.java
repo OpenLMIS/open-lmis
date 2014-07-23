@@ -60,7 +60,7 @@ public class ReportController {
       jasperView = jasperReportsViewFactory.getJasperReportsView(template);
       map = templateService.getParametersMap(template, userId, request, format);
     } catch (Exception e) {
-      return new ModelAndView("report/partials/invalid-report");
+      return new ModelAndView("error-page");
     }
     return new ModelAndView(jasperView, map);
   }
