@@ -108,7 +108,7 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
 
   var sortByCategory = function (facilityTypeApprovedProducts) {
     var sortedData = _.chain(facilityTypeApprovedProducts).sortBy(function (facilityTypeApprovedProduct) {
-      return facilityTypeApprovedProduct.programProduct.productCategory.name;
+      return facilityTypeApprovedProduct.programProduct.productCategory.name.toLowerCase();
     });
     return sortedData._wrapped;
   };
