@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function FacilityApprovedProductController($scope, programs, facilityTypes, FacilityTypeApprovedProducts, $dialog, messageService) {
+function FacilityApprovedProductController($scope, programs, facilityTypes, ProgramProductsFilter, FacilityTypeApprovedProducts, $dialog, messageService) {
 
   $scope.programs = programs;
   $scope.facilityTypes = facilityTypes;
@@ -125,6 +125,17 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Faci
       facilityApprovedProduct.error = data.data.error;
     });
     $scope.focusSuccessMessageDiv();
+  };
+
+  $scope.openFacilityApprovedProductsModal = function () {
+    ProgramProductsFilter.get({programId: $scope.program.id, facilityTypeId: $scope.facilityType.id}, function (data) {
+      $scope.programProductList = data.programProductList;
+      var productCategories = _.pluck($scope.programProductList, "productCategory");
+      $scope.productCategories = _.uniq(productCategories, function (category) {
+        return category.id;
+      });
+      $scope.facilityApprovedProductsModal = true;
+    }, {});
   };
 }
 

@@ -8,19 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, FacilityTypeApprovedProducts, messageService) {
+function CreateFacilityApprovedProductController($scope, FacilityTypeApprovedProducts, messageService) {
   $scope.addedFacilityTypeApprovedProducts = [];
   $scope.selectedProgramProductList = [];
-
-  var loadProductsWithCategory = function () {
-    ProgramProductsFilter.get({programId: $scope.$parent.$parent.program.id, facilityTypeId: $scope.$parent.$parent.facilityType.id}, function (data) {
-      $scope.programProductList = data.programProductList;
-      var productCategories = _.pluck(data.programProductList, "productCategory");
-      $scope.productCategories = _.uniq(productCategories, function (category) {
-        return category.id;
-      });
-    }, {});
-  };
 
   var fillFacilityTypeApprovedProduct = function (selectedProduct) {
     return {
@@ -51,7 +41,7 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
   };
 
   var filterProductsToDisplay = function (selectedProduct) {
-    $scope.programProductList = addAndRemoveFromProgramProductList($scope.programProductList, $scope.selectedProgramProductList, selectedProduct.code);
+    $scope.$parent.$parent.programProductList = addAndRemoveFromProgramProductList($scope.programProductList, $scope.selectedProgramProductList, selectedProduct.code);
   };
 
   $scope.getHeader = function () {
@@ -61,11 +51,6 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
       messageService.get('header.unit.of.measure') + " | " +
       messageService.get('header.template.type');
   };
-
-  $scope.$parent.$parent.$watch('facilityApprovedProductsModal', function () {
-    if ($scope.$parent.$parent.facilityApprovedProductsModal)
-      loadProductsWithCategory();
-  });
 
   $scope.formatResult = function (product) {
     if (!product) return false;
@@ -106,13 +91,13 @@ function CreateFacilityApprovedProductController($scope, ProgramProductsFilter, 
       $scope.productCategorySelected && $scope.productSelected);
   };
 
-  var sortByCategory = function (facilityTypeApprovedProducts) {
+  function sortByCategory(facilityTypeApprovedProducts) {
     return _(facilityTypeApprovedProducts).chain().sortBy(function (facilityApprovedProduct) {
       return facilityApprovedProduct.programProduct.product.code.toLowerCase();
     }).sortBy(function (facilityApprovedProduct) {
       return facilityApprovedProduct.programProduct.productCategory.name.toLowerCase();
     }).value();
-  };
+  }
 
   $scope.addFacilityTypeApprovedProduct = function () {
     var selectedProduct = $.parseJSON($scope.productSelected);

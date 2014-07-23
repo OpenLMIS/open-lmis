@@ -58,23 +58,6 @@ describe("Create Facility Approved Product Controller", function () {
       ];
     });
 
-    it("should load facility approved product", function () {
-      grandParentScope.program = {"id": 2};
-      grandParentScope.facilityType = {"id": 1};
-      grandParentScope.facilityApprovedProductsModal = false;
-
-      var data = {"programProductList": programProductList};
-
-      $httpBackend.when("GET", '/programProducts/filter/programId/2/facilityTypeId/1.json').respond(data);
-      scope.$parent.$parent.$apply(function () {
-        scope.$parent.$parent.facilityApprovedProductsModal = true;
-      });
-
-      $httpBackend.flush();
-      expect(scope.programProductList).toEqual(programProductList);
-      expect(scope.productCategories).toEqual([productCategory1, productCategory2]);
-    });
-
     it("should filter products by category", function () {
       scope.programProductList = programProductList;
       scope.productCategorySelected = productCategory1;
@@ -130,7 +113,7 @@ describe("Create Facility Approved Product Controller", function () {
             eop: 124
           }
         ]);
-        expect(scope.programProductList).toEqual([
+        expect(scope.$parent.$parent.programProductList).toEqual([
           {"product": product2, "productCategory": productCategory2},
           {"product": product3, "productCategory": productCategory1}
         ]);
@@ -178,17 +161,6 @@ describe("Create Facility Approved Product Controller", function () {
         ]);
       });
     });
-  });
-
-  it("should not load facility approved product if modal window is closed", function () {
-    var httpBackendSpy = spyOn($httpBackend, 'expectGET');
-    grandParentScope.facilityApprovedProductsModal = true;
-
-    scope.$parent.$parent.$apply(function () {
-      scope.$parent.$parent.facilityApprovedProductsModal = false;
-    });
-
-    expect(httpBackendSpy).not.toHaveBeenCalled();
   });
 
   it("should return headers", function () {
