@@ -151,7 +151,7 @@ public class ProductMapperIT {
 
     productMapper.insert(product);
 
-    assertFalse(productMapper.isActive(product.getCode()));
+    assertFalse(productMapper.isActive("p999"));
   }
 
   @Test

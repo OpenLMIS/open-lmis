@@ -72,14 +72,11 @@ public class ProductRepository {
   }
 
   public Long getIdByCode(String code) {
-    Long productCode = mapper.getIdByCode(code);
-
-    if (productCode == null)
+    Long productId = mapper.getIdByCode(code);
+    if (productId == null)
       throw new DataException("product.code.invalid");
-
-    return productCode;
+    return productId;
   }
-
 
   public Product getByCode(String code) {
     return mapper.getByCode(code);
