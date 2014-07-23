@@ -36,31 +36,32 @@ describe("Facility Approved Product", function () {
       {$scope: scope, facilityTypes: facilityTypeList, programs: programs, messageService: messageService});
   }));
 
-//  it("should open facility approved product modal and load programProducts", function () {
-//    scope.program = {"id": 2};
-//    scope.facilityType = {"id": 1};
-//    scope.facilityApprovedProductsModal = false;
-//    var product1 = {name: "product1", code: "1"};
-//    var product2 = {name: "product2", code: "2"};
-//    var product3 = {name: "product3", code: "3"};
-//    var productCategory1 = {name: "second product category", id: 1, code: 1};
-//    var productCategory2 = {name: "first product category", id: 2, code: 2};
-//    var programProductList = [
-//      {"product": product1, "productCategory": productCategory1},
-//      {"product": product2, "productCategory": productCategory2},
-//      {"product": product3, "productCategory": productCategory1}
-//    ];
-//    var data = {"programProductList": programProductList };
-//
-//    $httpBackend.when("GET", '/programProducts/filter/programId/2/facilityTypeId/1.json').respond(data);
-//
-//    scope.openFacilityApprovedProductsModal();
-//    $httpBackend.flush();
-//
-//    expect(scope.programProductList).toEqual(programProductList);
-//    expect(scope.productCategories).toEqual([productCategory1, productCategory2]);
-//    expect(scope.facilityApprovedProductsModal).toBeTruthy();
-//  });
+  it("should open facility approved product modal and load programProducts", function () {
+    scope.currentPage = 0;
+    scope.program = {"id": 2};
+    scope.facilityType = {"id": 1};
+    scope.facilityApprovedProductsModal = false;
+    var product1 = {name: "product1", code: "1"};
+    var product2 = {name: "product2", code: "2"};
+    var product3 = {name: "product3", code: "3"};
+    var productCategory1 = {name: "second product category", id: 1, code: 1};
+    var productCategory2 = {name: "first product category", id: 2, code: 2};
+    var programProductList = [
+      {"product": product1, "productCategory": productCategory1},
+      {"product": product2, "productCategory": productCategory2},
+      {"product": product3, "productCategory": productCategory1}
+    ];
+    var data = {"programProductList": programProductList };
+
+    $httpBackend.when("GET", '/programProducts/filter/programId/2/facilityTypeId/1.json').respond(data);
+
+    scope.openFacilityApprovedProductsModal();
+    $httpBackend.flush();
+
+    expect(scope.programProductList).toEqual(programProductList);
+    expect(scope.productCategories).toEqual([productCategory1, productCategory2]);
+    expect(scope.facilityApprovedProductsModal).toBeTruthy();
+  });
 
   it("should set currentPage, programs and facility types in scope", function () {
     expect(scope.facilityTypes).toEqual(facilityTypeList);
