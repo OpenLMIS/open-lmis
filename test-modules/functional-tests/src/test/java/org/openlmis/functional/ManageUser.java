@@ -101,6 +101,7 @@ public class ManageUser extends TestCaseHelper {
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
     userPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
     userPage.clickUserName(1);
     testWebDriver.waitForAjax();
     assertEquals(userPage.getVerifiedLabel(), "Yes");
@@ -112,6 +113,7 @@ public class ManageUser extends TestCaseHelper {
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
     userPage.clickSearchIcon();
+    testWebDriver.waitForAjax();
     userPage.clickUserName(1);
     testWebDriver.waitForAjax();
     userPage.clickEnableButton();
@@ -219,7 +221,7 @@ public class ManageUser extends TestCaseHelper {
                                                                 String programFirst, String programSecond, String schedule, String roleName) throws SQLException {
     setupDeliveryZoneRolesAndRights(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, roleName);
-    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokS2Aieie";
     String email = "Jasmine_Doe@openlmis.com";
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
