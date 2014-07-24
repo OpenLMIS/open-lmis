@@ -58,7 +58,7 @@ describe('program product controller', function () {
     scope.showProductISA(programProduct);
 
     expect(spyOnProgramProductISA).toHaveBeenCalled();
-    expect(scope.previousProgramProduct).toEqual(programProduct);
+    expect(scope.currentProgramProduct).toEqual(programProduct);
     expect(scope.programProductISAModal).toBeTruthy();
   });
 
@@ -66,7 +66,7 @@ describe('program product controller', function () {
     scope.clearAndCloseProgramProductISAModal();
     expect(scope.population).toEqual(0);
     expect(scope.inputClass).toBeFalsy();
-    expect(scope.previousProgramProduct).toBeNull();
+    expect(scope.currentProgramProduct).toBeNull();
     expect(scope.programProductISAModal).toBeFalsy();
   });
 
@@ -87,7 +87,7 @@ describe('program product controller', function () {
     var programProductIsa = {"id": 1, "whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
     var productIsa = new ProgramProductISA();
     productIsa.init(programProductIsa);
-    scope.previousProgramProduct = {"id": 1, "programProductIsa": productIsa};
+    scope.currentProgramProduct = {"id": 1, "programProductIsa": productIsa};
 
     $httpBackend.expect('PUT','/programProducts/1/isa/1.json', productIsa).respond(200);
 
@@ -102,7 +102,7 @@ describe('program product controller', function () {
     var programProductIsa = {"whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
     var productIsa = new ProgramProductISA();
     productIsa.init(programProductIsa);
-    scope.previousProgramProduct = {"id": 1, "programProductIsa": productIsa};
+    scope.currentProgramProduct = {"id": 1, "programProductIsa": productIsa};
     $httpBackend.expect('POST','/programProducts/1/isa.json', productIsa).respond(200);
 
     scope.saveProductISA();
@@ -117,7 +117,7 @@ describe('program product controller', function () {
     var programProductIsa = {"whoRatio": 4, "dosesPerYear": 5, "bufferPercentage": 6, "adjustmentValue": 55};
     var productIsa = new ProgramProductISA();
     productIsa.init(programProductIsa);
-    scope.previousProgramProduct = {"id": 1, "programProductIsa": productIsa};
+    scope.currentProgramProduct = {"id": 1, "programProductIsa": productIsa};
     scope.isaForm.$error.required = true;
 
     scope.saveProductISA();
@@ -132,7 +132,7 @@ describe('program product controller', function () {
       "minimumValue":50, "maximumValue":5};
     var productIsa = new ProgramProductISA();
     productIsa.init(programProductIsa);
-    scope.previousProgramProduct = {"id": 1, "programProductIsa": productIsa};
+    scope.currentProgramProduct = {"id": 1, "programProductIsa": productIsa};
 
     scope.saveProductISA();
 
