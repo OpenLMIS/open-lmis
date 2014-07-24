@@ -16,6 +16,7 @@ function CreateVendorController($scope, $routeParams, $location, $dialog, messag
         });
     };
 
+    $scope.$parent.message = '';
 
     $scope.loadAvailableUsersForVendor = function(){
         UserListAvailableForVendor.get(function(data){
@@ -44,6 +45,7 @@ function CreateVendorController($scope, $routeParams, $location, $dialog, messag
         if($scope.vendorForm.$valid){
             SaveVendor.save($scope.current, function (data) {
                 // success
+                $scope.$parent.message = 'Your changes have been saved';
                 $location.path('');
             }, function (data) {
                 // error

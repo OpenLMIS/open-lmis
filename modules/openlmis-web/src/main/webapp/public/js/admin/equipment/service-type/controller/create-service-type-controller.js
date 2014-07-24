@@ -10,8 +10,9 @@
 
 function CreateServiceTypeController($scope, $routeParams, $location, ServiceType, SaveServiceType) {
 
+  $scope.$parent.message = '';
 
-    if ($routeParams.id === undefined) {
+  if ($routeParams.id === undefined) {
         $scope.current = {};
     } else {
         ServiceType.get({
@@ -24,7 +25,8 @@ function CreateServiceTypeController($scope, $routeParams, $location, ServiceTyp
     $scope.save = function () {
         SaveServiceType.save($scope.current, function (data) {
             // success
-            $location.path('');
+          $scope.$parent.message = 'Your changes have been saved';
+              $location.path('');
         }, function (data) {
             // error
             $scope.error = data.messages;

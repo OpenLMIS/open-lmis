@@ -11,6 +11,8 @@
 function CreateServiceContractController($scope, $routeParams, $location, Contract, SaveContract, Vendors, ServiceTypes, Programs) {
 
 
+    $scope.$parent.message = '';
+
     if ($routeParams.id === undefined) {
         $scope.current = {};
         $scope.isNew = true;
@@ -29,14 +31,7 @@ function CreateServiceContractController($scope, $routeParams, $location, Contra
     Vendors.get(function(data){
        $scope.vendors = data.vendors;
     });
-    // get the lookups that will be checked
-//    Equipments.get(function(data){
-//       $scope.equipments = data.equipments;
-//    });
-//
-//    ServiceTypes.get(function(data){
-//       $scope.service_types = data.service_type;
-//    });
+
 
     Programs.get(function(data){
        $scope.programs = data.programs;
@@ -49,6 +44,7 @@ function CreateServiceContractController($scope, $routeParams, $location, Contra
         if($scope.contractForm.$valid){
             SaveContract.save($scope.current, function (data) {
                 // success
+                $scope.$parent.message = 'Your changes have been saved';
                 $location.path('');
             }, function (data) {
                 // error

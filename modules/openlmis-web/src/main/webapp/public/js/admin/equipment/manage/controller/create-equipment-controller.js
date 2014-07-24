@@ -13,6 +13,8 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment, E
   EquipmentTypes.get(function (data) {
     $scope.equipmentTypes = data.equipment_type;
   });
+  // clear the message when this page is loaded.
+  $scope.$parent.message = '';
 
   if ($routeParams.id === undefined) {
     $scope.equipment = {};

@@ -10,6 +10,8 @@
 
 function CreateEquipmentTypeController($scope, $routeParams, $location, EquipmentType, SaveEquipmentType) {
 
+  $scope.$parent.message = '';
+
   if (isUndefined($routeParams.id)) {
     $scope.equipment_type = {};
   } else {
