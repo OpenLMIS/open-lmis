@@ -41,6 +41,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
@@ -148,11 +149,11 @@ public class OrderMapperIT {
     shipmentFileInfo.setFileName("abc.csv");
     shipmentFileInfo.setProcessingError(false);
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
-
-
     mapper.updateShipmentAndStatus(order.getOrderNumber(), RELEASED, shipmentFileInfo.getId());
     Long userId = insertUserAndRoleForOrders();
+
     List<Order> orders = mapper.getOrders(1, 0, userId, VIEW_ORDER);
+
     assertThat(orders.get(0).getShipmentFileInfo().getFileName(), is("abc.csv"));
     assertThat(orders.get(0).getShipmentFileInfo().isProcessingError(), is(false));
   }
@@ -167,11 +168,10 @@ public class OrderMapperIT {
     mapper.updateShipmentAndStatus(order.getOrderNumber(), PACKED, shipmentFileInfo.getId());
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", order.getRnr().getId());
-
     resultSet.next();
-
     assertThat(resultSet.getString("status"), is(PACKED.name()));
     assertThat(resultSet.getLong("shipmentId"), is(shipmentFileInfo.getId()));
+    assertThat(resultSet.getDate("modifiedDate"),is(not(order.getModifiedDate())));
   }
 
   @Test
@@ -232,6 +232,7 @@ public class OrderMapperIT {
     Order savedOrder = mapper.getById(order.getId());
     assertThat(savedOrder.getStatus(), is(TRANSFER_FAILED));
     assertThat(savedOrder.getFtpComment(), is(ftpComment));
+    assertThat(savedOrder.getModifiedDate(), is(not(order.getModifiedDate())));
   }
 
   private Long insertUserAndRoleForOrders() throws SQLException {

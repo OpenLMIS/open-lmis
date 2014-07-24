@@ -59,7 +59,7 @@ public interface OrderMapper {
   @Update({"UPDATE orders SET",
     "shipmentId = #{shipmentId},",
     "status = #{status},",
-    "modifiedDate = DEFAULT",
+    "modifiedDate = CURRENT_TIMESTAMP",
     "WHERE orderNumber = #{orderNumber}"})
   void updateShipmentAndStatus(@Param("orderNumber") String orderNumber,
                                @Param("status") OrderStatus status,
@@ -76,7 +76,7 @@ public interface OrderMapper {
   void insertOrderFileColumn(OrderFileColumn orderFileColumn);
 
 
-  @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment}, modifiedDate = DEFAULT WHERE id = #{id}")
+  @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment}, modifiedDate = CURRENT_TIMESTAMP WHERE id = #{id}")
   void updateOrderStatus(Order order);
 
   @Select("SELECT status FROM orders WHERE orderNumber = #{orderNumber}")
