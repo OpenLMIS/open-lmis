@@ -57,6 +57,10 @@ public class Money extends BaseModel {
     return value.compareTo(other.value);
   }
 
+  public BigDecimal toDecimal(){
+    return value;
+  }
+
   @Override
   public String toString() {
     return value.toString();

@@ -26,6 +26,7 @@ import org.openlmis.rnr.domain.*;
 import org.openlmis.web.model.PrintRnrLineItem;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -262,6 +263,8 @@ public class RequisitionPdfModel {
     this.requisition.fillFullSupplyCost();
     this.requisition.fillNonFullSupplyCost();
 
+    DecimalFormat formatter = new DecimalFormat("#,###.00");
+
     PdfPTable summaryTable = new PdfPTable(2);
     summaryTable.setWidths(new int[]{30, 20});
     summaryTable.setSpacingBefore(TABLE_SPACING);
@@ -277,17 +280,17 @@ public class RequisitionPdfModel {
     boolean showBudget = !requisition.isEmergency() && requisition.getProgram().getBudgetingApplies();
     if (showBudget) {
       summaryTable.addCell(summaryCell(textCell(messageService.message("label.allocated.budget"))));
-      PdfPCell allocatedBudgetCell = requisition.getAllocatedBudget() != null ? numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + new Money(requisition.getAllocatedBudget().toString())) :
+      PdfPCell allocatedBudgetCell = requisition.getAllocatedBudget() != null ? numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + formatter.format( new Money(requisition.getAllocatedBudget()).toDecimal())) :
         numberCell(messageService.message("msg.budget.not.allocated"));
       summaryTable.addCell(summaryCell(allocatedBudgetCell));
     }
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost.full.supply.items"))));
-    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + requisition.getFullSupplyItemsSubmittedCost())));
+    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + formatter.format(requisition.getFullSupplyItemsSubmittedCost().toDecimal()))) );
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost.non.full.supply.items"))));
-    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + requisition.getNonFullSupplyItemsSubmittedCost())));
+    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + formatter.format(requisition.getNonFullSupplyItemsSubmittedCost().toDecimal()))));
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost"))));
-    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + this.getTotalCost(
-      requisition).toString())));
+    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + formatter.format(this.getTotalCost(
+      requisition).toDecimal()).toString())));
     if (showBudget && requisition.getAllocatedBudget() != null && (requisition.getAllocatedBudget().compareTo(this.getTotalCost(requisition).getValue()) == -1)) {
       summaryTable.addCell(summaryCell(textCell(messageService.message("msg.cost.exceeds.budget"))));
       summaryTable.addCell(summaryCell(textCell(" ")));
