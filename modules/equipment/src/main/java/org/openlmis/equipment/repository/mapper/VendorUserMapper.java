@@ -21,7 +21,7 @@ public interface VendorUserMapper {
   @Select("SELECT u.id, u.firstName, u.lastName, u.email, u.username, u.active " +
           "from equipment_service_vendor_users vu " +
           "JOIN users u on vu.userId = u.id " +
-          "WHERE vu.vendorId=#{vendorId} ")
+          "WHERE vu.vendorId=#{vendorId} order by u.firstName, u.lastName")
   List<User> getAllUsersForVendor(Long vendorId);
 
   @Insert("INSERT INTO equipment_service_vendor_users (userId, vendorId, createdBy, createdDate, modifiedBy, modifiedDate) " +
@@ -40,6 +40,7 @@ public interface VendorUserMapper {
 
   @Select("SELECT u.id, u.firstName, u.lastName, u.email, u.username, u.active " +
           "from users u " +
-          "WHERE u.id not in (SELECT userId from equipment_service_vendor_users) AND u.active = TRUE ")
+          "WHERE u.id not in (SELECT userId from equipment_service_vendor_users) AND u.active = TRUE " +
+      "  order by u.firstName, u.lastName")
   List<User> getAllUsersAvailableForVendor();
 }
