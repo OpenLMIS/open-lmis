@@ -11,11 +11,7 @@
 package org.openlmis.functional;
 
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.PageObjectFactory;
-import org.openlmis.pageobjects.RequisitionGroupPage;
-import org.openlmis.pageobjects.UploadPage;
+import org.openlmis.pageobjects.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -48,7 +44,6 @@ public class ManageRequisitionGroups extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.removeAllExistingRights("Admin");
-    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     dbWrapper.insertFacilities("F10", "F100");
     dbWrapper.insertFacilities("F11", "F10A");
 
@@ -58,6 +53,7 @@ public class ManageRequisitionGroups extends TestCaseHelper {
 
   @Test(groups = {"admin"})
   public void testRightsNotPresent() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     homePage.navigateManageFacility();
 

@@ -43,7 +43,6 @@ public class ManageSupplyLine extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.removeAllExistingRights("Admin");
-    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F10", "F11", 1, 1);
     dbWrapper.updateFieldValue("facilities", "name", "central Hospital", "code", "F11");
     dbWrapper.updateFieldValue("programs", "name", "malaria", "code", "MALARIA");
@@ -61,6 +60,7 @@ public class ManageSupplyLine extends TestCaseHelper {
 
   @Test(groups = {"admin"})
   public void testRightsNotPresent() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     testWebDriver.waitForAjax();
     homePage.navigateManageFacility();

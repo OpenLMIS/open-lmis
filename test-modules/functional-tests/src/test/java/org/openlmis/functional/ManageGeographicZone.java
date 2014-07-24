@@ -36,7 +36,6 @@ public class ManageGeographicZone extends TestCaseHelper {
     super.setup();
     dbWrapper.setupDataForGeoZones();
     dbWrapper.removeAllExistingRights("Admin");
-    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     geographicZonePage = PageObjectFactory.getGeographicZonePage(testWebDriver);
   }

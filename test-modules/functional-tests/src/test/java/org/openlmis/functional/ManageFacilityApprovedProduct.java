@@ -44,7 +44,6 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.removeAllExistingRights("Admin");
-    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     dbWrapper.insertProductCategoryWithDisplayOrder("Antibiotic", "Antibiotics", 1);
     dbWrapper.insertProductCategoryWithDisplayOrder("anaesthetics", "anaesthetics", 1);
     dbWrapper.insertProductCategoryWithDisplayOrder("category3", "category3", 2);
@@ -54,6 +53,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
 
   @Test(groups = {"admin"})
   public void testRightsNotPresent() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     dbWrapper.updateFieldValue("programs", "push", "t", "code", "MALARIA");
     dbWrapper.updateFieldValue("programs", "name", "hiv", "code", "HIV");
     dbWrapper.updateFieldValue("facility_types", "name", "lvl3 Hospital", "name", "Lvl3 Hospital");
@@ -517,7 +517,7 @@ public class ManageFacilityApprovedProduct extends TestCaseHelper {
     facilityApprovedProductPage.selectCategory("anaesthetics2");
     assertTrue(facilityApprovedProductPage.getListOfProducts().contains("p4 | product4 | 300/200/600 | mg | true"));
     facilityApprovedProductPage.selectProduct("p4 | product4 | 300/200/600 | mg | true");
-    facilityApprovedProductPage.enterMaxMonthsOfStock(".99");
+    facilityApprovedProductPage.enterMaxMonthsOfStock("0.99");
     facilityApprovedProductPage.clickAddProductButton();
     facilityApprovedProductPage.clickAddDoneButton();
     testWebDriver.waitForAjax();

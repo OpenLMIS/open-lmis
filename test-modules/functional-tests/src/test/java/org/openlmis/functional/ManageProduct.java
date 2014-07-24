@@ -46,7 +46,6 @@ public class ManageProduct extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.removeAllExistingRights("Admin");
-    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     dbWrapper.insertProductCategoryWithDisplayOrder("Antibiotic", "Antibiotics", 1);
     dbWrapper.insertProductCategoryWithDisplayOrder("anaesthetics", "anaesthetics", 1);
     dbWrapper.insertProductCategoryWithDisplayOrder("category3", "category3", 2);
@@ -56,6 +55,7 @@ public class ManageProduct extends TestCaseHelper {
 
   @Test(groups = {"admin"})
   public void testRightsNotPresent() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     homePage.navigateManageFacility();
 
@@ -441,7 +441,7 @@ public class ManageProduct extends TestCaseHelper {
     assertEquals("product", productPage.getPrimaryNameOnEditPage());
     productPage.clickOtherInfoAccordion();
     assertEquals("generic name", productPage.getGenericNameOnEditPage());
-    assertEquals("0.9", productPage.getPackHeightOnEditPage());
+    assertEquals("9", productPage.getPackHeightOnEditPage());
   }
 
   @Test(groups = {"admin"})

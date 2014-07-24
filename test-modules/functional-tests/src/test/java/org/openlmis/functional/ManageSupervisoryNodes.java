@@ -42,7 +42,6 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.removeAllExistingRights("Admin");
-    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     dbWrapper.insertFacilities("F10", "F11");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     supervisoryNodesPage = PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
@@ -53,6 +52,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
     dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
+    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     homePage.navigateManageFacility();

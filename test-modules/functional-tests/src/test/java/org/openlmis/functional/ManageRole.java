@@ -46,7 +46,6 @@ public class ManageRole extends TestCaseHelper {
     super.setup();
     dbWrapper.removeAllExistingRights("Admin");
     dbWrapper.assignRight("Admin", "MANAGE_ROLE");
-    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     rolesPage = PageObjectFactory.getRolesPage(testWebDriver);
   }
@@ -126,8 +125,7 @@ public class ManageRole extends TestCaseHelper {
 
     assertEquals(rolesPage.getName(1), "Admin");
     assertEquals(rolesPage.getDescription(1), "Admin");
-    assertEquals(rolesPage.getRights(1, 1), "Admin - Manage Facilities");
-    assertEquals(rolesPage.getRights(1, 2), "Admin - Manage Roles");
+    assertEquals(rolesPage.getRights(1, 1), "Admin - Manage Roles");
 
     List<String> userRoleList = new ArrayList<>();
     userRoleList.add("Uploads");
