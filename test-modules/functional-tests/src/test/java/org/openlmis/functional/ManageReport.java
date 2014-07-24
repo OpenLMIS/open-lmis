@@ -611,7 +611,7 @@ public class ManageReport extends TestCaseHelper {
 
     reportPage.clickCsvTableLink();
     testWebDriver.switchWindow();
-    assertEquals("Invalid report specification, please contact your admin", testWebDriver.getElementById("invalidReportError").getText());  //not defined in page object, as element is present on switched window
+    assertEquals("Something went wrong! Please contact the administrator", testWebDriver.getElementById("invalidReportError").getText());  //not defined in page object, as element is present on switched window
     testWebDriver.switchWindow();
     testWebDriver.closeBrowser();
   }
