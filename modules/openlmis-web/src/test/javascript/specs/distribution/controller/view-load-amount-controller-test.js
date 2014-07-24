@@ -42,6 +42,11 @@ describe('ViewLoadAmountController', function () {
     expect(scope.message).toEqual("msg.no.records.found");
   });
 
+  it('should set no records found message if no facilities are undefined', function () {
+    controller(ViewLoadAmountController, {$scope: scope, facilities: undefined, period: {}, deliveryZone: {}});
+    expect(scope.message).toEqual("msg.no.records.found");
+  });
+
   it('should set Geographic zone level name', function () {
     expect(scope.geoZoneLevelName).toEqual('City');
   });

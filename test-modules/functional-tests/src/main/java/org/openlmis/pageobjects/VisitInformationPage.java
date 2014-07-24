@@ -188,7 +188,7 @@ public class VisitInformationPage extends DistributionTab {
     verifiedByTitleField.sendKeys(Keys.TAB);
   }
 
-  public void enterVisitDateAsFirstOfCurrentMonth() {
+  public void enterVisitDateAsCurrentDate() {
     testWebDriver.waitForElementToAppear(visitDateField);
     visitDateField.click();
     testWebDriver.waitForElementToAppear(calender);
@@ -288,7 +288,7 @@ public class VisitInformationPage extends DistributionTab {
   public void enterDataWhenFacilityVisited(String confirmName, String confirmTitle, String verifierName,
                                            String verifierTitle) {
     selectFacilityVisitedYes();
-    enterVisitDateAsFirstOfCurrentMonth();
+    enterVisitDateAsCurrentDate();
     enterConfirmedByName(confirmName);
     enterConfirmedByTitle(confirmTitle);
     enterVerifiedByName(verifierName);

@@ -21,9 +21,9 @@
                openlmis-message="button.apply.nr.all"/>
       </h3>
 
-      <div id="childCoverageTable" class="facility-distribution-form-table coverage-table">
+      <div id="childCoverageTable" class="parent facility-distribution-form-table coverage-table">
         <form auto-save="distribution" object-store="distributions">
-          <table class="table table-bordered">
+          <table class="table table-bordered" fixed-table-header>
             <thead>
             <tr>
               <th class="col-complete-vaccinated" id="vaccination" rowspan="2"
@@ -73,7 +73,9 @@
                            ng-model="lineItem.healthCenter11Months.value"
                            name="coverageHealthCenter11Months{{$index}}"
                            numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                           error-holder="healthCenter11MonthsError{{$index}}"/>
+                           error-holder="healthCenter11MonthsError{{$index}}"
+                           ng-class="{'required-error': !(lineItem.healthCenter11Months.value ||
+                           lineItem.healthCenter11Months.notRecorded)}"/>
                     <span id="healthCenter11MonthsError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
@@ -93,7 +95,9 @@
                            ng-model="lineItem.outreach11Months.value"
                            name="coverageOutreach11Months{{$index}}"
                            numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                           error-holder="outreach11MonthsError{{$index}}"/>
+                           error-holder="outreach11MonthsError{{$index}}"
+                           ng-class="{'required-error': !(lineItem.outreach11Months.value ||
+                           lineItem.outreach11Months.notRecorded)}"/>
                     <span id="outreach11MonthsError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
@@ -122,7 +126,9 @@
                              ng-model="lineItem.healthCenter23Months.value"
                              name="coverageHealthCenter23Months{{$index}}"
                              numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                             error-holder="healthCenter23MonthsError{{$index}}"/>
+                             error-holder="healthCenter23MonthsError{{$index}}"
+                             ng-class="{'required-error': !(lineItem.healthCenter23Months.value ||
+                             lineItem.healthCenter23Months.notRecorded)}"/>
                       <span id="healthCenter23MonthsError{{$index}}"
                             class="rnr-form-error"
                             openlmis-message="error.number.only"
@@ -144,7 +150,9 @@
                              ng-model="lineItem.outreach23Months.value"
                              name="coverageOutreach23Months{{$index}}"
                              numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                             error-holder="outreach23MonthsError{{$index}}"/>
+                             error-holder="outreach23MonthsError{{$index}}"
+                             ng-class="{'required-error': !(lineItem.outreach23Months.value ||
+                             lineItem.outreach23Months.notRecorded)}"/>
                       <span id="outreach23MonthsError{{$index}}"
                             class="rnr-form-error"
                             openlmis-message="error.number.only"
@@ -177,7 +185,9 @@
                            ng-model="openedVialMap[product].openedVial.value"
                            name="coverageOpenedVial{{$parent.$index}}{{$index}}"
                            numeric-validator="positiveInteger" maxlength="7" ng-trim=false
-                           error-holder="{{product}}OpenedVialError"/>
+                           error-holder="{{product}}OpenedVialError"
+                           ng-class="{'required-error': !(openedVialMap[product].openedVial.value ||
+                           openedVialMap[product].openedVial.notRecorded)}"/>
                     <span id="{{product}}OpenedVialError"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"

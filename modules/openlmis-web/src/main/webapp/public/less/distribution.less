@@ -45,7 +45,7 @@
 
 .facility-info {
   min-height: 535px;
-  margin-left: 270px;
+  margin-left: 175px;
   background: #fff;
   border-left: 1px solid #d2d2d2;
 
@@ -82,7 +82,7 @@
 
 .left-navigation {
   position: absolute;
-  width: 270px;
+  width: 175px;
   ul {
     list-style-type: none;
     margin-left: 0;
@@ -172,6 +172,10 @@
     padding: 11px 11px 9px;
     text-decoration: none;
   }
+}
+
+#addRefrigeratorModal h3{
+  margin: 0;
 }
 
 .refrigerator-container {
@@ -342,10 +346,16 @@
       text-align: right;
     }
   }
-  .col-complete-vaccinated, .col-health-center, .col-mobile-brigade {
+  .col-health-center, .col-mobile-brigade {
     input[type="text"] {
       text-align: right;
       width: 80px;
+    }
+  }
+  .col-complete-vaccinated {
+    input[type="text"] {
+      text-align: right;
+      width: 60px;
     }
   }
   input[type="text"] {
@@ -354,6 +364,9 @@
   }
   input[type="checkbox"] {
     margin-top: 0;
+  }
+  .header-fixed th {
+    color: #333;
   }
 }
 
@@ -580,4 +593,37 @@
 
 #adultCoverageTable tr:last-child td:first-child {
   height: 50px;
+}
+
+.app-cache-status-modal {
+  width: 400px;
+  margin: -170px 0 0 -200px;
+  .icon-ok-circle {
+    font-size: 20px;
+    color: #468847;
+    margin-right: 5px;
+  }
+  .icon-exclamation-sign {
+    font-size: 17px;
+    color: #cd1e24;
+    margin-right: 5px;
+  }
+  #downloadingLoader {
+    height: 20px;
+    background: url('../images/ajax-loader.gif') 38% 50% no-repeat;
+    margin-bottom: 6px;
+  }
+  #successMessage, #errorMessage, .icon {
+    vertical-align: middle;
+  }
+  .modal-footer {
+    padding: 10px;
+    .btn {
+      margin-left: 0;
+    }
+  }
+}
+
+#syncMessage {
+  font-size: 15px;
 }

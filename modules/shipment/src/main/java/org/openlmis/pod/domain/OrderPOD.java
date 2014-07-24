@@ -15,9 +15,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.serializer.DateDeserializer;
 import org.openlmis.rnr.domain.LineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -49,6 +51,8 @@ public class OrderPOD extends BaseModel {
   private List<OrderPODLineItem> podLineItems = new ArrayList<>();
   private String deliveredBy;
   private String receivedBy;
+
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date receivedDate;
 
   public OrderPOD(Long id) {

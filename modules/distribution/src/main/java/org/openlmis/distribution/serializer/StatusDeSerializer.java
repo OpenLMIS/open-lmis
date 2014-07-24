@@ -8,37 +8,26 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.core.serializer;
+package org.openlmis.distribution.serializer;
 
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.ObjectCodec;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
+import org.openlmis.distribution.domain.DistributionStatus;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 /**
- * DateDeserializer class represents the deserializer for Date.
+ * StatusDeSerializer class represents the deserializer for DistributionStatus.
  */
 
-public class DateDeserializer extends JsonDeserializer<Date> {
+public class StatusDeSerializer extends JsonDeserializer<DistributionStatus> {
   @Override
-  public Date deserialize(JsonParser jsonparser,
-                          DeserializationContext deserializationcontext) throws IOException {
-    try {
-      return new Date(Long.parseLong(jsonparser.getText()));
-    } catch (NumberFormatException e) {
-      try {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormat.setTimeZone(TimeZone.getDefault());
-        return dateFormat.parse(jsonparser.getText());
-      } catch (ParseException ex) {
-        throw new RuntimeException(ex);
-      }
-    }
+  public DistributionStatus deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
+    ObjectCodec oc = jsonParser.getCodec();
+    JsonNode node = oc.readTree(jsonParser);
+    return DistributionStatus.valueOf(node.get("name").getTextValue());
   }
 }
-

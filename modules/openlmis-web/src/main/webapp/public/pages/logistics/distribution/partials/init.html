@@ -9,67 +9,105 @@
   -->
 
 <div class="init-rnr manage-distribution">
-    <h2 id="manageDistributionHeader" openlmis-message="label.manage.distribution"></h2>
+  <h2 id="manageDistributionHeader" openlmis-message="label.manage.distribution"></h2>
 
-    <br/>
+  <br/>
 
-    <div class="alert alert-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
-         ng-show="message"></div>
+  <div class="alert alert-success" id="saveSuccessMsgDiv" fade-out="3000" openlmis-message="message"
+       ng-show="message"></div>
 
-    <div>
-        <div class="distribution-section">
-            <div class="row-fluid">
-                <div class="span12">
-                    <label openlmis-message="label.distribution.deliveryZone"></label>
-                </div>
-            </div>
-            <div class="row-fluid">
-                <select id="selectDeliveryZone" class="span3" ng-model="selectedZone"
-                        ng-options="i as i.name for i in deliveryZones" ng-change="loadPrograms()">
-                    <option ng-bind="zonePlaceholder"></option>
-                </select>
-            </div>
-        </div>
-
-        <div class="distribution-section">
-            <div class="row-fluid">
-                <div class="span12">
-                    <label openlmis-message="label.program"></label>
-                </div>
-            </div>
-            <div class="row-fluid">
-                <select id="selectProgram" class="span3" ng-model="selectedProgram"
-                        ng-options="i as i.name for i in programs"
-                        ng-change="loadPeriods()">
-                    <option ng-bind="programOptionMessage()"></option>
-                </select>
-            </div>
-        </div>
-
-        <div class="distribution-section">
-            <div class="row-fluid">
-                <div class="span12">
-                    <label openlmis-message="label.period"></label>
-                </div>
-            </div>
-            <div class="row-fluid">
-                <select id="selectPeriod" class="span3" ng-model="selectedPeriod"
-                        ng-options="i as i.name for i in periods">
-                    <option ng-bind="periodOptionMessage()"></option>
-                </select>
-            </div>
-        </div>
-
-    </div>
+  <div>
     <div class="distribution-section">
-        <input id="viewLoadAmounts" ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
-               type="button" ng-click="viewLoadAmount()" class="btn btn-primary"
-               openlmis-message="button.view.load.amount"/>
-
-        <input id="initiateDistribution" ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
-               type="button" ng-click="initiateDistribution()" class="btn btn-primary"
-               openlmis-message="button.initiate.distribution"/>
+      <div class="row-fluid">
+        <div class="span12">
+          <label openlmis-message="label.distribution.deliveryZone"></label>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <select id="selectDeliveryZone" class="span3" ng-model="selectedZone"
+                ng-options="i as i.name for i in deliveryZones" ng-change="loadPrograms()">
+          <option ng-bind="zonePlaceholder"></option>
+        </select>
+      </div>
     </div>
 
-    <div ng-include="'partials/list.html'"></div>
+    <div class="distribution-section">
+      <div class="row-fluid">
+        <div class="span12">
+          <label openlmis-message="label.program"></label>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <select id="selectProgram" class="span3" ng-model="selectedProgram"
+                ng-options="i as i.name for i in programs"
+                ng-change="loadPeriods()">
+          <option ng-bind="programOptionMessage()"></option>
+        </select>
+      </div>
+    </div>
+
+    <div class="distribution-section">
+      <div class="row-fluid">
+        <div class="span12">
+          <label openlmis-message="label.period"></label>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <select id="selectPeriod" class="span3" ng-model="selectedPeriod"
+                ng-options="i as i.name for i in periods">
+          <option ng-bind="periodOptionMessage()"></option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+  <div class="distribution-section">
+    <input id="viewLoadAmounts" ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
+           type="button" ng-click="viewLoadAmount()" class="btn btn-primary"
+           openlmis-message="button.view.load.amount"/>
+
+    <input id="initiateDistribution" ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
+           type="button" ng-click="initiateDistribution()" class="btn btn-primary"
+           openlmis-message="button.initiate.distribution"/>
+  </div>
+  <div ng-include="'partials/list.html'"></div>
+
+  <div ng-show="appCacheState !== undefined">
+    <div class="modal-backdrop"></div>
+
+    <div class="modal app-cache-status-modal" show="appCacheState !== 'progress'" >
+      <div class="modal-body">
+
+        <div ng-show="appCacheState === 'progress'">
+          <div id="downloadingLoader"></div>
+          <strong openlmis-message='message.downloading.app.data'></strong>
+          <div openlmis-message='message.downloading.in.progress'></div>
+        </div>
+
+        <div ng-show="appCacheState === 'cached'">
+          <div>
+            <i class="icon icon-ok-circle"></i>
+            <span id="successMessage" openlmis-message='message.downloading.success'></span>
+          </div>
+        </div>
+
+        <div ng-show="appCacheState === 'error'">
+          <div>
+            <i class="icon icon-exclamation-sign"></i>
+            <span id="errorMessage" openlmis-message='message.downloading.failed'></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" ng-hide="appCacheState === 'progress'">
+        <input type="button" ng-show="appCacheState === 'cached'" href="" ng-click="close();" class="btn btn-primary"
+           openlmis-message='button.close' />
+
+        <input type="button" ng-show="appCacheState === 'error'" href="" ng-click="reload();" class="btn btn-primary"
+           openlmis-message='button.retry' />
+      </div>
+    </div>
+  </div>
+
+
 </div>

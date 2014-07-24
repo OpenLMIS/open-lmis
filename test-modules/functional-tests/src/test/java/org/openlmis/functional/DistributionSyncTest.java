@@ -83,10 +83,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.updateFieldValue("facilities", "active", "true", "code", "F10");
     dbWrapper.updateFieldValue("facilities", "enabled", "true", "code", "F10");
     dbWrapper.updateFieldValue("programs", "active", "true", "code", "VACCINES");
-    dbWrapper.updateFieldValue("products", "active", "true", "code", "P10");
-    dbWrapper.updateFieldValue("products", "active", "true", "code", "P11");
-    dbWrapper.updateFieldValue("products", "active", "true", "code", "Product6");
-    dbWrapper.updateFieldValue("products", "active", "true", "code", "Product5");
   }
 
   @Test(groups = {"distribution"})

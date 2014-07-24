@@ -9,7 +9,7 @@
  */
 
 function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
-  if (facilities.length > 0) {
+  if (!isUndefined(facilities) && facilities.length > 0) {
     $scope.message = "";
     $scope.program = facilities[0].supportedPrograms[0].program;
     $scope.period = period;
@@ -173,7 +173,6 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
       facility.supportedPrograms[0].sortedProductGroup.push(otherGroupName);
     }
   }
-
 }
 
 ViewLoadAmountController.resolve = {

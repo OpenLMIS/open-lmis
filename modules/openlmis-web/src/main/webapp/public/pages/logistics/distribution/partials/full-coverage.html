@@ -45,7 +45,9 @@
                              ng-model="facilityData.fullCoverage.femaleHealthCenterReading.value"
                              name="coverageFemaleHC" ng-trim=false
                              numeric-validator="positiveInteger" maxlength="7"
-                             error-holder="coverageFemaleHCError"/>
+                             error-holder="coverageFemaleHCError"
+                             ng-class="{'required-error': !(facilityData.fullCoverage.femaleHealthCenterReading.value ||
+                             facilityData.fullCoverage.femaleHealthCenterReading.notRecorded)}"/>
                       <span id="coverageFemaleHCError"
                             class="rnr-form-error"
                             openlmis-message="error.number.only"
@@ -65,7 +67,9 @@
                              ng-model="facilityData.fullCoverage.femaleMobileBrigadeReading.value"
                              name="coverageFemaleMB" ng-trim=false
                              numeric-validator="positiveInteger" maxlength="7"
-                             error-holder="coverageFemaleMBError"/>
+                             error-holder="coverageFemaleMBError"
+                             ng-class="{'required-error': !(facilityData.fullCoverage.femaleMobileBrigadeReading.value ||
+                             facilityData.fullCoverage.femaleMobileBrigadeReading.notRecorded)}"/>
                       <span id="coverageFemaleMBError"
                             class="rnr-form-error"
                             openlmis-message="error.number.only"
@@ -89,7 +93,9 @@
                              ng-model="facilityData.fullCoverage.maleHealthCenterReading.value"
                              name="coverageMaleHC" ng-trim=false
                              numeric-validator="positiveInteger" maxlength="7"
-                             error-holder="coverageMaleHCError"/>
+                             error-holder="coverageMaleHCError"
+                             ng-class="{'required-error': !(facilityData.fullCoverage.maleHealthCenterReading.value ||
+                             facilityData.fullCoverage.maleHealthCenterReading.notRecorded)}"/>
                       <span id="coverageMaleHCError"
                             class="rnr-form-error"
                             openlmis-message="error.number.only"
@@ -109,7 +115,9 @@
                              ng-model="facilityData.fullCoverage.maleMobileBrigadeReading.value"
                              name="coverageMaleMB" ng-trim=false
                              numeric-validator="positiveInteger" maxlength="7"
-                             error-holder="coverageMaleMBError"/>
+                             error-holder="coverageMaleMBError"
+                             ng-class="{'required-error': !(facilityData.fullCoverage.maleMobileBrigadeReading.value ||
+                             facilityData.fullCoverage.maleMobileBrigadeReading.notRecorded)}"/>
                       <span id="coverageMaleMBError"
                             class="rnr-form-error"
                             openlmis-message="error.number.only"

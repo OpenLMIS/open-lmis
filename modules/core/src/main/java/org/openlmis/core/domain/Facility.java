@@ -16,7 +16,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.serializer.DateDeserializer;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -115,9 +117,11 @@ public class Facility extends BaseModel implements Importable {
   private Boolean active;
 
   @ImportField(type = "Date", mandatory = true, name = "Facility Go Live Date")
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date goLiveDate;
 
   @ImportField(type = "Date", name = "Facility Go Down Date")
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date goDownDate;
 
   @ImportField(type = "boolean", name = "Is Satellite Facility")

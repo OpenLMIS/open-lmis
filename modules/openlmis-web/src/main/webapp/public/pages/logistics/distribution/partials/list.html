@@ -17,7 +17,8 @@
     <span openlmis-message="message.no.distribution.initiated"></span>
   </div>
 
-  <div class="alert alert-info" ng-show="syncMessage"><span openlmis-message="syncMessage"></span></div>
+  <div class="alert alert-danger" ng-show="syncMessage"><span id="syncMessage" openlmis-message="syncMessage"></span>
+  </div>
 
   <div ng-show="sharedDistributions.distributionList.length">
     <div id="cachedDistributions" class="distribution-grid">
@@ -36,24 +37,24 @@
       </div>
 
       <div id="distributionList" class="list-container">
-        <div class="row-fluid list-row" ng-repeat="distribution in sharedDistributions.distributionList">
+        <div class="row-fluid list-row" ng-repeat="distribution in sharedDistributions.distributionList track by $index">
 
           <div class="span2">
             <div class="delivery-zone" ng-bind="distribution.deliveryZone.name"></div>
           </div>
           <div class="span2" ng-bind="distribution.program.name"></div>
           <div class="span2" ng-bind="distribution.period.name"></div>
-          <div id="distributionStatus" class="span2" ng-bind="distribution.status"></div>
+          <div id="distributionStatus" class="span2" openlmis-message="distribution.status.statusKey"></div>
           <div class="span2">
             <a id="recordData{{$index}}" href="javascript:void(0)" ng-href="#/record-facility-data/{{distribution.id}}"
-               ng-show="distribution.status !== 'SYNCED'" openlmis-message="label.record.data"></a>
+               ng-show="distribution.status.name !== 'SYNCED'" openlmis-message="label.record.data"></a>
             <a id="viewData{{$index}}" href="javascript:void(0)" ng-href="#/record-facility-data/{{distribution.id}}"
-               ng-show="distribution.status === 'SYNCED'" openlmis-message="label.view.data"></span>
+               ng-show="distribution.status.name === 'SYNCED'" openlmis-message="label.view.data"></span>
             </a>
           </div>
           <div class="span1">
             <a id="sync{{$index}}" href="javascript:void(0)" openlmis-message="label.sync"
-               ng-show="distribution.status != 'SYNCED'" ng-click="showConfirmDistributionSync(distribution.id)">
+               ng-show="distribution.status.name != 'SYNCED'" ng-click="showConfirmDistributionSync(distribution.id)">
             </a>
           </div>
           <div class="span1">
