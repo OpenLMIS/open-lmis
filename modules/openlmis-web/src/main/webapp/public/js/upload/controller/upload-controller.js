@@ -27,6 +27,10 @@ function UploadController($scope, SupportedUploads, messageService, loginConfig,
     return messageService.get(key);
   };
 
+  $scope.clearMessages = function(){
+    $scope.successMsg = $scope.errorMsg = "";
+  };
+
   $scope.validate = function (formData) {
     $scope.$apply(function () {
       $scope.inProgress = true;
