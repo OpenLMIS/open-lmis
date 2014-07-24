@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 /**
  * DateDeserializer class represents the deserializer for Date.
  */
@@ -29,6 +31,7 @@ public class DateDeserializer extends JsonDeserializer<Date> {
   public Date deserialize(JsonParser jsonparser,
                           DeserializationContext deserializationcontext) throws IOException {
     try {
+      if(isBlank(jsonparser.getText())) return null;
       return new Date(Long.parseLong(jsonparser.getText()));
     } catch (NumberFormatException e) {
       try {
