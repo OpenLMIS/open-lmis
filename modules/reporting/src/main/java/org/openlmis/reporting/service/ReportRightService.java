@@ -10,7 +10,7 @@
 
 package org.openlmis.reporting.service;
 
-import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.model.ReportRight;
 import org.openlmis.reporting.repository.ReportRightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class ReportRightService {
   @Autowired
   ReportRightRepository reportRightRepository;
 
-  public void insert(Template template) {
-    reportRightRepository.insert(template);
+  public void insert(ReportRight reportRight) {
+    reportRightRepository.insert(reportRight);
   }
 }

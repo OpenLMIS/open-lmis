@@ -24,6 +24,7 @@ import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RightService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.reporting.model.ReportRight;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.model.TemplateParameter;
 import org.openlmis.reporting.repository.TemplateRepository;
@@ -223,13 +224,16 @@ public class TemplateServiceTest {
     when(byteOutputStream.toByteArray()).thenReturn(byteData);
     Template template = new Template();
     Right right = new Right();
+    ReportRight reportRight = new ReportRight();
+
     whenNew(Right.class).withAnyArguments().thenReturn(right);
+    whenNew(ReportRight.class).withArguments(template, right).thenReturn(reportRight);
 
     service.validateFileAndInsertTemplate(template, file);
 
     verify(repository).insertWithParameters(template);
     verify(rightService).insertRight(right);
-    verify(reportRightService).insert(template);
+    verify(reportRightService).insert(reportRight);
     assertThat(template.getParameters().get(0).getDisplayName(), is("Param Display Name"));
     assertThat(template.getParameters().get(0).getDescription(), is("desc"));
     assertThat(template.getParameters().get(0).getName(), is("name"));
@@ -275,13 +279,16 @@ public class TemplateServiceTest {
     when(byteOutputStream.toByteArray()).thenReturn(byteData);
     Template template = new Template();
     Right right = new Right();
+    ReportRight reportRight = new ReportRight();
+
     whenNew(Right.class).withAnyArguments().thenReturn(right);
+    whenNew(ReportRight.class).withArguments(template, right).thenReturn(reportRight);
 
     service.validateFileAndInsertTemplate(template, file);
 
     verify(repository).insertWithParameters(template);
     verify(rightService).insertRight(right);
-    verify(reportRightService).insert(template);
+    verify(reportRightService).insert(reportRight);
     assertThat(template.getParameters().get(0).getDisplayName(), is("Param Display Name"));
     assertThat(template.getParameters().get(0).getCreatedBy(), is(template.getCreatedBy()));
   }

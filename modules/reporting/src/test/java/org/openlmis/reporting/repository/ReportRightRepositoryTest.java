@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.model.ReportRight;
 import org.openlmis.reporting.repository.mapper.ReportRightMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -41,20 +41,20 @@ public class ReportRightRepositoryTest {
 
   @Test
   public void shouldInsertReportTemplate() throws Exception {
-    Template template = new Template();
+    ReportRight reportRight = new ReportRight();
 
-    reportRightRepository.insert(template);
+    reportRightRepository.insert(reportRight);
 
-    verify(reportRightMapper).insert(template);
+    verify(reportRightMapper).insert(reportRight);
   }
 
   @Test
   public void shouldThrowDataExceptionIfReportWithSameNameAlreadyExists() throws Exception {
-    Template template = new Template();
-    doThrow(DataIntegrityViolationException.class).when(reportRightMapper).insert(template);
+    ReportRight reportRight = new ReportRight();
+    doThrow(DataIntegrityViolationException.class).when(reportRightMapper).insert(reportRight);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("report.template.name.already.exists");
-    reportRightRepository.insert(template);
+    reportRightRepository.insert(reportRight);
   }
 }

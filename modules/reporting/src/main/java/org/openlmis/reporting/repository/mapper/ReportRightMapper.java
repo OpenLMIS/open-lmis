@@ -11,7 +11,7 @@
 package org.openlmis.reporting.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
-import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.model.ReportRight;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -22,6 +22,6 @@ import org.springframework.stereotype.Repository;
 public interface ReportRightMapper {
 
   //Do not useGeneratedKeys = true
-  @Insert({"INSERT INTO report_rights (templateId, rightName) VALUES (#{id}, #{name})"})
-  void insert(Template template);
+  @Insert({"INSERT INTO report_rights (templateId, rightName) VALUES (#{template.id}, #{right.name})"})
+  void insert(ReportRight reportRight);
 }

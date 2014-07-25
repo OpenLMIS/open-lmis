@@ -21,6 +21,7 @@ import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.RightMapper;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
 import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.reporting.model.ReportRight;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.model.TemplateParameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,10 +178,10 @@ public class TemplateMapperIT {
     rightMapper.insertRight(right3);
     rightMapper.insertRight(right4);
 
-    reportRightMapper.insert(reportTemplate1);
-    reportRightMapper.insert(reportTemplate2);
-    reportRightMapper.insert(reportTemplate3);
-    reportRightMapper.insert(reportTemplate4);
+    reportRightMapper.insert(new ReportRight(reportTemplate1, right1));
+    reportRightMapper.insert(new ReportRight(reportTemplate2, right2));
+    reportRightMapper.insert(new ReportRight(reportTemplate3, right3));
+    reportRightMapper.insert(new ReportRight(reportTemplate4, right4));
 
     Role role1 = new Role();
     role1.setName("Reporting User Role");

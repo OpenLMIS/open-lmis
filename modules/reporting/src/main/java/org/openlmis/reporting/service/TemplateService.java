@@ -18,6 +18,7 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RightService;
+import org.openlmis.reporting.model.ReportRight;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.model.TemplateParameter;
 import org.openlmis.reporting.repository.TemplateRepository;
@@ -83,7 +84,9 @@ public class TemplateService {
 
     Right right = new Right(template.getName(), REPORTING);
     rightService.insertRight(right);
-    reportRightService.insert(template);
+
+    ReportRight reportRight = new ReportRight(template, right);
+    reportRightService.insert(reportRight);
   }
 
   private void validateFile(Template template, MultipartFile file) {

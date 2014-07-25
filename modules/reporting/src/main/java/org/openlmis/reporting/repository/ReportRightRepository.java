@@ -11,7 +11,7 @@
 package org.openlmis.reporting.repository;
 
 import org.openlmis.core.exception.DataException;
-import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.model.ReportRight;
 import org.openlmis.reporting.repository.mapper.ReportRightMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,9 +27,9 @@ public class ReportRightRepository {
   @Autowired
   ReportRightMapper mapper;
 
-  public void insert(Template template) {
+  public void insert(ReportRight reportRight) {
     try {
-      mapper.insert(template);
+      mapper.insert(reportRight);
     } catch (DataIntegrityViolationException integrityViolationException) {
       throw new DataException("report.template.name.already.exists");
     }

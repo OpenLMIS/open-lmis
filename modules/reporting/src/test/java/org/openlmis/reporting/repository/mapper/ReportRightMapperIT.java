@@ -17,6 +17,7 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.RightMapper;
 import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.reporting.model.ReportRight;
 import org.openlmis.reporting.model.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -59,8 +60,9 @@ public class ReportRightMapperIT {
     templateMapper.insert(template);
     Right right = new Right(templateName, REPORTING);
     rightMapper.insertRight(right);
+    ReportRight reportRight = new ReportRight(template, right);
 
-    mapper.insert(template);
+    mapper.insert(reportRight);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM report_rights WHERE templateId=?", template.getId());
     resultSet.next();
