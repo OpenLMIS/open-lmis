@@ -12,12 +12,15 @@ package org.openlmis.core.domain;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
+@Category(UnitTests.class)
 public class GeographicZoneTest {
 
   @Rule
