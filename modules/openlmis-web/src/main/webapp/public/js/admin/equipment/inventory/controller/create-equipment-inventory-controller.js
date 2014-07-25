@@ -53,7 +53,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
   $scope.saveEquipment = function () {
     $scope.error = '';
     $scope.showError = true;
-    if($scope.equipmentForm.$valid ){
+    if(!$scope.equipmentForm.$invalid ){
       SaveEquipmentInventory.save($scope.equipment, function (data) {
         // success
         if($routeParams.from !== undefined){

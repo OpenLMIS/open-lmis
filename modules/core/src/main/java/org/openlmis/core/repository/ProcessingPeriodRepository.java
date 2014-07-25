@@ -88,6 +88,10 @@ public class ProcessingPeriodRepository {
     return mapper.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
   }
 
+  public List<ProcessingPeriod> getRnrPeriodsForDateRange(Long facilityId, Long programId, Date startDate, Date endDate){
+    return mapper.getRnrPeriodsForDateRange(facilityId, programId, startDate, endDate);
+  }
+
   public List<ProcessingPeriod> getAllPeriodsBefore(Long scheduleId, Date beforeDate) {
     return mapper.getAllPeriodsBefore(scheduleId, beforeDate);
   }

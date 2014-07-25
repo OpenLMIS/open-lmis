@@ -11,6 +11,8 @@
 
 function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, SaveAndLogMaintenanceRequest, messageService, $routeParams, $location) {
 
+    $scope.$parent.message = '';
+
     //The following variables store information for the currently selected maintenance request
     $scope.servicePerformedForCurrent = null;
     $scope.findingForCurrent = null;

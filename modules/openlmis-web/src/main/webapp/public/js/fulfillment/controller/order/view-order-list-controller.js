@@ -37,6 +37,7 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
     columnDefs: [
       {field: 'orderNumber', displayName: messageService.get("label.order.no"), width: 150, cellTemplate: "<div class='ngCellText'><span id = 'order{{row.rowIndex}}' class='orderNumber'>{{row.entity.orderNumber}}</span></div>"},
       {field: 'facilityCode', displayName: messageService.get("label.facility.code.name"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
+      {field: 'rnr.districtName', displayName: messageService.get("option.value.facility.district")},
       {field: 'rnr.programName', displayName: messageService.get("label.program")},
       {field: 'periodName', displayName: messageService.get("label.period"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.periodName}} ({{row.entity.rnr.stringPeriodStartDate}} - {{row.entity.rnr.stringPeriodEndDate}})</span></div>"},
       {field: 'supplyLine.supplyingFacility.name', displayName: messageService.get("label.supplying.depot")},

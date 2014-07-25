@@ -21,6 +21,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,16 +82,24 @@ public class RequisitionCellFactory {
                                  ColumnType columnType,
                                  String columnValue,
                                  String currency) throws IOException, BadElementException {
+    DecimalFormat moneyFormatter = new DecimalFormat("#,###.00");
+    DecimalFormat formatter = new DecimalFormat("#,###");
     switch (columnType) {
       case TEXT:
         result.add(textCell(columnValue));
         break;
       case NUMERIC:
-        result.add(numberCell(columnValue));
+        if(!columnValue.isEmpty())
+          result.add(numberCell(formatter.format(Double.parseDouble(columnValue.toString())).toString()));
+        else
+          result.add(numberCell(columnValue));
         break;
       case CURRENCY:
-        result.add(numberCell(currency + columnValue));
-        break;
+        if(!columnValue.isEmpty())
+          result.add(numberCell(currency + moneyFormatter.format(Double.parseDouble(columnValue.toString())).toString()));
+        else
+          result.add(numberCell(currency));
+          break;
       case BOOLEAN:
         PdfPCell pdfPCell = Boolean.valueOf(columnValue) ? imageCell() : textCell("");
         result.add(pdfPCell);

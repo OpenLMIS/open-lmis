@@ -20,10 +20,7 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
@@ -509,6 +506,12 @@ public class RequisitionControllerTest {
     final Facility facility = new Facility();
     facility.setCode(FACILITY_CODE);
     facility.setName(FACILITY_NAME);
+    facility.setFacilityType(new FacilityType());
+    facility.setGeographicZone(new GeographicZone());
+
+    facility.getFacilityType().setId(1L);
+    facility.getGeographicZone().setId(1L);
+
     final Program program = new Program();
     program.setName(PROGRAM_NAME);
     final ProcessingPeriod period = new ProcessingPeriod();

@@ -8,11 +8,10 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ProgramEquipmentProductController($scope,$dialog,messageService, navigateBackService, Equipments, ProgramCompleteList,Products, GetProgramEquipmentByProgramId, SaveProgramEquipment, GetProgramEquipmentProductByProgramEquipment, SaveProgramEquipmentProduct, RemoveProgramEquipmentProduct) {
+function ProgramEquipmentProductController($scope,$dialog,messageService, navigateBackService, Equipments, ProgramCompleteList,GetProductsCompleteListForAProgram, GetProgramEquipmentByProgramId, SaveProgramEquipment, GetProgramEquipmentProductByProgramEquipment, SaveProgramEquipmentProduct, RemoveProgramEquipmentProduct) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.getAllEquipments();
-        $scope.getAllProducts();
         $scope.getAllPrograms();
     });
 
@@ -28,9 +27,9 @@ function ProgramEquipmentProductController($scope,$dialog,messageService, naviga
         });
     };
 
-    $scope.getAllProducts = function(){
-        Products.get(function(data){
-            $scope.allProducts = data.productList;
+    $scope.getAllProductsForAProgram = function(){
+        GetProductsCompleteListForAProgram.get({programId:$scope.currentProgramEquipment.program.id},function(data){
+            $scope.allProducts = data.products;
             $scope.productsLoaded = true;
         });
     };
@@ -43,9 +42,19 @@ function ProgramEquipmentProductController($scope,$dialog,messageService, naviga
 
 
     $scope.listEquipmentsForProgram = function () {
-        GetProgramEquipmentByProgramId.get({programId:$scope.currentProgramEquipment.program.id},function(data){
-            $scope.programEquipments = data.programEquipments;
-        });
+        if($scope.currentProgramEquipment.program){
+            GetProgramEquipmentByProgramId.get({programId:$scope.currentProgramEquipment.program.id},function(data){
+                $scope.programEquipments = data.programEquipments;
+            });
+            $scope.getAllProductsForAProgram();
+            $scope.programEquipmentProducts = null;
+        }
+        else{
+            $scope.programEquipments = null;
+            $scope.programEquipmentProducts = null;
+            $scope.currentProgramEquipment = {};
+            $scope.currentProgramEquipmentProduct = {};
+        }
     };
 
     $scope.addNewEquipment = function() {
@@ -63,16 +72,28 @@ function ProgramEquipmentProductController($scope,$dialog,messageService, naviga
     };
 
     $scope.setSelectedProgramEquipment = function (programEquipment){
-        $scope.currentProgramEquipment.id = programEquipment.id;
-        $scope.currentProgramEquipment.equipmentId = programEquipment.equipmentId;
-        $scope.currentProgramEquipmentProduct.programEquipment = programEquipment;
+        if(programEquipment) {
+            $scope.currentProgramEquipment.id = programEquipment.id;
+            $scope.currentProgramEquipment.equipmentId = programEquipment.equipmentId;
+            $scope.currentProgramEquipmentProduct.programEquipment = programEquipment;
+        }
+        else{
+            $scope.currentProgramEquipment = null;
+            $scope.currentProgramEquipmentProduct = null;
+        }
+
         $scope.refreshProgramEquipmentProductList();
     };
 
     $scope.refreshProgramEquipmentProductList = function (){
-        GetProgramEquipmentProductByProgramEquipment.get({programEquipmentId:$scope.currentProgramEquipment.id},function(data){
-            $scope.programEquipmentProducts = data.programEquipmentProducts;
-        });
+        if($scope.currentProgramEquipment) {
+            GetProgramEquipmentProductByProgramEquipment.get({programEquipmentId: $scope.currentProgramEquipment.id}, function (data) {
+                $scope.programEquipmentProducts = data.programEquipmentProducts;
+            });
+        }
+        else{
+            $scope.programEquipmentProducts = null;
+        }
     };
 
     $scope.getProgramEquipmentColor = function(programEquipment){

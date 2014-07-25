@@ -32,8 +32,7 @@
       <table class="table" style="vertical-align: top">
         <tr>
           <td>
-            <div><p><a ng-click="addNewEquipment()"  ng-show="equipmentsLoaded" class="pull-right btn btn-primary"><span
-                  id="equipment-add-new">Add New</span></a></p></div>
+            <div><input id="equipment-add-new" type="button" value="Add New" ng-click="addNewEquipment()"  ng-show="equipmentsLoaded" ng-disabled="currentProgramEquipment.program == null || currentProgramEquipment.program == undefined" class="pull-right btn btn-primary"/></div>
             <table class="table table-hover table-bordered">
               <thead>
               <tr class="gradient-header">
@@ -61,7 +60,7 @@
                 <td>
                   <div>
                     <input type="checkbox" name="totalCount-enabled"
-                           ng-model="programEquipment.enableTotalCount" ng-change="setDataChanged(programEquipment)"/>
+                           ng-model="programEquipment.enableTotalColumn" ng-change="setDataChanged(programEquipment)"/>
                   </div>
                 </td>
               </tr>
@@ -70,8 +69,7 @@
           </td>
           <td>&nbsp;</td>
           <td>
-            <div><a ng-click="addNewProduct()"  ng-show="productsLoaded" class="pull-right btn btn-primary"><span
-                  id="product-add-new">Add New</span></a></div>
+            <div><input id="product-add-new" type="button" value="Add New" ng-click="addNewProduct()" ng-show="productsLoaded" ng-disabled="currentProgramEquipment.id == null || currentProgramEquipment.id == undefined" class="pull-right btn btn-primary"/></div>
             <table class="table table-hover table-bordered">
               <thead>
               <tr class="gradient-header">
@@ -169,7 +167,7 @@
             <div class="span4">
               <select style="width:200px;" ng-required="true" size="7" name="productValue"
                       id="productValue" ng-model="currentProgramEquipmentProduct.product.id"
-                      ng-options="option.id as option.name for option in allProducts">
+                      ng-options="option.product.id as option.product.primaryName.concat('(').concat(option.product.fullName).concat(')') for option in allProducts">
               </select>
             </div>
           </div>

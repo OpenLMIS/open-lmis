@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram,navigateBackService, $routeParams, $location) {
+function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram,navigateBackService, $routeParams, messageService ) {
 
   if($routeParams.selectedType !== undefined){
     $scope.selectedType = $routeParams.selectedType;

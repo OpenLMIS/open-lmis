@@ -94,12 +94,13 @@
               <label for="nextVisitDateValue"><span>Next Service Date</span></label>
             </div>
             <div class="span4">
-              <input ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                     ui-date-format="yy-dd-mm"
+              <input
                      ng-model="currentRequest.maintenanceDetails.nextVisitDate"
                      id="nextVisitDateValue"
                      name="nextVisitDateValue"
-                     ng-required="false" />
+                     ng-required="false"
+                     type="date"
+                  />
             </div>
           </div>
         </div>

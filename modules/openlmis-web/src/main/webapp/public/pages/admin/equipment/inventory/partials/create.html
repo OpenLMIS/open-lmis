@@ -111,8 +111,9 @@
             </label>
 
             <div class="form-field">
-              <input ng-model="equipment.purchasePrice" name="purchasePrice" id="purchasePrice" type="number" maxlength="50" ng-required="true" />
+              <input ng-model="equipment.purchasePrice" name="purchasePrice" id="purchasePrice" type="number" maxlength="50" min="0" ng-required="true" />
               <span class="field-error" ng-show="equipmentForm.purchasePrice.$error.required && showError" openlmis-message="missing.value"></span>
+              <span class="field-error" ng-show="equipmentForm.purchasePrice.$error.min && !equipmentForm.purchasePrice.$error.required && showError" >Enter a valid purchase price</span>
             </div>
           </div>
 
@@ -135,8 +136,9 @@
             </label>
 
             <div class="form-field">
-              <input ng-model="equipment.yearOfInstallation"  name="year" id="year" type="number" ng-required="true" />
+              <input ng-model="equipment.yearOfInstallation"  name="year" id="year" type="number" min="1900" max="3000" ng-required="true" />
               <span class="field-error" ng-show="equipmentForm.year.$error.required && showError" openlmis-message="missing.value"></span>
+              <span class="field-error" ng-show="(equipmentForm.year.$error.min || equipmentForm.year.$error.max) && showError" >Enter a valid Year</span>
             </div>
           </div>
         </div>
@@ -203,6 +205,7 @@
                            ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
                            ui-date-format="yy-dd-mm"
                            ng-required="true" />
+                    <span class="field-error" ng-show="equipmentForm.dateLastAssessed.$error.required && showError" openlmis-message="missing.value"></span>
                 </div>
             </div>
 
@@ -280,11 +283,7 @@
           <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancelCreateEquipment()" />
         </div>
 
-
-        <div class="toolbar-error" id="saveErrorMsgDiv">
-          <span openlmis-message="error" ng-show="error"></span>&nbsp;
-          <span ng-show="errorMessage" ng-bind="errorMessage"></span>
-        </div>
+        <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
         <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
       </div>
       </div>
