@@ -19,11 +19,12 @@ public class DistrictConsumptionQueryBuilder {
   public static String SelectFilteredSortedPagedRecords(Map params){
 
      DistrictConsumptionReportParam filter  = (DistrictConsumptionReportParam)params.get("filterCriteria");
+     Long userId                             = (Long) params.get("userId");
 
      String query = "WITH temp AS (select product,zone_name, SUM(normalizedconsumption) normalizedconsumption "+
 
     "from vw_district_consumption_summary "+
-     writePredicates(filter)+
+     writePredicates(filter, userId)+
     "group by product,zone_name "+
     "order by product) "+
 
@@ -38,13 +39,17 @@ public class DistrictConsumptionQueryBuilder {
     return query;
 }
 
-  private static String writePredicates(DistrictConsumptionReportParam filter){
+  private static String writePredicates(DistrictConsumptionReportParam filter, Long userId){
         String predicate = "";
         if(filter != null){
+
           predicate = "where processing_periods_id = " + filter.getPeriod() + " ";
+          predicate = predicate + " and facility_id in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = "  + filter.getProgramId() + ")";
+
             if (filter.getZoneId() != 0) {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " zone_id = #{filterCriteria.zoneId}";
+                predicate = predicate + " ( district_zone_id = " + filter.getZoneId() +" or parent = " +filter.getZoneId() + " or region_id = " + filter.getZoneId() + " or district_id = " + filter.getZoneId() + ") " ;
+                //" zone_id = #{filterCriteria.zoneId}";
             }
 
             if(filter.getProductCategoryId() != 0 ){
@@ -60,8 +65,6 @@ public class DistrictConsumptionQueryBuilder {
                 predicate = predicate.isEmpty() ?" where " : predicate +  " and ";
                 predicate = predicate + " program_id = #{filterCriteria.programId}";
             }
-
-
         }
 
         return predicate;
@@ -83,7 +86,7 @@ public class DistrictConsumptionQueryBuilder {
     }
 
     if(filter.getZoneId() != 0){
-      predicates = predicates + " and ( d.zone_id = " + filter.getZoneId() +" or d.parent = " +filter.getZoneId() + " or d.region_id = " + filter.getZoneId() + " or d.district_id = " + filter.getZoneId() + ") " ;
+      predicates = predicates + " and ( district_zone_id = " + filter.getZoneId() +" or d.parent = " +filter.getZoneId() + " or d.region_id = " + filter.getZoneId() + " or d.district_id = " + filter.getZoneId() + ") " ;
     }
 
     String query = "SELECT li.productCode code, li.product, sum(li.quantityDispensed) dispensed, sum(li.normalizedConsumption) consumption FROM requisition_line_items li \n" +

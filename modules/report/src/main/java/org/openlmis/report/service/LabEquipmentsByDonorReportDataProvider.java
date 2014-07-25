@@ -35,6 +35,6 @@ public class LabEquipmentsByDonorReportDataProvider extends ReportDataProvider {
     @Override
     public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sorter, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return mapper.getFilteredLabEquipmentByDonorReport(filterCriteria, rowBounds);
+        return mapper.getFilteredLabEquipmentByDonorReport(filterCriteria, rowBounds, this.getUserId());
     }
 }

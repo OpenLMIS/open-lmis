@@ -19,7 +19,8 @@ public interface LabEquipmentByDonorMapper {
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = false)
     public List<LabEquipmentsByDonorReport> getFilteredLabEquipmentByDonorReport(
             @Param("filterCriteria") Map<String, String[]> params,
-            @Param("rowBounds") RowBounds rowBounds
+            @Param("rowBounds") RowBounds rowBounds,
+            @Param("userId") Long userId
     );
 
 }
