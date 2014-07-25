@@ -33,7 +33,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * This controller handles endpoint to search supervisory nodes.
+ * This controller handles endpoint to list, search, create, update supervisory nodes.
  */
 @Controller
 @RequestMapping(value = "/supplyLines")

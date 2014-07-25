@@ -36,7 +36,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * This controller handles endpoint related to get non full supply products for a given facility, program combination.
+ * This controller handles endpoint related to get non full supply products for a given facility, program combination,
+ * GET, POST, PUT, DELETE of facilityTypeApprovedProduct.
  */
 
 @Controller

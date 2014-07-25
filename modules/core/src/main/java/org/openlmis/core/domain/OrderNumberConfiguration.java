@@ -15,6 +15,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 
+/**
+ * OrderNumberConfiguration represents the configuration for order number present in the order file.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

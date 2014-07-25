@@ -11,6 +11,11 @@ import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This entity represents DTO for RequisitionGroup form containing RequisitionGroup, list of RequisitionGroupMember and
+ * list of RequisitionGroupProgramSchedule.
+ */
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

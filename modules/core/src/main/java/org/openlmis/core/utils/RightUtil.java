@@ -9,12 +9,15 @@
  */
 package org.openlmis.core.utils;
 
-
 import com.google.common.base.Predicate;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RightType;
 
 import java.util.List;
+
+/**
+ * RightUtil is a utility class which provides basic matcher operations on Right entity.
+ */
 
 public class RightUtil {
 

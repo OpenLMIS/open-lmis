@@ -38,6 +38,10 @@ import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+/**
+ * This controller handles endpoint related to GET, PUT, POST and other operations on RequisitionGroup.
+ */
+
 @Controller
 @NoArgsConstructor
 public class RequisitionGroupController extends BaseController {

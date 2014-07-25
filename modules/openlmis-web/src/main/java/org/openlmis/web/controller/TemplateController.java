@@ -34,7 +34,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * This controller handles endpoint to handle requisition operations like save , submit, approve, authorize, init.
+ * This controller handles endpoint related to GET, POST operations on Template.
  */
 
 @Controller

@@ -18,7 +18,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository class for template related database operations.
+ * Repository class for report right related database operations.
  */
 
 @Repository

@@ -15,7 +15,7 @@ import org.openlmis.reporting.model.Template;
 import org.springframework.stereotype.Repository;
 
 /**
- * It maps the Template entity to corresponding representation in database.
+ * It maps the ReportRight entity to corresponding representation in database.
  */
 
 @Repository

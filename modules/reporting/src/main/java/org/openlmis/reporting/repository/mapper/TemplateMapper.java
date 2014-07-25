@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * It maps the Template entity to corresponding representation in database.
+ * It maps the Template entity and Template Parameter entity to their corresponding representations in database.
  */
 
 @Repository

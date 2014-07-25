@@ -18,8 +18,7 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Right;
 
 /**
- * Template represents an entity that records a byte array of data, type of template, list of parameters and comma
- * separated parameters that are used to configure jasper report views.
+ * ReportRight represents an entity that binds a particular report template to the right on it.
  */
 
 @Data

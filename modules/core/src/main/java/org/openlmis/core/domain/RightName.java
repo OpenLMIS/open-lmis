@@ -12,6 +12,10 @@ package org.openlmis.core.domain;
 
 import java.util.Arrays;
 
+/**
+ * RightName is an entity that represents name of a right. It contains all right names as constants for pre defined rights.
+ */
+
 public class RightName {
   public static final String CONFIGURE_RNR = "CONFIGURE_RNR";
   public static final String MANAGE_FACILITY = "MANAGE_FACILITY";

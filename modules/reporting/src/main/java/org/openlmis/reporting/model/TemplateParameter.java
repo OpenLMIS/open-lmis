@@ -21,6 +21,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * TemplateParameter represents an entity that keeps track of parameter name, name to be displayed on UI, default value,
+ * its data type, description and id of the template to which it belongs.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

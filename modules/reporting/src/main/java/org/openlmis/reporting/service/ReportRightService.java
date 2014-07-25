@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Exposes the services for handling Template entity.
+ * Exposes the services for handling Report Right entity.
  */
 
 @Service
