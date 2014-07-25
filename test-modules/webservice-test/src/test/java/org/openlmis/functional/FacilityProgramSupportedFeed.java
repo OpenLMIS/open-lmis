@@ -100,7 +100,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
 
 
     String str_date = date_time.split("-")[0].substring(0, 6) + "25";
-    long dateLong = new SimpleDateFormat("yyyyMMdd zzz").parse(str_date + " GMT").getTime();
+    long dateLong = new SimpleDateFormat("yyyyMMdd").parse(str_date + " GMT").getTime();
 
     ResponseEntity responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
     String expected = "\"facilityCode\":\"" + facilityCodePrefix + date_time + "\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":" + dateLong;
