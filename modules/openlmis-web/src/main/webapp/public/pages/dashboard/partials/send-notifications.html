@@ -12,8 +12,8 @@
             <tbody>
                 <tr ng-repeat="notification in notifications">
                     <td><div><input type="radio" name="notificationTypeName" ng-value="notification" ng-model="formFilter.selectedAlert"  /><span style="padding-left: 3px" openlmis-message="label.alertType.{{ notification.alertType }}"></span></div></td>
-                    <td><input  type="checkbox" ng-disabled="!notification.email" ng-model="notification.emailMethod" ng-change="notificationMethodsChange(notification)"   /></td>
-                    <td class="pull-right"><input  type="checkbox" ng-disabled="!notification.sms" ng-model="notification.smsMethod" ng-change="notificationMethodsChange(notification)"/></td>
+                    <td><input  type="checkbox" ng-disabled="!notification.email||selectedNotification != notification" ng-model="notification.emailMethod" ng-change="notificationMethodsChange(notification)"   /></td>
+                    <td class="pull-right"><input  type="checkbox" ng-disabled="!notification.sms ||selectedNotification != notification"  ng-model="notification.smsMethod" ng-change="notificationMethodsChange(notification)"/></td>
                 </tr>
 
             </tbody>
