@@ -35,16 +35,16 @@
             <ng-include src="'/public/pages/dashboard/shared/dashboard-form.html'"></ng-include>
         </div>
         <div style="margin-top: 2px">
-            <table class="table table-bordered" ng-show="facilities == undefined || facilities.length == 0">
+            <table class="table table-bordered" ng-show="datarows == undefined || datarows.length == 0">
                 <tr>
                     <td>No data to show under selected filters</td>
                 </tr>
             </table>
             <div class="alert alert-error" id="sendSuccessMsgDiv" openlmis-message="errorMessage" ng-show="errorMessage"></div>
             <div class="alert  alert-success" id="successMsgDiv" openlmis-message="successMessage" ng-show="successMessage"></div>
-            <input type="button" ng-click="sendNotifications()" openlmis-message="button.send" class="btn btn-primary btn-small pull-right" ng-show="facilities.length > 0"/>
+            <input type="button" ng-click="sendNotifications()" openlmis-message="button.send" class="btn btn-primary btn-small pull-right" ng-show="datarows.length > 0"/>
 
-            <table ng-show="facilities.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams" >
+            <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams" >
                 <thead>
                     <tr>
                         <th><div openlmis-message="label.select.all"></div><div><input type="checkbox" ng-model="formFilter.selectAll" ng-change="selectAllFacilities()"/></div></th>
@@ -56,7 +56,7 @@
 
                 </thead>
                 <tbody >
-                <tr ng-repeat="row in facilities">
+                <tr ng-repeat="row in datarows">
                     <td><input type="checkbox" ng-disabled="!row.phonenumber && !row.email" ng-model="row.selected" ng-change="facilitySelectChange(row.selected)"  class="{{(!row.phonenumber && !row.email)?'highlight':''}}"/></td>
                     <td data-title="'Facility Code'" style="width:150px" sortable="code"  class="{{(!row.phonenumber && !row.email)?'highlight':''}}">{{ row.code }}</td>
                     <td data-title="'Facility Name'" style="width:30%" sortable="name"  class="{{(!row.phonenumber && !row.email)?'highlight':''}}">{{ row.name }}</td>
