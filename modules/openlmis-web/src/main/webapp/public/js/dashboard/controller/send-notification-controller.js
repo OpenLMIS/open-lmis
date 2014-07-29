@@ -108,7 +108,12 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         }
     };
 
-    $scope.$watch("formFilter.selectedAlert", function(newVal){
+    $scope.$watch("formFilter.selectedAlert", function(newVal, oldVal){
+
+        if(!isUndefined(oldVal)){
+            oldVal.emailMethod = null;
+            oldVal.smsMethod = null;
+        }
         $scope.selectedNotification = $scope.formFilter.selectedAlert;
         processNotificationChange($scope.selectedNotification);
 
