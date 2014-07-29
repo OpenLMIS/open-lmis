@@ -156,7 +156,7 @@ public interface FacilityLookupReportMapper {
             "WHERE geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
             "AND f.active = TRUE \n" +
             "AND f.virtualFacility = FALSE\n" +
-            "order by name")
+            "order by phonenumber,email,name")
     List<HashMap>  getFacilitiesForNotifications(@Param("userId") Long userId, @Param("zoneId") Long zoneId);
 
     @Select("SELECT facilities.id, facilities.code, facilities.name\n" +
