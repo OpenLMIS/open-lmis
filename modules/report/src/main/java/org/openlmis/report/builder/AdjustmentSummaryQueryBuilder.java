@@ -37,7 +37,7 @@ public class AdjustmentSummaryQueryBuilder {
 
   private static void writePredicates(AdjustmentSummaryReportParam filter) {
     WHERE("req_status in ('APPROVED','RELEASED')");
-    WHERE("program_id = #{filterCriteria.programId}");
+    //WHERE("program_id = #{filterCriteria.programId}");
     WHERE("f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.programId})");
     if (filter != null) {
 
@@ -58,9 +58,7 @@ public class AdjustmentSummaryQueryBuilder {
       if (filter.getProductCategoryId() != 0) {
         WHERE("product_category_id = #{filterCriteria.productCategoryId}");
       }
-      if (filter.getRgroupId() != 0) {
-        WHERE("requisition_group_id = #{filterCriteria.rgroupId}");
-      }
+
       if (filter.getProductId() != -1 && filter.getProductId() != 0) {
         WHERE("product_id= #{filterCriteria.productId}");
       }

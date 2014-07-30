@@ -17,8 +17,10 @@ import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.report.mapper.AdjustmentSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.dto.AdjustmentType;
 import org.openlmis.report.model.params.AdjustmentSummaryReportParam;
 import org.openlmis.report.util.Constants;
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,6 +36,9 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
 
   @Autowired
   private AdjustmentSummaryReportMapper reportMapper;
+
+    @Autowired
+    private SelectedFilterHelper filterHelper;
 
   @Autowired
   private ProcessingPeriodService processingPeriodService;
@@ -66,7 +71,6 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
       adjustmentSummaryReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
       adjustmentSummaryReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
       adjustmentSummaryReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
-      adjustmentSummaryReportParam.setRgroupId(StringHelper.isBlank(filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
       adjustmentSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0])); //defaults to 0
       adjustmentSummaryReportParam.setAdjustmentTypeId(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "" : filterCriteria.get("adjustmentType")[0]);
       adjustmentSummaryReportParam.setAdjustmentType(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
@@ -82,7 +86,8 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    return getReportFilterData(params).toString();
+      //return getReportFilterData(params).toString();
+      return filterHelper.getProgramPeriodGeoZone(params);
   }
 
 }
