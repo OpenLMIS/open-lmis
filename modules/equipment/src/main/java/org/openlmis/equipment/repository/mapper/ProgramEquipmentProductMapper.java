@@ -22,7 +22,7 @@ public interface ProgramEquipmentProductMapper {
   @Select("select pep.*, p.fullName productName, p.primaryName " +
       "      from program_equipment_products pep " +
       "      join products p on p.id = pep.productId " +
-      "      where programEquipmentId = #{programEquipmentId}")
+      "      where programEquipmentId = #{programEquipmentId} order by productName")
   @Results(value = {
       @Result(property = "product.fullName",column = "productName"),
       @Result(property="product.primaryName",column = "primaryName")
