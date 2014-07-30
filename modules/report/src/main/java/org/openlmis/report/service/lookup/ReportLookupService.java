@@ -302,7 +302,7 @@ public List<Program>getAllProgramsWithBudgeting(){
     }
 
     if(requisitionGroup == 0){
-      facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type, zone, userId);
+      return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type, zone, userId);
     }
 
     return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup, zone);

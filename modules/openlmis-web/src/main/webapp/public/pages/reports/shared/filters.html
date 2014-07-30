@@ -57,7 +57,7 @@
     <label class="labels">Geographic Zone<span ng-show="requiredFilters.zone" class="label-required">*</span></label>
     <div>
       <select class="input-large" ng-change="filterChanged();" ng-model="filter.zone">
-        <option selected="selected" value="">-- National --</option>
+        <option ng-selected="filter.zone == 0" value="0">-- National --</option>
         <!--<option value="{{zones.id}}">{{zones.name}}</option>-->
         <optgroup ng-repeat="value in zones.children" value="{{ value.id }}" ng-selected="filter.zone == value.id" label="{{value.name}}">
           <option value="{{value.id}}"><b class="green">All of {{value.name}}</b></option>

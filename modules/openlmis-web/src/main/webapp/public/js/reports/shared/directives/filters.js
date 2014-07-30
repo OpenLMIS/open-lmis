@@ -203,7 +203,9 @@ app.directive('zoneFilter', ['TreeGeographicZoneList','TreeGeographicZoneListByP
       restrict: 'E',
       require: '^filterContainer',
       link: function (scope, elm, attr) {
-        scope.filter.zone = $routeParams.zone;
+        //scope.filter.zone = $routeParams.zone;
+
+        scope.filter.zone = (isUndefined($routeParams.zone) || $routeParams.zone === '')? 0: $routeParams.zone;
 
         if (attr.required) {
           scope.requiredFilters.zone = 'zone';
