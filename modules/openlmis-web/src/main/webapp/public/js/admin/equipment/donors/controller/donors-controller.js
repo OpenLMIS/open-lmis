@@ -73,16 +73,21 @@ function DonorController($scope, sharedSpace, $routeParams, $location, SaveDonor
 
     $scope.removeDonorConfirm = function (result) {
         if (result) {
-            $scope.removeDonor($scope.selectedDonor.id);
+
+          RemoveDonor.get({id: $scope.selectedDonor.id}, function (){
+            // on success
             $scope.$parent.message = "Donor: " + $scope.selectedDonor.shortName + " has been successfully removed. ";
             $location.path('#/list');
+          }, function(){
+            $scope.error = 'This Donor cannot be deleted because donations have been recorded under it. Please remove the donations before deleting this donor';
+          });
+
+
         }
         $scope.selectedDonor = undefined;
     };
 
-    $scope.removeDonor = function(id){
-        RemoveDonor.get({id: id});
-    };
+
 
 }
 
