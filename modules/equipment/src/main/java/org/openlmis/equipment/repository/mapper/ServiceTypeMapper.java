@@ -26,7 +26,7 @@ public interface ServiceTypeMapper {
   @Select("select * from equipment_service_types where id = #{id}")
   ServiceType getById(Long id);
 
-  @Select("select * from equipment_service_types")
+  @Select("select * from equipment_service_types order by name")
   List<ServiceType> getAll();
 
   @Insert("insert into equipment_service_types (name, description, createdBy, createdDate, modifiedBy, modifiedDate) " +
