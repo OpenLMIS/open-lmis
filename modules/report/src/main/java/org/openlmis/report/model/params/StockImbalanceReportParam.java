@@ -23,15 +23,12 @@ import org.openlmis.report.model.ReportParameter;
 @AllArgsConstructor
 public class StockImbalanceReportParam
   extends BaseParam implements ReportParameter {
-
   private int facilityTypeId;
   private String facilityType;
   private int productId;
   private String product;
   private int productCategoryId;
   private String productCategory;
-  private int rgroupId;
-  private String rgroup;
   private String facility;
   private int programId;
   private String program;
@@ -51,8 +48,7 @@ public class StockImbalanceReportParam
       append("Program : ").append(this.program).append("\n").
       append("Product Category : ").append(this.productCategory).append("\n").
       append("Product : ").append(this.product).append("\n").
-      append("Facility Types : ").append(this.getFacilityType()).append("\n").
-      append("Reporting Groups : ").append(this.getRgroup());
+      append("Facility Types : ").append(this.getFacilityType()).append("\n");
 
     return filtersValue.toString();
   }

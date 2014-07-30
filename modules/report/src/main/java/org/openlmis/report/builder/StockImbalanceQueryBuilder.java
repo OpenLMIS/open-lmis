@@ -54,9 +54,7 @@ public class StockImbalanceQueryBuilder {
             if(filter.getProductCategoryId() != 0 && filter.getProductCategoryId() != -1 ){
                 WHERE("categoryid = #{filterCriteria.productCategoryId}");
             }
-            if(filter.getRgroupId() != 0 && filter.getRgroupId() != -1){
-                WHERE("rgid = #{filterCriteria.rgroupId}");
-            }
+
             if(filter.getProductId() != 0 && filter.getProductId() != -1){
                 WHERE("productid= #{filterCriteria.productId}");
             } else if (filter.getProductId() == -1){
