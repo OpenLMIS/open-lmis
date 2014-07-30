@@ -18,6 +18,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -62,8 +64,8 @@ public class TemplateParameterTest {
   @Test
   public void shouldGetParsedValueForDateDataType() throws Exception {
     parameter.setDataType("java.util.Date");
-    Date date = new Date(66600000L);
-    assertThat(parameter.getParsedValueOf("02/01/1970"), is((Object) date));
+    String stringDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+    assertThat(parameter.getParsedValueOf(stringDate), is((Object) new SimpleDateFormat("dd/MM/yyyy").parse(stringDate)));
   }
 
   @Test
