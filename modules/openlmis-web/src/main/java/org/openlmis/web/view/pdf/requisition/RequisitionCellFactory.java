@@ -82,8 +82,8 @@ public class RequisitionCellFactory {
                                  ColumnType columnType,
                                  String columnValue,
                                  String currency) throws IOException, BadElementException {
-    DecimalFormat moneyFormatter = new DecimalFormat("#,###.00");
-    DecimalFormat formatter = new DecimalFormat("#,###");
+    DecimalFormat moneyFormatter = new DecimalFormat("#,##0.00");
+    DecimalFormat formatter = new DecimalFormat("#,##0");
     switch (columnType) {
       case TEXT:
         result.add(textCell(columnValue));

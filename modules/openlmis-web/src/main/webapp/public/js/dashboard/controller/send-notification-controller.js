@@ -1,7 +1,7 @@
 /**
  * Created by issa on 4/24/14.
  */
-function SendNotificationController($scope,$timeout,SendNotification,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,messageService, NotificationAlerts, GetPeriod, formInputValue,FacilitiesForNotifications,userPreferredFilterValues,ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
+function SendNotificationController($scope,$timeout,$filter,SendNotification,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,messageService, NotificationAlerts, GetPeriod, formInputValue,FacilitiesForNotifications,userPreferredFilterValues,ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -52,6 +52,7 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
     $scope.loadFacilities = function(){
         FacilitiesForNotifications.get({zoneId: $scope.filterObject.zoneId}, function(data) {
             $scope.facilities = data.facilities;
+            setupTableOption();
             $scope.selectAllFacilities();
 
         });
@@ -325,11 +326,38 @@ function SendNotificationController($scope,$timeout,SendNotification,dashboardFi
         dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
     });
 
-    // the grid options
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        total: 0,           // length of data
-        count: 25           // count per page
-    });
+
+    function setupTableOption(){
+        // the grid options
+        $scope.tableParams = new ngTableParams({
+            page: 1,            // show first page
+            total: 0,           // length of data
+            count: 25           // count per page
+        });
+
+        $scope.paramsChanged = function (params) {
+
+            // slice array data on pages
+            if ($scope.facilities === undefined) {
+                $scope.datarows = [];
+            } else {
+                var data = $scope.facilities;
+                var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+                orderedData = params.sorting ? $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+                params.total = orderedData.length;
+                $scope.datarows = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+
+            }
+        };
+
+        // watch for changes of parameters
+        $scope.$watch('tableParams', $scope.paramsChanged, true);
+
+
+
+    }
+
+
 
 }

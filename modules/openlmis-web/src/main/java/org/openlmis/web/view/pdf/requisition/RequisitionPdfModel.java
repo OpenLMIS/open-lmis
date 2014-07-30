@@ -263,7 +263,7 @@ public class RequisitionPdfModel {
     this.requisition.fillFullSupplyCost();
     this.requisition.fillNonFullSupplyCost();
 
-    DecimalFormat formatter = new DecimalFormat("#,###.00");
+    DecimalFormat formatter = new DecimalFormat("#,##0.00");
 
     PdfPTable summaryTable = new PdfPTable(2);
     summaryTable.setWidths(new int[]{30, 20});
