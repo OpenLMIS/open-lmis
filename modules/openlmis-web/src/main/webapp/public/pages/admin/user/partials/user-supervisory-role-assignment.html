@@ -58,7 +58,7 @@
         <div class="row-fluid">
             <div class="span3">
                 <div class="fluid-grid-cell">
-                    <select
+                    <select ui-select2
                             ng-options="program.id as program.name group by program.status for program in programsMap.pull"
                             id="programToSupervise" ng-model="selectedProgramIdToSupervise"
                             ng-change="checkSupervisoryRolesDuplicity()">
@@ -74,7 +74,7 @@
             </div>
             <div class="span3">
                 <div class="fluid-grid-cell">
-                    <select
+                    <select ui-select2
                             ng-options="supervisoryNode.id as supervisoryNode.name for supervisoryNode in supervisoryNodes"
                             id="supervisoryNodeToSupervise" ng-model="selectedSupervisoryNodeIdToSupervise"
                             ng-change="checkSupervisoryRolesDuplicity()">
