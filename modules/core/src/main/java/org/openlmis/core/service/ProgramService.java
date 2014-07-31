@@ -97,6 +97,11 @@ public class ProgramService {
     programRepository.setFeedSendFlag(program, sendFeed);
   }
 
+  public void save(Program program) {
+    if(program.hasId()) programRepository.update(program);
+    else programRepository.insert(program);
+  }
+
   public void notifyProgramChange() {
     List<Program> programsForNotifications = programRepository.getProgramsForNotification();
     for (Program program : programsForNotifications) {

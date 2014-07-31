@@ -22,6 +22,7 @@ import org.openlmis.core.builder.ProgramProductBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
+import org.openlmis.core.repository.FacilityTypeRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.db.categories.UnitTests;
@@ -57,6 +58,9 @@ public class ProgramProductServiceTest {
 
   @Mock
   private FacilityRepository facilityRepository;
+
+  @Mock
+  private FacilityTypeRepository facilityTypeRepository;
 
   @Mock
   private ProductCategoryService categoryService;
@@ -294,13 +298,13 @@ public class ProgramProductServiceTest {
     List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
     when(programRepository.getIdByCode("P1")).thenReturn(10L);
     FacilityType warehouse = new FacilityType("warehouse");
-    when(facilityRepository.getFacilityTypeByCode(warehouse)).thenReturn(warehouse);
+    when(facilityTypeRepository.getByCodeOrThrowException(warehouse.getCode())).thenReturn(warehouse);
     when(programProductRepository.getProgramProductsBy(10L, "warehouse")).thenReturn(expectedProgramProducts);
 
     List<ProgramProduct> programProducts = service.getProgramProductsBy(" P1", " warehouse");
 
     assertThat(programProducts, is(expectedProgramProducts));
-    verify(facilityRepository).getFacilityTypeByCode(warehouse);
+    verify(facilityTypeRepository).getByCodeOrThrowException(warehouse.getCode());
     verify(programRepository).getIdByCode("P1");
     verify(programProductRepository).getProgramProductsBy(10L, "warehouse");
   }
@@ -315,7 +319,7 @@ public class ProgramProductServiceTest {
     List<ProgramProduct> programProducts = service.getProgramProductsBy("P1", null);
 
     assertThat(programProducts, is(expectedProgramProducts));
-    verify(facilityRepository, never()).getFacilityTypeByCode(any(FacilityType.class));
+    verify(facilityTypeRepository, never()).getByCodeOrThrowException(null);
     verify(programRepository).getIdByCode("P1");
     verify(programProductRepository).getProgramProductsBy(10L, null);
   }

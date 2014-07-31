@@ -58,12 +58,14 @@ public class FacilityRepositoryTest {
   private FacilityMapper mapper;
 
   @Mock
-  private GeographicZoneRepository geographicZoneRepository;
+  private FacilityTypeRepository facilityTypeRepository;
 
   @Mock
-  private CommaSeparator commaSeparator;
+  private FacilityOperatorRepository facilityOperatorRepository;
 
-  @InjectMocks
+  @Mock
+  private GeographicZoneRepository geographicZoneRepository;
+
   private FacilityRepository repository;
 
   private DateTime now;
@@ -71,6 +73,11 @@ public class FacilityRepositoryTest {
 
   @Before
   public void setUp() {
+    repository = new FacilityRepository(mapper,
+      facilityTypeRepository,
+      geographicZoneRepository,
+      facilityOperatorRepository);
+
     mockStatic(DateTime.class);
     now = new DateTime(2012, 10, 10, 8, 0);
     when(DateTime.now()).thenReturn(now);
@@ -79,7 +86,8 @@ public class FacilityRepositoryTest {
     geographicZone.setLevel(defaultGeographicLevel);
     when(geographicZoneRepository.getByCode(GEOGRAPHIC_ZONE_CODE)).thenReturn(geographicZone);
     when(geographicZoneRepository.getLowestGeographicLevel()).thenReturn(4);
-    when(mapper.getFacilityTypeForCode(FacilityBuilder.FACILITY_TYPE_CODE)).thenReturn(new FacilityType(FACILITY_TYPE_ID));
+    when(facilityTypeRepository.getByCode(FacilityBuilder.FACILITY_TYPE_CODE))
+      .thenReturn(new FacilityType(FACILITY_TYPE_ID));
   }
 
   @Test
@@ -154,7 +162,7 @@ public class FacilityRepositoryTest {
     facilityOperator.setId(1l);
     facilityOperator.setCode(operatedByCode);
     facilityOperator.setText(operatedByName);
-    when(mapper.getFacilityOperatorById(1l)).thenReturn(facilityOperator);
+    when(facilityOperatorRepository.getById(1l)).thenReturn(facilityOperator);
 
     repository.save(facility);
     assertThat(facility.getOperatedBy().getId(), is(facilityOperatorId));
@@ -166,7 +174,7 @@ public class FacilityRepositoryTest {
   public void shouldRaiseInvalidReferenceDataFacilityTypeError() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.getFacilityType().setCode("invalid code");
-    when(mapper.getFacilityTypeForCode("invalid code")).thenReturn(null);
+    when(facilityTypeRepository.getByCodeOrThrowException("invalid code")).thenReturn(null);
 
     expectedEx.expect(dataExceptionMatcher("error.reference.data.invalid.facility.type"));
 
@@ -189,7 +197,7 @@ public class FacilityRepositoryTest {
     facility.getFacilityType().setCode("valid code");
     FacilityType facilityType = new FacilityType("code");
     facilityType.setId(1L);
-    when(mapper.getFacilityTypeForCode("valid code")).thenReturn(facilityType);
+    when(facilityTypeRepository.getByCode("valid code")).thenReturn(facilityType);
 
     repository.save(facility);
     assertThat(facility.getFacilityType().getId(), is(1L));

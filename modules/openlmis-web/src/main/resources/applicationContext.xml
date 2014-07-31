@@ -279,6 +279,69 @@
                         <property name="recordHandler" ref="facilityFtpDetailsPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="dosageUnit">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.dosage.units"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.DosageUnit</value>
+                        </property>
+                        <property name="recordHandler" ref="dosageUnitPersistenceHandler"/>
+                    </bean>
+                </entry>
+                <entry key="productForm">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.product.forms"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ProductForm</value>
+                        </property>
+                        <property name="recordHandler" ref="productFormPersistenceHandler"/>
+                    </bean>
+                </entry>
+                <entry key="program">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.programs"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.Program</value>
+                        </property>
+                        <property name="recordHandler" ref="programPersistenceHandler"/>
+                    </bean>
+                </entry>
+                <entry key="geographicLevel">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.geographic.levels"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.GeographicLevel</value>
+                        </property>
+                        <property name="recordHandler" ref="geographicLevelPersistenceHandler"/>
+                    </bean>
+                </entry>
+                <entry key="facilityOperator">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.facility.operators"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityOperator</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityOperatorPersistenceHandler"/>
+                    </bean>
+                </entry>
+                <entry key="facilityType">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.facility.types"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityType</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityTypePersistenceHandler"/>
+                    </bean>
+                </entry>
+                <entry key="regimenCategory">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.regimen.categories"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.RegimenCategory</value>
+                        </property>
+                        <property name="recordHandler" ref="regimenCategoryPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

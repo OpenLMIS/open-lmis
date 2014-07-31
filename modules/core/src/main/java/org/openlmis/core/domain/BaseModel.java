@@ -44,4 +44,12 @@ public abstract class BaseModel {
   public BaseModel(Long id) {
     this.id = id;
   }
+  
+  /**
+   * Determines if this BaseModel has an id set or not.
+   * @return true if it has an id set, false otherwise
+   */
+  public boolean hasId() {
+    return id != null ? true : false;
+  }
 }
