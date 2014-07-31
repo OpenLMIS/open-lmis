@@ -37,7 +37,7 @@ public class OrderFillRateQueryBuilder {
 
     private static void writePredicates(String zone, String program, String period, String schedule, String facility, String product, String facilityType, String productCategory) {
 
-        if (zone != "" && !zone.endsWith("undefined")) {
+        if (zone != null && !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0") && !zone.equals("-1")) {
             WHERE(" (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone + " or gz.parent = " + zone + " )");
         }
 
