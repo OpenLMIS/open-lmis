@@ -11,10 +11,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.RequisitionGroup;
-import org.openlmis.core.domain.RequisitionGroupMember;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +39,18 @@ public class RequisitionGroupService {
   @Autowired
   private RequisitionGroupMemberService requisitionGroupMemberService;
 
+  @Autowired
+  private RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
+
   @Transactional
-  public void saveWithMembers(RequisitionGroup requisitionGroup, List<RequisitionGroupMember> requisitionGroupMembers) {
+  public void saveWithMembersAndSchedules(RequisitionGroup requisitionGroup,
+                                          List<RequisitionGroupMember> requisitionGroupMembers,
+                                          List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules,
+                                          Long userId) {
+    requisitionGroup.setCreatedBy(userId);
     save(requisitionGroup);
-    saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup);
+    saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, requisitionGroup, userId);
+    saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup, userId);
   }
 
   public void save(RequisitionGroup requisitionGroup) {
@@ -58,10 +63,13 @@ public class RequisitionGroupService {
       requisitionGroupRepository.update(requisitionGroup);
   }
 
-  public void saveRequisitionGroupMembers(List<RequisitionGroupMember> requisitionGroupMembers, RequisitionGroup requisitionGroup) {
+  public void saveRequisitionGroupMembers(List<RequisitionGroupMember> requisitionGroupMembers,
+                                          RequisitionGroup requisitionGroup,
+                                          Long userId) {
     for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
       requisitionGroupMember.setRequisitionGroup(requisitionGroup);
-      requisitionGroupMember.setModifiedBy(requisitionGroup.getModifiedBy());
+      requisitionGroupMember.setCreatedBy(userId);
+      requisitionGroupMember.setModifiedBy(userId);
       requisitionGroupMemberService.save(requisitionGroupMember);
     }
   }
@@ -94,5 +102,46 @@ public class RequisitionGroupService {
 
   public List<RequisitionGroupMember> getMembersBy(Long requisitionGroupId) {
     return requisitionGroupMemberService.getMembersBy(requisitionGroupId);
+  }
+
+  public void updateWithMembersAndSchedules(RequisitionGroup requisitionGroup,
+                                            List<RequisitionGroupMember> requisitionGroupMembers,
+                                            List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules,
+                                            Long userId) {
+    requisitionGroup.setModifiedBy(userId);
+    save(requisitionGroup);
+    deleteAndInsertRequisitionGroupProgramSchedules(requisitionGroup, requisitionGroupProgramSchedules, userId);
+    deleteAndInsertRequisitionGroupMembers(requisitionGroup, requisitionGroupMembers, userId);
+  }
+
+  private void deleteAndInsertRequisitionGroupMembers(RequisitionGroup requisitionGroup,
+                                                      List<RequisitionGroupMember> requisitionGroupMembers,
+                                                      Long userId) {
+    requisitionGroupMemberService.deleteMembersForGroup(requisitionGroup.getId());
+    for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
+      requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+      requisitionGroupMember.setCreatedBy(userId);
+      requisitionGroupMember.setModifiedBy(userId);
+      requisitionGroupMemberService.insert(requisitionGroupMember);
+    }
+  }
+
+  private void deleteAndInsertRequisitionGroupProgramSchedules(RequisitionGroup requisitionGroup,
+                                                               List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules,
+                                                               Long userId) {
+    requisitionGroupProgramScheduleService.deleteRequisitionGroupProgramSchedulesFor(requisitionGroup.getId());
+    saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, requisitionGroup, userId);
+  }
+
+  public void saveRequisitionGroupProgramSchedules(List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules,
+                                                   RequisitionGroup requisitionGroup,
+                                                   Long userId) {
+    for (RequisitionGroupProgramSchedule requisitionGroupProgramSchedule : requisitionGroupProgramSchedules) {
+      requisitionGroupProgramSchedule.setId(null);
+      requisitionGroupProgramSchedule.setRequisitionGroup(requisitionGroup);
+      requisitionGroupProgramSchedule.setCreatedBy(userId);
+      requisitionGroupProgramSchedule.setModifiedBy(userId);
+      requisitionGroupProgramScheduleService.save(requisitionGroupProgramSchedule);
+    }
   }
 }

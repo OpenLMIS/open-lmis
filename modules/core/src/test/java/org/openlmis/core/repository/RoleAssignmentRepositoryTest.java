@@ -27,21 +27,18 @@ import org.openlmis.db.categories.UnitTests;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.RoleAssignmentBuilder.defaultRoleAssignment;
 import static org.openlmis.core.builder.RoleAssignmentBuilder.supervisoryNode;
-import static org.openlmis.core.builder.SupervisoryNodeBuilder.*;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.builder.SupervisoryNodeBuilder.defaultSupervisoryNode;
+import static org.openlmis.core.builder.SupervisoryNodeBuilder.id;
+import static org.openlmis.core.domain.RightName.AUTHORIZE_REQUISITION;
+import static org.openlmis.core.domain.RightName.CREATE_REQUISITION;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -84,6 +81,14 @@ public class RoleAssignmentRepositoryTest {
     RoleAssignment expected = new RoleAssignment();
     when(mapper.getAdminRole(1L)).thenReturn(expected);
     RoleAssignment actual = repository.getAdminRole(1L);
+    assertThat(actual, is(expected));
+  }
+
+  @Test
+  public void shouldGetReportingRoles() throws Exception {
+    RoleAssignment expected = new RoleAssignment();
+    when(mapper.getReportingRole(1L)).thenReturn(expected);
+    RoleAssignment actual = repository.getReportingRole(1L);
     assertThat(actual, is(expected));
   }
 

@@ -16,6 +16,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -28,10 +30,17 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
-public class GeographicLevel extends BaseModel {
+public class GeographicLevel extends BaseModel implements Importable {
+
+  @ImportField(name="Geographic Level Code", mandatory = true)
   String code;
+
+  @ImportField(name="Name", mandatory = true)
   String name;
+
+  @ImportField(name="Level Number", mandatory = true)
   Integer levelNumber;
+
   private static Integer ROOT_LEVEL_NUMBER = 1;
 
   public GeographicLevel(Long id, String code, String name, Integer levelNumber) {

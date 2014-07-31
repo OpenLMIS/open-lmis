@@ -59,7 +59,7 @@
 
     </li>
 
-    <li ng-show="hasPermission('VIEW_REPORT')">
+    <li ng-show="hasReportingPermission()">
       <a id="reports-menu" href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
     </li>
 
@@ -117,8 +117,7 @@
           </li>
 
           <li class="has-children">
-            <a id="manage-option" href="/public/pages/admin/facility/index.html"
-               openlmis-message="link.admin.manage"></a>
+            <a id="manage-option" href="javascript: void(0);" openlmis-message="link.admin.manage"></a>
 
             <div class="submenu">
               <ul>
@@ -143,20 +142,24 @@
                      openlmis-message="menu.header.geographic.zones"></a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_SUPERVISORY_NODE')">
-                  <a id='supervisoryNodes' href="/public/pages/admin/supervisory-node/index.html"
+                  <a id='supervisoryNodesMenu' href="/public/pages/admin/supervisory-node/index.html"
                      openlmis-message="menu.header.supervisory.nodes"></a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')">
-                <a id='requisitionGroups' href="/public/pages/admin/requisition-group/index.html"
+                  <a id='requisitionGroupsMenu' href="/public/pages/admin/requisition-group/index.html"
                      openlmis-message="menu.header.requisition.groups"></a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_SUPPLY_LINE')">
-                <a id='supplyLines' href="/public/pages/admin/supply-line/index.html"
+                  <a id='supplyLinesMenu' href="/public/pages/admin/supply-line/index.html"
                      openlmis-message="menu.header.supply.lines"></a>
                 </li>
                 <li ng-show="hasPermission('MANAGE_FACILITY_APPROVED_PRODUCT')">
-                  <a id="facilityApprovedProducts" href="/public/pages/admin/facility-approved-product/index.html"
+                  <a id="facilityApprovedProductsMenu" href="/public/pages/admin/facility-approved-product/index.html"
                      openlmis-message="header.facility.approved.products"></a>
+                </li>
+                <li ng-show="hasPermission('MANAGE_PRODUCT')">
+                  <a id="productsMenu" href="/public/pages/admin/product/index.html"
+                     openlmis-message="header.products"></a>
                 </li>
                 <li class="beak"></li>
               </ul>

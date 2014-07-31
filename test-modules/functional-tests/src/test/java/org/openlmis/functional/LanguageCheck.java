@@ -33,6 +33,7 @@ public class LanguageCheck extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
+    dbWrapper.removeAllExistingRights("Admin");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
@@ -119,6 +120,7 @@ public class LanguageCheck extends TestCaseHelper {
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
+    dbWrapper.insertAllAdminRightsAsSeedData();
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);

@@ -71,9 +71,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @When("^I create \"([^\"]*)\" program supported facility$")
   public void createFacilityForProgram(String program) {
-    ManageFacilityPage manageFacilityPage = ManageFacilityPage.getInstance(testWebDriver);
+    FacilityPage facilityPage = PageObjectFactory.getFacilityPage(testWebDriver);
 
-    date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
+    date_time = facilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, catchmentPopulation);
     facility_code = facilityCodePrefix + date_time;
     facility_name = facilityNamePrefix + date_time;
@@ -81,8 +81,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("^I should see message for successfully created facility$")
   public void verify() {
-    ManageFacilityPage manageFacilityPage = PageObjectFactory.getManageFacilityPage(testWebDriver);
-    manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    FacilityPage facilityPage = PageObjectFactory.getFacilityPage(testWebDriver);
+    facilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
   }
 
   @When("^I create \"([^\"]*)\" role having \"([^\"]*)\" based \"([^\"]*)\" rights$")
@@ -504,9 +504,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String roleType) {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
-    RolesPage rolesPage = homePage.navigateRoleAssignments();
+    RolesPage rolesPage = homePage.navigateToRolePage();
     rolesPage.createRole(roleName, roleDescription, userRoleList, roleType);
-    rolesPage.verifyCreatedRoleMessage(roleName);
+    assertEquals(rolesPage.getSuccessMessage(), "\"" + roleName + "\" created successfully");
   }
 
   private void verifyOrderedList(boolean downloadFlag) throws SQLException {

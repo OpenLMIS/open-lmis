@@ -17,7 +17,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
@@ -26,6 +25,9 @@ import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.*;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +43,11 @@ import static org.openlmis.core.builder.ProgramBuilder.PROGRAM_CODE;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
 @Category(UnitTests.class)
+@PrepareForTest(RequisitionGroupMemberService.class)
 public class RequisitionGroupMemberServiceTest {
 
   RequisitionGroupMemberService service;
@@ -84,7 +88,7 @@ public class RequisitionGroupMemberServiceTest {
     programIdList.add(1L);
 
     service = new RequisitionGroupMemberService(requisitionGroupMemberRepository, facilityRepository,
-        requisitionGroupRepository, requisitionGroupProgramScheduleRepository, programRepository);
+      requisitionGroupRepository, requisitionGroupProgramScheduleRepository, programRepository);
   }
 
   @Test
@@ -100,7 +104,7 @@ public class RequisitionGroupMemberServiceTest {
   @Test
   public void shouldGiveErrorIfRGDoesNotExist() throws Exception {
     when(requisitionGroupRepository.getByCode(
-        requisitionGroupMember.getRequisitionGroup())).thenReturn(null);
+      requisitionGroupMember.getRequisitionGroup())).thenReturn(null);
 
     expectedEx.expect(dataExceptionMatcher("error.requisition.group.not.exist"));
 
@@ -184,5 +188,25 @@ public class RequisitionGroupMemberServiceTest {
 
     verify(requisitionGroupMemberRepository).getAllRequisitionGroupMembersByFacility(facilityId);
     assertThat(actualMembers, is(expectedMembers));
+  }
+
+  @Test
+  public void shouldInsertRequisitionGroupMembers() throws Exception {
+
+    RequisitionGroupMember member = new RequisitionGroupMember();
+    Facility facility = new Facility();
+    facility.setId(1L);
+    member.setFacility(facility);
+    member.setId(1L);
+    member.getFacility().setCode("code");
+
+    RequisitionGroupMemberService serviceSpy = PowerMockito.spy(service);
+    PowerMockito.doNothing().when(serviceSpy,
+      method(RequisitionGroupMemberService.class, "validateIfFacilityIsAlreadyAssignedToRequisitionGroupForProgram", RequisitionGroupMember.class)).withArguments(member);
+
+    serviceSpy.insert(member);
+
+    verify(facilityRepository).getIdForCode(member.getFacility().getCode());
+    verify(requisitionGroupMemberRepository).insert(member);
   }
 }

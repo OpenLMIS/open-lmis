@@ -19,6 +19,7 @@
     <context:spring-configured/>
 
     <import resource="classpath*:test-applicationContext-db.xml"/>
+    <import resource="classpath*:test-applicationContext-core.xml"/>
 
     <context:component-scan base-package="org.openlmis.*.repository.mapper"/>
 

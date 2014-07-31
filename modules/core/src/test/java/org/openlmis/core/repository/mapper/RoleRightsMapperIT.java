@@ -10,12 +10,14 @@
 
 package org.openlmis.core.repository.mapper;
 
+import com.natpryce.makeiteasy.MakeItEasy;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.builder.UserBuilder;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -24,15 +26,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.google.common.collect.Iterables.any;
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -40,7 +43,10 @@ import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.SupervisoryNodeBuilder.code;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
+import static org.openlmis.core.domain.RightType.ADMIN;
+import static org.openlmis.core.domain.RightType.REQUISITION;
+import static org.openlmis.core.utils.RightUtil.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -73,17 +79,18 @@ public class RoleRightsMapperIT {
   @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
 
-
+  @Autowired
+  private QueryExecutor queryExecutor;
 
   @Test
   public void shouldGetAllRightsForAUserByUserId() throws Exception {
     Facility facility = insertFacility();
     User user = insertUser(facility);
 
-    Set<Right> allRightsForUser = roleRightsMapper.getAllRightsForUserById(user.getId());
+    List<Right> allRightsForUser = roleRightsMapper.getAllRightsForUserById(user.getId());
     assertThat(allRightsForUser.size(), is(0));
 
-    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+    Program program = insertProgram(make(a(defaultProgram, MakeItEasy.with(programCode, "p1"))));
     Role role = insertRole("r1", "random description");
     Role role2 = insertRole("r2", "fulfillment role");
 
@@ -95,12 +102,13 @@ public class RoleRightsMapperIT {
     roleRightsMapper.createRoleRight(role2, VIEW_ORDER);
 
     allRightsForUser = roleRightsMapper.getAllRightsForUserById(user.getId());
-    assertThat(allRightsForUser.size(), is(3));
-    assertTrue(allRightsForUser.contains(CREATE_REQUISITION));
-    assertTrue(allRightsForUser.contains(CONFIGURE_RNR));
-    assertTrue(allRightsForUser.contains(VIEW_ORDER));
-  }
 
+    assertThat(allRightsForUser.size(), is(3));
+    assertTrue(any(allRightsForUser, with(CREATE_REQUISITION)));
+    assertTrue(any(allRightsForUser, withType(REQUISITION)));
+    assertTrue(any(allRightsForUser, with(CONFIGURE_RNR)));
+    assertTrue(any(allRightsForUser, with(VIEW_ORDER)));
+  }
 
   @Test
   public void shouldGetRoleAndRights() throws Exception {
@@ -112,13 +120,11 @@ public class RoleRightsMapperIT {
 
     Role resultRole = roleRightsMapper.getRole(role.getId());
 
-    assertThat(resultRole.getId(), is(not(111L)));
-    assertThat(resultRole.getId(), is(notNullValue()));
+    assertThat(resultRole.getId(), is(role.getId()));
     assertThat(resultRole.getName(), is(role.getName()));
     assertThat(resultRole.getDescription(), is(role.getDescription()));
-    assertThat(resultRole.getModifiedBy(), is(role.getModifiedBy()));
-    assertTrue(resultRole.getRights().contains(CREATE_REQUISITION));
-    assertTrue(resultRole.getRights().contains(MANAGE_FACILITY));
+    assertTrue(any(resultRole.getRights(), with(CREATE_REQUISITION)));
+    assertTrue(any(resultRole.getRights(), with(MANAGE_FACILITY)));
   }
 
   @Test(expected = DuplicateKeyException.class)
@@ -137,14 +143,16 @@ public class RoleRightsMapperIT {
     roleRightsMapper.createRoleRight(role, CONFIGURE_RNR);
     roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
 
-    List<Role> roles = new ArrayList();
-    roles.addAll(roleRightsMapper.getAllRoles());
+    List<Role> roles = roleRightsMapper.getAllRoles();
 
     assertThat(roles.get(0).getName(), is("Admin"));
     Role fetchedRole = roles.get(1);
     assertThat(fetchedRole.getName(), is("role name"));
-    assertTrue(fetchedRole.getRights().contains(CONFIGURE_RNR));
-    assertTrue(fetchedRole.getRights().contains(CREATE_REQUISITION));
+    assertTrue(any(fetchedRole.getRights(), with(CREATE_REQUISITION)));
+    assertTrue(any(fetchedRole.getRights(), withDisplayNameKey("right.create.requisition")));
+    assertTrue(any(fetchedRole.getRights(), with(CONFIGURE_RNR)));
+    assertTrue(any(fetchedRole.getRights(), withDisplayNameKey("right.configure.rnr")));
+    assertTrue(any(fetchedRole.getRights(), withType(ADMIN)));
   }
 
   @Test
@@ -153,7 +161,8 @@ public class RoleRightsMapperIT {
     roleRightsMapper.insertRole(role);
 
     role.setName("Right2");
-    role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
+    Right right = new Right(CREATE_REQUISITION, ADMIN);
+    role.setRights(new ArrayList<>(asList(right)));
     role.setDescription("Right Description Changed");
     role.setModifiedBy(222L);
 
@@ -179,15 +188,14 @@ public class RoleRightsMapperIT {
   public void shouldGetRightsForAUserOnSupervisoryNodeAndProgram() throws Exception {
     Facility facility = insertFacility();
     User user = insertUser(facility);
-    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN1")));
+    Program program = insertProgram(make(a(defaultProgram, MakeItEasy.with(programCode, "p1"))));
+    SupervisoryNode supervisoryNode1 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, MakeItEasy.with(code, "SN1")));
     supervisoryNode1.setFacility(facility);
     supervisoryNodeMapper.insert(supervisoryNode1);
 
-    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(code, "SN2")));
+    SupervisoryNode supervisoryNode2 = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, MakeItEasy.with(code, "SN2")));
     supervisoryNode2.setFacility(facility);
     supervisoryNodeMapper.insert(supervisoryNode2);
-
 
     Role role1 = insertRole("r1", "random description");
     roleRightsMapper.createRoleRight(role1, CREATE_REQUISITION);
@@ -198,17 +206,17 @@ public class RoleRightsMapperIT {
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode1.getId(), role1.getId());
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), supervisoryNode2.getId(), role2.getId());
 
-    List<Right> result = roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(user.getId(), "{" + supervisoryNode1.getId() + ", " + supervisoryNode2.getId() + "}", program);
-    assertThat(result.size(), is(2));
-    assertTrue(result.contains(CREATE_REQUISITION));
-    assertTrue(result.contains(AUTHORIZE_REQUISITION));
+    List<Right> results = roleRightsMapper.getRightsForUserOnSupervisoryNodeAndProgram(user.getId(), "{" + supervisoryNode1.getId() + ", " + supervisoryNode2.getId() + "}", program);
+    assertThat(results.size(), is(2));
+    assertTrue(any(results, with(CREATE_REQUISITION)));
+    assertTrue(any(results, with(AUTHORIZE_REQUISITION)));
   }
 
   @Test
   public void shouldGetRightsForAUserOnHomeFacilityAndProgram() throws Exception {
     Facility facility = insertFacility();
     User user = insertUser(facility);
-    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+    Program program = insertProgram(make(a(defaultProgram, MakeItEasy.with(programCode, "p1"))));
 
     Role role1 = insertRole("r1", "random description");
     roleRightsMapper.createRoleRight(role1, CREATE_REQUISITION);
@@ -219,10 +227,11 @@ public class RoleRightsMapperIT {
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), null, role1.getId());
     roleAssignmentMapper.insertRoleAssignment(user.getId(), program.getId(), null, role2.getId());
 
-    List<Right> result = roleRightsMapper.getRightsForUserOnHomeFacilityAndProgram(user.getId(), program);
-    assertThat(result.size(), is(2));
-    assertTrue(result.contains(CREATE_REQUISITION));
-    assertTrue(result.contains(AUTHORIZE_REQUISITION));
+    List<Right> results = roleRightsMapper.getRightsForUserOnHomeFacilityAndProgram(user.getId(), program);
+
+    assertThat(results.size(), is(2));
+    assertTrue(any(results, with(CREATE_REQUISITION)));
+    assertTrue(any(results, with(AUTHORIZE_REQUISITION)));
   }
 
   @Test
@@ -237,13 +246,14 @@ public class RoleRightsMapperIT {
   public void shouldGetRightTypeForRoleId() throws Exception {
     Role role = new Role("rolename", "description");
     roleRightsMapper.insertRole(role);
-
     roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
 
     RightType rightTypeForRoleId = roleRightsMapper.getRightTypeForRoleId(role.getId());
 
-    assertThat(rightTypeForRoleId, is(CREATE_REQUISITION.getType()));
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM rights WHERE name =?", CREATE_REQUISITION);
+    resultSet.next();
 
+    assertThat(rightTypeForRoleId.toString(), is(resultSet.getString("rightType")));
   }
 
   @Test
@@ -253,14 +263,14 @@ public class RoleRightsMapperIT {
     roleRightsMapper.createRoleRight(role, MANAGE_POD);
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
-    User user = make(a(UserBuilder.defaultUser, with(UserBuilder.facilityId, facility.getId())));
+    User user = make(a(UserBuilder.defaultUser, MakeItEasy.with(UserBuilder.facilityId, facility.getId())));
     userMapper.insert(user);
     fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user, facility.getId(), role.getId());
 
-    Set<Right> rights = roleRightsMapper.getRightsForUserAndWarehouse(user.getId(), facility.getId());
+    List<Right> rights = roleRightsMapper.getRightsForUserAndWarehouse(user.getId(), facility.getId());
 
     assertThat(rights.size(), is(1));
-    assertThat(rights.contains(MANAGE_POD), is(true));
+    assertTrue(any(rights, with(MANAGE_POD)));
   }
 
   private Role insertRole(String name, String description) {
@@ -273,7 +283,6 @@ public class RoleRightsMapperIT {
     fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user, facility.getId(), role.getId());
   }
 
-
   private Program insertProgram(Program program) {
     programMapper.insert(program);
     return program;
@@ -285,7 +294,7 @@ public class RoleRightsMapperIT {
   }
 
   private User insertUser(Facility facility) {
-    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    User user = make(a(defaultUser, MakeItEasy.with(facilityId, facility.getId())));
     userMapper.insert(user);
     return user;
   }

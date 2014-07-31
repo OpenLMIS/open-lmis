@@ -2,6 +2,10 @@ package org.openlmis.rnr.domain;
 
 import java.util.Comparator;
 
+/**
+ *  LineItemComparator represents a comparator for comparing fields of two RnrLineItem.
+ */
+
 public class LineItemComparator implements Comparator<RnrLineItem> {
 
   @Override

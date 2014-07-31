@@ -19,6 +19,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
@@ -31,15 +32,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.email;
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
 import static org.openlmis.core.repository.UserRepository.*;
 
 @Category(UnitTests.class)
@@ -150,27 +149,22 @@ public class UserRepositoryTest {
   }
 
   @Test
-  public void shouldReturnUserIfUserExistsWithSearchCriteria() throws Exception {
-    String userSearchParam = "abc";
-    User user = new User();
-    List<User> listOfUsers = new ArrayList<User>();
-    listOfUsers.add(user);
+  public void shouldReturnUsers(){
+    String searchParam = "abc";
+    Pagination pagination = new Pagination(1,2);
 
-    when(userMapper.getUserWithSearchedName(userSearchParam)).thenReturn(listOfUsers);
+    userRepository.searchUser(searchParam,pagination);
 
-    List<User> listOfUsersReturned = userRepository.searchUser(userSearchParam);
-
-    assertTrue(listOfUsersReturned.contains(user));
+    verify(userMapper).search(searchParam,pagination);
   }
 
   @Test
-  public void shouldReturnMessageIfNoUserExistsWithTheSearchCriteria() throws Exception {
-    String userSearchParam = "xyz";
-    when(userMapper.getUserWithSearchedName(userSearchParam)).thenReturn(null);
+  public void shouldReturnTotalResultCount(){
+    String searchParam = "abc";
 
-    List<User> userList = userRepository.searchUser(userSearchParam);
+    userRepository.getTotalSearchResultCount(searchParam);
 
-    assertThat(userList, is(nullValue()));
+    verify(userMapper).getTotalSearchResultCount(searchParam);
   }
 
   @Test

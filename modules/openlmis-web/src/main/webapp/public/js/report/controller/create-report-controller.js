@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateReportController($scope, $location) {
+function CreateReportController($scope, $location, loginConfig, $window) {
   $scope.$parent.successMessage = "";
 
   var successHandler = function (data) {
@@ -17,21 +17,20 @@ function CreateReportController($scope, $location) {
     $location.path('list');
   };
 
-
   $scope.$on('$viewContentLoaded', function () {
     var options = {
-      beforeSubmit:validate,
-      success:processResponse
+      beforeSubmit: validate,
+      success: processResponse,
+      error: failureHandler
     };
     $('#reportForm').ajaxForm(options);
-
   });
 
-  function validate(formData, jqForm, options) {
+  function validate(formData) {
     $scope.showError = false;
     _.each(formData, function (input) {
       $scope.$apply(function () {
-        if (utils.isEmpty(input.value)) {
+        if (input.name !== "description" && utils.isEmpty(input.value)) {
           $scope.showError = true;
           $scope.reportForm[input.name].$error.required = true;
         } else {
@@ -43,11 +42,22 @@ function CreateReportController($scope, $location) {
     return !$scope.showError;
   }
 
-  function processResponse(responseText, statusText, xhr, $form) {
+  function processResponse(responseText) {
     var responseJson = JSON.parse(responseText);
     $scope.$apply(function () {
       if (responseJson.success) successHandler(responseJson);
       $scope.errorMessage = responseJson.error;
+    });
+  }
+
+  function failureHandler(response) {
+    $scope.$apply(function () {
+      if (response.status == 401) {
+        loginConfig.modalShown = loginConfig.preventReload = true;
+      }
+      if (response.status == 403) {
+        $window.location = "/public/pages/access-denied.html";
+      }
     });
   }
 

@@ -42,8 +42,8 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
-import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RightName.CONFIGURE_RNR;
+import static org.openlmis.core.domain.RightName.CREATE_REQUISITION;
 
 @Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
@@ -59,6 +59,9 @@ public class FacilityMapperIT {
 
   @Autowired
   FacilityMapper mapper;
+
+  @Autowired
+  FacilityTypeMapper facilityTypeMapper;
 
   @Autowired
   RequisitionGroupMapper requisitionGroupMapper;
@@ -124,25 +127,6 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldGetAllFacilityTypes() throws Exception {
-    List<FacilityType> facilityTypes = mapper.getAllTypes();
-
-    assertThat(facilityTypes.size(), is(11));
-    FacilityType facilityType = facilityTypes.get(0);
-    assertThat(facilityType.getCode(), is("lvl3_hospital"));
-    assertThat(facilityType.getName(), is("Lvl3 Hospital"));
-    assertThat(facilityType.getDescription(), is("State Hospital"));
-    assertThat(facilityType.getLevelId(), is(nullValue()));
-    assertThat(facilityType.getNominalMaxMonth(), is(3));
-    assertThat(facilityType.getNominalEop(), is(0.5));
-    assertThat(facilityType.isActive(), is(true));
-
-    for (int index = 0; index < facilityTypes.size(); index++) {
-      assertThat(facilityTypes.get(index).getDisplayOrder(), is(index + 1));
-    }
-  }
-
-  @Test
   public void shouldGetAllParentFacilitiesByModifiedDate() {
     Facility facility1 = make(a(defaultFacility));
     Facility facility2 = make(a(defaultFacility, with(code, "FFF111")));
@@ -162,16 +146,6 @@ public class FacilityMapperIT {
 
     assertThat(facilities.size(), is(1));
     assertThat(facilities.get(0).getId(), is(facility2.getId()));
-  }
-
-  @Test
-  public void shouldGetAllOperators() throws Exception {
-    List<FacilityOperator> allOperators = mapper.getAllOperators();
-    assertThat(allOperators.size(), is(4));
-    FacilityOperator facilityOperator = allOperators.get(0);
-    assertThat(facilityOperator.getCode(), is("MoH"));
-    assertThat(facilityOperator.getText(), is("MoH"));
-    assertThat(facilityOperator.getDisplayOrder(), is(1));
   }
 
   @Test
@@ -302,34 +276,6 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldReturnFacilityTypeForCode() {
-    FacilityType facilityType = mapper.getFacilityTypeForCode(FACILITY_TYPE_CODE);
-    assertThat(facilityType.getId(), is(1L));
-
-    facilityType = mapper.getFacilityTypeForCode("InValid");
-    assertThat(facilityType, is(nullValue()));
-  }
-
-  @Test
-  public void shouldReturnFacilityTypeById() {
-    FacilityType facilityTypeWithId = mapper.getFacilityTypeForCode(FACILITY_TYPE_CODE);
-
-    FacilityType facilityType = mapper.getFacilityTypeById(facilityTypeWithId.getId());
-    assertThat(facilityType, is(notNullValue()));
-    assertThat(facilityType.getId(), is(facilityTypeWithId.getId()));
-    assertThat(facilityType.getCode(), is(FACILITY_TYPE_CODE));
-  }
-
-  @Test
-  public void shouldReturnFacilityOperatorById() throws Exception {
-    Long id = mapper.getOperatedByIdForCode(OPERATED_BY_MOH);
-
-    FacilityOperator operator = mapper.getFacilityOperatorById(id);
-    assertThat(operator.getId(), is(id));
-    assertThat(operator.getCode(), is(OPERATED_BY_MOH));
-  }
-
-  @Test
   public void shouldUpdateEnabledAndActiveForAFacility() throws Exception {
     Facility facility = make(a(defaultFacility));
     mapper.insert(facility);
@@ -412,77 +358,6 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldSearchAllFacilitiesByCodeOrName() throws Exception {
-    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(name, "D1100")));
-    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "F110")));
-    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1100"), with(name, "F1100")));
-    Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "FF130")));
-    Facility facility5 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1101"), with(virtualFacility, true)));
-
-    mapper.insert(facility1);
-    mapper.insert(facility2);
-    mapper.insert(facility3);
-    mapper.insert(facility4);
-    mapper.insert(facility5);
-
-    List<Facility> returnedFacilityList = mapper.searchFacilitiesByCodeOrName("f11");
-
-    assertThat(returnedFacilityList.size(), is(4));
-
-    for (Facility facility : returnedFacilityList) {
-      assertThat(facility.getCode().equals(facility1.getCode())
-        || facility.getCode().equals(facility2.getCode())
-        || facility.getCode().equals(facility3.getCode())
-        || facility.getCode().equals(facility5.getCode()), is(true));
-    }
-  }
-
-  @Test
-  public void shouldSearchVirtualFacilitiesByCodeOrName() throws Exception {
-    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(name, "D1100")));
-    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "F110")));
-    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1100"), with(name, "F1100")));
-    Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "FF130")));
-    Facility facility5 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1101"), with(virtualFacility, true)));
-
-    mapper.insert(facility1);
-    mapper.insert(facility2);
-    mapper.insert(facility3);
-    mapper.insert(facility4);
-    mapper.insert(facility5);
-
-    List<Facility> returnedFacilityList = mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("f11", true);
-
-    assertThat(returnedFacilityList.size(), is(1));
-    assertThat(returnedFacilityList.get(0).getCode(), is("FF1101"));
-  }
-
-  @Test
-  public void shouldSearchNonVirtualFacilitiesByCodeOrName() throws Exception {
-    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(name, "D1100")));
-    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "F110")));
-    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1100"), with(name, "F1100")));
-    Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "FF130")));
-    Facility facility5 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1101"), with(virtualFacility, true)));
-
-    mapper.insert(facility1);
-    mapper.insert(facility2);
-    mapper.insert(facility3);
-    mapper.insert(facility4);
-    mapper.insert(facility5);
-
-    List<Facility> returnedFacilityList = mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("f11", false);
-
-    assertThat(returnedFacilityList.size(), is(3));
-
-    for (Facility facility : returnedFacilityList) {
-      assertThat(facility.getCode().equals(facility1.getCode())
-        || facility.getCode().equals(facility2.getCode())
-        || facility.getCode().equals(facility3.getCode()), is(true));
-    }
-  }
-
-  @Test
   public void shouldGetHomeFacilityIfUserHasRight() throws Exception {
     Facility homeFacility = make(a(defaultFacility));
     mapper.insert(homeFacility);
@@ -548,7 +423,7 @@ public class FacilityMapperIT {
     GeographicZone zone1 = new GeographicZone(1000L, "Z1", "Z1", level, zone0);
     geographicZoneMapper.insert(zone1);
 
-    List<FacilityType> allTypes = mapper.getAllTypes();
+    List<FacilityType> allTypes = facilityTypeMapper.getAll();
     FacilityType facilityType = allTypes.get(1);
 
     Facility facility = insertFacility("CODE123", facilityType, zone1, null);
@@ -573,7 +448,7 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldGetEnabledFacilitiesBySearchParamOnly() {
+  public void shouldSearchFacilitiesBySearchParamOnly() {
     String searchParam = "fac";
     Facility fac1 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC1"), with(enabled, true), with(code, "FAC2")));
     mapper.insert(fac1);
@@ -587,7 +462,7 @@ public class FacilityMapperIT {
     Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
     mapper.insert(fac4);
 
-    List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam, null, null);
+    List<Facility> enabledFacilities = mapper.searchFacilitiesBy(searchParam, null, null, null, true);
 
     assertThat(enabledFacilities.size(), is(2));
     assertThat(enabledFacilities.get(0).getId(), is(fac3.getId()));
@@ -602,10 +477,11 @@ public class FacilityMapperIT {
     assertThat(enabledFacilities.get(1).getName(), is(fac1.getName()));
     assertThat(enabledFacilities.get(1).getFacilityType().getId(), is(fac1.getFacilityType().getId()));
     assertThat(enabledFacilities.get(1).getFacilityType().getName(), is(fac1.getFacilityType().getName()));
+    assertThat(enabledFacilities.get(0).getGeographicZone().getName(), is(fac3.getGeographicZone().getName()));
   }
 
   @Test
-  public void shouldGetEnabledFacilitiesBySearchParamAndFacilityTypeFilter() {
+  public void shouldSearchFacilitiesBySearchParamAndFacilityTypeFilter() {
     String searchParam = "fac";
     Long facilityTypeId = 1L;
 
@@ -621,7 +497,7 @@ public class FacilityMapperIT {
     Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
     mapper.insert(fac4);
 
-    List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam, facilityTypeId, null);
+    List<Facility> enabledFacilities = mapper.searchFacilitiesBy(searchParam, facilityTypeId, null, null, true);
 
     assertThat(enabledFacilities.size(), is(1));
     assertThat(enabledFacilities.get(0).getId(), is(fac1.getId()));
@@ -649,7 +525,7 @@ public class FacilityMapperIT {
     Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
     mapper.insert(fac4);
 
-    List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam, null, geoZoneId);
+    List<Facility> enabledFacilities = mapper.searchFacilitiesBy(searchParam, null, geoZoneId, null, null);
 
     assertThat(enabledFacilities.size(), is(1));
     assertThat(enabledFacilities.get(0).getId(), is(fac1.getId()));
@@ -658,6 +534,61 @@ public class FacilityMapperIT {
     assertThat(enabledFacilities.get(0).getName(), is(fac1.getName()));
     assertThat(enabledFacilities.get(0).getFacilityType().getId(), is(fac1.getFacilityType().getId()));
     assertThat(enabledFacilities.get(0).getFacilityType().getName(), is(fac1.getFacilityType().getName()));
+  }
+
+  @Test
+  public void shouldNotGetVirtualFacilities() {
+    String searchParam = "fac";
+    Long geoZoneId = 1L;
+    Boolean virtualFacilityValue = false;
+
+    Facility fac1 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC1"), with(enabled, true), with(code, "FAC2"), with(geographicZoneId, 1L)));
+    mapper.insert(fac1);
+
+    Facility fac2 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, false), with(code, "FAC3")));
+    mapper.insert(fac2);
+
+    Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, true), with(code, "FAC1"), with(geographicZoneId, 2L)));
+    mapper.insert(fac3);
+
+    Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, false), with(code, "DIS3"), with(virtualFacility,true)));
+    mapper.insert(fac4);
+
+    List<Facility> facilities = mapper.searchFacilitiesBy(searchParam, null, geoZoneId, virtualFacilityValue, null);
+
+    assertThat(facilities.size(), is(1));
+    assertThat(facilities.get(0).getId(), is(fac1.getId()));
+    assertThat(facilities.get(0).getEnabled(), is(fac1.getEnabled()));
+    assertThat(facilities.get(0).getCode(), is(fac1.getCode()));
+    assertThat(facilities.get(0).getName(), is(fac1.getName()));
+    assertThat(facilities.get(0).getFacilityType().getId(), is(fac1.getFacilityType().getId()));
+    assertThat(facilities.get(0).getFacilityType().getName(), is(fac1.getFacilityType().getName()));
+  }
+
+  @Test
+  public void shouldGetDisabledFacilitiesAsWell() {
+    String searchParam = "fac";
+    Boolean virtualFacilityValue = null;
+    Boolean enabledFacilityValue = null;
+
+    Facility fac1 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC1"), with(enabled, true), with(code, "FAC2")));
+    mapper.insert(fac1);
+
+    Facility fac2 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, false), with(code, "FAC3")));
+    mapper.insert(fac2);
+
+    Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC2"), with(enabled, true), with(code, "FAC1")));
+    mapper.insert(fac3);
+
+    Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, false), with(code, "DIS3"), with(virtualFacility,true)));
+    mapper.insert(fac4);
+
+    List<Facility> facilities = mapper.searchFacilitiesBy(searchParam, null, null, virtualFacilityValue, enabledFacilityValue);
+
+    assertThat(facilities.size(), is(3));
+    assertThat(facilities.get(0).getId(), is(fac3.getId()));
+    assertThat(facilities.get(1).getId(), is(fac1.getId()));
+    assertThat(facilities.get(2).getId(), is(fac2.getId()));
   }
 
   @Test
@@ -677,7 +608,7 @@ public class FacilityMapperIT {
     Facility fac4 = make(a(FacilityBuilder.defaultFacility, with(name, "FAC3"), with(enabled, true), with(code, "FAC3"), with(geographicZoneId, 1L)));
     mapper.insert(fac4);
 
-    List<Facility> enabledFacilities = mapper.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+    List<Facility> enabledFacilities = mapper.searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, null, true);
 
     assertThat(enabledFacilities.size(), is(2));
     assertThat(enabledFacilities.get(0).getName(), is(fac1.getName()));
@@ -701,7 +632,39 @@ public class FacilityMapperIT {
     Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 3")));
     mapper.insert(facility3);
 
-    Integer totalFacilities = mapper.getEnabledFacilitiesCount("fac", null, null);
+    Integer totalFacilities = mapper.getFacilitiesCountBy("fac", null, null, null, true);
+
+    assertThat(totalFacilities, is(2));
+  }
+
+  @Test
+  public void shouldGetCountOfDisabledFacilitiesAsWellBySearchParamOnly() {
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 1")));
+    mapper.insert(facility1);
+
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 2"), with(enabled, false)));
+    mapper.insert(facility2);
+
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 3")));
+    mapper.insert(facility3);
+
+    Integer totalFacilities = mapper.getFacilitiesCountBy("fac", null, null, null, null);
+
+    assertThat(totalFacilities, is(3));
+  }
+
+  @Test
+  public void shouldNotGetCountOfVirtualFacilities() {
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 1")));
+    mapper.insert(facility1);
+
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 2"), with(enabled, false)));
+    mapper.insert(facility2);
+
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 3"), with(virtualFacility, true)));
+    mapper.insert(facility3);
+
+    Integer totalFacilities = mapper.getFacilitiesCountBy("fac", null, null, false, null);
 
     assertThat(totalFacilities, is(2));
   }
@@ -719,7 +682,7 @@ public class FacilityMapperIT {
     Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 3"), with(typeId, 5L)));
     mapper.insert(facility3);
 
-    Integer totalFacilities = mapper.getEnabledFacilitiesCount("fac", facilityTypeId, null);
+    Integer totalFacilities = mapper.getFacilitiesCountBy("fac", facilityTypeId, null, null, true);
 
     assertThat(totalFacilities, is(1));
   }
@@ -737,7 +700,7 @@ public class FacilityMapperIT {
     Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "Facility 3")));
     mapper.insert(facility3);
 
-    Integer totalFacilities = mapper.getEnabledFacilitiesCount("fac", null, geoZoneId);
+    Integer totalFacilities = mapper.getFacilitiesCountBy("fac", null, geoZoneId, null, true);
 
     assertThat(totalFacilities, is(1));
   }
@@ -757,7 +720,7 @@ public class FacilityMapperIT {
     Facility fac3 = make(a(FacilityBuilder.defaultFacility, with(name, "Dispensary1"), with(enabled, true), with(code, "DIS3")));
     mapper.insert(fac3);
 
-    Integer count = mapper.getEnabledFacilitiesCount(searchParam, facilityTypeId, geoZoneId);
+    Integer count = mapper.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, null, true);
 
     assertThat(count, is(0));
   }
@@ -900,7 +863,7 @@ public class FacilityMapperIT {
     GeographicZone zone2 = new GeographicZone(2000L, "Z2", "Z2", level, zone1);
     geographicZoneMapper.insert(zone2);
 
-    List<FacilityType> allTypes = mapper.getAllTypes();
+    List<FacilityType> allTypes = facilityTypeMapper.getAll();
     FacilityType facilityType1 = allTypes.get(1);
     FacilityType facilityType2 = allTypes.get(2);
 
@@ -921,6 +884,86 @@ public class FacilityMapperIT {
     Facility fetchedFacility = mapper.getById(facility.getId());
     assertThat(fetchedFacility.getFacilityType().getCode(), is(facilityType1.getCode()));
     assertThat(fetchedFacility.getGeographicZone().getCode(), is(zone1.getCode()));
+  }
+
+  @Test
+  public void shouldGetTotalSearchResultCount() {
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(name, "D1100")));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "Ff110")));
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1100"), with(name, "F1100")));
+    Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "A00"), with(name, "B00")));
+
+    mapper.insert(facility1);
+    mapper.insert(facility2);
+    mapper.insert(facility3);
+    mapper.insert(facility4);
+
+    Integer resultCount = mapper.getTotalSearchResultCount("ff1");
+
+    assertThat(resultCount, is(3));
+  }
+
+  @Test
+  public void shouldGetTotalSearchResultCountByGeographicZone() {
+    //1L Root
+    //2L Mozambique
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(geographicZoneId, 1L)));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(geographicZoneId, 2L)));
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "FF1100"), with(geographicZoneId, 1L)));
+    Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "A00"), with(geographicZoneId, 2L)));
+
+    mapper.insert(facility1);
+    mapper.insert(facility2);
+    mapper.insert(facility3);
+    mapper.insert(facility4);
+
+    Integer resultCount = mapper.getTotalSearchResultCountByGeographicZone("oo");
+
+    assertThat(resultCount, is(2));
+  }
+
+  @Test
+  public void shouldGetFacilitiesBySearchParam() {
+    String searchParam = "F10";
+    String column = "facility";
+    Pagination pagination = new Pagination(1, 2);
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "F10"), with(name, "A100"), with(geographicZoneId, 1L)));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "DF10"), with(geographicZoneId, 2L)));
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "ABC100"), with(name, "C100"), with(geographicZoneId, 1L)));
+    Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "AF100"), with(name, "E100"), with(geographicZoneId, 1L)));
+
+    mapper.insert(facility1);
+    mapper.insert(facility2);
+    mapper.insert(facility3);
+    mapper.insert(facility4);
+
+    List<Facility> facilityList = mapper.search(searchParam, column, pagination);
+
+    assertThat(facilityList.size(), is(2));
+    assertThat(facilityList.get(0).getName(), is(facility1.getName()));
+    assertThat(facilityList.get(1).getName(), is(facility2.getName()));
+  }
+
+  @Test
+  public void shouldGetFacilitiesBySearchParamAndGeographicZone() {
+    String searchParam = "oo";
+    String column = "geographicZone";
+    Pagination pagination = new Pagination(1, 2);
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(code, "F10"), with(name, "A100"), with(geographicZoneId, 1L)));
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(code, "D00"), with(name, "DF10"), with(geographicZoneId, 2L)));
+    Facility facility3 = make(a(FacilityBuilder.defaultFacility, with(code, "ABC100"), with(name, "C100"), with(geographicZoneId, 1L)));
+    Facility facility4 = make(a(FacilityBuilder.defaultFacility, with(code, "AF100"), with(name, "E100"), with(geographicZoneId, 1L)));
+
+    mapper.insert(facility1);
+    mapper.insert(facility2);
+    mapper.insert(facility3);
+    mapper.insert(facility4);
+
+    List<Facility> facilityList = mapper.search(searchParam, column, pagination);
+
+    assertThat(facilityList.size(), is(2));
+    assertThat(facilityList.get(0).getName(), is(facility1.getName()));
+    assertThat(facilityList.get(1).getName(), is(facility3.getName()));
   }
 
   private ProgramSupported insertProgramSupported(Program program, Facility supportedFacility, Date modifiedDate) {

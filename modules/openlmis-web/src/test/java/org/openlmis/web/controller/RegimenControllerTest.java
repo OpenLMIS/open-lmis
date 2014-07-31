@@ -12,6 +12,7 @@ package org.openlmis.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,6 +21,7 @@ import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RegimenService;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.RegimenColumn;
 import org.openlmis.rnr.domain.RegimenTemplate;
 import org.openlmis.rnr.service.RegimenColumnService;
@@ -27,7 +29,6 @@ import org.openlmis.web.form.RegimenFormDTO;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.web.controller.RegimenController.REGIMENS;
 import static org.openlmis.web.controller.RegimenController.REGIMEN_CATEGORIES;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RegimenControllerTest {
 
@@ -56,19 +58,16 @@ public class RegimenControllerTest {
   @InjectMocks
   RegimenController controller;
 
-  MockHttpServletRequest httpServletRequest;
+  MockHttpServletRequest request;
 
   Long userId = 1L;
 
   @Before
   public void setUp() throws Exception {
-    httpServletRequest = new MockHttpServletRequest();
-    MockHttpSession mockHttpSession = new MockHttpSession();
-    httpServletRequest.setSession(mockHttpSession);
-    mockHttpSession.setAttribute(USER, USER);
-    mockHttpSession.setAttribute(USER_ID, userId);
+    request = new MockHttpServletRequest();
+    request.getSession().setAttribute(USER, USER);
+    request.getSession().setAttribute(USER_ID, userId);
   }
-
 
   @Test
   public void shouldGetRegimenByProgram() {
@@ -101,7 +100,7 @@ public class RegimenControllerTest {
     RegimenTemplate regimenTemplate = new RegimenTemplate(programId, columns);
     RegimenFormDTO regimenFormDTO = new RegimenFormDTO(regimens, columns);
 
-    controller.save(programId, regimenFormDTO, httpServletRequest);
+    controller.save(programId, regimenFormDTO, request);
 
     verify(regimenColumnService).save(regimenTemplate, userId);
     verify(regimenService).save(regimens, userId);

@@ -12,6 +12,7 @@ package org.openlmis.core.service;
 
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
+import org.openlmis.core.repository.RegimenCategoryRepository;
 import org.openlmis.core.repository.RegimenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class RegimenService {
   RegimenRepository repository;
 
   @Autowired
+  private RegimenCategoryRepository regimenCategoryRepository;
+
+  @Autowired
   ProgramService programService;
 
   public void save(List<Regimen> regimens, Long userId) {
@@ -40,7 +44,7 @@ public class RegimenService {
   }
 
   public List<RegimenCategory> getAllRegimenCategories() {
-    return repository.getAllRegimenCategories();
+    return regimenCategoryRepository.getAll();
   }
 
 }

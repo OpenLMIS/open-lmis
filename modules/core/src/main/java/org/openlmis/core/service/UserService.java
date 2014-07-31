@@ -12,8 +12,8 @@ package org.openlmis.core.service;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
@@ -81,8 +81,8 @@ public class UserService {
     sendEmail(emailMessage);
   }
 
-  public List<User> searchUser(String userSearchParam) {
-    return userRepository.searchUser(userSearchParam);
+  public List<User> searchUser(String searchParam, Pagination pagination) {
+    return userRepository.searchUser(searchParam,pagination);
   }
 
   public User getUserWithRolesById(Long id) {
@@ -90,6 +90,7 @@ public class UserService {
     user.setHomeFacilityRoles(roleAssignmentService.getHomeFacilityRoles(id));
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
     user.setAdminRole(roleAssignmentService.getAdminRole(id));
+    user.setReportingRole(roleAssignmentService.getReportingRole(id));
     user.setAllocationRoles(roleAssignmentService.getAllocationRoles(id));
     user.setFulfillmentRoles(roleAssignmentService.getFulfilmentRoles(id));
     return user;
@@ -138,16 +139,16 @@ public class UserService {
     userRepository.deletePasswordResetTokenForUser(userId);
   }
 
-  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, Right right) {
-    return userRepository.getUsersWithRightInNodeForProgram(program, node, right);
+  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, String rightName) {
+    return userRepository.getUsersWithRightInNodeForProgram(program, node, rightName);
   }
 
-  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Program program, Right right) {
-    return userRepository.getUsersWithRightInHierarchyUsingBaseNode(nodeId, program.getId(), right);
+  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Program program, String rightName) {
+    return userRepository.getUsersWithRightInHierarchyUsingBaseNode(nodeId, program.getId(), rightName);
   }
 
-  public List<User> getUsersWithRightOnWarehouse(Long id, Right right) {
-    return userRepository.getUsersWithRightOnWarehouse(id, right);
+  public List<User> getUsersWithRightOnWarehouse(Long id, String rightName) {
+    return userRepository.getUsersWithRightOnWarehouse(id, rightName);
   }
 
   private void sendUserCreationEmail(User user, String resetPasswordLink) {
@@ -209,5 +210,9 @@ public class UserService {
       }
     });
     return new ArrayList<>(users);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return userRepository.getTotalSearchResultCount(searchParam);
   }
 }

@@ -78,7 +78,7 @@ Feature: Smoke Distribution Tests
       | VACCINES | P10     | 10       | 10           | 10            | 10               | null         | null         | 0               |
     And I have following override ISA values:
       | Facility Code | Program  | Product | ISA  |
-      | F11           | VACCINES | P11     | 1005 |
+      | F11           | VACCINES | P11     | 1004 |
     And I update population of facility "F10" as "342"
     And I have role assigned to delivery zones
     When I am logged in as "fieldCoordinator"
@@ -90,7 +90,7 @@ Feature: Smoke Distribution Tests
     Then I should see ISA values as per delivery zone facilities
     And  I verify ISA values for Product1 as:
       | Facility1 | Facility2 |
-      | 31        | 31        |
+      | 31        | 32        |
     And  I verify ISA values for Product2 as:
       | Facility1 | Facility2 |
       | 101       | --        |
@@ -400,7 +400,7 @@ Feature: Smoke Distribution Tests
     Then Verify "child coverage" indicator should be "GREEN"
     And I verify saved "child coverage" values:
       | targetGroup | healthCenter11 | outreach11 | total1 | coverageRate | healthCenter23 | outreach23 | total2 | total3 | openedVial | wastageRate |
-      | 34          | 123            | 22         | 145    | 426          | 23             | 34         | 57     | 202    | 4          | -1415       |
+      | 3           | 123            | 22         | 145    | 4833          | 23             | 34         | 57     | 202    | 4          | -1415       |
 
   @smokeDistribution
   Scenario: User should fill Adult Coverage data
@@ -433,7 +433,7 @@ Feature: Smoke Distribution Tests
     Then Verify "adult coverage" indicator should be "GREEN"
     And I verify saved "adult coverage" values:
       | targetGroup | healthCenter1 | outreach1 | total1 | healthCenter25 | outreach25 | total2 | total3 | coverageRate | openedVial | wastageRate |
-      | 1385        | 123           | 22        | 145    | 23             | 31         | 54     | 199    | 14           | 4          | -1967       |
+      | 116         | 123           | 22        | 145    | 23             | 31         | 54     | 199    | 172          | 4          | -1967       |
 
   @smokeDistribution
   Scenario: User should verify facility and sync status when facility was visited

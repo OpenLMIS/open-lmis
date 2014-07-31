@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.RightService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -29,7 +30,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -37,8 +41,10 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
-import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RightName.CONFIGURE_RNR;
+import static org.openlmis.core.domain.RightName.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RightType.ADMIN;
+import static org.openlmis.core.domain.RightType.REQUISITION;
 import static org.openlmis.core.matchers.Matchers.facilityMatcher;
 import static org.openlmis.core.matchers.Matchers.programMatcher;
 import static org.openlmis.web.controller.RoleRightsController.*;
@@ -54,6 +60,9 @@ public class RoleRightsControllerTest {
 
   @Mock
   RoleRightsService roleRightsService;
+
+  @Mock
+  RightService rightService;
 
   @Mock
   MessageService messageService;
@@ -72,11 +81,11 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldFetchAllRightsInSystem() throws Exception {
-    Set<Right> rights = new HashSet<>();
-    when(roleRightsService.getAllRights()).thenReturn(rights);
+    List<Right> rights = new ArrayList<>();
+    when(rightService.getAll()).thenReturn(rights);
     ResponseEntity<OpenLmisResponse> result = controller.getAllRights();
-    assertThat((Set<Right>) result.getBody().getData().get(RIGHTS), is(rights));
-    verify(roleRightsService).getAllRights();
+    assertThat((List<Right>) result.getBody().getData().get(RIGHTS), is(rights));
+    verify(rightService).getAll();
   }
 
   @Test
@@ -106,7 +115,7 @@ public class RoleRightsControllerTest {
 
     OpenLmisResponse response = controller.getAll().getBody();
 
-    assertThat((Map<String , List<Role>>) response.getData().get(ROLES_MAP), is(roles_map));
+    assertThat((Map<String, List<Role>>) response.getData().get(ROLES_MAP), is(roles_map));
     verify(roleRightsService).getAllRolesMap();
   }
 
@@ -127,12 +136,12 @@ public class RoleRightsControllerTest {
     Role role = new Role();
     Long roleId = 1L;
     when(roleRightsService.getRole(roleId)).thenReturn(role);
-    when(roleRightsService.getRightTypeForRoleId(roleId)).thenReturn(RightType.ADMIN);
+    when(roleRightsService.getRightTypeForRoleId(roleId)).thenReturn(ADMIN);
 
     OpenLmisResponse response = controller.get(roleId).getBody();
 
     assertThat((Role) response.getData().get(ROLE), is(role));
-    assertThat((RightType) response.getData().get(RIGHT_TYPE), is(RightType.ADMIN));
+    assertThat((RightType) response.getData().get(RIGHT_TYPE), is(ADMIN));
 
     verify(roleRightsService).getRole(roleId);
     verify(roleRightsService).getRightTypeForRoleId(roleId);
@@ -140,7 +149,7 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldUpdateRoleAndRights() throws Exception {
-    Role role = new Role("Role Name", "Desc", new HashSet<>(asList(CONFIGURE_RNR)));
+    Role role = new Role("Role Name", "Desc", asList(new Right(CONFIGURE_RNR, ADMIN)));
     when(messageService.message("message.role.updated.success", "Role Name")).thenReturn("Role Name updated successfully");
 
     OpenLmisResponse response = controller.updateRole(role.getId(), role, httpServletRequest).getBody();
@@ -164,15 +173,15 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldGetRightsForUserAndFacilityProgram() throws Exception {
-    Set<Right> rights = new HashSet<Right>() {{
-      add(CREATE_REQUISITION);
-    }};
+    List<Right> rights = asList(new Right(CREATE_REQUISITION, REQUISITION));
+
     Long facilityId = 1L;
     Long programId = 1L;
     when(roleRightsService.getRightsForUserAndFacilityProgram(eq(LOGGED_IN_USERID), any(Facility.class), any(Program.class))).thenReturn(rights);
+
     ResponseEntity<OpenLmisResponse> response = controller.getRightsForUserAndFacilityProgram(facilityId, programId, httpServletRequest);
 
-    assertThat((Set<Right>) response.getBody().getData().get("rights"), is(rights));
+    assertThat((List<Right>)response.getBody().getData().get("rights"), is(rights));
     verify(roleRightsService).getRightsForUserAndFacilityProgram(eq(LOGGED_IN_USERID), argThat(facilityMatcher(facilityId)), argThat(programMatcher(programId)));
   }
 }

@@ -13,31 +13,35 @@ package org.openlmis.core.service;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.RequisitionGroup;
-import org.openlmis.core.domain.RequisitionGroupMember;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.core.builder.SupervisoryNodeBuilder.defaultSupervisoryNode;
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(RequisitionGroupService.class)
 public class RequisitionGroupServiceTest {
 
   @InjectMocks
@@ -51,6 +55,11 @@ public class RequisitionGroupServiceTest {
 
   @Mock
   private RequisitionGroupMemberService requisitionGroupMemberService;
+
+  @Mock
+  private RequisitionGroupProgramScheduleService requisitionGroupProgramScheduleService;
+
+  private static final Long userId = 1L;
 
   @Test
   public void shouldSaveANewRequisitionGroup() {
@@ -85,7 +94,8 @@ public class RequisitionGroupServiceTest {
     List<RequisitionGroup> requisitionGroups = asList(new RequisitionGroup());
     when(requisitionGroupRepository.searchByGroupName(searchParam, pagination)).thenReturn(requisitionGroups);
 
-    List<RequisitionGroup> requisitionGroupList = requisitionGroupService.search(searchParam, "requisitionGroup", pagination);
+    List<RequisitionGroup> requisitionGroupList = requisitionGroupService.search(searchParam, "requisitionGroup",
+      pagination);
 
     verify(requisitionGroupRepository).searchByGroupName(searchParam, pagination);
     assertThat(requisitionGroupList, is(requisitionGroups));
@@ -99,7 +109,8 @@ public class RequisitionGroupServiceTest {
     List<RequisitionGroup> requisitionGroups = asList(new RequisitionGroup());
     when(requisitionGroupRepository.searchByNodeName(searchParam, pagination)).thenReturn(requisitionGroups);
 
-    List<RequisitionGroup> requisitionGroupList = requisitionGroupService.search(searchParam, "supervisoryNode", pagination);
+    List<RequisitionGroup> requisitionGroupList = requisitionGroupService.search(searchParam, "supervisoryNode",
+      pagination);
 
     verify(requisitionGroupRepository).searchByNodeName(searchParam, pagination);
     assertThat(requisitionGroupList, is(requisitionGroups));
@@ -134,9 +145,103 @@ public class RequisitionGroupServiceTest {
   @Test
   public void shouldSaveRequisitionGroupMembers() throws Exception {
     List<RequisitionGroupMember> requisitionGroupMembers = asList(new RequisitionGroupMember());
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
 
-    requisitionGroupService.saveRequisitionGroupMembers(requisitionGroupMembers, new RequisitionGroup());
+    requisitionGroupService.saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup, userId);
 
+    assertThat(requisitionGroupMembers.get(0).getRequisitionGroup(), is(requisitionGroup));
+    assertThat(requisitionGroupMembers.get(0).getCreatedBy(), is(userId));
+    assertThat(requisitionGroupMembers.get(0).getModifiedBy(), is(userId));
     verify(requisitionGroupMemberService).save(requisitionGroupMembers.get(0));
+  }
+
+  @Test
+  public void shouldSaveRequisitionGroupProgramSchedules() {
+    List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = asList(
+      new RequisitionGroupProgramSchedule());
+
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    requisitionGroupService.saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules, requisitionGroup,
+      userId);
+
+    assertThat(requisitionGroupProgramSchedules.get(0).getId(), is(nullValue()));
+    assertThat(requisitionGroupProgramSchedules.get(0).getRequisitionGroup(), is(requisitionGroup));
+    assertThat(requisitionGroupProgramSchedules.get(0).getCreatedBy(), is(userId));
+    assertThat(requisitionGroupProgramSchedules.get(0).getModifiedBy(), is(userId));
+    verify(requisitionGroupProgramScheduleService).save(requisitionGroupProgramSchedules.get(0));
+  }
+
+  @Test
+  public void shouldUpdateWithRequisitionGroupMembers() {
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    requisitionGroup.setId(1L);
+    requisitionGroup.setCode("RG1");
+    requisitionGroup.setModifiedBy(2L);
+
+    RequisitionGroupMember member1 = new RequisitionGroupMember();
+    member1.setId(1L);
+    RequisitionGroupMember member2 = new RequisitionGroupMember();
+    List<RequisitionGroupMember> requisitionGroupMembers = new ArrayList<>();
+    requisitionGroupMembers.add(member1);
+    requisitionGroupMembers.add(member2);
+
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule1 = new RequisitionGroupProgramSchedule();
+    requisitionGroupProgramSchedule1.setId(2L);
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule2 = new RequisitionGroupProgramSchedule();
+    List<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = new ArrayList<>();
+    requisitionGroupProgramSchedules.add(requisitionGroupProgramSchedule1);
+    requisitionGroupProgramSchedules.add(requisitionGroupProgramSchedule2);
+
+    RequisitionGroupService spyRequisitionGroup = PowerMockito.spy(requisitionGroupService);
+    doNothing().when(spyRequisitionGroup).save(requisitionGroup);
+
+    spyRequisitionGroup.updateWithMembersAndSchedules(requisitionGroup, requisitionGroupMembers,
+      requisitionGroupProgramSchedules, userId);
+
+    verify(spyRequisitionGroup).save(requisitionGroup);
+    verify(requisitionGroupMemberService).deleteMembersForGroup(requisitionGroup.getId());
+    verify(requisitionGroupMemberService, times(2)).insert(Matchers.any(RequisitionGroupMember.class));
+    verify(requisitionGroupProgramScheduleService).deleteRequisitionGroupProgramSchedulesFor(requisitionGroup.getId());
+    verify(requisitionGroupProgramScheduleService, times(2)).save(Matchers.any(RequisitionGroupProgramSchedule.class));
+
+    assertThat(requisitionGroup.getModifiedBy(), is(userId));
+
+    assertThat(requisitionGroupProgramSchedule1.getRequisitionGroup(), is(requisitionGroup));
+    assertThat(requisitionGroupProgramSchedule1.getModifiedBy(), is(userId));
+    assertNull(requisitionGroupProgramSchedule1.getId());
+    assertThat(requisitionGroupProgramSchedule2.getRequisitionGroup(), is(requisitionGroup));
+    assertThat(requisitionGroupProgramSchedule2.getModifiedBy(), is(userId));
+
+    assertThat(member1.getRequisitionGroup(), is(requisitionGroup));
+    assertThat(member1.getCreatedBy(), is(userId));
+    assertThat(member1.getModifiedBy(), is(userId));
+    assertThat(member2.getRequisitionGroup(), is(requisitionGroup));
+    assertThat(member2.getCreatedBy(), is(userId));
+    assertThat(member2.getModifiedBy(), is(userId));
+  }
+
+  @Test
+  public void shouldSaveWithMembersAndSchedules() {
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    ArrayList<RequisitionGroupMember> requisitionGroupMembers = new ArrayList<>();
+    ArrayList<RequisitionGroupProgramSchedule> requisitionGroupProgramSchedules = new ArrayList<>();
+
+    RequisitionGroupService spyRequisitionGroupService = PowerMockito.spy(requisitionGroupService);
+    doNothing().when(spyRequisitionGroupService).save(requisitionGroup);
+    doNothing().when(spyRequisitionGroupService).saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules,
+      requisitionGroup, userId);
+    doNothing().when(spyRequisitionGroupService).saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup,
+      userId);
+    InOrder order = inOrder(spyRequisitionGroupService);
+
+    spyRequisitionGroupService.saveWithMembersAndSchedules(requisitionGroup, requisitionGroupMembers,
+      requisitionGroupProgramSchedules, userId);
+
+    assertThat(requisitionGroup.getCreatedBy(), is(userId));
+    order.verify(spyRequisitionGroupService).save(requisitionGroup);
+    order.verify(spyRequisitionGroupService).saveRequisitionGroupProgramSchedules(requisitionGroupProgramSchedules,
+      requisitionGroup, userId);
+    order.verify(spyRequisitionGroupService).saveRequisitionGroupMembers(requisitionGroupMembers, requisitionGroup,
+      userId);
   }
 }

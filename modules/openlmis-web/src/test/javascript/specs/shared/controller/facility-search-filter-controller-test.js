@@ -26,16 +26,63 @@ describe("Facility Search Filter Controller", function () {
   }));
 
   it("should associate a facility", function () {
-    scope.$parent = {"$parent": {"associate": function () {
-    }, "showSlider": false}};
-
-    spyOn(scope.$parent.$parent, "associate");
+    scope.$parent = {associate: function () {
+    }};
+    spyOn(scope.$parent, "associate");
+    spyOn(scope, "clearFacilitySearch");
+    spyOn(scope, "clearVisibleFilters");
+    spyOn(scope, "$broadcast");
     var facility = {code: "F10", name: "Village Dispensary"};
 
     scope.associate(facility);
 
-    expect(scope.$parent.$parent.associate).toHaveBeenCalledWith(facility);
-    expect(scope.$parent.$parent.showSlider).toBeTruthy();
+    expect(scope.$parent.associate).toHaveBeenCalledWith(facility);
+    expect(scope.clearFacilitySearch).toHaveBeenCalled();
+    expect(scope.clearVisibleFilters).toHaveBeenCalled();
+    expect(scope.$broadcast).toHaveBeenCalledWith("singleSelectSearchCleared");
+  });
+
+  it('should clear visible filters', function () {
+    scope.type = {name: "type"};
+    scope.zone = {name: "zone"};
+
+    scope.clearVisibleFilters();
+
+    expect(scope.type).toEqual({});
+    expect(scope.zone).toEqual({});
+  });
+
+  it('should clear facility searched results', function () {
+    scope.facilitySearchParam = "F1";
+    scope.facilityList = [
+      {name: "F1"},
+      {name: "F2"}
+    ];
+    scope.facilityResultCount = 34;
+
+    scope.clearFacilitySearch();
+
+    expect(scope.facilitySearchParam).toBeUndefined();
+    expect(scope.facilityList).toBeUndefined();
+    expect(scope.facilityResultCount).toBeUndefined();
+  });
+
+  it('should trigger fetching facility search results on pressing enter key', function () {
+    var event = {keyCode: 13};
+    spyOn(scope, 'showFacilitySearchResults');
+
+    scope.triggerSearch(event);
+
+    expect(scope.showFacilitySearchResults).toHaveBeenCalled();
+  });
+
+  it('should not trigger fetching facility search results on any key except enter key', function () {
+    var event = {keyCode: 213};
+    spyOn(scope, 'showFacilitySearchResults');
+
+    scope.triggerSearch(event);
+
+    expect(scope.showFacilitySearchResults).not.toHaveBeenCalled();
   });
 
   it('should not search results if query is undefined', function () {
@@ -52,14 +99,16 @@ describe("Facility Search Filter Controller", function () {
     var facility1 = {code: "F10", name: "Village Dispensary1"};
     var facility2 = {code: "F11", name: "Village Dispensary2"};
     var response = {"facilityList": [facility1, facility2]};
+    scope.extraParams = {"virtualFacility": null, "enabled": true };
 
-    $httpBackend.when('GET', '/filter-facilities.json?searchParam=Fac').respond(response);
+    $httpBackend.when('GET', '/filter-facilities.json?enabled=true&searchParam=Fac').respond(response);
     scope.showFacilitySearchResults();
     $httpBackend.flush();
 
     expect(scope.facilityList).toEqual([facility1, facility2]);
     expect(scope.message).toEqual(undefined);
     expect(scope.facilityResultCount).toEqual(2);
+    expect(scope.resultCount).toEqual(2);
   });
 
   it('should set search and filtered result facilities in scope', function () {
@@ -70,8 +119,9 @@ describe("Facility Search Filter Controller", function () {
     var facility1 = {code: "F10", name: "Village Dispensary1"};
     var facility2 = {code: "F11", name: "Village Dispensary2"};
     var response = {"facilityList": [facility1, facility2]};
+    scope.extraParams = {"virtualFacility": true, "enabled": null };
 
-    $httpBackend.when('GET', '/filter-facilities.json?facilityTypeId=2&geoZoneId=6&searchParam=Fac').respond(response);
+    $httpBackend.when('GET', '/filter-facilities.json?facilityTypeId=2&geoZoneId=6&searchParam=Fac&virtualFacility=true').respond(response);
     scope.showFacilitySearchResults();
     $httpBackend.flush();
 
@@ -83,8 +133,9 @@ describe("Facility Search Filter Controller", function () {
   it('should set message if too many searched facilities found', function () {
     scope.facilitySearchParam = "Fac";
     var response = {"facilityList": [], "message": "Too may results found"};
+    scope.extraParams = {"virtualFacility": null, "enabled": true };
 
-    $httpBackend.when('GET', '/filter-facilities.json?searchParam=Fac').respond(response);
+    $httpBackend.when('GET', '/filter-facilities.json?enabled=true&searchParam=Fac').respond(response);
     scope.showFacilitySearchResults();
     $httpBackend.flush();
 
@@ -92,113 +143,4 @@ describe("Facility Search Filter Controller", function () {
     expect(scope.message).toEqual("Too may results found");
     expect(scope.facilityResultCount).toEqual(0);
   });
-
-  it('should show filter modal with facilityTypes', function () {
-    scope.filterModal = false;
-    $httpBackend.when('GET', '/facility-types.json').respond({"facilityTypeList": facilityTypeList});
-    scope.showFilterModal();
-    $httpBackend.flush();
-
-    expect(scope.filterModal).toBeTruthy();
-    expect(scope.facilityTypes).toEqual(facilityTypeList);
-  });
-
-  it('should search geo zone and set results in scope', function () {
-    scope.geoZoneSearchParam = "moz";
-    var response = {"geoZones": [
-      {"name": "moz", "level": {"name": "district"}}
-    ]};
-
-    $httpBackend.when('GET', '/filtered-geographicZones.json?searchParam=moz').respond(response);
-    scope.searchGeoZone();
-    $httpBackend.flush();
-
-    expect(scope.geoZoneList).toEqual([
-      {"name": "moz", "level": {"name": "district"}}
-    ]);
-    expect(scope.levels).toEqual(["district"]);
-    expect(scope.showResults).toEqual(true);
-  });
-
-  it('should set message if too many searched geo zones found', function () {
-    scope.geoZoneSearchParam = "moz";
-    var response = {"geoZones": [], "message": "Too may results found"};
-
-    $httpBackend.when('GET', '/filtered-geographicZones.json?searchParam=moz').respond(response);
-    scope.searchGeoZone();
-    $httpBackend.flush();
-
-    expect(scope.geoZoneList).toEqual([]);
-    expect(scope.manyGeoZoneMessage).toEqual("Too may results found");
-    expect(scope.geoZonesResultCount).toEqual(0);
-  });
-
-  it('should not search geo zone if query undefined', function () {
-    spyOn($httpBackend, 'expectGET');
-    scope.geoZoneSearchParam = undefined;
-
-    scope.searchGeoZone();
-
-    expect($httpBackend.expectGET).not.toHaveBeenCalledWith('/filtered-geographicZones.json?searchParam=undefined');
-  });
-
-  it('should set geo zone', function () {
-    spyOn(scope, 'clearGeoZoneSearch');
-    var geoZone = {"name": "moz"};
-    scope.setGeoZone(geoZone);
-
-    expect(scope.selectedGeoZone).toEqual(geoZone);
-    expect(scope.clearGeoZoneSearch).toHaveBeenCalled();
-  });
-
-  it('should clear geo zone search', function () {
-    scope.showResults = true;
-    scope.geoZoneList = [
-      {"name": "moz"}
-    ];
-    scope.geoZoneQuery = "moz";
-    scope.geoZoneSearchParam = "moz";
-
-    scope.clearGeoZoneSearch();
-
-    expect(scope.showResults).toBeFalsy();
-    expect(scope.geoZoneList).toEqual([]);
-    expect(scope.geoZoneQuery).toBeUndefined();
-    expect(scope.geoZoneSearchParam).toBeUndefined();
-  });
-
-  it('should set facility type', function () {
-    scope.facilityType = {"name": "warehouse"};
-
-    scope.setFacilityType();
-
-    expect(scope.selectedFacilityType).toEqual({"name": "warehouse"});
-    expect(scope.facilityType).toBeUndefined();
-  });
-
-  it('should set filters', function () {
-    spyOn(scope, 'showFacilitySearchResults');
-    scope.selectedFacilityType = {"name": "warehouse"};
-    scope.selectedGeoZone = {"name": "moz"};
-
-    scope.setFilters();
-
-    expect(scope.zone).toEqual(scope.selectedGeoZone);
-    expect(scope.type).toEqual(scope.selectedFacilityType);
-    expect(scope.filterModal).toBeFalsy();
-    expect(scope.showFacilitySearchResults).toHaveBeenCalled();
-  });
-
-  it('should cancel filters', function () {
-    scope.selectedFacilityType = {"name": "warehouse"};
-    scope.selectedGeoZone = {"name": "moz"};
-    scope.zone = {"name": "geo zone"};
-
-    scope.cancelFilters();
-
-    expect(scope.selectedGeoZone).toEqual({"name": "geo zone"});
-    expect(scope.selectedFacilityType).toEqual({});
-    expect(scope.filterModal).toBeFalsy();
-  });
-
 });

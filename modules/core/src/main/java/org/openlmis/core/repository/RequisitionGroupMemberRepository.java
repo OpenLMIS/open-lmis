@@ -74,4 +74,8 @@ public class RequisitionGroupMemberRepository {
   public List<RequisitionGroupMember> getMembersBy(Long requisitionGroupId) {
     return mapper.getMembersBy(requisitionGroupId);
   }
+
+  public void deleteMembersForGroup(Long requisitionGroupId) {
+    mapper.deleteMemberForGroup(requisitionGroupId);
+  }
 }

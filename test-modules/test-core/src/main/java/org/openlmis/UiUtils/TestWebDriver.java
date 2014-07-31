@@ -252,7 +252,6 @@ public class TestWebDriver {
       Actions action = new Actions(driver);
       action.click(element).perform();
     }
-
   }
 
   public void keyPress(final WebElement element) {
@@ -296,6 +295,16 @@ public class TestWebDriver {
       driver.switchTo().window((String) set.toArray()[0]);
       driver.close();
       driver.switchTo().window(base);
+    }
+  }
+
+  public void switchWindow() {
+    String base = driver.getWindowHandle();
+    Set<String> set = driver.getWindowHandles();
+    set.remove(base);
+
+    if (set.size() >= 1) {
+      driver.switchTo().window((String) set.toArray()[0]);
     }
   }
 }

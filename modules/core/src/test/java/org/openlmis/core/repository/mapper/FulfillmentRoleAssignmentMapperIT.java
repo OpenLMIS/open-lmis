@@ -38,8 +38,8 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.domain.Right.MANAGE_POD;
-import static org.openlmis.core.domain.Right.VIEW_ORDER;
+import static org.openlmis.core.domain.RightName.MANAGE_POD;
+import static org.openlmis.core.domain.RightName.VIEW_ORDER;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)

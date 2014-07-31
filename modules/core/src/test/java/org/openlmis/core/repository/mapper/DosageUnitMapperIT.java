@@ -21,6 +21,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -35,6 +37,12 @@ public class DosageUnitMapperIT {
   private DosageUnitMapper duMapper;
 
   @Test
+  public void shouldGetAllDosageUnits() throws Exception {
+    List<DosageUnit> result = duMapper.getAll();
+    assertThat(result.size(), is(7));
+  }  
+  
+  @Test  
   public void shouldInsertDosageUnitByCode() {
     DosageUnit du = new DosageUnit();
     du.setCode("du code");

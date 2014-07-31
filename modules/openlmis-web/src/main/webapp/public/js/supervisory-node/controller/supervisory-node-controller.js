@@ -10,6 +10,7 @@
 
 function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSupervisoryNodes, SupervisoryNodes) {
   $scope.supervisoryNode = supervisoryNode || {};
+  $scope.$parent.message = "";
 
   var reset = function () {
     $scope.query = undefined;
@@ -25,8 +26,14 @@ function SupervisoryNodeController($scope, $location, supervisoryNode, ParentSup
     return true;
   };
 
+  $scope.toggleSlider = function(){
+    $scope.showSlider = !$scope.showSlider;
+    $scope.extraParams = {"virtualFacility": null, "enabled": true};
+  };
+
   $scope.associate = function (facility) {
     $scope.supervisoryNode.facility = facility;
+    $scope.showSlider = !$scope.showSlider;
   };
 
   $scope.showParentNodeSearchResults = function () {

@@ -36,7 +36,10 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -50,7 +53,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.spy;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RightName.*;
 import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -165,27 +168,6 @@ public class FacilityServiceTest {
     assertThat(result, is(facilities));
   }
 
-
-  @Test
-  public void shouldSearchFacilitiesByCodeOrNameAndVirtualFacilityFlag() throws Exception {
-    List<Facility> facilityList = Arrays.asList(new Facility());
-    when(facilityRepository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true)).thenReturn(facilityList);
-
-    List<Facility> returnedFacilities = facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true);
-
-    assertThat(returnedFacilities, is(facilityList));
-  }
-
-  @Test
-  public void shouldSearchFacilitiesByCodeOrNameIfVirtualFacilityFlagIsNotPresenr() throws Exception {
-    List<Facility> facilityList = Arrays.asList(new Facility());
-    when(facilityRepository.searchFacilitiesByCodeOrName("query")).thenReturn(facilityList);
-
-    List<Facility> returnedFacilities = facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", null);
-
-    assertThat(returnedFacilities, is(facilityList));
-  }
-
   @Test
   public void shouldThrowExceptionIfProgramsSupportedInvalidWhileUpdating() throws Exception {
     Facility facility = new Facility();
@@ -284,25 +266,25 @@ public class FacilityServiceTest {
   @Test
   public void shouldGetAllFacilitiesForUserAndRights() throws Exception {
     //Arrange
-    Right[] rights = {Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION};
+    String[] rightNames = {VIEW_REQUISITION, APPROVE_REQUISITION};
     Facility homeFacility = new Facility();
     List<Facility> supervisedFacilities = new ArrayList<>();
     supervisedFacilities.add(homeFacility);
     List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
     List<RequisitionGroup> requisitionGroups = new ArrayList<>();
-    when(facilityRepository.getHomeFacilityForRights(1L, rights)).thenReturn(homeFacility);
-    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1L, rights)).thenReturn(supervisoryNodes);
+    when(facilityRepository.getHomeFacilityForRights(1L, rightNames)).thenReturn(homeFacility);
+    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1L, rightNames)).thenReturn(supervisoryNodes);
     when(requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes)).thenReturn(requisitionGroups);
     when(facilityRepository.getAllInRequisitionGroups(requisitionGroups)).thenReturn(supervisedFacilities);
 
     //Act
-    List<Facility> actualFacilities = facilityService.getForUserAndRights(1L, rights);
+    List<Facility> actualFacilities = facilityService.getForUserAndRights(1L, rightNames);
 
     //Assert
     assertThat(actualFacilities, is(supervisedFacilities));
     assertThat(actualFacilities.contains(homeFacility), is(true));
-    verify(facilityRepository).getHomeFacilityForRights(1L, rights);
-    verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1L, rights);
+    verify(facilityRepository).getHomeFacilityForRights(1L, rightNames);
+    verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1L, rightNames);
     verify(requisitionGroupService).getRequisitionGroupsBy(supervisoryNodes);
     verify(facilityRepository).getAllInRequisitionGroups(requisitionGroups);
   }
@@ -310,25 +292,25 @@ public class FacilityServiceTest {
   @Test
   public void shouldNotGetHomeFacilityWhenItIsNull() throws Exception {
     //Arrange
-    Right[] rights = {Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION};
+    String[] rightNames = {VIEW_REQUISITION, APPROVE_REQUISITION};
     Facility supervisedFacility = new Facility();
     List<Facility> supervisedFacilities = new ArrayList<>();
     supervisedFacilities.add(supervisedFacility);
     List<SupervisoryNode> supervisoryNodes = new ArrayList<>();
     List<RequisitionGroup> requisitionGroups = new ArrayList<>();
-    when(facilityRepository.getHomeFacilityForRights(1L, rights)).thenReturn(null);
-    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1L, rights)).thenReturn(supervisoryNodes);
+    when(facilityRepository.getHomeFacilityForRights(1L, rightNames)).thenReturn(null);
+    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1L, rightNames)).thenReturn(supervisoryNodes);
     when(requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes)).thenReturn(requisitionGroups);
     when(facilityRepository.getAllInRequisitionGroups(requisitionGroups)).thenReturn(supervisedFacilities);
 
     //Act
-    List<Facility> actualFacilities = facilityService.getForUserAndRights(1L, rights);
+    List<Facility> actualFacilities = facilityService.getForUserAndRights(1L, rightNames);
 
     //Assert
     assertThat(actualFacilities, is(supervisedFacilities));
     assertThat(actualFacilities.size(), is(1));
-    verify(facilityRepository).getHomeFacilityForRights(1L, rights);
-    verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1L, rights);
+    verify(facilityRepository).getHomeFacilityForRights(1L, rightNames);
+    verify(supervisoryNodeService).getAllSupervisoryNodesInHierarchyBy(1L, rightNames);
     verify(requisitionGroupService).getRequisitionGroupsBy(supervisoryNodes);
     verify(facilityRepository).getAllInRequisitionGroups(requisitionGroups);
   }
@@ -491,5 +473,29 @@ public class FacilityServiceTest {
     facilityService.getOperativeFacilityByCode("code");
 
     verify(facilityRepository, never()).getById(anyLong());
+  }
+
+  @Test
+  public void shouldGetTotalSearchResultCountByFacility(){
+    String columnName = "facility";
+    String searchParam = "searchParam";
+    int count = 10;
+    when(facilityRepository.getTotalSearchResultCount(searchParam)).thenReturn(count);
+
+    assertThat(facilityService.getTotalSearchResultCountByColumnName(searchParam, columnName),is(count));
+
+    verify(facilityRepository).getTotalSearchResultCount(searchParam);
+  }
+
+  @Test
+  public void shouldGetTotalSearchResultCountByGeographicZone(){
+    String columnName = "geographicZone";
+    String searchParam = "searchParam";
+    int count = 10;
+    when(facilityRepository.getTotalSearchResultCountByGeographicZone(searchParam)).thenReturn(count);
+
+    assertThat(facilityService.getTotalSearchResultCountByColumnName(searchParam, columnName), is(count));
+
+    verify(facilityRepository).getTotalSearchResultCountByGeographicZone(searchParam);
   }
 }

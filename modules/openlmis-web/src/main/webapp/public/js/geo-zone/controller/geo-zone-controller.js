@@ -9,9 +9,9 @@
  */
 
 function GeoZoneController($scope, geoLevels, geoZone, GeographicZonesAboveLevel, $location, GeographicZones) {
-
   $scope.levels = geoLevels;
   $scope.geoZone = geoZone;
+  $scope.$parent.message = "";
 
   $scope.loadParents = function (levelCode) {
     GeographicZonesAboveLevel.get({geoLevelCode: levelCode}, function (data) {

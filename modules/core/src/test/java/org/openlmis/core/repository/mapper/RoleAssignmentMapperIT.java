@@ -38,7 +38,7 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -231,7 +231,7 @@ public class RoleAssignmentMapperIT {
     roleRightsMapper.insertRole(r1);
     Role r2 = new Role("r2", "random description");
     roleRightsMapper.insertRole(r2);
-    roleRightsMapper.createRoleRight(r2, Right.CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(r2, CREATE_REQUISITION);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     supervisoryNode.setFacility(facility);
@@ -335,6 +335,25 @@ public class RoleAssignmentMapperIT {
     assertThat(allocationRoles.size(), is(1));
     assertThat(allocationRoles.get(0).getRoleIds().size(), is(1));
     assertThat(allocationRoles.get(0).getRoleIds().get(0), is(allocationRole.getId()));
+  }
+
+  @Test
+  public void shouldGetReportingRolesForUser(){
+    Long userId = user.getId();
+    Role reportingRole = new Role("r1", "reporting role");
+    roleRightsMapper.insertRole(reportingRole);
+    roleRightsMapper.createRoleRight(reportingRole, MANAGE_REPORT);
+
+    Role nonReportingRole = new Role("r2", "non reporting role");
+    roleRightsMapper.insertRole(nonReportingRole);
+    roleRightsMapper.createRoleRight(nonReportingRole, CREATE_REQUISITION);
+    mapper.insertRoleAssignment(userId, null, null, reportingRole.getId());
+    mapper.insertRoleAssignment(userId, 2L, null, nonReportingRole.getId());
+
+    RoleAssignment role = mapper.getReportingRole(userId);
+
+    assertThat(role.getRoleIds().size(), is(1));
+    assertThat(role.getRoleIds().get(0), is(reportingRole.getId()));
   }
 
   private Program insertProgram(Program program) {

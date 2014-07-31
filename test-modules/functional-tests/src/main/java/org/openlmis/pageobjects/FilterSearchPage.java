@@ -19,6 +19,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.NoSuchElementException;
 
+import static org.openqa.selenium.By.cssSelector;
 import static org.openqa.selenium.support.How.ID;
 
 public class FilterSearchPage extends Page {
@@ -61,6 +62,39 @@ public class FilterSearchPage extends Page {
 
   @FindBy(how = ID, using = "removeGeoZoneIcon")
   private static WebElement removeGeoZoneIcon = null;
+
+  @FindBy(how = ID, using = "addSelectedFacilities")
+  private static WebElement addSelectedFacilities = null;
+
+  @FindBy(how = ID, using = "noFacilityResultMessage")
+  private static WebElement noFacilityResultMessage = null;
+
+  @FindBy(how = ID, using = "oneFacilityResultMessage")
+  private static WebElement oneFacilityResultMessage = null;
+
+  @FindBy(how = ID, using = "nFacilityResultsMessage")
+  private static WebElement nFacilityResultsMessage = null;
+
+  @FindBy(how = ID, using = "tooManyFacilityResultsMessage")
+  private static WebElement tooManyFacilityResultsMessage = null;
+
+  @FindBy(how = ID, using = "noGeoZoneResult")
+  private static WebElement noGeoZoneResultMessage = null;
+
+  @FindBy(how = ID, using = "oneGeoZoneResult")
+  private static WebElement oneGeoZoneResultMessage = null;
+
+  @FindBy(how = ID, using = "nGeoZoneResults")
+  private static WebElement nGeoZoneResultsMessage = null;
+
+  @FindBy(how = ID, using = "tooManyGeoZoneResults")
+  private static WebElement tooManyGeoZoneResultsMessage = null;
+
+  @FindBy(how = ID, using = "searchFacilityIcon")
+  private static WebElement searchFacilityIcon = null;
+
+  @FindBy(how = ID, using = "searchMultipleFacilitiesIcon")
+  private static WebElement searchMultipleFacilitiesIcon = null;
 
   public FilterSearchPage(TestWebDriver driver) {
     super(driver);
@@ -184,5 +218,132 @@ public class FilterSearchPage extends Page {
       return false;
     }
     return removeGeoZoneIcon.isDisplayed();
+  }
+
+  public void clickOnAddSelectedFacilityButton() {
+    testWebDriver.waitForElementToAppear(addSelectedFacilities);
+    addSelectedFacilities.click();
+  }
+
+  public boolean isAddSelectedFacilityButtonEnabled() {
+    try {
+      testWebDriver.waitForElementToAppear(addSelectedFacilities);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return addSelectedFacilities.isEnabled();
+  }
+
+  public void checkFacilityToBeAssociated(int rowNumber) {
+    WebElement facilityCheckBox = testWebDriver.getElementById("facilityCheckBox" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(facilityCheckBox);
+    facilityCheckBox.click();
+  }
+
+  public boolean isNoFacilityResultMessageDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(noFacilityResultMessage);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return noFacilityResultMessage.isDisplayed();
+  }
+
+  public String getNFacilityResultsMessage() {
+    testWebDriver.waitForElementToAppear(nFacilityResultsMessage);
+    return nFacilityResultsMessage.getText();
+  }
+
+  public String getOneFacilityResultMessage() {
+    testWebDriver.waitForElementToAppear(oneFacilityResultMessage);
+    return oneFacilityResultMessage.getText();
+  }
+
+  public String getNoFacilityResultMessage() {
+    testWebDriver.waitForElementToAppear(noFacilityResultMessage);
+    return noFacilityResultMessage.getText();
+  }
+
+  public String getTooManyFacilitySearchResultMessage() {
+    testWebDriver.waitForElementToAppear(tooManyFacilityResultsMessage);
+    return tooManyFacilityResultsMessage.getText();
+  }
+
+  public String getNGeoZoneResultsMessage() {
+    testWebDriver.waitForElementToAppear(nGeoZoneResultsMessage);
+    return nGeoZoneResultsMessage.getText();
+  }
+
+  public String getOneGeoZoneResultMessage() {
+    testWebDriver.waitForElementToAppear(oneGeoZoneResultMessage);
+    return oneGeoZoneResultMessage.getText();
+  }
+
+  public String getNoGeoZoneResultMessage() {
+    testWebDriver.waitForElementToAppear(noGeoZoneResultMessage);
+    return noGeoZoneResultMessage.getText();
+  }
+
+  public String getTooManyGeoZoneSearchResultMessage() {
+    testWebDriver.waitForElementToAppear(tooManyGeoZoneResultsMessage);
+    return tooManyGeoZoneResultsMessage.getText();
+  }
+
+  public String getSearchFacilityText() {
+    WebElement facilitySearch = testWebDriver.findElement(cssSelector("input[ng-model='facilitySearchParam']"));
+    testWebDriver.waitForElementToAppear(facilitySearch);
+    return facilitySearch.getText();
+  }
+
+  public void selectFacility(int rowNumber) {
+    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(facilityResult);
+    facilityResult.click();
+  }
+
+  public boolean isSearchFacilityIconDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(searchFacilityIcon);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return searchFacilityIcon.isDisplayed();
+  }
+
+  public boolean isSearchMultipleFacilitiesIconDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(searchMultipleFacilitiesIcon);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return searchMultipleFacilitiesIcon.isDisplayed();
+  }
+
+  public void searchMultipleFacilities(String facilityCode) {
+    WebElement multipleFacilitiesSearch = testWebDriver.findElement(cssSelector("input[ng-model='multipleFacilitiesSearchParam']"));
+    testWebDriver.waitForElementToAppear(multipleFacilitiesSearch);
+    sendKeys(multipleFacilitiesSearch, facilityCode);
+    searchMultipleFacilitiesIcon.click();
+  }
+
+  public void searchFacility(String facilityCode) {
+    WebElement facilitySearch = testWebDriver.findElement(cssSelector("input[ng-model='facilitySearchParam']"));
+    testWebDriver.waitForElementToAppear(facilitySearch);
+    sendKeys(facilitySearch, facilityCode);
+    searchFacilityIcon.click();
+  }
+
+  public String getFacilityResult(int rowNumber) {
+    WebElement element = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
+    testWebDriver.waitForElementToAppear(element);
+    return element.getText();
   }
 }

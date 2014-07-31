@@ -23,13 +23,13 @@ public class FacilityApprovedProductBuilder {
   public static final Property<FacilityTypeApprovedProduct, Long> facilityTypeId = newProperty();
   public static final Property<FacilityTypeApprovedProduct, String> programCode = newProperty();
   public static final Property<FacilityTypeApprovedProduct, String> productCode = newProperty();
-  public static final Property<FacilityTypeApprovedProduct, Integer> maxMonthsOfStock = newProperty();
+  public static final Property<FacilityTypeApprovedProduct, Double> maxMonthsOfStock = newProperty();
 
   public static final String defaultFacilityTypeCode = "code";
   public static final Long defaultFacilityTypeId = 1L;
   public static final String defaultProgramCode = "YELL_FVR";
   public static final String defaultProductCode = "P999";
-  public static final Integer defaultMaxMonthsOfStock = 3;
+  public static final Double defaultMaxMonthsOfStock = 3.2;
 
   public static final Instantiator<FacilityTypeApprovedProduct> defaultFacilityApprovedProduct = new Instantiator<FacilityTypeApprovedProduct>() {
 

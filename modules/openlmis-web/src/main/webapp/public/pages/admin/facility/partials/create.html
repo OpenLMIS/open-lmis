@@ -120,7 +120,7 @@
       </label>
 
       <div class="form-field radio-group">
-        <input ng-model="facility.active" type="radio" name="isActive" ng-value="true"
+        <input id="facilityActiveTrue" ng-model="facility.active" type="radio" name="isActive" ng-value="true"
                ng-required="facility.active == null || facility.active == undefined"/>
         <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
         <input id="facilityActiveFalse" ng-model="facility.active" type="radio" name="isActive"
@@ -495,10 +495,12 @@
       <label openlmis-message="create.facility.electricityAvailable"></label>
 
       <div class="form-field radio-group">
-        <input ng-model="facility.hasElectricity" type="radio" name="has-electricity" ng-value="true"/>
+        <input id="hasElectricityTrue" ng-model="facility.hasElectricity" type="radio" name="has-electricity"
+               ng-value="true"/>
         <strong openlmis-message="button.yes"></strong>
         &nbsp; &nbsp; &nbsp;
-        <input ng-model="facility.hasElectricity" type="radio" name="has-electricity" ng-value="false"/>
+        <input id="hasElectricityFalse" ng-model="facility.hasElectricity" type="radio" name="has-electricity"
+               ng-value="false"/>
         <strong openlmis-message="button.no"></strong>
       </div>
     </div>
@@ -507,12 +509,12 @@
       <label openlmis-message="create.facility.internetConnection"></label>
 
       <div class="form-field radio-group">
-        <input ng-model="facility.online" type="radio" name="is-online" ng-value="true"/>
+        <input id="isOnlineTrue" ng-model="facility.online" type="radio" name="is-online" ng-value="true"/>
         <strong openlmis-message="button.yes"></strong>
         &nbsp;
         &nbsp;
         &nbsp;
-        <input ng-model="facility.online" type="radio" name="is-online" ng-value="false"/>
+        <input id="isOnlineFalse" ng-model="facility.online" type="radio" name="is-online" ng-value="false"/>
         <strong openlmis-message="button.no"></strong>
       </div>
     </div>
@@ -523,10 +525,10 @@
       <label openlmis-message="create.facility.electronicSCC"></label>
 
       <div class="form-field radio-group">
-        <input ng-model="facility.hasElectronicSCC" type="radio" name="has-electronic-scc"
+        <input id="hasElectronicSccTrue" ng-model="facility.hasElectronicSCC" type="radio" name="has-electronic-scc"
                ng-value="true"/><strong
           openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-        <input ng-model="facility.hasElectronicSCC" type="radio" name="has-electronic-scc"
+        <input id="hasElectronicSccFalse" ng-model="facility.hasElectronicSCC" type="radio" name="has-electronic-scc"
                ng-value="false"/><strong
           openlmis-message="button.no"></strong>
       </div>
@@ -536,10 +538,10 @@
       <label openlmis-message="create.facility.electronicDAR"></label>
 
       <div class="form-field radio-group">
-        <input ng-model="facility.hasElectronicDAR" type="radio" name="has-electronic-dar"
+        <input id="hasElectronicDARTrue" ng-model="facility.hasElectronicDAR" type="radio" name="has-electronic-dar"
                ng-value="true"/><strong
           openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
-        <input ng-model="facility.hasElectronicDAR" type="radio" name="has-electronic-dar"
+        <input id="hasElectronicDARFalse" ng-model="facility.hasElectronicDAR" type="radio" name="has-electronic-dar"
                ng-value="false"/><strong
           openlmis-message="button.no"></strong>
       </div>

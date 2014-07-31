@@ -30,7 +30,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
@@ -86,6 +86,16 @@ public class RoleAssignmentServiceTest {
     assertThat(actual, is(expected));
   }
 
+@Test
+  public void shouldGetReportingRoleAssignments() throws Exception {
+
+    RoleAssignment expected = new RoleAssignment();
+    when(roleAssignmentRepository.getReportingRole(1L)).thenReturn(expected);
+    RoleAssignment actual = service.getReportingRole(1L);
+
+    assertThat(actual, is(expected));
+  }
+
   @Test
   public void shouldGetRoleAssignmentsForAGivenUserOnAGivenProgramWithRights() throws Exception {
     Long userId = 1L;
@@ -114,8 +124,10 @@ public class RoleAssignmentServiceTest {
     user.setHomeFacilityRoles(homeFacilityRoles);
     user.setSupervisorRoles(supervisorRoles);
     user.setAllocationRoles(allocationRoles);
-    final RoleAssignment adminRole = new RoleAssignment();
+    final RoleAssignment adminRole = new RoleAssignment(user.getId(), 1L, null, null);
+    final RoleAssignment reportingRole = new RoleAssignment(user.getId(), 2L, null, null);
     user.setAdminRole(adminRole);
+    user.setReportingRole(reportingRole);
 
     service.saveRolesForUser(user);
 
@@ -123,6 +135,7 @@ public class RoleAssignmentServiceTest {
     verify(roleAssignmentRepository).insert(allocationRoles, user.getId());
     verify(roleAssignmentRepository).insert(supervisorRoles, user.getId());
     verify(roleAssignmentRepository).insert(asList(adminRole), user.getId());
+    verify(roleAssignmentRepository).insert(asList(reportingRole), user.getId());
   }
 
   @Test

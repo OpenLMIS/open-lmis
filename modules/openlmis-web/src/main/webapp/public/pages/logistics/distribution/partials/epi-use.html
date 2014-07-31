@@ -9,188 +9,200 @@
  -->
 
 <ng-include
-        src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+  src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 <div class="clearfix facility-container">
-    <ng-include
-            src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+  <ng-include
+    src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
-    <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
-        <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('epi-use')}}">
-            <h3>
-                <span id="epiUsePageHeader" openlmis-message="header.epi.use"></span>
-                <input id="epiUseApplyNrAll" type="button" ng-click="applyNRAll()"
-                       class="pull-right btn"
-                       openlmis-message="button.apply.nr.all"/>
-            </h3>
+  <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
+    <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('epi-use')}}">
+      <h3>
+        <span id="epiUsePageHeader" openlmis-message="header.epi.use"></span>
+        <input id="epiUseApplyNrAll" type="button" ng-click="applyNRAll()"
+               class="pull-right btn"
+               openlmis-message="button.apply.nr.all"/>
+      </h3>
 
-            <div class="clearfix"></div>
-            <div class="alert alert-info" id="noLineItems"
-                 ng-hide="facilityData.epiUse.lineItems.length">
-                <span openlmis-message="message.no.product.groups"></span>
-            </div>
+      <div class="clearfix"></div>
+      <div class="alert alert-info" id="noLineItems"
+           ng-hide="facilityData.epiUse.lineItems.length">
+        <span openlmis-message="message.no.product.groups"></span>
+      </div>
 
-            <div id="epiUseTable" class="facility-distribution-form-table" tab-scroll bottom-offset="180"
-                 ng-show="facilityData.epiUse.lineItems.length">
-                <form auto-save="distribution" object-store="distributions">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th class="col-doses"
-                                openlmis-message="header.epi.use.doses"></th>
-                            <th class="col-starting-stock"
-                                openlmis-message="header.epi.use.startingStock"></th>
-                            <th class="col-received"
-                                openlmis-message="header.epi.use.received"></th>
-                            <th class="col-total"
-                                openlmis-message="header.epi.use.total"></th>
-                            <th class="col-distributed"
-                                openlmis-message="header.epi.use.distributed"></th>
-                            <th class="col-loss"
-                                openlmis-message="header.epi.use.loss"></th>
-                            <th class="col-ending-stock"
-                                openlmis-message="header.epi.use.endingStock"></th>
-                            <th class="col-expiration-date"
-                                openlmis-message="description.column.expiration.date"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="lineItem in facilityData.epiUse.lineItems"
-                            ng-controller="EpiUseRowController">
-                            <td class="col-doses">
-                                <span ng-bind="lineItem.productGroup.name"></span>
-                            </td>
-                            <td class="col-starting-stock">
-                                <div>
-                  <span class="input-error-parent-cell">
+      <div id="epiUseTable" class="facility-distribution-form-table" tab-scroll bottom-offset="180"
+           ng-show="facilityData.epiUse.lineItems.length">
+        <form auto-save="distribution" object-store="distributions">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th class="col-doses"
+                  openlmis-message="header.epi.use.doses"></th>
+              <th class="col-starting-stock"
+                  openlmis-message="header.epi.use.startingStock"></th>
+              <th class="col-received"
+                  openlmis-message="header.epi.use.received"></th>
+              <th class="col-total"
+                  openlmis-message="header.epi.use.total"></th>
+              <th class="col-distributed"
+                  openlmis-message="header.epi.use.distributed"></th>
+              <th class="col-loss"
+                  openlmis-message="header.epi.use.loss"></th>
+              <th class="col-ending-stock"
+                  openlmis-message="header.epi.use.endingStock"></th>
+              <th class="col-expiration-date"
+                  openlmis-message="description.column.expiration.date"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="lineItem in facilityData.epiUse.lineItems"
+                ng-controller="EpiUseRowController">
+              <td class="col-doses">
+                <span ng-bind="lineItem.productGroup.name"></span>
+              </td>
+              <td class="col-starting-stock">
+                <div>
+                  <span class="position-relative">
                     <input id="stockAtFirstOfMonthInput{{$index}}" type="text"
                            ng-model="lineItem.stockAtFirstOfMonth.value"
                            name="stockAtFirstOfMonth{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="stockAtFirstOfMonthError{{$index}}"/>
+                           error-holder="stockAtFirstOfMonthError{{$index}}"
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.stockAtFirstOfMonth.value ||
+                             lineItem.stockAtFirstOfMonth.notRecorded)}"/>
                     <span id="stockAtFirstOfMonthError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
-                                </div>
-                                <input id="stockAtFirstOfMonth{{$index}}" type="checkbox"
-                                       ng-model="lineItem.stockAtFirstOfMonth.notRecorded"
-                                       not-recorded/>
-                                <label class="checkbox-label"
-                                       for="stockAtFirstOfMonth{{$index}}"
-                                       openlmis-message="label.not.recorded"></label>
-                            </td>
-                            <td class="col-received">
-                                <div>
-                  <span class="input-error-parent-cell">
+                </div>
+                <input id="stockAtFirstOfMonth{{$index}}" type="checkbox"
+                       ng-model="lineItem.stockAtFirstOfMonth.notRecorded"
+                       not-recorded/>
+                <label class="checkbox-label"
+                       for="stockAtFirstOfMonth{{$index}}"
+                       openlmis-message="label.not.recorded"></label>
+              </td>
+              <td class="col-received">
+                <div>
+                  <span class="position-relative">
                     <input id="receivedInput{{$index}}" type="text"
                            ng-model="lineItem.received.value"
                            name="received{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="receivedError{{$index}}"/>
+                           error-holder="receivedError{{$index}}"
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.received.value ||
+                             lineItem.received.notRecorded)}"/>
                     <span id="receivedError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
-                                </div>
-                                <input id="received{{$index}}" type="checkbox"
-                                       ng-model="lineItem.received.notRecorded"
-                                       not-recorded/>
-                                <label class="checkbox-label" for="received{{$index}}"
-                                       openlmis-message="label.not.recorded"></label>
-                            </td>
-                            <td class="col-total">
-                                <span ng-bind="getTotal()"></span>
-                            </td>
-                            <td class="col-distributed">
-                                <div>
-                  <span class="input-error-parent-cell">
+                </div>
+                <input id="received{{$index}}" type="checkbox"
+                       ng-model="lineItem.received.notRecorded"
+                       not-recorded/>
+                <label class="checkbox-label" for="received{{$index}}"
+                       openlmis-message="label.not.recorded"></label>
+              </td>
+              <td class="col-total">
+                <span ng-bind="getTotal()"></span>
+              </td>
+              <td class="col-distributed">
+                <div>
+                  <span class="position-relative">
                     <input id="distributedInput{{$index}}" type="text"
                            ng-model="lineItem.distributed.value"
                            name="distributed{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="distributedError{{$index}}"/>
+                           error-holder="distributedError{{$index}}"
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.distributed.value ||
+                             lineItem.distributed.notRecorded)}"/>
                     <span id="distributedError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
-                                </div>
-                                <input id="distributed{{$index}}" type="checkbox"
-                                       ng-model="lineItem.distributed.notRecorded"
-                                       not-recorded/>
-                                <label class="checkbox-label" for="distributed{{$index}}"
-                                       openlmis-message="label.not.recorded"></label>
-                            </td>
-                            <td class="col-loss">
-                                <div>
-                  <span class="input-error-parent-cell">
+                </div>
+                <input id="distributed{{$index}}" type="checkbox"
+                       ng-model="lineItem.distributed.notRecorded"
+                       not-recorded/>
+                <label class="checkbox-label" for="distributed{{$index}}"
+                       openlmis-message="label.not.recorded"></label>
+              </td>
+              <td class="col-loss">
+                <div>
+                  <span class="position-relative">
                     <input id="lossInput{{$index}}" type="text"
                            ng-model="lineItem.loss.value" ng-trim=false
                            name="loss{{$index}}" maxlength="7"
                            numeric-validator="positiveInteger"
-                           error-holder="lossError{{$index}}"/>
+                           error-holder="lossError{{$index}}"
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.loss.value ||
+                             lineItem.loss.notRecorded)}"/>
                     <span id="lossError{{$index}}" class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
-                                </div>
-                                <input id="loss{{$index}}" type="checkbox"
-                                       ng-model="lineItem.loss.notRecorded"
-                                       not-recorded/>
-                                <label class="checkbox-label" for="loss{{$index}}"
-                                       openlmis-message="label.not.recorded"></label>
-                            </td>
-                            <td class="col-ending-stock">
-                                <div>
-                  <span class="input-error-parent-cell">
+                </div>
+                <input id="loss{{$index}}" type="checkbox"
+                       ng-model="lineItem.loss.notRecorded"
+                       not-recorded/>
+                <label class="checkbox-label" for="loss{{$index}}"
+                       openlmis-message="label.not.recorded"></label>
+              </td>
+              <td class="col-ending-stock">
+                <div>
+                  <span class="position-relative">
                     <input id="stockAtEndOfMonthInput{{$index}}" type="text"
                            ng-model="lineItem.stockAtEndOfMonth.value"
                            name="stockAtEndOfMonth{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="stockAtEndOfMonthError{{$index}}"/>
+                           error-holder="stockAtEndOfMonthError{{$index}}"
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.stockAtEndOfMonth.value ||
+                             lineItem.stockAtEndOfMonth.notRecorded)}"/>
                     <span id="stockAtEndOfMonthError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
-                                </div>
-                                <input id="stockAtEndOfMonth{{$index}}" type="checkbox"
-                                       ng-model="lineItem.stockAtEndOfMonth.notRecorded"
-                                       not-recorded/>
-                                <label class="checkbox-label"
-                                       for="stockAtEndOfMonth{{$index}}"
-                                       openlmis-message="label.not.recorded"></label>
-                            </td>
-                            <td class="expiration-date">
-                                <div>
-                  <span class="expirationDateContainer input-error-parent-cell">
+                </div>
+                <input id="stockAtEndOfMonth{{$index}}" type="checkbox"
+                       ng-model="lineItem.stockAtEndOfMonth.notRecorded"
+                       not-recorded/>
+                <label class="checkbox-label"
+                       for="stockAtEndOfMonth{{$index}}"
+                       openlmis-message="label.not.recorded"></label>
+              </td>
+              <td class="expiration-date">
+                <div>
+                  <span class="expirationDateContainer position-relative">
                     <input id="expirationDateInput{{$index}}" type="text"
                            ng-model="lineItem.expirationDate.value"
                            name="expirationDate{{$index}}"
+                           maxlength="7"
                            date-validator="date"
                            showError="lineItem.expirationDate.notRecorded"
                            error-holder="expirationDateError{{$index}}"
-                           maxlength="7"/>
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-use') && !(lineItem.expirationDate.value ||
+                             lineItem.expirationDate.notRecorded)}"/>
                     <span class="rnr-form-error"
                           id="expirationDateError{{$index}}"
                           style="display:none;"
                           openlmis-message="error.invalid.date.format"></span>
                   </span>
-                                </div>
-                                <input id="expirationDate{{$index}}" type="checkbox"
-                                       ng-model="lineItem.expirationDate.notRecorded"
-                                       not-recorded />
-                                <label class="checkbox-label"
-                                       for="expirationDate{{$index}}"
-                                       openlmis-message="label.not.recorded"></label>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-        </div>
+                </div>
+                <input id="expirationDate{{$index}}" type="checkbox"
+                       ng-model="lineItem.expirationDate.notRecorded"
+                       not-recorded/>
+                <label class="checkbox-label"
+                       for="expirationDate{{$index}}"
+                       openlmis-message="label.not.recorded"></label>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
     </div>
+  </div>
 </div>

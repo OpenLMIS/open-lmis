@@ -10,7 +10,6 @@
 
 package org.openlmis.core.repository.mapper;
 
-
 import org.apache.commons.collections.Predicate;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +36,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProductBuilder.*;
-import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramBuilder.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -45,18 +44,25 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ProgramProductMapperIT {
+
   @Autowired
-  ProgramMapper programMapper;
+  private ProgramMapper programMapper;
+
   @Autowired
-  ProductMapper productMapper;
+  private ProductMapper productMapper;
+
   @Autowired
-  ProgramProductMapper programProductMapper;
+  private ProgramProductMapper programProductMapper;
+
   @Autowired
   private ProgramProductIsaMapper programProductISAMapper;
+
   @Autowired
   private FacilityApprovedProductMapper facilityApprovedProductMapper;
+
   @Autowired
   private ProductCategoryMapper productCategoryMapper;
+
   @Autowired
   QueryExecutor executor;
 
@@ -122,7 +128,8 @@ public class ProgramProductMapperIT {
 
     programProductMapper.updateCurrentPrice(programProduct);
 
-    ProgramProduct returnedProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(), product.getId());
+    ProgramProduct returnedProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(),
+      product.getId());
     assertThat(returnedProgramProduct.getCurrentPrice(), is(price));
     assertThat(returnedProgramProduct.getModifiedBy(), is(1L));
     assertThat(returnedProgramProduct.getModifiedDate(), is(notNullValue()));
@@ -142,7 +149,7 @@ public class ProgramProductMapperIT {
     ProgramProduct dbProgramProduct = programProductMapper.getByProgramAndProductId(program.getId(), product.getId());
 
     assertThat(dbProgramProduct.getDosesPerMonth(), is(10));
-    assertThat(dbProgramProduct.isActive(), is(false));
+    assertThat(dbProgramProduct.getActive(), is(false));
     assertThat(dbProgramProduct.getProductCategory(), is(productCategory));
   }
 
@@ -177,9 +184,12 @@ public class ProgramProductMapperIT {
     assertThat(programProducts.size(), is(3));
     assertThat(programProducts.get(0).getId(), is(programProduct2.getId()));
     assertThat(programProducts.get(0).getDisplayOrder(), is(programProduct2.getDisplayOrder()));
+    assertThat(programProducts.get(0).getProductCategory(), is(productCategory));
     assertThat(programProducts.get(1).getId(), is(programProduct3.getId()));
+    assertThat(programProducts.get(1).getProductCategory(), is(productCategory));
     assertThat(programProducts.get(2).getId(), is(programProduct1.getId()));
     assertThat(programProducts.get(2).getProgramProductIsa(), is(programProductISA));
+    assertThat(programProducts.get(2).getProductCategory(), is(productCategory));
   }
 
   @Test
@@ -199,7 +209,6 @@ public class ProgramProductMapperIT {
 
   @Test
   public void shouldGetById() throws Exception {
-
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
@@ -211,18 +220,19 @@ public class ProgramProductMapperIT {
 
   @Test
   public void shouldGetByProductCode() throws Exception {
-
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProduct.setProductCategory(productCategory);
     Program hiv = new Program(1L);
     hiv.setCode("HIV");
+    hiv.setName("HIV");
 
     ProgramProduct programProduct2 = new ProgramProduct(hiv, product, 10, true);
     programProduct2.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
     programProductMapper.insert(programProduct2);
 
-    List<ProgramProduct> returnedProducts = programProductMapper.getByProductCode(programProduct.getProduct().getCode());
+    List<ProgramProduct> returnedProducts = programProductMapper.getByProductCode(
+      programProduct.getProduct().getCode());
 
     assertThat(returnedProducts.size(), is(2));
     assertContainsProgramProduct(returnedProducts, programProduct);
@@ -231,7 +241,6 @@ public class ProgramProductMapperIT {
 
   @Test
   public void shouldGetByProgramProductIdAndFacilityTypeCode() throws Exception {
-
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProduct.setProductCategory(productCategory);
     programProductMapper.insert(programProduct);
@@ -244,10 +253,12 @@ public class ProgramProductMapperIT {
 
     facilityTypeApprovedProduct.setFacilityType(facilityType);
     facilityTypeApprovedProduct.setProgramProduct(programProduct);
+    facilityTypeApprovedProduct.setMaxMonthsOfStock(33.22);
 
     facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
 
-    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityTypeCode(program.getId(), facilityTypeCode);
+    List<ProgramProduct> returnedProducts = programProductMapper.getByProgramIdAndFacilityTypeCode(program.getId(),
+      facilityTypeCode);
 
     assertThat(returnedProducts.size(), is(1));
     assertContainsProgramProduct(returnedProducts, programProduct);
@@ -256,7 +267,6 @@ public class ProgramProductMapperIT {
 
   @Test
   public void shouldGetAllProgramProductsForProgramIdWhenFacilityTypeCodeIsNull() throws Exception {
-
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
     programProduct.setProductCategory(productCategory);
     Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P1")));
@@ -274,6 +284,115 @@ public class ProgramProductMapperIT {
     assertContainsProgramProduct(returnedProducts, programProduct2);
   }
 
+  @Test
+  public void shouldGetTotalResultCount() {
+    String searchParam = "Yell";
+    Program program2 = make(a(defaultProgram, with(programName, "TB"), with(programCode, "anshul")));
+    programMapper.insert(program2);
+
+    ProgramProduct programProduct1 = new ProgramProduct(program, product, 10, true);
+    programProduct1.setProductCategory(productCategory);
+    ProgramProduct programProduct2 = new ProgramProduct(program2, product, 10, true);
+    programProduct2.setProductCategory(productCategory);
+
+    programProductMapper.insert(programProduct1);
+    programProductMapper.insert(programProduct2);
+
+    assertThat(programProductMapper.getTotalSearchResultCount(searchParam), is(1));
+  }
+
+  @Test
+  public void shouldSearchProgramProductByProduct() {
+    Pagination pagination = new Pagination(1, 10);
+    Product prod1 = make(a(defaultProduct, with(primaryName, "prod1"), with(code, "p1")));
+    Product prod2 = make(a(defaultProduct, with(primaryName, "prod2"), with(code, "p2")));
+    Product prod3 = make(a(defaultProduct, with(primaryName, "new"), with(code, "p3")));
+    Product prod4 = make(a(defaultProduct, with(primaryName, "prod4"), with(code, "p4")));
+    productMapper.insert(prod1);
+    productMapper.insert(prod2);
+    productMapper.insert(prod3);
+    productMapper.insert(prod4);
+
+    Program program1 = make(a(defaultProgram, with(programName, "Essnl Mdn"), with(programCode, "prog1")));
+    Program program2 = make(a(defaultProgram, with(programName, "TB"), with(programCode, "prog2")));
+    programMapper.insert(program1);
+    programMapper.insert(program2);
+
+    ProductCategory productCategory1 = new ProductCategory("C1", "Anaesthetics", 1);
+    ProductCategory productCategory2 = new ProductCategory("C2", "Antibiotics", 1);
+    productCategoryMapper.insert(productCategory1);
+    productCategoryMapper.insert(productCategory2);
+
+    ProgramProduct programProduct1 = new ProgramProduct(program1, prod1, 10, true);
+    programProduct1.setProductCategory(productCategory1);
+    programProductMapper.insert(programProduct1);
+
+    ProgramProduct programProduct2 = new ProgramProduct(program1, prod2, 10, true);
+    programProduct2.setProductCategory(productCategory1);
+    programProductMapper.insert(programProduct2);
+
+    ProgramProduct programProduct3 = new ProgramProduct(program2, prod2, 10, true);
+    programProduct3.setProductCategory(productCategory2);
+    programProductMapper.insert(programProduct3);
+
+    ProgramProduct programProduct4 = new ProgramProduct(program2, prod3, 10, true);
+    programProduct4.setProductCategory(productCategory2);
+    programProductMapper.insert(programProduct4);
+
+    List<ProgramProduct> programProducts = programProductMapper.searchByProduct("prod", pagination);
+
+    assertThat(programProducts.size(), is(4));
+    assertThat(programProducts.get(0).getProduct().getCode(), is(programProduct1.getProduct().getCode()));
+    assertThat(programProducts.get(1).getProduct().getCode(), is(programProduct2.getProduct().getCode()));
+    assertThat(programProducts.get(2).getProduct().getCode(), is(programProduct3.getProduct().getCode()));
+    assertThat(programProducts.get(3).getProduct().getCode(), is(prod4.getCode()));
+  }
+
+  @Test
+  public void shouldSearchProgramProductByProgram() {
+    Pagination pagination = new Pagination(1, 3);
+    Product prod1 = make(a(defaultProduct, with(primaryName, "prod1"), with(code, "p1")));
+    Product prod2 = make(a(defaultProduct, with(primaryName, "prod2"), with(code, "p2")));
+    Product prod3 = make(a(defaultProduct, with(primaryName, "new"), with(code, "p3")));
+    Product prod4 = make(a(defaultProduct, with(primaryName, "prod4"), with(code, "p4")));
+    productMapper.insert(prod1);
+    productMapper.insert(prod2);
+    productMapper.insert(prod3);
+    productMapper.insert(prod4);
+
+    Program program1 = make(a(defaultProgram, with(programName, "TB1"), with(programCode, "prog1")));
+    Program program2 = make(a(defaultProgram, with(programName, "TB2"), with(programCode, "prog2")));
+    programMapper.insert(program1);
+    programMapper.insert(program2);
+
+    ProductCategory productCategory1 = new ProductCategory("C1", "Anaesthetics", 1);
+    ProductCategory productCategory2 = new ProductCategory("C2", "Antibiotics", 1);
+    productCategoryMapper.insert(productCategory1);
+    productCategoryMapper.insert(productCategory2);
+
+    ProgramProduct programProduct1 = new ProgramProduct(program2, prod1, 10, true);
+    programProduct1.setProductCategory(productCategory1);
+    programProductMapper.insert(programProduct1);
+
+    ProgramProduct programProduct2 = new ProgramProduct(program1, prod2, 10, true);
+    programProduct2.setProductCategory(productCategory1);
+    programProductMapper.insert(programProduct2);
+
+    ProgramProduct programProduct3 = new ProgramProduct(program2, prod2, 10, true);
+    programProduct3.setProductCategory(productCategory1);
+    programProductMapper.insert(programProduct3);
+
+    ProgramProduct programProduct4 = new ProgramProduct(program1, prod3, 10, true);
+    programProduct4.setProductCategory(productCategory2);
+    programProductMapper.insert(programProduct4);
+
+    List<ProgramProduct> programProducts = programProductMapper.searchByProgram("tb", pagination);
+
+    assertThat(programProducts.size(), is(3));
+    assertThat(programProducts.get(0).getProduct().getCode(), is(programProduct2.getProduct().getCode()));
+    assertThat(programProducts.get(1).getProduct().getCode(), is(programProduct4.getProduct().getCode()));
+    assertThat(programProducts.get(2).getProduct().getCode(), is(programProduct1.getProduct().getCode()));
+  }
 
   private void assertContainsProgramProduct(List<ProgramProduct> returnedProducts, final ProgramProduct programProduct) {
     boolean exists = exists(returnedProducts, new Predicate() {
@@ -281,7 +400,11 @@ public class ProgramProductMapperIT {
       public boolean evaluate(Object o) {
         ProgramProduct productFromCollection = (ProgramProduct) o;
         return (productFromCollection.getProgram().getCode().equals(programProduct.getProgram().getCode())) &&
-          (productFromCollection.isActive() == programProduct.isActive()) &&
+          (productFromCollection.getProgram().getName().equals(programProduct.getProgram().getName())) &&
+          (productFromCollection.getProductCategory().getCode().equals(programProduct.getProductCategory().getCode())) &&
+          (productFromCollection.getProductCategory().getName().equals(programProduct.getProductCategory().getName())) &&
+          (productFromCollection.getProductCategory().getDisplayOrder().equals(programProduct.getProductCategory().getDisplayOrder())) &&
+          (productFromCollection.getActive() == programProduct.getActive()) &&
           (productFromCollection.getProduct().getActive() == programProduct.getProduct().getActive());
       }
     });

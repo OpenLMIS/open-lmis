@@ -14,6 +14,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -25,14 +27,29 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)
-public class FacilityType extends BaseModel {
+public class FacilityType extends BaseModel implements Importable {
+
+  @ImportField(name="Facility Type Code", mandatory=true)
   private String code;
+
+  @ImportField(name="Name", mandatory=true)
   private String name;
+
+  @ImportField(name="Description")
   private String description;
+
   private Integer levelId;
+
+  @ImportField(name="Nominal Max Month", mandatory=true)
   private Integer nominalMaxMonth;
+
+  @ImportField(name="Nominal EOP", mandatory=true)
   private Double nominalEop;
+
+  @ImportField(name="Display Order", mandatory=true)
   private Integer displayOrder;
+
+  @ImportField(name="Active", mandatory=true, type="boolean")
   private boolean active;
 
   public FacilityType(String code) {

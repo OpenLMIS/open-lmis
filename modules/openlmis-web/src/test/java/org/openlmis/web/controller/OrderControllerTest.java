@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.OrderConfiguration;
-import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.RightName;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.DateFormat;
@@ -46,7 +46,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.core.domain.RightName.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.web.controller.OrderController.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -106,13 +106,13 @@ public class OrderControllerTest {
     }};
 
     mockStatic(OrderDTO.class);
-    when(orderService.getOrdersForPage(2, USER_ID, Right.VIEW_ORDER)).thenReturn(orders);
+    when(orderService.getOrdersForPage(2, USER_ID, RightName.VIEW_ORDER)).thenReturn(orders);
     List<OrderDTO> orderDTOs = new ArrayList<>();
     when(OrderDTO.getOrdersForView(orders)).thenReturn(orderDTOs);
 
     ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2, request);
 
-    verify(orderService).getOrdersForPage(2, USER_ID, Right.VIEW_ORDER);
+    verify(orderService).getOrdersForPage(2, USER_ID, RightName.VIEW_ORDER);
     assertThat((List<OrderDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(orderDTOs));
   }
 

@@ -8,7 +8,6 @@
 
 package org.openlmis.order.repository;
 
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.order.domain.Order;
@@ -42,8 +41,8 @@ public class OrderRepository {
     }
   }
 
-  public List<Order> getOrdersForPage(int page, int pageSize, Long userId, Right right) {
-    return orderMapper.getOrders(pageSize, (page - 1) * pageSize, userId, right);
+  public List<Order> getOrdersForPage(int page, int pageSize, Long userId, String rightName) {
+    return orderMapper.getOrders(pageSize, (page - 1) * pageSize, userId, rightName);
   }
 
   public Order getById(Long id) {

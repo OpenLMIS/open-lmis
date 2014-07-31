@@ -29,11 +29,11 @@ public class FacilityApprovedProductRepository {
   private FacilityApprovedProductMapper mapper;
 
   public List<FacilityTypeApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return mapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+    return mapper.getFullSupplyProductsBy(facilityId, programId);
   }
 
   public List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return mapper.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+    return mapper.getNonFullSupplyProductsBy(facilityId, programId);
   }
 
   public void insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
@@ -41,12 +41,12 @@ public class FacilityApprovedProductRepository {
   }
 
   public void update(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
-    mapper.updateFacilityApprovedProduct(facilityTypeApprovedProduct);
+    mapper.update(facilityTypeApprovedProduct);
   }
 
-  public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
-    return mapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(
-      facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
+  public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
+    return mapper.getBy(facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
   }
 
   public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId, Long programId, String searchParam, Pagination pagination) {
@@ -55,5 +55,13 @@ public class FacilityApprovedProductRepository {
 
   public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId, String searchParam) {
     return mapper.getTotalSearchResultCount(facilityTypeId, programId, searchParam);
+  }
+
+  public void delete(Long id) {
+    mapper.delete(id);
+  }
+
+  public FacilityTypeApprovedProduct get(Long id){
+    return mapper.get(id);
   }
 }

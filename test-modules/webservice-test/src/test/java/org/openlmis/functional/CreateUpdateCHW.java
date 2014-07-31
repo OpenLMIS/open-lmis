@@ -78,7 +78,7 @@ public class CreateUpdateCHW extends JsonUtility {
     userPage.enterUserDetails("storeInCharge", userEmail, "Fatim", "Doe");
     userPage.clickViewHere();
     userPage.enterUserHomeFacility(DEFAULT_PARENT_FACILITY_CODE);
-    userPage.verifyNoMatchedFoundMessage();
+    assertTrue("No match found link should show up", userPage.isNoFacilityResultMessageDisplayed());
     homePage.logout(baseUrlGlobal);
 
     HttpClient client = new HttpClient();
@@ -96,7 +96,7 @@ public class CreateUpdateCHW extends JsonUtility {
   public void shouldVerifyFacilityUpload(String[] credentials) throws FileNotFoundException, SQLException {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
-    uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data_WebService.csv");
+    uploadPage.uploadGeographicZone("QA_Geographic_Data_WebService.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadFacilities("QA_facilities_WebService.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
@@ -119,19 +119,19 @@ public class CreateUpdateCHW extends JsonUtility {
     client.SendJSON(getJsonStringFor(agentJson), CREATE_URL, POST, commTrackUser, "Admin123");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility(agentCode);
-    manageFacilityPage.clickFacilityList(agentCode);
-    manageFacilityPage.disableFacility(agentCode, DEFAULT_AGENT_NAME);
+    FacilityPage facilityPage = homePage.navigateManageFacility();
+    facilityPage.searchFacility(agentCode);
+    facilityPage.clickFirstFacilityList();
+    facilityPage.disableFacility(agentCode, DEFAULT_AGENT_NAME);
 
-    manageFacilityPage.verifyDisabledFacility(agentCode, DEFAULT_AGENT_NAME);
-    HomePage homePageRestore = manageFacilityPage.enableFacility();
-    manageFacilityPage.verifyEnabledFacility();
-    ManageFacilityPage manageFacilityPageRestore = homePageRestore.navigateSearchFacility();
-    manageFacilityPageRestore.searchFacility(agentCode);
-    manageFacilityPageRestore.clickFacilityList(agentCode);
-    manageFacilityPage.saveFacility();
-    manageFacilityPage.verifyMessageOnFacilityScreen(DEFAULT_AGENT_NAME, "updated");
+    facilityPage.verifyDisabledFacility(agentCode, DEFAULT_AGENT_NAME);
+    HomePage homePageRestore = facilityPage.enableFacility();
+    assertEquals(facilityPage.getEnabledFacilityText(), "Yes");
+    FacilityPage facilityPageRestore = homePageRestore.navigateManageFacility();
+    facilityPageRestore.searchFacility(agentCode);
+    facilityPageRestore.clickFirstFacilityList();
+    facilityPage.saveFacility();
+    facilityPage.verifyMessageOnFacilityScreen(DEFAULT_AGENT_NAME, "updated");
     assertEquals(TRUE_FLAG, dbWrapper.getAttributeFromTable("facilities", "virtualFacility", "code", agentCode));
     homePage.logout(baseUrlGlobal);
   }
@@ -203,7 +203,8 @@ public class CreateUpdateCHW extends JsonUtility {
 
     assertTrue("Showing response as : " + responseEntityEnabledFalse.getResponse(),
       responseEntityEnabledFalse.getResponse().contains(
-        "{\"error\":\"CHW cannot be updated as it has been deleted\"}"));
+        "{\"error\":\"CHW cannot be updated as it has been deleted\"}")
+    );
 
   }
 
@@ -887,8 +888,9 @@ public class CreateUpdateCHW extends JsonUtility {
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson), CREATE_URL, POST, commTrackUser,
       "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " +
-      getJsonStringFor(agentJson),
-      responseEntityUpdated.getResponse().contains("{\"error\":\"Agent already registered\"}"));
+        getJsonStringFor(agentJson),
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Agent already registered\"}")
+    );
 
   }
 
@@ -916,8 +918,9 @@ public class CreateUpdateCHW extends JsonUtility {
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + agent_code_updated + JSON_EXTENSION, PUT, commTrackUser, "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " +
-      getJsonStringFor(agentJson),
-      responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+        getJsonStringFor(agentJson),
+      responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}")
+    );
 
   }
 

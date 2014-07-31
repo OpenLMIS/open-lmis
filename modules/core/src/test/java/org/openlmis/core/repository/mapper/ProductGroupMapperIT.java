@@ -23,6 +23,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -44,7 +46,6 @@ public class ProductGroupMapperIT {
     productGroup.setCode("PG1");
     productGroup.setName("Vaccines");
   }
-
 
   @Test
   public void shouldInsertProductGroup() throws Exception {
@@ -82,5 +83,12 @@ public class ProductGroupMapperIT {
     ProductGroup returnedProductGroup = mapper.getById(productGroup.getId());
 
     assertThat(returnedProductGroup.getName(), is("Vaccines"));
+  }
+
+  @Test
+  public void shouldGetAllProductGroups() throws Exception {
+    List<ProductGroup> result = mapper.getAll();
+
+    assertThat(result.size(), is(1));
   }
 }

@@ -41,6 +41,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   @BeforeMethod(groups = {"admin"})
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
+    dbWrapper.removeAllExistingRights("Admin");
     dbWrapper.insertFacilities("F10", "F11");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
     supervisoryNodesPage = PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
@@ -51,15 +52,16 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
     dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
+    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    homePage.navigateToUser();
+    homePage.navigateManageFacility();
     assertFalse(homePage.isSupervisoryNodeTabDisplayed());
     homePage.logout();
 
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
     loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
-    homePage.navigateToUser();
+    homePage.navigateManageFacility();
     assertTrue(homePage.isSupervisoryNodeTabDisplayed());
     supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
 
@@ -72,6 +74,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testSupervisoryNodeSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
+    dbWrapper.assignRight("Admin", "UPLOADS");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
     dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
@@ -148,6 +151,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   @Test(groups = {"admin"})
   public void testSupervisoryNodeParentSearchSortAndPagination() throws SQLException {
     dbWrapper.assignRight("Admin", "MANAGE_SUPERVISORY_NODE");
+    dbWrapper.assignRight("Admin", "UPLOADS");
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node1", null);
     dbWrapper.insertSupervisoryNode("F11", "N2", "Node2", null);
     dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
@@ -253,7 +257,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     dbWrapper.insertSupervisoryNode("F10", "N3", "Node3", "N2");
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11A", "F11B", 1, 1);
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11C", "F11D", 1, 1);
-    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11E","F11F",1,5);
+    dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F11E", "F11F", 1, 5);
 
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
@@ -277,14 +281,17 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.selectSupervisoryNodeSearchResult(1);
 
     supervisoryNodesPage.clickAssociatedFacilityMemberField();
+    assertTrue(supervisoryNodesPage.isSearchFacilityIconDisplayed());
     supervisoryNodesPage.clickFilterButton();
     testWebDriver.waitForAjax();
     supervisoryNodesPage.selectFacilityType("Warehouse");
     supervisoryNodesPage.clickApplyFilterButton();
     testWebDriver.waitForAjax();
-    searchAssociatedFacility("F11");
+    supervisoryNodesPage.searchFacility("F11");
     testWebDriver.waitForAjax();
-    supervisoryNodesPage.selectFacilityToBeAssociated(1);
+    supervisoryNodesPage.selectFacility(1);
+    testWebDriver.sleep(500);
+    assertFalse(supervisoryNodesPage.isSearchFacilityIconDisplayed());
 
     supervisoryNodesPage.clickSaveButton();
     assertEquals("Supervisory Node \"Node 4\" created successfully", supervisoryNodesPage.getSuccessMessage());
@@ -323,8 +330,10 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.enterSupervisoryNodeName("Node4");
     supervisoryNodesPage.enterSupervisoryNodeDescription("This is Node 4");
     supervisoryNodesPage.clickAssociatedFacilityMemberField();
-    searchAssociatedFacility("F10");
-    supervisoryNodesPage.selectFacilityToBeAssociated(1);
+    supervisoryNodesPage.searchFacility("F10");
+    supervisoryNodesPage.selectFacility(1);
+    testWebDriver.sleep(500);
+    assertFalse(supervisoryNodesPage.isSearchFacilityIconDisplayed());
     supervisoryNodesPage.clickSaveButton();
 
     supervisoryNodesPage.clickAddNewButton();
@@ -386,6 +395,13 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage = homePage.navigateToSupervisoryNodes();
 
     supervisoryNodesPage.clickAddNewButton();
+    assertEquals("Add supervisory node", supervisoryNodesPage.getAddSupervisoryNodeHeader());
+    assertEquals("Code *", supervisoryNodesPage.getCodeLabel());
+    assertEquals("Name *", supervisoryNodesPage.getNameLabel());
+    assertEquals("Description", supervisoryNodesPage.getDescriptionLabel());
+    assertEquals("Parent node", supervisoryNodesPage.getParentNodeLabel());
+    assertEquals("Associated facility *", supervisoryNodesPage.getAssociateFacilityLabel());
+
     supervisoryNodesPage.clickSaveButton();
     assertEquals("There are some errors in the form. Please resolve them.", supervisoryNodesPage.getSaveMessage());
     supervisoryNodesPage.clickCancelButton();
@@ -404,7 +420,7 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     dbWrapper.updateFieldValue("facilities", "enabled", "false", "code", "F10");
 
     supervisoryNodesPage.clickAssociatedFacilityMemberField();
-    searchAssociatedFacility("F10");
+    supervisoryNodesPage.searchFacility("F10");
     assertEquals("No matches found for 'F10'", supervisoryNodesPage.getNoFacilityResultMessage());
     supervisoryNodesPage.closeSearchResults();
     assertEquals("", supervisoryNodesPage.getSearchFacilityText());
@@ -420,6 +436,8 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
 
     searchNode("sup");
     supervisoryNodesPage.clickOnNode(1);
+    assertEquals("Edit supervisory node", supervisoryNodesPage.getEditSupervisoryNodeHeader());
+
     enterSupervisoryNodeDetails("N1", "Node1", "nod", "sup", 1, "Village Dispensary");
     supervisoryNodesPage.clickSaveButton();
     assertEquals("Supervisory Node \"Node1\" updated successfully", supervisoryNodesPage.getSuccessMessage());
@@ -455,13 +473,8 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
     supervisoryNodesPage.selectSupervisoryNodeSearchResult(nodeResultNumber);
     supervisoryNodesPage.clickAssociatedFacilityMemberField();
     testWebDriver.waitForAjax();
-    searchAssociatedFacility(facilityCodeOrName);
-    supervisoryNodesPage.selectFacilityToBeAssociated(1);
-  }
-
-  public void searchAssociatedFacility(String facilityName) {
-    supervisoryNodesPage.searchFacilityToBeAssociated(facilityName);
-    supervisoryNodesPage.clickSearchIcon();
+    supervisoryNodesPage.searchFacility(facilityCodeOrName);
+    supervisoryNodesPage.selectFacility(1);
   }
 
   private void verifySupervisoryNodeNameOrderOnPage(String[] nodeNames) {
@@ -484,6 +497,8 @@ public class ManageSupervisoryNodes extends TestCaseHelper {
   public void tearDown() throws SQLException {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

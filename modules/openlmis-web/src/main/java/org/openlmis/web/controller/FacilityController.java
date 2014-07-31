@@ -13,7 +13,9 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.FacilityOperatorRepository;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.model.FacilityReferenceData;
@@ -35,9 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Integer.parseInt;
 import static org.openlmis.core.domain.Facility.createFacilityToBeDeleted;
 import static org.openlmis.core.domain.Facility.createFacilityToBeRestored;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
 import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -52,32 +55,41 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class FacilityController extends BaseController {
 
+  public static final String FACILITIES = "facilities";
   @Autowired
   private FacilityService facilityService;
+
+  @Autowired
+  private FacilityOperatorRepository facilityOperatorRepository;
 
   @Autowired
   private ProgramService programService;
 
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_USER')")
-  public List<Facility> get(@RequestParam(value = "searchParam", required = false) String searchParam,
-                            @RequestParam(value = "virtualFacility", required = false) Boolean virtualFacility) {
-    if (searchParam != null) {
-      return facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam, virtualFacility);
-    } else {
-      return facilityService.getAll();
-    }
+  public ResponseEntity<OpenLmisResponse> get(@RequestParam(value = "searchParam", required = false) String searchParam,
+                                              @RequestParam(value = "columnName") String columnName,
+                                              @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                              @Value("${search.page.size}") String limit) {
+    Pagination pagination = new Pagination(page, parseInt(limit));
+    pagination.setTotalRecords(facilityService.getTotalSearchResultCountByColumnName(searchParam, columnName));
+    List<Facility> facilities = facilityService.searchBy(searchParam, columnName, pagination);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(FACILITIES, facilities);
+    response.getBody().addData("pagination", pagination);
+    return response;
   }
 
   @RequestMapping(value = "/filter-facilities", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE, MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getFilteredFacilities(@RequestParam(value = "searchParam", required = false) String searchParam,
                                                                 @RequestParam(value = "facilityTypeId", required = false) Long facilityTypeId,
                                                                 @RequestParam(value = "geoZoneId", required = false) Long geoZoneId,
+                                                                @RequestParam(value = "virtualFacility", required = false) Boolean virtualFacility,
+                                                                @RequestParam(value = "enabled", required = false) Boolean enabled,
                                                                 @Value("${search.results.limit}") String facilitySearchLimit) {
-    Integer count = facilityService.getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+    Integer count = facilityService.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
     if (count <= Integer.parseInt(facilitySearchLimit)) {
-      List<Facility> facilities = facilityService.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+      List<Facility> facilities = facilityService.searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
       return OpenLmisResponse.response("facilityList", facilities);
     } else {
       return OpenLmisResponse.response("message", "too.many.results.found");
@@ -94,7 +106,7 @@ public class FacilityController extends BaseController {
   public Map getReferenceData() {
     FacilityReferenceData facilityReferenceData = new FacilityReferenceData();
     return facilityReferenceData.addFacilityTypes(facilityService.getAllTypes()).
-      addFacilityOperators(facilityService.getAllOperators()).
+      addFacilityOperators(facilityOperatorRepository.getAll()).
       addGeographicZones(facilityService.getAllZones()).
       addPrograms(programService.getAll()).get();
   }
@@ -203,7 +215,7 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facility-types", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE, MANAGE_FACILITY_APPROVED_PRODUCT')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE, MANAGE_FACILITY_APPROVED_PRODUCT, MANAGE_USER')")
   public List<FacilityType> getFacilityTypes() {
     return facilityService.getAllTypes();
   }

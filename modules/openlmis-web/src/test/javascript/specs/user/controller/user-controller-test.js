@@ -142,49 +142,6 @@ describe("User", function () {
       expect(scope.userNameInvalid).toBeTruthy();
     });
 
-    it("should get facilities when user enters 3 characters in search", function () {
-      var facilityResponse = {"facilityList": [
-        {"code": "F101"}
-      ]};
-      httpBackend.expectGET('/facilities.json?searchParam=F10&virtualFacility=false').respond(facilityResponse);
-
-      scope.query = "F10";
-      scope.showFacilitySearchResults();
-
-      httpBackend.flush();
-      expect(scope.filteredFacilities).toEqual([
-        {"code": "F101"}
-      ]);
-    });
-
-    it("should filter facilities by facility code when more than 3 characters are entered for search", function () {
-      scope.facilityList = [
-        {"name": "Village1", "code": "F10111"},
-        {"name": "Village2", "code": "F10200"}
-      ];
-
-      scope.query = "F101";
-      scope.showFacilitySearchResults();
-
-      expect(scope.filteredFacilities).toEqual([
-        {"name": "Village1", "code": "F10111"}
-      ]);
-    });
-
-    it("should filter facilities by facility name when more than 3 characters are entered for search", function () {
-      scope.facilityList = [
-        {"name": "Village Dispensary", "code": "F10111"},
-        {"name": "Facility2", "code": "F10200"}
-      ];
-
-      scope.query = "Vill";
-      scope.showFacilitySearchResults();
-
-      expect(scope.filteredFacilities).toEqual([
-        {"name": "Village Dispensary", "code": "F10111"}
-      ]);
-    });
-
     it("should not create a user with empty role", function () {
       var userWithoutRole = {userName: "User 123", homeFacilityRoles: [
         {programId: 111, roleIds: [1]},
@@ -265,50 +222,10 @@ describe("User", function () {
       expect(location.path()).toBe('/');
     });
 
-    it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are not populated',
-      function () {
-        var facility = {id: 74, code: 'F10', name: 'facilityName'};
-        scope.allSupportedPrograms = undefined;
-
-        var data = {};
-        data.facility = facility;
-        httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
-
-        scope.setSelectedFacility(facility);
-        httpBackend.flush();
-
-        expect(scope.facilitySelected).toEqual(facility);
-      });
-
-    it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are populated',
-      function () {
-        var facility = {id: 74, code: 'F10', name: 'facilityName'};
-        scope.allSupportedPrograms = [
-          {id: 1, code: 'HIV'},
-          {id: 2, code: 'ARV'}
-        ];
-
-        var data = {};
-        data.facility = facility;
-
-        scope.setSelectedFacility(facility);
-
-        expect(scope.facilitySelected).toEqual(facility);
-      });
-
-    it('should clear everything including role assignments when user clears facility', function () {
-      scope.clearSelectedFacility();
-
-      expect(scope.facilitySelected).toEqual(null);
-      expect(scope.allSupportedPrograms).toEqual(null);
-      expect(scope.user.homeFacilityRoles).toEqual(null);
-      expect(scope.user.facilityId).toEqual(null);
-    });
-
     it('should show confirm modal when Admin clicks Disable', function () {
       spyOn(OpenLmisDialog, 'newDialog');
       spyOn(messageService, 'get');
-      httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+      httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
 
       scope.showConfirmUserDisableModal();
 
@@ -334,7 +251,7 @@ describe("User", function () {
     it('should show confirm modal when Admin clicks Restore', function () {
       spyOn(OpenLmisDialog, 'newDialog');
       spyOn(messageService, 'get');
-      httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
+      httpBackend.expectGET('/public/pages/template/dialog/dialogbox.html').respond(200);
 
       scope.showConfirmUserRestoreModal();
 
@@ -355,6 +272,163 @@ describe("User", function () {
       expect(scope.user.active).toBeTruthy();
     });
 
+    it("should open reset password modal", function () {
+      var user = {id: 1, firstName: "User", active: true};
+
+      scope.changePassword(user);
+
+      expect(scope.user.password1).toEqual("");
+      expect(scope.user.password2).toEqual("");
+      expect(scope.message).toEqual("");
+      expect(scope.passwordError).toEqual("");
+      expect(scope.changePasswordModal).toEqual(true);
+    });
+
+    it("should not open reset password modal if user is inactive", function () {
+      var user = {id: 1, firstName: "User", active: false};
+      spyOn(messageService, 'get');
+
+      scope.changePassword(user);
+
+      expect(messageService.get).toHaveBeenCalledWith("user.is.disabled");
+      expect(scope.changePasswordModal).toBeUndefined();
+      expect(scope.message).toEqual("");
+    });
+
+    it("should reset password modal", function () {
+      scope.resetPasswordModal();
+
+      expect(scope.changePasswordModal).toEqual(false);
+    });
+
+    it("should update user password if password matches and is valid", function () {
+      scope.user = {id: 1, firstName: "User"};
+      scope.user.password1 = scope.user.password2 = "Abcd1234!";
+      httpBackend.expect('PUT', '/admin/resetPassword/1.json').respond(200, {success: "password updated"});
+
+      scope.updatePassword();
+      httpBackend.flush();
+
+      expect(scope.message).toEqual("password updated")
+      expect(scope.passwordError).toEqual(undefined)
+    });
+
+    it("should update show error if password is not valid", function () {
+      scope.user = {id: 1, firstName: "User"};
+      scope.user.password1 = scope.user.password2 = "invalid";
+      spyOn(messageService, 'get');
+
+      scope.updatePassword();
+
+      expect(messageService.get).toHaveBeenCalledWith("error.password.invalid");
+    });
+
+    it("should update show error if passwords do not match", function () {
+      scope.user = {id: 1, firstName: "User"};
+      scope.user.password1 = "Abcd1234!";
+      scope.user.password2 = "invalid";
+      spyOn(messageService, 'get');
+
+      scope.updatePassword();
+
+      expect(messageService.get).toHaveBeenCalledWith("error.password.mismatch");
+    });
+
+    it('should not toggle slider when there is facility selected', function () {
+      scope.facilitySelected = {name: "fac"};
+      scope.showSlider = true;
+
+      scope.toggleSlider();
+
+      expect(scope.showSlider).toBeTruthy();
+    });
+
+    it('should toggle slider when there is no facility selected', function () {
+      scope.facilitySelected = undefined;
+      scope.showSlider = true;
+
+      scope.toggleSlider();
+
+      expect(scope.showSlider).toBeFalsy();
+      expect(scope.extraParams.virtualFacility).toBeFalsy();
+      expect(scope.extraParams.enabled).toBeNull();
+    });
+
+    it('should clear selected facility if the result is true', function () {
+      scope.facilitySelected = {};
+      scope.allSupportedPrograms = [
+        {}
+      ];
+      scope.user.homeFacilityRoles = [
+        {}
+      ];
+      scope.user.facilityId = 1;
+
+      scope.clearSelectedFacility(true);
+
+      expect(scope.facilitySelected).toBeNull();
+      expect(scope.allSupportedPrograms).toBeNull();
+      expect(scope.user.homeFacilityRoles).toBeNull();
+      expect(scope.user.facilityId).toBeNull();
+    });
+
+    it('should not clear selected facility if the result is false', function () {
+      scope.facilitySelected = {};
+      scope.allSupportedPrograms = [
+        {}
+      ];
+      scope.user.homeFacilityRoles = [
+        {}
+      ];
+      scope.user.facilityId = 1;
+
+      scope.clearSelectedFacility(false);
+
+      expect(scope.facilitySelected).not.toBeNull();
+      expect(scope.allSupportedPrograms).not.toBeNull();
+      expect(scope.user.homeFacilityRoles).not.toBeNull();
+      expect(scope.user.facilityId).not.toBeNull();
+    });
+
+    it('should associate facility', function () {
+      var supportedProgramsList = [
+        {id: 1, code: 'HIV', program:{push:true}},
+        {id: 2, code: 'ARV', program:{push:false}}
+      ];
+      var facility = {id: 74, code: 'F10', name: 'facilityName', supportedPrograms:supportedProgramsList};
+      scope.allSupportedPrograms = undefined;
+      var data = {};
+      data.facility = facility;
+      scope.showSlider = true;
+      httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
+
+      scope.associate(facility);
+      httpBackend.flush();
+
+      expect(scope.facilitySelected).toEqual(facility);
+      expect(scope.query).toBeNull();
+      expect(scope.user.facilityId).toEqual(facility.id);
+      expect(scope.showSlider).toBeFalsy();
+      expect(scope.allSupportedPrograms).toEqual([supportedProgramsList[1]]);
+    });
+
+    it('should associate facility when there are programs supported', function () {
+      var facility = {id: 74, code: 'F10', name: 'facilityName'};
+      scope.allSupportedPrograms = [
+        {id: 1, code: 'HIV', push:true},
+        {id: 2, code: 'ARV', push:false}
+      ];
+      var data = {};
+      data.facility = facility;
+      scope.showSlider = true;
+
+      scope.associate(facility);
+
+      expect(scope.facilitySelected).toEqual(facility);
+      expect(scope.query).toBeNull();
+      expect(scope.user.facilityId).toEqual(facility.id);
+      expect(scope.showSlider).toBeFalsy();
+    });
   });
 
   describe("User controller resolve", function () {
@@ -459,8 +533,6 @@ describe("User", function () {
       httpBackend.flush();
       expect(deferredObject.resolve).toHaveBeenCalledWith(enabledWarehouses);
     })
-
-
   })
 
 });

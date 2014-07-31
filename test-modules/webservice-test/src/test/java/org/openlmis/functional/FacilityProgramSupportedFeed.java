@@ -87,7 +87,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
+    FacilityPage facilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
     String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
@@ -95,22 +95,22 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     String facilityCodePrefix = "FCcode";
     String facilityNamePrefix = "FCname";
 
-    String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, "");
-    manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    String date_time = facilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, "");
+    facilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
 
     String str_date = date_time.split("-")[0].substring(0, 6) + "25";
-    long dateLong = new SimpleDateFormat("yyyyMMdd zzz").parse(str_date + " GMT").getTime();
+    long dateLong = new SimpleDateFormat("yyyyMMdd").parse(str_date + " GMT").getTime();
 
     ResponseEntity responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
     String expected = "\"facilityCode\":\"" + facilityCodePrefix + date_time + "\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":" + dateLong;
     assertTrue(responseEntity.getResponse().contains(expected));
 
-    homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility(date_time);
-    manageFacilityPage.clickFacilityList(date_time);
-    manageFacilityPage.addProgram("VACCINES", true);
-    manageFacilityPage.saveFacility();
+    homePage.navigateManageFacility();
+    facilityPage.searchFacility(date_time);
+    facilityPage.clickFirstFacilityList();
+    facilityPage.addProgram("VACCINES", true);
+    facilityPage.saveFacility();
 
     Thread.sleep(2000);
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
@@ -119,11 +119,11 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     assertTrue("responseEntity.getResponse() : " + responseEntity.getResponse(), feedJSONList.get(1).contains("\"active\":true"));
     assertTrue("responseEntity.getResponse() : " + responseEntity.getResponse(), feedJSONList.get(1).contains("\"active\":false"));
 
-    manageFacilityPage = homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility(date_time);
-    manageFacilityPage.clickFacilityList(date_time);
-    manageFacilityPage.removeFirstProgram();
-    manageFacilityPage.saveFacility();
+    facilityPage = homePage.navigateManageFacility();
+    facilityPage.searchFacility(date_time);
+    facilityPage.clickFirstFacilityList();
+    facilityPage.removeFirstProgram();
+    facilityPage.saveFacility();
 
     Thread.sleep(2000);
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
@@ -132,11 +132,11 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     assertTrue("feedJSONList.get(2) : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"active\":false"));
     assertFalse("feedJSONList.get(2) : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"active\":true"));
 
-    manageFacilityPage = homePage.navigateSearchFacility();
-    manageFacilityPage.searchFacility(date_time);
-    manageFacilityPage.clickFacilityList(date_time);
-    manageFacilityPage.activeInactiveFirstProgram();
-    manageFacilityPage.saveFacility();
+    facilityPage = homePage.navigateManageFacility();
+    facilityPage.searchFacility(date_time);
+    facilityPage.clickFirstFacilityList();
+    facilityPage.activeInactiveFirstProgram();
+    facilityPage.saveFacility();
 
     Thread.sleep(2000);
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");

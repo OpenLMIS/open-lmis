@@ -8,101 +8,51 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function FacilitySearchFilterController($scope, FacilityTypes, GeographicZoneSearch, Facilities, messageService) {
+function FacilitySearchFilterController($scope, Facilities) {
 
-  $scope.showResults = false;
   $scope.type = {};
   $scope.zone = {};
-
-  $scope.label = !$scope.facilityType ? messageService.get("create.facility.select.facilityType") :
-    messageService.get("label.change.facility.type");
-
-  $scope.showFilterModal = function () {
-    $scope.filterModal = true;
-    FacilityTypes.get({}, function (data) {
-      $scope.facilityTypes = data.facilityTypeList;
-    }, {});
-  };
 
   $scope.showFacilitySearchResults = function () {
     if (!$scope.facilitySearchParam) return;
 
     $scope.facilityQuery = $scope.facilitySearchParam.trim();
-    Facilities.get({"searchParam": $scope.facilityQuery, "facilityTypeId": $scope.type.id, "geoZoneId": $scope.zone.id}, function (data) {
-      $scope.facilityList = data.facilityList;
-      $scope.facilityResultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
-      $scope.message = data.message;
-    });
-  };
-
-  $scope.clearFacilitySearch = function () {
-    angular.element("#search .search-list").slideUp("slow", function () {
-      $scope.facilitySearchParam = undefined;
-      $scope.facilityList = undefined;
-      $scope.facilityResultCount = undefined;
-      $scope.$apply();
-      angular.element('#searchFacility').focus();
-    });
-  };
-
-  $scope.searchGeoZone = function () {
-    if (!$scope.geoZoneSearchParam) return;
-    $scope.geoZoneQuery = $scope.geoZoneSearchParam.trim();
-
-    GeographicZoneSearch.get({"searchParam": $scope.geoZoneQuery}, function (data) {
-      $scope.geoZoneList = data.geoZones;
-      $scope.geoZonesResultCount = isUndefined($scope.geoZoneList) ? 0 : $scope.geoZoneList.length;
-      $scope.manyGeoZoneMessage = data.message;
-      $scope.levels = _.uniq(_.pluck(_.pluck($scope.geoZoneList, 'level'), 'name'));
-      $scope.showResults = true;
-      angular.element("#filter .search-list").show();
-    });
+    Facilities.get({
+        "searchParam": $scope.facilityQuery,
+        "facilityTypeId": $scope.type.id,
+        "geoZoneId": $scope.zone.id,
+        "virtualFacility": $scope.extraParams.virtualFacility,
+        "enabled": $scope.extraParams.enabled},
+      function (data) {
+        $scope.facilityList = data.facilityList;
+        $scope.facilityResultCount = isUndefined($scope.facilityList) ? 0 : $scope.facilityList.length;
+        $scope.resultCount = $scope.facilityResultCount;
+        $scope.message = data.message;
+      });
   };
 
   $scope.triggerSearch = function (event) {
     if (event.keyCode === 13) {
-      $scope.searchGeoZone();
+      $scope.showFacilitySearchResults();
     }
   };
 
-  $scope.setGeoZone = function (geoZone) {
-    $scope.selectedGeoZone = geoZone;
-    $scope.clearGeoZoneSearch();
+  $scope.clearFacilitySearch = function () {
+    $scope.facilitySearchParam = undefined;
+    $scope.facilityList = undefined;
+    $scope.facilityResultCount = undefined;
+    angular.element('#searchFacility').focus();
   };
 
-  $scope.setFacilityType = function () {
-    $scope.selectedFacilityType = $scope.facilityType;
-    $scope.label = $scope.facilityType ? messageService.get("label.change.facility.type") :
-      messageService.get("create.facility.select.facilityType");
-    $scope.facilityType = undefined;
-  };
-
-  $scope.setFilters = function () {
-    $scope.zone = $scope.selectedGeoZone || {};
-    $scope.type = $scope.selectedFacilityType || {};
-    $scope.filterModal = false;
-    $scope.showFacilitySearchResults();
-  };
-
-  $scope.clearGeoZoneSearch = function () {
-    $scope.showResults = false;
-    $scope.geoZoneList = [];
-    $scope.geoZoneQuery = undefined;
-    $scope.geoZoneSearchParam = undefined;
+  $scope.clearVisibleFilters = function () {
+    $scope.type = {};
+    $scope.zone = {};
   };
 
   $scope.associate = function (facility) {
-    $scope.$parent.$parent.associate(facility);
-    $scope.$parent.$parent.showSlider = !$scope.$parent.$parent.showSlider;
-  };
-
-  $scope.cancelFilters = function () {
-    $scope.selectedFacilityType = $scope.type;
-    $scope.selectedGeoZone = $scope.zone;
-    $scope.filterModal = false;
-  };
-
-  $scope.showLevel = function (index) {
-    return !((index > 0 ) && ($scope.geoZoneList[index].level.name === $scope.geoZoneList[index - 1].level.name));
+    $scope.$parent.associate(facility);
+    $scope.clearFacilitySearch();
+    $scope.clearVisibleFilters();
+    $scope.$broadcast('singleSelectSearchCleared');
   };
 }

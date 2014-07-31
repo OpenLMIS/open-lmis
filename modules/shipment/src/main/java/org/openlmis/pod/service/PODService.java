@@ -32,7 +32,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.core.domain.RightName.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
 
 /**

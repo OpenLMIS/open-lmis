@@ -11,13 +11,12 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-
-import java.util.NoSuchElementException;
 
 import static org.openqa.selenium.support.How.ID;
 
@@ -95,12 +94,6 @@ public class SupplyLinePage extends FilterSearchPage {
   @FindBy(how = ID, using = "associatedFacilityField")
   private static WebElement associatedFacilityField = null;
 
-  @FindBy(how = ID, using = "searchFacility")
-  private static WebElement searchFacility = null;
-
-  @FindBy(how = ID, using = "searchButton")
-  private static WebElement searchButton = null;
-
   @FindBy(how = ID, using = "exportOrdersFalse")
   private static WebElement exportOrdersFalse = null;
 
@@ -112,6 +105,27 @@ public class SupplyLinePage extends FilterSearchPage {
 
   @FindBy(how = ID, using = "clearSearch")
   private static WebElement clearSearch = null;
+
+  @FindBy(how = ID, using = "addNewSupplyLineHeader")
+  private static WebElement addSupplyLineHeader = null;
+
+  @FindBy(how = ID, using = "editSupplyLineHeader")
+  private static WebElement editSupplyLineHeader = null;
+
+  @FindBy(how = ID, using = "programLabel")
+  private static WebElement programLabel = null;
+
+  @FindBy(how = ID, using = "facilityExportOrdersLabel")
+  private static WebElement facilityExportOrdersLabel = null;
+
+  @FindBy(how = ID, using = "supervisoryNodeLabel")
+  private static WebElement supervisoryNodeLabel = null;
+
+  @FindBy(how = ID, using = "descriptionLabel")
+  private static WebElement descriptionLabel = null;
+
+  @FindBy(how = ID, using = "supplyingFacilityLabel")
+  private static WebElement supplyingFacilityLabel = null;
 
   public SupplyLinePage(TestWebDriver driver) {
     super(driver);
@@ -314,12 +328,6 @@ public class SupplyLinePage extends FilterSearchPage {
     associatedFacilityField.click();
   }
 
-  public void searchAssociatedFacility(String facilityCodeOrName) {
-    testWebDriver.waitForElementToAppear(searchFacility);
-    sendKeys(searchFacility, facilityCodeOrName);
-    searchButton.click();
-  }
-
   public void selectExportOrderFlag(boolean exportOrdersOption) {
     if (exportOrdersOption)
       exportOrdersTrue.click();
@@ -339,12 +347,6 @@ public class SupplyLinePage extends FilterSearchPage {
     description.sendKeys(desc);
   }
 
-  public void selectAssociatedFacilityResult(int rowNumber) {
-    WebElement facilityResult = testWebDriver.getElementById("facilityResult" + (rowNumber - 1));
-    testWebDriver.waitForElementToAppear(facilityResult);
-    facilityResult.click();
-  }
-
   public String getSaveErrorMessage() {
     testWebDriver.waitForElementToAppear(saveErrorMsgDiv);
     return saveErrorMsgDiv.getText();
@@ -353,6 +355,41 @@ public class SupplyLinePage extends FilterSearchPage {
   public void clickClearNodeSearchResult() {
     testWebDriver.waitForElementToAppear(clearSearch);
     clearSearch.click();
+  }
+
+  public String getAddSupplyLineHeader() {
+    testWebDriver.waitForElementToAppear(addSupplyLineHeader);
+    return addSupplyLineHeader.getText();
+  }
+
+  public String getEditSupplyLineHeader() {
+    testWebDriver.waitForElementToAppear(editSupplyLineHeader);
+    return editSupplyLineHeader.getText();
+  }
+
+  public String getProgramLabel() {
+    testWebDriver.waitForElementToAppear(programLabel);
+    return programLabel.getText();
+  }
+
+  public String getFacilityExportOrdersLabel() {
+    testWebDriver.waitForElementToAppear(facilityExportOrdersLabel);
+    return facilityExportOrdersLabel.getText();
+  }
+
+  public String getSupervisoryNodeLabel() {
+    testWebDriver.waitForElementToAppear(supervisoryNodeLabel);
+    return supervisoryNodeLabel.getText();
+  }
+
+  public String getDescriptionLabel() {
+    testWebDriver.waitForElementToAppear(descriptionLabel);
+    return descriptionLabel.getText();
+  }
+
+  public String getSupplyingFacilityLabel() {
+    testWebDriver.waitForElementToAppear(supplyingFacilityLabel);
+    return supplyingFacilityLabel.getText();
   }
 }
 

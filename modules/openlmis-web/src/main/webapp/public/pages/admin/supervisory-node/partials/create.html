@@ -9,19 +9,21 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-  <div ng-hide="supervisoryNode.id"><h2 id="addNewSupervisoryNodeHeader"
-                                        openlmis-message="header.supervisory.node.add.new"></h2></div>
-  <div ng-show="supervisoryNode.id"><h2 id="editSupervisoryNodeHeader"
-                                        openlmis-message="header.supervisory.node.edit"></h2></div>
+  <div ng-hide="supervisoryNode.id">
+    <h2 id="addNewSupervisoryNodeHeader" openlmis-message="header.supervisory.node.add.new"></h2>
+  </div>
+  <div ng-show="supervisoryNode.id">
+    <h2 id="editSupervisoryNodeHeader" openlmis-message="header.supervisory.node.edit"></h2>
+  </div>
 
-  <form ng-submit="saveSupervisoryNode()" name="supervisoryNodeForm" novalidate>
+  <form name="supervisoryNodeForm" novalidate>
     <div class="app-form">
 
       <div id="supervisoryNodeFormGroup" class="form-group clear-top">
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="code">
+            <label id="codeLabel" for="code">
               <span openlmis-message="header.code"></span>
               <span class="label-required"> *</span>
             </label>
@@ -38,7 +40,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="name">
+            <label id="nameLabel" for="name">
               <span openlmis-message="header.name"></span>
               <span class="label-required"> *</span>
             </label>
@@ -55,7 +57,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="description" openlmis-message="label.description"></label>
+            <label id="descriptionLabel" for="description" openlmis-message="label.description"></label>
 
             <div class="form-field">
               <input ng-model="supervisoryNode.description" name="description" id="description" type="text"
@@ -66,7 +68,7 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label openlmis-message="header.parent.node"></label>
+            <label id="parentNodeLabel" openlmis-message="header.parent.node"></label>
 
             <div class="form-field autosuggest-input">
               <div class="suggest-field">
@@ -77,7 +79,7 @@
                 <div id="search_list" class="search-list" ng-show="query.length > 2">
                   <ul>
                     <li ng-repeat="node in filteredNodes">
-                      <a href="" id="result{{$index}}" ng-click="setSelectedParentNode(node)">{{node.name}}</a>
+                      <a href="" id="result{{$index}}" ng-click="setSelectedParentNode(node)" ng-bind="node.name"></a>
                     </li>
                     <li ng-show="resultCount == 0">
                       <a href="" openlmis-message="msg.no.matches|query"></a>
@@ -96,15 +98,15 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label>
+            <label id="associatedFacilityLabel">
               <span openlmis-message="label.associated.facility"></span>
               <span class="label-required"> *</span>
             </label>
 
             <div class="form-field">
               <div id="associatedFacilityField" class="input-div associate-facility clearfix"
-                   ng-click="showSlider = !showSlider;">
-              <div class="facility-associated">
+                   ng-click="toggleSlider()">
+                <div class="facility-associated">
                   <span class="placeholder" ng-show="!supervisoryNode.facility"
                         openlmis-message="label.no.facility.selected"></span>
                   <span ng-show="supervisoryNode.facility">{{supervisoryNode.facility.code}} - {{supervisoryNode.facility.name}}</span>
@@ -120,7 +122,8 @@
         </div>
 
         <div class="position-relative">
-          <ng-include src="'/public/pages/admin/shared/search-filter-facilities.html'"></ng-include>
+          <div class="slider" slider="showSlider" ng-include
+               src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
         </div>
 
       </div>
@@ -132,7 +135,7 @@
                  ng-click="cancel()"/>
         </div>
 
-        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
+        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
       </div>
 
     </div>

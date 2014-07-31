@@ -43,7 +43,6 @@ public class ManageSupplyLine extends TestCaseHelper {
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
     dbWrapper.removeAllExistingRights("Admin");
-    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     dbWrapper.insertFacilitiesWithFacilityTypeIDAndGeoZoneId("F10", "F11", 1, 1);
     dbWrapper.updateFieldValue("facilities", "name", "central Hospital", "code", "F11");
     dbWrapper.updateFieldValue("programs", "name", "malaria", "code", "MALARIA");
@@ -61,6 +60,7 @@ public class ManageSupplyLine extends TestCaseHelper {
 
   @Test(groups = {"admin"})
   public void testRightsNotPresent() throws SQLException {
+    dbWrapper.assignRight("Admin", "MANAGE_FACILITY");
     HomePage homePage = loginPage.loginAs(testData.get(ADMIN), testData.get(PASSWORD));
     testWebDriver.waitForAjax();
     homePage.navigateManageFacility();
@@ -242,9 +242,16 @@ public class ManageSupplyLine extends TestCaseHelper {
     supplyLinePage = homePage.navigateToSupplyLine();
     supplyLinePage.clickAddNewButton();
 
+    assertEquals("Add supply line", supplyLinePage.getAddSupplyLineHeader());
+    assertEquals("Program *", supplyLinePage.getProgramLabel());
+    assertEquals("Facility exports orders? *", supplyLinePage.getFacilityExportOrdersLabel());
+    assertEquals("Supplying facility *", supplyLinePage.getSupplyingFacilityLabel());
+    assertEquals("Supervisory node *", supplyLinePage.getSupervisoryNodeLabel());
+    assertEquals("Description", supplyLinePage.getDescriptionLabel());
+
     supplyLinePage.enterValuesInSupplyLineFields("Malaria", "node", false);
     supplyLinePage.clickSupplyingFacilityField();
-    supplyLinePage.searchAssociatedFacility("F11");
+    supplyLinePage.searchFacility("F11");
     testWebDriver.waitForAjax();
     supplyLinePage.clickFilterButton();
     testWebDriver.waitForAjax();
@@ -253,7 +260,7 @@ public class ManageSupplyLine extends TestCaseHelper {
     supplyLinePage.selectGeographicZoneResult(1);
     supplyLinePage.clickApplyFilterButton();
     testWebDriver.sleep(500);
-    supplyLinePage.selectAssociatedFacilityResult(1);
+    supplyLinePage.selectFacility(1);
 
     supplyLinePage.clickSaveButton();
     assertEquals("Supply line created successfully", supplyLinePage.getSuccessMessage());
@@ -276,9 +283,9 @@ public class ManageSupplyLine extends TestCaseHelper {
 
     supplyLinePage.enterValuesInSupplyLineFields("HIV", "node", false);
     supplyLinePage.clickSupplyingFacilityField();
-    supplyLinePage.searchAssociatedFacility("F11");
+    supplyLinePage.searchFacility("F11");
     testWebDriver.waitForAjax();
-    supplyLinePage.selectAssociatedFacilityResult(1);
+    supplyLinePage.selectFacility(1);
     supplyLinePage.clickSaveButton();
 
     assertEquals("Supply line created successfully", supplyLinePage.getSuccessMessage());
@@ -289,14 +296,15 @@ public class ManageSupplyLine extends TestCaseHelper {
     supplyLinePage.enterDescription("Description");
 
     supplyLinePage.clickSupplyingFacilityField();
-    supplyLinePage.searchAssociatedFacility("F11A");
+    supplyLinePage.searchFacility("F11A");
     testWebDriver.waitForAjax();
-    supplyLinePage.selectAssociatedFacilityResult(1);
+    supplyLinePage.selectFacility(1);
     supplyLinePage.clickSaveButton();
 
     assertEquals("Supply line updated successfully", supplyLinePage.getSuccessMessage());
     supplyLinePage.clickViewHereLink();
 
+    assertEquals("Edit supply line", supplyLinePage.getEditSupplyLineHeader());
     supplyLinePage.clickClearNodeSearchResult();
     supplyLinePage.searchSupervisoryNode("node");
     supplyLinePage.selectSupervisoryNodeResult(1);
@@ -344,8 +352,8 @@ public class ManageSupplyLine extends TestCaseHelper {
     assertEquals("There are some errors in the form. Please resolve them.", supplyLinePage.getSaveErrorMessage());
 
     supplyLinePage.clickSupplyingFacilityField();
-    supplyLinePage.searchAssociatedFacility("F11");
-    supplyLinePage.selectAssociatedFacilityResult(1);
+    supplyLinePage.searchFacility("F11");
+    supplyLinePage.selectFacility(1);
     supplyLinePage.clickSaveButton();
     testWebDriver.sleep(1000);
     assertEquals("Supervisory node and Program already has a supplying facility assigned to it.", supplyLinePage.getSaveErrorMessage());

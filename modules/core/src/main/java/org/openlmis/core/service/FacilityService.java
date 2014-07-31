@@ -21,6 +21,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.FacilityFeedDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
+import org.openlmis.core.repository.FacilityTypeRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,9 @@ public class FacilityService {
   private FacilityRepository facilityRepository;
 
   @Autowired
+  private FacilityTypeRepository facilityTypeRepository;
+
+  @Autowired
   private ProgramSupportedService programSupportedService;
 
   @Autowired
@@ -70,16 +74,8 @@ public class FacilityService {
     programSupportedService.updateSupportedPrograms(facility);
   }
 
-  public List<Facility> getAll() {
-    return facilityRepository.getAll();
-  }
-
   public List<FacilityType> getAllTypes() {
-    return facilityRepository.getAllTypes();
-  }
-
-  public List<FacilityOperator> getAllOperators() {
-    return facilityRepository.getAllOperators();
+    return facilityTypeRepository.getAll();
   }
 
   public List<GeographicZone> getAllZones() {
@@ -102,8 +98,8 @@ public class FacilityService {
     notify(asList(facility));
   }
 
-  public List<Facility> getUserSupervisedFacilities(Long userId, Long programId, Right... rights) {
-    List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, rights);
+  public List<Facility> getUserSupervisedFacilities(Long userId, Long programId, String... rightNames) {
+    List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, rightNames);
     List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
     return facilityRepository.getFacilitiesBy(programId, requisitionGroups);
   }
@@ -149,11 +145,11 @@ public class FacilityService {
     }
   }
 
-  public List<Facility> getForUserAndRights(Long userId, Right... rights) {
-    List<SupervisoryNode> supervisoryNodesInHierarchy = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, rights);
+  public List<Facility> getForUserAndRights(Long userId, String... rightNames) {
+    List<SupervisoryNode> supervisoryNodesInHierarchy = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, rightNames);
     List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodesInHierarchy);
     final Set<Facility> userFacilities = new HashSet<>(facilityRepository.getAllInRequisitionGroups(requisitionGroups));
-    final Facility homeFacility = facilityRepository.getHomeFacilityForRights(userId, rights);
+    final Facility homeFacility = facilityRepository.getHomeFacilityForRights(userId, rightNames);
 
     if (homeFacility != null) userFacilities.add(homeFacility);
 
@@ -162,7 +158,7 @@ public class FacilityService {
   }
 
   public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
-    return facilityRepository.getFacilityTypeByCode(facilityType);
+    return facilityTypeRepository.getByCodeOrThrowException(facilityType.getCode());
   }
 
   public Facility getByCode(Facility facility) {
@@ -186,11 +182,8 @@ public class FacilityService {
     return getById(facilityId);
   }
 
-  public List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(String query, Boolean virtualFacility) {
-    if (virtualFacility == null) {
-      return facilityRepository.searchFacilitiesByCodeOrName(query);
-    }
-    return facilityRepository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
+  public List<Facility> searchBy(String searchParam, String columnName, Pagination pagination) {
+    return facilityRepository.searchBy(searchParam,columnName,pagination);
   }
 
   public List<Facility> getEnabledWarehouses() {
@@ -240,11 +233,19 @@ public class FacilityService {
     return facility;
   }
 
-  public Integer getCountOfEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId){
-    return facilityRepository.getCountOfEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+  public Integer getFacilitiesCountBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled){
+    return facilityRepository.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
   }
 
-  public List<Facility> getEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId) {
-    return facilityRepository.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+  public List<Facility> searchFacilitiesBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled) {
+    return facilityRepository.searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
+  }
+
+  public Integer getTotalSearchResultCountByColumnName(String searchParam, String columnName) {
+    if(columnName.equalsIgnoreCase("Facility"))
+    {
+      return facilityRepository.getTotalSearchResultCount(searchParam);
+    }
+    return facilityRepository.getTotalSearchResultCountByGeographicZone(searchParam);
   }
 }

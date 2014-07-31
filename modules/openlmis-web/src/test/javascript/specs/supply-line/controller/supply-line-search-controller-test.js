@@ -10,12 +10,13 @@
 
 describe("Supply Line Search Controller", function () {
 
-  var scope, $httpBackend, ctrl, navigateBackService;
+  var scope, $httpBackend, ctrl, navigateBackService, location;
   beforeEach(module('openlmis'));
 
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _navigateBackService_, $location) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
+    location = $location;
     scope.query = "Nod";
     navigateBackService = _navigateBackService_;
     navigateBackService.query = '';
@@ -40,7 +41,25 @@ describe("Supply Line Search Controller", function () {
     expect(scope.totalItems).toEqual(100);
   });
 
-  it('should not get supply Lines if query is undefined ', function () {
+  it('should get all supply Lines in a page depending on last query', function () {
+    var supplyLine = {program: {name: "P1"}, supplyingFacility: {name: "Fac 1"}, supervisoryNode: {name: "Node 1"}, description: "desc"};
+    var pagination = {"page": 1, "pageSize": 10, "numberOfPages": 10, "totalRecords": 100};
+    var response = {"supplyLines": [supplyLine], "pagination": pagination};
+    scope.query = "Nod";
+    var lastQuery = "node";
+    scope.selectedSearchOption.value = 'supervisoryNode';
+    $httpBackend.when('GET', '/supplyLines/search.json?column=supervisoryNode&page=1&searchParam=' + lastQuery).respond(response);
+    scope.search(1, lastQuery);
+    $httpBackend.flush();
+
+    expect(scope.supplyLines).toEqual([supplyLine]);
+    expect(scope.pagination).toEqual(pagination);
+    expect(scope.currentPage).toEqual(1);
+    expect(scope.showResults).toEqual(true);
+    expect(scope.totalItems).toEqual(100);
+  });
+
+  it('should not get supply lines if query is undefined ', function () {
     spyOn($httpBackend, "expectGET");
     scope.query = "";
 
@@ -101,13 +120,14 @@ describe("Supply Line Search Controller", function () {
 
   it('should get results according to specified page', function () {
     scope.currentPage = 5;
+    scope.searchedQuery = "Nod";
     var searchSpy = spyOn(scope, 'search');
 
     scope.$apply(function () {
       scope.currentPage = 6;
     });
 
-    expect(searchSpy).toHaveBeenCalledWith(6);
+    expect(searchSpy).toHaveBeenCalledWith(6, scope.searchedQuery);
   });
 
   it('should not search records when currentPage changed to 0', function () {
@@ -119,5 +139,17 @@ describe("Supply Line Search Controller", function () {
     });
 
     expect(searchSpy).not.toHaveBeenCalledWith(0);
+  });
+
+  it("should save query into shared service on clicking edit link",function(){
+    spyOn(navigateBackService, 'setData');
+    spyOn(location, 'path');
+    scope.query = "node";
+    scope.selectedSearchOption = "supervisory";
+
+    scope.edit(1);
+
+    expect(navigateBackService.setData).toHaveBeenCalledWith({query: "node", selectedSearchOption: "supervisory" });
+    expect(location.path).toHaveBeenCalledWith('edit/1');
   });
 });

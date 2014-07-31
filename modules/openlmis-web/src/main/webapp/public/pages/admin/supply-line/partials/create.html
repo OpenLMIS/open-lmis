@@ -27,7 +27,7 @@
         <div class="form-row clearfix">
 
           <div class="form-cell">
-            <label>
+            <label id="programLabel">
               <span openlmis-message="program.header"></span>
               <span class="label-required"> *</span>
             </label>
@@ -43,13 +43,14 @@
           </div>
 
           <div class="form-cell">
-            <label>
+            <label id="facilityExportOrdersLabel">
               <span openlmis-message="label.facility.export.orders"></span>
               <span class="label-required"> *</span>
             </label>
 
             <div class="form-field radio-group">
-              <input id="exportOrdersTrue" ng-model="supplyLine.exportOrders" type="radio" name="exportOrders" ng-value="true"
+              <input id="exportOrdersTrue" ng-model="supplyLine.exportOrders" type="radio" name="exportOrders"
+                     ng-value="true"
                      ng-required="true"/>
               <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
               <input id="exportOrdersFalse" ng-model="supplyLine.exportOrders" type="radio" name="exportOrders"
@@ -67,7 +68,7 @@
         <div class="form-row clearfix">
 
           <div class="form-cell">
-            <label>
+            <label id="supervisoryNodeLabel">
               <span openlmis-message="label.supervisory.node"></span>
               <span class="label-required"> *</span>
             </label>
@@ -100,7 +101,7 @@
           </div>
 
           <div class="form-cell">
-            <label for="description" openlmis-message="label.description"></label>
+            <label id="descriptionLabel" for="description" openlmis-message="label.description"></label>
 
             <div class="form-field">
               <input ng-model="supplyLine.description" name="description" id="description" type="text"
@@ -113,14 +114,14 @@
         <div class="form-row clearfix">
 
           <div class="form-cell">
-            <label>
+            <label id="supplyingFacilityLabel">
               <span openlmis-message="label.supplying.facility"></span>
               <span class="label-required"> *</span>
             </label>
 
             <div class="form-field">
               <div id="associatedFacilityField" class="input-div associate-facility clearfix"
-                   ng-click="showSlider = !showSlider;">
+                   ng-click="toggleSlider()">
                 <div class="facility-associated">
                   <span class="placeholder" ng-show="!supplyLine.supplyingFacility"
                         openlmis-message="label.no.facility.selected"></span>
@@ -140,9 +141,8 @@
         </div>
 
         <div class="position-relative">
-
-          <ng-include src="'/public/pages/admin/shared/search-filter-facilities.html'"></ng-include>
-
+          <div class="slider" ng-include="'/public/pages/admin/shared/search-filter-facilities.html'"
+               slider="showSlider"></div>
         </div>
 
       </div>
@@ -158,7 +158,7 @@
 
         </div>
 
-        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
+        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
 
       </div>
 

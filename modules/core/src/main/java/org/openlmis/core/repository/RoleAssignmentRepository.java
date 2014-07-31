@@ -12,7 +12,6 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Closure;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.repository.mapper.RoleAssignmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.forAllDo;
-import static org.openlmis.core.domain.Right.commaSeparateRightNames;
+import static org.openlmis.core.domain.RightName.commaSeparateRightNames;
 
 /**
  * RoleAssignmentRepository is Repository class for RoleAssignment related database operations.
@@ -38,8 +37,8 @@ public class RoleAssignmentRepository {
     this.mapper = roleAssignmentMapper;
   }
 
-  public List<RoleAssignment> getRoleAssignmentsForUserWithRight(Right right, Long userId) {
-    return mapper.getRoleAssignmentsWithGivenRightForAUser(right, userId);
+  public List<RoleAssignment> getRoleAssignmentsForUserWithRight(String rightName, Long userId) {
+    return mapper.getRoleAssignmentsWithGivenRightForAUser(rightName, userId);
   }
 
   public void deleteAllRoleAssignmentsForUser(Long id) {
@@ -54,8 +53,8 @@ public class RoleAssignmentRepository {
     return mapper.getHomeFacilityRoles(userId);
   }
 
-  public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Long userId, Long programId, Right... rights) {
-    return mapper.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, commaSeparateRightNames(rights));
+  public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Long userId, Long programId, String... rightNames) {
+    return mapper.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, commaSeparateRightNames(rightNames));
   }
 
   public RoleAssignment getAdminRole(Long userId) {
@@ -63,10 +62,10 @@ public class RoleAssignmentRepository {
   }
 
   public void insert(List<RoleAssignment> roleAssignments, final Long userId) {
-    if(roleAssignments == null) return;
+    if (roleAssignments == null) return;
 
     for (final RoleAssignment roleAssignment : roleAssignments) {
-      if(roleAssignment == null) continue;
+      if (roleAssignment == null) continue;
       forAllDo(roleAssignment.getRoleIds(), new Closure() {
         @Override
         public void execute(Object o) {
@@ -80,5 +79,9 @@ public class RoleAssignmentRepository {
 
   public List<RoleAssignment> getAllocationRoles(Long userId) {
     return mapper.getAllocationRoles(userId);
+  }
+
+  public RoleAssignment getReportingRole(Long userId) {
+    return mapper.getReportingRole(userId);
   }
 }

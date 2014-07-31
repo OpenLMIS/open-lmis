@@ -89,7 +89,8 @@ public class LossesAndAdjustmentsMapperIT {
     programProduct.setProductCategory(category);
     programProductMapper.insert(programProduct);
 
-    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct("warehouse", programProduct, 3);
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct("warehouse",
+      programProduct, 3.3);
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
 
@@ -116,7 +117,8 @@ public class LossesAndAdjustmentsMapperIT {
   public void shouldInsertLossesAndAdjustments() {
     lossesAndAdjustmentsMapper.insert(rnrLineItem, lossAndAdjustment);
 
-    List<LossesAndAdjustments> lossesAndAdjustmentsList = lossesAndAdjustmentsMapper.getByRnrLineItem(rnrLineItem.getId());
+    List<LossesAndAdjustments> lossesAndAdjustmentsList = lossesAndAdjustmentsMapper.getByRnrLineItem(
+      rnrLineItem.getId());
     LossesAndAdjustments lineItemLossAndAdjustment = lossesAndAdjustmentsList.get(0);
 
     assertThat(lossesAndAdjustmentsList.size(), is(1));

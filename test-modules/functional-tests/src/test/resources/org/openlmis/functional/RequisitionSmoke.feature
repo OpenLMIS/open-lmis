@@ -155,12 +155,12 @@ Feature: Smoke Requisition Tests
       | Email                   | FirstName | LastName | UserName |
       | Dummy_User@openlmis.com | Dummy     | User     | Dummy    |
     Then I should see user not verified
-    When I disable user "Dummy User"
+    When I disable user "Dummy" and "User"
     Then I should see disable user "Dummy User" message
-    When I enable user "Dummy User"
+    When I enable user "Dummy"
     Then I should see enable user "Dummy User" message
     When I verify user email "Dummy_User@openlmis.com"
-    Then I should see user "Dummy User" verified
+    Then I should see user "Dummy" verified
 
   @smokeRequisition
   Scenario: User should be able to configure order file format

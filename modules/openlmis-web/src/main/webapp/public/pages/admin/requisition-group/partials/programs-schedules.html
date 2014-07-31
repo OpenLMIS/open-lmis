@@ -1,0 +1,209 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div class="table-container">
+    <div id="programSchedulesTable" class="prog-role-grid">
+      <div class="fluid-grid">
+        <div class="row-fluid fluid-grid-header">
+          <div class="span3">
+            <div id="programsHeader" class="fluid-grid-cell" openlmis-message="label.programs"></div>
+          </div>
+          <div class="span3">
+            <div id="schedulesHeader" class="fluid-grid-cell" openlmis-message="schedules.header"></div>
+          </div>
+          <div class="span1">
+            <div id="directDeliveryHeader" class="fluid-grid-cell" openlmis-message="label.direct.delivery"></div>
+          </div>
+          <div class="span3">
+            <div id="dropOffFacilityHeader" class="fluid-grid-cell" openlmis-message="label.drop.off.facility"></div>
+          </div>
+          <div class="span2">
+            <div class="fluid-grid-cell">&nbsp;</div>
+          </div>
+        </div>
+
+        <div class="row-fluid" ng-repeat="programSchedule in requisitionGroupProgramSchedules" tab-scroll>
+          <div class="row-fluid">
+            <div class="span3">
+              <div class="fluid-grid-cell">
+                <label id="programName{{programSchedule.program.name}}" ng-bind="programSchedule.program.name"></label>
+              </div>
+            </div>
+
+          <div class="span3">
+            <div ng-show="!programSchedule.underEdit" class="fluid-grid-cell">
+              <div id="schedule{{programSchedule.program.name}}"
+                   ng-bind="programSchedule.processingSchedule.code + '-' + programSchedule.processingSchedule.name">
+              </div>
+            </div>
+
+            <div ng-show="programSchedule.underEdit" class="fluid-grid-cell">
+              <select class="select2-container bottom-spacer span8"
+                      id="schedules{{programSchedule.program.name}}"
+                      ng-change="updateSchedule($index)"
+                      ng-options="i.id as (i.code + '-' + i.name) for i in schedules"
+                      ng-model="programSchedule.processingSchedule.id">
+                <option value="" openlmis-message="label.select.schedule"></option>
+              </select>
+            </div>
+          </div>
+
+          <div class="span1">
+            <div class="fluid-grid-cell">
+              <div ng-show="!programSchedule.underEdit" ng-model="programSchedule.directDelivery">
+                <span id="directDeliverIcon{{programSchedule.program.name}}" ng-show="programSchedule.directDelivery"
+                      class="icon icon-ok"></span>
+              </div>
+              <input ng-show="programSchedule.underEdit" type="checkbox"
+                     id="directDelivery{{programSchedule.program.name}}"
+                     ng-model="programSchedule.directDelivery">
+            </div>
+          </div>
+
+          <div class="span3">
+            <div class="fluid-grid-cell">
+            <span id="dropOffFacility{{programSchedule.program.name}}"
+                  ng-show="!programSchedule.underEdit && programSchedule.dropOffFacility"
+                  ng-model="programSchedule.dropOffFacility">
+              {{programSchedule.dropOffFacility.code}} - {{programSchedule.dropOffFacility.name}}
+            </span>
+
+              <div ng-show="programSchedule.underEdit"
+                   class="input-div associate-facility suggest-field"
+                   ng-model="programSchedule.dropOffFacility">
+                <div id="editDropOffFacility{{programSchedule.program.name}}" ng-click="toggleSlider($index)"
+                     class="clearfix position-relative">
+                  <div class="facility-associated">
+                    <span ng-show="programSchedule.dropOffFacility">{{programSchedule.dropOffFacility.code}} - {{programSchedule.dropOffFacility.name}}</span>
+                  </div>
+                  <a href="" class="btn">
+                    <i class="icon icon-ellipsis-horizontal"></i>
+                  </a>
+                  <div ng-show="showSlider" class="slider-beak"></div>
+                </div>
+                <a id="clearDropOffFacility{{programSchedule.program.name}}" href=""
+                   ng-show="programSchedule.dropOffFacility"
+                   class="clear-search"
+                   ng-click="clearDropOffFacility($index)"></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="span2">
+          <span ng-show="!programSchedule.underEdit">
+            <input id="programScheduleRemove{{programSchedule.program.name}}" type="button"
+                   class="btn program-schedules-btn btn-small pull-right"
+                   ng-disabled="(findProgramScheduleUnderEdit() || addNew)"
+                   ng-click="remove(programSchedule.program.id)"
+                   openlmis-message="button.remove"/>
+            <input id="programScheduleEdit{{programSchedule.program.name}}"
+                   ng-disabled="(findProgramScheduleUnderEdit() || addNew)"
+                   type="button"
+                   class="btn program-schedules-btn btn-small btn-primary pull-right"
+                   ng-click="edit($index)"
+                   openlmis-message="button.edit"/>
+          </span>
+          <span ng-show="programSchedule.underEdit">
+            <input id="programScheduleEditCancel{{programSchedule.program.name}}" type="button"
+                   class="btn program-schedules-add-new-btn btn-small pull-right"
+                   ng-click="cancelEdit($index)"
+                   openlmis-message="button.cancel"/>
+            <input id="programScheduleEditDone{{programSchedule.program.name}}" type="button"
+                   class="btn btn-primary program-schedules-add-new-btn btn-small pull-right"
+                   openlmis-message="button.done"
+                   ng-disabled="!(programSchedule.processingSchedule)"
+                   ng-click="saveEditableRow($index)"/>
+          </span>
+          </div>
+        </div>
+        <div class="slider-row-fluid" ng-if="currentSlider === $index">
+          <div class="position-relative">
+            <div class="slider" slider="currentSlider === $index"
+                 ng-include src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
+          </div>
+        </div>
+      </div>
+
+      <div ng-show="addNew" class="row-fluid add-program-schedule" tab-scroll>
+        <div class="row-fluid">
+          <div class="span3 fluid-grid-cell">
+            <select class="select2-container span8" id="programs{{programSchedule.program.name}}"
+                    ng-options="i as i.name for i in programs"
+                    ng-model="newProgramSchedule.program">
+              <option value="" openlmis-message="programMessage"></option>
+            </select>
+          </div>
+
+          <div class="span3 fluid-grid-cell">
+            <select class="select2-container span8" id="newSchedule{{programSchedule.program.name}}"
+                    ng-options="(i.code + '-' + i.name) for i in schedules"
+                    ng-model="newProgramSchedule.processingSchedule">
+              <option value="" openlmis-message="label.select.schedule"></option>
+            </select>
+          </div>
+
+          <div class="span1 fluid-grid-cell">
+            <input type="checkbox" id="newDirectDelivery{{programSchedule.program.name}}"
+                   ng-model="newProgramSchedule.directDelivery">
+          </div>
+
+          <div class="span3 fluid-grid-cell">
+            <div class="input-div associate-facility clearfix suggest-field"
+                 ng-model="newProgramSchedule.dropOffFacility">
+              <div id="addDropOffFacility{{programSchedule.program.name}}" ng-click="addNew && toggleSlider('add')"
+                   class="clearfix position-relative">
+                <div class="facility-associated">
+                <span id="selectedDropOffFacility{{programSchedule.program.name}}"
+                      ng-show="newProgramSchedule.dropOffFacility">{{newProgramSchedule.dropOffFacility.code}} - {{newProgramSchedule.dropOffFacility.name}}</span>
+                </div>
+                <a href="" class="btn">
+                  <i class="icon icon-ellipsis-horizontal"></i>
+                </a>
+                <div ng-show="showSlider" class="slider-beak"></div>
+              </div>
+              <a id="clearNewDropOffFacility{{programSchedule.program.name}}" href=""
+                 ng-show="newProgramSchedule.dropOffFacility"
+                 class="clear-search" style="right: 38px;"
+                 ng-click="newProgramSchedule.dropOffFacility = undefined;"></a>
+            </div>
+          </div>
+
+          <div class="span2">
+            <span ng-show="addNew" class="fluid-grid-cell">
+              <input id="programScheduleAddCancel" class="btn program-schedules-add-new-btn btn-small pull-right"
+                     type="button"
+                     openlmis-message="button.cancel"
+                     ng-click="cancelAdd()">
+              <input type="button" class="btn btn-primary program-schedules-add-new-btn btn-small pull-right"
+                     id="programScheduleAdd"
+                     openlmis-message="button.add"
+                     ng-click="addProgramSchedules()"
+                     ng-disabled="!(newProgramSchedule.program && newProgramSchedule.processingSchedule)">
+            </span>
+          </div>
+        </div>
+        <div class="slider-row-fluid" ng-if="currentSlider === 'add'">
+          <div class="position-relative">
+            <div class="slider" slider="currentSlider === 'add'"
+                 ng-include src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
+          </div>
+        </div>
+      </div>
+
+      <div ng-show="!addNew" class="row-fluid add-program-schedule">
+        <div class="fluid-grid-cell">
+          <input type="button" id="addNewRow" ng-disabled="findProgramScheduleUnderEdit()"
+                 class="btn btn-small btn-primary pull-right"
+                 openlmis-message="button.add" ng-click="addNewRow()"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

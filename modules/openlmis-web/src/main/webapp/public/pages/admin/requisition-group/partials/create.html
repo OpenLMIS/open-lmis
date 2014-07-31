@@ -9,19 +9,21 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-  <div ng-hide="requisitionGroup.id"><h2 id="addNewRequisitionGroupHeader"
-                                         openlmis-message="header.requisition.group.add.new"></h2></div>
-  <div ng-show="requisitionGroup.id"><h2 id="editRequisitionGroupHeader"
-                                         openlmis-message="header.requisition.group.edit"></h2></div>
+  <div ng-hide="requisitionGroup.id">
+    <h2 id="addNewRequisitionGroupHeader" openlmis-message="header.requisition.group.add.new"></h2>
+  </div>
+
+  <div ng-show="requisitionGroup.id">
+    <h2 id="editRequisitionGroupHeader" openlmis-message="header.requisition.group.edit"></h2>
+  </div>
 
   <form name="requisitionGroupForm" novalidate>
     <div class="app-form">
-
       <div id="requisitionGroupFormGroup" class="form-group clear-top">
 
-        <div class="form-row clearfix">
+        <div class="form-row clearfix bottom-padding">
           <div class="form-cell">
-            <label for="requisitionGroupCode">
+            <label id="codeLabel" for="requisitionGroupCode">
               <span openlmis-message="header.code"></span>
               <span class="label-required"> *</span>
             </label>
@@ -33,11 +35,8 @@
                     openlmis-message="missing.value"></span>
             </div>
           </div>
-        </div>
-
-        <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="requisitionGroupName">
+            <label id="nameLabel" for="requisitionGroupName">
               <span openlmis-message="header.name"></span>
               <span class="label-required"> *</span>
             </label>
@@ -53,19 +52,8 @@
 
         <div class="form-row clearfix">
           <div class="form-cell">
-            <label for="requisitionGroupDescription" openlmis-message="label.description"></label>
-
-            <div class="form-field">
-              <input ng-model="requisitionGroup.description" name="description" id="requisitionGroupDescription"
-                     type="text"
-                     maxlength="250"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="searchSupervisoryNode" openlmis-message="label.supervisory.node">
+            <label id="supervisoryNodeLabel" for="searchSupervisoryNode">
+              <span openlmis-message="label.supervisory.node"></span>
               <span class="label-required"> *</span>
             </label>
 
@@ -78,9 +66,7 @@
                 <div id="searchList" class="search-list" ng-show="query.length > 2">
                   <ul>
                     <li ng-repeat="node in filteredNodeList">
-                      <a href="" id="result{{$index}}" ng-click="setSelectedSupervisoryNode(node)">
-                        {{node.name}}
-                      </a>
+                      <a href="" id="result{{$index}}" ng-click="setSelectedSupervisoryNode(node)" ng-bind="node.name"></a>
                     </li>
                     <li ng-show="resultCount == 0">
                       <a href="" openlmis-message="msg.no.matches|query"></a>
@@ -98,54 +84,74 @@
             <span class="field-error" ng-show="!requisitionGroup.supervisoryNode && showError"
                   openlmis-message="select.value"></span>
           </div>
-        </div>
-
-        <div class="form-row clearfix">
           <div class="form-cell">
-            <label>
-              <span openlmis-message="label.member.facilities"></span>
-            </label>
+            <label id="descriptionLabel" for="requisitionGroupDescription" openlmis-message="label.description"></label>
 
             <div class="form-field">
-              <a id="associateFacility" href="" ng-click="showSlider = !showSlider">
-                <span openlmis-message="link.add.facility"></span>
-              </a>
+              <input ng-model="requisitionGroup.description" name="description" id="requisitionGroupDescription"
+                     type="text" maxlength="250"/>
             </div>
           </div>
         </div>
 
-        <div class="position-relative">
-          <ng-include src="'/public/pages/admin/shared/search-filter-facilities.html'"></ng-include>
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="accordion">
+
+              <div class="pull-right control-accordion">
+                <a id="expandAll" href="javascript:void(0);" onClick="accordion.expandCollapse('expand')"
+                   openlmis-message="label.expand.all"></a> / <a
+                  id="collapseAll"
+                  href="javascript:void(0);"
+                  onClick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all"></a>
+              </div>
+              <div class="clearfix"></div>
+
+              <div class="accordion-section">
+                <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                  <span>
+                    <b>+</b>
+                    <a id="programSchedules" href="javascript:void(0);"
+                       openlmis-message='label.program.and.schedules'></a>
+                  </span>
+                </div>
+                <div class="accordion-body">
+                  <ng-include
+                      src="'/public/pages/admin/requisition-group/partials/programs-schedules.html'"></ng-include>
+                </div>
+              </div>
+
+              <div class="accordion-section">
+                <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                  <span>
+                    <b>+</b>
+                    <a id="Members" href="javascript:void(0);" openlmis-message='label.members'></a>
+                  </span>
+                </div>
+                <div class="accordion-body">
+                  <input type="button" class="btn btn-primary" id="addMembers"
+                         ng-click="toggleMultipleFacilitiesSlider()"
+                         openlmis-message="label.add.members">
+
+                  <div class="position-relative clearfix">
+
+                    <div class="slider" slider="showMultipleFacilitiesSlider" ng-include
+                         src="'/public/pages/admin/shared/select-filter-multiple-facilities.html'"></div>
+
+                    <div class="alert alert-error" id="duplicateFacilityMessage"
+                         openlmis-message="error.duplicate.facility|duplicateFacilityName"
+                         ng-show="duplicateFacilityName"></div>
+
+                    <div id="facilityAddedMessage" class="alert alert-success" ng-show="message"
+                         ng-bind="message" fade-out="3000"></div>
+
+                    <ng-include src="'/public/pages/admin/requisition-group/partials/members.html'"></ng-include>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div class="toolbar-error" id="duplicateFacilityMessage"
-             openlmis-message="error.duplicate.facility|duplicateFacilityName" ng-show="duplicateFacilityName"></div>
-
-        <table id="membersTable" class="table table-striped table-bordered search-list">
-          <thead>
-          </tr>
-          <tr class="gradient-header" ng-show="requisitionGroupMembers.length">
-            <th id="facilityHeader" openlmis-message="label.associated.facility"></th>
-            <th id="facilityTypeHeader" openlmis-message="label.facility.type"></th>
-            <th id="enabledHeader" openlmis-message="label.facility.enabled"></th>
-            <th></th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr ng-repeat="member in requisitionGroupMembers">
-            <td id="code{{$index}}">{{member.facility.code}} - {{member.facility.name}}</td>
-            <td id="facilityTypeName{{$index}}" ng-bind="member.facility.facilityType.name"></td>
-            <td id="enabled{{$index}}">
-              <i id="enabledIcon{{$index}}" ng-show="member.facility.enabled" class="icon icon-ok"></i>
-            </td>
-            <td id="delete{{$index}}">
-              <input id="removeMemberButton{{$index}}" type="button" class="btn btn-danger cancel-button"
-                     openlmis-message="button.remove"
-                     ng-click="removeMember(member.facility.id)"/>
-            </td>
-          </tr>
-          </tbody>
-        </table>
       </div>
 
       <div form-toolbar id="action_buttons" class="action-buttons">
@@ -156,7 +162,7 @@
                  ng-click="cancel()"/>
         </div>
 
-        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
+        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
       </div>
 
     </div>

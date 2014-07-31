@@ -183,7 +183,7 @@ public class RegimenTemplateConfigPage extends Page {
     return remarksDataType.getText().trim();
   }
 
-  public void AddNewRegimen(String category, String code, String name, Boolean isActive) {
+  public void addNewRegimen(String category, String code, String name, Boolean isActive) {
     testWebDriver.waitForElementsToAppear(newRegimenCategoryDropDown, newRegimenCodeTextBox);
     testWebDriver.selectByVisibleText(newRegimenCategoryDropDown, category);
     newRegimenCodeTextBox.sendKeys(code);

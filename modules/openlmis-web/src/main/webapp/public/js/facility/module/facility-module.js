@@ -8,16 +8,16 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var facilityModule = angular.module('facility', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-    config(['$routeProvider', function ($routeProvider) {
-      $routeProvider.
-          when('/search', {controller: FacilitySearchController, templateUrl: 'partials/search.html'}).
-          when('/create-facility',
-          {controller: FacilityController, templateUrl: 'partials/create.html', resolve: FacilityController.resolve}).
-          when('/edit/:facilityId',
-          {controller: FacilityController, templateUrl: 'partials/create.html', resolve: FacilityController.resolve}).
-          otherwise({redirectTo: '/search'});
-    }]).run(function ($rootScope, AuthorizationService) {
-      $rootScope.facilitySelected = "selected";
-      AuthorizationService.preAuthorize('MANAGE_FACILITY');
-    });
+var facilityModule = angular.module('facility', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination']).
+  config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.
+      when('/search', {controller: FacilitySearchController, templateUrl: 'partials/search.html', reloadOnSearch: false}).
+      when('/create-facility',
+      {controller: FacilityController, templateUrl: 'partials/create.html', resolve: FacilityController.resolve}).
+      when('/edit/:facilityId',
+      {controller: FacilityController, templateUrl: 'partials/create.html', resolve: FacilityController.resolve}).
+      otherwise({redirectTo: '/search'});
+  }]).run(function ($rootScope, AuthorizationService) {
+    $rootScope.facilitySelected = "selected";
+    AuthorizationService.preAuthorize('MANAGE_FACILITY');
+  });

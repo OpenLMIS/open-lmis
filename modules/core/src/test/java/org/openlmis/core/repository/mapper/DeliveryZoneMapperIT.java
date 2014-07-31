@@ -32,9 +32,8 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
+import static org.openlmis.core.domain.RightName.MANAGE_DISTRIBUTION;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -165,7 +164,7 @@ public class DeliveryZoneMapperIT {
   private void createRoleAssignment(long user, String deliveryZoneCode, String planDistributionRole) throws SQLException {
     queryExecutor.executeUpdate("INSERT INTO roles (name) VALUES (?)", planDistributionRole);
     queryExecutor.executeUpdate("INSERT INTO role_rights (roleId, rightName) VALUES ((select id from roles where name=?), ?)",
-      planDistributionRole, MANAGE_DISTRIBUTION.toString());
+      planDistributionRole, MANAGE_DISTRIBUTION);
     queryExecutor.executeUpdate("INSERT INTO role_assignments (userId, roleId, deliveryZoneId) " +
       "VALUES (?, (SELECT id FROM roles WHERE name = ?), " +
       "(SELECT id FROM delivery_zones WHERE code=?))",user, planDistributionRole, deliveryZoneCode);

@@ -56,10 +56,14 @@ public class EpiUse {
     }
   }
 
+  /**
+   *  ProductNameComparator represents a comparator for comparing code of two EpiUseLineItem.
+   */
+
   private class ProductNameComparator implements Comparator<EpiUseLineItem> {
     @Override
     public int compare(EpiUseLineItem lineItem1, EpiUseLineItem lineItem2) {
-      return lineItem1.getProductGroup().getName().toLowerCase().compareTo(lineItem2.getProductGroup().getName().toLowerCase());
+      return lineItem1.getProductGroup().getCode().toLowerCase().compareTo(lineItem2.getProductGroup().getCode().toLowerCase());
     }
   }
 }

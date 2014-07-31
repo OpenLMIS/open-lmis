@@ -11,9 +11,11 @@ package org.openlmis.core.dto;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +24,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
+@Category(UnitTests.class)
 public class BudgetLineItemDTOTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();

@@ -49,8 +49,7 @@ public class FacilityApprovedProductRepositoryTest {
     facilityTypeApprovedProduct.setProgramProduct(programProduct);
     facilityTypeApprovedProduct.setFacilityType(new FacilityType("warehouse"));
 
-    when(mapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(1L,
-      "warehouse")).thenReturn(null);
+    when(mapper.getBy(1L, "warehouse")).thenReturn(null);
 
     repository.insert(facilityTypeApprovedProduct);
     verify(mapper).insert(facilityTypeApprovedProduct);
@@ -59,19 +58,25 @@ public class FacilityApprovedProductRepositoryTest {
   @Test
   public void shouldGetFullSupplyFacilityApprovedProducts() {
     repository.getFullSupplyProductsByFacilityAndProgram(5L, 8L);
-    verify(mapper).getFullSupplyProductsByFacilityAndProgram(5L, 8L);
+    verify(mapper).getFullSupplyProductsBy(5L, 8L);
   }
 
   @Test
   public void shouldGetNonFullSupplyFacilityApprovedProducts() {
     repository.getNonFullSupplyProductsByFacilityAndProgram(5L, 8L);
-    verify(mapper).getNonFullSupplyProductsByFacilityAndProgram(5L, 8L);
+    verify(mapper).getNonFullSupplyProductsBy(5L, 8L);
   }
 
   @Test
   public void shouldUpdateFacilityApprovedProductIfExists() throws Exception {
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = new FacilityTypeApprovedProduct();
     repository.update(facilityTypeApprovedProduct);
-    verify(mapper).updateFacilityApprovedProduct(facilityTypeApprovedProduct);
+    verify(mapper).update(facilityTypeApprovedProduct);
+  }
+
+  @Test
+  public void shouldGetFacilityApprovedProduct(){
+    repository.get(2L);
+    verify(mapper).get(2L);
   }
 }

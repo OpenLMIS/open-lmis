@@ -71,4 +71,8 @@
             org.springframework.security.web.session.HttpSessionEventPublisher
         </listener-class>
     </listener>
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/public/pages/error-page.html</location>
+    </error-page>
 </web-app>

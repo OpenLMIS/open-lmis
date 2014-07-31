@@ -11,8 +11,8 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
@@ -47,12 +47,12 @@ public class UserRepository {
     this.userMapper = userMapper;
   }
 
-  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, Right right) {
-    return userMapper.getUsersWithRightInNodeForProgram(program, node, right);
+  public List<User> getUsersWithRightInNodeForProgram(Program program, SupervisoryNode node, String rightName) {
+    return userMapper.getUsersWithRightInNodeForProgram(program, node, rightName);
   }
 
-  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Long programId, Right right) {
-    return userMapper.getUsersWithRightInHierarchyUsingBaseNode(nodeId, programId, right);
+  public List<User> getUsersWithRightInHierarchyUsingBaseNode(Long nodeId, Long programId, String rightName) {
+    return userMapper.getUsersWithRightInHierarchyUsingBaseNode(nodeId, programId, rightName);
   }
 
   public void create(User user) {
@@ -105,8 +105,8 @@ public class UserRepository {
     return userMapper.getByEmail(email);
   }
 
-  public List<User> searchUser(String userSearchParam) {
-    return userMapper.getUserWithSearchedName(userSearchParam);
+  public List<User> searchUser(String searchParam, Pagination pagination) {
+    return userMapper.search(searchParam, pagination);
   }
 
   public User getById(Long id) {
@@ -149,7 +149,11 @@ public class UserRepository {
     return userMapper.getByUserName(userName);
   }
 
-  public List<User> getUsersWithRightOnWarehouse(Long id, Right right) {
-    return userMapper.getUsersWithRightOnWarehouse(id, right);
+  public List<User> getUsersWithRightOnWarehouse(Long id, String rightName) {
+    return userMapper.getUsersWithRightOnWarehouse(id, rightName);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return userMapper.getTotalSearchResultCount(searchParam);
   }
 }

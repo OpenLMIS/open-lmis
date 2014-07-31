@@ -11,7 +11,6 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.OrderNumberConfiguration;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
@@ -34,7 +33,8 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.core.domain.RightName.MANAGE_POD;
+import static org.openlmis.core.domain.RightName.VIEW_ORDER;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.order.dto.OrderDTO.getOrdersForView;
 import static org.openlmis.web.response.OpenLmisResponse.error;
@@ -81,7 +81,7 @@ public class OrderController extends BaseController {
     required = true,
     defaultValue = "1") Integer page, HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> response = response(ORDERS,
-      getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));
+      getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), VIEW_ORDER)));
     response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
     response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
     return response;

@@ -11,6 +11,7 @@
 function SupplyLineController($scope, $location, supplyLine, TopLevelSupervisoryNodes, SupplyLines, programs) {
   $scope.supplyLine = supplyLine || {};
   $scope.programs = programs;
+  $scope.$parent.message = "";
 
   var reset = function () {
     $scope.query = undefined;
@@ -26,8 +27,14 @@ function SupplyLineController($scope, $location, supplyLine, TopLevelSupervisory
     return true;
   };
 
+  $scope.toggleSlider = function () {
+    $scope.showSlider = !$scope.showSlider;
+    $scope.extraParams = {"virtualFacility": null, "enabled": true};
+  };
+
   $scope.associate = function (facility) {
     $scope.supplyLine.supplyingFacility = facility;
+    $scope.showSlider = !$scope.showSlider;
     reset();
   };
 

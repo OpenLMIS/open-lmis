@@ -1,0 +1,35 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<table id="membersTable" class="table table-striped table-bordered" ng-if="requisitionGroupMembers.length > 0">
+  <thead>
+    <tr class="gradient-header" ng-show="requisitionGroupMembers.length">
+      <th id="facilityHeader" openlmis-message="label.associated.facility"></th>
+      <th id="geoZoneHeader" openlmis-message="label.geographic.zone"></th>
+      <th id="facilityTypeHeader" openlmis-message="label.facility.type"></th>
+      <th id="enabledHeader" openlmis-message="label.facility.enabled"></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="member in requisitionGroupMembers">
+      <td id="code{{$index}}">{{member.facility.code}} - {{member.facility.name}}</td>
+      <td id="geoZoneName{{$index}}" ng-bind="member.facility.geographicZone.name"></td>
+      <td id="facilityTypeName{{$index}}" ng-bind="member.facility.facilityType.name"></td>
+      <td id="enabled{{$index}}">
+        <i id="enabledIcon{{$index}}" ng-show="member.facility.enabled" class="icon icon-ok"></i>
+      </td>
+      <td id="delete{{$index}}">
+        <input id="removeMemberButton{{$index}}" type="button" class="btn btn-small"
+               openlmis-message="button.remove" ng-click="removeMember(member.facility.id)"/>
+      </td>
+    </tr>
+  </tbody>
+</table>

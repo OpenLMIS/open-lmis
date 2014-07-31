@@ -27,7 +27,7 @@ public interface RequisitionGroupMemberMapper {
 
   @Insert("INSERT INTO requisition_group_members" +
     "(requisitionGroupId, facilityId, createdBy, modifiedBy, modifiedDate) " +
-    "VALUES (#{requisitionGroup.id}, #{facility.id}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))")
+    "VALUES (#{requisitionGroup.id}, #{facility.id}, #{createdBy}, #{createdBy}, COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroupMember requisitionGroupMember);
 
@@ -37,13 +37,14 @@ public interface RequisitionGroupMemberMapper {
     "WHERE rgm.facilityId = #{facilityId}"})
   List<Long> getRequisitionGroupProgramIdsForFacilityId(Long facilityId);
 
-  @Select({"SELECT * FROM requisition_group_members WHERE requisitionGroupId = #{requisitionGroup.id} AND facilityId = #{facility.id}"})
+  @Select(
+    {"SELECT * FROM requisition_group_members WHERE requisitionGroupId = #{requisitionGroup.id} AND facilityId = #{facility.id}"})
   RequisitionGroupMember getMappingByRequisitionGroupIdAndFacilityId(
     @Param(value = "requisitionGroup") RequisitionGroup requisitionGroup,
     @Param(value = "facility") Facility facility);
 
   @Update("UPDATE requisition_group_members " +
-    "SET modifiedBy=#{modifiedBy}, modifiedDate=COALESCE(#{modifiedDate}, NOW()) WHERE " +
+    "SET modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate}, NOW()) WHERE " +
     "requisitionGroupId = #{requisitionGroup.id} AND facilityId = #{facility.id}")
   void update(RequisitionGroupMember requisitionGroupMember);
 
@@ -69,10 +70,12 @@ public interface RequisitionGroupMemberMapper {
   @Delete({"DELETE FROM requisition_group_members where facilityId = #{id}"})
   void deleteMembersFor(Facility facility);
 
-  @Select({"SELECT RGM.*, F.name AS facilityName, F.code AS facilityCode, F.id AS facilityId, F.enabled AS enabled, FT.name AS facilityType FROM requisition_group_members RGM",
-    "INNER JOIN facilities F ON RGM.facilityId = F.id INNER JOIN facility_types FT ON FT.id = F.typeId",
-    "INNER JOIN requisition_groups RG ON RG.id = requisitionGroupId",
-    "WHERE requisitionGroupId = #{requisitionGroupId} ORDER BY LOWER(F.code)"})
+  @Select(
+    {"SELECT RGM.*,GZ.name as geoZoneName, F.name AS facilityName, F.code AS facilityCode, F.id AS facilityId, F.enabled AS enabled, FT.name AS facilityType FROM requisition_group_members RGM",
+      "INNER JOIN facilities F ON RGM.facilityId = F.id INNER JOIN facility_types FT ON FT.id = F.typeId",
+      "INNER JOIN requisition_groups RG ON RG.id = requisitionGroupId",
+      "INNER JOIN geographic_zones GZ ON GZ.id = F.geographiczoneid",
+      "WHERE requisitionGroupId = #{requisitionGroupId} ORDER BY LOWER(F.code)"})
   @Results(value = {
     @Result(property = "requisitionGroup.id", column = "requisitionGroupId"),
     @Result(property = "facility.id", column = "facilityId"),
@@ -80,6 +83,10 @@ public interface RequisitionGroupMemberMapper {
     @Result(property = "facility.code", column = "facilityCode"),
     @Result(property = "facility.enabled", column = "enabled"),
     @Result(property = "facility.facilityType.name", column = "facilityType"),
+    @Result(property = "facility.geographicZone.name", column = "geoZoneName"),
   })
   List<RequisitionGroupMember> getMembersBy(Long requisitionGroupId);
+
+  @Delete({"DELETE FROM requisition_group_members where requisitionGroupId = #{requisitionGroupId}"})
+  void deleteMemberForGroup(Long requisitionGroupId);
 }

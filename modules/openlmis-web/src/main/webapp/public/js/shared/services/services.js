@@ -352,6 +352,43 @@ services.factory('SupplyLinesSearch', function ($resource) {
   return $resource('/supplyLines/search.json', {}, {});
 });
 
-services.factory('FacilityApprovedProductsSearch', function ($resource) {
-  return $resource('/facilityApprovedProducts.json', {}, {});
+services.factory('ProgramProductsFilter', function ($resource) {
+  return $resource('/programProducts/filter/programId/:programId/facilityTypeId/:facilityTypeId.json',
+      {programId: '@programId', facilityTypeId: '@facilityTypeId'}, {}, {});
 });
+
+services.factory('FacilityTypeApprovedProducts', function ($resource) {
+  return $resource('/facilityApprovedProducts/:id.json', {id: '@id'}, update);
+});
+
+services.factory('ProgramProductsSearch', function ($resource) {
+  return $resource('/programProducts/search.json', {}, {});
+});
+
+services.factory('Reports', function ($resource) {
+  return $resource('/reports/:id/:format.json', {}, {});
+});
+
+services.factory('ProductGroups', function ($resource) {
+  return $resource('/products/groups.json', {}, {});
+});
+
+services.factory('ProductForms', function ($resource) {
+  return $resource('/products/forms.json', {}, {});
+});
+
+services.factory('DosageUnits', function ($resource) {
+  return $resource('/products/dosageUnits.json', {}, {});
+});
+
+services.factory('Products', function ($resource) {
+  return $resource('/products/:id.json', {id: '@id'}, update);
+});
+
+services.factory('ProductCategories', function ($resource) {
+  return $resource('/products/categories.json', {}, {});
+});
+
+
+
+

@@ -11,7 +11,10 @@
 package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.stereotype.Repository;
@@ -161,12 +164,12 @@ public interface RequisitionMapper {
   })
   List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
                                                             @Param("pageNumber") Integer pageNumber, @Param("pageSize") Integer pageSize,
-                                                            @Param("userId") Long userId, @Param("right") Right right,
+                                                            @Param("userId") Long userId, @Param("right") String rightName,
                                                             @Param("sortBy") String sortBy, @Param("sortDirection") String sortDirection);
 
   @SelectProvider(type = ApprovedRequisitionSearch.class, method = "getCountOfApprovedRequisitionsForCriteria")
   Integer getCountOfApprovedRequisitionsForCriteria(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
-                                                    @Param("userId") Long userId, @Param("right") Right right);
+                                                    @Param("userId") Long userId, @Param("right") String rightName);
 
   @Select({"SELECT facilityId FROM requisitions WHERE id = #{id}"})
   Long getFacilityId(Long id);
@@ -218,7 +221,7 @@ public interface RequisitionMapper {
       String searchType = (String) params.get("searchType");
       String searchVal = ((String) params.get("searchVal")).toLowerCase();
       Long userId = (Long) params.get("userId");
-      Right right = (Right) params.get("right");
+      String right = (String) params.get("right");
 
       if (userId != null && right != null) {
         sql.append("INNER JOIN supply_lines S ON R.supervisoryNodeId = S.supervisoryNodeId " +

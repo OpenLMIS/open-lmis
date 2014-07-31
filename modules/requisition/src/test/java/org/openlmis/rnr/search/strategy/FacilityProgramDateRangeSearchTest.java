@@ -36,7 +36,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.core.domain.RightName.VIEW_REQUISITION;
 import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 
 @Category(UnitTests.class)

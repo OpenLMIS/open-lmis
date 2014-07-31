@@ -48,7 +48,7 @@ public class FacilityProgramProduct extends ProgramProduct {
 
   @JsonIgnore
   public ProductGroup getActiveProductGroup() {
-    if (this.isActive() && this.getProduct().getActive()) {
+    if (this.getActive() && this.getProduct().getActive()) {
       return this.getProduct().getProductGroup();
     }
     return null;
@@ -81,7 +81,7 @@ public class FacilityProgramProduct extends ProgramProduct {
       @Override
       public boolean evaluate(Object o) {
         FacilityProgramProduct programProduct = (FacilityProgramProduct) o;
-        return programProduct.isActive() && programProduct.getProduct().getActive();
+        return programProduct.getActive() && programProduct.getProduct().getActive();
       }
     });
     return activeProgramProducts;

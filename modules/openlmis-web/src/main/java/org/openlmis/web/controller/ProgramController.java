@@ -12,7 +12,6 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
@@ -66,7 +65,7 @@ public class ProgramController extends BaseController {
   @RequestMapping(value = "/create/requisition/programs", method = GET, headers = ACCEPT_JSON)
   public List<Program> getProgramsForCreateOrAuthorizeRequisition(@RequestParam(value = "facilityId", required = false) Long facilityId,
                                                                   HttpServletRequest request) {
-    Right[] rights = {CREATE_REQUISITION, AUTHORIZE_REQUISITION};
+    String[] rights = {CREATE_REQUISITION, AUTHORIZE_REQUISITION};
     if (facilityId == null) {
       return programService.getProgramForSupervisedFacilities(loggedInUserId(request), rights);
     } else {
@@ -75,7 +74,7 @@ public class ProgramController extends BaseController {
   }
 
   @RequestMapping(value = "/programs/pull", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER, CONFIGURE_RNR, MANAGE_SUPPLY_LINE, MANAGE_FACILITY_APPROVED_PRODUCT')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER, CONFIGURE_RNR, MANAGE_SUPPLY_LINE, MANAGE_FACILITY_APPROVED_PRODUCT, MANAGE_REQUISITION_GROUP')")
   public ResponseEntity<OpenLmisResponse> getAllPullPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAllPullPrograms());
   }
@@ -93,7 +92,7 @@ public class ProgramController extends BaseController {
   }
 
   @RequestMapping(value = "/programs", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_REGIMEN_TEMPLATE, MANAGE_USER')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_REGIMEN_TEMPLATE, MANAGE_USER, MANAGE_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getAllPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAll());
   }

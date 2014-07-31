@@ -12,6 +12,7 @@ package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -19,7 +20,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.openqa.selenium.support.How.*;
 import static org.testng.AssertJUnit.assertEquals;
@@ -113,6 +113,33 @@ public class GeographicZonePage extends Page {
   @FindBy(how = ID, using = "saveErrorMsgDiv")
   private static WebElement errorMessage = null;
 
+  @FindBy(how = ID, using = "codeLabel")
+  private static WebElement codeLabel = null;
+
+  @FindBy(how = ID, using = "levelLabel")
+  private static WebElement levelLabel = null;
+
+  @FindBy(how = ID, using = "nameLabel")
+  private static WebElement nameLabel = null;
+
+  @FindBy(how = ID, using = "parentLabel")
+  private static WebElement parentLabel = null;
+
+  @FindBy(how = ID, using = "populationLabel")
+  private static WebElement populationLabel = null;
+
+  @FindBy(how = ID, using = "latitudeLabel")
+  private static WebElement latitudeLabel = null;
+
+  @FindBy(how = ID, using = "longitudeLabel")
+  private static WebElement longitudeLabel = null;
+
+  @FindBy(how = ID, using = "addNewGeoZoneHeader")
+  private static WebElement addNewGeoZoneHeader = null;
+
+  @FindBy(how = ID, using = "editGeoZoneHeader")
+  private static WebElement editGeoZoneHeader = null;
+
   public GeographicZonePage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -191,7 +218,7 @@ public class GeographicZonePage extends Page {
   }
 
   public void verifyNumberOfItemsPerPage(int numberOfItemsPerPage) {
-    assertEquals(numberOfItemsPerPage, testWebDriver.getElementsSizeByXpath("//*[@id='searchResult']"));
+    assertEquals(numberOfItemsPerPage, testWebDriver.getElementsSizeByXpath("//*[@id='wrap']/div/div/div/div[3]/table/tbody/tr"));
   }
 
   public boolean isSuccessMessageDisplayed() {
@@ -364,5 +391,50 @@ public class GeographicZonePage extends Page {
   public boolean isLevelCodeDropDownEnabled() {
     testWebDriver.waitForElementToAppear(levelCodeDropDown);
     return levelCodeDropDown.isEnabled();
+  }
+
+  public String getNameLabel() {
+    testWebDriver.waitForElementToAppear(nameLabel);
+    return nameLabel.getText();
+  }
+
+  public String getCodeLabel() {
+    testWebDriver.waitForElementToAppear(codeLabel);
+    return codeLabel.getText();
+  }
+
+  public String getPopulationLabel() {
+    testWebDriver.waitForElementToAppear(populationLabel);
+    return populationLabel.getText();
+  }
+
+  public String getParentLabel() {
+    testWebDriver.waitForElementToAppear(parentLabel);
+    return parentLabel.getText();
+  }
+
+  public String getLatitudeLabel() {
+    testWebDriver.waitForElementToAppear(latitudeLabel);
+    return latitudeLabel.getText();
+  }
+
+  public String getLongitudeLabel() {
+    testWebDriver.waitForElementToAppear(longitudeLabel);
+    return longitudeLabel.getText();
+  }
+
+  public String getLevelLabel() {
+    testWebDriver.waitForElementToAppear(levelLabel);
+    return levelLabel.getText();
+  }
+
+  public String getAddNewGeoZoneHeader() {
+    testWebDriver.waitForElementToAppear(addNewGeoZoneHeader);
+    return addNewGeoZoneHeader.getText();
+  }
+
+  public String getEditGeoZoneHeader() {
+    testWebDriver.waitForElementToAppear(editGeoZoneHeader);
+    return editGeoZoneHeader.getText();
   }
 }

@@ -266,6 +266,32 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
   }
 
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  public void testOnlyCreateRight(String program, String userSIC, String password) throws SQLException {
+    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
+    setupTestDataToInitiateRnR(true, program, userSIC, rightsList);
+
+    String[] expectedMenuItem = {"Create / Authorize", "View"};
+    HomePage homePage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+
+    homePage.clickRequisitionSubMenuItem();
+    homePage.verifySubMenuItems(expectedMenuItem);
+    homePage.navigateAndInitiateRnr(program);
+    homePage.clickProceed();
+
+    InitiateRnRPage initiateRnRPage = PageObjectFactory.getInitiateRnRPage(testWebDriver);
+    initiateRnRPage.enterValueIfNotNull(10, "beginningBalanceFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(10, "quantityDispensedFirstProduct");
+    initiateRnRPage.enterValueIfNotNull(10, "quantityReceivedFirstProduct");
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+    assertFalse(initiateRnRPage.isAuthorizeButtonPresent());
+
+    initiateRnRPage.verifyBeginningBalanceForFirstProduct(10);
+    initiateRnRPage.verifyQuantityReceivedForFirstProduct(10);
+    initiateRnRPage.verifyQuantityDispensedForFirstProduct(10);
+  }
+
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testSubmitAndAuthorizeRegimen(String program, String userSIC, String categoryCode, String password,
                                             String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws SQLException {

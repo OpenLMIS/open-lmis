@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.core.domain.Right.MANAGE_DISTRIBUTION;
+import static org.openlmis.core.domain.RightName.MANAGE_DISTRIBUTION;
 import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 

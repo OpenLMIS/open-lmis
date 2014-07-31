@@ -42,7 +42,7 @@ public class ProgramProduct extends BaseModel implements Importable {
   private Integer dosesPerMonth;
 
   @ImportField(name = "Is Active", type = "boolean", mandatory = true)
-  private boolean active;
+  private Boolean active;
 
   @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
   private ProductCategory productCategory;
@@ -53,6 +53,10 @@ public class ProgramProduct extends BaseModel implements Importable {
   ProgramProductISA programProductIsa;
 
   private Money currentPrice;
+
+  public ProgramProduct(Long id) {
+    super(id);
+  }
 
   public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active) {
     this.program = program;

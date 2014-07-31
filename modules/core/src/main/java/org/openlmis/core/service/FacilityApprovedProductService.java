@@ -30,6 +30,7 @@ import java.util.List;
 public class FacilityApprovedProductService {
 
   public static final String FACILITY_TYPE_DOES_NOT_EXIST = "facilityType.invalid";
+  public static final String FACILITY_APPROVED_PRODUCT_DOES_NOT_EXIST = "facility.approved.product.does.not.exist";
 
   @Autowired
   private FacilityApprovedProductRepository repository;
@@ -62,6 +63,9 @@ public class FacilityApprovedProductService {
     facilityTypeApprovedProduct.getFacilityType().setId(facilityType.getId());
 
     if (facilityTypeApprovedProduct.getId() != null) {
+      if(repository.get(facilityTypeApprovedProduct.getId()) == null){
+        throw new DataException(FACILITY_APPROVED_PRODUCT_DOES_NOT_EXIST);
+      }
       repository.update(facilityTypeApprovedProduct);
     } else {
       repository.insert(facilityTypeApprovedProduct);
@@ -88,5 +92,16 @@ public class FacilityApprovedProductService {
     facilityTypeApprovedProduct.getProgramProduct().getProgram().setId(programId);
     facilityTypeApprovedProduct.getProgramProduct().getProduct().setId(productId);
     facilityTypeApprovedProduct.getProgramProduct().setId(programProductId);
+  }
+
+  public void saveAll(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, Long userId) {
+    for (FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
+      facilityTypeApprovedProduct.setCreatedBy(userId);
+      save(facilityTypeApprovedProduct);
+    }
+  }
+
+  public void delete(Long id) {
+    repository.delete(id);
   }
 }

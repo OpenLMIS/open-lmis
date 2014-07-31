@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -25,6 +26,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
@@ -34,11 +36,13 @@ public class VaccinationAdultCoverageTest {
 
   private Facility facility;
   private FacilityVisit facilityVisit;
+  private ProcessingPeriod period;
 
   @Before
   public void setUp() {
     facility = mock(Facility.class);
     facilityVisit = mock(FacilityVisit.class);
+    period = mock(ProcessingPeriod.class);
   }
 
   @Test
@@ -47,12 +51,12 @@ public class VaccinationAdultCoverageTest {
     List<TargetGroupProduct> targetGroupProducts = asList(targetGroupProduct);
     AdultCoverageLineItem lineItem = new AdultCoverageLineItem();
 
-    whenNew(AdultCoverageLineItem.class).withArguments(facilityVisit, facility, targetGroupProduct, "pregnant women").thenReturn(
+    when(period.getNumberOfMonths()).thenReturn(10);
+    whenNew(AdultCoverageLineItem.class).withArguments(facilityVisit, facility, targetGroupProduct, "pregnant women", 10).thenReturn(
       lineItem);
 
     List<ProductVial> productVials = asList(new ProductVial("Tetanus", "Tetanus", false));
-    VaccinationAdultCoverage vaccinationAdultCoverage = new VaccinationAdultCoverage(facilityVisit, facility,
-      targetGroupProducts, productVials);
+    VaccinationAdultCoverage vaccinationAdultCoverage = new VaccinationAdultCoverage(facilityVisit, facility, period, targetGroupProducts, productVials);
 
     assertThat(vaccinationAdultCoverage.getAdultCoverageLineItems().size(), is(7));
   }

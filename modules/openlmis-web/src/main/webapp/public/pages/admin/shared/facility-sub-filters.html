@@ -1,0 +1,112 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div id="filter" class="pull-left" ng-controller="FacilitySubFiltersController">
+  <div class="form-group clear-bottom">
+    <h3 class="main-heading" openlmis-message="filter.header"></h3>
+  </div>
+
+  <label class="form-row">
+    <strong openlmis-message="label.facility.type"></strong>:&nbsp;
+    <span id="facilityTypeLabel" ng-bind="type.name"></span>
+  </label>
+
+  <label class="form-row">
+    <strong openlmis-message="label.geographic.zone"></strong>:&nbsp;
+    <span id="geoZoneLabel" ng-bind="zone.name"></span>
+  </label>
+
+  <div class="form-row">
+    <input id="filterButton" type="button" class="btn btn-primary btn-small" ng-click="showFilterModal()"
+           openlmis-message="button.set.filters"/>
+  </div>
+
+  <div id="setFiltersModal" modal="filterModal" options="{ backdrop: 'static', escape: false}">
+    <div class="modal-header">
+      <h3 openlmis-message="button.set.filters"></h3>
+    </div>
+
+    <div class="modal-body">
+      <div class="row-fluid">
+        <label>
+          <strong openlmis-message="label.facility.type"></strong>:
+
+          <span ng-show="selectedFacilityType.id" class="selected-text">
+            <span id="selectedFacilityType" ng-bind="selectedFacilityType.name"></span>
+            <a href="" id="removeFacilityTypeIcon" ng-click="selectedFacilityType = undefined"
+               openlmis-message="link.clear">Clear</a>
+          </span>
+        </label>
+
+      </div>
+      <div class="row-fluid section-divider">
+        <select ui-select2 class="select2-container bottom-spacer span8" name="facilityType" id="facilityType"
+                ng-model="facilityType" ng-change="setFacilityType()"
+                ng-options="i as i.name for i in facilityTypes">
+          <option value="" ng-bind="label"></option>
+        </select>
+      </div>
+
+      <div class="row-fluid">
+        <label>
+          <strong openlmis-message="label.geographic.zone"></strong>:
+
+          <span ng-show="selectedGeoZone.id" class="selected-text">
+            <span id="selectedGeoZone" ng-bind="selectedGeoZone.name"></span>
+            <a href="" id="removeGeoZoneIcon" ng-click="selectedGeoZone = undefined"
+               openlmis-message="link.clear"></a>
+          </span>
+        </label>
+      </div>
+
+      <div class="row-fluid">
+        <div class="input-append input-prepend">
+          <input id='searchGeoZone' type="text" ng-model="geoZoneSearchParam" maxlength="50"
+                 ng-keydown="triggerSearch($event)"
+                 openlmis-message="placeholder.geographic.zone.search"/>
+          <button class="btn" ng-click="searchGeoZone()">
+            <i id='geoZoneSearchIcon' class="icon-search"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="geoZoneSearchList" class="search-list slider" slider="showResults">
+        <div ng-switch on="geoZonesResultCount">
+          <h3 ng-switch-when="0">
+            <span id="noGeoZoneResult" ng-show="!manyGeoZoneMessage"
+                  openlmis-message="msg.no.matches|geoZoneQuery"></span>
+            <span id="tooManyGeoZoneResults" ng-show="manyGeoZoneMessage" openlmis-message="manyGeoZoneMessage"></span>
+          </h3>
+
+          <h3 id="oneGeoZoneResult" ng-switch-when="1" openlmis-message="msg.one.match|geoZoneQuery"></h3>
+
+          <h3 id="nGeoZoneResults" ng-switch-default
+              openlmis-message="msg.many.matches|geoZonesResultCount|geoZoneQuery"></h3>
+        </div>
+        <a href="" class="close-btn" id="geoZoneSearchCloseButton" ng-click="clearGeoZoneSearch()"></a>
+        <ul>
+          <li ng-repeat="geoZone in geoZoneList">
+            <div class="productCategory" ng-show="showLevel($index)" ng-bind="geoZone.level.name"></div>
+            <a id="geoZoneResult{{$index}}" href="" ng-click="setGeoZone(geoZone)">{{geoZone.code}} -
+              {{geoZone.name}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <input type="button" id="doneFilters" class="btn btn-primary" ng-click="setFilters()"
+             openlmis-message="button.apply.filters"/>
+
+      <input type="button" id="cancelFilters" class="btn btn-cancel" ng-click="cancelFilters()"
+             openlmis-message="button.cancel"/>
+    </div>
+  </div>
+</div>

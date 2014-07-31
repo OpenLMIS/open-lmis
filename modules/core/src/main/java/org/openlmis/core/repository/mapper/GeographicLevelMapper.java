@@ -10,7 +10,9 @@
 
 package org.openlmis.core.repository.mapper;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.GeographicLevel;
 import org.springframework.stereotype.Repository;
 
@@ -28,4 +30,34 @@ public interface GeographicLevelMapper {
 
   @Select("SELECT * FROM geographic_levels ORDER BY levelNumber")
   List<GeographicLevel> getAll();
+
+  @Select("SELECT * FROM geographic_levels WHERE LOWER(code) = LOWER(#{code})")
+  GeographicLevel getByCode(String code);
+
+  @Select("SELECT * FROM geographic_levels WHERE LOWER(code) = LOWER(#{code})")
+  GeographicLevel getGeographicLevelByCode(String code);
+
+  @Insert({"INSERT INTO geographic_levels (code"
+    , ", name"
+    , ", levelNumber"
+    , ", createdBy"
+    , ", createdDate"
+    , ", modifiedBy"
+    , ", modifiedDate)"
+    , "VALUES (#{code}"
+    , ", #{name}"
+    , ", #{levelNumber}"
+    , ", #{createdBy}"
+    , ", NOW()"
+    , ", #{modifiedBy}"
+    , ", NOW())"})
+  void insert(GeographicLevel geographicLevel);
+
+  @Update({"UPDATE geographic_levels SET code = #{code}"
+    , ", name = #{name}"
+    , ", levelNumber = #{levelNumber}"
+    , ", modifiedBy = #{modifiedBy}"
+    , ", modifiedDate = #{modifiedDate}"
+    , "WHERE LOWER(code) = LOWER(#{code})"})
+  void update(GeographicLevel geographicLevel);
 }

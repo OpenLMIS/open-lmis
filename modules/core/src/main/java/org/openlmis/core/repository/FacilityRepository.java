@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.commaSeparateRightNames;
+import static org.openlmis.core.domain.RightName.commaSeparateRightNames;
 
 /**
  * FacilityRepository is repository class for Facility related database operations.
@@ -33,17 +33,26 @@ import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 @NoArgsConstructor
 public class FacilityRepository {
 
-  @Autowired
   private FacilityMapper mapper;
+
+  private FacilityTypeRepository facilityTypeRepository;
 
   @Autowired
   private CommaSeparator commaSeparator;
 
-  @Autowired
   private GeographicZoneRepository geographicZoneRepository;
 
-  public List<Facility> getAll() {
-    return mapper.getAll();
+  private FacilityOperatorRepository facilityOperatorRepository;
+
+  @Autowired
+  public FacilityRepository(FacilityMapper facilityMapper,
+                            FacilityTypeRepository facilityTypeRepository,
+                            GeographicZoneRepository geographicZoneRepository,
+                            FacilityOperatorRepository facilityOperatorRepository) {
+    this.mapper = facilityMapper;
+    this.facilityTypeRepository = facilityTypeRepository;
+    this.geographicZoneRepository = geographicZoneRepository;
+    this.facilityOperatorRepository = facilityOperatorRepository;
   }
 
   public void save(Facility facility) {
@@ -93,7 +102,7 @@ public class FacilityRepository {
       throw new DataException("error.reference.data.facility.type.missing");
 
     String facilityTypeCode = facilityType.getCode();
-    FacilityType existingFacilityType = mapper.getFacilityTypeForCode(facilityTypeCode);
+    FacilityType existingFacilityType = facilityTypeRepository.getByCode(facilityTypeCode);
 
     if (existingFacilityType == null)
       throw new DataException("error.reference.data.invalid.facility.type");
@@ -111,15 +120,7 @@ public class FacilityRepository {
     if (operatedById == null)
       throw new DataException("error.reference.data.invalid.operated.by");
 
-    facility.setOperatedBy(mapper.getFacilityOperatorById(operatedById));
-  }
-
-  public List<FacilityType> getAllTypes() {
-    return mapper.getAllTypes();
-  }
-
-  public List<FacilityOperator> getAllOperators() {
-    return mapper.getAllOperators();
+    facility.setOperatedBy(facilityOperatorRepository.getById(operatedById));
   }
 
   public Facility getHomeFacility(Long userId) {
@@ -153,21 +154,10 @@ public class FacilityRepository {
     return facilityId;
   }
 
-  public List<Facility> searchFacilitiesByCodeOrName(String searchParam) {
-    return mapper.searchFacilitiesByCodeOrName(searchParam);
+  public Facility getHomeFacilityForRights(Long userId, String... rightNames) {
+    return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rightNames));
   }
 
-  public Facility getHomeFacilityForRights(Long userId, Right... rights) {
-    return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rights));
-  }
-
-  public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
-    facilityType = mapper.getFacilityTypeForCode(facilityType.getCode());
-    if (facilityType == null) {
-      throw new DataException("error.facility.type.code.invalid");
-    }
-    return facilityType;
-  }
 
   public Facility getByCode(String code) {
     return mapper.getByCode(code);
@@ -179,10 +169,6 @@ public class FacilityRepository {
 
   public List<Facility> getAllByProgramSupportedModifiedDate(Date dateModified) {
     return mapper.getAllByProgramSupportedModifiedDate(dateModified);
-  }
-
-  public List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(String query, Boolean virtualFacility) {
-    return mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
   }
 
   public List<Facility> getEnabledWarehouses() {
@@ -205,11 +191,23 @@ public class FacilityRepository {
     return mapper.getAllParentsByModifiedDate(modifiedDate);
   }
 
-  public Integer getCountOfEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId){
-    return mapper.getEnabledFacilitiesCount(searchParam, facilityTypeId, geoZoneId);
+  public Integer getFacilitiesCountBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled) {
+    return mapper.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
   }
 
-  public List<Facility> getEnabledFacilities(String searchParam, Long facilityTypeId, Long geoZoneId) {
-    return mapper.getEnabledFacilities(searchParam, facilityTypeId, geoZoneId);
+  public List<Facility> searchFacilitiesBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled) {
+    return mapper.searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return mapper.getTotalSearchResultCount(searchParam);
+  }
+
+  public Integer getTotalSearchResultCountByGeographicZone(String searchParam) {
+    return mapper.getTotalSearchResultCountByGeographicZone(searchParam);
+  }
+
+  public List<Facility> searchBy(String searchParam, String columnName, Pagination pagination) {
+    return mapper.search(searchParam,columnName,pagination);
   }
 }

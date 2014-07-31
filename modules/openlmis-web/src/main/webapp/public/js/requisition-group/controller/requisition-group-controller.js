@@ -8,63 +8,191 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function RequisitionGroupController($scope, requisitionGroupData, $location, RequisitionGroups, SupervisoryNodesSearch) {
+function RequisitionGroupController($scope, requisitionGroupData, messageService, $location, RequisitionGroups, SupervisoryNodesSearch, programs, schedules) {
+
+  var currentProgramSchedule, programScheduleUnderEdit;
+  $scope.$parent.message = "";
 
   if (requisitionGroupData) {
     $scope.requisitionGroup = requisitionGroupData.requisitionGroup;
     $scope.requisitionGroupMembers = requisitionGroupData.requisitionGroupMembers;
+    $scope.requisitionGroupProgramSchedules = requisitionGroupData.requisitionGroupProgramSchedules;
+    _.each($scope.requisitionGroupProgramSchedules, function (requisitionGroupProgramSchedule) {
+      requisitionGroupProgramSchedule.underEdit = false;
+    });
   }
   else {
     $scope.requisitionGroup = {};
     $scope.requisitionGroupMembers = [];
+    $scope.requisitionGroupProgramSchedules = [];
   }
 
+  $scope.schedules = schedules;
+  $scope.newProgramSchedule = {};
+
+  refreshAndSortPrograms();
+
+  function refreshAndSortPrograms() {
+    var selectedProgramIds = _.pluck(_.pluck($scope.requisitionGroupProgramSchedules, 'program'), 'id');
+    $scope.programs = _.reject(programs, function (program) {
+      return _.contains(selectedProgramIds, program.id);
+    });
+
+    $scope.programs = _.sortBy($scope.programs, function (program) {
+      return program.name.toLowerCase();
+    });
+    $scope.programMessage = $scope.programs.length ? "label.select.program" : "label.noProgramLeft";
+  }
+
+  $scope.addNewRow = function () {
+    $scope.addNew = true;
+  };
+
+  $scope.updateSchedule = function (index) {
+    $scope.requisitionGroupProgramSchedules[index].processingSchedule = _.find($scope.schedules, function (schedule) {
+      return $scope.requisitionGroupProgramSchedules[index].processingSchedule.id == schedule.id;
+    });
+  };
+
+  $scope.edit = function (index) {
+    currentProgramSchedule = angular.copy($scope.requisitionGroupProgramSchedules[index]);
+    $scope.requisitionGroupProgramSchedules[index].underEdit = true;
+  };
+
+  $scope.clearDropOffFacility = function (index) {
+    $scope.requisitionGroupProgramSchedules[index].dropOffFacility = undefined;
+  };
+
+  $scope.cancelEdit = function (index) {
+    $scope.requisitionGroupProgramSchedules[index] = currentProgramSchedule;
+    $scope.requisitionGroupProgramSchedules[index].underEdit = false;
+    currentProgramSchedule = undefined;
+    closeSlider();
+  };
+
+  $scope.cancelAdd = function () {
+    $scope.newProgramSchedule = {};
+    $scope.addNew = false;
+    closeSlider();
+  };
+
+  $scope.findProgramScheduleUnderEdit = function () {
+    return _.find($scope.requisitionGroupProgramSchedules, function (programSchedule) {
+      return programSchedule.underEdit === true;
+    });
+  };
+
+  $scope.saveEditableRow = function (index) {
+    $scope.requisitionGroupProgramSchedules[index].underEdit = false;
+    programScheduleUnderEdit = $scope.findProgramScheduleUnderEdit();
+    $scope.requisitionGroupProgramSchedules[index].dropOffFacility = (programScheduleUnderEdit && programScheduleUnderEdit.dropOffFacility) || $scope.requisitionGroupProgramSchedules[index].dropOffFacility;
+    closeSlider();
+  };
+
   $scope.cancel = function () {
-    $scope.$parent.message = "";
+    $scope.$parent.successMessage = "";
     $scope.$parent.requisitionGroupId = undefined;
     $location.path('#/search');
   };
 
   loadSupervisoryNode();
 
+  $scope.addProgramSchedules = function () {
+    $scope.requisitionGroupProgramSchedules.push($scope.newProgramSchedule);
+    refreshAndSortPrograms();
+    $scope.newProgramSchedule = {};
+    $scope.addNew = false;
+    closeSlider();
+  };
+
+  $scope.remove = function (programId) {
+    $scope.requisitionGroupProgramSchedules = _.reject($scope.requisitionGroupProgramSchedules, function (programSchedule) {
+      return programSchedule.program.id === programId;
+    });
+    refreshAndSortPrograms();
+  };
+
   $scope.save = function () {
     if ($scope.requisitionGroupForm.$error.required || !$scope.requisitionGroup.supervisoryNode) {
       $scope.showError = "true";
       $scope.error = 'form.error';
-      $scope.message = "";
+      $scope.successMessage = "";
       return;
     }
+
+    if ($scope.findProgramScheduleUnderEdit()) {
+      $scope.error = 'error.program.schedules.not.done';
+      return;
+    }
+
     if ($scope.requisitionGroup.id) {
-      RequisitionGroups.update({id: $scope.requisitionGroup.id}, {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers},
-          success, error);
+      RequisitionGroups.update({id: $scope.requisitionGroup.id},
+        {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers, "requisitionGroupProgramSchedules": $scope.requisitionGroupProgramSchedules},
+        success, error);
     }
     else {
-      RequisitionGroups.save({}, {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers},
-          success, error);
+      RequisitionGroups.save({},
+        {"requisitionGroup": $scope.requisitionGroup, "requisitionGroupMembers": $scope.requisitionGroupMembers, "requisitionGroupProgramSchedules": $scope.requisitionGroupProgramSchedules},
+        success, error);
     }
+  };
+
+  $scope.toggleSlider = function (index) {
+    $scope.currentSlider = $scope.showSlider ? undefined : index;
+    $scope.showSlider = !$scope.showSlider;
+    $scope.extraParams = {"virtualFacility": null, "enabled": true};
+  };
+
+  var closeSlider = function () {
+    if ($scope.showSlider === true)
+      $scope.toggleSlider();
   };
 
   $scope.associate = function (facility) {
-    var isDuplicate = _.find($scope.requisitionGroupMembers, function (member) {
-      return member.facility.id == facility.id;
-    });
-    if (isDuplicate) {
-      $scope.duplicateFacilityName = facility.name;
-      return;
+    programScheduleUnderEdit = $scope.findProgramScheduleUnderEdit();
+    if (programScheduleUnderEdit) {
+      programScheduleUnderEdit.dropOffFacility = facility;
     }
-    $scope.duplicateFacilityName = undefined;
-
-    var newMember = {"facility": facility, "requisitionGroup": $scope.requisitionGroup};
-    $scope.requisitionGroupMembers.push(newMember);
-
-    $scope.requisitionGroupMembers.sort(function (member1, member2) {
-      if (member1.facility.code.toLowerCase() > member2.facility.code.toLowerCase())
-        return 1;
-      if (member1.facility.code.toLowerCase() < member2.facility.code.toLowerCase())
-        return -1;
-      return 0;
-    });
+    else {
+      $scope.newProgramSchedule.dropOffFacility = facility;
+    }
+    closeSlider();
   };
+
+  $scope.toggleMultipleFacilitiesSlider = function () {
+    $scope.showMultipleFacilitiesSlider = !$scope.showMultipleFacilitiesSlider;
+    $scope.extraMultipleParams = {"virtualFacility": null, "enabled": true};
+  };
+
+  $scope.addMembers = function (tempFacilities) {
+    var duplicateMembers = _.intersection(_.pluck(_.pluck($scope.requisitionGroupMembers, 'facility'), 'id'),
+      _.pluck(tempFacilities, "id"));
+    if (duplicateMembers.length > 0) {
+      $scope.duplicateFacilityName = _.find($scope.requisitionGroupMembers, function (member) {
+        return member.facility.id == duplicateMembers[0];
+      }).facility.name;
+      $scope.message = undefined;
+      return false;
+    }
+
+    $.each(tempFacilities, function (index, tempFacility) {
+      var newMember = {"facility": tempFacility, "requisitionGroup": $scope.requisitionGroup};
+      $scope.requisitionGroupMembers.push(newMember);
+    });
+
+    $scope.requisitionGroupMembers = _.sortBy($scope.requisitionGroupMembers, function (member) {
+      return member.facility.code.toLowerCase();
+    });
+
+    $scope.showMultipleFacilitiesSlider = !$scope.showMultipleFacilitiesSlider;
+    $scope.message = messageService.get('facilities.added.successfully');
+    $scope.duplicateFacilityName = undefined;
+    return true;
+  };
+
+  $scope.$watch('showMultipleFacilitiesSlider', function () {
+    $scope.duplicateFacilityName = undefined;
+  });
 
   $scope.removeMember = function (memberFacilityId) {
     $scope.requisitionGroupMembers = _.filter($scope.requisitionGroupMembers, function (member) {
@@ -74,14 +202,14 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
 
   var success = function (data) {
     $scope.error = "";
-    $scope.$parent.message = data.success;
+    $scope.$parent.successMessage = data.success;
     $scope.$parent.requisitionGroupId = data.requisitionGroupId;
     $scope.showError = false;
     $location.path('#/search');
   };
 
   var error = function (data) {
-    $scope.$parent.message = "";
+    $scope.$parent.successMessage = "";
     $scope.error = data.data.error;
     $scope.showError = true;
   };
@@ -125,9 +253,9 @@ function RequisitionGroupController($scope, requisitionGroupData, $location, Req
   };
 
   function loadSupervisoryNode() {
-    if (!$scope.requisitionGroup) return;
-
-    $scope.nodeSelected = $scope.requisitionGroup.supervisoryNode;
+    if ($scope.requisitionGroup) {
+      $scope.nodeSelected = $scope.requisitionGroup.supervisoryNode;
+    }
   }
 }
 
@@ -141,6 +269,28 @@ RequisitionGroupController.resolve = {
     $timeout(function () {
       RequisitionGroups.get({id: requisitionGroupId}, function (data) {
         deferred.resolve(data.requisitionGroupData);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  programs: function ($q, $timeout, Programs) {
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      Programs.get({type: "pull"}, function (data) {
+        deferred.resolve(data.programs);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  schedules: function ($q, $timeout, Schedule) {
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      Schedule.get({}, function (data) {
+        deferred.resolve(data.schedules);
       }, {});
     }, 100);
     return deferred.promise;

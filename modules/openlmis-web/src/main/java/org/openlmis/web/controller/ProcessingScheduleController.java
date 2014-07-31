@@ -45,7 +45,7 @@ public class ProcessingScheduleController extends BaseController {
   private ProcessingScheduleService processingScheduleService;
 
   @RequestMapping(value = "/schedules", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE, MANAGE_REQUISITION_GROUP')")
   public ResponseEntity<OpenLmisResponse> getAll() {
     return OpenLmisResponse.response(SCHEDULES, processingScheduleService.getAll());
   }

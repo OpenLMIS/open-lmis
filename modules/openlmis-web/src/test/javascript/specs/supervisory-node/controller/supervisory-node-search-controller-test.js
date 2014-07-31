@@ -24,6 +24,15 @@ describe("Supervisory Node Search Controller", function () {
     ctrl('SupervisoryNodeSearchController', {$scope: scope});
   }));
 
+  it('should return if query is null', function () {
+    scope.query = "";
+    var httpBackendSpy = spyOn($httpBackend, 'expectGET');
+
+    scope.search(1);
+
+    expect(httpBackendSpy).not.toHaveBeenCalled();
+  });
+
   it('should get all supervisory nodes in a page depending on search criteria', function () {
     var supervisoryNode = {"code": "N1", "name": "Node 1", "parent": 2};
     var pagination = {"page": 1, "pageSize": 10, "numberOfPages": 10, "totalRecords": 100};
@@ -32,6 +41,24 @@ describe("Supervisory Node Search Controller", function () {
     scope.selectedSearchOption.value = 'parent';
     $httpBackend.when('GET', '/paged-search-supervisory-nodes.json?page=1&param=' + scope.query + '&parent=true').respond(response);
     scope.search(1);
+    $httpBackend.flush();
+
+    expect(scope.supervisoryNodeList).toEqual([supervisoryNode]);
+    expect(scope.pagination).toEqual(pagination);
+    expect(scope.currentPage).toEqual(1);
+    expect(scope.showResults).toEqual(true);
+    expect(scope.totalItems).toEqual(100);
+  });
+
+  it('should get all supervisory nodes in a page depending on last query', function () {
+    var supervisoryNode = {"code": "N1", "name": "Node 1", "parent": 2};
+    var pagination = {"page": 1, "pageSize": 10, "numberOfPages": 10, "totalRecords": 100};
+    var response = {"supervisoryNodes": [supervisoryNode], "pagination": pagination};
+    scope.query = "Nod";
+    var lastQuery = "Super";
+    scope.selectedSearchOption.value = 'parent';
+    $httpBackend.when('GET', '/paged-search-supervisory-nodes.json?page=1&param=' + lastQuery + '&parent=true').respond(response);
+    scope.search(1, lastQuery);
     $httpBackend.flush();
 
     expect(scope.supervisoryNodeList).toEqual([supervisoryNode]);
@@ -84,13 +111,14 @@ describe("Supervisory Node Search Controller", function () {
 
   it('should get results according to specified page', function () {
     scope.currentPage = 5;
+    scope.searchedQuery = "no";
     var searchSpy = spyOn(scope, 'search');
 
     scope.$apply(function () {
       scope.currentPage = 6;
     });
 
-    expect(searchSpy).toHaveBeenCalledWith(6);
+    expect(searchSpy).toHaveBeenCalledWith(6, scope.searchedQuery);
   });
 
   it("should take to edit page of the supervisory node", function () {

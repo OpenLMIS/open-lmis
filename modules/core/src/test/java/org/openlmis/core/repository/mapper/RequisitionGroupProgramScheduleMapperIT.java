@@ -30,7 +30,6 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
@@ -46,8 +45,10 @@ public class RequisitionGroupProgramScheduleMapperIT {
 
   @Autowired
   ProgramMapper programMapper;
+
   @Autowired
   ProcessingScheduleMapper processingScheduleMapper;
+
   @Autowired
   FacilityMapper facilityMapper;
 
@@ -157,5 +158,38 @@ public class RequisitionGroupProgramScheduleMapperIT {
     assertThat(resultRequisitionGroupProgramSchedule.getRequisitionGroup().getId(), is(requisitionGroupProgramSchedule.getRequisitionGroup().getId()));
     assertThat(resultRequisitionGroupProgramSchedule.isDirectDelivery(), is(requisitionGroupProgramSchedule.isDirectDelivery()));
     assertThat(resultRequisitionGroupProgramSchedule.getDropOffFacility().getId(), is(requisitionGroupProgramSchedule.getDropOffFacility().getId()));
+  }
+
+  @Test
+  public void shouldGetRequisitionGroupProgramScheduleForRequisitionGroup() throws Exception {
+    programMapper.insert(requisitionGroupProgramSchedule.getProgram());
+    requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
+
+    requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
+
+    List<RequisitionGroupProgramSchedule> result = requisitionGroupProgramScheduleMapper.
+      getByRequisitionGroupId(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
+
+    assertThat(result.size(), is(1));
+    assertThat(result.get(0).getProgram(), is(requisitionGroupProgramSchedule.getProgram()));
+    assertThat(result.get(0).getProcessingSchedule(), is(requisitionGroupProgramSchedule.getProcessingSchedule()));
+    assertThat(result.get(0).isDirectDelivery(), is(requisitionGroupProgramSchedule.isDirectDelivery()));
+    assertThat(result.get(0).getDropOffFacility().getId(), is(requisitionGroupProgramSchedule.getDropOffFacility().getId()));
+    assertThat(result.get(0).getDropOffFacility().getName(), is(requisitionGroupProgramSchedule.getDropOffFacility().getName()));
+    assertThat(result.get(0).getRequisitionGroup().getId(), is(requisitionGroupProgramSchedule.getRequisitionGroup().getId()));
+  }
+
+  @Test
+  public void shouldDeleteRequisitionGroupProgramScheduleByRequisitionGroup() throws Exception {
+    programMapper.insert(requisitionGroupProgramSchedule.getProgram());
+    requisitionGroupMapper.insert(requisitionGroupProgramSchedule.getRequisitionGroup());
+
+    requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
+    requisitionGroupProgramScheduleMapper.deleteRequisitionGroupProgramSchedulesFor(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
+
+    List<RequisitionGroupProgramSchedule> result = requisitionGroupProgramScheduleMapper.
+      getByRequisitionGroupId(requisitionGroupProgramSchedule.getRequisitionGroup().getId());
+
+    assertThat(result.size(), is(0));
   }
 }

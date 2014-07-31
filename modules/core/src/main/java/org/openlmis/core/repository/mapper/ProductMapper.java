@@ -65,15 +65,12 @@ public interface ProductMapper {
     "#{specialStorageInstructions}," + "#{specialTransportInstructions}," +
     "#{active}," + "#{fullSupply}," + "#{tracer}," + "#{roundToZero}," + "#{archived}," +
     "#{packRoundingThreshold},  #{productGroup.id}," +
-    "#{createdBy}, #{modifiedBy}, #{modifiedDate})")
+    "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
   @Options(useGeneratedKeys = true)
   Integer insert(Product product);
 
-  @Select("SELECT id FROM dosage_Units WHERE LOWER(code) = LOWER(#{code})")
-  Long getDosageUnitIdForCode(String code);
-
-  @Select("SELECT id FROM product_forms WHERE LOWER(code) = LOWER(#{code})")
-  Long getProductFormIdForCode(String code);
+  @Select("SELECT * FROM dosage_Units WHERE LOWER(code) = LOWER(#{code})")
+  DosageUnit getDosageUnitByCode(String code);
 
   @Select("SELECT id FROM products WHERE LOWER(code) = LOWER(#{code})")
   Long getIdByCode(String code);
@@ -88,22 +85,40 @@ public interface ProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))})
   Product getByCode(String code);
 
-  @Update(
-    {"UPDATE products SET  alternateItemCode=#{alternateItemCode}, ", "manufacturer =#{manufacturer},manufacturerCode=#{manufacturerCode},manufacturerBarcode=#{manufacturerBarCode}, mohBarcode=#{mohBarCode}, ", "gtin=#{gtin},type=#{type}, ",
-      "primaryName=#{primaryName},fullName=#{fullName}, genericName=#{genericName},alternateName=#{alternateName},description=#{description}, ", "strength=#{strength}, formId=#{form.id}, ", "dosageUnitId=#{dosageUnit.id}, dispensingUnit=#{dispensingUnit}, ",
-      "dosesPerDispensingUnit=#{dosesPerDispensingUnit}, ", "packSize=#{packSize},alternatePackSize=#{alternatePackSize}, ", "storeRefrigerated=#{storeRefrigerated},storeRoomTemperature=#{storeRoomTemperature}, ", "hazardous=#{hazardous},",
-      "flammable=#{flammable},controlledSubstance=#{controlledSubstance},lightSensitive=#{lightSensitive},approvedByWHO=#{approvedByWHO}, ", "contraceptiveCYP=#{contraceptiveCYP},", "packLength=#{packLength},packWidth=#{packWidth},packHeight=#{packHeight},",
-      "packWeight=#{packWeight},packsPerCarton=#{packsPerCarton},", "cartonLength=#{cartonLength},cartonWidth=#{cartonWidth},cartonHeight=#{cartonHeight},cartonsPerPallet=#{cartonsPerPallet},", "expectedShelfLife=#{expectedShelfLife},",
-      "specialStorageInstructions=#{specialStorageInstructions},specialTransportInstructions=#{specialTransportInstructions},", "active=#{active},fullSupply=#{fullSupply},tracer=#{tracer},roundToZero=#{roundToZero},archived=#{archived},",
-      "packRoundingThreshold=#{packRoundingThreshold}, productGroupId = #{productGroup.id},", "modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE id=#{id}"})
+  @Update({"UPDATE products SET code = #{code}, alternateItemCode = #{alternateItemCode}, ", "manufacturer = #{manufacturer},",
+    "manufacturerCode = #{manufacturerCode}, manufacturerBarcode = #{manufacturerBarCode}, mohBarcode = #{mohBarCode}, ",
+    "gtin = #{gtin}, type = #{type}, primaryName = #{primaryName}, fullName = #{fullName}, genericName = #{genericName},",
+    "alternateName=#{alternateName},description=#{description}, ", "strength=#{strength}, formId=#{form.id}, ", "dosageUnitId=#{dosageUnit.id}, dispensingUnit=#{dispensingUnit}, ",
+    "dosesPerDispensingUnit=#{dosesPerDispensingUnit}, ", "packSize=#{packSize},alternatePackSize=#{alternatePackSize}, ", "storeRefrigerated=#{storeRefrigerated},storeRoomTemperature=#{storeRoomTemperature}, ", "hazardous=#{hazardous},",
+    "flammable=#{flammable},controlledSubstance=#{controlledSubstance},lightSensitive=#{lightSensitive},approvedByWHO=#{approvedByWHO}, ", "contraceptiveCYP=#{contraceptiveCYP},", "packLength=#{packLength},packWidth=#{packWidth},packHeight=#{packHeight},",
+    "packWeight=#{packWeight},packsPerCarton=#{packsPerCarton},", "cartonLength=#{cartonLength},cartonWidth=#{cartonWidth},cartonHeight=#{cartonHeight},cartonsPerPallet=#{cartonsPerPallet},", "expectedShelfLife=#{expectedShelfLife},",
+    "specialStorageInstructions=#{specialStorageInstructions},specialTransportInstructions=#{specialTransportInstructions},", "active=#{active},fullSupply=#{fullSupply},tracer=#{tracer},roundToZero=#{roundToZero},archived=#{archived},",
+    "packRoundingThreshold=#{packRoundingThreshold}, productGroupId = #{productGroup.id},", "modifiedBy=#{modifiedBy}, modifiedDate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) WHERE id=#{id}"})
   void update(Product product);
 
   @Select("SELECT * FROM products WHERE id=#{id}")
-  @Results({@Result(property = "productGroup", column = "productGroupId", javaType = ProductGroup.class,
-    one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById"))})
+  @Results({
+    @Result(property = "productGroup", column = "productGroupId", javaType = ProductGroup.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById")),
+    @Result(
+      property = "dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
+    @Result(
+      property = "form", column = "formId", javaType = DosageUnit.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById"))})
   Product getById(Long id);
 
-
-  @Select("SELECT active FROM products WHERE code = #{code}")
+  @Select("SELECT active FROM products WHERE LOWER(code) = LOWER(#{code})")
   boolean isActive(String code);
+
+  @Select({"SELECT id, fullSupply, code, primaryName, strength, dosageUnitId, dispensingUnit, packSize, active",
+    "FROM products WHERE id = #{id}"})
+  @Results({
+    @Result(property = "dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))})
+  Product getLWProduct(Long id);
+
+  @Select({"SELECT COUNT(*) FROM products WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%')",
+    "OR (LOWER(primaryName) LIKE '%' || LOWER(#{searchParam}) || '%')"})
+  Integer getTotalSearchResultCount(String searchParam);
 }

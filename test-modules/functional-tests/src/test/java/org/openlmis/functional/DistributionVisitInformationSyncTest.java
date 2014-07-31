@@ -88,7 +88,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     visitInformationPage.verifyIndicator("AMBER");
     testWebDriver.refresh();
     assertTrue(visitInformationPage.isYesRadioButtonSelected());
-    visitInformationPage.enterVisitDateAsFirstOfCurrentMonth();
+    visitInformationPage.enterVisitDateAsCurrentDate();
     visitInformationPage.verifyIndicator("AMBER");
     visitInformationPage.enterObservations("Some Observations");
     visitInformationPage.verifyIndicator("AMBER");
@@ -117,7 +117,7 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
     visitInformationPage.selectFacilityVisitedYes();
     visitInformationPage.verifyIndicator("AMBER");
     facilityListPage.verifyOverallFacilityIndicatorColor("AMBER");
-    visitInformationPage.enterVisitDateAsFirstOfCurrentMonth();
+    visitInformationPage.enterVisitDateAsCurrentDate();
     visitInformationPage.verifyIndicator("AMBER");
     visitInformationPage.enterObservations("Some Observations");
     visitInformationPage.verifyIndicator("AMBER");
@@ -497,9 +497,9 @@ public class DistributionVisitInformationSyncTest extends TestCaseHelper {
   }
 
   @And("^I select visit date as current date$")
-  public void enterVisitDateAsFirstOfCurrentMonth() {
+  public void enterVisitDateAsCurrentDate() {
     VisitInformationPage visitInformationPage = PageObjectFactory.getVisitInformationPage(testWebDriver);
-    visitInformationPage.enterVisitDateAsFirstOfCurrentMonth();
+    visitInformationPage.enterVisitDateAsCurrentDate();
   }
 
   @Then("^I enter vehicle id as \"([^\"]*)\"$")

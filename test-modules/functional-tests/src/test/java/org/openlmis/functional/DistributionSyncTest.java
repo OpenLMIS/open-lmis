@@ -83,10 +83,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.updateFieldValue("facilities", "active", "true", "code", "F10");
     dbWrapper.updateFieldValue("facilities", "enabled", "true", "code", "F10");
     dbWrapper.updateFieldValue("programs", "active", "true", "code", "VACCINES");
-    dbWrapper.updateFieldValue("products", "active", "true", "code", "P10");
-    dbWrapper.updateFieldValue("products", "active", "true", "code", "P11");
-    dbWrapper.updateFieldValue("products", "active", "true", "code", "Product6");
-    dbWrapper.updateFieldValue("products", "active", "true", "code", "Product5");
   }
 
   @Test(groups = {"distribution"})
@@ -365,7 +361,6 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
     assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-
   }
 
   @Test(groups = {"distribution"})
@@ -403,7 +398,6 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
     assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-
   }
 
   @Test(groups = {"distribution"})
@@ -437,7 +431,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     for (WebElement webElement : distributionPage.getAllSelectOptionsFromProgram()) {
       assertFalse(webElement.getText().contains(distributionTestData.get(VACCINES_PROGRAM)));
     }
-
   }
 
   @Test(groups = {"distribution"})
@@ -492,7 +485,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     for (int i = 0; i < refrigeratorDetails.length; i++) {
       assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
     }
-
   }
 
   @Test(groups = {"distribution"})
@@ -543,7 +535,6 @@ public class DistributionSyncTest extends TestCaseHelper {
     verifyRefrigeratorReadingDataInDatabase(distributionTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0F, "Y", 2, 5, null, null);
     verifyFullCoveragesDataInDatabase(null, null, null, null, distributionTestData.get(FIRST_FACILITY_CODE));
     verifyAdultCoverageDataNullInDatabase(distributionTestData.get(FIRST_FACILITY_CODE));
-
   }
 
   @Test(groups = {"distribution"})
@@ -824,7 +815,6 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     initiateNextDistributionForGivenPeriod(distributionTestData.get(FIRST_DELIVERY_ZONE_NAME), distributionTestData.get(VACCINES_PROGRAM), "Period13");
     assertFalse(facilityListPage.getFacilitiesInDropDown().contains(distributionTestData.get(FIRST_FACILITY_CODE)));
-
   }
 
   @Test(groups = {"distribution"})
