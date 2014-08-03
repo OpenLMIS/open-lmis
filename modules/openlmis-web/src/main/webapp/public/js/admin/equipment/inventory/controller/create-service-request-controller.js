@@ -14,7 +14,7 @@ function CreateServiceRequestController($scope, $location, $routeParams, Equipme
 
     $scope.current.inventoryId = $routeParams.id;
     $scope.current.facilityId = $routeParams.facilityId;
-    $scope.current.vendorId = 1;
+
 
     Vendors.get(function(data){
         $scope.vendors = data.vendors;

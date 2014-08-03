@@ -35,7 +35,7 @@
 
           <div>
             <div class="form-row clearfix">
-              <label>Maintenance Service Vendor</label>
+              <label>Maintenance Service Vendor <span class="label-required">*</span></label>
               <div class="form-field">
                 <select name="vendor" ng-model="current.vendorId" ng-required="true">
                   <option value="{{vendor.id}}" ng-repeat="vendor in vendors">{{vendor.name}}</option>
@@ -44,7 +44,7 @@
               </div>
             </div>
             <div class="form-row clearfix">
-              <label>Reason for requesting maintenance</label>
+              <label>Reason for requesting maintenance <span class="label-required">*</span></label>
               <div class="form-field">
                 <textarea style="width:100%" name="reason" ng-model="current.reason" ng-required="true"></textarea>
                 <span class="field-error" ng-show="requestForm.reason.$error.required && showError" openlmis-message="missing.value"></span>
@@ -52,7 +52,7 @@
             </div>
 
             <div class="form-row clearfix">
-              <label >Recommended Maintenance Visit Date</label>
+              <label >Recommended Maintenance Visit Date <span class="label-required">*</span></label>
 
               <div class="form-field">
                 <input ng-required="true"
@@ -81,7 +81,7 @@
 
     <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
-      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button" openlmis-message="button.save" />
+      <input id="saveButton" ng-disabled="!requestForm.$valid" type="submit" id="save-button" class="btn btn-primary save-button" openlmis-message="button.save" />
       <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancel()" />
     </div>
 

@@ -182,8 +182,8 @@
           <div class="row-fluid">
             <div class="span4">
               <select ng-required="true" size="10" name="userValue"
-                      id="userValue" ng-model="vendorUser.user"  >
-                <option ng-repeat="option in allUsers | filter: filterUserQuery">{{option.firstName}} {{option.lastName}}</option>
+                      id="userValue" ng-model="vendorUser.user"
+                      ng-options="option as option.firstName.concat(' ').concat(option.lastName) for option in allUsers | filter: filterUserQuery">
               </select>
             </div>
           </div>

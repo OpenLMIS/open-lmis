@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, SettingsByKey, ContactList, $dialog, messageService) {
+function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, SettingsByKey, ContactList, SendMessages, $dialog, messageService) {
 
 
   $scope.default_indicator = "period_over_expected";
@@ -48,17 +48,60 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
 
   // start send actions
 
-  $scope.sendEmail = function(){
-    // construct the messges here
+  $scope.doSend = function(){
 
-    // send it to the server
+    if($scope.show_sms){
+      $scope.sendSms();
+      $scope.show_sms=false;
+    }
+    else{
+      $scope.sendEmail();
+      $scope.show_email=false;
+    }
+    $scope.selected_facility.sent=true;
+
   };
 
-  $scope.senSms = function(){
+
+  $scope.sendEmail = function(){
+    // construct the messges here
+    var messages  = [];
+    for(var i = 0; i < $scope.contacts.length; i++){
+      var template = $scope.email_template;
+      var contact = $scope.contacts[i];
+
+      template = template.replace( '{name}' , contact.name);
+      template = template.replace( '{facility_name}', $scope.selected_facility.name );
+      template = template.replace( '{period}', $scope.selected_facility.name );
+
+      messages.push({type: 'email', facility_id: $scope.selected_facility.id, contact: contact.contact, message: template });
+    }
+
+    SendMessages.post(messages, function(data){
+      $scope.sent_confirmation = true;
+    });
+
+  };
+
+  $scope.sendSms = function(){
 
     // construct the messages that go out
+    var messages  = [];
+    for(var i = 0; i < $scope.contacts.length; i++){
+      var template = $scope.sms_template;
+      var contact = $scope.contacts[i];
 
-    // send the request to the server.
+      template = template.replace( '{name}' , contact.name);
+      template = template.replace( '{facility_name}', $scope.selected_facility.name );
+      template = template.replace( '{period}', $scope.selected_facility.name );
+
+      messages.push({type: 'sms', facility_id: $scope.selected_facility.id, contact: contact.contact, message: template });
+
+    }
+
+    SendMessages.post(messages, function(data){
+      $scope.sent_confirmation = true;
+    });
 
   };
 
