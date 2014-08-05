@@ -13,6 +13,7 @@ package org.openlmis.core.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -29,9 +30,13 @@ public class ProductForm extends BaseModel implements Importable {
   @ImportField(name="Display Order", mandatory=true)
   private Integer displayOrder;
 
-  public boolean isValid() {
-    return code != null
-      && code.length() > 0
-      && displayOrder != null;
+  /**
+   * Validates this product form.
+   * @throws DataException if this object is not well-formed.
+   */
+  public void isValid() {
+    if (code == null
+      || code.length() == 0
+      || displayOrder == null) throw new DataException("error.reference.data.missing");
   }
 }

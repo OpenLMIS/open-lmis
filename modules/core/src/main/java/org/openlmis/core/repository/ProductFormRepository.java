@@ -44,7 +44,7 @@ public class ProductFormRepository {
    * @throws DataException if entity is invalid or already exists.
    */
   public void insert(ProductForm pf) {
-    if(pf.isValid() == false) throw new DataException("error.reference.data.missing");
+    pf.isValid();
     if(getByCode(pf.getCode()) != null) throw new DataException("error.duplicate.dosage.unit.code");
 
     try {
@@ -60,7 +60,7 @@ public class ProductFormRepository {
    * @throws DataException if entity is invalid.
    */
   public void update(ProductForm pf) {
-    if(pf.isValid() == false) throw new DataException("error.reference.data.missing");
+    pf.isValid();
 
     try {
       pfMapper.update(pf);
