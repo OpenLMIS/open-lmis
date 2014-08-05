@@ -11,8 +11,8 @@
 function SummaryReportController($scope, $filter, ngTableParams, SummaryReport, ReportSchedules, ReportPrograms, ReportPeriods, ProductCategoriesByProgram, ReportProductsByProgram, ReportFacilityTypes, GeographicZones, RequisitionGroupsByProgram, AllFacilites, $http, $routeParams, $location) {
 
   $scope.exportReport = function (type) {
-    $scope.filterObject.pdformat = 1;
-    var params = jQuery.param($scope.filterObject);
+    $scope.filter.pdformat = 1;
+    var params = jQuery.param($scope.filter);
     var url = '/reports/download/summary/' + type + '?' + params;
     window.open(url);
   };
