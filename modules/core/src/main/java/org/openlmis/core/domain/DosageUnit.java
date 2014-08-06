@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -33,9 +34,11 @@ public class DosageUnit extends BaseModel implements Importable {
 
   /**
    * Validation method for an instantiated DosageUnit.  A valid dosage unit has a code and a display order.
-   * @return true if this dosage unit is a defined well (valid), false otherwise.
+   * @throws DataException if this dosage unit is not defined well.
    */
-  public boolean isValid() {
-    return code != null && code.length() > 0 && displayOrder > 0;
+  public void isValid() {
+    if (code == null
+      || code.length() == 0
+      || displayOrder <= 0 ) throw new DataException("error.reference.data.missing");
   }
 }

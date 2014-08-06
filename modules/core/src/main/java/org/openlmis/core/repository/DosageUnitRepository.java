@@ -39,7 +39,7 @@ public class DosageUnitRepository {
   }
 
   public void insert(DosageUnit du) {
-    if(du.isValid() == false) throw new DataException("error.reference.data.missing");
+    du.isValid();
     if(getByCode(du.getCode()) != null) throw new DataException("error.duplicate.dosage.unit.code");
 
     try {
