@@ -75,7 +75,7 @@ public interface SupervisoryNodeMapper {
   })
   SupervisoryNode getParent(Long id);
 
-  @Select("SELECT * FROM supervisory_nodes")
+  @Select("SELECT * FROM supervisory_nodes order by name")
   List<SupervisoryNode> getAll();
 
   @Select({"WITH  recursive  supervisoryNodesRec AS ",

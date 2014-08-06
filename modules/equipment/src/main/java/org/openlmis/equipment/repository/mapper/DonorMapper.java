@@ -9,13 +9,14 @@ import java.util.List;
 @Repository
 public interface DonorMapper {
 
-  @Select("SELECT * from donors order by shortName")
+  @Select("SELECT * from donors order by shortName, longName")
   List<Donor> getAll();
 
   @Select("Select * from donors AS d " +
       "LEFT JOIN (SELECT primaryDonorId AS id, Count(*) donationCount FROM facility_program_equipments fpi " +
       "          GROUP  BY primaryDonorId) AS x " +
-      "          ON d.id = x.id ")
+      "          ON d.id = x.id " +
+      " Order By d.shortName, d.longName")
   @Results(value = {
       @Result(property = "donationCount",column = "countOfDonations")
   })

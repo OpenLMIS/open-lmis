@@ -19,6 +19,9 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
     $scope.originalSchedule = null;
     $scope.selectedSchedule = null;
 
+
+
+
     $scope.showFacilityTypeList = function (id) {
 
         ReportFacilityTypes.get(function (data) {

@@ -584,12 +584,17 @@ services.factory('RnRStatusSummary',function($resource){
     return $resource('/dashboard/RnRStatus/:zoneId/:periodId/:programId/rnrStatus.json',{},{});
   });
 
+services.factory("SendMessages",function($resource){
+  return $resource('/messages/send.json',{}, {post: {method:'POST'}});
+});
+
+
 /*services.factory("RnRStatusByRequisitionGroupAndPeriodDetails ",function($resource){
     $resource('/dashboard/RnRStatusByRequisitionGroupDetails.json',{},{});
 });*/
 
 services.factory('RnRStatusDetail', function($resource){
-    return $resource('/dashboard/rnrStatus-detail.json',{},{});
+  return $resource('/dashboard/rnrStatus-detail.json',{},{});
 });
 
 

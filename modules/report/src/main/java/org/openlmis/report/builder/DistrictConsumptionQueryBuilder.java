@@ -19,12 +19,11 @@ public class DistrictConsumptionQueryBuilder {
   public static String SelectFilteredSortedPagedRecords(Map params){
 
      DistrictConsumptionReportParam filter  = (DistrictConsumptionReportParam)params.get("filterCriteria");
-     Long userId                             = (Long) params.get("userId");
 
      String query = "WITH temp AS (select product,zone_name, SUM(normalizedconsumption) normalizedconsumption "+
 
     "from vw_district_consumption_summary "+
-     writePredicates(filter, userId)+
+     writePredicates(filter)+
     "group by product,zone_name "+
     "order by product) "+
 
@@ -39,12 +38,12 @@ public class DistrictConsumptionQueryBuilder {
     return query;
 }
 
-  private static String writePredicates(DistrictConsumptionReportParam filter, Long userId){
+  private static String writePredicates(DistrictConsumptionReportParam filter ){
         String predicate = "";
         if(filter != null){
 
           predicate = "where processing_periods_id = " + filter.getPeriod() + " ";
-          predicate = predicate + " and facility_id in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = "  + filter.getProgramId() + ")";
+          predicate = predicate + " and facility_id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = "  + filter.getProgramId() + ")";
 
             if (filter.getZoneId() != 0) {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";

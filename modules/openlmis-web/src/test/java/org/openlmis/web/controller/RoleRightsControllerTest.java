@@ -106,8 +106,7 @@ public class RoleRightsControllerTest {
 
     OpenLmisResponse response = controller.getAll().getBody();
 
-    assertThat((Map<String , List<Role>>) response.getData().get(ROLES_MAP), is(roles_map));
-    verify(roleRightsService).getAllRolesMap();
+    verify(roleRightsService).getAllRoles();
   }
 
   @Test

@@ -104,15 +104,10 @@ Edit Product
 <fieldset class="span4">
     <!-- product strength-->
     <div class="form-cell">
-        <label for="strength">Strength <span class="label-required">*</span></label>
-
+        <label for="strength">Strength</label>
         <div class="form-field" style="width: 40%;">
             <input ng-model="editProduct.strength" name="strength" id="strength" type="text"
                    maxlength="20"/>
-                                        <span class="field-error"
-                                              ng-show="editProductForm.strength.$error.required && showError"
-                                              openlmis-message="missing.value">
-                                        </span>
         </div>
     </div>
 

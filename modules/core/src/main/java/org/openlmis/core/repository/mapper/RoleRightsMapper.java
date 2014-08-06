@@ -50,7 +50,7 @@ public interface RoleRightsMapper {
   })
   Role getRole(Long id);
 
-  @Select("SELECT * FROM roles ORDER BY id")
+  @Select("SELECT * FROM roles ORDER BY name")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "rights", javaType = Set.class, column = "id",

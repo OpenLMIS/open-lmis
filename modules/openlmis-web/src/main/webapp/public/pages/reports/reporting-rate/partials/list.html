@@ -82,10 +82,10 @@
                      Please use the form below to customize and send sms notifications for <b>{{selected_facility.name}}</b>
                  </p>
                  <div style="padding: 10px;">
-                    <div class="row">
-                      <textarea class="field span6" rows="4" ng-model="sms_template"></textarea>
+                    <div >
+                      <textarea rows="4" style="width: 350px;" ng-model="sms_template"></textarea>
                     </div>
-                     <div class="row">
+                     <div >
                          Who receives this notification?
                          <div>
                              <table class="table table-bordered">
@@ -108,10 +108,10 @@
                     Use this form to customize and send email notifications for <b>{{selected_facility.name}}</b>
                 </p>
                 <div style="padding: 10px;">
-                    <div class="row">
-                      <textarea class="field span6" rows="5" ng-model="email_template"></textarea>
+                    <div>
+                      <textarea rows="4" style="width: 350px;" ng-model="email_template"></textarea>
                     </div>
-                    <div class="row">
+                    <div >
                         Who receives this notification?
                         <div>
                             <table class="table table-bordered">
@@ -126,7 +126,7 @@
                 </div>
             </div>
         </div>
-      <table ng-show="!show_sms && !show_email" class="table" style="max-height: 350px">
+      <table ng-show="!show_sms && !show_email" class="table table-bordered" >
         <thead>
         <tr>
           <th>Facility Name</th>
@@ -143,8 +143,8 @@
           <td>{{ row.mainPhone }}</td>
           <td>
               <div ng-show="row.hasContacts && !row.sent">
-                  <a href="#/list" class="btn btn-mini" ng-click="showSendEmail(row)">Email</a>
-                  <a href="#/list" class="btn btn-mini" ng-click="showSendSms(row)" ng-show="sms_enabled">SMS</a>
+                  <a class="btn btn-mini" ng-click="showSendEmail(row)">Email</a>
+                  <a class="btn btn-mini" ng-click="showSendSms(row)" ng-show="sms_enabled">SMS</a>
               </div>
               <div ng-show="!row.hasContacts">
                    No Contacts
@@ -159,7 +159,7 @@
     </div>
     <div class="modal-footer">
       <a class="btn btn-primary pull-right" ng-click="successModal=false;">Close</a>
-      <a class="btn btn-primary pull-right" ng-show="show_sms || show_email" ng-click="selected_facility.sent=true;show_sms=false;show_email=false;">Send</a>
+      <a class="btn btn-primary pull-right" ng-show="show_sms || show_email" ng-click="doSend();">Send</a>
     </div>
   </div>
 

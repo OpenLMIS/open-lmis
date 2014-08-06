@@ -13,10 +13,7 @@ package org.openlmis.report.builder;
 
 import org.openlmis.report.model.params.RegimenSummaryReportParam;
 
-
 import java.util.Map;
-
-import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
 
 public class RegimenSummaryQueryBuilder {
 
@@ -56,7 +53,10 @@ public class RegimenSummaryQueryBuilder {
         if (filter != null) {
             if (filter.getZoneId() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " zoneId = #{filterCriteria.zoneId}";
+                predicate = predicate + " zoneId = #{filterCriteria.zoneId} " +
+                        " or districtid=#{filterCriteria.zoneId} " +
+                        "or regionid = #{filterCriteria.zoneId} " +
+                        "or parentId = #{filterCriteria.zoneId}";
             }
 
             if (filter.getScheduleId() != 0 && filter.getScheduleId() != -1) {

@@ -42,8 +42,6 @@ public class AdjustmentSummaryReportParam
     private Long zoneId;
     private int productId;
     private int productCategoryId;
-    private int rgroupId;
-    private String rgroup;
 
     private String  adjustmentTypeId;
     private String adjustmentType;
