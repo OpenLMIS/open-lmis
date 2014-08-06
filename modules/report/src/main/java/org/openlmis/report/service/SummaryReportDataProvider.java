@@ -40,10 +40,8 @@ public class SummaryReportDataProvider extends ReportDataProvider {
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    String facilityTypeId = params.get("facilityTypeId")[0];
-    String rgroupId = params.get("rgroupId")[0];
+    String facilityTypeId = params.get("facilityType")[0];
     String facilityType = "";
-    String rgroup = "";
 
     if (facilityTypeId != null && !facilityTypeId.isEmpty()) {
       if (facilityTypeId.equals("-1") || facilityTypeId.equals(""))
@@ -52,16 +50,8 @@ public class SummaryReportDataProvider extends ReportDataProvider {
         facilityType = params.get("facilityType")[0];
     }
 
-    if (rgroupId != null && !rgroupId.isEmpty()) {
-      if (rgroupId.equals("-1"))
-        rgroup = "All Reporting Groups";
-      else
-        rgroup = params.get("rgroup")[0];
-    }
     String finalFacilityType = facilityType;
-    String finalRgroup = rgroup;
-
-    return finalFacilityType + "\n" + finalRgroup + "\n";
+    return finalFacilityType + "\n";
 
   }
 }
