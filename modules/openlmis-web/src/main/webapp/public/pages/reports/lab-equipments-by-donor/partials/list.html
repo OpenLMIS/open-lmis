@@ -7,7 +7,20 @@
 ~
 ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
 -->
-
+<style>
+    .ng-table th.sortable div {
+        /* css-3 */
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+    }
+    table {
+        table-layout: fixed;
+        width: 100%
+    }
+</style>
 <div class="row-fluid">
     <div class="box span12">
         <div class="box-header">
@@ -48,12 +61,12 @@
                     <div client-side-sort-pagination class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) *
                         tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
                     </div>
-                    <div class="report-container">
-                        <div>
+
+                    <div class="table-responsive">
                             <table  ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
                                 <tbody>
                                 <tr ng-repeat="row in datarows">
-                                    <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
+                                    <td  data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
                                     <td data-title="'District'" sortable="district">{{row.district}}</td>
                                     <td data-title="'Primary Donor'" sortable="donor">{{row.donor}}</td>
                                     <td data-title="'Funding Source'" sortable="sourceoffund">{{row.sourceoffund}}</td>
@@ -64,11 +77,10 @@
                                     <td data-title="'End Date of Service Contract'" sortable="servicecontractenddate">{{row.servicecontractenddate | date }}</td>
                                     <td data-title="'Is Active?'"  sortable="isactive">{{ row.isactive }}</td>
                                     <td data-title="'Decommission Date'" sortable="datedecommissioned">{{ row.datedecommissioned}}</td>
-                                    <td data-title="'Replacement Recommended?'" sortable="replacementrecommended">{{ row.replacementrecommended}}</td>
+                                    <td style="width: 45px;" data-title="'Replacement Recommended?'" sortable="replacementrecommended">{{ row.replacementrecommended}}</td>
                                 </tr>
                                 </tbody>
                             </table>
-                        </div>
                     </div>
                 </div>
             </div>
