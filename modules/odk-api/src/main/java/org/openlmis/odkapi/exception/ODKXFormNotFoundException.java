@@ -12,34 +12,35 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.repository;
+package org.openlmis.odkapi.exception;
 
-import org.openlmis.odkapi.domain.ODKXForm;
-import org.openlmis.odkapi.domain.ODKXFormSurveyType;
-import org.openlmis.odkapi.repository.mapper.ODKXFormMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+public class ODKXFormNotFoundException
+        extends RuntimeException
+{
+    private String message;
 
-import java.util.List;
-
-@Repository
-public class ODKXFormRepository {
-
-    @Autowired
-    private ODKXFormMapper odkxFormMapper;
-
-    public List<ODKXForm> getAvailableXFormDefinitions()
+    public ODKXFormNotFoundException()
     {
-        return odkxFormMapper.getAvailableXFormDefinitions();
+
+    }
+    public ODKXFormNotFoundException(String message)
+    {
+        super(message);
+        this.message = message;
     }
 
-    public ODKXForm getXFormByFormId(String formId)
+    @Override
+    public String toString()
     {
-        return odkxFormMapper.getXFormByFormId(formId);
-    }
-
-    public ODKXFormSurveyType getXFormSurveyTypeById(Long id)
-    {
-        return odkxFormMapper.getXFormSurveyTypeById(id);
+        if (this.message == null)
+        {
+            return this.message;
+        }
+        else
+        {
+            return null;
+        }
     }
 }
+
+

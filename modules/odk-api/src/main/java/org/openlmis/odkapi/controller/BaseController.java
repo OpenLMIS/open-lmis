@@ -46,6 +46,10 @@ public class BaseController {
             "    <message nature=\"submit_failure\"> Facility not found. </message>\n" +
             "</OpenRosaResponse>";
 
+    public static final String ODK_COLLECT_ODK_XFORM_NOT_FOUND =  "<OpenRosaResponse xmlns=\"http://openrosa.org/http/response\">\n" +
+            "    <message nature=\"submit_failure\"> ODK XForm not found. </message>\n" +
+            "</OpenRosaResponse>";
+
     public static final String ODK_COLLECT_APP_APK_FILE_NAME = "OpenLMIS ODK Collect.apk";
     public static final String ODK_COLLECT_APP_APK_REQUEST_PARAMETER = "apk";
     public static final String ODK_COLLECT_APP_ITEMSETS_CSV_FILE_NAME = "itemsets.csv";

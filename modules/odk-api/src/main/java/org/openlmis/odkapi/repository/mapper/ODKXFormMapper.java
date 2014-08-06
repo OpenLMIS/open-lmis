@@ -16,6 +16,7 @@ package org.openlmis.odkapi.repository.mapper;
 
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.odkapi.domain.ODKXForm;
+import org.openlmis.odkapi.domain.ODKXFormSurveyType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,5 +29,8 @@ public interface ODKXFormMapper {
 
     @Select("SELECT * FROM odk_xform WHERE formId = #{formId}")
     public ODKXForm getXFormByFormId(String formId);
+
+    @Select("SELECT * FROM odk_xform_survey_type WHERE id = #{id}")
+    public ODKXFormSurveyType getXFormSurveyTypeById(Long id);
 
 }

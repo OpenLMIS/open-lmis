@@ -17,6 +17,7 @@ package org.openlmis.odkapi.service;
 import org.openlmis.odkapi.domain.ODKXForm;
 import org.openlmis.odkapi.domain.ODKXFormDTO;
 import org.openlmis.odkapi.domain.ODKXFormList;
+import org.openlmis.odkapi.domain.ODKXFormSurveyType;
 import org.openlmis.odkapi.repository.ODKXFormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -56,5 +57,10 @@ public class ODKXFormService {
     public ODKXForm getXFormByFormId(String formId)
     {
         return odkxFormRepository.getXFormByFormId(formId);
+    }
+
+    public ODKXFormSurveyType getXFormSurveyTypeById(Long id)
+    {
+        return odkxFormRepository.getXFormSurveyTypeById(id);
     }
 }

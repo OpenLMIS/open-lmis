@@ -13,6 +13,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package org.openlmis.odkapi.parser;
+
 import org.openlmis.odkapi.domain.ODKAccount;
 import org.openlmis.odkapi.domain.ODKStockStatusSubmission;
 import org.openlmis.odkapi.domain.ODKSubmission;
@@ -26,8 +27,8 @@ import java.util.List;
 
 public class ODKStockStatusSubmissionSAXHandler extends  DefaultHandler
 {
-    private ODKAccount odkAccount = new ODKAccount();
-    private List<ODKStockStatusSubmission> listODKStockStatusSubmissions = new ArrayList<>();
+    private ODKAccount odkAccount ;
+    private List<ODKStockStatusSubmission> listODKStockStatusSubmissions;
     private ODKSubmission odkSubmission;
     private ODKStockStatusSubmission tempODKStockStatusSubmission;
     private String tempString;
@@ -35,7 +36,6 @@ public class ODKStockStatusSubmissionSAXHandler extends  DefaultHandler
     boolean bdata;
     boolean bmeta;
     boolean binstanceID;
-    boolean bstockStatusSurvey;
     boolean bmsdCode;
     boolean bcommodityName;
     boolean bmanaged;
@@ -72,15 +72,16 @@ public class ODKStockStatusSubmissionSAXHandler extends  DefaultHandler
             binstanceID = true;
         }
 
-        if (qName.equals("stock_status_survey"))
-        {
-            tempODKStockStatusSubmission = new ODKStockStatusSubmission();
-            bstockStatusSurvey = true;
-        }
-
         if (qName.equals("MSD_Code"))
         {
             bmsdCode = true;
+            tempODKStockStatusSubmission = new ODKStockStatusSubmission();
+            if (listODKStockStatusSubmissions == null)
+            {
+                listODKStockStatusSubmissions = new ArrayList<>();
+            }
+
+
         }
 
         if (qName.equals("Commodity_Name"))
@@ -133,7 +134,7 @@ public class ODKStockStatusSubmissionSAXHandler extends  DefaultHandler
             bdaysDataAvailable = true;
         }
 
-        if (qName.equals("bdeviceID"))
+        if (qName.equals("deviceID"))
         {
             bdeviceID = true;
         }
@@ -143,15 +144,11 @@ public class ODKStockStatusSubmissionSAXHandler extends  DefaultHandler
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException
     {
-       if (qName.equals("data"))
-       {
-           bdata = false;
-       }
-
         if (qName.equals("stock_status_survey"))
         {
             listODKStockStatusSubmissions.add(tempODKStockStatusSubmission);
-            bstockStatusSurvey = false;
+            tempODKStockStatusSubmission = null;
+
         }
 
         if (qName.equals("MSD_Code"))
@@ -209,7 +206,7 @@ public class ODKStockStatusSubmissionSAXHandler extends  DefaultHandler
             bdaysDataAvailable = false;
         }
 
-        if (qName.equals("bdeviceID"))
+        if (qName.equals("deviceID"))
         {
             bdeviceID = false;
         }
@@ -342,32 +339,28 @@ public class ODKStockStatusSubmissionSAXHandler extends  DefaultHandler
 
         else if (bdeviceID)
         {
+            odkAccount = new ODKAccount();
             odkAccount.setDeviceId(new String(ch, start, length));
             bdeviceID = false;
         }
 
+        else
+        {
+            // Do Nothing
+        }
+
+
     }
     public List<ODKStockStatusSubmission> getListODKStockStatusSubmissions() {
-        return listODKStockStatusSubmissions;
-    }
-
-    public void setListODKStockStatusSubmissions(List<ODKStockStatusSubmission> listODKStockStatusSubmissions) {
-        this.listODKStockStatusSubmissions = listODKStockStatusSubmissions;
+        return this.listODKStockStatusSubmissions;
     }
 
     public ODKAccount getOdkAccount() {
         return odkAccount;
     }
 
-    public void setOdkAccount(ODKAccount odkAccount) {
-        this.odkAccount = odkAccount;
-    }
-
     public ODKSubmission getOdkSubmission() {
         return odkSubmission;
     }
 
-    public void setOdkSubmission(ODKSubmission odkSubmission) {
-        this.odkSubmission = odkSubmission;
-    }
 }

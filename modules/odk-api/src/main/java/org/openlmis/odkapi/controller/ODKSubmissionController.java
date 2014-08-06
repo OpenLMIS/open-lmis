@@ -128,6 +128,11 @@ public class ODKSubmissionController extends BaseController {
             return new ResponseEntity<String>(this.ODK_COLLECT_XML_SUBMISSION_FILE_PARSE_ERROR, this.headers, HttpStatus.NOT_ACCEPTABLE);
         }
 
+        catch(ODKXFormNotFoundException e)
+        {
+            return new ResponseEntity<String>(this.ODK_COLLECT_ODK_XFORM_NOT_FOUND, this.headers, HttpStatus.NOT_ACCEPTABLE);
+        }
+
 
       return new ResponseEntity<String>(this.ODK_COLLECT_SUBMISSION_SUCCESSFUL, this.headers, HttpStatus.CREATED);
     }

@@ -15,9 +15,13 @@
 package org.openlmis.odkapi.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.io.IOUtils;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.odkapi.domain.*;
 import org.openlmis.odkapi.exception.*;
 import org.openlmis.odkapi.parser.ODKStockStatusSubmissionSAXHandler;
+import org.openlmis.odkapi.parser.ODKSubmissionSAXHandler;
 import org.openlmis.odkapi.parser.ODKSubmissionXFormIDSAXHandler;
 import org.openlmis.odkapi.repository.ODKSubmissionDataRepository;
 import org.openlmis.odkapi.repository.ODKSubmissionRepository;
@@ -25,24 +29,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.domain.Facility;
 import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import javax.servlet.ServletContext;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
-import org.apache.commons.io.IOUtils;
-
-import org.openlmis.odkapi.parser.ODKSubmissionSAXHandler;
+import org.openlmis.odkapi.parser.XmlFormatter;
+import org.w3c.dom.Document;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 @Service
 @NoArgsConstructor
@@ -60,12 +69,16 @@ public class ODKSubmissionService {
     private ODKXFormService odkxFormService;
 
     @Autowired
+    ServletContext servletContext;
+
+    @Autowired
     private FacilityService facilityService;
     private String currentDateTime;
     private SimpleDateFormat format;
     private Facility facility;
     private ODKAccount odkAccount;
     private List<ODKSubmissionData> listOfODKSubmissionData;
+    private List<ODKStockStatusSubmission> listODKStockStatusSubmissions;
     private ODKSubmissionData odkSubmissionData;
     private ODKSubmission odkSubmission;
     private HashMap<Long,ArrayList<String>> associatedFacilityPictures;
@@ -80,7 +93,7 @@ public class ODKSubmissionService {
 
     public void saveODKSubmissionData(Set submissionsFilesSet) throws ODKAccountNotFoundException,
             FacilityPictureNotFoundException, ODKCollectXMLSubmissionFileNotFoundException,
-            ODKCollectXMLSubmissionParserConfigurationException, ODKCollectXMLSubmissionSAXException, FacilityNotFoundException
+            ODKCollectXMLSubmissionParserConfigurationException, ODKCollectXMLSubmissionSAXException, FacilityNotFoundException, ODKXFormNotFoundException
     {
         // first get the XML submission file
         facilityPictures = new HashMap<String, MultipartFile>();
@@ -133,16 +146,23 @@ public class ODKSubmissionService {
 
         ODKXForm tempXForm = odkxFormService.getXFormByFormId(formBuildID);
 
-        ODKXFormSurveyType surveyType = tempXForm.getOdkxFormSurveyType();
+        if (tempXForm == null)
+        {
+            throw new ODKXFormNotFoundException();
+        }
 
-        if(surveyType.getSurveyName() == "Facility GPS Location and Pictures")
+
+        ODKXFormSurveyType surveyType = odkxFormService.getXFormSurveyTypeById(tempXForm.getODKXFormSurveyTypeId());
+
+
+        if(surveyType.getSurveyName().equals("Facility GPS Location and Pictures"))
         {
             saveFacilityGPSLocationAndPicturesSurveyData(XMLSubmissionFile);
         }
 
-        else if (surveyType.getSurveyName() == "Stock Status")
+        else if (surveyType.getSurveyName().equals("Stock Status"))
         {
-
+            saveStockStatusSurveyData(XMLSubmissionFile);
         }
 
         else
@@ -160,12 +180,99 @@ public class ODKSubmissionService {
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
         ODKStockStatusSubmissionSAXHandler handler;
         handler = new ODKStockStatusSubmissionSAXHandler();
+        // To Do : the xml is not well formatted when stock status submission is done , find out why
+        // this is a temporary solution
+
+        String filePath = "/public/odk-collect-submissions/";
+        InputStream inputStream;
+        FileOutputStream outputStream;
+
+        // first save the xml submission file
+
+
+        try
+        {
+        inputStream = XMLSubmissionFile.getInputStream();
+        File newFile = new File(servletContext.getRealPath(filePath + XMLSubmissionFile.getOriginalFilename()));
+        outputStream = new FileOutputStream(newFile);
+        int read = 0;
+        byte[] bytes = new byte[1024];
+
+        while ((read = inputStream.read(bytes)) != -1) {
+            outputStream.write(bytes, 0, read);
+        }
+
+        inputStream.close();
+        outputStream.close();
+        }
+        catch (Exception ex)
+        {
+             ex.printStackTrace();
+        }
+
+        // read the submission file into a string
+
+        String xmlString = "";
+        try
+        {
+            File savedSubmissionFile = new File(servletContext.getRealPath(filePath + XMLSubmissionFile.getOriginalFilename()));
+            xmlString = readFile(servletContext.getRealPath(filePath + XMLSubmissionFile.getOriginalFilename()), Charset.defaultCharset());
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+
+        // use XML Formatter
+
+        XmlFormatter formatter = new XmlFormatter();
+        String formattedXmlSubmission = formatter.format(xmlString);
+
+        // get input stream from the document object of the formatted xml
+
+        Document  xmlSubmissionDocument;
+        try
+        {
+            xmlSubmissionDocument = stringToDom(formattedXmlSubmission);
+        }
+        catch(SAXException exception )
+        {
+            throw new ODKCollectXMLSubmissionSAXException();
+
+        }
+        catch(IOException e)
+        {
+            throw new ODKCollectXMLSubmissionFileNotFoundException();
+        }
+        catch(ParserConfigurationException e)
+        {
+            throw new ODKCollectXMLSubmissionParserConfigurationException();
+        }
+
+        ByteArrayOutputStream outputStreamForDocument = new ByteArrayOutputStream();
+        Source xmlSource = new DOMSource(xmlSubmissionDocument);
+        Result outputTarget = new StreamResult(outputStreamForDocument);
+        try
+        {
+            TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
+
+        }
+        catch(TransformerConfigurationException transformerConfigurationException)
+        {
+          transformerConfigurationException.printStackTrace();
+        }
+        catch(TransformerException transformerException)
+        {
+           transformerException.printStackTrace();
+        }
+
+        InputStream inputStreamForDocument = new ByteArrayInputStream(outputStreamForDocument.toByteArray());
 
         try
         {
             SAXParser saxParser = saxParserFactory.newSAXParser();
-            saxParser.parse(XMLSubmissionFile.getInputStream(), handler);
-
+            saxParser.parse(inputStreamForDocument, handler);
         }
         catch(SAXException exception )
         {
@@ -191,12 +298,15 @@ public class ODKSubmissionService {
         odkSubmission.setOdkAccountId(tempAccount.getId());
         odkSubmission.setActive(true);
         this.insertODKSubmission(odkSubmission);
+        Long lastODKSubmissionId =  odkSubmissionRepository.getLastSubmissionId();
 
-        List<ODKStockStatusSubmission> listODKStockStatusSubmissions = handler.getListODKStockStatusSubmissions();
+        listODKStockStatusSubmissions = handler.getListODKStockStatusSubmissions();
 
         for (ODKStockStatusSubmission odkStockStatusSubmission : listODKStockStatusSubmissions)
         {
-             this.insertStockStatus(odkStockStatusSubmission);
+            odkStockStatusSubmission.setODKSubmissionId(lastODKSubmissionId);
+            odkStockStatusSubmission.setActive(true);
+            this.insertStockStatus(odkStockStatusSubmission);
         }
 
     }
@@ -380,4 +490,17 @@ public class ODKSubmissionService {
         odkSubmissionRepository.insertStockStatus(odkStockStatusSubmission);
     }
 
+    private String readFile(String path, Charset encoding)
+            throws IOException
+    {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded, encoding);
+    }
+
+    private static Document stringToDom(String xmlSource)
+            throws SAXException, ParserConfigurationException, IOException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        return builder.parse(new InputSource(new StringReader(xmlSource)));
+    }
 }

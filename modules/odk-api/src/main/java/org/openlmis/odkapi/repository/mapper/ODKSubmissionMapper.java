@@ -51,10 +51,11 @@ public interface ODKSubmissionMapper {
             "SOSevenDays," +
             "totalDaysStockedoutThreeMonths," +
             "issuedThreeMonths," +
-            "daysDataAvailable) " +
+            "daysDataAvailable, " +
+            "active) " +
             "VALUES (" +
-            "#{ODKSubmissionId}, " +
-            "#{MSDCode}, " +
+            "#{ODKSubmissionId}," +
+            "#{MSDCode}," +
             "#{commodityName}, " +
             "#{managed}," +
             "#{physicalInventory}," +
@@ -64,7 +65,8 @@ public interface ODKSubmissionMapper {
             "#{SOSevenDays}," +
             "#{totalDaysStockedoutThreeMonths}," +
             "#{issuedThreeMonths}," +
-            "#{daysDataAvailable})")
+            "#{daysDataAvailable}, " +
+            "#{active})")
     @Options(useGeneratedKeys = true)
     void insertStockStatus(ODKStockStatusSubmission odkStockStatusSubmission);
 }

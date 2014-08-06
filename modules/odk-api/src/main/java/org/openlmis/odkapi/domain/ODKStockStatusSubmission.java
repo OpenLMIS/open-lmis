@@ -38,5 +38,7 @@ public class ODKStockStatusSubmission extends BaseModel {
     private int totalDaysStockedoutThreeMonths;
     private Double issuedThreeMonths;
     private int daysDataAvailable;
+    private boolean active;
+    private String comment;
 
 }
