@@ -7,7 +7,17 @@
   ~
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
+<style>
+    .ng-table th.sortable div {
+        /* css-3 */
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+    }
 
+</style>
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 <div class="container-fluid">
     <div class="box row-fluid">
@@ -51,41 +61,23 @@
                             {{tableParams.total}}
                             <br/>
                         </div>
-                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped"
                                ng-table="tableParams">
-                            <thead>
-                            <tr>
-                                <th style="font-size:12px; text-align:right">#</th>
-
-                                <th style="font-size:12px; text-align:left">Regimen</th>
-                                <th style="font-size:12px">No. of Patients <br>On Treatment</th>
-
-                                <th style="font-size:12px">No. of Patients To <br> Initiate Treatment</th>
-
-                                <th style="font-size:12px">No. of Patients <br>Stopped Treatment</th>
-
-                            </tr>
-                            </thead>
                             <tbody>
                             <tr ng-repeat="row in datarows">
                                 <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
 
 
-                                <td style="width:40px">{{ row.regimen }}</td>
-                                <td style="width:20px;text-align:center" class="number" sortable="patientsontreatment">
-                                    {{ row.patientsontreatment | number}}
+                                <td data-title="'Regimen'" style="width:40px" sortable="regimen">{{ row.regimen }}</td>
+                                <td data-title="'No. of Patients On Treatment'" style="width:20px;text-align:center" class="number" sortable="patientsontreatment">{{ row.patientsontreatment | number}}</td>
+
+                                <td data-title="'No. of Patients To Initiate Treatment'" class="number" style="width:20px;text-align:center"
+                                    sortable="patientstoinitiatetreatment">{{ row.patientstoinitiatetreatment | number }}
                                 </td>
 
-                                <td class="number" style="width:20px;text-align:center"
-                                    sortable="patientstoinitiatetreatment">{{ row.patientstoinitiatetreatment | number
-                                    }}
-                                </td>
-
-                                <td style="width:20px;text-align:center" class="number"
+                                <td data-title="'No. of Patients Stopped Treatment'" style="width:20px;text-align:center" class="number"
                                     sortable="patientsstoppedtreatment">{{ row.patientsstoppedtreatment | number}}
                                 </td>
-
-
                             </tr>
                             </tbody>
                         </table>
