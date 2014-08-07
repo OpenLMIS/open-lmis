@@ -7,7 +7,20 @@
   ~
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
-
+<style>
+    .ng-table th.sortable div {
+        /* css-3 */
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+    }
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
+</style>
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 <div class="container-fluid">
     <div class="box row-fluid">
@@ -64,49 +77,34 @@
                             {{tableParams.total}}
                             <br/>
                         </div>
-                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
-                               ng-table="tableParams">
-                            <thead>
-                            <tr>
-                                <th style="font-size:12px; ">#</th>
-                                <th style="font-size:12px; text-align:left">District</th>
-                                <th style="font-size:12px; text-align:left">Regimen</th>
-                                <th style="font-size:12px">No. of Patients <br>On Treatment</th>
-                                <th style="font-size:12px">% of Total</th>
-                                <th style="font-size:12px">No. of Patients To <br> Initiate treatment</th>
-                                <th style="font-size:12px">% of Total</th>
-                                <th style="font-size:12px">No. of Patients <br>Stopped Treatment</th>
-                                <th style="font-size:12px">% of Total</th>
 
-
-                            </tr>
-                            </thead>
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped"  ng-table="tableParams">
                             <tbody>
                             <tr ng-repeat="row in datarows">
-                                <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
-                                <td style="width:40px">{{ row.district }}</td>
+                                <td data-title="'#'" class="number">{{ row.no }}</td>
+                                <td data-title="'District'" sortable="district" style="width:40px">{{ row.district }}</td>
 
-                                <td style="width:40px">{{ row.regimen }}</td>
+                                <td data-title="'Regimen'" style="width:40px" sortable="regimen">{{ row.regimen }}</td>
 
-                                <td style="width:20px;text-align:center" class="number" sortable="patientsontreatment">
+                                <td data-title="'No. of Patients On Treatment'" style="width:20px;text-align:center" class="number" sortable="patientsontreatment">
                                     {{ row.patientsontreatment | number}}
                                 </td>
-                                <td class="number" style="width:20px;text-align:center"
+                                <td data-title="'% of Total'" class="number" style="width:20px;text-align:center"
                                     sortable="totalOnTreatmentPercentage ">{{ row.totalOnTreatmentPercentage | number
                                     }}%
                                 </td>
-                                <td class="number" style="width:20px;text-align:center"
+                                <td data-title="'No. of Patients To Initiate treatment'" class="number" style="width:20px;text-align:center"
                                     sortable="patientstoinitiatetreatment">{{ row.patientstoinitiatetreatment | number
                                     }}
                                 </td>
-                                <td class="number" style="width:20px;text-align:center"
+                                <td data-title="'% of Total'" class="number" style="width:20px;text-align:center"
                                     sortable="totalpatientsToInitiateTreatmentPercentage ">{{
                                     row.totalpatientsToInitiateTreatmentPercentage }}%
                                 </td>
-                                <td style="width:20px;text-align:center" class="number"
+                                <td data-title="'No. of Patients Stopped Treatment'" style="width:20px;text-align:center" class="number"
                                     sortable="patientsstoppedtreatment">{{ row.patientsstoppedtreatment | number}}
                                 </td>
-                                <td class="number" style="width:20px;text-align:center"
+                                <td data-title="'% of Total'" class="number" style="width:20px;text-align:center"
                                     sortable="stoppedTreatmentPercentage ">{{ row.stoppedTreatmentPercentage | number
                                     }}%
                                 </td>
