@@ -77,6 +77,10 @@ services.factory('Roles', function ($resource) {
   return $resource('/roles/:id.json', {id: '@id'}, update);
 });
 
+services.factory('RolesFlat', function ($resource) {
+  return $resource('/roles-flat', {id: '@id'}, update);
+});
+
 services.factory('CreateRequisitionProgramList', function ($resource) {
   return $resource('/create/requisition/programs.json', {}, {});
 });
