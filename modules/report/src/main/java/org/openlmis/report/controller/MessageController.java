@@ -2,6 +2,7 @@ package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.email.service.EmailService;
+import org.openlmis.report.model.dto.MessageCollection;
 import org.openlmis.report.model.dto.MessageDto;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.sms.domain.SMS;
@@ -33,14 +34,14 @@ public class MessageController extends BaseController{
 
   @RequestMapping(value = "/send", method = POST, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> send(
-     @RequestBody List<MessageDto> messages,
+     @RequestBody MessageCollection messages,
       HttpServletRequest request
   ) {
     Long userId = loggedInUserId(request);
 
 
-    for(MessageDto dto: messages){
-      //todo: check if the snd sms flag is true.
+    for(MessageDto dto: messages.getMessages()){
+
       if(dto.getType().equals("sms")){
         SMS sms = new SMS();
         sms.setMessage(dto.getMessage());
@@ -51,7 +52,9 @@ public class MessageController extends BaseController{
       }else if( dto.getType().equals("email") ){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(dto.getAddress());
-        //TODO:  make this configurable
+
+        //TODO:  make this configurable or let the user write it.
+
         message.setSubject("Reporting rate notice");
         message.setText(dto.getMessage());
         emailService.send(message);
