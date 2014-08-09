@@ -45,13 +45,13 @@ public class MessageController extends BaseController{
       if(dto.getType().equals("sms")){
         SMS sms = new SMS();
         sms.setMessage(dto.getMessage());
-        sms.setPhoneNumber(dto.getAddress());
+        sms.setPhoneNumber(dto.getContact());
         sms.setDateSaved(new Date());
         sms.setDirection("O");
         smsService.sendAsync(sms);
       }else if( dto.getType().equals("email") ){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(dto.getAddress());
+        message.setTo(dto.getContact());
 
         //TODO:  make this configurable or let the user write it.
 
