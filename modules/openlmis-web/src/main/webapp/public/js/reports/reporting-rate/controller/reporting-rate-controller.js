@@ -77,7 +77,7 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
       messages.push({type: 'email', facility_id: $scope.selected_facility.id, contact: contact.contact, message: template });
     }
 
-    SendMessages.post(messages, function(data){
+    SendMessages.post({messages: messages}, function(data){
       $scope.sent_confirmation = true;
     });
 
@@ -99,7 +99,7 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
 
     }
 
-    SendMessages.post(messages, function(data){
+    SendMessages.post({messages: messages}, function(data){
       $scope.sent_confirmation = true;
     });
 

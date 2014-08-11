@@ -8,7 +8,7 @@ public class MessageDto {
 
   private String type;
   private String message;
-  private String address;
+  private String contact;
   private int facility_id;
 
 }
