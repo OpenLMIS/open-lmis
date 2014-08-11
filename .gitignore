@@ -18,3 +18,4 @@ modules/openlmis-web/src/test/coverage/
 local-ftp-data/
 *.jasper
 *.jar
+modules/openlmis-web/src/main/webapp/public/odk-collect-submissions/*
