@@ -331,3 +331,7 @@ services.factory('EquipmentOperationalStatus', function ($resource) {
 services.factory('FacilityImages', function($resource){
   return $resource('/facility-images.json', {},{});
 });
+
+services.factory('ConfigSettingsByKey',function($resource){
+  return $resource('/settings/:key.json',{},{});
+});
