@@ -31,10 +31,14 @@ public interface ApproverMapper {
   List<User> getFacilityBasedAuthorizers( @Param(value = "RnrID") Long RnrID );
 
   @Select("select distinct u.* from requisitions r " +
-      "join role_assignments ra on ra.supervisoryNodeId = r.supervisoryNodeId " +
-      "join users u on u.id = ra.userid " +
-      " and ra.programid = r.programid " +
-      "and roleid in (select roleid from role_rights where rightname = 'APPROVE_REQUISITION') \n" +
+      "join ( select * from role_assignments " +
+      "           where " +
+      "               roleId in (select roleId from role_rights where rightName = 'APPROVE_REQUISITION') " +
+      "     ) ra " +
+      "   on  ra.supervisoryNodeId = r.supervisoryNodeId " +
+      "         and ra.programId = r.programId " +
+      " join users u " +
+      "   on u.id = ra.userId " +
       "where r.id = #{RnrID} and u.active = true")
   List<User> getNextSupervisors( @Param(value = "RnrID") Long RnrID );
 
