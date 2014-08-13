@@ -39,7 +39,10 @@ public interface ProgramEquipmentProductMapper {
       "WHERE id = #{id}")
   void update(ProgramEquipmentProduct programEquipmentProduct);
 
-  @Delete("DELETE FROM program_equipment_products WHERE id = #{programEquipmentId}")
-  void remove(@Param(value = "programEquipmentId") Long programEquipmentId);
+  @Delete("DELETE FROM program_equipment_products WHERE id = #{programEquipmentProductId}")
+  void remove(@Param(value = "programEquipmentProductId") Long programEquipmentProductId);
+
+  @Delete("DELETE FROM program_equipment_products WHERE programequipmentid = #{programEquipmentId}")
+  void removeEquipmentProducts(@Param(value = "programEquipmentId") Long programEquipmentId);
 
 }

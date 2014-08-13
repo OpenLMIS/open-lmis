@@ -11,6 +11,7 @@ package org.openlmis.web.controller.equipment;
 
 import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.ProgramEquipment;
+import org.openlmis.equipment.service.ProgramEquipmentProductService;
 import org.openlmis.equipment.service.ProgramEquipmentService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -33,6 +34,9 @@ public class ProgramEquipmentController extends BaseController {
 
   @Autowired
   ProgramEquipmentService programEquipmentService;
+
+  @Autowired
+  ProgramEquipmentProductService programEquipmentProductService;
 
   @RequestMapping(value = "save", method = RequestMethod.POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
@@ -70,4 +74,24 @@ public class ProgramEquipmentController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getProgramEquipmentByProgram(@PathVariable(value="programId") Long programId){
     return OpenLmisResponse.response("programEquipments", programEquipmentService.getByProgramId(programId));
   }
+
+    @RequestMapping(value="remove/{programEquipmentId}")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
+    public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value = "programEquipmentId") Long programEquipmentId){
+        ResponseEntity<OpenLmisResponse> successResponse;
+
+        try{
+            //remove the program_equipment_products first
+            programEquipmentProductService.removeEquipmentProducts(programEquipmentId);
+
+            //then  go for the program_equipment
+            programEquipmentService.remove(programEquipmentId);
+        }
+        catch(DataException e){
+            return OpenLmisResponse.error(e,HttpStatus.BAD_REQUEST);
+        }
+
+        successResponse = OpenLmisResponse.success("Program equipment successfully removed.");
+        return successResponse;
+    }
 }

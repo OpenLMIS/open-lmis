@@ -42,4 +42,7 @@ public interface ProgramEquipmentMapper {
       "SET programId = #{program.id}, equipmentId = #{equipment.id}, displayOrder = #{displayOrder}, enableTestCount = #{enableTestCount}, enableTotalColumn = #{enableTotalColumn},modifiedBy = #{modifiedBy},modifiedDate = #{modifiedDate} " +
       "WHERE id = #{id}")
   void update(ProgramEquipment programEquipment);
+
+  @Delete("DELETE FROM program_equipments WHERE id = #{programEquipmentId}")
+  void remove(Long programEquipmentId);
 }

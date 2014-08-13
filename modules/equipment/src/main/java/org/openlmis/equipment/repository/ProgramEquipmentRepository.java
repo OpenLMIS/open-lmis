@@ -32,4 +32,8 @@ public class ProgramEquipmentRepository {
   public void update(ProgramEquipment programEquipment) {
     programEquipmentMapper.update(programEquipment);
   }
+
+    public void remove(Long programEquipmentId){
+        programEquipmentMapper.remove(programEquipmentId);
+    }
 }

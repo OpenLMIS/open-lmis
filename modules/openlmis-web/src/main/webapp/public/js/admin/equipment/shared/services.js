@@ -140,6 +140,10 @@ services.factory('GetProgramEquipmentByProgramId', function($resource){
     return $resource('/program-equipment/getByProgram/:programId.json',{},{});
 });
 
+services.factory('RemoveProgramEquipment',function($resource){
+    return $resource('/program-equipment/remove/:id.json',{},{});
+});
+
 /* Program Equipment Products */
 
 services.factory('SaveProgramEquipmentProduct',function($resource){
@@ -153,3 +157,5 @@ services.factory('GetProgramEquipmentProductByProgramEquipment', function($resou
 services.factory('RemoveProgramEquipmentProduct',function($resource){
     return $resource('/program-equipment-product/remove/:id.json',{},{});
 });
+
+

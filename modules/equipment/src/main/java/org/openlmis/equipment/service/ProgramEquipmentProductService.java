@@ -37,4 +37,8 @@ public class ProgramEquipmentProductService {
   public void remove(Long programEquipmentId) {
     programEquipmentProductRepository.remove(programEquipmentId);
   }
+
+    public void removeEquipmentProducts(Long programEquipmentId){
+        programEquipmentProductRepository.removeEquipmentProducts(programEquipmentId);
+    }
 }

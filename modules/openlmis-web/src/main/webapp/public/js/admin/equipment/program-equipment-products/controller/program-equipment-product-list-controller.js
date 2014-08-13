@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ProgramEquipmentProductController($scope,$dialog,messageService, navigateBackService, Equipments, ProgramCompleteList,GetProductsCompleteListForAProgram, GetProgramEquipmentByProgramId, SaveProgramEquipment, GetProgramEquipmentProductByProgramEquipment, SaveProgramEquipmentProduct, RemoveProgramEquipmentProduct) {
+function ProgramEquipmentProductController($scope,$dialog,messageService, navigateBackService, Equipments, ProgramCompleteList,GetProductsCompleteListForAProgram, GetProgramEquipmentByProgramId, SaveProgramEquipment, GetProgramEquipmentProductByProgramEquipment, SaveProgramEquipmentProduct, RemoveProgramEquipmentProduct, RemoveProgramEquipment) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.getAllEquipments();
@@ -58,6 +58,11 @@ function ProgramEquipmentProductController($scope,$dialog,messageService, naviga
     };
 
     $scope.addNewEquipment = function() {
+        $scope.equipmentDialogModal = true;
+        $scope.currentProgramEquipment.id = null;
+    };
+
+    $scope.deleteEquipment = function() {
         $scope.equipmentDialogModal = true;
         $scope.currentProgramEquipment.id = null;
     };
@@ -174,6 +179,37 @@ function ProgramEquipmentProductController($scope,$dialog,messageService, naviga
         $scope.isDataChanged = true;
     };
 
+    $scope.showRemoveProgramEquipmentConfirmDialog = function (index) {
+        var programEquipment = $scope.programEquipments[index];
+
+        $scope.selectedProgramEquipment = programEquipment;
+        var options = {
+            id: "removeProgramEquipmentConfirmDialog",
+            header: "Confirmation",
+            body: "Please confirm that you want to remove the equipment: " + programEquipment.equipment.name
+        };
+
+        OpenLmisDialog.newDialog(options, $scope.removeProgramEquipmentConfirm, $dialog, messageService);
+    };
+
+    $scope.removeProgramEquipmentConfirm = function (result) {
+
+        var successCallBack = function(response){
+            $scope.message = response.success;
+            $scope.showMessage = true;
+            $scope.listEquipmentsForProgram();
+        }
+
+        var errorCallBack = function(response){
+            $scope.equipmentError = true;
+            $scope.equipmentErrorMessage = response.data.error;
+        }
+
+        if (result){
+            RemoveProgramEquipment.delete({id: $scope.selectedProgramEquipment.id}, successCallBack, errorCallBack);
+        }
+    }
+
     $scope.showRemoveProgramEquipmentProductConfirmDialog = function (index) {
         var programEquipmentProduct = $scope.programEquipmentProducts[index];
         $scope.index = index;
@@ -195,6 +231,17 @@ function ProgramEquipmentProductController($scope,$dialog,messageService, naviga
     };
 
     $scope.removeProgramEquipmentProduct = function(){
-        RemoveProgramEquipmentProduct.get({id: $scope.selectedProgramEquipmentProduct.id});
+
+        var successCallBack = function(response){
+            $scope.message = response.success;
+            $scope.showMessage = true;
+        }
+
+        var errorCallBack = function(response){
+            $scope.productError = true;
+            $scope.productErrorMessage = response.data.error;
+        }
+
+        RemoveProgramEquipmentProduct.get({id: $scope.selectedProgramEquipmentProduct.id}, successCallBack, errorCallBack);
     };
 }
