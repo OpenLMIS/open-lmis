@@ -76,11 +76,13 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
           $scope.showError = false;
           $scope.error = "";
           $scope.message = response.success;
+          $scope.showSuccess = true;
           $scope.loadMemberFacilities();
         };
 
         var errorHandler = function (response) {
             $scope.showError = true;
+            $scope.showSuccess = false;
             $scope.error = messageService.get(response.data.error);
         };
 

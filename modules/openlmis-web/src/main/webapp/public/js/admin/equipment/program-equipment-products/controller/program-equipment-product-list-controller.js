@@ -241,7 +241,7 @@ function ProgramEquipmentProductController($scope,$dialog,messageService, naviga
             $scope.productError = true;
             $scope.productErrorMessage = response.data.error;
         }
-
         RemoveProgramEquipmentProduct.get({id: $scope.selectedProgramEquipmentProduct.id}, successCallBack, errorCallBack);
+
     };
 }
