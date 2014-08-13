@@ -8,8 +8,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ListRoleController($scope, Roles) {
-  Roles.get({}, function(data) {
+function ListRoleController($scope, RolesFlat) {
+  RolesFlat.get({}, function(data) {
        $scope.roles = _.flatten(_.values(data.roles_map));
   }, {}
   );

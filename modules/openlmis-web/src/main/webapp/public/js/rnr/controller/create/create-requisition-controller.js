@@ -8,12 +8,19 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisitionData, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition,SkipRequisition,ReOpenRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisitionData, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition, ConfigSettingsByKey, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
   var REGIMEN = 'regimen';
   var EQUIPMENT = 'equipment';
+
+
+  // get configurations
+  ConfigSettingsByKey.get({key: 'ENABLE_SKIP_RNR_PERIOD'}, function (data){
+    $scope.enable_skip_period          = data.settings.value;
+  });
+
 
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
