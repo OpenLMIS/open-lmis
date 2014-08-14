@@ -70,7 +70,8 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
       adjustmentSummaryReportParam.setFacilityId(StringHelper.isBlank( filterCriteria, "facility")? 0L : Long.parseLong(filterCriteria.get("facility")[0]));
       adjustmentSummaryReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
       adjustmentSummaryReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
-      adjustmentSummaryReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
+        adjustmentSummaryReportParam.setProductId(!filterCriteria.containsKey("product") ? "0" : java.util.Arrays.toString(filterCriteria.get("product")));
+      //adjustmentSummaryReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
       adjustmentSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0])); //defaults to 0
       adjustmentSummaryReportParam.setAdjustmentTypeId(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "" : filterCriteria.get("adjustmentType")[0]);
       adjustmentSummaryReportParam.setAdjustmentType(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);
