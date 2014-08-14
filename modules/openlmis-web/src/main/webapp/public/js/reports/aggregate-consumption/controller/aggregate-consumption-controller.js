@@ -12,6 +12,8 @@ function DistrictConsumptionReportController($scope,  AggregateConsumptionReport
 
     //filter form data section
 
+    $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
+
     $scope.OnFilterChanged = function(){
       $scope.data = $scope.datarows = [];
 

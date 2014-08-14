@@ -123,6 +123,16 @@
     </div>
 </script>
 
+<script type="text/ng-template" id="filter-product-multi-template">
+    <div>
+        <label class="labels">Product <span ng-show="requiredFilters.product" class="label-required">*</span></label><div>
+        <select ui-select2="wideOption" multiple data-placeholder="-- All Products --" class="input-large" ng-model="filter.product" ng-change="filterChanged();">
+            <option  ng-repeat="option in products | filter:productCFilter" value="{{ option.id }}" ng-selected="filter.product == option.id">{{ option.name }}</option>
+        </select>
+    </div>
+    </div>
+</script>
+
 <script type="text/ng-template" id="filter-requisition-group-template">
     <div>
         <label class="labels">Requisition Groups <span ng-show="requiredFilters.requisitionGroup" class="label-required">*</span></label><div>

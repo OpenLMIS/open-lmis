@@ -56,10 +56,11 @@ public class DistrictConsumptionQueryBuilder {
                 predicate = predicate + " product_category_id = #{filterCriteria.productCategoryId}";
             }
 
-            if(filter.getProductId() != 0){
+            if(!filter.getProductId().equals("-1") && !filter.getProductId().equals("")){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " product_id= #{filterCriteria.productId}";
+                predicate = predicate + " product_id= "+filter.getProductId();
             }
+
             if(filter.getProgramId() != 0){
                 predicate = predicate.isEmpty() ?" where " : predicate +  " and ";
                 predicate = predicate + " program_id = #{filterCriteria.programId}";
@@ -75,9 +76,8 @@ public class DistrictConsumptionQueryBuilder {
 
     String predicates = "";
 
-
-    if(filter.getProductId() > 0 ){
-        predicates = predicates + " and p.id = " + filter.getProductId();
+   if(!filter.getProductId().equals("0")){ // && !filter.getProductId().equals("{}")){
+        predicates = predicates + " and p.id = ANY(array" + filter.getProductId()+"::INT[])";
     }
 
     if(filter.getProductCategoryId() > 0){

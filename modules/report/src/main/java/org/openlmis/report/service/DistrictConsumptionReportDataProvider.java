@@ -11,6 +11,7 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.ConsumptionReportMapper;
 import org.openlmis.report.model.ReportData;
@@ -51,7 +52,7 @@ public class DistrictConsumptionReportDataProvider extends ReportDataProvider {
     if (filterCriteria != null) {
       districtConsumptionReportParam = new DistrictConsumptionReportParam();
       districtConsumptionReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
-      districtConsumptionReportParam.setProductId(StringHelper.isBlank(filterCriteria,("product")) ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
+      districtConsumptionReportParam.setProductId(StringUtils.isBlank(filterCriteria.get("product")[0]) ? "0" : (filterCriteria.get("product")[0]).toString().replace("]", "}").replace("[", "{").replaceAll("\"", ""));
       districtConsumptionReportParam.setProgramId(StringHelper.isBlank(filterCriteria,("program")) ? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
       districtConsumptionReportParam.setZoneId(StringHelper.isBlank(filterCriteria,("zone")) ? 0 : Integer.parseInt(filterCriteria.get("zone")[0])); //defaults to 0
       // a required field

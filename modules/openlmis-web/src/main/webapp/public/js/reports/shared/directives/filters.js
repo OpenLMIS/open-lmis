@@ -547,6 +547,62 @@ app.directive('productFilter', ['ReportProductsByProgram','$routeParams',
 
 }]);
 
+//This is a hacky way needs to be needs to be incorporated in the Product filter
+app.directive('productMultiFilter', ['ReportProductsByProgram','$routeParams',
+    function (ReportProductsByProgram, $routeParams) {
+
+        var onPgCascadedVarsChanged = function ($scope, newValue) {
+
+            if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
+                return;
+
+            var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
+            ReportProductsByProgram.get({
+                programId: program
+            }, function (data) {
+                $scope.products = data.productList;
+                $scope.products.unshift({
+                    'name': '-- Indicator Products --',
+                    id: 0
+                });
+                $scope.products.unshift({
+                    'name': '-- All Products --',
+                    id: -1
+                });
+
+            });
+
+        };
+
+        return {
+            restrict: 'E',
+            link: function (scope, elm, attr) {
+
+                scope.products = [];
+                scope.products.push({
+                    'name': '-- All Products --',
+                    id: -1
+                });
+
+                scope.filter.product = (isUndefined($routeParams.product) || $routeParams.product === '')? -1: $routeParams.product;
+
+                if (attr.required) {
+                    scope.requiredFilters.product = 'product';
+                }
+
+                scope.productCFilter = function (option) {
+                    return (!angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) || scope.filter.productCategory === '' || scope.filter.productCategory === '0' || option.categoryId == scope.filter.productCategory);
+                };
+
+                scope.$watch('filter.program', function (value) {
+                    onPgCascadedVarsChanged(scope, value);
+                });
+            },
+            templateUrl: 'filter-product-multi-template'
+        };
+
+    }]);
+
 
 app.directive('programByRegimenFilter',['ReportRegimenPrograms', function(ReportRegimenPrograms){
 
