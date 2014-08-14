@@ -116,7 +116,7 @@
                 </label>
 
                 <div class="form-field">
-                  <input
+                  <input ng-disabled="true"
                       ng-change="blurDateFields();"
                       ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
                       ui-date-format="yy-dd-mm"
@@ -128,43 +128,46 @@
           </div>
         </td>
         <td  width="50%" style="vertical-align: top;padding:10px">
-          <div ng-show="!isNew">
-            <div class="form-row clearfix">
-              <div class="form-cell">
-                <label>Service Types</label>
-              </div>
-              <div class="form-field">
-                <label ng-repeat="type in current.serviceTypes"><input ng-disabled="true" type="checkbox" ng-model="type.isActive"  /> {{type.name}}</label>
-              </div>
+        <div ng-show="!isNew">
+          <div class="form-row clearfix">
+            <div class="form-cell">
+              <label class="bold">Service Types</label>
             </div>
-            <div class="form-row clearfix">
-              <div class="form-cell">
-                <label>Equipments Covered</label>
-              </div>
-              <div class="form-field">
-                <label  ng-repeat="type in current.equipments"><input ng-disabled="true" type="checkbox" ng-model="type.isActive"  /> {{type.name}}</label>
-              </div>
+            <div class="form-field">
+              <label ng-repeat="type in current.serviceTypes | filter : {isActive: true}"><input ng-disabled="true" type="checkbox" ng-model="type.isActive"  /> {{type.name}}</label>
             </div>
-            <div class="panel">
-              <div class="header-nav">
-                Facilities Covered
-              </div>
-              <div class="content-body">
+          </div>
+          <div class="form-row clearfix">
+            <div class="form-cell">
+              <label class="bold">Equipments Covered</label>
+            </div>
+            <div class="form-field">
+              <label  ng-repeat="type in current.equipments | filter : {isActive: true}"><input ng-disabled="true" type="checkbox" ng-model="type.isActive"  /> {{type.name}}</label>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="header-nav bold">
+              Facilities Covered
+            </div>
+            <div class="content-body">
 
-                <div class="form-row clearfix">
-                  <div class="form-field">
-                    <div style="height: 200px; max-height: 200px; overflow-y: scroll">
-                      <label ng-repeat="facility in current.facilities">
-                        <input ng-disabled="true" type="checkbox" ng-model="facility.isActive" >
-                        {{facility.name}}
-                      </label>
-                    </div>
+              <div class="form-row clearfix">
+                <div class="form-field">
+                  <div style="height: 200px; max-height: 200px; overflow-y: scroll">
+                    <label ng-repeat="facility in current.facilities | filter : {isActive : true}">
+                      <input ng-disabled="true" type="checkbox" ng-model="facility.isActive" >
+                      {{facility.name}}
+                    </label>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </td>
+        </div>
+      </td>
+
+
+
       </tr>
     </table>
     

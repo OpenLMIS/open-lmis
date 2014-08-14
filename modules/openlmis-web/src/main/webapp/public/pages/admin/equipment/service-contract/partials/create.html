@@ -167,14 +167,14 @@
             </div>
             <div class="panel">
             <div class="header-nav">
-              Facilities Covered
+              Facilities Covered <input type="text" ng-model="facilityName" />
             </div>
             <div class="content-body">
 
               <div class="form-row clearfix">
                 <div class="form-field">
                   <div style="height: 200px; max-height: 200px; overflow-y: scroll">
-                      <label ng-repeat="facility in current.facilities">
+                      <label ng-repeat="facility in current.facilities | filter : facilityName">
                         <input type="checkbox" ng-model="facility.isActive" >
                         {{facility.name}}
                       </label>
