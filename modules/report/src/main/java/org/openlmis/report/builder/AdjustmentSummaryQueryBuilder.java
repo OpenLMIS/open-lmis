@@ -14,8 +14,7 @@ import org.openlmis.report.model.params.AdjustmentSummaryReportParam;
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
-import static org.apache.ibatis.jdbc.SqlBuilder.FROM;
-import static org.apache.ibatis.jdbc.SqlBuilder.SQL;
+import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
 
 
 public class AdjustmentSummaryQueryBuilder {
@@ -59,9 +58,13 @@ public class AdjustmentSummaryQueryBuilder {
         WHERE("product_category_id = #{filterCriteria.productCategoryId}");
       }
 
-      if (filter.getProductId() != -1 && filter.getProductId() != 0) {
+      /*if (filter.getProductId() != -1 && filter.getProductId() != 0) {
         WHERE("product_id= #{filterCriteria.productId}");
       }
+*/
+        if(!filter.getProductId().equals("0")){ // && !filter.getProductId().equals("{}")){
+            WHERE("product_id = ANY(array" + filter.getProductId()+"::INT[])");
+        }
 
       if (!filter.getAdjustmentTypeId().equals("-1") && !filter.getAdjustmentTypeId().equals("0") && !filter.getAdjustmentTypeId().equals("")) {
         WHERE("adjustment_type = #{filterCriteria.adjustmentTypeId}");
