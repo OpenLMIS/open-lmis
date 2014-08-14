@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, SettingsByKey, ContactList, SendMessages, $dialog, messageService) {
+function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, SettingsByKey, ContactList, SendMessages, $filter , $dialog, messageService) {
 
 
   $scope.default_indicator = "period_over_expected";
@@ -85,6 +85,8 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
 
   $scope.sendSms = function(){
 
+
+
     // construct the messages that go out
     var messages  = [];
     for(var i = 0; i < $scope.contacts.length; i++){
@@ -134,7 +136,7 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
       $scope.title = 'Non Reporting Facilities in ' + feature.name;
     });
 
-    $scope.zoomToSelectedFeature(feature);
+
   };
 
     $scope.expectedFilter = function(item) {
@@ -231,9 +233,6 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
         });
     };
 
-    $scope.zoomToSelectedFeature = function( currentFeature ) {
-      //TODO: highlight the district here
-    };
 
     $scope.drawMap = function(json) {
 
@@ -266,7 +265,7 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     }
 
     function zoomToFeature(e) {
-
+      //todo: complete this
     }
 
     $scope.OnFilterChanged = function() {
