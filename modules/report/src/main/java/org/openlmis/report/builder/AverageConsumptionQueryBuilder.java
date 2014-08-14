@@ -31,14 +31,16 @@ public class AverageConsumptionQueryBuilder {
         Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
         BEGIN();
 
-        SELECT("coalesce( avg(quantitydispensed),0) average, product, productcode, productcategory category, ft.name facilityType, f.name facilityName,  MAX(s.name) supplyingFacility, MAX(ft.nominalmaxmonth) MaxMOS, MAX(ft.nominaleop) minMOS");
+        SELECT("coalesce( avg(quantitydispensed),0) average, product, productcode, productcategory category, ft.name facilityType, f.name facilityName,MAX(ps.name) schedulename, MAX(pp.name) periodname,  MAX(s.name) supplyingFacility, MAX(ft.nominalmaxmonth) MaxMOS, MAX(ft.nominaleop) minMOS");
         FROM("requisition_line_items li");
         JOIN("requisitions r on r.id = li.rnrid");
         JOIN("facilities f on r.facilityid = f.id");
         JOIN("facility_types ft on ft.id = f.typeid");
         JOIN("processing_periods pp on pp.id = r.periodid");
+        JOIN("processing_schedules ps on pp.scheduleid = ps.id");
         JOIN("products pr on pr.code = li.productcode");
-        JOIN("product_categories prc on prc.id = pr.categoryid");
+        JOIN("program_products prp on prp.productid = pr.id");
+        JOIN("product_categories prc on prc.id = prp.productcategoryid");
         JOIN("requisition_group_members rgm on rgm.facilityid = f.id");
         LEFT_OUTER_JOIN("supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid");
         LEFT_OUTER_JOIN("facilities s on s.id = sl.supplyingfacilityid");
