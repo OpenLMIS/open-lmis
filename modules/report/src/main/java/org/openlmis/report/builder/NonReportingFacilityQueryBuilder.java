@@ -57,7 +57,7 @@ public class NonReportingFacilityQueryBuilder {
 
      private static void writePredicates(String program, String period, String zone, String facilityType, String schedule) {
 
-         if(zone != "" && !zone.endsWith( "undefined")){
+         if(!zone.equals("0") && !zone.isEmpty() && !zone.endsWith( "undefined")){
              WHERE(" (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone +" or gz.parent = " + zone + " )");
          }
 
