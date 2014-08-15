@@ -13,7 +13,4 @@ package org.openlmis.report.model.sorter;
 import org.openlmis.report.model.report.FacilityReport;
 
 public class MailingLabelReportSorter extends FacilityReport {
-
-    private String orderBy;
-    private String order;
 }
