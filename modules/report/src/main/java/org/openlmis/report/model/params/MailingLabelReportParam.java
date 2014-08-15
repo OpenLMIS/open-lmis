@@ -28,7 +28,8 @@ public class MailingLabelReportParam
   private Long facilityType;
   private Long zone;
   private Boolean status;
-
+  private String orderBy;
+  private String sortOrder;
   private String header;
 
   @Override
