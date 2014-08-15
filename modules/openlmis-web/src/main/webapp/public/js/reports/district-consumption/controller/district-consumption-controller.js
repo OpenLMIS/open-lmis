@@ -17,11 +17,19 @@ function DistrictConsumptionReportController($scope,  DistrictConsumptionReport)
       $scope.filter.page = 1;
       $scope.filter.max = 10000;
       DistrictConsumptionReport.get($scope.filter, function(data) {
+
         if(data.pages !== undefined){
-          $scope.data = data.pages.rows;
+          $scope.data = removeRowsWithNoPercentage(data.pages.rows); //data.pages.rows
           $scope.paramsChanged($scope.tableParams);
         }
       });
+    };
+
+    var removeRowsWithNoPercentage = function (data){
+        return data
+            .filter(function (el) {
+                return el.totalPercentage !== null && el.totalPercentage !== 0;
+            });
     };
 
    $scope.exportReport   = function (type){
