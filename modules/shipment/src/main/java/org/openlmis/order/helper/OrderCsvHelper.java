@@ -78,13 +78,14 @@ public class OrderCsvHelper {
   }
 
   private void writeLineItems(Order order, List<RnrLineItem> fullSupplyLineItems, List<OrderFileColumn> orderFileColumns, Writer writer) throws IOException {
+    int counter = 1;
     for (RnrLineItem rnrLineItem : fullSupplyLineItems) {
-      writeCsvLineItem(order, rnrLineItem, orderFileColumns, writer);
+      writeCsvLineItem(order, rnrLineItem, orderFileColumns, writer, counter ++);
       writer.write(lineSeparator);
     }
   }
 
-  private void writeCsvLineItem(Order order, RnrLineItem rnrLineItem, List<OrderFileColumn> orderFileColumns, Writer writer) throws IOException {
+  private void writeCsvLineItem(Order order, RnrLineItem rnrLineItem, List<OrderFileColumn> orderFileColumns, Writer writer, int counter) throws IOException {
     JXPathContext orderContext = JXPathContext.newContext(order);
     JXPathContext lineItemContext = JXPathContext.newContext(rnrLineItem);
     for (OrderFileColumn orderFileColumn : orderFileColumns) {
@@ -93,7 +94,12 @@ public class OrderCsvHelper {
         continue;
       }
       Object columnValue;
-      if (orderFileColumn.getNested().equals("order")) {
+
+      if(orderFileColumn.getNested().equals("string")){
+        columnValue = orderFileColumn.getKeyPath();
+      }else if (orderFileColumn.getNested().equals("line_no")) {
+        columnValue = counter;
+      }else if (orderFileColumn.getNested().equals("order")) {
         columnValue = orderContext.getValue(orderFileColumn.getKeyPath());
       } else {
         columnValue = lineItemContext.getValue(orderFileColumn.getKeyPath());
