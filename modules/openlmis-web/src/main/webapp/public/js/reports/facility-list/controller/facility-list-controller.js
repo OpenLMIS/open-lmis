@@ -8,7 +8,9 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ListFacilitiesController($scope, FacilityList) {
+function ListFacilitiesController($scope, FacilityList, ngTableParams) {
+
+
 
     $scope.OnFilterChanged = function(){
         FacilityList.get($scope.filter, function(data) {
@@ -23,14 +25,23 @@ function ListFacilitiesController($scope, FacilityList) {
         {'name': 'Inactive', 'value': "FALSE"}
     ];
 
+
     $scope.exportReport   = function (type){
+
 
       var params = jQuery.param($scope.filter);
 
-      var url = '/reports/download/mailinglabels/' + type +'?' + params ;
+    var sortOrderParams = jQuery.param($scope.tableParams.sorting);
+    sortOrderParams = sortOrderParams.split('=');
+    sortOrderParams = { sortBy:sortOrderParams[0], order:sortOrderParams[1] };
+    sortOrderParams = jQuery.param(sortOrderParams);
+
+
+      var url = '/reports/download/mailinglabels/' + type +'?' + sortOrderParams +'&'+ params ;
       if(type == "mailing-list"){
-        url = '/reports/download/mailinglabels/list/' + "pdf" +'?' + params ;
+        url = '/reports/download/mailinglabels/list/' + "pdf" +'?' + sortOrderParams +'&'+ params ;
       }
+        console.log(url);
 
       window.open(url);
     };
