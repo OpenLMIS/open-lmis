@@ -199,7 +199,7 @@ public interface RequisitionMapper {
       sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, R.supervisoryNodeId," +
           " R.modifiedDate as modifiedDate, RSC.createdDate as submittedDate, P.name AS programName, F.name AS facilityName," +
           " F.code AS facilityCode, SF.name AS supplyingDepotName, PP.startDate as periodStartDate, PP.endDate as periodEndDate" +
-          " FROM Requisitions R INNER JOIN requisition_status_changes RSC ON R.id = RSC.rnrId AND RSC.status = 'SUBMITTED' " +
+          " FROM Requisitions R INNER JOIN  (select status, rnrId, max(createdDate) createdDate from requisition_status_changes group by rnrId, status) RSC ON R.id = RSC.rnrId AND RSC.status = 'SUBMITTED' " +
           " INNER JOIN processing_periods PP ON PP.id = R.periodId ");
 
       appendQueryClausesBySearchType(sql, params);
