@@ -17,8 +17,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     };
     $scope.formPanel = {openPanel:true};
 
-    $scope.alertsPanel = {openPanel:true};
-
     initialize();
 
     function initialize() {
