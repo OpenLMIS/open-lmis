@@ -6,8 +6,8 @@ INSERT INTO master_regimen_columns
     values
       ('skipped','Skip', true, 'Boolean');
 
-INSERT INTO program_regimen_columns
-(id, programId, name, label, visible, dataType, createdBy, createdDate, modifiedBy, modifiedDate)
-    values
-      (0, 2, 'skipped', 'Skip', true, 'Boolean', 2, NOW(), 2, NOW());
+-- INSERT INTO program_regimen_columns
+-- (id, programId, name, label, visible, dataType, createdBy, createdDate, modifiedBy, modifiedDate)
+--     values
+--       (0, 2, 'skipped', 'Skip', true, 'Boolean', 2, NOW(), 2, NOW());
 
