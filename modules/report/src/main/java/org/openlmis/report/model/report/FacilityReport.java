@@ -22,7 +22,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FacilityReport implements ReportData {
+public class    FacilityReport implements ReportData {
     private String code;
     private String facilityName;
     private String facilityType;

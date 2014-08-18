@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="district-consumption" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="13"/>
@@ -36,12 +35,12 @@
 	</queryString>
 	<field name="product" class="java.lang.String"/>
 	<field name="district" class="java.lang.String"/>
-	<field name="consumption" class="java.lang.Long"/>
-	<field name="totalPercentage" class="java.math.BigDecimal"/>
+	<field name="consumption" class="java.lang.Number"/>
+	<field name="totalPercentage" class="java.lang.Number"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
-	<variable name="consumption_1" class="java.lang.Long" resetType="Group" resetGroup="GroupByProduct" calculation="Sum">
+	<variable name="consumption_1" class="java.lang.Number" resetType="Group" resetGroup="GroupByProduct" calculation="Sum">
 		<variableExpression><![CDATA[$F{consumption}]]></variableExpression>
 	</variable>
 	<group name="GroupByProduct" isStartNewPage="true">
@@ -65,7 +64,7 @@
 				<textField isBlankWhenNull="true">
 					<reportElement x="45" y="0" width="307" height="20" uuid="987dfd20-2622-443c-9f95-62413810cbef"/>
 					<textElement>
-						<font isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 				</textField>
@@ -105,7 +104,7 @@
 					</textElement>
 					<text><![CDATA[Total :]]></text>
 				</staticText>
-				<textField pattern="" isBlankWhenNull="true">
+				<textField>
 					<reportElement mode="Transparent" x="241" y="0" width="136" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a4c069eb-7ead-42ce-8dfb-3239eb46942a"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -194,21 +193,14 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="185" y="0" width="192" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f3fca3e5-268e-49ab-9dda-1b628d2ca58e"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single" rightIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{consumption}.toString().toUpperCase()== "NULL"?" " : new java.text.DecimalFormat("#,##0.##").format($F{consumption}.doubleValue())]]></textFieldExpression>
+			<textField>
+				<reportElement x="277" y="0" width="100" height="20" uuid="5a01a3cf-e81b-4564-b06e-ad43feb067a7"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{consumption}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="442" y="0" width="136" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="029c088b-bf88-4d50-bbe1-7a98dc98ce36"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single" leftIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{totalPercentage} == null ? 0 : ($F{totalPercentage} > 0 ? $F{totalPercentage}.setScale(2, java.math.RoundingMode.HALF_UP) +'%' : 0 )]]></textFieldExpression>
+			<textField>
+				<reportElement x="442" y="0" width="100" height="20" uuid="10e6e842-7414-4456-8d71-a9f99b6249ed"/>
+				<textFieldExpression><![CDATA[$F{totalPercentage}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

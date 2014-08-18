@@ -43,6 +43,7 @@ public class DistrictConsumptionQueryBuilder {
         if(filter != null){
 
           predicate = "where processing_periods_id = " + filter.getPeriod() + " ";
+          predicate = predicate + " and normalizedconsumption > 0 "; // To filter out rows with zero normalized consumption
           predicate = predicate + " and facility_id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = "  + filter.getProgramId() + ")";
 
             if (filter.getZoneId() != 0) {

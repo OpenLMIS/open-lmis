@@ -198,17 +198,17 @@ function ProgramEquipmentProductController($scope,$dialog,messageService, naviga
             $scope.message = response.success;
             $scope.showMessage = true;
             $scope.listEquipmentsForProgram();
-        }
+        };
 
         var errorCallBack = function(response){
             $scope.equipmentError = true;
             $scope.equipmentErrorMessage = response.data.error;
-        }
+        };
 
         if (result){
             RemoveProgramEquipment.delete({id: $scope.selectedProgramEquipment.id}, successCallBack, errorCallBack);
         }
-    }
+    };
 
     $scope.showRemoveProgramEquipmentProductConfirmDialog = function (index) {
         var programEquipmentProduct = $scope.programEquipmentProducts[index];
@@ -235,12 +235,12 @@ function ProgramEquipmentProductController($scope,$dialog,messageService, naviga
         var successCallBack = function(response){
             $scope.message = response.success;
             $scope.showMessage = true;
-        }
+        };
 
         var errorCallBack = function(response){
             $scope.productError = true;
             $scope.productErrorMessage = response.data.error;
-        }
+        };
         RemoveProgramEquipmentProduct.get({id: $scope.selectedProgramEquipmentProduct.id}, successCallBack, errorCallBack);
 
     };

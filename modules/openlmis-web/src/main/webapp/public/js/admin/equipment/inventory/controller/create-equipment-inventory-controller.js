@@ -10,6 +10,8 @@
 
 function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors ,Equipments, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService) {
 
+
+  $scope.max_year = new Date().getFullYear();
   $scope.submitted = false;
   $scope.showError = false;
   Equipments.get(function (data) {
