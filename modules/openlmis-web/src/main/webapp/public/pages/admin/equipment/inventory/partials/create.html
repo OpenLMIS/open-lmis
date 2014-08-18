@@ -136,7 +136,7 @@
             </label>
 
             <div class="form-field">
-              <input ng-model="equipment.yearOfInstallation"  name="year" id="year" type="number" min="1950" max="2500" ng-required="true" />
+              <input ng-model="equipment.yearOfInstallation"  name="year" id="year" type="number" min="1950" max="{{max_year}}" ng-required="true" />
               <span class="field-error" ng-show="equipmentForm.year.$error.required && showError" openlmis-message="missing.value"></span>
               <span class="field-error" ng-show="(equipmentForm.year.$error.min || equipmentForm.year.$error.max) && showError" >Enter a valid Year</span>
             </div>
@@ -202,8 +202,9 @@
                            name="dateLastAssessed" 
                            id="dateLastAssessed"
                            ng-change="blurDateFields();"
-                           ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                           ui-date="{maxDate: 'today', dateFormat: 'dd/mm/yy', changeYear: true}"
                            ui-date-format="yy-dd-mm"
+
                            ng-required="true" />
                     <span class="field-error" ng-show="equipmentForm.dateLastAssessed.$error.required && showError" openlmis-message="missing.value"></span>
                 </div>

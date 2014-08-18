@@ -462,6 +462,7 @@ public class RequisitionService {
   }
 
   private void sendRequisitionStatusChangeMail(Rnr requisition) {
+
     List<User> userList = new ArrayList<>();
 
     if (requisition.getStatus().equals(SUBMITTED)) {
@@ -478,9 +479,9 @@ public class RequisitionService {
       }
     }
 
-    ArrayList<User> activeUsersWithRight = userService.filterForActiveUsers(userList);
-    statusChangeEventService.notifyUsers(activeUsersWithRight, requisition.getId(), requisition.getFacility(),
-      requisition.getProgram(), requisition.getPeriod(), requisition.getStatus().toString());
+//    ArrayList<User> activeUsersWithRight = userService.filterForActiveUsers(userList);
+//    statusChangeEventService.notifyUsers(activeUsersWithRight, requisition.getId(), requisition.getFacility(),
+//      requisition.getProgram(), requisition.getPeriod(), requisition.getStatus().toString());
   }
 
   private void insert(Rnr requisition) {
