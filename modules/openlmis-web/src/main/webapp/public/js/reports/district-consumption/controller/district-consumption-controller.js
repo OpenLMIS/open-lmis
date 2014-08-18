@@ -19,7 +19,7 @@ function DistrictConsumptionReportController($scope,  DistrictConsumptionReport)
       DistrictConsumptionReport.get($scope.filter, function(data) {
 
         if(data.pages !== undefined){
-          $scope.data = removeRowsWithNoPercentage(data.pages.rows); //data.pages.rows
+          $scope.data = data.pages.rows;//removeRowsWithNoPercentage(data.pages.rows); //data.pages.rows
           $scope.paramsChanged($scope.tableParams);
         }
       });
