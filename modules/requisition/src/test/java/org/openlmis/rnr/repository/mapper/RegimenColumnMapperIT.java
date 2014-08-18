@@ -115,6 +115,6 @@ public class RegimenColumnMapperIT {
 
     List<RegimenColumn> regimenColumns = mapper.getMasterRegimenColumns();
 
-    assertThat(regimenColumns.size(), is(6));
+    assertThat(regimenColumns.size(), is(7));
   }
 }
