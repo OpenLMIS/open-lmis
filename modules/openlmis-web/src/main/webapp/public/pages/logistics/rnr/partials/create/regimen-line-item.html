@@ -15,7 +15,12 @@
             <tr>
                 <th class="col-{{regimenColumn.name}}" ng-repeat="regimenColumn in visibleRegimenColumns">
                     <div class="regimen-heading">
+
                         <span openlmis-message="regimenColumn.label"></span>
+                        <span ng-if="regimenColumn.name == 'skipped'">
+                            <a href="" id="selectAll" ng-click="setSkipAll(true)" openlmis-message="label.select.all"></a>&nbsp;|
+                            <a href="" id="selectNone" ng-click="setSkipAll(false)" openlmis-message="label.select.none"></a>
+                        </span>
                     </div>
                 </th>
             </tr>
@@ -34,17 +39,20 @@
               <span ng-switch-when="code">
                 <span ng-bind="regimenLineItem.code" class="cell-text"></span>
               </span>
+               <span ng-switch-when="skipped">
+                <input ng-model="regimenLineItem.skipped" type="checkbox" />
+              </span>
               <span ng-switch-when="remarks">
                 <input id="remarks_{{$parent.$parent.$index}}" type="text"
                        ng-model="regimenLineItem[regimenColumn.name]" class="cell-text"
-                       ng-disabled="formDisabled" maxlength="255">
+                       ng-disabled="formDisabled || regimenLineItem.skipped" maxlength="255">
               </span>
               <span ng-switch-default class="input-error-parent-cell">
                 <input ng-class="{'required-error':!regimenLineItem[regimenColumn.name] && regimenLineItem[regimenColumn.name] !== 0 && $parent.regimenLineItemInValid}"
                        id="{{getId(regimenColumn.name, $parent)}}"
                        name="{{regimenColumn.name + $parent.$parent.$index}}"
                        type="text" ng-model="regimenLineItem[regimenColumn.name]" ng-required="true" ng-trim="false"
-                       numeric-validator="positiveInteger" maxlength="8" ng-disabled="formDisabled">
+                       numeric-validator="positiveInteger" maxlength="8" ng-disabled="formDisabled || regimenLineItem.skipped">
                 <span class="rnr-form-error" id="{{regimenColumn.name + $parent.$parent.$index}}"
                       style="display:none;" openlmis-message="error.number.only">
               </span>
