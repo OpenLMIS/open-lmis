@@ -17,4 +17,10 @@ function CreateRegimenLineItemController($scope) {
   $scope.getId = function (prefix, parent) {
     return prefix + "_" + parent.$parent.$index;
   };
+
+  $scope.setSkipAll = function(value){
+    _.each($scope.page.regimen, function (regimen) {
+      regimen.skipped = value;
+    });
+  };
 }

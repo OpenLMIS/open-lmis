@@ -162,35 +162,145 @@ Accordions
 ***/
 .accordion{
   margin-bottom: 0px;
+  .accordion-group{
+    border-radius: 0px !important;
+  }
+  .accordion-body{
+    background: #ffffff;
+  }
 }
 .accordion-heading {
   background: #eee;
   margin-bottom: 0;
-}
-.accordion-heading a {
-  text-decoration: none;
-  bottom: 0;
+  a {
+    text-decoration: none;
+    bottom: 0;
+  }
 }
 
-.accordion .accordion-heading a.collapsed{
+/*.accordion .accordion-heading a.collapsed{
   color: #ffffff;
   background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
   span{
     background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
   }
-}
+}*/
 .accordion .accordion-heading span {
   padding: 0 !important;
 }
+.accordion .blue-steel .accordion-heading a {
+  text-decoration: none;
+  color: #ffffff;
+  background: none repeat scroll 0% 0% rgb(75, 119, 190) !important;
+  span{
+    background: none repeat scroll 0% 0% rgb(75, 119, 190) !important;
+  }
+}
+.accordion .blue-steel.accordion-group{
+  border: 1px solid rgb(75, 119, 190);
+}
 
-.accordion-heading a.open:hover {
+/*Green-haze*/
+.accordion .green-haze .accordion-heading a {
+  text-decoration: none;
+  color: #ffffff;
+  background: none repeat scroll 0% 0% rgb(68, 182, 174) !important;
+  span{
+    background: none repeat scroll 0% 0% rgb(68, 182, 174) !important;
+  }
+}
+.accordion .green-haze.accordion-group{
+  border: 1px solid rgb(68, 182, 174);
+}
+/*purple-wisteria*/
+.accordion .purple-wisteria .accordion-heading a {
+  text-decoration: none;
+  color: #ffffff;
+  background: none repeat scroll 0% 0% rgb(155, 89, 182) !important;
+  span{
+    background: none repeat scroll 0% 0% rgb(155, 89, 182) !important;
+  }
+}
+.accordion .purple-wisteria.accordion-group{
+  border: 1px solid rgb(155, 89, 182);
+}
+
+/*red-sunglo*/
+.accordion .red-sunglo .accordion-heading a {
+  text-decoration: none;
+  color: #ffffff;
+  background: none repeat scroll 0% 0% rgb(226, 106, 106) !important;
+  span{
+    background: none repeat scroll 0% 0% rgb(226, 106, 106) !important;
+  }
+}
+.accordion .red-sunglo.accordion-group{
+  border: 1px solid rgb(226, 106, 106);
+}
+
+/*yellow-gold*/
+.accordion .yellow-gold .accordion-heading a {
+  text-decoration: none;
+  color: #ffffff;
+  background: none repeat scroll 0% 0% rgb(232, 126, 4) !important;
+  span{
+    background: none repeat scroll 0% 0% rgb(232, 126, 4) !important;
+  }
+}
+.accordion .yellow-gold.accordion-group{
+  border: 1px solid rgb(232, 126, 4);
+}
+
+/*gray-cascade*/
+.accordion .gray-cascade .accordion-heading a {
+  text-decoration: none;
+  color: #ffffff;
+  background: none repeat scroll 0% 0% rgb(149, 165, 166) !important;
+  span{
+    background: none repeat scroll 0% 0% rgb(149, 165, 166) !important;
+  }
+}
+.accordion .gray-cascade.accordion-group{
+  border: 1px solid rgb(149, 165, 166);
+}
+
+
+/*simple-group-accordion*/
+.accordion .simple-accordion {
+  .accordion-heading{
+    background: none !important;
+    a {
+      text-decoration: none;
+      color: rgb(232, 126, 4);
+      background: none !important;
+      span{
+        background: none !important;
+      }
+    }
+  }
+  .accordion-inner{
+    border: none;
+  }
+
+}
+.accordion .simple-accordion.accordion-group{
+  border: none;
+}
+
+
+
+
+
+
+/*.accordion-heading a.open:hover {
   text-decoration: none;
   color: #ffffff;
   background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
   span{
     background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
   }
-}
+}*/
+/*
 .accordion-heading a.collapsed:hover {
   text-decoration: none;
   color: #078f97;
@@ -199,6 +309,7 @@ Accordions
     background: none repeat scroll 0% 0% rgb(248, 248, 248) !important;
   }
 }
+*/
 
 
 /*<!-- -- */
