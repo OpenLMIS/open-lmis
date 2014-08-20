@@ -103,5 +103,9 @@ public class SupervisoryNodeRepository {
       supervisoryNodeMapper.removeSupervisoryNode(id);
   }
 
+    public Long getTotalUnassignedSupervisoryNodeOfUserBy(Long userId, Long programId) {
+       return supervisoryNodeMapper.getTotalUnassignedSupervisoryNodeOfUserBy(userId, programId);
+    }
+
 
 }

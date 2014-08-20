@@ -16,6 +16,7 @@ import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.ReportLookupService;
@@ -58,6 +59,9 @@ public class ReportLookupController extends BaseController {
 
   @Autowired
   private ProcessingScheduleService processingScheduleService;
+
+  @Autowired
+  private SupervisoryNodeService supervisoryNodeService;
 
   @RequestMapping(value="/programs", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getPrograms(){
@@ -148,6 +152,13 @@ public class ReportLookupController extends BaseController {
 
     return OpenLmisResponse.response("zone", geoZoneTree);
   }
+
+  @RequestMapping(value = "/supervisory-node/user-unassigned-node", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getTotalUnassignedSupervisoryNode( @RequestParam(value = "program", required = true, defaultValue = "0") long program,  HttpServletRequest request) {
+    Long unassignedSupervisoryNodes =  supervisoryNodeService.getTotalUnassignedSupervisoryNodeOfUserBy(loggedInUserId(request), program);
+
+        return OpenLmisResponse.response("supervisory_nodes", unassignedSupervisoryNodes);
+    }
 
   @RequestMapping(value="/program-products/{programId}.json", method = GET, headers = BaseController.ACCEPT_JSON)
   public List<Product> getProgramProducts( @PathVariable("programId") Long programId){

@@ -49,6 +49,8 @@ public class RegimenLineItem extends LineItem {
   private RegimenCategory category;
   private Integer regimenDisplayOrder;
 
+  private Boolean skipped = false;
+
   private static Logger logger = LoggerFactory.getLogger(RegimenLineItem.class);
 
   public RegimenLineItem(Long rnrId, RegimenCategory category, Long createdBy, Long modifiedBy) {
