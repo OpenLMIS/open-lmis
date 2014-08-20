@@ -20,8 +20,10 @@
 	<title>
 		<band height="79" splitType="Stretch">
 			<staticText>
-				<reportElement x="180" y="0" width="400" height="79" uuid="11f3a3e7-8367-499f-b5d5-83231cc79499"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement x="180" y="0" width="400" height="40" uuid="11f3a3e7-8367-499f-b5d5-83231cc79499"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
 				<text><![CDATA[OpenLMIS Title]]></text>
 			</staticText>
 			<textField pattern="MMMMM dd, yyyy">
@@ -33,6 +35,11 @@
 				<reportElement x="650" y="20" width="100" height="20" uuid="8ad6326f-b839-44be-835c-136c4a51a73e"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="40" width="400" height="39" uuid="1c2f7b0c-34ac-44d1-92d8-e47de375a8c6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Subtitle"]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
