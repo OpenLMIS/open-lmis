@@ -124,9 +124,6 @@ ORDER BY facilities.name
 			</textField>
 		</band>
 	</title>
-	<pageHeader>
-		<band height="35" splitType="Stretch"/>
-	</pageHeader>
 	<columnHeader>
 		<band height="48" splitType="Stretch">
 			<staticText>
