@@ -629,3 +629,7 @@ services.factory('GetAllUsers',function($resource){
 services.factory('GetPushedProductList', function($resource){
     return $resource('/reports/reportdata/pushedProductList.json',{},{});
 });
+
+services.factory('GetUserUnassignedSupervisoryNode',function ($resource){
+    return $resource('/reports/supervisory-node/user-unassigned-node.json', {}, {});
+});

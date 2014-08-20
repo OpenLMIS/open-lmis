@@ -181,4 +181,11 @@ public interface SupervisoryNodeMapper {
   @Delete("DELETE FROM supervisory_nodes WHERE ID = #{id}")
   void removeSupervisoryNode(@Param(value="id") Long id);
 
+  @Select("select count(id) AS total_unassigned from supervisory_nodes where id not in \n" +
+          " (select id from vw_user_supervisorynodes  where userid = #{userId} and programid = #{programId} )")
+  Long getTotalUnassignedSupervisoryNodeOfUserBy(
+          @Param(value="userId") Long userId,
+          @Param(value="programId") Long programId
+  );
+
 }

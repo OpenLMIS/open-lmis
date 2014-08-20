@@ -188,15 +188,32 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
 }]);
 
 
-app.directive('zoneFilter', ['TreeGeographicZoneList','TreeGeographicZoneListByProgram','$routeParams',
-  function (TreeGeographicZoneList, TreeGeographicZoneListByProgram, $routeParams) {
+app.directive('zoneFilter', ['TreeGeographicZoneList','TreeGeographicZoneListByProgram', 'GetUserUnassignedSupervisoryNode', '$routeParams',
+  function (TreeGeographicZoneList, TreeGeographicZoneListByProgram, GetUserUnassignedSupervisoryNode, $routeParams) {
 
     var onCascadedVarsChanged = function( $scope, newValue){
       if(!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)){
           TreeGeographicZoneListByProgram.get({program: $scope.filter.program},function(data){
           $scope.zones = data.zone;
         });
+
+          isNationalUser($scope);
+
+       $scope.filter.zone = (isUndefined($routeParams.zone) || $routeParams.zone === '')? 0: $routeParams.zone;
       }
+    };
+
+    var isNationalUser = function($scope){
+
+        GetUserUnassignedSupervisoryNode.get({program: $scope.filter.program}, function (data){
+
+            $scope.user_geo_level = '--All Geographic Zones--';
+
+            if(!angular.isUndefined(data.supervisory_nodes)){
+                if(data.supervisory_nodes === 0)
+                    $scope.user_geo_level = '--National---';
+            }
+        });
     };
 
     return {
@@ -207,9 +224,12 @@ app.directive('zoneFilter', ['TreeGeographicZoneList','TreeGeographicZoneListByP
 
         scope.filter.zone = (isUndefined($routeParams.zone) || $routeParams.zone === '')? 0: $routeParams.zone;
 
+
         if (attr.required) {
           scope.requiredFilters.zone = 'zone';
         }
+
+        isNationalUser(scope);
 
         TreeGeographicZoneList.get(function (data) {
           // now recreate the zone data to a tree structure in java script objects.

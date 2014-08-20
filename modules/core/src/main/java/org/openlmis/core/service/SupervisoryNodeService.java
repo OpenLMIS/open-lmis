@@ -130,5 +130,7 @@ public class SupervisoryNodeService {
       supervisoryNodeRepository.removeSupervisoryNode(id);
   }
 
-
+   public Long getTotalUnassignedSupervisoryNodeOfUserBy(Long userId, Long programId){
+       return supervisoryNodeRepository.getTotalUnassignedSupervisoryNodeOfUserBy(userId, programId);
+  }
 }
