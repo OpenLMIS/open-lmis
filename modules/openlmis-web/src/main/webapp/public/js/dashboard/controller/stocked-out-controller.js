@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function StockedOutController($scope, $location,  dashboardMenuService,programsList,UserGeographicZoneTree, formInputValue,GetPeriod,dashboardFiltersHistoryService,userPreferredFilterValues,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
+function StockedOutController($scope, $location,  dashboardMenuService,programsList,FlatGeographicZoneList,UserGeographicZoneTree, formInputValue,GetPeriod,dashboardFiltersHistoryService,userPreferredFilterValues,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
     $scope.filterObject = {};
 
     $scope.formFilter = {};
@@ -25,6 +25,9 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
         $scope.productSelectOption = {maximumSelectionSize : 1};
 
     }
+    FlatGeographicZoneList.get(function (data) {
+        $scope.geographicZones = data.zones;
+    });
 
     $scope.programs = programsList;
     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
@@ -49,10 +52,10 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
 
     $scope.filterProductsByProgram = function (){
         $scope.loadGeoZones();
-
-       // alert(getSelectedItemName($scope.formFilter.programId,$scope.programs));
-
         $scope.filterObject.programId = $scope.formFilter.programId;
+
+        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
+
         if(!isUndefined($scope.formFilter.programId)){
             ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
                 $scope.products = data.productList;
@@ -63,10 +66,14 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
             $scope.processProductsFilter();
         }
 
+        $scope.loadStockedOutData();
+
     };
 
     $scope.processZoneFilter = function(){
         $scope.filterObject.zoneId = $scope.formFilter.zoneId;
+        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
+
         $scope.loadStockedOutData();
     };
 
@@ -104,20 +111,13 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
 
 
     $scope.processPeriodFilter = function (){
-        if ( $scope.formFilter.periodId == "All") {
-            $scope.filterObject.periodId = -1;
-        } else if ($scope.formFilter.periodId !== undefined || $scope.formFilter.periodId === "") {
+        if (!isUndefined($scope.formFilter.periodId)) {
             $scope.filterObject.periodId = $scope.formFilter.periodId;
-            $.each($scope.periods, function (item, idx) {
-                if (idx.id == $scope.formFilter.periodId) {
-                    $scope.filterObject.period = idx.name;
-                }
-            });
-
-        } else {
-            $scope.filterObject.periodId = 0;
         }
+        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
+
         $scope.loadStockedOutData();
+
     };
 
     $scope.changeScheduleByYear = function (){
@@ -128,14 +128,6 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
         }
         $scope.changeSchedule();
 
-    };
-
-    $scope.processPeriodFilter = function (){
-        if (!isUndefined($scope.formFilter.periodId)) {
-            $scope.filterObject.periodId = $scope.formFilter.periodId;
-        }
-
-        $scope.loadStockedOutData();
     };
 
     $scope.stockedOutPieChartOption = {
@@ -179,6 +171,7 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
     };
 
     $scope.loadStockedOutData = function(){
+        getFilterValues();
         if(!isUndefined($scope.filterObject.programId) &&
             !isUndefined($scope.filterObject.periodId) &&
             !isUndefined($scope.filterObject.productIdList) && $scope.filterObject.productIdList.length > 0){
@@ -232,11 +225,20 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
             dashboardMenuService.addTab('menu.header.dashboard.stocked.out.district','/public/pages/dashboard/index.html#'+districtStockOutPath,'DISTRICT-STOCK-OUT',true, 4);
 
             $location.path(districtStockOutPath);
-            $scope.filterObject.isNavigatedBack = true;
-            dashboardFiltersHistoryService.add($scope.$parent.currentTab,$scope.filterObject);
+            $scope.formFilter.isNavigatedBack = true;
+            $scope.setFilterData();
             $scope.$apply();
         }
 
+    };
+
+    $scope.setFilterData = function(){
+
+        var data = {};
+        $scope.filterObject = $scope.formFilter;
+        angular.extend(data,$scope.filterObject);
+
+        dashboardFiltersHistoryService.add($scope.$parent.currentTab,data);
     };
 
     function flotChartHoverCursorHandler(event,pos,item){
@@ -304,6 +306,21 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
         });
 
     };
+
+    var getFilterValues = function(){
+
+        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
+        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId,$scope.programs);
+
+        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
+
+        $scope.filterObject = $scope.formFilter;
+
+    };
+
+    $scope.$on('$routeChangeStart', function(){
+       $scope.setFilterData();
+    });
 
 
     $scope.tableParams = new ngTableParams({

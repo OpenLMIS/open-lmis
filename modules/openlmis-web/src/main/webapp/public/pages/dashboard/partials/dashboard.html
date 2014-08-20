@@ -59,8 +59,11 @@
                 <div class="span6">
                     <h2 openlmis-message="label.order.fill.rate"></h2>
                     <div class="filter-value">
-                        <span class="labels" openlmis-message="label.program"></span><span ng-model="formFilter.programName"></span>
-
+                        <ul>
+                            <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
+                            <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
+                            <li><span openlmis-message="label.facility"></span><span class="label">{{formFilter.facilityName}}</span></li>
+                        </ul>
                     </div>
                     <div ng-show="orderFillChart.data == undefined">
                         <label class="chart-note">
@@ -73,8 +76,11 @@
                 <div class="span6">
                     <h2 openlmis-message="label.item.fill.rate"></h2>
                     <div class="filter-value">
-                        <span class="labels" openlmis-message="label.program"></span><span ng-model="formFilter.programName"></span>
-
+                        <ul>
+                            <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
+                            <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
+                            <li><span openlmis-message="label.facility"></span><span class="label">{{formFilter.facilityName}}</span></li>
+                        </ul>
                     </div>
                     <div ng-show="productItemFillRates == undefined || productItemFillRates.length == 0">
                         <label class="chart-note">No data to render chart</label>
@@ -111,8 +117,11 @@
                         </div>
                     </accordion-heading>
                     <div class="filter-value">
-                        <span class="labels" openlmis-message="label.program"></span><span>{{formFilter.programName}}</span>
-
+                        <ul>
+                            <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
+                            <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
+                            <li><span openlmis-message="label.zone"></span><span class="label">{{formFilter.zoneName}}</span></li>
+                        </ul>
                     </div>
                     <div ng-hide="reportingChartData"><label class="chart-note">No data to render chart</label></div>
                     <div  ng-show="reportingChartData">
@@ -138,7 +147,11 @@
                         </div>
                     </accordion-heading>
                     <div class="filter-value">
-                        <span class="labels" openlmis-message="label.program"></span><span ng-model="formFilter.programName"></span>
+                        <ul>
+                            <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
+                            <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
+                            <li><span openlmis-message="label.zone"></span><span class="label">{{formFilter.zoneName}}</span></li>
+                        </ul>
 
                     </div>
                     <div ng-hide="multiBarsData"><label class="chart-note">No data to render chart</label></div>

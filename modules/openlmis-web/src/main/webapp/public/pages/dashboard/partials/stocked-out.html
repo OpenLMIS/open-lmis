@@ -1,5 +1,20 @@
 <!DOCTYPE html>
 
+<script id="template/accordion/accordion.html" type="text/ng-template">
+    <div class="accordion" ng-transclude></div>
+</script>
+
+<script id="template/accordion/accordion-group.html" type="text/ng-template">
+    <div class="accordion-group">
+        <div class="accordion-heading" style="margin-bottom:0; border-bottom:0">
+            <a style="bottom:0" class="accordion-toggle" ng-class="{'collapsed':!isOpen,'open':isOpen}" ng-click="isOpen = !isOpen" accordion-transclude="heading">{{heading}}</a>
+        </div>
+        <div class="accordion-body" style="display:block; margin-bottom:0" collapse="!isOpen">
+
+            <div class="accordion-inner" ng-transclude></div>  </div>
+    </div>
+</script>
+
 <h2><span openlmis-message="label.stocked.out"></span></h2>
 <div class="row-fluid">
     <div class="span12">

@@ -44,6 +44,39 @@ var getSelectedItemName = function(id,itemList){
     return selectedItem;
 
 };
+
+var getSelectedZoneName = function(id,zoneTreeList, zoneFlatList){
+    var selectedItem = "None";
+    var zoneRootId = null;
+    if(!isUndefined(zoneTreeList)){
+        zoneRootId = zoneTreeList.id;
+    }
+    angular.forEach(zoneFlatList, function(item, idx){
+        if(item.id == id){
+            if(item.id == zoneRootId){
+                selectedItem = "--National--";
+            }else{
+                selectedItem = item.name;
+            }
+        }
+    });
+
+    return selectedItem;
+
+};
+/*var getFilterValues = function($scope){
+    var zoneRootId = null;
+    $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
+    $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId,$scope.programs);
+    $scope.formFilter.facilityName = getSelectedItemName($scope.formFilter.facilityId,$scope.allFacilities);
+    if(!isUndefined($scope.zones)){
+        zoneRootId = $scope.zones.id;
+    }
+    $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId,$scope.geographicZones, zoneRootId);
+    $scope.filterObject = $scope.formFilter;
+
+};*/
+
 var isItemWithIdExists = function(id, listObject){
     var isEq = false;
     angular.forEach(listObject,function(item,idx){
