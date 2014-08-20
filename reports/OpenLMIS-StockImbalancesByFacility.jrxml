@@ -13,23 +13,23 @@
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.0" value="title"/>
 	<parameter name="DistrictName" class="java.lang.String">
 		<property name="displayName" value="District Name"/>
-		<parameterDescription><![CDATA[District Name]]></parameterDescription>
+		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
 	<parameter name="Program" class="java.lang.String">
 		<property name="displayName" value="Program Name"/>
-		<parameterDescription><![CDATA[Program Name]]></parameterDescription>
+		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
 	<parameter name="Date" class="java.util.Date">
 		<property name="displayName" value="Month"/>
-		<parameterDescription><![CDATA[Month]]></parameterDescription>
+		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
 	<parameter name="UnderstockPercentage" class="java.lang.Integer">
 		<property name="displayName" value="Percentage-threshold for Understock"/>
-		<parameterDescription><![CDATA[Percentage-threshold for Understock]]></parameterDescription>
+		<parameterDescription><![CDATA[for example entering 15 uses 15%]]></parameterDescription>
 	</parameter>
 	<parameter name="OverstockPercentage" class="java.lang.Integer">
 		<property name="displayName" value="Percentage-threshold for Overstock"/>
-		<parameterDescription><![CDATA[Percentage-threshold for Overstock]]></parameterDescription>
+		<parameterDescription><![CDATA[for example entering 15 uses 15%]]></parameterDescription>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT facilities.code AS FacCode
@@ -109,17 +109,17 @@ ORDER BY facilities.name, products.primaryname;]]>
 			</textField>
 			<textField>
 				<reportElement x="180" y="40" width="400" height="39" uuid="943a3320-b921-4ebb-8274-a767336ea133"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
 				<textFieldExpression><![CDATA["For " + $P{Program} + " program, for requisitions from the month of " + $P{Date}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<columnHeader>
-		<band height="32" splitType="Stretch">
+		<band height="42" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="100" height="30" uuid="79f8abc9-3345-43c0-96be-683864bf86ac"/>
 				<textElement verticalAlignment="Bottom">
-					<font isBold="true" isUnderline="true"/>
+					<font isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Facility Name]]></text>
 			</staticText>
@@ -129,7 +129,7 @@ ORDER BY facilities.name, products.primaryname;]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Bottom">
-					<font isBold="true" isUnderline="true"/>
+					<font isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Product Name]]></text>
 			</staticText>
@@ -139,7 +139,7 @@ ORDER BY facilities.name, products.primaryname;]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Bottom">
-					<font isBold="true" isUnderline="true"/>
+					<font isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Product Code]]></text>
 			</staticText>
@@ -149,7 +149,7 @@ ORDER BY facilities.name, products.primaryname;]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Bottom">
-					<font isBold="true" isUnderline="true"/>
+					<font isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Average Monthly Consumption]]></text>
 			</staticText>
@@ -159,7 +159,7 @@ ORDER BY facilities.name, products.primaryname;]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Bottom">
-					<font isBold="true" isUnderline="true"/>
+					<font isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Stock on Hand]]></text>
 			</staticText>
@@ -169,21 +169,24 @@ ORDER BY facilities.name, products.primaryname;]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Bottom">
-					<font isBold="true" isUnderline="true"/>
+					<font isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Months of Stock on Hand]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="660" y="0" width="92" height="30" uuid="cd315c92-2c3e-49fc-8569-60fd8c584aec"/>
 				<textElement verticalAlignment="Bottom">
-					<font isBold="true" isUnderline="true"/>
+					<font isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Stocking Status]]></text>
 			</staticText>
+			<line>
+				<reportElement x="-1" y="29" width="753" height="1" uuid="0cb8c3f9-7362-489c-ae10-5e8402317af8"/>
+			</line>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="41" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="100" height="20" uuid="28f231c5-8a7b-4f94-a9aa-a337bdd2d499"/>
 				<textFieldExpression><![CDATA[$F{facname}]]></textFieldExpression>
