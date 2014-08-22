@@ -16,7 +16,7 @@ function StockController($scope, $routeParams,$filter,dashboardFiltersHistorySer
     $scope.formFilter = {};
     $scope.formPanel = {openPanel:true};
 
-    $scope.alertsPanel = {openPanel:true};
+    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
 
     initialize();
 
@@ -236,7 +236,8 @@ function StockController($scope, $routeParams,$filter,dashboardFiltersHistorySer
             return;
 
         }else if(!_.isEmpty($routeParams)){
-            $scope.alertsPanel.openPanel = false;
+
+            $scope.alertsPanel = {openAlertPanel:false, openStockPanel:false};
 
             $scope.registerWatches();
             $scope.formFilter = $scope.filterObject = $routeParams;

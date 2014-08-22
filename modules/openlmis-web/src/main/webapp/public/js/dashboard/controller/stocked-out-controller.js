@@ -13,7 +13,7 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
 
     $scope.formPanel = {openPanel:true};
 
-    $scope.alertsPanel = {openPanel:false};
+    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
 
     initialize();
 
