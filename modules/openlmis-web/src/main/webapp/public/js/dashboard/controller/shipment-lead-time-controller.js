@@ -232,4 +232,30 @@ function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryServi
         count: 25           // count per page
     });
 
+    $scope.paramsChanged = function(params) {
+
+        // slice array data on pages
+        if($scope.data === undefined ){
+            $scope.datarows = [];
+            params.total = 0;
+        }else{
+            var data = $scope.data;
+            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+            params.total = orderedData.length;
+            $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            var i = 0;
+            var baseIndex = params.count * (params.page - 1) + 1;
+            while(i < $scope.datarows.length){
+                $scope.datarows[i].no = baseIndex + i;
+                i++;
+            }
+        }
+    };
+
+    // watch for changes of parameters
+    $scope.$watch('tableParams', $scope.paramsChanged , true);
+
+
 }

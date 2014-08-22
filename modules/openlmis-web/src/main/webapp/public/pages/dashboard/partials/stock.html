@@ -23,12 +23,12 @@
     </div>
 </div>
 
-<table class="table table-bordered" ng-show="datarows == undefined || datarows.length == 0">
+<table class="table table-bordered" ng-show="stockByProductAndStock == undefined || stockByProductAndStock.length == 0">
     <tr>
         <td>No data to show under selected filters</td>
     </tr>
 </table>
-<div style="margin-top: 5px;" ng-repeat="productGroup in datarows">
+<div style="margin-top: 5px;" ng-repeat="productGroup in stockByProductAndStock">
     <div style="margin-top: 5px;">
          <h2 style="font-weight: bold"> <span openlmis-message="title.product.stock.efficiency|productGroup.product"></span></h2>
         <div class="row-fluid sortable ui-sortable" ng-repeat="stock in productGroup.stocks">

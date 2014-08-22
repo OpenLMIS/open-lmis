@@ -64,18 +64,6 @@ var getSelectedZoneName = function(id,zoneTreeList, zoneFlatList){
     return selectedItem;
 
 };
-/*var getFilterValues = function($scope){
-    var zoneRootId = null;
-    $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
-    $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId,$scope.programs);
-    $scope.formFilter.facilityName = getSelectedItemName($scope.formFilter.facilityId,$scope.allFacilities);
-    if(!isUndefined($scope.zones)){
-        zoneRootId = $scope.zones.id;
-    }
-    $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId,$scope.geographicZones, zoneRootId);
-    $scope.filterObject = $scope.formFilter;
-
-};*/
 
 var isItemWithIdExists = function(id, listObject){
     var isEq = false;

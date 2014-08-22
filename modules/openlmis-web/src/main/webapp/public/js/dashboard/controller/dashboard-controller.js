@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMenuService,FlatGeographicZoneList,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,ReportingPerformance,GetPeriod, userPreferredFilterValues,formInputValue,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneTree, OrderFillRate, ItemFillRate, StockEfficiency) {
+function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMenuService,messageService,FlatGeographicZoneList,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,ReportingPerformance,GetPeriod, userPreferredFilterValues,formInputValue,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneTree, OrderFillRate, ItemFillRate, StockEfficiency) {
 
     $scope.filterObject = {};
 
@@ -94,6 +94,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     $scope.processProductsFilter = function (){
 
         $scope.filterObject.productIdList = $scope.formFilter.productIdList;
+
         $scope.loadFillRates();
         $scope.loadStockingData();
 
@@ -396,7 +397,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
             },
             tooltip: true,
             tooltipOpts: {
-                content: getTooltip, //() "%p.0%, %s",
+                content: "%p.0%, %s",
                 shifts: {
                     x: 20,
                     y: 0
@@ -420,9 +421,14 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                  if(!isUndefined(data.reportingPerformance)){
                      var reporting = data.reportingPerformance;
 
+                     var colors = {R:"#05BC57",N:"#CC0505", L:"#FFFF05"};
+
                      for(var i=0; i < reporting.length; i++){
-                         $scope.reportingChartData[i] = {label: reporting[i].status,
-                             data: reporting[i].total};
+                         var labelKey = 'label.district.reporting.status.'+reporting[i].status;
+                         var label = messageService.get(labelKey);
+                         $scope.reportingChartData[i] = {label: label,
+                             data: reporting[i].total,
+                             color: colors[reporting[i].status]};
                      }
                      $scope.reportingRenderedData = {
                          status : _.pairs(_.object(_.range(reporting.length), _.pluck(reporting,'status')))
