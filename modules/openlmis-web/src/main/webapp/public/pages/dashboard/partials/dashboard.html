@@ -57,24 +57,26 @@
             </div>
             <div class="row-fluid">
                 <div class="span6">
-                    <h2 openlmis-message="label.order.fill.rate"></h2>
-                    <div class="filter-value">
-                        <ul>
-                            <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
-                            <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
-                            <li><span openlmis-message="label.facility"></span><span class="label">{{formFilter.facilityName}}</span></li>
-                        </ul>
-                    </div>
-                    <div ng-show="orderFillChart.data == undefined">
-                        <label class="chart-note">
-                            No data to render chart
-                        </label>
-                    </div>
+                    <div class="simple-panel blue-madison">
+                        <div class="panel-header bg-blue-madison" openlmis-message="label.order.fill.rate"></div>
+                        <div class="filter-value">
+                            <ul>
+                                <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
+                                <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
+                                <li><span openlmis-message="label.facility"></span><span class="label">{{formFilter.facilityName}}</span></li>
+                            </ul>
+                        </div>
+                        <div ng-show="orderFillChart.data == undefined">
+                            <label class="chart-note">
+                                No data to render chart
+                            </label>
+                        </div>
 
-                    <div ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:360px;height:300px;" ng-show="showOrderFill"></div>
+                        <div ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:360px;height:300px;" ng-show="showOrderFill"></div>
+                    </div>
                 </div>
-                <div class="span6">
-                    <h2 openlmis-message="label.item.fill.rate"></h2>
+                <div class="span6 simple-panel blue">
+                    <div class="panel-header bg-blue" openlmis-message="label.item.fill.rate"></div>
                     <div class="filter-value">
                         <ul>
                             <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
