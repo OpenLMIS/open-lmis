@@ -9,7 +9,7 @@
  */
 
 function CreateNonFullSupplyController($scope, messageService) {
-  var map = _.map($scope.facilityApprovedProducts, function (facilitySupportedProduct) {
+  var map = _.map($scope.facilityApprovedNFSProducts, function (facilitySupportedProduct) {
     return facilitySupportedProduct.programProduct.productCategory;
   });
 
@@ -97,7 +97,7 @@ function CreateNonFullSupplyController($scope, messageService) {
       _.pluck($scope.addedNonFullSupplyProducts, 'productCode')
         .concat(_.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode'));
     if ($scope.nonFullSupplyProductCategory !== undefined) {
-      $scope.nonFullSupplyProductsToDisplay = $.grep($scope.facilityApprovedProducts, function (facilityApprovedProduct) {
+      $scope.nonFullSupplyProductsToDisplay = $.grep($scope.facilityApprovedNFSProducts, function (facilityApprovedProduct) {
         return $.inArray(facilityApprovedProduct.programProduct.product.code, addedNonFullSupplyProductList) == -1 &&
           $.inArray(facilityApprovedProduct.programProduct.productCategory.name, [$scope.nonFullSupplyProductCategory.name]) === 0;
       });
