@@ -86,8 +86,8 @@ public class OrderController extends BaseController {
     @RequestParam(value="searchType", defaultValue = "All") String searchType,
     HttpServletRequest request) {
 
-    ResponseEntity<OpenLmisResponse> response = response(ORDERS, getOrdersForView(orderService.getSearchedOrdersForPage(loggedInUserId(request), page, query, searchType)));
-    response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
+    ResponseEntity<OpenLmisResponse> response = response(ORDERS,
+          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
     response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
     return response;
   }
