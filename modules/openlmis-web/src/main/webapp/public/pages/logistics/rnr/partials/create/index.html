@@ -62,7 +62,6 @@
         <div form-toolbar id="action_buttons" class="action-buttons">
             <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
             <div class="form-cell button-row">
-
                 <input ng-show="hasPermission('DELETE_REQUISITION') && rnr.status == 'INITIATED'"  type="button" class="btn btn-primary submit-button" ng-click="deleteRnR();" openlmis-message="button.delete" />
                 <input ng-show="rnr.status == 'INITIATED' && enable_skip_period" type="button" class="btn btn-primary submit-button" ng-click="skipRnR();" openlmis-message="button.skip.period" />
 
@@ -78,8 +77,9 @@
                        ng-disabled="rnr.status == 'AUTHORIZED'" ng-click="authorizeRnr()"
                        class="btn btn-primary submit-button"
                        openlmis-message="button.authorize"/>
-                <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
+                <input ng-class="{'btn-warning': rnrComments.length}" id="comments"  type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
                        openlmis-message="comments.header"/>
+
                 <comment-box updatable="!formDisabled" show="showCommentBox"></comment-box>
             </div>
             <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
