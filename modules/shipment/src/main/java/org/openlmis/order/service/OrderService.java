@@ -32,10 +32,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
@@ -260,5 +257,9 @@ public class OrderService {
 
   public boolean hasStatus(String orderNumber, OrderStatus... statuses) {
     return contains(statuses, orderRepository.getStatus(orderNumber));
+  }
+
+  public List<Order> getSearchedOrdersForPage(Long userId, int page, String query, String searchType) {
+    return orderRepository.getSearchedOrdersForPage(userId, page, query, searchType);
   }
 }
