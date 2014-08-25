@@ -196,14 +196,11 @@ app.directive('zoneFilter', ['TreeGeographicZoneList','TreeGeographicZoneListByP
           TreeGeographicZoneListByProgram.get({program: $scope.filter.program},function(data){
           $scope.zones = data.zone;
         });
-
-          isNationalUser($scope);
-
        $scope.filter.zone = (isUndefined($routeParams.zone) || $routeParams.zone === '')? 0: $routeParams.zone;
       }
     };
 
-    var isNationalUser = function($scope){
+    var categoriseZoneBySupervisoryNode = function($scope){
 
         GetUserUnassignedSupervisoryNode.get({program: $scope.filter.program}, function (data){
 
@@ -224,12 +221,14 @@ app.directive('zoneFilter', ['TreeGeographicZoneList','TreeGeographicZoneListByP
 
         scope.filter.zone = (isUndefined($routeParams.zone) || $routeParams.zone === '')? 0: $routeParams.zone;
 
-
         if (attr.required) {
           scope.requiredFilters.zone = 'zone';
         }
 
-        isNationalUser(scope);
+        if(attr.districtOnly)
+            scope.showDistrictOnly = true;
+        else
+            categoriseZoneBySupervisoryNode(scope);
 
         TreeGeographicZoneList.get(function (data) {
           // now recreate the zone data to a tree structure in java script objects.
@@ -237,6 +236,9 @@ app.directive('zoneFilter', ['TreeGeographicZoneList','TreeGeographicZoneListByP
         });
 
         scope.$watch('filter.program', function (value) {
+            if(!scope.showDistrictOnly)
+                categoriseZoneBySupervisoryNode(scope);
+
           onCascadedVarsChanged(scope, value);
         });
       },
