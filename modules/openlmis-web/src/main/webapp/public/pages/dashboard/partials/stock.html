@@ -1,5 +1,19 @@
 <!DOCTYPE html>
 
+<script id="template/accordion/accordion.html" type="text/ng-template">
+    <div class="accordion" ng-transclude></div>
+</script>
+
+<script id="template/accordion/accordion-group.html" type="text/ng-template">
+    <div class="accordion-group">
+        <div class="accordion-heading" style="margin-bottom:0; border-bottom:0">
+            <a style="bottom:0" class="accordion-toggle" ng-class="{'collapsed':!isOpen,'open':isOpen}" ng-click="isOpen = !isOpen" accordion-transclude="heading">{{heading}}</a>
+        </div>
+        <div class="accordion-body" style="display:block; margin-bottom:0" collapse="!isOpen">
+
+            <div class="accordion-inner" ng-transclude></div>  </div>
+    </div>
+</script>
 <h2><span openlmis-message="label.stocking.efficiency"></span></h2>
 <div class="row-fluid">
     <div class="span12">
@@ -23,7 +37,7 @@
                <span  style="font-size: 1.25em; font-weight: bold" class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}"
                                                       openlmis-message="title.facility.product.stock|stock.name|productGroup.product"></span>
                <div class="pull-right legend" ><span openlmis-message="total.facilities"></span> : {{stock.facilities.length}}</span></div>
-               <table class="table-bordered table table-striped pull-right" ng-table="tableParams" >
+               <table class="table-bordered table table-striped pull-right" ng-table="tbleOption.tableParams" >
                         <thead>
                             <tr class="gradient-header">
                                 <th>Facility</th>

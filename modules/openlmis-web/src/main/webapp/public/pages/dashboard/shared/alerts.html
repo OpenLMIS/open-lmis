@@ -12,6 +12,13 @@
                         </div>
                     </div>
                 </accordion-heading>
+                <div class="filter-value">
+                    <ul>
+                        <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
+                        <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
+                        <li><span openlmis-message="label.zone"></span><span class="label">{{formFilter.zoneName}}</span></li>
+                    </ul>
+                </div>
                 <table class="table-bordered table table-striped" ng-show="dataRows.alert == undefined || dataRows.alert.length == 0">
                     <thead>
                     <tr class="gradient-header">
@@ -56,6 +63,13 @@
                         </div>
                     </div>
                 </accordion-heading>
+                <div class="filter-value">
+                    <ul>
+                        <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
+                        <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
+                        <li><span openlmis-message="label.zone"></span><span class="label">{{formFilter.zoneName}}</span></li>
+                    </ul>
+                </div>
                 <table class="table table-bordered" ng-show="dataRows.stock == undefined || dataRows.stock.length == 0">
                     <thead>
                     <tr class="gradient-header" >
