@@ -86,10 +86,10 @@ Tech Stack
  - Gradle
  - Postgres
  - Spring
- - Mybatis
- - Angularjs
- - Jasmine
- - Node.js
+ - Mybatis - Java datamapping framework
+ - Angularjs - Javascript MVW framework - client side
+ - Jasmine - Javascript behavior driven testing framework
+ - Node.js - Lightweight Javascript based server for developing interactive applications
  - Grunt.js
 
 
