@@ -47,6 +47,10 @@ public class OrderRepository {
     return orderMapper.getOrders(pageSize, (page - 1) * pageSize, userId, right);
   }
 
+  public List<Order> getOrdersForPage(int page, int pageSize, Long userId, Right right, Long supplyDepot, Long program) {
+    return orderMapper.getOrdersByDepot(pageSize, (page - 1) * pageSize, userId, right, supplyDepot, program);
+  }
+
   public Order getById(Long id) {
     return orderMapper.getById(id);
   }
@@ -78,6 +82,10 @@ public class OrderRepository {
 
   public Integer getNumberOfPages(int pageSize) {
     return orderMapper.getNumberOfPages(pageSize);
+  }
+
+  public Integer getNumberOfPages(int pageSize, Long supplyDepot, Long program) {
+    return orderMapper.getNumberOfPagesByDepot(pageSize, supplyDepot, program);
   }
 
   public List<Order> searchByWarehousesAndStatuses(List<Long> facilityIds, List<OrderStatus> orderStatuses) {

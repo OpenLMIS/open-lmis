@@ -170,7 +170,12 @@ public class SupplyLineController extends BaseController {
            }
        }
 
+    @RequestMapping(value = "/supplyingDepots.json", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getSupplyingDepots(){
 
+      ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("supplylines", supplyLineService.getSupplyDepots());
+      return response;
+    }
 
 
 }

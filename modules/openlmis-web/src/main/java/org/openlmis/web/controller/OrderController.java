@@ -82,13 +82,25 @@ public class OrderController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page",
     required = true,
     defaultValue = "1") Integer page,
-    @RequestParam(value="query", defaultValue = "") String query,
-    @RequestParam(value="searchType", defaultValue = "All") String searchType,
+    @RequestParam(value="supplyDepot", defaultValue = "0") Long supplyDepot,
+    @RequestParam(value="program", defaultValue = "0") Long program,
     HttpServletRequest request) {
 
-    ResponseEntity<OpenLmisResponse> response = response(ORDERS,
-          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
-    response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
+    ResponseEntity<OpenLmisResponse> response;
+    if(supplyDepot != 0 || program != 0){
+
+      response = response(ORDERS,
+          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER, supplyDepot, program)));
+      response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
+      response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages(supplyDepot, program));
+
+    }else {
+      response = response(ORDERS,
+          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));
+      response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
+      response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
+    }
+
     return response;
   }
 

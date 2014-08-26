@@ -15,7 +15,10 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.dto.SupplyDepot;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * SupplyLineMapper maps the SupplyLine entity to corresponding representation in database.
@@ -62,4 +65,8 @@ public interface SupplyLineMapper {
     @Result(property = "supplyingFacility.code", column = "facilityCode")
   })
   SupplyLine getById(Long id);
+
+  @Select( "select distinct f.id, f.name from supply_lines sl join facilities f on f.id = sl.supplyingFacilityId")
+  List<SupplyDepot> getSupplyDepots();
+
 }
