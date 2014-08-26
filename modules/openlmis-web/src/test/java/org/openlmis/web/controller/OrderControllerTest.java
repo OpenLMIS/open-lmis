@@ -110,7 +110,7 @@ public class OrderControllerTest {
     List<OrderDTO> orderDTOs = new ArrayList<>();
     when(OrderDTO.getOrdersForView(orders)).thenReturn(orderDTOs);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2, request);
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2,"","", request);
 
     verify(orderService).getOrdersForPage(2, USER_ID, Right.VIEW_ORDER);
     assertThat((List<OrderDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(orderDTOs));
@@ -120,7 +120,7 @@ public class OrderControllerTest {
   public void shouldAddPageInfoForOrders() throws Exception {
     when(orderService.getPageSize()).thenReturn(3);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2, request);
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2,"","", request);
 
     assertThat((Integer) fetchedOrders.getBody().getData().get("pageSize"), is(3));
   }
@@ -129,7 +129,7 @@ public class OrderControllerTest {
   public void shouldAddTotalNumberOfPagesForOrders() throws Exception {
     when(orderService.getNumberOfPages()).thenReturn(5);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2, request);
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2,"","", request);
 
     assertThat((Integer) fetchedOrders.getBody().getData().get("numberOfPages"), is(5));
   }

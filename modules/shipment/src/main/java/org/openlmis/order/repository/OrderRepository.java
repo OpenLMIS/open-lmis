@@ -20,6 +20,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Repository class for Order related database operations.
@@ -89,5 +90,9 @@ public class OrderRepository {
 
   public Order getByOrderNumber(String orderNumber) {
     return orderMapper.getByOrderNumber(orderNumber);
+  }
+
+  public List<Order> getSearchedOrdersForPage(Long userId, int page, String query, String searchType) {
+    return orderMapper.getSearchOrders(userId, page, query, searchType);
   }
 }

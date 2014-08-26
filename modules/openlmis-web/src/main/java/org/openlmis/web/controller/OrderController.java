@@ -30,7 +30,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
@@ -79,10 +81,13 @@ public class OrderController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
   public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page",
     required = true,
-    defaultValue = "1") Integer page, HttpServletRequest request) {
+    defaultValue = "1") Integer page,
+    @RequestParam(value="query", defaultValue = "") String query,
+    @RequestParam(value="searchType", defaultValue = "All") String searchType,
+    HttpServletRequest request) {
+
     ResponseEntity<OpenLmisResponse> response = response(ORDERS,
-      getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));
-    response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
+          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
     response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
     return response;
   }
