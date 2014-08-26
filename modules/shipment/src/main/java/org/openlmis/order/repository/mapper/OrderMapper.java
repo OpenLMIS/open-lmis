@@ -51,6 +51,22 @@ public interface OrderMapper {
   List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") Right right);
 
 
+  @Select({"SELECT DISTINCT O.* FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
+      "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId",
+       "INNER JOIN requisitions r on r.id = O.id ",
+      "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId",
+      "WHERE FRA.userid = #{userId} AND RR.rightName = #{right} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} ORDER BY O.createdDate DESC LIMIT #{limit} OFFSET #{offset}"})
+  @Results({
+      @Result(property = "id", column = "id"),
+      @Result(property = "rnr.id", column = "id"),
+      @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
+          one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
+      @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+          one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+  })
+  List<Order> getOrdersByDepot(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") Right right, @Param("supplyDepot") Long supplyDepot, @Param("program") Long program);
+
+
   @SelectProvider(type = ViewOrderSearch.class, method = "getOrderByCriteria")
   @Results({
       @Result(property = "id", column = "id"),
@@ -99,6 +115,10 @@ public interface OrderMapper {
 
   @Select("SELECT ceil(count(*)::float/#{pageSize}) FROM orders")
   Integer getNumberOfPages(int pageSize);
+
+  @Select("SELECT ceil(count(*)::float/#{pageSize}) FROM orders o join supply_lines s on s.id = o.supplylineid join requisitions r on r.id = o.id where r.programId = #{program} and s.supplyingfacilityid = #{depot}")
+  Integer getNumberOfPagesByDepot(@Param("pageSize")int pageSize, @Param("depot") long depot, @Param("program") long program);
+
 
   @Select({"SELECT O.* FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id",
     "WHERE supplyingFacilityId = ANY(#{facilityIds}::INTEGER[]) AND status = ANY(#{statuses}::VARCHAR[])",

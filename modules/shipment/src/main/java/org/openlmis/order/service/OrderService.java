@@ -142,6 +142,11 @@ public class OrderService {
     return fillOrders(orders);
   }
 
+  public List<Order> getOrdersForPage(int page, Long userId, Right right, Long supplyDepot, Long program) {
+    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right, supplyDepot, program);
+    return fillOrders(orders);
+  }
+
   public Order getOrder(Long id) {
     Order order = orderRepository.getById(id);
     if (order == null) {
@@ -213,6 +218,10 @@ public class OrderService {
 
   public Integer getNumberOfPages() {
     return orderRepository.getNumberOfPages(pageSize);
+  }
+
+  public Integer getNumberOfPages(Long supplyDepot, Long program) {
+    return orderRepository.getNumberOfPages(pageSize, supplyDepot, program);
   }
 
   public Integer getPageSize() {

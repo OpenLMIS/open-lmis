@@ -14,6 +14,20 @@
     <div class="form-group">
         <h3 openlmis-message="label.order.list"></h3>
 
+        <div class="horizontalFilters">
+          <label for="program">Program</label>
+          <select id="program" ng-change="OnFilterChanged()" ng-model="program">
+            <option ng-repeat="line in programs" value="{{line.id}}">{{line.name}}</option>
+          </select>
+        </div>
+
+        <div class="horizontalFilters">
+          <label for="depot">Supplying Depot</label>
+          <select id="depot" ng-change="OnFilterChanged()" ng-model="supplyDepot">
+            <option ng-repeat="line in supplylines" value="{{line.id}}">{{line.name}}</option>
+          </select>
+        </div>
+
         <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders && orders.length">
             <span openlmis-message="message.no.order"></span>
         </div>
