@@ -38,11 +38,26 @@ var getSelectedItemName = function(id,itemList){
     angular.forEach(itemList, function(item, idx){
         if(item.id == id){
             selectedItem = item.name;
+            return selectedItem;
         }
     });
-
     return selectedItem;
+};
 
+var getSelectedItemNames = function(ids,itemList){
+    var selectedItems = "None";
+    var item = null;
+    angular.forEach(ids, function(id){
+        item =  getSelectedItemName(id,itemList);
+        if(selectedItems !== "None" && item !== "None"){
+            selectedItems =selectedItems+ " , "+item;
+
+        }else if(selectedItems === "None" && item !== "None"){
+            selectedItems = item;
+
+        }
+    });
+    return selectedItems;
 };
 
 var getSelectedZoneName = function(id,zoneTreeList, zoneFlatList){
