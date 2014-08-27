@@ -70,6 +70,10 @@ public class SupplyLineService {
     this.supplyLineRepository.update(supplyLine);
   }
 
+  public SupplyLine getByFacilityProgram(Long facilityId, Long programId){
+    return supplyLineRepository.getSupplyLineByFacilityProgram(facilityId, programId);
+  }
+
   private void validateIfSupervisoryNodeAlreadyExistsForProgram(SupplyLine supplyLine) {
       if(supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(),supplyLine.getProgram())!= null){
          throw new DataException("Supply line already exists for the chosen program and supervisory node combination.");
