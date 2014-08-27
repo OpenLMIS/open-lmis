@@ -43,20 +43,16 @@ var getSelectedItemName = function(id,itemList){
     });
     return selectedItem;
 };
-
 var getSelectedItemNames = function(ids,itemList){
-    var selectedItems = "None";
+    var selectedItems = [];
     var item = null;
     angular.forEach(ids, function(id){
         item =  getSelectedItemName(id,itemList);
-        if(selectedItems !== "None" && item !== "None"){
-            selectedItems =selectedItems+ " , "+item;
-
-        }else if(selectedItems === "None" && item !== "None"){
-            selectedItems = item;
-
+        if(item !== "None"){
+            selectedItems.push(item);
         }
     });
+    if(selectedItems.length === 0) selectedItems.push("None");
     return selectedItems;
 };
 

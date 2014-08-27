@@ -79,8 +79,14 @@
                             <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
                             <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
                             <li><span openlmis-message="label.facility"></span><span class="label">{{formFilter.facilityName}}</span></li>
-                            <li><span openlmis-message="label.product"></span><span class="label">{{formFilter.productNames}}</span></li>
+                            <li>
+                                <ul>
+                                    <li><span openlmis-message="label.products"></span></li>
+                                    <li ng-repeat="product in formFilter.productNamesList"><span class="label">{{product}}</span></li>
+                                </ul>
+                            </li>
                         </ul>
+                        <div class="clearfix"></div>
                     </div>
                     <div ng-show="productItemFillRates == undefined || productItemFillRates.length == 0">
                         <label class="chart-note">No data to render chart</label>
@@ -151,8 +157,15 @@
                             <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
                             <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
                             <li><span openlmis-message="label.zone"></span><span class="label">{{formFilter.zoneName}}</span></li>
-                            <li><span openlmis-message="label.product"></span><span class="label">{{formFilter.productNames}}</span></li>
+                            <li>
+                                <ul>
+                                     <li><span openlmis-message="label.products"></span></li>
+                                     <li ng-repeat="product in formFilter.productNamesList"><span class="label">{{product}}</span></li>
+                                </ul>
+                            </li>
                         </ul>
+
+                        <div class="clearfix"></div>
 
                     </div>
                     <div ng-hide="multiBarsData"><label class="chart-note">No data to render chart</label></div>
