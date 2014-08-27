@@ -639,7 +639,8 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                 tickLength: 0, // hide gridlines
                 axisLabel: 'Product',
                 axisLabelUseCanvas: false,
-                ticks: ticksLabel
+                ticks: ticksLabel,
+                labelWidth: 30
 
             } ,
             yaxis: {
