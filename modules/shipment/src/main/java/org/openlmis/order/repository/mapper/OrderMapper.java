@@ -55,7 +55,7 @@ public interface OrderMapper {
       "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId",
        "INNER JOIN requisitions r on r.id = O.id ",
       "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId",
-      "WHERE FRA.userid = #{userId} AND RR.rightName = #{right} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} ORDER BY O.createdDate DESC LIMIT #{limit} OFFSET #{offset}"})
+      "WHERE FRA.userid = #{userId} AND RR.rightName = #{right} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} ORDER BY O.createdDate DESC LIMIT #{limit} OFFSET #{offset}"})
   @Results({
       @Result(property = "id", column = "id"),
       @Result(property = "rnr.id", column = "id"),
@@ -64,7 +64,7 @@ public interface OrderMapper {
       @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
           one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
-  List<Order> getOrdersByDepot(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") Right right, @Param("supplyDepot") Long supplyDepot, @Param("program") Long program);
+  List<Order> getOrdersByDepot(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") Right right, @Param("supplyDepot") Long supplyDepot, @Param("program") Long program, @Param("period") Long period);
 
 
   @SelectProvider(type = ViewOrderSearch.class, method = "getOrderByCriteria")

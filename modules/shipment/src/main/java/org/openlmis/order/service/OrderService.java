@@ -146,8 +146,8 @@ public class OrderService {
     return fillOrders(orders);
   }
 
-  public List<Order> getOrdersForPage(int page, Long userId, Right right, Long supplyDepot, Long program) {
-    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right, supplyDepot, program);
+  public List<Order> getOrdersForPage(int page, Long userId, Right right, Long supplyDepot, Long program, Long period) {
+    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right, supplyDepot, program, period);
     return fillOrders(orders);
   }
 
