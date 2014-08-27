@@ -17,19 +17,19 @@
 
 <div class="row-fluid">
     <div class="span6">
-        <table>
+        <table class="table">
             <thead>
             <tr>
                 <th><span openlmis-message="Notification"></span></th>
                 <th><span openlmis-message="Email"></span></th>
-                <th ><span openlmis-message="SMS" style="padding-left: 25px"></span></th>
+                <th ><span openlmis-message="SMS" ></span></th>
             </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="notification in notifications">
-                    <td><div><input type="radio" name="notificationTypeName" ng-value="notification" ng-model="formFilter.selectedAlert"  /><span style="padding-left: 3px" openlmis-message="label.alertType.{{ notification.alertType }}"></span></div></td>
-                    <td><input  type="checkbox" ng-disabled="!notification.email||selectedNotification != notification" ng-model="notification.emailMethod" ng-change="notificationMethodsChange(notification)"   /></td>
-                    <td class="pull-right"><input  type="checkbox" ng-disabled="!notification.sms ||selectedNotification != notification"  ng-model="notification.smsMethod" ng-change="notificationMethodsChange(notification)"/></td>
+                    <td  style="border: none; font-size: 14px"><div><input type="radio" name="notificationTypeName" ng-value="notification" ng-model="formFilter.selectedAlert"  /><span style="padding-left: 3px" openlmis-message="label.alertType.{{ notification.alertType }}"></span></div></td>
+                    <td  style="border: none"><input  type="checkbox" ng-disabled="!notification.email||selectedNotification != notification" ng-model="notification.emailMethod" ng-change="notificationMethodsChange(notification)"   /></td>
+                    <td  style="border: none"><input  type="checkbox" ng-disabled="!notification.sms ||selectedNotification != notification"  ng-model="notification.smsMethod" ng-change="notificationMethodsChange(notification)"/></td>
                 </tr>
 
             </tbody>
@@ -37,9 +37,9 @@
         </table>
     </div>
     <div class="span6">
-        <span><label>Email</label></span>
+        <span><label style="font-weight: bold">Email</label></span>
         <textarea required="" ng-model="emailTemplate" cols="500" rows="5" style="width:400px"></textarea>
-        <span><label>SMS</label></span>
+        <span><label style="font-weight: bold">SMS</label></span>
         <textarea required="" ng-model="smsTemplate" cols="500" rows="5" style="width:400px"></textarea><br/>
         <div>SMS length {{smsTemplate.length || 0}} of {{maxSmsText}} characters.</div>
 
@@ -58,7 +58,7 @@
             </table>
             <div class="alert alert-error" id="sendSuccessMsgDiv" openlmis-message="errorMessage" ng-show="errorMessage"></div>
             <div class="alert  alert-success" id="successMsgDiv" openlmis-message="successMessage" ng-show="successMessage"></div>
-            <input type="button" ng-click="sendNotifications()" openlmis-message="button.send" class="btn btn-primary btn-small pull-right" ng-show="datarows.length > 0"/>
+            <input style="margin: 5px 0px;" type="button" ng-click="sendNotifications()" openlmis-message="button.send" class="btn btn-primary btn-small pull-right" ng-show="datarows.length > 0"/>
 
             <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams" >
                 <thead>

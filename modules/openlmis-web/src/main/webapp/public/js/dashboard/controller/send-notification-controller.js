@@ -84,7 +84,7 @@ function SendNotificationController($scope,$timeout,$filter,SendNotification,das
         }
     };
     $scope.$watch('smsTemplate', function(){
-        if($scope.smsTemplate.length > $scope.maxSmsText){
+        if(!isUndefined($scope.smsTemplate) && $scope.smsTemplate.length > $scope.maxSmsText){
             $scope.smsTemplate = $scope.smsTemplate.substring(0,$scope.maxSmsText);
         }
 
@@ -343,7 +343,6 @@ function SendNotificationController($scope,$timeout,$filter,SendNotification,das
             } else {
                 var data = $scope.facilities;
                 var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
-                orderedData = params.sorting ? $filter('orderBy')(orderedData, params.orderBy()) : data;
 
                 params.total = orderedData.length;
                 $scope.datarows = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
