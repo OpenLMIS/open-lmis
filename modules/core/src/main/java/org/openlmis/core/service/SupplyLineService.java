@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.dto.SupplyDepot;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramRepository;
@@ -69,6 +70,10 @@ public class SupplyLineService {
     this.supplyLineRepository.update(supplyLine);
   }
 
+  public SupplyLine getByFacilityProgram(Long facilityId, Long programId){
+    return supplyLineRepository.getSupplyLineByFacilityProgram(facilityId, programId);
+  }
+
   private void validateIfSupervisoryNodeAlreadyExistsForProgram(SupplyLine supplyLine) {
       if(supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(),supplyLine.getProgram())!= null){
          throw new DataException("Supply line already exists for the chosen program and supervisory node combination.");
@@ -92,6 +97,10 @@ public class SupplyLineService {
   public SupplyLine getExisting(SupplyLine supplyLine) {
     populateIdsForSupplyLine(supplyLine);
     return supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram());
+  }
+
+  public List<SupplyDepot> getSupplyDepots(){
+    return supplyLineRepository.getSupplyDepots();
   }
 
   public SupplyLine getById(Long id) {

@@ -13,6 +13,8 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.List;
@@ -26,6 +28,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RnrColumn extends Column {
 
   private int position;
@@ -36,6 +39,7 @@ public class RnrColumn extends Column {
   private boolean used;
   private boolean mandatory;
   private String calculationOption;
+
 
   private FormulaOption options;
 
@@ -53,7 +57,7 @@ public class RnrColumn extends Column {
   }
 
   @SuppressWarnings(value = "unused")
-  public void setCalculationOptions(String opt){
+  public void setOptions(String opt){
     this.options = new FormulaOption(opt);
   }
 

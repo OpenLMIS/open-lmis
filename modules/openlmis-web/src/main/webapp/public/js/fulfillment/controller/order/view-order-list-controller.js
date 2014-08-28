@@ -8,12 +8,31 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewOrderListController($scope, Orders, messageService, $location, $routeParams) {
+function ViewOrderListController($scope, Orders, messageService, $location, $routeParams, supplylines, programs, schedules, years, ReportPeriodsByScheduleAndYear) {
+
+  $scope.supplylines = supplylines;
+  $scope.programs = programs;
+  $scope.years = years;
+  $scope.schedules = schedules;
+
+  $scope.LoadPeriods = function(){
+    ReportPeriodsByScheduleAndYear.get({
+      scheduleId: $scope.schedule,
+      year: $scope.year
+    }, function (data) {
+      $scope.periods = data.periods;
+    });
+  };
 
   function refreshGrid() {
+    // do a lazy validation, none of the two parameters could be undefined
+    if($scope.supplyDepot === undefined || $scope.program === undefined || $scope.period === undefined){
+      return;
+    }
+
     $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
 
-    Orders.get({page: $scope.currentPage}, function (data) {
+    Orders.get({page: $scope.currentPage, supplyDepot: $scope.supplyDepot, program: $scope.program, period: $scope.period }, function (data) {
       if ((!data.orders || data.orders.length === 0) && $routeParams.page != 1) {
         $location.search('page', 1);
         return;
@@ -24,9 +43,11 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
     });
   }
 
+  $scope.OnFilterChanged = refreshGrid;
+
   $scope.$on('$routeUpdate', refreshGrid);
 
-  refreshGrid();
+  //refreshGrid();
 
   $scope.gridOptions = { data: 'orders',
     showFooter: false,
@@ -64,3 +85,49 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
 
 }
 
+ViewOrderListController.resolve = {
+  supplylines: function($q, $timeout, SupplyingDepots){
+    var deferred = $q.defer();
+    $timeout(function(){
+
+      SupplyingDepots.get(function(data){
+        deferred.resolve(data.supplylines);
+      });
+
+    },100);
+    return deferred.promise;
+  },
+  schedules:  function($q, $timeout, ReportSchedules){
+    var deferred = $q.defer();
+    $timeout(function(){
+      ReportSchedules.get(function (data) {
+        deferred.resolve(data.schedules);
+      });
+
+    },100);
+    return deferred.promise;
+  },
+  years:  function($q, $timeout, OperationYears){
+    var deferred = $q.defer();
+    $timeout(function(){
+
+      OperationYears.get(function (data) {
+        deferred.resolve(data.years);
+      });
+
+    },100);
+    return deferred.promise;
+  },
+  programs: function($q, $timeout, CreateRequisitionProgramList){
+    var deferred = $q.defer();
+    $timeout(function(){
+
+      CreateRequisitionProgramList.get(function(data){
+        deferred.resolve(data.programList);
+      });
+
+    },100);
+
+    return deferred.promise;
+  }
+};

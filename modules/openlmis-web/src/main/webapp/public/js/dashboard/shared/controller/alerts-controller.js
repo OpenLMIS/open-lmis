@@ -14,8 +14,8 @@ function AlertsController($scope, $filter, Alerts,StockedOutAlerts,$location, da
     var typeAlert = 'ALERT',
         typeStockOut = 'STOCKOUT',
         typeSummary = 'SUMMARY';
-
-    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
+/*
+    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};*/
 
     $scope.$watch('formFilter.zoneId', function(){
         $scope.getAlerts();

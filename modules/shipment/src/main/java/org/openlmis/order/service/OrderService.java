@@ -32,10 +32,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
@@ -99,10 +96,14 @@ public class OrderService {
     requisitionService.releaseRequisitionsAsOrder(rnrList, userId);
     Order order;
     for (Rnr rnr : rnrList) {
+      Long depotId = rnr.getSupplyingDepotId();
       rnr = requisitionService.getLWById(rnr.getId());
       rnr.setModifiedBy(userId);
       order = new Order(rnr);
       SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram());
+      if(depotId != null && supplyLine.getSupplyingFacility().getId() != depotId){
+        supplyLine = supplyLineService.getByFacilityProgram(depotId, rnr.getProgram().getId());
+      }
       order.setSupplyLine(supplyLine);
       if (!fulfillmentPermissionService.hasPermissionOnWarehouse(userId, supplyLine.getSupplyingFacility().getId(), Right.CONVERT_TO_ORDER)) {
         throw new AccessDeniedException("user.not.authorized");
@@ -142,6 +143,11 @@ public class OrderService {
 
   public List<Order> getOrdersForPage(int page, Long userId, Right right) {
     List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right);
+    return fillOrders(orders);
+  }
+
+  public List<Order> getOrdersForPage(int page, Long userId, Right right, Long supplyDepot, Long program, Long period) {
+    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right, supplyDepot, program, period);
     return fillOrders(orders);
   }
 
@@ -218,6 +224,10 @@ public class OrderService {
     return orderRepository.getNumberOfPages(pageSize);
   }
 
+  public Integer getNumberOfPages(Long supplyDepot, Long program) {
+    return orderRepository.getNumberOfPages(pageSize, supplyDepot, program);
+  }
+
   public Integer getPageSize() {
     return pageSize;
   }
@@ -260,5 +270,9 @@ public class OrderService {
 
   public boolean hasStatus(String orderNumber, OrderStatus... statuses) {
     return contains(statuses, orderRepository.getStatus(orderNumber));
+  }
+
+  public List<Order> getSearchedOrdersForPage(Long userId, int page, String query, String searchType) {
+    return orderRepository.getSearchedOrdersForPage(userId, page, query, searchType);
   }
 }

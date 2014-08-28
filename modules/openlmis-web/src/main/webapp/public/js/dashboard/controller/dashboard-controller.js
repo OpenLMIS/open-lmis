@@ -17,6 +17,8 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     };
     $scope.formPanel = {openPanel:true};
 
+    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
+
     initialize();
 
     function initialize() {
@@ -94,7 +96,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     $scope.processProductsFilter = function (){
 
         $scope.filterObject.productIdList = $scope.formFilter.productIdList;
-
+        $scope.formFilter.productNamesList = getSelectedItemNames($scope.filterObject.productIdList, $scope.products);
         $scope.loadFillRates();
         $scope.loadStockingData();
 
@@ -169,13 +171,13 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                                seriesDefaults:{
                                    renderer:$.jqplot.MeterGaugeRenderer,
                                    rendererOptions: {
-                                       label: 'Order Sub/App',
-                                       labelPosition: 'bottom',
-                                       labelHeightAdjust: -5,
+                                      // label: 'Order Sub/App',
+                                      // labelPosition: 'bottom',
+                                      //  labelHeightAdjust: -5,
                                        min: 0,
-                                       max: 100,
-                                       intervals:[25, 50, 75, 100],
-                                       intervalColors:['#66cc66', '#93b75f', '#E7E658', '#cc6666']
+                                       max: 110,
+                                       intervals:[0,50, 80, 110],
+                                       intervalColors:[ '#00FF00','#FF0000', '#F6F404']
                                    }
                                }
                            },'data': fillRate
@@ -421,7 +423,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                  if(!isUndefined(data.reportingPerformance)){
                      var reporting = data.reportingPerformance;
 
-                     var colors = {R:"#05BC57",N:"#CC0505", L:"#FFFF05"};
+                     var colors = {R:"#00FF00",N:"#CC0505", L:"#FFFF05"};
 
                      for(var i=0; i < reporting.length; i++){
                          var labelKey = 'label.district.reporting.status.'+reporting[i].status;
@@ -637,7 +639,9 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                 tickLength: 0, // hide gridlines
                 axisLabel: 'Product',
                 axisLabelUseCanvas: false,
-                ticks: ticksLabel
+                ticks: ticksLabel,
+                labelWidth: 20,
+                reserveSpace: true
 
             } ,
             yaxis: {
@@ -739,7 +743,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         $scope.formFilter.facilityName = getSelectedItemName($scope.formFilter.facilityId,$scope.allFacilities);
 
         $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
-
+        $scope.formFilter.productNamesList = getSelectedItemNames($scope.filterObject.productIdList, $scope.products);
         $scope.filterObject = $scope.formFilter;
 
     };

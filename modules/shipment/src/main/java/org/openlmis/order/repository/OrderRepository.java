@@ -20,6 +20,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Repository class for Order related database operations.
@@ -44,6 +45,10 @@ public class OrderRepository {
 
   public List<Order> getOrdersForPage(int page, int pageSize, Long userId, Right right) {
     return orderMapper.getOrders(pageSize, (page - 1) * pageSize, userId, right);
+  }
+
+  public List<Order> getOrdersForPage(int page, int pageSize, Long userId, Right right, Long supplyDepot, Long program, Long period) {
+    return orderMapper.getOrdersByDepot(pageSize, (page - 1) * pageSize, userId, right, supplyDepot, program, period);
   }
 
   public Order getById(Long id) {
@@ -79,6 +84,10 @@ public class OrderRepository {
     return orderMapper.getNumberOfPages(pageSize);
   }
 
+  public Integer getNumberOfPages(int pageSize, Long supplyDepot, Long program) {
+    return orderMapper.getNumberOfPagesByDepot(pageSize, supplyDepot, program);
+  }
+
   public List<Order> searchByWarehousesAndStatuses(List<Long> facilityIds, List<OrderStatus> orderStatuses) {
     return orderMapper.getByWarehouseIdsAndStatuses(format(facilityIds.toString()), format(orderStatuses.toString()));
   }
@@ -89,5 +98,9 @@ public class OrderRepository {
 
   public Order getByOrderNumber(String orderNumber) {
     return orderMapper.getByOrderNumber(orderNumber);
+  }
+
+  public List<Order> getSearchedOrdersForPage(Long userId, int page, String query, String searchType) {
+    return orderMapper.getSearchOrders(userId, page, query, searchType);
   }
 }

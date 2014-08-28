@@ -41,7 +41,6 @@
                     </div>
                 </div>
             </accordion-heading>
-            <div class="fill-rate-header">
                 <div class="row-fluid">
                     <div class="span3">
                         <div class="form-field">
@@ -53,34 +52,41 @@
                     </div>
 
                 </div>
-
-            </div>
             <div class="row-fluid">
                 <div class="span6">
-                    <h2 openlmis-message="label.order.fill.rate"></h2>
-                    <div class="filter-value">
-                        <ul>
-                            <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
-                            <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
-                            <li><span openlmis-message="label.facility"></span><span class="label">{{formFilter.facilityName}}</span></li>
-                        </ul>
-                    </div>
-                    <div ng-show="orderFillChart.data == undefined">
-                        <label class="chart-note">
-                            No data to render chart
-                        </label>
-                    </div>
+                    <div class="simple-panel blue-madison">
+                        <div class="panel-header bg-blue-madison" openlmis-message="label.order.fill.rate"></div>
+                        <div class="filter-value">
+                            <ul>
+                                <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
+                                <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
+                                <li><span openlmis-message="label.facility"></span><span class="label">{{formFilter.facilityName}}</span></li>
+                            </ul>
+                        </div>
+                        <div ng-show="orderFillChart.data == undefined">
+                            <label class="chart-note">
+                                No data to render chart
+                            </label>
+                        </div>
 
-                    <div ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:360px;height:300px;" ng-show="showOrderFill"></div>
+                        <div ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:360px;height:300px;" ng-show="showOrderFill"></div>
+                    </div>
                 </div>
-                <div class="span6">
-                    <h2 openlmis-message="label.item.fill.rate"></h2>
+                <div class="span6 simple-panel blue">
+                    <div class="panel-header bg-blue" openlmis-message="label.item.fill.rate"></div>
                     <div class="filter-value">
                         <ul>
                             <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
                             <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
                             <li><span openlmis-message="label.facility"></span><span class="label">{{formFilter.facilityName}}</span></li>
+                            <li>
+                                <ul>
+                                    <li><span openlmis-message="label.products"></span></li>
+                                    <li ng-repeat="product in formFilter.productNamesList"><span class="label">{{product}}</span></li>
+                                </ul>
+                            </li>
                         </ul>
+                        <div class="clearfix"></div>
                     </div>
                     <div ng-show="productItemFillRates == undefined || productItemFillRates.length == 0">
                         <label class="chart-note">No data to render chart</label>
@@ -151,7 +157,15 @@
                             <li><span openlmis-message="label.program"></span><span class="label">{{formFilter.programName}}</span></li>
                             <li><span openlmis-message="label.period"></span><span class="label">{{formFilter.periodName}}</span></li>
                             <li><span openlmis-message="label.zone"></span><span class="label">{{formFilter.zoneName}}</span></li>
+                            <li>
+                                <ul>
+                                     <li><span openlmis-message="label.products"></span></li>
+                                     <li ng-repeat="product in formFilter.productNamesList"><span class="label">{{product}}</span></li>
+                                </ul>
+                            </li>
                         </ul>
+
+                        <div class="clearfix"></div>
 
                     </div>
                     <div ng-hide="multiBarsData"><label class="chart-note">No data to render chart</label></div>

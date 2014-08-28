@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisitionData, Requisitions,RejectRequisition, rnrColumns, regimenTemplate, equipmentOperationalStatus , $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
+function ApproveRnrController($scope, requisitionData, comments, Requisitions,RejectRequisition, rnrColumns, regimenTemplate, equipmentOperationalStatus , $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
   $scope.canApproveRnr = requisitionData.canApproveRnr;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
   $scope.rnrColumns = rnrColumns;
@@ -23,6 +23,7 @@ function ApproveRnrController($scope, requisitionData, Requisitions,RejectRequis
 
   $scope.errorPages = {};
   $scope.shownErrorPages = [];
+  $scope.rnrComments = comments;
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
 
@@ -179,6 +180,16 @@ ApproveRnrController.resolve = {
     $timeout(function () {
       Requisitions.get({id: $route.current.params.rnr}, function (data) {
         deferred.resolve(data);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  comments: function($q, $timeout, RequisitionComment, $route){
+    var deferred = $q.defer();
+    $timeout(function () {
+      RequisitionComment.get({id: $route.current.params.rnr}, function (data) {
+        deferred.resolve(data.comments);
       }, {});
     }, 100);
     return deferred.promise;

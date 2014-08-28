@@ -12,6 +12,7 @@ package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Program;
+import org.openlmis.rnr.domain.FormulaOption;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrColumnOption;
 import org.springframework.stereotype.Repository;
@@ -49,13 +50,16 @@ public interface ProgramRnrColumnMapper {
       "ORDER BY visible DESC, position"})
   @Results(value = {
       @Result(property = "id", column = "id"),
-      @Result(property = "cOptions", column = "options"),
+      @Result(property = "options", column = "cOptions" ),
       @Result(property = "configuredOption",  javaType = RnrColumnOption.class, column = "rnrOptionId",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionById")),
       @Result(property = "rnrColumnOptions",  javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.ProgramRnrColumnMapper.getRnrColumnOptionsByMasterRnrColumnId"))
   })
   List<RnrColumn> fetchDefinedRnrColumnsForProgram(Long programId);
+
+
+
 
   @Update("UPDATE program_rnr_columns SET " +
       "visible = #{rnrColumn.visible}, " +

@@ -36,6 +36,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   };
 
   $scope.rnrColumns.forEach(function(column) {
+
     if(column.rnrColumnOptions) {
       column.configuredOption = column.configuredOption ? _.findWhere(column.rnrColumnOptions, {name: column.configuredOption.name}) : column.rnrColumnOptions[0];
     }
@@ -60,7 +61,12 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   };
 
   function updatePosition() {
+
     $scope.rnrColumns.forEach(function (rnrColumn, index) {
+      if(rnrColumn.options !== undefined){
+        delete rnrColumn.options;
+      }
+
       rnrColumn.position = index + 1;
     });
   }

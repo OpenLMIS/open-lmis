@@ -14,9 +14,12 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.dto.SupplyDepot;
 import org.openlmis.core.repository.mapper.SupplyLineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * SupplyLineRepository is Repository class for SupplyLine related database operations.
@@ -56,5 +59,12 @@ public class SupplyLineRepository {
   public SupplyLine getSupplyLineBySupervisoryNodeProgramAndFacility(SupplyLine supplyLine) {
     return supplyLineMapper.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
   }
-  
+
+  public List<SupplyDepot> getSupplyDepots(){
+    return supplyLineMapper.getSupplyDepots();
+  }
+
+  public SupplyLine getSupplyLineByFacilityProgram(Long facilityId, Long programId) {
+    return supplyLineMapper.getByFacilityByProgram(facilityId, programId);
+  }
 }

@@ -14,7 +14,7 @@ function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryServi
 
     $scope.formPanel = {openPanel:true};
 
-    $scope.alertsPanel = {openPanel:false};
+    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
 
     initialize();
 

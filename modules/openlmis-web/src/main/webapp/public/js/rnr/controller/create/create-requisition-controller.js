@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisitionData, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition, ConfigSettingsByKey, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisitionData, comments , pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition, ConfigSettingsByKey, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
@@ -24,6 +24,7 @@ function CreateRequisitionController($scope, requisitionData, pageSize, rnrColum
 
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
+  $scope.rnrComments = comments;
 
   $scope.deleteRnR = function( ){
 
@@ -352,7 +353,15 @@ CreateRequisitionController.resolve = {
     }, 100);
     return deferred.promise;
   },
-
+  comments: function($q, $timeout, RequisitionComment, $route){
+    var deferred = $q.defer();
+    $timeout(function () {
+      RequisitionComment.get({id: $route.current.params.rnr}, function (data) {
+        deferred.resolve(data.comments);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
   rnrColumns: function ($q, $timeout, ProgramRnRColumnList, $route) {
     var deferred = $q.defer();
     $timeout(function () {

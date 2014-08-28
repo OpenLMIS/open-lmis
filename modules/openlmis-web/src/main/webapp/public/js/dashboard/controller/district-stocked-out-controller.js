@@ -13,7 +13,6 @@ function DistrictStockedOutController($scope,$location,$routeParams,dashboardMen
 
     $scope.formPanel = {openPanel:true};
 
-    $scope.alertsPanel = {openPanel:true};
 
     $scope.startYears = [];
     $scope.showProductsFilter = true;

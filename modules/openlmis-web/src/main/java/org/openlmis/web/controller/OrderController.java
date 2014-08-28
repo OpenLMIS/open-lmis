@@ -30,7 +30,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
@@ -79,11 +81,27 @@ public class OrderController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
   public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page",
     required = true,
-    defaultValue = "1") Integer page, HttpServletRequest request) {
-    ResponseEntity<OpenLmisResponse> response = response(ORDERS,
-      getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));
-    response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
-    response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
+    defaultValue = "1") Integer page,
+    @RequestParam(value="supplyDepot", defaultValue = "0") Long supplyDepot,
+    @RequestParam(value="period", defaultValue = "0") Long period,
+    @RequestParam(value="program", defaultValue = "0") Long program,
+    HttpServletRequest request) {
+
+    ResponseEntity<OpenLmisResponse> response;
+    if(supplyDepot != 0 || program != 0){
+
+      response = response(ORDERS,
+          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER, supplyDepot, program, period)));
+      response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
+      response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages(supplyDepot, program));
+
+    }else {
+      response = response(ORDERS,
+          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));
+      response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
+      response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
+    }
+
     return response;
   }
 

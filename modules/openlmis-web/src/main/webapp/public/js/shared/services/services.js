@@ -335,3 +335,11 @@ services.factory('FacilityImages', function($resource){
 services.factory('ConfigSettingsByKey',function($resource){
   return $resource('/settings/:key.json',{},{});
 });
+
+services.factory('Supplylines', function ($resource) {
+  return $resource('/supplylines.json', {});
+});
+
+services.factory('SupplyingDepots', function ($resource) {
+  return $resource('/supplyingDepots.json', {});
+});

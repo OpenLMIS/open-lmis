@@ -67,6 +67,34 @@
 .fill-rate-header span{
   font-size: small;
 }
+.simple-panel{
+  background-color: #ffffff;
+  .panel-header{
+    margin-bottom: 2px;
+    font-weight: bold;
+    padding-left: 10px;
+    line-height: 25px;
+  }
+}
+.blue-madison{
+  border: solid 1px rgb(87, 142, 190) !important;
+}
+.bg-blue-madison{
+  background-color: rgb(87, 142, 190) !important;
+  color: #ffffff !important;
+  border: solid 1px rgb(87, 142, 190) !important;
+}
+
+.blue{
+  border: solid 1px  rgb(75, 141, 248) !important;
+}
+
+.bg-blue{
+  background-color: rgb(75, 141, 248) !important;
+  color: #ffffff !important;
+  border: solid 1px rgb(75, 141, 248) !important;
+}
+
 .chart-note{
   margin-top: 15px;
   padding: 8px;
@@ -161,7 +189,7 @@
 
 .filter-value{
   margin-bottom: 35px;
-
+  color: #5D5D5D;
   ul {
     margin: 0;
     list-style: none;
@@ -197,19 +225,19 @@ Accordions
   }
 }
 
-/*.accordion .accordion-heading a.collapsed{
-  color: #ffffff;
-  background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
-  span{
-    background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
+.accordion .accordion-heading{
+  a{
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
   }
-}*/
-.accordion .accordion-heading span {
-  padding: 0 !important;
+  span {
+    padding: 0 !important;
+  }
+
 }
+
 .accordion .blue-steel .accordion-heading a {
-  text-decoration: none;
-  color: #ffffff;
   background: none repeat scroll 0% 0% rgb(75, 119, 190) !important;
   span{
     background: none repeat scroll 0% 0% rgb(75, 119, 190) !important;
@@ -221,8 +249,6 @@ Accordions
 
 /*Green-haze*/
 .accordion .green-haze .accordion-heading a {
-  text-decoration: none;
-  color: #ffffff;
   background: none repeat scroll 0% 0% rgb(68, 182, 174) !important;
   span{
     background: none repeat scroll 0% 0% rgb(68, 182, 174) !important;
@@ -233,8 +259,6 @@ Accordions
 }
 /*purple-wisteria*/
 .accordion .purple-wisteria .accordion-heading a {
-  text-decoration: none;
-  color: #ffffff;
   background: none repeat scroll 0% 0% rgb(155, 89, 182) !important;
   span{
     background: none repeat scroll 0% 0% rgb(155, 89, 182) !important;
@@ -246,8 +270,6 @@ Accordions
 
 /*red-sunglo*/
 .accordion .red-sunglo .accordion-heading a {
-  text-decoration: none;
-  color: #ffffff;
   background: none repeat scroll 0% 0% rgb(226, 106, 106) !important;
   span{
     background: none repeat scroll 0% 0% rgb(226, 106, 106) !important;
@@ -259,8 +281,6 @@ Accordions
 
 /*yellow-gold*/
 .accordion .yellow-gold .accordion-heading a {
-  text-decoration: none;
-  color: #ffffff;
   background: none repeat scroll 0% 0% rgb(232, 126, 4) !important;
   span{
     background: none repeat scroll 0% 0% rgb(232, 126, 4) !important;
@@ -272,8 +292,6 @@ Accordions
 
 /*gray-cascade*/
 .accordion .gray-cascade .accordion-heading a {
-  text-decoration: none;
-  color: #ffffff;
   background: none repeat scroll 0% 0% rgb(149, 165, 166) !important;
   span{
     background: none repeat scroll 0% 0% rgb(149, 165, 166) !important;
@@ -305,32 +323,6 @@ Accordions
 .accordion .simple-accordion.accordion-group{
   border: none;
 }
-
-
-
-
-
-
-/*.accordion-heading a.open:hover {
-  text-decoration: none;
-  color: #ffffff;
-  background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
-  span{
-    background: none repeat scroll 0% 0% rgb(13, 113, 121) !important;
-  }
-}*/
-/*
-.accordion-heading a.collapsed:hover {
-  text-decoration: none;
-  color: #078f97;
-  background: none repeat scroll 0% 0% rgb(248, 248, 248) !important;
-  span{
-    background: none repeat scroll 0% 0% rgb(248, 248, 248) !important;
-  }
-}
-*/
-
-
 /*<!-- -- */
 
 
@@ -348,9 +340,9 @@ Accordions
 .accordion-heading  .accordion-title .caption {
   float: left;
   display: inline-block;
-  font-size: 18px;
+  //font-size: 18px;
   line-height: 18px;
-  font-weight: 400;
+  //font-weight: 400;
 }
 
 .accordion-heading  .accordion-title  .caption > i {
