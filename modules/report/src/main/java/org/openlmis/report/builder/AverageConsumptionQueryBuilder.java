@@ -45,7 +45,7 @@ public class AverageConsumptionQueryBuilder {
         LEFT_OUTER_JOIN("supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid");
         LEFT_OUTER_JOIN("facilities s on s.id = sl.supplyingfacilityid");
 
-        WHERE("r.status in ('APPROVED', 'RELEASED')");
+        WHERE("r.status in ('APPROVED', 'RELEASED') AND quantitydispensed > 0");
         if(filter != null){
             if (filter.getFacilityTypeId() != 0) {
                 WHERE("ft.id = #{filterCriteria.facilityTypeId}");
