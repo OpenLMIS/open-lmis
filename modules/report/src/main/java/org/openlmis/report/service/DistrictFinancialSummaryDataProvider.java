@@ -18,6 +18,7 @@ import org.openlmis.report.mapper.DistrictFinancialSummaryMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.params.DistrictSummaryReportParam;
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,9 @@ public class DistrictFinancialSummaryDataProvider extends ReportDataProvider {
 
   private DistrictFinancialSummaryMapper reportMapper;
   private ConfigurationSettingService configurationService;
+
+  @Autowired
+  private SelectedFilterHelper filterHelper;
 
   @Autowired
   public DistrictFinancialSummaryDataProvider(DistrictFinancialSummaryMapper mapper, ConfigurationSettingService configurationService) {
@@ -64,7 +68,7 @@ public class DistrictFinancialSummaryDataProvider extends ReportDataProvider {
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    return getReportFilterData(params).toString();
+    return filterHelper.getProgramPeriodGeoZone(params);//getReportFilterData(params).toString();
   }
 
 
