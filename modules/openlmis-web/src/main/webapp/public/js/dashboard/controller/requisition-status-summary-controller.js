@@ -62,10 +62,24 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
         $scope.loadRnRStatus();
     };
 
+    var getFilterValues = function(){
+
+        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
+        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId,$scope.programs);
+        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
+
+        $scope.filterObject = $scope.formFilter;
+
+    };
+
+
     $scope.loadRnRStatus= function(){
+        getFilterValues();
         if (isUndefined($scope.filterObject.periodId) || isUndefined($scope.filterObject.programId)) {
             return;
         }
+
+
          //$scope.filterObject.requisitionGroupId= $scope.formFilter.rgroupId;
 
         RnRStatusSummary.get({zoneId:$scope.filterObject.zoneId,
