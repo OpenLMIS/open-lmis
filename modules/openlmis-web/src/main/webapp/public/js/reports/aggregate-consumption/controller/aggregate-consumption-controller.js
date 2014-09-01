@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function DistrictConsumptionReportController($scope,  AggregateConsumptionReport) {
+function DistrictConsumptionReportController($scope,  AggregateConsumptionReport, ReportUserPrograms) {
 
     //filter form data section
 
@@ -24,6 +24,24 @@ function DistrictConsumptionReportController($scope,  AggregateConsumptionReport
           $scope.paramsChanged($scope.tableParams);
         }
       });
+
+        ReportUserPrograms.get(function (data) {
+            $scope.programs = data.programs;
+
+            $scope.programs.forEach( function(program) {
+
+                if(program.id == $scope.filter.program) {
+
+                    if (program.name == 'ILS')
+                        $scope.reportFooterNote = 'Note: Estimated consumption is the sum of dispensed quantity. Adjusted Consumption is adjusted for days out of stock.';
+                    else if (program.name == 'ARV')
+                        $scope.reportFooterNote = 'Note: Estimated consumption is the sum of dispensed quantity, adjusted consumption includes the estimates for new patients';
+                }
+
+            });
+        });
+
+
     };
 
    $scope.exportReport   = function (type){
