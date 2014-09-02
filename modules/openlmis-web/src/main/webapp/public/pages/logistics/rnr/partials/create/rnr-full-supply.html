@@ -72,7 +72,7 @@
 <table id="fullSupplyTable" class="table table-bordered scrollable" fixed-table-header>
 <thead>
 <tr>
-    <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable"
+    <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable | filter : {name : '!remarks'}"
         ng-bind="column.label"></th>
 </tr>
 </thead>
@@ -84,7 +84,7 @@
         &nbsp;</td>
 </tr>
 <tr ng-class="getRowErrorClass(rnrLineItem)">
-    <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
+    <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable | filter : {name : '!remarks'}">
         <ng-switch on="column.source.name">
     <span ng-switch-when="USER_INPUT">
       <ng-switch on="column.name">
@@ -221,11 +221,11 @@
           </span>
 
         <span ng-switch-when="remarks">
-          <input ng-disabled="formDisabled || rnrLineItem.skipped"
+          <!--<input ng-disabled="formDisabled || rnrLineItem.skipped"
                  id="{{getId(column.name, $parent)}}" type="text"
                  name="remarks{{rnrLineItem['id']}}"
                  ng-model="rnrLineItem[column.name]"
-                 maxlength="250"/>
+                 maxlength="250"/>-->
         </span>
 
         <span class="reasonForRequestedQuantityContainer" ng-switch-when="reasonForRequestedQuantity">
