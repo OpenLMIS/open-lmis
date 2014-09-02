@@ -58,6 +58,8 @@ public class FacilityReportDataProvider extends ReportDataProvider {
       facilityReportParam.setZoneId(StringHelper.isBlank(filterCriteria,"zone") ? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));  //defaults to 0
       facilityReportParam.setFacilityTypeId(filterCriteria.get("facilityType") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
       facilityReportParam.setStatusId(StringHelper.isBlank(filterCriteria, "status") ? null : Boolean.valueOf(filterCriteria.get("status")[0]));
+      facilityReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program") ? 0 :Integer.parseInt(filterCriteria.get("program")[0]));
+
     }
     return facilityReportParam;
   }

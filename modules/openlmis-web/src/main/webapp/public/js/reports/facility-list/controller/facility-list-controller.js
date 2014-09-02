@@ -41,7 +41,6 @@ function ListFacilitiesController($scope, FacilityList, ngTableParams) {
       if(type == "mailing-list"){
         url = '/reports/download/mailinglabels/list/' + "pdf" +'?' + sortOrderParams +'&'+ params ;
       }
-        console.log(url);
 
       window.open(url);
     };

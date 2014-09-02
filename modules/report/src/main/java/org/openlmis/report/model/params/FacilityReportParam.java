@@ -32,5 +32,6 @@ public class FacilityReportParam
   private Boolean statusId;
   private int rgId;
   private String rgroup;
+  private int programId;
 
 }
