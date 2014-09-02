@@ -99,8 +99,8 @@ public class SupplyLineService {
     return supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram());
   }
 
-  public List<SupplyDepot> getSupplyDepots(){
-    return supplyLineRepository.getSupplyDepots();
+  public List<SupplyDepot> getSupplyDepots(Long userId){
+    return supplyLineRepository.getSupplyDepots(userId);
   }
 
   public SupplyLine getById(Long id) {

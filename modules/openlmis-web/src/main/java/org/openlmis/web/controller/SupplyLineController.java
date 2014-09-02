@@ -171,9 +171,9 @@ public class SupplyLineController extends BaseController {
        }
 
     @RequestMapping(value = "/supplyingDepots.json", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getSupplyingDepots(){
+    public ResponseEntity<OpenLmisResponse> getSupplyingDepots(HttpServletRequest request){
 
-      ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("supplylines", supplyLineService.getSupplyDepots());
+      ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("supplylines", supplyLineService.getSupplyDepots(loggedInUserId(request)));
       return response;
     }
 
