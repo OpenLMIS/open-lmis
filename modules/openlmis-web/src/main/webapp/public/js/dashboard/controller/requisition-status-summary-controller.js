@@ -8,13 +8,14 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,programsList,UserGeographicZoneTree,dashboardMenuService,$location ,dashboardFiltersHistoryService, formInputValue, GetPeriod, userPreferredFilterValues, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
+function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,programsList,FlatGeographicZoneList,UserGeographicZoneTree,dashboardMenuService,$location ,dashboardFiltersHistoryService, formInputValue, GetPeriod, userPreferredFilterValues, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
 
     $scope.filterObject = {};
 
     $scope.formFilter = {};
 
     $scope.formPanel = {openPanel: true};
+    $scope.rnrStatus = {openPanel: true};
 
 
     initialize();
@@ -34,6 +35,10 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
         });
     };
 
+    FlatGeographicZoneList.get(function (data) {
+        $scope.geographicZones = data.zones;
+    });
+
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
         $scope.startYears.unshift(formInputValue.yearOptionAll);
@@ -52,28 +57,32 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
             return;
         }
         $scope.filterObject.programId = $scope.formFilter.programId;
+        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
 
-        $scope.loadRnRStatus();
+        //$scope.loadRnRStatus();
 
     };
 
     $scope.processZoneFilter = function(){
         $scope.filterObject.zoneId = $scope.formFilter.zoneId;
+        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
+
         $scope.loadRnRStatus();
     };
 
     $scope.loadRnRStatus= function(){
         if (isUndefined($scope.filterObject.periodId) || isUndefined($scope.filterObject.programId)) {
+            $scope.resetRnRStatusData();
             return;
         }
-         //$scope.filterObject.requisitionGroupId= $scope.formFilter.rgroupId;
+
 
         RnRStatusSummary.get({zoneId:$scope.filterObject.zoneId,
                 periodId:$scope.filterObject.periodId,
                 programId:$scope.filterObject.programId
             },
             function (data) {
-
+                alert('data is '+JSON.stringify(data))
                 $scope.total = 0;
                 $scope.RnRStatusPieChartData = [];
                 $scope.dataRows = [];
@@ -82,6 +91,10 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
                 if (!isUndefined(data.rnrStatus)) {
 
                     $scope.dataRows = data.rnrStatus;
+                    if(isUndefined($scope.dataRows)){
+                        $scope.resetRnRStatusData();
+                        return;
+                    }
                     var statusData = _.pluck($scope.dataRows,'status');
                     var totalData = _.pluck($scope.dataRows,'totalStatus');
 
@@ -112,6 +125,26 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
                 $scope.paramsChanged($scope.tableParams);
             });
        // }
+
+    };
+
+    $scope.resetRnRStatusData = function(){
+        alert('called when period is null')
+        $scope.rnrStatusRenderedData = null;
+        $scope.rnRStatusPieChartOption = null;
+        $scope.total = 0;
+        $scope.RnRStatusPieChartData = null;
+        $scope.dataRows = null;
+        $scope.datarows = null;
+    };
+
+    var getFilterValues = function(){
+
+        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
+        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId,$scope.programs);
+
+        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
+        $scope.filterObject = $scope.formFilter;
 
     };
 
@@ -222,32 +255,9 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
     };
 
     $scope.processPeriodFilter = function () {
-        if ($scope.formFilter.periodId == "All") {
-            $scope.filterObject.periodId = -1;
-        } else if ($scope.formFilter.periodId !== undefined || $scope.formFilter.periodId === "") {
-            $scope.filterObject.periodId = $scope.formFilter.periodId;
-            $.each($scope.periods, function (item, idx) {
-                if (idx.id == $scope.formFilter.periodId) {
-                    $scope.filterObject.period = idx.name;
-                }
-            });
-
-        } else {
-            $scope.filterObject.periodId = 0;
-        }
-        $scope.loadRnRStatus();
-    };
-
-    $scope.processRequisitionFilter = function () {
-
-        if ($scope.formFilter.rgroupId && $scope.formFilter.rgroupId.length > 1) {
-            $scope.formFilter.rgroupId = _.reject($scope.formFilter.rgroupId, function (rgroup) {
-                return rgroup === "";
-            });
-        }
-
-        $scope.filterObject.rgroupId = $scope.formFilter.rgroupId;
-
+        alert('period after change schedule is '+$scope.formFilter.periodId)
+        $scope.filterObject.periodId = $scope.formFilter.periodId;
+        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
         $scope.loadRnRStatus();
     };
 
@@ -273,7 +283,7 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
         }
 
 
-        $scope.loadRnRStatus();
+        $scope.processPeriodFilter();
     };
 
     $scope.changeScheduleByYear = function () {
@@ -288,7 +298,8 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
 
     $scope.$on('$routeChangeStart', function () {
         var data = {};
-        angular.extend(data, $scope.filterObject);
+        $scope.filterObject = $scope.formFilter;
+        angular.extend(data,$scope.filterObject);
         dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
     });
 
@@ -343,12 +354,6 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
             $scope.changeSchedule();
 
         });
-
-        $scope.$watch('formFilter.rgroupId',function(){
-            $scope.loadRnRStatus();
-
-        });
-
     };
 
     $scope.paramsChanged = function (params) {

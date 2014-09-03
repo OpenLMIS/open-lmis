@@ -27,7 +27,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         $scope.showProductsFilter = true;
     }
 
-
     FlatGeographicZoneList.get(function (data) {
         $scope.geographicZones = data.zones;
     });

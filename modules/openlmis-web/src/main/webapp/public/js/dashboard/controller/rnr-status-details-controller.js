@@ -72,5 +72,6 @@ function RnRStatusDetailsController($scope,$routeParams,RnRStatusDetail,ngTableP
 
     $scope.resetRnRStatusData = function(){
         $scope.rnrStatusDetails = null;
+        $scope.rnRStatusPieChartOption = null;
     };
 }

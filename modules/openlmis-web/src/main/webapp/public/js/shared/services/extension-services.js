@@ -571,9 +571,9 @@ services.factory("UserRoleAssignmentsSummary1", function($resource){
 
 });
 
-services.factory("RnRStatusSummary",function($resource){
+/*services.factory("RnRStatusSummary",function($resource){
     return $resource('/dashboard/rnrstatusSummary/requisitionGroup/:requisitionGroupId.json',{},{});
-});
+});*/
 
 services.factory("totalRnRCreatedByRequisitionGroup",function($resource){
     return $resource('/dashboard//RnRCreateForRequisitionGroup',{},{});
