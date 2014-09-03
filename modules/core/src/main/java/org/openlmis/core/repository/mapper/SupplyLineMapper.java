@@ -66,7 +66,15 @@ public interface SupplyLineMapper {
   })
   SupplyLine getById(Long id);
 
-  @Select( "select distinct f.id, f.name from supply_lines sl join facilities f on f.id = sl.supplyingFacilityId")
-  List<SupplyDepot> getSupplyDepots();
+  @Select( "select distinct f.id, f.name from supply_lines sl join facilities f on f.id = sl.supplyingFacilityId where sl.supplyingFacilityId in (select facilityId from fulfillment_role_assignments where userId = #{userId} )")
+  List<SupplyDepot> getSupplyDepots(@Param("userId") Long userId);
+
+  @Select("SELECT * FROM supply_lines WHERE supplyingFacilityId = #{facilityId} AND programId = #{programId} limit 1")
+  @Results(value = {
+      @Result(property = "supervisoryNode.id", column = "supervisoryNodeId"),
+      @Result(property = "program.id", column = "programId"),
+      @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
+  })
+  SupplyLine getByFacilityByProgram(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
 }

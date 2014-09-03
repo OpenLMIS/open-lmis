@@ -12,21 +12,45 @@
 
 <div class="app-form">
   <div class="row-fluid">
-    <div class="pull-right">
-      <label for="program">Program</label>
+  <div class="pull-right">
+
+    <div class="pull-left">
+      <label for="schedule" openlmis-message="label.schedule"> <span class="label-required">*</span></label>
+      <select id="schedule" ng-change="LoadPeriods()" ng-model="schedule">
+        <option ng-repeat="line in schedules" value="{{line.id}}">{{line.name}}</option>
+      </select>
+    </div>
+
+    <div class="pull-left">
+      <label for="year" openlmis-message="label.year"> <span class="label-required">*</span></label>
+      <select id="year" ng-change="LoadPeriods()" ng-model="year">
+        <option ng-repeat="year in years" value="{{year}}">{{year}}</option>
+      </select>
+    </div>
+
+    <div class="pull-left">
+      <label for="period" openlmis-message="label.period"> <span class="label-required">*</span></label>
+      <select id="period" ng-change="OnFilterChanged()" ng-model="period">
+        <option ng-repeat="line in periods" value="{{line.id}}">{{line.name}}</option>
+      </select>
+    </div>
+
+
+    <div class="pull-left">
+      <label for="program" openlmis-message="label.program"> <span class="label-required">*</span></label>
       <select id="program" ng-change="OnFilterChanged()" ng-model="program">
         <option ng-repeat="line in programs" value="{{line.id}}">{{line.name}}</option>
       </select>
     </div>
 
-    <div class="pull-right">
-      <label for="depot">Supplying Depot</label>
+    <div class="pull-left">
+      <label for="depot" openlmis-message="label.supplying.depot"> <span class="label-required">*</span></label>
       <select id="depot" ng-change="OnFilterChanged()" ng-model="supplyDepot">
         <option ng-repeat="line in supplylines" value="{{line.id}}">{{line.name}}</option>
       </select>
     </div>
-
   </div>
+</div>
   <div class="clear-both"></div>
     <div class="form-group">
         <h3 openlmis-message="label.order.list"></h3>

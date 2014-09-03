@@ -75,7 +75,7 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
             $scope.resetRnRStatusData();
             return;
         }
-
+         //$scope.filterObject.requisitionGroupId= $scope.formFilter.rgroupId;
 
         RnRStatusSummary.get({zoneId:$scope.filterObject.zoneId,
                 periodId:$scope.filterObject.periodId,

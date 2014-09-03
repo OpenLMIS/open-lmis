@@ -47,8 +47,8 @@ public class OrderRepository {
     return orderMapper.getOrders(pageSize, (page - 1) * pageSize, userId, right);
   }
 
-  public List<Order> getOrdersForPage(int page, int pageSize, Long userId, Right right, Long supplyDepot, Long program) {
-    return orderMapper.getOrdersByDepot(pageSize, (page - 1) * pageSize, userId, right, supplyDepot, program);
+  public List<Order> getOrdersForPage(int page, int pageSize, Long userId, Right right, Long supplyDepot, Long program, Long period) {
+    return orderMapper.getOrdersByDepot(pageSize, (page - 1) * pageSize, userId, right, supplyDepot, program, period);
   }
 
   public Order getById(Long id) {

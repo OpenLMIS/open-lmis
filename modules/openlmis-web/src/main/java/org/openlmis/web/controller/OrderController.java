@@ -83,6 +83,7 @@ public class OrderController extends BaseController {
     required = true,
     defaultValue = "1") Integer page,
     @RequestParam(value="supplyDepot", defaultValue = "0") Long supplyDepot,
+    @RequestParam(value="period", defaultValue = "0") Long period,
     @RequestParam(value="program", defaultValue = "0") Long program,
     HttpServletRequest request) {
 
@@ -90,7 +91,7 @@ public class OrderController extends BaseController {
     if(supplyDepot != 0 || program != 0){
 
       response = response(ORDERS,
-          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER, supplyDepot, program)));
+          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER, supplyDepot, program, period)));
       response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
       response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages(supplyDepot, program));
 

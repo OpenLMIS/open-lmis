@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrder, $dialog, messageService, $routeParams, $location) {
+function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrder,SupplyingDepots, $dialog, messageService, $routeParams, $location) {
   $scope.message = "";
   $scope.maxNumberOfPages = 10;
   $scope.selectedItems = [];
@@ -19,7 +19,13 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
     {value: "facilityName", name: "option.value.facility.name"},
     {value: "supplyingDepot", name: "label.supplying.depot"}
   ];
+
   $scope.noRequisitions = false;
+
+  SupplyingDepots.get(function(data){
+    $scope.depots = data.supplylines;
+  });
+
 
   $scope.selectedSearchOption = $scope.searchOptions[0];
   $scope.sortOptions = { fields: ['submittedDate'], directions: ['asc'] };
@@ -90,7 +96,10 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
       {field: 'stringPeriodEndDate', displayName: messageService.get("label.period.end.date")},
       {field: 'stringSubmittedDate', displayName: messageService.get("label.date.submitted")},
       {field: 'stringModifiedDate', displayName: messageService.get("label.date.modified")},
-      {field: 'supplyingDepotName', displayName: messageService.get("label.supplying.depot")},
+      {field: 'supplyingDepotName',
+        displayName: messageService.get("label.supplying.depot"),
+        width: 220,
+        cellTemplate: "<div><select ng-model='row.entity.supplyingDepotId'><option ng-repeat='t in depots' ng-selected='t.id == row.entity.supplyingDepotId' value='{{t.id}}'>{{t.name}}</option></select></div>"},
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
         cellTemplate: "<div id=\"orderCheckbox{{ $parent.$index }}\" class='ngCellText checked'><i ng-class='{\"icon-ok\": row.entity.emergency}'></i></div>",
         width: 110 }

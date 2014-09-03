@@ -53,6 +53,7 @@ public class RnrDTO {
   private String periodName;
   private Long facilityId;
   private String supplyingDepotName;
+  private Long supplyingDepotId;
   private List<RnrLineItemDTO> products;
   private String requisitionStatus;
   private Long modifiedBy;
@@ -85,6 +86,7 @@ public class RnrDTO {
     RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
     if (requisition.getSupplyingDepot() != null) {
       rnrDTO.supplyingDepotName = requisition.getSupplyingDepot().getName();
+      rnrDTO.supplyingDepotId = requisition.getSupplyingDepot().getId();
     }
     return rnrDTO;
   }

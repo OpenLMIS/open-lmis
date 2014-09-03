@@ -52,7 +52,8 @@ public interface RnRStatusSummaryReportMapper {
             "WHERE vw_facility_requisitions.geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
             "AND programid = #{programId}\n" +
             "AND periodid = #{periodId}\n"+
-            "AND  status= #{status}")
+            "AND  status= #{status}\n" +
+            "AND status in ('APPROVED','AUTHORIZED','IN_APPROVAL','RELEASED') ")
     List<RnRStatusSummaryReport> getRnRStatusDetail(@Param("userId") Long userId, @Param("periodId") Long periodId, @Param("programId") Long programId, @Param("zoneId") Long zoneId, @Param("status") String status);
 
 
@@ -67,11 +68,16 @@ public interface RnRStatusSummaryReportMapper {
             "where vw_facility_requisitions.geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
             "and vw_facility_requisitions.programid = #{programId}\n" +
             "and vw_facility_requisitions.periodid = #{periodId}\n" +
-            "GROUP BY vw_facility_requisitions.status \n")
+            "and status in ('APPROVED','AUTHORIZED','IN_APPROVAL','RELEASED') " +
+            "GROUP BY vw_facility_requisitions.status " +
+            "order by status \n")
     public List<RnRStatusSummaryReport> getRnRStatusSummary(@Param("userId") Long userId, @Param("zoneId") Long zoneId, @Param("periodId") Long periodId,
                                                             @Param("programId") Long programId);
 
     @Select("select programname, status, count(rnrid) totalStatus from vw_rnr_status" +
-            "where  requisitiongroupid = #{requisitiongroupId} and periodid = #{periodId} group by programname, status")
+            "where  requisitiongroupid = #{requisitiongroupId} and periodid = #{periodId} " +
+            "and status in ('APPROVED','AUTHORIZED','IN_APPROVAL','RELEASED') " +
+            "group by programname, status " +
+            "order by status")
     public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriodData(@Param("requisitionGroupId") Long requisitionGroupId,@Param("periodId") Long periodId);
 }

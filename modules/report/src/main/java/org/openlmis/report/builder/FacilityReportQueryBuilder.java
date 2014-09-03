@@ -25,9 +25,10 @@ public class FacilityReportQueryBuilder {
         Long userId = (Long) params.get("userId");
 
         BEGIN();
-        SELECT("F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.district_name as region, FO.code as owner,F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates,F.mainphone as phoneNumber, F.fax as fax ");
+        SELECT("DISTINCT F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.district_name as region, FO.code as owner,F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates,F.mainphone as phoneNumber, F.fax as fax ");
         FROM("facilities F");
         JOIN("facility_types FT on FT.id = F.typeid");
+        LEFT_OUTER_JOIN("programs_supported ps on ps.facilityid = F.id");
         LEFT_OUTER_JOIN("vw_districts GZ on GZ.district_id = F.geographiczoneid");
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
         WHERE("F.geographicZoneId in (select distinct district_id from vw_user_facilities where user_id = " + userId+ " )");
@@ -40,6 +41,9 @@ public class FacilityReportQueryBuilder {
             }
             if (filter.getFacilityTypeId() != 0) {
                 WHERE("F.typeid = " + filter.getFacilityTypeId());
+            }
+            if (filter.getProgramId() != 0) {
+                WHERE("ps.programid = " + filter.getProgramId());
             }
         }
         return SQL();

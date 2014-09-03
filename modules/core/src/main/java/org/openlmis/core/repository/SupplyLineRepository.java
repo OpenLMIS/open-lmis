@@ -60,8 +60,11 @@ public class SupplyLineRepository {
     return supplyLineMapper.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
   }
 
-  public List<SupplyDepot> getSupplyDepots(){
-    return supplyLineMapper.getSupplyDepots();
+  public List<SupplyDepot> getSupplyDepots(Long userId){
+    return supplyLineMapper.getSupplyDepots(userId);
   }
-  
+
+  public SupplyLine getSupplyLineByFacilityProgram(Long facilityId, Long programId) {
+    return supplyLineMapper.getByFacilityByProgram(facilityId, programId);
+  }
 }

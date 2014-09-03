@@ -7,7 +7,45 @@
   ~
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
+<style>
+    .scroll table {
+        width: 100%;
+    }
 
+    .scroll thead, .scroll tbody, .scroll tr, .scroll td, .scroll th { display: block; }
+
+    .scroll tr:after {
+        content: ' ';
+        display: block;
+        visibility: hidden;
+        clear: both;
+    }
+
+    .scroll thead th {
+        height: 20px;
+
+        /*text-align: left;*/
+    }
+
+    .scroll tbody {
+        height: 500px;
+        overflow-y: auto;
+    }
+
+    .scroll thead {
+        /* fallback */
+    }
+
+    .scroll thead th {
+        width: 19%;
+        float: left;
+    }
+
+    .scroll tbody td {
+        width: 18%;
+        float: left;
+    }
+</style>
     <div class="row-fluid sortable ui-sortable">
             <div class="box span12">
                 <div class="box-header">
@@ -38,25 +76,25 @@
             </div>
         </div>
         <div class="span5" >
-          <div style="max-height: 600px;overflow-y:scroll;" ng-show="features && (features | filter:expectedFilter).length > 0">
+          <div style="" ng-show="features && (features | filter:expectedFilter).length > 0">
               <p class="grey pull-right">
               You can click on the chart to see list of facilities
-              </p>
-            <table class="table table-striped table-scrollable" >
+              </p><br/>
+            <table class="table table-striped table-scrollable scroll" >
                 <thead>
                 <tr>
                     <th>District</th>
                     <th>Expected</th>
-                    <th>Reported</th>
+                    <th style="width:70px !important;">Reported</th>
                     <th style="width: 150px;">% Reported</th>
                 </tr>
                 </thead>
               <tbody>
                 <tr ng-repeat="feature in features | filter:expectedFilter">
-                    <td>{{feature.name}}</td>
-                    <td class="number">{{feature.expected}}</td>
-                    <td class="number">{{feature.period}}</td>
-                    <td>
+                    <td style="width:120px !important;" >{{feature.name}}</td>
+                    <td style="width:60px !important;" class="number">{{feature.expected}}</td>
+                    <td style="width:100px !important;" class="number">{{feature.period}}</td>
+                    <td style="width:150px !important;" class="number">
                         <div class="number" style="float:right;" >{{((feature.period / feature.expected) * 100).toFixed(0)}} %</div>
                         <div class="progress" style="margin-bottom:0px;width:68%">
                             <div class="bar bar-success leaflet-clickable" ng-click="ReportingFacilities(feature, this)" style="width: {{((feature.period / feature.expected) * 100).toFixed(2)}}%"></div>

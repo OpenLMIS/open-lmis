@@ -96,10 +96,14 @@ public class OrderService {
     requisitionService.releaseRequisitionsAsOrder(rnrList, userId);
     Order order;
     for (Rnr rnr : rnrList) {
+      Long depotId = rnr.getSupplyingDepotId();
       rnr = requisitionService.getLWById(rnr.getId());
       rnr.setModifiedBy(userId);
       order = new Order(rnr);
       SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(rnr.getSupervisoryNodeId()), rnr.getProgram());
+      if(depotId != null && supplyLine.getSupplyingFacility().getId() != depotId){
+        supplyLine = supplyLineService.getByFacilityProgram(depotId, rnr.getProgram().getId());
+      }
       order.setSupplyLine(supplyLine);
       if (!fulfillmentPermissionService.hasPermissionOnWarehouse(userId, supplyLine.getSupplyingFacility().getId(), Right.CONVERT_TO_ORDER)) {
         throw new AccessDeniedException("user.not.authorized");
@@ -142,8 +146,8 @@ public class OrderService {
     return fillOrders(orders);
   }
 
-  public List<Order> getOrdersForPage(int page, Long userId, Right right, Long supplyDepot, Long program) {
-    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right, supplyDepot, program);
+  public List<Order> getOrdersForPage(int page, Long userId, Right right, Long supplyDepot, Long program, Long period) {
+    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right, supplyDepot, program, period);
     return fillOrders(orders);
   }
 
