@@ -310,11 +310,12 @@ CreateRequisitionController.resolve = {
   facilityApprovedNFSProducts: function ($q, $timeout, $route, FacilityApprovedNonFullSupplyProducts) {
     var deferred = $q.defer();
     $timeout(function () {
-      FacilityApprovedNonFullSupplyProducts.get({facilityId: $route.current.params.facility
-              , programId: $route.current.params.program},
-          function (data) {
-            deferred.resolve(data.nonFullSupplyProducts);
-          }, {});
+      FacilityApprovedNonFullSupplyProducts.get(
+        {facilityId: $route.current.params.facility, programId: $route.current.params.program},
+        function (data) {
+          deferred.resolve(data.nonFullSupplyProducts);
+        },
+        {} );
     }, 100);
     return deferred.promise;
   },

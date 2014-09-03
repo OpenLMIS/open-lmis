@@ -117,7 +117,7 @@ services.factory('requisitionService', function (messageService) {
     var nfsReqQuantityColumns = _.filter(rnrColumns, function (column) {
       return _.contains(['quantityRequested', 'reasonForRequestedQuantity'], column.name);
     });
-    if(nfsReqQuantityColumns.length == 0) throw new Error('Requested Quantity column(s) not found');
+    if(nfsReqQuantityColumns.length === 0) throw new Error('Requested Quantity column(s) not found');
     nfsColumns.scrollable = _.union(nfsColumns.scrollable, nfsReqQuantityColumns);
 
     return {
