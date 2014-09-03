@@ -12,6 +12,7 @@
     "grunt": "~0.4.1",
     "karma": "~0.12.19",
     "karma-coverage": "~0.2.5",
+    "karma-htmlfile-reporter": "~0.1",
     "karma-jasmine": "~0.1.5",
     "karma-firefox-launcher": "~0.1.3"
   }
