@@ -82,7 +82,6 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
                 programId:$scope.filterObject.programId
             },
             function (data) {
-                alert('data is '+JSON.stringify(data))
                 $scope.total = 0;
                 $scope.RnRStatusPieChartData = [];
                 $scope.dataRows = [];
@@ -129,7 +128,6 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
     };
 
     $scope.resetRnRStatusData = function(){
-        alert('called when period is null')
         $scope.rnrStatusRenderedData = null;
         $scope.rnRStatusPieChartOption = null;
         $scope.total = 0;
@@ -255,7 +253,6 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
     };
 
     $scope.processPeriodFilter = function () {
-        alert('period after change schedule is '+$scope.formFilter.periodId)
         $scope.filterObject.periodId = $scope.formFilter.periodId;
         $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
         $scope.loadRnRStatus();
