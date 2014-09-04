@@ -110,4 +110,10 @@ public class GeographicZoneRepository {
       throw new DataException("error.incorrect.length");
     }
   }
+
+    public GeographicZone getDistrictOfFacilityByFacilityId(Long facilityId)
+    {
+        return mapper.getDistrictOfFacilityByFacilityId(facilityId);
+    }
+
 }

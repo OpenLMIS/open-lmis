@@ -30,7 +30,8 @@ dependencies {
             'cglib:cglib:2.2.2',
             'commons-fileupload:commons-fileupload:1.2.2',
             'xerces:xercesImpl:2.8.1',
-            project(':modules:core')
+            project(':modules:core'),
+            project(':modules:requisition')
 
 
     testCompile 'org.springframework:spring-test:3.1.2.RELEASE'

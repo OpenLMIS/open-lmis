@@ -29,6 +29,8 @@
 
     <bean id="odkSubmissionService" class="org.openlmis.odkapi.service.ODKSubmissionService" />
     <bean id="odkxFormService" class="org.openlmis.odkapi.service.ODKXFormService" />
+    <bean id="odkProofOfDeliverySurveyService" class="org.openlmis.odkapi.service.ODKProofOfDeliverySurveyService" />
+    <bean id="requisitionService" class="org.openlmis.rnr.service.RequisitionService" />
     <bean id="dateUtil" class="org.openlmis.odkapi.util.DateUtil" />
     <bean id="odkAccountService" class="org.openlmis.odkapi.service.ODKAccountService" />
 

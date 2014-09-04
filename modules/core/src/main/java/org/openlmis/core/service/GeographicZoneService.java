@@ -101,4 +101,9 @@ public class GeographicZoneService {
       }
     }
   }
+
+    public GeographicZone getDistrictOfFacilityByFacilityId(Long facilityId)
+    {
+        return repository.getDistrictOfFacilityByFacilityId(facilityId);
+    }
 }

@@ -18,11 +18,11 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProductService;
 import org.openlmis.odkapi.domain.*;
 import org.openlmis.odkapi.exception.*;
-import org.openlmis.odkapi.parser.ODKStockStatusSubmissionSAXHandler;
-import org.openlmis.odkapi.parser.ODKSubmissionSAXHandler;
-import org.openlmis.odkapi.parser.ODKSubmissionXFormIDSAXHandler;
+import org.openlmis.odkapi.parser.*;
+import org.openlmis.odkapi.repository.ODKProofOfDeliverySubmissionDataRepository;
 import org.openlmis.odkapi.repository.ODKSubmissionDataRepository;
 import org.openlmis.odkapi.repository.ODKSubmissionRepository;
 import org.slf4j.Logger;
@@ -45,7 +45,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import org.openlmis.odkapi.parser.XmlFormatter;
+
 import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -69,6 +69,12 @@ public class ODKSubmissionService {
     private ODKXFormService odkxFormService;
 
     @Autowired
+    private ODKProofOfDeliverySubmissionDataRepository odkProofOfDeliverySubmissionDataRepository;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
     ServletContext servletContext;
 
     @Autowired
@@ -79,13 +85,17 @@ public class ODKSubmissionService {
     private ODKAccount odkAccount;
     private List<ODKSubmissionData> listOfODKSubmissionData;
     private List<ODKStockStatusSubmission> listODKStockStatusSubmissions;
+    private ODKProofOfDeliverySubmissionData odkProofOfDeliverySubmissionData;
     private ODKSubmissionData odkSubmissionData;
     private ODKSubmission odkSubmission;
     private HashMap<Long,ArrayList<String>> associatedFacilityPictures;
+    private ArrayList<String> associatedProofOfDeliveryPictures;
+
+
     Long tempFacilityId;
     ArrayList<String> tempPictures = new ArrayList<String>();
 
-    private Map<String, MultipartFile> facilityPictures;
+    private Map<String, MultipartFile> submissionPictures;
     private String[] pictureSetMethods = {"setFirstPicture", "setSecondPicture", "setThirdPicture", "setFourthPicture", "setFifthPicture"};
 
     private static Logger logger = LoggerFactory.getLogger(ODKSubmissionService.class);
@@ -96,7 +106,7 @@ public class ODKSubmissionService {
             ODKCollectXMLSubmissionParserConfigurationException, ODKCollectXMLSubmissionSAXException, FacilityNotFoundException, ODKXFormNotFoundException
     {
         // first get the XML submission file
-        facilityPictures = new HashMap<String, MultipartFile>();
+        submissionPictures = new HashMap<String, MultipartFile>();
         Iterator iterator = submissionsFilesSet.iterator();
         MultipartFile XMLSubmissionFile = null;
         while(iterator.hasNext())
@@ -110,7 +120,7 @@ public class ODKSubmissionService {
             }
             else
             {
-                facilityPictures.put(fileName, (MultipartFile)entry.getValue());
+                submissionPictures.put(fileName, (MultipartFile) entry.getValue());
             }
         }
 
@@ -165,13 +175,224 @@ public class ODKSubmissionService {
             saveStockStatusSurveyData(XMLSubmissionFile);
         }
 
+        else if (surveyType.getSurveyName().equals("Proof of Delivery Survey"))
+        {
+            saveProofOfDeliverySurveyData(XMLSubmissionFile);
+        }
+
         else
         {
-              // To Do Handle
+            // Handle
         }
 
     }
 
+    public void saveProofOfDeliverySurveyData(MultipartFile XMLSubmissionFile) throws ODKAccountNotFoundException,
+            FacilityPictureNotFoundException, ODKCollectXMLSubmissionFileNotFoundException,
+            ODKCollectXMLSubmissionParserConfigurationException, ODKCollectXMLSubmissionSAXException, ODKXFormNotFoundException
+    {
+        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+        ODKProofOfDeliverySubmissionSAXHandler handler;
+        handler = new ODKProofOfDeliverySubmissionSAXHandler();
+
+        String filePath = "/public/odk-collect-submissions/";
+        InputStream inputStream;
+        FileOutputStream outputStream;
+
+        // first save the xml submission file
+
+
+        try
+        {
+            inputStream = XMLSubmissionFile.getInputStream();
+            File newFile = new File(servletContext.getRealPath(filePath + XMLSubmissionFile.getOriginalFilename()));
+            outputStream = new FileOutputStream(newFile);
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+
+            inputStream.close();
+            outputStream.close();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+        // read the submission file into a string
+
+        String xmlString = "";
+        try
+        {
+            File savedSubmissionFile = new File(servletContext.getRealPath(filePath + XMLSubmissionFile.getOriginalFilename()));
+            xmlString = readFile(servletContext.getRealPath(filePath + XMLSubmissionFile.getOriginalFilename()), Charset.defaultCharset());
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+
+        // use XML Formatter
+
+        XmlFormatter formatter = new XmlFormatter();
+        String formattedXmlSubmission = formatter.format(xmlString);
+
+        // get input stream from the document object of the formatted xml
+
+        Document  xmlSubmissionDocument;
+        try
+        {
+            xmlSubmissionDocument = stringToDom(formattedXmlSubmission);
+        }
+        catch(SAXException exception )
+        {
+            throw new ODKCollectXMLSubmissionSAXException();
+
+        }
+        catch(IOException e)
+        {
+            throw new ODKCollectXMLSubmissionFileNotFoundException();
+        }
+        catch(ParserConfigurationException e)
+        {
+            throw new ODKCollectXMLSubmissionParserConfigurationException();
+        }
+
+        ByteArrayOutputStream outputStreamForDocument = new ByteArrayOutputStream();
+        Source xmlSource = new DOMSource(xmlSubmissionDocument);
+        Result outputTarget = new StreamResult(outputStreamForDocument);
+        try
+        {
+            TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
+
+        }
+        catch(TransformerConfigurationException transformerConfigurationException)
+        {
+            transformerConfigurationException.printStackTrace();
+        }
+        catch(TransformerException transformerException)
+        {
+            transformerException.printStackTrace();
+        }
+
+        InputStream inputStreamForDocument = new ByteArrayInputStream(outputStreamForDocument.toByteArray());
+
+        try
+        {
+            SAXParser saxParser = saxParserFactory.newSAXParser();
+            saxParser.parse(inputStreamForDocument, handler);
+        }
+        catch(SAXException exception )
+        {
+            throw new ODKCollectXMLSubmissionSAXException();
+
+        }
+        catch(IOException e)
+        {
+            throw new ODKCollectXMLSubmissionFileNotFoundException();
+        }
+        catch(ParserConfigurationException e)
+        {
+            throw new ODKCollectXMLSubmissionParserConfigurationException();
+        }
+
+        odkSubmission = handler.getOdkSubmission();
+        odkAccount = handler.getOdkAccount();
+
+        ODKAccount tempAccount;
+
+        tempAccount =  odkAccountService.authenticate(odkAccount);
+
+        odkSubmission.setOdkAccountId(tempAccount.getId());
+        odkSubmission.setActive(true);
+        this.insertODKSubmission(odkSubmission);
+        Long lastODKSubmissionId =  odkSubmissionRepository.getLastSubmissionId();
+
+        odkProofOfDeliverySubmissionData = handler.getOdkProofOfDeliverySubmissionData();
+
+        this.insertODKProofOfDeliverySubmissionData(odkProofOfDeliverySubmissionData);
+    }
+
+    public void insertODKProofOfDeliverySubmissionData(ODKProofOfDeliverySubmissionData odkProofOfDeliverySubmissionData)
+    {
+         Long productId = productService.getByCode(odkProofOfDeliverySubmissionData.getProductCode()).getId();
+         odkProofOfDeliverySubmissionData.setProductId(productId);
+         // get the pictures
+
+         ODKProofOfDeliverySubmissionData tempODKProofOfDeliverySubmissionData = assignProofOfDeliveryPictures(odkProofOfDeliverySubmissionData);
+
+
+
+         odkProofOfDeliverySubmissionDataRepository.insert(tempODKProofOfDeliverySubmissionData);
+
+
+    }
+
+    public ODKProofOfDeliverySubmissionData assignProofOfDeliveryPictures(ODKProofOfDeliverySubmissionData odkProofOfDeliverySubmissionData)
+    {
+        MultipartFile tempPicture;
+        InputStream imageInputStream;
+
+        int i = 0;
+        String tempPictureSetMethod;
+        for(String tempFileName : associatedProofOfDeliveryPictures)
+        {
+            tempPicture = submissionPictures.get(tempFileName);
+            tempPictureSetMethod = pictureSetMethods[i];
+            try
+            {
+                imageInputStream = tempPicture.getInputStream();
+                byte[] bytes = IOUtils.toByteArray(imageInputStream);
+                try
+                {
+                    Method picMethod = odkProofOfDeliverySubmissionData.getClass().getMethod(tempPictureSetMethod, new Class[] {byte[].class});
+                    picMethod.invoke(odkProofOfDeliverySubmissionData, odkProofOfDeliverySubmissionData.getProofOfDeliveryPictures().get(i));
+                }
+
+                catch (IllegalAccessException ex)
+                {
+                    // TO DO handle
+                }
+
+                catch (NoSuchMethodException ex)
+                {
+                    // TO DO handle
+
+                }
+                catch (SecurityException ex)
+                {
+                    // TO DO handle
+                }
+                catch (IllegalArgumentException ex)
+                {
+                    // TO DO handle
+
+                }
+                catch (InvocationTargetException ex)
+                {
+                    // TO DO handle
+                }
+
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+
+
+            }
+            catch(NullPointerException e)
+            {
+                System.out.println("Picture for:" + tempFileName + "not found");
+            }
+        }
+
+        return odkProofOfDeliverySubmissionData;
+
+    }
     public void saveStockStatusSurveyData(MultipartFile XMLSubmissionFile)
             throws ODKAccountNotFoundException,
             FacilityPictureNotFoundException, ODKCollectXMLSubmissionFileNotFoundException,
@@ -375,7 +596,7 @@ public class ODKSubmissionService {
                    tempFileNames = (ArrayList<String>) associatedPairs.getValue();
                    for (String fileName:tempFileNames)
                    {
-                       tempPicture = facilityPictures.get(fileName);
+                       tempPicture = submissionPictures.get(fileName);
                        try
                        {
                            imageInputStream = tempPicture.getInputStream();
