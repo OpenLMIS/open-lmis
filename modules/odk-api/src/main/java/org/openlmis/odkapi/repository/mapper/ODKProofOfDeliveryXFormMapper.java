@@ -17,48 +17,31 @@ package org.openlmis.odkapi.repository.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
-import org.openlmis.odkapi.domain.ODKXForm;
-import org.openlmis.odkapi.domain.ODKXFormSurveyType;
+import org.openlmis.odkapi.domain.ODKProofOfDeliveryXForm;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ODKXFormMapper {
-
-    @Select("SELECT * FROM odk_xform")
-    public List<ODKXForm> getAvailableXFormDefinitions();
-
-    @Select("SELECT * FROM odk_xform WHERE formId = #{formId}")
-    public ODKXForm getXFormByFormId(String formId);
-
-    @Select("SELECT * FROM odk_xform_survey_type WHERE id = #{id}")
-    public ODKXFormSurveyType getXFormSurveyTypeById(Long id);
-
-    @Insert("INSERT INTO odk_xform(" +
-            "formId, " +
-            "name, " +
-            "version," +
-            "hash," +
-            "descriptionText," +
-            "downloadUrl," +
-            "XMLString," +
-            "active," +
-            "ODKXFormSurveyTypeId) " +
+public interface ODKProofOfDeliveryXFormMapper
+{
+    @Insert("INSERT INTO odk_proof_of_delivery_xform(" +
+            "odkXformId, " +
+            "facilityId, " +
+            "programId," +
+            "districtId," +
+            "periodId," +
+            "rnrId ) " +
             "VALUES " +
-            "(#{formId}, " +
-            " #{name}," +
-            " #{version}," +
-            " #{hash}," +
-            " #{descriptionText}, " +
-            " #{downloadUrl}, " +
-            " #{XMLString}, " +
-            " #{active}, " +
-            " #{ODKXFormSurveyTypeId})")
+            "(#{odkXformId}, " +
+            " #{facilityId}," +
+            " #{programId}," +
+            " #{districtId}," +
+            " #{periodId}, " +
+            " #{rnrId})")
     @Options(useGeneratedKeys = true)
-    void insert(ODKXForm odkxForm);
+    void insert(ODKProofOfDeliveryXForm odkProofOfDeliveryXForm);
 
-    @Select("SELECT * FROM odk_xform WHERE id = #{id}")
-    public ODKXForm getXFormById(Long id);
-
+    @Select("SELECT * FROM odk_proof_of_delivery_xform WHERE programId = #{programId} AND districtId = #{districtId}")
+    public List<ODKProofOfDeliveryXForm> getActiveODKProofOfDeliveryXFormsByProgramAndDistrictIds(Long programId, Long districtId);
 }
