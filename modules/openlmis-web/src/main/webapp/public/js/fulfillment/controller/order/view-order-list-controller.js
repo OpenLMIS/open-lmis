@@ -118,12 +118,12 @@ ViewOrderListController.resolve = {
     },100);
     return deferred.promise;
   },
-  programs: function($q, $timeout, CreateRequisitionProgramList){
+  programs: function($q, $timeout, ReportPrograms){
     var deferred = $q.defer();
     $timeout(function(){
 
-      CreateRequisitionProgramList.get(function(data){
-        deferred.resolve(data.programList);
+      ReportPrograms.get(function(data){
+        deferred.resolve(data.programs);
       });
 
     },100);

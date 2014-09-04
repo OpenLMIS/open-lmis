@@ -27,8 +27,8 @@ public interface ProgramReportMapper {
 
   @Select("SELECT id, name, description, code " +
       "   FROM " +
-      "       programs where id in (select program_id from vw_user_facilities where user_id = #{userId}) " +
-      "order by name")
+      "       programs where id in (select program_id from vw_user_facilities where user_id = #{userId}) or (( select count(*) from fulfillment_role_assignments where userId = #{userId}) > 0 ) " +
+      " order by name")
   List<Program> getAllForUser(@Param("userId") Long userId);
 
     @Select("SELECT * FROM Programs where code = #{code}")
@@ -41,8 +41,7 @@ public interface ProgramReportMapper {
             "        ORDER BY name\n" )
     List<Program>getAllRegimenPrograms();
 
-    @Select("\n" +
-            "SELECT DISTINCT p.* \n" +
+    @Select( "SELECT DISTINCT p.* \n" +
             "FROM programs p \n" +
             "INNER JOIN role_assignments ra ON p.id = ra.programId \n" +
             "INNER JOIN role_rights rr ON ra.roleId = rr.roleId \n" +

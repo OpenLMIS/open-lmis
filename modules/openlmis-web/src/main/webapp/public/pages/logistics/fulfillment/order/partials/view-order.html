@@ -15,21 +15,21 @@
   <div class="pull-right">
 
     <div class="pull-left">
-      <label for="schedule" openlmis-message="label.schedule"> <span class="label-required">*</span></label>
+      <label for="schedule" openlmis-message="label.schedule"> <span class="label-required"> *</span></label>
       <select id="schedule" ng-change="LoadPeriods()" ng-model="schedule">
         <option ng-repeat="line in schedules" value="{{line.id}}">{{line.name}}</option>
       </select>
     </div>
 
     <div class="pull-left">
-      <label for="year" openlmis-message="label.year"> <span class="label-required">*</span></label>
+      <label for="year" openlmis-message="label.year"> <span class="label-required"> *</span></label>
       <select id="year" ng-change="LoadPeriods()" ng-model="year">
         <option ng-repeat="year in years" value="{{year}}">{{year}}</option>
       </select>
     </div>
 
     <div class="pull-left">
-      <label for="period" openlmis-message="label.period"> <span class="label-required">*</span></label>
+      <label for="period" openlmis-message="label.period"> <span class="label-required"> *</span></label>
       <select id="period" ng-change="OnFilterChanged()" ng-model="period">
         <option ng-repeat="line in periods" value="{{line.id}}">{{line.name}}</option>
       </select>
@@ -37,7 +37,7 @@
 
 
     <div class="pull-left">
-      <label for="program" openlmis-message="label.program"> <span class="label-required">*</span></label>
+      <label for="program" openlmis-message="label.program"> <span class="label-required"> *</span></label>
       <select id="program" ng-change="OnFilterChanged()" ng-model="program">
         <option ng-repeat="line in programs" value="{{line.id}}">{{line.name}}</option>
       </select>
@@ -53,8 +53,11 @@
 </div>
   <div class="clear-both"></div>
     <div class="form-group">
-        <h3 openlmis-message="label.order.list"></h3>
-        <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders && orders.length">
+        <h3 ng-show="orders != undefined" openlmis-message="label.order.list"></h3>
+      <div id="noFilterSelected" ng-show="orders == undefined" >
+        <span>Please select value in all required filters above</span>
+      </div>
+        <div class="alert alert-info" id="noOrdersPresent" ng-show="orders != undefined && orders.length == 0" >
             <span openlmis-message="message.no.order"></span>
         </div>
         <div class="alert alert-info" id="noOrders" ng-show="downloadMessage" openlmis-message="downloadMessage">
