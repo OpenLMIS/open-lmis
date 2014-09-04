@@ -14,42 +14,27 @@
  */
 package org.openlmis.odkapi.repository;
 
-import org.openlmis.odkapi.domain.ODKXForm;
-import org.openlmis.odkapi.domain.ODKXFormSurveyType;
-import org.openlmis.odkapi.repository.mapper.ODKXFormMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.openlmis.odkapi.domain.ODKProofOfDeliveryXForm;
+import org.openlmis.odkapi.repository.mapper.ODKProofOfDeliveryXFormMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+
 @Repository
-public class ODKXFormRepository {
-
+public class ODKProofOfDeliveryXFormRepository
+{
     @Autowired
-    private ODKXFormMapper odkxFormMapper;
+    private ODKProofOfDeliveryXFormMapper odkProofOfDeliveryXFormMapper;
 
-    public List<ODKXForm> getAvailableXFormDefinitions()
+    public void insert(ODKProofOfDeliveryXForm odkProofOfDeliveryXForm)
     {
-        return odkxFormMapper.getAvailableXFormDefinitions();
+        odkProofOfDeliveryXFormMapper.insert(odkProofOfDeliveryXForm);
     }
 
-    public ODKXForm getXFormByFormId(String formId)
+    public List<ODKProofOfDeliveryXForm> getActiveODKProofOfDeliveryXFormsByProgramAndDistrictIds(Long programId, Long districtId)
     {
-        return odkxFormMapper.getXFormByFormId(formId);
-    }
-
-    public ODKXFormSurveyType getXFormSurveyTypeById(Long id)
-    {
-        return odkxFormMapper.getXFormSurveyTypeById(id);
-    }
-
-    public void save(ODKXForm odkxForm)
-    {
-        odkxFormMapper.insert(odkxForm);
-    }
-
-    public ODKXForm getXFormById(Long id)
-    {
-        return odkxFormMapper.getXFormById(id);
+        return odkProofOfDeliveryXFormMapper.getActiveODKProofOfDeliveryXFormsByProgramAndDistrictIds(programId, districtId);
     }
 }

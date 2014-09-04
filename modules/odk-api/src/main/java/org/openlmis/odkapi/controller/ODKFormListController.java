@@ -16,6 +16,7 @@ package org.openlmis.odkapi.controller;
 
 import org.openlmis.odkapi.domain.ODKXForm;
 import org.openlmis.odkapi.domain.ODKXFormList;
+import org.openlmis.odkapi.service.ODKProofOfDeliverySurveyService;
 import org.openlmis.odkapi.service.ODKXFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +36,9 @@ public class ODKFormListController extends  BaseController
     @Autowired
     ODKXFormService odkxFormService;
 
+    @Autowired
+    ODKProofOfDeliverySurveyService odkProofOfDeliverySurveyService;
+
     ODKXForm odkxForm;
 
     @RequestMapping(value="/odk-api/formList")
@@ -42,6 +46,18 @@ public class ODKFormListController extends  BaseController
     public ResponseEntity<ODKXFormList> getAvailableForms(HttpServletRequest httpServletRequest)
     {
         ODKXFormList odkxFormListXML = odkxFormService.getAvailableXFormDefinitions();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set(OPEN_ROSA_VERSION_HEADER, OPEN_ROSA_VERSION);
+        responseHeaders.setContentType(MediaType.TEXT_XML);
+        return new ResponseEntity<ODKXFormList>(odkxFormListXML, responseHeaders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/odk-api/formList/{programDistrictId}")
+    @ResponseBody
+    public ResponseEntity<ODKXFormList> getAvailableForms(@PathVariable String programDistrictId,HttpServletRequest httpServletRequest)
+    {
+        // this is for the Proof of Delivery Survey
+        ODKXFormList odkxFormListXML = odkProofOfDeliverySurveyService.getActiveODKProofOfDeliveryXFormsByProgramAndDistrictCode(programDistrictId);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set(OPEN_ROSA_VERSION_HEADER, OPEN_ROSA_VERSION);
         responseHeaders.setContentType(MediaType.TEXT_XML);

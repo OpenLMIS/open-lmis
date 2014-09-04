@@ -63,4 +63,15 @@ public class ODKXFormService {
     {
         return odkxFormRepository.getXFormSurveyTypeById(id);
     }
+
+    public void save(ODKXForm odkxForm)
+    {
+        odkxFormRepository.save(odkxForm);
+    }
+
+    public ODKXForm getXFormById(Long id)
+    {
+        return odkxFormRepository.getXFormById(id);
+    }
+
 }
