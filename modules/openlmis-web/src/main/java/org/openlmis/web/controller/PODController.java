@@ -13,6 +13,7 @@ package org.openlmis.web.controller;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.dto.OrderPODDTO;
@@ -75,13 +76,14 @@ public class PODController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
   public ResponseEntity<OpenLmisResponse> createPOD(@RequestParam Long orderId,
                                                     HttpServletRequest request) throws ParseException {
-    OrderPODDTO orderPODDTO = OrderPODDTO.getOrderDetailsForPOD(orderService.getOrder(orderId));
+    Order order = orderService.getOrder(orderId);
+    OrderPODDTO orderPODDTO = OrderPODDTO.getOrderDetailsForPOD(order);
     OrderPOD existingPOD = service.getPODByOrderId(orderId);
     ResponseEntity<OpenLmisResponse> response;
     if (existingPOD != null) {
       response = response(ORDER_POD, existingPOD);
     } else {
-      OrderPOD orderPOD = new OrderPOD(orderId, loggedInUserId(request));
+      OrderPOD orderPOD = new OrderPOD(orderId, order.getOrderNumber() , loggedInUserId(request));
       OrderPOD createdPOD = service.createPOD(orderPOD);
       response = response(ORDER_POD, createdPOD, HttpStatus.CREATED);
     }

@@ -55,8 +55,9 @@ public class OrderPOD extends BaseModel {
     this.id = id;
   }
 
-  public OrderPOD(Long orderId, Long userId) {
+  public OrderPOD(Long orderId, String orderNumber, Long userId) {
     this.orderId = orderId;
+    this.orderNumber = orderNumber;
     this.createdBy = userId;
     this.modifiedBy = userId;
   }
