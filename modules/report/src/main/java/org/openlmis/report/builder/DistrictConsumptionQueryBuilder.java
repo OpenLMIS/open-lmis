@@ -100,7 +100,7 @@ public class DistrictConsumptionQueryBuilder {
               " JOIN processing_periods pp on pp.id = r.periodId " +
               " JOIN products p on p.code::text = li.productCode::text " +
               " JOIN program_products ppc on ppc.programId = r.programId and ppc.productId = p.id " +
-              " JOIN requisition_group_program_schedules rgps on rgps.requisitionGroupID = rgm.requisitionGroupId and pp.scheduleId = rgps.scheduleId\n" +
+              " JOIN requisition_group_program_schedules rgps on rgps.requisitionGroupID = rgm.requisitionGroupId and rgps.programId = r.programId and pp.scheduleId = rgps.scheduleId\n" +
               " WHERE " +
               "   f.id in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = "  + filter.getProgramId() + ") " +
               "   and r.periodId = " + filter.getPeriod() + " and r.programId =  " + filter.getProgramId() + predicates +
