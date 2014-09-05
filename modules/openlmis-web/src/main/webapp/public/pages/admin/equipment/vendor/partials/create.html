@@ -144,7 +144,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="user in users | filter:userFilterToken">
+        <tr ng-repeat="user in users | filter: userFilterToken">
           <td>
             <div>{{user.userName}}</div>
           </td>
@@ -175,7 +175,7 @@
           <div class="row-fluid">
             <div class="span4">
               <input id="txtFilterUsers" class="search-query input-xlarge" type="text" ng-model="filterUserQuery"
-                     placeholder="Enter user's first name or last name"/>
+                     placeholder="Search by user's Name"/>
             </div>
           </div>
           <br/>
@@ -183,7 +183,7 @@
             <div class="span4">
               <select ng-required="true" size="10" name="userValue"
                       id="userValue" ng-model="vendorUser.user"
-                      ng-options="option as option.firstName.concat(' ').concat(option.lastName) for option in allUsers | filter: filterUserQuery">
+                      ng-options="option as option.fullName for option in allUsers | filter: { fullName: filterUserQuery}">
               </select>
             </div>
           </div>

@@ -20,6 +20,9 @@ function CreateVendorController($scope, $routeParams, $location, $dialog, messag
 
     $scope.loadAvailableUsersForVendor = function(){
         UserListAvailableForVendor.get(function(data){
+            angular.forEach(data.users, function(item){
+              item.fullName = item.firstName.concat(' ').concat(item.lastName);
+            });
             $scope.allUsers = data.users;
             $scope.usersLoaded = true;
         });
