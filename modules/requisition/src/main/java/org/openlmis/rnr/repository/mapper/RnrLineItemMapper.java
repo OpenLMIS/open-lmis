@@ -107,6 +107,7 @@ public interface RnrLineItemMapper {
   @Update("UPDATE requisition_line_items " +
     "SET quantityApproved = #{quantityApproved}, " +
     " packsToShip = #{packsToShip}, " +
+    " skipped = #{skipped} " +
     " remarks = #{remarks}, " +
     " modifiedBy = #{modifiedBy}, " +
     " modifiedDate = CURRENT_TIMESTAMP " +

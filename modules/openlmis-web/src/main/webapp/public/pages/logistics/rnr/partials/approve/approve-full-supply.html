@@ -46,7 +46,7 @@
             <span ng-switch on="column.name">
               <span ng-switch-when="skipped">
                 <input ng-model="rnrLineItem[column.name]" id="skip_{{$parent.$parent.$index}}"
-                       ng-disabled="true" type="checkbox">
+                       ng-disabled="!rnrLineItem[column.name]" type="checkbox">
               </span>
               <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
                     class="cell-text"></span>

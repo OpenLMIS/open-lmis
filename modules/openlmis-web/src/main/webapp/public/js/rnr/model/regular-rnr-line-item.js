@@ -39,7 +39,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   reduceForApproval: function () {
-    return _.pick(this, 'id', 'productCode', 'quantityApproved', 'remarks');
+    return _.pick(this, 'id', 'skipped' , 'productCode', 'quantityApproved', 'remarks');
   },
 
   init: function () {
