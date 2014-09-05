@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function InitiateRnrController($scope, $location, Requisitions, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService, $timeout) {
+function InitiateRnrController($scope, $location, Requisitions, AuthorizationService, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService, $timeout) {
   var isNavigatedBack;
 
   $scope.selectedRnrType = {"name": "Regular", "emergency": false};
@@ -27,6 +27,8 @@ function InitiateRnrController($scope, $location, Requisitions, PeriodsForFacili
     $scope.facilities = null;
     $scope.error = null;
   };
+  
+  $scope.isSupervisor = AuthorizationService.hasPermission('APPROVE_REQUISITION');
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.selectedType = navigateBackService.selectedType || "0";

@@ -34,6 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
+import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doThrow;
@@ -88,7 +89,7 @@ public class PODControllerTest {
     OrderPOD createdPOD = new OrderPOD();
     mockStatic(OrderPODDTO.class);
 
-    whenNew(OrderPOD.class).withArguments(orderId, USER_ID).thenReturn(orderPOD);
+    whenNew(OrderPOD.class).withArguments(orderId, any(String.class), USER_ID).thenReturn(orderPOD);
     when(service.getPODByOrderId(orderId)).thenReturn(null);
     when(service.createPOD(orderPOD)).thenReturn(createdPOD);
     Order order = new Order(orderId);
