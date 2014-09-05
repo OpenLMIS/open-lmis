@@ -1,7 +1,6 @@
 -- Index: i_mv_user_facilities_userid
 DROP INDEX IF EXISTS i_mv_user_facilities_userid;
-DROP VIEW IF EXISTS vw_user_districts;
-DROP VIEW IF EXISTS vw_user_facilities;
+DROP VIEW IF EXISTS vw_user_facilities_2;
 
 -- Table: mv_user_facilities
 DROP TABLE IF EXISTS mv_user_facilities;
