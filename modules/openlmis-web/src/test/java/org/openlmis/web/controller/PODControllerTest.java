@@ -89,12 +89,13 @@ public class PODControllerTest {
     OrderPOD createdPOD = new OrderPOD();
     mockStatic(OrderPODDTO.class);
 
-    whenNew(OrderPOD.class).withArguments(orderId, any(String.class), USER_ID).thenReturn(orderPOD);
+
     when(service.getPODByOrderId(orderId)).thenReturn(null);
     when(service.createPOD(orderPOD)).thenReturn(createdPOD);
     Order order = new Order(orderId);
     OrderPODDTO orderPODDTO = mock(OrderPODDTO.class);
     when(orderService.getOrder(orderId)).thenReturn(order);
+    whenNew(OrderPOD.class).withArguments(orderId, order.getOrderNumber(), USER_ID).thenReturn(orderPOD);
     when(OrderPODDTO.getOrderDetailsForPOD(order)).thenReturn(orderPODDTO);
 
     ResponseEntity<OpenLmisResponse> response = controller.createPOD(orderId, request);
