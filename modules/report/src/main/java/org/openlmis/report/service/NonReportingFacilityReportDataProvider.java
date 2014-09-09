@@ -103,14 +103,14 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
     // compose the filter text as would be presented on the pdf reports.
     String header = "";
-    if (program != "" && !program.endsWith("undefined")) {
+    if (!program.equals("0") && !program.isEmpty() && !program.endsWith("undefined")) {
       header += "Program: " + this.reportMapper.getProgram(Integer.parseInt(program)).get(0).getName();
     }
-    if (zone != "" && !zone.endsWith("undefined")) {
+    if (!zone.equals("0") && !zone.isEmpty() && !zone.endsWith("undefined")) {
       header += "\nGeographic Zone: " + this.geographicZoneMapper.getById(Integer.parseInt(zone)).getName();
     }
 
-    if (facilityType != "" && !facilityType.endsWith("undefined")) {
+    if (!facilityType.isEmpty() && !facilityType.equals("0") && !facilityType.endsWith("undefined")) {
       header += "\nFacility Type : " + this.reportMapper.getFacilityType(Integer.parseInt(facilityType)).get(0).getName();
     } else {
       header += "\nFacility Type : All Facility Types";

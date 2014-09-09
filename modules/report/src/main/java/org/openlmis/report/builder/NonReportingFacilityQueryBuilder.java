@@ -61,15 +61,15 @@ public class NonReportingFacilityQueryBuilder {
              WHERE(" (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone +" or gz.parent = " + zone + " )");
          }
 
-         if(facilityType != "" && !facilityType.endsWith( "undefined")){
+         if(!facilityType.isEmpty() && !facilityType.endsWith( "undefined")){
              WHERE("facilities.typeId = cast(" + facilityType+ " as int4)");
          }
 
-         if(program != "" && !program.endsWith("undefined")){
+         if(!program .isEmpty() && !program.endsWith("undefined")){
             WHERE("ps.programId = cast(" + program+ " as int4)");
          }
 
-         if(schedule != "" && !schedule.endsWith("undefined")){
+         if(! schedule.isEmpty()  && !schedule.endsWith("undefined")){
              WHERE("rgps.scheduleId = cast(" + schedule + " as int4)");
          }
      }
