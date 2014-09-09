@@ -88,6 +88,10 @@ public class RequisitionCellFactory {
       case TEXT:
         result.add(textCell(columnValue));
         break;
+      case BOOLEAN:
+        PdfPCell pdfPCell = Boolean.valueOf(columnValue) ? imageCell() : textCell("");
+        result.add(pdfPCell);
+        break;
       case NUMERIC:
         if(!columnValue.isEmpty())
           result.add(numberCell(formatter.format(Double.parseDouble(columnValue.toString())).toString()));
@@ -100,9 +104,7 @@ public class RequisitionCellFactory {
         else
           result.add(numberCell(currency));
           break;
-      case BOOLEAN:
-        PdfPCell pdfPCell = Boolean.valueOf(columnValue) ? imageCell() : textCell("");
-        result.add(pdfPCell);
+
     }
   }
 
