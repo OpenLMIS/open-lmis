@@ -169,9 +169,9 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                                seriesDefaults:{
                                    renderer:$.jqplot.MeterGaugeRenderer,
                                    rendererOptions: {
-                                      // label: 'Order Sub/App',
+                                       label: 'Order Fill Rate '+ $filter('number')($scope.orderFill.fillRate, 0)+'%',
                                       // labelPosition: 'bottom',
-                                      //  labelHeightAdjust: -5,
+                                        labelHeightAdjust: -32,
                                        min: 0,
                                        max: 100,
                                        intervals:[0,50, 80, 100],
