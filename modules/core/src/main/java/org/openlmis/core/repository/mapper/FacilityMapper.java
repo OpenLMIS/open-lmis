@@ -235,7 +235,7 @@ public interface FacilityMapper {
             "ORDER BY facilities.code, facilities.name")
     @Results(value = {
             @Result(property = "geographicZone", column = "geographicZoneId", javaType = Integer.class,
-                    one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapperExtension.getGeographicZoneById_Ext")),
+                    one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getGeographicZoneById_Ext")),
             @Result(property = "facilityType", column = "typeId", javaType = Integer.class, one = @One(select = "getFacilityTypeById")),
             @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
     })
