@@ -151,7 +151,6 @@ public class TemplateServiceTest {
     verify(repository, never()).insertWithParameters(template);
   }
 
-  @Test
   public void shouldThrowErrorIfThereAreExtraParameterProperties() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Error Message");

@@ -13,6 +13,7 @@
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.0" value="title"/>
 	<parameter name="District" class="java.lang.String">
 		<property name="displayName" value="District Name"/>
+		<property name="sql" value="SELECT * FROM geographic_zones where levelid=3"/>
 	</parameter>
 	<parameter name="Program" class="java.lang.String">
 		<property name="displayName" value="Program Name"/>
