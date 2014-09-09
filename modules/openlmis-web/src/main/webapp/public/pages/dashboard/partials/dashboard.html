@@ -69,7 +69,7 @@
                             </label>
                         </div>
 
-                        <div ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:360px;height:300px;" ng-show="showOrderFill"></div>
+                        <div ui-chart="orderFillChart.data" chart-options="orderFillChart.option" style="width:100%;height:300px;" ng-show="showOrderFill"></div>
                     </div>
                 </div>
                 <div class="span6 simple-panel blue">
@@ -84,13 +84,18 @@
                     <div ng-show="productItemFillRates == undefined || productItemFillRates.length == 0">
                         <label class="chart-note">No data to render chart</label>
                     </div>
-                    <table ng-show="showItemFill">
+                    <table ng-show="showItemFill" style="width:100%; margin: 10px">
                         <tr>
-                            <td ng-repeat="itemFillRate in productItemFillRates">
+                            <td style="width: 33%" ng-repeat="itemFillRate in productItemFillRates">
                                     <span class="easychart" style="height: 75px" easypiechart options="itemFillRate.option"  percent="itemFillRate.percent">
                                     <span class="easychart-percent" ng-bind="itemFillRate.percent"></span>
                                     </span>
-                                <div style="text-align: center">{{itemFillRate.name}}</div>
+                                <!--<div style="width: 60%; padding-left: 20px;">{{itemFillRate.name}}</div>-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 33%" ng-repeat="itemFillRate in productItemFillRates">
+                                <div style="width: 60%; padding-left: 20px;">{{itemFillRate.name}}</div>
                             </td>
                         </tr>
                     </table>
