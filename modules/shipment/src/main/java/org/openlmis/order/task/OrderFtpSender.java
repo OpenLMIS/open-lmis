@@ -33,6 +33,7 @@ public class OrderFtpSender {
     CamelContext context = new DefaultCamelContext();
     ProducerTemplate template = context.createProducerTemplate();
     template.sendBodyAndHeader(createFtpUri(supplyingFacility), file, Exchange.FILE_NAME, file.getName());
+
   }
 
   private String createFtpUri(FacilityFtpDetails supplyingFacility) {
