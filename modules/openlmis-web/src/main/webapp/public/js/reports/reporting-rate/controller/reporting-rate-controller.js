@@ -165,8 +165,8 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
         },
         legend: {
             position: 'bottomleft',
-            colors: [ '#FF0000', '#FFFF00', '#5eb95e' ],
-            labels: [ 'Non Reporting', 'Partial Reporting ', 'Fully Reporting']
+            colors: [ '#FF0000', '#FFFF00', '#5eb95e',"#000000" ],
+            labels: [ 'Non Reporting', 'Partial Reporting ', 'Fully Reporting','Not expected to Report']
         }
     });
 
