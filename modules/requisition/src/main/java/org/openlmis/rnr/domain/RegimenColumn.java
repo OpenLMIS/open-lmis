@@ -46,7 +46,9 @@ public class RegimenColumn extends Column {
   public ColumnType getColumnType() {
     if (this.getName().equals("name") || this.getName().equals("code") || this.getName().equals("remarks")) {
       return ColumnType.TEXT;
-    } else {
+    } else if(this.getName().equals("skipped")) {
+      return ColumnType.BOOLEAN;
+    }else {
       return ColumnType.NUMERIC;
     }
   }

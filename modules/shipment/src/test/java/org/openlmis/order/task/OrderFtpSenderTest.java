@@ -48,7 +48,7 @@ public class OrderFtpSenderTest {
 
     orderFtpSender.sendFile(facilityFtpDetails, file);
 
-    verify(producerTemplate).sendBodyAndHeader("ftp://username@serverhost:serverport/localfolderpath?password=password&passiveMode=false", file, Exchange.FILE_NAME, fileName);
+    verify(producerTemplate).sendBodyAndHeader("ftp://username@serverhost:serverport/localfolderpath?password=password&passiveMode=true", file, Exchange.FILE_NAME, fileName);
   }
 
   private FacilityFtpDetails getFacilityFtpDetails() {
