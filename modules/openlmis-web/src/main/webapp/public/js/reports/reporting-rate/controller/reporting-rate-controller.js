@@ -225,10 +225,21 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
                     var coord = $scope.features[c].geometry.coordinates[i];
                     for (var j in coord) {
                         var points = coord[j];
-                        latlngs.push(L.GeoJSON.coordsToLatLng(points));
+                        var latlng = L.GeoJSON.coordsToLatLng(points);
+                       
+                       //this is a hack to make the tz shape files to work
+                       //sadly the shapefiles for tz and zm have some areas that are in europe, 
+                        //which indicates that the quality of the shapes is not good, 
+                        //however the zoom neeeds to show the correct country boundaries. 
+                        if(latlng.lat < 0 && latlng.lng > 0){
+                          latlngs.push(latlng);
+                        }
                     }
                 }
             }
+          
+           thevar = latlngs;
+            theMap = map;
             map.fitBounds(latlngs);
         });
     };
