@@ -45,6 +45,7 @@
 	<parameter name="TOTAL_PRODUCTS_RECEIVED_1" class="java.lang.String"/>
 	<parameter name="TOTAL_PRODUCTS_APPROVED" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES_1" class="java.lang.String"/>
+    <parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -57,6 +58,7 @@
 	<field name="approved" class="java.lang.Integer"/>
 	<field name="item_fill_rate" class="java.lang.Integer"/>
 	<field name="ORDER_FILL_RATE" class="java.lang.Integer"/>
+
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
@@ -228,6 +230,9 @@
 				</subreportParameter>
 				<subreportParameter name="REPORT_TITLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_NAME">
+                    <subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="LOGO">
 					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>

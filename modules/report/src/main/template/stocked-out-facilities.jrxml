@@ -22,6 +22,7 @@
 	<parameter name="TOTAL_FACILITIES" class="java.lang.String"/>
 	<parameter name="TOTAL_STOCKEDOUT" class="java.lang.String"/>
 	<parameter name="PERCENTAGE_STOCKEDOUT" class="java.lang.String"/>
+    <parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<parameter name="SHOW_SUMMARY" class="java.lang.String">
 		<defaultValueExpression><![CDATA["N"]]></defaultValueExpression>
 	</parameter>
@@ -221,6 +222,9 @@ WHERE
 				</subreportParameter>
 				<subreportParameter name="REPORT_TITLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_NAME">
+                    <subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="LOGO">
 					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>

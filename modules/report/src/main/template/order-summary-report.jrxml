@@ -15,6 +15,7 @@
 	<parameter name="REPORT_VERSION" class="java.lang.String"/>
 	<parameter name="REPORT_ID" class="java.lang.String"/>
 	<parameter name="LOGO" class="java.io.InputStream"/>
+    <parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
 	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
@@ -718,6 +719,9 @@
 				</subreportParameter>
 				<subreportParameter name="REPORT_SUB_TITLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_NAME">
+                    <subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="REPORT_NAME">
 					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
