@@ -45,6 +45,7 @@
 	<parameter name="TOTAL_PRODUCTS_RECEIVED_1" class="java.lang.String"/>
 	<parameter name="TOTAL_PRODUCTS_APPROVED" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES_1" class="java.lang.String"/>
+    <parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -150,6 +151,9 @@
 				</subreportParameter>
 				<subreportParameter name="LOGO">
 					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_NAME">
+                    <subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="REPORT_SUB_TITLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>

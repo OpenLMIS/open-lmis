@@ -151,6 +151,9 @@ public class ReportManager {
         params.put(Constants.OPERATOR_LOGO, this.getClass().getClassLoader().getResourceAsStream(configuration != null ? configuration.getValue() : "logo.png"));
         params.put(Constants.REPORT_FILTER_PARAM_VALUES, report.getReportDataProvider().getFilterSummary(filterCriteria));
 
+        configuration =  configurationService.getByKey(Constants.OPERATOR_NAME);
+        params.put(Constants.OPERATOR_NAME, configuration.getValue());
+
         // populate all the rest of the report parameters as overriden by the report data provider
         HashMap<String, String> values = report.getReportDataProvider().getAdditionalReportData(filterCriteria);
         if(values != null){
