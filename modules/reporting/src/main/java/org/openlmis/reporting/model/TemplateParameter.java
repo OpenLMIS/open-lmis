@@ -51,6 +51,8 @@ public class TemplateParameter extends BaseModel {
 
   private String dataType;
 
+  private String selectSql;
+
   private String description;
 
   public Object getParsedValueOf(String value) throws ParseException {
