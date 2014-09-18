@@ -228,7 +228,11 @@ public class RnrLineItem extends LineItem {
     for (Integer previousNC : previousNormalizedConsumptions) {
       sumOfNCs += previousNC;
     }
-    BigDecimal countOfNCs = new BigDecimal(previousNormalizedConsumptions.size() + 1);
+    int months = reportingDays / 30;
+    if(months == 0){
+      months = 1;
+    }
+    BigDecimal countOfNCs = new BigDecimal((previousNormalizedConsumptions.size() + 1) * months);
 
     amc = new BigDecimal(sumOfNCs).divide(countOfNCs, MATH_CONTEXT).setScale(0, HALF_UP).intValue();
   }
