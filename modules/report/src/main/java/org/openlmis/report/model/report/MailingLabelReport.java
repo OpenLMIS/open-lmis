@@ -20,7 +20,7 @@ import javax.persistence.Column;
 /**
  * A report data used to fill mailing labels report.
  * Mailing Labels Report is used to generates mailing labels displaying the contact person and address for each facility in the distribution system.
- * Logistics managers may use these labels when sending reports or correspon­dence to facilities in the distribution system
+ * Logistics managers may use these labels when sending reports or corresponds to facilities in the distribution system
  */
 
 @Data
