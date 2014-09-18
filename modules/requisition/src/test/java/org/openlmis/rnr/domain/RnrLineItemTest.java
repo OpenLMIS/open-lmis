@@ -290,7 +290,7 @@ public class RnrLineItemTest {
 
     spyLineItem.calculateForFullSupply(template, AUTHORIZED, lossesAndAdjustmentsList, numberOfMonths);
 
-    verify(spyLineItem).calculateAmc();
+    verify(spyLineItem).calculateAmc(numberOfMonths);
     verify(spyLineItem).calculateMaxStockQuantity(template);
     verify(spyLineItem).calculateOrderQuantity();
   }
@@ -712,7 +712,7 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(10);
     lineItem.setPreviousNormalizedConsumptions(asList(10, 20));
 
-    lineItem.calculateAmc();
+    lineItem.calculateAmc(1);
     assertThat(lineItem.getAmc(), is(13));
   }
 

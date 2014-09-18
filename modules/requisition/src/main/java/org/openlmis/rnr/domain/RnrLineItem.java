@@ -211,7 +211,7 @@ public class RnrLineItem extends LineItem {
     calculatePeriodNormalizedConsumption(numberOfMonths);
 
     if (rnrStatus == AUTHORIZED) {
-      calculateAmc();
+      calculateAmc(numberOfMonths);
       calculateMaxStockQuantity(template);
       calculateOrderQuantity();
     }
@@ -223,16 +223,13 @@ public class RnrLineItem extends LineItem {
     periodNormalizedConsumption = normalizedConsumption * numberOfMonths;
   }
 
-  public void calculateAmc() {
+  public void calculateAmc(Integer numberOfMonths) {
     Integer sumOfNCs = normalizedConsumption;
     for (Integer previousNC : previousNormalizedConsumptions) {
       sumOfNCs += previousNC;
     }
-    int months = reportingDays / 30;
-    if(months == 0){
-      months = 1;
-    }
-    BigDecimal countOfNCs = new BigDecimal((previousNormalizedConsumptions.size() + 1) * months);
+
+    BigDecimal countOfNCs = new BigDecimal((previousNormalizedConsumptions.size() + 1) * numberOfMonths);
 
     amc = new BigDecimal(sumOfNCs).divide(countOfNCs, MATH_CONTEXT).setScale(0, HALF_UP).intValue();
   }
