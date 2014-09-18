@@ -39,7 +39,7 @@ public class PrintRnrLineItem {
       rnrLineItem.calculateQuantityDispensed();
     calculateNormalizedConsumption(template, status);
     calculatePeriodNormalizedConsumption(numberOfMonths);
-    calculateAmc();
+    calculateAmc(numberOfMonths);
     calculateMaxStockQuantity(template);
     calculateLossesAndAdjustments(lossesAndAdjustmentsTypes);
     rnrLineItem.calculateOrderQuantity();
@@ -74,9 +74,9 @@ public class PrintRnrLineItem {
     }
   }
 
-  private void calculateAmc() {
+  private void calculateAmc(Integer numberOfMonths) {
     try {
-      rnrLineItem.calculateAmc();
+      rnrLineItem.calculateAmc(numberOfMonths);
     } catch (NullPointerException e) {
       rnrLineItem.setAmc(null);
     }
