@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
-<!-- 2014-09-18T14:18:49 -->
+<!-- 2014-09-19T12:21:03 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Order Fill Rate By Facility" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="b406d512-c5b3-455b-a0fc-03bb05345fc5">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Open-LMIS - Localhost"/>
 	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
@@ -14,13 +14,15 @@
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.0" value="title"/>
 	<parameter name="District" class="java.lang.String">
 		<property name="displayName" value="District Name"/>
-		<property name="selectSql" value="SELECT name FROM geographic_zones where levelid=3"/>
+		<property name="selectSql" value="SELECT gz.name FROM geographic_zones gz JOIN geographic_levels gl ON (gz.levelid=gl.id) WHERE gl.code=&apos;district&apos; ORDER BY gz.name"/>
 	</parameter>
 	<parameter name="Program" class="java.lang.String">
 		<property name="displayName" value="Program Name"/>
+		<property name="selectSql" value="SELECT p.name FROM programs p ORDER BY p.name"/>
 	</parameter>
-	<parameter name="Month" class="java.util.Date">
-		<property name="displayName" value="End Month"/>
+	<parameter name="Month" class="java.lang.String">
+		<property name="displayName" value="Period"/>
+		<property name="selectSql" value="SELECT pp.name FROM processing_periods pp ORDER BY pp.endDate DESC"/>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT geographic_zones.name AS DistrictName
@@ -72,7 +74,7 @@ LEFT JOIN shipment_line_items
 WHERE 
   geographic_zones.name=$P{District}  
   AND programs.name=$P{Program}
-  AND CAST($P{Month} AS date) BETWEEN processing_periods.startdate AND processing_periods.enddate 
+  AND processing_periods.name=$P{Month} 
   AND geographic_zones.levelid=3
 ORDER BY facilities.name
   , requisition_line_items.productcategorydisplayorder
@@ -101,7 +103,7 @@ ORDER BY facilities.name
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch">
+		<band height="84" splitType="Stretch">
 			<staticText>
 				<reportElement x="180" y="0" width="400" height="40" uuid="11f3a3e7-8367-499f-b5d5-83231cc79499"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -122,7 +124,7 @@ ORDER BY facilities.name
 			<textField>
 				<reportElement x="180" y="40" width="400" height="39" uuid="1c2f7b0c-34ac-44d1-92d8-e47de375a8c6"/>
 				<textElement textAlignment="Center" verticalAlignment="Top"/>
-				<textFieldExpression><![CDATA["For " + $F{programname} + " program, for the period " + $F{periodname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["For " + $P{Program} + " program, for the period " + $P{Month}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
