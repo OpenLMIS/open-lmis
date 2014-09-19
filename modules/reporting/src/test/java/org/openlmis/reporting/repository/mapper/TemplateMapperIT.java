@@ -37,6 +37,7 @@ import java.util.List;
 import static com.google.common.collect.Iterables.any;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
@@ -76,6 +77,14 @@ public class TemplateMapperIT {
 
     assertThat(returnedTemplate.getName(), is(template.getName()));
     assertThat(returnedTemplate.getData(), is(template.getData()));
+  }
+
+  @Test
+  public void shouldHaveEmptyParameterListOnGetLWById() {
+    Template t = createReportTemplate("test", "test");
+    Template tRet = mapper.getLWById(t.getId());
+
+    assertThat(tRet.getParameters(), is(notNullValue()));
   }
 
   @Test

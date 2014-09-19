@@ -10,6 +10,7 @@
 
 package org.openlmis.reporting.repository;
 
+import org.apache.log4j.Logger;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.model.TemplateParameter;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 /**
  * Repository class for template related database operations.
  */
@@ -28,7 +31,9 @@ import java.util.List;
 public class TemplateRepository {
 
   @Autowired
-  TemplateMapper mapper;
+  private TemplateMapper mapper;
+
+  private static final Logger logger = Logger.getLogger(TemplateRepository.class);
 
   public void insertWithParameters(Template template) {
     try {
@@ -55,6 +60,19 @@ public class TemplateRepository {
   }
 
   public Template getLWById(Long id) {
-    return mapper.getLWById(id);
+    Template t = mapper.getLWById(id);
+    if(t == null) return null;
+
+    // run select sql and populate returned values for every template parameter
+    for(TemplateParameter tp : t.getParameters()) {
+      if(isBlank(tp.getSelectSql()) == false) {
+        logger.debug("Template Parameter " + t.getName() + " has select sql: " + tp.getSelectSql());
+        List<String> selectValues = mapper.runSelectSql(tp.getSelectSql());
+        logger.debug("Template Parameter " + t.getName() + " select values: " + selectValues);
+        tp.setSelectValues(selectValues);
+      }
+    }
+
+    return t;
   }
 }
