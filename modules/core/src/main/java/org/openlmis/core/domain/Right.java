@@ -67,6 +67,7 @@ public enum Right {
   MANAGE_EQUIPMENT_INVENTORY ("Admin - Manage Equipment Inventory", ADMIN, "Permission to manage equipment inventory.",61),
   SERVICE_VENDOR_RIGHT("Admin - Service Vendor Rights", ADMIN, "Permission to use system as equipment Service Vendor", 62),
   MANAGE_DONOR("Admin - Manage Donors", ADMIN, "Permission to manage donors", 63),
+  MANAGE_MAOS_SETTINGS("Admin - Manage Maos Settings", ADMIN, "Permission to manage maos settings", 64),
 
 
   VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", REPORT, "Permission to view Facility List Report",32),
@@ -89,7 +90,9 @@ public enum Right {
   VIEW_DASHBOARD_POC("Report - View Dashboard POC", REPORT, "View Dashboard POC",51),
   VIEW_USER_SUMMARY_REPORT("Report - View User Summary Report", REPORT, "Permission to view user summary Report",52),
   VIEW_LAB_EQUIPMENT_LIST_REPORT("Report - View lab equipment list Report", REPORT, "Permission to view lab equipment list Report", 53),
-  VIEW_LAB_EQUIPMENTS_BY_FUNDING_SOURCE("Report - View Lab equipments by funding source report", REPORT, "Permission to view lab equipment list by funding source Report", 54);
+  VIEW_LAB_EQUIPMENTS_BY_FUNDING_SOURCE("Report - View Lab equipments by funding source report", REPORT, "Permission to view lab equipment list by funding source Report", 54),
+  VIEW_ORDER_FILL_RATE_SUMMARY_REPORT("Report - View Order Fill Rate Report Summary", REPORT, "Permission to view order fill rate summary Report",55);
+
 
 
     @Getter
