@@ -13,11 +13,14 @@ package org.openlmis.order.helper;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.rnr.domain.LineItemComparator;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -35,12 +38,21 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
  */
 
 @Component
-@NoArgsConstructor
 public class OrderCsvHelper {
 
-  // apply the windows line break
-  // TODO: take this to the configuration
+
   String lineSeparator = "\r\n";
+
+  Boolean apply_quotes_setting = false;
+
+  Boolean initated = false;
+
+  @Autowired
+  ConfigurationSettingService configSettingService;
+
+  public OrderCsvHelper(){
+
+  }
 
   public void writeCsvFile(Order order, OrderFileTemplateDTO orderFileTemplateDTO, Writer writer) throws IOException {
     List<OrderFileColumn> orderFileColumns = orderFileTemplateDTO.getOrderFileColumns();
@@ -86,6 +98,11 @@ public class OrderCsvHelper {
   }
 
   private void writeCsvLineItem(Order order, RnrLineItem rnrLineItem, List<OrderFileColumn> orderFileColumns, Writer writer, int counter) throws IOException {
+    if(!initated){
+      lineSeparator = StringEscapeUtils.unescapeJava(configSettingService.getConfigurationStringValue("CSV_LINE_SEPARATOR"));
+      apply_quotes_setting = configSettingService.getBoolValue("CSV_APPLY_QUOTES");
+      initated = true;
+    }
     JXPathContext orderContext = JXPathContext.newContext(order);
     JXPathContext lineItemContext = JXPathContext.newContext(rnrLineItem);
     for (OrderFileColumn orderFileColumn : orderFileColumns) {
@@ -107,7 +124,11 @@ public class OrderCsvHelper {
       if (columnValue instanceof Date) {
         columnValue = forPattern(orderFileColumn.getFormat()).print(((Date) columnValue).getTime());
       }
-      writer.write("\"" + (columnValue).toString() + "\"");
+      if(apply_quotes_setting) {
+        writer.write("\"" + (columnValue).toString() + "\"");
+      }else{
+        writer.write((columnValue).toString());
+      }
       if (orderFileColumns.indexOf(orderFileColumn) < orderFileColumns.size() - 1)
         writer.write(",");
     }
