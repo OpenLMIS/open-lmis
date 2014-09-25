@@ -67,7 +67,7 @@ public enum Right {
   MANAGE_EQUIPMENT_INVENTORY ("Admin - Manage Equipment Inventory", ADMIN, "Permission to manage equipment inventory.",61),
   SERVICE_VENDOR_RIGHT("Admin - Service Vendor Rights", ADMIN, "Permission to use system as equipment Service Vendor", 62),
   MANAGE_DONOR("Admin - Manage Donors", ADMIN, "Permission to manage donors", 63),
-
+  MANAGE_MAOS_SETTINGS("Admin - Manage Maos Settings", ADMIN, "Permission to manage maos settings", 64),
 
 
   VIEW_FACILITY_REPORT("Report - Facility Listing (V1)", REPORT, "Permission to view Facility List Report",32),
