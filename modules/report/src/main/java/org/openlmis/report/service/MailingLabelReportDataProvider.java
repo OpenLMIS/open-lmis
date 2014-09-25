@@ -15,6 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.report.mapper.MailingLabelReportMapper;
 import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
 import org.openlmis.report.model.params.MailingLabelReportParam;
@@ -45,6 +46,8 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
   @Autowired
   private GeographicZoneMapper geographicZoneMapper;
 
+  @Autowired
+  private ProgramService programService;
 
   private MailingLabelReportParam mailingLabelReportParam = null;
 
@@ -97,16 +100,36 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
       mailingLabelReportParam.setStatus((StringHelper.isBlank(filterCriteria, "status") ? null : Boolean.parseBoolean(filterCriteria.get("status")[0])));
       mailingLabelReportParam.setOrderBy(StringHelper.isBlank(filterCriteria, "sortBy") ? "" : filterCriteria.get("sortBy")[0]);
       mailingLabelReportParam.setSortOrder(StringHelper.isBlank(filterCriteria, "order") ? "" : filterCriteria.get("order")[0]);
+      mailingLabelReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program") ? 0 :Integer.parseInt(filterCriteria.get("program")[0]));
 
-      String header = "Geographic Zone: National";
-      if(mailingLabelReportParam.getZone() != 0){
-        header = "Geographic Zone: " + geographicZoneMapper.getWithParentById(mailingLabelReportParam.getZone()).getName();
-      }
-      if(mailingLabelReportParam.getFacilityType() != 0){
-        header = header + "\nFacility Type: " + facilityTypeMapper.getById(mailingLabelReportParam.getFacilityType()).getName();
-      }
-      mailingLabelReportParam.setHeader(header);
+      StringBuffer header = new StringBuffer();
+
+        if(mailingLabelReportParam.getProgramId() == 0)
+            header.append("Program: All");
+        else
+            header.append("Program: ").append(programService.getById(new Long(mailingLabelReportParam.getProgramId())).getName());
+
+        if(mailingLabelReportParam.getZone() != 0)
+            header.append("\nGeographic Zone: ").append(geographicZoneMapper.getWithParentById(mailingLabelReportParam.getZone()).getName());
+        else
+            header.append("\nGeographic Zone: All");
+
+        if(mailingLabelReportParam.getFacilityType() != 0)
+            header.append("\nFacility Type: " + facilityTypeMapper.getById(mailingLabelReportParam.getFacilityType()).getName());
+        else
+            header.append("\nFacility Type: All");
+
+        if(mailingLabelReportParam.getStatus() == null)
+            header.append("\nStatus : All");
+        else if(mailingLabelReportParam.getStatus() == true)
+            header.append("\nStatus : Active");
+        else
+            header.append("\nStatus : Inactive");
+
+        mailingLabelReportParam.setHeader(header.toString());
+
     }
+
     return mailingLabelReportParam;
   }
 
