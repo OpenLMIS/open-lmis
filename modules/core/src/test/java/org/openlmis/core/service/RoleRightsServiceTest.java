@@ -116,7 +116,8 @@ public class RoleRightsServiceTest {
             MANAGE_EQUIPMENT_SETTINGS,
             MANAGE_EQUIPMENT_INVENTORY,
             SERVICE_VENDOR_RIGHT,
-            MANAGE_DONOR
+            MANAGE_DONOR,
+            VIEW_ORDER_FILL_RATE_SUMMARY_REPORT
         );
 
     assertThat(allRights, is(alphabeticalRights));
