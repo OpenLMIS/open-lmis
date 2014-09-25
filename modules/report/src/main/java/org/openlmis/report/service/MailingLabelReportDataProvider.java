@@ -97,6 +97,7 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
       mailingLabelReportParam.setStatus((StringHelper.isBlank(filterCriteria, "status") ? null : Boolean.parseBoolean(filterCriteria.get("status")[0])));
       mailingLabelReportParam.setOrderBy(StringHelper.isBlank(filterCriteria, "sortBy") ? "" : filterCriteria.get("sortBy")[0]);
       mailingLabelReportParam.setSortOrder(StringHelper.isBlank(filterCriteria, "order") ? "" : filterCriteria.get("order")[0]);
+      mailingLabelReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program") ? 0 :Integer.parseInt(filterCriteria.get("program")[0]));
 
       String header = "Geographic Zone: National";
       if(mailingLabelReportParam.getZone() != 0){

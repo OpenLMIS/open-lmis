@@ -31,6 +31,7 @@ public class MailingLabelReportParam
   private String orderBy;
   private String sortOrder;
   private String header;
+  private int programId;
 
   @Override
   public String toString() {
