@@ -19,13 +19,15 @@ describe("requisitionService", function () {
     {"id": 2, "name": "product", "position": 2, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Product", "formula": "", "indicator": "R", "used": true, "visible": true, "mandatory": true, "description": "Primary name of the product", "formulaValidationRequired": true},
     {"id": 3, "name": "dispensingUnit", "position": 3, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Unit/Unit of Issue", "formula": "", "indicator": "U", "used": true, "visible": true, "mandatory": false, "description": "Dispensing unit for this product", "formulaValidationRequired": true},
     {"id": 4, "name": "beginningBalance", "position": 4, "source": {"description": "User Input", "name": "USER_INPUT", "code": "U"}, "sourceConfigurable": false, "label": "Beginning Balance", "formula": "", "indicator": "A", "used": true, "visible": true, "mandatory": false, "description": "Stock in hand of previous period.This is quantified in dispensing units", "formulaValidationRequired": true},
-    {"id": 7, "name": "lossesAndAdjustments", "position": 7, "source": {"description": "User Input", "name": "USER_INPUT", "code": "U"}, "sourceConfigurable": false, "label": "Total Losses / Adjustments", "formula": "D1 + D2+D3...DN", "indicator": "D", "used": true, "visible": false, "mandatory": false, "description": "All kind of looses/adjustments made at the facility", "formulaValidationRequired": true}
+    {"id": 7, "name": "lossesAndAdjustments", "position": 7, "source": {"description": "User Input", "name": "USER_INPUT", "code": "U"}, "sourceConfigurable": false, "label": "Total Losses / Adjustments", "formula": "D1 + D2+D3...DN", "indicator": "D", "used": true, "visible": false, "mandatory": false, "description": "All kind of looses/adjustments made at the facility", "formulaValidationRequired": true},
+    {"id": 8, "name": "quantityRequested", "label":"Requested Quantity", "visible": false, "position":8, "source": {"description": "User Input", "name": "USER_INPUT", "code": "U"}, "sourceConfigurable": false, "formula": "","indicator": "Q", "used": true, "mandatory": false, "description": "Requested Quantity", "formulaValidationRequired": true, "configuredOption": null},
+    {"id": 9, "name": "reasonForRequestedQuantity", "label":"Requested Quantity Explanation", "visible": false, "position": 19, "source": {"description": "User Input", "name": "USER_INPUT", "code": "U"}, "sourceConfigurable": false, "formula": "", "indicator": "T","used": true, "mandatory": false, "description": "Reason for Requested Quantity", "formulaValidationRequired":true, "configuredOption": null}
   ];
-  var visibleFullScrollableColumns = [columns[3], columns[4]];
-  var visibleFullFixedColumns = [columns[0], columns[1], columns[2]];
+  var visibleFullScrollableColumns = [ columns[3], columns[4] ];
+  var visibleFullFixedColumns = [ columns[0], columns[1], columns[2] ];
 
-  var visibleNonFullScrollableColumns = [columns[3]];
-  var visibleNonFullFixedColumns = [columns[1], columns[2]];
+  var visibleNonFullScrollableColumns = [ columns[3], columns[6], columns[7] ];
+  var visibleNonFullFixedColumns = [ columns[1], columns[2] ];
 
   beforeEach(inject(function ($location, $routeParams, $rootScope, _requisitionService_, _messageService_) {
     location = $location;
@@ -128,5 +130,10 @@ describe("requisitionService", function () {
 
     expect(mappedColumns.fullSupply.scrollable.length).toEqual(1);
   });
+
+  it('should error if requested quantity column not found', function () {
+    expect(function() { requisitionService.getMappedVisibleColumns([], [], []) } )
+      .toThrow(new Error("Requested Quantity column(s) not found"));
+  })
 
 });
