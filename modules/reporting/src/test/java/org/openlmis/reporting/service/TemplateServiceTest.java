@@ -164,16 +164,14 @@ public class TemplateServiceTest {
     when(file.getInputStream()).thenReturn(inputStream);
 
     JRParameter param1 = mock(JRParameter.class);
-    JRParameter param2 = mock(JRParameter.class);
     JRPropertiesMap propertiesMap = mock(JRPropertiesMap.class);
 
     when(messageService.message("report.template.extra.properties", param1.getName())).thenReturn("Error Message");
-    when(report.getParameters()).thenReturn(new JRParameter[]{param1, param2});
+    when(report.getParameters()).thenReturn(new JRParameter[]{param1});
     when(JasperCompileManager.compileReport(inputStream)).thenReturn(report);
     when(param1.getPropertiesMap()).thenReturn(propertiesMap);
-    String[] propertyNames = {"name1", "name2"};
+    String[] propertyNames = {"name1", "name2", "name3"};
     when(propertiesMap.getPropertyNames()).thenReturn(propertyNames);
-    when(propertiesMap.getProperty("displayName")).thenReturn("Param Display Name");
     Template template = new Template();
 
     service.validateFileAndInsertTemplate(template, file);

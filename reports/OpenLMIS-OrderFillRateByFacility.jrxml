@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
+<!-- 2014-09-19T12:21:03 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Order Fill Rate By Facility" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="b406d512-c5b3-455b-a0fc-03bb05345fc5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Open-LMIS - Localhost"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.background" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.border" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.0" value="title"/>
+	<parameter name="District" class="java.lang.String">
+		<property name="displayName" value="District Name"/>
+		<property name="selectSql" value="SELECT gz.name FROM geographic_zones gz JOIN geographic_levels gl ON (gz.levelid=gl.id) WHERE gl.code=&apos;district&apos; ORDER BY gz.name"/>
+	</parameter>
+	<parameter name="Program" class="java.lang.String">
+		<property name="displayName" value="Program Name"/>
+		<property name="selectSql" value="SELECT p.name FROM programs p ORDER BY p.name"/>
+	</parameter>
+	<parameter name="Month" class="java.lang.String">
+		<property name="displayName" value="Period"/>
+		<property name="selectSql" value="SELECT pp.name FROM processing_periods pp ORDER BY pp.endDate DESC"/>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT geographic_zones.name AS DistrictName
+  , facilities.code AS FacilityCode
+  , facilities.name AS FacilityName
+  , programs.name AS ProgramName
+  , processing_periods.name AS PeriodName
+  , requisitions.id AS RequisitionID
+  , requisition_line_items.productcategory
+  , requisition_line_items.productcategorydisplayorder
+  , requisition_line_items.ProductCode
+  , products.primaryname AS ProductPrimaryName
+  , products.fullname AS ProductFullName
+  , program_products.displayorder AS ProductDispOrder
+  , requisition_line_items.calculatedorderquantity
+  , requisition_line_items.quantityrequested
+  , requisition_line_items.quantityapproved
+  , shipment_line_items.quantityshipped
+  , CASE
+      WHEN quantityRequested is null THEN calculatedOrderQuantity
+      ELSE quantityRequested
+    END AS CalcReqQuantity
+  , quantityShipped / CalcReqQuantity AS PercentOfCalcReqQuantity
+  , quantityShipped / quantityApproved AS PercentOfApprovedQuantity
+FROM 
+(
+  requisition_line_items
+  JOIN
+  (
+    SELECT id,
+      CASE 
+        WHEN quantityRequested is null THEN calculatedOrderQuantity
+        ELSE quantityRequested
+      END AS CalcReqQuantity
+    FROM requisition_line_items
+  ) AS rli_inner ON requisition_line_items.id = rli_inner.id
+  JOIN requisitions ON requisition_line_items.rnrid = requisitions.id
+  JOIN products ON requisition_line_items.productcode = products.code
+  JOIN facilities ON requisitions.facilityid = facilities.id
+  JOIN programs ON requisitions.programid = programs.id
+  JOIN geographic_zones ON facilities.geographiczoneid = geographic_zones.id
+  JOIN processing_periods ON requisitions.periodid = processing_periods.id
+  JOIN program_products ON (products.id = program_products.productid 
+    AND programs.id = program_products.programid)
+)
+LEFT JOIN shipment_line_items
+  ON (requisition_line_items.productcode = shipment_line_items.productcode AND
+    requisition_line_items.rnrid = shipment_line_items.id )
+WHERE 
+  geographic_zones.name=$P{District}  
+  AND programs.name=$P{Program}
+  AND processing_periods.name=$P{Month} 
+  AND geographic_zones.levelid=3
+ORDER BY facilities.name
+  , requisition_line_items.productcategorydisplayorder
+  , program_products.displayorder;]]>
+	</queryString>
+	<field name="districtname" class="java.lang.String"/>
+	<field name="facilitycode" class="java.lang.String"/>
+	<field name="facilityname" class="java.lang.String"/>
+	<field name="programname" class="java.lang.String"/>
+	<field name="periodname" class="java.lang.String"/>
+	<field name="requisitionid" class="java.lang.Integer"/>
+	<field name="productcategory" class="java.lang.String"/>
+	<field name="productcategorydisplayorder" class="java.lang.Integer"/>
+	<field name="productcode" class="java.lang.String"/>
+	<field name="productprimaryname" class="java.lang.String"/>
+	<field name="productfullname" class="java.lang.String"/>
+	<field name="productdisporder" class="java.lang.Integer"/>
+	<field name="calculatedorderquantity" class="java.lang.Integer"/>
+	<field name="quantityrequested" class="java.lang.Integer"/>
+	<field name="quantityapproved" class="java.lang.Integer"/>
+	<field name="quantityshipped" class="java.lang.Integer"/>
+	<field name="calcreqquantity" class="java.lang.Integer"/>
+	<field name="percentofcalcreqquantity" class="java.lang.Integer"/>
+	<field name="percentofapprovedquantity" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="84" splitType="Stretch">
+			<staticText>
+				<reportElement x="180" y="0" width="400" height="40" uuid="11f3a3e7-8367-499f-b5d5-83231cc79499"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Order Fill Rate By Facility]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="650" y="0" width="100" height="20" uuid="bb0866e5-88b1-4b47-bc0e-29c11d11fa61"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a z">
+				<reportElement x="650" y="20" width="100" height="20" uuid="8ad6326f-b839-44be-835c-136c4a51a73e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="40" width="400" height="39" uuid="1c2f7b0c-34ac-44d1-92d8-e47de375a8c6"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA["For " + $P{Program} + " program, for the period " + $P{Month}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="48" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="50" height="40" uuid="bb590145-39a1-4b9a-af2b-9a0d0c2096fb"/>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Facility Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="0" width="100" height="40" uuid="f254df81-c3f3-48b0-b037-5f00deb01a8b"/>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Facility Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="0" width="100" height="40" uuid="601994b5-858f-4861-95a2-d388b9ee1e67"/>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Product Category]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="100" height="40" uuid="23cf2da9-3a38-41f7-bf35-8c6e8c2c67c4"/>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Product Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="0" width="60" height="40" uuid="f6a0a416-8655-44c6-970c-ab694ec0bc36"/>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Calculated/
+Requested
+Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="510" y="0" width="50" height="40" uuid="d6bd8aa5-0ce2-499c-bb4a-78f3753c9d43"/>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Approved
+Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="573" y="0" width="47" height="40" uuid="10f6ca8f-bcc9-4107-99e6-ec5df3b506f2"/>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Shipped
+Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="630" y="0" width="60" height="40" uuid="9b9823c2-15f0-46f9-8e29-7226cd6402f3"/>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Percent of
+Calculated/
+Requested]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="700" y="0" width="50" height="40" uuid="1881fb70-6398-4e2c-b797-82eeee94f3cf"/>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Percent
+Of
+Approved]]></text>
+			</staticText>
+			<line direction="BottomUp">
+				<reportElement x="0" y="40" width="751" height="1" uuid="832be4af-ff60-490d-81d2-6de12a9b3eb3"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="50" height="20" uuid="8f306284-1aab-4a58-b6d0-ab98325b43e5"/>
+				<textFieldExpression><![CDATA[$F{facilitycode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="0" width="100" height="20" uuid="06535d5c-6d6f-4979-8b3a-970a94fc2214"/>
+				<textFieldExpression><![CDATA[$F{facilityname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="0" width="100" height="20" uuid="10be6a65-35d6-4bb4-9434-bf50f11e6343"/>
+				<textFieldExpression><![CDATA[$F{productcategory}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="0" width="100" height="20" uuid="9fa5e79b-2456-48a3-b32f-78741c2b44d4"/>
+				<textFieldExpression><![CDATA[$F{productprimaryname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="0" width="60" height="20" uuid="d94a3c02-b390-4074-8aaa-1fef496d1528"/>
+				<textFieldExpression><![CDATA[$F{calcreqquantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="510" y="0" width="50" height="20" uuid="d7a64e7a-fa02-4661-af5e-248ea97508eb"/>
+				<textFieldExpression><![CDATA[$F{quantityapproved}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="573" y="0" width="47" height="20" uuid="3f2cf8f5-f195-44a6-8d77-43dea2365af5"/>
+				<textFieldExpression><![CDATA[$F{quantityshipped}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="630" y="0" width="60" height="20" uuid="1f659d5c-7ee2-4cda-8427-42b5a4ffaa13"/>
+				<textFieldExpression><![CDATA[$F{percentofcalcreqquantity}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="700" y="0" width="50" height="20" uuid="aa05cacf-ae67-4afd-a189-24693252e8a6"/>
+				<textFieldExpression><![CDATA[$F{percentofapprovedquantity}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

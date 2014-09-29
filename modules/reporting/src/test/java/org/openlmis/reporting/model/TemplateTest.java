@@ -10,34 +10,23 @@
 
 package org.openlmis.reporting.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-/**
- * Template represents an entity that records a byte array of data, type of template, list of parameters and comma
- * separated parameters that are used to configure jasper report views.
- */
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
+public class TemplateTest {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class Template extends BaseModel {
-
-  private String name;
-
-  private byte[] data;
-
-  private List<TemplateParameter> parameters = new ArrayList<>(0);
-
-  private String type;
-
-  private String description;
-
+  @Test
+  public void shouldHaveEmptyParameterList() {
+    Template t = new Template();
+    assertThat(t.getParameters(), is(notNullValue()));
+  }
 }

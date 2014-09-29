@@ -26,9 +26,13 @@ import org.openlmis.reporting.repository.mapper.TemplateMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
@@ -63,5 +67,28 @@ public class TemplateRepositoryTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("unexpected.exception");
     templateRepository.insertWithParameters(template);
+  }
+
+  @Test
+  public void shouldRunTemplateParameterSelectSqlAndSetValues() {
+    final Template t = new Template();
+    TemplateParameter tpWithSelectSql = new TemplateParameter();
+    final String selectSql = "select name from something";
+    tpWithSelectSql.setSelectSql(selectSql);
+    TemplateParameter tpNoSelectSql = new TemplateParameter();
+    t.setParameters(asList(tpWithSelectSql, tpNoSelectSql));
+
+    final long id = 1L;
+    final List<String> selectValues = asList("first", "second");
+    when(templateMapper.getLWById(id)).thenReturn(t);
+    when(templateMapper.runSelectSql(selectSql)).thenReturn(selectValues);
+
+    Template tRet = templateRepository.getLWById(id);
+
+    assertThat(tRet, is(notNullValue()));
+    verify(templateMapper, atLeastOnce()).runSelectSql(selectSql);
+    assertThat(tRet.getParameters().size(), is(2));
+    assertThat(tpWithSelectSql.getSelectValues(), is(selectValues));
+    assertThat(tpNoSelectSql.getSelectValues().size(), is(0));
   }
 }

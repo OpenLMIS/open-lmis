@@ -55,6 +55,16 @@
     <appender-ref ref="consoleAppender"/>
   </logger>
 
+  <logger name="org.openlmis.reporting.service">
+      <level value="DEBUG"/>
+      <appender-ref ref="consoleAppender"/>
+  </logger>
+
+  <logger name="org.openlmis.reporting.repository">
+    <level value="DEBUG"/>
+    <appender-ref ref="consoleAppender"/>
+  </logger>
+
   <logger name="org.openlmis.web">
     <level value="INFO"/>
     <appender-ref ref="logFileAppender"/>
