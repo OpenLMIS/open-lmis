@@ -113,11 +113,12 @@ public class RoleRightsServiceTest {
             VIEW_USER_SUMMARY_REPORT,
             VIEW_LAB_EQUIPMENT_LIST_REPORT,
             VIEW_LAB_EQUIPMENTS_BY_FUNDING_SOURCE,
+            VIEW_ORDER_FILL_RATE_SUMMARY_REPORT,
             MANAGE_EQUIPMENT_SETTINGS,
             MANAGE_EQUIPMENT_INVENTORY,
             SERVICE_VENDOR_RIGHT,
             MANAGE_DONOR,
-            VIEW_ORDER_FILL_RATE_SUMMARY_REPORT
+            MANAGE_MAOS_SETTINGS
         );
 
     assertThat(allRights, is(alphabeticalRights));
