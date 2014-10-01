@@ -82,7 +82,7 @@ public class NonReportingFacilityQueryBuilder {
       params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
 
       String period           = ((String[])params.get("period"))[0];
-      String reportingGroup   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
+      String zone   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
       String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
       String program          = ((String[])params.get("program"))[0];
       String schedule         = ((String[])params.get("schedule"))[0];
@@ -95,7 +95,7 @@ public class NonReportingFacilityQueryBuilder {
         INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
         INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
         WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = " + userId+ " and program_id = " + program + ")");
-        writePredicates(program, period, reportingGroup, facilityType, schedule);
+        writePredicates(program, period, zone, facilityType, schedule);
         return SQL();
     }
 
@@ -121,8 +121,6 @@ public class NonReportingFacilityQueryBuilder {
          writePredicates(program, period, reportingGroup, facilityType, schedule);
          return SQL();
      }
-
-
 
     public static String getSummaryQuery(Map params){
       Long userId = (Long) params.get("userId");

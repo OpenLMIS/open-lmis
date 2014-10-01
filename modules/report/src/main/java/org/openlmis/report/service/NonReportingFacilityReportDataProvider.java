@@ -54,20 +54,29 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
     List<NameCount> summary = reportMapper.getReportSummary(filterCriteria, this.getUserId());
 
     // TODO: move this to other section of the application
-    NameCount percentage = new NameCount();
-    percentage.setName("Percentage not-reporting");
+
 
     String totalFacilities = reportMapper.getTotalFacilities(filterCriteria, this.getUserId()).get(0).toString();
     String nonReporting = reportMapper.getNonReportingTotalFacilities(filterCriteria, this.getUserId()).get(0).toString();
 
     // Assume by default that the 100% of facilities didn't report
-    Long percent = Long.parseLong("100");
+    Long percentNonReporting = Long.parseLong("100");
+    Long percentReporting = Long.parseLong("100");
     if (totalFacilities != "0") {
-      percent = Math.round((Double.parseDouble(nonReporting) / Double.parseDouble(totalFacilities)) * 100);
+        percentNonReporting = Math.round((Double.parseDouble(nonReporting) / Double.parseDouble(totalFacilities)) * 100);
+        percentReporting = 100 - percentNonReporting;
     }
 
-    percentage.setCount(percent.toString() + "%");
-    summary.add(0, percentage);
+      NameCount percentageNonReporting = new NameCount();
+      NameCount percentageReporting = new NameCount();
+
+      percentageNonReporting.setName("Percentage not-reporting");
+      percentageNonReporting.setCount(percentNonReporting.toString() + "%");
+      summary.add(0, percentageNonReporting);
+
+      percentageReporting.setName("Percentage reporting");
+      percentageReporting.setCount(percentReporting.toString() + "%");
+      summary.add(1, percentageReporting);
 
     report.summary = summary;
 
