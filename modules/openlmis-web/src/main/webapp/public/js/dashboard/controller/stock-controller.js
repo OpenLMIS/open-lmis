@@ -197,7 +197,7 @@ function StockController($scope, $routeParams,$filter,dashboardFiltersHistorySer
                 var statusMap = _.findWhere($scope.stockStatusMapping,{key:status});
                 var stockStatusDesc = !isUndefined(statusMap) ? statusMap.name : key;
                 groupedByStocking.push({stocking: status, name: stockStatusDesc, facilities: null});
-            })
+            });
             groupedByProductAndStocking.push({productId: productGroup.productId, product: productGroup.product, stocks:groupedByStocking });
         });
         return groupedByProductAndStocking;
