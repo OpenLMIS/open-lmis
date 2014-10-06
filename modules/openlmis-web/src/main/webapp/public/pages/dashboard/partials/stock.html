@@ -29,7 +29,134 @@
     </tr>
 </table>
 <div style="margin-top: 5px;" ng-repeat="productGroup in stockByProductAndStock">
-    <div style="margin-top: 5px;">
+    <accordion>
+        <accordion-group class="green-haze" is-open="productGroup.openPanel">
+            <accordion-heading >
+                <div class="accordion-title">
+                    <div class="caption">
+                        <i class="flaticon-pie2"></i> <span openlmis-message="title.product.stock.efficiency|productGroup.product"></span>
+                    </div>
+                    <div class="tools">
+                        <i  ng-class="{'icon-minus-sign': productGroup.openPanel, 'icon-plus-sign': !productGroup.openPanel}"></i>
+                    </div>
+                </div>
+            </accordion-heading>
+
+            <div class="row-fluid">
+
+                <div ng-repeat="stock in productGroup.stocks">
+
+                    <div class="span6" style="margin: 2px;" ng-if="$index == 0 || $index == 1">
+                        <accordion class="stock-efficiency">
+                            <accordion-group class="{{(stock.name == 'Stocked out')?'red-sunglo':(stock.name=='Understocked')?'green-haze':(stock.name=='Overstocked')?'blue-light':'yellow-gold'}}" is-open="districtReporting.openPanel">
+                                <accordion-heading>
+                                    <div class="accordion-title">
+                                        <div class="caption">
+                                            <i class="flaticon-pie2"></i> <span openlmis-message="'{{stock.name}}'"></span><span> ({{ stock.facilities.length||0}})</span>
+                                        </div>
+                                        <div class="tools">
+                                            <i  ng-class="{'icon-minus-sign': districtReporting.openPanel, 'icon-plus-sign': !districtReporting.openPanel}"></i>
+                                        </div>
+                                    </div>
+                                </accordion-heading>
+
+                                <table class="table-bordered table table-striped" ng-show="stock.facilities == undefined || stock.facilities == 0">
+                                   <tbody>
+                                    <tr>
+                                        <td>No facilities {{stock.name}}</td>
+                                    </tr>
+                                   </tbody>
+
+                                </table>
+                                <div ng-show="stock.facilities !== undefined && stock.facilities.length > 0">
+
+                                    <table class="table-bordered table table-striped pull-right" ng-table="tbleOption.tableParams" >
+                                        <thead>
+                                        <tr class="gradient-header">
+                                            <th>Facility</th>
+                                            <th>AMC</th>
+                                            <th>SOH</th>
+                                            <th>MOS</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <tr ng-repeat="row in stock.facilities">
+                                            <td sortable="facility" class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}" >{{row.facility}}</td>
+                                            <td  class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.amc | number}}</td>
+                                            <td class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.soh | number}}</td>
+                                            <td class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.mos}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row-fluid">
+
+                <div ng-repeat="stock in productGroup.stocks">
+
+                    <div class="span6" style="margin: 2px;" ng-if="$index == 2 || $index == 3">
+                        <accordion>
+                            <accordion-group class="{{(stock.name == 'Stocked out')?'red-sunglo':(stock.name=='Understocked')?'green-haze':(stock.name=='Overstocked')?'blue-light':'yellow-gold'}}" is-open="districtReporting.openPanel">
+                                <accordion-heading>
+                                    <div class="accordion-title">
+                                        <div class="caption">
+                                            <i class="flaticon-pie2"></i> <span openlmis-message="'{{stock.name}}'"></span><span> ({{ stock.facilities.length||0}})</span>
+                                        </div>
+                                        <div class="tools">
+                                            <i  ng-class="{'icon-minus-sign': districtReporting.openPanel, 'icon-plus-sign': !districtReporting.openPanel}"></i>
+                                        </div>
+                                    </div>
+                                </accordion-heading>
+                                <table class="table-bordered table table-striped" ng-show="stock.facilities == undefined || stock.facilities == 0">
+                                    <tbody>
+                                    <tr>
+                                        <td>No facilities {{stock.name}}</td>
+                                    </tr>
+                                    </tbody>
+
+                                </table>
+                                <div ng-show="stock.facilities !== undefined && stock.facilities.length > 0">
+
+                                    <table class="table-bordered table table-striped pull-right" ng-table="tbleOption.tableParams" >
+                                        <thead>
+                                        <tr class="gradient-header">
+                                            <th>Facility</th>
+                                            <th>AMC</th>
+                                            <th>SOH</th>
+                                            <th>MOS</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <tr ng-repeat="row in stock.facilities">
+                                            <td sortable="facility" class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}" >{{row.facility}}</td>
+                                            <td  class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.amc | number}}</td>
+                                            <td class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.soh | number}}</td>
+                                            <td class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.mos}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </accordion-group>
+    </accordion>
+
+   <!-- <div style="margin-top: 5px;">
          <h2 style="font-weight: bold"> <span openlmis-message="title.product.stock.efficiency|productGroup.product"></span></h2>
         <div class="row-fluid sortable ui-sortable" ng-repeat="stock in productGroup.stocks">
             <div class="span12">
@@ -60,6 +187,6 @@
             </div>
 
         </div>
-    </div>
+    </div>-->
 
 </div>

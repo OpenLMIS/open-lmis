@@ -175,21 +175,29 @@ function StockController($scope, $routeParams,$filter,dashboardFiltersHistorySer
             return data;
         }
         var groupedByProductAndStocking = [];
-        var groupedByProduct = _.chain(data).groupBy('productId').map(function(value, key) { return {productId: key, product: _.first(value).product, stocks: value };}).value();
+        var groupedByProduct = _.chain(data).groupBy('productId').map(function(value, key) { return {productId: key, product: _.first(value).product, stocks: value, openPanel:true };}).value();
         $scope.stockTableParams = {};
         angular.forEach(groupedByProduct, function(productGroup){
+
             var groupedByStocking = _.chain(productGroup.stocks).
                                       groupBy('stocking').
                                       map(function(value, key) {
                                         var statusMap = _.findWhere($scope.stockStatusMapping,{key:key});
-                                        var tableParam = _.findWhere($scope.tableParams,{key:key});
-                                        var tableParamValue = !isUndefined(tableParam) ? tableParam.value : null;
                                         var stockStatusDesc = !isUndefined(statusMap) ? statusMap.name : key;
 
-                                        return {stocking: key, name: stockStatusDesc, facilities: value, tableParams : tableParamValue };
+                                        return {stocking: key, name: stockStatusDesc, facilities: value };
 
                                       }).value();
 
+            var statuses = _.reject($scope.stockStatusMapping,function(status){return status.value === -1;});
+            var existingStat = _.pluck(groupedByStocking,'stocking');
+            var statusMapping = _.pluck(statuses,'key');
+            var nonexistingStat = _.difference(statusMapping,existingStat);
+            angular.forEach(nonexistingStat, function(status){
+                var statusMap = _.findWhere($scope.stockStatusMapping,{key:status});
+                var stockStatusDesc = !isUndefined(statusMap) ? statusMap.name : key;
+                groupedByStocking.push({stocking: status, name: stockStatusDesc, facilities: null});
+            })
             groupedByProductAndStocking.push({productId: productGroup.productId, product: productGroup.product, stocks:groupedByStocking });
         });
         return groupedByProductAndStocking;
