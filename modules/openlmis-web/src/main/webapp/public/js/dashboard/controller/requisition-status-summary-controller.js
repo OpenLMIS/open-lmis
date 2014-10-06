@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,programsList,FlatGeographicZoneList,UserGeographicZoneTree,dashboardMenuService,$location ,dashboardFiltersHistoryService, formInputValue, GetPeriod, userPreferredFilterValues, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
+function RequisitionStatusSummaryController($scope, messageService, $filter, RnRStatusSummary, programsList, FlatGeographicZoneList, UserGeographicZoneTree, dashboardMenuService, $location, dashboardFiltersHistoryService, formInputValue, GetPeriod, userPreferredFilterValues, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
 
     $scope.filterObject = {};
 
@@ -29,8 +29,8 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
     $scope.programs = programsList;
     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
 
-    $scope.loadGeoZones = function(){
-        UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
+    $scope.loadGeoZones = function () {
+        UserGeographicZoneTree.get({programId: $scope.formFilter.programId}, function (data) {
             $scope.zones = data.zone;
         });
     };
@@ -63,23 +63,23 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
 
     };
 
-    $scope.processZoneFilter = function(){
+    $scope.processZoneFilter = function () {
         $scope.filterObject.zoneId = $scope.formFilter.zoneId;
         $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
 
         $scope.loadRnRStatus();
     };
 
-    $scope.loadRnRStatus= function(){
+    $scope.loadRnRStatus = function () {
         if (isUndefined($scope.filterObject.periodId) || isUndefined($scope.filterObject.programId)) {
             $scope.resetRnRStatusData();
             return;
         }
-         //$scope.filterObject.requisitionGroupId= $scope.formFilter.rgroupId;
+        //$scope.filterObject.requisitionGroupId= $scope.formFilter.rgroupId;
 
-        RnRStatusSummary.get({zoneId:$scope.filterObject.zoneId,
-                periodId:$scope.filterObject.periodId,
-                programId:$scope.filterObject.programId
+        RnRStatusSummary.get({zoneId: $scope.filterObject.zoneId,
+                periodId: $scope.filterObject.periodId,
+                programId: $scope.filterObject.programId
             },
             function (data) {
                 $scope.total = 0;
@@ -90,44 +90,45 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
                 if (!isUndefined(data.rnrStatus)) {
 
                     $scope.dataRows = data.rnrStatus;
-                    if(isUndefined($scope.dataRows)){
+                    if (isUndefined($scope.dataRows)) {
                         $scope.resetRnRStatusData();
                         return;
                     }
-                    var statusData = _.pluck($scope.dataRows,'status');
-                    var totalData = _.pluck($scope.dataRows,'totalStatus');
-
-                    var color=["#F83103","#37AC02","#02A8FA","#FAA702"];
+                    var statusData = _.pluck($scope.dataRows, 'status');
+                    var totalData = _.pluck($scope.dataRows, 'totalStatus');
+                    var color = {AUTHORIZED: '#FF0000', IN_APPROVAL: '#FFFF00', APPROVED: '#0000FF', RELEASED: '#008000'};
                     for (var i = 0; i < $scope.dataRows.length; i++) {
                         $scope.total += $scope.dataRows[i].totalStatus;
+                        var labelKey = 'label.rnr.status.summary.' + statusData[i];
+                        var label = messageService.get(labelKey);
                         $scope.RnRStatusPieChartData[i] = {
 
-                            label: statusData[i],
+                            label: label,
                             data: totalData[i],
-                            color:color[i]
+                            color: color[statusData[i]]
 
                         };
 
                     }
                     $scope.rnrStatusPieChartOptionFunction();
                     $scope.rnrStatusRenderedData = {
-                        status : _.pairs(_.object(_.range(data.rnrStatus.length), _.pluck(data.rnrStatus,'status')))
+                        status: _.pairs(_.object(_.range(data.rnrStatus.length), _.pluck(data.rnrStatus, 'status')))
 
                     };
 
-                    bindChartEvent("#rnr-status-report","plotclick",rnrStatusChartClickHandler);
-                    bindChartEvent("#rnr-status-report",flotChartHoverCursorHandler);
+                    bindChartEvent("#rnr-status-report", "plotclick", rnrStatusChartClickHandler);
+                    bindChartEvent("#rnr-status-report", flotChartHoverCursorHandler);
 
                 } else {
                     $scope.resetRnRStatusReportData();
                 }
                 $scope.paramsChanged($scope.tableParams);
             });
-       // }
+        // }
 
     };
 
-    $scope.resetRnRStatusData = function(){
+    $scope.resetRnRStatusData = function () {
         $scope.rnrStatusRenderedData = null;
         $scope.rnRStatusPieChartOption = null;
         $scope.total = 0;
@@ -136,17 +137,17 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
         $scope.datarows = null;
     };
 
-    var getFilterValues = function(){
+    var getFilterValues = function () {
 
-        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
-        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId,$scope.programs);
+        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
+        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
 
         $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
         $scope.filterObject = $scope.formFilter;
 
     };
 
-    $scope.rnrStatusPieChartOptionFunction =function(){
+    $scope.rnrStatusPieChartOptionFunction = function () {
 
         $scope.rnRStatusPieChartOption = {
             series: {
@@ -168,8 +169,8 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
                 show: true,
                 container: $("#rnrStatusReportLegend"),
                 noColumns: 0,
-                labelBoxBorderColor: "none",
-                width:20
+                labelBoxBorderColor: "none"
+                //width: 20
 
             },
             grid: {
@@ -178,7 +179,7 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
                 borderWidth: 1,
                 borderColor: "#d6d6d6",
                 backgroundColor: {
-                    colors: ["#FFF", "#CCC","#FFF","#CCC"]
+                    colors: ["#FFF", "#CCC", "#FFF", "#CCC"]
                 }
             },
             tooltip: true,
@@ -193,32 +194,31 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
         };
 
 
-
     };
 
 
-    function flotChartHoverCursorHandler(event,pos,item){
+    function flotChartHoverCursorHandler(event, pos, item) {
 
         if (item && !isUndefined(item.dataIndex)) {
-           $(event.target).css('cursor','pointer');
+            $(event.target).css('cursor', 'pointer');
         } else {
-            $(event.target).css('cursor','auto');
+            $(event.target).css('cursor', 'auto');
         }
     }
 
-    function bindChartEvent(elementSelector, eventType, callback){
+    function bindChartEvent(elementSelector, eventType, callback) {
         $(elementSelector).bind(eventType, callback);
     }
 
-    function rnrStatusChartClickHandler(event, pos, item){
-        if(item){
+    function rnrStatusChartClickHandler(event, pos, item) {
+        if (item) {
             var status;
-            if(!isUndefined($scope.rnrStatusRenderedData.status)){
+            if (!isUndefined($scope.rnrStatusRenderedData.status)) {
                 status = $scope.rnrStatusRenderedData.status[item.seriesIndex][1];
             }
-            var rnrDetailPath = '/rnr-status-report/program/'+$scope.filterObject.programId+'/period/'+$scope.filterObject.periodId;
-            dashboardMenuService.addTab('menu.header.dashboard.rnr.status.detail','/public/pages/dashboard/index.html#'+rnrDetailPath,'RNR-STATUS-DETAIL',true, 8);
-            $location.path(rnrDetailPath).search("status="+status+"&zoneId="+$scope.filterObject.zoneId);
+            var rnrDetailPath = '/rnr-status-report/program/' + $scope.filterObject.programId + '/period/' + $scope.filterObject.periodId;
+            dashboardMenuService.addTab('menu.header.dashboard.rnr.status.detail', '/public/pages/dashboard/index.html#' + rnrDetailPath, 'RNR-STATUS-DETAIL', true, 8);
+            $location.path(rnrDetailPath).search("status=" + status + "&zoneId=" + $scope.filterObject.zoneId);
 
             $scope.$apply();
         }
@@ -227,12 +227,9 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
 
     $scope.resetRnRStatusReportData = function () {
         $scope.RnRStatusPieChartData = null;
-        $scope.rnRStatusPieChartOption =null;
+        $scope.rnRStatusPieChartOption = null;
         $scope.dataRows = null;
     };
-
-
-
 
 
     $scope.loadFacilitiesByRequisition = function () {
@@ -296,7 +293,7 @@ function RequisitionStatusSummaryController($scope, $filter,RnRStatusSummary,pro
     $scope.$on('$routeChangeStart', function () {
         var data = {};
         $scope.filterObject = $scope.formFilter;
-        angular.extend(data,$scope.filterObject);
+        angular.extend(data, $scope.filterObject);
         dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
     });
 
