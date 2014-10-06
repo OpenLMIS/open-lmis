@@ -11,7 +11,6 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.DistrictFinancialSummaryMapper;
@@ -19,10 +18,12 @@ import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.params.DistrictSummaryReportParam;
 import org.openlmis.report.util.SelectedFilterHelper;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -41,34 +42,33 @@ public class DistrictFinancialSummaryDataProvider extends ReportDataProvider {
     this.configurationService = configurationService;
   }
 
-  @Override
-  protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-    RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-    return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds);
-  }
+    @Override
+    protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
+        return getMainReportData(filterCriteria, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    }
 
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
+    return reportMapper.getReportPagedData(getReportFilterData(filterCriteria), SortCriteria, rowBounds,this.getUserId());
   }
 
   public ReportParameter getReportFilterData(Map<String, String[]> filterCriteria) {
       DistrictSummaryReportParam districtSummaryReportParam = null;
 
     if (filterCriteria != null) {
-
-            districtSummaryReportParam = new DistrictSummaryReportParam();
-            districtSummaryReportParam.setZoneId(StringUtils.isBlank(filterCriteria.get("zone")[0]) ? 0 : Integer.parseInt(filterCriteria.get("zone")[0])); //defaults to 0
-            districtSummaryReportParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0 : Integer.parseInt(filterCriteria.get("program")[0]));
-            districtSummaryReportParam.setPeriodId(StringUtils.isBlank(filterCriteria.get("period")[0]) ? 0 : Integer.parseInt(filterCriteria.get("period")[0]));
+        districtSummaryReportParam = new DistrictSummaryReportParam();
+        districtSummaryReportParam.setScheduleId(StringHelper.isBlank(filterCriteria, ("schedule")) ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0]));
+        districtSummaryReportParam.setPeriodId(Long.parseLong(filterCriteria.get("period")[0]));
+        districtSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria, ("program")) ? 0 : Integer.parseInt(filterCriteria.get("program")[0]));
+        districtSummaryReportParam.setZoneId(StringHelper.isBlank(filterCriteria, ("zone")) ? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));
     }
-    return districtSummaryReportParam;
+        return districtSummaryReportParam;
   }
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    return filterHelper.getProgramPeriodGeoZone(params);//getReportFilterData(params).toString();
+    return filterHelper.getProgramPeriodGeoZone(params);
   }
 
 

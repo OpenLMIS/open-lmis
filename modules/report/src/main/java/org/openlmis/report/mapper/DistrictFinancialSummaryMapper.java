@@ -16,11 +16,8 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.DistrictFinancialSummaryQueryBuilder;
-import org.openlmis.report.builder.RegimenSummaryQueryBuilder;
-import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.report.DistrictSummaryReport;
-import org.openlmis.report.model.report.RegimenSummaryReport;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -36,8 +33,9 @@ public interface DistrictFinancialSummaryMapper {
 
     @SelectProvider(type=DistrictFinancialSummaryQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<DistrictSummaryReport> getReport(@Param("filterCriteria") ReportParameter filterCriteria,
+    public List<DistrictSummaryReport> getReportPagedData(@Param("filterCriteria") ReportParameter filterCriteria,
                                                 @Param("SortCriteria") Map<String, String[]> SortCriteria,
-                                                @Param("RowBounds") RowBounds rowBounds);
+                                                @Param("RowBounds") RowBounds rowBounds,
+                                                @Param("userId") Long userId);
 
 }

@@ -4,6 +4,7 @@ function DistrictFinancialSummaryControllers( $scope, $window, DistrictFinancial
     $scope.OnFilterChanged = function(){
         // clear old data if there was any
         $scope.data = $scope.datarows = [];
+        $scope.filter.max = 10000;
         DistrictFinancialSummaryReport.get($scope.filter, function (data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
                 $scope.data = data.pages.rows;

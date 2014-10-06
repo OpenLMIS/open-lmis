@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 
 import java.text.DateFormat;
@@ -32,7 +31,7 @@ public class DistrictSummaryReportParam
   private String program;
   private int scheduleId;
   private String schedule;
-  private int periodId;
+  private Long periodId;
   private String period;
   private Integer year;
   private int zoneId;
