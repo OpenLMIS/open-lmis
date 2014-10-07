@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="district-order-compilation" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="113"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -25,7 +25,6 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="rgroup" class="java.lang.String"/>
 	<field name="facility" class="java.lang.String"/>
 	<field name="facilitytype" class="java.lang.String"/>
 	<field name="facilitycode" class="java.lang.String"/>
@@ -38,7 +37,7 @@
 		<variableExpression><![CDATA[$F{totalcost}]]></variableExpression>
 	</variable>
 	<group name="GroupByDistrict" isStartNewPage="true">
-		<groupExpression><![CDATA[$F{rgroup}]]></groupExpression>
+		<groupExpression><![CDATA[$F{region}]]></groupExpression>
 		<groupHeader>
 			<band height="40">
 				<staticText>
@@ -48,7 +47,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="0" y="20" width="43" height="20" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b"/>
+					<reportElement mode="Transparent" x="0" y="20" width="57" height="20" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="2"/>
@@ -56,14 +55,14 @@
 					<text><![CDATA[Line#]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="158" y="0" width="142" height="20" uuid="987dfd20-2622-443c-9f95-62413810cbef"/>
+					<reportElement x="57" y="0" width="101" height="20" uuid="987dfd20-2622-443c-9f95-62413810cbef"/>
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{rgroup}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{region}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement mode="Transparent" x="43" y="20" width="115" height="20" forecolor="#000000" backcolor="#333333" uuid="b6ab5830-0e99-41b6-b051-2f2345d099e6"/>
+					<reportElement mode="Transparent" x="57" y="20" width="101" height="20" forecolor="#000000" backcolor="#333333" uuid="b6ab5830-0e99-41b6-b051-2f2345d099e6"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -84,12 +83,12 @@
 					<text><![CDATA[Facility Type]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="0" y="0" width="158" height="20" forecolor="#000000" backcolor="#333333" uuid="d43bd3da-867e-43e2-b9a2-d20eb3e76574"/>
+					<reportElement mode="Transparent" x="0" y="0" width="57" height="20" forecolor="#000000" backcolor="#333333" uuid="d43bd3da-867e-43e2-b9a2-d20eb3e76574"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="2"/>
 					</textElement>
-					<text><![CDATA[Requisiition Group]]></text>
+					<text><![CDATA[District]]></text>
 				</staticText>
 				<staticText>
 					<reportElement mode="Transparent" x="480" y="20" width="151" height="20" forecolor="#000000" backcolor="#333333" uuid="8636e0ab-c763-49ff-8f9a-2b69bae7f528"/>
@@ -110,7 +109,7 @@
 				<staticText>
 					<reportElement x="380" y="20" width="100" height="20" uuid="f366d7f4-b71b-4b14-9de7-7a37ccebd29c"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
-					<text><![CDATA[Region]]></text>
+					<text><![CDATA[District]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -125,7 +124,7 @@
 					<textFieldExpression><![CDATA[$V{totalapprovedcost_1}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement mode="Transparent" x="330" y="0" width="150" height="20" forecolor="#000000" backcolor="#333333" uuid="6e8f1df6-fbf3-4488-b4a5-249a8b802c58"/>
+					<reportElement mode="Transparent" x="380" y="0" width="100" height="20" forecolor="#000000" backcolor="#333333" uuid="6e8f1df6-fbf3-4488-b4a5-249a8b802c58"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="15"/>
@@ -194,7 +193,7 @@
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="0" width="43" height="20" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
+				<reportElement x="0" y="0" width="57" height="20" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -209,7 +208,7 @@
 				</graphicElement>
 			</line>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="43" y="0" width="115" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5342fab3-58d3-42c9-b212-7e577dc21e8c"/>
+				<reportElement mode="Transparent" x="57" y="0" width="101" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5342fab3-58d3-42c9-b212-7e577dc21e8c"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -225,7 +224,7 @@
 				<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement x="270" y="0" width="107" height="20" uuid="6d514553-cf8e-43ed-ac69-9489ead644bc"/>
+				<reportElement x="270" y="0" width="110" height="20" uuid="6d514553-cf8e-43ed-ac69-9489ead644bc"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{facilitytype}]]></textFieldExpression>
 			</textField>
@@ -243,6 +242,8 @@
 	</detail>
 	<summary>
 		<band height="180">
+			<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"
+]]></printWhenExpression>
 			<staticText>
 				<reportElement mode="Transparent" x="158" y="30" width="443" height="20" isPrintInFirstWholeBand="true" forecolor="#000000" backcolor="#333333" uuid="2d33a97b-e7bf-437b-b173-eb155d4b5154"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
