@@ -21,20 +21,18 @@ public class DistrictFinancialSummaryQueryBuilder {
     public static String getQuery(Map params) {
 
         DistrictSummaryReportParam filter = (DistrictSummaryReportParam) params.get("filterCriteria");
-        Long userId = (Long)params.get("userId");
+        Long userId = (Long) params.get("userId");
 
         String sql = "";
         sql = "  WITH temp as (select facilitycode,facility,facilitytype,region,\n" +
-                "  sum(fullsupplyitemssubmittedcost) fullsupplyitemssubmittedcost,\n" +
-                "  sum(nonfullsupplyitemssubmittedcost) nonfullsupplyitemssubmittedcost\n" +
-                "  from vw_district_financial_summary " +
-                writePredicates(filter,userId) +
-                "    Group by region,facilitycode,facility,facilitytype order by region)    \n" +
-                "    select t.facilitycode,t.facility,t.facilitytype ,\n" +
-                "    (t.fullsupplyitemssubmittedcost+t.nonfullsupplyitemssubmittedcost) totalcost,t.region                             \n" +
-                "   from temp t INNER JOIN (select region from temp GROUP BY region order by region) temp2 ON t.region= temp2.region";
-
-
+                "  coalesce (sum(fullsupplyitemssubmittedcost)+sum(nonfullsupplyitemssubmittedcost),0) totalCost  \n" +
+                "  from vw_district_financial_summary \n" +
+                writePredicates(filter, userId) +
+                "  Group by region,facilitycode,facility,facilitytype order by region)   \n" +
+                "  select t.facilitycode,t.facility,t.facilitytype ,totalcost ,t.region                            \n" +
+                "  from temp t INNER JOIN (select region from temp GROUP BY region order by region) temp2 ON \n" +
+                "  t.region= temp2.region\n" +
+                "  where totalcost > 0 ";
         return sql;
     }
 
@@ -44,13 +42,12 @@ public class DistrictFinancialSummaryQueryBuilder {
         if (filter != null) {
 
             predicate = "where periodId =  " + filter.getPeriodId() + " and ";
-            predicate = predicate + " facilityId in (select facility_id from vw_user_facilities where user_id = "+userId+ " and program_id = " + filter.getProgramId() + ")";
+            predicate = predicate + " facility_Id in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = " + filter.getProgramId() + ")";
             predicate = predicate + " and status in ('IN_APPROVAL','APPROVED','RELEASED') ";
 
             if (filter.getZoneId() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " ( district_zone_id = " + filter.getZoneId() + " or parent = " + filter.getZoneId() + " or region_id = " + filter.getZoneId() + " or district_id = " + filter.getZoneId() + ") ";
-                //" zone_id = #{filterCriteria.zoneId}";
             }
             if (filter.getScheduleId() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
