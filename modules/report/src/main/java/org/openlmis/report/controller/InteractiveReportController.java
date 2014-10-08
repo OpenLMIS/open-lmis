@@ -16,10 +16,7 @@ import org.openlmis.report.ReportManager;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.report.*;
 import org.openlmis.report.response.OpenLmisResponse;
-import org.openlmis.report.service.LabEquipmentStatusReportDataProvider;
-import org.openlmis.report.service.LabEquipmentsByDonorReportDataProvider;
-import org.openlmis.report.service.PushedProductReportDataProvider;
-import org.openlmis.report.service.UserSummaryReportProvider;
+import org.openlmis.report.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,9 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.Response;
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -421,5 +416,19 @@ public class InteractiveReportController extends BaseController {
                 provider.getMainReportData(request.getParameterMap(), request.getParameterMap(),page, max);
 
         return new Pages(page, max, pushedProductList);
+    }
+    @RequestMapping(value = "/reportdata/orderFillRateReportSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_FILL_RATE_SUMMARY_REPORT')")
+    public Pages getOrderFillRateReportSummaryData(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                     HttpServletRequest request) {
+
+        Report report = reportManager.getReportByKey("order_fill_rate_summary");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        OrderFillRateReportSummaryDataProvider provider = (OrderFillRateReportSummaryDataProvider) report.getReportDataProvider();
+        List<OrderFillRateSummaryReport> orderFillRateReportList = (List<OrderFillRateSummaryReport>)
+                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(),page, max);
+
+        return new Pages(page, max, orderFillRateReportList);
     }
 }

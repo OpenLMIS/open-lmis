@@ -249,6 +249,15 @@
                     <property name="title" value="Pushed Product List by Facility Report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="order_fill_rate_summary"/>
+                    <property name="template" value="order_fill_rate.jasper"/>
+                    <property name="reportDataProvider" ref="orderFillRateReportSummaryDataProvider"/>
+                    <property name="id" value="RP-Order-Fill-Rate-Summary"/>
+                    <property name="name" value="Order Fill Rate Summary"/>
+                    <property name="title" value="Order fill rate Summary Report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>

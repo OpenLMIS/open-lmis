@@ -18,6 +18,7 @@ import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.report.model.dto.*;
+import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.util.InteractiveReportPeriodFilterParser;
@@ -373,6 +374,18 @@ public class ReportLookupController extends BaseController {
         List<EquipmentType> equipmentTypeList =  reportLookupService.getEquipmentTypes();
 
         return OpenLmisResponse.response("equipmentTypes", equipmentTypeList);
+    }
+
+    @RequestMapping(value = "/OrderFillRateSummary/program/{programId}/period/{periodId}/schedule/{scheduleId}/facilityTypeId/{facilityTypeId}/zone/{zoneId}/status/{status}/orderFillRateSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getOrderFillRateSummaryData(@PathVariable("programId") Long programId,
+                                                                        @PathVariable("periodId") Long periodId,
+                                                                        @PathVariable("scheduleId") Long scheduleId,
+                                                                        @PathVariable("facilityTypeId") Long facilityTypeId,
+                                                                        @PathVariable("zoneId") Long zoneId,
+                                                                        @PathVariable("status") String status,
+                                                                        HttpServletRequest request) {
+        List<OrderFillRateSummaryReport> orderFillRateReportSummaryList = reportLookupService.getOrderFillRateSummary(programId, periodId, scheduleId, facilityTypeId, loggedInUserId(request), zoneId, status);
+        return OpenLmisResponse.response("orderFillRateSummary", orderFillRateReportSummaryList);
     }
 
 }
