@@ -75,8 +75,8 @@
                           <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
                               <a href="/public/pages/reports/facility-list/index.html">Facility List</a>
                           </li>
-                          <li ng-show="hasPermission('VIEW_REPORTING_RATE_REPORT')">
-                              <a href="/public/pages/reports/facility-stockout/index.html">Facility List (V2)</a>
+                          <li ng-show="hasPermission('VIEW_MAILING_LABEL_REPORT')">
+                              <a href="/public/pages/reports/mailing-labels/index.html">Facility List (V2)</a>
                           </li>
 
 
@@ -134,6 +134,10 @@
                   <li ng-show="hasPermission('VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT')">
                     <a href="/public/pages/reports/district-financial-summary/index.html">District Order Compilation</a>
                   </li>
+
+                    <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_SUMMARY_REPORT')">
+                        <a href="/public/pages/reports/order-fill-rate-summary/index.html">Order Fill Rate Report Summary</a>
+                    </li>
 
                   <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_REPORT')">
                     <a href="/public/pages/reports/order-fill-rate/index.html">Order Fill Rate Report by Facility</a>

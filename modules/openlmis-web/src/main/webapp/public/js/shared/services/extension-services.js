@@ -632,10 +632,18 @@ services.factory('GetUserUnassignedSupervisoryNode',function ($resource){
     return $resource('/reports/supervisory-node/user-unassigned-node.json', {}, {});
 });
 
+
 services.factory('GetProductCategoryProductByProgramTree',function ($resource){
     return $resource('/reports/productProgramCategoryTree/:programId', {}, {});
 });
 
 services.factory('GetYearSchedulePeriodTree',function ($resource){
     return $resource('/reports/yearSchedulePeriod', {}, {});
+
+services.factory('OrderFillRateSummaryReport', function ($resource) {
+    return $resource('/reports/reportdata/orderFillRateReportSummary.json', {}, {});
+});
+
+services.factory('GetOrderFillRateSummary', function($resource){
+    return $resource('/reports/OrderFillRateSummary/program/:programId/period/:periodId/schedule/:scheduleId/facilityTypeId/:facilityTypeId/zone/:zoneId/status/:status/orderFillRateSummary.json',{},{});
 });
