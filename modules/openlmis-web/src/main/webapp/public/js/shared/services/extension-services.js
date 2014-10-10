@@ -639,6 +639,7 @@ services.factory('GetProductCategoryProductByProgramTree',function ($resource){
 
 services.factory('GetYearSchedulePeriodTree',function ($resource){
     return $resource('/reports/yearSchedulePeriod', {}, {});
+});
 
 services.factory('OrderFillRateSummaryReport', function ($resource) {
     return $resource('/reports/reportdata/orderFillRateReportSummary.json', {}, {});
