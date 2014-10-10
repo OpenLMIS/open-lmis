@@ -178,7 +178,7 @@
 
 <script type="text/ng-template" id="filter-equipment-type">
     <div>
-        <label class="labels">Equipment <span ng-show="requiredFilters.equipmentType" class="label-required">*</span></label><div>
+        <label class="labels">Equipment Type <span ng-show="requiredFilters.equipmentType" class="label-required">*</span></label><div>
         <select class="input-large" ng-model="filter.equipmentType" ng-change="filterChanged();">
             <option ng-repeat="equipment in equipmentTypes" value="{{ equipment.id }}" ng-selected="filter.equipmentTypes == equipment.id">{{equipment.name}}</option>
         </select>
@@ -196,3 +196,47 @@
     </div>
     </div>
 </script>
+
+<script type="text/ng-template" id="filter-program-product-period">
+    <div class="row">
+        <div class="span3">
+            <label class="labels">Program <span ng-show="requiredFilters.program" class="label-required">*</span></label>
+            <div>
+                <select class="input-large" ng-model="filter.program" ng-change="filterChanged()">
+                    <option ng-repeat="program in programs" value="{{ program.id }}" ng-selected="program.id == filter.program">{{program.name}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="span3">
+            <label class="labels">Product <span ng-show="requiredFilters.product" class="label-required">*</span></label>
+            <div>
+                <select class="input-large" ng-model="filter.product" ng-change="filterChanged();">
+
+                    <option ng-selected="filter.period === 0" ng-value="0">--Select Period --</option>
+                    <option ng-selected="filter.period === -1" ng-value="-1">--Select Period --</option>
+
+                    <optgroup ng-repeat="category in products"  label="{{category.category}}">
+                        <option  ng-repeat="option in category.children" value="{{ option.product_id }}" ng-selected="filter.product == option.product_id">{{ option.product }}</option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+        <div class="span4">
+            <label class="labels">Period <span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
+            <div>
+            <select class="input-large" ng-change="filterChanged();" ng-model="filter.period">
+                <option ng-selected="filter.period === -1" ng-value="-1">--Select Period --</option>
+                <optgroup ng-repeat="year in periods" value="{{ year.id }}" ng-selected="filter.zone == year.id" label="{{year.year}}">
+
+                    <option ng-repeat-start="v in year.children" value="{{v.id}}">{{v.groupname}}</option>
+                    <option ng-repeat-end ng-repeat="d in v.children" value="{{d.periodid}}"> &nbsp; &nbsp; {{d.periodname}}</option>
+
+                </optgroup>
+            </select>
+          </div>
+        </div>
+    </div>
+
+
+</script>
+

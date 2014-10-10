@@ -631,3 +631,11 @@ services.factory('GetPushedProductList', function($resource){
 services.factory('GetUserUnassignedSupervisoryNode',function ($resource){
     return $resource('/reports/supervisory-node/user-unassigned-node.json', {}, {});
 });
+
+services.factory('GetProductCategoryProductByProgramTree',function ($resource){
+    return $resource('/reports/productProgramCategoryTree/:programId', {}, {});
+});
+
+services.factory('GetYearSchedulePeriodTree',function ($resource){
+    return $resource('/reports/yearSchedulePeriod', {}, {});
+});

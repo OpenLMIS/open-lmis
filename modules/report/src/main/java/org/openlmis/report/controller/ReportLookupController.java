@@ -375,4 +375,19 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("equipmentTypes", equipmentTypeList);
     }
 
+    @RequestMapping(value="/productProgramCategoryTree/{programId}", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getProductCategoryProductByProgramId(@PathVariable("programId") int programId){
+
+        List<ProductCategoryProductTree> categoryProductTree = reportLookupService.getProductCategoryProductByProgramId(programId);
+
+        return OpenLmisResponse.response("productCategoryTree", categoryProductTree);
+    }
+
+    @RequestMapping(value="/yearSchedulePeriod", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getScheduleYearPeriod(){
+
+        List<YearSchedulePeriodTree> yearSchedulePeriodTree = reportLookupService.getYearSchedulePeriodTree();
+
+        return OpenLmisResponse.response("yearSchedulePeriod", yearSchedulePeriodTree);
+    }
 }
