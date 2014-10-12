@@ -37,6 +37,7 @@ public class GeoDataController extends BaseController {
       return OpenLmisResponse.response("map", this.geographicZoneReportMapper.getGeoReportingRate(program, period));
   }
 
+
   @RequestMapping(value="/reporting-facilities", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getReportingFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
                                                                  @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
@@ -53,5 +54,95 @@ public class GeoDataController extends BaseController {
   ){
      return OpenLmisResponse.response("facilities", this.geographicZoneReportMapper.getNonReportingFacilities(program, geoZoneId , period));
   }
+
+
+    @RequestMapping(value="/stock-status-facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockStatusSummaryFacilityReport(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                   @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                   @RequestParam(value = "product", required = true, defaultValue = "0") Long product) {
+        return OpenLmisResponse.response("map", this.geographicZoneReportMapper.getGeoStockStatusFacilitySummary(program, period, product));
+    }
+
+
+    @RequestMapping(value="/stocked-out-facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockedOutFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                      @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                      @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
+                                                                      @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+    ){
+        return OpenLmisResponse.response("facilities", this.geographicZoneReportMapper.getStockedOutFacilities(program, geoZoneId , period, product));
+    }
+
+    @RequestMapping(value="/under-stocked-facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getUnderStockedFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                    @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                    @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
+                                                                    @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+    ){
+        return OpenLmisResponse.response("facilities", this.geographicZoneReportMapper.getUnderStockedFacilities(program, geoZoneId , period, product));
+    }
+
+    @RequestMapping(value="/over-stocked-facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getOverStockedFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                      @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                      @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
+                                                                      @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+    ){
+        return OpenLmisResponse.response("facilities", this.geographicZoneReportMapper.getOverStockedFacilities(program, geoZoneId , period, product));
+    }
+
+    @RequestMapping(value="/adequately-stocked-facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAdequatelyStockedFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                      @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                      @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
+                                                                      @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+    ){
+        return OpenLmisResponse.response("facilities", this.geographicZoneReportMapper.getAdequatelyStockedFacilities(program, geoZoneId , period, product));
+    }
+
+    @RequestMapping(value="/stock-status-products", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockStatusProductReport(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                        @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                        @RequestParam(value = "zone", required = true, defaultValue = "0") Long geoZoneId) {
+        return OpenLmisResponse.response("products", this.geographicZoneReportMapper.getStockStatusProductSummary(program, geoZoneId, period));
+    }
+
+
+    @RequestMapping(value="/stocked-out-products", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockedOutProducts(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                         @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                         @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
+                                                                         @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+    ){
+        return OpenLmisResponse.response("products", this.geographicZoneReportMapper.getStockedOutProducts(program, geoZoneId , period, product));
+    }
+
+    @RequestMapping(value="/under-stocked-products", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getUnderStockedProducts(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                  @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                  @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
+                                                                  @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+    ){
+        return OpenLmisResponse.response("products", this.geographicZoneReportMapper.getUnderStockedProducts(program, geoZoneId , period, product));
+    }
+
+
+    @RequestMapping(value="/over-stocked-products", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getOverStockedProducts(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                    @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                    @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
+                                                                    @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+    ){
+        return OpenLmisResponse.response("products", this.geographicZoneReportMapper.getOverStockedProducts(program, geoZoneId , period, product));
+    }
+
+    @RequestMapping(value="/adequately-stocked-products", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAdequatelyStockedProducts(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                         @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                         @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
+                                                                         @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+    ){
+        return OpenLmisResponse.response("products", this.geographicZoneReportMapper.getAdequatelyStockedProducts(program, geoZoneId , period, product));
+    }
 
 }
