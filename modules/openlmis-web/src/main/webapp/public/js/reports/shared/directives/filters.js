@@ -807,7 +807,8 @@ app.directive('programProductPeriodFilter', ['ReportUserPrograms','GetProductCat
                 }
 
                 scope.filter.product = (isUndefined($routeParams.product) || $routeParams.product === '')? 0: $routeParams.product;
-                scope.filter.period = -1;//(isUndefined($routeParams.period) || $routeParams.period === '')? 0: $routeParams.period;
+                scope.filter.period = (isUndefined($routeParams.period) || $routeParams.period === '')? 0: $routeParams.period;
+                scope.filter.program = (isUndefined($routeParams.program) || $routeParams.program === '')? 0: $routeParams.program;
 
                 scope.$evalAsync(function(){
 

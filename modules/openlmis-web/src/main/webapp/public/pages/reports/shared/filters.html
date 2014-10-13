@@ -212,8 +212,8 @@
             <div>
                 <select class="input-large" ng-model="filter.product" ng-change="filterChanged();">
 
-                    <option ng-selected="filter.period === 0" ng-value="0">--Select Period --</option>
-                    <option ng-selected="filter.period === -1" ng-value="-1">--Select Period --</option>
+                    <option ng-selected="filter.product === 0" ng-value="0">--Select Product --</option>
+                    <!-- <option ng-selected="filter.product === -1" ng-value="-1">--Indicator Products --</option> -->
 
                     <optgroup ng-repeat="category in products"  label="{{category.category}}">
                         <option  ng-repeat="option in category.children" value="{{ option.product_id }}" ng-selected="filter.product == option.product_id">{{ option.product }}</option>
@@ -225,11 +225,11 @@
             <label class="labels">Period <span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
             <div>
             <select class="input-large" ng-change="filterChanged();" ng-model="filter.period">
-                <option ng-selected="filter.period === -1" ng-value="-1">--Select Period --</option>
-                <optgroup ng-repeat="year in periods" value="{{ year.id }}" ng-selected="filter.zone == year.id" label="{{year.year}}">
+                <option ng-selected="filter.period === 0" ng-value="0">--Select Period --</option>
+                <optgroup ng-repeat="year in periods"  label="{{year.year}}">
 
-                    <option ng-repeat-start="v in year.children" value="{{v.id}}">{{v.groupname}}</option>
-                    <option ng-repeat-end ng-repeat="d in v.children" value="{{d.periodid}}"> &nbsp; &nbsp; {{d.periodname}}</option>
+                    <option ng-repeat-start="v in year.children" value="-1">{{v.groupname}}</option>
+                    <option ng-repeat-end ng-repeat="d in v.children" value="{{d.periodid}}" ng-selected="filter.period == d.periodid"> &nbsp; &nbsp; {{d.periodname}}</option>
 
                 </optgroup>
             </select>
