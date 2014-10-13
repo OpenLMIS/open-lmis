@@ -475,7 +475,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductList, Sto
         $.getJSON('/gis/stock-status-products.json', $scope.filter, function(data) {
             $scope.products = data.products;
         });
-    }
+    };
 
     $scope.OnFilterChanged = function() {
 
