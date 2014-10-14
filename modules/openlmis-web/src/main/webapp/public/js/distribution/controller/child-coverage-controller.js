@@ -104,6 +104,10 @@ function ChildCoverageController($scope, $routeParams, distributionService) {
     return (isUndefined(targetGroup) ? null : (targetGroup === 0 ? null : Math.round((total / targetGroup) * 100)));
   };
 
+  $scope.getFormattedAsPercent = function (number) {
+      return utils.getFormattedPercent(number);
+  };
+
   $scope.calculateWastageRate = function (productsForVaccination) {
     var totalDosesConsumed = 0;
     var totalVaccinations = 0;

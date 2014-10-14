@@ -127,7 +127,7 @@
     <span ng-bind="pregnantWomenCoverage.totalTetanus()"></span>
   </td>
   <td id="coverageRate_1" class="col-coverage-rate">
-    <span ng-bind="pregnantWomenCoverage.coverageRate()"></span>
+        <span ng-bind="getFormattedPercent(pregnantWomenCoverage.coverageRate())"></span>
   </td>
   <td class="vertical-middle-aligned" rowspan="7">
     <span class="position-relative">
@@ -146,7 +146,7 @@
     <label for="openedVial" class="checkbox-label" openlmis-message="label.not.recorded"></label>
   </td>
   <td id="wastageRate" class="col-opened-vial vertical-middle-aligned" rowspan="7">
-    <span ng-bind="adultCoverage.wastageRate(adultCoverageOpenedVialsMap['Tetanus'])"></span>
+        <span ng-bind="getFormattedPercent(adultCoverage.wastageRate(adultCoverageOpenedVialsMap['Tetanus']))"></span>
   </td>
 </tr>
 
