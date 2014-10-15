@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushedProductList, $routeParams) {
+function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushedProductList) {
     //to minimize and maximize the filter section
     $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
     $scope.OnFilterChanged = function () {
@@ -25,8 +25,7 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
         });
 
 
-        GetPushedProductList.get($scope.filter,
-            function (data) {
+        GetPushedProductList.get($scope.filter,function (data) {
                 if (data.pages !== undefined && data.pages.rows !== undefined) {
                     $scope.pusheditems = data.pages.rows;
                 }
