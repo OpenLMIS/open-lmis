@@ -1,5 +1,5 @@
 
-DROP VIEW IF EXISTS  vw_order_fill_rate_Summary;
+DROP VIEW IF EXISTS  vw_order_fill_rate_summary;
 
 CREATE OR REPLACE VIEW vw_order_fill_rate_summary AS
  WITH query AS (
