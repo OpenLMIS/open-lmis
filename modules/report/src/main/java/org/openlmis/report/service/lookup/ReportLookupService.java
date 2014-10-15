@@ -462,4 +462,67 @@ public class ReportLookupService {
         return orderFillRateSummaryListMapper.getOrderFillRateSummaryReportData(programId, periodId, scheduleId, facilityTypeId, userId, zoneId, status);
     }
 
+  public List<ProductCategoryProductTree> getProductCategoryProductByProgramId(int programId) {
+
+      List<ProductCategory> productCategory = this.productCategoryMapper.getForProgramUsingProgramProductCategory(programId);
+
+      List<ProductCategoryProductTree> productCategoryProducts = productCategoryMapper.getProductCategoryProductByProgramId(programId);
+
+      List<ProductCategoryProductTree> newTreeList = new ArrayList<ProductCategoryProductTree>();
+
+      for (ProductCategory pc : productCategory) {
+
+          ProductCategoryProductTree object = new ProductCategoryProductTree();
+          object.setCategory(pc.getName());
+          object.setCategory_id(pc.getId());
+
+          for (ProductCategoryProductTree productCategoryProduct : productCategoryProducts) {
+
+              if (pc.getId() == productCategoryProduct.getCategory_id()) {
+                  object.getChildren().add(productCategoryProduct);
+              }
+          }
+
+          newTreeList.add(object);
+      }
+      return newTreeList;
+  }
+
+    public List<YearSchedulePeriodTree> getYearSchedulePeriodTree() {
+
+        List<YearSchedulePeriodTree> yearSchedulePeriodTree = processingPeriodMapper.getYearSchedulePeriodTree();
+        List<Schedule> schedules = scheduleMapper.getAll();
+
+        List<Integer> years = getOperationYears();
+
+        List<YearSchedulePeriodTree> yearList = new ArrayList<YearSchedulePeriodTree>();
+
+        //add the year layer
+        for(Integer year : years){
+
+            YearSchedulePeriodTree yearObject = new YearSchedulePeriodTree();
+            yearObject.setYear(year.toString());
+
+            // Add the shcedule layer
+            for(Schedule schedule : schedules){
+
+                        YearSchedulePeriodTree scheduleObject = new YearSchedulePeriodTree();
+                        scheduleObject.setGroupname(schedule.getName());
+
+                        for(YearSchedulePeriodTree period : yearSchedulePeriodTree){
+
+                            if(schedule.getId() == period.getGroupid() && period.getYear().equals(year.toString())){
+                                scheduleObject.getChildren().add(period);
+                            }
+                        }
+
+                        yearObject.getChildren().add(scheduleObject);
+                    }
+
+            yearList.add(yearObject);
+            }
+
+        return yearList;
+    }
+
 }

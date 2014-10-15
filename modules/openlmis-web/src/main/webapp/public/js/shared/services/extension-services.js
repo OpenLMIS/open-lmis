@@ -632,10 +632,55 @@ services.factory('GetUserUnassignedSupervisoryNode',function ($resource){
     return $resource('/reports/supervisory-node/user-unassigned-node.json', {}, {});
 });
 
+
+services.factory('GetProductCategoryProductByProgramTree',function ($resource){
+    return $resource('/reports/productProgramCategoryTree/:programId', {}, {});
+});
+
+services.factory('GetYearSchedulePeriodTree',function ($resource){
+    return $resource('/reports/yearSchedulePeriod', {}, {});
+});
+
 services.factory('OrderFillRateSummaryReport', function ($resource) {
     return $resource('/reports/reportdata/orderFillRateReportSummary.json', {}, {});
 });
 
 services.factory('GetOrderFillRateSummary', function($resource){
     return $resource('/reports/OrderFillRateSummary/program/:programId/period/:periodId/schedule/:scheduleId/facilityTypeId/:facilityTypeId/zone/:zoneId/status/:status/orderFillRateSummary.json',{},{});
+});
+
+services.factory('StockedOutFacilityList', function($resource){
+    return $resource('/gis/stocked-out-facilities.json',{}, {});
+});
+
+services.factory('OverStockedFacilityList', function($resource){
+    return $resource('/gis/over-stocked-facilities.json',{}, {});
+});
+
+services.factory('UnderStockedFacilityList', function($resource){
+    return $resource('/gis/under-stocked-facilities.json',{}, {});
+});
+
+services.factory('AdequatelyStockedFacilityList', function($resource){
+    return $resource('/gis/adequately-stocked-facilities.json',{}, {});
+});
+
+services.factory('StockStatusProductList', function($resource){
+    return $resource('/gis/stock-status-products.json',{}, {});
+});
+
+services.factory('StockedOutFacilityByProductList', function($resource){
+    return $resource('/gis/stocked-out-products.json',{}, {});
+});
+
+services.factory('OverStockedFacilityByProductList', function($resource){
+    return $resource('/gis/over-stocked-products.json',{}, {});
+});
+
+services.factory('UnderStockedFacilityByProductList', function($resource){
+    return $resource('/gis/under-stocked-products.json',{}, {});
+});
+
+services.factory('AdequatelyStockedFacilityByProductList', function($resource){
+    return $resource('/gis/adequately-stocked-products.json',{}, {});
 });

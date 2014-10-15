@@ -376,6 +376,23 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("equipmentTypes", equipmentTypeList);
     }
 
+
+    @RequestMapping(value="/productProgramCategoryTree/{programId}", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getProductCategoryProductByProgramId(@PathVariable("programId") int programId){
+
+        List<ProductCategoryProductTree> categoryProductTree = reportLookupService.getProductCategoryProductByProgramId(programId);
+
+        return OpenLmisResponse.response("productCategoryTree", categoryProductTree);
+    }
+
+    @RequestMapping(value="/yearSchedulePeriod", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getScheduleYearPeriod(){
+
+        List<YearSchedulePeriodTree> yearSchedulePeriodTree = reportLookupService.getYearSchedulePeriodTree();
+
+        return OpenLmisResponse.response("yearSchedulePeriod", yearSchedulePeriodTree);
+    }
+
     @RequestMapping(value = "/OrderFillRateSummary/program/{programId}/period/{periodId}/schedule/{scheduleId}/facilityTypeId/{facilityTypeId}/zone/{zoneId}/status/{status}/orderFillRateSummary", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getOrderFillRateSummaryData(@PathVariable("programId") Long programId,
                                                                         @PathVariable("periodId") Long periodId,
@@ -387,5 +404,6 @@ public class ReportLookupController extends BaseController {
         List<OrderFillRateSummaryReport> orderFillRateReportSummaryList = reportLookupService.getOrderFillRateSummary(programId, periodId, scheduleId, facilityTypeId, loggedInUserId(request), zoneId, status);
         return OpenLmisResponse.response("orderFillRateSummary", orderFillRateReportSummaryList);
     }
+
 
 }

@@ -778,3 +778,58 @@ app.directive('equipmentTypeFilter',['ReportEquipmentTypes','$routeParams', func
     };
 }]);
 
+
+app.directive('programProductPeriodFilter', ['ReportUserPrograms','GetProductCategoryProductByProgramTree','GetYearSchedulePeriodTree','$routeParams',
+    function (ReportUserPrograms, GetProductCategoryProductByProgramTree, GetYearSchedulePeriodTree,  $routeParams) {
+
+        // When a program filter changes
+        var onProgramChanged = function ($scope, newValue) {
+
+            if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0) {
+                $scope.products = {};
+                return;
+            }
+
+            var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
+
+            GetProductCategoryProductByProgramTree.get({ programId: program}, function (data) {
+                $scope.products = data.productCategoryTree;
+            });
+        };
+
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+
+                if (attr.required) {
+                    scope.requiredFilters.program = 'program';
+                }
+
+                scope.filter.product = (isUndefined($routeParams.product) || $routeParams.product === '')? 0: $routeParams.product;
+                scope.filter.period = (isUndefined($routeParams.period) || $routeParams.period === '')? 0: $routeParams.period;
+                scope.filter.program = (isUndefined($routeParams.program) || $routeParams.program === '')? 0: $routeParams.program;
+
+                scope.$evalAsync(function(){
+
+                    //Load Program
+                    ReportUserPrograms.get(function (data) {
+                        scope.programs = data.programs;
+                        scope.programs.unshift({
+                            'name': '-- Select Programs --'
+                        });
+                    });
+                    //Load period tree
+                    GetYearSchedulePeriodTree.get({}, function (data) {
+                        scope.periods = data.yearSchedulePeriod;
+                    });
+                });
+
+                scope.$watch('filter.program', function (value) {
+                    onProgramChanged(scope, value);
+                });
+
+            },
+            templateUrl: 'filter-program-product-period'
+        };
+    }]);

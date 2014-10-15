@@ -13,6 +13,7 @@ package org.openlmis.report.mapper.lookup;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.ProductCategory;
+import org.openlmis.report.model.dto.ProductCategoryProductTree;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,5 +46,14 @@ public interface ProductCategoryReportMapper {
     " order by name")
   List<ProductCategory> getForProgramUsingProgramProductCategory(@Param("programId") int programId);
 
-
+    @Select("SELECT pp.programId As program_id, pp.productcategoryid AS category_id, p.id AS product_id,  pc.name AS category, concat(p.primaryname ,' ', form.code ,' ', p.strength ,' ', du.code) as product, p.code as code  \n" +
+            "FROM  " +
+            "   products as p  " +
+            "  join product_forms as form on form.id = p.formid  " +
+            "  join dosage_units as du on du.id = p.dosageunitid  " +
+            "  join program_products pp on pp.productId = p.id " +
+            " join product_categories pc on   pc.id = pp.productcategoryid " +
+            " where pp.programId = #{programId} and pp.active = true " +
+            "    order by pp.programId, pp.productcategoryid, p.id")
+    List<ProductCategoryProductTree> getProductCategoryProductByProgramId(@Param("programId") int programId);
 }

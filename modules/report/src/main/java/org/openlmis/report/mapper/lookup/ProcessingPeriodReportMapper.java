@@ -13,6 +13,7 @@ package org.openlmis.report.mapper.lookup;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.ProcessingPeriod;
+import org.openlmis.report.model.dto.YearSchedulePeriodTree;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -31,4 +32,12 @@ public interface ProcessingPeriodReportMapper {
             "WHERE startdate >= #{startDate, jdbcType=DATE, javaType=java.util.Date, mode=IN} and " +
             "enddate <= #{endDate, jdbcType=DATE, javaType=java.util.Date, mode=IN}")
     List<ProcessingPeriod> getFilteredPeriods(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Select("select EXTRACT(YEAR FROM pp.startdate) as year, ps.name as groupname, pp.name as periodname, pp.id AS periodid, ps.id as groupid\n" +
+            " from processing_periods pp " +
+            " join processing_schedules ps on pp.scheduleid = ps.id " +
+            " order by year,groupname,pp.startdate  asc")
+    List<YearSchedulePeriodTree> getYearSchedulePeriodTree();
+
 }
+
