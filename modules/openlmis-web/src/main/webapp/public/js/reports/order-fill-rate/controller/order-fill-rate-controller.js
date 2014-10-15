@@ -39,7 +39,7 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
         if (type == "pushed-product-list") {
             url = '/reports/download/pushed_product_list/' + "pdf" + '?' + params;
         } else {
-            url = '/reports/download/order_fill_rate/' + "pdf" + '?' + params;
+            url = '/reports/download/order_fill_rate/' + type + '?' + params;
         }
         $window.open(url);
     };
