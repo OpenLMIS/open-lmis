@@ -9,32 +9,31 @@ public class PushedProductsQueryBuilder {
 
     public static String getQueryForPushedItems(Map params) {
 
-        Long userId = (Long)params.get("userId");
+        Long userId = (Long) params.get("userId");
+
         params = (Map) (params.containsKey("param1") ? params.get("param1") : params);
-        String period = ((String[]) params.get("period"))[0];
-        String zone   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
+        String zone = params.containsKey("zone") ? ((String[]) params.get("zone"))[0] : "";
+        String period = params.containsKey("period") ? ((String[]) params.get("period"))[0] : "";
         String facility = params.containsKey("facility") ? ((String[]) params.get("facility"))[0] : "";
         String facilityType = params.containsKey("facilityType") ? ((String[]) params.get("facilityType"))[0] : "";
-        String program = ((String[]) params.get("program"))[0];
-        String schedule = ((String[]) params.get("schedule"))[0];
-        String product = ((String[]) params.get("product"))[0];
+        String program = params.containsKey("program") ? ((String[]) params.get("program"))[0] : "";
+        String schedule = params.containsKey("schedule") ? ((String[]) params.get("schedule"))[0] : "";
+        String product = params.containsKey("product") ? java.util.Arrays.toString((String[]) params.get("product")) : "0";//.replace("]", "}").replace("]", "{").replaceAll("\"","") : "";
         String productCategory = params.containsKey("productCategory") ? ((String[]) params.get("productCategory"))[0] : "";
-        return getProductsPushedQuery(params, zone,program, period, schedule, facility, product, facilityType, productCategory,userId);
+        return getProductsPushedQuery(params, zone, program, period, schedule, facility, product, facilityType, productCategory, userId);
 
     }
 
-    private static String getProductsPushedQuery(Map params,String zone, String program, String period, String schedule, String facility, String product, String facilityType,String productCategory,Long userId) {
+    private static String getProductsPushedQuery(Map params, String zone, String program, String period, String schedule, String facility, String product, String facilityType, String productCategory, Long userId) {
 
         BEGIN();
-        SELECT_DISTINCT("product,productcode,sum(fn_previous_period(programid,facilityid,periodid,\n" +
-                "                    productcode)) approved,sum(quantityreceived) receipts");
+        SELECT_DISTINCT("product,productcode,sum(fn_previous_period(programid,facilityid,periodid,productcode)) approved,sum(quantityreceived) receipts");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = zoneId");
-        WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId+ " as int4) and program_id = cast(" + program + " as int4))");
-        WHERE(" fn_previous_period(programid,facilityid,periodid,\n" +
-                " productcode) = 0 and quantityreceived > 1\n" +
-                " and  status in ('RELEASED') and periodid = cast (" + period + " as int4)" +
+        WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId + " as int4) and program_id = cast(" + program + " as int4)) ");
+        WHERE(" fn_previous_period(programid,facilityid,periodid,productcode) = 0 and quantityreceived > 1\n" +
+                " and  status in ('RELEASED') and periodid = cast (" + period + " as int4) " +
                 "and facilityId= cast(" + facility + " as int4) and programid = cast(" + program + " as int4)");
-        writePredicates(zone,program, period, schedule, facility, product, facilityType, productCategory);
+        writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
         GROUP_BY("product,productcode");
         ORDER_BY(QueryHelpers.getSortOrder(params, "product"));
         String sql = SQL();
@@ -43,15 +42,16 @@ public class PushedProductsQueryBuilder {
 
     private static void writePredicates(String zone, String program, String period, String schedule, String facility, String product, String facilityType, String productCategory) {
 
-        if(zone != "" && !zone.endsWith( "undefined")){
-            WHERE(" (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone +" or gz.parent = " + zone + " )");
+        if (zone != null && !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0") && !zone.equals("-1")) {
+            WHERE(" (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone + " or gz.parent = " + zone + " )");
         }
 
         if (facility != "" && !facility.endsWith("undefined")) {
             WHERE("facilityid = cast(" + facility + " as int4)");
         }
-        if (product != null && !product.equals("undefined") && !product.isEmpty() && !product.equals("0") && !product.equals("-1")) {
-            WHERE("productid = cast(" + product + " as int4)");
+
+        if (!product.equals("0") && !product.equals("-1") && product != null && !product.isEmpty() && !product.equals("{}") && !product.equals("{0}") && !product.endsWith("undefined")) {
+            WHERE("productId =  ANY(array" + product + "::INT[]) ");
         }
 
         if (period != "" && !period.endsWith("undefined")) {
