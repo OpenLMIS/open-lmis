@@ -93,7 +93,7 @@ public class OrderController extends BaseController {
       response = response(ORDERS,
           getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER, supplyDepot, program, period)));
       response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
-      response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages(supplyDepot, program));
+      response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages(supplyDepot, program,period));
 
     }else {
       response = response(ORDERS,

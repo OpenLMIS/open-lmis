@@ -51,11 +51,13 @@ public interface OrderMapper {
   List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") Right right);
 
 
-  @Select({"SELECT DISTINCT O.* FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
+  @Select({"SELECT DISTINCT O.*, f.name FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
       "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId",
        "INNER JOIN requisitions r on r.id = O.id ",
-      "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId",
-      "WHERE FRA.userid = #{userId} AND RR.rightName = #{right} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} ORDER BY O.createdDate DESC LIMIT #{limit} OFFSET #{offset}"})
+      "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId " ,
+          " INNER JOIN facilities f on f.id = r.facilityid ",
+      "WHERE FRA.userid = #{userId} AND RR.rightName = #{right} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " +
+          "ORDER BY f.name ASC LIMIT #{limit} OFFSET #{offset}"})
   @Results({
       @Result(property = "id", column = "id"),
       @Result(property = "rnr.id", column = "id"),
@@ -116,8 +118,8 @@ public interface OrderMapper {
   @Select("SELECT ceil(count(*)::float/#{pageSize}) FROM orders")
   Integer getNumberOfPages(int pageSize);
 
-  @Select("SELECT ceil(count(*)::float/#{pageSize}) FROM orders o join supply_lines s on s.id = o.supplylineid join requisitions r on r.id = o.id where r.programId = #{program} and s.supplyingfacilityid = #{depot}")
-  Integer getNumberOfPagesByDepot(@Param("pageSize")int pageSize, @Param("depot") long depot, @Param("program") long program);
+  @Select("SELECT ceil(count(*)::float/#{pageSize}) FROM orders o join supply_lines s on s.id = o.supplylineid join requisitions r on r.id = o.id where r.programId = #{program} and r.periodid = #{period} and s.supplyingfacilityid = #{depot}")
+  Integer getNumberOfPagesByDepot(@Param("pageSize")int pageSize, @Param("depot") long depot, @Param("program") long program, @Param("period") long period);
 
 
   @Select({"SELECT O.* FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id",
