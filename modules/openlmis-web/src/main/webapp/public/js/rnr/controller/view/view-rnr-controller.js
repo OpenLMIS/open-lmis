@@ -8,11 +8,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewRnrController($scope, requisitionData, rnrColumns, regimenTemplate, equipmentOperationalStatus, ReOpenRequisition, RejectRequisition , $dialog , $location, pageSize, $routeParams, requisitionService) {
+function ViewRnrController($scope, requisitionData, hideSkippedProducts , rnrColumns, regimenTemplate, equipmentOperationalStatus, ReOpenRequisition, RejectRequisition , $dialog , $location, pageSize, $routeParams, requisitionService) {
 
+  $scope.hide_skipped_products = hideSkippedProducts;
   $scope.rnrColumns = rnrColumns;
   $scope.pageSize = pageSize;
-  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
+  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths, hideSkippedProducts);
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
 
   if (!($scope.rnr.status == "APPROVED" || $scope.rnr.status == "RELEASED")) {
@@ -24,9 +25,7 @@ function ViewRnrController($scope, requisitionData, rnrColumns, regimenTemplate,
   $scope.reOpenRnR = function( ){
 
     var callBack = function (result) {
-
       if (result) {
-
         // delete the rnr here
         ReOpenRequisition.post({id: $scope.rnr.id}, function(data){
           OpenLmisDialog.newDialog({
@@ -46,7 +45,6 @@ function ViewRnrController($scope, requisitionData, rnrColumns, regimenTemplate,
       header: "label.confirm.action",
       body: "label.rnr.confirm.reopen"
     };
-
     OpenLmisDialog.newDialog(options, callBack, $dialog);
   };
 
@@ -148,6 +146,15 @@ ViewRnrController.resolve = {
     $timeout(function () {
       ProgramRegimenTemplate.get({programId: $route.current.params.program}, function (data) {
         deferred.resolve(data.template);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+  hideSkippedProducts: function ($q, $timeout, $route, ConfigSettingsByKey) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      ConfigSettingsByKey.get({key: 'RNR_HIDE_SKIPPED_PRODUCTS'}, function (data){
+        deferred.resolve(data.settings.value);
       }, {});
     }, 100);
     return deferred.promise;
