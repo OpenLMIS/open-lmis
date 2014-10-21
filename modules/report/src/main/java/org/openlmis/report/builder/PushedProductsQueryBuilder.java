@@ -1,3 +1,13 @@
+/*
+ * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ *
+ * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ */
+
 package org.openlmis.report.builder;
 
 import java.util.Map;
@@ -27,10 +37,10 @@ public class PushedProductsQueryBuilder {
     private static String getProductsPushedQuery(Map params, String zone, String program, String period, String schedule, String facility, String product, String facilityType, String productCategory, Long userId) {
 
         BEGIN();
-        SELECT_DISTINCT("product,productcode,sum(fn_previous_period(programid,facilityid,periodid,productcode)) approved,sum(quantityreceived) receipts");
+        SELECT_DISTINCT("product,productcode,sum(quantityApproved) approved,sum(quantityreceived) receipts");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = zoneId");
         WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId + " as int4) and program_id = cast(" + program + " as int4)) ");
-        WHERE(" fn_previous_period(programid,facilityid,periodid,productcode) = 0 and quantityreceived > 1\n" +
+        WHERE("totalproductsapproved = 0 and quantityreceived > 1\n" +
                 " and  status in ('RELEASED') and periodid = cast (" + period + " as int4) " +
                 "and facilityId= cast(" + facility + " as int4) and programid = cast(" + program + " as int4)");
         writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
