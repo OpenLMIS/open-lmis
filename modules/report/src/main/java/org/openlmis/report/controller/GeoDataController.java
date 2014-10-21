@@ -19,6 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -27,6 +29,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class GeoDataController extends BaseController {
 
   public static final String USER_ID = "USER_ID";
+
+ public static String  getCommaSeparatedIds(List<Long> idList){
+
+     return idList == null ? "{}" : idList.toString().replace("[", "").replace("]", "");
+ }
 
   @Autowired
   private GeographicZoneReportMapper geographicZoneReportMapper;
@@ -143,6 +150,15 @@ public class GeoDataController extends BaseController {
                                                                          @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
     ){
         return OpenLmisResponse.response("products", this.geographicZoneReportMapper.getAdequatelyStockedProducts(program, geoZoneId , period, product));
+    }
+
+    @RequestMapping(value="/stock-status-product-consumption", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockStatusProductConsumption(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                             @RequestParam(value = "product", required = true, defaultValue = "0")List<Long> productListId,
+                                                                            // @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
+                                                                             @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+    ){
+        return OpenLmisResponse.response("consumption", this.geographicZoneReportMapper.getStockStatusProductConsumption(program, geoZoneId , getCommaSeparatedIds(productListId)));
     }
 
 }

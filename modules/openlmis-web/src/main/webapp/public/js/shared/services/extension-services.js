@@ -684,3 +684,7 @@ services.factory('UnderStockedFacilityByProductList', function($resource){
 services.factory('AdequatelyStockedFacilityByProductList', function($resource){
     return $resource('/gis/adequately-stocked-products.json',{}, {});
 });
+
+services.factory('StockStatusProductConsumptionGraph', function($resource){
+    return $resource('/gis/stock-status-product-consumption.json',{}, {});
+});

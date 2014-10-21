@@ -21,6 +21,7 @@ import org.openlmis.report.model.dto.GeographicZone;
 import org.openlmis.report.model.geo.GeoFacilityIndicator;
 import org.openlmis.report.model.geo.GeoStockStatusFacility;
 import org.openlmis.report.model.geo.GeoStockStatusProduct;
+import org.openlmis.report.model.geo.GeoStockStatusProductConsumption;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -495,5 +496,9 @@ public interface GeographicZoneReportMapper {
             " WHERE ss.programid = #{programId} AND ss.periodid = #{periodId} AND ss.productid = #{productId} AND (ss.gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) AND ss.status = 'SP' order by f.name")
 
     List<GeoStockStatusProduct> getAdequatelyStockedProducts(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
+
+    @Select("   select productid, productname, periodid, periodname, periodyear, quantityonhand, quantityconsumed, amc from fn_getstockstatusgraphdata(2,0,25,#{productId}); ")
+
+    List<GeoStockStatusProductConsumption> getStockStatusProductConsumption(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("productId") String ProductIds);
 
 }
