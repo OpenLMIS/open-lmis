@@ -71,14 +71,13 @@ public class OrderFillRateQueryBuilder {
 
     private static String getQueryString(Map params, String zone, String program, String period, String schedule, String facility, String product, String facilityType, String productCategory, Long userId) {
         BEGIN();
-        SELECT_DISTINCT("facilityname facility,fn_previous_period(programid,facilityid,periodid,productcode) as Approved,quantityreceived receipts ,productcode, product, " +
-                " CASE WHEN COALESCE(fn_previous_period(programid,facilityid,periodid,productcode), 0::numeric) = 0::numeric THEN 0::numeric\n" +
-                "    ELSE COALESCE(quantityreceived,0 )/ COALESCE(fn_previous_period(programid,facilityid,periodid,\n" +
-                "    productcode),0) * 100::numeric\n" +
+        SELECT_DISTINCT("facilityname facility,quantityapproved as Approved,quantityreceived receipts ,productcode, product, " +
+                " CASE WHEN COALESCE(quantityapproved, 0::numeric) = 0::numeric THEN 0::numeric\n" +
+                "    ELSE COALESCE(quantityreceived,0 )/ COALESCE(quantityapproved,0) * 100::numeric\n" +
                 "                                     END AS item_fill_rate ");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = vw_order_fill_rate.zoneId");
         WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId + " as int4) and program_id = cast(" + program + " as int4))");
-        WHERE(" status in ('RELEASED') and fn_previous_period(programid,facilityid,periodid,productcode)>0 and periodid = cast (" + period + " as int4)" +
+        WHERE(" status in ('RELEASED') and totalproductsapproved > 0 and periodid = cast (" + period + " as int4)" +
                 "and facilityid= cast(" + facility + " as int4) and programid = cast(" + program + " as int4)");
 
         writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
@@ -106,7 +105,7 @@ public class OrderFillRateQueryBuilder {
         SELECT("count(totalproductsreceived) quantityreceived");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = zoneId");
         WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId + " as int4) and program_id = cast(" + program + " as int4))");
-        WHERE("totalproductsreceived>0 and fn_previous_period(programid,facilityid,periodid,productcode) >0  and status in ('RELEASED') and periodId= cast(" + period + " as int4) and programId= cast(" + program + " as int4) and facilityId= cast(" + facility + " as int4)");
+        WHERE("totalproductsreceived>0 and totalproductsapproved >0  and status in ('RELEASED') and periodId= cast(" + period + " as int4) and programId= cast(" + program + " as int4) and facilityId= cast(" + facility + " as int4)");
         writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
         GROUP_BY("totalproductsreceived");
         String sql = SQL();
@@ -128,10 +127,10 @@ public class OrderFillRateQueryBuilder {
         String product = "";
         String productCategory = "";
         BEGIN();
-        SELECT("count(fn_previous_period(programid,facilityid,periodid,productcode)) quantityapproved");
+        SELECT("count(totalproductsapproved) quantityapproved");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = zoneId");
         WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId + " as int4) and program_id = cast(" + program + " as int4))");
-        WHERE("fn_previous_period(programid,facilityid,periodid,productcode) > 0  and status in ('RELEASED') and periodId= cast(" + period + " as int4) and programId= cast(" + program + " as int4) and facilityId= cast(" + facility + " as int4) ");
+        WHERE("totalproductsapproved > 0  and status in ('RELEASED') and periodId= cast(" + period + " as int4) and programId= cast(" + program + " as int4) and facilityId= cast(" + facility + " as int4) ");
         writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
         String sql = SQL();
         return sql;
@@ -158,15 +157,15 @@ public class OrderFillRateQueryBuilder {
         SELECT("count(totalproductsreceived) quantityreceived");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = zoneId");
         WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId + " as int4) and program_id = cast(" + program + " as int4))");
-        WHERE("totalproductsreceived>0 and fn_previous_period(programid,facilityid,periodid,productcode)>0 and  status in ('RELEASED') and periodId= cast(" + period + " as int4) and programId= cast(" + program + " as int4) and facilityId= cast(" + facility + " as int4)");
+        WHERE("totalproductsreceived>0 and totalproductsapproved > 0 and  status in ('RELEASED') and periodId= cast(" + period + " as int4) and programId= cast(" + program + " as int4) and facilityId= cast(" + facility + " as int4)");
         writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
         GROUP_BY("totalproductsreceived");
         String query = SQL();
         RESET();
         BEGIN();
-        SELECT("count(fn_previous_period(programid,facilityid,periodid,productcode)) quantityapproved");
+        SELECT("count(totalproductsapproved) quantityapproved");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = zoneId");
-        WHERE("status in ('RELEASED') and fn_previous_period(programid,facilityid,periodid,productcode)>0 and periodId= cast(" + period + " as int4) and programId= cast(" + program + " as int4) and facilityId= cast(" + facility + " as int4)");
+        WHERE("status in ('RELEASED') and totalproductsapproved > 0 and periodId= cast(" + period + " as int4) and programId= cast(" + program + " as int4) and facilityId= cast(" + facility + " as int4)");
         writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
         query += " UNION " + SQL();
         return query;
