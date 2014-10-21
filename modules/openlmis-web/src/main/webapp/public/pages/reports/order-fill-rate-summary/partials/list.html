@@ -8,7 +8,8 @@
 ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
 -->
 
-<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"
+     xmlns="http://www.w3.org/1999/html"/>
   <div class="container-fluid">
     <div class="box row-fluid">
         <div class="box-header">
@@ -43,10 +44,11 @@
                             </label>
                         </div>
                         <div ng-show="OrderFillRateSummaryPieChartData != undefined">
-                            <div id="orderFillRateReportLegend" class="chartLegend"></div>
-                            <a-float id="order-fill-rate-summary" af-option="OrderFillRateSummaryPieChartOption"
-                                     af-data="OrderFillRateSummaryPieChartData" class="chart"
-                                     style="width:700px"></a-float>
+                            <span id="orderFillRateReportLegend" class="chartLegend"></span>
+                            <span style="text-align: left"> <a-float id="order-fill-rate-summary" af-option="OrderFillRateSummaryPieChartOption"
+                                         af-data="OrderFillRateSummaryPieChartData" class="chart" style="width:700px;" >
+
+                                  </a-float></span>
 
                         </div>
 

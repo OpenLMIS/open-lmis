@@ -23,8 +23,8 @@ public class OrderFillRateReportSummaryQueryBuilder {
                 "        WITH query as (  SELECT CASE when sum(totalproductsapproved)=0 THEN 0 ELSE\n" +
                 "                         ROUND(count(CASE WHEN totalproductsreceived>0 THEN 1 ELSE NULL END) * 100/\n" +
                 "                         count(CASE WHEN totalproductsapproved>0 THEN 1 ELSE NULL END),0) END Order_fill_rate\n" +
-                "                         FROM vw_order_fill_rate_Summary\n" +
-                "                         join vw_districts gz on gz.district_id = vw_order_fill_rate_Summary.zoneId\n" +
+                "                         FROM vw_order_fill_rate\n" +
+                "                         join vw_districts gz on gz.district_id = vw_order_fill_rate.zoneId\n" +
                 "                         JOIN facility_types ft on facilityTypeID=ft.id \n"
                   ).append(writePredicates(filterCriteria,userId)).append("\n"+
                 "                         and totalproductsapproved>0\n" +
