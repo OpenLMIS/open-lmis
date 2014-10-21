@@ -1,4 +1,4 @@
-DROP VIEW IF EXISTS vw_order_fill_rate;
+ DROP VIEW IF EXISTS vw_order_fill_rate;
 
 CREATE OR REPLACE VIEW vw_order_fill_rate AS 
  SELECT dw_orders.status, dw_orders.facilityid, dw_orders.periodid, dw_orders.productfullname AS product, products.code AS productcode, facilities.name AS facilityname, dw_orders.scheduleid, dw_orders.facilitytypeid, dw_orders.productid, dw_orders.productcategoryid, dw_orders.programid, dw_orders.geographiczoneid AS zoneid, dw_orders.geographiczonename AS zonename, sum(COALESCE(dw_orders.quantityapprovedprev, 0)::numeric) AS quantityapproved, sum(COALESCE(dw_orders.quantityreceived, 0)::numeric) AS quantityreceived, sum(
