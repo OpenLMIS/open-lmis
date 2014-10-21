@@ -1,4 +1,4 @@
--- Function: fn_getstockstatusgraphdata(integer, integer, integer, character varying)
+--   Function: fn_getstockstatusgraphdata(integer, integer, integer, character varying)
 
 DROP FUNCTION IF EXISTS fn_getstockstatusgraphdata(integer, integer, integer, character varying);
 
@@ -31,30 +31,37 @@ EXECUTE 'CREATE TEMP TABLE _stock_status (
 
 stockStatusQuery :=
 'SELECT
-	productid,
-	product productname,
-	periodid,
-	processing_period_name periodname,
-	EXTRACT (''year'' FROM startdate) periodyear,
+	product_id productid,
+	product_primaryname productname,
+	processing_periods_id periodid,
+	processing_periods_name periodname,
+	EXTRACT (
+		''year''
+		FROM
+			processing_periods_start_date
+	) periodyear,
 	SUM (stockinhand) quantityonhand,
-	AVG (amc) quantityconsumed,
-	AVG (amc) amc
+	SUM (quantitydispensed) quantityconsumed,
+	SUM (amc) amc
 FROM
-	vw_stock_status_2
+	vw_requisition_detail_2
+
 WHERE
-	programid = '|| in_programid ||'
-AND (gz_id = '|| in_geographiczoneid || ' OR ' || in_geographiczoneid ||' = 0)
-AND productid IN ('|| in_productid ||')
-AND periodid IN (select id from processing_periods where scheduleid = '|| v_scheduleid || ' AND id <= '|| in_periodid || ' order by id desc limit 4) 
+	program_id = '|| in_programid ||'
+AND (zone_id = '|| in_geographiczoneid || ' OR ' || in_geographiczoneid ||' = 0)
+AND product_id IN ('|| in_productid ||')
+AND processing_periods_id IN (select id from processing_periods where scheduleid = '|| v_scheduleid || ' AND id <= '|| in_periodid || ' order by id desc limit 4)
+
 GROUP BY
-	productid,
-	product,
-	periodid,
-	processing_period_name,
-	EXTRACT (''year'' FROM startdate)
-ORDER BY
-  product,
-	periodid DESC';
+	product_id,
+	product_primaryname,
+	processing_periods_id,
+	processing_periods_name,
+	EXTRACT (
+		''year''
+		FROM
+			processing_periods_start_date
+	)';
 
 FOR rowSS IN EXECUTE stockStatusQuery 
 LOOP
@@ -62,14 +69,14 @@ LOOP
 
 EXECUTE
 'INSERT INTO _stock_status VALUES (' || 
-rowSS.productid || ',' ||
+COALESCE(rowSS.productid,0) || ',' ||
 quote_literal(rowSS.productname::text) || ',' ||
-rowSS.periodid || ',' || 
+COALESCE(rowSS.periodid,0) || ',' || 
 quote_literal(rowSS.periodname::text) || ',' ||
-rowSS.periodyear || ',' ||
-rowSS.quantityonhand || ',' ||
-rowSS.quantityconsumed || ',' ||
-rowSS.amc || ')';
+COALESCE(rowSS.periodyear,0) || ',' ||
+COALESCE(rowSS.quantityonhand,0) || ',' ||
+COALESCE(rowSS.quantityconsumed,0) || ',' ||
+COALESCE(rowSS.amc,0) || ')';
 
 
 END LOOP;
