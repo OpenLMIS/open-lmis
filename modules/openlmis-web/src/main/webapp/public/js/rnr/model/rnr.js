@@ -8,13 +8,19 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
+var Rnr = function (rnr, programRnrColumns, numberOfMonths, hideSkippedProduct) {
+  
+  // separate the skipped products from the not so skipped. 
+  rnr.allSupplyLineItems = rnr.fullSupplyLineItems;
+  if(hideSkippedProduct == 'true'){
+    rnr.skippedLineItems = _.where(rnr.allSupplyLineItems, { skipped:true});
+    rnr.fullSupplyLineItems =  _.where(rnr.allSupplyLineItems, {skipped: false});
+  }
+
   $.extend(true, this, rnr);
   var thisRnr = this;
   this.skipAll = false;
   this.numberOfMonths = numberOfMonths;
-  
-  
   
   var getInvalidLineItemIndexes = function (lineItems) {
     var errorLineItems = [];
@@ -96,7 +102,7 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
       if(lineItem.equipments !== undefined && lineItem.calculatedOrderQuantity > 0){
         //TODO: remove the hardcoded status
         //TODO: iterate through all the equipments and check if all are not functional
-        if(lineItem.equipments[0].operationalStatusId == 3 && (lineItem.equipments[0].remarks === '' || lineItem.equipments[0].remarks === undefined)){
+        if(lineItem.equipments[0].operationalStatusId === 3 && (lineItem.equipments[0].remarks === '' || lineItem.equipments[0].remarks === undefined)){
           lineItem.isEquipmentValid = false;
           //errorMessage = "error.rnr.validation";
           this.equipmentErrorMessage = lineItem.equipments[0].equipmentName + " is not operational but you are placing order for " + lineItem.product  + '<br />'; 
@@ -117,9 +123,9 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
   };
 
   Rnr.prototype.validateEquipments = function(){
-    errorMessage = null;
+    var errorMessage = null;
     $(this.equipmentLineItems).each(function(i,lineItem){
-      if(lineItem.operationalStatusId == 3 && lineItem.remarks === undefined || lineItem.remarks === ''){
+      if(lineItem.operationalStatusId === 3 && lineItem.remarks === undefined || lineItem.remarks === ''){
         lineItem.IsRemarkRequired = true;
         errorMessage = 'Remarks are required for equipments that are not operational';
       }
@@ -239,7 +245,7 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
       for(var j = 0; j < eqli.relatedProducts.length;j++){
         var prod = eqli.relatedProducts[j];
         for(var n= 0; i < this.fullSupplyLineItems.length; n++){
-          if(this.fullSupplyLineItems[n].id == prod.id){
+          if(this.fullSupplyLineItems[n].id === prod.id){
             if(this.fullSupplyLineItems[n].equipments === undefined){
               this.fullSupplyLineItems[n].equipments = [];
             }
