@@ -1,6 +1,6 @@
 -- Function: fn_set_user_preference()
 
-DROP FUNCTION fn_set_user_preference(integer, character varying, character varying);
+DROP FUNCTION IF EXISTS fn_set_user_preference(integer, character varying, character varying);
 
 CREATE OR REPLACE FUNCTION fn_set_user_preference(in_userid integer, in_key character varying, in_value character varying)
   RETURNS character varying AS
