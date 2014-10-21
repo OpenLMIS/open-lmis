@@ -1,0 +1,15 @@
+{
+  "curly": true,
+  "eqeqeq": true,
+  "undef": true,
+  "globals": {
+    "jQuery": true,
+    "app": true,
+    "console":true,
+    "config": true,
+    "window":true,
+    "angular":true,
+    "$":true,
+    "_":true
+  }
+}
