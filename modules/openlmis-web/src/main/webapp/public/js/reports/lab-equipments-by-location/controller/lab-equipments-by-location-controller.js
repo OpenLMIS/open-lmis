@@ -193,7 +193,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
         });
 
 
-    }
+    };
 
     var marker_icons = {
 
@@ -212,7 +212,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
 
     var plotMarkers = function(data){
 
-        $scope.facilityEquipmentStatuses = data == null ? [] : data.equipmentsStatus;
+        $scope.facilityEquipmentStatuses = data === null ? [] : data.equipmentsStatus;
         $scope.showSummary = false;
 
         $.getJSON('/gis/facilitiesEquipments.json', $scope.filter, function (data) {
@@ -236,19 +236,19 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
             $scope.showSummary = true;
         }
 
-    }
+    };
 
     var resolveMarkerIcon = function(status){
 
-            if(status.total_partially_operational +  status.total_fully_operational == 0 && status.total_not_operational > 0)
+            if(status.total_partially_operational +  status.total_fully_operational === 0 && status.total_not_operational > 0)
                 return marker_icons.AllNotFunctioningIcon;
 
-            else if (status.total_partially_operational + status.total_not_operational == 0 &&  status.total_fully_operational > 0 )
+            else if (status.total_partially_operational + status.total_not_operational === 0 &&  status.total_fully_operational > 0 )
                 return marker_icons.AllFunctioningIcon;
 
              else
                 return marker_icons.SomeFunctioningIcon;
-        }
+        };
 
 
     // ====== Pie Chart ==========================
@@ -258,7 +258,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
 
             $scope.UserRolePieChartData = [];
 
-            if (!(angular.isUndefined(data) || data == null)) {
+            if (!(angular.isUndefined(data) || data === null)) {
 
                 $scope.datarows = data.equipmentsStatusSummary;
 
@@ -267,7 +267,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
                     $scope.UserRolePieChartData[i] = {
                         label: $scope.datarows[i].equipment_status,
                         data: $scope.datarows[i].total,
-                        color: $scope.datarows[i].equipment_status == 'Fully Operational' ? '#A3CC29' : $scope.datarows[i].equipment_status == 'Partially Operational' ? '#FFB445' : '#8F0000'
+                        color: $scope.datarows[i].equipment_status === 'Fully Operational' ? '#A3CC29' : $scope.datarows[i].equipment_status === 'Partially Operational' ? '#FFB445' : '#8F0000'
                     };
                 }
 
@@ -275,7 +275,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
 
                bindChartEvent("#equipment-status-summary","plotclick", function (event, pos, item) {
 
-                   if(item!=null) {
+                   if(item!==null) {
 
                        var status = $scope.UserRolePieChartData[item.seriesIndex].label;
                           popFacilitiesByEquipmentStatus(status);
@@ -368,7 +368,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
                 $scope.successModal = true;
 
             });
-    }
+    };
 
     function flotChartHoverCursorHandler(event,pos,item){
 

@@ -447,7 +447,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
                 },
                 defaultTheme: false
             }
-        }
+        };
 
     }
     $scope.barsOption = {};
