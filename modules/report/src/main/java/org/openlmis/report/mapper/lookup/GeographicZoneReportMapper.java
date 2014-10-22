@@ -10,11 +10,9 @@
 
 package org.openlmis.report.mapper.lookup;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.openlmis.report.model.GeoZoneReportingRate;
-import org.openlmis.report.model.GeoStockStatusFacilitySummary;
-import org.openlmis.report.model.GeoStockStatusProductSummary;
+import org.apache.ibatis.annotations.*;
+import org.openlmis.report.builder.LabEquipmentStatusByLocationQueryBuilder;
+import org.openlmis.report.model.*;
 import org.openlmis.report.model.dto.FlatGeographicZone;
 import org.openlmis.report.model.dto.GeoZoneTree;
 import org.openlmis.report.model.dto.GeographicZone;
@@ -91,7 +89,6 @@ public interface GeographicZoneReportMapper {
     " ) period" +
     " on gzz.id = period.geographicZoneId order by gzz.name" )
   List<GeoZoneReportingRate> getGeoReportingRate(@Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId);
-
 
 
   @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, false reported , (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts from facilities f\n" +
@@ -497,8 +494,61 @@ public interface GeographicZoneReportMapper {
 
     List<GeoStockStatusProduct> getAdequatelyStockedProducts(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
 
+   //@Select("select facility_id, facility_code, facility_name, serial_number, equipment_name, equipment_status, longitude, latitude from vw_lab_equipment_status")
+   @SelectProvider(type=LabEquipmentStatusByLocationQueryBuilder.class, method="getFacilitiesEquipmentsData")
+    List<GeoZoneEquipmentStatus> getFacilitiesEquipments(@Param("program") Long program,
+                                                         @Param("zone") Long zone,
+                                                         @Param("facilityType") Long facilityType,
+                                                         @Param("facility") Long facility,
+                                                         @Param("equipmentType") Long equipmentType,
+                                                         @Param("userId")Long userId,
+                                                         @Param("equipment")Long equipment);
+
+
+    @SelectProvider(type=LabEquipmentStatusByLocationQueryBuilder.class, method="getFacilityEquipmentStatusGeoData")
+    List<GeoZoneEquipmentStatus> getFacilityEquipmentStatusGeo2(@Param("program") Long program,
+                                                                @Param("zone") Long zone,
+                                                                @Param("facilityType") Long facilityType,
+                                                                @Param("facility") Long facility,
+                                                                @Param("equipmentType") Long equipmentType,
+                                                                @Param("userId")Long userId,
+                                                                @Param("equipment")Long equipment
+
+    );
+
+    @Select("select facility_code, facility_name, facility_type, disrict, facility_id from vw_lab_equipment_status where equipment_status = 'Not Operational'")
+    List<GeoZoneEquipmentStatus> getFacilitiesWithNonOperationalEquipments();
+
+    @Select("select facility_code, facility_name, facility_type, disrict, facility_id from vw_lab_equipment_status where equipment_status = 'Fully Operational'")
+    List<GeoZoneEquipmentStatus> getFacilitiesWithFullyOperationalEquipments();
+
+    @Select("select facility_code, facility_name, facility_type, disrict, facility_id from vw_lab_equipment_status where equipment_status = 'Partially Operational'")
+    List<GeoZoneEquipmentStatus> getFacilitiesWithPartiallyOperationalEquipments();
+
+
+    @SelectProvider(type=LabEquipmentStatusByLocationQueryBuilder.class, method="getFacilitiesByEquipmentStatus")
+    List<GeoZoneEquipmentStatus> getFacilitiesByEquipmentOperationalStatus(@Param("program") Long program,
+                                                                           @Param("zone") Long zone,
+                                                                           @Param("facilityType") Long facilityType,
+                                                                           @Param("facility") Long facility,
+                                                                           @Param("equipmentType") Long equipmentType,
+                                                                           @Param("userId")Long userId,
+                                                                           @Param("status") String status,
+                                                                           @Param("equipment")Long equipment);
+
+
+    @SelectProvider(type=LabEquipmentStatusByLocationQueryBuilder.class, method="getFacilityEquipmentStatusGeoSummaryData")
+    List<GeoZoneEquipmentStatusSummary> getFacilitiesEquipmentStatusSummary( @Param("program") Long program,
+                                                                             @Param("zone") Long zone,
+                                                                             @Param("facilityType") Long facilityType,
+                                                                             @Param("facility") Long facility,
+                                                                             @Param("equipmentType") Long equipmentType,
+                                                                             @Param("userId")Long userId,
+                                                                             @Param("equipment")Long equipment);
+
     @Select("   select productid, productname, periodid, periodname, periodyear, quantityonhand, quantityconsumed, amc from fn_getstockstatusgraphdata(#{programId}::int,#{geographicZoneId}::int,#{periodId}::int,#{productId}); ")
 
     List<GeoStockStatusProductConsumption> getStockStatusProductConsumption(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("geographicZoneId") Long geographicZoneId, @Param("productId") String ProductIds);
+
 
 }

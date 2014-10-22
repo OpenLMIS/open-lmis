@@ -7,19 +7,12 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-package org.openlmis.report.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class EquipmentType {
-    private Integer id;
-    private String code;
-    private String name;
-    private Integer displayOrder;
-}
+angular.module('lab_equipment_list_app', ['openlmis','angularCombine', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+    .config(['$routeProvider', function ($routeProvider) {
+      $routeProvider.
+        when('/list', {controller:LabEquipmentFunctioningReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
+        otherwise({redirectTo:'/list'});
+    }]).config(function(angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+    });

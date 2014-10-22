@@ -17,6 +17,7 @@ import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.response.OpenLmisResponse;
@@ -376,6 +377,12 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("equipmentTypes", equipmentTypeList);
     }
 
+    @RequestMapping(value = "/equipmentsByType/{equipmentType}", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getEquipmentByType(  @PathVariable("equipmentType") Long equipmentType
+                                                                 ) {
+        List<Equipment> equipments = reportLookupService.getEquipmentsByType(equipmentType);
+        return OpenLmisResponse.response("equipments", equipments);
+    }
 
     @RequestMapping(value="/productProgramCategoryTree/{programId}", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getProductCategoryProductByProgramId(@PathVariable("programId") int programId){

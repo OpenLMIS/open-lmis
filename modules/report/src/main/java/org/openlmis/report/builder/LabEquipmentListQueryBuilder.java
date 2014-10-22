@@ -2,6 +2,7 @@ package org.openlmis.report.builder;
 
 
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.report.model.params.LabEquipmentListReportParam;
 import org.openlmis.report.model.report.StockedOutReport;
 import org.openlmis.report.util.StringHelper;
 
@@ -11,57 +12,139 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 public class LabEquipmentListQueryBuilder {
 
-    public static String SelectFilteredSortedPagedRecords(Map params){
+    public static String getData(Map params){
 
+        LabEquipmentListReportParam filter = (LabEquipmentListReportParam) params.get("filterCriteria");
+        BEGIN();
+        SELECT("facility_code AS facilityCode, facility_name AS facilityName, facility_type AS facilityType, disrict as district, zone," +
+                " equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, equipment_status AS operationalStatus");
+        FROM("vw_lab_equipment_status");
+        writePredicates(filter);
+        ORDER_BY("zone, district, facilityName, equipmentName");
+        return SQL();
+
+        /*
         Map filterCriteria = (Map) params.get("filterCriteria");
         Long userId = (Long) params.get("userId");
 
         StringBuilder query = new StringBuilder();
         query.append("select * from vw_equipment_operational_status")
         .append(writePredicates(filterCriteria, userId));
-
-        return query.toString();
+        return query.toString();*/
     }
 
-    private static String writePredicates(Map params, Long userId){
+    public static String getFunctioningEquipmentWithContract(Map params){
 
-        StringBuilder predicate = new StringBuilder(" WHERE ");
-        String facilityTypeId =  StringHelper.isBlank(params,("facilityType"))  ? null :((String[])params.get("facilityType"))[0];
-        String facilityId = StringHelper.isBlank(params,("facility"))  ? null :((String[])params.get("facility"))[0]; //params.get("facility") == null ? null : ((String[])params.get("facility"))[0];
-        String period = StringHelper.isBlank(params,("period"))  ? null :((String[])params.get("period"))[0]; //params.get("period") == null ? null : ((String[])params.get("period"))[0];
-        String program = StringHelper.isBlank(params,("program"))  ? null :((String[])params.get("program"))[0]; //params.get("program") == null ? null : ((String[])params.get("program"))[0];
-        String schedule = StringHelper.isBlank(params,("schedule"))  ? null :((String[])params.get("schedule"))[0]; //params.get("schedule") == null ? null : ((String[])params.get("schedule"))[0];
-        String equipmentTypeId = StringHelper.isBlank(params,("equipmentType"))  ? null :((String[])params.get("equipmentType"))[0]; //params.get("equipmentType") == null ? null : ((String[])params.get("equipmentType"))[0];
-        String zoneId = StringHelper.isBlank(params,("zone"))  ? null :((String[])params.get("zone"))[0]; //params.get("equipmentType") == null ? null : ((String[])params.get("equipmentType"))[0];
+        LabEquipmentListReportParam filter = (LabEquipmentListReportParam) params.get("filterCriteria");
+        BEGIN();
+        SELECT("facility_code AS facilityCode, facility_name AS facilityName, facility_type AS facilityType, disrict as district, zone," +
+                " equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, 'Functioning' AS operationalStatus," +
+                " case when contract.contractid is null THEN 'NO' else 'YES' END AS serviceContract, contract.name AS vendorName, contract.contractid as contractId");
+                //" case when hasservicecontract = 'f' THEN 'NO' when hasservicecontract = 't' THEN 'YES' END AS serviceContract, contract.name AS vendorName, contract.contractid as contractId");
 
-        predicate.append(" pg_id = "+ program);
-        predicate.append(" and pp_id = "+ (period.isEmpty()? null : period));
-        predicate.append(" and ps_id = "+ schedule);
-        predicate.append(" and f_id in (select facility_id from vw_user_facilities where user_id = ").append(userId).append(" and program_id = ").append(program).append(")");
-
-        if (facilityId != null &&  !facilityId.equals("undefined") && !facilityId.isEmpty() && !facilityId.equals("0") &&  !facilityId.equals("-1")) {
-
-           predicate.append(" and f_id = "+ facilityId);
-        }
-
-        if (zoneId != null &&  !zoneId.equals("undefined") && !zoneId.isEmpty() && !zoneId.equals("0") &&  !zoneId.equals("-1")) {
-
-            //predicate.append(" and zone_id = "+ zoneId);
-            predicate.append(" and ( zone_id = ").append(zoneId).append(" or parent = ").append(zoneId).append(" or region_id = ").append(zoneId).append(" or district_id = ").append(zoneId).append(") ") ;
-        }
-
-        if (equipmentTypeId != null &&  !equipmentTypeId.equals("undefined") && !equipmentTypeId.isEmpty() && !equipmentTypeId.equals("0") &&  !equipmentTypeId.equals("-1")) {
-
-            predicate.append(" and eqpt_ty_id = ").append(equipmentTypeId);
-        }
-
-        if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1")) {
-
-            predicate.append(" and ft_id = ").append(facilityTypeId);
-        }
-
-        return predicate.toString();
+        FROM("vw_lab_equipment_status");
+        LEFT_OUTER_JOIN("(SELECT distinct name, vendorid, equipment_service_contracts.id contractid, equipmentid, facilityid FROM equipment_service_contracts JOIN equipment_service_contract_equipments ON\n" +
+                " equipment_service_contracts.id = equipment_service_contract_equipments.contractid JOIN\n" +
+                " equipment_service_contract_facilities ON equipment_service_contracts.id = equipment_service_contract_facilities.contractid\n" +
+                " JOIN equipment_service_vendors ON equipment_service_vendors.id = equipment_service_contracts.vendorid) contract\n" +
+                " on vw_lab_equipment_status.equipment_id = contract.equipmentid AND contract.facilityid = vw_lab_equipment_status.facility_id ");
+        writePredicatesForServiceContractReports(filter);
+        WHERE("equipment_status  = 'Fully Operational'");
+        ORDER_BY("zone, district, facilityName, equipmentName");
+        return SQL();
     }
 
+    public static String getNonFunctioningEquipmentWithContract(Map params){
 
+        LabEquipmentListReportParam filter = (LabEquipmentListReportParam) params.get("filterCriteria");
+        BEGIN();
+        SELECT("facility_code AS facilityCode, facility_name AS facilityName, facility_type AS facilityType, disrict as district, zone," +
+                " equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, 'Non Functioning' AS operationalStatus," +
+                " case when contract.contractid is null THEN 'NO' else 'YES' END AS serviceContract, contract.name AS vendorName, contract.contractid as contractId");
+     //        " case when hasservicecontract = 'f' THEN 'NO' when hasservicecontract = 't' THEN 'YES' END AS serviceContract, contract.name AS vendorName, contract.contractid as contractId");
+        FROM("vw_lab_equipment_status");
+        LEFT_OUTER_JOIN("(SELECT distinct name, vendorid, equipment_service_contracts.id contractid, equipmentid, facilityid FROM equipment_service_contracts JOIN equipment_service_contract_equipments ON\n" +
+                " equipment_service_contracts.id = equipment_service_contract_equipments.contractid JOIN\n" +
+                " equipment_service_contract_facilities ON equipment_service_contracts.id = equipment_service_contract_facilities.contractid\n" +
+                " JOIN equipment_service_vendors ON equipment_service_vendors.id = equipment_service_contracts.vendorid) contract\n" +
+                " on vw_lab_equipment_status.equipment_id = contract.equipmentid AND contract.facilityid = vw_lab_equipment_status.facility_id ");
+        writePredicatesForServiceContractReports(filter);
+        WHERE("equipment_status  = 'Not Operational'");
+        ORDER_BY("zone, district, facilityName, equipmentName");
+        return SQL();
+    }
+
+    private static void writePredicatesForServiceContractReports(LabEquipmentListReportParam filter) {
+
+        WHERE("facility_id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.programId})");
+        WHERE("programid  = #{filterCriteria.programId}");
+
+        if (filter != null) {
+
+            if (filter.getFacilityTypeId() != 0) {
+                WHERE("ftype_id = #{filterCriteria.facilityTypeId}");
+            }
+
+            if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
+                WHERE("(district_id = #{filterCriteria.zoneId} or zone_id = #{filterCriteria.zoneId} or region_id = #{filterCriteria.zoneId} or parent = #{filterCriteria.zoneId})");
+            }
+
+            if (filter.getFacilityId() != 0) {
+                WHERE("facility_id = #{filterCriteria.facilityId}");
+            }
+
+            if (filter.getEquipmentTypeId() != 0) {
+                WHERE("equipmenttype_id = #{filterCriteria.equipmentTypeId}");
+            }
+
+            if (filter.getEquipmentId() != 0) {
+                WHERE("equipment_id = #{filterCriteria.equipmentId}");
+            }
+
+            /*if (filter.getServiceContractAvailable() != 0) {
+                if(filter.getServiceContractAvailable() == 1)
+                    WHERE("hasservicecontract = 'YES'");
+                else
+                    WHERE("hasservicecontract = 'NO'");
+            }*/
+            if (filter.getServiceContractAvailable() != 0) {
+                // Based on the other interpretation of equipment contract
+                if (filter.getServiceContractAvailable() == 1)
+                    WHERE("contract.contractid is not null");
+                else
+                    WHERE("contract.contractid is null");
+            }
+        }
+    }
+
+    private static void writePredicates(LabEquipmentListReportParam filter) {
+
+
+        WHERE("facility_id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.programId})");
+        WHERE("programid  = #{filterCriteria.programId}");
+
+        if (filter != null) {
+
+            if (filter.getFacilityTypeId() != 0) {
+                WHERE("ftype_id = #{filterCriteria.facilityTypeId}");
+            }
+
+            if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
+                WHERE("(district_id = #{filterCriteria.zoneId} or zone_id = #{filterCriteria.zoneId} or region_id = #{filterCriteria.zoneId} or parent = #{filterCriteria.zoneId})");
+            }
+
+            if (filter.getFacilityId() != 0) {
+                WHERE("facility_id = #{filterCriteria.facilityId}");
+            }
+
+            if (filter.getEquipmentTypeId() != 0) {
+                WHERE("equipmenttype_id = #{filterCriteria.equipmentTypeId}");
+            }
+
+            if (filter.getEquipmentId() != 0) {
+                WHERE("equipment_id = #{filterCriteria.equipmentId}");
+            }
+
+        }
+    }
 }

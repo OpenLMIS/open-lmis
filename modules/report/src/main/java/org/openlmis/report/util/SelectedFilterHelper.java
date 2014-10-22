@@ -12,9 +12,11 @@ package org.openlmis.report.util;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProductRepository;
@@ -42,6 +44,9 @@ public class SelectedFilterHelper {
   @Autowired
   private GeographicZoneRepository geoZoneRepsotory;
 
+  @Autowired
+  private FacilityRepository facilityRepository;
+
   public String getProgramPeriodGeoZone(Map<String, String[]> params){
     String filterSummary = "";
 
@@ -63,6 +68,33 @@ public class SelectedFilterHelper {
 
     return filterSummary;
   }
+
+    public String getProgramGeoZoneFacility(Map<String, String[]> params){
+
+        String filterSummary = "";
+
+        String program = StringHelper.isBlank(params, "program")? "0": params.get("program")[0];
+        String zone = StringHelper.isBlank(params, "zone")?"0" : params.get("zone")[0];
+        String facility = StringHelper.isBlank(params, "facility")?"0" : params.get("facility")[0];
+
+        filterSummary = "Program: " + programService.getById(Long.parseLong(program)).getName();
+        GeographicZone zoneObject = geoZoneRepsotory.getById(Integer.parseInt(zone));
+        Facility facilityObject = facilityRepository.getById(Long.parseLong(facility));
+
+        if(zoneObject == null){
+            filterSummary += "\nGeographic Zone: National";
+        }else{
+            filterSummary += "\nGeographic Zone: " + zoneObject.getName();
+        }
+
+        if(facilityObject == null){
+            filterSummary += "\nFacility: All Facilities";
+        }else{
+            filterSummary += "\nFacility: " + facilityObject.getName();
+        }
+
+        return filterSummary;
+    }
 
   public String getSelectedFilterString(Map<String, String[]> params){
     String filterSummary = "";
@@ -88,5 +120,6 @@ public class SelectedFilterHelper {
 
     return filterSummary;
   }
+
 
 }

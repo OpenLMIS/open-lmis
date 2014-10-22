@@ -32,6 +32,8 @@
 	<field name="serialNumber" class="java.lang.String"/>
 	<field name="equipmentName" class="java.lang.String"/>
 	<field name="operationalStatus" class="java.lang.String"/>
+	<field name="serviceContract" class="java.lang.String"/>
+	<field name="vendorName" class="java.lang.String"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
@@ -88,48 +90,60 @@
 		</band>
 	</title>
 	<columnHeader>
-		<band height="21" splitType="Stretch">
+		<band height="27" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="1" width="802" height="19" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+				<reportElement mode="Opaque" x="0" y="1" width="802" height="26" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
 					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 				</reportElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="8" y="1" width="86" height="20" uuid="79284315-9bcd-47cc-b6f3-dfe0ac45e4c8"/>
+				<reportElement x="8" y="1" width="64" height="20" uuid="79284315-9bcd-47cc-b6f3-dfe0ac45e4c8"/>
 				<text><![CDATA[Facility Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="94" y="1" width="100" height="20" uuid="b751aafe-298f-4716-91bf-e71e4e549caf"/>
+				<reportElement x="72" y="1" width="80" height="20" uuid="b751aafe-298f-4716-91bf-e71e4e549caf"/>
 				<text><![CDATA[Facility Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="194" y="1" width="86" height="20" uuid="d3df70ed-4107-41cf-9391-732cdb8860ba"/>
+				<reportElement x="152" y="1" width="76" height="20" uuid="d3df70ed-4107-41cf-9391-732cdb8860ba"/>
 				<text><![CDATA[Facility Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="280" y="1" width="82" height="20" uuid="ad272815-98c7-4170-ae18-1585584bd77c"/>
+				<reportElement x="228" y="1" width="72" height="20" uuid="ad272815-98c7-4170-ae18-1585584bd77c"/>
 				<text><![CDATA[District]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="362" y="1" width="77" height="20" uuid="833106bc-411d-478a-9b32-6d80d2ac550c"/>
+				<reportElement x="300" y="1" width="64" height="20" uuid="833106bc-411d-478a-9b32-6d80d2ac550c"/>
 				<text><![CDATA[Zone]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="439" y="1" width="120" height="20" uuid="c7e457e1-73bd-43c2-986b-f37a27daed31"/>
+				<reportElement x="364" y="1" width="80" height="26" uuid="c7e457e1-73bd-43c2-986b-f37a27daed31"/>
 				<text><![CDATA[Equipment Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="559" y="1" width="77" height="20" uuid="16a94877-3c30-4b69-837f-363cbb91373b"/>
+				<reportElement x="444" y="1" width="67" height="20" uuid="16a94877-3c30-4b69-837f-363cbb91373b"/>
 				<text><![CDATA[Model]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="636" y="1" width="85" height="20" uuid="80cabe8b-3bcb-4b52-83b2-68d9d33822ec"/>
-				<text><![CDATA[Serial Number]]></text>
+				<reportElement x="511" y="2" width="64" height="25" uuid="80cabe8b-3bcb-4b52-83b2-68d9d33822ec"/>
+				<text><![CDATA[Serial Numberf]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="723" y="1" width="78" height="20" uuid="75e6ef4e-553e-402d-a3f5-396bd6b6caea"/>
+				<reportElement x="575" y="1" width="68" height="26" uuid="19dba632-417f-4fed-ba8d-ccbd91c3a6e7"/>
+				<text><![CDATA[Equipment Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="643" y="1" width="58" height="26" uuid="75e6ef4e-553e-402d-a3f5-396bd6b6caea"/>
 				<text><![CDATA[Operational Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="701" y="2" width="45" height="25" uuid="6061547a-81fe-486c-b7ea-ff45e31671ab"/>
+				<text><![CDATA[Service Contract]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="746" y="2" width="55" height="25" uuid="34aef36b-2555-420f-a895-f713c954beb9"/>
+				<text><![CDATA[Vendor]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -157,40 +171,52 @@
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="13" y="0" width="81" height="20" uuid="1efbb955-a0ae-48a5-a50b-b1cf4d027ddf"/>
+				<reportElement x="13" y="0" width="59" height="20" uuid="1efbb955-a0ae-48a5-a50b-b1cf4d027ddf"/>
 				<textFieldExpression><![CDATA[$F{facilityCode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="94" y="0" width="100" height="20" uuid="a68ddd15-ccef-4996-8e7e-e9ac24fc06fe"/>
+				<reportElement x="72" y="0" width="80" height="20" uuid="a68ddd15-ccef-4996-8e7e-e9ac24fc06fe"/>
 				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="362" y="0" width="77" height="20" uuid="971f3175-6e07-49b6-aa38-51833490cd2c"/>
+				<reportElement x="300" y="0" width="64" height="20" uuid="971f3175-6e07-49b6-aa38-51833490cd2c"/>
 				<textFieldExpression><![CDATA[$F{zone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="439" y="0" width="120" height="20" uuid="21e1f76c-e874-49d5-b0fc-dfaa439a93da"/>
+				<reportElement x="364" y="0" width="80" height="20" uuid="21e1f76c-e874-49d5-b0fc-dfaa439a93da"/>
 				<textFieldExpression><![CDATA[$F{equipmentType}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="559" y="0" width="77" height="20" uuid="5a26bf4c-2c91-418d-b422-80ec533acdc9"/>
+				<reportElement x="444" y="0" width="67" height="20" uuid="5a26bf4c-2c91-418d-b422-80ec533acdc9"/>
 				<textFieldExpression><![CDATA[$F{model}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="636" y="0" width="85" height="20" uuid="88825a54-d0c5-4f3d-b365-97b0991c3019"/>
+				<reportElement x="511" y="0" width="64" height="20" uuid="88825a54-d0c5-4f3d-b365-97b0991c3019"/>
 				<textFieldExpression><![CDATA[$F{serialNumber}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="723" y="0" width="78" height="20" uuid="88f96f49-7aa7-4318-a20c-0052fa705ce3"/>
-				<textFieldExpression><![CDATA[$F{operationalStatus}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="194" y="0" width="86" height="20" uuid="6c35c1c8-5fa5-4a7d-9270-fdb3cd821a3b"/>
+				<reportElement x="152" y="0" width="76" height="20" uuid="6c35c1c8-5fa5-4a7d-9270-fdb3cd821a3b"/>
 				<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="0" width="82" height="20" uuid="82e867e0-0b58-4fc6-ad9e-987a540b105e"/>
+				<reportElement x="228" y="0" width="72" height="20" uuid="82e867e0-0b58-4fc6-ad9e-987a540b105e"/>
 				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="575" y="0" width="68" height="20" uuid="313e8b41-4fc5-4806-8b77-780f2e939472"/>
+				<textFieldExpression><![CDATA[$F{equipmentName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="643" y="0" width="58" height="20" uuid="88f96f49-7aa7-4318-a20c-0052fa705ce3"/>
+				<textFieldExpression><![CDATA[$F{operationalStatus}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="701" y="0" width="45" height="20" uuid="b25cfec1-3e07-4143-8e49-828b83eb078a"/>
+				<textFieldExpression><![CDATA[$F{serviceContract}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="746" y="0" width="55" height="20" uuid="6bed5067-2a92-4cc2-b47b-fac0285ccf1b"/>
+				<textFieldExpression><![CDATA[$F{vendorName}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

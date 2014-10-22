@@ -19,7 +19,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -53,6 +58,8 @@ public class GeoDataController extends BaseController {
 
       return OpenLmisResponse.response("facilities", this.geographicZoneReportMapper.getReportingFacilities(program, geoZoneId , period));
     }
+
+
 
   @RequestMapping(value="/non-reporting-facilities", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getNonReportingFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
@@ -150,6 +157,66 @@ public class GeoDataController extends BaseController {
                                                                          @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
     ){
         return OpenLmisResponse.response("products", this.geographicZoneReportMapper.getAdequatelyStockedProducts(program, geoZoneId , period, product));
+    }
+
+
+    //Lab equipment status by location
+    @RequestMapping(value="/facilitiesEquipments", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilitiesLabEquipmentStatus(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                            @RequestParam(value = "zone", required = true, defaultValue = "0") Long zone,
+                                                                            @RequestParam(value = "facilityType", required = true, defaultValue = "0") Long facilityType,
+                                                                            @RequestParam(value = "facility", required = true, defaultValue = "0") Long facility,
+                                                                            @RequestParam(value = "equipmentType", required = true, defaultValue = "0") Long equipmentType,
+                                                                            @RequestParam(value = "equipment", required = true, defaultValue = "0") Long equipment,
+                                                                            HttpServletRequest request
+    ){
+        Long userId = loggedInUserId(request);
+        return  OpenLmisResponse.response("equipmentsStatus",
+                this.geographicZoneReportMapper.getFacilitiesEquipments(program, zone,  facilityType, facility, equipmentType, userId, equipment));
+    }
+
+    @RequestMapping(value="/facilitiesEquipmentsStatusGeo2", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilitiesLabEquipmentStatus2(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                             @RequestParam(value = "zone", required = true, defaultValue = "0") Long zone,
+                                                                             @RequestParam(value = "facilityType", required = true, defaultValue = "0") Long facilityType,
+                                                                             @RequestParam(value = "facility", required = true, defaultValue = "0") Long facility,
+                                                                             @RequestParam(value = "equipmentType", required = true, defaultValue = "0") Long equipmentType,
+                                                                             @RequestParam(value = "equipment", required = true, defaultValue = "0") Long equipment,
+                                                                             HttpServletRequest request
+
+    ){
+        Long userId = loggedInUserId(request);
+        return  OpenLmisResponse.response("equipmentsStatus", this.geographicZoneReportMapper
+                .getFacilityEquipmentStatusGeo2(program, zone,  facilityType, facility, equipmentType, userId, equipment));
+    }
+
+    @RequestMapping(value="/facilitiesByEquipmentOperationalStatus", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilitiesByEquipmentOperationalStatus(@RequestParam(value = "status", required = true, defaultValue = "") String status,
+                                                                                      @RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                                      @RequestParam(value = "zone", required = true, defaultValue = "0") Long zone,
+                                                                                      @RequestParam(value = "facilityType", required = true, defaultValue = "0") Long facilityType,
+                                                                                      @RequestParam(value = "facility", required = true, defaultValue = "0") Long facility,
+                                                                                      @RequestParam(value = "equipmentType", required = true, defaultValue = "0") Long equipmentType,
+                                                                                      @RequestParam(value = "equipment", required = true, defaultValue = "0") Long equipment,
+                                                                                      HttpServletRequest request
+    ){
+        Long userId = loggedInUserId(request);
+        return  OpenLmisResponse.response("equipmentsStatus", this.geographicZoneReportMapper
+                .getFacilitiesByEquipmentOperationalStatus(program, zone,  facilityType, facility, equipmentType, userId, status, equipment));
+    }
+
+    @RequestMapping(value="/facilitiesEquipmentStatusSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilitiesEquipmentStatusSummary(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                                @RequestParam(value = "zone", required = true, defaultValue = "0") Long zone,
+                                                                                @RequestParam(value = "facilityType", required = true, defaultValue = "0") Long facilityType,
+                                                                                @RequestParam(value = "facility", required = true, defaultValue = "0") Long facility,
+                                                                                @RequestParam(value = "equipmentType", required = true, defaultValue = "0") Long equipmentType,
+                                                                                @RequestParam(value = "equipment", required = true, defaultValue = "0") Long equipment,
+                                                                                HttpServletRequest request
+    ){
+        Long userId = loggedInUserId(request);
+        return  OpenLmisResponse.response("equipmentsStatusSummary", this.geographicZoneReportMapper
+                .getFacilitiesEquipmentStatusSummary(program, zone,  facilityType, facility, equipmentType, userId, equipment));
     }
 
     @RequestMapping(value="/stock-status-product-consumption", method = GET, headers = BaseController.ACCEPT_JSON)

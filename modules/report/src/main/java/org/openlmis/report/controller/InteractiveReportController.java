@@ -431,4 +431,36 @@ public class InteractiveReportController extends BaseController {
 
         return new Pages(page, max, orderFillRateReportList);
     }
+
+    @RequestMapping(value = "/reportdata/functioningLabEquipment", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_LAB_EQUIPMENT_LIST_REPORT')")
+    //TODO: premission needs to be done
+    public Pages getFunctioningLabEquipmentWithServiceContract(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                         @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                         HttpServletRequest request) {
+
+        Report report = reportManager.getReportByKey("lab_equipments_functioning");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        EquipmentsFunctioningDataProvider provider = (EquipmentsFunctioningDataProvider) report.getReportDataProvider();
+        List<LabEquipmentStatusReport> labEquipmentFunctioningList = (List<LabEquipmentStatusReport>)
+                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(),page, max);
+
+        return new Pages(page, max, labEquipmentFunctioningList);
+    }
+
+    @RequestMapping(value = "/reportdata/nonFunctioningLabEquipment", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_LAB_EQUIPMENT_LIST_REPORT')")
+    //TODO: premission needs to be done
+    public Pages getNonFunctioningLabEquipmentWithServiceContract(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                         @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                         HttpServletRequest request) {
+
+        Report report = reportManager.getReportByKey("lab_equipments_non_functioning");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        EquipmentsNonFunctioningDataProvider provider = (EquipmentsNonFunctioningDataProvider) report.getReportDataProvider();
+        List<LabEquipmentStatusReport> labEquipmentNonFunctioningList = (List<LabEquipmentStatusReport>)
+                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(),page, max);
+
+        return new Pages(page, max, labEquipmentNonFunctioningList);
+    }
 }
