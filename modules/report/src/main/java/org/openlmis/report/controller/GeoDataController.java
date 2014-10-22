@@ -155,10 +155,10 @@ public class GeoDataController extends BaseController {
     @RequestMapping(value="/stock-status-product-consumption", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getStockStatusProductConsumption(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
                                                                              @RequestParam(value = "product", required = true, defaultValue = "0")List<Long> productListId,
-                                                                            // @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
+                                                                             @RequestParam(value = "period", required = true, defaultValue = "0") Long periodId,
                                                                              @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
     ){
-        return OpenLmisResponse.response("consumption", this.geographicZoneReportMapper.getStockStatusProductConsumption(program, geoZoneId , getCommaSeparatedIds(productListId)));
+        return OpenLmisResponse.response("consumption", this.geographicZoneReportMapper.getStockStatusProductConsumption(program, periodId, geoZoneId, getCommaSeparatedIds(productListId)));
     }
 
 }

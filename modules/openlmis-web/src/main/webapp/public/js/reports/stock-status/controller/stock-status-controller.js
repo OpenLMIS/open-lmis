@@ -311,6 +311,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
         StockStatusProductConsumptionGraph.get({
             program: $scope.filter.program,
             product: $scope.productsSelected,
+            period: $scope.filter.period,
             geo_zone: $scope.filter.zone
         },function (data){
             $scope.consumptionData =  data.consumption;
