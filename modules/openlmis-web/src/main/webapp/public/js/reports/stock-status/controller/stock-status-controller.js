@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockStatusController( $scope, leafletData, StockStatusProductList, StockedOutFacilityByProductList, UnderStockedFacilityByProductList, OverStockedFacilityByProductList, AdequatelyStockedFacilityByProductList, StockedOutFacilityList, UnderStockedFacilityList, OverStockedFacilityList, AdequatelyStockedFacilityList, SettingsByKey, ContactList, SendMessages, $filter, $dialog, messageService) {
+function StockStatusController( $scope, leafletData, StockStatusProductConsumptionGraph, StockStatusProductList, StockedOutFacilityByProductList, UnderStockedFacilityByProductList, OverStockedFacilityByProductList, AdequatelyStockedFacilityByProductList, StockedOutFacilityList, UnderStockedFacilityList, OverStockedFacilityList, AdequatelyStockedFacilityList, SettingsByKey, ContactList, SendMessages, $filter, $dialog, messageService) {
 
     $scope.default_indicator = "stocked_out";
     $scope.district_title = "All Geographic Zones";
@@ -16,19 +16,19 @@ function StockStatusController( $scope, leafletData, StockStatusProductList, Sto
 
     // get configurations
 
-/*
-    SettingsByKey.get({key: 'STOCKED_OUT_SMS_TEMPLATE'}, function (data){
-        $scope.sms_template           = data.settings.value;
-    });
+    /*
+     SettingsByKey.get({key: 'STOCKED_OUT_SMS_TEMPLATE'}, function (data){
+     $scope.sms_template           = data.settings.value;
+     });
 
-    SettingsByKey.get({key: 'UNDER_STOCKED_SMS_TEMPLATE'}, function (data){
-        $scope.sms_template           = data.settings.value;
-    });
+     SettingsByKey.get({key: 'UNDER_STOCKED_SMS_TEMPLATE'}, function (data){
+     $scope.sms_template           = data.settings.value;
+     });
 
-    SettingsByKey.get({key: 'OVER_STOCKED_SMS_TEMPLATE'}, function (data){
-        $scope.sms_template           = data.settings.value;
-    });
-*/
+     SettingsByKey.get({key: 'OVER_STOCKED_SMS_TEMPLATE'}, function (data){
+     $scope.sms_template           = data.settings.value;
+     });
+     */
     // get configurations
     SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'}, function (data){
         $scope.sms_template           = data.settings.value;
@@ -44,6 +44,16 @@ function StockStatusController( $scope, leafletData, StockStatusProductList, Sto
     // end of configurations
 
     // show dialog box contents
+
+
+    var barColors = [{'minRange': -100, 'maxRange': 0, 'color' : '#E23E3E', 'description' : 'Red color for product with a fill rate <= 0 '},
+        {'minRange': 1, 'maxRange': 50, 'color' : '#FEBA50', 'description' : 'Yellow color for product with a fill rate > 0 and <= 50 '},
+        {'minRange': 51, 'maxRange': 100, 'color' : '#38AB49', 'description' : 'Green color for product with a fill rate > 50 '}];
+    var $scaleColor = '#D7D5D5';
+    var defaultBarColor = '#FEBA50';
+    var $lineWidth = 5;
+    var barColor = defaultBarColor;
+
 
     $scope.showSendEmail = function(facility){
         $scope.selected_facility = facility;
@@ -125,40 +135,6 @@ function StockStatusController( $scope, leafletData, StockStatusProductList, Sto
 
     // end send actions
 
-
-  /*
-    $scope.ReportingFacilities = function(feature, element) {
-        ReportingFacilityList.get({
-            program: $scope.filter.program,
-            period: $scope.filter.period,
-            geo_zone: feature.id
-        }, function(data) {
-            $scope.facilities = data.facilities;
-            $scope.successModal = true;
-            $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Properly Reporting Facilities in ' + feature.name;
-        });
-        $scope.zoomToSelectedFeature(feature);
-    };
-*/
-/*
-    $scope.NonReportingFacilities = function(feature, element) {
-        NonReportingFacilityList.get({
-            program: $scope.filter.program,
-            period: $scope.filter.period,
-            geo_zone: feature.id
-        }, function(data) {
-            $scope.facilities = data.facilities;
-            $scope.successModal = true;
-            $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Non Reporting Facilities in ' + feature.name;
-        });
-
-
-    };
-
-*/
-
     $scope.StockedOutFacilities = function(feature, element) {
         StockedOutFacilityList.get({
             program: $scope.filter.program,
@@ -173,25 +149,28 @@ function StockStatusController( $scope, leafletData, StockStatusProductList, Sto
             $scope.title = 'Stocked Out Facilities in ' + feature.name;
             $scope.district_title = feature.name;
             getStockStatusByProduct();
+            //getStockStatusProductConsumption();
+            loadStockStatusConsumptionData();
+
         });
         //alert("fail:" +  JSON.stringify($scope.filter));
         $scope.zoomToSelectedFeature(feature);
     };
 
     /*
-    $scope.StockStatusProducts = function(feature, element) {
-        StockStatusProductList.get({
-            program: $scope.filter.program,
-            period: $scope.filter.period
-        }, function(data) {
-            $scope.products = data.products;
-            $scope.successModal = true;
-            alert("fail:" +  JSON.stringify($scope.products));
+     $scope.StockStatusProducts = function(feature, element) {
+     StockStatusProductList.get({
+     program: $scope.filter.program,
+     period: $scope.filter.period
+     }, function(data) {
+     $scope.products = data.products;
+     $scope.successModal = true;
+     alert("fail:" +  JSON.stringify($scope.products));
 
-        });
-    };
+     });
+     };
 
-*/
+     */
     $scope.UnderStockedFacilities = function(feature, element) {
         UnderStockedFacilityList.get({
             program: $scope.filter.program,
@@ -248,10 +227,10 @@ function StockStatusController( $scope, leafletData, StockStatusProductList, Sto
         $scope.zoomToSelectedFeature(feature);
     };
 
- // stock status by product
+    // stock status by product
 
 
-  $scope.AdequatelyStockedProducts = function(feature, element) {
+    $scope.AdequatelyStockedProducts = function(feature, element) {
         AdequatelyStockedFacilityByProductList.get({
             program: $scope.filter.program,
             period: $scope.filter.period,
@@ -319,13 +298,177 @@ function StockStatusController( $scope, leafletData, StockStatusProductList, Sto
         $scope.zoomToSelectedFeature(feature);
     };
 
- ///////////
+
+    ///////////
+    loadStockStatusConsumptionData = function(){
+        $scope.productsSelected = [];
+        angular.forEach($scope.products, function(itm,idx){
+            if(itm.selected){
+                $scope.productsSelected.push(itm.id);
+            }
+        });
+
+        StockStatusProductConsumptionGraph.get({
+            program: $scope.filter.program,
+            product: $scope.productsSelected,
+            period: $scope.filter.period,
+            geo_zone: $scope.filter.zone
+        },function (data){
+            $scope.consumptionData =  data.consumption;
+            //alert("fail5:" +  JSON.stringify($scope.consumptionData));
+            adjustDataForChart($scope.consumptionData);
+
+
+        });
+    };
+
+    $scope.resetConsumptionChartData = function(){
+
+        $scope.productstocks = null;
+        $scope.multiBarsRenderedData = undefined;
+        $scope.multiBarsData = undefined;
+        $scope.multipleBarsOption = undefined;
+    };
+    $scope.productstocks = null;
+
+    var adjustDataForChart = function(consumptionData){
+        if(isUndefined(consumptionData) || consumptionData.length === 0){
+            $scope.resetConsumptionChartData();
+            return;
+        }
+
+        var groupedByProduct = _.chain(consumptionData).groupBy('productId').map(function(value, key) { return {productId: key, product: _.first(value).productName, productData: value };}).value();
+
+        $scope.productstocks = [];
+
+        angular.forEach(groupedByProduct,function(productStock){
+            var productId = _.first(productStock.productData).productId;
+            var productName = _.first(productStock.productData).productName;
+            var quantityOnHandSeries =  _.pairs(_.object(_.range(productStock.productData.length), _.map(_.pluck(productStock.productData,'quantityOnHand'),function(stat){ return stat;})));
+            var quantityConsumedSeries =  _.pairs(_.object(_.range(productStock.productData.length), _.map(_.pluck(productStock.productData,'quantityConsumed'),function(stat){ return  stat;})));
+            var amcSeries =  _.pairs(_.object(_.range(productStock.productData.length), _.map(_.pluck(productStock.productData,'amc'),function(stat){ return  stat;})));
+
+            var periodSeries = _.pairs(_.object(_.range(productStock.productData.length), _.map(productStock.productData ,function(stat){ return  stat.periodName +' '+stat.periodYear;})));
+
+            var barsOption = generateBarsOption(productId, periodSeries, productName);
+
+            $scope.productstocks.push({productId: productId,options: barsOption, dataSeries: [{
+                label: "stock in hand",
+                data: quantityOnHandSeries,
+                color: "#5eb95e",
+                bars: {
+                    show: true,
+                    align: "center",
+                    barWidth: 0.5,
+                    fill: 0.9,
+                    lineWidth:1
+                }
+            },{
+                label: "quantity consumed",
+                data: quantityConsumedSeries,
+                 yaxis: 3,
+                color: "#dd514c",
+                points: { fillColor: "#dd514c", show: true },
+                lines: {show:true}
+            },{
+                label:"amc",
+                data: amcSeries,
+                 yaxis: 3,
+                color: "#faa732",
+                points: { fillColor: "#faa732", show: true },
+                lines: {show:true}
+            }]});
+
+        });
+    };
+
+    function generateBarsOption(id, tickLabel, xaxisLabel){
+               return {
+            legend: {
+                position:"nw",
+                noColumns: 1,
+                labelBoxBorderColor: "none"
+           },
+            xaxis: {
+                tickLength: 0, // hide gridlines
+                axisLabel: xaxisLabel,
+                axisLabelUseCanvas: false,
+                ticks: tickLabel,
+                labelWidth: 10,
+                reserveSpace: true
+
+            } ,
+            yaxes: [
+                //yaxis:1
+                {
+                    position: "left",
+                    //max: 1070,
+                    color: "#5eb95e",
+                    axisLabel: "Stock in hand",
+                    axisLabelUseCanvas: true,
+                    axisLabelFontSizePixels: 12,
+                    axisLabelFontFamily: 'Verdana, Arial',
+                    axisLabelPadding: 3
+                },
+                //yaxis:2
+                {
+                    position: "right",
+                    color: "#dd514c",
+                    axisLabel: "Consumption",
+                    axisLabelUseCanvas: true,
+                    axisLabelFontSizePixels: 12,
+                    axisLabelFontFamily: 'Verdana, Arial',
+                    axisLabelPadding: 3
+                },
+                //yaxis:3
+                {
+                    position: "right",
+                    //tickSize: 50,
+                    color: "#faa732",
+                    axisLabel: "AMC/Consumption",
+                    axisLabelUseCanvas: true,
+                    axisLabelFontSizePixels: 12,
+                    axisLabelFontFamily: 'Verdana, Arial',
+                    axisLabelPadding: 3
+                }
+            ],
+
+            grid: {
+                hoverable: true,
+                borderWidth: 1,
+                backgroundColor: { colors: ["#ffffff", "#EDF5FF"] }
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "%s is %y",
+                shifts: {
+                    x: 20,
+                    y: 0
+                },
+                defaultTheme: false
+            }
+        }
+
+    }
+    $scope.barsOption = {};
+    $scope.barsData =[];
+
+    $scope.productSelectChange = function(selected, product){
+        loadStockStatusConsumptionData();
+    };
+
+//////////////////////
+
 
 
     $scope.expectedFilter = function(item) {
         return item.period > 0;
     };
 
+
+
+
+    ////////////////////////////////////////////////////
     angular.extend($scope, {
         layers: {
             baselayers: {
@@ -477,6 +620,12 @@ function StockStatusController( $scope, leafletData, StockStatusProductList, Sto
         });
     };
 
+    getStockStatusProductConsumption = function() {
+        $.getJSON('/gis/stock-status-product-consumption.json', $scope.filter, function(data) {
+            $scope.consumption = data.consumption;
+            alert("fail:" +  JSON.stringify($scope.consumption));
+        });
+    };
     $scope.OnFilterChanged = function() {
 
         $.getJSON('/gis/stock-status-facilities.json', $scope.filter, function(data) {
@@ -497,9 +646,22 @@ function StockStatusController( $scope, leafletData, StockStatusProductList, Sto
             $scope.centerJSON();
         });
 
-
         $.getJSON('/gis/stock-status-products.json', $scope.filter, function(data) {
-            $scope.products = data.products;
+            var markSelectedProducts = null;
+
+            if(!isUndefined(data.products)){
+
+                markSelectedProducts = _.map(data.products ,function(product){
+
+                    if($scope.filter.product == product.id){
+                        product.selected = true;
+                    }
+
+                    return product;
+                });
+            }
+            $scope.products = markSelectedProducts;
+            loadStockStatusConsumptionData();
         });
 
     };

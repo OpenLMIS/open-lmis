@@ -14,7 +14,7 @@
         <li ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
             <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
                openlmis-message="label.full.supply.products"></a></li>
-        <li ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
+        <li  ng-show="hide_skipped_products == 'false'" ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
             <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
                openlmis-message="label.non.full.supply.products"></a></li>
         <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show="regimenCount">
@@ -61,7 +61,7 @@
         <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
 
         <div class="form-cell button-row">
-          <input ng-show="rnr.status != 'SKIPPED'" type="button" class="btn btn-primary submit-button" ng-click="rejectRnR();" openlmis-message="button.rnr.reject" />
+          <input ng-show="rnr.status != 'SKIPPED' && rnr.status != 'RELEASED'" type="button" class="btn btn-primary submit-button" ng-click="rejectRnR();" openlmis-message="button.rnr.reject" />
 
             <input id="saveButton" type="button" openlmis-message="button.save" ng-click="saveRnr()"
                    class="btn btn-primary save-button"

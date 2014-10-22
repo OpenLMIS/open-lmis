@@ -135,6 +135,12 @@ public class RnrLineItem extends LineItem {
     this.previousStockInHand = previousLineItem.getStockInHand();
   }
 
+  public void setSkippedValueWhenPreviousLineItemIsAvalable(RnrLineItem previousLineItem){
+    if(previousLineItem != null){
+      this.setSkipped(previousLineItem.getSkipped());
+    }
+  }
+
   public void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {
     if (!template.columnsVisible(QUANTITY_RECEIVED)) quantityReceived = 0;
     if (!template.columnsVisible(QUANTITY_DISPENSED)) quantityDispensed = 0;

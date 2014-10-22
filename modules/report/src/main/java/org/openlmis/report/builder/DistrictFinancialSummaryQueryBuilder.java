@@ -27,7 +27,8 @@ public class DistrictFinancialSummaryQueryBuilder {
         sql = "  WITH temp as (select facilitycode,facility,facilitytype,region,\n" +
                 "  coalesce (sum(fullsupplyitemssubmittedcost)+sum(nonfullsupplyitemssubmittedcost),0) totalCost  \n" +
                 "  from vw_district_financial_summary \n" +
-                writePredicates(filter, userId) +
+                 " join vw_districts gz on gz.district_id = vw_district_financial_summary.zoneId \n"+
+                   writePredicates(filter, userId) +
                 "  Group by region,facilitycode,facility,facilitytype order by region)   \n" +
                 "  select t.facilitycode,t.facility,t.facilitytype ,totalcost ,t.region                            \n" +
                 "  from temp t INNER JOIN (select region from temp GROUP BY region order by region) temp2 ON \n" +
@@ -47,7 +48,7 @@ public class DistrictFinancialSummaryQueryBuilder {
 
             if (filter.getZoneId() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " ( district_zone_id = " + filter.getZoneId() + " or parent = " + filter.getZoneId() + " or region_id = " + filter.getZoneId() + " or district_id = " + filter.getZoneId() + ") ";
+                predicate = predicate + " ( zone_id = " + filter.getZoneId() + " or parent = " + filter.getZoneId() + " or region_id = " + filter.getZoneId() + " or district_id = " + filter.getZoneId() + ") ";
             }
             if (filter.getScheduleId() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";

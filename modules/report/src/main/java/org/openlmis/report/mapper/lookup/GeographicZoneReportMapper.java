@@ -19,6 +19,7 @@ import org.openlmis.report.model.dto.GeographicZone;
 import org.openlmis.report.model.geo.GeoFacilityIndicator;
 import org.openlmis.report.model.geo.GeoStockStatusFacility;
 import org.openlmis.report.model.geo.GeoStockStatusProduct;
+import org.openlmis.report.model.geo.GeoStockStatusProductConsumption;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -83,7 +84,7 @@ public interface GeographicZoneReportMapper {
              " join programs_supported ps on ps.facilityId = facilities.id " +
              " join geographic_zones gz on gz.id = facilities.geographicZoneId " +
              " where  ps.programId = #{programId} and facilities.id in  " +
-             " (select facilityId from requisitions where periodId = #{processingPeriodId} and programId = #{programId}) " +
+             " (select facilityId from requisitions where periodId = #{processingPeriodId} and programId = #{programId} and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and emergency = false ) " +
               " group by geographicZoneId" +
     " ) period" +
     " on gzz.id = period.geographicZoneId order by gzz.name" )
@@ -100,13 +101,11 @@ public interface GeographicZoneReportMapper {
             " order by f.name ")
   List<GeoFacilityIndicator> getNonReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
 
-  @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, true reported, (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts from facilities f\n" +
-    "  join requisition_group_members m on f.id = m.facilityId\n" +
-    "  join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
-    "  join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
-    "where f.id in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
-    "  and f.enabled = true\n" +
-    "  and f.geographicZoneId = #{geographicZoneId}" +
+  @Select("select rq.id rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, true reported, (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts " +
+      " from facilities f " +
+      " join (select facilityId, r.id from requisitions r where r.programId = #{programId} and r.periodId = #{periodId} and emergency = false and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')) rq on rq.facilityId = f.id " +
+    "where  f.enabled = true\n" +
+    " and f.geographicZoneId = #{geographicZoneId}" +
     " order by f.name")
   List<GeoFacilityIndicator> getReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
 
@@ -495,7 +494,6 @@ public interface GeographicZoneReportMapper {
 
     List<GeoStockStatusProduct> getAdequatelyStockedProducts(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
 
-
    //@Select("select facility_id, facility_code, facility_name, serial_number, equipment_name, equipment_status, longitude, latitude from vw_lab_equipment_status")
    @SelectProvider(type=LabEquipmentStatusByLocationQueryBuilder.class, method="getFacilitiesEquipmentsData")
     List<GeoZoneEquipmentStatus> getFacilitiesEquipments(@Param("program") Long program,
@@ -547,5 +545,10 @@ public interface GeographicZoneReportMapper {
                                                                              @Param("equipmentType") Long equipmentType,
                                                                              @Param("userId")Long userId,
                                                                              @Param("equipment")Long equipment);
+
+    @Select("   select productid, productname, periodid, periodname, periodyear, quantityonhand, quantityconsumed, amc from fn_getstockstatusgraphdata(#{programId}::int,#{geographicZoneId}::int,#{periodId}::int,#{productId}); ")
+
+    List<GeoStockStatusProductConsumption> getStockStatusProductConsumption(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("geographicZoneId") Long geographicZoneId, @Param("productId") String ProductIds);
+
 
 }

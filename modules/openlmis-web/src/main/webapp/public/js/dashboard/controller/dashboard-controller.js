@@ -713,9 +713,11 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                 $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
 
                 $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
+                $scope.loadFacilities();
                 $scope.filterObject.facilityId = $scope.formFilter.facilityId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY],$scope.allFacilities) ?
                     userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY] : $scope.formFilter.facilityId;
 
+                $scope.filterObject.facilityId = $scope.formFilter.facilityId  = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY];
                 $scope.registerWatches();
 
                 $scope.formFilter = $scope.filterObject;

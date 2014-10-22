@@ -16,7 +16,7 @@
             <li ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
                 <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
                    openlmis-message="label.full.supply.products"></a></li>
-            <li ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
+            <li ng-show="hide_skipped_products == 'false'" ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
                 <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
                    openlmis-message="label.non.full.supply.products"></a></li>
             <li ng-class="{'selected': visibleTab == 'regimen', 'has-error': regimenLineItemInValid}"

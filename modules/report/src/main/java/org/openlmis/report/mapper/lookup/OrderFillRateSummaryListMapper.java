@@ -23,7 +23,7 @@ public interface OrderFillRateSummaryListMapper {
             "            SELECT DISTINCT facilityId,zonename district, facilityname facility, ft.name facilityType,\n" +
             "             CASE WHEN SUM(totalproductsapproved)=0 THEN 0 ELSE ROUND(count(CASE WHEN totalproductsreceived>0 THEN 1 ELSE NULL END) * 100/\n" +
             "             count(CASE WHEN totalproductsapproved>0 THEN 1 ELSE NULL END),0) END Order_fill_rate\n" +
-            "             FROM vw_order_fill_rate_Summary\n" +
+            "             FROM vw_order_fill_rate\n" +
             "             JOIN facility_types ft on facilityTypeID=ft.id\n" +
             "             JOIN vw_districts d on d.district_id = zoneId \n" +
             "  WHERE  scheduleId= #{scheduleId} and programid=#{programId} and periodId=#{periodId} and (ft.id=#{facilityTypeId} or #{facilityTypeId} = 0) and totalproductsapproved>0\n" +
@@ -42,7 +42,7 @@ public interface OrderFillRateSummaryListMapper {
             "             select facilityId,district,facility,facilityType,Order_fill_rate,'L' as status from query \n" +
             "             where order_fill_rate between 1 and 49.9\n" +
             "            )Y\n" +
-            "           where status=#{status}\n" )
+            "           where status=#{status}\n")
     public List<OrderFillRateSummaryReport> getOrderFillRateSummaryReportData(@Param("programId") Long programId,
                                                                               @Param("periodId") Long periodId,
                                                                               @Param("scheduleId") Long scheduleId,

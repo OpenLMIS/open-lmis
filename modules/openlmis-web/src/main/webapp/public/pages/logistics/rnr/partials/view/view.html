@@ -62,7 +62,7 @@
            openlmis-message="comments.header"/>
 
     <input ng-show="rnr.status == 'SKIPPED'" type="button" class="btn btn-primary submit-button" ng-click="reOpenRnR();" openlmis-message="button.reopen.period" />
-    <input ng-show="rnr.status != 'SKIPPED'" type="button" class="btn btn-primary submit-button" ng-click="rejectRnR();" openlmis-message="button.rnr.undo.approvals" />
+    <input ng-show="rnr.status != 'SKIPPED' && rnr.status != 'RELEASED'" type="button" class="btn btn-primary submit-button" ng-click="rejectRnR();" openlmis-message="button.rnr.undo.approvals" />
     <comment-box updatable="false" show="showCommentBox"></comment-box>
   </div>
 </div>

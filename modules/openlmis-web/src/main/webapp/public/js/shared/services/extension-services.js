@@ -704,3 +704,8 @@ services.factory('NonFunctioningLabEquipment', function ($resource) {
 services.factory('FunctioningLabEquipment', function ($resource) {
     return $resource('/reports/reportdata/functioningLabEquipment.json', {}, {});
 });
+
+services.factory('StockStatusProductConsumptionGraph', function($resource){
+    return $resource('/gis/stock-status-product-consumption.json',{}, {});
+});
+

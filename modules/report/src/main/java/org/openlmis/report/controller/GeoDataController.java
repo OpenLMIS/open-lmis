@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -33,6 +34,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class GeoDataController extends BaseController {
 
   public static final String USER_ID = "USER_ID";
+
+ public static String  getCommaSeparatedIds(List<Long> idList){
+
+     return idList == null ? "{}" : idList.toString().replace("[", "").replace("]", "");
+ }
 
   @Autowired
   private GeographicZoneReportMapper geographicZoneReportMapper;
@@ -153,6 +159,7 @@ public class GeoDataController extends BaseController {
         return OpenLmisResponse.response("products", this.geographicZoneReportMapper.getAdequatelyStockedProducts(program, geoZoneId , period, product));
     }
 
+
     //Lab equipment status by location
     @RequestMapping(value="/facilitiesEquipments", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilitiesLabEquipmentStatus(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
@@ -211,4 +218,14 @@ public class GeoDataController extends BaseController {
         return  OpenLmisResponse.response("equipmentsStatusSummary", this.geographicZoneReportMapper
                 .getFacilitiesEquipmentStatusSummary(program, zone,  facilityType, facility, equipmentType, userId, equipment));
     }
+
+    @RequestMapping(value="/stock-status-product-consumption", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockStatusProductConsumption(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
+                                                                             @RequestParam(value = "product", required = true, defaultValue = "0")List<Long> productListId,
+                                                                             @RequestParam(value = "period", required = true, defaultValue = "0") Long periodId,
+                                                                             @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+    ){
+        return OpenLmisResponse.response("consumption", this.geographicZoneReportMapper.getStockStatusProductConsumption(program, periodId, geoZoneId, getCommaSeparatedIds(productListId)));
+    }
+
 }
