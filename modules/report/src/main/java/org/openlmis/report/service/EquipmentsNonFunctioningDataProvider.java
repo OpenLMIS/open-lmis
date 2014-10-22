@@ -7,25 +7,27 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
+
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.LabEquipmentMapper;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.params.LabEquipmentListReportParam;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
-@Component
+
+@Service
 @NoArgsConstructor
-public class LabEquipmentStatusReportDataProvider extends ReportDataProvider {
+public class EquipmentsNonFunctioningDataProvider extends ReportDataProvider {
 
     @Autowired
     private LabEquipmentMapper mapper;
@@ -41,7 +43,7 @@ public class LabEquipmentStatusReportDataProvider extends ReportDataProvider {
     @Override
     public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sorter, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return mapper.getFilteredSortedLabEquipmentStatusReport(getReportFilterData(filterCriteria), rowBounds, this.getUserId());
+        return mapper.getNonFunctioningEquipmentWithContractReport(getReportFilterData(filterCriteria), rowBounds, this.getUserId());
     }
 
     public LabEquipmentListReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
@@ -54,6 +56,7 @@ public class LabEquipmentStatusReportDataProvider extends ReportDataProvider {
         labEquipmentReportParam.setFacilityId(StringHelper.isBlank( filterCriteria, "facility")? 0L : Long.parseLong(filterCriteria.get("facility")[0]));
         labEquipmentReportParam.setEquipmentTypeId(StringHelper.isBlank( filterCriteria, "equipmentType")? 0L : Long.parseLong(filterCriteria.get("equipmentType")[0]));
         labEquipmentReportParam.setEquipmentId(StringHelper.isBlank( filterCriteria, "equipment")? 0L : Long.parseLong(filterCriteria.get("equipment")[0]));
+        labEquipmentReportParam.setServiceContractAvailable(StringHelper.isBlank( filterCriteria, "serviceContract")? 0L : Long.parseLong(filterCriteria.get("serviceContract")[0]));
 
         return labEquipmentReportParam;
     }

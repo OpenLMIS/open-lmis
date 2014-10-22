@@ -7,19 +7,21 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-package org.openlmis.report.model.dto;
+package org.openlmis.report.mapper.lookup;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.equipment.domain.Equipment;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class EquipmentType {
-    private Integer id;
-    private String code;
-    private String name;
-    private Integer displayOrder;
+@Repository
+public interface EquipmentReportMapper {
+
+    @Select(" select id, code, name from equipments where equipmenttypeid = #{equipmentType}order by name ")
+    List<Equipment> getEquipmentsByType(@Param("equipmentType") Long equipmentType);
+
+    @Select(" select id, code, name from equipments order by name ")
+    List<Equipment> getEquipmentAll();
 }

@@ -24,7 +24,7 @@
 <div class="row-fluid">
     <div class="box span12">
         <div class="box-header">
-            <h2><i class="icon-edit"></i><span class="break"></span>List of Lab Equipment by Operational Status</h2>
+            <h2><i class="icon-edit"></i><span class="break"></span>Functioning equipment with service contract status</h2>
 
             <div class="box-icon">
                 <a id="pdf-button" ng-show="filterForm.$valid" href="#list" ng-click="exportReport('PDF');"
@@ -47,7 +47,7 @@
                             <facility-filter class="form-cell horizontalFilters"></facility-filter>
                             <equipment-type-filter class="form-cell horizontalFilters"></equipment-type-filter>
                             <equipment-filter class="form-cell horizontalFilters"></equipment-filter>
-
+                            <service-contract-filter class="form-cell horizontalFilters"></service-contract-filter>
                         </div>
                     </form>
                 </div>
@@ -76,6 +76,10 @@
                                     <td data-title="'Serial Number'" style="width:80px" sortable="serialNumber">{{ row.serialNumber }}</td>
                                     <td data-title="'Equipment Name'" sortable="equipmentName">{{ row.equipmentName}}</td>
                                     <td data-title="'Equipment Status'" sortable="operationalStatus">{{ row.operationalStatus}}</td>
+
+                                    <td data-title="'Service contract'" sortable="serviceContract">{{ row.serviceContract}}</td>
+                                    <td data-title="'Service Vendor'" sortable="vendorName">{{ row.vendorName}}</td>
+                                    <td data-title="'Contract details'" sortable="operationalStatus"><a ng-show="row.contractId != null" href="/public/pages/admin/equipment/my-contracts/index.html#/view/{{row.contractId}}">View</a></td>
                                 </tr>
                                 </tbody>
                             </table>

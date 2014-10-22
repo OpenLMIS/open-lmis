@@ -51,4 +51,5 @@ public interface EquipmentMapper {
       "WHERE id = #{id}")
   void update(Equipment equipment);
 
+
 }

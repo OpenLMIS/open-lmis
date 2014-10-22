@@ -17,6 +17,9 @@ import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.repository.EquipmentRepository;
+import org.openlmis.equipment.repository.mapper.EquipmentMapper;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.*;
 import org.openlmis.report.model.dto.*;
@@ -114,6 +117,9 @@ public class ReportLookupService {
 
     @Autowired
     private EquipmentTypeReportMapper equipmentTypeReportMapper;
+
+    @Autowired
+    private EquipmentReportMapper equipmentReportMapper;
 
     public List<Product> getAllProducts() {
         return productMapper.getAll();
@@ -302,6 +308,10 @@ public class ReportLookupService {
 
         if (type == 0 && requisitionGroup != 0) {
             return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup, zone, userId);
+        }
+
+        if(requisitionGroup == 0 && type != 0){
+            return facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, userId, type);
         }
 
         if (requisitionGroup == 0) {
@@ -503,7 +513,7 @@ public class ReportLookupService {
             YearSchedulePeriodTree yearObject = new YearSchedulePeriodTree();
             yearObject.setYear(year.toString());
 
-            // Add the shcedule layer
+            // Add the schedule layer
             for(Schedule schedule : schedules){
 
                         YearSchedulePeriodTree scheduleObject = new YearSchedulePeriodTree();
@@ -523,6 +533,15 @@ public class ReportLookupService {
             }
 
         return yearList;
+    }
+
+    public List<Equipment> getEquipmentsByType(Long equipmentType){
+
+        if(equipmentType == 0)
+            return equipmentReportMapper.getEquipmentAll();
+        else
+            return equipmentReportMapper.getEquipmentsByType(equipmentType);
+
     }
 
 }

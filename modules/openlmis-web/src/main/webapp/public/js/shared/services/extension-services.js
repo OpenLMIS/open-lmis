@@ -684,3 +684,23 @@ services.factory('UnderStockedFacilityByProductList', function($resource){
 services.factory('AdequatelyStockedFacilityByProductList', function($resource){
     return $resource('/gis/adequately-stocked-products.json',{}, {});
 });
+
+services.factory('GetFacilitiesByEquipmentStatus', function($resource){
+    return $resource('/gis/facilitiesByEquipmentOperationalStatus.json',{}, {});
+});
+
+services.factory('GetFacilitiesEquipmentStatusSummary', function($resource){
+    return $resource('/gis/facilitiesEquipmentStatusSummary.json',{}, {});
+});
+
+services.factory('ReportEquipments', function ($resource) {
+    return $resource('/reports/equipmentsByType/:equipmentType',{}, {});
+});
+
+services.factory('NonFunctioningLabEquipment', function ($resource) {
+    return $resource('/reports/reportdata/nonFunctioningLabEquipment.json', {}, {});
+});
+
+services.factory('FunctioningLabEquipment', function ($resource) {
+    return $resource('/reports/reportdata/functioningLabEquipment.json', {}, {});
+});

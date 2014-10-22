@@ -35,7 +35,7 @@
         <label class="labels">Facility Type <span ng-show="requiredFilters.facilityType" class="label-required">*</span></label>
          <div>
          <select class="input-large" ng-model="filter.facilityType" ng-change="filterChanged()">
-                <option ng-repeat="type in facilityTypes" value="{{ type.id }}">{{type.name}}</option>
+                <option ng-repeat="type in facilityTypes" ng-selected="filter.facilityType == type.id" value="{{ type.id }}">{{type.name}}</option>
          </select>
         </div>
     </div>
@@ -46,7 +46,7 @@
         <label class="labels">Facility <span ng-show="requiredFilters.facility" class="label-required">*</span></label>
         <div>
         <select class="input-large" ng-model="filter.facility" ng-change="filterChanged();">
-               <option  ng-repeat="option in facilities" value="{{ option.id }}">{{ option.name }}</option>
+               <option  ng-repeat="option in facilities" ng-selected="filter.facility == option.id" value="{{ option.id }}">{{ option.name }}</option>
             </select>
         </div>
     </div>
@@ -180,7 +180,7 @@
     <div>
         <label class="labels">Equipment Type <span ng-show="requiredFilters.equipmentType" class="label-required">*</span></label><div>
         <select class="input-large" ng-model="filter.equipmentType" ng-change="filterChanged();">
-            <option ng-repeat="equipment in equipmentTypes" value="{{ equipment.id }}" ng-selected="filter.equipmentTypes == equipment.id">{{equipment.name}}</option>
+            <option ng-repeat="equipment in equipmentTypes" value="{{ equipment.id }}" ng-selected="filter.equipmentType == equipment.id">{{equipment.name}}</option>
         </select>
     </div>
     </div>
@@ -236,7 +236,26 @@
           </div>
         </div>
     </div>
-
-
 </script>
 
+<script type="text/ng-template" id="filter-equipment">
+    <div>
+        <label class="labels">Equipment Type <span ng-show="requiredFilters.equipment" class="label-required">*</span></label><div>
+        <select class="input-large" ng-model="filter.equipment" ng-change="filterChanged();">
+            <option ng-repeat="equipment in equipments" value="{{ equipment.id }}" ng-selected="filter.equipment == equipment.id">{{equipment.name}}</option>
+        </select>
+    </div>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="filter-service-contract">
+    <div>
+        <label class="labels">Service Contract Available <span ng-show="requiredFilters.serviceContract" class="label-required">*</span></label><div>
+        <select class="input-large" ng-model="filter.serviceContract" ng-change="filterChanged();">
+            <option  ng-repeat="contract in serviceContract" value="{{ contract.key }}" ng-selected="filter.serviceContract == contract.key">{{contract.value}}</option>
+        </select>
+
+    </div>
+    </div>
+</script>

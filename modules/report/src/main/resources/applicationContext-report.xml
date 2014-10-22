@@ -258,6 +258,24 @@
                     <property name="title" value="Order fill rate Summary Report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="lab_equipments_functioning"/>
+                    <property name="template" value="lab-equipment-functioning-list.jasper"/>
+                    <property name="reportDataProvider" ref="equipmentsFunctioningDataProvider"/>
+                    <property name="id" value="RP-lab-equipments-functioning-Report"/>
+                    <property name="name" value="Functioning equipment with service contract status"/>
+                    <property name="title" value="Functioning equipment with service contract status"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="lab_equipments_non_functioning"/>
+                    <property name="template" value="lab-equipment-non-functioning-list.jasper"/>
+                    <property name="reportDataProvider" ref="equipmentsNonFunctioningDataProvider"/>
+                    <property name="id" value="RP-lab-equipments-functioning-Report"/>
+                    <property name="name" value="Non Functioning equipment with service contract status"/>
+                    <property name="title" value="Non Functioning equipment with service contract status"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>

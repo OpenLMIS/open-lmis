@@ -6,9 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Created by aworku on 5/21/2014.
- */
 @Repository
 public interface EquipmentTypeReportMapper {
 
