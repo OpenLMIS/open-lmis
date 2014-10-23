@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-master-landscape" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="164"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -90,9 +90,9 @@
 		</band>
 	</title>
 	<columnHeader>
-		<band height="27" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="1" width="802" height="26" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+				<reportElement mode="Opaque" x="0" y="1" width="802" height="29" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
 					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 				</reportElement>
 				<text><![CDATA[]]></text>
@@ -118,32 +118,32 @@
 				<text><![CDATA[Zone]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="364" y="1" width="80" height="26" uuid="c7e457e1-73bd-43c2-986b-f37a27daed31"/>
-				<text><![CDATA[Equipment Type]]></text>
+				<reportElement x="364" y="1" width="80" height="29" uuid="c7e457e1-73bd-43c2-986b-f37a27daed31"/>
+				<text><![CDATA[Equipment     Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="444" y="1" width="67" height="20" uuid="16a94877-3c30-4b69-837f-363cbb91373b"/>
-				<text><![CDATA[Model]]></text>
+				<reportElement x="444" y="1" width="67" height="29" uuid="16a94877-3c30-4b69-837f-363cbb91373b"/>
+				<text><![CDATA[Equipment Model]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="511" y="2" width="64" height="25" uuid="80cabe8b-3bcb-4b52-83b2-68d9d33822ec"/>
-				<text><![CDATA[Serial Numberf]]></text>
+				<reportElement x="511" y="2" width="64" height="28" uuid="80cabe8b-3bcb-4b52-83b2-68d9d33822ec"/>
+				<text><![CDATA[Serial  Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="575" y="1" width="68" height="26" uuid="19dba632-417f-4fed-ba8d-ccbd91c3a6e7"/>
-				<text><![CDATA[Equipment Name]]></text>
+				<reportElement x="575" y="1" width="68" height="29" uuid="19dba632-417f-4fed-ba8d-ccbd91c3a6e7"/>
+				<text><![CDATA[Equipment    Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="643" y="1" width="58" height="26" uuid="75e6ef4e-553e-402d-a3f5-396bd6b6caea"/>
-				<text><![CDATA[Operational Status]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="701" y="2" width="45" height="25" uuid="6061547a-81fe-486c-b7ea-ff45e31671ab"/>
+				<reportElement x="701" y="2" width="45" height="28" uuid="6061547a-81fe-486c-b7ea-ff45e31671ab"/>
 				<text><![CDATA[Service Contract]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="746" y="2" width="55" height="25" uuid="34aef36b-2555-420f-a895-f713c954beb9"/>
-				<text><![CDATA[Vendor]]></text>
+				<reportElement x="746" y="2" width="55" height="28" uuid="34aef36b-2555-420f-a895-f713c954beb9"/>
+				<text><![CDATA[Service Vendor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="643" y="1" width="58" height="29" uuid="75e6ef4e-553e-402d-a3f5-396bd6b6caea"/>
+				<text><![CDATA[Equipment Status]]></text>
 			</staticText>
 		</band>
 	</columnHeader>

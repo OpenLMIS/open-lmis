@@ -7,66 +7,7 @@
 ~
 ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
 -->
-<style>
-    .ng-table th.sortable div {
-        /* css-3 */
-        white-space: -o-pre-wrap;
-        word-wrap: break-word;
-        white-space: pre-wrap;
-        white-space: -moz-pre-wrap;
-        white-space: -pre-wrap;
-    }
 
-    .leaflet-popup-content {
-        width:auto !important;
-    }
-
-    .legendColorBox{
-        width:4px;
-    }
-    .legendLabel{
-
-        padding-left:5px;
-    }
-    .chart {
-        width: 400px;
-        height: 200px;
-        text-align: left;
-        margin-top: 10px;
-    }
-
-    #flotTip {
-        z-index: 1040;
-        display: none;
-        position: absolute;
-        white-space: nowrap;
-        text-align: center;
-        color: #FFF;
-        text-decoration: none;
-        font-size: 0.8em;
-        border-radius: 3px;
-        padding: 2px 4px;
-        background-color: rgba(0, 0, 0, 0.7);
-    }
-    .chartLegend table {
-
-        padding: 8px;
-    }
-    #facilityLabEquipmentStatusSummary{
-       margin-top:10px;
-    }
-    .pieLabel {
-        font-size: 13px;
-        font-weight: bold;
-        text-align: center;
-        padding: 2px;
-    }
-    .xaxisLabel,
-    .yaxisLabel {
-        font-weight: bold;
-        color: #666 !important;
-    }
-</style>
 <div class="row-fluid">
 
     <div class="span12">
@@ -75,17 +16,17 @@
            <h2>Equipment Status By Location Report</h2>
         </div>
 
-        <div class="row show-grid offset2" style="padding-top:4px;">
+        <div class="row show-grid offset1 indicator-list" >
             <div class="span2"><strong>Key Indicators:</strong></div>
-            <div class="span2"><img src="/public/images/not-functioning-marker.png"><strong>All not functioning</strong></div>
+            <div class="span3"><img src="/public/images/not-functioning-marker.png"><strong>All not functioning</strong></div>
             <div class="span3"><img src="/public/images/some-functioning-marker.png"><strong>Some not functioning</strong></div>
-            <div class="span4" ><img src="/public/images/all-functioning-marker.png"><strong>All functioning</strong></div>
+            <div class="span3" ><img src="/public/images/all-functioning-marker.png"><strong>All functioning</strong></div>
         </div>
 <hr/>
         <div class="row-fluid">
 
             <div class="sidebar">
-                <div class="app-form" style="padding: 5px;">
+                <div class="app-form form-wider">
 
                     <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                         <div filter-container class="clearfix">
@@ -108,7 +49,7 @@
             <div class="content-body">
 
                 <div class="span8">
-                    <div style="padding-left: 30px;">
+                    <div class="leaflet-middle">
                         <leaflet  width="100%" height="600px" legend="legend" geojson="geojson" layers="layers" markers="markers"></leaflet>
                     </div>
                 </div>
@@ -119,19 +60,19 @@
                         <h2>Equipment Status Summary</h2>
                     </div>
 
-                    <a-float id="equipment-status-summary" style="align-items: center" af-option="equipmentStatusSummaryPieChartOption"
-                             af-data="summary" class="chart"></a-float>
+                    <a-float id="equipment-status-summary" af-option="equipmentStatusSummaryPieChartOption"
+                             af-data="pieChartSummary" class="chart"></a-float>
 
-                    <div id="facilityLabEquipmentStatusSummary" class="span12 chartLegend"></div>
+                    <div id="facilityLabEquipmentStatusSummary" class="container-legend-drifted span12 chartLegend"></div>
 
 
-                    <div class="box-header" style="margin-top:49px;">
+                    <div class="box-header sub-content">
                         <h2>Detailed Equipment Reports</h2>
                     </div>
 
                     <ul>
-                       <li><strong><a href="/public/pages/reports/lab-equipments-non-functioning/index.html#/list?{{urlParams}}" style="text-decoration: underline;">Non Functioning Equipment with service contract status</a></strong></li>
-                        <li><strong><a  href="/public/pages/reports/lab-equipments-functioning/index.html#/list?{{urlParams}}" style="text-decoration: underline;">Functioning Equipment with service contract status</a></strong></li>
+                       <li><strong><a href="/public/pages/reports/lab-equipments-non-functioning/index.html#/list?{{urlParams}}" class="sub-content-decorated">Non Functioning Equipment with service contract status</a></strong></li>
+                        <li><strong><a  href="/public/pages/reports/lab-equipments-functioning/index.html#/list?{{urlParams}}" class="sub-content-decorated">Functioning Equipment with service contract status</a></strong></li>
                     </ul>
                 </div>
 
@@ -145,20 +86,20 @@
 
 </div>
 
-<div id="popup-box" modal="successModal" style="width: 850px;">
+<div id="popup-box" modal="facilitySummaryModal" class="success-modal-wide">
 
     <div class="modal-header">
         <h3>{{ title }}</h3>
     </div>
     <div class="modal-body">
-        <table class="table table-bordered" style="width: 100%" >
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th>Facility Code</th>
                 <th>Facility Name</th>
                 <th>Facility Type</th>
                 <th>District</th>
-                <th>Equipment Detail</th>
+                <th>Equipment Details</th>
             </tr>
             </thead>
             <tbody>
@@ -174,7 +115,7 @@
     </div>
 
     <div class="modal-footer">
-        <a class="btn btn-primary pull-right" ng-click="successModal=false;">Close</a>
+        <a class="btn btn-primary pull-right" ng-click="facilitySummaryModal=false;">Close</a>
     </div>
 </div>
 

@@ -20,7 +20,7 @@ public class LabEquipmentListQueryBuilder {
                 " equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, equipment_status AS operationalStatus");
         FROM("vw_lab_equipment_status");
         writePredicates(filter);
-        ORDER_BY("zone, district, facilityName, equipmentName");
+        ORDER_BY("facilityName, equipmentName");
         return SQL();
 
         /*
@@ -50,7 +50,7 @@ public class LabEquipmentListQueryBuilder {
                 " on vw_lab_equipment_status.equipment_id = contract.equipmentid AND contract.facilityid = vw_lab_equipment_status.facility_id ");
         writePredicatesForServiceContractReports(filter);
         WHERE("equipment_status  = 'Fully Operational'");
-        ORDER_BY("zone, district, facilityName, equipmentName");
+        ORDER_BY("facilityName, equipmentName");
         return SQL();
     }
 
@@ -59,7 +59,7 @@ public class LabEquipmentListQueryBuilder {
         LabEquipmentListReportParam filter = (LabEquipmentListReportParam) params.get("filterCriteria");
         BEGIN();
         SELECT("facility_code AS facilityCode, facility_name AS facilityName, facility_type AS facilityType, disrict as district, zone," +
-                " equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, 'Non Functioning' AS operationalStatus," +
+                " equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, 'Not Functioning' AS operationalStatus," +
                 " case when contract.contractid is null THEN 'NO' else 'YES' END AS serviceContract, contract.name AS vendorName, contract.contractid as contractId");
      //        " case when hasservicecontract = 'f' THEN 'NO' when hasservicecontract = 't' THEN 'YES' END AS serviceContract, contract.name AS vendorName, contract.contractid as contractId");
         FROM("vw_lab_equipment_status");
@@ -70,7 +70,7 @@ public class LabEquipmentListQueryBuilder {
                 " on vw_lab_equipment_status.equipment_id = contract.equipmentid AND contract.facilityid = vw_lab_equipment_status.facility_id ");
         writePredicatesForServiceContractReports(filter);
         WHERE("equipment_status  = 'Not Operational'");
-        ORDER_BY("zone, district, facilityName, equipmentName");
+        ORDER_BY("facilityName, equipmentName");
         return SQL();
     }
 
