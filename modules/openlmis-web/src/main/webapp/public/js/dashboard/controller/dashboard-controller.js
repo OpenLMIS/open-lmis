@@ -421,7 +421,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                  if(!isUndefined(data.reportingPerformance)){
                      var reporting = data.reportingPerformance;
 
-                     var colors = {R:"#00FF00",N:"#CC0505", L:"#FFFF05"};
+                     var colors = {R:"#078B07",N:"#CC0505", L:"#FFFF05"};
 
                      for(var i=0; i < reporting.length; i++){
                          var labelKey = 'label.district.reporting.status.'+reporting[i].status;
