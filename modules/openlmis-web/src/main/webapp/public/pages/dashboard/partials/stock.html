@@ -48,7 +48,7 @@
 
                     <div class="span6" style="margin: 2px;" ng-if="$index == 0 || $index == 1">
                         <accordion class="stock-efficiency">
-                            <accordion-group class="{{(stock.name == 'Stocked out')?'red-sunglo':(stock.name=='Understocked')?'green-haze':(stock.name=='Overstocked')?'blue-light':'yellow-gold'}}" is-open="districtReporting.openPanel">
+                            <accordion-group class="{{(stock.name == 'Stocked out')?'red-sunglo':(stock.name=='Understocked')?'yellow-gold':(stock.name=='Overstocked')?'blue-light':'green-fast'}}" is-open="districtReporting.openPanel">
                                 <accordion-heading>
                                     <div class="accordion-title">
                                         <div class="caption">
@@ -82,10 +82,10 @@
 
                                         <tbody>
                                         <tr ng-repeat="row in stock.facilities">
-                                            <td sortable="facility" class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}" >{{row.facility}}</td>
-                                            <td  class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.amc | number}}</td>
-                                            <td class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.soh | number}}</td>
-                                            <td class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.mos}}</td>
+                                            <td sortable="facility" class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}" >{{row.facility}}</td>
+                                            <td  class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}">{{row.amc | number}}</td>
+                                            <td class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}">{{row.soh | number}}</td>
+                                            <td class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}">{{row.mos}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -104,7 +104,7 @@
 
                     <div class="span6" style="margin: 2px;" ng-if="$index == 2 || $index == 3">
                         <accordion>
-                            <accordion-group class="{{(stock.name == 'Stocked out')?'red-sunglo':(stock.name=='Understocked')?'green-haze':(stock.name=='Overstocked')?'blue-light':'yellow-gold'}}" is-open="districtReporting.openPanel">
+                            <accordion-group class="{{(stock.name == 'Stocked out')?'red-sunglo':(stock.name=='Understocked')?'yellow-gold':(stock.name=='Overstocked')?'blue-light':'green-fast'}}" is-open="districtReporting.openPanel">
                                 <accordion-heading>
                                     <div class="accordion-title">
                                         <div class="caption">
@@ -137,10 +137,10 @@
 
                                         <tbody>
                                         <tr ng-repeat="row in stock.facilities">
-                                            <td sortable="facility" class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}" >{{row.facility}}</td>
-                                            <td  class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.amc | number}}</td>
-                                            <td class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.soh | number}}</td>
-                                            <td class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'green':(stock.name=='Overstocked')?'blue':'yellow'}}">{{row.mos}}</td>
+                                            <td sortable="facility" class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}" >{{row.facility}}</td>
+                                            <td  class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}">{{row.amc | number}}</td>
+                                            <td class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}">{{row.soh | number}}</td>
+                                            <td class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}">{{row.mos}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
