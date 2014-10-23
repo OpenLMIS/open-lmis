@@ -256,7 +256,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
 
         GetFacilitiesEquipmentStatusSummary.get($scope.filter, function(data){
 
-            $scope.UserRolePieChartData = [];
+            $scope.FacilityEquipStatusPieChartData = [];
 
             if (!(angular.isUndefined(data) || data === null)) {
 
@@ -264,7 +264,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
 
                 for (var i = 0; i < data.equipmentsStatusSummary.length; i++) {
 
-                    $scope.UserRolePieChartData[i] = {
+                    $scope.FacilityEquipStatusPieChartData[i] = {
                         label: $scope.datarows[i].equipment_status,
                         data: $scope.datarows[i].total,
                         color: $scope.datarows[i].equipment_status === 'Fully Operational' ? '#A3CC29' : $scope.datarows[i].equipment_status === 'Partially Operational' ? '#FFB445' : '#8F0000'
@@ -277,11 +277,12 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
 
                    if(item!==null) {
 
-                       var status = $scope.UserRolePieChartData[item.seriesIndex].label;
-                          popFacilitiesByEquipmentStatus(status);
+                       var status = $scope.FacilityEquipStatusPieChartData[item.seriesIndex].label;
+
+                       popFacilitiesByEquipmentStatus(status);
                    }
                });
-                $scope.summary = $scope.UserRolePieChartData;
+                $scope.pieChartSummary = $scope.FacilityEquipStatusPieChartData;
             }
 
 
@@ -343,13 +344,18 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
         $scope.filter.status =  status;
 
         //The filter object needs to be cloned in such a way. Since the ff operation
-        // might mess up the scop.filter variable
+        // might mess up the scope.filter global object
         var urlParams = $.extend({}, $scope.filter);
 
         GetFacilitiesByEquipmentStatus.get($scope.filter,
 
             function(data){
-                $scope.title = 'Facilities with Fully functioning equipment';
+
+
+                $scope.title = status === 'Not Operational' ?
+                    'Facilities with Non functioning equipment' :
+                        status === 'Partially Operational' ? 'Facilities with Some functioning equipment' :
+                                                    'Facilities with All functioning equipment';
 
                //delete urlParams.facility;
 
@@ -361,11 +367,9 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
 
                     urlParams.facility = value.facility_id;
                     value.url = '/public/pages/reports/lab-equipment-list/index.html#/list?'+$.param(urlParams);
-                    console.log(value.url);
-
                 });
 
-                $scope.successModal = true;
+                $scope.facilitySummaryModal = true;
 
             });
     };

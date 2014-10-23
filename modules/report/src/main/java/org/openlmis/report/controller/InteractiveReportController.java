@@ -433,8 +433,7 @@ public class InteractiveReportController extends BaseController {
     }
 
     @RequestMapping(value = "/reportdata/functioningLabEquipment", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_LAB_EQUIPMENT_LIST_REPORT')")
-    //TODO: premission needs to be done
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT')")
     public Pages getFunctioningLabEquipmentWithServiceContract(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                          @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                          HttpServletRequest request) {
@@ -449,8 +448,7 @@ public class InteractiveReportController extends BaseController {
     }
 
     @RequestMapping(value = "/reportdata/nonFunctioningLabEquipment", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_LAB_EQUIPMENT_LIST_REPORT')")
-    //TODO: premission needs to be done
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT')")
     public Pages getNonFunctioningLabEquipmentWithServiceContract(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                          @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                          HttpServletRequest request) {

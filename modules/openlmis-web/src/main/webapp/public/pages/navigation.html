@@ -118,10 +118,9 @@
                   <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_FUNDING_SOURCE')">
                     <a href="/public/pages/reports/lab-equipments-by-donor/index.html">Lab Equipments by Funding Source</a>
                   </li>
-                    <li>
+                    <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT')">
                         <a href="/public/pages/reports/lab-equipments-by-location/index.html">Lab Equipments by location</a>
                     </li>
-
                   <li class="beak"></li>
                 </ul>
               </div>
