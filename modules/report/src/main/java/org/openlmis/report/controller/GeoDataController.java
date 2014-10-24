@@ -228,4 +228,9 @@ public class GeoDataController extends BaseController {
         return OpenLmisResponse.response("consumption", this.geographicZoneReportMapper.getStockStatusProductConsumption(program, periodId, geoZoneId, getCommaSeparatedIds(productListId)));
     }
 
+    @RequestMapping(value="/geo-zone-geometry", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getGeoZoneGeometryJson(){
+
+        return OpenLmisResponse.response("geoZone", this.geographicZoneReportMapper.getGeoZoneGeometryJson());
+    }
 }
