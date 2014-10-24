@@ -16,6 +16,7 @@ import org.openlmis.report.model.*;
 import org.openlmis.report.model.dto.FlatGeographicZone;
 import org.openlmis.report.model.dto.GeoZoneTree;
 import org.openlmis.report.model.dto.GeographicZone;
+import org.openlmis.report.model.dto.GeographicZoneJsonDto;
 import org.openlmis.report.model.geo.GeoFacilityIndicator;
 import org.openlmis.report.model.geo.GeoStockStatusFacility;
 import org.openlmis.report.model.geo.GeoStockStatusProduct;
@@ -550,5 +551,6 @@ public interface GeographicZoneReportMapper {
 
     List<GeoStockStatusProductConsumption> getStockStatusProductConsumption(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("geographicZoneId") Long geographicZoneId, @Param("productId") String ProductIds);
 
-
+    @Select("select * from geographic_zone_geojson")
+    List<GeographicZoneJsonDto> getGeoZoneGeometryJson();
 }

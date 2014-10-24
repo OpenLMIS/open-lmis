@@ -157,8 +157,8 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
 
     $scope.OnFilterChanged = function () {
 
-        $.getJSON('/gis/reporting-rate.json', $scope.filter, function (data) {
-            $scope.features = data.map;
+        $.getJSON('/gis/geo-zone-geometry.json', $scope.filter, function (data) {
+            $scope.features = data.geoZone;
 
             angular.forEach($scope.features, function (feature) {
                 feature.geometry_text = feature.geometry;
