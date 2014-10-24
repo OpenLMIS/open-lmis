@@ -353,7 +353,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
             var barsOption = generateBarsOption(productId, periodSeries, productName);
 
             $scope.productstocks.push({productId: productId,options: barsOption, dataSeries: [{
-                label: "stock in hand",
+                label: "SOH",
                 data: quantityOnHandSeries,
                 color: "#5eb95e",
                 bars: {
@@ -364,14 +364,14 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
                     lineWidth:1
                 }
             },{
-                label: "quantity consumed",
+                label: "Consumed",
                 data: quantityConsumedSeries,
                  yaxis: 3,
                 color: "#dd514c",
                 points: { fillColor: "#dd514c", show: true },
                 lines: {show:true}
             },{
-                label:"amc",
+                label:"AMC",
                 data: amcSeries,
                  yaxis: 3,
                 color: "#faa732",
@@ -404,7 +404,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
                     position: "left",
                     //max: 1070,
                     color: "#5eb95e",
-                    axisLabel: "Stock in hand",
+                    axisLabel: "SOH",
                     axisLabelUseCanvas: true,
                     axisLabelFontSizePixels: 12,
                     axisLabelFontFamily: 'Verdana, Arial',
@@ -462,9 +462,12 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
 
 
     $scope.expectedFilter = function(item) {
-        return item.period > 0;
+        return (item.period > 0 && item.stockedout >= 0 && item.understocked >= 0 && item.overstocked >= 0 && item.adequatelystocked >= 0);
     };
 
+    $scope.expectedProductFilter = function(item) {
+        return (item.reported > 0 && item.stockedout >= 0 && item.understocked >= 0 && item.overstocked >= 0 && item.adequatelystocked >= 0);
+    };
 
 
 
