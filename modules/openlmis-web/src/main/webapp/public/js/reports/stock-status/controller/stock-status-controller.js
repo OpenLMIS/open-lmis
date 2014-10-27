@@ -240,7 +240,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
             $scope.products = data.products;
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Adequately Stocked Facilities in ' + feature.primayname;
+            $scope.title = 'Adequately Stocked Facilities for ' + feature.primayname;
             // alert("fail:" + JSON.stringify($scope.facilities));
         });
 
@@ -257,10 +257,9 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
             $scope.products = data.products;
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Stocked Out Facilities for ' + feature.primaryname;
-            //alert("fail2:" + JSON.stringify($scope.filter));
-        });
+            $scope.title = 'Stocked Out Facilities for ' + feature.primaryname + '*** ' + element.id;
 
+        });
         $scope.zoomToSelectedFeature(feature);
     };
 
@@ -626,7 +625,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
     getStockStatusProductConsumption = function() {
         $.getJSON('/gis/stock-status-product-consumption.json', $scope.filter, function(data) {
             $scope.consumption = data.consumption;
-            alert("fail:" +  JSON.stringify($scope.consumption));
+
         });
     };
     $scope.OnFilterChanged = function() {
@@ -634,7 +633,10 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
         $.getJSON('/gis/stock-status-facilities.json', $scope.filter, function(data) {
             $scope.features = data.map;
 
+
+
             angular.forEach($scope.features, function(feature) {
+
                 feature.geometry_text = feature.geometry;
                 feature.geometry = JSON.parse(feature.geometry);
                 feature.type = "Feature";

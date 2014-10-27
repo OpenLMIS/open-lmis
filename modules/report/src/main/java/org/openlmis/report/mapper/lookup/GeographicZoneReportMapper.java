@@ -159,7 +159,7 @@ public interface GeographicZoneReportMapper {
             "       fn_get_parent_geographiczone(gzz.ID,1) georegion, " +
             "       fn_get_parent_geographiczone(gzz.ID,2) geozone, " +
             "   	gjson.geometry,  "  +
-            "   	COALESCE (period. COUNT) period,  "  +
+            "   	COALESCE (stockedout. COUNT, 0) + COALESCE (understocked. COUNT, 0) + COALESCE (overstocked. COUNT, 0) + COALESCE (adequatelystocked. COUNT, 0) period,  "  +
             "   	COALESCE (total. COUNT) total,  "  +
             "   	COALESCE (expected. COUNT, 0) AS expected,  "  +
             "   	COALESCE (ever. COUNT, 0) AS ever,  "  +
@@ -446,23 +446,23 @@ public interface GeographicZoneReportMapper {
     List<GeoStockStatusFacility> getAdequatelyStockedFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
 
 
-    @Select("   SELECT p.id, p.code,p.primaryname, COALESCE(reported.count) AS reported, COALESCE(stockedout.count) AS stockedout,COALESCE(understocked.count) AS understocked,  "  +
-            "   COALESCE(overstocked.count) AS overstocked, COALESCE(adequatelystocked.count) AS adequatelystocked  "  +
+    @Select("   SELECT p.id, p.code,p.primaryname,  COALESCE(stockedout.count,0) AS stockedout,COALESCE(understocked.count,0) AS understocked,  "  +
+            "   COALESCE(overstocked.count,0) AS overstocked, COALESCE(adequatelystocked.count,0) AS adequatelystocked,  "  +
+            "   COALESCE (stockedout. COUNT, 0) + COALESCE (understocked. COUNT, 0) + COALESCE (overstocked. COUNT, 0) + COALESCE (adequatelystocked. COUNT, 0) reported  " +
             "   FROM public.products AS p  "  +
-            "    LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and req_status <> 'INITIATED' and reported_figures > 0  group by productid " +
+            "    LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and req_status <> 'INITIATED' and reported_figures > 0 and reported_figures > 0  group by productid " +
             "    ) AS reported ON p.id = reported.productid " +
-            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and status = 'SO' group by productid  "  +
+            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'SO' group by productid  "  +
             "   ) AS stockedout ON p.id = stockedout.productid  "  +
-            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and status = 'US' group by productid  "  +
+            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'US' group by productid  "  +
             "   ) AS understocked ON p.id = understocked.productid  "  +
-            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and status = 'US' group by productid  "  +
+            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'US' group by productid  "  +
             "   ) AS overstocked ON p.id = overstocked.productid  "  +
-            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and status = 'SP' group by productid  "  +
+            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'SP' group by productid  "  +
             "   ) AS adequatelystocked ON p.id = adequatelystocked.productid  "  +
             "   INNER JOIN public.program_products ON p.id = public.program_products.productid  "  +
-            "   where programid = 1 and p.active  = true  "  +
-            "   and ((COALESCE(stockedout.count) is not null) or (COALESCE(understocked.count) is not null) or (COALESCE(overstocked.count) is not null)   "  +
-            "        or ((COALESCE(adequatelystocked.count) is not null)))  ")
+            "   where programid = #{programId} and p.active  = true  "  +
+            "   and COALESCE (stockedout. COUNT, 0) + COALESCE (understocked. COUNT, 0) + COALESCE (overstocked. COUNT, 0) + COALESCE (adequatelystocked. COUNT, 0)  > 0 ")
 
     List<GeoStockStatusProductSummary> getStockStatusProductSummary(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
 
