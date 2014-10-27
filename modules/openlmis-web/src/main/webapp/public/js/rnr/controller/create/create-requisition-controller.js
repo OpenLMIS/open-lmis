@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisitionData, hideSkippedProducts, enableSkipPeriod , comments , pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition, ConfigSettingsByKey, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisitionData, hideAdditionalCommoditiesTab , hideSkippedProducts, enableSkipPeriod , comments , pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition, ConfigSettingsByKey, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
@@ -19,6 +19,7 @@ function CreateRequisitionController($scope, requisitionData, hideSkippedProduct
 
   $scope.enable_skip_period     = enableSkipPeriod;
   $scope.hide_skipped_products  = hideSkippedProducts;
+  $scope.hide_additional_commodity_tab = hideAdditionalCommoditiesTab;
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths, $scope.hide_skipped_products);
   $scope.rnrComments = comments;
@@ -430,7 +431,15 @@ CreateRequisitionController.resolve = {
     }, 100);
     return deferred.promise;
   },
-
+  hideAdditionalCommoditiesTab: function ($q, $timeout, $route, ConfigSettingsByKey) {
+      var deferred = $q.defer();
+      $timeout(function () {
+          ConfigSettingsByKey.get({key: 'RNR_HIDE_NON_FULL_SUPPLY_TAB'}, function (data){
+              deferred.resolve(data.settings.value);
+          }, {});
+      }, 100);
+      return deferred.promise;
+  },
   enableSkipPeriod: function ($q, $timeout, $route, ConfigSettingsByKey) {
     var deferred = $q.defer();
     $timeout(function () {
