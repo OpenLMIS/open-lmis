@@ -141,7 +141,7 @@
 
         <div style="" ng-show="products && (products).length > 0">
 
-            <b>{{ district_title }}</b>
+            <b>You are viewing data for: {{ district_title }}</b>
             <div class="clearfix"><br /></div>
             <!-- <filter-container>
                 <zone-filter class="form-cell horizontalFilters" required="true"></zone-filter>
@@ -185,6 +185,7 @@
     <br><br>
     <div class="span5">
         <p style="font-weight: bold">Note: The graph will show zero values when no report was found for a period</p>
+        <p style="font-weight: bold; text-align: center">Aggregated Data for {{ district_title }}</p>
         <br>
         <div ng-repeat="productStock in productstocks">
             <a-float  af-option="productStock.options" af-data="productStock.dataSeries" class="chart"> </a-float>
@@ -303,7 +304,7 @@
 
 <!--------------------------------------------------------------------------------------------------------------------->
 
-<div id="popup-box-2" modal="successModal2" style="width: 850px;">
+<div id="popup-box" modal="successModal2" style="width: 850px;">
 
     <div class="modal-header">
         <h3>{{ title }}</h3>
@@ -374,7 +375,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="row in products">
+            <tr ng-repeat="row in productPopup">
                 <td>{{ row.geographiczonename }}</td>
                 <td>
                     <span   data-toggle="tooltip" title="This facility did not report for period" class="icon-warning-sign" style="color: red;" ng-show="row.stockedout"></span>

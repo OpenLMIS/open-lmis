@@ -12,6 +12,9 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
 
     $scope.default_indicator = "stocked_out";
     $scope.district_title = "All Geographic Zones";
+    $scope.showConsumed = true;
+    $scope.showAMC = true;
+    $scope.showSOH = true;
 
 
     // get configurations
@@ -230,34 +233,18 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
     // stock status by product
 
 
-    $scope.AdequatelyStockedProducts = function(feature, element) {
-        AdequatelyStockedFacilityByProductList.get({
-            program: $scope.filter.program,
-            period: $scope.filter.period,
-            product: feature.id,
-            geo_zone: $scope.filter.zone
-        }, function(data) {
-            $scope.products = data.products;
-            $scope.successModal2 = true;
-            $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Adequately Stocked Facilities for ' + feature.primayname;
-            // alert("fail:" + JSON.stringify($scope.facilities));
-        });
-
-        $scope.zoomToSelectedFeature(feature);
-    };
-
-    $scope.StockedOutProducts = function(feature, element) {
+     $scope.StockedOutProducts = function(feature, element) {
         StockedOutFacilityByProductList.get({
             program: $scope.filter.program,
             period: $scope.filter.period,
             product: feature.id,
             geo_zone: $scope.filter.zone
         }, function(data) {
-            $scope.products = data.products;
+            $scope.productPopup = data.products;
+            //alert("fail:" + JSON.stringify($scope.productPopup));
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Stocked Out Facilities for ' + feature.primaryname + '*** ' + element.id;
+            $scope.title = 'Stocked Out Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
 
         });
         $scope.zoomToSelectedFeature(feature);
@@ -270,10 +257,10 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
             product: feature.id,
             geo_zone: $scope.filter.zone
         }, function(data) {
-            $scope.products = data.products;
+            $scope.productPopup = data.products;
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'UnderStocked Out Facilities in ' + feature.primayname;
+            $scope.title = 'UnderStocked Out Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
             // alert("fail:" + JSON.stringify($scope.facilities));
         });
 
@@ -287,11 +274,28 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
             product: feature.id,
             geo_zone: $scope.filter.zone
         }, function(data) {
-            $scope.products = data.products;
+            $scope.productPopup = data.products;
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Over Stocked Facilities in ' + feature.primayname;
+            $scope.title = 'Over Stocked Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
             //alert("fail:" + JSON.stringify(feature));
+        });
+
+        $scope.zoomToSelectedFeature(feature);
+    };
+
+    $scope.AdequatelyStockedProducts = function(feature, element) {
+        AdequatelyStockedFacilityByProductList.get({
+            program: $scope.filter.program,
+            period: $scope.filter.period,
+            product: feature.id,
+            geo_zone: $scope.filter.zone
+        }, function(data) {
+            $scope.productPopup = data.products;
+            $scope.successModal2 = true;
+            $scope.show_email = $scope.show_sms = false;
+            $scope.title = 'Adequately Stocked Facilities for '+ feature.primaryname + ' in ' + $scope.district_title;
+            // alert("fail:" + JSON.stringify($scope.facilities));
         });
 
         $scope.zoomToSelectedFeature(feature);
@@ -366,9 +370,9 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
                 label: "Consumed",
                 data: quantityConsumedSeries,
                  yaxis: 3,
-                color: "#dd514c",
-                points: { fillColor: "#dd514c", show: true },
-                lines: {show:true}
+                color: "#4bb1cf",
+                points: { fillColor: "#4bb1cf", show: $scope.showConsumed },
+                lines: {show:$scope.showConsumed}
             },{
                 label:"AMC",
                 data: amcSeries,
