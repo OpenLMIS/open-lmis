@@ -456,7 +456,7 @@ public interface GeographicZoneReportMapper {
             "   ) AS stockedout ON p.id = stockedout.productid  "  +
             "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'US' group by productid  "  +
             "   ) AS understocked ON p.id = understocked.productid  "  +
-            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'US' group by productid  "  +
+            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'OS' group by productid  "  +
             "   ) AS overstocked ON p.id = overstocked.productid  "  +
             "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'SP' group by productid  "  +
             "   ) AS adequatelystocked ON p.id = adequatelystocked.productid  "  +
