@@ -906,3 +906,22 @@ app.directive('serviceContractFilter',['$routeParams', function($routeParams){
         templateUrl: 'filter-service-contract'
     };
 }]);
+
+
+app.directive('donorFilter',['$routeParams', 'GetDonors', function($routeParams, GetDonors){
+
+    return {
+        restrict: 'E',
+        require: '^filterContainer',
+        link: function (scope, elm, attr) {
+
+            scope.filter.donor = (isUndefined($routeParams.donor) || $routeParams.donor === '')? 0: $routeParams.donor;
+
+            GetDonors.get({}, function(data){
+                scope.donors = data.donors;
+                scope.donors.unshift({'id':0, 'shortName': '--All Donors --'});
+            });
+        },
+        templateUrl: 'filter-donors'
+    };
+}]);

@@ -14,7 +14,9 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.LabEquipmentByDonorMapper;
 import org.openlmis.report.mapper.LabEquipmentMapper;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.params.LabEquipmentListReportParam;
 import org.openlmis.report.util.SelectedFilterHelper;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +41,23 @@ public class LabEquipmentsByDonorReportDataProvider extends ReportDataProvider {
     @Override
     public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sorter, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return mapper.getFilteredLabEquipmentByDonorReport(filterCriteria, rowBounds, this.getUserId());
+        return mapper.getFilteredLabEquipmentByDonorReport(getReportFilterData(filterCriteria), rowBounds, this.getUserId());
+    }
+
+    public LabEquipmentListReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
+
+        LabEquipmentListReportParam labEquipmentReportParam = new LabEquipmentListReportParam();
+
+        labEquipmentReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
+        labEquipmentReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone") ? 0: Long.parseLong(filterCriteria.get("zone")[0]));
+        labEquipmentReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0 : Long.parseLong(filterCriteria.get("facilityType")[0])); //defaults to 0
+        labEquipmentReportParam.setFacilityId(StringHelper.isBlank( filterCriteria, "facility")? 0L : Long.parseLong(filterCriteria.get("facility")[0]));
+        labEquipmentReportParam.setEquipmentTypeId(StringHelper.isBlank( filterCriteria, "equipmentType")? 0L : Long.parseLong(filterCriteria.get("equipmentType")[0]));
+        labEquipmentReportParam.setEquipmentId(StringHelper.isBlank( filterCriteria, "equipment")? 0L : Long.parseLong(filterCriteria.get("equipment")[0]));
+        labEquipmentReportParam.setServiceContractAvailable(StringHelper.isBlank( filterCriteria, "serviceContract")? 0L : Long.parseLong(filterCriteria.get("serviceContract")[0]));
+        labEquipmentReportParam.setDonor(StringHelper.isBlank( filterCriteria, "donor")? 0L : Long.parseLong(filterCriteria.get("donor")[0]));
+
+        return labEquipmentReportParam;
     }
 
     @Override

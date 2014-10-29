@@ -17,6 +17,7 @@ import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
@@ -412,5 +413,14 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("orderFillRateSummary", orderFillRateReportSummaryList);
     }
 
+    @RequestMapping(value="/donors", method = GET, headers = BaseController.ACCEPT_JSON)
+
+    public ResponseEntity<OpenLmisResponse> getDonorsList(){
+
+        List<Donor> donors = reportLookupService.getAllDonors();
+
+        return OpenLmisResponse.response("donors", donors);
+
+    }
 
 }
