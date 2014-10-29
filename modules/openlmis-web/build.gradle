@@ -144,7 +144,7 @@ task cleanWorkspace(type: Delete) {
 }
 
 build.doLast {
-  karmaRun.execute()
+//  karmaRun.execute()
   jsHint.execute()
   cleanWorkspace.execute()
 }
@@ -174,7 +174,8 @@ dependencies {
     project(':modules:report'),
     project(':modules:distribution'),
     project(':modules:odk-api'),
-    project(':modules:equipment')
+    project(':modules:equipment'),
+          project(':modules:help')
 
 
   testCompile 'org.springframework:spring-test:3.1.1.RELEASE',

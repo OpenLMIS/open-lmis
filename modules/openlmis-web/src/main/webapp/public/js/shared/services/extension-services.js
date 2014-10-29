@@ -639,3 +639,44 @@ services.factory('OrderFillRateSummaryReport', function ($resource) {
 services.factory('GetOrderFillRateSummary', function($resource){
     return $resource('/reports/OrderFillRateSummary/program/:programId/period/:periodId/schedule/:scheduleId/facilityTypeId/:facilityTypeId/zone/:zoneId/status/:status/orderFillRateSummary.json',{},{});
 });
+/* help modudule services as updated on october 16
+
+ */
+//CreateHelp topic
+//load helptopic intialize
+services.factory('IntializeHelpTopic', function ($resource) {
+    return $resource('/helpTopicForCreate.json', {}, {post:{method:'GET'}});
+});
+services.factory('CreateHelpTopic', function ($resource) {
+    return $resource('/createHelpTopic.json', {}, {post:{method:'POST'}});
+});
+//load helptopic detail
+services.factory('HelpTopicDetail', function ($resource) {
+    return $resource('/helpTopicDetail/:id.json', {}, {post:{method:'GET'}});
+});
+//update help topic
+services.factory('UpdateHelpTopic', function ($resource) {
+    return $resource('/updateHelpTopic.json', {}, {post:{method:'POST'}});
+});
+//load help topic list
+services.factory('HelpTopicList', function ($resource) {
+    //alert('here i am');
+    return $resource('/helpTopicList.json', {}, {});
+});
+services.factory('CreateHelpContent', function ($resource) {
+    return $resource('/createHelpContent.json', {}, {post:{method:'POST'}});
+});
+services.factory('UpdateHelpContent', function ($resource) {
+    return $resource('/updateHelpContent.json', {}, {post:{method:'POST'}});
+});
+services.factory('HelpContentList', function ($resource) {
+  //  alert('here i am');
+    return $resource('/helpContentList.json', {}, {});
+});
+services.factory('HelpContentDetail', function ($resource) {
+    return $resource('/helpContentDetail/:id.json', {}, {post:{method:'GET'}});
+});
+services.factory('HelpUsertopicList', function ($resource) {
+  //  alert('here i am');
+    return $resource('/userHelpTopicList.json', {}, {});
+});

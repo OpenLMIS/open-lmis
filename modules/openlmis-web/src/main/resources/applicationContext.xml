@@ -68,7 +68,7 @@
     <import resource="classpath:/applicationContext-distribution.xml"/>
     <import resource="classpath:/applicationContext-odkapi.xml"/>
     <import resource="classpath:/applicationContext-equipment.xml" />
-
+    <import resource="classpath:/applicationContext-help.xml" />
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 
     <bean id="multipartResolver"
