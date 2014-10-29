@@ -77,7 +77,7 @@ function CreateFullSupplyController($scope, messageService) {
     });
 
     rnr.skippedLineItems = _.where(rnr.skippedLineItems, {unskip: undefined});
-
+    window.window.adjustHeight();
     // all is said and done, close the dialog box
     $scope.addSkippedProductsModal = false;
   };

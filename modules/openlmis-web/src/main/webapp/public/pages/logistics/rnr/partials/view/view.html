@@ -14,7 +14,7 @@
     <li ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen')}">
       <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
          openlmis-message="label.full.supply.products"></a></li>
-    <li ng-class="{'selected': visibleTab == 'nonFullSupply'}">
+    <li  ng-show="hide_additional_commodity_tab == 'false'" ng-class="{'selected': visibleTab == 'nonFullSupply'}">
       <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
          openlmis-message="label.non.full.supply.products"></a></li>
     <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show="regimenCount">

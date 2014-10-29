@@ -89,7 +89,7 @@
             </div>
         </div>
 
-        <div class="span6" >
+        <div class="span6" style="border: 1px;">
           <div style="" ng-show="features && (features | filter:expectedFilter).length > 0">
               <p class="grey pull-left">
               You can click on the chart to see list of facilities
@@ -111,15 +111,15 @@
                     <td style="width:60px !important;" class="number">{{feature.expected}}</td>
                     <td style="width:60px !important;" class="number">{{feature.period}}</td>
 
-                    <td style="width:150px !important;" class="number">
+                    <td style="width:180px !important;" class="number">
                          <div class="progress" style="margin-bottom:0px;width:90%">
                             <div class="bar bar-danger leaflet-clickable" ng-click="StockedOutFacilities(feature, this)" style="width: {{((feature.stockedout / feature.period) * 100).toFixed(2)}}%">{{feature.stockedout}}</div>
                             <div class="bar bar-warning leaflet-clickable" ng-click="UnderStockedFacilities(feature, this)" style="width: {{((feature.understocked / feature.period) * 100).toFixed(2)}}%">{{feature.understocked}}</div>
                             <div class="bar bar-info leaflet-clickable" ng-click="OverStockedFacilities(feature, this)" style="width: {{((feature.overstocked / feature.period) * 100).toFixed(2)}}%">{{feature.overstocked}}</div>
-                            <div class="bar bar-success leaflet-clickable" ng-click="AdequatelyStockedFacilities(feature, this)" style="width: {{(100 - (((feature.stockedout + feature.understocked + feature.overstocked )/ feature.period) * 100).toFixed(2))}}%">{{feature.adequatelystocked}}</div>
+                            <div class="bar bar-success leaflet-clickable" ng-click="AdequatelyStockedFacilities(feature, this)" style="width: {{(100 - (((feature.stockedout + feature.understocked + feature.overstocked)/ feature.period) * 100).toFixed(2))}}%">{{ (feature.period - (feature.stockedout + feature.understocked + feature.overstocked)) }}</div>
                         </div>
                     </td>
-                    <td style="width:60px !important;" class="number">{{((feature.stockedout / feature.period) * 100).toFixed(0)}} %</td>
+                    <td style="width:70px !important;" class="number">{{((feature.stockedout / feature.period) * 100).toFixed(0)}} %</td>
                 </tr>
               </tbody>
             </table>
@@ -136,12 +136,12 @@
 <div class="row-fluid">
 
 
-    <div class="span7" >
+    <div class="span6" >
 
 
         <div style="" ng-show="products && (products).length > 0">
 
-            <b>{{ district_title }}</b>
+            <b>You are viewing data for: {{ district_title }}</b>
             <div class="clearfix"><br /></div>
             <!-- <filter-container>
                 <zone-filter class="form-cell horizontalFilters" required="true"></zone-filter>
@@ -158,22 +158,22 @@
                 <tr>
                     <th style="width:170px !important;">Product</th>
                     <th style="width:70px !important;">Reported</th>
-                    <th style="width: 280px;">Status</th>
+                    <th style="width: 180px;">Status</th>
                     <th style="width: 100px;">% StockedOut</th>
                     <th style="width: 100px;">Check</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="product in products">
+                <tr ng-repeat="product in products | filter:expectedProductFilter">
                     <td style="width:170px !important;" >{{product.primaryname}}</td>
                     <td style="width:70px !important;" class="number">{{product.reported}}</td>
-                    <td style="width:280px !important;" class="number">
-                        <div class="progress" style="margin-bottom:0px;width:100%">
-                            <div class="bar bar-danger leaflet-clickable" ng-click="StockedOutProducts(product, this)" style="width: {{((product.stockedout / product.reported) * 100).toFixed(2)}}%"></div>
-                            <div class="bar bar-warning leaflet-clickable" ng-click="UnderStockedProducts(product, this)" style="width: {{((product.understocked / product.reported) * 100).toFixed(2)}}%"></div>
-                            <div class="bar bar-info leaflet-clickable" ng-click="OverStockedProducts(product, this)" style="width: {{((product.overstocked / product.reported) * 100).toFixed(2)}}%"></div>
-                            <div class="bar bar-success leaflet-clickable" ng-click="AdequatelyStockedProducts(product, this)" style="width: {{(100 - (((product.stockedout + product.understocked + product.overstocked )/ product.reported) * 100).toFixed(2))}}%"></div>
-                        </div>
+                    <td style="width:180px !important;" class="number">
+                        <div class="progress" style="margin-bottom:0px;width:180px;">
+                            <div class="bar bar-danger leaflet-clickable" ng-click="StockedOutProducts(product,this);" style="width: {{((product.stockedout / product.reported) * 100).toFixed(2)}}%">{{product.stockedout}}</div>
+                            <div class="bar bar-warning leaflet-clickable" ng-click="UnderStockedProducts(product, this)" style="width: {{((product.understocked / product.reported) * 100).toFixed(2)}}%">{{product.understocked}}</div>
+                            <div class="bar bar-info leaflet-clickable" ng-click="OverStockedProducts(product, this)" style="width: {{((product.overstocked / product.reported) * 100).toFixed(2)}}%">{{product.overstocked}}</div>
+                            <div class="bar bar-success leaflet-clickable" ng-click="AdequatelyStockedProducts(product, this)" style="width: {{(100 - (((product.stockedout + product.understocked + product.overstocked)/ product.reported) * 100).toFixed(2))}}%">{{ (product.reported - (product.stockedout + product.understocked + product.overstocked)) }}</div>
+                       </div>
                     </td>
                     <td style="width:100px !important;" class="number">{{((product.stockedout / product.reported) * 100).toFixed(0)}} %</td>
                     <td style="width:30px"><input type="checkbox" ng-model="product.selected" ng-change="productSelectChange(product.selected, product)" ></td>
@@ -182,8 +182,11 @@
             </table>
         </div>
     </div>
-
+    <br><br>
     <div class="span5">
+        <p style="font-weight: bold">Note: The graph will show zero values when no report was found for a period</p>
+        <p style="font-weight: bold; text-align: center">Aggregated Data for {{ district_title }}</p>
+        <br>
         <div ng-repeat="productStock in productstocks">
             <a-float  af-option="productStock.options" af-data="productStock.dataSeries" class="chart"> </a-float>
         </div>
@@ -249,7 +252,7 @@
       <table ng-show="!show_sms && !show_email" class="table table-bordered" >
         <thead>
         <tr>
-          <th>Facility Namex</th>
+          <th>Facility Name</th>
           <th>Phone</th>
           <th>Action</th>
           <th>Product</th>
@@ -372,7 +375,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="row in products">
+            <tr ng-repeat="row in productPopup">
                 <td>{{ row.geographiczonename }}</td>
                 <td>
                     <span   data-toggle="tooltip" title="This facility did not report for period" class="icon-warning-sign" style="color: red;" ng-show="row.stockedout"></span>

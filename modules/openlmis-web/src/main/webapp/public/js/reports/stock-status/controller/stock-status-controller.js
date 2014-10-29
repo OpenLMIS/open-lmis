@@ -12,6 +12,9 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
 
     $scope.default_indicator = "stocked_out";
     $scope.district_title = "All Geographic Zones";
+    $scope.showConsumed = true;
+    $scope.showAMC = true;
+    $scope.showSOH = true;
 
 
     // get configurations
@@ -230,37 +233,20 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
     // stock status by product
 
 
-    $scope.AdequatelyStockedProducts = function(feature, element) {
-        AdequatelyStockedFacilityByProductList.get({
-            program: $scope.filter.program,
-            period: $scope.filter.period,
-            product: feature.id,
-            geo_zone: $scope.filter.zone
-        }, function(data) {
-            $scope.products = data.products;
-            $scope.successModal2 = true;
-            $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Adequately Stocked Facilities in ' + feature.primayname;
-            // alert("fail:" + JSON.stringify($scope.facilities));
-        });
-
-        $scope.zoomToSelectedFeature(feature);
-    };
-
-    $scope.StockedOutProducts = function(feature, element) {
+     $scope.StockedOutProducts = function(feature, element) {
         StockedOutFacilityByProductList.get({
             program: $scope.filter.program,
             period: $scope.filter.period,
             product: feature.id,
             geo_zone: $scope.filter.zone
         }, function(data) {
-            $scope.products = data.products;
+            $scope.productPopup = data.products;
+            //alert("fail:" + JSON.stringify($scope.productPopup));
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Stocked Out Facilities for ' + feature.primaryname;
-            //alert("fail2:" + JSON.stringify($scope.filter));
-        });
+            $scope.title = 'Stocked Out Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
 
+        });
         $scope.zoomToSelectedFeature(feature);
     };
 
@@ -271,10 +257,10 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
             product: feature.id,
             geo_zone: $scope.filter.zone
         }, function(data) {
-            $scope.products = data.products;
+            $scope.productPopup = data.products;
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'UnderStocked Out Facilities in ' + feature.primayname;
+            $scope.title = 'UnderStocked Out Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
             // alert("fail:" + JSON.stringify($scope.facilities));
         });
 
@@ -288,11 +274,28 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
             product: feature.id,
             geo_zone: $scope.filter.zone
         }, function(data) {
-            $scope.products = data.products;
+            $scope.productPopup = data.products;
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Over Stocked Facilities in ' + feature.primayname;
+            $scope.title = 'Over Stocked Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
             //alert("fail:" + JSON.stringify(feature));
+        });
+
+        $scope.zoomToSelectedFeature(feature);
+    };
+
+    $scope.AdequatelyStockedProducts = function(feature, element) {
+        AdequatelyStockedFacilityByProductList.get({
+            program: $scope.filter.program,
+            period: $scope.filter.period,
+            product: feature.id,
+            geo_zone: $scope.filter.zone
+        }, function(data) {
+            $scope.productPopup = data.products;
+            $scope.successModal2 = true;
+            $scope.show_email = $scope.show_sms = false;
+            $scope.title = 'Adequately Stocked Facilities for '+ feature.primaryname + ' in ' + $scope.district_title;
+            // alert("fail:" + JSON.stringify($scope.facilities));
         });
 
         $scope.zoomToSelectedFeature(feature);
@@ -353,7 +356,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
             var barsOption = generateBarsOption(productId, periodSeries, productName);
 
             $scope.productstocks.push({productId: productId,options: barsOption, dataSeries: [{
-                label: "stock in hand",
+                label: "SOH",
                 data: quantityOnHandSeries,
                 color: "#5eb95e",
                 bars: {
@@ -364,14 +367,14 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
                     lineWidth:1
                 }
             },{
-                label: "quantity consumed",
+                label: "Consumed",
                 data: quantityConsumedSeries,
                  yaxis: 3,
-                color: "#dd514c",
-                points: { fillColor: "#dd514c", show: true },
-                lines: {show:true}
+                color: "#4bb1cf",
+                points: { fillColor: "#4bb1cf", show: $scope.showConsumed },
+                lines: {show:$scope.showConsumed}
             },{
-                label:"amc",
+                label:"AMC",
                 data: amcSeries,
                  yaxis: 3,
                 color: "#faa732",
@@ -404,7 +407,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
                     position: "left",
                     //max: 1070,
                     color: "#5eb95e",
-                    axisLabel: "Stock in hand",
+                    axisLabel: "SOH",
                     axisLabelUseCanvas: true,
                     axisLabelFontSizePixels: 12,
                     axisLabelFontFamily: 'Verdana, Arial',
@@ -462,9 +465,12 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
 
 
     $scope.expectedFilter = function(item) {
-        return item.period > 0;
+        return (item.period > 0 && item.stockedout >= 0 && item.understocked >= 0 && item.overstocked >= 0 && item.adequatelystocked >= 0);
     };
 
+    $scope.expectedProductFilter = function(item) {
+        return (item.reported > 0 && item.stockedout >= 0 && item.understocked >= 0 && item.overstocked >= 0 && item.adequatelystocked >= 0);
+    };
 
 
 
@@ -623,7 +629,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
     getStockStatusProductConsumption = function() {
         $.getJSON('/gis/stock-status-product-consumption.json', $scope.filter, function(data) {
             $scope.consumption = data.consumption;
-            alert("fail:" +  JSON.stringify($scope.consumption));
+
         });
     };
     $scope.OnFilterChanged = function() {
@@ -631,7 +637,10 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
         $.getJSON('/gis/stock-status-facilities.json', $scope.filter, function(data) {
             $scope.features = data.map;
 
+
+
             angular.forEach($scope.features, function(feature) {
+
                 feature.geometry_text = feature.geometry;
                 feature.geometry = JSON.parse(feature.geometry);
                 feature.type = "Feature";

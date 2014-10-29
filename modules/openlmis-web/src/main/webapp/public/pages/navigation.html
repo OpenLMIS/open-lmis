@@ -190,24 +190,12 @@
                 </div>
               </li>
 
-              <li class="has-children">
-                  <a href="javascript: void(0);">Stock Status</a>
-
-                  <div class="submenu">
-                      <ul>
-                          <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
-                              <a href="/public/pages/reports/stock-status/index.html">Stock Status</a>
-                          </li>
-                      </ul>
-                  </div>
-              </li>
-
             <li class="has-children">
               <a href="javascript: void(0);">Stock Keeping</a>
 
               <div class="submenu">
                 <ul>
-                  <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
+                   <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
                     <a href="/public/pages/reports/adjustment-summary/index.html">Adjustment Summary</a>
                   </li>
                   <li ng-show="hasPermission('VIEW_STOCKED_OUT_REPORT')">
@@ -222,6 +210,9 @@
                   <li ng-show="hasPermission('VIEW_SUPPLY_STATUS_REPORT')">
                     <a href="/public/pages/reports/supply-status/index.html">Supply Status by Facility</a>
                   </li>
+                    <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+                        <a href="/public/pages/reports/stock-status/index.html">Stock Status By Location</a>
+                    </li>
                 </ul>
               </div>
             </li>
