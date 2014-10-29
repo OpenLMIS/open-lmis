@@ -1,0 +1,30 @@
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+    <div><h2 id="addNewFacilityHeader" >Help List View</h2></div>
+
+
+
+    <div class="app-form">
+
+
+        <div ng-model="showMinDir" ng-value="false">
+
+
+
+
+            <div>
+                <button ng-click="my_tree.expand_all()" class="btn btn-default btn-sm">Expand All</button>
+                <button ng-click="my_tree.collapse_all()" class="btn btn-default btn-sm">Collapse All</button>
+
+                <tree-grid tree-data="tree_data" tree-control="my_tree" col-defs="col_defs"
+                           expand-on="expanding_property"
+                           on-select="my_tree_handler(branch)" expand-level="2"
+                           icon-leaf="glyphicon glyphicon-globe"></tree-grid>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
