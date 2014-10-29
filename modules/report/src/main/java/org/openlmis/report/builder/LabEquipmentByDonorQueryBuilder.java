@@ -53,9 +53,6 @@ public class LabEquipmentByDonorQueryBuilder {
             if (filter.getDonor() != 0) {
                 WHERE("donorid = #{filterCriteria.donor}");
             }
-
-
-
         }
     }
 
