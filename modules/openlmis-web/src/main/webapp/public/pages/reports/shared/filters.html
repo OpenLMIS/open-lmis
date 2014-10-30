@@ -240,7 +240,7 @@
 
 <script type="text/ng-template" id="filter-equipment">
     <div>
-        <label class="labels">Equipment Type <span ng-show="requiredFilters.equipment" class="label-required">*</span></label><div>
+        <label class="labels">Equipment <span ng-show="requiredFilters.equipment" class="label-required">*</span></label><div>
         <select class="input-large" ng-model="filter.equipment" ng-change="filterChanged();">
             <option ng-repeat="equipment in equipments" value="{{ equipment.id }}" ng-selected="filter.equipment == equipment.id">{{equipment.name}}</option>
         </select>
@@ -256,6 +256,16 @@
             <option  ng-repeat="contract in serviceContract" value="{{ contract.key }}" ng-selected="filter.serviceContract == contract.key">{{contract.value}}</option>
         </select>
 
+    </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="filter-donors">
+    <div>
+        <label class="labels">Donors <span ng-show="requiredFilters.donor" class="label-required">*</span></label><div>
+        <select class="input-large" ng-model="filter.donor" ng-change="filterChanged();">
+            <option  ng-repeat="donor in donors" value="{{ donor.id }}" ng-selected="filter.donors == donor.id">{{donor.shortName}}</option>
+        </select>
     </div>
     </div>
 </script>
