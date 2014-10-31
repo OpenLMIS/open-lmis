@@ -738,6 +738,12 @@ services.factory('EditUserPreference', function ($resource) {
 
     return resource;
 });
+services.factory('SupervisoryNodesList', function ($resource) {
+    return $resource('/supervisory-nodes/list.json', {}, {});
+});
+services.factory('RolesList', function ($resource) {
+    return $resource('/roles/list.json', {}, {});
+});
 
 
 

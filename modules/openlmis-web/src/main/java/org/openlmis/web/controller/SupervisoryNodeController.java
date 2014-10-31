@@ -48,6 +48,11 @@ public class SupervisoryNodeController extends BaseController {
     return OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getAll());
   }
 
+  @RequestMapping(value = "/supervisory-nodes/list", method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> getAllReadOnly() {
+    return OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getAll());
+  }
+
   @RequestMapping(value="/supervisoryNode/getList",method= RequestMethod.GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
   public ResponseEntity<OpenLmisResponse> getSupervisoryNodeList(HttpServletRequest request){

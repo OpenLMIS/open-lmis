@@ -135,11 +135,11 @@ UserPreferenceController.resolve = {
 
         return deferred.promise;
     },
-    supervisoryNodes: function ($q, SupervisoryNodes, $timeout) {
+    supervisoryNodes: function ($q, SupervisoryNodesList, $timeout) {
         var deferred = $q.defer();
 
         $timeout(function () {
-            SupervisoryNodes.get({}, function (data) {
+            SupervisoryNodesList.get({}, function (data) {
                 deferred.resolve(data.supervisoryNodes);
             }, function () {
             });
@@ -147,11 +147,11 @@ UserPreferenceController.resolve = {
 
         return deferred.promise;
     },
-    roles_map: function ($q, Roles, $timeout) {
+    roles_map: function ($q, RolesList, $timeout) {
         var deferred = $q.defer();
 
         $timeout(function () {
-            Roles.get({}, function (data) {
+            RolesList.get({}, function (data) {
                 deferred.resolve(data.roles_map);
             }, function () {
             });
