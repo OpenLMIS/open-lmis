@@ -12,32 +12,15 @@ var userModule = angular.module('user', ['openlmis', 'ui.bootstrap.modal', 'ui.b
 
 userModule.config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
-      when('/search', {controller: UserSearchController, templateUrl: 'partials/search.html', resolve: UserSearchController.resolve}).
-     /* when('/edit-user-preference/:userId', {controller: UserPreferenceController, templateUrl: 'preference/partials/user-preference.html',resolve: UserPreferenceController.resolve}).*/
-      when('/create-user', {controller: UserController, templateUrl: 'partials/create.html', resolve: UserController.resolve}).
-      when('/edit/:userId', {controller: UserController, templateUrl: 'partials/create.html', resolve: UserController.resolve}).
-      otherwise({redirectTo: '/search'});
+      when('/user-preference', {controller: UserPreferenceController, templateUrl: 'partials/user-preference.html', resolve: UserPreferenceController.resolve}).
+      when('/edit-user-preference/:userId', {controller: UserPreferenceController, templateUrl: 'partials/user-preference.html', resolve: UserPreferenceController.resolve}).
+      otherwise({redirectTo: '/edit-user-preference'});
   }]).directive('onKeyup', function () {
     return function (scope, elm, attrs) {
       elm.bind("keyup", function () {
         scope.$apply(attrs.onKeyup);
       });
     };
-  })
-  .directive('select2Blur', function () {
-    return function (scope, elm, attrs) {
-      angular.element("body").on('mousedown', function (e) {
-        $('.select2-dropdown-open').each(function () {
-          if (!$(this).hasClass('select2-container-active')) {
-            $(this).data("select2").blur();
-          }
-        });
-      });
-    };
-  })
-  .run(function ($rootScope, AuthorizationService) {
-    $rootScope.userSelected = "selected";
-    AuthorizationService.preAuthorize('MANAGE_USER');
   });
 
 

@@ -709,3 +709,33 @@ services.factory('StockStatusProductConsumptionGraph', function($resource){
     return $resource('/gis/stock-status-product-consumption.json',{}, {});
 });
 
+services.factory('UserPrograms', function ($resource) {
+    return $resource('/reports/users/:userId/programs.json', {}, {});
+});
+services.factory('UserFacilitiesForProgram', function ($resource) {
+    return $resource('/users/:userId/supervised/:programId/facilities.json', {}, {});
+});
+
+services.factory('UserPreferences', function ($resource) {
+    return $resource('/users/:userId/preferences.json', {}, {});
+});
+services.factory('UpdateUserPreference', function ($resource) {
+    return $resource('/users/:userId/preferences.json', {}, update);
+});
+
+/*services.factory('EditUserPreference', function ($resource) {
+    return $resource('/preference/users/:id.json', {}, update);
+});*/
+
+services.factory('EditUserPreference', function ($resource) {
+    var resource = $resource('/preference/users/:id.json', {id: '@id'}, update);
+
+    resource.disable = function (pathParams, success, error) {
+        $resource('/preference/users/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
+    };
+
+    return resource;
+});
+
+
+
