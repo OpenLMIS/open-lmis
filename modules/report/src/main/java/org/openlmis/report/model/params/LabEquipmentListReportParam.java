@@ -30,5 +30,6 @@ public class LabEquipmentListReportParam {
     private Long equipmentId;
     private Long equipmentTypeId;
     private Long serviceContractAvailable;
+    private Long donor;
 
 }

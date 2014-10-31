@@ -23,14 +23,6 @@ public class LabEquipmentListQueryBuilder {
         ORDER_BY("facilityName, equipmentName");
         return SQL();
 
-        /*
-        Map filterCriteria = (Map) params.get("filterCriteria");
-        Long userId = (Long) params.get("userId");
-
-        StringBuilder query = new StringBuilder();
-        query.append("select * from vw_equipment_operational_status")
-        .append(writePredicates(filterCriteria, userId));
-        return query.toString();*/
     }
 
     public static String getFunctioningEquipmentWithContract(Map params){

@@ -17,7 +17,9 @@ import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.repository.DonorRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
 import org.openlmis.equipment.repository.mapper.EquipmentMapper;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
@@ -120,6 +122,9 @@ public class ReportLookupService {
 
     @Autowired
     private EquipmentReportMapper equipmentReportMapper;
+
+    @Autowired
+    private DonorRepository donorRepository;
 
     public List<Product> getAllProducts() {
         return productMapper.getAll();
@@ -544,4 +549,7 @@ public class ReportLookupService {
 
     }
 
+    public List<Donor> getAllDonors() {
+        return donorRepository.getAll();
+    }
 }

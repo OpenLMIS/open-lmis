@@ -709,7 +709,9 @@ services.factory('StockStatusProductConsumptionGraph', function($resource){
     return $resource('/gis/stock-status-product-consumption.json',{}, {});
 });
 
-services.factory('UserPrograms', function ($resource) {
+services.factory('GetDonors', function($resource){
+    return $resource('/reports/donors',{}, {});
+});services.factory('UserPrograms', function ($resource) {
     return $resource('/reports/users/:userId/programs.json', {}, {});
 });
 services.factory('UserFacilitiesForProgram', function ($resource) {

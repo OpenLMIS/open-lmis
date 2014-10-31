@@ -107,7 +107,8 @@ public class OrderCsvHelper {
     JXPathContext lineItemContext = JXPathContext.newContext(rnrLineItem);
     for (OrderFileColumn orderFileColumn : orderFileColumns) {
       if (orderFileColumn.getNested() == null || orderFileColumn.getNested().isEmpty()) {
-        writer.write(",");
+        if (orderFileColumns.indexOf(orderFileColumn) < orderFileColumns.size() - 1)
+          writer.write(",");
         continue;
       }
       Object columnValue;
