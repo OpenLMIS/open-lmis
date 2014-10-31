@@ -24,7 +24,7 @@ function UserPreferenceController($scope,ReportProductsByProgram,user,Users,Edit
         ReportProductsByProgram.get({programId: $scope.preference.program}, function(data){
             $scope.products = data.productList;
         });
-    }
+    };
 
     $scope.saveUser = function () {
         var successHandler = function (msgKey) {
@@ -56,7 +56,6 @@ function UserPreferenceController($scope,ReportProductsByProgram,user,Users,Edit
             $scope.preference.program = isUndefined($scope.preference.program)? 1: $scope.preference.program;
             $scope.preference.facility = isUndefined($scope.preference.facility)? 1: $scope.preference.facility;
             $scope.preference.products = isUndefined($scope.preference.products)? [1]: $scope.preference.products;
-            alert('preferences '+JSON.stringify($scope.preference))
 
             UpdateUserPreference.update({userId: $scope.user.id, programId: $scope.preference.program,
                 facilityId:$scope.preference.facility, products:$scope.preference.products},{},updateSuccessHandler, errorHandler);
