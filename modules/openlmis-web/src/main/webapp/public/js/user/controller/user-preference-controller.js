@@ -9,7 +9,7 @@ function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,
 
     $scope.preference = {program: userDashboardPreferenceValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM],
         facility: userDashboardPreferenceValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY],
-        products: userDashboardPreferenceValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(', ')};
+        products: userDashboardPreferenceValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',')};
 
     $scope.$watch('preference.program',function(){
         loadFacilities();

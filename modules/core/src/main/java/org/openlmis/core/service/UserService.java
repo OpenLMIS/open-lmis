@@ -42,7 +42,7 @@ public class UserService {
 
   public static String  getCommaSeparatedIds(List<Long> idList){
 
-    return idList == null ? "{}" : idList.toString().replace("[","").replace("]","");
+    return idList == null ? "{}" : idList.toString().replace("[","").replace("]","").replace(", ",",");
   }
 
   @Autowired
