@@ -1,9 +1,11 @@
 /**
  * Created by issa on 10/24/14.
  */
-function UserPreferenceController($scope,ReportProductsByProgram,user,Users,EditUserPreference,UserFacilitiesForProgram,programs,$location,messageService,UpdateUserPreference,userDashboardPreferenceValues){
+function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,supervisoryNodes,EditUserPreference,UserFacilitiesForProgram,programs,$location,messageService,UpdateUserPreference,userDashboardPreferenceValues){
     $scope.user = user || {};
     $scope.programs = programs;
+    $scope.supervisoryNodes = supervisoryNodes;
+    $scope.rolesMap = roles_map;
 
     $scope.preference = {program: userDashboardPreferenceValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM],
         facility: userDashboardPreferenceValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY],
@@ -15,15 +17,20 @@ function UserPreferenceController($scope,ReportProductsByProgram,user,Users,Edit
     });
 
     var loadFacilities = function(){
-        UserFacilitiesForProgram.get({userId:$scope.user.id, programId:$scope.preference.program},function(data){
-            $scope.allFacilities = data.facilities;
-        });
+        if(!isUndefined($scope.programs) && $scope.programs.length > 0){
+            UserFacilitiesForProgram.get({userId:$scope.user.id, programId:$scope.preference.program},function(data){
+                $scope.allFacilities = data.facilities;
+            });
+        }
     };
 
     var loadProducts = function(){
-        ReportProductsByProgram.get({programId: $scope.preference.program}, function(data){
-            $scope.products = data.productList;
-        });
+        if(!isUndefined($scope.programs) && $scope.programs.length > 0){
+            ReportProductsByProgram.get({programId: $scope.preference.program}, function(data){
+                $scope.products = data.productList;
+            });
+        }
+
     };
 
     $scope.saveUser = function () {
@@ -62,6 +69,18 @@ function UserPreferenceController($scope,ReportProductsByProgram,user,Users,Edit
         }
 
         return true;
+    };
+
+    $scope.getSupervisoryNodeName = function (supervisoryNodeId) {
+        return _.findWhere($scope.supervisoryNodes, {id: supervisoryNodeId}).name;
+    };
+
+    $scope.getProgramName = function (programId) {
+        return _.findWhere($scope.programs, {id: programId}).name;
+    };
+
+    $scope.getRoleName = function (roleId) {
+       return _.findWhere($scope.rolesMap.REQUISITION, {id: roleId}).name;
     };
 
 }
@@ -113,6 +132,30 @@ UserPreferenceController.resolve = {
             });
         }, 100);
 
+
+        return deferred.promise;
+    },
+    supervisoryNodes: function ($q, SupervisoryNodes, $timeout) {
+        var deferred = $q.defer();
+
+        $timeout(function () {
+            SupervisoryNodes.get({}, function (data) {
+                deferred.resolve(data.supervisoryNodes);
+            }, function () {
+            });
+        }, 100);
+
+        return deferred.promise;
+    },
+    roles_map: function ($q, Roles, $timeout) {
+        var deferred = $q.defer();
+
+        $timeout(function () {
+            Roles.get({}, function (data) {
+                deferred.resolve(data.roles_map);
+            }, function () {
+            });
+        }, 100);
 
         return deferred.promise;
     }
