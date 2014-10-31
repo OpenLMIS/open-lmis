@@ -1,7 +1,8 @@
 /**
  * Created by issa on 10/24/14.
  */
-function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,supervisoryNodes,EditUserPreference,UserFacilitiesForProgram,programs,$location,messageService,UpdateUserPreference,userDashboardPreferenceValues){
+function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,supervisoryNodes,EditUserPreference,UserFacilitiesForProgram,programs,$location,messageService,
+                                  UpdateUserPreference,userDashboardPreferenceValues, UserPreferences, localStorageService){
     $scope.user = user || {};
     $scope.programs = programs;
     $scope.supervisoryNodes = supervisoryNodes;
@@ -66,9 +67,30 @@ function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,
 
             UpdateUserPreference.update({userId: $scope.user.id, programId: $scope.preference.program,
                 facilityId:$scope.preference.facility, products:$scope.preference.products},{},updateSuccessHandler, errorHandler);
+
+            //if user preference of currently logged-in user changes, reload the new user preference to localstorage
+            if($scope.user.id == localStorageService.get(localStorageKeys.USER_ID)){
+                reloadUserDashboardPreferenceCache($scope.user.id);
+            }
+
         }
 
         return true;
+    };
+
+    var reloadUserDashboardPreferenceCache = function(userId){
+
+        $.each(localStorageKeys.PREFERENCE, function(item, idx){
+            localStorageService.remove(idx);
+
+        });
+        UserPreferences.get({userId: userId}, function(data){
+            $scope.prefData = data.preferences;
+            for (var prefKey in $scope.prefData) {
+                localStorageService.add(prefKey, $scope.prefData[prefKey]);
+            }
+        });
+
     };
 
     $scope.getSupervisoryNodeName = function (supervisoryNodeId) {
