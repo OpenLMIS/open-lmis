@@ -4,7 +4,7 @@
 
 CREATE TABLE elmis_help_topic_roles
 (
-  id integer NOT NULL DEFAULT nextval('elmis_help_topic_roles_help_topic_role_id_seq'::regclass),
+  id serial NOT NULL,
   help_topic_id integer,
   role_id integer,
   is_asigned boolean DEFAULT true,
