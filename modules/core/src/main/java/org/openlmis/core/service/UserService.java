@@ -40,6 +40,11 @@ public class UserService {
   static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";
   static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
 
+  public static String  getCommaSeparatedIds(List<Long> idList){
+
+    return idList == null ? "{}" : idList.toString().replace("[","").replace("]","").replace(", ",",");
+  }
+
   @Autowired
   private UserRepository userRepository;
 
@@ -221,5 +226,10 @@ public class UserService {
 
   public List<User> getAllUsers() {
     return userRepository.getAllUsers();
+  }
+
+  public void updateUserPreferences(Long userId, Long programId, Long facilityId, List<Long> products) {
+    userRepository.updateUserPreferences(userId, programId, facilityId, getCommaSeparatedIds(products));
+
   }
 }
