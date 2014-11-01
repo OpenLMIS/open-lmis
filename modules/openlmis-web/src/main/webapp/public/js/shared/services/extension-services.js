@@ -534,7 +534,9 @@ services.factory('ReportingPerformanceDetail',function($resource){
     return $resource('/dashboard/reportingPerformance-detail.json',{},{});
 });
 
-
+services.factory('ReportingPerformanceDetail',function($resource){
+    return $resource('/dashboard/reportingPerformance-detail.json',{},{});
+});
 
 /* End Dashboard data factories */
 
@@ -631,6 +633,13 @@ services.factory('GetPushedProductList', function($resource){
 services.factory('GetUserUnassignedSupervisoryNode',function ($resource){
     return $resource('/reports/supervisory-node/user-unassigned-node.json', {}, {});
 });
+services.factory('GetProductCategoryProductByProgramTree',function ($resource){
+    return $resource('/reports/productProgramCategoryTree/:programId', {}, {});
+});
+
+services.factory('GetYearSchedulePeriodTree',function ($resource){
+    return $resource('/reports/yearSchedulePeriod', {}, {});
+});
 
 services.factory('OrderFillRateSummaryReport', function ($resource) {
     return $resource('/reports/reportdata/orderFillRateReportSummary.json', {}, {});
@@ -638,6 +647,102 @@ services.factory('OrderFillRateSummaryReport', function ($resource) {
 
 services.factory('GetOrderFillRateSummary', function($resource){
     return $resource('/reports/OrderFillRateSummary/program/:programId/period/:periodId/schedule/:scheduleId/facilityTypeId/:facilityTypeId/zone/:zoneId/status/:status/orderFillRateSummary.json',{},{});
+});
+
+services.factory('StockedOutFacilityList', function($resource){
+    return $resource('/gis/stocked-out-facilities.json',{}, {});
+});
+
+services.factory('OverStockedFacilityList', function($resource){
+    return $resource('/gis/over-stocked-facilities.json',{}, {});
+});
+
+services.factory('UnderStockedFacilityList', function($resource){
+    return $resource('/gis/under-stocked-facilities.json',{}, {});
+});
+
+services.factory('AdequatelyStockedFacilityList', function($resource){
+    return $resource('/gis/adequately-stocked-facilities.json',{}, {});
+});
+
+services.factory('StockStatusProductList', function($resource){
+    return $resource('/gis/stock-status-products.json',{}, {});
+});
+
+services.factory('StockedOutFacilityByProductList', function($resource){
+    return $resource('/gis/stocked-out-products.json',{}, {});
+});
+
+services.factory('OverStockedFacilityByProductList', function($resource){
+    return $resource('/gis/over-stocked-products.json',{}, {});
+});
+
+services.factory('UnderStockedFacilityByProductList', function($resource){
+    return $resource('/gis/under-stocked-products.json',{}, {});
+});
+
+services.factory('AdequatelyStockedFacilityByProductList', function($resource){
+    return $resource('/gis/adequately-stocked-products.json',{}, {});
+});
+
+services.factory('GetFacilitiesByEquipmentStatus', function($resource){
+    return $resource('/gis/facilitiesByEquipmentOperationalStatus.json',{}, {});
+});
+
+services.factory('GetFacilitiesEquipmentStatusSummary', function($resource){
+    return $resource('/gis/facilitiesEquipmentStatusSummary.json',{}, {});
+});
+
+services.factory('ReportEquipments', function ($resource) {
+    return $resource('/reports/equipmentsByType/:equipmentType',{}, {});
+});
+
+services.factory('NonFunctioningLabEquipment', function ($resource) {
+    return $resource('/reports/reportdata/nonFunctioningLabEquipment.json', {}, {});
+});
+
+services.factory('FunctioningLabEquipment', function ($resource) {
+    return $resource('/reports/reportdata/functioningLabEquipment.json', {}, {});
+});
+
+services.factory('StockStatusProductConsumptionGraph', function($resource){
+    return $resource('/gis/stock-status-product-consumption.json',{}, {});
+});
+
+services.factory('GetDonors', function($resource){
+    return $resource('/reports/donors',{}, {});
+});services.factory('UserPrograms', function ($resource) {
+    return $resource('/reports/users/:userId/programs.json', {}, {});
+});
+services.factory('UserFacilitiesForProgram', function ($resource) {
+    return $resource('/users/:userId/supervised/:programId/facilities.json', {}, {});
+});
+
+services.factory('UserPreferences', function ($resource) {
+    return $resource('/users/:userId/preferences.json', {}, {});
+});
+services.factory('UpdateUserPreference', function ($resource) {
+    return $resource('/users/:userId/preferences.json', {}, update);
+});
+
+/*services.factory('EditUserPreference', function ($resource) {
+ return $resource('/preference/users/:id.json', {}, update);
+ });*/
+
+services.factory('EditUserPreference', function ($resource) {
+    var resource = $resource('/preference/users/:id.json', {id: '@id'}, update);
+
+    resource.disable = function (pathParams, success, error) {
+        $resource('/preference/users/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
+    };
+
+    return resource;
+});
+services.factory('SupervisoryNodesList', function ($resource) {
+    return $resource('/supervisory-nodes/list.json', {}, {});
+});
+services.factory('RolesList', function ($resource) {
+    return $resource('/roles/list.json', {}, {});
 });
 /* help modudule services as updated on october 16
 
@@ -670,13 +775,13 @@ services.factory('UpdateHelpContent', function ($resource) {
     return $resource('/updateHelpContent.json', {}, {post:{method:'POST'}});
 });
 services.factory('HelpContentList', function ($resource) {
-  //  alert('here i am');
+    //  alert('here i am');
     return $resource('/helpContentList.json', {}, {});
 });
 services.factory('HelpContentDetail', function ($resource) {
     return $resource('/helpContentDetail/:id.json', {}, {post:{method:'GET'}});
 });
 services.factory('HelpUsertopicList', function ($resource) {
-  //  alert('here i am');
+    //  alert('here i am');
     return $resource('/userHelpTopicList.json', {}, {});
 });
