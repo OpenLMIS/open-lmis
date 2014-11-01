@@ -118,8 +118,9 @@
                   <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_FUNDING_SOURCE')">
                     <a href="/public/pages/reports/lab-equipments-by-donor/index.html">Lab Equipments by Funding Source</a>
                   </li>
-
-
+                    <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT')">
+                        <a href="/public/pages/reports/lab-equipments-by-location/index.html">Lab Equipments by location</a>
+                    </li>
                   <li class="beak"></li>
                 </ul>
               </div>
@@ -194,7 +195,7 @@
 
               <div class="submenu">
                 <ul>
-                  <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
+                   <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
                     <a href="/public/pages/reports/adjustment-summary/index.html">Adjustment Summary</a>
                   </li>
                   <li ng-show="hasPermission('VIEW_STOCKED_OUT_REPORT')">
@@ -209,6 +210,9 @@
                   <li ng-show="hasPermission('VIEW_SUPPLY_STATUS_REPORT')">
                     <a href="/public/pages/reports/supply-status/index.html">Supply Status by Facility</a>
                   </li>
+                    <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+                        <a href="/public/pages/reports/stock-status/index.html">Stock Status By Location</a>
+                    </li>
                 </ul>
               </div>
             </li>
