@@ -42,4 +42,4 @@ function HelpTopicCreateController($scope,$route, $location,messageService,Creat
         });
     };
     $scope.intializeHelpTopic($route.current.params.id);
-};
+}

@@ -49,4 +49,4 @@ function HelpContentEditCotntroller($scope, $route, $location, $dialog, messageS
 
 
     $scope.startHelpContentEdit($route.current.params.id);
-};
+}

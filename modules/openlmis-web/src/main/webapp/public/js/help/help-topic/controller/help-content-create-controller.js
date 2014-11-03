@@ -36,12 +36,13 @@ function ContentCreateController($scope, $location, $route, messageService, Crea
         CreateHelpTopic.save($scope.helpContent, createSuccessCallback, errorCallback);
     };
     $scope.intializeHelpContent = function (parentId) {
-        var helpTopic =new function () {
-            this.parentHelpTopic = "";
-            this.name = "";
-            this.htmlContent = "";
-
-        };
+//        var helpTopic =new function () {
+//            this.parentHelpTopic = "";
+//            this.name = "";
+//            this.htmlContent = "";
+//
+//        }
+        var helpTopic={};
         helpTopic.parentHelpTopic = parentId;
         ////alert('here intializing help topic and parent id is ' + parentId);
 
@@ -54,6 +55,6 @@ function ContentCreateController($scope, $location, $route, messageService, Crea
 
     };
     $scope.intializeHelpContent($route.current.params.id);
-};
+}
 
 

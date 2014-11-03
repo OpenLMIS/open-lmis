@@ -25,7 +25,7 @@ function HelpTopicTreeViewController($scope, $timeout, $resource, $location, $ro
         $location.path($scope.$parent.sourceUrl);
 
 
-    })
+    });
 
 
     $scope.my_tree_handler = function (branch) {
@@ -33,29 +33,31 @@ function HelpTopicTreeViewController($scope, $timeout, $resource, $location, $ro
         $scope.selectedHelpTopic = branch;
 //            $location.path('create/' + branch.id);
 
-    }
+    };
     $scope.add_help_topic = function () {
 //        <a href="" ng-click="editHelpTopic(ht.id)">{{ht.name}}</a>
-if( $scope.selectedHelpTopic !=null) {
-    $location.path('create/' + $scope.selectedHelpTopic.id);
-}else{
-    $location.path('/create/');
-}
 
-    }
+        if ($scope.selectedHelpTopic) {
+            alert(' here i am');
+            $location.path('create/' + $scope.selectedHelpTopic.id);
+        } else {
+            $location.path('/create/');
+        }
+
+    };
     $scope.add_help_content = function () {
 //        <a href="" ng-click="editHelpTopic(ht.id)">{{ht.name}}</a>
 
         $location.path('createHelpContent/' + $scope.selectedHelpTopic.id);
 
-    }
+    };
     $scope.editHelpTopic = function () {
 
 //        var data = {query: $scope.query};
 //        navigateBackService.setData(data);
 //        sharedSpace.setCountOfDonations(donationCount);
         ////alert(" editing content"+$scope.selectedHelpTopic.category);
-        if ($scope.selectedHelpTopic.category){
+        if ($scope.selectedHelpTopic.category) {
             $location.path('/edit/' + $scope.selectedHelpTopic.id);
         }
 
@@ -64,7 +66,7 @@ if( $scope.selectedHelpTopic !=null) {
         }
     };
     function getTree(data, primaryIdName, parentIdName) {
-        if (!data || data.length == 0 || !primaryIdName || !parentIdName)
+        if (!data || data.length === 0 || !primaryIdName || !parentIdName)
             return [];
 
         var tree = [],
@@ -98,15 +100,15 @@ if( $scope.selectedHelpTopic !=null) {
             }
         }
 
-        for (var i = 0; i < rootIds.length; i++) {
-            tree.push(treeObjs[rootIds[i]]);
+        for (var ii = 0; ii < rootIds.length; ii++) {
+            tree.push(treeObjs[rootIds[ii]]);
         }
-        ;
+
 
         return tree;
     }
 
-};
+}
 
 
 
