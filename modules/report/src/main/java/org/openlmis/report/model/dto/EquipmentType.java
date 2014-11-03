@@ -13,9 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Created by aworku on 5/21/2014.
- */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

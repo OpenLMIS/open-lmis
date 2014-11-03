@@ -25,6 +25,12 @@
 
 <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
 
+ <br/>
+    <input ng-show="hide_skipped_products" id="showSkippedProductModal" type="button" ng-click="showAddSkippedProductsModal()"
+           class="pull-right btn btn-primary"
+           openlmis-message="button.add"/>  
+<div class="clearfix"></div>  
+  
 <div class="rnr-table" ng-show="page.fullSupply.length" tab-scroll bottom-offset="180" adjust-height>
 <div class="float-left left-table">
     <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
@@ -384,5 +390,42 @@
 
     </div>
 </div>
+<form name="addSkippedProductForm">
+    <div id="addSkippedProductsModal" modal="addSkippedProductsModal"
+         options="{ backdrop: 'static', escape: false}">
+        <div class="modal-header"><h3>Add Product</h3></div>
+        <div class="modal-body">
 
+            <div class="row-fluid">
+              <div class="span12">
+                  Search for Products: <input type="text" class="large" ng-model="filterText" />
+
+              </div>
+              <div class="span12" style="max-height: 240px ; overflow:scroll">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Add?</th>
+                      <th>Code</th>
+                      <th>Product Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="row in $parent.$parent.rnr.skippedLineItems | filter: {product: filterText, unskip: undefined}">
+                      <td><input type="checkbox" ng-model="row.unskip" /></td>
+                      <td>{{row.productCode}}</td>
+                      <td>{{row.product}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="clearfix"></div>
+              <div class="span12">
+                <a href="" class="btn btn-primary" ng-click="unskipProducts($parent.$parent.rnr)">Add Selected Products</a>
+                  <a href="" ng-click="addSkippedProductsModal=false;" class="btn btn-cancel">Cancel</a>
+              </div>
+            </div>
+      </div>
+      </div>
+  </form>
 </div>

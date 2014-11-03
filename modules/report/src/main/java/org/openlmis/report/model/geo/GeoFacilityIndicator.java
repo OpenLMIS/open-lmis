@@ -11,6 +11,8 @@ public class GeoFacilityIndicator {
 
   private Long id;
 
+  private Long rnrid;
+
   private String name;
 
   private String mainPhone;

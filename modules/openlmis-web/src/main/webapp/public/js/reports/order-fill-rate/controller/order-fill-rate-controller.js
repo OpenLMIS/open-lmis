@@ -10,7 +10,7 @@
 
 function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushedProductList) {
     //to minimize and maximize the filter section
-
+    $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
     $scope.OnFilterChanged = function () {
         // clear old data if there was any
         $scope.pusheditems = $scope.data = $scope.datarows = $scope.summaries = [];
@@ -24,19 +24,22 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
             }
         });
 
-        GetPushedProductList.get($scope.filter, function (data) {
-            if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.pusheditems = data.pages.rows;
-            }
-        });
+
+        GetPushedProductList.get($scope.filter,function (data) {
+                if (data.pages !== undefined && data.pages.rows !== undefined) {
+                    $scope.pusheditems = data.pages.rows;
+                }
+            });
     };
 
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
         var params = jQuery.param($scope.filter);
-        var url = '/reports/download/order_fill_rate/' + type + '?' + params;
+        var url;
         if (type == "pushed-product-list") {
             url = '/reports/download/pushed_product_list/' + "pdf" + '?' + params;
+        } else {
+            url = '/reports/download/order_fill_rate/' + type + '?' + params;
         }
         $window.open(url);
     };

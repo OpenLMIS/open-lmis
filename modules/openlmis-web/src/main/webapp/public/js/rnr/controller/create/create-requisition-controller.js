@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisitionData, comments , pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition, ConfigSettingsByKey, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisitionData, hideAdditionalCommoditiesTab , hideSkippedProducts, enableSkipPeriod , comments , pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus , regimenTemplate, $location, DeleteRequisition, ConfigSettingsByKey, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
@@ -16,14 +16,12 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
   var EQUIPMENT = 'equipment';
 
 
-  // get configurations
-  ConfigSettingsByKey.get({key: 'ENABLE_SKIP_RNR_PERIOD'}, function (data){
-    $scope.enable_skip_period          = data.settings.value;
-  });
 
-
+  $scope.enable_skip_period     = enableSkipPeriod;
+  $scope.hide_skipped_products  = hideSkippedProducts;
+  $scope.hide_additional_commodity_tab = hideAdditionalCommoditiesTab;
   $scope.pageSize = pageSize;
-  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
+  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths, $scope.hide_skipped_products);
   $scope.rnrComments = comments;
 
   $scope.deleteRnR = function( ){
@@ -321,7 +319,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
     var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": [], "regimenLineItems": []};
     if (!$scope.page[$scope.visibleTab].length) return rnr;
 
-    var nonLineItemFields = ['rnr', 'programRnrColumnList', 'numberOfMonths', 'rnrStatus', 'cost', 'productName', 'hasError','equipments','IsRemarkRequired','isEquipmentValid','isEquipmentValid' ];
+    var nonLineItemFields = ['rnr', 'programRnrColumnList', 'numberOfMonths', 'rnrStatus', 'cost', 'productName', 'hasError','equipments','IsRemarkRequired','isEquipmentValid','isEquipmentValid', 'unskip' ];
 
     function transform(copyFrom) {
       return _.map(copyFrom, function (lineItem) {
@@ -420,6 +418,34 @@ CreateRequisitionController.resolve = {
           function (data) {
             deferred.resolve(data.rights);
           }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+  hideSkippedProducts: function ($q, $timeout, $route, ConfigSettingsByKey) {
+    var deferred = $q.defer();
+    $timeout(function () {
+          ConfigSettingsByKey.get({key: 'RNR_HIDE_SKIPPED_PRODUCTS'}, function (data){
+            deferred.resolve(data.settings.value);
+          }, {});
+    }, 100);
+    return deferred.promise;
+  },
+  hideAdditionalCommoditiesTab: function ($q, $timeout, $route, ConfigSettingsByKey) {
+      var deferred = $q.defer();
+      $timeout(function () {
+          ConfigSettingsByKey.get({key: 'RNR_HIDE_NON_FULL_SUPPLY_TAB'}, function (data){
+              deferred.resolve(data.settings.value);
+          }, {});
+      }, 100);
+      return deferred.promise;
+  },
+  enableSkipPeriod: function ($q, $timeout, $route, ConfigSettingsByKey) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      ConfigSettingsByKey.get({key: 'ENABLE_SKIP_RNR_PERIOD'}, function (data){
+        deferred.resolve(data.settings.value);
+      }, {});
     }, 100);
     return deferred.promise;
   },

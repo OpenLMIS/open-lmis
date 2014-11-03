@@ -224,8 +224,8 @@ public class OrderService {
     return orderRepository.getNumberOfPages(pageSize);
   }
 
-  public Integer getNumberOfPages(Long supplyDepot, Long program) {
-    return orderRepository.getNumberOfPages(pageSize, supplyDepot, program);
+  public Integer getNumberOfPages(Long supplyDepot, Long program, Long period) {
+    return orderRepository.getNumberOfPages(pageSize, supplyDepot, program, period);
   }
 
   public Integer getPageSize() {

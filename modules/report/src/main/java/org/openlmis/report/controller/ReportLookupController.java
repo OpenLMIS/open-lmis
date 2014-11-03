@@ -17,6 +17,8 @@ import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.equipment.domain.Donor;
+import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.response.OpenLmisResponse;
@@ -333,6 +335,13 @@ public class ReportLookupController extends BaseController {
       List<Program> programList = reportLookupService.getAllUserSupervisedActivePrograms(loggedInUserId(request));
       return OpenLmisResponse.response("programs",programList);
   }
+
+  @RequestMapping(value = "/users/{userId}/programs", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getAllSupervisedActiveProgramsForUser(@PathVariable("userId") Long userId){
+
+    List<Program> programList = reportLookupService.getAllUserSupervisedActivePrograms(userId);
+    return OpenLmisResponse.response("programs",programList);
+ }
   @RequestMapping(value = "/supervisory-node/{supervisoryNodeId}/programs", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getProgramsForSupervisoryNode(@PathVariable("supervisoryNodeId") Long supervisoryNodeId, HttpServletRequest request){
 
@@ -376,6 +385,29 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("equipmentTypes", equipmentTypeList);
     }
 
+    @RequestMapping(value = "/equipmentsByType/{equipmentType}", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getEquipmentByType(  @PathVariable("equipmentType") Long equipmentType
+                                                                 ) {
+        List<Equipment> equipments = reportLookupService.getEquipmentsByType(equipmentType);
+        return OpenLmisResponse.response("equipments", equipments);
+    }
+
+    @RequestMapping(value="/productProgramCategoryTree/{programId}", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getProductCategoryProductByProgramId(@PathVariable("programId") int programId){
+
+        List<ProductCategoryProductTree> categoryProductTree = reportLookupService.getProductCategoryProductByProgramId(programId);
+
+        return OpenLmisResponse.response("productCategoryTree", categoryProductTree);
+    }
+
+    @RequestMapping(value="/yearSchedulePeriod", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getScheduleYearPeriod(){
+
+        List<YearSchedulePeriodTree> yearSchedulePeriodTree = reportLookupService.getYearSchedulePeriodTree();
+
+        return OpenLmisResponse.response("yearSchedulePeriod", yearSchedulePeriodTree);
+    }
+
     @RequestMapping(value = "/OrderFillRateSummary/program/{programId}/period/{periodId}/schedule/{scheduleId}/facilityTypeId/{facilityTypeId}/zone/{zoneId}/status/{status}/orderFillRateSummary", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getOrderFillRateSummaryData(@PathVariable("programId") Long programId,
                                                                         @PathVariable("periodId") Long periodId,
@@ -386,6 +418,16 @@ public class ReportLookupController extends BaseController {
                                                                         HttpServletRequest request) {
         List<OrderFillRateSummaryReport> orderFillRateReportSummaryList = reportLookupService.getOrderFillRateSummary(programId, periodId, scheduleId, facilityTypeId, loggedInUserId(request), zoneId, status);
         return OpenLmisResponse.response("orderFillRateSummary", orderFillRateReportSummaryList);
+    }
+
+    @RequestMapping(value="/donors", method = GET, headers = BaseController.ACCEPT_JSON)
+
+    public ResponseEntity<OpenLmisResponse> getDonorsList(){
+
+        List<Donor> donors = reportLookupService.getAllDonors();
+
+        return OpenLmisResponse.response("donors", donors);
+
     }
 
 }

@@ -38,9 +38,7 @@
                                                  required="true"></facility-filter>
                                 <product-category-filter
                                         class="form-cell horizontalFilters"></product-category-filter>
-                                <product-filter class="form-cell horizontalFilters"></product-filter>
-
-
+                                <product-multi-filter class="form-cell horizontalFilters"></product-multi-filter>
                             </div>
                         </form>
                     </div>
@@ -75,7 +73,7 @@
                         <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
                                ng-table="tableParams">
                             <tbody>
-                            <tr ng-repeat="row in datarows"><!--ng-if = "row.item_fill_rate >0">-->
+                            <tr ng-repeat="row in datarows">
 
                                 <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
                                 <td data-title="'Product Code'" style="width:80px" sortable="productcode">{{
@@ -106,8 +104,10 @@
         </div>
 
     </div>
-
+    <div class="pull-right">
+        <a ng-href="/public/pages/reports/order-fill-rate-summary/index.html#/list">Back to Order Fill Rate Summary
+            Report</a>
+    </div>
 </div>
-
 
 

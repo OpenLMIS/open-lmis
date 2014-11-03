@@ -84,8 +84,8 @@ public class OrderRepository {
     return orderMapper.getNumberOfPages(pageSize);
   }
 
-  public Integer getNumberOfPages(int pageSize, Long supplyDepot, Long program) {
-    return orderMapper.getNumberOfPagesByDepot(pageSize, supplyDepot, program);
+  public Integer getNumberOfPages(int pageSize, Long supplyDepot, Long program, Long period) {
+    return orderMapper.getNumberOfPagesByDepot(pageSize, supplyDepot, program, period);
   }
 
   public List<Order> searchByWarehousesAndStatuses(List<Long> facilityIds, List<OrderStatus> orderStatuses) {

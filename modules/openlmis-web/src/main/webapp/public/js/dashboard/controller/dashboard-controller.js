@@ -421,7 +421,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                  if(!isUndefined(data.reportingPerformance)){
                      var reporting = data.reportingPerformance;
 
-                     var colors = {R:"#00FF00",N:"#CC0505", L:"#FFFF05"};
+                     var colors = {R:"#078B07",N:"#CC0505", L:"#FFFF05"};
 
                      for(var i=0; i < reporting.length; i++){
                          var labelKey = 'label.district.reporting.status.'+reporting[i].status;
@@ -595,7 +595,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
             products : _.pairs(_.object(_.range(stockingData.length), _.pluck(stockingData,'productId'))),
             filterParams : _.pick(stockingData[0],'rgroupId','programId', 'periodId')
         };
-        var multiBarsColors = ["#F83103","#37AC02","#02A8FA","#FAA702"];
+        var multiBarsColors = ["#F83103","#FAA702","#02A8FA","#37AC02"];
         var adequatelyStockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'adequatelyStocked'),function(stat){ return stat;})));
         var stockedOutSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'stockedOut'),function(stat){ return  stat;})));
         var overstockedSeries =  _.pairs(_.object(_.range(stockingData.length), _.map(_.pluck(stockingData,'overStocked'),function(stat){ return  stat;})));
@@ -713,9 +713,11 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                 $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
 
                 $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
+                $scope.loadFacilities();
                 $scope.filterObject.facilityId = $scope.formFilter.facilityId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY],$scope.allFacilities) ?
                     userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY] : $scope.formFilter.facilityId;
 
+                $scope.filterObject.facilityId = $scope.formFilter.facilityId  = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY];
                 $scope.registerWatches();
 
                 $scope.formFilter = $scope.filterObject;

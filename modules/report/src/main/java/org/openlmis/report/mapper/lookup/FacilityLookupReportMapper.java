@@ -164,4 +164,16 @@ public interface FacilityLookupReportMapper {
             "WHERE geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))")
     List<Facility>  getFacilitiesByGeographicZoneTree(@Param("userId") Long userId, @Param("zoneId") Long zoneId);
 
+    @Select("SELECT f.id, f.code, f.name \n" +
+            "FROM  \n" +
+            "facilities f  \n" +
+            "     join programs_supported ps  \n" +
+            "\t   on ps.facilityid = f.id  \n" +
+            "     join vw_districts d on d.district_id = f.geographicZoneId  \n" +
+            "  where  \n" +
+            "       f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{program}) and  \n" +
+            "       (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and  \n" +
+            "       ps.programid = #{program} and f.typeid = #{type} and ps.active = true  order by f.name")
+    List<Facility>  getFacilitiesByProgramZoneFacilityType(@Param("program") Long program, @Param("zone") Long zone, @Param("userId") Long userId, @Param("type") Long type);
+
 }

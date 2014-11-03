@@ -18,28 +18,20 @@
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
 	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
-    <parameter name="OPERATOR_NAME" class="java.lang.String"/>
+	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT facility_name,
-                        equipment_name,
-                        district,
-                        facility_program_equipments.model,
-                        facility_program_equipments.serialnumber,
-                        equipment_status_line_items.testcount AS test,
-                        equipment_status_line_items.totalcount AS total_test,
-                        equipment_status_line_items.daysoutofuse,
-                        equipment_operational_status.name AS operational_status
-                       FROM vw_equipment_operational_status;]]>
+		<![CDATA[]]>
 	</queryString>
-	<field name="facility_name" class="java.lang.String"/>
-	<field name="equipment_name" class="java.lang.String"/>
+	<field name="facilityCode" class="java.lang.String"/>
+	<field name="facilityName" class="java.lang.String"/>
+	<field name="facilityType" class="java.lang.String"/>
 	<field name="district" class="java.lang.String"/>
+	<field name="zone" class="java.lang.String"/>
+	<field name="equipmentType" class="java.lang.String"/>
 	<field name="model" class="java.lang.String"/>
-	<field name="serialnumber" class="java.lang.String"/>
-	<field name="test" class="java.lang.Integer"/>
-	<field name="total_test" class="java.lang.Integer"/>
-	<field name="daysoutofuse" class="java.lang.Integer"/>
-	<field name="operational_status" class="java.lang.String"/>
+	<field name="serialNumber" class="java.lang.String"/>
+	<field name="equipmentName" class="java.lang.String"/>
+	<field name="operationalStatus" class="java.lang.String"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
@@ -48,7 +40,7 @@
 		<groupHeader>
 			<band height="24">
 				<textField>
-					<reportElement x="0" y="4" width="100" height="20" uuid="bae257e2-25ae-47db-86ef-2e5b1b767f48"/>
+					<reportElement x="13" y="4" width="100" height="20" uuid="d73e509a-7fff-4bce-bba1-be89484d982e"/>
 					<textElement>
 						<font isBold="true"/>
 					</textElement>
@@ -76,7 +68,7 @@
 					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="OPERATOR_NAME">
-                    <subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="REPORT_SUB_TITLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>
@@ -104,31 +96,39 @@
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="1" width="100" height="20" uuid="023e1a6a-f640-4957-b172-1ff069140d07"/>
-				<text><![CDATA[Equipment Name]]></text>
+				<reportElement x="8" y="1" width="86" height="20" uuid="79284315-9bcd-47cc-b6f3-dfe0ac45e4c8"/>
+				<text><![CDATA[Facility Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="200" y="1" width="100" height="20" uuid="2a6c3ce6-5602-47e5-90db-aef6c70aba97"/>
+				<reportElement x="94" y="1" width="100" height="20" uuid="b751aafe-298f-4716-91bf-e71e4e549caf"/>
+				<text><![CDATA[Facility Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="194" y="1" width="86" height="20" uuid="d3df70ed-4107-41cf-9391-732cdb8860ba"/>
+				<text><![CDATA[Facility Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="1" width="82" height="20" uuid="ad272815-98c7-4170-ae18-1585584bd77c"/>
+				<text><![CDATA[District]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="362" y="1" width="77" height="20" uuid="833106bc-411d-478a-9b32-6d80d2ac550c"/>
+				<text><![CDATA[Zone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="1" width="120" height="20" uuid="c7e457e1-73bd-43c2-986b-f37a27daed31"/>
+				<text><![CDATA[Equipment Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="559" y="1" width="77" height="20" uuid="16a94877-3c30-4b69-837f-363cbb91373b"/>
 				<text><![CDATA[Model]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="1" width="100" height="20" uuid="a69d6c22-c7a4-47d8-95a0-f261f17104c0"/>
-				<text><![CDATA[Serial]]></text>
+				<reportElement x="636" y="1" width="85" height="20" uuid="80cabe8b-3bcb-4b52-83b2-68d9d33822ec"/>
+				<text><![CDATA[Serial Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="400" y="1" width="100" height="20" uuid="7485df04-a1e0-49f9-909a-b5addff3e7fa"/>
-				<text><![CDATA[Test]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="500" y="1" width="100" height="20" uuid="d9b34ec1-dbd4-4382-9b1e-3c1e4d5c8c7b"/>
-				<text><![CDATA[Total Test]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="600" y="0" width="88" height="20" uuid="2037d2f8-9a02-4e5f-9e50-b2d6f28949bc"/>
-				<text><![CDATA[Days out of order]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="699" y="1" width="100" height="20" uuid="69bc4837-088a-4988-a9da-c1c45fa54a5a"/>
+				<reportElement x="723" y="1" width="78" height="20" uuid="75e6ef4e-553e-402d-a3f5-396bd6b6caea"/>
 				<text><![CDATA[Operational Status]]></text>
 			</staticText>
 		</band>
@@ -157,36 +157,40 @@
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="cc3fd4ef-55c7-4981-89a0-a797a449ae3f"/>
-				<textFieldExpression><![CDATA[$F{facility_name}]]></textFieldExpression>
+				<reportElement x="13" y="0" width="81" height="20" uuid="1efbb955-a0ae-48a5-a50b-b1cf4d027ddf"/>
+				<textFieldExpression><![CDATA[$F{facilityCode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="0" width="100" height="20" uuid="b9295bc6-8480-4392-8eb1-8f0f3fd40c58"/>
-				<textFieldExpression><![CDATA[$F{equipment_name}]]></textFieldExpression>
+				<reportElement x="94" y="0" width="100" height="20" uuid="a68ddd15-ccef-4996-8e7e-e9ac24fc06fe"/>
+				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="200" y="0" width="100" height="20" uuid="cdfa6375-8811-4520-9161-37b2ddd39378"/>
+				<reportElement x="362" y="0" width="77" height="20" uuid="971f3175-6e07-49b6-aa38-51833490cd2c"/>
+				<textFieldExpression><![CDATA[$F{zone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="439" y="0" width="120" height="20" uuid="21e1f76c-e874-49d5-b0fc-dfaa439a93da"/>
+				<textFieldExpression><![CDATA[$F{equipmentType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="559" y="0" width="77" height="20" uuid="5a26bf4c-2c91-418d-b422-80ec533acdc9"/>
 				<textFieldExpression><![CDATA[$F{model}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="300" y="0" width="100" height="20" uuid="fc5f157e-b0ce-4715-8df7-59bf38a467a2"/>
-				<textFieldExpression><![CDATA[$F{serialnumber}]]></textFieldExpression>
+				<reportElement x="636" y="0" width="85" height="20" uuid="88825a54-d0c5-4f3d-b365-97b0991c3019"/>
+				<textFieldExpression><![CDATA[$F{serialNumber}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="400" y="0" width="100" height="20" uuid="297093e4-79ef-4684-b154-353e0655e926"/>
-				<textFieldExpression><![CDATA[($F{test}== null? "0":$F{test})]]></textFieldExpression>
+				<reportElement x="723" y="0" width="78" height="20" uuid="88f96f49-7aa7-4318-a20c-0052fa705ce3"/>
+				<textFieldExpression><![CDATA[$F{operationalStatus}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="500" y="0" width="100" height="20" uuid="c6a83e8c-7320-47dd-b1c3-08a400d35831"/>
-				<textFieldExpression><![CDATA[($F{total_test}== null? "0":$F{total_test})]]></textFieldExpression>
+				<reportElement x="194" y="0" width="86" height="20" uuid="6c35c1c8-5fa5-4a7d-9270-fdb3cd821a3b"/>
+				<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="600" y="0" width="88" height="20" uuid="a20c984a-2369-4017-99dc-a77f54fa5b5d"/>
-				<textFieldExpression><![CDATA[$F{daysoutofuse}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="699" y="0" width="100" height="20" uuid="05c0e452-b067-4032-933b-aece18e5d5fd"/>
-				<textFieldExpression><![CDATA[$F{operational_status}]]></textFieldExpression>
+				<reportElement x="280" y="0" width="82" height="20" uuid="82e867e0-0b58-4fc6-ad9e-987a540b105e"/>
+				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

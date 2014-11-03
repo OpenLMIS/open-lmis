@@ -176,7 +176,10 @@
         <tr ng-repeat="row in facilities">
           <td>
              <span  data-toggle="tooltip" title="This facility has reported properly" class="icon-check green" ng-show="row.reported"></span>
-              <span   data-toggle="tooltip" title="This facility did not report for period" class="icon-warning-sign" style="color: red;" ng-show="!row.reported"></span> {{ row.name }}
+              <span   data-toggle="tooltip" title="This facility did not report for period" class="icon-warning-sign" style="color: red;" ng-show="!row.reported"></span>
+            <span ng-show=row.rnrid != undefined"><a ng-href="/public/pages/logistics/rnr/index.html#/requisition/{{ row.rnrid }}/{{filter.program}}?supplyType=fullSupply&page=1">{{ row.name }}</a></span>
+            <span ng-show="row.rnrid == undefined">{{ row.name }}</span>
+
           </td>
           <td>{{ row.mainPhone }}</td>
           <td>

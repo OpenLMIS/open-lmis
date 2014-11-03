@@ -1,6 +1,6 @@
 -- Table: elmis_help
 
--- DROP TABLE elmis_help;
+DROP  TABLE IF EXISTS elmis_help cascade;
 
 CREATE TABLE elmis_help
 (

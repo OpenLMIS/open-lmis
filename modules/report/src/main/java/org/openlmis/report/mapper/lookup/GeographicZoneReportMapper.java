@@ -10,13 +10,17 @@
 
 package org.openlmis.report.mapper.lookup;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.openlmis.report.model.GeoZoneReportingRate;
+import org.apache.ibatis.annotations.*;
+import org.openlmis.report.builder.LabEquipmentStatusByLocationQueryBuilder;
+import org.openlmis.report.model.*;
 import org.openlmis.report.model.dto.FlatGeographicZone;
 import org.openlmis.report.model.dto.GeoZoneTree;
 import org.openlmis.report.model.dto.GeographicZone;
+import org.openlmis.report.model.dto.GeographicZoneJsonDto;
 import org.openlmis.report.model.geo.GeoFacilityIndicator;
+import org.openlmis.report.model.geo.GeoStockStatusFacility;
+import org.openlmis.report.model.geo.GeoStockStatusProduct;
+import org.openlmis.report.model.geo.GeoStockStatusProductConsumption;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -81,11 +85,12 @@ public interface GeographicZoneReportMapper {
              " join programs_supported ps on ps.facilityId = facilities.id " +
              " join geographic_zones gz on gz.id = facilities.geographicZoneId " +
              " where  ps.programId = #{programId} and facilities.id in  " +
-             " (select facilityId from requisitions where periodId = #{processingPeriodId} and programId = #{programId}) " +
+             " (select facilityId from requisitions where periodId = #{processingPeriodId} and programId = #{programId} and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and emergency = false ) " +
               " group by geographicZoneId" +
     " ) period" +
     " on gzz.id = period.geographicZoneId order by gzz.name" )
   List<GeoZoneReportingRate> getGeoReportingRate(@Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId);
+
 
   @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, false reported , (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts from facilities f\n" +
             "  join requisition_group_members m on f.id = m.facilityId\n" +
@@ -97,15 +102,17 @@ public interface GeographicZoneReportMapper {
             " order by f.name ")
   List<GeoFacilityIndicator> getNonReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
 
-  @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, true reported, (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts from facilities f\n" +
-    "  join requisition_group_members m on f.id = m.facilityId\n" +
-    "  join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
-    "  join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
-    "where f.id in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
-    "  and f.enabled = true\n" +
-    "  and f.geographicZoneId = #{geographicZoneId}" +
+  @Select("select rq.id rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, true reported, (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts " +
+      " from facilities f " +
+      " join (select facilityId, r.id from requisitions r where r.programId = #{programId} and r.periodId = #{periodId} and emergency = false and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')) rq on rq.facilityId = f.id " +
+    "where  f.enabled = true\n" +
+    " and f.geographicZoneId = #{geographicZoneId}" +
     " order by f.name")
   List<GeoFacilityIndicator> getReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
+
+
+
+
 
   @Select("select * from geographic_zones where parentId is null")
   GeoZoneTree getParentZoneTree();
@@ -145,4 +152,414 @@ public interface GeographicZoneReportMapper {
           "INNER JOIN userGeographicZonesRec gzRec on gz.id = gzRec.id\n" +
           "WHERE gz.parentId = #{parentId} order by gz.name\n")
   List<GeoZoneTree> getUserGeographicZoneChildren(@Param("programId") Long programId, @Param("parentId")int parentId, @Param("userId")Long userId);
+
+    @Select("   SELECT  "  +
+            "   	gzz. ID,  "  +
+            "   	gzz. NAME,  "  +
+            "       fn_get_parent_geographiczone(gzz.ID,1) georegion, " +
+            "       fn_get_parent_geographiczone(gzz.ID,2) geozone, " +
+            "   	gjson.geometry,  "  +
+            "   	COALESCE (stockedout. COUNT, 0) + COALESCE (understocked. COUNT, 0) + COALESCE (overstocked. COUNT, 0) + COALESCE (adequatelystocked. COUNT, 0) period,  "  +
+            "   	COALESCE (total. COUNT) total,  "  +
+            "   	COALESCE (expected. COUNT, 0) AS expected,  "  +
+            "   	COALESCE (ever. COUNT, 0) AS ever,  "  +
+            "   	COALESCE (stockedout. COUNT, 0) AS stockedout,  "  +
+            "   	COALESCE (understocked. COUNT, 0) AS understocked,  "  +
+            "   	COALESCE (overstocked. COUNT, 0) AS overstocked,  "  +
+            "   	COALESCE (adequatelystocked. COUNT, 0) AS adequatelystocked,  "  +
+            "   	COALESCE (stockedoutprev. COUNT, 0) AS stockedoutprev,  "  +
+            "   	COALESCE (understockedprev. COUNT, 0) AS understockedprev,  "  +
+            "   	COALESCE (overstockedprev. COUNT, 0) AS overstockedprev,  "  +
+            "   	COALESCE (adequatelystockedprev. COUNT,	0) AS adequatelystockedprev  "  +
+            "   FROM  "  +
+            "   	geographic_zones gzz  "  +
+            "   LEFT JOIN geographic_zone_geojson gjson ON gzz. ID = gjson.zoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		facilities  "  +
+            "   	JOIN programs_supported ps ON ps.facilityId = facilities. ID  "  +
+            "   	JOIN geographic_zones gz ON gz. ID = facilities.geographicZoneId  "  +
+            "   	JOIN requisition_group_members rgm ON rgm.facilityId = facilities. ID  "  +
+            "   	JOIN requisition_group_program_schedules rgps ON rgps.requisitionGroupId = rgm.requisitionGroupId  "  +
+            "   	AND rgps.programId = ps.programId  "  +
+            "   	JOIN processing_periods pp ON pp.scheduleId = rgps.scheduleId  "  +
+            "   	AND pp. ID = #{processingPeriodId}  "  +
+            "   	WHERE  "  +
+            "   		gz.levelId = (  "  +
+            "   			SELECT  "  +
+            "   				MAX (ID)  "  +
+            "   			FROM  "  +
+            "   				geographic_levels  "  +
+            "   		)  "  +
+            "   	AND ps.programid = #{programId}  "  +
+            "   	GROUP BY  "  +
+            "   		geographicZoneId  "  +
+            "   ) expected ON gzz. ID = expected.geographicZoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		facilities  "  +
+            "   	JOIN geographic_zones gz ON gz. ID = facilities.geographicZoneId  "  +
+            "   	WHERE  "  +
+            "   		gz.levelId = (  "  +
+            "   			SELECT  "  +
+            "   				MAX (ID)  "  +
+            "   			FROM  "  +
+            "   				geographic_levels  "  +
+            "   		)  "  +
+            "   	GROUP BY  "  +
+            "   		geographicZoneId  "  +
+            "   ) total ON gzz. ID = total.geographicZoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		facilities  "  +
+            "   	JOIN programs_supported ps ON ps.facilityId = facilities. ID  "  +
+            "   	JOIN geographic_zones gz ON gz. ID = facilities.geographicZoneId  "  +
+            "   	WHERE  "  +
+            "   		ps.programid = #{programId}  "  +
+            "   	AND facilities. ID IN (  "  +
+            "   		SELECT  "  +
+            "   			facilityId  "  +
+            "   		FROM  "  +
+            "   			requisitions  "  +
+            "   		WHERE status <> 'INITIATED' "  +
+            "   		AND periodId = #{processingPeriodId}  "  +
+            "   		AND programid = #{programId}  "  +
+            "   	)  "  +
+            "   	GROUP BY  "  +
+            "   		geographicZoneId  "  +
+            "   ) period ON gzz. ID = period.geographicZoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		gz_id geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		vw_stock_status_2  "  +
+            "   	WHERE  "  +
+            "   		periodId = #{processingPeriodId}  "  +
+            "   	AND programid = #{programId}  "  +
+            "   	AND productId = #{productId}  "  +
+            "       AND req_status <> 'INITIATED' AND reported_figures > 0 " +
+            "   	AND status = 'SO'  "  +
+            "   	GROUP BY  "  +
+            "   		gz_id  "  +
+            "   ) stockedout ON gzz. ID = stockedout.geographicZoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		gz_id geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		vw_stock_status_2  "  +
+            "   	WHERE  "  +
+            "   		programid = #{programId}  "  +
+            "   	AND productId = #{productId}  "  +
+            "       AND req_status <> 'INITIATED' AND reported_figures > 0 " +
+            "   	AND status = 'SO'  "  +
+            "   	GROUP BY  "  +
+            "   		gz_id  "  +
+            "   ) ever ON gzz. ID = ever.geographicZoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		gz_id geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		vw_stock_status_2  "  +
+            "   	WHERE  "  +
+            "   		periodId = #{processingPeriodId}  "  +
+            "   	AND programid = #{programId}  "  +
+            "   	AND productId = #{productId}  "  +
+            "       AND req_status <> 'INITIATED' AND reported_figures > 0 " +
+            "   	AND status = 'US'  "  +
+            "   	GROUP BY  "  +
+            "   		gz_id  "  +
+            "   ) understocked ON gzz. ID = understocked.geographicZoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		gz_id geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		vw_stock_status_2  "  +
+            "   	WHERE  "  +
+            "   		periodId = #{processingPeriodId}  "  +
+            "   	AND programid = #{programId}  "  +
+            "   	AND productId = #{productId}  "  +
+            "       AND req_status <> 'INITIATED' AND reported_figures > 0 " +
+            "   	AND status = 'OS'  "  +
+            "   	GROUP BY  "  +
+            "   		gz_id  "  +
+            "   ) overstocked ON gzz. ID = overstocked.geographicZoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		gz_id geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		vw_stock_status_2  "  +
+            "   	WHERE  "  +
+            "   		periodId = #{processingPeriodId}  "  +
+            "   	AND programid = #{programId}  "  +
+            "   	AND productId = #{productId}  "  +
+            "       AND req_status <> 'INITIATED' AND reported_figures > 0 " +
+            "   	AND status = 'SP'  "  +
+            "   	GROUP BY  "  +
+            "   		gz_id  "  +
+            "   ) adequatelystocked ON gzz. ID = adequatelystocked.geographicZoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		gz_id geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		vw_stock_status_2  "  +
+            "   	WHERE  "  +
+            "   		periodId = (  "  +
+            "   			SELECT  "  +
+            "   				COALESCE (MAX(periodid), 0)  "  +
+            "   			FROM  "  +
+            "   				requisitions  "  +
+            "   			WHERE  "  +
+            "   				programid = #{programId}  "  +
+            "   			AND periodId < #{processingPeriodId}  "  +
+            "   		)  "  +
+            "   	AND programid = #{programId}  "  +
+            "   	AND productId = #{productId}  "  +
+            "       AND req_status <> 'INITIATED' AND reported_figures > 0 " +
+            "   	AND status = 'SO'  "  +
+            "   	GROUP BY  "  +
+            "   		gz_id  "  +
+            "   ) stockedoutprev ON gzz. ID = stockedoutprev.geographicZoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		gz_id geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		vw_stock_status_2  "  +
+            "   	WHERE  "  +
+            "   		periodId = (  "  +
+            "   			SELECT  "  +
+            "   				COALESCE (MAX(periodid), 0)  "  +
+            "   			FROM  "  +
+            "   				requisitions  "  +
+            "   			WHERE  "  +
+            "   				programid = #{programId}  "  +
+            "   			AND periodId < #{processingPeriodId}  "  +
+            "   		)  "  +
+            "   	AND programid = #{programId}  "  +
+            "   	AND productId = #{productId}  "  +
+            "       AND req_status <> 'INITIATED' AND reported_figures > 0 " +
+            "   	AND status = 'US'  "  +
+            "   	GROUP BY  "  +
+            "   		gz_id  "  +
+            "   ) understockedprev ON gzz. ID = understockedprev.geographicZoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		gz_id geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		vw_stock_status_2  "  +
+            "   	WHERE  "  +
+            "   		periodId = (  "  +
+            "   			SELECT  "  +
+            "   				COALESCE (MAX(periodid), 0)  "  +
+            "   			FROM  "  +
+            "   				requisitions  "  +
+            "   			WHERE  "  +
+            "   				programid = #{programId}  "  +
+            "   			AND periodId < #{processingPeriodId}  "  +
+            "   		)  "  +
+            "   	AND programid = #{programId}  "  +
+            "   	AND productId = #{productId}  "  +
+            "       AND req_status <> 'INITIATED' AND reported_figures > 0 " +
+            "   	AND status = 'OS'  "  +
+            "   	GROUP BY  "  +
+            "   		gz_id  "  +
+            "   ) overstockedprev ON gzz. ID = overstockedprev.geographicZoneId  "  +
+            "   LEFT JOIN (  "  +
+            "   	SELECT  "  +
+            "   		gz_id geographicZoneId,  "  +
+            "   		COUNT (*)  "  +
+            "   	FROM  "  +
+            "   		vw_stock_status_2  "  +
+            "   	WHERE  "  +
+            "   		periodId = (  "  +
+            "   			SELECT  "  +
+            "   				COALESCE (MAX(periodid), 0)  "  +
+            "   			FROM  "  +
+            "   				requisitions  "  +
+            "   			WHERE  "  +
+            "   				programid = #{programId}  "  +
+            "   			AND periodId < #{processingPeriodId}  "  +
+            "   		)  "  +
+            "   	AND programid = #{programId}  "  +
+            "   	AND productId = #{productId}  "  +
+            "   	AND status = 'SP'  "  +
+            "       AND req_status <> 'INITIATED' AND reported_figures > 0 " +
+            "   	GROUP BY  "  +
+            "   		gz_id  "  +
+            "   ) adequatelystockedprev ON gzz. ID = adequatelystockedprev.geographicZoneId  "  +
+            "   ORDER BY  "  +
+            "   	gzz. NAME  ")
+  List<GeoStockStatusFacilitySummary> getGeoStockStatusFacilitySummary(@Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId, @Param("productId") Long productId);
+
+
+    @Select("SELECT ss.rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, true stockedout, " +
+            " (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
+            " ss.product, ss.amc, ss.stockinhand, ss.mos " +
+            " FROM vw_stock_status_2 ss " +
+            " INNER JOIN facilities f ON f.id = ss.facility_id " +
+            " WHERE ss.programid = #{programId} AND ss.periodid = #{periodId} AND ss.productid = #{productId} AND ss.gz_id = #{geographicZoneId} and ss.req_status <> 'INITIATED' and ss.reported_figures > 0 AND ss.status = 'SO' order by f.name")
+
+    List<GeoStockStatusFacility> getStockedOutFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
+
+    @Select("SELECT ss.rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, true understocked, " +
+            " (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
+            " ss.product, ss.amc, ss.stockinhand, ss.mos " +
+            " FROM vw_stock_status_2 ss " +
+            " INNER JOIN facilities f ON f.id = ss.facility_id " +
+            " WHERE ss.programid = #{programId} AND ss.periodid = #{periodId} AND ss.productid = #{productId} AND ss.gz_id = #{geographicZoneId} and ss.req_status <> 'INITIATED' and ss.reported_figures > 0 AND ss.status = 'US' order by f.name")
+
+    List<GeoStockStatusFacility> getUnderStockedFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
+
+   @Select("SELECT ss.rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, true overstocked, " +
+            " (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
+    " ss.product, ss.amc, ss.stockinhand, ss.mos " +
+    " FROM vw_stock_status_2 ss " +
+    " INNER JOIN facilities f ON f.id = ss.facility_id " +
+    " WHERE ss.programid = #{programId} AND ss.periodid = #{periodId} AND ss.productid = #{productId} AND ss.gz_id = #{geographicZoneId} and ss.req_status <> 'INITIATED' and ss.reported_figures > 0 AND ss.status = 'OS' order by f.name")
+
+
+    List<GeoStockStatusFacility> getOverStockedFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
+
+    @Select("SELECT ss.rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, true adequatelystocked, " +
+            " (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
+            " ss.product, ss.amc, ss.stockinhand, ss.mos " +
+            " FROM vw_stock_status_2 ss " +
+            " INNER JOIN facilities f ON f.id = ss.facility_id " +
+            " WHERE ss.programid = #{programId} AND ss.periodid = #{periodId} AND ss.productid = #{productId} AND ss.gz_id = #{geographicZoneId} and ss.req_status <> 'INITIATED' and ss.reported_figures > 0 AND ss.status = 'SP' order by f.name")
+
+    List<GeoStockStatusFacility> getAdequatelyStockedFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
+
+
+    @Select("   SELECT p.id, p.code,p.primaryname,  COALESCE(stockedout.count,0) AS stockedout,COALESCE(understocked.count,0) AS understocked,  "  +
+            "   COALESCE(overstocked.count,0) AS overstocked, COALESCE(adequatelystocked.count,0) AS adequatelystocked,  "  +
+            "   COALESCE (stockedout. COUNT, 0) + COALESCE (understocked. COUNT, 0) + COALESCE (overstocked. COUNT, 0) + COALESCE (adequatelystocked. COUNT, 0) reported  " +
+            "   FROM public.products AS p  "  +
+            "    LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and req_status <> 'INITIATED' and reported_figures > 0 and reported_figures > 0  group by productid " +
+            "    ) AS reported ON p.id = reported.productid " +
+            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'SO' group by productid  "  +
+            "   ) AS stockedout ON p.id = stockedout.productid  "  +
+            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'US' group by productid  "  +
+            "   ) AS understocked ON p.id = understocked.productid  "  +
+            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'OS' group by productid  "  +
+            "   ) AS overstocked ON p.id = overstocked.productid  "  +
+            "   LEFT JOIN ( select productid, count(*) from vw_stock_status_2 where periodId = #{periodId} and programId = #{programId} AND (gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and  req_status <> 'INITIATED' and reported_figures > 0 and status = 'SP' group by productid  "  +
+            "   ) AS adequatelystocked ON p.id = adequatelystocked.productid  "  +
+            "   INNER JOIN public.program_products ON p.id = public.program_products.productid  "  +
+            "   where programid = #{programId} and p.active  = true  "  +
+            "   and COALESCE (stockedout. COUNT, 0) + COALESCE (understocked. COUNT, 0) + COALESCE (overstocked. COUNT, 0) + COALESCE (adequatelystocked. COUNT, 0)  > 0 ")
+
+    List<GeoStockStatusProductSummary> getStockStatusProductSummary(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
+
+
+
+     @Select("SELECT ss.rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, location geographiczonename, true stockedout, " +
+            " (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
+            " ss.product, ss.amc, ss.stockinhand, ss.mos " +
+            " FROM vw_stock_status_2 ss " +
+            " INNER JOIN facilities f ON f.id = ss.facility_id " +
+            " WHERE ss.programid = #{programId} AND ss.periodid = #{periodId} AND ss.productid = #{productId} AND (ss.gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and ss.req_status <> 'INITIATED' and ss.reported_figures > 0 AND ss.status = 'SO' order by f.name")
+
+    List<GeoStockStatusProduct> getStockedOutProducts(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
+
+    @Select("SELECT ss.rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, location geographiczonename, true understocked, " +
+            " (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
+            " ss.product, ss.amc, ss.stockinhand, ss.mos " +
+            " FROM vw_stock_status_2 ss " +
+            " INNER JOIN facilities f ON f.id = ss.facility_id " +
+            " WHERE ss.programid = #{programId} AND ss.periodid = #{periodId} AND ss.productid = #{productId} AND (ss.gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and ss.req_status <> 'INITIATED' and ss.reported_figures > 0 AND ss.status = 'US' order by f.name")
+
+    List<GeoStockStatusProduct> getUnderStockedProducts(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
+
+    @Select("SELECT ss.rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, location geographiczonename, true overstocked, " +
+            " (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
+            " ss.product, ss.amc, ss.stockinhand, ss.mos " +
+            " FROM vw_stock_status_2 ss " +
+            " INNER JOIN facilities f ON f.id = ss.facility_id " +
+            " WHERE ss.programid = #{programId} AND ss.periodid = #{periodId} AND ss.productid = #{productId} AND (ss.gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and ss.req_status <> 'INITIATED' and ss.reported_figures > 0 AND ss.status = 'OS' order by f.name")
+
+    List<GeoStockStatusProduct> getOverStockedProducts(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
+
+    @Select("SELECT ss.rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, location geographiczonename, true adequatelystocked, " +
+            " (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
+            " ss.product, ss.amc, ss.stockinhand, ss.mos " +
+            " FROM vw_stock_status_2 ss " +
+            " INNER JOIN facilities f ON f.id = ss.facility_id " +
+            " WHERE ss.programid = #{programId} AND ss.periodid = #{periodId} AND ss.productid = #{productId} AND (ss.gz_id = #{geographicZoneId} OR #{geographicZoneId} = 0) and ss.req_status <> 'INITIATED' and ss.reported_figures > 0 AND ss.status = 'SP' order by f.name")
+
+    List<GeoStockStatusProduct> getAdequatelyStockedProducts(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
+
+   //@Select("select facility_id, facility_code, facility_name, serial_number, equipment_name, equipment_status, longitude, latitude from vw_lab_equipment_status")
+   @SelectProvider(type=LabEquipmentStatusByLocationQueryBuilder.class, method="getFacilitiesEquipmentsData")
+    List<GeoZoneEquipmentStatus> getFacilitiesEquipments(@Param("program") Long program,
+                                                         @Param("zone") Long zone,
+                                                         @Param("facilityType") Long facilityType,
+                                                         @Param("facility") Long facility,
+                                                         @Param("equipmentType") Long equipmentType,
+                                                         @Param("userId")Long userId,
+                                                         @Param("equipment")Long equipment);
+
+
+    @SelectProvider(type=LabEquipmentStatusByLocationQueryBuilder.class, method="getFacilityEquipmentStatusGeoData")
+    List<GeoZoneEquipmentStatus> getFacilityEquipmentStatusGeo2(@Param("program") Long program,
+                                                                @Param("zone") Long zone,
+                                                                @Param("facilityType") Long facilityType,
+                                                                @Param("facility") Long facility,
+                                                                @Param("equipmentType") Long equipmentType,
+                                                                @Param("userId")Long userId,
+                                                                @Param("equipment")Long equipment
+
+    );
+
+    @Select("select facility_code, facility_name, facility_type, disrict, facility_id from vw_lab_equipment_status where equipment_status = 'Not Operational'")
+    List<GeoZoneEquipmentStatus> getFacilitiesWithNonOperationalEquipments();
+
+    @Select("select facility_code, facility_name, facility_type, disrict, facility_id from vw_lab_equipment_status where equipment_status = 'Fully Operational'")
+    List<GeoZoneEquipmentStatus> getFacilitiesWithFullyOperationalEquipments();
+
+    @Select("select facility_code, facility_name, facility_type, disrict, facility_id from vw_lab_equipment_status where equipment_status = 'Partially Operational'")
+    List<GeoZoneEquipmentStatus> getFacilitiesWithPartiallyOperationalEquipments();
+
+
+    @SelectProvider(type=LabEquipmentStatusByLocationQueryBuilder.class, method="getFacilitiesByEquipmentStatus")
+    List<GeoZoneEquipmentStatus> getFacilitiesByEquipmentOperationalStatus(@Param("program") Long program,
+                                                                           @Param("zone") Long zone,
+                                                                           @Param("facilityType") Long facilityType,
+                                                                           @Param("facility") Long facility,
+                                                                           @Param("equipmentType") Long equipmentType,
+                                                                           @Param("userId")Long userId,
+                                                                           @Param("status") String status,
+                                                                           @Param("equipment")Long equipment);
+
+
+    @SelectProvider(type=LabEquipmentStatusByLocationQueryBuilder.class, method="getFacilityEquipmentStatusGeoSummaryData")
+    List<GeoZoneEquipmentStatusSummary> getFacilitiesEquipmentStatusSummary( @Param("program") Long program,
+                                                                             @Param("zone") Long zone,
+                                                                             @Param("facilityType") Long facilityType,
+                                                                             @Param("facility") Long facility,
+                                                                             @Param("equipmentType") Long equipmentType,
+                                                                             @Param("userId")Long userId,
+                                                                             @Param("equipment")Long equipment);
+
+    @Select("   select productid, productname, periodid, periodname, periodyear, quantityonhand, quantityconsumed, amc from fn_getstockstatusgraphdata(#{programId}::int,#{geographicZoneId}::int,#{periodId}::int,#{productId}); ")
+
+    List<GeoStockStatusProductConsumption> getStockStatusProductConsumption(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("geographicZoneId") Long geographicZoneId, @Param("productId") String ProductIds);
+
+    @Select("select * from geographic_zone_geojson")
+    List<GeographicZoneJsonDto> getGeoZoneGeometryJson();
 }

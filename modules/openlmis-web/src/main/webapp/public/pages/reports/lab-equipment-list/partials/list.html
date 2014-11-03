@@ -40,14 +40,13 @@
 
                     <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                         <div filter-container class="clearfix">
+
                             <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
-                            <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
-                            <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
-                            <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
                             <zone-filter class="form-cell horizontalFilters"></zone-filter>
                             <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
                             <facility-filter class="form-cell horizontalFilters"></facility-filter>
                             <equipment-type-filter class="form-cell horizontalFilters"></equipment-type-filter>
+                            <equipment-filter class="form-cell horizontalFilters"></equipment-filter>
 
                         </div>
                     </form>
@@ -66,16 +65,17 @@
                        <table  ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
                                 <tbody>
                                 <tr ng-repeat="row in datarows">
-                                    <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
-                                    <td data-title="'District'" style="width:80px" sortable="district">{{row.district}}</td>
-                                     <td data-title="'Facility Name'" style="width:80px" sortable="facility_name">{{ row.facility_name }}</td>
-                                    <td data-title="'Equipment Name'" style="width:30%" sortable="equipment_name">{{ row.equipment_name }}</td>
-                                    <td data-title="'Model'" style="width:80px" sortable="model">{{ row.model }}</td>
-                                    <td data-title="'Serial'"  style="width:80px" sortable="serialnumber">{{ row.serialnumber }}</td>
-                                    <td data-title="'Test'" class="number" style="width:80px" sortable="test">{{row.test | number }}</td>
-                                    <td data-title="'Total Test'" class="number" style="width:80px" sortable="total_test">{{ row.total_test | number }}</td>
-                                    <td data-title="'Days out of order'" class="number" style="width:80px" sortable="daysoutofuse">{{ row.daysoutofuse | number }}</td>
-                                    <td data-title="'Operational Status'" sortable="operational_status">{{ row.operational_status}}</td>
+                                    <td data-title="'#'" class="number" style="width:10px">{{ row.no }}</td>
+                                    <td data-title="'Facility Code'" style="width:80px" sortable="facilityCode">{{row.facilityCode}}</td>
+                                     <td data-title="'Facility Name'" style="width:80px" sortable="facilityName">{{ row.facilityName }}</td>
+                                    <td data-title="'Facility Type'" style="width:30%" sortable="facilityType">{{ row.facilityType }}</td>
+                                    <td data-title="'District'" style="width:80px" sortable="district">{{ row.district }}</td>
+                                    <td data-title="'Zone'"  style="width:80px" sortable="zone">{{ row.zone }}</td>
+                                    <td data-title="'Equipment Type'" style="width:80px" sortable="equipmentType">{{row.equipmentType }}</td>
+                                    <td data-title="'Equipment Model'" style="width:80px" sortable="model">{{ row.model }}</td>
+                                    <td data-title="'Serial Number'" style="width:80px" sortable="serialNumber">{{ row.serialNumber }}</td>
+                                    <td data-title="'Equipment Name'" sortable="equipmentName">{{ row.equipmentName}}</td>
+                                    <td data-title="'Equipment Status'" sortable="operationalStatus">{{ row.operationalStatus}}</td>
                                 </tr>
                                 </tbody>
                             </table>

@@ -17,6 +17,11 @@ import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.equipment.domain.Donor;
+import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.repository.DonorRepository;
+import org.openlmis.equipment.repository.EquipmentRepository;
+import org.openlmis.equipment.repository.mapper.EquipmentMapper;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.*;
 import org.openlmis.report.model.dto.*;
@@ -114,6 +119,12 @@ public class ReportLookupService {
 
     @Autowired
     private EquipmentTypeReportMapper equipmentTypeReportMapper;
+
+    @Autowired
+    private EquipmentReportMapper equipmentReportMapper;
+
+    @Autowired
+    private DonorRepository donorRepository;
 
     public List<Product> getAllProducts() {
         return productMapper.getAll();
@@ -304,6 +315,10 @@ public class ReportLookupService {
             return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup, zone, userId);
         }
 
+        if(requisitionGroup == 0 && type != 0){
+            return facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, userId, type);
+        }
+
         if (requisitionGroup == 0) {
             return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type, zone, userId);
         }
@@ -462,4 +477,79 @@ public class ReportLookupService {
         return orderFillRateSummaryListMapper.getOrderFillRateSummaryReportData(programId, periodId, scheduleId, facilityTypeId, userId, zoneId, status);
     }
 
+  public List<ProductCategoryProductTree> getProductCategoryProductByProgramId(int programId) {
+
+      List<ProductCategory> productCategory = this.productCategoryMapper.getForProgramUsingProgramProductCategory(programId);
+
+      List<ProductCategoryProductTree> productCategoryProducts = productCategoryMapper.getProductCategoryProductByProgramId(programId);
+
+      List<ProductCategoryProductTree> newTreeList = new ArrayList<ProductCategoryProductTree>();
+
+      for (ProductCategory pc : productCategory) {
+
+          ProductCategoryProductTree object = new ProductCategoryProductTree();
+          object.setCategory(pc.getName());
+          object.setCategory_id(pc.getId());
+
+          for (ProductCategoryProductTree productCategoryProduct : productCategoryProducts) {
+
+              if (pc.getId() == productCategoryProduct.getCategory_id()) {
+                  object.getChildren().add(productCategoryProduct);
+              }
+          }
+
+          newTreeList.add(object);
+      }
+      return newTreeList;
+  }
+
+    public List<YearSchedulePeriodTree> getYearSchedulePeriodTree() {
+
+        List<YearSchedulePeriodTree> yearSchedulePeriodTree = processingPeriodMapper.getYearSchedulePeriodTree();
+        List<Schedule> schedules = scheduleMapper.getAll();
+
+        List<Integer> years = getOperationYears();
+
+        List<YearSchedulePeriodTree> yearList = new ArrayList<YearSchedulePeriodTree>();
+
+        //add the year layer
+        for(Integer year : years){
+
+            YearSchedulePeriodTree yearObject = new YearSchedulePeriodTree();
+            yearObject.setYear(year.toString());
+
+            // Add the schedule layer
+            for(Schedule schedule : schedules){
+
+                        YearSchedulePeriodTree scheduleObject = new YearSchedulePeriodTree();
+                        scheduleObject.setGroupname(schedule.getName());
+
+                        for(YearSchedulePeriodTree period : yearSchedulePeriodTree){
+
+                            if(schedule.getId() == period.getGroupid() && period.getYear().equals(year.toString())){
+                                scheduleObject.getChildren().add(period);
+                            }
+                        }
+
+                        yearObject.getChildren().add(scheduleObject);
+                    }
+
+            yearList.add(yearObject);
+            }
+
+        return yearList;
+    }
+
+    public List<Equipment> getEquipmentsByType(Long equipmentType){
+
+        if(equipmentType == 0)
+            return equipmentReportMapper.getEquipmentAll();
+        else
+            return equipmentReportMapper.getEquipmentsByType(equipmentType);
+
+    }
+
+    public List<Donor> getAllDonors() {
+        return donorRepository.getAll();
+    }
 }

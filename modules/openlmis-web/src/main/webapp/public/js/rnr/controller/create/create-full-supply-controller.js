@@ -57,6 +57,31 @@ function CreateFullSupplyController($scope, messageService) {
     $scope.saveRnrForm.$dirty = true;
   };
 
+  $scope.showAddSkippedProductsModal = function(){
+    $scope.addSkippedProductsModal = true;
+  };
+
+  $scope.unskipProducts = function(rnr){
+
+    var selected = _.where(rnr.skippedLineItems, {unskip: true});
+    angular.forEach(selected, function(lineItem, index){
+      lineItem.skipped = false;
+      $scope.$parent.page[$scope.$parent.visibleTab].push( new RegularRnrLineItem(lineItem, rnr.numberOfMonths, rnr.programRnrColumnList, rnr.status));
+    });
+
+    $scope.saveRnrForm.$dirty = true;
+    var save = $scope.$parent.saveRnr();
+
+    save.then(function(){
+      $scope.$parent.goToPage($scope.$parent.currentPage);
+    });
+
+    rnr.skippedLineItems = _.where(rnr.skippedLineItems, {unskip: undefined});
+    window.window.adjustHeight();
+    // all is said and done, close the dialog box
+    $scope.addSkippedProductsModal = false;
+  };
+
   function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
     var lossesAndAdjustmentTypesForLineItem = _.pluck(_.pluck(lineItem.lossesAndAdjustments, 'type'), 'name');
 

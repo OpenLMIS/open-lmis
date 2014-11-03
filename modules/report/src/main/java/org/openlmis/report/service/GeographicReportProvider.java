@@ -13,6 +13,8 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
 import org.openlmis.report.model.GeoZoneReportingRate;
+import org.openlmis.report.model.GeoStockStatusFacilitySummary;
+import org.openlmis.report.model.GeoStockStatusProductSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,5 +30,13 @@ public class GeographicReportProvider  {
   public List<GeoZoneReportingRate> getReportingRateReport(Long programId, Long processingPeriodId){
     return geoMapper.getGeoReportingRate(programId, processingPeriodId);
   }
+
+    public List<GeoStockStatusFacilitySummary> getStockStatusFacilitySummaryReport(Long programId, Long processingPeriodId, Long productId){
+        return geoMapper.getGeoStockStatusFacilitySummary(programId, processingPeriodId,productId);
+    }
+
+    public List<GeoStockStatusProductSummary> getStockStatusProductSummaryReport(Long programId, Long geographicZoneId, Long processingPeriodId){
+        return geoMapper.getStockStatusProductSummary(programId, geographicZoneId,processingPeriodId);
+    }
 
 }
