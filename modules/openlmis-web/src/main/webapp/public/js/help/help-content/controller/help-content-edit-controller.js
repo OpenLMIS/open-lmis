@@ -53,4 +53,4 @@ function HelpContentEditCotntroller($scope, $location,$route,messageService,Help
 
 
     $scope.startHelpContentEdit($route.current.params.id);
-};
+}

@@ -39,5 +39,5 @@ function HelpContentCreateController($scope, $location,messageService,CreateHelp
         $scope.error = "";
         CreateHelpContent.save($scope.helpContent, createSuccessCallback, errorCallback);
     };
-};
+}
 

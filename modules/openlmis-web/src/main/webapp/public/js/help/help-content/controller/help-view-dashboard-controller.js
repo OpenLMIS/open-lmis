@@ -29,7 +29,7 @@ function HelpTreeViewController($scope, $timeout ,$resource,$location, $route,He
 
 
 
-    })
+    });
 
 
 
@@ -45,19 +45,19 @@ function HelpTreeViewController($scope, $timeout ,$resource,$location, $route,He
         }
 //            $location.path('create/' + branch.id);
 
-    }
+    };
     $scope.add_help_topic = function(){
 //        <a href="" ng-click="editHelpTopic(ht.id)">{{ht.name}}</a>
 
         $location.path('create/' + $scope.selectedHelpTopic.id);
 
-    }
+    };
     $scope.add_help_content = function(){
 //        <a href="" ng-click="editHelpTopic(ht.id)">{{ht.name}}</a>
 
         $location.path('createHelpContent/' + $scope.selectedHelpTopic.id);
 
-    }
+    };
     $scope.editHelpTopic = function () {
 
 //        var data = {query: $scope.query};
@@ -66,7 +66,7 @@ function HelpTreeViewController($scope, $timeout ,$resource,$location, $route,He
         $location.path('/edit/' + $scope.selectedHelpTopic.id);
     };
     function getTree(data, primaryIdName, parentIdName){
-        if(!data || data.length==0 || !primaryIdName ||!parentIdName)
+        if(!data || data.length===0 || !primaryIdName ||!parentIdName)
             return [];
 
         var tree = [],
@@ -100,14 +100,14 @@ function HelpTreeViewController($scope, $timeout ,$resource,$location, $route,He
             }
         }
 
-        for (var i = 0; i < rootIds.length; i++) {
-            tree.push(treeObjs[rootIds[i]]);
-        };
+        for (var ii = 0; ii < rootIds.length; ii++) {
+            tree.push(treeObjs[rootIds[ii]]);
+        }
 
         return tree;
     }
 
-};
+}
 
 
 
