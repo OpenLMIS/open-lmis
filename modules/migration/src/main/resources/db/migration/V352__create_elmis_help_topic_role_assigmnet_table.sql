@@ -1,6 +1,6 @@
 -- Table: elmis_help_topic_roles
 
-DROP TABLE elmis_help_topic_roles cascade;
+DROP TABLE IF EXISTS elmis_help_topic_roles cascade;
 
 CREATE TABLE elmis_help_topic_roles
 (
