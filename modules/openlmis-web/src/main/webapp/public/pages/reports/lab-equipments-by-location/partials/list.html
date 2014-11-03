@@ -1,0 +1,124 @@
+<!--
+~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+~
+~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+~
+~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+~
+~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+-->
+
+<div class="row-fluid">
+
+    <div class="span12">
+
+        <div class="box-header">
+           <h2>Equipment Status By Location Report</h2>
+        </div>
+
+        <div class="row show-grid offset1 indicator-list" >
+            <div class="span2"><strong>Key Indicators:</strong></div>
+            <div class="span3"><img src="/public/images/not-functioning-marker.png"><strong>All not functioning</strong></div>
+            <div class="span3"><img src="/public/images/some-functioning-marker.png"><strong>Some not functioning</strong></div>
+            <div class="span3" ><img src="/public/images/all-functioning-marker.png"><strong>All functioning</strong></div>
+        </div>
+<hr/>
+        <div class="row-fluid">
+
+            <div class="sidebar">
+                <div class="app-form form-wider">
+
+                    <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                        <div filter-container class="clearfix">
+                            <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                            <!-- <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+                             <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+                             <period-filter class="form-cell horizontalFilters" required="true"></period-filter>-->
+                             <zone-filter class="form-cell horizontalFilters"></zone-filter>
+                             <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
+                             <facility-filter class="form-cell horizontalFilters"></facility-filter>
+                             <equipment-type-filter class="form-cell horizontalFilters"></equipment-type-filter>
+                             <equipment-filter class="form-cell horizontalFilters"></equipment-filter>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Ends side bar -->
+
+               <!-- Start content -->
+            <div class="content-body">
+
+                <div class="span8">
+                    <div class="leaflet-middle">
+                        <leaflet  width="100%" height="600px" legend="legend" geojson="geojson" layers="layers" markers="markers"></leaflet>
+                    </div>
+                </div>
+
+                <ng-div class="span4" ng-show="showSummary === true">
+
+                    <div class="box-header">
+                        <h2>Equipment Status Summary</h2>
+                    </div>
+
+                    <a-float id="equipment-status-summary" af-option="equipmentStatusSummaryPieChartOption"
+                             af-data="pieChartSummary" class="chart"></a-float>
+
+                    <div id="facilityLabEquipmentStatusSummary" class="container-legend-drifted span12 chartLegend"></div>
+
+
+                    <div class="box-header sub-content">
+                        <h2>Detailed Equipment Reports</h2>
+                    </div>
+
+                    <ul>
+                       <li><strong><a href="/public/pages/reports/lab-equipments-non-functioning/index.html#/list?{{urlParams}}" class="sub-content-decorated">Non Functioning Equipment with service contract status</a></strong></li>
+                        <li><strong><a  href="/public/pages/reports/lab-equipments-functioning/index.html#/list?{{urlParams}}" class="sub-content-decorated">Functioning Equipment with service contract status</a></strong></li>
+                    </ul>
+                </div>
+
+            </ng-div>
+            <!-- End content -->
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<div id="popup-box" modal="facilitySummaryModal" class="success-modal-wide">
+
+    <div class="modal-header">
+        <h3>{{ title }}</h3>
+    </div>
+    <div class="modal-body">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Facility Code</th>
+                <th>Facility Name</th>
+                <th>Facility Type</th>
+                <th>District</th>
+                <th>Equipment Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="f in facilitiesEquipmentStatus">
+                <td>{{f.facility_code}}</td>
+                <td>{{f.facility_name}}</td>
+                <td>{{f.facility_type}}</td>
+                <td>{{f.disrict}}</td>
+                <td><a href="{{f.url}}">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal-footer">
+        <a class="btn btn-primary pull-right" ng-click="facilitySummaryModal=false;">Close</a>
+    </div>
+</div>
+
+
+
+    </div>
