@@ -91,8 +91,8 @@ public enum Right {
   VIEW_USER_SUMMARY_REPORT("Report - View User Summary Report", REPORT, "Permission to view user summary Report",52),
   VIEW_LAB_EQUIPMENT_LIST_REPORT("Report - View lab equipment list Report", REPORT, "Permission to view lab equipment list Report", 53),
   VIEW_LAB_EQUIPMENTS_BY_FUNDING_SOURCE("Report - View Lab equipments by funding source report", REPORT, "Permission to view lab equipment list by funding source Report", 54),
-  VIEW_ORDER_FILL_RATE_SUMMARY_REPORT("Report - View Order Fill Rate Report Summary", REPORT, "Permission to view order fill rate summary Report",55);
-
+  VIEW_ORDER_FILL_RATE_SUMMARY_REPORT("Report - View Order Fill Rate Report Summary", REPORT, "Permission to view order fill rate summary Report",55),
+  VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT("Report - View Lab equipments by location report", REPORT, "Permission to view lab equipments by location Report", 56);
 
 
     @Getter
