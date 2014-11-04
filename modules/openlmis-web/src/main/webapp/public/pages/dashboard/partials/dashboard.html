@@ -17,7 +17,7 @@
 
 <div xmlns="http://www.w3.org/1999/html">
 
-<h2><span openlmis-message="menu.header.dashboard.summary"></span></h2>
+<h2><span openlmis-message="menu.header.dashboard.summary"></span><div ng-show="showSyncDashboard" class="pull-right"><a id="createRnr" ng-click="syncDashboard()" href="#">Sync Dashboard</a><div class="loader-icon" ng-show="inProgress"></div></div></h2>
 <div style="background-color: #f9f9f9; padding: 5px">
 
     <div class="row-fluid">
