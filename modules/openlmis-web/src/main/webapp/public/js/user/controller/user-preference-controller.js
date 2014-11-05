@@ -53,8 +53,7 @@ function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,
         };
 
         var updateSuccessPreferenceHandler = function (response) {
-            alert(JSON.stringify(response));
-            //successHandler("message.user.updated.success");
+            successHandler("message.user.updated.success");
         };
 
         var errorHandler = function (response) {
