@@ -54,8 +54,13 @@
                 </label>
             </div>
             <div ng-show ="stockedOutPieChartData != undefined">
-                <a-float id="stocked-out-reporting" af-option="stockedOutPieChartOption" af-data="stockedOutPieChartData" class="chart"></a-float>
-                <div id="stockedOutReportLegend" class="chartLegend"></div>
+                <table>
+                    <tr>
+                        <td><a-float id="stocked-out-reporting" af-option="stockedOutPieChartOption" af-data="stockedOutPieChartData" class="chart"></a-float></td>
+                        <td><div style="padding: 0px; margin: 0px;" id="stockedOutReportLegend" class="chartLegend"></div></td>
+                    </tr>
+                </table>
+
                 <div style="margin-left: 10px; padding-left: 15px;font-weight: bold;" >
                     <span openlmis-message="label.total.facilities.stock.out|2"></span><span> : {{totalStockOuts}}</span>
                 </div>
