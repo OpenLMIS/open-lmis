@@ -228,8 +228,8 @@ public class UserService {
     return userRepository.getAllUsers();
   }
 
-  public void updateUserPreferences(Long userId, Long programId, Long facilityId, List<Long> products) {
-    userRepository.updateUserPreferences(userId, programId, facilityId, getCommaSeparatedIds(products));
+  public String updateUserPreferences(Long userId, Long programId, Long facilityId, List<Long> products) {
+    return userRepository.updateUserPreferences(userId, programId, facilityId, getCommaSeparatedIds(products));
 
   }
 }
