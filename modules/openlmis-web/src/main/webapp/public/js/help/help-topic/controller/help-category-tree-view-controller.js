@@ -38,7 +38,7 @@ function HelpTopicTreeViewController($scope, $timeout, $resource, $location, $ro
 //        <a href="" ng-click="editHelpTopic(ht.id)">{{ht.name}}</a>
 
         if ($scope.selectedHelpTopic) {
-            alert(' here i am');
+           // alert(' here i am');
             $location.path('create/' + $scope.selectedHelpTopic.id);
         } else {
             $location.path('/create/');

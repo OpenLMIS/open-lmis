@@ -12,11 +12,8 @@ app.directive('treeGrid', function ($timeout) {
                 "     <th ng-repeat=\"col in colDefinitions\">{{col.displayName || col.field}}</th>" +
                 " </tr>" +
                 "   </thead>" +
-                "  <tbody>" +
-                "  <tr ng-repeat=\"row in tree_rows | filter:{visible:true} track by row.branch.uid\"" +
-                "   ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\" class=\"tree-grid-row\">" +
-                "   <td   ng-class=\"row.branch.category ? 'text-primary':'tree-link-a'\"><a ng-click=\"user_clicks_branch(row.branch)\"><i ng-class=\"row.tree_icon\"" +
-                "     ng-click=\"row.branch.expanded = !row.branch.expanded\"" +
+                "  <tbody>  <tr ng-repeat=\"row in tree_rows | filter:{visible:true} track by row.branch.uid\"  ng-class=\"'level-'+ {{ row.level }} + (row.branch.selected ? 'active ':'')\" class=\"tree-grid-row\">" +
+                "   <td   ng-class=\"row.branch.category ? 'text-primary':'tree-link-a'\"><a ng-click=\"user_clicks_branch(row.branch)\"><i ng-class=\"row.tree_icon\"   ng-click=\"row.branch.expanded = !row.branch.expanded\"" +
                 "     class=\" indented tree-icon\"></i>" +
                 "    </a><span class=\"indented tree-label\" ng-click=\"user_clicks_branch(row.branch)\">" +
                 "       {{row.branch[expandingProperty]}}</span>" +
@@ -44,16 +41,16 @@ app.directive('treeGrid', function ($timeout) {
 //                    return void 0;
 //                    };
 
-                if (attrs.iconExpand === null) {
+                if (!attrs.iconExpand ) {
                     attrs.iconExpand = 'icon-plus  glyphicon glyphicon-plus  fa fa-plus';
                 }
-                if (attrs.iconCollapse === null) {
+                if (!attrs.iconCollapse) {
                     attrs.iconCollapse = 'icon-minus glyphicon glyphicon-minus fa fa-minus';
                 }
-                if (attrs.iconLeaf === null) {
+                if (!attrs.iconLeaf) {
                     attrs.iconLeaf = 'icon-file  glyphicon glyphicon-file  fa fa-file';
                 }
-                if (attrs.expandLevel === null) {
+                if (!attrs.expandLevel ) {
                     attrs.expandLevel = '3';
                 }
 
