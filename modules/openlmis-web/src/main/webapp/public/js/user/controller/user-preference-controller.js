@@ -52,6 +52,10 @@ function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,
             successHandler("message.user.updated.success");
         };
 
+        var updateSuccessPreferenceHandler = function (response) {
+            successHandler("message.user.updated.success");
+        };
+
         var errorHandler = function (response) {
             $scope.showError = true;
             $scope.message = "";
@@ -66,7 +70,7 @@ function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,
             $scope.preference.products = isUndefined($scope.preference.products)? [1]: $scope.preference.products;
 
             UpdateUserPreference.update({userId: $scope.user.id, programId: $scope.preference.program,
-                facilityId:$scope.preference.facility, products:$scope.preference.products},{},updateSuccessHandler, errorHandler);
+                facilityId:$scope.preference.facility, products:$scope.preference.products},{},updateSuccessPreferenceHandler, errorHandler);
 
             //if user preference of currently logged-in user changes, reload the new user preference to localstorage
             if($scope.user.id == localStorageService.get(localStorageKeys.USER_ID)){

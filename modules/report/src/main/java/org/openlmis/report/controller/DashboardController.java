@@ -1,9 +1,12 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.apache.ibatis.annotations.Update;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.report.model.dto.Notification;
 import org.openlmis.report.response.OpenLmisResponse;
+import org.openlmis.report.service.DashboardBatchDataUpdateExecutorService;
 import org.openlmis.report.service.lookup.DashboardLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * User: Issa
@@ -46,6 +52,9 @@ public class DashboardController extends BaseController {
     private static final String RNR_STATUS_BY_REQUISITION_GROUP_DETAILS="rnrStatusDetailTest";
     @Autowired
     DashboardLookupService lookupService;
+
+    @Autowired
+    DashboardBatchDataUpdateExecutorService dashboardUpdateService;
 
     @Autowired
     MessageService messageService;
@@ -210,6 +219,16 @@ public class DashboardController extends BaseController {
                                                                            @RequestParam("status") String status,
                                                                            HttpServletRequest request){
         return OpenLmisResponse.response(RNR_STATUS_DETAILS, this.lookupService.getRnRStatusDetail(loggedInUserId(request), periodId,programId, zoneId,status));
+    }
+
+    @RequestMapping(value="/sync", method = PUT, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> syncDashboard(HttpServletRequest request){
+        try {
+            dashboardUpdateService.startNightlyDashboardDataUpdate();
+        } catch (DataException e) {
+            return OpenLmisResponse.error(e, BAD_REQUEST);
+        }
+        return new OpenLmisResponse().response(OK);
     }
 
 }

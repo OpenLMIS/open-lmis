@@ -725,10 +725,6 @@ services.factory('UpdateUserPreference', function ($resource) {
     return $resource('/users/:userId/preferences.json', {}, update);
 });
 
-/*services.factory('EditUserPreference', function ($resource) {
- return $resource('/preference/users/:id.json', {}, update);
- });*/
-
 services.factory('EditUserPreference', function ($resource) {
     var resource = $resource('/preference/users/:id.json', {id: '@id'}, update);
 
@@ -737,6 +733,10 @@ services.factory('EditUserPreference', function ($resource) {
     };
 
     return resource;
+});
+
+services.factory('SyncDashboard', function($resource){
+   return $resource('/dashboard/sync.json', {},update);
 });
 services.factory('SupervisoryNodesList', function ($resource) {
     return $resource('/supervisory-nodes/list.json', {}, {});
