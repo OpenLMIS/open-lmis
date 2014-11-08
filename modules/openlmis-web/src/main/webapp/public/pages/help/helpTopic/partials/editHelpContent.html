@@ -16,17 +16,16 @@
     <form ng-submit="updateHelpContent()" id="updateHelpContentForm" name="updateHelpContentForm"
           novalidate select2-blur>
 
-        <div>
-            <h3>Help Content Information</h3>
+        <div class="app-form">
 
-            <div class="row">
+            <div class="form-group">
 
-                <fieldset class="span2">
-                    <!-- help category -->
+                <h3>Help Content Information</h3>
 
+                <div class="form-row clearfix">
 
                     <div class="form-cell">
-                        <label for="name">Name<span
+                    <label for="name">Name<span
                                 class="label-required"> *</span></label>
 
                         <div class="form-field" style="width: 40%;">
@@ -38,17 +37,17 @@
         </span>
                         </div>
                     </div>
-
-                    <div class="container app">
+                </div>
+            </div>
+            </div>
+                    <div class="form-cell">
                         <h3>Help Content</h3>
 
-                        <div text-angular="text-angular" name="htmlcontent" ng-model="editHelpContent.htmlContent"
+                        <div style="width: 100%" text-angular="text-angular" name="htmlcontent" ng-model="editHelpContent.htmlContent"
                              ta-disabled='disabled'></div>
                     </div>
 
-                </fieldset>
 
-            </div>
 
 
             <div form-toolbar id="action_buttons" class="action-buttons">
@@ -60,7 +59,7 @@
                 <div class="toolbar-error" id="saveErrorMsgDiv" ng-show="showError || error">{{ errorMessage }}</div>
             </div>
 
-        </div>
+
     </form>
 
 </div>

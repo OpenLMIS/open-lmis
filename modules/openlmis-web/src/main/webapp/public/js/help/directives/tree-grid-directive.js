@@ -16,7 +16,7 @@ app.directive('treeGrid', function ($timeout) {
                 "   <td   ng-class=\"row.branch.category ? 'text-primary':'tree-link-a'\"><a ng-click=\"user_clicks_branch(row.branch)\"><i ng-class=\"row.tree_icon\"   ng-click=\"row.branch.expanded = !row.branch.expanded\"" +
                 "     class=\" indented tree-icon\"></i>" +
                 "    </a><span class=\"indented tree-label\" ng-click=\"user_clicks_branch(row.branch)\">" +
-                "       {{row.branch[expandingProperty]}}</span>" +
+                "       {{row.branch[expandingProperty]}}</span> " +
                 "    </td> " +
                 "        <td ng-repeat=\"col in colDefinitions\">{{row.branch[col.field]}}</td>" +
                 "        <tr >" +
