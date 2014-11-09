@@ -16,6 +16,7 @@ import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.dto.FacilityContact;
 import org.openlmis.core.dto.FacilityImages;
+import org.openlmis.core.dto.FacilitySupervisor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -282,4 +283,13 @@ public interface FacilityMapper {
 
   @Select("SELECT * from odk_submission_data where facilityId = #{facilityId}")
   List<FacilityImages> getFacilityImages(Long facilityId);
+
+    @Select("SELECT DISTINCT userid as userId, username as name, email as contact   \n" +
+            "            FROM role_assignments  \n" +
+            "            JOIN supervisory_nodes on supervisory_nodes.id = role_assignments.supervisorynodeid  \n" +
+            "            JOIN users on users.id = role_assignments.userid AND users.active = true  \n" +
+            "            WHERE supervisory_nodes.facilityid = #{facilityId}\n" +
+            "            ORDER BY username")
+    List<FacilitySupervisor> getFacilitySupervisors(Long facilityId);
+
 }

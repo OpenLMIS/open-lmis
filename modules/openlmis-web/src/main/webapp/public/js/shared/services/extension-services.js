@@ -712,3 +712,11 @@ services.factory('StockStatusProductConsumptionGraph', function($resource){
 services.factory('GetDonors', function($resource){
     return $resource('/reports/donors',{}, {});
 });
+
+services.factory('GetFacilitySupervisors', function($resource){
+    return $resource('/facility-supervisors.json',{}, {});
+});
+
+services.factory("SendMessagesReportAttachment",function($resource){
+    return $resource('/messages/send/report.json',{}, {post: {method:'POST'}});
+});

@@ -10,21 +10,6 @@
 
 function LabEquipmentStatusByLocationController($scope, $window, leafletData, $filter, GetFacilitiesByEquipmentStatus, ngTableParams , GetFacilitiesEquipmentStatusSummary) {
 
-
-    $scope.exportReport = function (type) {
-        $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
-        var url = '/reports/download/lab_equipment_list/' + type + '?' + params;
-        window.open(url);
-    };
-
-    // the grid options
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        total: 0,           // length of data
-        count: 10           // count per page
-    });
-
     angular.extend($scope, {
         layers: {
             baselayers: {

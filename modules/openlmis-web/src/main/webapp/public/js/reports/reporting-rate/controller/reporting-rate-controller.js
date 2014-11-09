@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList, SettingsByKey, ContactList, SendMessages, $filter , $dialog, messageService) {
+function ReportingRateController($scope, leafletData, ReportingFacilityList, SendMessagesReportAttachment, GetFacilitySupervisors , NonReportingFacilityList, SettingsByKey, ContactList, SendMessages, $filter , $dialog, messageService) {
 
 
   $scope.default_indicator = "period_over_expected";
@@ -25,6 +25,11 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
   SettingsByKey.get({key: 'SMS_ENABLED'},function (data){
     $scope.sms_enabled            = data.settings.value;
   });
+
+    SettingsByKey.get({key: 'LATE_RNR_SUPERVISOR_NOTIFICATION_EMAIL_TEMPLATE'},function (data){
+        $scope.email_template_supervisor           = data.settings.value;
+    });
+
   // end of configurations
 
   // show dialog box contents
@@ -36,6 +41,22 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     });
     $scope.show_email = !$scope.show_email;
   };
+
+   $scope.showSendEmailSupervisor = function(facility){
+       $scope.selected_facility = facility;
+       GetFacilitySupervisors.get({
+           facilityId : facility.id
+       }, function(data){
+           $scope.contacts = data.supervisors;
+           $scope.attachementCaption = "Attachement: Non reporting facility report for "+ $scope.zoneName+ ' district';
+           var fullReportfilter = $.extend($scope.filter, {zone: $scope.zoneid});
+           $scope.reportFilter = '/reports/download/non_reporting/PDF?max=10000&' + $.param(fullReportfilter);
+           console.log($scope.reportFilter);
+       });
+
+       $scope.show_email_supervisor = !$scope.show_email_supervisor;
+
+    };
 
   $scope.showSendSms = function(facility){
     $scope.selected_facility = facility;
@@ -54,20 +75,48 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
       $scope.sendSms();
       $scope.show_sms=false;
     }
-    else{
-      $scope.sendEmail();
-      $scope.show_email=false;
+    else if($scope.show_email_supervisor){
+        $scope.sendSupervisorEmail();
+        $scope.show_email_supervisor = false;
     }
+    else{
+      $scope.sendFacilityEmail();
+      $scope.show_email = false;
+    }
+
     $scope.selected_facility.sent=true;
 
   };
 
+    $scope.sendSupervisorEmail = function(){
 
-  $scope.sendEmail = function(){
+        var messages = constructMessage();
+
+        //Since originally the reporting rate report doesn't have zone parameter
+        var filterParamsWithZone = $.extend($scope.filter, {zone: $scope.zoneid});
+        var emailParam = {messages: messages, reportKey: 'non_reporting', subject: 'Non reporting facilities', outputOption: 'xls', reportParams: filterParamsWithZone};
+
+        SendMessagesReportAttachment.post(emailParam, function (data) {
+            $scope.sent_confirmation = true;
+        });
+    };
+
+    $scope.sendFacilityEmail = function(){
+
+        var messages = constructMessage();
+
+        SendMessages.post({messages: messages}, function(data){
+            $scope.sent_confirmation = true;
+        });
+    };
+
+  var constructMessage = function(){
+
     // construct the messges here
     var messages  = [];
+
     for(var i = 0; i < $scope.contacts.length; i++){
-      var template = $scope.email_template;
+      var template = $scope.show_email_supervisor ? $scope.email_template_supervisor : $scope.email_template;
       var contact = $scope.contacts[i];
 
       template = template.replace( '{name}' , contact.name);
@@ -77,39 +126,10 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
       messages.push({type: 'email', facility_id: $scope.selected_facility.id, contact: contact.contact, message: template });
     }
 
-    SendMessages.post({messages: messages}, function(data){
-      $scope.sent_confirmation = true;
-    });
-
-  };
-
-  $scope.sendSms = function(){
-
-
-
-    // construct the messages that go out
-    var messages  = [];
-    for(var i = 0; i < $scope.contacts.length; i++){
-      var template = $scope.sms_template;
-      var contact = $scope.contacts[i];
-
-      template = template.replace( '{name}' , contact.name);
-      template = template.replace( '{facility_name}', $scope.selected_facility.name );
-      template = template.replace( '{period}', $scope.selected_facility.name );
-
-      messages.push({type: 'sms', facility_id: $scope.selected_facility.id, contact: contact.contact, message: template });
-
-    }
-
-    SendMessages.post({messages: messages}, function(data){
-      $scope.sent_confirmation = true;
-    });
-
+      return messages;
   };
 
   // end send actions
-
-
   $scope.ReportingFacilities = function(feature, element) {
     ReportingFacilityList.get({
       program: $scope.filter.program,
@@ -118,7 +138,9 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     }, function(data) {
       $scope.facilities = data.facilities;
       $scope.successModal = true;
-      $scope.show_email = $scope.show_sms = false;
+      $scope.show_email = $scope.show_sms = $scope.show_email_supervisor = false;
+      $scope.zoneid = feature.id;
+      $scope.zoneName = feature.name;
       $scope.title = 'Properly Reporting Facilities in ' + feature.name;
     });
     $scope.zoomToSelectedFeature(feature);
@@ -132,11 +154,13 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
     }, function(data) {
       $scope.facilities = data.facilities;
       $scope.successModal = true;
-      $scope.show_email = $scope.show_sms = false;
+      $scope.zoneid = feature.id;
+      $scope.zoneName = feature.name;
+      $scope.show_email = $scope.show_sms = $scope.show_email_supervisor = false;
       $scope.title = 'Non Reporting Facilities in ' + feature.name;
     });
 
-
+      console.log(feature.id);
   };
 
     $scope.expectedFilter = function(item) {

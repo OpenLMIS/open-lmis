@@ -12,14 +12,18 @@ package org.openlmis.email.service;
 
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.Payload;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
+import javax.mail.internet.MimeMessage;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -34,6 +38,11 @@ public class EmailService {
   private Boolean mailSendingFlag;
 
   private MailSender mailSender;
+
+  @Autowired
+  @Qualifier("mailSender")
+  private JavaMailSender javaMailSender;
+
 
   @Autowired
   public EmailService(MailSender mailSender, @Value("${mail.sending.flag}") Boolean mailSendingFlag) {
@@ -64,4 +73,16 @@ public class EmailService {
     }
     mailSender.send(simpleMailMessage.toArray(new SimpleMailMessage[simpleMailMessage.size()]));
   }
+
+    @Async
+    public Future<Boolean> send(MimeMessage message) {
+
+        if (!mailSendingFlag) {
+            return new AsyncResult<>(true);
+        }
+
+        javaMailSender.send(message);
+
+        return new AsyncResult<>(true);
+    }
 }

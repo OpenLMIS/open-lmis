@@ -22,6 +22,7 @@ import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -87,16 +88,38 @@ public class ReportManager {
            throw new ReportException("invalid report");
        }
 
-
-       User currentUser = userService.getById(Long.parseLong(String.valueOf(userId)));
-       report.getReportDataProvider().setUserId(userId.longValue());
-       List<? extends ReportData> dataSource = report.getReportDataProvider().getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
-
-
+        List<? extends ReportData> dataSource = report.getReportDataProvider().getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
+        HashMap<String, Object> extraParams = getReportExtraDataSourceParams(userId, params, outputOption, dataSource, report);
 
        // Read the report template from file.
        InputStream reportInputStream =  this.getClass().getClassLoader().getResourceAsStream(report.getTemplate()) ;
-       HashMap<String, Object> extraParams = getReportExtraParams(report, currentUser.getFirstName() + " " + currentUser.getLastName(), outputOption.name(), params ) ;
+
+        reportExporter.exportReport(reportInputStream, extraParams, dataSource, outputOption, response);
+    }
+
+    public ByteArrayOutputStream exportReportBytesStream(Integer userId, Report report, Map<String, String[]> params, ReportOutputOption outputOption){
+
+        if (report == null){
+            throw new ReportException("invalid report");
+        }
+
+        List<? extends ReportData> dataSource = report.getReportDataProvider().getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
+        HashMap<String, Object> extraParams = getReportExtraDataSourceParams(userId, params, outputOption, dataSource, report);
+
+        // Read the report template from file.
+        InputStream reportInputStream =  this.getClass().getClassLoader().getResourceAsStream(report.getTemplate()) ;
+
+        return reportExporter.exportReportBytesStream(reportInputStream, extraParams, dataSource, outputOption);
+
+    }
+
+    private  HashMap<String, Object> getReportExtraDataSourceParams(Integer userId,  Map<String, String[]> params , ReportOutputOption outputOption, List<? extends ReportData> dataSource, Report report){
+
+        User currentUser = userService.getById(Long.parseLong(String.valueOf(userId)));
+        report.getReportDataProvider().setUserId(userId.longValue());
+
+
+        HashMap<String, Object> extraParams = getReportExtraParams(report, currentUser.getFirstName() + " " + currentUser.getLastName(), outputOption.name(), params ) ;
 
         //Setup message for a report when there is no data found
         if(dataSource != null && dataSource.size() == 0){
@@ -104,13 +127,16 @@ public class ReportManager {
             if(extraParams != null){
                 extraParams.put(Constants.REPORT_MESSAGE_WHEN_NO_DATA, configurationService.getByKey(Constants.REPORT_MESSAGE_WHEN_NO_DATA).getValue());
             }else {
-                 extraParams = new HashMap<String, Object>();
-                 extraParams.put(Constants.REPORT_MESSAGE_WHEN_NO_DATA, configurationService.getByKey(Constants.REPORT_MESSAGE_WHEN_NO_DATA).getValue());
+                extraParams = new HashMap<String, Object>();
+                extraParams.put(Constants.REPORT_MESSAGE_WHEN_NO_DATA, configurationService.getByKey(Constants.REPORT_MESSAGE_WHEN_NO_DATA).getValue());
             }
         }
-        reportExporter.exportReport(reportInputStream,extraParams, dataSource, outputOption, response);
 
+        return extraParams;
     }
+
+
+
     /**
      *
      * @param reportKey
@@ -122,6 +148,29 @@ public class ReportManager {
 
         showReport(userId, getReportByKey(reportKey), params, outputOption, response);
     }
+
+    /**
+     *
+     * @param userId
+     * @param reportKey
+     * @param params
+     * @param outputOption
+     * @return ByteArrayOutputStream
+     */
+    public ByteArrayOutputStream exportReportBytesStream(Integer userId, String reportKey, Map<String, String[]> params, String outputOption){
+
+        switch (outputOption.toUpperCase()) {
+            case "PDF":
+                return exportReportBytesStream(userId, getReportByKey(reportKey), params, ReportOutputOption.CSV.PDF);
+            case "XLS":
+                return exportReportBytesStream(userId, getReportByKey(reportKey), params, ReportOutputOption.XLS);
+            case "HTML":
+                return exportReportBytesStream(userId, getReportByKey(reportKey), params, ReportOutputOption.HTML);
+        }
+
+        return null;
+    }
+
 
      /**
      * Used to extract extra parameters that are used by report header and footer.

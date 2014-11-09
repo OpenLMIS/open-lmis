@@ -222,6 +222,11 @@ public class FacilityController extends BaseController {
     return OpenLmisResponse.response("contacts",facilityService.getContactList(facilityId, type));
   }
 
+    @RequestMapping(value = "/facility-supervisors", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilitySupervisors(@RequestParam("facilityId") Long facilityId) {
+        return OpenLmisResponse.response("supervisors",facilityService.getFacilitySupervisors(facilityId));
+    }
+
   @RequestMapping(value = "/facility-images", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getImagesForFacility(@RequestParam("facilityId") Long facilityId) {
     return OpenLmisResponse.response("images",facilityService.getFacilityImages(facilityId));

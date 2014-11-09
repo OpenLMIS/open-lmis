@@ -114,93 +114,168 @@
        <h3>{{ title }}</h3>
     </div>
     <div class="modal-body">
-        <div ng-show="show_sms">
-             <div>
-                 <p>
-                     Please use the form below to customize and send sms notifications for <b>{{selected_facility.name}}</b>
-                 </p>
-                 <div style="padding: 10px;">
-                    <div >
-                      <textarea rows="4" style="width: 350px;" ng-model="sms_template"></textarea>
-                    </div>
-                     <div >
-                         Who receives this notification?
-                         <div>
-                             <table class="table table-bordered">
-                                 <tr ng-repeat="contact in contacts">
-                                     <td>{{contact.name}}</td>
-                                     <td>{{contact.contact}}</td>
-                                 </tr>
-                             </table>
-                         </div>
-                     </div>
 
-
-                 </div>
-
-             </div>
-        </div>
-        <div ng-show="show_email">
-            <div>
-                <p>
-                    Use this form to customize and send email notifications for <b>{{selected_facility.name}}</b>
-                </p>
-                <div style="padding: 10px;">
-                    <div>
-                      <textarea rows="4" style="width: 350px;" ng-model="email_template"></textarea>
-                    </div>
-                    <div >
-                        Who receives this notification?
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#notify-facility" data-toggle="tab">Notify Facility</a></li>
+                <li><a href="#notify-supervisor" data-toggle="tab">Notify Supervisor</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="notify-facility">
+                    <div ng-show="show_sms">
                         <div>
-                            <table class="table table-bordered">
-                                <tr ng-repeat="contact in contacts">
-                                    <td><b>{{contact.name}}</b></td>
-                                    <td>{{contact.contact}}</td>
-                                </tr>
-                            </table>
+                            <p>
+                                Please use the form below to customize and send sms notifications for <b>{{selected_facility.name}}</b>
+                            </p>
+                            <div style="padding: 10px;">
+                                <div >
+                                    <textarea rows="4" style="width: 350px;" ng-model="sms_template"></textarea>
+                                </div>
+                                <div >
+                                    Who receives this notification?
+                                    <div>
+                                        <table class="table table-bordered">
+                                            <tr ng-repeat="contact in contacts">
+                                                <td>{{contact.name}}</td>
+                                                <td>{{contact.contact}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div ng-show="show_email">
+                        <div>
+                            <p>
+                                Use this form to customize and send email notifications for <b>{{selected_facility.name}}</b>
+                            </p>
+                            <div style="padding: 10px;">
+                                <div>
+                                    <textarea rows="4" style="width: 350px;" ng-model="email_template"></textarea>
+                                </div>
+                                <div >
+                                    Who receives this notification?
+                                    <div>
+                                        <table class="table table-bordered">
+                                            <tr ng-repeat="contact in contacts">
+                                                <td><b>{{contact.name}}</b></td>
+                                                <td>{{contact.contact}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <table ng-show="!show_sms && !show_email" class="table table-bordered" >
+                        <thead>
+                        <tr>
+                            <th>Facility Name</th>
+                            <th>Phone</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="row in facilities">
+                            <td>
+                                <span  data-toggle="tooltip" title="This facility has reported properly" class="icon-check green" ng-show="row.reported"></span>
+                                <span   data-toggle="tooltip" title="This facility did not report for period" class="icon-warning-sign" style="color: red;" ng-show="!row.reported"></span>
+                                <span ng-show=row.rnrid != undefined"><a ng-href="/public/pages/logistics/rnr/index.html#/requisition/{{ row.rnrid }}/{{filter.program}}?supplyType=fullSupply&page=1">{{ row.name }}</a></span>
+                                <span ng-show="row.rnrid == undefined">{{ row.name }}</span>
+
+                            </td>
+                            <td>{{ row.mainPhone }}</td>
+                            <td>
+                                <div ng-show="row.hasContacts && !row.sent">
+                                    <a class="btn btn-mini" ng-click="showSendEmail(row)">Email</a>
+                                    <a class="btn btn-mini" ng-click="showSendSms(row)" ng-show="sms_enabled">SMS</a>
+                                </div>
+                                <div ng-show="!row.hasContacts">
+                                    No Contacts
+                                </div>
+                                <div class="green" ng-show="row.hasContacts && row.sent">
+                                    Sent
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- supervisors tab --->
+                <div class="tab-pane" id="notify-supervisor">
+
+                    <div ng-show="show_email_supervisor">
+                        <div>
+                            <p>
+                                Use this form to customize and send email notifications for <b>{{selected_facility.name}}</b>
+                            </p>
+                            <div style="padding: 10px;">
+                                <div>
+                                    <textarea rows="4" style="width: 350px;" ng-model="email_template_supervisor"></textarea>
+                                </div>
+                                <div >
+                                    Who receives this notification?
+                                    <div>
+                                        <table class="table table-bordered">
+                                            <tr ng-repeat="contact in contacts">
+                                                <td><b>{{contact.name}}</b></td>
+                                                <td>{{contact.contact}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                              <a href="{{reportFilter}}" target="_blank">{{attachementCaption}}</a>
+                            </div>
                         </div>
                     </div>
 
+                    <table ng-show="!show_email_supervisor" class="table table-bordered" >
+                        <thead>
+                        <tr>
+                            <th>Facility Name</th>
+                            <th>Phone</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="row in facilities">
+                            <td>
+                                <span  data-toggle="tooltip" title="This facility has reported properly" class="icon-check green" ng-show="row.reported"></span>
+                                <span   data-toggle="tooltip" title="This facility did not report for period" class="icon-warning-sign" style="color: red;" ng-show="!row.reported"></span>
+                                <span ng-show=row.rnrid != undefined"><a ng-href="/public/pages/logistics/rnr/index.html#/requisition/{{ row.rnrid }}/{{filter.program}}?supplyType=fullSupply&page=1">{{ row.name }}</a></span>
+                                <span ng-show="row.rnrid == undefined">{{ row.name }}</span>
+
+                            </td>
+                            <td>{{ row.mainPhone }}</td>
+                            <td>
+                                <div ng-show="row.hasSupervisors && !row.sent">
+                                    <a class="btn btn-mini" ng-click="showSendEmailSupervisor(row)">Email</a>
+                                </div>
+                                <div ng-show="!row.hasSupervisors">
+                                    No Contacts
+                                </div>
+                                <div class="green" ng-show="row.hasSupervisors && row.sent">
+                                    Sent
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-      <table ng-show="!show_sms && !show_email" class="table table-bordered" >
-        <thead>
-        <tr>
-          <th>Facility Name</th>
-          <th>Phone</th>
-          <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="row in facilities">
-          <td>
-             <span  data-toggle="tooltip" title="This facility has reported properly" class="icon-check green" ng-show="row.reported"></span>
-              <span   data-toggle="tooltip" title="This facility did not report for period" class="icon-warning-sign" style="color: red;" ng-show="!row.reported"></span>
-            <span ng-show=row.rnrid != undefined"><a ng-href="/public/pages/logistics/rnr/index.html#/requisition/{{ row.rnrid }}/{{filter.program}}?supplyType=fullSupply&page=1">{{ row.name }}</a></span>
-            <span ng-show="row.rnrid == undefined">{{ row.name }}</span>
 
-          </td>
-          <td>{{ row.mainPhone }}</td>
-          <td>
-              <div ng-show="row.hasContacts && !row.sent">
-                  <a class="btn btn-mini" ng-click="showSendEmail(row)">Email</a>
-                  <a class="btn btn-mini" ng-click="showSendSms(row)" ng-show="sms_enabled">SMS</a>
-              </div>
-              <div ng-show="!row.hasContacts">
-                   No Contacts
-              </div>
-              <div class="green" ng-show="row.hasContacts && row.sent">
-                  Sent
-              </div>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+
     </div>
     <div class="modal-footer">
       <a class="btn btn-primary pull-right" ng-click="successModal=false;">Close</a>
-      <a class="btn btn-primary pull-right" ng-show="show_sms || show_email" ng-click="doSend();">Send</a>
+      <a class="btn btn-primary pull-right" ng-show="show_sms || show_email || show_email_supervisor" ng-click="doSend();">Send</a>
     </div>
   </div>
 

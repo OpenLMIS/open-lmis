@@ -27,4 +27,6 @@ public class GeoFacilityIndicator {
 
   private Boolean hasContacts;
 
+  private Boolean hasSupervisors;
+
 }

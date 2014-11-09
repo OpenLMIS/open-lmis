@@ -33,36 +33,40 @@ import java.util.List;
 @Component
 public class JasperReportExporter implements ReportExporter {
 
+
+    @Override
+    public ByteArrayOutputStream exportReportBytesStream(InputStream reportInputStream, HashMap<String, Object> reportExtraParams, List<? extends ReportData> reportData, ReportOutputOption outputOption) {
+
+        try{
+
+            JasperPrint jasperPrint = getJasperPrintResult(reportExtraParams, reportInputStream, outputOption, reportData);
+
+            String reportOutputFileName = reportExtraParams != null ? ((String) reportExtraParams.get(Constants.REPORT_NAME)) : "";
+
+            //Jasper export handler
+            return export(outputOption, reportOutputFileName, jasperPrint);
+
+        } catch (JRException e) {
+
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     @Override
     public void exportReport(InputStream reportInputStream, HashMap<String, Object> reportExtraParams, List<? extends ReportData> reportData, ReportOutputOption outputOption, HttpServletResponse response) {
 
         try{
 
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportInputStream);
-
-            //removes pagination in exel output. It allows to remove repeating column header
-            if(reportExtraParams != null && (outputOption != null && !outputOption.equals(ReportOutputOption.PDF))){
-                reportExtraParams.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
-            }
-            JasperPrint jasperPrint = null;
-
-            //Check for empty report data. Fill empty datasource when there is no data to fill
-            if(reportData.size() == 0){
-
-                  jasperPrint = JasperFillManager.fillReport(jasperReport, reportExtraParams , new JREmptyDataSource());
-
-            } else{
-
-               jasperPrint =  JasperFillManager.fillReport(jasperReport, reportExtraParams , new JRBeanCollectionDataSource(reportData,false));
-
-            }
+            JasperPrint jasperPrint = getJasperPrintResult(reportExtraParams, reportInputStream, outputOption, reportData);
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
             String reportOutputFileName = reportExtraParams != null ? ((String) reportExtraParams.get(Constants.REPORT_NAME)) : "";
 
             //Jasper export handler
-            export(outputOption, reportOutputFileName, jasperPrint,response,byteArrayOutputStream);
+            export(outputOption, reportOutputFileName, jasperPrint, response, byteArrayOutputStream);
 
             //Write to servlet output stream
             writeToServletOutputStream(response, byteArrayOutputStream);
@@ -73,6 +77,30 @@ public class JasperReportExporter implements ReportExporter {
         }
     }
 
+    private JasperPrint getJasperPrintResult(HashMap<String, Object> reportExtraParams, InputStream reportInputStream, ReportOutputOption outputOption,
+                                             List<? extends ReportData> reportData) throws JRException {
+
+        JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportInputStream);
+
+        //removes pagination in exel output. It allows to remove repeating column header
+        if(reportExtraParams != null && (outputOption != null && !outputOption.equals(ReportOutputOption.PDF))){
+            reportExtraParams.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
+        }
+        JasperPrint jasperPrint = null;
+
+        //Check for empty report data. Fill empty datasource when there is no data to fill
+        if(reportData.size() == 0){
+
+            jasperPrint = JasperFillManager.fillReport(jasperReport, reportExtraParams , new JREmptyDataSource());
+
+        } else{
+
+            jasperPrint =  JasperFillManager.fillReport(jasperReport, reportExtraParams , new JRBeanCollectionDataSource(reportData,false));
+
+        }
+
+        return jasperPrint;
+    }
     /**
      *
      * @param outputOption
@@ -96,6 +124,129 @@ public class JasperReportExporter implements ReportExporter {
         }
 
         return response;
+    }
+
+    /**
+     *
+     * @param outputOption
+     * @param jasperPrint
+     * @return
+     */
+    private ByteArrayOutputStream export(ReportOutputOption outputOption, String outputFileName, JasperPrint jasperPrint) {
+
+        switch (outputOption){
+
+            case PDF:
+                return exportPdfByteArrayOutputStream(jasperPrint, outputFileName);
+            case XLS:
+                return exportXlsByteArrayOutputStream(jasperPrint, outputFileName);
+            case CSV:
+                return exportCsvByteArrayOutputStream(jasperPrint, outputFileName);
+            case HTML:
+                return exportHtmlByteArrayOutputStream(jasperPrint, outputFileName);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param jasperPrint
+     * @param outputFileName
+     * @return
+     */
+    private ByteArrayOutputStream exportHtmlByteArrayOutputStream(JasperPrint jasperPrint, String outputFileName) {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        JRHtmlExporter exporter = new JRHtmlExporter();
+        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
+        exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, Boolean.FALSE);
+        exporter.setParameter(JRHtmlExporterParameter.ZOOM_RATIO, 1.5F);
+
+        try {
+
+            exporter.exportReport();
+
+            return byteArrayOutputStream;
+
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private ByteArrayOutputStream exportCsvByteArrayOutputStream(JasperPrint jasperPrint, String outputFileName) {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        JRCsvExporter exporter = new JRCsvExporter();
+
+        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
+
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, Boolean.TRUE);
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
+        exporter.setParameter(JRXlsExporterParameter.IS_IGNORE_GRAPHICS, Boolean.FALSE);
+
+        try {
+
+            exporter.exportReport();
+
+            return byteArrayOutputStream;
+
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private ByteArrayOutputStream exportXlsByteArrayOutputStream(JasperPrint jasperPrint, String outputFileName) {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        JRXlsExporter exporter = new JRXlsExporter();
+
+        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
+
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, Boolean.TRUE);
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
+        exporter.setParameter(JRXlsExporterParameter.IS_IGNORE_GRAPHICS, Boolean.FALSE);
+        exporter.setParameter(JRXlsAbstractExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
+
+
+        try {
+
+            exporter.exportReport();
+
+            return byteArrayOutputStream;
+
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private ByteArrayOutputStream exportPdfByteArrayOutputStream(JasperPrint jasperPrint, String outputFileName) {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        JRPdfExporter exporter = new JRPdfExporter();
+
+        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
+
+        try {
+
+            exporter.exportReport();
+
+            return byteArrayOutputStream;
+
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

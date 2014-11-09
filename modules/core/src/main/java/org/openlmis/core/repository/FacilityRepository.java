@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.FacilityContact;
 import org.openlmis.core.dto.FacilityImages;
+import org.openlmis.core.dto.FacilitySupervisor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
@@ -232,6 +233,8 @@ public class FacilityRepository {
   public List<FacilityContact> getSmsContacts(Long facilityId) {
     return mapper.getSmsContacts(facilityId);
   }
+
+  public List<FacilitySupervisor> getFacilitySupervisors(Long facilityId) {  return mapper.getFacilitySupervisors(facilityId); }
 
   public List<FacilityImages> getFacilityImages(Long facilityId) {
     return mapper.getFacilityImages(facilityId);
