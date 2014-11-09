@@ -11,6 +11,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
@@ -76,6 +77,7 @@ public class UserController extends BaseController {
 
       OpenLmisResponse openLmisResponse = new OpenLmisResponse("name", userName);
       openLmisResponse.addData("authenticated", TRUE);
+      openLmisResponse.addData("userId", userId);
       openLmisResponse.addData("rights", roleRightService.getRights(userId));
       openLmisResponse.addData("preferences", userService.getPreferences(userId));
 
@@ -142,6 +144,34 @@ public class UserController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public User get(@PathVariable(value = "id") Long id) {
     return userService.getById(id);
+  }
+
+  @RequestMapping(value = "/preference/users/{id}", method = GET)
+  public User getUser(@PathVariable(value = "id") Long id, HttpServletRequest request) {
+     Long userId = loggedInUserId(request);
+      if (id == userId || roleRightService.getRights(userId).contains(Right.MANAGE_USER)){
+          return userService.getById(id);
+      }
+      return null;
+  }
+
+  @RequestMapping(value = "/preference/users/{id}", method = PUT, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> updateUser(@RequestBody User user,
+                                                 @PathVariable("id") Long id,
+                                                 HttpServletRequest request) {
+      Long userId = loggedInUserId(request);
+      if (id == userId || roleRightService.getRights(userId).contains(Right.MANAGE_USER)){
+          user.setModifiedBy(userId);
+          user.setId(id);
+          try {
+              userService.update(user);
+          } catch (DataException e) {
+              return error(e, BAD_REQUEST);
+          }
+          return new OpenLmisResponse().response(OK);
+      }
+      return new OpenLmisResponse().errorEntity(FORBIDDEN.getReasonPhrase(),FORBIDDEN);
+
   }
 
   @RequestMapping(value = "/users/{id}", method = DELETE, headers = ACCEPT_JSON)
@@ -212,6 +242,24 @@ public class UserController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getUserPreferences(HttpServletRequest request){
     return response("preferences", userService.getPreferences(this.loggedInUserId(request)));
   }
+
+  @RequestMapping(value = "/users/{userId}/preferences", method = GET)
+  public ResponseEntity<OpenLmisResponse> getUserPreferences(@PathVariable("userId") Long userId){
+    return response("preferences", userService.getPreferences(userId));
+  }
+    @RequestMapping(value = "/users/{userId}/preferences", method = PUT, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> updateUserPreferences(@PathVariable(value = "userId") Long userId, @RequestParam("programId") Long programId,
+                                                                  @RequestParam("facilityId") Long facilityId, @RequestParam("products") List<Long> productListId) {
+        String result = null;
+        try {
+          result =  userService.updateUserPreferences(userId, programId, facilityId, productListId);
+        } catch (DataException e) {
+            return error(e, BAD_REQUEST);
+        }
+        return success(messageService.message("user.preference.set.successfully"));
+    }
+
+
 
   @RequestMapping(value="/user/getAll", method = GET)
   public ResponseEntity<OpenLmisResponse> getAllUsers(HttpServletRequest request){

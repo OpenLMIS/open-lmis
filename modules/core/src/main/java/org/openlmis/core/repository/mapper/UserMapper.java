@@ -123,4 +123,8 @@ public interface UserMapper {
 
   @Select(value = "SELECT id, firstName, lastName, email, username, active FROM users WHERE active = TRUE")
   List<User> getAllUsers();
+
+  @Select("select * from fn_save_user_preference(#{userId}::int,#{programId}::int,#{facilityId}::int,#{products})")
+  String updateUserPreferences(@Param(value = "userId") Long userId, @Param("programId") Long programId, @Param("facilityId") Long facilityId, @Param(value = "products") String products);
+
 }

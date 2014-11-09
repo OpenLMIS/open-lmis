@@ -343,3 +343,6 @@ services.factory('Supplylines', function ($resource) {
 services.factory('SupplyingDepots', function ($resource) {
   return $resource('/supplyingDepots.json', {});
 });
+/*
+these are services done for help module
+ */

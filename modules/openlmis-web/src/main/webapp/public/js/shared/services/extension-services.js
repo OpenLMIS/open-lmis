@@ -534,7 +534,9 @@ services.factory('ReportingPerformanceDetail',function($resource){
     return $resource('/dashboard/reportingPerformance-detail.json',{},{});
 });
 
-
+services.factory('ReportingPerformanceDetail',function($resource){
+    return $resource('/dashboard/reportingPerformance-detail.json',{},{});
+});
 
 /* End Dashboard data factories */
 
@@ -631,8 +633,6 @@ services.factory('GetPushedProductList', function($resource){
 services.factory('GetUserUnassignedSupervisoryNode',function ($resource){
     return $resource('/reports/supervisory-node/user-unassigned-node.json', {}, {});
 });
-
-
 services.factory('GetProductCategoryProductByProgramTree',function ($resource){
     return $resource('/reports/productProgramCategoryTree/:programId', {}, {});
 });
@@ -709,8 +709,8 @@ services.factory('StockStatusProductConsumptionGraph', function($resource){
     return $resource('/gis/stock-status-product-consumption.json',{}, {});
 });
 
-services.factory('GetDonors', function($resource){
-    return $resource('/reports/donors',{}, {});
+services.factory('GetDonors', function($resource) {
+    return $resource('/reports/donors', {}, {});
 });
 
 services.factory('GetFacilitySupervisors', function($resource){
@@ -719,4 +719,83 @@ services.factory('GetFacilitySupervisors', function($resource){
 
 services.factory("SendMessagesReportAttachment",function($resource){
     return $resource('/messages/send/report.json',{}, {post: {method:'POST'}});
+
+});services.factory('UserPrograms', function ($resource) {
+    return $resource('/reports/users/:userId/programs.json', {}, {});
+});
+services.factory('UserFacilitiesForProgram', function ($resource) {
+    return $resource('/users/:userId/supervised/:programId/facilities.json', {}, {});
+});
+
+services.factory('UserPreferences', function ($resource) {
+    return $resource('/users/:userId/preferences.json', {}, {});
+});
+services.factory('UpdateUserPreference', function ($resource) {
+    return $resource('/users/:userId/preferences.json', {}, update);
+});
+
+services.factory('EditUserPreference', function ($resource) {
+    var resource = $resource('/preference/users/:id.json', {id: '@id'}, update);
+
+    resource.disable = function (pathParams, success, error) {
+        $resource('/preference/users/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
+    };
+
+    return resource;
+});
+
+services.factory('SyncDashboard', function($resource){
+   return $resource('/dashboard/sync.json', {},update);
+});
+
+services.factory('SupervisoryNodesList', function ($resource) {
+    return $resource('/supervisory-nodes/list.json', {}, {});
+});
+
+services.factory('RolesList', function ($resource) {
+    return $resource('/roles/list.json', {}, {});
+});
+/* help modudule services as updated on october 16
+
+ */
+//CreateHelp topic
+//load helptopic intialize
+services.factory('IntializeHelpTopic', function ($resource) {
+    return $resource('/helpTopicForCreate.json', {}, {post:{method:'GET'}});
+});
+
+services.factory('CreateHelpTopic', function ($resource) {
+    return $resource('/createHelpTopic.json', {}, {post:{method:'POST'}});
+});
+//load helptopic detail
+services.factory('HelpTopicDetail', function ($resource) {
+    return $resource('/helpTopicDetail/:id.json', {}, {post:{method:'GET'}});
+});
+//update help topic
+services.factory('UpdateHelpTopic', function ($resource) {
+    return $resource('/updateHelpTopic.json', {}, {post:{method:'POST'}});
+});
+//load help topic list
+services.factory('HelpTopicList', function ($resource) {
+    return $resource('/helpTopicList.json', {}, {});
+});
+
+services.factory('CreateHelpContent', function ($resource) {
+    return $resource('/createHelpContent.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('UpdateHelpContent', function ($resource) {
+    return $resource('/updateHelpContent.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('HelpContentList', function ($resource) {
+    return $resource('/helpContentList.json', {}, {});
+});
+
+services.factory('HelpContentDetail', function ($resource) {
+    return $resource('/helpContentDetail/:id.json', {}, {post:{method:'GET'}});
+});
+
+services.factory('HelpUsertopicList', function ($resource) {
+    return $resource('/userHelpTopicList.json', {}, {});
 });

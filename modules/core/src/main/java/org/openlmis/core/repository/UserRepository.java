@@ -161,4 +161,8 @@ public class UserRepository {
   public List<User> getAllUsers() {
     return userMapper.getAllUsers();
   }
+
+  public String updateUserPreferences(Long userId, Long programId, Long facilityId, String products) {
+     return userMapper.updateUserPreferences(userId, programId, facilityId, products);
+  }
 }

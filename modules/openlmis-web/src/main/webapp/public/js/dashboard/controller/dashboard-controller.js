@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMenuService,messageService,FlatGeographicZoneList,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,ReportingPerformance,GetPeriod, userPreferredFilterValues,formInputValue,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneTree, OrderFillRate, ItemFillRate, StockEfficiency) {
+function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMenuService,messageService,FlatGeographicZoneList,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,ReportingPerformance,GetPeriod, userPreferredFilterValues,formInputValue,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneTree, OrderFillRate, ItemFillRate, StockEfficiency, SyncDashboard,AuthorizationService) {
 
     $scope.filterObject = {};
 
@@ -789,6 +789,20 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     function bindChartEvent(elementSelector, eventType, callback){
         $(elementSelector).bind(eventType, callback);
     }
+
+    $scope.showSyncDashboard = AuthorizationService.hasPermission('MANAGE_USER');
+
+    $scope.syncDashboard = function(){
+        $scope.inProgress = true;
+        SyncDashboard.update({},function(data){
+
+            $scope.inProgress = false;
+
+        },function(errorMessage){
+
+        });
+        $location.path("/");
+    };
 
     /* End Custom Bar Chart */
 

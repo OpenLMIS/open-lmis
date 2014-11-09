@@ -147,7 +147,7 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
         },
         legend: {
             container:$("#stockedOutReportLegend"),
-            noColumns: 0,
+            noColumns: 1,
             labelBoxBorderColor: "none"
         },
         grid:{

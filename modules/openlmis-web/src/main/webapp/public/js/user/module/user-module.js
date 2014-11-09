@@ -13,6 +13,7 @@ var userModule = angular.module('user', ['openlmis', 'ui.bootstrap.modal', 'ui.b
 userModule.config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
       when('/search', {controller: UserSearchController, templateUrl: 'partials/search.html', resolve: UserSearchController.resolve}).
+     /* when('/edit-user-preference/:userId', {controller: UserPreferenceController, templateUrl: 'preference/partials/user-preference.html',resolve: UserPreferenceController.resolve}).*/
       when('/create-user', {controller: UserController, templateUrl: 'partials/create.html', resolve: UserController.resolve}).
       when('/edit/:userId', {controller: UserController, templateUrl: 'partials/create.html', resolve: UserController.resolve}).
       otherwise({redirectTo: '/search'});

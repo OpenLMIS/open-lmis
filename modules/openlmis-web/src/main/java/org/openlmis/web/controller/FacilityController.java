@@ -104,6 +104,15 @@ public class FacilityController extends BaseController {
     modelMap.put("facilities", facilities);
     return new ResponseEntity<>(modelMap, HttpStatus.OK);
   }
+  @RequestMapping(value = "/users/{userId}/supervised/{programId}/facilities.json", method = GET)
+  public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgram(@PathVariable(
+        value = "programId") Long programId, @PathVariable("userId") Long userId) {
+    ModelMap modelMap = new ModelMap();
+    List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, CREATE_REQUISITION,
+            AUTHORIZE_REQUISITION);
+    modelMap.put("facilities", facilities);
+    return new ResponseEntity<>(modelMap, HttpStatus.OK);
+  }
 
   @RequestMapping(value = "/facilities", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
