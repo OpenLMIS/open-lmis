@@ -16,7 +16,7 @@ public class StockingInfo {
     private String facility;
     private Integer AMC;
     private Integer SOH;
-    private Double MOC;
+    private Double MOS;
     private String product;
     private String stocking;
     private Integer stockingStat;

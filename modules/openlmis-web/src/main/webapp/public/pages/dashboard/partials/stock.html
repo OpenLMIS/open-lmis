@@ -85,7 +85,7 @@
                                             <td sortable="facility" class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}" >{{row.facility}}</td>
                                             <td  class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}">{{row.amc | number}}</td>
                                             <td class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}">{{row.soh | number}}</td>
-                                            <td class="{{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}">{{row.mos}}</td>
+                                            <td class="number {{(stock.name == 'Stocked out')?'red':(stock.name=='Understocked')?'yellow':(stock.name=='Overstocked')?'blue':'green-fast'}}">{{row.mos}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
