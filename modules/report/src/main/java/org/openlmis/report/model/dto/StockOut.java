@@ -20,6 +20,7 @@ public class StockOut {
     private String product;
     private String location;
     private Integer totalStockOut;
+    private Integer totalGeoFacility;
     private Boolean suppliedInPast;
     private Double mosSuppliedInPast;
 

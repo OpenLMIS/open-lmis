@@ -38,10 +38,11 @@
                     <tbody>
                     <tr ng-repeat="row in datarows">
                         <td data-title="'District'" sortable="facility"  >{{row.location}}</td>
+                        <td data-title="'Existing Facilities'" class="number" >{{row.totalGeoFacility | number}}</td>
                         <td data-title="'Facility Count'" class="number" >{{row.totalStockOut | number}}</td>
                         <td data-title="'%'" class="number">{{getFacilityStockOutPercent(row.totalStockOut)}}</td>
                     </tr>
-                    <tr style="font-weight: bold"><td openlmis-message="label.total.facilities.stock.out|2"></td><td class="number">{{totalStockOuts}}</td><td></td></tr>
+                    <tr style="font-weight: bold"><td openlmis-message="label.total.facilities.stock.out|2"></td><td colspan="2" class="number">{{totalStockOuts}}</td><td></td></tr>
                     </tbody>
                 </table>
             </div>

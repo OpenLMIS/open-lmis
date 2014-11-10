@@ -66,7 +66,7 @@ public interface DashboardMapper {
 
    List<StockingInfo> getStockEfficiencyDetailData(@Param("userId") Long userId, @Param("periodId")  Long periodId, @Param("programId") Long programId ,@Param("zoneId") Long zoneId, @Param("products") String productIds);
 
-   @Select("select d.programId,d.periodId,d.productId, d.geographicZoneId, d.geographiczonename as location, count(*) totalStockOut\n" +
+   @Select("select d.programId,d.periodId,d.productId, d.geographicZoneId, d.geographiczonename as location, count(*) totalStockOut, (select count(f.*) from facilities f where f.geographiczoneid = d.geographicZoneId and f.active = TRUE and f.virtualFacility = FALSE) totalGeoFacility\n" +
            "from dw_orders d \n" +
            "where d.stockedOutInPast=true \n" +
            "and d.programId = #{programId} \n" +
