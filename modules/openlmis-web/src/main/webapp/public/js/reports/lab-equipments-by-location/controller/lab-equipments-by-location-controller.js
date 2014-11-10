@@ -184,13 +184,13 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
 
         defaultIcon: {},
         AllNotFunctioningIcon: {
-            iconUrl: '/public/images/not-functioning-marker.png'
+            iconUrl: '../../../images/not-functioning-marker.png'
         },
         AllFunctioningIcon: {
-            iconUrl: '/public/images/all-functioning-marker.png'
+            iconUrl: '../../../images/all-functioning-marker.png'
         },
         SomeFunctioningIcon: {
-            iconUrl: '/public/images/some-functioning-marker.png'
+            iconUrl: '../../../images/some-functioning-marker.png'
         }
 
     };
