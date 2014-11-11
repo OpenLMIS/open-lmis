@@ -1,0 +1,58 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div>
+
+  <div class="rnr-tabs clearfix">
+    <ul class="clearfix">
+      <li ng-class="{'selected': (visibleTab == 'stockMovement' || visibleTab == undefined)}">
+        <a href="" ng-click="visibleTab ='stockMovement'" >Stock Movement</a></li>
+      <li  ng-class="{'selected': visibleTab == 'services'}">
+        <a href="" ng-click="visibleTab = 'services'" >Services</a></li>
+      <li  ng-class="{'selected': visibleTab == 'incident'}">
+        <a href="" ng-click="visibleTab = 'incident'" >Incident Tracking</a></li>
+      <li  ng-class="{'selected': visibleTab == 'coldChain'}">
+        <a href="" ng-click="visibleTab = 'coldChain'" >Cold Chain</a></li>
+    </ul>
+
+  </div>
+  <span ng-show="visibleTab == 'stockMovement'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/stock-movement.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'services'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/services.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'incident'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/incident.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'coldChain'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/cold-chain.html'"></ng-include>
+  </span>
+
+
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+             openlmis-message="button.save"/>
+      <input id="submitButton" type="submit" id="submit-button" class="btn btn-primary save-button"
+             openlmis-message="button.submit"/>
+      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+             ng-click="cancelUserSave()"/>
+
+    </div>
+
+
+    <div class="toolbar-error" id="saveErrorMsgDiv">
+      <span openlmis-message="error" ng-show="error"></span>&nbsp;
+      <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+  </div>
+</div>

@@ -8,5 +8,5 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 function CreateVaccineReportController($scope) {
-
+  $scope.visibleTab = 'stockMovement';
 }
