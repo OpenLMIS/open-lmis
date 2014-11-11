@@ -1,0 +1,138 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+<div>
+  <h2>Vaccine Protocols</h2>
+  <p>Please use this form to indicate the dosage protocols applicable in Vaccine Program</p>
+</div>
+<div class="">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th class="span5">Product</th>
+        <th>Dose 1</th>
+        <th>Dose 2</th>
+        <th>Dose 3</th>
+        <th>Dose 4</th>
+        <th>Dose 5</th>
+        <th>Dose 6</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>BCG</th>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+      </tr>
+      <tr>
+        <th>OPV</th>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+      </tr>
+      <tr>
+        <th>Pentavalent</th>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+      </tr>
+      <tr>
+        <th>PCV</th>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+      </tr>
+      <tr>
+        <th>Rotavirus</th>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+      </tr>
+      <tr>
+        <th>Measles</th>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+      </tr>
+      <tr>
+        <th>Tetanus</th>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+      </tr>
+      <tr>
+        <th>Vitamin A</th>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+      </tr>
+      <tr>
+        <th>HepB</th>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+      </tr>
+      <tr>
+        <th>DTP-HepB-Hip</th>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+        <td><input type="checkbox" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+             openlmis-message="button.save"/>
+      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+             ng-click="cancelUserSave()"/>
+
+    </div>
+
+
+    <div class="toolbar-error" id="saveErrorMsgDiv">
+      <span openlmis-message="error" ng-show="error"></span>&nbsp;
+      <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+  </div>
+</div>
