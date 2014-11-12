@@ -59,11 +59,24 @@
 
         </li>
 
-        <li>
-            <a ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')" id="equipment-inventory" href="/public/pages/admin/equipment/inventory/index.html">Equipment Inventory</a>
-        </li>
     <li>
-        <a id="reports-menu" href="javascript: void(0)" openlmis-message="link.reports"></a>
+        <a ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')" id="equipment-inventory" href="/public/pages/admin/equipment/inventory/index.html">Equipment Inventory</a>
+    </li>
+    <li>
+      <a  id="vaccine" >Vaccine</a>
+      <div class="submenu">
+        <ul>
+          <li>
+            <a href="/public/pages/vaccine/report/index.html">Create / Submit Report</a>
+          </li>
+          <li>
+            <a href="/public/pages/vaccine/view/index.html">View Report</a>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li>
+    <a id="reports-menu" href="javascript: void(0)" openlmis-message="link.reports"></a>
 
       <div class="submenu">
           <ul>
@@ -377,6 +390,20 @@
                               </li>
                             </ul>
                         </div>
+                    </li>
+
+                    <li class="has-children">
+                      <a  id="vaccine-admin" >Vaccine</a>
+                      <div class="submenu">
+                        <ul>
+                          <li>
+                            <a href="/public/pages/vaccine/admin/protocol/index.html">Protocols</a>
+                          </li>
+                          <li>
+                            <a href="/public/pages/vaccine/view/index.html">Other</a>
+                          </li>
+                        </ul>
+                      </div>
                     </li>
 <li class="has-children">
     <a id="manage-help-option" href="/public/pages/help/helpTopic/index.html" >Help</a>
