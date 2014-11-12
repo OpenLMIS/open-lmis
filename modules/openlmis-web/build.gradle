@@ -175,7 +175,8 @@ dependencies {
     project(':modules:distribution'),
     project(':modules:odk-api'),
     project(':modules:equipment'),
-          project(':modules:help')
+    project(':modules:vaccine'),
+    project(':modules:help')
 
 
   testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
