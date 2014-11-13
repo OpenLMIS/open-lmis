@@ -7,37 +7,10 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
+package org.openlmis.vaccine.repository.mapper;
 
-package org.openlmis.vaccine.repository;
-
-import org.openlmis.vaccine.domain.VaccineTarget;
-import org.openlmis.vaccine.mapper.VaccineMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public class VaccineRepository {
-
-    @Autowired
-    private VaccineMapper vaccineMapper;
-
-
-    public void updateVaccineTraget(VaccineTarget vaccineTarget) {
-        vaccineMapper.updateVaccineTraget(vaccineTarget);
-    }
-
-    public List<VaccineTarget> getVaccineTargets() {
-        return vaccineMapper.getVaccineTargets();
-    }
-
-    public VaccineTarget getVaccineTarget(Long id) {    return  vaccineMapper.getVaccineTarget(id); }
-
-    public void insertVaccineTraget(VaccineTarget vaccineTarget) {vaccineMapper.insertVaccineTraget(vaccineTarget);   }
-
-    public void deleteVaccineTarget(Long id) {
-        vaccineMapper.deleteVaccineTarget(id);
-    }
-
+public interface VaccineMapper {
 }
