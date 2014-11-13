@@ -38,24 +38,25 @@ public interface VaccineStorageMapper {
     VaccineStorage getById(Long id);
 
     @Select("SELECT " +
-            "  vs.id, " +
-            "  vs.storagetypeid, " +
-            "  vs.location, " +
-            "  vs.grosscapacity, " +
-            "  vs.netcapacity, " +
-            "  vs.temperatureid, " +
-            "  vs.createdby, " +
-            "  vs.createddate, " +
-            "  vs.modifiedby, " +
-            "  vs.modifieddate, " +
-            "  t.temperaturename, " +
-            "  st.storagetypename" +
+            "  vaccine_storage.id, " +
+            "  vaccine_storage.storagetypeid, " +
+            "  vaccine_storage.location, " +
+            "  vaccine_storage.grosscapacity, " +
+            "  vaccine_storage.netcapacity, " +
+            "  vaccine_storage.temperatureid, " +
+            "  vaccine_storage.createdby, " +
+            "  vaccine_storage.createddate, " +
+            "  vaccine_storage.modifiedby, " +
+            "  vaccine_storage.modifieddate, " +
+            "  temperature.temperaturename, " +
+            "  storage_types.storagetypename" +
             " FROM " +
-            "  public.vaccine_storage vs inner join " +
-            "  public.temperature t on vs.temperatureid=t.id " +
-            "  inner join " +
-            "  public.storage_types st" +
-            "on vs.storagetypeid=st.id ")
+            "  public.vaccine_storage  " +
+            " LEFT OUTER JOIN " +
+            "   public.temperature  ON vaccine_storage.temperatureid = temperature.id " +
+            "   LEFT OUTER JOIN " +
+            "   public.storage_types " +
+            " ON vaccine_storage.storagetypeid = storage_types.id ")
     @Results({
             @Result(column = "id", property = "id"),
             @Result(column = "storagetypeid", property = "storageTypeId.id"),
