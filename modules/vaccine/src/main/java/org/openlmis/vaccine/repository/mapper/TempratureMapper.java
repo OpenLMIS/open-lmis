@@ -1,11 +1,13 @@
-package org.openlmis.vaccine.domain;
+package org.openlmis.vaccine.repository.mapper;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.upload.Importable;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.vaccine.domain.StorageType;
+import org.openlmis.vaccine.domain.Temprature;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /*
  * This program is part of the OpenLMIS logistics management information system platform software.
@@ -16,10 +18,12 @@ import org.openlmis.upload.Importable;
  *   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class Temprature extends BaseModel implements Importable {
-    private String tempratureName;
+@Repository
+public interface TempratureMapper {
+    @Select("SELECT * FROM temperature ")
+    @Results({
+            @Result(column = "id", property = "id"),
+            @Result(column = "temperaturename", property = "tempratureName")
+    })
+    List<Temprature> loadAllList();
 }

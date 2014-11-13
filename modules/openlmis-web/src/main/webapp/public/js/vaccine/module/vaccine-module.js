@@ -12,5 +12,6 @@ var vaccine = angular.module('vaccine',['openlmis', 'ui.bootstrap']).config(['$r
 
     $routeProvider.
         when('/vaccine', {controller: VaccineDistributionConroller, templateUrl: 'partials/vaccine-distribution.html'}).
+        when('/vaccine-storage', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage.html'}).
         otherwise({redirectTo: '/vaccine'});
 }]);

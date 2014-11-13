@@ -799,3 +799,31 @@ services.factory('HelpContentDetail', function ($resource) {
 services.factory('HelpUsertopicList', function ($resource) {
     return $resource('/userHelpTopicList.json', {}, {});
 });
+
+//vaccine storage service
+services.factory('CreateVaccineStorage', function ($resource) {
+
+    return $resource('/createVaccineStorage.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('UpdateVaccineStorage', function ($resource) {
+    return $resource('/updateVaccineStorage.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('VaccineStorageList', function ($resource) {
+    return $resource('/vaccineStorageList.json', {}, {});
+});
+
+services.factory('VaccineStorageDetail', function ($resource) {
+    return $resource('/vaccineStorageDetail/:id.json', {}, {post:{method:'GET'}});
+});
+services.factory('DeleteVaccineStorage', function ($resource) {
+    return $resource('/deleteVaccineStorage.json', {}, {post:{method:'POST'}});
+});
+services.factory('StorageTypeList', function ($resource) {
+    return $resource('/storageTypeList.json', {}, {});
+});
+
+services.factory('TempratureList', function ($resource) {
+    return $resource('/tempratureList.json', {}, {});
+});
