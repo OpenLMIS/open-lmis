@@ -1,0 +1,187 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+
+<form ng-submit="saveVaccineTarget()" id="create-vaccineTarget" name="vaccineTargetForm" novalidate>
+<div class="app-form">
+       <div class="form-group">
+
+            <h3 >Demographics/Targets</h3>
+
+                <div class="form-row clearfix">
+                    <!-- helath facility -->
+                    <div class="form-cell">
+
+                        <label for="geographicZone" >Health Facility<span class="label-required"> *</span></label>
+                        <div class="form-field">
+
+                            <select name="geographicZone" id="geographicZone" type="number"  ng-required="true"
+                                    class="input-medium" ng-model="target.geographicZoneId" >
+                                <option ng-repeat="geographicZone in geographicZones" ng-selected="target.geographicZoneId == geographicZone.id" value="{{ geographicZone.id }}">{{geographicZone.name}}</option>
+                            </select>
+
+                        <span class="field-error" ng-show="vaccineTargetForm.geographicZone.$error.required && showError"
+                              openlmis-message="missing.value">
+
+                        </span>
+                        </div>
+                    </div>
+
+                    <!-- target year -->
+                    <div class="form-cell">
+                        <label for="year" >Year<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="target.targetYear" name="targetYear" id="targetYear" type="number" maxlength="50" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineTargetForm.targetYear.$error.required && showError"
+                              openlmis-message="missing.value">
+
+                        </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row clearfix">
+
+                    <!--  population -->
+                    <div class="form-cell">
+
+                        <label for="population" >Population<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="target.population" name="population" id="population" type="number" maxlength="50" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineTargetForm.population.$error.required && showError"
+                              openlmis-message="missing.value">
+
+                        </span>
+                        </div>
+                    </div>
+
+                    <!-- expected births -->
+                    <div class="form-cell">
+                        <label for="expectedBirths" >Expected Births<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="target.expectedBirths" name="expectedBirths" id="expectedBirths" type="number" maxlength="50" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineTargetForm.expectedBirths.$error.required && showError"
+                              openlmis-message="missing.value">
+
+                        </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expected Pregnancies -->
+                <div class="form-row clearfix">
+                    <div class="form-cell">
+
+                        <label for="expectedPregnancies" >Expected Pregnancies<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="target.expectedPregnancies" name="expectedPregnancies" id="expectedPregnancies" type="number" maxlength="50" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineTargetForm.expectedPregnancies.$error.required && showError"
+                              openlmis-message="missing.value">
+
+                        </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-row clearfix">
+
+                    <!-- Serving infants -->
+                    <div class="form-cell">
+
+                        <label for="servingInfants" >Serving infants<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="target.servingInfants" name="servingInfants" id="servingInfants" type="number" maxlength="50" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineTargetForm.servingInfants.$error.required && showError"
+                              openlmis-message="missing.value">
+
+                        </span>
+                        </div>
+                    </div>
+
+                    <!-- Surviving infants -->
+                    <div class="form-cell">
+                        <label for="survivingInfants" >Surviving infants<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="target.survivingInfants" name="survivingInfants" id="survivingInfants" type="number" maxlength="50" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineTargetForm.survivingInfants.$error.required && showError"
+                              openlmis-message="missing.value">
+
+                        </span>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="form-row clearfix">
+
+                <!-- Children < 1 year -->
+                <div class="form-cell">
+
+                    <label for="children1Yr" >Children < 1 year <span class="label-required"> *</span></label>
+                    <div class="form-field">
+                        <input ng-model="target.children1Yr" name="children1Yr" id="children1Yr" type="number" maxlength="50" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineTargetForm.children1Yr.$error.required && showError"
+                              openlmis-message="missing.value">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-cell">
+                    <label for="cBetweenOneAndTwo" >Children 1-2 Year<span class="label-required"> *</span></label>
+                    <div class="form-field">
+                        <input ng-model="target.children2Yr" name="children2Yr" id="children2Yr" type="number" maxlength="50" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineTargetForm.children2Yr.$error.required && showError"
+                              openlmis-message="missing.value">
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+                <div class="form-row clearfix">
+                    <div class="form-cell">
+
+                        <label for="girls9_13Yr" >Girls 9-13 Years<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="target.girls9_13Yr" name="girls9_13Yr" id="code" type="number" maxlength="50" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineTargetForm.girls9_13Yr.$error.required && showError"
+                              openlmis-message="missing.value">
+
+                        </span>
+                        </div>
+                    </div>
+
+
+                </div>
+
+         </div>
+   </div>
+
+
+<div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+        <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+               openlmis-message="button.save"/>
+        <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+               ng-click="cancelTargetForm()"/>
+    </div>
+
+
+    <div class="toolbar-error" id="saveErrorMsgDiv">
+        <span openlmis-message="error" ng-show="error"></span>&nbsp;
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+</div>
+
+
+</form>
+</div>
+

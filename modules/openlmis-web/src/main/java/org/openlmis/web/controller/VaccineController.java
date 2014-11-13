@@ -10,12 +10,83 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.vaccine.domain.VaccineTarget;
+import org.openlmis.vaccine.service.VaccineTargetService;
+import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
+
+import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller handles endpoints to Vaccine related features
  */
 @Controller
 @NoArgsConstructor
-public class VaccineController {
+@RequestMapping(value="/vaccine")
+public class VaccineController extends BaseController {
+
+   @Autowired
+   private VaccineTargetService vaccineTargetService;
+
+    @RequestMapping(value = "/target/create", method = POST, headers = ACCEPT_JSON)
+    // TODO: Add appropriate permission
+    //  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE')")
+    public ResponseEntity insert(@RequestBody VaccineTarget vaccineTarget, HttpServletRequest request) {
+
+        vaccineTarget.setCreatedBy(loggedInUserId(request));
+        vaccineTarget.setModifiedBy(loggedInUserId(request));
+
+        ResponseEntity<OpenLmisResponse> response;
+
+        try {
+            vaccineTargetService.updateVaccineTarget(vaccineTarget);
+        } catch(DuplicateKeyException exp){
+        return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
+    }
+
+        response = success(messageService.message("message.vaccine.target.created.success"));
+        response.getBody().addData("vaccineTarget", vaccineTarget);
+        return response;
+    }
+
+    @RequestMapping(value = "/target/delete/{id}", method = DELETE, headers = ACCEPT_JSON)
+    // TODO: Add appropriate permission
+    //  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE')")
+    public ResponseEntity deleteVaccineTarget(@PathVariable(value="id") Long id){
+
+        vaccineTargetService.deleteVaccineTarget(id);
+
+        ResponseEntity<OpenLmisResponse> response;
+        response = success(messageService.message("message.vaccine.target.created.success"));
+        return response;
+    }
+
+    @RequestMapping(value = "/target/list", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity getVaccineTargets() {
+
+        return OpenLmisResponse.response("vaccineTargets", vaccineTargetService.getVaccineTargets());
+    }
+
+    @RequestMapping(value = "/target/get/{id}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity getVaccineTarget(@PathVariable(value="id") Long id){
+        return OpenLmisResponse.response("vaccineTarget", vaccineTargetService.getVaccineTarget(id));
+    }
+
 }

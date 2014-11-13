@@ -9,15 +9,16 @@
  */
 package org.openlmis.vaccine.service;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.vaccine.repository.VaccineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
 
-@Service
-@NoArgsConstructor
+@Component
 public class VaccineService {
+
     @Autowired
     private VaccineRepository vaccineRepository;
+
 }

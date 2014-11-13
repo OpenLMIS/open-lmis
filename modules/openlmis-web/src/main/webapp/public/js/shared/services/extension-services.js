@@ -800,6 +800,22 @@ services.factory('HelpUsertopicList', function ($resource) {
     return $resource('/userHelpTopicList.json', {}, {});
 });
 
+services.factory('VaccineTargetUpdate', function ($resource) {
+    return $resource('/vaccine/target/create.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('VaccineTargetList', function ($resource) {
+    return $resource('/vaccine/target/list.json', {}, {});
+});
+
+services.factory('GetVaccineTarget', function ($resource) {
+    return $resource('/vaccine/target/get/:id.json', {}, {});
+});
+
+services.factory('DeleteVaccineTarget', function ($resource) {
+    return $resource('/vaccine/target/delete/:id.json', {}, {});
+});
+
 //vaccine storage service
 services.factory('CreateVaccineStorage', function ($resource) {
 

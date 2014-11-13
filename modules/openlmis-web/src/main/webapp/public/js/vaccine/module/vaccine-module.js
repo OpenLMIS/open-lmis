@@ -13,5 +13,8 @@ var vaccine = angular.module('vaccine',['openlmis', 'ui.bootstrap']).config(['$r
     $routeProvider.
         when('/vaccine', {controller: VaccineDistributionConroller, templateUrl: 'partials/vaccine-distribution.html'}).
         when('/vaccine-storage', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage.html'}).
+        when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
+        when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
+        when('/quantification', {controller: VaccineQuantificationController, templateUrl: 'partials/vaccine-quantification.html'}).
         otherwise({redirectTo: '/vaccine'});
 }]);

@@ -1,0 +1,45 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div>
+    <h2>
+        <span id="vaccineTargetHeader" >Demographic/Targets</span>
+        <a id="vaccine-target-new" ng-href="#/targetEdit/0" class="pull-right btn btn-primary"
+           openlmis-message="button.add.new"></a>
+    </h2>
+
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr class="gradient-header">
+            <th> Zone </th>
+            <th> Year </th>
+            <th> Population </th>
+            <th> Pregnancies </th>
+            <th> Births </th>
+            <th> Serving Infants </th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="vaccineTarget in vaccineTargets">
+            <td>{{vaccineTarget.zoneName}}</td>
+            <td>{{vaccineTarget.targetYear}}</td>
+            <td>{{vaccineTarget.population}}</td>
+            <td>{{vaccineTarget.expectedPregnancies}}</td>
+            <td>{{vaccineTarget.expectedBirths}}</td>
+            <td>{{vaccineTarget.servingInfants}}</td>
+            <td> <a href ng-click="showRemoveVaccineTargetDialog($index)">Delete</a> | <a href="#/targetEdit/{{vaccineTarget.id}}">Edit</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
