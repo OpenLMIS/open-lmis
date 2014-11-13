@@ -8,41 +8,35 @@
  * You should have received a copy of the GNU Affero GenNeral Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.vaccine.service;
+package org.openlmis.vaccine.repository;
 
 import org.openlmis.vaccine.domain.VaccineTarget;
-import org.openlmis.vaccine.repository.VaccineRepository;
+import org.openlmis.vaccine.mapper.VaccineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
-public class VaccineService {
+@Repository
+public class VaccineRepository {
 
     @Autowired
-    private VaccineRepository vaccineRepository;
+    private VaccineMapper vaccineMapper;
 
-    public void updateVaccineTarget(VaccineTarget vaccineTarget) {
 
-        if(vaccineTarget.getId() == null){
-            // Add new
-            vaccineRepository.insertVaccineTraget(vaccineTarget);
-        }
-        else
-        // Update
-        vaccineRepository.updateVaccineTraget(vaccineTarget);
+    public void updateVaccineTraget(VaccineTarget vaccineTarget) {
+        vaccineMapper.updateVaccineTraget(vaccineTarget);
     }
 
     public List<VaccineTarget> getVaccineTargets() {
-        return vaccineRepository.getVaccineTargets();
+        return vaccineMapper.getVaccineTargets();
     }
 
-    public VaccineTarget getVaccineTarget(Long id) {
-        return vaccineRepository.getVaccineTarget(id);
-    }
+    public VaccineTarget getVaccineTarget(Long id) {    return  vaccineMapper.getVaccineTarget(id); }
+
+    public void insertVaccineTraget(VaccineTarget vaccineTarget) {vaccineMapper.insertVaccineTraget(vaccineTarget);   }
 
     public void deleteVaccineTarget(Long id) {
-        vaccineRepository.deleteVaccineTarget(id);
+        vaccineMapper.deleteVaccineTarget(id);
     }
 }
