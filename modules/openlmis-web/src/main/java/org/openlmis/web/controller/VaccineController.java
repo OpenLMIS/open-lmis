@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.vaccine.domain.VaccineTarget;
-import org.openlmis.vaccine.service.VaccineService;
+import org.openlmis.vaccine.service.VaccineTargetService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -43,7 +43,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class VaccineController extends BaseController {
 
    @Autowired
-   private VaccineService vaccineService;
+   private VaccineTargetService vaccineTargetService;
 
     @RequestMapping(value = "/target/create", method = POST, headers = ACCEPT_JSON)
     // TODO: Add appropriate permission
@@ -56,7 +56,7 @@ public class VaccineController extends BaseController {
         ResponseEntity<OpenLmisResponse> response;
 
         try {
-            vaccineService.updateVaccineTarget(vaccineTarget);
+            vaccineTargetService.updateVaccineTarget(vaccineTarget);
         } catch(DuplicateKeyException exp){
         return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
     }
@@ -71,7 +71,7 @@ public class VaccineController extends BaseController {
     //  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE')")
     public ResponseEntity deleteVaccineTarget(@PathVariable(value="id") Long id){
 
-        vaccineService.deleteVaccineTarget(id);
+        vaccineTargetService.deleteVaccineTarget(id);
 
         ResponseEntity<OpenLmisResponse> response;
         response = success(messageService.message("message.vaccine.target.created.success"));
@@ -81,12 +81,12 @@ public class VaccineController extends BaseController {
     @RequestMapping(value = "/target/list", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity getVaccineTargets() {
 
-        return OpenLmisResponse.response("vaccineTargets", vaccineService.getVaccineTargets());
+        return OpenLmisResponse.response("vaccineTargets", vaccineTargetService.getVaccineTargets());
     }
 
     @RequestMapping(value = "/target/get/{id}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity getVaccineTarget(@PathVariable(value="id") Long id){
-        return OpenLmisResponse.response("vaccineTarget", vaccineService.getVaccineTarget(id));
+        return OpenLmisResponse.response("vaccineTarget", vaccineTargetService.getVaccineTarget(id));
     }
 
 }

@@ -9,7 +9,6 @@
  */
 package org.openlmis.vaccine.service;
 
-import org.openlmis.vaccine.domain.VaccineTarget;
 import org.openlmis.vaccine.repository.VaccineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,28 +20,5 @@ public class VaccineService {
 
     @Autowired
     private VaccineRepository vaccineRepository;
-
-    public void updateVaccineTarget(VaccineTarget vaccineTarget) {
-
-        if(vaccineTarget.getId() == null){
-            // Add new
-            vaccineRepository.insertVaccineTraget(vaccineTarget);
-        }
-        else
-        // Update
-        vaccineRepository.updateVaccineTraget(vaccineTarget);
-    }
-
-    public List<VaccineTarget> getVaccineTargets() {
-        return vaccineRepository.getVaccineTargets();
-    }
-
-    public VaccineTarget getVaccineTarget(Long id) {
-        return vaccineRepository.getVaccineTarget(id);
-    }
-
-    public void deleteVaccineTarget(Long id) {
-        vaccineRepository.deleteVaccineTarget(id);
-    }
 
 }

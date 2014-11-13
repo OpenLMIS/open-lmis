@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.vaccine.mapper;
+package org.openlmis.vaccine.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.VaccineTarget;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VaccineMapper {
+public interface VaccineTargetMapper {
 
 
     @Update("UPDATE vaccine_targets\n" +
@@ -62,3 +62,5 @@ public interface VaccineMapper {
     @Delete("delete from vaccine_targets where id = #{id}")
     void deleteVaccineTarget(Long id);
 }
+
+
