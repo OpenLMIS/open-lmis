@@ -815,3 +815,12 @@ services.factory('GetVaccineTarget', function ($resource) {
 services.factory('DeleteVaccineTarget', function ($resource) {
     return $resource('/vaccine/target/delete/:id.json', {}, {});
 });
+
+services.factory('VaccineDistributionBatches', function ($resource) {
+    return $resource('/vaccine/distribution-batches/:id.json', {id: '@id'}, update);
+});
+
+services.factory('VaccineDistributionBatchByBatch', function ($resource) {
+    return $resource('/vaccine/distribution-batches/batchId/:batchId.json',{},{});
+});
+

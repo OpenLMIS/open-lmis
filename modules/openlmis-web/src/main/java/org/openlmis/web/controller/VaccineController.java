@@ -12,7 +12,9 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.vaccine.domain.DistributionBatch;
 import org.openlmis.vaccine.domain.VaccineTarget;
+import org.openlmis.vaccine.service.VaccineDistributionBatchService;
 import org.openlmis.vaccine.service.VaccineTargetService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.success;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * This controller handles endpoints to Vaccine related features
@@ -44,6 +45,9 @@ public class VaccineController extends BaseController {
 
    @Autowired
    private VaccineTargetService vaccineTargetService;
+
+    @Autowired
+    private VaccineDistributionBatchService distributionBatchService;
 
     @RequestMapping(value = "/target/create", method = POST, headers = ACCEPT_JSON)
     // TODO: Add appropriate permission
@@ -88,5 +92,58 @@ public class VaccineController extends BaseController {
     public ResponseEntity getVaccineTarget(@PathVariable(value="id") Long id){
         return OpenLmisResponse.response("vaccineTarget", vaccineTargetService.getVaccineTarget(id));
     }
+
+    @RequestMapping(value = "/distribution-batches/batchId/{batchId}", method = GET, headers = ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
+    public ResponseEntity<OpenLmisResponse> getDistributionBatchesByBatchNumber(@PathVariable("batchId") String batchId){
+        return OpenLmisResponse.response("distributionBatches", distributionBatchService.getByBatchId(batchId));
+    }
+
+    @RequestMapping(value = "/distribution-batches", method = GET, headers = ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
+    public ResponseEntity<OpenLmisResponse> getDistributionBatches(){
+        return OpenLmisResponse.response("distributionBatches", distributionBatchService.getAll());
+    }
+
+    @RequestMapping(value = "/distribution-batches", method = POST, headers = ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
+    public ResponseEntity insertDistributionBatches(@RequestBody DistributionBatch distributionBatch, HttpServletRequest request){
+
+        distributionBatch.setCreatedBy(loggedInUserId(request));
+        distributionBatch.setModifiedBy(loggedInUserId(request));
+
+        ResponseEntity<OpenLmisResponse> response;
+
+        try {
+            distributionBatchService.update(distributionBatch);
+        }catch (DataException exception) {
+            OpenLmisResponse openLmisResponse = new OpenLmisResponse("distributionBatch", distributionBatch);
+            return openLmisResponse.errorEntity(exception, BAD_REQUEST);
+        }
+        response = success(messageService.message("message.distribution.batch.created.success"));
+        response.getBody().addData("distributionBatch", distributionBatch);
+        return response;
+    }
+
+    @RequestMapping(value = "/distribution-batches/{id}", method = PUT, headers = ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
+    public ResponseEntity<OpenLmisResponse> update(@PathVariable("id") long id,
+                                                   @RequestBody DistributionBatch distributionBatch,
+                                                   HttpServletRequest request) {
+        distributionBatch.setId(id);
+        distributionBatch.setModifiedBy(loggedInUserId(request));
+
+        try {
+            distributionBatchService.update(distributionBatch);
+        } catch (DataException exception) {
+            OpenLmisResponse openLmisResponse = new OpenLmisResponse("distributionBatch", distributionBatch);
+            return openLmisResponse.errorEntity(exception, BAD_REQUEST);
+        }
+
+        String successMessage = messageService.message("message.distribution.batch.updated.success");
+        OpenLmisResponse openLmisResponse = new OpenLmisResponse("distributionBatch", distributionBatch);
+        return openLmisResponse.successEntity(successMessage);
+    }
+
 
 }

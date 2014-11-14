@@ -26,10 +26,11 @@ import java.util.Date;
 public class DistributionBatch extends BaseModel {
 
     private Long batchId;
+    private Long dispatchId;
     private Date expiryDate;
     private Date productionDate;
     private Manufacturer manufacturer;
-    private Integer donorId;
+    private Donor donor;
     private Date receiveDate;
     private Product product;
     private Facility fromFacility;

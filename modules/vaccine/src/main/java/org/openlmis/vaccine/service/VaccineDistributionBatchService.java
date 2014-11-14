@@ -7,20 +7,31 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
+package org.openlmis.vaccine.service;
 
-package org.openlmis.vaccine.repository;
-
-import org.openlmis.vaccine.repository.mapper.VaccineMapper;
+import org.openlmis.vaccine.domain.DistributionBatch;
+import org.openlmis.vaccine.repository.VaccineDistributionBatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Repository
-public class VaccineRepository {
+@Component
+public class VaccineDistributionBatchService {
 
     @Autowired
-    private VaccineMapper vaccineMapper;
+    private VaccineDistributionBatchRepository distributionBatchRepository;
 
+    public List<DistributionBatch> getByBatchId(String batchId){
+        return distributionBatchRepository.getByBatchId(batchId);
+    }
+
+    public List<DistributionBatch> getAll(){
+        return distributionBatchRepository.getAll();
+    }
+
+    public void update(DistributionBatch distributionBatch) {
+        distributionBatchRepository.update(distributionBatch);
+    }
 
 }
