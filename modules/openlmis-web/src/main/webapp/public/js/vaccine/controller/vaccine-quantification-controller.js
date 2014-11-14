@@ -8,13 +8,8 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-  config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-        when('/list', {controller:VaccineProtocolController, templateUrl:'partials/list.html'}).
-        when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html'}).
-        when('/temprature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html'}).
-        otherwise({redirectTo:'/list'});
-  }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('VIEW_REPORT');
-  });
+
+function VaccineQuantificationController($scope, $routeParams, $location) {
+
+
+}

@@ -7,18 +7,20 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-package org.openlmis.vaccine.service;
 
-import org.openlmis.vaccine.repository.VaccineRepository;
+package org.openlmis.vaccine.repository;
+
+import org.openlmis.vaccine.repository.mapper.VaccineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
-public class VaccineService {
+@Repository
+public class VaccineRepository {
 
     @Autowired
-    private VaccineRepository vaccineRepository;
+    private VaccineMapper vaccineMapper;
+
 
 }
