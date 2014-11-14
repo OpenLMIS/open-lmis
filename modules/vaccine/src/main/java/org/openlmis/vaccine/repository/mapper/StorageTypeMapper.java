@@ -29,7 +29,7 @@ public interface StorageTypeMapper {
     @Insert({"INSERT INTO storage_types",
             "( storagetypename, createdby, createddate, modifiedby,modifieddate) ",
             "VALUES",
-            "( #{tempratureName} ,#{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}) "})
+            "( #{storageTypeName} ,#{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}) "})
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Long insert(StorageType storageType);
 

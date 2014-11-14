@@ -843,3 +843,34 @@ services.factory('StorageTypeList', function ($resource) {
 services.factory('TempratureList', function ($resource) {
     return $resource('/tempratureList.json', {}, {});
 });
+//storage type
+services.factory('CreateStorageType', function ($resource) {
+
+    return $resource('/createStorageType.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('UpdateStorageType', function ($resource) {
+    return $resource('/updateStorageType.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('StorageTypeDetail', function ($resource) {
+    return $resource('/storageTypeDetail/:id.json', {}, {post:{method:'GET'}});
+});
+services.factory('DeleteStorageType', function ($resource) {
+    return $resource('/deleteStorageType.json', {}, {post:{method:'POST'}});
+});
+//temprature
+services.factory('CreateTemprature', function ($resource) {
+
+    return $resource('/createTemprature.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('UpdateTemprature', function ($resource) {
+    return $resource('/updateTemprature.json', {}, {post:{method:'POST'}});
+});
+services.factory('TempratureDetail', function ($resource) {
+    return $resource('/tempratureDetail/:id.json', {}, {post:{method:'GET'}});
+});
+services.factory('DeleteTemprature', function ($resource) {
+    return $resource('/deleteTemprature.json', {}, {post:{method:'POST'}});
+});
