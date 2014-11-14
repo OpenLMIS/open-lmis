@@ -44,6 +44,7 @@ CREATE TABLE  vaccine_distribution_batches
 (
   id SERIAL PRIMARY KEY, 
   batchId integer,
+  dispatchId integer,
   expiryDate timestamp without time zone,
   productionDate timestamp without time zone,
   manufacturerId integer REFERENCES manufacturers (id) NOT NULL,
