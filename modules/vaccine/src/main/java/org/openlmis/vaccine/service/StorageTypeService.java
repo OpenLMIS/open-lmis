@@ -21,5 +21,17 @@ private StorageTypeRepository storageTypeRepository;
     public List<StorageType> loadStorageTypeList(){
         return this.storageTypeRepository.loadStorageTypeList();
     }
+    public void addStorageType(StorageType storageType){
+        this.storageTypeRepository.addStorageType(storageType);
+    }
+    public StorageType loadStorageTypeDetail(long id){
+        return  this.storageTypeRepository.loadStorageTypeDetail(id);
+    }
+    public void updateStorageType(StorageType storageType){
+        this.storageTypeRepository.updateStorageType(storageType);
+    }
+    public void removeStorageType(StorageType storageType){
+        this.storageTypeRepository.removeStorageType(storageType);
+    }
 
 }

@@ -1,9 +1,8 @@
 package org.openlmis.vaccine.repository.mapper;
 
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.StorageType;
+import org.openlmis.vaccine.domain.Temprature;
 import org.openlmis.vaccine.domain.VaccineStorage;
 import org.springframework.stereotype.Repository;
 
@@ -25,5 +24,30 @@ public interface StorageTypeMapper {
             @Result(column = "id", property = "id"),
             @Result(column = "storagetypename", property = "storageTypeName")
     })
+
     List<StorageType> loadAllList();
+    @Insert({"INSERT INTO storage_types",
+            "( storagetypename, createdby, createddate, modifiedby,modifieddate) ",
+            "VALUES",
+            "( #{tempratureName} ,#{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}) "})
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    Long insert(StorageType storageType);
+
+    @Select("SELECT * FROM storage_types where id =#{id} ")
+    @Results({
+            @Result(column = "id", property = "id"),
+            @Result(column = "storagetypename", property = "storageTypeName")
+    })
+    StorageType getById(Long id);
+    @Update("UPDATE storage_types " +
+            "   SET storagetypename= #{storageTypeName}," +
+                       " modifiedby=#{modifiedBy}, " +
+            "modifieddate=#{modifiedDate} " +
+
+            " WHERE id=#{id};")
+    void update(StorageType storageType);
+
+    @Delete("DELETE from storage_types " +
+            " WHERE id=#{id};")
+    void delete(StorageType storageType);
 }

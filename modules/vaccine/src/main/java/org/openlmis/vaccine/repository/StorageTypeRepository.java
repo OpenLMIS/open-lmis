@@ -11,6 +11,7 @@ package org.openlmis.vaccine.repository;
         */
 
 import org.openlmis.vaccine.domain.StorageType;
+import org.openlmis.vaccine.domain.Temprature;
 import org.openlmis.vaccine.repository.mapper.StorageTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,5 +23,17 @@ public class StorageTypeRepository {
     private StorageTypeMapper storageTypeMapper;
     public List<StorageType> loadStorageTypeList(){
         return this.storageTypeMapper.loadAllList();
+    }
+    public void addStorageType(StorageType storageType){
+        this.storageTypeMapper.insert(storageType);
+    }
+    public StorageType loadStorageTypeDetail(long id){
+      return  this.storageTypeMapper.getById(id);
+    }
+    public void updateStorageType(StorageType storageType){
+        this.storageTypeMapper.update(storageType);
+    }
+    public void removeStorageType(StorageType storageType){
+        this.storageTypeMapper.delete(storageType);
     }
 }

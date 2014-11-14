@@ -21,4 +21,17 @@ public class TempratureService {
     public List<Temprature> loadTempratureList(){
         return this.tempratureRepository.loadTempratureList();
     }
+
+    public void addTemprature(Temprature temprature){
+        this.tempratureRepository.addTemprature(temprature);
+    }
+    public Temprature loadTempratureDetail(long id){
+        return  this.tempratureRepository.loadTempratureDetail(id);
+    }
+    public void updateTemprature(Temprature temprature){
+        this.tempratureRepository.updateTemprature(temprature);
+    }
+    public void removeTemprature(Temprature temprature){
+        this.tempratureRepository.removeTemprature(temprature);
+    }
 }
