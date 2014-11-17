@@ -10,10 +10,11 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.vaccine.domain.DistributionBatch;
+import org.openlmis.vaccine.domain.DistributionType;
 import org.openlmis.vaccine.domain.VaccineTarget;
+import org.openlmis.vaccine.service.ManufacturerService;
 import org.openlmis.vaccine.service.VaccineDistributionBatchService;
 import org.openlmis.vaccine.service.VaccineTargetService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -21,15 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
-
-import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -45,6 +43,9 @@ public class VaccineController extends BaseController {
 
    @Autowired
    private VaccineTargetService vaccineTargetService;
+
+    @Autowired
+    private ManufacturerService manufacturerService;
 
     @Autowired
     private VaccineDistributionBatchService distributionBatchService;
@@ -93,16 +94,22 @@ public class VaccineController extends BaseController {
         return OpenLmisResponse.response("vaccineTarget", vaccineTargetService.getVaccineTarget(id));
     }
 
-    @RequestMapping(value = "/distribution-batches/batchId/{batchId}", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/distribution-batches/dispatch/{dispatchId}", method = GET, headers = ACCEPT_JSON)
     //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
-    public ResponseEntity<OpenLmisResponse> getDistributionBatchesByBatchNumber(@PathVariable("batchId") String batchId){
-        return OpenLmisResponse.response("distributionBatches", distributionBatchService.getByBatchId(batchId));
+    public ResponseEntity<OpenLmisResponse> getDistributionBatchesByBatchNumber(@PathVariable("dispatchId") String dispatchId){
+        return OpenLmisResponse.response("distributionBatches", distributionBatchService.getByDispatchId(dispatchId));
     }
 
     @RequestMapping(value = "/distribution-batches", method = GET, headers = ACCEPT_JSON)
     //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
     public ResponseEntity<OpenLmisResponse> getDistributionBatches(){
         return OpenLmisResponse.response("distributionBatches", distributionBatchService.getAll());
+    }
+
+    @RequestMapping(value = "/distribution-batches/{id}", method = GET, headers = ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
+    public ResponseEntity<OpenLmisResponse> getDistributionBatchById(@PathVariable("id") Long id){
+        return OpenLmisResponse.response("distributionBatch", distributionBatchService.getById(id));
     }
 
     @RequestMapping(value = "/distribution-batches", method = POST, headers = ACCEPT_JSON)
@@ -143,6 +150,16 @@ public class VaccineController extends BaseController {
         String successMessage = messageService.message("message.distribution.batch.updated.success");
         OpenLmisResponse openLmisResponse = new OpenLmisResponse("distributionBatch", distributionBatch);
         return openLmisResponse.successEntity(successMessage);
+    }
+
+    @RequestMapping(value = "/manufacturers", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getManufacturers(){
+        return OpenLmisResponse.response("manufacturers", manufacturerService.getAll());
+    }
+
+    @RequestMapping(value = "/distributionTypes", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getDistributionTypes(){
+        return OpenLmisResponse.response("distributionTypes", DistributionType.values());
     }
 
 

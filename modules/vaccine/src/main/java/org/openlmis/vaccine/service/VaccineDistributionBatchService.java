@@ -22,8 +22,12 @@ public class VaccineDistributionBatchService {
     @Autowired
     private VaccineDistributionBatchRepository distributionBatchRepository;
 
-    public List<DistributionBatch> getByBatchId(String batchId){
-        return distributionBatchRepository.getByBatchId(batchId);
+    public List<DistributionBatch> getByDispatchId(String dispatchId){
+        return distributionBatchRepository.getByDispatchId(dispatchId);
+    }
+
+    public DistributionBatch getById(Long id){
+        return distributionBatchRepository.getById(id);
     }
 
     public List<DistributionBatch> getAll(){

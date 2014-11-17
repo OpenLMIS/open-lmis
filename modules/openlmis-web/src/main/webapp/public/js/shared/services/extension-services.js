@@ -884,3 +884,10 @@ services.factory('VaccineDistributionBatchByBatch', function ($resource) {
     return $resource('/vaccine/distribution-batches/batchId/:batchId.json',{},{});
 });
 
+services.factory('Manufacturers', function($resource){
+    return $resource('/vaccine/manufacturers.json',{},{});
+});
+services.factory('DistributionTypes', function($resource){
+    return $resource('/vaccine/distributionTypes.json',{},{});
+});
+

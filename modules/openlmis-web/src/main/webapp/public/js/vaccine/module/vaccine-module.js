@@ -11,7 +11,9 @@
 var vaccine = angular.module('vaccine', ['openlmis', 'ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
-        when('/vaccine', {controller: VaccineDistributionConroller, templateUrl: 'partials/vaccine-distribution-search.html'}).
+        when('/distribution-batch', {controller: VaccineDistributionSearchController, templateUrl: 'partials/vaccine-distribution-search.html'}).
+        when('/create-distribution-batch', {controller: VaccineDistributionController, templateUrl: 'partials/vaccine-distribution-edit.html', resolve:VaccineDistributionController.resolve}).
+        when('/edit-distribution-batch/:distributionBatchId', {controller: VaccineDistributionController, templateUrl: 'partials/vaccine-distribution-edit.html', resolve:VaccineDistributionController.resolve}).
         when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
         when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
         when('/quantification', {controller: VaccineQuantificationController, templateUrl: 'partials/vaccine-quantification.html'}).
@@ -19,5 +21,11 @@ var vaccine = angular.module('vaccine', ['openlmis', 'ui.bootstrap']).config(['$
         when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
         when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
         when('/quantification', {controller: VaccineQuantificationController, templateUrl: 'partials/vaccine-quantification.html'}).
-        otherwise({redirectTo: '/vaccine'});
-}]);
+        otherwise({redirectTo: '/distribution-batch'});
+}]).directive('onKeyup', function () {
+        return function (scope, elm, attrs) {
+            elm.bind("keyup", function () {
+                scope.$apply(attrs.onKeyup);
+            });
+        };
+});
