@@ -58,8 +58,8 @@ public class VaccineController extends BaseController {
         try {
             vaccineTargetService.updateVaccineTarget(vaccineTarget);
         } catch(DuplicateKeyException exp){
-        return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
-    }
+        return OpenLmisResponse.error("There is a record with the same geographic zone and target year.", HttpStatus.BAD_REQUEST);
+      }
 
         response = success(messageService.message("message.vaccine.target.created.success"));
         response.getBody().addData("vaccineTarget", vaccineTarget);

@@ -843,3 +843,24 @@ services.factory('StorageTypeList', function ($resource) {
 services.factory('TempratureList', function ($resource) {
     return $resource('/tempratureList.json', {}, {});
 });
+
+
+services.factory('VaccineQuantificationUpdate', function ($resource) {
+    return $resource('/vaccineQuantification/create.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('VaccineQuantificationList', function ($resource) {
+    return $resource('/vaccineQuantification/list.json', {}, {});
+});
+
+services.factory('GetVaccineQuantification', function ($resource) {
+    return $resource('/vaccineQuantification/get/:id.json', {}, {});
+});
+
+services.factory('DeleteVaccineQuantification', function ($resource) {
+    return $resource('/vaccineQuantification/delete/:id.json', {}, {});
+});
+
+services.factory('VaccineQuantificationFormLookUps', function ($resource) {
+    return $resource('/vaccineQuantification/formLookups.json', {}, {});
+});
