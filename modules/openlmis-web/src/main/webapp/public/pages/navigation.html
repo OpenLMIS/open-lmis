@@ -326,6 +326,19 @@
 
                         <div class="submenu">
                             <ul>
+                                <li class="has-children">
+                                    <a id="vaccine-option" href="/public/pages/vaccine/index.html"
+                                       openlmis-message="link.admin.vaccine"></a>
+
+                                    <div class="submenu">
+                                        <ul>
+                                            <li>
+                                                <a href="/public/pages/vaccine/index.html" openlmis-message="menu.header.vaccine.distribution.batch"></a>
+                                            </li>
+                                            <li class="beak"></li>
+                                        </ul>
+                                    </div>
+                                </li>
                                 <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONES')">
                                     <a href="/public/pages/admin/geographic-zones/index.html">Geographic Zones</a>
                                 </li>
@@ -358,19 +371,6 @@
                                 </li>
                                 <li ng-show="hasPermission('MANAGE_PRODUCT_ALLOWED_FOR_FACILITY')">
                                     <a href="/public/pages/admin/product-allowed-for-facility/index.html">Products Permissions</a>
-                                </li>
-                                <li class="has-children">
-                                    <a id="vaccine-option" href="/public/pages/vaccine/index.html"
-                                       openlmis-message="link.admin.vaccine"></a>
-
-                                    <div class="submenu">
-                                        <ul>
-                                            <li>
-                                                <a href="/public/pages/vaccine/index.html" openlmis-message="menu.header.vaccine.distribution.batch"></a>
-                                            </li>
-                                            <li class="beak"></li>
-                                        </ul>
-                                    </div>
                                 </li>
                                 <li class="beak"></li>
                             </ul>

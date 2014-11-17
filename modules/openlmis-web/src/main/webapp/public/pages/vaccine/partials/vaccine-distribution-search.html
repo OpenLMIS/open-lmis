@@ -1,0 +1,129 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div xmlns="http://www.w3.org/1999/html">
+    <h2><span openlmis-message="label.search.distribution.batch"></span>
+        <a href="#/create-distribution-batch" class="pull-right btn btn-primary"><span id="distribution-batch-add-new"
+                                                                         openlmis-message="button.add.new"></span></a>
+    </h2>
+
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="distributionBatchId">
+        <span ng-bind="message"></span>.&nbsp;<a id="viewHereLink" href="" ng-click="editDistributionBatch(distributionBatchId)"
+                                                 openlmis-message="search.viewHere"></a>
+    </div>
+
+    <input id="searchUser" class="search-query input-xxlarge" type="text" ng-model="query"
+           on-keyup="showDistributionBatchSearchResults()" openlmis-message="placeholder.distribution.batch.search"/>
+
+    <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+    <div class="facility-list" ng-show="query.length > 2">
+        <div ng-switch on="resultCount">
+            <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+
+            <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+
+            <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+        </div>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr  class="gradient-header">
+                <th>Batch Number</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Production Date</th>
+                <th>Expiry Date</th>
+                <th>Donor</th>
+                <th>Product</th>
+                <th>Received Date</th>
+                <th>Quantity</th>
+                <th>Unusable</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="distribution in filteredDistributionBatches">
+                <td>{{ distribution.batchId }}</td>
+                <td>{{ distribution.fromFacility.name }}</td>
+                <td>{{ distribution.toFacility.name }}</td>
+                <td>{{ convertStringToCorrectDateFormat(distribution.stringProductionDate)}}</td>
+                <td>{{ convertStringToCorrectDateFormat(distribution.stringExpiryDate) }}</td>
+                <td>{{ distribution.donor.shortName }}</td>
+                <td>{{ distribution.product.primaryName }} {{distribution.product.strength}}</td>
+                <td>{{ convertStringToCorrectDateFormat(distribution.stringReceiveDate) }}</td>
+                <td>{{ distribution.quantity }}</td>
+                <td>{{ distribution.unusable }}</td>
+                <td >
+                    <a href="/public/pages/admin/sms/index.html#/create-sms/{{user.id}}" class="btn btn-primary btn-small" openlmis-message="button.receive"></a>
+                    <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
+                       ng-click="editDistributionBatch(distribution.id)"></a>
+                    <a href="/public/pages/admin/user/preference/index.html#/edit-user-preference/{{user.id}}" class="btn btn-primary btn-small" openlmis-message="button.delete"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div ng-hide="query.length > 2">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr  class="gradient-header">
+                <th>Batch Number</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Production Date</th>
+                <th>Expiry Date</th>
+                <th>Donor</th>
+                <th>Product</th>
+                <th>Received Date</th>
+                <th>Quantity</th>
+                <th>Unusable</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="distribution in distributionBatches">
+                <td>{{ distribution.batchId }}</td>
+                <td>{{ distribution.fromFacility.name }}</td>
+                <td>{{ distribution.toFacility.name }}</td>
+                <td>{{ convertStringToCorrectDateFormat(distribution.stringProductionDate)}}</td>
+                <td>{{ convertStringToCorrectDateFormat(distribution.stringExpiryDate) }}</td>
+                <td>{{ distribution.donor.shortName }}</td>
+                <td>{{ distribution.product.primaryName }} {{distribution.product.strength}}</td>
+                <td>{{ convertStringToCorrectDateFormat(distribution.stringReceiveDate) }}</td>
+                <td>{{ distribution.quantity }}</td>
+                <td>{{ distribution.unusable }}</td>
+                <td >
+                    <a href="/public/pages/admin/sms/index.html#/create-sms/{{user.id}}" class="btn btn-primary btn-small" openlmis-message="button.receive"></a>
+                    <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
+                       ng-click="editDistributionBatch(distribution.id)"></a>
+                    <a href="/public/pages/admin/user/preference/index.html#/edit-user-preference/{{user.id}}" class="btn btn-primary btn-small" openlmis-message="button.delete"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="changePassword" modal="changePasswordModal" options="{'backdrop':'static', 'escape':false}">
+        <form name="passwordForm">
+            <div class="modal-header">
+                <h3>
+                    <span openlmis-message="message.reset.password"></span>&nbsp;<span ng-bind="user.firstName"></span>&nbsp;
+                    <span ng-bind="user.lastName"></span>
+                </h3>
+            </div>
+
+            <div class="alert alert-error" ng-bind="error" ng-show="error"></div>
+        </form>
+    </div>
+
+    </form>
+</div>
+
+</div>
