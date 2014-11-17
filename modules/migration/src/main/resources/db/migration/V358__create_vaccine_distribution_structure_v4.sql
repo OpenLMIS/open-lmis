@@ -32,8 +32,8 @@ INSERT INTO distribution_types
 (id , name)
 
 VALUES
-(1  , 'Supply'),
-(2  , 'Recall');
+(1  , 'SUPPLY'),
+(2  , 'RECALL');
  
 
 
@@ -44,13 +44,16 @@ CREATE TABLE  vaccine_distribution_batches
 (
   id SERIAL PRIMARY KEY, 
   batchId integer,
-  dispatchId integer,
+  dispatchId character varying(100),
   expiryDate timestamp without time zone,
   productionDate timestamp without time zone,
   manufacturerId integer REFERENCES manufacturers (id) NOT NULL,
   donorId integer REFERENCES donors (id) NOT NULL,
   receiveDate date,
+  recallDate date,
   productCode character varying(50) REFERENCES products (code) NOT NULL,
+  voucherNumber integer,
+  originId integer,
   fromFacilityId integer REFERENCES facilities (id) NOT NULL,
   toFacilityId integer REFERENCES facilities (id) NOT NULL,
   distributionTypeId character varying(100) REFERENCES distribution_types(name),
@@ -61,6 +64,7 @@ CREATE TABLE  vaccine_distribution_batches
   unitCost integer,
   totalCost integer,
   purposeId integer,
+  freight integer,
   createdBy         INTEGER                                       ,
   createdDate       TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
   modifiedBy        INTEGER                                       ,
