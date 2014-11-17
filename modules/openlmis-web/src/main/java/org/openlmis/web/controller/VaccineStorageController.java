@@ -3,6 +3,8 @@ package org.openlmis.web.controller;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.help.domain.HelpContent;
 import org.openlmis.help.domain.HelpTopic;
+import org.openlmis.vaccine.domain.StorageType;
+import org.openlmis.vaccine.domain.Temprature;
 import org.openlmis.vaccine.domain.VaccineStorage;
 import org.openlmis.vaccine.service.StorageTypeService;
 import org.openlmis.vaccine.service.TempratureService;
@@ -46,6 +48,8 @@ public class VaccineStorageController extends BaseController  {
     public static final String VACCINESTORAGELIST = "vaccineStorageList";
     public static final String TEMPERATURELIST = "temperatureList";
     public static final String STORAGETYPELIST = "storageTypeList";
+    public static final String STORAGETYPE="storageType";
+    public static final String TEMPRATURE="temprature";
     @RequestMapping(value = "/createVaccineStorage", method = RequestMethod.POST, headers = ACCEPT_JSON)
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineStorage vaccineStorage, HttpServletRequest request) {
@@ -87,13 +91,13 @@ public class VaccineStorageController extends BaseController  {
 
          */
 
-        @RequestMapping(value = "/vaccineStorageDetail/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/vaccineStorageDetail/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-        public ResponseEntity<OpenLmisResponse> getVaccineStorageDetail(@PathVariable("id") Long id) {
-            //System.out.println(" here calling");
-            VaccineStorage vaccineStorage = this.storageService.loadVaccineStorageDetail(id);
-            return OpenLmisResponse.response(VACCINESTORAGEDATAIL, vaccineStorage);
-        }
+    public ResponseEntity<OpenLmisResponse> getVaccineStorageDetail(@PathVariable("id") Long id) {
+        //System.out.println(" here calling");
+        VaccineStorage vaccineStorage = this.storageService.loadVaccineStorageDetail(id);
+        return OpenLmisResponse.response(VACCINESTORAGEDATAIL, vaccineStorage);
+    }
 
 
     @RequestMapping(value = "/vaccineStorageList", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -102,16 +106,16 @@ public class VaccineStorageController extends BaseController  {
         //System.out.println(" here calling");
         return OpenLmisResponse.response(VACCINESTORAGELIST, this.storageService.loadVaccineStorageList());
     }
-        @RequestMapping(value = "/updateVaccineStorage", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/updateVaccineStorage", method = RequestMethod.POST, headers = "Accept=application/json")
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-        public ResponseEntity<OpenLmisResponse> update(@RequestBody VaccineStorage vaccineStorage, HttpServletRequest request) {
-            //System.out.println(" updating ");
-            vaccineStorage.setModifiedBy(loggedInUserId(request));
-            vaccineStorage.setModifiedDate(new Date());
+    public ResponseEntity<OpenLmisResponse> update(@RequestBody VaccineStorage vaccineStorage, HttpServletRequest request) {
+        //System.out.println(" updating ");
+        vaccineStorage.setModifiedBy(loggedInUserId(request));
+        vaccineStorage.setModifiedDate(new Date());
 
-            //System.out.println(" help topic id is" + helpTopic.getName());
-            return saveVaccineStorage(vaccineStorage, false);
-        }
+        //System.out.println(" help topic id is" + helpTopic.getName());
+        return saveVaccineStorage(vaccineStorage, false);
+    }
     @RequestMapping(value = "/deleteVaccineStorage", method = RequestMethod.POST, headers = "Accept=application/json")
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> delete(@RequestBody VaccineStorage vaccineStorage, HttpServletRequest request) {
@@ -136,6 +140,158 @@ public class VaccineStorageController extends BaseController  {
     public ResponseEntity<OpenLmisResponse> getTemperatureList() {
 
         return OpenLmisResponse.response(TEMPERATURELIST, this.tempratureService.loadTempratureList());
+    }
+    /* below are methods .. for temperature and storagetypes lookup
+
+     */
+    private ResponseEntity<OpenLmisResponse> saveStorageType(StorageType storageType, boolean createOperation) {
+        try {
+            if (createOperation) {
+                System.out.println("creating "+storageType.getStorageTypeName());
+                this.storageTypeService.addStorageType(storageType);
+            } else {
+                this.storageTypeService.updateStorageType(storageType);
+            }
+            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + storageType.getId()) + "' " + (createOperation ? "created" : "updated") + " successfully");
+            response.getBody().addData(STORAGETYPE, this.storageTypeService.loadStorageTypeDetail(storageType.getId()));
+            response.getBody().addData(STORAGETYPELIST, this.storageTypeService.loadStorageTypeList());
+            return response;
+        } catch (DuplicateKeyException exp) {
+            System.out.println(exp.getStackTrace());
+            return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
+        } catch (DataException e) {
+            System.out.println(e.getStackTrace());
+            return error(e, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
+        }
+    }
+        /*
+
+         */
+
+    @RequestMapping(value = "/storageTypeDetail/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> getStorageTypeDetail(@PathVariable("id") Long id) {
+        //System.out.println(" here calling");
+        StorageType storageType = this.storageTypeService.loadStorageTypeDetail(id);
+        return OpenLmisResponse.response(   STORAGETYPE, storageType);
+    }
+
+
+
+    @RequestMapping(value = "/updateStorageType", method = RequestMethod.POST, headers = "Accept=application/json")
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> updateStorageType(@RequestBody StorageType storageType, HttpServletRequest request) {
+        //System.out.println(" updating ");
+        storageType.setModifiedBy(loggedInUserId(request));
+        storageType.setModifiedDate(new Date());
+
+        //System.out.println(" help topic id is" + helpTopic.getName());
+        return saveStorageType(storageType, false);
+    }
+    //////////////////////////////////////////////////////////////////////////
+    @RequestMapping(value = "/createStorageType", method = RequestMethod.POST, headers = ACCEPT_JSON)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> saveStorageType(@RequestBody StorageType storageType, HttpServletRequest request) {
+        //System.out.println(" here saving help Content");
+        storageType.setCreatedBy(loggedInUserId(request));
+        storageType.setModifiedBy(loggedInUserId(request));
+        storageType.setModifiedDate(new Date());
+        storageType.setCreatedDate(new Date());
+        //System.out.println(" help content id is " + helpContent.getName());
+
+
+        return saveStorageType(storageType, true);
+    }
+
+
+    @RequestMapping(value = "/deleteStorageType", method = RequestMethod.POST, headers = "Accept=application/json")
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> deleteStorageType(@RequestBody StorageType storageType, HttpServletRequest request) {
+
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + storageType.getId()) + "Deleted successfully");
+        response.getBody().addData(STORAGETYPE, storageType);
+        response.getBody().addData(STORAGETYPELIST, this.storageTypeService.loadStorageTypeList());
+        this.storageTypeService.removeStorageType(storageType);
+        return response;
+    }
+    /*
+    temprature lookup related
+     */
+    private ResponseEntity<OpenLmisResponse> saveTemprature(Temprature temprature, boolean createOperation) {
+        try {
+            if (createOperation) {
+                System.out.println("creating "+temprature.getTempratureName());
+                this.tempratureService.addTemprature(temprature);
+            } else {
+                this.tempratureService.updateTemprature(temprature);
+            }
+            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + temprature.getId()) + "' " + (createOperation ? "created" : "updated") + " successfully");
+            response.getBody().addData(TEMPRATURE, this.tempratureService.loadTempratureDetail(temprature.getId()));
+            response.getBody().addData(TEMPERATURELIST, this.tempratureService.loadTempratureList());
+            return response;
+        } catch (DuplicateKeyException exp) {
+            System.out.println(exp.getStackTrace());
+            return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
+        } catch (DataException e) {
+            System.out.println(e.getStackTrace());
+            return error(e, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
+        }
+    }
+        /*
+
+         */
+
+    @RequestMapping(value = "/tempratureDetail/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> getTempratureDetail(@PathVariable("id") Long id) {
+        //System.out.println(" here calling");
+        Temprature temprature = this.tempratureService.loadTempratureDetail(id);
+        return OpenLmisResponse.response(   TEMPRATURE, temprature);
+    }
+
+
+
+    @RequestMapping(value = "/updateTemprature", method = RequestMethod.POST, headers = "Accept=application/json")
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> updateTemprature(@RequestBody Temprature temprature, HttpServletRequest request) {
+        //System.out.println(" updating ");
+        temprature.setModifiedBy(loggedInUserId(request));
+        temprature.setModifiedDate(new Date());
+
+        //System.out.println(" help topic id is" + helpTopic.getName());
+        return saveTemprature(temprature, false);
+    }
+    //////////////////////////////////////////////////////////////////////////
+    @RequestMapping(value = "/createTemprature", method = RequestMethod.POST, headers = ACCEPT_JSON)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> saveTemprature(@RequestBody Temprature temprature, HttpServletRequest request) {
+        //System.out.println(" here saving help Content");
+        temprature.setCreatedBy(loggedInUserId(request));
+        temprature.setModifiedBy(loggedInUserId(request));
+        temprature.setModifiedDate(new Date());
+        temprature.setCreatedDate(new Date());
+        //System.out.println(" help content id is " + helpContent.getName());
+
+
+        return saveTemprature(temprature, true);
+    }
+
+
+    @RequestMapping(value = "/deleteTemprature", method = RequestMethod.POST, headers = "Accept=application/json")
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> deleteTemprature(@RequestBody Temprature temprature, HttpServletRequest request) {
+
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + temprature.getId()) + "Deleted successfully");
+        response.getBody().addData(TEMPRATURE, temprature);
+        response.getBody().addData(TEMPERATURELIST, this.tempratureService.loadTempratureList());
+        this.tempratureService.removeTemprature(temprature);
+        return response;
     }
     }
 
