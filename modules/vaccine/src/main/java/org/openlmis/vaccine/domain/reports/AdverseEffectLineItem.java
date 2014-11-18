@@ -25,16 +25,16 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public class AdverseEffectLineItem extends BaseModel {
 
-  private Integer reportId;
-  private Integer productId;
+  private Long reportId;
+  private Long productId;
 
   private Date date;
 
-  private Integer manufacturerId;
+  private Long manufacturerId;
   private String batch;
   private Date expiryDate;
 
-  private Integer cases;
+  private Long cases;
   private String investigation;
   private String notes;
 

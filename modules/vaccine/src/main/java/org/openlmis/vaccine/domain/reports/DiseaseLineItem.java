@@ -23,13 +23,13 @@ import org.openlmis.core.domain.BaseModel;
 @EqualsAndHashCode(callSuper = false)
 public class DiseaseLineItem extends BaseModel {
 
-  private Integer reportId;
+  private Long reportId;
 
-  private Integer diseaseId;
+  private Long diseaseId;
   private String diseaseName;
-  private Integer displayOrder;
+  private Long displayOrder;
 
-  private Integer cases;
-  private Integer death;
+  private Long cases;
+  private Long death;
 
 }

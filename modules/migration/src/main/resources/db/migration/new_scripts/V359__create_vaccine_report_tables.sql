@@ -1,4 +1,4 @@
-CREATE TABLE vaccine_dose
+CREATE TABLE vaccine_doses
 (
   id                SERIAL PRIMARY KEY,
   name              VARCHAR (100) UNIQUE NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE vaccine_dose
 
 -- seed the vaccine dose table
 
-INSERT INTO vaccine_dose (name, displayOrder)
+INSERT INTO vaccine_doses (name, displayOrder)
   VALUES ('Dose 1',1), ('Dose 2',2), ('Dose 3',3), ('Dose 4',4), ('Dose 5',5)
 ;
 

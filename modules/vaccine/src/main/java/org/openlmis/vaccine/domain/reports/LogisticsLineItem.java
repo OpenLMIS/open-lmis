@@ -23,22 +23,22 @@ import org.openlmis.core.domain.BaseModel;
 @EqualsAndHashCode(callSuper = false)
 public class LogisticsLineItem extends BaseModel{
 
-  private Integer reportId;
-  private Integer productId;
+  private Long reportId;
+  private Long productId;
   private String productCode;
   private String productName;
 
-  private Integer displayOrder;
+  private Long displayOrder;
 
-  private Integer openingBalance;
-  private Integer quantityReceived;
-  private Integer quantityIssued;
-  private Integer quantityVvmAlerted;
-  private Integer quantityFreezed;
-  private Integer quantityExpired;
-  private Integer quantityDiscardedUnopened;
-  private Integer quantityDiscardedOpened;
-  private Integer quantityWastedOther;
+  private Long openingBalance;
+  private Long quantityReceived;
+  private Long quantityIssued;
+  private Long quantityVvmAlerted;
+  private Long quantityFreezed;
+  private Long quantityExpired;
+  private Long quantityDiscardedUnopened;
+  private Long quantityDiscardedOpened;
+  private Long quantityWastedOther;
 
-  private Integer endingBalance;
+  private Long endingBalance;
 }

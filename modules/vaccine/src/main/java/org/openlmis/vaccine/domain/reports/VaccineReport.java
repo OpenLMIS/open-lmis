@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.vaccine.dto.ServiceLineItem;
 
 import java.util.List;
 
@@ -24,11 +25,11 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class VaccineReport extends BaseModel {
-  private Integer   periodId;
-  private Integer   productId;
-  private Integer   facilityId;
-  private String    status;
-  private Integer   supervisoryNodeId;
+  private Long   periodId;
+  private Long   productId;
+  private Long   facilityId;
+  private String status;
+  private Long   supervisoryNodeId;
 
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;

@@ -22,7 +22,7 @@ import org.openlmis.core.domain.BaseModel;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class VaccineProductDose extends BaseModel {
-  Integer doseId;
-  Integer productId;
+  Long doseId;
+  Long productId;
   Boolean isActive;
 }
