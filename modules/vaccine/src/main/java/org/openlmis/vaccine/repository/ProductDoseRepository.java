@@ -8,27 +8,36 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.domain.reports;
+package org.openlmis.vaccine.repository;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.openlmis.vaccine.domain.VaccineProductDose;
+import org.openlmis.vaccine.repository.mapper.ProductDoseMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class ServiceLineItem extends BaseModel {
+@Component
+public class ProductDoseRepository {
 
-  private Integer productId;
-  private String productCode;
-  private String productName;
+  @Autowired
+  private ProductDoseMapper mapper;
 
-  private List<ServiceItem> serviceItems;
+  public void insert(VaccineProductDose dose){
+    mapper.insert(dose);
+  }
+
+
+  public void update(VaccineProductDose dose){
+    mapper.update(dose);
+  }
+
+  public List<VaccineProductDose> getDosesForProduct(Long productId){
+    return mapper.getDoseSettingByProduct(productId);
+  }
+
+  public List<VaccineProductDose> getEmptyDosesForProduct(Long productId){
+    return mapper.getEmptySettingByProduct(productId);
+  }
 
 }

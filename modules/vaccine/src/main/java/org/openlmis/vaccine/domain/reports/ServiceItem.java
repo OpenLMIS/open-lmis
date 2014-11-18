@@ -22,14 +22,14 @@ import org.openlmis.core.domain.BaseModel;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ServiceItem extends BaseModel{
-  private Integer reportId;
+  private Long reportId;
 
-  private Integer productId;
+  private Long productId;
 
   private Boolean isActive;
 
-  private Integer doseId;
-  private Integer regular;
-  private Integer outreach;
+  private Long doseId;
+  private Long regular;
+  private Long outreach;
 
 }
