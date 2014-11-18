@@ -26,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -101,9 +102,8 @@ public class VaccineController extends BaseController {
     }
 
     @RequestMapping(value = "/distribution-batches", method = GET, headers = ACCEPT_JSON)
-    //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
-    public ResponseEntity<OpenLmisResponse> getDistributionBatches(){
-        return OpenLmisResponse.response("distributionBatches", distributionBatchService.getAll());
+    public ResponseEntity<OpenLmisResponse> searchUser(@RequestParam(required = true) String param) {
+        return OpenLmisResponse.response("distributionBatches", distributionBatchService.searchDistributionBatches(param));
     }
 
     @RequestMapping(value = "/distribution-batches/{id}", method = GET, headers = ACCEPT_JSON)

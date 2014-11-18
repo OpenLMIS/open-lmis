@@ -20,7 +20,7 @@ function VaccineDistributionSearchController($scope,VaccineDistributionBatches,n
         return null;
     };
 
-    VaccineDistributionBatches.get({},function(data){
+    VaccineDistributionBatches.get({param:''},function(data){
         $scope.distributionBatches  = data.distributionBatches;
     });
 
@@ -33,7 +33,6 @@ function VaccineDistributionSearchController($scope,VaccineDistributionBatches,n
     var filterDistributionBatchByDispatchId = function (query) {
         $scope.filteredDistributionBatches = [];
         query = query || "";
-
         angular.forEach($scope.distributionBatches, function (distributionBatch) {
             if (distributionBatch.dispatchId.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
                 $scope.filteredDistributionBatches.push(distributionBatch);
@@ -46,14 +45,22 @@ function VaccineDistributionSearchController($scope,VaccineDistributionBatches,n
         var query = $scope.query;
         var len = (query === undefined) ? 0 : query.length;
         if (len >= 3) {
+            if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3)) {
+                $scope.previousQuery = query;
                 filterDistributionBatchByDispatchId(query);
+                return true;
+            }
+            $scope.previousQuery = query;
+            VaccineDistributionBatches.get({param:$scope.query.substr(0,3)}, function(data){
+                $scope.distributionBatches = data.distributionBatches;
+                filterDistributionBatchByDispatchId(query);
+            },{});
             return true;
+
         } else {
             return false;
         }
     };
-
-
     $scope.previousQuery = '';
     $scope.query = navigateBackService.query;
     $scope.showDistributionBatchSearchResults();

@@ -37,6 +37,9 @@ public class VaccineDistributionBatchRepository {
     public List<DistributionBatch> getAll(){
         return distributionBatchMapper.getAll();
     }
+    public List<DistributionBatch> searchDistributionBatches(String query){
+        return distributionBatchMapper.searchDistributionBatches(query);
+    }
 
     public void update(DistributionBatch distributionBatch){
         try {

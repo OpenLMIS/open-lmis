@@ -46,6 +46,19 @@ public interface VaccineDistributionBatchMapper {
     })
     List<DistributionBatch> getAll();
 
+    @Select("select * from vaccine_distribution_batches where dispatchId like LOWER(#{query})||'%' ")
+    @Results({
+            @Result(property = "donor", javaType = Donor.class, column = "donorId",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.DonorMapper2.getById")),
+            @Result(property = "product", javaType = Product.class, column = "productCode",
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode")),
+            @Result(property = "toFacility", javaType = Facility.class, column = "toFacilityId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+            @Result(property = "fromFacility", javaType = Facility.class, column = "fromFacilityId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
+    })
+    List<DistributionBatch> searchDistributionBatches(@Param("query")String query);
+
     @Insert("INSERT INTO vaccine_distribution_batches(" +
             " dispatchId, batchid,originid, expirydate, productiondate, manufacturerid, donorid, \n" +
             "            receivedate,recalldate, productcode,voucherNumber, fromfacilityid, tofacilityid, distributiontypeid, \n" +
