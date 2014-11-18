@@ -53,7 +53,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="distribution in filteredDistributionBatches">
+                <tr ng-click="rowClickedEvent(distribution)" ng-repeat="distribution in filteredDistributionBatches">
                     <td>{{ distribution.batchId }}</td>
                     <td>{{ distribution.fromFacility.name }}</td>
                     <td>{{ distribution.toFacility.name }}</td>
@@ -95,18 +95,18 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-click="rowClickedEvent(distribution)" ng-repeat="distribution in distributionBatches">
-                <td>{{ distribution.batchId }}</td>
-                <td>{{ distribution.fromFacility.name }}</td>
-                <td>{{ distribution.toFacility.name }}</td>
-                <td>{{ convertStringToCorrectDateFormat(distribution.stringProductionDate)}}</td>
-                <td>{{ convertStringToCorrectDateFormat(distribution.stringExpiryDate) }}</td>
-                <td>{{ distribution.donor.shortName }}</td>
-                <td>{{ distribution.product.primaryName }} {{distribution.product.strength}}</td>
-                <td>{{ convertStringToCorrectDateFormat(distribution.stringReceiveDate) }}</td>
-                <td>{{ distribution.quantity }}</td>
-                <td>{{ distribution.unusable }}</td>
-                <td >
+            <tr ng-click="rowClickedEvent(distribution)" style="cursor: pointer" ng-repeat="distribution in distributionBatches">
+                <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.batchId }}</td>
+                <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.fromFacility.name }}</td>
+                <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.toFacility.name }}</td>
+                <td ng-class="{'highlight' : selected == distribution.id}">{{ convertStringToCorrectDateFormat(distribution.stringProductionDate)}}</td>
+                <td ng-class="{'highlight' : selected == distribution.id}">{{ convertStringToCorrectDateFormat(distribution.stringExpiryDate) }}</td>
+                <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.donor.shortName }}</td>
+                <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.product.primaryName }} {{distribution.product.strength}}</td>
+                <td ng-class="{'highlight' : selected == distribution.id}">{{ convertStringToCorrectDateFormat(distribution.stringReceiveDate) }}</td>
+                <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.quantity }}</td>
+                <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.unusable }}</td>
+                <td ng-class="{'highlight' : selected == distribution.id}">
                     <a href="" ng-click="addReceive(distribution)" class="btn btn-primary btn-small" openlmis-message="button.receive"></a>
                     <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
                        ng-click="editDistributionBatch(distribution.id)"></a>
@@ -121,7 +121,7 @@
         <div class="modal-header">
             <h3>
                 <span openlmis-message="message.add.distribution.quantity.received"></span>&nbsp;<span ng-bind="distribution.batchId"></span>&nbsp;
-                <span ng-bind="distribution.dispatchId"></span>
+
             </h3>
         </div>
 
