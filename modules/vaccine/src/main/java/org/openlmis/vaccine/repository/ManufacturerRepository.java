@@ -8,24 +8,21 @@
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.vaccine.domain;
+package org.openlmis.vaccine.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.openlmis.vaccine.domain.Manufacturer;
+import org.openlmis.vaccine.repository.mapper.ManufacturerMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class DistributionLineItem extends BaseModel {
+import java.util.List;
 
-    private DistributionBatch distributionBatch;
-    private Double quantityReceived;
-    private Integer vvmStage;
-    private Boolean confirmed;
-    private String comments;
+@Component
+public class ManufacturerRepository {
+    @Autowired
+    private ManufacturerMapper manufacturerMapper;
 
+    public List<Manufacturer> getAll(){
+        return manufacturerMapper.getAll();
+    }
 }

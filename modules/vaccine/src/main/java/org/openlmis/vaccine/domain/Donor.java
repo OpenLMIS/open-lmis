@@ -20,12 +20,10 @@ import org.openlmis.core.domain.BaseModel;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class DistributionLineItem extends BaseModel {
+public class Donor extends BaseModel {
+    private String code;
+    private String shortName;
+    private String longName;
 
-    private DistributionBatch distributionBatch;
-    private Double quantityReceived;
-    private Integer vvmStage;
-    private Boolean confirmed;
-    private String comments;
-
+    private Integer countOfDonations;
 }

@@ -896,3 +896,19 @@ services.factory('TempratureDetail', function ($resource) {
 services.factory('DeleteTemprature', function ($resource) {
     return $resource('/deleteTemprature.json', {}, {post:{method:'POST'}});
 });
+
+services.factory('VaccineDistributionBatches', function ($resource) {
+    return $resource('/vaccine/distribution-batches/:id.json', {id: '@id'}, update);
+});
+
+services.factory('VaccineDistributionLineItems', function ($resource) {
+    return $resource('/vaccine/distribution-batch-line-items/:id.json', {id: '@id'}, update);
+});
+
+services.factory('Manufacturers', function($resource){
+    return $resource('/vaccine/manufacturers.json',{},{});
+});
+services.factory('DistributionTypes', function($resource){
+    return $resource('/vaccine/distributionTypes.json',{},{});
+});
+

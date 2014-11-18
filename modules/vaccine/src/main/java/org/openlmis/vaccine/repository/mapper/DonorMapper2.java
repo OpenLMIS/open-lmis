@@ -8,24 +8,21 @@
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.vaccine.domain;
+package org.openlmis.vaccine.repository.mapper;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.apache.ibatis.annotations.*;
+import org.openlmis.vaccine.domain.Donor;
+import org.springframework.stereotype.Repository;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class DistributionLineItem extends BaseModel {
+import java.util.List;
+@Repository
+public interface DonorMapper2 {
 
-    private DistributionBatch distributionBatch;
-    private Double quantityReceived;
-    private Integer vvmStage;
-    private Boolean confirmed;
-    private String comments;
+    @Select("SELECT * from donors order by shortName, longName")
+    List<Donor> getAll();
+
+    @Select("SELECT id, code, shortName, longName, modifiedBy, modifiedDate " +
+            "FROM donors WHERE id = #{id}")
+    Donor getById(Long id);
 
 }

@@ -9,16 +9,36 @@
  */
 package org.openlmis.vaccine.service;
 
-import org.openlmis.vaccine.repository.VaccineRepository;
+import org.openlmis.vaccine.domain.DistributionBatch;
+import org.openlmis.vaccine.repository.VaccineDistributionBatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class VaccineService {
+public class VaccineDistributionBatchService {
 
     @Autowired
-    private VaccineRepository vaccineRepository;
+    private VaccineDistributionBatchRepository distributionBatchRepository;
+
+    public List<DistributionBatch> getByDispatchId(String dispatchId){
+        return distributionBatchRepository.getByDispatchId(dispatchId);
+    }
+
+    public DistributionBatch getById(Long id){
+        return distributionBatchRepository.getById(id);
+    }
+
+    public List<DistributionBatch> getAll(){
+        return distributionBatchRepository.getAll();
+    }
+    public List<DistributionBatch> searchDistributionBatches(String query){
+        return distributionBatchRepository.searchDistributionBatches(query);
+    }
+
+    public void update(DistributionBatch distributionBatch) {
+        distributionBatchRepository.update(distributionBatch);
+    }
 
 }
