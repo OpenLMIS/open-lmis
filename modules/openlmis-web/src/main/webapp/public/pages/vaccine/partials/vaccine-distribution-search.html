@@ -95,7 +95,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-click="rowClickedEvent(distribution.id)" ng-repeat="distribution in distributionBatches">
+            <tr ng-click="rowClickedEvent(distribution)" ng-repeat="distribution in distributionBatches">
                 <td>{{ distribution.batchId }}</td>
                 <td>{{ distribution.fromFacility.name }}</td>
                 <td>{{ distribution.toFacility.name }}</td>
@@ -170,6 +170,7 @@
         </div>
     </div>
     <div ng-hide="filteredQuantityReceived == null || filteredQuantityReceived.length == 0">
+        <h3>Quantity Received for {{quantityReceivedFor}}</h3>
         <table class="table table-striped table-bordered">
             <thead>
             <tr  class="gradient-header">
@@ -177,21 +178,21 @@
                 <th>Quantity</th>
                 <th>VM Stage</th>
                 <th>Confirmed</th>
-                <th></th>
+                <!--<th></th>-->
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="batchLineItem in filteredQuantityReceived">
-                <td>{{ batchLineItem.id }}</td>
+                <td>{{ batchLineItem.distributionBatch.batchId }}</td>
                 <td>{{ batchLineItem.quantityReceived }}</td>
                 <td>{{ batchLineItem.vvmStage }}</td>
                 <td>{{ batchLineItem.confirmed}}</td>
-                <td >
-                    <!--<a href="" ng-click="addReceive(distribution)" class="btn btn-primary btn-small" openlmis-message="button.receive"></a>
+                <!--<td >
+                    &lt;!&ndash;<a href="" ng-click="addReceive(distribution)" class="btn btn-primary btn-small" openlmis-message="button.receive"></a>
                     <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
                        ng-click="editDistributionBatch(distribution.id)"></a>
-                    <a href="/public/pages/admin/user/preference/index.html#/edit-user-preference/{{user.id}}" class="btn btn-primary btn-small" openlmis-message="button.delete"></a>-->
-                </td>
+                    <a href="/public/pages/admin/user/preference/index.html#/edit-user-preference/{{user.id}}" class="btn btn-primary btn-small" openlmis-message="button.delete"></a>&ndash;&gt;
+                </td>-->
             </tr>
             </tbody>
         </table>

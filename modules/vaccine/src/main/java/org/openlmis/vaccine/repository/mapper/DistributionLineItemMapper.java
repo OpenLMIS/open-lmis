@@ -11,6 +11,7 @@
 package org.openlmis.vaccine.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.vaccine.domain.DistributionBatch;
 import org.openlmis.vaccine.domain.DistributionLineItem;
 import org.springframework.stereotype.Repository;
 
@@ -33,7 +34,8 @@ public interface DistributionLineItemMapper {
 
     @Select("SELECT * from vaccine_distribution_line_items")
     @Results({
-            @Result(property = "distributionBatch.id", column = "distributionBatchId")
+            @Result(property = "distributionBatch", javaType = DistributionBatch.class, column = "distributionBatchId",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.VaccineDistributionBatchMapper.getById"))
     })
     List<DistributionLineItem> getAll();
 }

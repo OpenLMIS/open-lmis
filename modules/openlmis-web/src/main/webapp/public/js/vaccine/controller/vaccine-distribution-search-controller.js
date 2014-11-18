@@ -82,10 +82,11 @@ function VaccineDistributionSearchController($scope,VaccineDistributionBatches,V
     };
     $scope.filteredQuantityReceived = [];
 
-    $scope.rowClickedEvent = function(distributionBatchId){
-
+    $scope.rowClickedEvent = function(distributionBatch){
+        $scope.filteredQuantityReceived = [];
+        $scope.quantityReceivedFor = distributionBatch.batchId;
         angular.forEach($scope.distributionLineItems, function(lineItem){
-           if(lineItem.distributionBatch.id === distributionBatchId){
+           if(lineItem.distributionBatch.id === distributionBatch.id){
                $scope.filteredQuantityReceived.push(lineItem);
            }
         });
