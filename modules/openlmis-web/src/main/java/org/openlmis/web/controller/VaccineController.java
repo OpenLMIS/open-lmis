@@ -12,8 +12,10 @@ package org.openlmis.web.controller;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.vaccine.domain.DistributionBatch;
+import org.openlmis.vaccine.domain.DistributionLineItem;
 import org.openlmis.vaccine.domain.DistributionType;
 import org.openlmis.vaccine.domain.VaccineTarget;
+import org.openlmis.vaccine.service.DistributionLineItemService;
 import org.openlmis.vaccine.service.ManufacturerService;
 import org.openlmis.vaccine.service.VaccineDistributionBatchService;
 import org.openlmis.vaccine.service.VaccineTargetService;
@@ -50,6 +52,9 @@ public class VaccineController extends BaseController {
 
     @Autowired
     private VaccineDistributionBatchService distributionBatchService;
+
+    @Autowired
+    private DistributionLineItemService distributionLineItemService;
 
     @RequestMapping(value = "/target/create", method = POST, headers = ACCEPT_JSON)
     // TODO: Add appropriate permission
@@ -134,7 +139,7 @@ public class VaccineController extends BaseController {
 
     @RequestMapping(value = "/distribution-batches/{id}", method = PUT, headers = ACCEPT_JSON)
     //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
-    public ResponseEntity<OpenLmisResponse> update(@PathVariable("id") long id,
+    public ResponseEntity<OpenLmisResponse> update(@PathVariable("id") Long id,
                                                    @RequestBody DistributionBatch distributionBatch,
                                                    HttpServletRequest request) {
         distributionBatch.setId(id);
@@ -151,6 +156,53 @@ public class VaccineController extends BaseController {
         OpenLmisResponse openLmisResponse = new OpenLmisResponse("distributionBatch", distributionBatch);
         return openLmisResponse.successEntity(successMessage);
     }
+
+    @RequestMapping(value = "/distribution-batch-line-items", method = POST, headers = ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
+    public ResponseEntity insertDistributionLinetItems(@RequestBody DistributionLineItem distributionLineItem, HttpServletRequest request){
+
+        distributionLineItem.setCreatedBy(loggedInUserId(request));
+        distributionLineItem.setModifiedBy(loggedInUserId(request));
+
+        ResponseEntity<OpenLmisResponse> response;
+
+        try {
+            distributionLineItemService.update(distributionLineItem);
+        }catch (DataException exception) {
+            OpenLmisResponse openLmisResponse = new OpenLmisResponse("distributionLineItem", distributionLineItem);
+            return openLmisResponse.errorEntity(exception, BAD_REQUEST);
+        }
+        response = success(messageService.message("message.distribution.batch.line.item.created.success"));
+        response.getBody().addData("distributionLineItem", distributionLineItem);
+        return response;
+    }
+
+    @RequestMapping(value = "/distribution-batch-line-items/{id}", method = PUT, headers = ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
+    public ResponseEntity<OpenLmisResponse> updateDispatchLineItem(@PathVariable("id") Long id,
+                                                   @RequestBody DistributionLineItem distributionLineItem,
+                                                   HttpServletRequest request) {
+        distributionLineItem.setId(id);
+        distributionLineItem.setModifiedBy(loggedInUserId(request));
+
+        try {
+            distributionLineItemService.update(distributionLineItem);
+        } catch (DataException exception) {
+            OpenLmisResponse openLmisResponse = new OpenLmisResponse("distributionLineItem", distributionLineItem);
+            return openLmisResponse.errorEntity(exception, BAD_REQUEST);
+        }
+
+        String successMessage = messageService.message("message.distribution.batch.line.item.updated.success");
+        OpenLmisResponse openLmisResponse = new OpenLmisResponse("distributionLineItem", distributionLineItem);
+        return openLmisResponse.successEntity(successMessage);
+    }
+
+    @RequestMapping(value = "/distribution-batch-line-items", method = GET, headers = ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
+    public ResponseEntity<OpenLmisResponse> getAllDistributionLineItems(){
+        return OpenLmisResponse.response("distributionLineItems", distributionLineItemService.getAll());
+    }
+
 
     @RequestMapping(value = "/manufacturers", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getManufacturers(){
