@@ -8,14 +8,32 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-  config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-        when('/list', {controller:VaccineProtocolController, templateUrl:'partials/list.html'}).
-        when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html'}).
-        when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html'}).
-        when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html'}).
-        otherwise({redirectTo:'/list'});
-  }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('VIEW_REPORT');
-  });
+package org.openlmis.vaccine.domain.reports;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
+import org.openlmis.vaccine.dto.ServiceLineItem;
+
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class VaccineReport extends BaseModel {
+  private Long   periodId;
+  private Long   productId;
+  private Long   facilityId;
+  private String status;
+  private Long   supervisoryNodeId;
+
+  private List<LogisticsLineItem> logisticsLineItems;
+  private List<AdverseEffectLineItem> adverseEffectLineItems;
+  private List<ServiceLineItem> serviceLineItems;
+  private List<DiseaseLineItem> diseaseLineItems;
+
+}

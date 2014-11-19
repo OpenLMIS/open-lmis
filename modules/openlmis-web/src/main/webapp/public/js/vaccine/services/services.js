@@ -1,3 +1,4 @@
+
 /*
  * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
  *
@@ -8,14 +9,6 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-  config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-        when('/list', {controller:VaccineProtocolController, templateUrl:'partials/list.html'}).
-        when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html'}).
-        when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html'}).
-        when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html'}).
-        otherwise({redirectTo:'/list'});
-  }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('VIEW_REPORT');
-  });
+services.factory('VaccineDiseases', function ($resource) {
+  return $resource('/vaccine/diseases/all.json', {}, {});
+});

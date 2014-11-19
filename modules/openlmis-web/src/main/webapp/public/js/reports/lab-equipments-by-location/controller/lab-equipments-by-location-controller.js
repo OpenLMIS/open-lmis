@@ -10,6 +10,15 @@
 
 function LabEquipmentStatusByLocationController($scope, $window, leafletData, $filter, GetFacilitiesByEquipmentStatus, ngTableParams , GetFacilitiesEquipmentStatusSummary) {
 
+    $scope.imagePath = '';
+
+    // since we don't know the version number for the folder under /public
+    // we need to pass the right versioned directory path from the html side. This is
+    //a hacky solution for a temporary fix.
+    $scope.setImageFilePath = function(imagePath){
+        $scope.imagePath = imagePath;
+    };
+
     angular.extend($scope, {
         layers: {
             baselayers: {
@@ -176,23 +185,20 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
             plotMarkers(data);
 
         });
-
-
     };
 
     var marker_icons = {
 
         defaultIcon: {},
         AllNotFunctioningIcon: {
-            iconUrl: '../../../images/not-functioning-marker.png'
+            iconUrl: "not-functioning-marker.png"
         },
         AllFunctioningIcon: {
-            iconUrl: '../../../images/all-functioning-marker.png'
+            iconUrl: "all-functioning-marker.png"
         },
         SomeFunctioningIcon: {
-            iconUrl: '../../../images/some-functioning-marker.png'
+            iconUrl: "some-functioning-marker.png"
         }
-
     };
 
     var plotMarkers = function(data){
@@ -223,18 +229,18 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
 
     };
 
-    var resolveMarkerIcon = function(status){
+    var resolveMarkerIcon = function(status, imagePath){
 
+           //A hacky way for temporary build-versioning compatibility of the file path under /public
             if(status.total_partially_operational +  status.total_fully_operational === 0 && status.total_not_operational > 0)
-                return marker_icons.AllNotFunctioningIcon;
+                return {iconUrl: $scope.imagePath+"not-functioning-marker.png"}; // marker_icons.AllNotFunctioningIcon;
 
             else if (status.total_partially_operational + status.total_not_operational === 0 &&  status.total_fully_operational > 0 )
-                return marker_icons.AllFunctioningIcon;
+                return {iconUrl: $scope.imagePath+"all-functioning-marker.png"};//marker_icons.AllFunctioningIcon;
 
              else
-                return marker_icons.SomeFunctioningIcon;
+                return {iconUrl: $scope.imagePath+"some-functioning-marker.png"};//marker_icons.SomeFunctioningIcon;
         };
-
 
     // ====== Pie Chart ==========================
     var getEquipmentStatusSummary = function(){

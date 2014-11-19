@@ -8,14 +8,28 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-  config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-        when('/list', {controller:VaccineProtocolController, templateUrl:'partials/list.html'}).
-        when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html'}).
-        when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html'}).
-        when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html'}).
-        otherwise({redirectTo:'/list'});
-  }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('VIEW_REPORT');
-  });
+package org.openlmis.vaccine.domain.reports;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class DiseaseLineItem extends BaseModel {
+
+  private Long reportId;
+
+  private Long diseaseId;
+  private String diseaseName;
+  private Long displayOrder;
+
+  private Long cases;
+  private Long death;
+
+}

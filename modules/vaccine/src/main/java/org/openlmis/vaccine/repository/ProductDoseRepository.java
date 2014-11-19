@@ -8,14 +8,36 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-  config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-        when('/list', {controller:VaccineProtocolController, templateUrl:'partials/list.html'}).
-        when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html'}).
-        when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html'}).
-        when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html'}).
-        otherwise({redirectTo:'/list'});
-  }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('VIEW_REPORT');
-  });
+package org.openlmis.vaccine.repository;
+
+import org.openlmis.vaccine.domain.VaccineProductDose;
+import org.openlmis.vaccine.repository.mapper.ProductDoseMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class ProductDoseRepository {
+
+  @Autowired
+  private ProductDoseMapper mapper;
+
+  public void insert(VaccineProductDose dose){
+    mapper.insert(dose);
+  }
+
+
+  public void update(VaccineProductDose dose){
+    mapper.update(dose);
+  }
+
+  public List<VaccineProductDose> getDosesForProduct(Long productId){
+    return mapper.getDoseSettingByProduct(productId);
+  }
+
+  public List<VaccineProductDose> getEmptyDosesForProduct(Long productId){
+    return mapper.getEmptySettingByProduct(productId);
+  }
+
+}

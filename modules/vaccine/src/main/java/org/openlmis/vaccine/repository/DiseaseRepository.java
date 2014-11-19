@@ -8,14 +8,34 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-  config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-        when('/list', {controller:VaccineProtocolController, templateUrl:'partials/list.html'}).
-        when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html'}).
-        when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html'}).
-        when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html'}).
-        otherwise({redirectTo:'/list'});
-  }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('VIEW_REPORT');
-  });
+package org.openlmis.vaccine.repository;
+
+import org.openlmis.vaccine.domain.VaccineDisease;
+import org.openlmis.vaccine.repository.mapper.DiseaseMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class DiseaseRepository {
+
+  @Autowired
+  private DiseaseMapper mapper;
+
+  public void update(VaccineDisease disease){
+    mapper.update(disease);
+  }
+
+  public void insert(VaccineDisease disease){
+    mapper.insert(disease);
+  }
+
+  public List<VaccineDisease> getAll(){
+    return mapper.getAll();
+  }
+
+  public VaccineDisease getById(Long id) {
+    return mapper.getById(id);
+  }
+}
