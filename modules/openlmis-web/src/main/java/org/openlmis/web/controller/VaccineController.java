@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Date;
+
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -201,6 +203,11 @@ public class VaccineController extends BaseController {
     //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
     public ResponseEntity<OpenLmisResponse> getAllDistributionLineItems(){
         return OpenLmisResponse.response("distributionLineItems", distributionLineItemService.getAll());
+    }
+
+    @RequestMapping(value = "/distribution-batches/filter", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> filterDistributionBatches(@RequestParam DistributionType distributionType, @RequestParam Long batchId, @RequestParam Date receivedDate){
+        return OpenLmisResponse.response("distributionBatches", distributionBatchService.searchDistributionBatches(""));
     }
 
 

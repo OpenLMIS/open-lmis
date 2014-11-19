@@ -901,6 +901,10 @@ services.factory('VaccineDistributionBatches', function ($resource) {
     return $resource('/vaccine/distribution-batches/:id.json', {id: '@id'}, update);
 });
 
+services.factory('FilterDistributionBatches', function ($resource) {
+    return $resource('/vaccine/distribution-batches/filter.json',{},{});
+});
+
 services.factory('VaccineDistributionLineItems', function ($resource) {
     return $resource('/vaccine/distribution-batch-line-items/:id.json', {id: '@id'}, update);
 });
