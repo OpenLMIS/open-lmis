@@ -19,7 +19,7 @@ INSERT INTO vaccine_doses (name, displayOrder)
 CREATE TABLE vaccine_product_doses
 (
   id                SERIAL PRIMARY KEY,
-  doseId            INTEGER NOT NULL REFERENCES vaccine_dose(id),
+  doseId            INTEGER NOT NULL REFERENCES vaccine_doses(id),
   productId         INTEGER NOT NULL REFERENCES products (id),
   isActive          BOOLEAN,
 
@@ -119,7 +119,7 @@ CREATE TABLE vaccine_report_service_line_items(
   reportId          INTEGER NOT NULL REFERENCES vaccine_reports(id),
 
   productId         INTEGER NOT NULL REFERENCES products(id),
-  doseId            INTEGER NOT NULL REFERENCES vaccine_dose(id),
+  doseId            INTEGER NOT NULL REFERENCES vaccine_doses(id),
   isActive          BOOLEAN NOT NULL DEFAULT (FALSE),
   regular           INTEGER NOT NULL,
   outreach          INTEGER NOT NULL,
