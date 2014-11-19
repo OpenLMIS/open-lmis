@@ -35,4 +35,7 @@ public class DiseaseRepository {
     return mapper.getAll();
   }
 
+  public VaccineDisease getById(Long id) {
+    return mapper.getById(id);
+  }
 }

@@ -8,35 +8,32 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.service;
+package org.openlmis.web.controller.vaccine;
 
-import org.openlmis.vaccine.domain.VaccineDisease;
-import org.openlmis.vaccine.repository.DiseaseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.List;
+import static org.junit.Assert.*;
 
-@Service
-public class DiseaseService {
+public class DiseaseControllerTest {
 
-  @Autowired
-  private DiseaseRepository repository;
+  @Before
+  public void setUp() throws Exception {
 
-  public List<VaccineDisease> getAll(){
-    return repository.getAll();
   }
 
-  public void update(VaccineDisease disease){
-    repository.update(disease);
+  @Test
+  public void testGet() throws Exception {
+
   }
 
-  public void insert(VaccineDisease disease){
-    repository.insert(disease);
+  @Test
+  public void testGetAll() throws Exception {
+
   }
 
-  public VaccineDisease getById(Long id){
-    return repository.getById(id);
-  }
+  @Test
+  public void testGet1() throws Exception {
 
+  }
 }

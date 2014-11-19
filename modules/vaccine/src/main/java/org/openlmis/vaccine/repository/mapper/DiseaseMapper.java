@@ -11,6 +11,7 @@
 package org.openlmis.vaccine.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.openlmis.vaccine.domain.VaccineDisease;
@@ -38,4 +39,6 @@ public interface DiseaseMapper {
     "where id = #{id}")
   void update(VaccineDisease disease);
 
+  @Select("select * from vaccine_diseases where id = #{id}")
+  VaccineDisease getById(@Param("id") Long id);
 }
