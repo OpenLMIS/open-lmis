@@ -7,9 +7,20 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineDistributionController($scope,distributionBatch,VaccineDistributionBatches,$location,messageService,GetDonors,Products,GetFacilityCompleteList,Manufacturers,DistributionTypes){
+function VaccineDistributionController($scope,$route,allFacilities,VaccineDistributionBatches,$location,messageService,GetDonors,Products,GetFacilityCompleteList,Manufacturers,DistributionTypes,VaccineDistributionBatches){
 
     $scope.message = "";
+
+    $scope.allFacilities = allFacilities;
+
+    if(!isUndefined($route.current.params.distributionBatchId)){
+        VaccineDistributionBatches.get({id: $route.current.params.distributionBatchId}, function (data){
+
+            $scope.distributionBatch = $scope.getDistributionBatchWithDateObjects(data.distributionBatch);
+
+        });
+    }
+
     $scope.convertStringToCorrectDateFormat = function(stringDate) {
         if (stringDate) {
             return stringDate.split("-").reverse().join("-");
@@ -27,8 +38,6 @@ function VaccineDistributionController($scope,distributionBatch,VaccineDistribut
 
         return distributionBatch;
     };
-
-    $scope.distributionBatch = $scope.getDistributionBatchWithDateObjects(distributionBatch);
 
 
     $scope.origins = [{id:0,name:'France'},{id:1,name:'USA'}];
@@ -50,11 +59,6 @@ function VaccineDistributionController($scope,distributionBatch,VaccineDistribut
     $scope.cancelDistributionBatchSave = function () {
         $location.path('#/distribution-batch');
     };
-    GetFacilityCompleteList.get({},function(data){
-        $scope.allFacilities = data.allFacilities;
-        $scope.allFacilities.unshift({name:'-- Select Facility --'});
-    });
-
 
     $scope.saveDistributionBatch = function(){
 
@@ -95,18 +99,17 @@ function VaccineDistributionController($scope,distributionBatch,VaccineDistribut
     };
 }
 
+
 VaccineDistributionController.resolve = {
 
-    distributionBatch: function ($q, VaccineDistributionBatches, $route, $timeout) {
-        var distributionBatchId = $route.current.params.distributionBatchId;
-        if (!distributionBatchId) return undefined;
+    allFacilities: function ($q, GetFacilityCompleteList, $timeout) {
         var deferred = $q.defer();
         $timeout(function () {
-            VaccineDistributionBatches.get({id: distributionBatchId}, function (data) {
-                deferred.resolve(data.distributionBatch);
+            GetFacilityCompleteList.get({}, function (data) {
+                deferred.resolve(data.allFacilities);
             }, function () {
             });
-        }, 100);
+        }, 0);
         return deferred.promise;
     }
 };
