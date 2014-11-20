@@ -36,7 +36,7 @@
                             <label for="shortName">Short Name: <span class="label-required"> *</span></label>
 
                             <div class="form-field">
-                                <input ng-model="donor.shortName" name="shortName" id="shortName" type="text" maxlength="30"
+                                <input ng-model="donor.shortName" name="shortName" id="shortName" type="text" maxlength="50"
                                        width="320px"
                                        ng-required="true" ng-change="validateDonorShortName()"/>
                                   <span class="field-error" ng-show="donorForm.shortName.$error.required && showError"
@@ -52,7 +52,7 @@
                             <label for="longName">Long Name: <span class="label-required"> *</span></label>
 
                             <div class="form-field">
-                                <input ng-model="donor.longName" name="longName" id="longName" type="text" maxlength="30"
+                                <input ng-model="donor.longName" name="longName" id="longName" type="text" maxlength="200"
                                        width="320px"
                                        ng-required="true" ng-change="validateDonorShortName()"/>
                                   <span class="field-error" ng-show="donorForm.longName.$error.required && showError"
