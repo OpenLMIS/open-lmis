@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class VaccineDistributionBatchService {
@@ -34,6 +35,10 @@ public class VaccineDistributionBatchService {
         return distributionBatchRepository.getAll();
     }
     public List<DistributionBatch> searchDistributionBatches(String query){
+        return distributionBatchRepository.searchDistributionBatches(query);
+    }
+
+    public List<DistributionBatch> filterDistributionBatches(Map filterCriteria){
         return distributionBatchRepository.searchDistributionBatches(query);
     }
 

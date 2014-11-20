@@ -32,7 +32,7 @@
                     <label for="originalFacility" openlmis-message="label.originalFacility"></label>
                     <div class="form-field">
                         <select id="originalFacility"  name="fromFacility" ng-model="formFilter.fromFacilityId"  style="width:90%;">
-                            <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
+                            <option  ng-repeat="option in allFacilities | limitTo:50" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                         </select>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                     <label for="receivingFacility" openlmis-message="label.receivingFacility"></label>
                     <div class="form-field">
                         <select id="receivingFacility"  name="toFacility" ng-model="formFilter.toFacilityId"  style="width:90%;">
-                            <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
+                            <option  ng-repeat="option in allFacilities | limitTo:50" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                         </select>
                     </div>
                 </div>

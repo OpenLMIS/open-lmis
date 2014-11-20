@@ -42,6 +42,10 @@ function VaccineDistributionFilterController($scope,FilterDistributionBatches,Ge
     $scope.searchDistributionBatch = function () {
 
         alert('searching for '+JSON.stringify($scope.formFilter));
+        FilterDistributionBatches.get({},$scope.formFilter, function(data){
+            alert('data is '+JSON.stringify(data));
+
+        });
 
     };
 

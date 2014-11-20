@@ -19,6 +19,8 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Repository
 public class VaccineDistributionBatchRepository {
@@ -38,6 +40,10 @@ public class VaccineDistributionBatchRepository {
         return distributionBatchMapper.getAll();
     }
     public List<DistributionBatch> searchDistributionBatches(String query){
+        return distributionBatchMapper.searchDistributionBatches(query);
+    }
+
+    public List<Map<String,Object>> filterDistributionBatches(String query){
         return distributionBatchMapper.searchDistributionBatches(query);
     }
 
