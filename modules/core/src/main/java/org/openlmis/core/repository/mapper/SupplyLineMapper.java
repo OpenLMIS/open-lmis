@@ -27,8 +27,8 @@ import java.util.List;
 public interface SupplyLineMapper {
 
   @Insert("INSERT INTO supply_lines " +
-    "(description, supervisoryNodeId, programId, supplyingFacilityId, exportOrders, createdBy, modifiedBy, modifiedDate)" +
-    "VALUES (#{description}, #{supervisoryNode.id}, #{program.id}, #{supplyingFacility.id}, #{exportOrders}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
+    "(description, supervisoryNodeId, programId, supplyingFacilityId, exportOrders, parentId , createdBy, modifiedBy, modifiedDate)" +
+    "VALUES (#{description}, #{supervisoryNode.id}, #{program.id}, #{supplyingFacility.id}, #{exportOrders}, #{parentId}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(SupplyLine supplyLine);
 
@@ -41,7 +41,7 @@ public interface SupplyLineMapper {
 
   @Update("UPDATE supply_lines " +
     "SET description = #{description}, supervisoryNodeId = #{supervisoryNode.id}, programId = #{program.id}, " +
-    "supplyingFacilityId = #{supplyingFacility.id}, exportOrders =#{exportOrders},modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
+    "supplyingFacilityId = #{supplyingFacility.id}, exportOrders =#{exportOrders}, parentId = #{parentId} ,modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
     "WHERE id = #{id}")
   void update(SupplyLine supplyLine);
 
