@@ -29,7 +29,7 @@ public interface DiseaseMapper {
     "(#{name}, #{description}, #{displayOrder}, #{modifiedBy}, #{createdBy})")
   void insert(VaccineDisease disease);
 
-  @Update("update vaccine_disease " +
+  @Update("update vaccine_diseases " +
     "set " +
     " name = #{name}, " +
     " description = #{description}," +

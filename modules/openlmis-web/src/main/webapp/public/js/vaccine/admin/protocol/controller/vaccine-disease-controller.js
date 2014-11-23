@@ -8,6 +8,21 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function VaccineDiseaseController($scope) {
+function VaccineDiseaseController($scope, diseases) {
+
+  $scope.diseases = diseases;
 
 }
+
+VaccineDiseaseController.resolve = {
+
+  diseases: function ($q, $timeout, VaccineDiseases) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      VaccineDiseases.get({}, function (data) {
+        deferred.resolve(data.diseases);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  }
+};

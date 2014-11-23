@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -40,7 +41,7 @@ public class DiseaseController extends BaseController {
   }
 
   @RequestMapping(value="save")
-  public ResponseEntity<OpenLmisResponse> get(@RequestParam VaccineDisease disease) {
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineDisease disease) {
     if(disease.getId() == null){
       service.insert(disease);
     }
