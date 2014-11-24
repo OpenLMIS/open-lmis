@@ -38,7 +38,7 @@ public interface VaccineReportCoverageMapper {
   void update(VaccineCoverageItem item);
 
   @Select("SELECT * from vaccine_report_service_line_items WHERE id = #{id}")
-  VaccineCoverageItem getCoverageById(@Param("id") Long id);
+  VaccineCoverageItem getById(@Param("id") Long id);
 
   @Select("SELECT * from vaccine_report_service_line_items WHERE reportId = #{reportId} and productId = #{productId} and doseId = #{doseId}")
   VaccineCoverageItem getCoverageByReportProductDosage(@Param("reportId") Long reportId, @Param("productId") Long productId, @Param("doseId") Long doseId);
