@@ -8,13 +8,15 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function VaccineProtocolController($scope, programs, protocols, $location, SaveVaccineProductDose) {
+function VaccineProtocolController($scope, programs, protocols, SaveVaccineProductDose, VaccineProductDose) {
 
   $scope.programs = programs;
   $scope.protocols = protocols;
 
   $scope.onProgramChanged = function(){
-    $location.path('/protocol/' + $scope.program);
+    VaccineProductDose.get({programId: $scope.program}, function (data) {
+      $scope.protocols = data.protocol;
+    });
   };
 
 

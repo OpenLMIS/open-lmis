@@ -12,8 +12,9 @@
 
   <p>Please choose a program</p>
   <div>
-    <select ng-model="program" ng-change="onProgramChanged()">
-      <option value="{{op.id}}" ng-repeat="op in programs">{{op.name}}</option>
+    <select ng-model="program"
+            ng-options="program.id as program.name for program in programs"
+            ng-change="onProgramChanged(  )">
     </select>
   </div>
 
