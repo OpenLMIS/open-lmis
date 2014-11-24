@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.dto;
+package org.openlmis.vaccine.domain.reports;
 
 
 import lombok.AllArgsConstructor;
@@ -16,20 +16,22 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.vaccine.domain.reports.ServiceItem;
-
-import java.util.List;
+import org.openlmis.vaccine.domain.VaccineDose;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ServiceLineItemDTO extends BaseModel {
+public class VaccineCoverageItem extends BaseModel{
 
-  private Integer productId;
-  private String productCode;
-  private String productName;
 
-  private List<ServiceItem> serviceItems;
+  private Long reportId;
+  private Long productId;
+
+  private Boolean isActive;
+
+  private Long doseId;
+  private Long regular;
+  private Long outreach;
 
 }
