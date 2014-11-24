@@ -102,8 +102,13 @@ public class SupplyLineController extends BaseController {
         supplyLine.setCreatedDate(new Date());
         // load the supervisory node ... and attach it to the supply line object
         // this is requred by the valiation and the save.
-        SupervisoryNode sn = supervisoryNodeMapper.getSupervisoryNode(Long.parseLong(supplyLine.getSupervisoryNode().getId().toString()));
-        supplyLine.setSupervisoryNode(sn);
+        if(supplyLine.getSupervisoryNode() != null) {
+            SupervisoryNode sn = supervisoryNodeMapper.getSupervisoryNode(Long.parseLong(supplyLine.getSupervisoryNode().getId().toString()));
+            supplyLine.setSupervisoryNode(sn);
+        }else{
+            SupervisoryNode emptyNode = new SupervisoryNode();
+            supplyLine.setSupervisoryNode(emptyNode);
+        }
         // load the programs
         Program program = programService.getById(Long.parseLong(supplyLine.getProgram().getId().toString()));
         supplyLine.setProgram(program);
