@@ -9,9 +9,18 @@
   -->
 <div>
   <h2>Vaccine Protocols</h2>
-  <p>Please check the doses that need to be blocked.</p>
+
+  <p>Please choose a program</p>
+  <div>
+    <select ng-model="program" ng-change="onProgramChanged()">
+      <option value="{{op.id}}" ng-repeat="op in programs">{{op.name}}</option>
+    </select>
+  </div>
+
+
 </div>
-<div class="">
+<div ng-show="program">
+  <p>Please check the doses that apply for this program.</p>
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -21,110 +30,24 @@
         <th>Dose 3</th>
         <th>Dose 4</th>
         <th>Dose 5</th>
-        <th>Dose 6</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th>BCG</th>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" checked /></td>
-        <td><input type="checkbox" checked /></td>
-        <td><input type="checkbox" checked /></td>
-      </tr>
-      <tr>
-        <th>OPV</th>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" checked /></td>
-        <td><input type="checkbox" checked /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-      </tr>
-      <tr>
-        <th>Pentavalent</th>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-      </tr>
-      <tr>
-        <th>PCV</th>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-      </tr>
-      <tr>
-        <th>Rotavirus</th>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-      </tr>
-      <tr>
-        <th>Measles</th>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-      </tr>
-      <tr>
-        <th>Tetanus</th>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-      </tr>
-      <tr>
-        <th>Vitamin A</th>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-      </tr>
-      <tr>
-        <th>HepB</th>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-      </tr>
-      <tr>
-        <th>DTP-HepB-Hip</th>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
-        <td><input type="checkbox" /></td>
+      <tr ng-repeat="product in protocols">
+        <th>{{product.productName}}</th>
+        <td ng-repeat="dose in product.doses">
+          <input type="checkbox" ng-model="dose.isActive" />
+        </td>
       </tr>
     </tbody>
   </table>
 
-
   <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
-      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button" ng-click="save()"
              openlmis-message="button.save"/>
       <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
-             ng-click="cancelUserSave()"/>
+             ng-click="cancel()"/>
     </div>
 
 

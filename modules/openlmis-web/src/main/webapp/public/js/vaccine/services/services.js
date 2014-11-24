@@ -20,3 +20,12 @@ services.factory('VaccineDisease', function ($resource) {
 services.factory('SaveVaccineDisease', function ($resource) {
   return $resource('/vaccine/disease/save.json', {}, update);
 });
+
+
+services.factory('SaveVaccineProductDose', function ($resource) {
+  return $resource('/vaccine/product-dose/save.json', {}, update);
+});
+
+services.factory('VaccineProductDose', function ($resource) {
+  return $resource('/vaccine/product-dose/get/:programId.json', {productId : '@programId'}, {});
+});

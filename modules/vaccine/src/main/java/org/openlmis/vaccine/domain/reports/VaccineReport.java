@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.vaccine.dto.ServiceLineItem;
+import org.openlmis.vaccine.dto.ServiceLineItemDTO;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class VaccineReport extends BaseModel {
 
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;
-  private List<ServiceLineItem> serviceLineItems;
+  private List<ServiceLineItemDTO> serviceLineItems;
   private List<DiseaseLineItem> diseaseLineItems;
 
 }

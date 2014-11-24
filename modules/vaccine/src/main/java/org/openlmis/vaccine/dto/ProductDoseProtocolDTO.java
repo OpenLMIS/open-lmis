@@ -8,23 +8,26 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.domain;
-
+package org.openlmis.vaccine.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.openlmis.vaccine.domain.VaccineProductDose;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class VaccineProductDose extends BaseModel {
+public class ProductDoseProtocolDTO {
 
-  Long doseId;
-  Long productId;
-  Boolean isActive;
+  private Long productId;
+
+  private String productName;
+
+  private List<VaccineProductDose> doses;
 
 }

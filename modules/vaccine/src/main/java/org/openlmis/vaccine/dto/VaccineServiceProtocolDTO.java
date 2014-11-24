@@ -10,26 +10,17 @@
 
 package org.openlmis.vaccine.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.vaccine.domain.reports.ServiceItem;
 
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class ServiceLineItem extends BaseModel {
+public class VaccineServiceProtocolDTO {
 
-  private Integer productId;
-  private String productCode;
-  private String productName;
-
-  private List<ServiceItem> serviceItems;
+  private List<ProductDoseProtocolDTO> protocols;
 
 }

@@ -8,6 +8,48 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function VaccineProtocolController($scope) {
+function VaccineProtocolController($scope, programs, protocols, $location, SaveVaccineProductDose) {
 
+  $scope.programs = programs;
+  $scope.protocols = protocols;
+
+  $scope.onProgramChanged = function(){
+    $location.path('/protocol/' + $scope.program)
+  };
+
+
+  $scope.save = function(){
+    SaveVaccineProductDose.update({protocols: $scope.protocols}, function(data){
+      $scope.message = 'Protocol Saved Successfully';
+    });
+  }
 }
+
+VaccineProtocolController.resolve = {
+  protocols : function($q,$timeout, $route, VaccineProductDose){
+    var deferred = $q.defer();
+
+    if($route.current.params.program)
+    {
+      $timeout(function() {
+        VaccineProductDose.get({programId: $route.current.params.program}, function (data) {
+          deferred.resolve(data.protocol);
+        });
+      }, 100);
+    }else{
+      return {};
+    }
+    return deferred.promise;
+  },
+  programs: function($q, $timeout, Programs){
+    var deferred = $q.defer();
+
+    $timeout(function(){
+      Programs.get({type: 'push'}, function(data){
+        deferred.resolve(data.programs);
+      });
+    },100);
+
+    return deferred.promise;
+  }
+};
