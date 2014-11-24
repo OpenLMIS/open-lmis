@@ -17,14 +17,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VaccineReportCoverageMapper {
 
-  @Insert("INSERT into vaccine_report_service_line_items " +
+  @Insert("INSERT into vaccine_report_coverage_line_items " +
     " (reportId, productId, doseId, isActive, regular, outreach, createdBy, createdDate, modifiedBy, modifiedDate) " +
     " values " +
     " (#{reportId}, #{productId}, #{doseId}, #{isActive}, #{regular}, #{outreach}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
   void insert(VaccineCoverageItem item);
 
-  @Update("UPDATE vaccine_report_service_line_items " +
+  @Update("UPDATE vaccine_report_coverage_line_items " +
     " SET " +
     " reportId = #{reportId} " +
     " , productId = #{productId} " +
@@ -37,10 +37,10 @@ public interface VaccineReportCoverageMapper {
     " WHERE id = #{id} ")
   void update(VaccineCoverageItem item);
 
-  @Select("SELECT * from vaccine_report_service_line_items WHERE id = #{id}")
+  @Select("SELECT * from vaccine_report_coverage_line_items WHERE id = #{id}")
   VaccineCoverageItem getById(@Param("id") Long id);
 
-  @Select("SELECT * from vaccine_report_service_line_items WHERE reportId = #{reportId} and productId = #{productId} and doseId = #{doseId}")
+  @Select("SELECT * from vaccine_report_coverage_line_items WHERE reportId = #{reportId} and productId = #{productId} and doseId = #{doseId}")
   VaccineCoverageItem getCoverageByReportProductDosage(@Param("reportId") Long reportId, @Param("productId") Long productId, @Param("doseId") Long doseId);
 
 

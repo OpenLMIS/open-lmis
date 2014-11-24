@@ -20,6 +20,7 @@ CREATE TABLE vaccine_product_doses
 (
   id                SERIAL PRIMARY KEY,
   doseId            INTEGER NOT NULL REFERENCES vaccine_doses(id),
+  programId         INTEGER NOT NULL REFERENCES programs(id),
   productId         INTEGER NOT NULL REFERENCES products (id),
   isActive          BOOLEAN,
 
@@ -114,7 +115,7 @@ CREATE TABLE vaccine_report_adverse_effect_line_items
   modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE vaccine_report_service_line_items(
+CREATE TABLE vaccine_report_coverage_line_items(
   id                SERIAL PRIMARY KEY,
   reportId          INTEGER NOT NULL REFERENCES vaccine_reports(id),
 

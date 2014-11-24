@@ -28,14 +28,15 @@ public interface ProductDoseMapper {
   @Select("select d.id as doseId, #{programId} as programId, false as isActive,#{productId} as productId from vaccine_doses d order by d.displayOrder")
   List<VaccineProductDose> getEmptySettingByProduct(@Param("programId") Long programId, @Param("productId") Long productId);
 
-  @Insert("insert into vaccine_product_doses (doseId, productId, isActive, createdBy, modifiedBy) " +
+  @Insert("insert into vaccine_product_doses (doseId, programId, productId, isActive, createdBy, modifiedBy) " +
     " values " +
-    " ( #{doseId}, #{productId}, #{isActive},#{createdBy}, #{modifiedBy} )")
+    " ( #{doseId}, #{programId} , #{productId}, #{isActive},#{createdBy}, #{modifiedBy} )")
   void insert(VaccineProductDose dose);
 
   @Update("update vaccine_product_doses " +
     " set " +
     " doseId = #{doseId}," +
+    " programId = #{programId}, " +
     " productId = #{productId}, " +
     " isActive = #{isActive}," +
     " modifiedBy = #{modifiedBy}, " +
