@@ -208,7 +208,7 @@ public class VaccineController extends BaseController {
     @RequestMapping(value = "/distribution-batches/filter", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> filterDistributionBatches(HttpServletRequest request){
 
-        return OpenLmisResponse.response("distributionBatches", distributionBatchService.searchDistributionBatches(""));
+        return OpenLmisResponse.response("distributionBatches", distributionBatchService.filterDistributionBatches(request.getParameterMap()));
     }
 
 

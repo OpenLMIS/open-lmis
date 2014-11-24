@@ -38,8 +38,8 @@ public class VaccineDistributionBatchService {
         return distributionBatchRepository.searchDistributionBatches(query);
     }
 
-    public List<DistributionBatch> filterDistributionBatches(Map filterCriteria){
-        return distributionBatchRepository.searchDistributionBatches(query);
+    public List<Map<String, Object>> filterDistributionBatches(Map filterCriteria){
+        return distributionBatchRepository.filterDistributionBatches(filterCriteria);
     }
 
     public void update(DistributionBatch distributionBatch) {

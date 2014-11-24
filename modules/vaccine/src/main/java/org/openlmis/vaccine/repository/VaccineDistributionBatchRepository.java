@@ -43,8 +43,9 @@ public class VaccineDistributionBatchRepository {
         return distributionBatchMapper.searchDistributionBatches(query);
     }
 
-    public List<Map<String,Object>> filterDistributionBatches(String query){
-        return distributionBatchMapper.searchDistributionBatches(query);
+    public List<Map<String,Object>> filterDistributionBatches(Map<String, Objects> query){
+        return null;
+       // return distributionBatchMapper.searchDistributionBatches(query);
     }
 
     public void update(DistributionBatch distributionBatch){
