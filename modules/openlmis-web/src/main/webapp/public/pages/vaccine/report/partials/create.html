@@ -15,8 +15,10 @@
     <ul class="clearfix">
       <li ng-class="{'selected': (visibleTab == 'stockMovement' || visibleTab == undefined)}">
         <a href="" ng-click="visibleTab ='stockMovement'" >Stock Status</a></li>
-      <li  ng-class="{'selected': visibleTab == 'services'}">
-        <a href="" ng-click="visibleTab = 'services'" >Services</a></li>
+      <li  ng-class="{'selected': visibleTab == 'coverage'}">
+        <a href="" ng-click="visibleTab = 'coverage'" >Coverage</a></li>
+      <li  ng-class="{'selected': visibleTab == 'disease'}">
+        <a href="" ng-click="visibleTab = 'disease'" >Diseases</a></li>
       <li  ng-class="{'selected': visibleTab == 'incident'}">
         <a href="" ng-click="visibleTab = 'incident'" >AEFI Reporting</a></li>
       <li  ng-class="{'selected': visibleTab == 'coldChain'}">
@@ -29,8 +31,11 @@
   <span ng-show="visibleTab == 'stockMovement'">
     <ng-include src="'/public/pages/vaccine/report/partials/create/stock-movement.html'"></ng-include>
   </span>
-  <span ng-show="visibleTab == 'services'">
-    <ng-include src="'/public/pages/vaccine/report/partials/create/services.html'"></ng-include>
+  <span ng-show="visibleTab == 'coverage'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/coverage.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'disease'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/disease.html'"></ng-include>
   </span>
   <span ng-show="visibleTab == 'incident'">
     <ng-include src="'/public/pages/vaccine/report/partials/create/incident.html'"></ng-include>
