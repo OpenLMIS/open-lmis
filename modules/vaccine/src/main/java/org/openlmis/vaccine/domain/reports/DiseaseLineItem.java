@@ -27,7 +27,7 @@ public class DiseaseLineItem extends BaseModel {
 
   private Long diseaseId;
   private String diseaseName;
-  private Long displayOrder;
+  private Integer displayOrder;
 
   private Long cases;
   private Long death;

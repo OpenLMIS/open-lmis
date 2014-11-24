@@ -21,23 +21,23 @@ public class VaccineReportRepository {
   @Autowired
   VaccineReportMapper mapper;
 
-  void insert(VaccineReport report){
+  public void insert(VaccineReport report){
     mapper.insert(report);
   }
 
-  void update(VaccineReport report){
+  public void update(VaccineReport report){
     mapper.update(report);
   }
 
-  VaccineReport getById(Long id){
+  public VaccineReport getById(Long id){
     return mapper.getById(id);
   }
 
-  VaccineReport getByIdWithFullDetails(Long id){
+  public VaccineReport getByIdWithFullDetails(Long id){
     return mapper.getByIdWithFullDetails(id);
   }
 
-  VaccineReport getByProgramPeriod(Long facilityId, Long programId, Long periodId ){
+  public VaccineReport getByProgramPeriod(Long facilityId, Long programId, Long periodId ){
     return mapper.getByPeriodFacilityProgram(facilityId, programId, periodId);
   }
 

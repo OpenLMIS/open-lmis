@@ -21,11 +21,11 @@ public class VaccineReportLogisticsLineItemRepository {
   @Autowired
   VaccineReportLogisticsLineItemMapper mapper;
 
-  void insert(LogisticsLineItem item){
+  public void insert(LogisticsLineItem item){
     mapper.insert(item);
   }
 
-  void update(LogisticsLineItem item){
+  public void update(LogisticsLineItem item){
     mapper.update(item);
   }
 

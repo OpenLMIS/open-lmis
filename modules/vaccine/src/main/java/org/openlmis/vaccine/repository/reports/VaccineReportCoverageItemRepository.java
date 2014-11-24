@@ -19,21 +19,21 @@ import org.springframework.stereotype.Component;
 public class VaccineReportCoverageItemRepository {
 
   @Autowired
-  VaccineReportCoverageMapper mapper;
+  private VaccineReportCoverageMapper mapper;
 
-  void insert(VaccineCoverageItem item){
+  public void insert(VaccineCoverageItem item){
     mapper.insert(item);
   }
 
-  void update(VaccineCoverageItem item){
+  public void update(VaccineCoverageItem item){
     mapper.update(item);
   }
 
-  VaccineCoverageItem getByParams(Long reportId, Long productId, Long doseId){
+  public VaccineCoverageItem getByParams(Long reportId, Long productId, Long doseId){
     return mapper.getCoverageByReportProductDosage(reportId, productId, doseId);
   }
 
-  VaccineCoverageItem getById(Long id){
+  public VaccineCoverageItem getById(Long id){
     return mapper.getById(id);
   }
 }

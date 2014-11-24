@@ -24,6 +24,7 @@ import org.openlmis.core.domain.BaseModel;
 public class VaccineProductDose extends BaseModel {
 
   Long doseId;
+  Long programId;
   Long productId;
   Boolean isActive;
 

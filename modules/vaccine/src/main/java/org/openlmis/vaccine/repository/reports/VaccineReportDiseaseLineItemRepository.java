@@ -19,13 +19,13 @@ import org.springframework.stereotype.Component;
 public class VaccineReportDiseaseLineItemRepository {
 
   @Autowired
-  VaccineReportDiseaseLineItemMapper mapper;
+  private VaccineReportDiseaseLineItemMapper mapper;
 
-  void insert(DiseaseLineItem lineItem){
+  public void insert(DiseaseLineItem lineItem){
     mapper.insert(lineItem);
   }
 
-  void update(DiseaseLineItem lineItem){
+  public void update(DiseaseLineItem lineItem){
     mapper.update(lineItem);
   }
 }
