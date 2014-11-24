@@ -10,46 +10,34 @@
 
 package org.openlmis.web.controller.vaccine;
 
-import org.openlmis.vaccine.domain.VaccineDisease;
-import org.openlmis.vaccine.service.DiseaseService;
+import org.openlmis.vaccine.dto.VaccineServiceProtocolDTO;
+import org.openlmis.vaccine.service.VaccineProductDoseService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(value = "/vaccine/disease/")
-public class DiseaseController extends BaseController {
+@RequestMapping(value = "/vaccine/product-dose/")
+public class ProductDoseController extends BaseController{
 
   @Autowired
-  private DiseaseService service;
+  private VaccineProductDoseService service;
 
-
-  @RequestMapping(value="get/{id}")
-  public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
-    return OpenLmisResponse.response("disease", service.getById(id));
+  @RequestMapping(value = "get/{programId}")
+  public ResponseEntity<OpenLmisResponse> getProgramProtocol(@PathVariable Long programId){
+    return OpenLmisResponse.response("protocol", service.getProductDoseForProgram(programId) );
   }
 
-  @RequestMapping(value="all")
-  public ResponseEntity<OpenLmisResponse> getAll() {
-    return OpenLmisResponse.response("diseases", service.getAll());
+
+  @RequestMapping(value = "save", headers = ACCEPT_JSON, method = RequestMethod.PUT)
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineServiceProtocolDTO protocol){
+    service.save( protocol.getProtocols() );
+    return OpenLmisResponse.response("status","success");
   }
 
-  @RequestMapping(value="save")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineDisease disease) {
-    if(disease.getId() == null){
-      service.insert(disease);
-    }
-    else{
-      service.update(disease);
-    }
-    return OpenLmisResponse.response("status", "success");
-  }
 
 
 }

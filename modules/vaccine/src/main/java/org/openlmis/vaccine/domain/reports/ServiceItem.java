@@ -16,14 +16,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.vaccine.domain.VaccineDose;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ServiceItem extends BaseModel{
-  private Long reportId;
 
+
+  private Long reportId;
   private Long productId;
 
   private Boolean isActive;

@@ -8,23 +8,34 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.domain;
+function VaccineDiseaseFormController($scope, disease, SaveVaccineDisease,$location) {
 
+  $scope.disease = disease;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+  $scope.save = function(form){
+    if(form.$valid){
+      SaveVaccineDisease.update($scope.disease, function(data){
+        $location.path('/disease');
+      },function(error){
+        alert(error.message);
+      });
+    }
+  };
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class VaccineProductDose extends BaseModel {
-
-  Long doseId;
-  Long productId;
-  Boolean isActive;
 
 }
+
+VaccineDiseaseFormController.resolve = {
+  disease : function($q, $timeout, VaccineDisease, $route){
+    if(!$route.current.params.id){
+      return {};
+    }
+    var deferred = $q.defer();
+    $timeout(function(){
+      VaccineDisease.get({id:$route.current.params.id}, function(data){
+        deferred.resolve(data.disease);
+      },{});
+    }, 100);
+    return deferred.promise;
+  }
+};

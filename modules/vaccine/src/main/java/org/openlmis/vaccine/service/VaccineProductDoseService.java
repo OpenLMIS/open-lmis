@@ -13,7 +13,7 @@ package org.openlmis.vaccine.service;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.vaccine.domain.VaccineProductDose;
-import org.openlmis.vaccine.dto.ProductDoseProtocol;
+import org.openlmis.vaccine.dto.ProductDoseProtocolDTO;
 import org.openlmis.vaccine.repository.ProductDoseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,12 +30,12 @@ public class VaccineProductDoseService {
   @Autowired
   private ProgramProductRepository programProductRepository;
 
-  public List<ProductDoseProtocol> getProductDoseForProgram( Long programId ){
+  public List<ProductDoseProtocolDTO> getProductDoseForProgram( Long programId ){
 
-    List<ProductDoseProtocol> protocols= new ArrayList<>();
+    List<ProductDoseProtocolDTO> protocols= new ArrayList<>();
     List<ProgramProduct> pp = programProductRepository.getActiveByProgram(programId);
     for(ProgramProduct p : pp){
-      ProductDoseProtocol protocol= new ProductDoseProtocol();
+      ProductDoseProtocolDTO protocol= new ProductDoseProtocolDTO();
       protocol.setProductId(p.getProduct().getId());
       protocol.setProductName(p.getProduct().getName());
       protocol.setDoses(repository.getDosesForProduct(p.getProduct().getId()));
@@ -47,8 +47,8 @@ public class VaccineProductDoseService {
     return protocols;
   }
 
-  public void save(List<ProductDoseProtocol> protocols){
-    for(ProductDoseProtocol protocol : protocols){
+  public void save(List<ProductDoseProtocolDTO> protocols){
+    for(ProductDoseProtocolDTO protocol : protocols){
       for(VaccineProductDose dose : protocol.getDoses()){
         if(dose.getId() == null){
           repository.insert(dose);

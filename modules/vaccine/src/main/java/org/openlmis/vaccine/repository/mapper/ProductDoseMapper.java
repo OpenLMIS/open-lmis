@@ -25,7 +25,7 @@ public interface ProductDoseMapper {
   @Select("select pd.* from vaccine_product_doses pd join vaccine_doses d on d.id = pd.doseId where productId = #{productId} order by d.displayOrder")
   List<VaccineProductDose> getDoseSettingByProduct(@Param("productId")Long productId);
 
-  @Select("select d.id as doseId, isActive = false, productId = #{productId} from vaccine_doses d order by d.displayOrder")
+  @Select("select d.id as doseId, false as isActive,#{productId} as productId from vaccine_doses d order by d.displayOrder")
   List<VaccineProductDose> getEmptySettingByProduct(@Param("productId")Long productId);
 
   @Insert("insert into vaccine_product_doses (doseId, productId, isActive, createdBy, modifiedBy) " +

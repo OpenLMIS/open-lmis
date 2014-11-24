@@ -135,7 +135,7 @@ public class RnrLineItem extends LineItem {
     this.previousStockInHand = previousLineItem.getStockInHand();
   }
 
-  public void setSkippedValueWhenPreviousLineItemIsAvalable(RnrLineItem previousLineItem){
+  public void setSkippedValueWhenPreviousLineItemIsAvailable(RnrLineItem previousLineItem){
     if(previousLineItem != null){
       this.setSkipped(previousLineItem.getSkipped());
     }

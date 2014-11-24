@@ -9,40 +9,28 @@
   -->
 <div>
   <h2>Diseases Tracked</h2>
+  <a href="#/disease/add" class="pull-right btn btn-primary">Add New Disease</a>
   <p>Manage vaccine related diseases that are tracked here</p>
 </div>
 <div class="">
+
   <table class="table table-bordered">
     <thead>
       <tr>
         <th class="span1">#</th>
         <th class="span5">Disease Name</th>
         <th>Description</th>
+        <th>Display Order</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="disease in diseases">
         <th>{{$index + 1}}</th>
-        <td>{{disease.name}}</td>
+        <td><a ng-href="#/disease/edit/{{disease.id}}">{{disease.name}}</a></td>
         <td>{{disease.description}}</td>
+        <td>{{disease.displayOrder}}</td>
       </tr>
     </tbody>
   </table>
 
-
-  <div form-toolbar id="action_buttons" class="action-buttons">
-    <div class="form-cell button-row">
-      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
-             openlmis-message="button.save"/>
-      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
-             ng-click="cancelUserSave()"/>
-    </div>
-
-
-    <div class="toolbar-error" id="saveErrorMsgDiv">
-      <span openlmis-message="error" ng-show="error"></span>&nbsp;
-      <span ng-show="errorProgram" ng-bind="errorProgram"></span>
-    </div>
-    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
-  </div>
 </div>
