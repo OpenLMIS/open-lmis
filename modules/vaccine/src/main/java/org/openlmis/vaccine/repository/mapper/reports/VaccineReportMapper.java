@@ -54,5 +54,16 @@ public interface VaccineReportMapper {
     "where id = #{id}")
   void update(VaccineReport report);
 
+  @Select("select max(s.scheduleId) id from requisition_group_program_schedules s " +
+    " join requisition_group_members m " +
+    "     on m.requisitionGroupId = s.requisitionGroupId " +
+    " where " +
+    "   s.programId = #{programId} " +
+    "   and m.facilityId = #{facilityId} ")
+  Long getScheduleFor(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
+  @Select("select * from vaccine_reports " +
+    "   where " +
+    "     facilityId = #{facilityId} and programId = #{programId}")
+  VaccineReport getLastReport(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 }

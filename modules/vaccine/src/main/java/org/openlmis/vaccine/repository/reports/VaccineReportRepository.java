@@ -41,4 +41,11 @@ public class VaccineReportRepository {
     return mapper.getByPeriodFacilityProgram(facilityId, programId, periodId);
   }
 
+  public VaccineReport getLastReport(Long facilityId, Long programId) {
+    return mapper.getLastReport(facilityId, programId);
+  }
+
+  public Long getScheduleFor(Long facilityId, Long programId) {
+    return mapper.getScheduleFor(facilityId, programId);
+  }
 }
