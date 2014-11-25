@@ -874,3 +874,6 @@ services.factory('TempratureDetail', function ($resource) {
 services.factory('DeleteTemprature', function ($resource) {
     return $resource('/deleteTemprature.json', {}, {post:{method:'POST'}});
 });
+services.factory('StorageFacilityList', function ($resource) {
+    return $resource('/facilityList.json', {}, {});
+});
