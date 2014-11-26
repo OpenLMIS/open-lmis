@@ -142,6 +142,7 @@ public class VaccineReportService {
   }
 
   public void save(VaccineReport report) {
+    repository.update(report);
     // save the other user inputs too.
     lLineItemService.saveLogisticsLineItems(report.getLogisticsLineItems());
     lLineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());

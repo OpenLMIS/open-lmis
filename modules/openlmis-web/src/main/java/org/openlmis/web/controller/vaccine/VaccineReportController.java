@@ -13,6 +13,7 @@ package org.openlmis.web.controller.vaccine;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.vaccine.RequestStatus;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
 import org.openlmis.web.controller.BaseController;
@@ -83,7 +84,8 @@ public class VaccineReportController extends BaseController {
 
   @RequestMapping(value = "submit")
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
-    //service.submit(report);
+    report.setStatus(RequestStatus.SUBMITTED.toString());
+    service.save(report);
     return OpenLmisResponse.response("report", report);
   }
 
