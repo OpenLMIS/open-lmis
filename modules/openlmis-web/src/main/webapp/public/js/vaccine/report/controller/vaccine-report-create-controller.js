@@ -21,7 +21,7 @@ CreateVaccineReportController.resolve = {
 
     $timeout(function(){
       VaccineReport.get({id: $route.current.params.id}, function(data){
-        deferred.resolve(data.report)
+        deferred.resolve(data.report);
       });
     }, 100);
     return deferred.promise;

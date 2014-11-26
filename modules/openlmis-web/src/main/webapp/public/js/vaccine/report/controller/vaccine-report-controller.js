@@ -28,11 +28,11 @@ function VaccineReportController($scope, programs, VaccineReportFacilities, Vacc
   $scope.initiate = function(period){
     if(period.id !== undefined){
       // redirect already
-      $location.path('/create/'+ period.id)
+      $location.path('/create/'+ period.id);
     }else{
       // initiate
       VaccineReportInitiate.get({ periodId: period.periodId, facilityId: period.facilityId, programId: period.programId}, function(data){
-        $location.path('/create/'+ data.report.id)
+        $location.path('/create/'+ data.report.id);
       });
     }
   };
@@ -52,4 +52,4 @@ VaccineReportController.resolve = {
 
     return deferred.promise;
   }
-}
+};
