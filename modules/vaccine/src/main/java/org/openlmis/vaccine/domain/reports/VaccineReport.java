@@ -40,6 +40,7 @@ public class VaccineReport extends BaseModel {
   private ProcessingPeriod period;
   private Facility facility;
 
+  private Boolean trackCampaignCoverage;
 
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;

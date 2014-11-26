@@ -87,4 +87,9 @@ public class ConfigurationSettingService {
   }
 
 
+  public void saveBooleanValue(String key, Boolean value) {
+    ConfigurationSetting setting = configurationSettingRepository.getByKey(key);
+    setting.setValue(value.toString());
+    configurationSettingRepository.setValue(setting);
+  }
 }

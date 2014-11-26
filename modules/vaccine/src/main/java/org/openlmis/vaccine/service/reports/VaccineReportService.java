@@ -50,6 +50,9 @@ public class VaccineReportService {
   @Autowired
   VaccineProductDoseService productDoseService;
 
+  @Autowired
+  ConfigurationSettingService settingService;
+
 
   @Autowired
   ProgramService programService;
@@ -153,6 +156,7 @@ public class VaccineReportService {
   public VaccineReport getById(Long id) {
     VaccineReport report =  repository.getByIdWithFullDetails(id);
     report.prepareCoverageDto();
+    report.setTrackCampaignCoverage(settingService.getBoolValue("TRACK_VACCINE_CAMPAIGN_COVERAGE"));
     return report;
   }
 }
