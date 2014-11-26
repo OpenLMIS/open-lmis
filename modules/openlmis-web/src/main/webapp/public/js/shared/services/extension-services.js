@@ -912,3 +912,35 @@ services.factory('DistributionTypes', function($resource){
     return $resource('/vaccine/distributionTypes.json',{},{});
 });
 
+
+services.factory('VaccineManufacturerUpdate', function ($resource) {
+    return $resource('/vaccineManufacturer/create.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('VaccineManufacturerList', function ($resource) {
+    return $resource('/vaccineManufacturer/list.json', {}, {});
+});
+
+services.factory('GetVaccineManufacturer', function ($resource) {
+    return $resource('/vaccineManufacturer/get/:id.json', {}, {});
+});
+
+services.factory('DeleteVaccineManufacturer', function ($resource) {
+    return $resource('/vaccineManufacturer/delete/:id.json', {}, {});
+});
+
+services.factory('GetVaccineManufacturerProductMapping', function ($resource) {
+    return $resource('/vaccineManufacturer/getManufacturerProducts/:id.json', {}, {});
+});
+
+services.factory('VaccineManufacturerProductUpdate', function ($resource) {
+    return $resource('/vaccineManufacturer/createProduct.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('GetManufacturerProduct', function ($resource) {
+    return $resource('/vaccineManufacturer/getProduct/:id.json', {}, {});
+});
+
+services.factory('DeleteManufacturerProductMapping', function ($resource) {
+    return $resource('/vaccineManufacturer/deleteProduct/:id.json', {}, {});
+});
