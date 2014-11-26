@@ -78,4 +78,10 @@ public class VaccineReportController extends BaseController {
     return OpenLmisResponse.response("report", report);
   }
 
+  @RequestMapping(value = "submit")
+  public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
+    //service.submit(report);
+    return OpenLmisResponse.response("report", report);
+  }
+
 }

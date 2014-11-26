@@ -64,6 +64,6 @@ public interface VaccineReportMapper {
 
   @Select("select * from vaccine_reports " +
     "   where " +
-    "     facilityId = #{facilityId} and programId = #{programId}")
+    "     facilityId = #{facilityId} and programId = #{programId} order by id desc limit 1")
   VaccineReport getLastReport(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 }

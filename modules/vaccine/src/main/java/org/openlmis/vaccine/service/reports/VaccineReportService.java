@@ -69,7 +69,7 @@ public class VaccineReportService {
     report.setFacilityId(facilityId);
     report.setProgramId(programId);
     report.setPeriodId(periodId);
-
+    report.setStatus(RequestStatus.DRAFT.toString());
     repository.insert(report);
 
     List<ProgramProduct> programProducts = programProductService.getActiveByProgram(programId);
@@ -112,7 +112,7 @@ public class VaccineReportService {
     // find all periods that are after this period, and before today.
 
     List<ProcessingPeriod> periods = periodService.getAllPeriodsForDateRange(scheduleId, startDate, new Date());
-    if(lastRequest.getStatus().equals( RequestStatus.DRAFT.toString())){
+    if(lastRequest != null && lastRequest.getStatus().equals( RequestStatus.DRAFT.toString())){
       ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
       reportStatusDTO.setPeriodName(lastRequest.getPeriod().getName());
       reportStatusDTO.setPeriodId(lastRequest.getPeriod().getId());

@@ -7,6 +7,11 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-function CreateVaccineReportController($scope) {
+function CreateVaccineReportController($scope, programs) {
+  // initial state of the display
+
   $scope.visibleTab = 'stockMovement';
+
+
+
 }
