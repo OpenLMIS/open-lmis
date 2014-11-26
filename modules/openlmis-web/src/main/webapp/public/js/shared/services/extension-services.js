@@ -897,7 +897,7 @@ services.factory('DeleteTemprature', function ($resource) {
 });
 services.factory('StorageFacilityList', function ($resource) {
     return $resource('/facilityList.json', {}, {});
-});});
+});
 
 services.factory('VaccineDistributionBatches', function ($resource) {
     return $resource('/vaccine/distribution-batches/:id.json', {id: '@id'}, update);
