@@ -14,7 +14,7 @@
   <table class="table table-bordered">
     <thead>
     <tr>
-      <th class="span5" rowspan="2">Product</th>
+      <th ng-class="{'span2': report.trackCampaignCoverage, 'span5':!report.trackCampaignCoverage }" rowspan="2">Product</th>
       <th class="span1" colspan="{{report.trackCampaignCoverage?2:1}}">Dose 1</th>
       <th class="span1" colspan="{{report.trackCampaignCoverage?2:1}}">Dose 2</th>
       <th class="span1" colspan="{{report.trackCampaignCoverage?2:1}}">Dose 3</th>
@@ -36,7 +36,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="product in report.coverageLineItems">
-      <td class="col-product cell-input"><span class="cell-text">{{product.productName}}</span></td>
+      <td class="col-product cell-input" ng-class="{'span2': report.trackCampaignCoverage, 'span5':!report.trackCampaignCoverage }" ><span class="cell-text">{{product.productName}}</span></td>
       <td class="cell-input col-beginningBalance" ng-repeat-start="dose in product.items">
         <input ng-disabled="!dose.isActive" ng-model="dose.regular" type="text" />
       </td>
