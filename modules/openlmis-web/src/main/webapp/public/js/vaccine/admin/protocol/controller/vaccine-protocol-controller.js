@@ -14,7 +14,7 @@ function VaccineProtocolController($scope, programs, protocols, $location, SaveV
   $scope.protocols = protocols;
 
   $scope.onProgramChanged = function(){
-    $location.path('/protocol/' + $scope.program)
+    $location.path('/protocol/' + $scope.program);
   };
 
 
@@ -22,7 +22,7 @@ function VaccineProtocolController($scope, programs, protocols, $location, SaveV
     SaveVaccineProductDose.update({protocols: $scope.protocols}, function(data){
       $scope.message = 'Protocol Saved Successfully';
     });
-  }
+  };
 }
 
 VaccineProtocolController.resolve = {
