@@ -188,9 +188,9 @@ CREATE TABLE
                      grossCapacity INTEGER ,  netCapacity INTEGER ,  dimension VARCHAR (100) ,
                      createdBy INTEGER ,  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  modifiedBy INTEGER ,
                      modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP );
-CREATE UNIQUE INDEX uc_vaccine_storage_code ON vaccine_storage(location);
+CREATE UNIQUE INDEX uc_vaccine_storage_code ON vaccine_storage(locCode);
 COMMENT ON TABLE vaccine_storage IS 'Vaccine storage capacity';
-COMMENT ON INDEX uc_vaccine_storage_code IS 'Unique code required for storage location';
+COMMENT ON INDEX uc_vaccine_storage_code IS 'Unique code required for storage locCode';
 COMMENT ON COLUMN vaccine_storage.id IS 'ID';
 COMMENT ON COLUMN vaccine_storage.storageTypeId IS 'Storage type';
 COMMENT ON COLUMN vaccine_storage.facilityId IS 'Facility';
