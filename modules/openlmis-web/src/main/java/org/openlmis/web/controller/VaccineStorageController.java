@@ -48,6 +48,7 @@ public class VaccineStorageController extends BaseController  {
     public static final String VACCINESTORAGELIST = "vaccineStorageList";
     public static final String TEMPERATURELIST = "temperatureList";
     public static final String STORAGETYPELIST = "storageTypeList";
+    public static final String FACILLYLIST = "facilityList";
     public static final String STORAGETYPE="storageType";
     public static final String TEMPRATURE="temprature";
     @RequestMapping(value = "/createVaccineStorage", method = RequestMethod.POST, headers = ACCEPT_JSON)
@@ -292,6 +293,12 @@ public class VaccineStorageController extends BaseController  {
         response.getBody().addData(TEMPERATURELIST, this.tempratureService.loadTempratureList());
         this.tempratureService.removeTemprature(temprature);
         return response;
+    }
+    @RequestMapping(value = "/facilityList", method = RequestMethod.GET, headers = "Accept=application/json")
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> loadFacilityList() {
+        //System.out.println(" here calling");
+        return OpenLmisResponse.response(FACILLYLIST, this.storageService.loadFacillityList());
     }
     }
 

@@ -22,11 +22,9 @@
   <div class="row-fluid">
     <select ui-select2
             id="programListMyFacility" class="span3"
-          ng-model="filter.program"   ng-change="loadPeriods()">
-      <option value=""></option>
-      <option selected="selected"
-              value="vaccine">Vaccine
-      </option>
+          ng-model="filter.program"   ng-change="onProgramChanged()">
+
+      <option value="{{program.id}}" ng-repeat="program in programs">{{program.name}}</option>
     </select>
   </div>
 
@@ -39,11 +37,9 @@
   <div class="row-fluid">
     <select ui-select2
             id="facility" class="span3"
-           ng-model="filter.facility"  ng-change="loadPeriods()">
-      <option value=""></option>
-      <option selected="selected"
-              value="kabawe">Kabawe HC
-      </option>
+           ng-model="filter.facility"  ng-change="onFacilityChanged()">
+      <option value="{{facility.id}}" ng-repeat="facility in facilities">{{facility.name}}</option>
+
     </select>
   </div>
 
@@ -58,11 +54,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-             <td>Sep, 2014</td>
-             <td>Draft</td>
-            <td><a class="btn btn-block" href="#create">Proceed</a></td>
-          </tr>
+        <tr ng-repeat="period in periods">
+          <td>{{period.periodName}}</td>
+          <td>{{period.status? period.status : 'Not Initiated'}}</td>
+          <td>
+            <span ng-show="$index == 0">
+              <a class="btn btn-primary" href="" ng-click="initiate(period)">Proceed</a>
+            </span>
+          </td>
+        </tr>
+
         </tbody>
       </table>
     </div>

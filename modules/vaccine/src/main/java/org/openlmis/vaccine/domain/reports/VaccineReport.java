@@ -15,9 +15,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.vaccine.dto.ServiceLineItemDTO;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.vaccine.domain.VaccineDisease;
+import org.openlmis.vaccine.domain.VaccineProductDose;
+import org.openlmis.vaccine.dto.CoverageLineItemDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,14 +33,66 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class VaccineReport extends BaseModel {
   private Long   periodId;
-  private Long   productId;
+  private Long   programId;
   private Long   facilityId;
   private String status;
   private Long   supervisoryNodeId;
+  private ProcessingPeriod period;
+  private Facility facility;
+
 
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;
-  private List<ServiceLineItemDTO> serviceLineItems;
+
+  @JsonIgnore
+  private List<VaccineCoverageItem> coverageItems;
+
+  private List<CoverageLineItemDTO> coverageLineItems;
   private List<DiseaseLineItem> diseaseLineItems;
 
+
+  public void initializeLogisticsLineItems(List<ProgramProduct> programProducts){
+    logisticsLineItems = new ArrayList<>();
+    for(ProgramProduct pp: programProducts){
+      LogisticsLineItem item = new LogisticsLineItem();
+
+      item.setReportId(id);
+
+      item.setProductId(pp.getProduct().getId());
+      item.setProductCode(pp.getProduct().getCode());
+      item.setProductName(pp.getProduct().getName());
+
+      item.setDisplayOrder(pp.getDisplayOrder());
+
+      logisticsLineItems.add(item);
+    }
+
+  }
+
+  public void initializeDiseaseLineItems(List<VaccineDisease> diseases) {
+    diseaseLineItems = new ArrayList<>();
+    for(VaccineDisease disease: diseases){
+      DiseaseLineItem lineItem = new DiseaseLineItem();
+      lineItem.setReportId(id);
+      lineItem.setDiseaseId(disease.getId());
+      lineItem.setDiseaseName(disease.getName());
+      lineItem.setDisplayOrder(disease.getDisplayOrder());
+
+      diseaseLineItems.add(lineItem);
+   }
+  }
+
+  public void initializeCoverageLineItems(List<VaccineProductDose> dosesToCover) {
+    coverageItems = new ArrayList<>();
+    for(VaccineProductDose dose: dosesToCover){
+      VaccineCoverageItem item = new VaccineCoverageItem();
+
+      item.setReportId(id);
+      item.setDoseId(dose.getDoseId());
+      item.setIsActive(dose.getIsActive());
+      item.setProductId(dose.getProductId());
+
+      coverageItems.add(item);
+    }
+  }
 }

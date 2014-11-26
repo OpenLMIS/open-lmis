@@ -12,6 +12,7 @@ angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootst
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
         when('/list', {controller:VaccineProtocolController, templateUrl:'partials/list.html', resolve: VaccineProtocolController.resolve }).
+        when('/protocol', {controller:VaccineProtocolController, templateUrl:'partials/list.html', resolve: VaccineProtocolController.resolve }).
         when('/protocol/:program', {controller:VaccineProtocolController, templateUrl:'partials/list.html', resolve: VaccineProtocolController.resolve }).
         when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html', resolve : VaccineDiseaseController.resolve }).
         when('/disease/add', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).

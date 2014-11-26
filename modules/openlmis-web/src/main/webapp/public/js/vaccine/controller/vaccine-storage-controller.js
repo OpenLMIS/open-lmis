@@ -8,12 +8,17 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 function VaccineStorageController($scope, $location, $route, $dialog, messageService, CreateVaccineStorage,
-                                  UpdateVaccineStorage,VaccineStorageList,VaccineStorageDetail,DeleteVaccineStorage,StorageTypeList ,TempratureList) {
+                                  UpdateVaccineStorage,VaccineStorageList,VaccineStorageDetail,DeleteVaccineStorage,StorageTypeList ,TempratureList,StorageFacilityList) {
 
 
 
 
     $scope.disabled = false;
+    StorageFacilityList.get({}, function (data) {
+        $scope.facillityList = data.facilityList;
+    }, function (data) {
+        $location.path($scope.$parent.sourceUrl);
+    });
     VaccineStorageList.get({}, function (data) {
         $scope.vaccineStorageList = data.vaccineStorageList;
     }, function (data) {

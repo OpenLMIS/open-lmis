@@ -8,39 +8,44 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.repository;
+package org.openlmis.vaccine.repository.reports;
 
-import org.openlmis.vaccine.domain.VaccineProductDose;
-import org.openlmis.vaccine.repository.mapper.ProductDoseMapper;
+import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.repository.mapper.reports.VaccineReportMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
-public class ProductDoseRepository {
+public class VaccineReportRepository {
 
   @Autowired
-  private ProductDoseMapper mapper;
+  VaccineReportMapper mapper;
 
-  public void insert(VaccineProductDose dose){
-    mapper.insert(dose);
+  public void insert(VaccineReport report){
+    mapper.insert(report);
   }
 
-
-  public void update(VaccineProductDose dose){
-    mapper.update(dose);
+  public void update(VaccineReport report){
+    mapper.update(report);
   }
 
-  public List<VaccineProductDose> getDosesForProduct(Long programId, Long productId){
-    return mapper.getDoseSettingByProduct(programId, productId);
+  public VaccineReport getById(Long id){
+    return mapper.getById(id);
   }
 
-  public List<VaccineProductDose> getEmptyDosesForProduct(Long programId, Long productId){
-    return mapper.getEmptySettingByProduct(programId, productId);
+  public VaccineReport getByIdWithFullDetails(Long id){
+    return mapper.getByIdWithFullDetails(id);
   }
 
-  public List<VaccineProductDose> getProgramProductDoses(Long programId) {
-    return mapper.getProgramProductDoses(programId);
+  public VaccineReport getByProgramPeriod(Long facilityId, Long programId, Long periodId ){
+    return mapper.getByPeriodFacilityProgram(facilityId, programId, periodId);
+  }
+
+  public VaccineReport getLastReport(Long facilityId, Long programId) {
+    return mapper.getLastReport(facilityId, programId);
+  }
+
+  public Long getScheduleFor(Long facilityId, Long programId) {
+    return mapper.getScheduleFor(facilityId, programId);
   }
 }

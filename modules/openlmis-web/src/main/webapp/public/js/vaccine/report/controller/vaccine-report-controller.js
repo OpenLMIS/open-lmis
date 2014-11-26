@@ -8,49 +8,47 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function VaccineProtocolController($scope, programs, protocols, SaveVaccineProductDose, VaccineProductDose) {
+function VaccineReportController($scope, programs, VaccineReportFacilities, VaccineReportPeriods, VaccineReportInitiate, $location) {
 
   $scope.programs = programs;
-  $scope.protocols = protocols;
 
   $scope.onProgramChanged = function(){
-    VaccineProductDose.get({programId: $scope.program}, function (data) {
-      $scope.protocols = data.protocol;
+    VaccineReportFacilities.get({programId: $scope.filter.program}, function(data){
+      $scope.facilities = data.facilities;
     });
   };
 
 
-  $scope.save = function(){
-    SaveVaccineProductDose.update({protocols: $scope.protocols}, function(data){
-      $scope.message = 'Protocol Saved Successfully';
+  $scope.onFacilityChanged = function(){
+    VaccineReportPeriods.get({facilityId: $scope.filter.facility, programId: $scope.filter.program}, function(data){
+      $scope.periods = data.periods;
     });
   };
+
+  $scope.initiate = function(period){
+    if(period.id !== undefined){
+      // redirect already
+      $location.path('/create/'+ period.id);
+    }else{
+      // initiate
+      VaccineReportInitiate.get({ periodId: period.periodId, facilityId: period.facilityId, programId: period.programId}, function(data){
+        $location.path('/create/'+ data.report.id);
+      });
+    }
+  };
+
 }
 
-VaccineProtocolController.resolve = {
-  protocols : function($q,$timeout, $route, VaccineProductDose){
-    var deferred = $q.defer();
-
-    if($route.current.params.program)
-    {
-      $timeout(function() {
-        VaccineProductDose.get({programId: $route.current.params.program}, function (data) {
-          deferred.resolve(data.protocol);
-        });
-      }, 100);
-    }else{
-      return {};
-    }
-    return deferred.promise;
-  },
-  programs: function($q, $timeout, Programs){
+VaccineReportController.resolve = {
+  programs: function($q, $timeout, VaccineReportPrograms){
     var deferred = $q.defer();
 
     $timeout(function(){
-      Programs.get({type: 'push'}, function(data){
+      VaccineReportPrograms.get({},function(data){
         deferred.resolve(data.programs);
       });
     },100);
+
 
     return deferred.promise;
   }

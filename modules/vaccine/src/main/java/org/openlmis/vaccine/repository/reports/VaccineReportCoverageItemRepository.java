@@ -8,24 +8,32 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.domain;
+package org.openlmis.vaccine.repository.reports;
 
+import org.openlmis.vaccine.domain.reports.VaccineCoverageItem;
+import org.openlmis.vaccine.repository.mapper.reports.VaccineReportCoverageMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+@Component
+public class VaccineReportCoverageItemRepository {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class VaccineProductDose extends BaseModel {
+  @Autowired
+  private VaccineReportCoverageMapper mapper;
 
-  Long doseId;
-  Long programId;
-  Long productId;
-  Boolean isActive;
+  public void insert(VaccineCoverageItem item){
+    mapper.insert(item);
+  }
 
+  public void update(VaccineCoverageItem item){
+    mapper.update(item);
+  }
+
+  public VaccineCoverageItem getByParams(Long reportId, Long productId, Long doseId){
+    return mapper.getCoverageByReportProductDosage(reportId, productId, doseId);
+  }
+
+  public VaccineCoverageItem getById(Long id){
+    return mapper.getById(id);
+  }
 }

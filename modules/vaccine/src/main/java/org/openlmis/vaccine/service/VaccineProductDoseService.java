@@ -38,13 +38,17 @@ public class VaccineProductDoseService {
       ProductDoseProtocolDTO protocol= new ProductDoseProtocolDTO();
       protocol.setProductId(p.getProduct().getId());
       protocol.setProductName(p.getProduct().getName());
-      protocol.setDoses(repository.getDosesForProduct(p.getProduct().getId()));
+      protocol.setDoses(repository.getDosesForProduct( programId, p.getProduct().getId()));
       if(protocol.getDoses() == null || protocol.getDoses().size() == 0){
-        protocol.setDoses(repository.getEmptyDosesForProduct(p.getProduct().getId()));
+        protocol.setDoses(repository.getEmptyDosesForProduct(programId, p.getProduct().getId()));
       }
       protocols.add(protocol);
     }
     return protocols;
+  }
+
+  public List<VaccineProductDose> getForProgram(Long programId){
+    return repository.getProgramProductDoses(programId);
   }
 
   public void save(List<ProductDoseProtocolDTO> protocols){

@@ -52,22 +52,72 @@
                                   </span>
                             </div>
                         </div>
+                    <!--start-->
                     <div class="form-cell">
-                            <label for="grossCapacity">Gross Capacity(liters): <span class="label-required"> *</span></label>
 
-                            <div class="form-field">
-                                <input ng-model="vaccineStorage.grossCapacity" name="grossCapacity" id="grossCapacity" type="text"
-                                       maxlength="50"
-                                       ng-required="true" />
+                        <label for="faciliyt">Facility: <span class="label-required"> *</span></label>
+
+                        <div class="form-field">
+
+                            <select name="faciliyt" id="faciliyt" ng-model="vaccineStorage.facility.id"
+                                    ng-options="i.id as i.name for i in facillityList" ng-required="true">
+                                <option value="" label="Select Facility" ></option>
+                            </select>
+                              <span class="field-error" ng-show="vaccineStorageForm.code.$error.required && showError"
+                                    openlmis-message="missing.value">
+                              </span>
+
+                        </div>
+                    </div>
+                    <div class="form-cell">
+                        <label for="locationName">Location Name: <span class="label-required"> *</span></label>
+
+                        <div class="form-field">
+                            <input ng-model="vaccineStorage.locationName" name="locationName" id="locationName" type="text"
+                                   maxlength="50"
+                                   ng-required="true"/>
+                                  <span class="field-error" ng-show="vaccineStorageForm.locationName.$error.required && showError"
+                                        openlmis-message="missing.value">
+                                  </span>
+
+                                  <span class="field-error" ng-show="donorShortNameInvalid">
+                                      Invalid location Name
+                                  </span>
+                        </div>
+                    </div>
+                    <!--end-->
+                    <div class="form-cell">
+                    <label for="grossCapacity">Gross Capacity(liters): <span class="label-required"> *</span></label>
+
+                    <div class="form-field">
+                        <input ng-model="vaccineStorage.grossCapacity" name="grossCapacity" id="grossCapacity" type="text"
+                               maxlength="50"
+                               ng-required="true" />
                                   <span class="field-error" ng-show="vaccineStorageForm.grossCapacity.$error.required && showError"
                                         openlmis-message="missing.value">
                                   </span>
 
                                   <span class="field-error" ng-show="donorShortNameInvalid">
-                                      Invalid donor name
+                                      Invalid Gross Capacity
                                   </span>
-                            </div>
+                    </div>
+                </div>
+                    <div class="form-cell">
+                        <label for="dimension">Dimension: <span class="label-required"> *</span></label>
+
+                        <div class="form-field">
+                            <input ng-model="vaccineStorage.dimenstion" name="dimension" id="dimension" type="text"
+                                   maxlength="50"
+                                   ng-required="true" />
+                                  <span class="field-error" ng-show="vaccineStorageForm.dimension.$error.required && showError"
+                                        openlmis-message="missing.value">
+                                  </span>
+
+                                  <span class="field-error" ng-show="donorShortNameInvalid">
+                                      Invalid dimension
+                                  </span>
                         </div>
+                    </div>
                     <div class="form-cell">
                             <label for="netCapacity">Net Capacity(liters): <span class="label-required"> *</span></label>
 

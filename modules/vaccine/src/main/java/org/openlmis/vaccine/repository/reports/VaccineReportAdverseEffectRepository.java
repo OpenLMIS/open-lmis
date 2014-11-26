@@ -8,24 +8,25 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.domain;
+package org.openlmis.vaccine.repository.reports;
 
+import org.openlmis.vaccine.domain.reports.AdverseEffectLineItem;
+import org.openlmis.vaccine.repository.mapper.reports.VaccineReportAdverseEffectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+@Component
+public class VaccineReportAdverseEffectRepository {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class VaccineProductDose extends BaseModel {
+  @Autowired
+  VaccineReportAdverseEffectMapper mapper;
 
-  Long doseId;
-  Long programId;
-  Long productId;
-  Boolean isActive;
+  void insert(AdverseEffectLineItem lineItem){
+    mapper.insert(lineItem);
+  }
+
+  void update(AdverseEffectLineItem lineItem){
+    mapper.update(lineItem);
+  }
 
 }

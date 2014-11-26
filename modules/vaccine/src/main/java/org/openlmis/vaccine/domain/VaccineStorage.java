@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.upload.Importable;
 
 /*
@@ -26,8 +27,13 @@ public class VaccineStorage extends BaseModel implements Importable {
      */
     private StorageType storageTypeId;
     private String location;
+    private String locationName;
     private int grossCapacity;
     private int netCapacity;
     private Temprature tempretureId;
+    private String dimenstion;
+    private Facility facility;
+
+
 
 }

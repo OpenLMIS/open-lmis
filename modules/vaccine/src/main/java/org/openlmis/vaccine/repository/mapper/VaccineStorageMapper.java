@@ -19,9 +19,9 @@ import java.util.List;
 public interface VaccineStorageMapper {
 
     @Insert({"INSERT INTO vaccine_storage",
-            "( storagetypeid, location,grosscapacity,netcapacity,temperatureid, createdby, createddate, modifiedby,modifieddate) ",
+            "( storagetypeid, location,grosscapacity,netcapacity,temperatureid, createdby, createddate, modifiedby,modifieddate, location_name, dimension,facility_id) ",
             "VALUES",
-            "( #{storageTypeId.id}, #{location}, #{grossCapacity}, #{netCapacity}, #{tempretureId.id} ,#{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}) "})
+            "( #{storageTypeId.id}, #{location}, #{grossCapacity}, #{netCapacity}, #{tempretureId.id} ,#{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}, #{locationName}, #{dimenstion}, #{facility.id}) "})
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Long insert(VaccineStorage vaccineStorage);
 
@@ -33,6 +33,9 @@ public interface VaccineStorageMapper {
             @Result(column = "location", property = "location"),
             @Result(column = "grosscapacity", property = "grossCapacity"),
             @Result(column = "netcapacity", property = "netCapacity"),
+            @Result(column = "location_name", property = "locationName"),
+            @Result(column = "dimension", property = "dimenstion"),
+            @Result(column = "facility_id", property = "facility.id"),
             @Result(column = "temperatureid", property = "tempretureId.id")
     })
     VaccineStorage getById(Long id);
@@ -49,6 +52,7 @@ public interface VaccineStorageMapper {
             "  vaccine_storage.modifiedby, " +
             "  vaccine_storage.modifieddate, " +
             "  temperature.temperaturename, " +
+            "  vaccine_storage.facility_id, " +
             "  storage_types.storagetypename" +
             " FROM " +
             "  public.vaccine_storage  " +
@@ -65,6 +69,7 @@ public interface VaccineStorageMapper {
             @Result(column = "grosscapacity", property = "grossCapacity"),
             @Result(column = "netcapacity", property = "netCapacity"),
             @Result(column = "temperatureid", property = "tempretureId.id"),
+            @Result(column = "facility_id", property = "facility.id"),
             @Result(column = "temperaturename", property = "tempretureId.tempratureName")
     })
     List<VaccineStorage> loadAllList();
@@ -76,6 +81,7 @@ public interface VaccineStorageMapper {
             "netcapacity=#{netCapacity}, " +
             "temperatureid=#{tempretureId.id}," +
             " modifiedby=#{modifiedBy}, " +
+            " facility_id=#{facility.id}, " +
             "modifieddate=#{modifiedDate} " +
 
             " WHERE id=#{id};")

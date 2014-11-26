@@ -1,3 +1,4 @@
+DROP  TABLE IF EXISTS vaccine_doses cascade;
 CREATE TABLE vaccine_doses
 (
   id                SERIAL PRIMARY KEY,
@@ -15,11 +16,12 @@ CREATE TABLE vaccine_doses
 INSERT INTO vaccine_doses (name, displayOrder)
   VALUES ('Dose 1',1), ('Dose 2',2), ('Dose 3',3), ('Dose 4',4), ('Dose 5',5)
 ;
-
+DROP  TABLE IF EXISTS vaccine_product_doses cascade;
 CREATE TABLE vaccine_product_doses
 (
   id                SERIAL PRIMARY KEY,
   doseId            INTEGER NOT NULL REFERENCES vaccine_doses(id),
+  programId         INTEGER NOT NULL REFERENCES programs(id),
   productId         INTEGER NOT NULL REFERENCES products (id),
   isActive          BOOLEAN,
 
@@ -28,7 +30,7 @@ CREATE TABLE vaccine_product_doses
   modifiedBy        INTEGER,
   modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
 );
-
+DROP  TABLE IF EXISTS vaccine_diseases cascade;
 CREATE TABLE vaccine_diseases
 (
   id                SERIAL PRIMARY KEY,
@@ -48,7 +50,7 @@ VALUES  ('Fever and rash', 'Fever and rash',1),
         ('Neonatal tetanus','Neonatal tetanus',2),
         ('AFP', 'AFP cases',3);
 
-
+DROP  TABLE IF EXISTS vaccine_reports cascade;
 CREATE TABLE vaccine_reports
 (
   id                SERIAL PRIMARY KEY,
@@ -63,7 +65,7 @@ CREATE TABLE vaccine_reports
   modifiedBy        INTEGER,
   modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
 );
-
+DROP TABLE IF EXISTS vaccine_report_logistics_line_items cascade;
 CREATE TABLE vaccine_report_logistics_line_items
 (
   id                SERIAL PRIMARY KEY,
@@ -91,7 +93,7 @@ CREATE TABLE vaccine_report_logistics_line_items
   modifiedBy        INTEGER,
   modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
 );
-
+DROP  TABLE IF EXISTS vaccine_report_adverse_effect_line_items cascade;
 CREATE TABLE vaccine_report_adverse_effect_line_items
 (
   id                SERIAL PRIMARY KEY,
@@ -113,16 +115,16 @@ CREATE TABLE vaccine_report_adverse_effect_line_items
   modifiedBy        INTEGER,
   modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE TABLE vaccine_report_service_line_items(
+DROP  TABLE IF EXISTS vaccine_report_coverage_line_items cascade;
+CREATE TABLE vaccine_report_coverage_line_items(
   id                SERIAL PRIMARY KEY,
   reportId          INTEGER NOT NULL REFERENCES vaccine_reports(id),
 
   productId         INTEGER NOT NULL REFERENCES products(id),
   doseId            INTEGER NOT NULL REFERENCES vaccine_doses(id),
   isActive          BOOLEAN NOT NULL DEFAULT (FALSE),
-  regular           INTEGER NOT NULL,
-  outreach          INTEGER NOT NULL,
+  regular           INTEGER NULL,
+  outreach          INTEGER NULL,
 
   createdBy         INTEGER,
   createdDate       TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
@@ -130,7 +132,7 @@ CREATE TABLE vaccine_report_service_line_items(
   modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
 
 );
-
+DROP  TABLE IF EXISTS vaccine_report_disease_line_items cascade;
 CREATE TABLE vaccine_report_disease_line_items
 (
   id                SERIAL PRIMARY KEY,

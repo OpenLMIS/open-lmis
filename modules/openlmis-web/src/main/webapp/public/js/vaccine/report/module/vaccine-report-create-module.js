@@ -11,8 +11,8 @@
 angular.module('vaccine-report-create', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
-      when('/create', {controller:CreateVaccineReportController, templateUrl:'partials/create.html'}).
-      when('/list', {controller:CreateVaccineReportController, templateUrl:'partials/list.html'}).
+      when('/create/:id', { controller:CreateVaccineReportController, templateUrl:'partials/create.html', resolve: CreateVaccineReportController.resolve}).
+      when('/list', { controller: VaccineReportController, templateUrl:'partials/list.html', resolve:VaccineReportController.resolve}).
       otherwise({redirectTo:'/list'});
   }]).run(function ($rootScope, AuthorizationService) {
     //AuthorizationService.preAuthorize('VIEW_REPORT');
