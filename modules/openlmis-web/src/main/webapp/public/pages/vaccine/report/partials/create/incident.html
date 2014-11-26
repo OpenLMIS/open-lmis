@@ -13,7 +13,7 @@
   <h2>Incidents by Batch</h2>
 
   <a href="" class="btn btn-primary pull-right">Register new Incident</a>
-  <br /><br />
+  <div ng-show="report.adverseEffectLineItems.length > 0">
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -41,4 +41,8 @@
     </tr>
 
   </table>
+  </div>
+  <div ng-show="report.adverseEffectLineItems.length == 0">
+    No Adverse Effects registered for this Period.
+  </div>
 </div>

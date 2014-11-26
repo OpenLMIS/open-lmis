@@ -145,10 +145,13 @@ public class VaccineReportService {
     // save the other user inputs too.
     lLineItemService.saveLogisticsLineItems(report.getLogisticsLineItems());
     lLineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());
+    report.flattenCoverageLineItems();
     lLineItemService.saveCoverageLineItems(report.getCoverageItems());
   }
 
   public VaccineReport getById(Long id) {
-    return repository.getByIdWithFullDetails(id);
+    VaccineReport report =  repository.getByIdWithFullDetails(id);
+    report.prepareCoverageDto();
+    return report;
   }
 }

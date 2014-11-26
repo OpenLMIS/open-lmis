@@ -14,6 +14,8 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.reports.VaccineCoverageItem;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface VaccineReportCoverageMapper {
 
@@ -33,7 +35,7 @@ public interface VaccineReportCoverageMapper {
     " , regular = #{regular} " +
     " , outreach = #{outreach} " +
     " , modifiedBy = #{modifiedBy} " +
-    " , modifiedDate NOW()" +
+    " , modifiedDate = NOW()" +
     " WHERE id = #{id} ")
   void update(VaccineCoverageItem item);
 
@@ -43,5 +45,7 @@ public interface VaccineReportCoverageMapper {
   @Select("SELECT * from vaccine_report_coverage_line_items WHERE reportId = #{reportId} and productId = #{productId} and doseId = #{doseId}")
   VaccineCoverageItem getCoverageByReportProductDosage(@Param("reportId") Long reportId, @Param("productId") Long productId, @Param("doseId") Long doseId);
 
+  @Select("SELECT * from vaccine_report_coverage_line_items WHERE reportId = #{reportId} ")
+  List<VaccineCoverageItem> getLineItems(@Param("reportId") Long reportId);
 
 }

@@ -14,106 +14,35 @@
   <table class="table table-bordered">
     <thead>
     <tr>
-      <th class="span5">Product</th>
-      <th class="span1">Dose 1</th>
-      <th class="span1">Dose 2</th>
-      <th class="span1">Dose 3</th>
-      <th class="gray-cascade span1">Dose 4</th>
-      <th class="gray-cascade span1">Dose 5</th>
-      <th class="gray-cascade span1">Dose 6</th>
+      <th class="span5" rowspan="2">Product</th>
+      <th class="span1" colspan="2">Dose 1</th>
+      <th class="span1" colspan="2">Dose 2</th>
+      <th class="span1" colspan="2">Dose 3</th>
+      <th class="gray-cascade span1" colspan="2">Dose 4</th>
+      <th class="gray-cascade span1" colspan="2">Dose 5</th>
+    </tr>
+    <tr>
+      <th>Regular</th>
+      <th>Campaign</th>
+      <th>Regular</th>
+      <th>Campaign</th>
+      <th>Regular</th>
+      <th>Campaign</th>
+      <th>Regular</th>
+      <th>Campaign</th>
+      <th>Regular</th>
+      <th>Campaign</th>
     </tr>
     </thead>
     <tbody>
-    <tr>
-      <td class="col-product cell-input"><span class="cell-text">BCG</span></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input ng-disabled="true" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input ng-disabled="true"  type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input ng-disabled="true"  type="text" /></td>
+    <tr ng-repeat="product in report.coverageLineItems">
+      <td class="col-product cell-input"><span class="cell-text">{{product.productName}}</span></td>
+      <td class="cell-input col-beginningBalance" ng-repeat-start="dose in product.items">
+        <input ng-disabled="!dose.isActive" ng-model="dose.regular" type="text" />
+      </td>
+      <td class="cell-input col-beginningBalance" ng-repeat-end>
+        <input ng-disabled="!dose.isActive" ng-model="dose.outreach" type="text" />
+      </td>
     </tr>
-    <tr>
-      <td class="col-product cell-input"><span class="cell-text">OPV</span></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input ng-disabled="true"  type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input ng-disabled="true"  type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-    </tr>
-    <tr>
-      <td class="col-product cell-input"><span class="cell-text">Pentavalent</span></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-    </tr>
-    <tr>
-      <td class="col-product cell-input"><span class="cell-text">PCV</span></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-    </tr>
-    <tr>
-      <td class="col-product cell-input"><span class="cell-text">Rotavirus</span></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-    </tr>
-    <tr>
-      <td class="col-product cell-input"><span class="cell-text">Measles</span></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-    </tr>
-    <tr>
-      <td class="col-product cell-input"><span class="cell-text">Tetanus</span></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-    </tr>
-    <tr>
-      <td class="col-product cell-input"><span class="cell-text">Vitamin A</span></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-    </tr>
-    <tr>
-      <td class="col-product cell-input"><span class="cell-text">HepB</span></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-    </tr>
-    <tr>
-      <td class="col-product cell-input"><span class="cell-text">DTP-HepB-Hip</span></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input type="text" /></td>
-    </tr>
-    </tbody>
   </table>
 </div>
