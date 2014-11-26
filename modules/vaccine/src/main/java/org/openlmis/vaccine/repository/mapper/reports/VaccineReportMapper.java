@@ -11,6 +11,8 @@
 package org.openlmis.vaccine.repository.mapper.reports;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.springframework.stereotype.Repository;
 
@@ -33,12 +35,18 @@ public interface VaccineReportMapper {
   @Select("SELECT * from vaccine_reports where id = #{id}")
   @Results(value = {
     @Result(property = "id", column = "id"),
+    @Result(property = "facilityId", column = "facilityId"),
+    @Result(property = "periodId", column = "periodId"),
     @Result(property = "logisticsLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportLogisticsLineItemMapper.getLineItems")),
     @Result(property = "adverseEffectLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportAdverseEffectMapper.getLineItems")),
     @Result(property = "diseaseLineItems", javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportDiseaseLineItemMapper.getLineItems"))
+      many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportDiseaseLineItemMapper.getLineItems")),
+    @Result(property = "period", javaType = ProcessingPeriod.class, column = "periodId",
+      many = @Many(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+    @Result(property = "facility", javaType = Facility.class, column = "facilityId",
+      many = @Many(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
   VaccineReport getByIdWithFullDetails(@Param("id") Long id);
 
@@ -54,5 +62,16 @@ public interface VaccineReportMapper {
     "where id = #{id}")
   void update(VaccineReport report);
 
+  @Select("select max(s.scheduleId) id from requisition_group_program_schedules s " +
+    " join requisition_group_members m " +
+    "     on m.requisitionGroupId = s.requisitionGroupId " +
+    " where " +
+    "   s.programId = #{programId} " +
+    "   and m.facilityId = #{facilityId} ")
+  Long getScheduleFor(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
+  @Select("select * from vaccine_reports " +
+    "   where " +
+    "     facilityId = #{facilityId} and programId = #{programId} order by id desc limit 1")
+  VaccineReport getLastReport(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 }

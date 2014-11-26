@@ -10,17 +10,23 @@
 
 package org.openlmis.vaccine.service.reports;
 
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.service.ProgramProductService;
+import org.openlmis.core.repository.ProcessingPeriodRepository;
+import org.openlmis.core.service.*;
+import org.openlmis.vaccine.RequestStatus;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.reports.VaccineReportRepository;
 import org.openlmis.vaccine.service.DiseaseService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -39,9 +45,18 @@ public class VaccineReportService {
   DiseaseService diseaseService;
 
   @Autowired
+  ProcessingPeriodRepository periodService;
+
+  @Autowired
   VaccineProductDoseService productDoseService;
 
-  public VaccineReport InitiateReport(Long facilityId, Long programId, Long periodId){
+
+  @Autowired
+  ProgramService programService;
+
+
+
+  public VaccineReport initialize(Long facilityId, Long programId, Long periodId){
     // check if the report is already initiated,
     VaccineReport report = repository.getByProgramPeriod(facilityId, programId, periodId);
     // if initiated, return it,
@@ -54,7 +69,7 @@ public class VaccineReportService {
     report.setFacilityId(facilityId);
     report.setProgramId(programId);
     report.setPeriodId(periodId);
-
+    report.setStatus(RequestStatus.DRAFT.toString());
     repository.insert(report);
 
     List<ProgramProduct> programProducts = programProductService.getActiveByProgram(programId);
@@ -78,5 +93,62 @@ public class VaccineReportService {
     lLineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());
     lLineItemService.saveCoverageLineItems(report.getCoverageItems());
     return report;
+  }
+
+  public List<ReportStatusDTO> getPeriodsFor(Long facilityId, Long programId) {
+    Date startDate = programService.getProgramStartDate(facilityId, programId);
+
+    // find out which schedule this facility is in?
+    Long scheduleId = repository.getScheduleFor(facilityId, programId);
+    VaccineReport lastRequest = repository.getLastReport(facilityId, programId);
+
+    if(lastRequest != null){
+      lastRequest.setPeriod(periodService.getById(lastRequest.getPeriodId()));
+      startDate = lastRequest.getPeriod().getStartDate();
+    }
+
+    Long lastPeriodId = lastRequest == null ? null : lastRequest.getPeriodId();
+    List<ReportStatusDTO> results = new ArrayList<>();
+    // find all periods that are after this period, and before today.
+
+    List<ProcessingPeriod> periods = periodService.getAllPeriodsForDateRange(scheduleId, startDate, new Date());
+    if(lastRequest != null && lastRequest.getStatus().equals( RequestStatus.DRAFT.toString())){
+      ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
+      reportStatusDTO.setPeriodName(lastRequest.getPeriod().getName());
+      reportStatusDTO.setPeriodId(lastRequest.getPeriod().getId());
+      reportStatusDTO.setStatus(lastRequest.getStatus());
+      reportStatusDTO.setProgramId(programId);
+      reportStatusDTO.setFacilityId(facilityId);
+      reportStatusDTO.setId(lastRequest.getId());
+
+      results.add(reportStatusDTO);
+    }
+
+    for(ProcessingPeriod period: periods){
+      // avoid duplicate period
+      if(lastRequest == null || lastRequest.getPeriodId() != period.getId()){
+        ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
+
+        reportStatusDTO.setPeriodName(period.getName());
+        reportStatusDTO.setPeriodId(period.getId());
+        reportStatusDTO.setProgramId(programId);
+        reportStatusDTO.setFacilityId(facilityId);
+
+        results.add(reportStatusDTO);
+      }
+
+    }
+    return results;
+  }
+
+  public void save(VaccineReport report) {
+    // save the other user inputs too.
+    lLineItemService.saveLogisticsLineItems(report.getLogisticsLineItems());
+    lLineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());
+    lLineItemService.saveCoverageLineItems(report.getCoverageItems());
+  }
+
+  public VaccineReport getById(Long id) {
+    return repository.getByIdWithFullDetails(id);
   }
 }

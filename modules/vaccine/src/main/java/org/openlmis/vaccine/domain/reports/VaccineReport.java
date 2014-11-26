@@ -17,6 +17,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
@@ -35,6 +37,9 @@ public class VaccineReport extends BaseModel {
   private Long   facilityId;
   private String status;
   private Long   supervisoryNodeId;
+  private ProcessingPeriod period;
+  private Facility facility;
+
 
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;

@@ -10,14 +10,87 @@
 
 package org.openlmis.vaccine.repository.mapper;
 
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.Manufacturer;
+import org.openlmis.vaccine.domain.ManufacturerProduct;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public interface ManufacturerMapper {
+
     @Select("Select * from manufacturers")
     List<Manufacturer> getAll();
+
+    @Update("UPDATE manufacturers " +
+            " SET  " +
+            " name=#{name}, website=#{website}, contactperson=#{contactPerson}, primaryphone=#{primaryPhone},  " +
+            " email=#{email}, description=#{description}, specialization=#{specialization}, geographiccoverage=#{geographicCoverage},  " +
+            " registrationdate=#{registrationDate}, modifiedby=#{modifiedBy}, modifieddate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) " +
+            " WHERE id = #{id}")
+    public void update( Manufacturer vaccineManufacturer);
+
+    @Select("select * from manufacturers where id = #{id}")
+    Manufacturer get(Long id);
+
+    @Insert(" INSERT INTO manufacturers ( " +
+            "            name, website, contactperson, primaryphone, email, description,  " +
+            "            specialization, geographiccoverage, registrationdate, createdby, createddate) " +
+            "    VALUES ( " +
+            "#{name}, " +
+            " #{website}, " +
+            " #{contactPerson}, " +
+            " #{primaryPhone}, " +
+            " #{email}, " +
+            " #{description}, " +
+            " #{ specialization}, " +
+            " #{geographicCoverage}, " +
+            " #{registrationDate}, " +
+            " #{createdBy}, " +
+            " COALESCE(#{createdDate}, NOW()) )")
+    @Options(useGeneratedKeys = true)
+    void insert(Manufacturer vaccineManufacturer);
+
+    @Delete("delete from manufacturers where id = #{id}")
+    void delete(Long id);
+
+    @Select("SELECT product_mapping.*, products.fullname AS productName " +
+            "  FROM product_mapping join  products on products.code = product_mapping.productCode where product_mapping.manufacturerId = #{manufacturerId}")
+    public List<ManufacturerProduct> getProductMapping(Long manufacturerId);
+
+    @Select("select * from product_mapping where id = #{productMappingId}")
+    public ManufacturerProduct getProductMappingByMappingId(Long productMappingId);
+
+    @Delete("Delete from product_mapping where  id = #{productMappingId}")
+    public void deleteProductMapping(Long productMappingId);
+
+    @Insert("INSERT INTO product_mapping(" +
+            "            productcode, manufacturerid, gtin, elmis, rhi, ppmr, who, " +
+            "            other1, other2, other3, other4, other5, createdby, createddate)" +
+            "    VALUES (" +
+            "    #{productCode}," +
+            "    #{manufacturerId}," +
+            "    #{gtin}," +
+            "    #{elmis}," +
+            "    #{rhi}," +
+            "    #{ppmr}," +
+            "    #{who}," +
+            "    #{other1}," +
+            "    #{other2}," +
+            "    #{other3}," +
+            "    #{other4}," +
+            "    #{other5}," +
+            "    #{createdBy}," +
+            "    COALESCE(#{createdDate}, NOW()) " +
+            "    )")
+    public void insertProductMapping(ManufacturerProduct manufacturerProduct);
+
+    @Update(" UPDATE product_mapping" +
+            "   SET  productcode=#{productCode}, manufacturerid=#{manufacturerId}, gtin=#{gtin}, elmis=#{elmis}, rhi=#{rhi}, " +
+            "       ppmr=#{ppmr}, who=#{who}, other1=#{other1}, other2=#{other2}, other3=#{other3}, other4=#{other4}, other5=#{other5}, " +
+            "       modifiedby=#{modifiedBy}, modifieddate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)" +
+            " WHERE id = #{id}")
+    public void updateProductMapping(ManufacturerProduct manufacturerProduct);
+
 }

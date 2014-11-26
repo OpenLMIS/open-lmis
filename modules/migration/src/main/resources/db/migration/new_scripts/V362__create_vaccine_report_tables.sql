@@ -123,8 +123,8 @@ CREATE TABLE vaccine_report_coverage_line_items(
   productId         INTEGER NOT NULL REFERENCES products(id),
   doseId            INTEGER NOT NULL REFERENCES vaccine_doses(id),
   isActive          BOOLEAN NOT NULL DEFAULT (FALSE),
-  regular           INTEGER NOT NULL,
-  outreach          INTEGER NOT NULL,
+  regular           INTEGER NULL,
+  outreach          INTEGER NULL,
 
   createdBy         INTEGER,
   createdDate       TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,

@@ -29,3 +29,27 @@ services.factory('SaveVaccineProductDose', function ($resource) {
 services.factory('VaccineProductDose', function ($resource) {
   return $resource('/vaccine/product-dose/get/:programId.json', {productId : '@programId'}, {});
 });
+
+services.factory('VaccineReportPrograms', function ($resource) {
+  return $resource('/vaccine/report/programs.json', {}, {});
+});
+
+services.factory('VaccineReportFacilities', function ($resource) {
+  return $resource('/vaccine/report/facilities/:programId.json', { programId: '@programId'}, {});
+});
+
+services.factory('VaccineReportPeriods', function ($resource) {
+  return $resource('/vaccine/report/periods/:facilityId/:programId.json', {facilityId: '@facilityId', programId: '@programId'}, {});
+});
+
+services.factory('VaccineReportInitiate', function ($resource) {
+  return $resource('/vaccine/report/initialize/:facilityId/:programId/:periodId.json', {facilityId: '@facilityId', programId: '@programId', periodId: '@periodId'}, {});
+});
+
+services.factory('VaccineReport', function ($resource) {
+  return $resource('/vaccine/report/get/:id.json', {id: '@id'}, {});
+});
+
+services.factory('VaccineReportSave', function ($resource) {
+  return $resource('/vaccine/report/save.json', {}, {});
+});

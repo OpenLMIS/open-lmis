@@ -75,7 +75,7 @@
                   <div >
                     <select name="parent" id="parentId"
                             ng-model="newSupplyline.parentId"
-                            ng-options="sn.id as sn.description for sn in supplylines"
+                            ng-options="sn.id as sn.supplyingFacility.name for sn in supplylines"
                             >
                       <option value="">--- Select Parent ---</option>
                     </select>
@@ -172,10 +172,10 @@
                     <span ng-hide="supplylinesBackupMap[supplyline.id].edit" ng-bind="supplyline.parentId"></span>
                     <select name="parentId" id="parent_{{$index}}"
                             ng-model="supplyline.parentId"
-                            ng-options="sn.id as sn.description for sn in supplylines"
                             ng-disabled="supplyline.dataReportable == 'false'"
                             ng-show="supplylinesBackupMap[supplyline.id].edit">
                       <option value="">--- Select Parent ---</option>
+                      <option value="{{sn.id}}" ng-selected="sn.id == supplyline.parentId" ng-repeat="sn in supplylines">{{sn.program.name}} - {{sn.supplyingFacility.name}}</option>
                     </select>
                     <span class="form-error" style="float: left" ng-show="editSupplylineForm.parentId.$error.required && showErrorForEdit"
                           openlmis-message="missing.value"></span>

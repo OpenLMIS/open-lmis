@@ -48,7 +48,7 @@ public interface VaccineReportLogisticsLineItemMapper {
     "WHERE id = #{id} ")
   void update(LogisticsLineItem lineItem);
 
-  @Select("select * from vaccine_logistics_line_items where reportId = #{reportId}")
+  @Select("select * from vaccine_report_logistics_line_items where reportId = #{reportId}")
   List<LogisticsLineItem> getLineItems(@Param("reportId") Long reportId);
 
 }

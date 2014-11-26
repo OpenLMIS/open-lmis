@@ -8,12 +8,9 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('vaccine-report-create', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-  config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-      when('/create/:id', { controller:CreateVaccineReportController, templateUrl:'partials/create.html', resolve: CreateVaccineReportController.resolve}).
-      when('/list', { controller: VaccineReportController, templateUrl:'partials/list.html', resolve:VaccineReportController.resolve}).
-      otherwise({redirectTo:'/list'});
-  }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('VIEW_REPORT');
-  });
+package org.openlmis.vaccine;
+
+public enum RequestStatus {
+  DRAFT,
+  SUBMITTED
+}
