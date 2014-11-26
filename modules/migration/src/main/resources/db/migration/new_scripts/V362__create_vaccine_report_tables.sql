@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS vaccine_doses;
+DROP cascade TABLE IF EXISTS vaccine_doses;
 CREATE TABLE vaccine_doses
 (
   id                SERIAL PRIMARY KEY,
@@ -16,7 +16,7 @@ CREATE TABLE vaccine_doses
 INSERT INTO vaccine_doses (name, displayOrder)
   VALUES ('Dose 1',1), ('Dose 2',2), ('Dose 3',3), ('Dose 4',4), ('Dose 5',5)
 ;
-DROP TABLE IF EXISTS vaccine_product_doses;
+DROP cascade TABLE IF EXISTS vaccine_product_doses;
 CREATE TABLE vaccine_product_doses
 (
   id                SERIAL PRIMARY KEY,
@@ -30,7 +30,7 @@ CREATE TABLE vaccine_product_doses
   modifiedBy        INTEGER,
   modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
 );
-DROP TABLE IF EXISTS vaccine_diseases;
+DROP cascade TABLE IF EXISTS vaccine_diseases;
 CREATE TABLE vaccine_diseases
 (
   id                SERIAL PRIMARY KEY,
@@ -50,7 +50,7 @@ VALUES  ('Fever and rash', 'Fever and rash',1),
         ('Neonatal tetanus','Neonatal tetanus',2),
         ('AFP', 'AFP cases',3);
 
-DROP TABLE IF EXISTS vaccine_reports;
+DROP cascade TABLE IF EXISTS vaccine_reports;
 CREATE TABLE vaccine_reports
 (
   id                SERIAL PRIMARY KEY,
@@ -93,7 +93,7 @@ CREATE TABLE vaccine_report_logistics_line_items
   modifiedBy        INTEGER,
   modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
 );
-DROP TABLE IF EXISTS vaccine_report_adverse_effect_line_items;
+DROP cascade TABLE IF EXISTS vaccine_report_adverse_effect_line_items;
 CREATE TABLE vaccine_report_adverse_effect_line_items
 (
   id                SERIAL PRIMARY KEY,
@@ -115,7 +115,7 @@ CREATE TABLE vaccine_report_adverse_effect_line_items
   modifiedBy        INTEGER,
   modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
 );
-DROP TABLE IF EXISTS vaccine_report_coverage_line_items;
+DROP cascade TABLE IF EXISTS vaccine_report_coverage_line_items;
 CREATE TABLE vaccine_report_coverage_line_items(
   id                SERIAL PRIMARY KEY,
   reportId          INTEGER NOT NULL REFERENCES vaccine_reports(id),
@@ -132,7 +132,7 @@ CREATE TABLE vaccine_report_coverage_line_items(
   modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
 
 );
-DROP TABLE IF EXISTS vaccine_report_disease_line_items;
+DROP cascade TABLE IF EXISTS vaccine_report_disease_line_items;
 CREATE TABLE vaccine_report_disease_line_items
 (
   id                SERIAL PRIMARY KEY,
