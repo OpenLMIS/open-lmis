@@ -28,6 +28,7 @@ public class VaccineStorage extends BaseModel implements Importable {
     private StorageType storageTypeId;
     private String location;
     private String locationName;
+    private String name;
     private int grossCapacity;
     private int netCapacity;
     private Temprature tempretureId;

@@ -11,6 +11,7 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
 
     $scope.message = "";
 
+    $scope.selectedStorages = [];
     $scope.allFacilities = allFacilities;
 
     if(!isUndefined($route.current.params.distributionBatchId)){
@@ -39,7 +40,6 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
         return distributionBatch;
     };
 
-
     $scope.origins = [{id:0,name:'France'},{id:1,name:'USA'}];
 
     DistributionTypes.get({}, function(data){
@@ -57,7 +57,6 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
     });
     VaccineStorageList.get({}, function(data){
         $scope.storages = data.vaccineStorageList;
-        alert('storages '+JSON.stringify(data.vaccineStorageList));
     });
     $scope.cancelDistributionBatchSave = function () {
         $location.path('#/distribution-batch');

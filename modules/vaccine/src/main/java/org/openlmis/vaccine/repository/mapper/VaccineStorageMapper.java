@@ -51,9 +51,9 @@ public interface VaccineStorageMapper {
             "  vaccine_storage.createddate, " +
             "  vaccine_storage.modifiedby, " +
             "  vaccine_storage.modifieddate, " +
-            "  temperature.temperaturename, " +
-            "  vaccine_storage.facility_id, " +
-            "  storage_types.storagetypename" +
+            " vaccine_storage.name, " +
+            "  vaccine_storage.facilityid " +
+           // "  storage_types.storagetypename" +
             " FROM " +
             "  public.vaccine_storage  " +
             " LEFT OUTER JOIN " +
@@ -64,13 +64,13 @@ public interface VaccineStorageMapper {
     @Results({
             @Result(column = "id", property = "id"),
             @Result(column = "storagetypeid", property = "storageTypeId.id"),
-            @Result(column = "storagetypename", property = "storageTypeId.storageTypeName"),
+            /*@Result(column = "storagetypename", property = "storageTypeId.storageTypeName"),*/
             @Result(column = "location", property = "location"),
             @Result(column = "grosscapacity", property = "grossCapacity"),
             @Result(column = "netcapacity", property = "netCapacity"),
             @Result(column = "temperatureid", property = "tempretureId.id"),
-            @Result(column = "facility_id", property = "facility.id"),
-            @Result(column = "temperaturename", property = "tempretureId.tempratureName")
+            @Result(column = "facilityId", property = "facility.id")//,
+            /*@Result(column = "temperaturename", property = "tempretureId.tempratureName")*/
     })
     List<VaccineStorage> loadAllList();
 
