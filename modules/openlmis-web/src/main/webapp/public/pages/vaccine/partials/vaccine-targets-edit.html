@@ -20,12 +20,12 @@
                     <!-- helath facility -->
                     <div class="form-cell">
 
-                        <label for="geographicZone" >Health Facility<span class="label-required"> *</span></label>
+                        <label for="geographicZone" >Zone<span class="label-required"> *</span></label>
                         <div class="form-field">
 
-                            <select name="geographicZone" id="geographicZone" type="number"  ng-required="true"
+                            <select name="geographicZone" id="geographicZone" type="number"  ng-required="true" style="width:210px;"
                                     class="input-medium" ng-model="target.geographicZoneId" >
-                                <option ng-repeat="geographicZone in geographicZones" ng-selected="target.geographicZoneId == geographicZone.id" value="{{ geographicZone.id }}">{{geographicZone.name}}</option>
+                                <option ng-repeat="geographicZone in geographicZones" ng-selected="target.geographicZoneId == geographicZone.id" value="{{ geographicZone.id }}" >{{geographicZone.name}}</option>
                             </select>
 
                         <span class="field-error" ng-show="vaccineTargetForm.geographicZone.$error.required && showError"
@@ -158,10 +158,7 @@
                         </span>
                         </div>
                     </div>
-
-
                 </div>
-
          </div>
    </div>
 

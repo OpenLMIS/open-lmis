@@ -7,10 +7,19 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-package org.openlmis.vaccine.repository.mapper;
+package org.openlmis.vaccine.domain;
 
-import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 
-@Repository
-public interface VaccineMapper {
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class AdministrationMode  extends BaseModel {
+    String name;
 }

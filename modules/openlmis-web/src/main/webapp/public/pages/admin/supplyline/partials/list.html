@@ -13,10 +13,6 @@
         <a href="#" id="supplyline-add-new"
            class="pull-right btn btn-primary"
            ng-click="startAddNewSupplyline()">Add New</a></h2>
-
-
-    <!--   <div ng-hide="supplylineLoaded()" openlmis-message="msg.loading"></div>
-   -->
     <div>
         <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
         <div  class="list-header-container">
@@ -26,7 +22,8 @@
                 <div class="span2" style="overflow: visible;">Program</div>
                 <div class="span2" style="overflow: visible;">Supplying Facility</div>
                 <div class="span2" style="overflow: visible;">Supervisory Node</div>
-                <div class="span3" style="overflow: visible;">Description</div>
+                <div class="span2" style="overflow: visible;">Parent</div>
+                <div class="span2" style="overflow: visible;">Description</div>
             </div>
         </div>
 
@@ -35,7 +32,7 @@
             <div ng-class="formActive">
                 <div class="row-fluid list-row">
 
-                    <div class="span3">
+                    <div >
                         <select name="programid" id="programid" ng-model="newSupplyline.program.id"
                                 ng-options="pg.id as pg.name for pg in programs" ng-required="true"
                                 ng-disabled="supplyline.dataReportable == 'false'">
@@ -47,7 +44,7 @@
                         </span>
 
                     </div>
-                    <div class="span3">
+                    <div >
                         <select name="supplyingfacilityid" id="supplyingfacilityid"
                                 ng-model="newSupplyline.supplyingFacility.id"
                                 ng-options="f.id as f.name for f in facilities" ng-required="true"
@@ -61,10 +58,10 @@
 
                     </div>
 
-                    <div class="span3">
+                    <div>
                         <select name="supervisorynode" id="supervisorynode"
                                 ng-model="newSupplyline.supervisoryNode.id"
-                                ng-options="sn.id as sn.name for sn in supervisoryNodes" ng-required="true"
+                                ng-options="sn.id as sn.name for sn in supervisoryNodes"
                                 ng-disabled="supplyline.dataReportable == 'false'">
                             <option value="">--- Select Supervisory Node ---</option>
                         </select>
@@ -75,7 +72,19 @@
 
                     </div>
 
-                    <div class="span3">
+                  <div >
+                    <select name="parent" id="parentId"
+                            ng-model="newSupplyline.parentId"
+                            ng-options="sn.id as sn.description for sn in supplylines"
+                            >
+                      <option value="">--- Select Parent ---</option>
+                    </select>
+                        <span class="form-error" style="float: left"
+                              ng-show="createSupplylineForm.supervisorynode.$error.required && showErrorForCreate">Please fill this value
+                        </span>
+                  </div>
+
+                    <div >
                         <input id="description" name="description" type="text" ng-required="true"
                                ng-model="newSupplyline.description"
                                maxlength="250" placeholder="Description"/>
@@ -83,10 +92,7 @@
                         <span class="form-error" style="float: left"
                               ng-show="createSupplylineForm.description.$error.required && showErrorForCreate">Please fill this value
                         </span>
-
                     </div>
-
-
                 </div>
                 <div class="row-fluid supplyline-button-row">
                     <div class="span1">&nbsp;</div>
@@ -97,8 +103,6 @@
                     </div>
                     <div ng-show="creationError" class="span9 form-error" ng-bind="creationError"></div>
                 </div>
-
-
             </div>
         </form>
 
@@ -114,7 +118,8 @@
 
             <!-- edit trigger -->
 
-                    <div class="span3" >
+                    <div >
+                      <div class="span2"> Program: <span ng-show="supplylinesBackupMap[supplyline.id].edit" class="label-required">*</span></div>
                         <span ng-hide="supplylinesBackupMap[supplyline.id].edit" ng-bind="supplyline.program.id"></span>
                         <select name="programid" id="programid_{{$index}}"
                                 ng-model="supplyline.program.id"
@@ -123,14 +128,16 @@
                                 ng-show="supplylinesBackupMap[supplyline.id].edit">
                             <option value="">--- Select Program ---</option>
                         </select>
-                        <span ng-show="supplylinesBackupMap[supplyline.id].edit" class="label-required">*</span>
+
                         <span class="form-error" style="float: left" ng-show="editSupplylineForm.programid.$error.required && showErrorForEdit"
                               openlmis-message="missing.value"></span>
 
                     </div>
 
 
-                    <div class="span3">
+                    <div >
+                        <div class="span2"> Supplying Facility:  <span ng-show="supplylinesBackupMap[supplyline.id].edit" class="label-required">*</span></div>
+
                         <span ng-hide="supplylinesBackupMap[supplyline.id].edit" ng-bind="supplyline.supplyingFacility.id"></span>
                         <select name="supplyingfacilityid" id="supplyingfacilityid_{{$index}}"
                                 ng-model="supplyline.supplyingFacility.id"
@@ -139,28 +146,44 @@
                                 ng-show="supplylinesBackupMap[supplyline.id].edit">>
                             <option value="">--- Select Supplying Facility ---</option>
                         </select>
-                        <span ng-show="supplylinesBackupMap[supplyline.id].edit" class="label-required">*</span>
+
                         <span class="form-error" style="float: left" ng-show="editSupplylineForm.supplyingfacilityid.$error.required && showErrorForEdit"
                               openlmis-message="missing.value"></span>
 
                     </div>
 
-                    <div class="span3">
+                    <div >
+                      <div class="span2"> Supervisory Node: </div>
                         <span ng-hide="supplylinesBackupMap[supplyline.id].edit" ng-bind="supplyline.supervisoryNode.id"></span>
                         <select name="supervisorynode" id="supervisorynode_{{$index}}"
                                 ng-model="supplyline.supervisoryNode.id"
-                                ng-options="sn.id as sn.name for sn in supervisoryNodes" ng-required="true"
+                                ng-options="sn.id as sn.name for sn in supervisoryNodes"
                                 ng-disabled="supplyline.dataReportable == 'false'"
                                 ng-show="supplylinesBackupMap[supplyline.id].edit">
                             <option value="">--- Select Supervisory Node ---</option>
                         </select>
-                        <span ng-show="supplylinesBackupMap[supplyline.id].edit" class="label-required">*</span>
+
                         <span class="form-error" style="float: left" ng-show="editSupplylineForm.supervisorynode.$error.required && showErrorForEdit"
                               openlmis-message="missing.value"></span>
-
                     </div>
 
-                    <div class="span2">
+                  <div >
+                    <div class="span2"> Parent: </div>
+                    <span ng-hide="supplylinesBackupMap[supplyline.id].edit" ng-bind="supplyline.parentId"></span>
+                    <select name="parentId" id="parent_{{$index}}"
+                            ng-model="supplyline.parentId"
+                            ng-options="sn.id as sn.description for sn in supplylines"
+                            ng-disabled="supplyline.dataReportable == 'false'"
+                            ng-show="supplylinesBackupMap[supplyline.id].edit">
+                      <option value="">--- Select Parent ---</option>
+                    </select>
+                    <span class="form-error" style="float: left" ng-show="editSupplylineForm.parentId.$error.required && showErrorForEdit"
+                          openlmis-message="missing.value"></span>
+
+                  </div>
+
+                    <div >
+                        <div class="span2"> Description: </div>
                         <input id="description_{{$index}}" name="desc" ng-show="supplylinesBackupMap[supplyline.id].edit" type="text"  ng-required="true"
                                ng-model="supplyline.description"
                                maxlength="250" placeholder="Description"/>
@@ -173,8 +196,8 @@
 
                     </div>
                 </div>
-                <div ng-show="supplylinesBackupMap[supplyline.id].edit" class="row-fluid supplyline-button-row">
-                    <div class="span1"></div>
+                <div ng-show="supplylinesBackupMap[supplyline.id].edit">
+
                     <div class="span2">
                         <input type="submit" class="btn btn-primary btn-small" value="Save"/>
                         <input type="button" class="btn btn-cancel btn-small" value="Cancel"
@@ -183,6 +206,7 @@
                     <div ng-show="supplylinesBackupMap[supplyline.id].error" class="span9 form-error"
                          ng-bind="supplylinesBackupMap[supplyline.id].error"></div>
                 </div>
+              <div class="clear-both clear"></div>
             </div>
         </form>
         <div class="alert alert-error" id="saveFailMessage" ng-bind="errorInValidSupplyline" ng-show="errorInValidSuppline"/>

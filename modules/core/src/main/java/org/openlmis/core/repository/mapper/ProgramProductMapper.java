@@ -75,7 +75,7 @@ public interface ProgramProductMapper {
 
   @Select({"SELECT PP.*, PD.* FROM program_products PP INNER JOIN products PD ON PP.productId = PD.id",
     "WHERE PP.programId = #{id} AND PP.active = TRUE AND PD.active = TRUE",
-    "ORDER BY PD.displayOrder NULLS LAST, LOWER(PD.code)"})
+    "ORDER BY PP.displayOrder NULLS LAST, LOWER(PD.code)"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "program", column = "programId", javaType = Program.class,

@@ -9,7 +9,117 @@
  */
 
 
-function VaccineQuantificationController($scope, $routeParams, $location) {
+function VaccineQuantificationController($scope, $dialog, messageService, $routeParams, $location, VaccineQuantificationFormLookUps, ReportProductsByProgram, VaccineQuantificationList, ProgramCompleteList, VaccineQuantificationUpdate, GetVaccineQuantification, DeleteVaccineQuantification) {
 
+    $scope.vaccineQuantifications = {};
+
+
+    if (isUndefined($routeParams.id) || $routeParams.id === 0) {
+
+        VaccineQuantificationList.get({}, function(data){
+            $scope.vaccineQuantifications = data.vaccineQuantifications;
+        });
+
+    } else {
+
+        $scope.$parent.message = '';
+
+        ProgramCompleteList.get({}, function(data){
+
+            $scope.programs = data.programs;
+        });
+
+        VaccineQuantificationFormLookUps.get({}, function(data){
+            $scope.administrationModes = data.administrationMode;
+            $scope.dilutions = data.dilution;
+            $scope.vaccinationTypes = data.vaccinationType;
+
+            $scope.administrationModes.unshift({
+                name : '--Select Administration mode--'
+            });
+            $scope.dilutions.unshift({
+                name : '--Select Dilution --'
+            });
+            $scope.vaccinationTypes.unshift({
+                name : '--Select Vaccination Type --'
+            });
+        });
+
+        GetVaccineQuantification.get({
+            id: $routeParams.id
+        }, function (data) {
+            $scope.quantification = data.vaccineQuantification;
+        });
+    }
+
+    $scope.saveVaccineQuantification = function(){
+        if ($scope.vaccineQuantificationForm.$error.pattern || $scope.vaccineQuantificationForm.$error.min || $scope.vaccineQuantificationForm.$error.required) {
+            $scope.showError = "true";
+            $scope.error = 'form.error';
+            $scope.message = "";
+            return;
+        }
+
+        var onSuccess = function(data){
+            $scope.$parent.message = 'Your changes have been saved!';
+            loadVaccineQuantificationList();
+            $location.path('/quantification');
+        };
+
+        var onError = function(data){
+            $scope.showError = true;
+            $scope.error = data.data.error;
+        };
+
+        VaccineQuantificationUpdate.post($scope.quantification,onSuccess, onError);
+    };
+
+    $scope.cancelQuantificationForm = function(){
+        $location.path('/quantification');
+    };
+
+
+    function loadVaccineQuantificationList(){
+        VaccineQuantificationList.get({}, function(data){
+            $scope.vaccineQuantifications = data.vaccineQuantifications;
+        });
+    }
+
+    $scope.showRemoveVaccineQuantificationDialog = function (index) {
+        var vaccineQuantification = $scope.vaccineQuantifications[index];
+        $scope.selectedVaccineQuantification = vaccineQuantification;
+
+        var options = {
+            id: "removeVaccineQuantificationConfirmDialog",
+            header: "Confirmation",
+            body: "Please confirm that you want to delete the selected vaccine Quantification"
+        };
+        OpenLmisDialog.newDialog(options, $scope.removeVaccineQuantificationConfirm, $dialog, messageService);
+    };
+
+    $scope.removeVaccineQuantificationConfirm = function (result) {
+
+        if (result) {
+            DeleteVaccineQuantification.delete({'id': $scope.selectedVaccineQuantification.id}, function(){
+                loadVaccineQuantificationList();
+                $scope.$parent.message = 'Vaccine Quantification deleted successfully!';
+            });
+        }
+    };
+
+    $scope.$watch('quantification.programId', function (value) {
+
+        if(isUndefined(value)){
+            $scope.products = {};
+        }
+        else{
+            ReportProductsByProgram.get({
+                programId: value
+            }, function (data) {
+                $scope.products = data.productList;
+            });
+        }
+
+    });
 
 }

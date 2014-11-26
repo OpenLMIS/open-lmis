@@ -8,7 +8,45 @@
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
 <div>
+    <h2>
+        <span id="vaccineQuantificationHeader" >Vaccine Quantification</span>
+        <a id="vaccine-quantification-new" ng-href="#/quantificationEdit/0" class="pull-right btn btn-primary"
+           openlmis-message="button.add.new"></a>
+    </h2>
 
-    <h2>Vaccine Quantification</h2>
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr class="gradient-header">
+            <th> Program </th>
+            <th> Product </th>
+            <th> Doses/Target </th>
+            <th> Target Population </th>
+            <th> Expected Coverage </th>
+            <th> Presentation </th>
+            <th> Wastage Rate </th>
+            <th> Supply Interval </th>
+            <th> Safety stock </th>
+            <th> Lead Time </th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="vaccineQuantification in vaccineQuantifications">
+            <td>{{vaccineQuantification.program}}</td>
+            <td>{{vaccineQuantification.product}}</td>
+            <td>{{vaccineQuantification.dosesPerTarget}}</td>
+            <td>{{vaccineQuantification.targetPopulation}}</td>
+            <td>{{vaccineQuantification.expectedCoverage}}%</td>
+            <td>{{vaccineQuantification.presentation}}</td>
+            <td>{{vaccineQuantification.wastageRate}}</td>
+            <td>{{vaccineQuantification.supplyInterval}}</td>
+            <td>{{vaccineQuantification.safetyStock}}</td>
+            <td>{{vaccineQuantification.leadTime}}</td>
+            <td> <a href ng-click="showRemoveVaccineQuantificationDialog($index)">Delete</a> |
+                <a href="#/quantificationEdit/{{vaccineQuantification.id}}">Edit</a></td>
+        </tr>
+        </tbody>
+    </table>
 </div>

@@ -1,0 +1,276 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+
+    <form ng-submit="saveVaccineQuantification()" id="create-vaccineQuantification" name="vaccineQuantificationForm" novalidate>
+        <div class="app-form">
+            <div class="form-group">
+
+                <h3 >Vaccine Quantification</h3>
+
+            <div class="form-row clearfix">
+                <!-- programId -->
+                <div class="form-cell">
+                    <label for="programId" >Program<span class="label-required"> *</span></label>
+                    <div class="form-field">
+
+                        <select  ng-model="quantification.programId" name="programId" id="programId" type="number" ng-required="true" style="width:210px;"
+                                class="input-medium" ng-model="target.geographicZoneId" >
+                            <option ng-repeat="program in programs" ng-value="program.id" ng-selected="quantification.programId == program.id">{{program.name}}</option>
+                        </select>
+
+                    <span class="field-error" ng-show="vaccineQuantificationForm.programId.$error.required && showError"
+                          openlmis-message="missing.value">
+                    </span>
+
+                    </div>
+                </div>
+
+                 <!-- quantificationYear -->
+                    <div class="form-cell">
+                        <label for="quantificationYear" >Quantification Year<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input name="quantificationYear" id="quantificationYear" type="number" ng-model="quantification.quantificationYear"  min="1900" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineQuantificationForm.quantificationYear.$error.required && showError"
+                              openlmis-message="missing.value">
+                        </span>
+                    <span class="field-error" ng-show="vaccineQuantificationForm.quantificationYear.$error.min || vaccineQuantificationForm.quantificationYear.$error.max">
+                              Year must be greater than 1900</span>
+                        </div>
+                    </div>
+             </div>
+
+            <div class="form-row clearfix">
+                    <!-- vaccineTypeId -->
+                    <div class="form-cell">
+                        <label for="vaccineTypeId" >Vaccination Type<span class="label-required"> *</span></label>
+                        <div class="form-field">
+
+                            <!-- <input ng-model="quantification.vaccineTypeId" name="vaccineTypeId" id="vaccineTypeId" type="number" ng-required="true"/> -->
+
+                            <select  ng-model="quantification.vaccineTypeId" name="vaccineTypeId" id="vaccineTypeId" type="number" ng-required="true" style="width:210px;"
+                                     class="input-medium" >
+                                <option ng-repeat="vaccinationType in vaccinationTypes" ng-value="vaccinationType.id" ng-selected="quantification.vaccineTypeId == vaccinationType.id">{{vaccinationType.name}}</option>
+                            </select>
+
+
+                    <span class="field-error" ng-show="vaccineQuantificationForm.vaccineTypeId.$error.required && showError"
+                          openlmis-message="missing.value">
+                    </span>
+
+                        </div>
+                    </div>
+
+                    <!-- productCode -->
+                    <div class="form-cell">
+                        <label for="productCode" >Product<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <select ng-model="quantification.productCode" name="productCode" id="productCode"  ng-required="true" style="width:210px;"
+                                    class="input-medium" ng-model="target.geographicZoneId" >
+                                <option ng-repeat="product in products" ng-value="product.code"  ng-selected="quantification.productCode == product.code">{{product.name}}</option>
+                            </select>
+                        <span class="field-error" ng-show="vaccineQuantificationForm.productCode.$error.required && showError"
+                              openlmis-message="missing.value">
+                        </span>
+
+                        </div>
+                    </div>
+                </div>
+
+            <div class="form-row clearfix">
+                <!-- targetPopulation -->
+                <div class="form-cell">
+                    <label for="targetPopulation" >Target Population<span class="label-required"> *</span></label>
+                    <div class="form-field">
+                        <input ng-model="quantification.targetPopulation" name="targetPopulation" id="targetPopulation" type="number" ng-required="true"/>
+                <span class="field-error" ng-show="vaccineQuantificationForm.targetPopulation.$error.required && showError"
+                      openlmis-message="missing.value">
+                </span>
+                    </div>
+                </div>
+
+                <!-- Target Population(%) -->
+                <div class="form-cell">
+                    <label for="targetPopulationPercent" >Target Population(%)<span class="label-required"> *</span></label>
+                    <div class="form-field">
+                        <input ng-model="quantification.targetPopulationPercent" name="targetPopulationPercent" id="targetPopulationPercent" type="number" ng-required="true"/>
+                    <span class="field-error" ng-show="vaccineQuantificationForm.targetPopulationPercent.$error.required && showError"
+                          openlmis-message="missing.value">
+                    </span>
+
+                    </div>
+                </div>
+            </div>
+
+                <div class="form-row clearfix">
+                    <!-- dosesPerTarget -->
+                    <div class="form-cell">
+                        <label for="dosesPerTarget" >Doses/Target<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="quantification.dosesPerTarget" name="dosesPerTarget" id="dosesPerTarget" type="number" ng-required="true"/>
+                    <span class="field-error" ng-show="vaccineQuantificationForm.dosesPerTarget.$error.required && showError"
+                          openlmis-message="missing.value">
+                    </span>
+
+                        </div>
+                    </div>
+
+                    <!-- presentation -->
+                    <div class="form-cell">
+                        <label for="presentation" >Presentation<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="quantification.presentation" name="presentation" id="presentation" type="number" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineQuantificationForm.presentation.$error.required && showError"
+                              openlmis-message="missing.value">
+                        </span>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row clearfix">
+                    <!-- expectedCoverage -->
+                    <div class="form-cell">
+                        <label for="expectedCoverage" >Expected Coverage (%)<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input type="number" ng-model="quantification.expectedCoverage"  name="expectedCoverage" id="expectedCoverage" min="0" max="100"  ng-required="true"/>
+                    <span class="field-error" ng-show="vaccineQuantificationForm.expectedCoverage.$error.required && showError"
+                          openlmis-message="missing.value">
+                    </span>
+                    <span class="field-error" ng-show="vaccineQuantificationForm.expectedCoverage.$error.integer">The value is not a valid integer!</span>
+                    <span class="field-error" ng-show="vaccineQuantificationForm.expectedCoverage.$error.min || vaccineQuantificationForm.expectedCoverage.$error.max">
+                              The value must be in range 0 to 100</span>
+
+                        </div>
+                    </div>
+
+                    <!-- administrationModeId -->
+                    <div class="form-cell">
+                        <label for="administrationModeId" >Administration Mode<span class="label-required"> *</span></label>
+                        <div class="form-field">
+
+                            <!-- input ng-model="quantification.administrationModeId" name="administrationModeId" id="administrationModeId" type="number" ng-required="true"/ -->
+
+                            <select  ng-model="quantification.administrationModeId" name="administrationModeId" id="administrationModeId" type="number" ng-required="true" style="width:210px;"
+                                    class="input-medium" >
+                                <option ng-repeat="administrationMode in administrationModes" ng-value="administrationMode.id" ng-selected="quantification.administrationModeId == administrationMode.id">
+                                    {{administrationMode.name}}</option>
+                            </select>
+
+                        <span class="field-error" ng-show="vaccineQuantificationForm.administrationModeId.$error.required && showError"
+                              openlmis-message="missing.value">
+                        </span>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row clearfix">
+                    <!-- wastageRate -->
+                    <div class="form-cell">
+                        <label for="wastageRate" >Wastage Rate<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="quantification.wastageRate" name="wastageRate" id="wastageRate" type="number" ng-required="true"/>
+                    <span class="field-error" ng-show="vaccineQuantificationForm.wastageRate.$error.required && showError"
+                          openlmis-message="missing.value">
+                    </span>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="form-row clearfix">
+                    <!-- dilutionId -->
+                    <div class="form-cell">
+                        <label for="dilutionId" >Dilution<span class="label-required"> *</span></label>
+                        <div class="form-field">
+
+
+                            <!-- <input ng-model="quantification.dilutionId" name="dilutionId" id="dilutionId" type="number" ng-required="true"/> -->
+
+                            <select ng-model="quantification.dilutionId" name="dilutionId" id="dilutionId" type="number" ng-required="true" style="width:210px;"
+                                     class="input-medium" >
+                                <option ng-repeat="dilution in dilutions" ng-value="dilution.id" ng-selected="quantification.dilutionId == dilution.id">{{dilution.name}}</option>
+                            </select>
+
+                    <span class="field-error" ng-show="vaccineQuantificationForm.dilutionId.$error.required && showError"
+                          openlmis-message="missing.value">
+                    </span>
+
+                        </div>
+                    </div>
+
+                    <!-- supplyInterval -->
+                    <div class="form-cell">
+                        <label for="supplyInterval" >Supply Interval (months)<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="quantification.supplyInterval" name="supplyInterval" id="supplyInterval" type="number" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineQuantificationForm.supplyInterval.$error.required && showError"
+                              openlmis-message="missing.value">
+                        </span>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-row clearfix">
+                    <!-- safetyStock -->
+                    <div class="form-cell">
+                        <label for="safetyStock" >Safty Stock (months)<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="quantification.safetyStock" name="safetyStock" id="safetyStock" type="number" ng-required="true"/>
+                    <span class="field-error" ng-show="vaccineQuantificationForm.safetyStock.$error.required && showError"
+                          openlmis-message="missing.value">
+                    </span>
+
+                        </div>
+                    </div>
+
+                    <!-- leadTime -->
+                    <div class="form-cell">
+                        <label for="leadTime" >Lead Time (weeks)<span class="label-required"> *</span></label>
+                        <div class="form-field">
+                            <input ng-model="quantification.leadTime" name="leadTime" id="leadTime" type="number" ng-required="true"/>
+                        <span class="field-error" ng-show="vaccineQuantificationForm.leadTime.$error.required && showError"
+                              openlmis-message="missing.value">
+                        </span>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="form-cell button-row">
+                <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+                       openlmis-message="button.save"/>
+                <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                       ng-click="cancelQuantificationForm()"/>
+            </div>
+
+
+            <div class="toolbar-error" id="saveErrorMsgDiv">
+                <span openlmis-message="error" ng-show="error"></span>&nbsp;
+            </div>
+            <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+        </div>
+
+
+    </form>
+</div>
+
