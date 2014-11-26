@@ -46,6 +46,10 @@ services.factory('VaccineReportInitiate', function ($resource) {
   return $resource('/vaccine/report/initialize/:facilityId/:programId/:periodId.json', {facilityId: '@facilityId', programId: '@programId', periodId: '@periodId'}, {});
 });
 
+services.factory('VaccineReport', function ($resource) {
+  return $resource('/vaccine/report/get/:id.json', {id: '@id'}, {});
+});
+
 services.factory('VaccineReportSave', function ($resource) {
   return $resource('/vaccine/report/save.json', {}, {});
 });

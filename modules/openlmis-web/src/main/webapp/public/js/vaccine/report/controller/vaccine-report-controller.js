@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function VaccineReportController($scope, programs, VaccineReportFacilities, VaccineReportPeriods, VaccineReportInitiate) {
+function VaccineReportController($scope, programs, VaccineReportFacilities, VaccineReportPeriods, VaccineReportInitiate, $location) {
 
   $scope.programs = programs;
 
@@ -26,12 +26,13 @@ function VaccineReportController($scope, programs, VaccineReportFacilities, Vacc
   };
 
   $scope.initiate = function(period){
-    if(period.id != undefined){
+    if(period.id !== undefined){
       // redirect already
+      $location.path('/create/'+ period.id)
     }else{
       // initiate
       VaccineReportInitiate.get({ periodId: period.periodId, facilityId: period.facilityId, programId: period.programId}, function(data){
-        alert(data.report.id);
+        $location.path('/create/'+ data.report.id)
       });
     }
   };

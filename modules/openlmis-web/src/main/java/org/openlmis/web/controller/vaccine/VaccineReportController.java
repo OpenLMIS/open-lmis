@@ -49,7 +49,6 @@ public class VaccineReportController extends BaseController {
   @RequestMapping(value = "facilities/{programId}.json", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getFacilities(@PathVariable Long programId, HttpServletRequest request){
     Long userId = loggedInUserId(request);
-
     //TODO: make sure this method also supports home facility.
     return OpenLmisResponse.response("facilities", facilityService.getUserSupervisedFacilities(userId, programId, Right.CREATE_REQUISITION));
   }
@@ -71,6 +70,10 @@ public class VaccineReportController extends BaseController {
     return OpenLmisResponse.response("report", service.initialize(facilityId, programId, periodId));
   }
 
+  @RequestMapping(value = "get/{id}.json", method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> getReport(@PathVariable Long id, HttpServletRequest request){
+    return OpenLmisResponse.response("report", service.getById(id));
+  }
 
   @RequestMapping(value = "save")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineReport report, HttpServletRequest request){

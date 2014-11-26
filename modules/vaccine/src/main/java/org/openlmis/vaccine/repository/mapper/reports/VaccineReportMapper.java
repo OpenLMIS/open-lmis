@@ -11,6 +11,8 @@
 package org.openlmis.vaccine.repository.mapper.reports;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.springframework.stereotype.Repository;
 
@@ -33,12 +35,18 @@ public interface VaccineReportMapper {
   @Select("SELECT * from vaccine_reports where id = #{id}")
   @Results(value = {
     @Result(property = "id", column = "id"),
+    @Result(property = "facilityId", column = "facilityId"),
+    @Result(property = "periodId", column = "periodId"),
     @Result(property = "logisticsLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportLogisticsLineItemMapper.getLineItems")),
     @Result(property = "adverseEffectLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportAdverseEffectMapper.getLineItems")),
     @Result(property = "diseaseLineItems", javaType = List.class, column = "id",
-      many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportDiseaseLineItemMapper.getLineItems"))
+      many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportDiseaseLineItemMapper.getLineItems")),
+    @Result(property = "period", javaType = ProcessingPeriod.class, column = "periodId",
+      many = @Many(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+    @Result(property = "facility", javaType = Facility.class, column = "facilityId",
+      many = @Many(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
   VaccineReport getByIdWithFullDetails(@Param("id") Long id);
 

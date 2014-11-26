@@ -125,15 +125,18 @@ public class VaccineReportService {
     }
 
     for(ProcessingPeriod period: periods){
-      ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
+      // avoid duplicate period
+      if(lastRequest == null || lastRequest.getPeriodId() != period.getId()){
+        ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
 
-      reportStatusDTO.setPeriodName(period.getName());
-      reportStatusDTO.setPeriodId(period.getId());
-      reportStatusDTO.setProgramId(programId);
-      reportStatusDTO.setFacilityId(facilityId);
+        reportStatusDTO.setPeriodName(period.getName());
+        reportStatusDTO.setPeriodId(period.getId());
+        reportStatusDTO.setProgramId(programId);
+        reportStatusDTO.setFacilityId(facilityId);
 
+        results.add(reportStatusDTO);
+      }
 
-      results.add(reportStatusDTO);
     }
     return results;
   }
@@ -143,5 +146,9 @@ public class VaccineReportService {
     lLineItemService.saveLogisticsLineItems(report.getLogisticsLineItems());
     lLineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());
     lLineItemService.saveCoverageLineItems(report.getCoverageItems());
+  }
+
+  public VaccineReport getById(Long id) {
+    return repository.getByIdWithFullDetails(id);
   }
 }

@@ -9,5 +9,23 @@
   -->
 <div class="rnr-table">
   <h2>Diseases Tracked</h2>
-  <p>Diseases tracked for the vaccine program</p>
+
+  <div class="span7">
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th class="span5">Disease Name</th>
+      <th class="span1">Cases</th>
+      <th class="span1">Death</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="disease in report.diseaseLineItems">
+        <td class="cell-input"><span class="cell-text">{{disease.diseaseName}}</span></td>
+        <td class="cell-input col-beginningBalance"><input type="text" ng-model="disease.cases" /></td>
+        <td class="cell-input col-beginningBalance"><input type="text" ng-model="disease.death" /></td>
+      </tr>
+    </tbody>
+    </table>
+  </div>
 </div>

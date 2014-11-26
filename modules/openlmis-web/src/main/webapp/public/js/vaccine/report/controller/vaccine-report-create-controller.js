@@ -7,11 +7,23 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-function CreateVaccineReportController($scope, programs) {
+function CreateVaccineReportController($scope, report) {
   // initial state of the display
-
+  $scope.report = report;
   $scope.visibleTab = 'stockMovement';
 
-
-
 }
+
+
+CreateVaccineReportController.resolve = {
+  report: function($q, $timeout, $route, VaccineReport) {
+    var deferred = $q.defer();
+
+    $timeout(function(){
+      VaccineReport.get({id: $route.current.params.id}, function(data){
+        deferred.resolve(data.report)
+      });
+    }, 100);
+    return deferred.promise;
+  }
+};
