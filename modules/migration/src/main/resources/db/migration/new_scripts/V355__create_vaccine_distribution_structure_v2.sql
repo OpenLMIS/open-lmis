@@ -187,7 +187,10 @@ CREATE TABLE vaccine_storage
   createdBy         INTEGER                                       ,
   createdDate       TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
   modifiedBy        INTEGER                                       ,
-  modifiedDate      TIMESTAMP            DEFAULT CURRENT_TIMESTAMP  
+  modifiedDate      TIMESTAMP            DEFAULT CURRENT_TIMESTAMP  ,
+  location_name     VARCHAR(100),
+  dimension         VARCHAR(100),
+  facility_id INTEGER REFERENCES facilities (id) not null
 );
 CREATE UNIQUE INDEX uc_vaccine_storage_code ON vaccine_storage(location);
 
@@ -204,6 +207,9 @@ COMMENT ON COLUMN vaccine_storage.createdBy IS         'Created by';
 COMMENT ON COLUMN vaccine_storage.createdDate IS       'Created on';
 COMMENT ON COLUMN vaccine_storage.modifiedBy IS        'Modified by';
 COMMENT ON COLUMN vaccine_storage.modifiedDate IS      'Modified on';
+COMMENT ON COLUMN vaccine_storage.location_name IS       'Location Name';
+COMMENT ON COLUMN vaccine_storage.dimension IS        'Dimension';
+COMMENT ON COLUMN vaccine_storage.facility_id IS      'Facility';
 
 -----------------------------------------
 -- Table: Manufacturers

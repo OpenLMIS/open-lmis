@@ -1,5 +1,7 @@
 package org.openlmis.vaccine.service;
 
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.vaccine.domain.VaccineStorage;
 import org.openlmis.vaccine.repository.VaccineStorageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ import java.util.List;
 public class VaccineStorageService {
     @Autowired
     private VaccineStorageRepository storageRepository;
+    @Autowired
+    private FacilityService facilityService;
     public void addVaccineStorage(VaccineStorage vaccineStorage){
         this.storageRepository.addVaccineStorage(vaccineStorage);
     }
@@ -34,5 +38,8 @@ public class VaccineStorageService {
     }
     public void deleteVccineStorage(VaccineStorage vaccineStorage){
         this.storageRepository.deleteVccineStorage(vaccineStorage);
+    }
+    public List<Facility> loadFacillityList(){
+        return this.facilityService.getAll();
     }
 }

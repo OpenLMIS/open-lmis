@@ -80,13 +80,15 @@ public class SupplyLineServiceTest {
     assertThat(returnedSupplyLine, is(supplyLine));
   }
 
-  @Test
-  public void shouldThrowErrorIfSupervisoryNodeIsNotTheParentNode() {
-    when(supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId())).thenThrow(new DataException("Supervising Node is not the Top node"));
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("Supervising Node is not the Top node");
-    supplyLineService.save(supplyLine);
-  }
+//NOTE: this rule has been removed because a supply line can be at any point
+//this change was made to accommodate the vaccine supply chain.
+//  @Test
+//  public void shouldThrowErrorIfSupervisoryNodeIsNotTheParentNode() {
+//    when(supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId())).thenThrow(new DataException("Supervising Node is not the Top node"));
+//    expectedEx.expect(DataException.class);
+//    expectedEx.expectMessage("Supervising Node is not the Top node");
+//    supplyLineService.save(supplyLine);
+//  }
 
   @Test
   public void shouldInsertSupplyLineIfDoesNotExist() throws Exception {

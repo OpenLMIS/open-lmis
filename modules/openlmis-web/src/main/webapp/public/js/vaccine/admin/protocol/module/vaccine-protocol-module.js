@@ -11,9 +11,14 @@
 angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
-        when('/list', {controller:VaccineProtocolController, templateUrl:'partials/list.html'}).
+        when('/list', {controller:VaccineProtocolController, templateUrl:'partials/list.html', resolve: VaccineProtocolController.resolve }).
+        when('/protocol', {controller:VaccineProtocolController, templateUrl:'partials/list.html', resolve: VaccineProtocolController.resolve }).
+        when('/protocol/:program', {controller:VaccineProtocolController, templateUrl:'partials/list.html', resolve: VaccineProtocolController.resolve }).
+        when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html', resolve : VaccineDiseaseController.resolve }).
+        when('/disease/add', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
+        when('/disease/edit/:id', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
         when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html'}).
-        when('/temprature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html'}).
+        when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html'}).
         otherwise({redirectTo:'/list'});
   }]).run(function ($rootScope, AuthorizationService) {
     //AuthorizationService.preAuthorize('VIEW_REPORT');

@@ -8,12 +8,32 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('vaccine-report-view', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-  config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-      when('/detail', {controller:VaccineReportViewController, templateUrl:'partials/create.html'}).
-      when('/list', {controller:VaccineReportViewController, templateUrl:'partials/list.html'}).
-      otherwise({redirectTo:'/list'});
-  }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('VIEW_REPORT');
-  });
+package org.openlmis.web.controller.vaccine;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class DiseaseControllerTest {
+
+  @Before
+  public void setUp() throws Exception {
+
+  }
+
+  @Test
+  public void testGet() throws Exception {
+
+  }
+
+  @Test
+  public void testGetAll() throws Exception {
+
+  }
+
+  @Test
+  public void testGet1() throws Exception {
+
+  }
+}

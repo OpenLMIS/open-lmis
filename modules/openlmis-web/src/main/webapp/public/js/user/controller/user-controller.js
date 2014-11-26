@@ -35,6 +35,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.programsMap = _.groupBy(programs, function (program) {
       return program.push ? 'push' : 'pull';
     });
+    $scope.programsMap.all = programs;
   }
 
   function validateHomeFacilityRoles(user) {

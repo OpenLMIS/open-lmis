@@ -18,11 +18,11 @@ import java.util.List;
 public interface SupplyLineMapperExtension {
 
     @Select("SELECT " +
-            "sl.id, sl.programId, sl.supervisoryNodeId, sl.supplyingFacilityId, sl.description, p.name AS programName,f.name AS facilityName, n.name As supervisoryNodeName " +
+            "sl.id, sl.programId, sl.supervisoryNodeId, sl.supplyingFacilityId, sl.description, p.name AS programName,f.name AS facilityName, n.name As supervisoryNodeName, sl.parentId " +
             "FROM supply_lines AS sl " +
             "JOIN programs AS p ON p.id = sl.programId " +
             "JOIN facilities AS f ON f.id = sl.supplyingFacilityId " +
-            "INNER JOIN supervisory_nodes AS n ON n.id = sl.supervisoryNodeId " +
+            "LEFT JOIN supervisory_nodes AS n ON  sl.supervisoryNodeId = n.id " +
             "ORDER BY p.name, n.name, f.name")
     @Results(value={
             @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
@@ -43,7 +43,7 @@ public interface SupplyLineMapperExtension {
     SupplyLine getSupplylineById(Long id);
 
     @Select("SELECT " +
-            "sl.id, sl.description, p.name AS programName,f.name AS facilityName, n.name As supervisorynodeName " +
+            "sl.id, sl.description, p.name AS programName,f.name AS facilityName, n.name As supervisorynodeName, sl.parentId " +
             "FROM supply_lines AS sl " +
             "JOIN programs AS p ON p.id = sl.programid " +
             "JOIN facilities AS f ON f.id = sl.supplyingfacilityid " +

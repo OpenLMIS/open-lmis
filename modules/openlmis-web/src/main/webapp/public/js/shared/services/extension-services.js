@@ -880,7 +880,6 @@ services.factory('StorageTypeDetail', function ($resource) {
 services.factory('DeleteStorageType', function ($resource) {
     return $resource('/deleteStorageType.json', {}, {post:{method:'POST'}});
 });
-
 //temprature
 services.factory('CreateTemprature', function ($resource) {
 
@@ -895,6 +894,9 @@ services.factory('TempratureDetail', function ($resource) {
 });
 services.factory('DeleteTemprature', function ($resource) {
     return $resource('/deleteTemprature.json', {}, {post:{method:'POST'}});
+});
+services.factory('StorageFacilityList', function ($resource) {
+    return $resource('/facilityList.json', {}, {});
 });
 
 services.factory('VaccineDistributionBatches', function ($resource) {
