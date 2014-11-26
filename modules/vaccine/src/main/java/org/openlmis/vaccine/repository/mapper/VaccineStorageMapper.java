@@ -80,7 +80,7 @@ public interface VaccineStorageMapper {
     @Update("UPDATE vaccine_storage " +
             "   SET storagetypeid= #{storageTypeId.id}," +
             "  locCode=#{location}, " +
-            "  name=#{mame}, " +
+            "  name=#{name}, " +
             " grosscapacity=#{grossCapacity}, " +
             "netcapacity=#{netCapacity}, " +
             "temperatureid=#{tempretureId.id}," +
