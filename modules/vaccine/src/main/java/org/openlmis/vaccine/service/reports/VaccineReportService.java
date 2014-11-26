@@ -151,6 +151,7 @@ public class VaccineReportService {
     lLineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());
     report.flattenCoverageLineItems();
     lLineItemService.saveCoverageLineItems(report.getCoverageItems());
+    lLineItemService.saveAdverseEffectLineItems(report.getAdverseEffectLineItems(), report.getId());
   }
 
   public VaccineReport getById(Long id) {

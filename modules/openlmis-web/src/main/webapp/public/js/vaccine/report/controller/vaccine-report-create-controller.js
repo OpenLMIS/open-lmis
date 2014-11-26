@@ -29,6 +29,22 @@ function CreateVaccineReportController($scope, $location, report, VaccineReportS
     $location.path('/');
   };
 
+
+  $scope.showAdverseEffect = function(effect, editMode){
+    $scope.currentEffect = effect;
+    $scope.currentEffectMode = editMode;
+
+    $scope.adverseEffectModal = true;
+  };
+
+  $scope.applyAdverseEffect = function(){
+    if(!$scope.currentEffectMode){
+      $scope.report.adverseEffectLineItems.push($scope.currentEffect);
+    }
+    $scope.adverseEffectModal = false;
+  };
+
+
 }
 
 

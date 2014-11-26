@@ -100,9 +100,9 @@ CREATE TABLE vaccine_report_adverse_effect_line_items
   reportId          INTEGER NOT NULL REFERENCES vaccine_reports(id),
   productId         INTEGER NOT NULL REFERENCES products(id),
 
-  date              DATE NOT NULL,
+  date              DATE NULL,
 
-  manufacturerId    INTEGER NOT NULL,
+  manufacturerId    INTEGER NULL,
   batch             VARCHAR (100) NOT NULL,
   expiry            DATE NULL,
 

@@ -21,11 +21,11 @@ public class VaccineReportAdverseEffectRepository {
   @Autowired
   VaccineReportAdverseEffectMapper mapper;
 
-  void insert(AdverseEffectLineItem lineItem){
+  public void insert(AdverseEffectLineItem lineItem){
     mapper.insert(lineItem);
   }
 
-  void update(AdverseEffectLineItem lineItem){
+  public void update(AdverseEffectLineItem lineItem){
     mapper.update(lineItem);
   }
 
