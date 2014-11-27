@@ -50,6 +50,9 @@ public class VaccineReportService {
   @Autowired
   VaccineProductDoseService productDoseService;
 
+  @Autowired
+  ConfigurationSettingService settingService;
+
 
   @Autowired
   ProgramService programService;
@@ -142,13 +145,19 @@ public class VaccineReportService {
   }
 
   public void save(VaccineReport report) {
+    repository.update(report);
     // save the other user inputs too.
     lLineItemService.saveLogisticsLineItems(report.getLogisticsLineItems());
     lLineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());
+    report.flattenCoverageLineItems();
     lLineItemService.saveCoverageLineItems(report.getCoverageItems());
+    lLineItemService.saveAdverseEffectLineItems(report.getAdverseEffectLineItems(), report.getId());
   }
 
   public VaccineReport getById(Long id) {
-    return repository.getByIdWithFullDetails(id);
+    VaccineReport report =  repository.getByIdWithFullDetails(id);
+    report.prepareCoverageDto();
+    report.setTrackCampaignCoverage(settingService.getBoolValue("TRACK_VACCINE_CAMPAIGN_COVERAGE"));
+    return report;
   }
 }

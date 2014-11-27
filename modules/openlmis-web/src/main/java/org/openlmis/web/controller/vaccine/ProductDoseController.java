@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller.vaccine;
 
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.vaccine.dto.VaccineServiceProtocolDTO;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
 import org.openlmis.web.controller.BaseController;
@@ -26,15 +27,22 @@ public class ProductDoseController extends BaseController{
   @Autowired
   private VaccineProductDoseService service;
 
+  @Autowired
+  private ConfigurationSettingService settingService;
+
   @RequestMapping(value = "get/{programId}")
   public ResponseEntity<OpenLmisResponse> getProgramProtocol(@PathVariable Long programId){
-    return OpenLmisResponse.response("protocol", service.getProductDoseForProgram(programId) );
+    VaccineServiceProtocolDTO dto = new VaccineServiceProtocolDTO();
+    dto.setProtocols(service.getProductDoseForProgram(programId));
+    dto.setTrackCampaign(settingService.getBoolValue("TRACK_VACCINE_CAMPAIGN_COVERAGE"));
+    return OpenLmisResponse.response("protocol",dto );
   }
 
 
   @RequestMapping(value = "save", headers = ACCEPT_JSON, method = RequestMethod.PUT)
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineServiceProtocolDTO protocol){
     service.save( protocol.getProtocols() );
+    settingService.saveBooleanValue("TRACK_VACCINE_CAMPAIGN_COVERAGE", protocol.getTrackCampaign());
     return OpenLmisResponse.response("status","success");
   }
 

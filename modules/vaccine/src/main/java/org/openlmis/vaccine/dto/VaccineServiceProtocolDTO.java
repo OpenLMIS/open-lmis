@@ -21,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class VaccineServiceProtocolDTO {
 
+  private Boolean trackCampaign;
   private List<ProductDoseProtocolDTO> protocols;
 
 }

@@ -26,7 +26,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class CoverageLineItemDTO extends BaseModel {
 
-  private Integer productId;
+  private Long productId;
   private String productCode;
   private String productName;
 

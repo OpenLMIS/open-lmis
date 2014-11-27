@@ -40,6 +40,7 @@ public class VaccineReport extends BaseModel {
   private ProcessingPeriod period;
   private Facility facility;
 
+  private Boolean trackCampaignCoverage;
 
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;
@@ -93,6 +94,38 @@ public class VaccineReport extends BaseModel {
       item.setProductId(dose.getProductId());
 
       coverageItems.add(item);
+    }
+  }
+
+  public void flattenCoverageLineItems() {
+    coverageItems = new ArrayList<>();
+
+    for(CoverageLineItemDTO lineItemDTO: coverageLineItems){
+      for(VaccineCoverageItem item: lineItemDTO.getItems()){
+        coverageItems.add( item );
+      }
+    }
+  }
+
+  public void prepareCoverageDto() {
+    if(coverageLineItems == null){
+      coverageLineItems = new ArrayList<>();
+    }
+    for(LogisticsLineItem lineItem: logisticsLineItems){
+      CoverageLineItemDTO dto = new CoverageLineItemDTO();
+      dto.setProductName(lineItem.getProductName());
+      dto.setProductId(lineItem.getProductId());
+
+      List<VaccineCoverageItem> items = new ArrayList<VaccineCoverageItem>();
+
+      // find the items and insert them appropriately on the dto
+      for(VaccineCoverageItem item: coverageItems){
+        if(item.getProductId().equals( dto.getProductId())){
+          items.add(item);
+        }
+      }
+      dto.setItems(items);
+      coverageLineItems.add(dto);
     }
   }
 }

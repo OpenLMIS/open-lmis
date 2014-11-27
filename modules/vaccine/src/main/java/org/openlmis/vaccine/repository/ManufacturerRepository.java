@@ -11,6 +11,7 @@
 package org.openlmis.vaccine.repository;
 
 import org.openlmis.vaccine.domain.Manufacturer;
+import org.openlmis.vaccine.domain.ManufacturerProduct;
 import org.openlmis.vaccine.repository.mapper.ManufacturerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,10 +20,48 @@ import java.util.List;
 
 @Component
 public class ManufacturerRepository {
+
     @Autowired
     private ManufacturerMapper manufacturerMapper;
 
     public List<Manufacturer> getAll(){
         return manufacturerMapper.getAll();
     }
+
+    public Manufacturer get(Long manufacturerId){
+         return manufacturerMapper.get(manufacturerId);
+    }
+
+    public void update(Manufacturer manufacturer){
+        manufacturerMapper.update(manufacturer);
+    }
+
+    public void insert(Manufacturer manufacturer){
+        manufacturerMapper.insert(manufacturer);
+    }
+
+    public void delete(Long manufacturerId) {
+        manufacturerMapper.delete(manufacturerId);
+    }
+
+    public List<ManufacturerProduct> getProductMapping(Long manufacturerId) {
+        return manufacturerMapper.getProductMapping(manufacturerId);
+    }
+
+    public ManufacturerProduct getProductMappingByMappingId(Long productMappingId){
+        return manufacturerMapper.getProductMappingByMappingId(productMappingId);
+    }
+
+    public void deleteProductMapping(Long productMappingId){
+        manufacturerMapper.deleteProductMapping(productMappingId);
+    }
+
+    public void insertProductMapping(ManufacturerProduct manufacturerProduct){
+        manufacturerMapper.insertProductMapping(manufacturerProduct);
+    }
+
+    public void updateProductMapping(ManufacturerProduct manufacturerProduct){
+        manufacturerMapper.updateProductMapping(manufacturerProduct);
+    }
+
 }

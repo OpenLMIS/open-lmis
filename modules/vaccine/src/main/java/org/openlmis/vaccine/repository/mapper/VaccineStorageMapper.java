@@ -19,9 +19,9 @@ import java.util.List;
 public interface VaccineStorageMapper {
 
     @Insert({"INSERT INTO vaccine_storage",
-            "( storagetypeid, location,grosscapacity,netcapacity,temperatureid, createdby, createddate, modifiedby,modifieddate, location_name, dimension,facility_id) ",
+            "( storagetypeid, location,name,grosscapacity,netcapacity,temperatureid, createdby, createddate, modifiedby,modifieddate, location_name, dimension,facility_id) ",
             "VALUES",
-            "( #{storageTypeId.id}, #{location}, #{grossCapacity}, #{netCapacity}, #{tempretureId.id} ,#{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}, #{locationName}, #{dimenstion}, #{facility.id}) "})
+            "( #{storageTypeId.id}, #{locCode},#{name}, #{grossCapacity}, #{netCapacity}, #{tempretureId.id} ,#{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}, #{locationName}, #{dimenstion}, #{facility.id}) "})
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Long insert(VaccineStorage vaccineStorage);
 
@@ -30,7 +30,8 @@ public interface VaccineStorageMapper {
     @Results({
             @Result(column = "id", property = "id"),
             @Result(column = "storagetypeid", property = "storageTypeId.id"),
-            @Result(column = "location", property = "location"),
+            @Result(column = "location", property = "locCode"),
+            @Result(column = "name", property = "name"),
             @Result(column = "grosscapacity", property = "grossCapacity"),
             @Result(column = "netcapacity", property = "netCapacity"),
             @Result(column = "location_name", property = "locationName"),
@@ -43,7 +44,8 @@ public interface VaccineStorageMapper {
     @Select("SELECT " +
             "  vaccine_storage.id, " +
             "  vaccine_storage.storagetypeid, " +
-            "  vaccine_storage.location, " +
+            "  vaccine_storage.locCode, " +
+            "  vaccine_storage.name, " +
             "  vaccine_storage.grosscapacity, " +
             "  vaccine_storage.netcapacity, " +
             "  vaccine_storage.temperatureid, " +
@@ -51,9 +53,9 @@ public interface VaccineStorageMapper {
             "  vaccine_storage.createddate, " +
             "  vaccine_storage.modifiedby, " +
             "  vaccine_storage.modifieddate, " +
-            " vaccine_storage.name, " +
-            "  vaccine_storage.facilityid " +
-           // "  storage_types.storagetypename" +
+            "  temperature.temperaturename, " +
+            "  vaccine_storage.facility_id, " +
+            "  storage_types.storagetypename" +
             " FROM " +
             "  public.vaccine_storage  " +
             " LEFT OUTER JOIN " +
@@ -64,19 +66,21 @@ public interface VaccineStorageMapper {
     @Results({
             @Result(column = "id", property = "id"),
             @Result(column = "storagetypeid", property = "storageTypeId.id"),
-            /*@Result(column = "storagetypename", property = "storageTypeId.storageTypeName"),*/
-            @Result(column = "location", property = "location"),
+            @Result(column = "storagetypename", property = "storageTypeId.storageTypeName"),
+            @Result(column = "location", property = "locCode"),
+            @Result(column = "name", property = "name"),
             @Result(column = "grosscapacity", property = "grossCapacity"),
             @Result(column = "netcapacity", property = "netCapacity"),
             @Result(column = "temperatureid", property = "tempretureId.id"),
-            @Result(column = "facilityId", property = "facility.id")//,
-            /*@Result(column = "temperaturename", property = "tempretureId.tempratureName")*/
+            @Result(column = "facility_id", property = "facility.id"),
+            @Result(column = "temperaturename", property = "tempretureId.tempratureName")
     })
     List<VaccineStorage> loadAllList();
 
     @Update("UPDATE vaccine_storage " +
             "   SET storagetypeid= #{storageTypeId.id}," +
-            " location= #{location}," +
+            "  locCode=#{location}, " +
+            "  name=#{name}, " +
             " grosscapacity=#{grossCapacity}, " +
             "netcapacity=#{netCapacity}, " +
             "temperatureid=#{tempretureId.id}," +

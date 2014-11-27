@@ -1,0 +1,154 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+
+    <form ng-submit="saveProductMapping()" id="create-manufacturer-product" name="vaccineManufacturerProductForm" novalidate>
+        <div class="app-form">
+            <div class="form-group">
+
+                <h3 >Product Mapping</h3>
+
+                <div class="form-row clearfix">
+                    
+                    <div class="form-cell">
+
+                        <label for="name" >Product<span class="label-required"> *</span></label>
+                        <div class="form-field">
+
+                            <select ng-model="productMapping.productCode" name="productCode" id="productCode" type="text" ng-required="true" style="width:87%;"
+                                     class="input-medium">
+                                <option ng-repeat="product in products" ng-value="product.code" ng-selected="productMapping.productCode == product.code">{{product.name}}</option>
+                            </select>
+
+                        <span class="field-error" ng-show="vaccineManufacturerProductForm.productCode.$error.required && showError"
+                              openlmis-message="missing.value">
+                        </span>
+                        </div>
+                    </div>
+                    
+                    <!-- gtin -->
+                    <div class="form-cell">
+
+                        <label for="name" >GTIN</label>
+                        <div class="form-field">
+                            <input ng-model="productMapping.gtin" name="gtin" id="gtin" type="text" />
+                        </div>
+                    </div>
+           </div>
+
+                <div class="form-row clearfix">
+
+                    <!-- elmis -->
+                    <div class="form-cell">
+
+                        <label for="name" >eLMIS ID</label>
+                        <div class="form-field">
+                            <input ng-model="productMapping.elmis" name="elmis" id="elmis" type="text" />
+                        </div>
+                    </div>
+
+                    <!-- rhi -->
+                    <div class="form-cell">
+
+                        <label for="name" >RHI</label>
+                        <div class="form-field">
+                            <input ng-model="productMapping.rhi" name="rhi" id="rhi" type="text" />
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="form-row clearfix">
+                    <!-- ppmr -->
+                    <div class="form-cell">
+
+                        <label for="name" >PPMR</label>
+                        <div class="form-field">
+                            <input ng-model="productMapping.ppmr" name="ppmr" id="ppmr" type="text" />
+                        </div>
+                    </div>
+
+                    <!-- other1 -->
+                    <div class="form-cell">
+
+                        <label for="name" >Other 1</label>
+                        <div class="form-field">
+                            <input ng-model="productMapping.other1" name="other1" id="other1" type="text" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row clearfix">
+
+                    <!-- other2 -->
+                    <div class="form-cell">
+
+                        <label for="name" >Other 2</label>
+                        <div class="form-field">
+                            <input ng-model="productMapping.other2" name="other2" id="other2" type="text" />
+                        </div>
+                    </div>
+
+                    <!-- other3 -->
+                    <div class="form-cell">
+
+                        <label for="name" >Other 3</label>
+                        <div class="form-field">
+                            <input ng-model="productMapping.other3" name="other3" id="other3" type="text" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row clearfix">
+
+                    <!-- other4 -->
+                    <div class="form-cell">
+
+                        <label for="name" >Other 4</label>
+                        <div class="form-field">
+                            <input ng-model="productMapping.other4" name="other4" id="other4" type="text" />
+                        </div>
+                    </div>
+
+                    <!-- other5 -->
+                    <div class="form-cell">
+
+                        <label for="name" >Other 5</label>
+                        <div class="form-field">
+
+                            <input ng-model="productMapping.other5" name="other5" id="other5" type="text" />
+
+                        </div>
+                    </div>
+                    </div>
+            </div>
+        </div>
+
+        <div form-toolbar id="action_buttons" class="action-buttons">
+            <div class="form-cell button-row">
+                <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+                       openlmis-message="button.save"/>
+                <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                       ng-click="cancelProductMappingForm()"/>
+            </div>
+
+            <div class="toolbar-error" id="saveErrorMsgDiv">
+                <span openlmis-message="error" ng-show="error"></span>&nbsp;
+            </div>
+            <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+        </div>
+
+
+    </form>
+</div>
+
+

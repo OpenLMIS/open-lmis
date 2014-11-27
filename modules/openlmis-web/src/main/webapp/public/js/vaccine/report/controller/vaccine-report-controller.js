@@ -26,7 +26,7 @@ function VaccineReportController($scope, programs, VaccineReportFacilities, Vacc
   };
 
   $scope.initiate = function(period){
-    if(period.id !== undefined){
+    if(!angular.isUndefined(period.id) && (period.id !== null)){
       // redirect already
       $location.path('/create/'+ period.id);
     }else{

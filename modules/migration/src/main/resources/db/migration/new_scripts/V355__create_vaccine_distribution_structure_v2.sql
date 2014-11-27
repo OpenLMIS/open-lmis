@@ -176,40 +176,26 @@ VALUES
 -------------------------------------------------------------------
 -- Table: vaccine_storage
 
-CREATE TABLE vaccine_storage
-(
-  id                SERIAL PRIMARY KEY                            ,
-  storageTypeId     INTEGER REFERENCES storage_types (id) NOT NULL,
-  location          VARCHAR (100)                                 ,
-  grossCapacity     INTEGER                                       ,
-  netCapacity       INTEGER                                       ,
-  temperatureId     INTEGER REFERENCES temperature (id)   NOT NULL,
-  createdBy         INTEGER                                       ,
-  createdDate       TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy        INTEGER                                       ,
-  modifiedDate      TIMESTAMP            DEFAULT CURRENT_TIMESTAMP  ,
-  location_name     VARCHAR(100),
-  dimension         VARCHAR(100),
-  facility_id INTEGER REFERENCES facilities (id) not null
-);
-CREATE UNIQUE INDEX uc_vaccine_storage_code ON vaccine_storage(location);
-
-COMMENT ON TABLE vaccine_storage IS                    'Vaccine storage capacity';
-COMMENT ON INDEX uc_vaccine_storage_code IS            'Unique code required for storage location';
-
-COMMENT ON COLUMN vaccine_storage.id IS                'ID';
-COMMENT ON COLUMN vaccine_storage.storageTypeId IS     'Storage type';
-COMMENT ON COLUMN vaccine_storage.location IS          'Storage location code';
-COMMENT ON COLUMN vaccine_storage.grossCapacity IS     'Grosss capacity (liters)';
-COMMENT ON COLUMN vaccine_storage.netCapacity IS       'Net capacity (liters)';
-COMMENT ON COLUMN vaccine_storage.temperatureId IS     'Temperature';
-COMMENT ON COLUMN vaccine_storage.createdBy IS         'Created by';
-COMMENT ON COLUMN vaccine_storage.createdDate IS       'Created on';
-COMMENT ON COLUMN vaccine_storage.modifiedBy IS        'Modified by';
-COMMENT ON COLUMN vaccine_storage.modifiedDate IS      'Modified on';
-COMMENT ON COLUMN vaccine_storage.location_name IS       'Location Name';
-COMMENT ON COLUMN vaccine_storage.dimension IS        'Dimension';
-COMMENT ON COLUMN vaccine_storage.facility_id IS      'Facility';
+-- Table: storage_types
+DROP TABLE IF EXISTS vaccine_storage cascade ;
+CREATE TABLE
+  vaccine_storage (  id SERIAL PRIMARY KEY ,
+                     storageTypeId INTEGER REFERENCES storage_types (id) NOT NULL,
+                     facilityId INTEGER REFERENCES facilities (id) NOT NULL,
+                     locCode VARCHAR (100) NOT NULL,
+                     name VARCHAR (250) NOT NULL,
+                     temperatureId INTEGER REFERENCES temperature (id) NOT NULL,
+                     grossCapacity INTEGER ,  netCapacity INTEGER ,  dimension VARCHAR (100) ,
+                     createdBy INTEGER ,  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  modifiedBy INTEGER ,
+                     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP );
+CREATE UNIQUE INDEX uc_vaccine_storage_code ON vaccine_storage(locCode);
+COMMENT ON TABLE vaccine_storage IS 'Vaccine storage capacity';
+COMMENT ON INDEX uc_vaccine_storage_code IS 'Unique code required for storage locCode';
+COMMENT ON COLUMN vaccine_storage.id IS 'ID';
+COMMENT ON COLUMN vaccine_storage.storageTypeId IS 'Storage type';
+COMMENT ON COLUMN vaccine_storage.facilityId IS 'Facility';
+COMMENT ON COLUMN vaccine_storage.locCode IS 'Storage location code';
+COMMENT ON COLUMN vaccine_storage.name IS 'Storage name';
 
 -----------------------------------------
 -- Table: Manufacturers

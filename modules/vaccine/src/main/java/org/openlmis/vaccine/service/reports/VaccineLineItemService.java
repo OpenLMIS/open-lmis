@@ -12,10 +12,12 @@ package org.openlmis.vaccine.service.reports;
 
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.ProgramProductService;
+import org.openlmis.vaccine.domain.reports.AdverseEffectLineItem;
 import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
 import org.openlmis.vaccine.domain.reports.LogisticsLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineCoverageItem;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportDiseaseLineItemMapper;
+import org.openlmis.vaccine.repository.reports.VaccineReportAdverseEffectRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportCoverageItemRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportDiseaseLineItemRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportLogisticsLineItemRepository;
@@ -33,8 +35,12 @@ public class VaccineLineItemService {
 
   @Autowired
   VaccineReportDiseaseLineItemRepository diseaseLineItemRepository;
+
   @Autowired
   VaccineReportCoverageItemRepository coverageItemRepository;
+
+  @Autowired
+  VaccineReportAdverseEffectRepository adverseLineItemRepository;
 
   public void saveLogisticsLineItems(List<LogisticsLineItem> lineItems){
     for(LogisticsLineItem lineItem: lineItems){
@@ -62,6 +68,18 @@ public class VaccineLineItemService {
         coverageItemRepository.insert(lineItem);
       }else{
         coverageItemRepository.update(lineItem);
+      }
+    }
+  }
+
+  public void saveAdverseEffectLineItems(List<AdverseEffectLineItem> adverseEffectLineItems, Long reportId) {
+    for(AdverseEffectLineItem lineItem: adverseEffectLineItems){
+      lineItem.setReportId(reportId);
+      if(lineItem.getId() == null){
+        adverseLineItemRepository.insert(lineItem);
+      }
+      else{
+        adverseLineItemRepository.update(lineItem);
       }
     }
   }

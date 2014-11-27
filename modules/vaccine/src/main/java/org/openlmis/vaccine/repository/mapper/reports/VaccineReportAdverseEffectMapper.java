@@ -43,6 +43,6 @@ public interface VaccineReportAdverseEffectMapper {
     " WHERE id = #{id}")
   void update(AdverseEffectLineItem lineItem);
 
-  @Select("SELECT * from vaccine_report_adverse_effect_line_items where reportId = #{reportId}")
+  @Select("SELECT e.*, p.primaryName as productName from vaccine_report_adverse_effect_line_items e join products p on p.id = e.productId where reportId = #{reportId}")
   List<AdverseEffectLineItem> getLineItems(@Param("reportId") Long reportId);
 }

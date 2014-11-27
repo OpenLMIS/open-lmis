@@ -51,5 +51,9 @@ services.factory('VaccineReport', function ($resource) {
 });
 
 services.factory('VaccineReportSave', function ($resource) {
-  return $resource('/vaccine/report/save.json', {}, {});
+  return $resource('/vaccine/report/save.json', {}, update);
+});
+
+services.factory('VaccineReportSubmit', function ($resource) {
+  return $resource('/vaccine/report/submit.json', {}, update);
 });
