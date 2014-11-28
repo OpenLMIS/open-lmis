@@ -15,10 +15,7 @@ import org.openlmis.vaccine.domain.DistributionBatch;
 import org.openlmis.vaccine.domain.DistributionLineItem;
 import org.openlmis.vaccine.domain.DistributionType;
 import org.openlmis.vaccine.domain.VaccineTarget;
-import org.openlmis.vaccine.service.DistributionLineItemService;
-import org.openlmis.vaccine.service.ManufacturerService;
-import org.openlmis.vaccine.service.VaccineDistributionBatchService;
-import org.openlmis.vaccine.service.VaccineTargetService;
+import org.openlmis.vaccine.service.*;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -57,6 +54,9 @@ public class VaccineController extends BaseController {
 
     @Autowired
     private DistributionLineItemService distributionLineItemService;
+
+    @Autowired
+    private StatusService statusService;
 
     @RequestMapping(value = "/target/create", method = POST, headers = ACCEPT_JSON)
     // TODO: Add appropriate permission
@@ -220,6 +220,12 @@ public class VaccineController extends BaseController {
     @RequestMapping(value = "/distributionTypes", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getDistributionTypes(){
         return OpenLmisResponse.response("distributionTypes", DistributionType.values());
+    }
+
+
+    @RequestMapping(value = "/status", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getVaccineDistributionStatus(){
+        return OpenLmisResponse.response("status", statusService.getAll());
     }
 
 

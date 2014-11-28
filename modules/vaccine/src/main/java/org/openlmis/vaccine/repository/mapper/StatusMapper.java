@@ -1,13 +1,3 @@
-package org.openlmis.vaccine.domain;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.upload.Importable;
-
 /*
  * This program is part of the OpenLMIS logistics management information system platform software.
  *   Copyright © 2013 VillageReach
@@ -17,24 +7,25 @@ import org.openlmis.upload.Importable;
  *   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class VaccineStorage extends BaseModel implements Importable {
-    /*
-    to be changed to storageType look up value
-     */
-    private StorageType storageTypeId;
-    private String location;
-    private String locationName;
-    private String name;
-    private int grossCapacity;
-    private int netCapacity;
-    private Temprature tempretureId;
-    private String dimenstion;
-    private Facility facility;
 
+package org.openlmis.vaccine.repository.mapper;
 
+import org.apache.ibatis.annotations.One;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.vaccine.domain.Status;
+import org.openlmis.vaccine.domain.TransactionType;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
+public interface StatusMapper {
+    @Select("Select * from received_status")
+    @Results({
+            @Result(column = "transactionTypeId", javaType = TransactionType.class, property = "transactionType",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.TransactionTypeMapper.getById"))
+    })
+    List<Status> getAll();
 }

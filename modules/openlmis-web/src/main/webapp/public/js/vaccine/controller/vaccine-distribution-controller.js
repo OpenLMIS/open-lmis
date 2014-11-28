@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineDistributionController($scope,$route,allFacilities,VaccineDistributionBatches,$location,messageService,GetDonors,Products,Manufacturers,DistributionTypes,VaccineStorageList){
+function VaccineDistributionController($scope,$route,allFacilities,VaccineDistributionBatches,$location,messageService,GetDonors,Products,Manufacturers,DistributionTypes,VaccineStorageList,VaccineDistributionStatus){
 
     $scope.message = "";
 
@@ -41,6 +41,16 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
     };
 
     $scope.origins = [{id:0,name:'France'},{id:1,name:'USA'}];
+
+    VaccineDistributionStatus.get({}, function(data){
+       $scope.status = data.status;
+        $scope.receivedStatus = [];
+       angular.forEach($scope.status, function(status){
+           if(!isUndefined(status.transactionType) && status.transactionType.name === "Received"){
+               $scope.receivedStatus.push(status);
+           }
+       });
+    });
 
     DistributionTypes.get({}, function(data){
         $scope.distributionTypes = data.distributionTypes;
