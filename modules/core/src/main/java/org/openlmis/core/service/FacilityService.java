@@ -278,5 +278,10 @@ public class FacilityService {
   public List<FacilityImages> getFacilityImages(Long facilityId){
     return facilityRepository.getFacilityImages(facilityId);
   }
+  public List<Facility> getUserSupervisedFacilities(Long userId) {
+    List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId);
+    List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
+    return facilityRepository.getAllInRequisitionGroups(requisitionGroups);
+ }
 
 }

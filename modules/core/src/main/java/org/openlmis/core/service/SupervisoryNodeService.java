@@ -133,4 +133,8 @@ public class SupervisoryNodeService {
    public Long getTotalUnassignedSupervisoryNodeOfUserBy(Long userId, Long programId){
        return supervisoryNodeRepository.getTotalUnassignedSupervisoryNodeOfUserBy(userId, programId);
   }
+
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId) {
+      return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId);
+  }
 }

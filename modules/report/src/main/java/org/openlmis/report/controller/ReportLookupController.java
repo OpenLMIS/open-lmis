@@ -11,15 +11,21 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.report.model.dto.*;
+import org.openlmis.report.model.dto.GeographicZone;
+//import org.openlmis.report.model.dto.ProcessingPeriod;
+import org.openlmis.report.model.dto.Product;
+import org.openlmis.report.model.dto.ProductCategory;
+import org.openlmis.report.model.dto.Program;
+import org.openlmis.report.model.dto.Regimen;
+import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.ReportLookupService;
@@ -429,5 +435,13 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("donors", donors);
 
     }
+
+    @RequestMapping(value = "/user/supervised/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getUserSupervisedFacilities(
+            HttpServletRequest request
+    ) {
+       return OpenLmisResponse.response("facilities", facilityService.getUserSupervisedFacilities(loggedInUserId(request)));
+    }
+
 
 }

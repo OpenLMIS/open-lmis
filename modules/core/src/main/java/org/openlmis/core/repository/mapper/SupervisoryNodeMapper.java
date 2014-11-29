@@ -188,4 +188,23 @@ public interface SupervisoryNodeMapper {
           @Param(value="programId") Long programId
   );
 
+    @Select({"WITH  recursive  supervisoryNodesRec AS ",
+            "   (",
+            "   SELECT *",
+            "   FROM supervisory_nodes ",
+            "   WHERE id in  (SELECT DISTINCT s.id FROM  ",
+            "       supervisory_nodes s ",
+            "       INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId  ",
+            "       INNER JOIN role_rights rr ON ra.roleId = rr.roleId  ",
+            "       WHERE ra.userId = #{userId} ) ",
+            "   UNION ",
+            "   SELECT sn.* ",
+            "   FROM supervisory_nodes sn ",
+            "   JOIN supervisoryNodesRec ",
+            "   ON sn.parentId = supervisoryNodesRec.id ",
+            "   )",
+            "SELECT * FROM supervisoryNodesRec"})
+    List<SupervisoryNode> getAllSupervisoryNodesInHierarchyByUser(@Param("userId") Long userId);
+
+
 }

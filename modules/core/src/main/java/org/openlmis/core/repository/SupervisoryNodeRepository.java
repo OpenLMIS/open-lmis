@@ -107,5 +107,9 @@ public class SupervisoryNodeRepository {
        return supervisoryNodeMapper.getTotalUnassignedSupervisoryNodeOfUserBy(userId, programId);
     }
 
+ public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId) {
+     return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByUser(userId);
+ }
+
 
 }
