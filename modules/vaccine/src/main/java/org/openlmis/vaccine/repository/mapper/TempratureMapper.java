@@ -1,8 +1,7 @@
 package org.openlmis.vaccine.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.vaccine.domain.StorageType;
-import org.openlmis.vaccine.domain.Temprature;
+import org.openlmis.vaccine.domain.Temperature;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,30 +22,30 @@ public interface TempratureMapper {
             @Result(column = "id", property = "id"),
             @Result(column = "temperaturename", property = "tempratureName")
     })
-    List<Temprature> loadAllList();
+    List<Temperature> loadAllList();
 
     @Insert({"INSERT INTO temperature",
             "( temperaturename, createdby, createddate, modifiedby,modifieddate) ",
             "VALUES",
             "( #{tempratureName} ,#{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}) "})
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    Long insert(Temprature temprature);
+    Long insert(Temperature temperature);
 
     @Select("SELECT * FROM temperature where id =#{id} ")
     @Results({
             @Result(column = "id", property = "id"),
             @Result(column = "temperaturename", property = "tempratureName")
     })
-    Temprature getById(Long id);
+    Temperature getById(Long id);
     @Update("UPDATE temperature " +
             "   SET temperaturename= #{tempratureName}," +
             " modifiedby=#{modifiedBy}, " +
             "modifieddate=#{modifiedDate} " +
 
             " WHERE id=#{id};")
-    void update(Temprature temprature);
+    void update(Temperature temperature);
 
     @Delete("DELETE from temperature " +
             " WHERE id=#{id};")
-    void delete(Temprature temprature);
+    void delete(Temperature temperature);
 }

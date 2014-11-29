@@ -42,4 +42,8 @@ public class VaccineStorageService {
     public List<Facility> loadFacillityList(){
         return this.facilityService.getAll();
     }
+
+    public List<VaccineStorage> getByFacilityId(Long facilityId){
+        return storageRepository.getByFacilityId(facilityId);
+    }
 }

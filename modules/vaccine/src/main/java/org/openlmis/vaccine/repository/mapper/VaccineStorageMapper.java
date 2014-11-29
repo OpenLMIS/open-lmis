@@ -77,6 +77,12 @@ public interface VaccineStorageMapper {
     })
     List<VaccineStorage> loadAllList();
 
+    @Select("Select * from vaccine_storage where facilityId = #{facilityId}")
+    @Results({
+            @Result(column = "facilityId", property = "facility.id")
+    })
+    List<VaccineStorage> getByFacilityId(Long facilityId);
+
     @Update("UPDATE vaccine_storage " +
             "   SET storagetypeid= #{storageTypeId.id}," +
             "  locCode=#{location}, " +

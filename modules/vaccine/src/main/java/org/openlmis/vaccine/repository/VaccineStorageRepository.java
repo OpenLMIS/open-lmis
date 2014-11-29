@@ -36,4 +36,8 @@ public class VaccineStorageRepository {
     public void updateVaccineStorage(VaccineStorage vaccineStorage) {
         this.vaccineStorageMapper.update(vaccineStorage);
     }
+
+    public List<VaccineStorage> getByFacilityId(Long facilityId){
+        return vaccineStorageMapper.getByFacilityId(facilityId);
+    }
 }

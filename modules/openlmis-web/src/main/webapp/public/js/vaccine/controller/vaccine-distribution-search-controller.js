@@ -7,7 +7,8 @@
  *   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineDistributionSearchController($scope,VaccineDistributionBatches,VaccineDistributionLineItems,navigateBackService,$location,messageService){
+function VaccineDistributionSearchController($scope,VaccineDistributionBatches,UserFacilityList,VaccineDistributionLineItems,navigateBackService,$location,messageService,UserSupervisedFacilities){
+    var isNavigatedBack;
 
     $scope.distributionBatch = {};
 
@@ -135,5 +136,60 @@ function VaccineDistributionSearchController($scope,VaccineDistributionBatches,V
             VaccineDistributionLineItems.save({}, $scope.qReceived, saveSuccessHandler, errorHandler);
         }
 
+    };
+
+    $scope.$on('$viewContentLoaded', function () {
+        $scope.selectedType = navigateBackService.selectedType || "0";
+        $scope.selectedFacilityId = navigateBackService.selectedFacilityId;
+        isNavigatedBack = navigateBackService.isNavigatedBack;
+        $scope.loadFacilityData($scope.selectedType);
+        if (isNavigatedBack) {
+            $scope.loadFacilitiesForProgram();
+        }
+        $scope.$watch('facilities', function () {
+            if ($scope.facilities && isNavigatedBack) {
+                $scope.selectedFacilityId = navigateBackService.selectedFacilityId;
+                isNavigatedBack = false;
+            }
+        });
+    });
+    $scope.viewSelectedFacility = function(){
+      alert('selected facility '+$scope.selectedFacilityId);
+    };
+    var resetRnrData = function () {
+        $scope.periodGridData = [];
+        $scope.selectedProgram = null;
+        $scope.selectedFacilityId = null;
+        $scope.myFacility = null;
+        $scope.programs = null;
+        $scope.facilities = null;
+        $scope.error = null;
+    };
+
+
+    $scope.loadFacilityData = function (selectedType) {
+        isNavigatedBack = isNavigatedBack ? selectedType !== "0" : resetRnrData();
+
+        if (selectedType === "0") { //My facility
+            UserFacilityList.get({}, function (data) {
+                $scope.facilities = data.facilityList;
+                $scope.myFacility = data.facilityList[0];
+                if ($scope.myFacility) {
+                    $scope.facilityDisplayName = $scope.myFacility.code + '-' + $scope.myFacility.name;
+                    $scope.selectedFacilityId = $scope.myFacility.id;
+
+                } else {
+                    $scope.facilityDisplayName = messageService.get("label.none.assigned");
+                    $scope.programs = null;
+                    $scope.selectedProgram = null;
+                }
+            }, {});
+        } else if (selectedType === "1") { // Supervised facility
+            UserSupervisedFacilities.get({}, function(data){
+                $scope.facilities = data.facilities;
+                $scope.selectedFacilityId = null;
+                $scope.error = null;
+            });
+        }
     };
 }

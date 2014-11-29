@@ -8,8 +8,7 @@ package org.openlmis.vaccine.repository;/*
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-import org.openlmis.vaccine.domain.StorageType;
-import org.openlmis.vaccine.domain.Temprature;
+import org.openlmis.vaccine.domain.Temperature;
 import org.openlmis.vaccine.repository.mapper.TempratureMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,19 +18,19 @@ import java.util.List;
 public class TempratureRepository {
     @Autowired
     private TempratureMapper tempratureMapper;
-    public List<Temprature> loadTempratureList(){
+    public List<Temperature> loadTempratureList(){
         return this.tempratureMapper.loadAllList();
     }
-    public void addTemprature(Temprature temprature){
-        this.tempratureMapper.insert(temprature);
+    public void addTemprature(Temperature temperature){
+        this.tempratureMapper.insert(temperature);
     }
-    public Temprature loadTempratureDetail(long id){
+    public Temperature loadTempratureDetail(long id){
         return  this.tempratureMapper.getById(id);
     }
-    public void updateTemprature(Temprature temprature){
-        this.tempratureMapper.update(temprature);
+    public void updateTemprature(Temperature temperature){
+        this.tempratureMapper.update(temperature);
     }
-    public void removeTemprature(Temprature temprature){
-        this.tempratureMapper.delete(temprature);
+    public void removeTemprature(Temperature temperature){
+        this.tempratureMapper.delete(temperature);
     }
 }

@@ -11,7 +11,6 @@ package org.openlmis.vaccine.repository;
         */
 
 import org.openlmis.vaccine.domain.StorageType;
-import org.openlmis.vaccine.domain.Temprature;
 import org.openlmis.vaccine.repository.mapper.StorageTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

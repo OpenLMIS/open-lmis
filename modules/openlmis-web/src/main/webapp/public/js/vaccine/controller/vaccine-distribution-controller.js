@@ -7,11 +7,12 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineDistributionController($scope,$route,allFacilities,VaccineDistributionBatches,$location,messageService,GetDonors,Products,Manufacturers,DistributionTypes,VaccineStorageList,VaccineDistributionStatus){
+function VaccineDistributionController($scope,$route,allFacilities,VaccineDistributionBatches,$location,messageService,GetDonors,Products,Manufacturers,DistributionTypes,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones){
 
     $scope.message = "";
 
     $scope.selectedStorages = [];
+    $scope.batches = [];
     $scope.allFacilities = allFacilities;
 
     if(!isUndefined($route.current.params.distributionBatchId)){
@@ -65,14 +66,40 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
     Products.get({}, function(data){
         $scope.products = data.productList;
     });
-    VaccineStorageList.get({}, function(data){
+
+    $scope.zones = [];
+    GeographicZones.get({},function(data){
+        angular.forEach(data.zones, function(zone){
+           if(zone.levelId == 2){
+               $scope.zones.push(zone);
+           }
+        });
+
+        $scope.zones.unshift({id:0, name:'MSD HQ'});
+    });
+
+    VaccineStorageByFacility.get({facilityId:14227}, function(data){
         $scope.storages = data.vaccineStorageList;
     });
     $scope.cancelDistributionBatchSave = function () {
         $location.path('#/distribution-batch');
     };
 
+
+    $scope.addBatches = function (distribution) {
+        $scope.batch = null;
+        $scope.distribution = distribution;
+        $scope.addBatchesModal = true;
+    };
+    $scope.resetAddBatchesModal = function () {
+        $scope.addBatchesModal = false;
+        $scope.error = undefined;
+        $scope.distribution = undefined;
+    };
+
     $scope.saveDistributionBatch = function(){
+
+        alert('distribution batch is '+JSON.stringify($scope.distributionBatch));
 
         if ($scope.distributionBatchForm.$error.required) {
             $scope.error = messageService.get("form.error");
@@ -108,6 +135,12 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
         } else {
             VaccineDistributionBatches.save({}, $scope.distributionBatch, saveSuccessHandler, errorHandler);
         }
+    };
+
+    $scope.saveBatches = function(){
+
+        $scope.batches.push($scope.batch);
+        $scope.addBatchesModal = undefined;
     };
 }
 

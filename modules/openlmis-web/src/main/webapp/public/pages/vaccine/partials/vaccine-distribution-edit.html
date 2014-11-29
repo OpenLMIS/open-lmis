@@ -12,548 +12,258 @@
     <h2><span openlmis-message="label.add.distribution.batch"></span>
 
     </h2>
-    <div class="row-fluid">
-        <div class="span4">
-            <label for="today" openlmis-message="label.dispatchId"><span class="label-required"> *</span></label>
 
-            <input id="today" name="productionDate" type="text" ng-model="distributionBatch.productionDate"
-                   readonly
-                   ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
-                   ui-date-format="yy-mm-dd"
-                   ng-required="true"/>
-            <span class="field-error" ng-show="distributionBatchForm.productionDate.$error.required && showError"
-                  openlmis-message="missing.value">
-            </span>
-        </div>
-        <div class="span4">
-            <label for="bol" openlmis-message="label.dispatchId"><span class="label-required"> *</span></label>
-            <input id="bol" ng-model="distributionBatch.dispatchId" name="dispatchId"  type="text" maxlength="50" ng-required="true"/>
-            <span class="field-error" ng-show="distributionBatchForm.dispatchId.$error.required && showError"
-                  openlmis-message="missing.value">
+    <form ng-submit="saveDistributionBatch()" name="distributionBatchForm" novalidate>
+        <div class="app-form">
+            <div class="row-fluid">
+                <div class="span4">
+                    <label for="today" openlmis-message="label.today"><span class="label-required"> *</span></label>
 
-            </span>
-        </div>
-        <div class="span4">
-            <label for="receivedAt" openlmis-message="label.dispatchId"><span class="label-required"> *</span></label>
-            <select   id="receivedAt"  name="fromFacility" ng-model="distributionBatch.fromFacility.id" ng-required="true" style="width:90%;">
-                <option  ng-repeat="option in allFacilities | limitTo:50" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
-            </select>
-            <span class="field-error" ng-show="distributionBatchForm.fromFacility.$error.required && showError"
-                  openlmis-message="missing.value">
-            </span>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span4">
-            <label for="dispatchNumber" openlmis-message="label.dispatchId"><span class="label-required"> *</span></label>
-            <input id="dispatchNumber" ng-model="distributionBatch.dispatchId" name="dispatchId"  type="text" maxlength="50" ng-required="true"/>
-            <span class="field-error" ng-show="distributionBatchForm.dispatchId.$error.required && showError"
-                  openlmis-message="missing.value">
+                    <input id="today" name="today" type="text" ng-model="distributionBatch.today"
+                           readonly
+                           ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
+                           ui-date-format="yy-mm-dd"
+                           ng-required="true"/>
+                <span class="field-error" ng-show="distributionBatchForm.today.$error.required && showError"
+                      openlmis-message="missing.value">
+                </span>
+                </div>
+                <div class="span4">
+                    <label for="bol" openlmis-message="label.bol"><span class="label-required"> *</span></label>
+                    <input id="bol" ng-model="distributionBatch.bol" name="bol"  type="text" maxlength="50" ng-required="true"/>
+                <span class="field-error" ng-show="distributionBatchForm.bol.$error.required && showError"
+                      openlmis-message="missing.value">
 
-            </span>
-        </div>
-        <div class="span4">
-            <label for="receivedDate" openlmis-message="label.dispatchId"><span class="label-required"> *</span></label>
+                </span>
+                </div>
+                <div class="span4">
+                    <label for="receivedAt" openlmis-message="label.receivedAt"><span class="label-required"> *</span></label>
+                    <select   id="receivedAt"  name="receivedAt" ng-model="distributionBatch.receivedAt" ng-required="true" style="width:90%;">
+                        <option  ng-repeat="option in zones " value="{{ option.id }}">{{ option.name }}</option>
+                    </select>
+                <span class="field-error" ng-show="distributionBatchForm.receivedAt.$error.required && showError"
+                      openlmis-message="missing.value">
+                </span>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span4">
+                    <label for="dispatchNumber" openlmis-message="label.dispatchId"><span class="label-required"> *</span></label>
+                    <input id="dispatchNumber" ng-model="distributionBatch.dispatchId" name="dispatchId"  type="text" maxlength="50" ng-required="true"/>
+                <span class="field-error" ng-show="distributionBatchForm.dispatchId.$error.required && showError"
+                      openlmis-message="missing.value">
 
-            <input id="receivedDate" name="productionDate" type="text" ng-model="distributionBatch.productionDate"
-                   readonly
-                   ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
-                   ui-date-format="yy-mm-dd"
-                   ng-required="true"/>
-            <span class="field-error" ng-show="distributionBatchForm.productionDate.$error.required && showError"
-                  openlmis-message="missing.value">
-            </span>
+                </span>
+                </div>
+                <div class="span4">
+                    <label for="receivedDate" openlmis-message="label.receivedDate"><span class="label-required"> *</span></label>
+
+                    <input id="receivedDate" name="productionDate" type="text" ng-model="distributionBatch.receivedDate"
+                           readonly
+                           ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
+                           ui-date-format="yy-mm-dd"
+                           ng-required="true"/>
+                <span class="field-error" ng-show="distributionBatchForm.receivedDate.$error.required && showError"
+                      openlmis-message="missing.value">
+                </span>
+                </div>
+
+                <div class="span4">
+                    <label for="product" openlmis-message="label.vaccine"><span class="label-required"> *</span></label>
+                    <select  id="product"  name="product" ng-model="distributionBatch.product.code"  required="true" style="width:90%;">
+                        <option  ng-repeat="option in products" value="{{option.code}}">{{ option.name }}</option>
+                    </select>
+                <span class="field-error" ng-show="distributionBatchForm.product.$error.required && showError"
+                      openlmis-message="missing.value">
+                </span>
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <label for="shipment-status" openlmis-message="label.shipment.status"><span class="label-required">*</span></label>
+
+                <div id="shipment-status" class="span12">
+                    <div ng-repeat="status in receivedStatus" class="span{{12/receivedStatus.length}} form-inline">
+                        <input style="margin: 0px;" id="statusSelected{{$index}}" name="statusSelected"  type="radio" ng-model="distributionBatch.shipmentStatusId"
+                               value="{{status.id}}"/>
+                        &nbsp;<label for="statusSelected{{$index}}">{{status.name}}</label>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="span4">
-            <label for="product" openlmis-message="label.product"><span class="label-required"> *</span></label>
-            <select  id="product"  name="product" ng-model="distributionBatch.product.code"  required="true" style="width:90%;">
-                    <option  ng-repeat="option in products" value="{{option.code}}">{{ option.name }}</option>
-            </select>
-            <span class="field-error" ng-show="distributionBatchForm.product.$error.required && showError"
-                  openlmis-message="missing.value">
-            </span>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span12">
-            <label for="shipment-status" openlmis-message="label.shipment.status"><span class="label-required">*</span></label>
-            <table id="shipment-status" width="100%">
-                <tr>
-                   <td ng-repeat="status in receivedStatus">
-                         <input type="radio" name="status"  ng-model="statusSelected"/> {{status.name}}
-                    </td>
-                </tr>
-            </table>
-
-        </div>
-    </div>
-    <div class="row-fluid" style="margin-top: 15px;">
-        <div class="span4">
-            <label for="donor" openlmis-message="label.donor"><span class="label-required">
-                         *</span></label>
-            <select   id="donor"  name="donor" ng-model="distributionBatch.donor.id"  required="true" style="width:90%;">
-                <option  ng-repeat="option in donors" value="{{ option.id }}">{{ option.longName }}</option>
-            </select>
-            <span class="field-error" ng-show="distributionBatchForm.donor.$error.required && showError"
-                  openlmis-message="missing.value">
-            </span>
-        </div>
-        <div class="span4">
-            <label for="origin" openlmis-message="label.origin"><span class="label-required">
-                         *</span></label>
+        <div class="row-fluid" style="margin-top: 15px;">
+            <div class="span4">
+                <label for="donor" openlmis-message="label.donor"><span class="label-required">
+                             *</span></label>
+                <select   id="donor"  name="donor" ng-model="distributionBatch.donor.id"  required="true" style="width:90%;">
+                    <option  ng-repeat="option in donors" value="{{ option.id }}">{{ option.longName }}</option>
+                </select>
+                <span class="field-error" ng-show="distributionBatchForm.donor.$error.required && showError"
+                      openlmis-message="missing.value">
+                </span>
+            </div>
+            <div class="span4">
+                <label for="origin" openlmis-message="label.origin"><span class="label-required">
+                             *</span></label>
                 <select   id="origin"  name="origin" ng-model="distributionBatch.originId"  required="true" style="width:90%;">
                     <option  ng-repeat="option in origins" value="{{ option.id }}">{{ option.name }}</option>
                 </select>
-            <span class="field-error" ng-show="distributionBatchForm.origin.$error.required && showError"
-                  openlmis-message="missing.value">
-            </span>
-        </div>
+                <span class="field-error" ng-show="distributionBatchForm.origin.$error.required && showError"
+                      openlmis-message="missing.value">
+                </span>
+            </div>
 
-        <div class="span4">
-            <label for="manufacturer" openlmis-message="label.manufacturer"><span class="label-required">
-                         *</span></label>
-            <select   id="manufacturer"  name="manufacturer" ng-model="distributionBatch.manufacturer.id"  required="true" style="width:90%;">
-                <option  ng-repeat="option in manufacturers" value="{{ option.id }}">{{ option.name }}</option>
-            </select>
-            <span class="field-error" ng-show="distributionBatchForm.manufacturer.$error.required && showError"
-                  openlmis-message="missing.value">
-            </span>
+            <div class="span4">
+                <label for="manufacturer" openlmis-message="label.manufacturer"><span class="label-required">
+                             *</span></label>
+                <select   id="manufacturer"  name="manufacturer" ng-model="distributionBatch.manufacturer.id"  required="true" style="width:90%;">
+                    <option  ng-repeat="option in manufacturers" value="{{ option.id }}">{{ option.name }}</option>
+                </select>
+                <span class="field-error" ng-show="distributionBatchForm.manufacturer.$error.required && showError"
+                      openlmis-message="missing.value">
+                </span>
+            </div>
         </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span4">
-            <label for="purpose" openlmis-message="label.purpose"><span class="label-required">
-                         *</span></label>
-            <table id="purpose" class="table table-striped table-bordered">
-                <thead>
-                <tr  class="gradient-header">
-                    <th>Routine</th>
-                    <th>Campaign</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><input id="routine" type="checkbox" name="purpose"/></td>
-                    <td><input id="campaign" type="checkbox" name="purpose"/></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="span4"></div>
-        <div class="span4">
-            <label for="vvmpresent" openlmis-message="label.vvmpresent"><span class="label-required">
-                         *</span></label>
-            <input id="vvmpresent" type="checkbox" name="vvmpresent"/>
+        <div class="row-fluid">
+            <div class="span4">
+                <label for="purpose" openlmis-message="label.purpose"><span class="label-required">
+                             *</span></label>
+                <table id="purpose" class="table table-striped table-bordered">
+                    <thead>
+                    <tr  class="gradient-header">
+                        <th>Routine</th>
+                        <th>Campaign</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><input id="routine" type="radio" name="purpose" value="routine" ng-model="distributionBatch.purpose"/></td>
+                        <td><input id="campaign" type="radio" name="purpose" value="campaign" ng-model="distributionBatch.purpose"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="span4"></div>
+            <div class="span4">
+                <label for="vvmpresent" openlmis-message="label.vvmpresent"><span class="label-required">
+                             *</span></label>
+                <input id="vvmpresent" type="checkbox" name="vvmpresent" ng-model="distributionBatch.vvmPresent"/>
 
+            </div>
         </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span6">
-            <label for="barCoding" openlmis-message="label.barCoding"><span class="label-required">
-                         *</span></label>
-            <table id="barCoding" class="table table-striped table-bordered">
+        <div class="row-fluid">
+            <div class="span6">
+                <label for="barCoding" openlmis-message="label.barCoding"><span class="label-required">
+                             *</span></label>
+                <table id="barCoding" class="table table-striped table-bordered">
+                    <thead>
+                    <tr  class="gradient-header">
+                        <th>Cartons are barcoded</th>
+                        <th>GS1 bar coded</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><input id="cartonsBarCoded" type="checkbox" name="barcoding" ng-model="distributionBatch.cartonBarCoded"/></td>
+                        <td><input id="GS1BarCoded" type="checkbox" name="barcoding" ng-model="distributionBatch.gs1BarCoded"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">
+                <label for="quantityValue" openlmis-message="label.quantityValue"><span class="label-required">
+                             *</span></label>
+                <table id="quantityValue" class="table table-striped table-bordered">
+                    <thead>
+                    <tr  class="gradient-header">
+                        <th>Pack Size</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total Cost</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><input id="packSize" type="text" name="packSize" ng-model="distributionBatch.packSize"/></td>
+                        <td><input id="quantity" type="text" name="quantity" ng-model="distributionBatch.quantity"/></td>
+                        <td><input id="unitPrice" type="text" name="unitPrice" ng-model="distributionBatch.unitPrice"/></td>
+                        <td><input id="totalCost" type="text" name="totalCost" ng-model="distributionBatch.totalCost"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span8">
+                <label for="storage" openlmis-message="label.storage"><span class="label-required">
+                             *</span></label>
+                <table id="storage" class="table table-striped table-bordered">
+                    <thead>
+                    <tr  class="gradient-header">
+                        <th ng-repeat="storage in storages">{{storage.location}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td ng-repeat="storage in storages"><input type="radio" name="storage" value="{{storage.id}}"  ng-model="distributionBatch.storageId"/>  {{storage.location}} </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <a href="" ng-click="addBatches()" class="pull-right btn btn-primary"><span id="distribution-batch-add-new"
+                                                                                        openlmis-message="button.add.new"></span></a>
+            <table class="table table-striped table-bordered">
                 <thead>
                 <tr  class="gradient-header">
-                    <th>Cartons are barcoded</th>
-                    <th>GS1 bar coded</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><input id="cartonsBarCoded" type="checkbox" name="barcoding"/></td>
-                    <td><input id="GS1BarCoded" type="checkbox" name="barcoding"/></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span6">
-            <label for="quantityValue" openlmis-message="label.quantityValue"><span class="label-required">
-                         *</span></label>
-            <table id="quantityValue" class="table table-striped table-bordered">
-                <thead>
-                <tr  class="gradient-header">
-                    <th>Pack Size</th>
+                    <th>Batch Number</th>
+                    <th>Expiry Date</th>
+                    <th>Production Date</th>
                     <th>Quantity</th>
-                    <th>Unit Price</th>
-                    <th>Total Cost</th>
+                    <th>Quantity VVM1</th>
+                    <th>Quantity VVM2</th>
+                    <th>Quantity VVM3</th>
+                    <th>Quantity VVM4</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td><input id="packSize" type="checkbox" name="quantityValue"/></td>
-                    <td><input id="quantity" type="checkbox" name="quantityValue"/></td>
-                    <td><input id="unitPrice" type="checkbox" name="quantityValue"/></td>
-                    <td><input id="totalCost" type="checkbox" name="quantityValue"/></td>
+                <tr ng-click="rowClickedEvent(distribution)" style="cursor: pointer" ng-repeat="batchItem in batches">
+                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.batchNumber }}</td>
+                    <td ng-class="{'highlight' : selected == distribution.id}">{{ convertStringToCorrectDateFormat(batchItem.expiryDate) }}</td>
+                    <td ng-class="{'highlight' : selected == distribution.id}">{{ convertStringToCorrectDateFormat(batchItem.productionDate)}}</td>
+                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.quantity }}</td>
+                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.vvm1 }}</td>
+                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.vvm2 }}</td>
+                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.vvm3 }}</td>
+                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.vvm4 }}</td>
+                    <td ng-class="{'highlight' : selected == distribution.id}">
+                        <a href="" ng-click="addReceive(distribution)" class="btn btn-primary btn-small" openlmis-message="button.receive"></a>
+                        <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
+                           ng-click="editDistributionBatch(distribution.id)"></a>
+                        <a href="/public/pages/admin/user/preference/index.html#/edit-user-preference/{{user.id}}" class="btn btn-primary btn-small" openlmis-message="button.delete"></a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span8">
-            <label for="storage" openlmis-message="label.storage"><span class="label-required">
-                         *</span></label>
-            <table id="storage" class="table table-striped table-bordered">
-                <thead>
-                <tr  class="gradient-header">
-                    <th ng-repeat="storage in storages">{{storage.location}}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td ng-repeat="storage in storages"><input type="checkbox" name="storage"  ng-model="storage.selected"/>  {{storage.location}} </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <table class="table table-striped table-bordered">
-        <thead>
-        <tr  class="gradient-header">
-            <th>Batch Number</th>
-            <th>Expiry Date</th>
-            <th>Production Date</th>
-            <th>Quantity</th>
-            <th>Quantity VVM1</th>
-            <th>Quantity VVM2</th>
-            <th>Quantity VVM3</th>
-            <th>Quantity VVM4</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-click="rowClickedEvent(distribution)" style="cursor: pointer" ng-repeat="distribution in distributionBatches">
-            <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.batchId }}</td>
-            <td ng-class="{'highlight' : selected == distribution.id}">{{ convertStringToCorrectDateFormat(distribution.stringExpiryDate) }}</td>
-            <td ng-class="{'highlight' : selected == distribution.id}">{{ convertStringToCorrectDateFormat(distribution.stringProductionDate)}}</td>
-            <td ng-class="{'highlight' : selected == distribution.id}">{{ convertStringToCorrectDateFormat(distribution.stringReceiveDate) }}</td>
-            <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.quantity }}</td>
-            <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.quantity }}</td>
-            <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.quantity }}</td>
-            <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.quantity }}</td>
-            <td ng-class="{'highlight' : selected == distribution.id}">{{ distribution.quantity }}</td>
-            <td ng-class="{'highlight' : selected == distribution.id}">
-                <a href="" ng-click="addReceive(distribution)" class="btn btn-primary btn-small" openlmis-message="button.receive"></a>
-                <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
-                   ng-click="editDistributionBatch(distribution.id)"></a>
-                <a href="/public/pages/admin/user/preference/index.html#/edit-user-preference/{{user.id}}" class="btn btn-primary btn-small" openlmis-message="button.delete"></a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="row-fluid">
-        <div class="span12">
-            <label for="notes" openlmis-message="label.notes"></label>
-            <textarea id="notes" type="text"
-                      name="notes"
-                      ng-model="notes"/>
-        </div>
-    </div>
 
-    <div id="addBatchModal" modal="addReceiveModal" options="{'backdrop':'static', 'escape':false}">
-        <div class="modal-header">
-            <h3>
-                <span openlmis-message="message.add.distribution.quantity.received"></span>&nbsp;<span ng-bind="distribution.batchId"></span>&nbsp;
-
-            </h3>
         </div>
 
-        <div class="modal-body">
-            <form ng-submit="saveDistributionLineItem()" id="create-distribution-line-item" name="distributionLineItemForm" novalidate>
-                <div class="form-row clearfix">
-                    <div class="form-cell">
-                        <label for="quantityReceived" openlmis-message="label.quantity.received"><span class="label-required">*</span></label>
-                        <div class="form-field">
-                            <input id="quantityReceived" ng-model="qReceived.quantityReceived" name="quantityReceived"  type="number" maxlength="50" required="true"/>
-                                    <span class="field-error" ng-show="distributionLineItemForm.quantityReceived.$error.required && showError"
-                                          openlmis-message="missing.value">
-                                    </span>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="vvmStage" openlmis-message="label.vvmStage"><span class="label-required">*</span></label>
-                        <div class="form-field">
-                            <select id="vvmStage"  name="vvmStage" ng-model="qReceived.vvmStage"  required="true">
-                                <option  ng-repeat="option in vvmStages" value="{{ option.id }}">{{ option.name }}</option>
-                            </select>
-                                <span class="field-error" ng-show="distributionLineItemForm.vvmStage.$error.required && showError"
-                                      openlmis-message="missing.value">
-                                </span>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="comments" openlmis-message="label.comments"></label>
-                        <div class="form-field">
-                            <textarea id="comments" type="text"
-                                      name="comments"
-                                      ng-model="qReceived.comments"/>
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-            <div class="alert alert-error" id="saveFailMessage" openlmis-message="error" ng-show="error">
+        <div class="row-fluid">
+            <div class="span12">
+                <label for="notes" openlmis-message="label.notes"></label>
+                <textarea id="notes" type="text"
+                          name="notes"
+                          ng-model="distributionBatch.notes"/>
             </div>
         </div>
-        <div class="modal-footer">
-            <input id="distributionBatchLineItemSaveButton" type="submit" ng-click="saveDistributionLineItem()" class="btn btn-primary save-button" openlmis-message="button.save"/>
-            <input type="button"
-                   ng-click="resetAddReceiveModal()"
-                   class="btn btn-cancel" openlmis-message="button.cancel"/>
-        </div>
-    </div>
 
-
-
-    <!--<form ng-submit="saveDistributionBatch()" id="create-distribution-batch" name="distributionBatchForm" novalidate>
-        <div class="app-form">
-            <div class="form-group">
-                <h3 openlmis-message="label.basic.information"></h3>
-                <div class="form-row clearfix">
-                    <div class="form-cell">
-                        <label for="dispatchId" openlmis-message="label.dispatchId"><span class="label-required"> *</span></label>
-                        <div class="form-field">
-                            <input id="dispatchId" ng-model="distributionBatch.dispatchId" name="dispatchId"  type="text" maxlength="50" ng-required="true"/>
-                        <span class="field-error" ng-show="distributionBatchForm.dispatchId.$error.required && showError"
-                              openlmis-message="missing.value">
-
-                        </span>
-                        </div>
-                    </div>
-
-                    <div class="form-cell">
-                        <label for="transactionType" openlmis-message="label.transactionType"><span class="label-required">
-                         *</span></label>
-
-                        <div class="form-field">
-                            <select   id="transactionType"  name="transactionType" ng-model="distributionBatch.distributionTypeId"  required="true" style="width:90%;">
-                                <option  ng-repeat="option in distributionTypes" value="{{ option }}">{{ option }}</option>
-                            </select>
-                            <span class="field-error" ng-show="distributionBatchForm.transactionType.$error.required && showError"
-                                  openlmis-message="missing.value">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <h3 openlmis-message="label.batch.information"></h3>
-
-                <div class="form-row clearfix">
-                    <div class="form-cell">
-                        <label for="manufacturer" openlmis-message="label.manufacturer"><span class="label-required">
-                         *</span></label>
-
-                        <div class="form-field">
-                            <select   id="manufacturer"  name="manufacturer" ng-model="distributionBatch.manufacturer.id"  required="true" style="width:90%;">
-                                <option  ng-repeat="option in manufacturers" value="{{ option.id }}">{{ option.name }}</option>
-                            </select>
-                            <span class="field-error" ng-show="distributionBatchForm.manufacturer.$error.required && showError"
-                                  openlmis-message="missing.value">
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="form-cell">
-                        <label for="productionDate" openlmis-message="label.productionDate"><span class="label-required"> *</span></label>
-
-                        <div class="form-field">
-                            <input id="productionDate" name="productionDate" type="text" ng-model="distributionBatch.productionDate"
-                                   readonly
-                                   ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
-                                   ui-date-format="yy-mm-dd"
-                                   ng-required="true"/>
-                            <span class="field-error" ng-show="distributionBatchForm.productionDate.$error.required && showError"
-                                  openlmis-message="missing.value">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row clearfix">
-                    <div class="form-cell">
-                        <label for="origin" openlmis-message="label.origin"><span class="label-required">
-                         *</span></label>
-
-                        <div class="form-field">
-                            <select   id="origin"  name="origin" ng-model="distributionBatch.originId"  required="true" style="width:90%;">
-                                <option  ng-repeat="option in origins" value="{{ option.id }}">{{ option.name }}</option>
-                            </select>
-                            <span class="field-error" ng-show="distributionBatchForm.origin.$error.required && showError"
-                                  openlmis-message="missing.value">
-                            </span>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="donor" openlmis-message="label.donor"><span class="label-required">
-                         *</span></label>
-
-                        <div class="form-field">
-                            <select   id="donor"  name="donor" ng-model="distributionBatch.donor.id"  required="true" style="width:90%;">
-                                <option  ng-repeat="option in donors" value="{{ option.id }}">{{ option.longName }}</option>
-                            </select>
-                            <span class="field-error" ng-show="distributionBatchForm.donor.$error.required && showError"
-                                  openlmis-message="missing.value">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row clearfix">
-                    <div class="form-cell">
-                        <label for="batchId" openlmis-message="label.batchId"><span class="label-required"> *</span></label>
-                        <div class="form-field">
-                            <input id="batchId" ng-model="distributionBatch.batchId" name="batchId"  type="text" maxlength="50" ng-required="true"/>
-                        <span class="field-error" ng-show="distributionBatchForm.batchId.$error.required && showError"
-                              openlmis-message="missing.value">
-
-                        </span>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="expiryDate" openlmis-message="label.expiryDate"><span class="label-required"> *</span></label>
-
-                        <div class="form-field">
-                            <input id="expiryDate" type="text" ng-model="distributionBatch.expiryDate" name="expiryDate"
-                                   readonly
-                                   ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
-                                   ui-date-format="yy-mm-dd"
-                                   ng-required="true"/>
-                            <span class="field-error" ng-show="distributionBatchForm.expiryDate.$error.required && showError"
-                                  openlmis-message="missing.value">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row clearfix">
-                    <div class="form-cell">
-                        <label for="originalFacility" openlmis-message="label.originalFacility"><span class="label-required">*</span></label>
-                        <div class="form-field">
-                            <select   id="originalFacility"  name="fromFacility" ng-model="distributionBatch.fromFacility.id" ng-required="true" style="width:90%;">
-                                <option  ng-repeat="option in allFacilities | limitTo:50" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
-                            </select>
-                            <span class="field-error" ng-show="distributionBatchForm.fromFacility.$error.required && showError"
-                                  openlmis-message="missing.value">
-                            </span>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="receivingFacility" openlmis-message="label.receivingFacility"><span class="label-required">*</span></label>
-                        <div class="form-field">
-                            <select   id="receivingFacility"  name="toFacility" ng-model="distributionBatch.toFacility.id" ng-required="true" style="width:90%;">
-                                <option  ng-repeat="option in allFacilities | limitTo:50" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
-                            </select>
-                            <span class="field-error" ng-show="distributionBatchForm.toFacility.$error.required && showError"
-                                  openlmis-message="missing.value">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row clearfix">
-                    <div class="form-cell">
-                        <label for="voucherNumber" openlmis-message="label.voucherNumber"></label>
-                        <div class="form-field">
-                            <input id="voucherNumber" ng-model="distributionBatch.voucherNumber" name="voucherNumber"  type="text" maxlength="50"/>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="receiveDate" openlmis-message="label.receiveDate"><span class="label-required"> *</span></label>
-
-                        <div class="form-field">
-                            <input id="receiveDate" name="receiveDate" type="text" ng-model="distributionBatch.receiveDate"
-                                   readonly
-                                   ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
-                                   ui-date-format="yy-mm-dd"
-                                   ng-required="true">
-                            <span class="field-error" ng-show="distributionBatchForm.receiveDate.$error.required && showError"
-                                  openlmis-message="missing.value">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row clearfix">
-                    <div class="form-cell">
-                        <label for="product" openlmis-message="label.product"><span class="label-required"> *</span></label>
-                        <div class="form-field">
-                            <select  id="product"  name="product" ng-model="distributionBatch.product.code"  required="true" style="width:90%;">
-                                <option  ng-repeat="option in products" value="{{option.code}}">{{ option.name }}</option>
-                            </select>
-                            <span class="field-error" ng-show="distributionBatchForm.product.$error.required && showError"
-                                  openlmis-message="missing.value">
-                            </span>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="recallDate" openlmis-message="label.recallDate"><span class="label-required"> *</span></label>
-
-                        <div class="form-field">
-                            <input id="recallDate" type="text" ng-model="distributionBatch.recallDate"  name="recallDate"
-                                   readonly
-                                   ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
-                                   ui-date-format="yy-mm-dd"
-                                   ng-required="true"/>
-                            <span class="field-error" ng-show="distributionBatchForm.recallDate.$error.required && showError"
-                                  openlmis-message="missing.value">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="form-group">
-                <h3 openlmis-message="label.packaging.info"></h3>
-
-                <div class="form-row clearfix">
-                    <div class="form-cell">
-                        <label for="vialsPerBox" openlmis-message="label.vialsPerBox"></label>
-                        <div class="form-field">
-                            <input id="vialsPerBox" ng-model="distributionBatch.vialsPerBox" name="vialsPerBox"  type="number" maxlength="50"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row clearfix">
-                    <div class="form-cell">
-                        <label for="boxLength" openlmis-message="label.boxLength"></label>
-                        <div class="form-field">
-                            <input id="boxLength" ng-model="distributionBatch.boxLength" name="length"  type="number" maxlength="50"/>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="boxWidth" openlmis-message="label.boxWidth"></label>
-                        <div class="form-field">
-                            <input id="boxWidth" ng-model="distributionBatch.boxWidth" name="width"  type="number" maxlength="50"/>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="boxHeight" openlmis-message="label.boxHeight"></label>
-                        <div class="form-field">
-                            <input id="boxHeight" ng-model="distributionBatch.boxHeight" name="boxHeight"  type="number" maxlength="50"/>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="unitCost" openlmis-message="label.unitCost"></label>
-                        <div class="form-field">
-                            <input id="unitCost" ng-model="distributionBatch.unitCost" name="unitCost"  type="number" maxlength="50"/>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="totalCost" openlmis-message="label.totalCost"></label>
-                        <div class="form-field">
-                            <input id="totalCost" ng-model="distributionBatch.totalCost" name="totalCost"  type="number" maxlength="50"/>
-                        </div>
-                    </div>
-                    <div class="form-cell">
-                        <label for="freight" openlmis-message="label.freight"></label>
-                        <div class="form-field">
-                            <input id="freight" ng-model="distributionBatch.freight" name="freight"  type="number" maxlength="50"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div form-toolbar id="action_buttons" class="action-buttons">
             <div class="form-cell button-row">
                 <input id="distributionBatchSaveButton" type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
@@ -564,7 +274,102 @@
             <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"/>
         </div>
 
-    </form>-->
+    </form>
+
+
+    <div id="addBatchesModal" modal="addBatchesModal" options="{'backdrop':'static', 'escape':false}">
+        <div class="modal-header">
+            <h3>
+                <span openlmis-message="message.add.distribution.batch"></span>&nbsp;
+
+            </h3>
+        </div>
+
+        <div class="modal-body">
+            <form ng-submit="saveBatches()" id="add-batch" name="addBatchForm" novalidate>
+
+                <div class="row-fluid">
+                    <div class="span6">
+                        <label for="batchNumber" openlmis-message="label.batchNumber"><span class="label-required">*</span></label>
+                        <div class="form-field">
+                            <input id="batchNumber" ng-model="batch.batchNumber" name="batchNumber"  type="number" maxlength="50" ng-required="true"/>
+                                    <span class="field-error" ng-show="addBatchForm.batchNumber.$error.required && showError"
+                                          openlmis-message="missing.value">
+                                    </span>
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <label for="expiryDate" openlmis-message="label.expiryDate"><span class="label-required">*</span></label>
+                        <input id="expiryDate" name="expiryDate" type="date" ng-model="batch.expiryDate" ng-required="true"/>
+                         <span class="field-error" ng-show="addBatchForm.expiryDate.$error.required && showError"
+                               openlmis-message="missing.value">
+                                    </span>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <label for="productionDate" openlmis-message="label.productionDate"><span class="label-required">*</span></label>
+                        <input id="productionDate" name="productionDate" type="date" ng-model="batch.productionDate" ng-required="true"/>
+                        <span class="field-error" ng-show="addBatchForm.productionDate.$error.required && showError"
+                               openlmis-message="missing.value">
+                                    </span>
+
+                    </div>
+                    <div class="span6">
+                        <label for="batchQuantity" openlmis-message="label.batchQuantity"><span class="label-required">*</span></label>
+                        <input id="batchQuantity" type="text" name="batchQuantity" ng-model="batch.quantity" ng-required="true"/>
+                         <span class="field-error" ng-show="addBatchForm.batchQuantity.$error.required && showError"
+                               openlmis-message="missing.value">
+                                    </span>
+
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <label for="vvm1" openlmis-message="label.vvm1"></label>
+                        <input id="vvm1" type="text" name="vvm1" ng-model="batch.vvm1"/>
+                         <span class="field-error" ng-show="addBatchForm.vvm1.$error.required && showError"
+                               openlmis-message="missing.value">
+                                    </span>
+                    </div>
+                    <div class="span6">
+                        <label for="vvm2" openlmis-message="label.vvm2"></label>
+                        <input id="vvm2" type="text" name="vvm2" ng-model="batch.vvm2"/>
+                         <span class="field-error" ng-show="addBatchForm.vvm2.$error.required && showError"
+                               openlmis-message="missing.value">
+                                    </span>
+
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <label for="vvm3" openlmis-message="label.vvm3"></label>
+                        <input id="vvm3" type="text" name="vvm3" ng-model="batch.vvm3"/>
+                         <span class="field-error" ng-show="addBatchForm.vvm3.$error.required && showError"
+                               openlmis-message="missing.value">
+                                    </span>
+
+                    </div>
+                    <div class="span6">
+                        <label for="vvm4" openlmis-message="label.vvm4"></label>
+                        <input id="vvm4" type="text" name="vvm4" ng-model="batch.vvm4"/>
+                         <span class="field-error" ng-show="addBatchForm.vvm4.$error.required && showError"
+                               openlmis-message="missing.value">
+                                    </span>
+
+                    </div>
+                </div>
+            </form>
+            <div class="alert alert-error" id="saveFailMessage" openlmis-message="error" ng-show="error">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input id="addBatchButton" type="submit" ng-click="saveBatches()" class="btn btn-primary save-button" openlmis-message="button.save"/>
+            <input type="button"
+                   ng-click="resetAddBatchesModal()"
+                   class="btn btn-cancel" openlmis-message="button.cancel"/>
+        </div>
+    </div>
 
 </div>
 

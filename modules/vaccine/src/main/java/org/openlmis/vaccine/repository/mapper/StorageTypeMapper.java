@@ -2,8 +2,6 @@ package org.openlmis.vaccine.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.StorageType;
-import org.openlmis.vaccine.domain.Temprature;
-import org.openlmis.vaccine.domain.VaccineStorage;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
