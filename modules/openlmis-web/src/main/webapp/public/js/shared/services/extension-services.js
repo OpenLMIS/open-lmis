@@ -931,6 +931,10 @@ services.factory('UserSupervisedFacilities', function($resource){
    return $resource('/reports/user/supervised/facilities.json',{},{});
 });
 
+services.factory('ReceiveVaccine', function ($resource) {
+    return $resource('/vaccine/receive-vaccine/:id.json', {id: '@id'}, update);
+});
+
 
 /* End: Vaccine Supply Line */
 

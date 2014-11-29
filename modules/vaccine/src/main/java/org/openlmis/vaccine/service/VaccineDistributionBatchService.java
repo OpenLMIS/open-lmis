@@ -10,14 +10,17 @@
 package org.openlmis.vaccine.service;
 
 import org.openlmis.vaccine.domain.DistributionBatch;
+import org.openlmis.vaccine.domain.InventoryBatch;
+import org.openlmis.vaccine.domain.InventoryTransaction;
 import org.openlmis.vaccine.repository.VaccineDistributionBatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Service
 public class VaccineDistributionBatchService {
 
     @Autowired
@@ -44,6 +47,10 @@ public class VaccineDistributionBatchService {
 
     public void update(DistributionBatch distributionBatch) {
         distributionBatchRepository.update(distributionBatch);
+    }
+
+    public void updateInventoryTransaction(InventoryTransaction inventoryTransaction, List<InventoryBatch> inventoryBatches) {
+        distributionBatchRepository.updateInventoryTransaction(inventoryTransaction,inventoryBatches);
     }
 
 }

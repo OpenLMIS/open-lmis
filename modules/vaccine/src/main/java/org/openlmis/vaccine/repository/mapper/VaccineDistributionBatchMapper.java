@@ -14,6 +14,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
 import org.openlmis.vaccine.domain.DistributionBatch;
 import org.openlmis.vaccine.domain.Donor;
+import org.openlmis.vaccine.domain.InventoryTransaction;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -118,4 +119,19 @@ public interface VaccineDistributionBatchMapper {
             "       createddate= COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
             " WHERE id=#{id}")
     void update(DistributionBatch distributionBatch);
+
+    @Insert("INSERT INTO inventory_transactions(transactiontypeid, fromfacilityid, tofacilityid, productid, \n" +
+            "            dispatchreference, dispatchdate, bol, donorid, origincountryid, \n" +
+            "            manufacturerid, statusid, purpose, vvmtracked, barcoded, gs1, \n" +
+            "            quantity, packsize, unitprice, totalcost, locationid, expecteddate, \n" +
+            "            arrivaldate, confirmedby, note, createdby, createddate, modifiedby, \n" +
+            "            modifieddate) " +
+            "VALUES (#{transactionType.id},#{fromFacilityId},#{toFacilityId},#{product.id}," +
+            "#{dispatchReference},#{dispatchDate},#{bol},#{donor.id},#{originId}," +
+            "#{manufacturer.id},#{status.id},#{purpose},#{vvmTracked},#{barCoded},#{gs1}," +
+            "#{quantity},#{packSize},#{unitPrice},#{totalCost},#{storageLocation.id},#{expectedDate}," +
+            "#{arrivalDate},#{confirmedBy},#{note},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+    @Options(useGeneratedKeys = true)
+    void insertInventoryTransaction(InventoryTransaction    inventoryTransaction);
+
 }

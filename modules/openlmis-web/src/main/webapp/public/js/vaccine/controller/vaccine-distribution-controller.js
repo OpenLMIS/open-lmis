@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineDistributionController($scope,$route,allFacilities,VaccineDistributionBatches,$location,messageService,GetDonors,Products,Manufacturers,DistributionTypes,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones){
+function VaccineDistributionController($scope,$route,allFacilities,VaccineDistributionBatches,$location,messageService,GetDonors,Products,Manufacturers,DistributionTypes,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccine){
 
     $scope.message = "";
 
@@ -99,9 +99,9 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
 
     $scope.saveDistributionBatch = function(){
 
-        alert('distribution batch is '+JSON.stringify($scope.distributionBatch));
+        alert('inventoryTransaction is '+JSON.stringify($scope.inventoryTransaction));
 
-        if ($scope.distributionBatchForm.$error.required) {
+        if ($scope.inventoryTransactionForm.$error.required) {
             $scope.error = messageService.get("form.error");
             $scope.showError = true;
             return false;
@@ -116,7 +116,7 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
         };
 
         var saveSuccessHandler = function (response) {
-            $scope.distributionBatch = response.distributionBatch;
+            $scope.inventoryTransaction = response.inventoryTransaction;
             successHandler(response.success);
         };
 
@@ -130,10 +130,12 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
             $scope.error = response.data.error;
         };
 
-        if ($scope.distributionBatch.id) {
-            VaccineDistributionBatches.update({id:$scope.distributionBatch.id}, $scope.distributionBatch, updateSuccessHandler, errorHandler);
+        var receiveVaccine = {inventoryTransaction:$scope.inventoryTransaction, inventoryBatches:$scope.batches};
+
+        if ($scope.inventoryTransaction.id) {
+            ReceiveVaccine.update({id:$scope.distributionBatch.id}, receiveVaccine, updateSuccessHandler, errorHandler);
         } else {
-            VaccineDistributionBatches.save({}, $scope.distributionBatch, saveSuccessHandler, errorHandler);
+            ReceiveVaccine.save({}, receiveVaccine, saveSuccessHandler, errorHandler);
         }
     };
 

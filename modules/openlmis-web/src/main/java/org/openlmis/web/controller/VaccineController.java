@@ -15,6 +15,7 @@ import org.openlmis.vaccine.domain.DistributionBatch;
 import org.openlmis.vaccine.domain.DistributionLineItem;
 import org.openlmis.vaccine.domain.DistributionType;
 import org.openlmis.vaccine.domain.VaccineTarget;
+import org.openlmis.vaccine.dto.ReceiveVaccine;
 import org.openlmis.vaccine.service.*;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +137,26 @@ public class VaccineController extends BaseController {
         }
         response = success(messageService.message("message.distribution.batch.created.success"));
         response.getBody().addData("distributionBatch", distributionBatch);
+        return response;
+    }
+
+    @RequestMapping(value = "/receive-vaccine", method = POST, headers = ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
+    public ResponseEntity receiveVaccine(@RequestBody ReceiveVaccine receiveVaccine, HttpServletRequest request){
+
+        receiveVaccine.setCreatedBy(loggedInUserId(request));
+        receiveVaccine.setModifiedBy(loggedInUserId(request));
+
+        ResponseEntity<OpenLmisResponse> response;
+
+        try {
+            distributionBatchService.updateInventoryTransaction(receiveVaccine.getInventoryTransaction(), receiveVaccine.getInventoryBatches());
+        }catch (DataException exception) {
+            OpenLmisResponse openLmisResponse = new OpenLmisResponse("receiveVaccine", receiveVaccine);
+            return openLmisResponse.errorEntity(exception, BAD_REQUEST);
+        }
+        response = success(messageService.message("message.distribution.batch.created.success"));
+        response.getBody().addData("receiveVaccine", receiveVaccine);
         return response;
     }
 

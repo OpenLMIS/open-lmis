@@ -12,11 +12,14 @@ package org.openlmis.vaccine.repository;
 
 import org.openlmis.core.exception.DataException;
 import org.openlmis.vaccine.domain.DistributionBatch;
+import org.openlmis.vaccine.domain.InventoryBatch;
+import org.openlmis.vaccine.domain.InventoryTransaction;
 import org.openlmis.vaccine.repository.mapper.VaccineDistributionBatchMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -54,6 +57,28 @@ public class VaccineDistributionBatchRepository {
                 distributionBatchMapper.insert(distributionBatch);
             } else {
                 distributionBatchMapper.update(distributionBatch);
+            }
+        } catch (DuplicateKeyException duplicateKeyException) {
+            throw new DataException("error.duplicate");
+        } catch (DataIntegrityViolationException integrityViolationException) {
+            String errorMessage = integrityViolationException.getMessage().toLowerCase();
+            if (errorMessage.contains("foreign key") || errorMessage.contains("not-null constraint")) {
+                throw new DataException("error.reference.data.missing");
+            }
+            throw new DataException("error.incorrect.length");
+        }
+    }
+    @Transactional
+    public void updateInventoryTransaction(InventoryTransaction inventoryTransaction, List<InventoryBatch> inventoryBatches){
+        try {
+            if (inventoryTransaction.getId() == null) {
+                distributionBatchMapper.insertInventoryTransaction(inventoryTransaction);
+                if(inventoryTransaction.getId() != null){
+                    //insert list of batches
+                }
+
+            } else {
+                //distributionBatchMapper.update(distributionBatch);
             }
         } catch (DuplicateKeyException duplicateKeyException) {
             throw new DataException("error.duplicate");

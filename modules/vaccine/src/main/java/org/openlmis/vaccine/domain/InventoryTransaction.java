@@ -28,6 +28,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InventoryTransaction extends BaseModel{
+    private Date today;
     private TransactionType transactionType;
     private Facility fromFacility;
     private Facility toFacility;

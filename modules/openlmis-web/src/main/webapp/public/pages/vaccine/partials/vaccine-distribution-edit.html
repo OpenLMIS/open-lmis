@@ -13,44 +13,44 @@
 
     </h2>
 
-    <form ng-submit="saveDistributionBatch()" name="distributionBatchForm" novalidate>
+    <form ng-submit="saveDistributionBatch()" name="inventoryTransactionForm" novalidate>
         <div class="app-form">
             <div class="row-fluid">
                 <div class="span4">
                     <label for="today" openlmis-message="label.today"><span class="label-required"> *</span></label>
 
-                    <input id="today" name="today" type="text" ng-model="distributionBatch.today"
+                    <input id="today" name="today" type="text" ng-model="inventoryTransaction.today"
                            readonly
                            ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
                            ui-date-format="yy-mm-dd"
                            ng-required="true"/>
-                <span class="field-error" ng-show="distributionBatchForm.today.$error.required && showError"
+                <span class="field-error" ng-show="inventoryTransactionForm.today.$error.required && showError"
                       openlmis-message="missing.value">
                 </span>
                 </div>
                 <div class="span4">
                     <label for="bol" openlmis-message="label.bol"><span class="label-required"> *</span></label>
-                    <input id="bol" ng-model="distributionBatch.bol" name="bol"  type="text" maxlength="50" ng-required="true"/>
-                <span class="field-error" ng-show="distributionBatchForm.bol.$error.required && showError"
+                    <input id="bol" ng-model="inventoryTransaction.bol" name="bol"  type="text" maxlength="50" ng-required="true"/>
+                <span class="field-error" ng-show="inventoryTransactionForm.bol.$error.required && showError"
                       openlmis-message="missing.value">
 
                 </span>
                 </div>
                 <div class="span4">
                     <label for="receivedAt" openlmis-message="label.receivedAt"><span class="label-required"> *</span></label>
-                    <select   id="receivedAt"  name="receivedAt" ng-model="distributionBatch.receivedAt" ng-required="true" style="width:90%;">
+                    <select   id="receivedAt"  name="receivedAt" ng-model="inventoryTransaction.receivedAt" ng-required="true" style="width:90%;">
                         <option  ng-repeat="option in zones " value="{{ option.id }}">{{ option.name }}</option>
                     </select>
-                <span class="field-error" ng-show="distributionBatchForm.receivedAt.$error.required && showError"
+                <span class="field-error" ng-show="inventoryTransactionForm.receivedAt.$error.required && showError"
                       openlmis-message="missing.value">
                 </span>
                 </div>
             </div>
             <div class="row-fluid">
                 <div class="span4">
-                    <label for="dispatchNumber" openlmis-message="label.dispatchId"><span class="label-required"> *</span></label>
-                    <input id="dispatchNumber" ng-model="distributionBatch.dispatchId" name="dispatchId"  type="text" maxlength="50" ng-required="true"/>
-                <span class="field-error" ng-show="distributionBatchForm.dispatchId.$error.required && showError"
+                    <label for="dispatchReference" openlmis-message="label.dispatchReference"><span class="label-required"> *</span></label>
+                    <input id="dispatchReference" ng-model="inventoryTransaction.dispatchReference" name="dispatchId"  type="text" maxlength="50" ng-required="true"/>
+                <span class="field-error" ng-show="inventoryTransactionForm.dispatchReference.$error.required && showError"
                       openlmis-message="missing.value">
 
                 </span>
@@ -58,22 +58,22 @@
                 <div class="span4">
                     <label for="receivedDate" openlmis-message="label.receivedDate"><span class="label-required"> *</span></label>
 
-                    <input id="receivedDate" name="productionDate" type="text" ng-model="distributionBatch.receivedDate"
+                    <input id="receivedDate" name="productionDate" type="text" ng-model="inventoryTransaction.arrivalDate"
                            readonly
                            ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
                            ui-date-format="yy-mm-dd"
                            ng-required="true"/>
-                <span class="field-error" ng-show="distributionBatchForm.receivedDate.$error.required && showError"
+                <span class="field-error" ng-show="inventoryTransactionForm.receivedDate.$error.required && showError"
                       openlmis-message="missing.value">
                 </span>
                 </div>
 
                 <div class="span4">
                     <label for="product" openlmis-message="label.vaccine"><span class="label-required"> *</span></label>
-                    <select  id="product"  name="product" ng-model="distributionBatch.product.code"  required="true" style="width:90%;">
+                    <select  id="product"  name="product" ng-model="inventoryTransaction.product.id"  required="true" style="width:90%;">
                         <option  ng-repeat="option in products" value="{{option.code}}">{{ option.name }}</option>
                     </select>
-                <span class="field-error" ng-show="distributionBatchForm.product.$error.required && showError"
+                <span class="field-error" ng-show="inventoryTransactionForm.product.$error.required && showError"
                       openlmis-message="missing.value">
                 </span>
                 </div>
@@ -84,7 +84,7 @@
 
                 <div id="shipment-status" class="span12">
                     <div ng-repeat="status in receivedStatus" class="span{{12/receivedStatus.length}} form-inline">
-                        <input style="margin: 0px;" id="statusSelected{{$index}}" name="statusSelected"  type="radio" ng-model="distributionBatch.shipmentStatusId"
+                        <input style="margin: 0px;" id="statusSelected{{$index}}" name="statusSelected"  type="radio" ng-model="inventoryTransaction.status.id"
                                value="{{status.id}}"/>
                         &nbsp;<label for="statusSelected{{$index}}">{{status.name}}</label>
                     </div>
@@ -98,20 +98,20 @@
             <div class="span4">
                 <label for="donor" openlmis-message="label.donor"><span class="label-required">
                              *</span></label>
-                <select   id="donor"  name="donor" ng-model="distributionBatch.donor.id"  required="true" style="width:90%;">
+                <select   id="donor"  name="donor" ng-model="inventoryTransaction.donor.id"  required="true" style="width:90%;">
                     <option  ng-repeat="option in donors" value="{{ option.id }}">{{ option.longName }}</option>
                 </select>
-                <span class="field-error" ng-show="distributionBatchForm.donor.$error.required && showError"
+                <span class="field-error" ng-show="inventoryTransactionForm.donor.$error.required && showError"
                       openlmis-message="missing.value">
                 </span>
             </div>
             <div class="span4">
                 <label for="origin" openlmis-message="label.origin"><span class="label-required">
                              *</span></label>
-                <select   id="origin"  name="origin" ng-model="distributionBatch.originId"  required="true" style="width:90%;">
+                <select   id="origin"  name="origin" ng-model="inventoryTransaction.originId"  required="true" style="width:90%;">
                     <option  ng-repeat="option in origins" value="{{ option.id }}">{{ option.name }}</option>
                 </select>
-                <span class="field-error" ng-show="distributionBatchForm.origin.$error.required && showError"
+                <span class="field-error" ng-show="inventoryTransactionForm.origin.$error.required && showError"
                       openlmis-message="missing.value">
                 </span>
             </div>
@@ -119,10 +119,10 @@
             <div class="span4">
                 <label for="manufacturer" openlmis-message="label.manufacturer"><span class="label-required">
                              *</span></label>
-                <select   id="manufacturer"  name="manufacturer" ng-model="distributionBatch.manufacturer.id"  required="true" style="width:90%;">
+                <select   id="manufacturer"  name="manufacturer" ng-model="inventoryTransaction.manufacturer.id"  required="true" style="width:90%;">
                     <option  ng-repeat="option in manufacturers" value="{{ option.id }}">{{ option.name }}</option>
                 </select>
-                <span class="field-error" ng-show="distributionBatchForm.manufacturer.$error.required && showError"
+                <span class="field-error" ng-show="inventoryTransactionForm.manufacturer.$error.required && showError"
                       openlmis-message="missing.value">
                 </span>
             </div>
@@ -140,8 +140,8 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td><input id="routine" type="radio" name="purpose" value="routine" ng-model="distributionBatch.purpose"/></td>
-                        <td><input id="campaign" type="radio" name="purpose" value="campaign" ng-model="distributionBatch.purpose"/></td>
+                        <td><input id="routine" type="radio" name="purpose" value="routine" ng-model="inventoryTransaction.purpose"/></td>
+                        <td><input id="campaign" type="radio" name="purpose" value="campaign" ng-model="inventoryTransaction.purpose"/></td>
                     </tr>
                     </tbody>
                 </table>
@@ -150,7 +150,7 @@
             <div class="span4">
                 <label for="vvmpresent" openlmis-message="label.vvmpresent"><span class="label-required">
                              *</span></label>
-                <input id="vvmpresent" type="checkbox" name="vvmpresent" ng-model="distributionBatch.vvmPresent"/>
+                <input id="vvmpresent" type="checkbox" name="vvmpresent" ng-model="inventoryTransaction.vvmTracked"/>
 
             </div>
         </div>
@@ -167,8 +167,8 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td><input id="cartonsBarCoded" type="checkbox" name="barcoding" ng-model="distributionBatch.cartonBarCoded"/></td>
-                        <td><input id="GS1BarCoded" type="checkbox" name="barcoding" ng-model="distributionBatch.gs1BarCoded"/></td>
+                        <td><input id="cartonsBarCoded" type="checkbox" name="barcoding" ng-model="inventoryTransaction.barCoded"/></td>
+                        <td><input id="GS1BarCoded" type="checkbox" name="barcoding" ng-model="inventoryTransaction.gs1"/></td>
                     </tr>
                     </tbody>
                 </table>
@@ -189,10 +189,10 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td><input id="packSize" type="text" name="packSize" ng-model="distributionBatch.packSize"/></td>
-                        <td><input id="quantity" type="text" name="quantity" ng-model="distributionBatch.quantity"/></td>
-                        <td><input id="unitPrice" type="text" name="unitPrice" ng-model="distributionBatch.unitPrice"/></td>
-                        <td><input id="totalCost" type="text" name="totalCost" ng-model="distributionBatch.totalCost"/></td>
+                        <td><input id="packSize" type="text" name="packSize" ng-model="inventoryTransaction.packSize"/></td>
+                        <td><input id="quantity" type="text" name="quantity" ng-model="inventoryTransaction.quantity"/></td>
+                        <td><input id="unitPrice" type="text" name="unitPrice" ng-model="inventoryTransaction.unitPrice"/></td>
+                        <td><input id="totalCost" type="text" name="totalCost" ng-model="inventoryTransaction.totalCost"/></td>
                     </tr>
                     </tbody>
                 </table>
@@ -210,7 +210,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td ng-repeat="storage in storages"><input type="radio" name="storage" value="{{storage.id}}"  ng-model="distributionBatch.storageId"/>  {{storage.location}} </td>
+                        <td ng-repeat="storage in storages"><input type="radio" name="storage" value="{{storage.id}}"  ng-model="inventoryTransaction.storageLocation.id"/>  {{storage.location}} </td>
                     </tr>
                     </tbody>
                 </table>
