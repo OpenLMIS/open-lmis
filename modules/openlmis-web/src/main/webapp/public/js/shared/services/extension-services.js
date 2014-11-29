@@ -923,6 +923,15 @@ services.factory('DistributionTypes', function($resource){
 services.factory('VaccineDistributionStatus', function($resource){
     return $resource('/vaccine/status.json',{},{});
 });
+
+services.factory('VaccineStorageByFacility', function($resource){
+    return $resource('/vaccine-storage/facility/:facilityId.json',{},{});
+});
+services.factory('UserSupervisedFacilities', function($resource){
+   return $resource('/reports/user/supervised/facilities.json',{},{});
+});
+
+
 /* End: Vaccine Supply Line */
 
 

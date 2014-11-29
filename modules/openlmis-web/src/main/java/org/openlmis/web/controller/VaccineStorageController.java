@@ -1,10 +1,8 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.core.exception.DataException;
-import org.openlmis.help.domain.HelpContent;
-import org.openlmis.help.domain.HelpTopic;
 import org.openlmis.vaccine.domain.StorageType;
-import org.openlmis.vaccine.domain.Temprature;
+import org.openlmis.vaccine.domain.Temperature;
 import org.openlmis.vaccine.domain.VaccineStorage;
 import org.openlmis.vaccine.service.StorageTypeService;
 import org.openlmis.vaccine.service.TempratureService;
@@ -98,6 +96,12 @@ public class VaccineStorageController extends BaseController  {
         //System.out.println(" here calling");
         VaccineStorage vaccineStorage = this.storageService.loadVaccineStorageDetail(id);
         return OpenLmisResponse.response(VACCINESTORAGEDATAIL, vaccineStorage);
+    }
+
+    @RequestMapping(value = "/vaccine-storage/facility/{facilityId}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getVaccineStorageByFacilityId(@PathVariable("facilityId") Long facilityId) {
+
+        return OpenLmisResponse.response("vaccineStorageList", this.storageService.getByFacilityId(facilityId));
     }
 
 
@@ -221,16 +225,16 @@ public class VaccineStorageController extends BaseController  {
     /*
     temprature lookup related
      */
-    private ResponseEntity<OpenLmisResponse> saveTemprature(Temprature temprature, boolean createOperation) {
+    private ResponseEntity<OpenLmisResponse> saveTemprature(Temperature temperature, boolean createOperation) {
         try {
             if (createOperation) {
-                System.out.println("creating "+temprature.getTempratureName());
-                this.tempratureService.addTemprature(temprature);
+                System.out.println("creating "+ temperature.getTempratureName());
+                this.tempratureService.addTemprature(temperature);
             } else {
-                this.tempratureService.updateTemprature(temprature);
+                this.tempratureService.updateTemprature(temperature);
             }
-            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + temprature.getId()) + "' " + (createOperation ? "created" : "updated") + " successfully");
-            response.getBody().addData(TEMPRATURE, this.tempratureService.loadTempratureDetail(temprature.getId()));
+            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + temperature.getId()) + "' " + (createOperation ? "created" : "updated") + " successfully");
+            response.getBody().addData(TEMPRATURE, this.tempratureService.loadTempratureDetail(temperature.getId()));
             response.getBody().addData(TEMPERATURELIST, this.tempratureService.loadTempratureList());
             return response;
         } catch (DuplicateKeyException exp) {
@@ -252,46 +256,46 @@ public class VaccineStorageController extends BaseController  {
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getTempratureDetail(@PathVariable("id") Long id) {
         //System.out.println(" here calling");
-        Temprature temprature = this.tempratureService.loadTempratureDetail(id);
-        return OpenLmisResponse.response(   TEMPRATURE, temprature);
+        Temperature temperature = this.tempratureService.loadTempratureDetail(id);
+        return OpenLmisResponse.response(   TEMPRATURE, temperature);
     }
 
 
 
     @RequestMapping(value = "/updateTemprature", method = RequestMethod.POST, headers = "Accept=application/json")
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> updateTemprature(@RequestBody Temprature temprature, HttpServletRequest request) {
+    public ResponseEntity<OpenLmisResponse> updateTemprature(@RequestBody Temperature temperature, HttpServletRequest request) {
         //System.out.println(" updating ");
-        temprature.setModifiedBy(loggedInUserId(request));
-        temprature.setModifiedDate(new Date());
+        temperature.setModifiedBy(loggedInUserId(request));
+        temperature.setModifiedDate(new Date());
 
         //System.out.println(" help topic id is" + helpTopic.getName());
-        return saveTemprature(temprature, false);
+        return saveTemprature(temperature, false);
     }
     //////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/createTemprature", method = RequestMethod.POST, headers = ACCEPT_JSON)
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> saveTemprature(@RequestBody Temprature temprature, HttpServletRequest request) {
+    public ResponseEntity<OpenLmisResponse> saveTemprature(@RequestBody Temperature temperature, HttpServletRequest request) {
         //System.out.println(" here saving help Content");
-        temprature.setCreatedBy(loggedInUserId(request));
-        temprature.setModifiedBy(loggedInUserId(request));
-        temprature.setModifiedDate(new Date());
-        temprature.setCreatedDate(new Date());
+        temperature.setCreatedBy(loggedInUserId(request));
+        temperature.setModifiedBy(loggedInUserId(request));
+        temperature.setModifiedDate(new Date());
+        temperature.setCreatedDate(new Date());
         //System.out.println(" help content id is " + helpContent.getName());
 
 
-        return saveTemprature(temprature, true);
+        return saveTemprature(temperature, true);
     }
 
 
     @RequestMapping(value = "/deleteTemprature", method = RequestMethod.POST, headers = "Accept=application/json")
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> deleteTemprature(@RequestBody Temprature temprature, HttpServletRequest request) {
+    public ResponseEntity<OpenLmisResponse> deleteTemprature(@RequestBody Temperature temperature, HttpServletRequest request) {
 
-        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + temprature.getId()) + "Deleted successfully");
-        response.getBody().addData(TEMPRATURE, temprature);
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + temperature.getId()) + "Deleted successfully");
+        response.getBody().addData(TEMPRATURE, temperature);
         response.getBody().addData(TEMPERATURELIST, this.tempratureService.loadTempratureList());
-        this.tempratureService.removeTemprature(temprature);
+        this.tempratureService.removeTemprature(temperature);
         return response;
     }
     @RequestMapping(value = "/facilityList", method = RequestMethod.GET, headers = "Accept=application/json")
