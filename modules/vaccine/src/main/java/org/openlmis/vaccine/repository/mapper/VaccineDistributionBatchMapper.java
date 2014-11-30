@@ -163,5 +163,20 @@ public interface VaccineDistributionBatchMapper {
     })
     List<InventoryTransaction> getInventoryTransactionsByReceivingFacility(Long toFacilityId);
 
+    @Select("SELECT ib.* \n" +
+            "FROM inventory_transactions inv\n" +
+            "INNER JOIN Inventory_batches ib on inv.id = ib.transactionId\n" +
+            "WHERE inv.productId = #{productId} \n" +
+            "AND CASE WHEN inv.vvmtracked THEN (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0)) > 0 END\n" +
+            "order by ib.expiryDate \n")
+    @Results({
+            @Result(property = "vvm1", column = "vvm1_qty"),
+            @Result(property = "vvm2", column = "vvm2_qty"),
+            @Result(property = "vvm3", column = "vvm3_qty"),
+            @Result(property = "vvm4", column = "vvm4_qty")
+
+    })
+    List<InventoryBatch> getUsableBatches(Long productId);
+
 
 }

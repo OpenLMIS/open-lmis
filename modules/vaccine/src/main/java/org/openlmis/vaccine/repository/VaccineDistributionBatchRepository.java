@@ -51,6 +51,10 @@ public class VaccineDistributionBatchRepository {
         return distributionBatchMapper.getInventoryTransactionsByReceivingFacility(facilityId);
     }
 
+    public List<InventoryBatch> getUsableBatches(Long productId){
+        return distributionBatchMapper.getUsableBatches(productId);
+    }
+
     public List<Map<String,Object>> filterDistributionBatches(Map<String, Objects> query){
         return null;
        // return distributionBatchMapper.searchDistributionBatches(query);

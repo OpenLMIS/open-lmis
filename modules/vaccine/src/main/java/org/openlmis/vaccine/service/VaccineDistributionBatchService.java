@@ -44,16 +44,20 @@ public class VaccineDistributionBatchService {
     public List<DistributionBatch> getAll(){
         return distributionBatchRepository.getAll();
     }
-    public List<DistributionBatch> searchDistributionBatches(String query){
+   /* public List<DistributionBatch> searchDistributionBatches(String query){
         return distributionBatchRepository.searchDistributionBatches(query);
-    }
+    }*/
 
     public List<InventoryTransaction> getReceivedVaccinesForFacility(Long facilityId){
         return distributionBatchRepository.getReceivedVaccinesForFacility(facilityId);
     }
 
-    public List<Map<String, Object>> filterDistributionBatches(Map filterCriteria){
+   /* public List<Map<String, Object>> filterDistributionBatches(Map filterCriteria){
         return distributionBatchRepository.filterDistributionBatches(filterCriteria);
+    }*/
+
+    public List<InventoryBatch> getUsableBatches(Long productId){
+        return  distributionBatchRepository.getUsableBatches(productId);
     }
 
     public void update(DistributionBatch distributionBatch) {
