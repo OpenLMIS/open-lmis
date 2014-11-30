@@ -11,11 +11,11 @@
 var vaccine = angular.module('vaccine', ['openlmis', 'ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
-        when('/distribution-batch', {controller: VaccineDistributionSearchController, templateUrl: 'partials/vaccine-distribution-search.html'}).
-        when('/receive', {controller: VaccineDistributionSearchController, templateUrl: 'partials/vaccine-distribution-search.html'}).
+        when('/distribution-batch', {controller: VaccineDistributionSearchController, templateUrl: 'partials/vaccine-receive-search.html'}).
+        when('/receive', {controller: VaccineDistributionSearchController, templateUrl: 'partials/vaccine-receive-search.html'}).
         when('/distribution-batch-filter', {controller: VaccineDistributionFilterController, templateUrl: 'partials/vaccine-distribution-filter.html'}).
-        when('/create-distribution-batch/:facilityId', {controller: VaccineDistributionController, templateUrl: 'partials/vaccine-distribution-edit.html', resolve:VaccineDistributionController.resolve}).
-        when('/edit-distribution-batch/:distributionBatchId', {controller: VaccineDistributionController, templateUrl: 'partials/vaccine-distribution-edit.html', resolve:VaccineDistributionController.resolve}).
+        when('/create-distribution-batch/:facilityId', {controller: VaccineDistributionController, templateUrl: 'partials/vaccine-receive-edit.html', resolve:VaccineDistributionController.resolve}).
+        when('/edit-distribution-batch/:distributionBatchId', {controller: VaccineDistributionController, templateUrl: 'partials/vaccine-receive-edit.html', resolve:VaccineDistributionController.resolve}).
         when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
         when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
         when('/vaccine-storage', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage.html'}).

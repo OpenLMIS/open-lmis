@@ -109,6 +109,7 @@ function VaccineDistributionSearchController($scope,ReceiveVaccines,UserFacility
     });
     var resetData = function () {
         $scope.selectedFacilityId = null;
+        $scope.inventoryTransactions = null;
         $scope.myFacility = null;
         $scope.facilities = null;
         $scope.error = null;
