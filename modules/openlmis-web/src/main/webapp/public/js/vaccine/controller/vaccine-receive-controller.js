@@ -7,13 +7,12 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineDistributionController($scope,$route,allFacilities,VaccineDistributionBatches,$location,messageService,GetDonors,Products,Manufacturers,DistributionTypes,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccines){
+function VaccineReceiveController($scope,$route,VaccineDistributionBatches,$location,messageService,GetDonors,Products,Manufacturers,DistributionTypes,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccines){
 
     $scope.message = "";
 
     $scope.selectedStorages = [];
     $scope.batches = [];
-    $scope.allFacilities = allFacilities;
 
     if(!isUndefined($route.current.params.distributionBatchId)){
         VaccineDistributionBatches.get({id: $route.current.params.distributionBatchId}, function (data){
@@ -150,18 +149,3 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
         $scope.addBatchesModal = undefined;
     };
 }
-
-
-VaccineDistributionController.resolve = {
-
-    allFacilities: function ($q, GetFacilityCompleteList, $timeout) {
-        var deferred = $q.defer();
-        $timeout(function () {
-            GetFacilityCompleteList.get({}, function (data) {
-                deferred.resolve(data.allFacilities);
-            }, function () {
-            });
-        }, 0);
-        return deferred.promise;
-    }
-};
