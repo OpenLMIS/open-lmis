@@ -70,7 +70,7 @@ public class VaccineDistributionBatchRepository {
             if (errorMessage.contains("foreign key") || errorMessage.contains("not-null constraint")) {
                 throw new DataException("error.reference.data.missing");
             }
-            throw new DataException("error.incorrect.lengt  h");
+            throw new DataException("error.incorrect.length");
         }
     }
     @Transactional

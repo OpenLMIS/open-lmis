@@ -931,7 +931,7 @@ services.factory('UserSupervisedFacilities', function($resource){
    return $resource('/reports/user/supervised/facilities.json',{},{});
 });
 
-services.factory('ReceiveVaccine', function ($resource) {
+services.factory('ReceiveVaccines', function ($resource) {
     return $resource('/vaccine/receive-vaccine/:id.json', {id: '@id'}, update);
 });
 

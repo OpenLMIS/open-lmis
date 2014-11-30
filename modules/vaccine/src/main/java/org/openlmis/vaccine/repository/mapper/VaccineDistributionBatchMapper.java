@@ -152,8 +152,8 @@ public interface VaccineDistributionBatchMapper {
     @Results({
             @Result(property = "transactionType", javaType = TransactionType.class, column = "transactionTypeId",
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.TransactionTypeMapper.getById")),
-            @Result(property = "product", javaType = Product.class, column = "productCode",
-                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode")),
+            @Result(property = "product", javaType = Product.class, column = "productId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
             @Result(property = "toFacility", javaType = Facility.class, column = "toFacilityId",
                     one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
             @Result(property = "fromFacility", javaType = Facility.class, column = "fromFacilityId",

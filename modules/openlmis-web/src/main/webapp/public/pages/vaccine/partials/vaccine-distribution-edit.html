@@ -202,6 +202,9 @@
             <div class="span8">
                 <label for="storage" openlmis-message="label.storage"><span class="label-required">
                              *</span></label>
+                <div ng-show="storages == undefined || storages.length == 0">
+                    facility does not have assigned storage locations
+                </div>
                 <table id="storage" class="table table-striped table-bordered">
                     <thead>
                     <tr  class="gradient-header">
