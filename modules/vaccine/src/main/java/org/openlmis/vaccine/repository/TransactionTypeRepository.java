@@ -10,6 +10,7 @@
 
 package org.openlmis.vaccine.repository;
 
+import org.openlmis.vaccine.domain.TransactionType;
 import org.openlmis.vaccine.repository.mapper.TransactionTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,5 +19,9 @@ import org.springframework.stereotype.Component;
 public class TransactionTypeRepository {
     @Autowired
     private TransactionTypeMapper transactionTypeMapper;
+
+    public TransactionType getByName(String name){
+        return transactionTypeMapper.getByName(name);
+    }
 
 }

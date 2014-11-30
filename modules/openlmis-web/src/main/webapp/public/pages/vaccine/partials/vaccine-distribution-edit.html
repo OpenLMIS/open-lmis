@@ -71,7 +71,7 @@
                 <div class="span4">
                     <label for="product" openlmis-message="label.vaccine"><span class="label-required"> *</span></label>
                     <select  id="product"  name="product" ng-model="inventoryTransaction.product.id"  required="true" style="width:90%;">
-                        <option  ng-repeat="option in products" value="{{option.code}}">{{ option.name }}</option>
+                        <option  ng-repeat="option in products" value="{{option.id}}">{{ option.name }}</option>
                     </select>
                 <span class="field-error" ng-show="inventoryTransactionForm.product.$error.required && showError"
                       openlmis-message="missing.value">
@@ -235,15 +235,15 @@
                 </thead>
                 <tbody>
                 <tr ng-click="rowClickedEvent(distribution)" style="cursor: pointer" ng-repeat="batchItem in batches">
-                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.batchNumber }}</td>
-                    <td ng-class="{'highlight' : selected == distribution.id}">{{ convertStringToCorrectDateFormat(batchItem.expiryDate) }}</td>
-                    <td ng-class="{'highlight' : selected == distribution.id}">{{ convertStringToCorrectDateFormat(batchItem.productionDate)}}</td>
-                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.quantity }}</td>
-                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.vvm1 }}</td>
-                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.vvm2 }}</td>
-                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.vvm3 }}</td>
-                    <td ng-class="{'highlight' : selected == distribution.id}">{{ batchItem.vvm4 }}</td>
-                    <td ng-class="{'highlight' : selected == distribution.id}">
+                    <td>{{ batchItem.batchNumber }}</td>
+                    <td>{{ convertStringToCorrectDateFormat(batchItem.expiryDate) }}</td>
+                    <td>{{ convertStringToCorrectDateFormat(batchItem.productionDate)}}</td>
+                    <td>{{ batchItem.quantity }}</td>
+                    <td>{{ batchItem.vvm1 }}</td>
+                    <td>{{ batchItem.vvm2 }}</td>
+                    <td>{{ batchItem.vvm3 }}</td>
+                    <td>{{ batchItem.vvm4 }}</td>
+                    <td>
                         <a href="" ng-click="addReceive(distribution)" class="btn btn-primary btn-small" openlmis-message="button.receive"></a>
                         <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
                            ng-click="editDistributionBatch(distribution.id)"></a>

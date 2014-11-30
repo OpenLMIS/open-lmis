@@ -14,6 +14,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.vaccine.domain.DistributionBatch;
 import org.openlmis.vaccine.domain.InventoryBatch;
 import org.openlmis.vaccine.domain.InventoryTransaction;
+import org.openlmis.vaccine.domain.OnHand;
 import org.openlmis.vaccine.repository.mapper.VaccineDistributionBatchMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -65,7 +66,7 @@ public class VaccineDistributionBatchRepository {
             if (errorMessage.contains("foreign key") || errorMessage.contains("not-null constraint")) {
                 throw new DataException("error.reference.data.missing");
             }
-            throw new DataException("error.incorrect.length");
+            throw new DataException("error.incorrect.lengt  h");
         }
     }
     @Transactional
@@ -75,6 +76,22 @@ public class VaccineDistributionBatchRepository {
                 distributionBatchMapper.insertInventoryTransaction(inventoryTransaction);
                 if(inventoryTransaction.getId() != null){
                     //insert list of batches
+                    for(InventoryBatch inventoryBatch : inventoryBatches){
+                        inventoryBatch.setInventoryTransaction(inventoryTransaction);
+                        distributionBatchMapper.insertInventoryBatch(inventoryBatch);
+
+
+                        //insert onHand
+                        OnHand onHand = new OnHand();
+                        onHand.setInventoryTransaction(inventoryTransaction);
+                        onHand.setTransactionType(inventoryTransaction.getTransactionType());
+                        onHand.setInventoryBatch(inventoryBatch);
+                        onHand.setProduct(inventoryTransaction.getProduct());
+                        onHand.setQuantity(inventoryBatch.getQuantity());
+                        onHand.setFacility(inventoryTransaction.getToFacility());
+
+                        distributionBatchMapper.insertOnHand(onHand);
+                    }
                 }
 
             } else {

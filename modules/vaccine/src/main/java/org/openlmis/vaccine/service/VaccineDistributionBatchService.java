@@ -12,6 +12,7 @@ package org.openlmis.vaccine.service;
 import org.openlmis.vaccine.domain.DistributionBatch;
 import org.openlmis.vaccine.domain.InventoryBatch;
 import org.openlmis.vaccine.domain.InventoryTransaction;
+import org.openlmis.vaccine.dto.ReceiveVaccine;
 import org.openlmis.vaccine.repository.VaccineDistributionBatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,8 +24,14 @@ import java.util.Map;
 @Service
 public class VaccineDistributionBatchService {
 
+    private final String TRANSACTION_TYPE_RECEIVED = "Received";
+    private final String TRANSACTION_TYPE_ISSUED = "Issued";
+
     @Autowired
     private VaccineDistributionBatchRepository distributionBatchRepository;
+
+    @Autowired
+    private TransactionTypeService transactionTypeService;
 
     public List<DistributionBatch> getByDispatchId(String dispatchId){
         return distributionBatchRepository.getByDispatchId(dispatchId);
@@ -49,7 +56,10 @@ public class VaccineDistributionBatchService {
         distributionBatchRepository.update(distributionBatch);
     }
 
-    public void updateInventoryTransaction(InventoryTransaction inventoryTransaction, List<InventoryBatch> inventoryBatches) {
+    public void receiveVaccine(InventoryTransaction inventoryTransaction, List<InventoryBatch> inventoryBatches) {
+        if(inventoryTransaction != null && inventoryTransaction.getId() == null){
+            inventoryTransaction.setTransactionType(transactionTypeService.getByName(TRANSACTION_TYPE_RECEIVED));
+        }
         distributionBatchRepository.updateInventoryTransaction(inventoryTransaction,inventoryBatches);
     }
 

@@ -12,9 +12,7 @@ package org.openlmis.vaccine.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
-import org.openlmis.vaccine.domain.DistributionBatch;
-import org.openlmis.vaccine.domain.Donor;
-import org.openlmis.vaccine.domain.InventoryTransaction;
+import org.openlmis.vaccine.domain.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -126,12 +124,28 @@ public interface VaccineDistributionBatchMapper {
             "            quantity, packsize, unitprice, totalcost, locationid, expecteddate, \n" +
             "            arrivaldate, confirmedby, note, createdby, createddate, modifiedby, \n" +
             "            modifieddate) " +
-            "VALUES (#{transactionType.id},#{fromFacilityId},#{toFacilityId},#{product.id}," +
+            "VALUES (#{transactionType.id},#{fromFacility.id},#{toFacility.id},#{product.id}," +
             "#{dispatchReference},#{dispatchDate},#{bol},#{donor.id},#{originId}," +
             "#{manufacturer.id},#{status.id},#{purpose},#{vvmTracked},#{barCoded},#{gs1}," +
             "#{quantity},#{packSize},#{unitPrice},#{totalCost},#{storageLocation.id},#{expectedDate}," +
-            "#{arrivalDate},#{confirmedBy},#{note},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+            "#{arrivalDate},#{confirmedBy.id},#{note},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
     @Options(useGeneratedKeys = true)
     void insertInventoryTransaction(InventoryTransaction    inventoryTransaction);
+
+    @Insert("INSERT INTO inventory_batches(transactionid, batchnumber, manufacturedate, expirydate, \n" +
+            "            quantity, vvm1_qty, vvm2_qty, vvm3_qty, vvm4_qty, note, createdby, \n" +
+            "            createddate, modifiedby, modifieddate)\n" +
+            "    VALUES (#{inventoryTransaction.id},#{batchNumber},#{productionDate},#{expiryDate},#{quantity},#{vvm1},#{vvm2},#{vvm3},#{vvm4},#{note}," +
+            "#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+    @Options(useGeneratedKeys = true)
+    void insertInventoryBatch(InventoryBatch inventoryBatch);
+
+    @Insert("INSERT INTO on_hand(transactionid, transactiontypeid, productid, facilityid, \n" +
+            "            batchnumber, quantity, vvm1_qty, vvm2_qty, vvm3_qty, vvm4_qty, \n" +
+            "            note, createdby, createddate, modifiedby, modifieddate)\n" +
+            "    VALUES (#{inventoryTransaction.id}, #{transactionType.id}, #{product.id},#{facility.id},#{inventoryBatch.id}," +
+            "#{quantity},#{vvm1},#{vvm2},#{vvm3},#{vvm4},#{note},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+    @Options(useGeneratedKeys = true)
+    void insertOnHand(OnHand onHand);
 
 }

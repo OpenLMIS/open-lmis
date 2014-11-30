@@ -14,7 +14,7 @@ var vaccine = angular.module('vaccine', ['openlmis', 'ui.bootstrap']).config(['$
         when('/distribution-batch', {controller: VaccineDistributionSearchController, templateUrl: 'partials/vaccine-distribution-search.html'}).
         when('/receive', {controller: VaccineDistributionSearchController, templateUrl: 'partials/vaccine-distribution-search.html'}).
         when('/distribution-batch-filter', {controller: VaccineDistributionFilterController, templateUrl: 'partials/vaccine-distribution-filter.html'}).
-        when('/create-distribution-batch', {controller: VaccineDistributionController, templateUrl: 'partials/vaccine-distribution-edit.html', resolve:VaccineDistributionController.resolve}).
+        when('/create-distribution-batch/:facilityId', {controller: VaccineDistributionController, templateUrl: 'partials/vaccine-distribution-edit.html', resolve:VaccineDistributionController.resolve}).
         when('/edit-distribution-batch/:distributionBatchId', {controller: VaccineDistributionController, templateUrl: 'partials/vaccine-distribution-edit.html', resolve:VaccineDistributionController.resolve}).
         when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
         when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).

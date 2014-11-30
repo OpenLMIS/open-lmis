@@ -11,10 +11,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.vaccine.domain.DistributionBatch;
-import org.openlmis.vaccine.domain.DistributionLineItem;
-import org.openlmis.vaccine.domain.DistributionType;
-import org.openlmis.vaccine.domain.VaccineTarget;
+import org.openlmis.vaccine.domain.*;
 import org.openlmis.vaccine.dto.ReceiveVaccine;
 import org.openlmis.vaccine.service.*;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -31,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -110,7 +108,7 @@ public class VaccineController extends BaseController {
     }
 
     @RequestMapping(value = "/distribution-batches", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> searchUser(@RequestParam(required = true) String param) {
+    public ResponseEntity<OpenLmisResponse> searchDistributions(@RequestParam(required = true) String param) {
         return OpenLmisResponse.response("distributionBatches", distributionBatchService.searchDistributionBatches(param));
     }
 
@@ -120,7 +118,12 @@ public class VaccineController extends BaseController {
         return OpenLmisResponse.response("distributionBatch", distributionBatchService.getById(id));
     }
 
-    @RequestMapping(value = "/distribution-batches", method = POST, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/receive-vaccine", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> searchReceivedVaccine(@RequestParam(required = true) String param) {
+        return OpenLmisResponse.response("distributionBatches", distributionBatchService.searchDistributionBatches(param));
+    }
+
+    /*@RequestMapping(value = "/distribution-batches", method = POST, headers = ACCEPT_JSON)
     //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
     public ResponseEntity insertDistributionBatches(@RequestBody DistributionBatch distributionBatch, HttpServletRequest request){
 
@@ -138,7 +141,7 @@ public class VaccineController extends BaseController {
         response = success(messageService.message("message.distribution.batch.created.success"));
         response.getBody().addData("distributionBatch", distributionBatch);
         return response;
-    }
+    }*/
 
     @RequestMapping(value = "/receive-vaccine", method = POST, headers = ACCEPT_JSON)
     //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
@@ -148,14 +151,22 @@ public class VaccineController extends BaseController {
         receiveVaccine.setModifiedBy(loggedInUserId(request));
 
         ResponseEntity<OpenLmisResponse> response;
+        InventoryTransaction inventoryTransaction = null;
+        List<InventoryBatch> inventoryBatches = null;
 
         try {
-            distributionBatchService.updateInventoryTransaction(receiveVaccine.getInventoryTransaction(), receiveVaccine.getInventoryBatches());
+            inventoryTransaction = receiveVaccine.getInventoryTransaction();
+            inventoryBatches  = receiveVaccine.getInventoryBatches();
+
+            distributionBatchService.receiveVaccine(inventoryTransaction, inventoryBatches);
+
         }catch (DataException exception) {
             OpenLmisResponse openLmisResponse = new OpenLmisResponse("receiveVaccine", receiveVaccine);
             return openLmisResponse.errorEntity(exception, BAD_REQUEST);
         }
-        response = success(messageService.message("message.distribution.batch.created.success"));
+        response = success(messageService.message("message.receive.vaccine.created.success"));
+        receiveVaccine.setInventoryTransaction(inventoryTransaction);
+        receiveVaccine.setInventoryBatches(inventoryBatches);
         response.getBody().addData("receiveVaccine", receiveVaccine);
         return response;
     }

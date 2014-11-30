@@ -18,4 +18,7 @@ import org.springframework.stereotype.Repository;
 public interface TransactionTypeMapper {
     @Select("Select * from transaction_types where id = #{id}")
     TransactionType getById(Long id);
+
+    @Select("Select * from transaction_types where name = #{name}")
+    TransactionType getByName(String name);
 }

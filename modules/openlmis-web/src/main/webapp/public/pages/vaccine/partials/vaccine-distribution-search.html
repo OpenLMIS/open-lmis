@@ -11,6 +11,10 @@
 
 <div class="init-rnr">
     <h2 openlmis-message="label.initiate.receive.vaccine"></h2>
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="inventoryTransactionId">
+        <span ng-bind="message"></span>.&nbsp;<!--<a id="viewHereLink" href="" ng-click="editDistributionBatch(distributionBatchId)"
+                                                 openlmis-message="search.viewHere"></a>-->
+    </div>
 
     <br>
 
@@ -72,7 +76,7 @@
         </div>
 
     </div>
-    <a style="margin-bottom: 5px;" href="#/create-distribution-batch" class="pull-right btn btn-primary"><span id="distribution-batch-add-new"
+    <a style="margin-bottom: 5px;" href="#/create-distribution-batch/{{selectedFacilityId}}" class="pull-right btn btn-primary"><span id="distribution-batch-add-new"
                                                                                    openlmis-message="button.add.receive.new"></span></a>
 
     <table class="table table-striped table-bordered">

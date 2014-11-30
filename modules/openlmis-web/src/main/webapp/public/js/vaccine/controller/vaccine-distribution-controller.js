@@ -22,6 +22,10 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
 
         });
     }
+    if(!isUndefined($route.current.params.facilityId)){
+        $scope.selectedFacilityId = $route.current.params.facilityId;
+    }
+
 
     $scope.convertStringToCorrectDateFormat = function(stringDate) {
         if (stringDate) {
@@ -78,7 +82,7 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
         $scope.zones.unshift({id:0, name:'MSD HQ'});
     });
 
-    VaccineStorageByFacility.get({facilityId:14227}, function(data){
+    VaccineStorageByFacility.get({facilityId:$scope.selectedFacilityId}, function(data){
         $scope.storages = data.vaccineStorageList;
     });
     $scope.cancelDistributionBatchSave = function () {
@@ -87,7 +91,7 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
 
 
     $scope.addBatches = function (distribution) {
-        $scope.batch = null;
+        $scope.batch = undefined;
         $scope.distribution = distribution;
         $scope.addBatchesModal = true;
     };
@@ -99,8 +103,6 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
 
     $scope.saveDistributionBatch = function(){
 
-        alert('inventoryTransaction is '+JSON.stringify($scope.inventoryTransaction));
-
         if ($scope.inventoryTransactionForm.$error.required) {
             $scope.error = messageService.get("form.error");
             $scope.showError = true;
@@ -110,13 +112,13 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
         var successHandler = function (msgKey) {
             $scope.showError = false;
             $scope.error = "";
-            $scope.$parent.message = messageService.get(msgKey, $scope.distributionBatch.batchId);
-            $scope.$parent.distributionBatchId = $scope.distributionBatch.id;
-            $location.path('');
+            $scope.$parent.message = messageService.get(msgKey, $scope.inventoryTransaction.id);
+            $scope.$parent.inventoryTransactionId = $scope.inventoryTransaction.id;
+            $location.path('/');
         };
 
         var saveSuccessHandler = function (response) {
-            $scope.inventoryTransaction = response.inventoryTransaction;
+            $scope.inventoryTransaction = response.receiveVaccine.inventoryTransaction;
             successHandler(response.success);
         };
 
@@ -129,6 +131,9 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
             $scope.message = "";
             $scope.error = response.data.error;
         };
+        $scope.inventoryTransaction.confirmedBy = {id:2};
+        $scope.inventoryTransaction.fromFacility = {id:18752};
+        $scope.inventoryTransaction.toFacility = {id:18752};
 
         var receiveVaccine = {inventoryTransaction:$scope.inventoryTransaction, inventoryBatches:$scope.batches};
 

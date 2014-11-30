@@ -20,4 +20,8 @@ public class TransactionTypeService {
     @Autowired
     private TransactionTypeRepository transactionTypeRepository;
 
+    public TransactionType getByName(String name){
+        return transactionTypeRepository.getByName(name);
+    }
+
 }
