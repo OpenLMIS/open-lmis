@@ -132,8 +132,8 @@ function VaccineDistributionController($scope,$route,allFacilities,VaccineDistri
             $scope.error = response.data.error;
         };
         $scope.inventoryTransaction.confirmedBy = {id:2};
-        $scope.inventoryTransaction.fromFacility = {id:18752};
-        $scope.inventoryTransaction.toFacility = {id:18752};
+        $scope.inventoryTransaction.fromFacility = {id:$scope.selectedFacilityId};
+        $scope.inventoryTransaction.toFacility = {id:$scope.selectedFacilityId};
 
         var receiveVaccine = {inventoryTransaction:$scope.inventoryTransaction, inventoryBatches:$scope.batches};
 

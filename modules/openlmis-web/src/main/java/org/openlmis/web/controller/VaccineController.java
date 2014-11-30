@@ -119,8 +119,8 @@ public class VaccineController extends BaseController {
     }
 
     @RequestMapping(value = "/receive-vaccine", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> searchReceivedVaccine(@RequestParam(required = true) String param) {
-        return OpenLmisResponse.response("distributionBatches", distributionBatchService.searchDistributionBatches(param));
+    public ResponseEntity<OpenLmisResponse> searchReceivedVaccine(@RequestParam(required = true) Long facilityId) {
+        return OpenLmisResponse.response("receivedVaccines", distributionBatchService.getReceivedVaccinesForFacility(facilityId));
     }
 
     /*@RequestMapping(value = "/distribution-batches", method = POST, headers = ACCEPT_JSON)

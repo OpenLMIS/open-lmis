@@ -153,22 +153,17 @@ function VaccineDistributionSearchController($scope,VaccineDistributionBatches,U
             }
         });
     });
-    $scope.viewSelectedFacility = function(){
-      alert('selected facility '+$scope.selectedFacilityId);
-    };
-    var resetRnrData = function () {
-        $scope.periodGridData = [];
-        $scope.selectedProgram = null;
+
+    var resetData = function () {
         $scope.selectedFacilityId = null;
         $scope.myFacility = null;
-        $scope.programs = null;
         $scope.facilities = null;
         $scope.error = null;
     };
 
 
     $scope.loadFacilityData = function (selectedType) {
-        isNavigatedBack = isNavigatedBack ? selectedType !== "0" : resetRnrData();
+        isNavigatedBack = isNavigatedBack ? selectedType !== "0" : resetData();
 
         if (selectedType === "0") { //My facility
             UserFacilityList.get({}, function (data) {

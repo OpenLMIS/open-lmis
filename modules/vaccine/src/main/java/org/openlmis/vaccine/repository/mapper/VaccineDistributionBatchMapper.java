@@ -148,4 +148,20 @@ public interface VaccineDistributionBatchMapper {
     @Options(useGeneratedKeys = true)
     void insertOnHand(OnHand onHand);
 
+    @Select("select * from inventory_transactions where toFacilityId = #{toFacilityId} ")
+    @Results({
+            @Result(property = "transactionType", javaType = TransactionType.class, column = "transactionTypeId",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.TransactionTypeMapper.getById")),
+            @Result(property = "product", javaType = Product.class, column = "productCode",
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode")),
+            @Result(property = "toFacility", javaType = Facility.class, column = "toFacilityId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+            @Result(property = "fromFacility", javaType = Facility.class, column = "fromFacilityId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+            @Result(property = "status", javaType = Status.class, column = "statusId",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.StatusMapper.getById"))
+    })
+    List<InventoryTransaction> getInventoryTransactionsByReceivingFacility(Long toFacilityId);
+
+
 }

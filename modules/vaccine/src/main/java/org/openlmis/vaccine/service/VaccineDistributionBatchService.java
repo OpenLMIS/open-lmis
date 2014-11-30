@@ -48,6 +48,10 @@ public class VaccineDistributionBatchService {
         return distributionBatchRepository.searchDistributionBatches(query);
     }
 
+    public List<InventoryTransaction> getReceivedVaccinesForFacility(Long facilityId){
+        return distributionBatchRepository.getReceivedVaccinesForFacility(facilityId);
+    }
+
     public List<Map<String, Object>> filterDistributionBatches(Map filterCriteria){
         return distributionBatchRepository.filterDistributionBatches(filterCriteria);
     }

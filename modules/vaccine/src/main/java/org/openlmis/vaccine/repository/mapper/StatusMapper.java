@@ -28,4 +28,7 @@ public interface StatusMapper {
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.TransactionTypeMapper.getById"))
     })
     List<Status> getAll();
+
+    @Select("select * from received_status where id = #{id}")
+    Status getById(Long id);
 }
