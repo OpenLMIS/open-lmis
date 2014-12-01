@@ -71,4 +71,11 @@ public class VaccineDistributionBatchService {
         distributionBatchRepository.updateInventoryTransaction(inventoryTransaction,inventoryBatches);
     }
 
+    public void distributeVaccine(InventoryTransaction inventoryTransaction, List<InventoryBatch> inventoryBatches) {
+        if(inventoryTransaction != null && inventoryTransaction.getId() == null){
+            inventoryTransaction.setTransactionType(transactionTypeService.getByName(TRANSACTION_TYPE_RECEIVED));
+        }
+        distributionBatchRepository.updateInventoryTransaction(inventoryTransaction,inventoryBatches);
+    }
+
 }
