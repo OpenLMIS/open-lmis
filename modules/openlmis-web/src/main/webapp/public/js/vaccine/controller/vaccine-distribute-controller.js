@@ -7,28 +7,14 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineDistributeController($scope,$route,VaccineDistributionBatches,$location,messageService,GetDonors,Products,Manufacturers,DistributionTypes,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccines,UsableBatches){
+function VaccineDistributeController($scope,$route,$location,messageService,Products,DistributionTypes,VaccineDistributionStatus,GeographicZones,UsableBatches,DistributeVaccines){
 
     $scope.message = "";
-
-    $scope.selectedStorages = [];
     $scope.batches = [];
 
-    if(!isUndefined($route.current.params.distributionBatchId)){
-        VaccineDistributionBatches.get({id: $route.current.params.distributionBatchId}, function (data){
-
-            $scope.distributionBatch = $scope.getDistributionBatchWithDateObjects(data.distributionBatch);
-
-        });
-    }
     if(!isUndefined($route.current.params.facilityId)){
         $scope.selectedFacilityId = $route.current.params.facilityId;
     }
-
-    UsableBatches.get({productId:2189}, function(data){
-       $scope.usableBatches = data.usableBatches;
-    });
-
 
     $scope.convertStringToCorrectDateFormat = function(stringDate) {
         if (stringDate) {
@@ -48,8 +34,6 @@ function VaccineDistributeController($scope,$route,VaccineDistributionBatches,$l
         return distributionBatch;
     };
 
-    $scope.origins = [{id:0,name:'France'},{id:1,name:'USA'}];
-
     VaccineDistributionStatus.get({}, function(data){
        $scope.status = data.status;
         $scope.receivedStatus = [];
@@ -64,12 +48,6 @@ function VaccineDistributeController($scope,$route,VaccineDistributionBatches,$l
     DistributionTypes.get({}, function(data){
         $scope.distributionTypes = data.distributionTypes;
     });
-    Manufacturers.get({}, function (data) {
-        $scope.manufacturers = data.manufacturers;
-    });
-    GetDonors.get({},function(data){
-        $scope.donors = data.donors;
-    });
 
     Products.get({}, function(data){
         $scope.products = data.productList;
@@ -83,20 +61,27 @@ function VaccineDistributeController($scope,$route,VaccineDistributionBatches,$l
            }
         });
 
-        $scope.zones.unshift({id:0, name:'MSD HQ'});
     });
 
-    VaccineStorageByFacility.get({facilityId:$scope.selectedFacilityId}, function(data){
-        $scope.storages = data.vaccineStorageList;
-    });
     $scope.cancelDistributionBatchSave = function () {
-        $location.path('#/distribution-batch');
+        $location.path('#/receive');
     };
 
 
     $scope.addBatches = function (distribution) {
         $scope.batch = undefined;
         $scope.distribution = distribution;
+
+        if(!isUndefined($scope.inventoryTransaction) && !isUndefined($scope.inventoryTransaction.product)){
+            UsableBatches.get({productId:$scope.inventoryTransaction.product.id}, function(data){
+                $scope.usableBatches = data.usableBatches;
+            });
+        }else{
+            $scope.usableBatches = null;
+
+        }
+
+
         $scope.addBatchesModal = true;
     };
     $scope.resetAddBatchesModal = function () {
@@ -139,13 +124,10 @@ function VaccineDistributeController($scope,$route,VaccineDistributionBatches,$l
         $scope.inventoryTransaction.fromFacility = {id:$scope.selectedFacilityId};
         $scope.inventoryTransaction.toFacility = {id:$scope.selectedFacilityId};
 
-        var receiveVaccine = {inventoryTransaction:$scope.inventoryTransaction, inventoryBatches:$scope.batches};
+        var receiveVaccine = {inventoryTransaction:$scope.inventoryTransaction, inventoryBatches:$scope.usableBatches};
 
-        if ($scope.inventoryTransaction.id) {
-            ReceiveVaccines.update({id:$scope.distributionBatch.id}, receiveVaccine, updateSuccessHandler, errorHandler);
-        } else {
-            ReceiveVaccines.save({}, receiveVaccine, saveSuccessHandler, errorHandler);
-        }
+        DistributeVaccines.save({},receiveVaccine, saveSuccessHandler, errorHandler);
+
     };
 
     $scope.saveBatches = function(){

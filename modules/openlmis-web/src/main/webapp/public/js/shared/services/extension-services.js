@@ -939,6 +939,10 @@ services.factory('UsableBatches', function ($resource) {
     return $resource('/vaccine/usable-batches/product/:productId.json', {}, {});
 });
 
+services.factory('DistributeVaccines', function ($resource) {
+    return $resource('/vaccine/distribute-vaccine.json', {}, {});
+});
+
 
 /* End: Vaccine Supply Line */
 
