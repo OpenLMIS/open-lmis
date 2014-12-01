@@ -1,0 +1,47 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div>
+  <h3>Vaccine Logistics Configuration</h3>
+  <div>
+    <div class="info-box">
+      <p><strong openlmis-message="template.programName"></strong> Vaccine <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
+      </p>
+    </div>
+  </div>
+  <form name="configureRnRTemplateForm" ng-submit="save()">
+  <div class="rnr-template-columns">
+
+    <ul ui-sortable ng-model="rnrSortableColumns" id="sortable">
+      <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in sortableColumns">
+        <div class="drag-handle"></div>
+          <span class="tpl-visible">
+            <input type="checkbox" ng-model="rnrColumn.visible" ng-disabled="rnrColumn.mandatory"/>
+          </span>
+          <span class="tpl-indicator">
+            <div class="indicator" openlmis-message="rnrColumn.indicator"></div>
+          </span>
+          <span class="tpl-label">
+            <!--<input name="label" type="text" ng-model="rnrColumn.label" required maxlength="200"/>-->
+            <span class="col-desc" openlmis-message="rnrColumn.description"></span>
+          </span>
+      </li>
+    </ul>
+  </div>
+
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+      <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+      <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
+    </div>
+    <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+  </div>
+  </form>
+</div>

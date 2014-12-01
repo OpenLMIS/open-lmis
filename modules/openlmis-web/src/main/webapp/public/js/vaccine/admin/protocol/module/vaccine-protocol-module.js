@@ -16,6 +16,7 @@ angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootst
         when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html', resolve : VaccineDiseaseController.resolve }).
         when('/disease/add', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
         when('/disease/edit/:id', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
+        when('/template', {controller:LogisticsColumnTemplate, templateUrl:'partials/column-template.html', resolve: LogisticsColumnTemplate.resolve }).
         when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html'}).
         when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html'}).
         otherwise({redirectTo:'/protocol'});
