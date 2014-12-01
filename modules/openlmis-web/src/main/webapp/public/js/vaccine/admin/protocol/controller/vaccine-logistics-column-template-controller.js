@@ -10,76 +10,69 @@
 
 function LogisticsColumnTemplate($scope){
 
-  $scope.sortableColumns = [
-    {
-      mandatory: true,
-      visible: true,
-      description: 'Product Name',
-      label: 'Product',
-      indicator: 'A'
-    },
-    {
-      mandatory: false,
-      visible: true,
-      description: 'Opening Balance',
-      label: 'Opening Balance',
-      indicator: 'B'
-    },
-    {
-      mandatory: false,
-      visible: true,
-      description: 'Received',
-      label: 'Received',
-      indicator: 'C'
-    }
-    ,
-    {
-      mandatory: false,
-      visible: true,
-      description: 'VVM Alerted',
-      label: 'VVM Alerted',
-      indicator: 'D'
-    }
-    ,
-    {
-      mandatory: false,
-      visible: true,
-      description: 'Freezed',
-      label: 'Freezed',
-      indicator: 'E'
-    }
-    ,
-    {
-      mandatory: false,
-      visible: true,
-      description: 'Expired',
-      label: 'Expired',
-      indicator: 'F'
-    }
-    ,
-    {
-      mandatory: false,
-      visible: true,
-      description: 'Other',
-      label: 'Other',
-      indicator: 'G'
-    }
-    ,
-    {
-      mandatory: false,
-      visible: true,
-      description: 'Discarded Unopened',
-      label: 'Discarded Unopened',
-      indicator: 'H'
-    },
-    {
-      mandatory: false,
-      visible: true,
-      description: 'Discarded Opened',
-      label: 'Discarded Opened',
-      indicator: 'I'
-    }
-  ];
+  $scope.sortableColumns = [{
+                              mandatory: true,
+                              visible: true,
+                              description: 'Product Name',
+                              label: 'Product',
+                              indicator: 'A'
+                            },
+                            {
+                              mandatory: false,
+                              visible: true,
+                              description: 'Opening Balance',
+                              label: 'Opening Balance',
+                              indicator: 'B'
+                            },
+                            {
+                              mandatory: false,
+                              visible: true,
+                              description: 'Received',
+                              label: 'Received',
+                              indicator: 'C'
+                            },
+                            {
+                              mandatory: false,
+                              visible: true,
+                              description: 'VVM Alerted',
+                              label: 'VVM Alerted',
+                              indicator: 'D'
+                            },
+                            {
+                              mandatory: false,
+                              visible: true,
+                              description: 'Freezed',
+                              label: 'Freezed',
+                              indicator: 'E'
+                            },
+                            {
+                              mandatory: false,
+                              visible: true,
+                              description: 'Expired',
+                              label: 'Expired',
+                              indicator: 'F'
+                            },
+                            {
+                              mandatory: false,
+                              visible: true,
+                              description: 'Other',
+                              label: 'Other',
+                              indicator: 'G'
+                            },
+                            {
+                              mandatory: false,
+                              visible: true,
+                              description: 'Discarded Unopened',
+                              label: 'Discarded Unopened',
+                              indicator: 'H'
+                            },
+                            {
+                              mandatory: false,
+                              visible: true,
+                              description: 'Discarded Opened',
+                              label: 'Discarded Opened',
+                              indicator: 'I'
+                            } ];
 
 }
 
