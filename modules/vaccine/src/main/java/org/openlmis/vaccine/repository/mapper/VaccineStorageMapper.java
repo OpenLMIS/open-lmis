@@ -1,7 +1,10 @@
 package org.openlmis.vaccine.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.vaccine.domain.StorageType;
+import org.openlmis.vaccine.domain.Temperature;
 import org.openlmis.vaccine.domain.VaccineStorage;
 import org.springframework.stereotype.Repository;
 
@@ -20,9 +23,9 @@ import java.util.List;
 public interface VaccineStorageMapper {
 
     @Insert({"INSERT INTO vaccine_storage",
-            "( storagetypeid, location,name,grosscapacity,netcapacity,temperatureid, createdby, createddate, modifiedby,modifieddate, location_name, dimension,facility_id) ",
+            "( storagetypeid, locCode ,name,grosscapacity,netcapacity,temperatureid, createdby, createddate, modifiedby,modifieddate,  dimension,facilityId) ",
             "VALUES",
-            "( #{storageTypeId.id}, #{locCode},#{name}, #{grossCapacity}, #{netCapacity}, #{tempretureId.id} ,#{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}, #{locationName}, #{dimenstion}, #{facility.id}) "})
+            "( #{storageType.id}, #{location},#{name}, #{grossCapacity}, #{netCapacity}, #{temperature.id} ,#{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}, #{dimension}, #{facility.id}) "})
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Long insert(VaccineStorage vaccineStorage);
 
@@ -30,71 +33,56 @@ public interface VaccineStorageMapper {
     @Select("SELECT * FROM vaccine_storage where id =#{id} ")
     @Results({
             @Result(column = "id", property = "id"),
-            @Result(column = "storagetypeid", property = "storageTypeId.id"),
-            @Result(column = "location", property = "locCode"),
+            @Result(column = "loccode", property = "location"),
             @Result(column = "name", property = "name"),
             @Result(column = "grosscapacity", property = "grossCapacity"),
             @Result(column = "netcapacity", property = "netCapacity"),
-            @Result(column = "location_name", property = "locationName"),
-            @Result(column = "dimension", property = "dimenstion"),
-            @Result(column = "facility_id", property = "facility.id"),
-            @Result(column = "temperatureid", property = "tempretureId.id")
+            @Result(column = "dimension", property = "dimension"),
+            @Result(column = "storageTypeId", javaType = StorageType.class, property = "storageType",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.StorageTypeMapper.getById")),
+            @Result(column = "facilityId", javaType = Facility.class, property = "facility",
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+            @Result(column = "temperatureid", javaType = Temperature.class, property = "temperature",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.TempratureMapper.getById"))
     })
     VaccineStorage getById(Long id);
 
-    @Select("SELECT " +
-            "  vaccine_storage.id, " +
-            "  vaccine_storage.storagetypeid, " +
-            "  vaccine_storage.locCode, " +
-            "  vaccine_storage.name, " +
-            "  vaccine_storage.grosscapacity, " +
-            "  vaccine_storage.netcapacity, " +
-            "  vaccine_storage.temperatureid, " +
-            "  vaccine_storage.createdby, " +
-            "  vaccine_storage.createddate, " +
-            "  vaccine_storage.modifiedby, " +
-            "  vaccine_storage.modifieddate, " +
-            "  temperature.temperaturename, " +
-            "  vaccine_storage.facility_id, " +
-            "  storage_types.storagetypename" +
+    @Select("SELECT * " +
             " FROM " +
-            "  public.vaccine_storage  " +
-            " LEFT OUTER JOIN " +
-            "   public.temperature  ON vaccine_storage.temperatureid = temperature.id " +
-            "   LEFT OUTER JOIN " +
-            "   public.storage_types " +
-            " ON vaccine_storage.storagetypeid = storage_types.id ")
+            "  vaccine_storage   ")
     @Results({
             @Result(column = "id", property = "id"),
-            @Result(column = "storagetypeid", property = "storageTypeId.id"),
-            @Result(column = "storagetypename", property = "storageTypeId.storageTypeName"),
-            @Result(column = "location", property = "locCode"),
+            @Result(column = "loccode", property = "location"),
             @Result(column = "name", property = "name"),
             @Result(column = "grosscapacity", property = "grossCapacity"),
             @Result(column = "netcapacity", property = "netCapacity"),
-            @Result(column = "temperatureid", property = "tempretureId.id"),
-            @Result(column = "facility_id", property = "facility.id"),
-            @Result(column = "temperaturename", property = "tempretureId.tempratureName")
+            @Result(column = "dimension", property = "dimension"),
+            @Result(column = "storageTypeId", javaType = StorageType.class, property = "storageType",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.StorageTypeMapper.getById")),
+            @Result(column = "facilityId", javaType = Facility.class, property = "facility",
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+            @Result(column = "temperatureid", javaType = Temperature.class, property = "temperature",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.TempratureMapper.getById"))
     })
     List<VaccineStorage> loadAllList();
 
     @Select("Select * from vaccine_storage where facilityId = #{facilityId}")
     @Results({
             @Result(column = "facilityId", property = "facility.id"),
-            @Result(column = "storageTypeId", javaType = StorageType.class ,property="storageType",
-            one = @One(select = "org.openlmis.vaccine.repository.mapper.StorageTypeMapper.getById"))
+            @Result(column = "storageTypeId", javaType = StorageType.class, property = "storageType",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.StorageTypeMapper.getById"))
     })
     List<VaccineStorage> getByFacilityId(Long facilityId);
 
     @Update("UPDATE vaccine_storage " +
-            "   SET storagetypeid= #{storageTypeId.id}," +
-            "  locCode=#{location}, " +
+            "   SET storagetypeid= #{storageType.id}," +
+            "  locCode =#{location}, " +
             "  name=#{name}, " +
             " grosscapacity=#{grossCapacity}, " +
             "netcapacity=#{netCapacity}, " +
-            "temperatureid=#{tempretureId.id}," +
+            "temperatureid=#{temperature.id}," +
             " modifiedby=#{modifiedBy}, " +
-            " facility_id=#{facility.id}, " +
+            " facilityId=#{facility.id}, " +
             "modifieddate=#{modifiedDate} " +
 
             " WHERE id=#{id};")

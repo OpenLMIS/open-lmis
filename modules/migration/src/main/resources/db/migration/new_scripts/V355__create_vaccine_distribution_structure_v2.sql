@@ -107,7 +107,7 @@ COMMENT ON COLUMN vaccine_quantifications.modifiedDate IS            'Modified o
 
 -------------------------------------------------------------------
 -- Table: storage_types
-DROP TABLE IF EXISTS vaccine_storage;
+DROP TABLE IF EXISTS vaccine_storage cascade ;
 DROP TABLE IF EXISTS storage_types;
 CREATE TABLE storage_types
 (
@@ -177,25 +177,30 @@ VALUES
 -- Table: vaccine_storage
 
 -- Table: storage_types
+
 DROP TABLE IF EXISTS vaccine_storage cascade ;
-CREATE TABLE
-  vaccine_storage (  id SERIAL PRIMARY KEY ,
-                     storageTypeId INTEGER REFERENCES storage_types (id) NOT NULL,
-                     facilityId INTEGER REFERENCES facilities (id) NOT NULL,
-                     locCode VARCHAR (100) NOT NULL,
-                     name VARCHAR (250) NOT NULL,
-                     temperatureId INTEGER REFERENCES temperature (id) NOT NULL,
-                     grossCapacity INTEGER ,  netCapacity INTEGER ,  dimension VARCHAR (100) ,
-                     createdBy INTEGER ,  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  modifiedBy INTEGER ,
-                     modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP );
+CREATE TABLE vaccine_storage
+(
+ id SERIAL PRIMARY KEY ,
+  storageTypeId INTEGER REFERENCES storage_types (id) NOT NULL,
+ facilityId INTEGER REFERENCES facilities (id) NOT NULL,  locCode VARCHAR (100) NOT NULL,
+ name VARCHAR (250) NOT NULL,
+  temperatureId INTEGER REFERENCES temperature (id) NOT NULL,
+ grossCapacity INTEGER ,
+  netCapacity INTEGER ,
+   dimension VARCHAR (100) ,
+ createdBy INTEGER ,
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy INTEGER ,
+    modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP );
 CREATE UNIQUE INDEX uc_vaccine_storage_code ON vaccine_storage(locCode);
-COMMENT ON TABLE vaccine_storage IS 'Vaccine storage capacity';
-COMMENT ON INDEX uc_vaccine_storage_code IS 'Unique code required for storage locCode';
-COMMENT ON COLUMN vaccine_storage.id IS 'ID';
-COMMENT ON COLUMN vaccine_storage.storageTypeId IS 'Storage type';
+ COMMENT ON TABLE vaccine_storage IS 'Vaccine storage capacity';
+COMMENT ON INDEX uc_vaccine_storage_code IS 'Unique code required for storage location';
+ COMMENT ON COLUMN vaccine_storage.id IS 'ID'; COMMENT ON COLUMN vaccine_storage.storageTypeId IS 'Storage type';
 COMMENT ON COLUMN vaccine_storage.facilityId IS 'Facility';
 COMMENT ON COLUMN vaccine_storage.locCode IS 'Storage location code';
 COMMENT ON COLUMN vaccine_storage.name IS 'Storage name';
+COMMENT ON COLUMN vaccine_storage.temperatureId IS 'Temperature';
 
 -----------------------------------------
 -- Table: Manufacturers
