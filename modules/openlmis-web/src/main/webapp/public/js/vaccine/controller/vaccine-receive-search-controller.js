@@ -7,14 +7,12 @@
  *   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineDistributionSearchController($scope,VaccineDistributionBatches,UserFacilityList,VaccineDistributionLineItems,navigateBackService,$location,messageService,UserSupervisedFacilities){
+function VaccineReceiveSearchController($scope,ReceiveVaccines,UserFacilityList,VaccineDistributionLineItems,navigateBackService,$location,messageService,UserSupervisedFacilities){
     var isNavigatedBack;
 
     $scope.distributionBatch = {};
 
     $scope.origins = [{id:0,name:'France'},{id:1,name:'USA'}];
-
-    $scope.vvmStages = [{id:0,name:'Stage1'},{id:1,name:'Stage2'},{id:2,name:'Stage3'}];
 
     $scope.convertStringToCorrectDateFormat = function(stringDate) {
         if (stringDate) {
@@ -29,49 +27,6 @@ function VaccineDistributionSearchController($scope,VaccineDistributionBatches,U
         $location.path('/edit-distribution-batch/' + id);
     };
 
-    var filterDistributionBatchByDispatchId = function (query) {
-        $scope.filteredDistributionBatches = [];
-        query = query || "";
-        angular.forEach($scope.distributionBatches, function (distributionBatch) {
-            if (distributionBatch.dispatchId.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
-                $scope.filteredDistributionBatches.push(distributionBatch);
-            }
-        });
-        $scope.resultCount = $scope.filteredDistributionBatches.length;
-    };
-
-    VaccineDistributionLineItems.get({}, function(data){
-        $scope.distributionLineItems = data.distributionLineItems;
-    });
-
-    $scope.showDistributionBatchSearchResults = function () {
-        var query = $scope.query;
-        var len = (query === undefined) ? 0 : query.length;
-        if (len >= 3) {
-            if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3)) {
-                $scope.previousQuery = query;
-                filterDistributionBatchByDispatchId(query);
-                return true;
-            }
-            $scope.previousQuery = query;
-            VaccineDistributionBatches.get({param:$scope.query.substr(0,3)}, function(data){
-                $scope.distributionBatches = data.distributionBatches;
-                filterDistributionBatchByDispatchId(query);
-            },{});
-            return true;
-
-        } else {
-
-            VaccineDistributionBatches.get({param:''},function(data){
-                $scope.distributionBatches  = data.distributionBatches;
-            });
-            return false;
-        }
-    };
-    $scope.previousQuery = '';
-    $scope.query = navigateBackService.query;
-    $scope.showDistributionBatchSearchResults();
-
     $scope.addReceive = function (distribution) {
         $scope.distribution = distribution;
             $scope.addReceiveModal = true;
@@ -83,16 +38,6 @@ function VaccineDistributionSearchController($scope,VaccineDistributionBatches,U
     };
     $scope.filteredQuantityReceived = [];
 
-    $scope.rowClickedEvent = function(distributionBatch){
-        $scope.selected = distributionBatch.id;
-        $scope.filteredQuantityReceived = [];
-        $scope.quantityReceivedFor = distributionBatch.batchId;
-        angular.forEach($scope.distributionLineItems, function(lineItem){
-           if(lineItem.distributionBatch.id === distributionBatch.id){
-               $scope.filteredQuantityReceived.push(lineItem);
-           }
-        });
-    };
 
     $scope.saveDistributionLineItem = function(){
 
@@ -143,19 +88,28 @@ function VaccineDistributionSearchController($scope,VaccineDistributionBatches,U
         $scope.selectedFacilityId = navigateBackService.selectedFacilityId;
         isNavigatedBack = navigateBackService.isNavigatedBack;
         $scope.loadFacilityData($scope.selectedType);
-        if (isNavigatedBack) {
-            $scope.loadFacilitiesForProgram();
-        }
+
         $scope.$watch('facilities', function () {
             if ($scope.facilities && isNavigatedBack) {
                 $scope.selectedFacilityId = navigateBackService.selectedFacilityId;
+
                 isNavigatedBack = false;
             }
         });
     });
 
+
+    $scope.$watch('selectedFacilityId', function(){
+        if(!isUndefined($scope.selectedFacilityId)){
+            ReceiveVaccines.get({facilityId:$scope.selectedFacilityId}, function(data){
+                $scope.inventoryTransactions = data.receivedVaccines;
+            });
+        }
+
+    });
     var resetData = function () {
         $scope.selectedFacilityId = null;
+        $scope.inventoryTransactions = null;
         $scope.myFacility = null;
         $scope.facilities = null;
         $scope.error = null;
@@ -172,7 +126,6 @@ function VaccineDistributionSearchController($scope,VaccineDistributionBatches,U
                 if ($scope.myFacility) {
                     $scope.facilityDisplayName = $scope.myFacility.code + '-' + $scope.myFacility.name;
                     $scope.selectedFacilityId = $scope.myFacility.id;
-
                 } else {
                     $scope.facilityDisplayName = messageService.get("label.none.assigned");
                     $scope.programs = null;

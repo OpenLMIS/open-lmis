@@ -51,6 +51,10 @@ public class VaccineDistributionBatchRepository {
         return distributionBatchMapper.getInventoryTransactionsByReceivingFacility(facilityId);
     }
 
+    public List<InventoryBatch> getUsableBatches(Long productId){
+        return distributionBatchMapper.getUsableBatches(productId);
+    }
+
     public List<Map<String,Object>> filterDistributionBatches(Map<String, Objects> query){
         return null;
        // return distributionBatchMapper.searchDistributionBatches(query);
@@ -70,7 +74,7 @@ public class VaccineDistributionBatchRepository {
             if (errorMessage.contains("foreign key") || errorMessage.contains("not-null constraint")) {
                 throw new DataException("error.reference.data.missing");
             }
-            throw new DataException("error.incorrect.lengt  h");
+            throw new DataException("error.incorrect.length");
         }
     }
     @Transactional

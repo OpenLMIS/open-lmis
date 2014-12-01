@@ -11,11 +11,11 @@
 var vaccine = angular.module('vaccine', ['openlmis', 'ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
-        when('/distribution-batch', {controller: VaccineDistributionSearchController, templateUrl: 'partials/vaccine-distribution-search.html'}).
-        when('/receive', {controller: VaccineDistributionSearchController, templateUrl: 'partials/vaccine-distribution-search.html'}).
-        when('/distribution-batch-filter', {controller: VaccineDistributionFilterController, templateUrl: 'partials/vaccine-distribution-filter.html'}).
-        when('/create-distribution-batch/:facilityId', {controller: VaccineDistributionController, templateUrl: 'partials/vaccine-distribution-edit.html', resolve:VaccineDistributionController.resolve}).
-        when('/edit-distribution-batch/:distributionBatchId', {controller: VaccineDistributionController, templateUrl: 'partials/vaccine-distribution-edit.html', resolve:VaccineDistributionController.resolve}).
+        when('/distribute', {controller: VaccineDistributeController, templateUrl: 'partials/vaccine-distribute-edit.html'}).
+        when('/receive', {controller: VaccineReceiveSearchController, templateUrl: 'partials/vaccine-receive-search.html'}).
+        //when('/distribution-batch-filter', {controller: VaccineDistributionFilterController, templateUrl: 'partials/vaccine-distribution-filter.html'}).
+        when('/create-receive-vaccine/:facilityId', {controller: VaccineReceiveController, templateUrl: 'partials/vaccine-receive-edit.html'}).
+       // when('/edit-distribution-batch/:distributionBatchId', {controller: VaccineReceiveController, templateUrl: 'partials/vaccine-receive-edit.html', resolve:VaccineReceiveController.resolve}).
         when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
         when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
         when('/vaccine-storage', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage.html'}).
@@ -27,7 +27,7 @@ var vaccine = angular.module('vaccine', ['openlmis', 'ui.bootstrap']).config(['$
         when('/manufacturerEdit/:id', {controller: VaccineManufacturerController, templateUrl: 'partials/vaccine-manufacturer-edit.html'}).
         when('/productMappingEdit/:manufacturerId/:productId', {controller: VaccineProductMappingController, templateUrl: 'partials/vaccine-product-mapping.html'}).
         when('/productMappingCreate/:manufacturerId', {controller: VaccineProductMappingController, templateUrl: 'partials/vaccine-product-mapping.html'}).
-        otherwise({redirectTo: '/distribution-batch'});
+        otherwise({redirectTo: '/receive'});
 }]).directive('onKeyup', function () {
         return function (scope, elm, attrs) {
             elm.bind("keyup", function () {

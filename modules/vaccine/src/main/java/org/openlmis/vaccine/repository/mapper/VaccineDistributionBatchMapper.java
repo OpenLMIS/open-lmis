@@ -152,8 +152,8 @@ public interface VaccineDistributionBatchMapper {
     @Results({
             @Result(property = "transactionType", javaType = TransactionType.class, column = "transactionTypeId",
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.TransactionTypeMapper.getById")),
-            @Result(property = "product", javaType = Product.class, column = "productCode",
-                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode")),
+            @Result(property = "product", javaType = Product.class, column = "productId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
             @Result(property = "toFacility", javaType = Facility.class, column = "toFacilityId",
                     one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
             @Result(property = "fromFacility", javaType = Facility.class, column = "fromFacilityId",
@@ -162,6 +162,21 @@ public interface VaccineDistributionBatchMapper {
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.StatusMapper.getById"))
     })
     List<InventoryTransaction> getInventoryTransactionsByReceivingFacility(Long toFacilityId);
+
+    @Select("SELECT ib.* \n" +
+            "FROM inventory_transactions inv\n" +
+            "INNER JOIN Inventory_batches ib on inv.id = ib.transactionId\n" +
+            "WHERE inv.productId = #{productId} \n" +
+            "AND CASE WHEN inv.vvmtracked THEN (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0)) > 0 END\n" +
+            "order by ib.expiryDate \n")
+    @Results({
+            @Result(property = "vvm1", column = "vvm1_qty"),
+            @Result(property = "vvm2", column = "vvm2_qty"),
+            @Result(property = "vvm3", column = "vvm3_qty"),
+            @Result(property = "vvm4", column = "vvm4_qty")
+
+    })
+    List<InventoryBatch> getUsableBatches(Long productId);
 
 
 }

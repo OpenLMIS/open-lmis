@@ -20,6 +20,8 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.User;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -53,4 +55,9 @@ public class InventoryTransaction extends BaseModel{
     private Date arrivalDate;
     private User confirmedBy;
     private String note;
+
+    @SuppressWarnings("unused")
+    public String getStringArrivalDate() throws ParseException {
+        return this.arrivalDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.arrivalDate);
+    }
 }
