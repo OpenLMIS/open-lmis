@@ -83,6 +83,13 @@ function VaccineReceiveController($scope,$route,VaccineDistributionBatches,$loca
 
     VaccineStorageByFacility.get({facilityId:$scope.selectedFacilityId}, function(data){
         $scope.storages = data.vaccineStorageList;
+        $scope.groupedByStorageTypes = [];
+        angular.forEach($scope.storages, function(storage){
+            var groupedByTypes =_.filter($scope.storages,function(location){if(location.storageType.id == storage.storageType.id){return location;}});
+            if(isUndefined(_.findWhere($scope.groupedByStorageTypes,{storageTypeName:storage.storageType.name}))){
+                $scope.groupedByStorageTypes.push({storageTypeName:storage.storageType.name, locations:groupedByTypes});
+            }
+        });
     });
     $scope.cancelDistributionBatchSave = function () {
         $location.path('#/distribution-batch');

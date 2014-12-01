@@ -1,6 +1,7 @@
 package org.openlmis.vaccine.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.vaccine.domain.StorageType;
 import org.openlmis.vaccine.domain.VaccineStorage;
 import org.springframework.stereotype.Repository;
 
@@ -79,7 +80,9 @@ public interface VaccineStorageMapper {
 
     @Select("Select * from vaccine_storage where facilityId = #{facilityId}")
     @Results({
-            @Result(column = "facilityId", property = "facility.id")
+            @Result(column = "facilityId", property = "facility.id"),
+            @Result(column = "storageTypeId", javaType = StorageType.class ,property="storageType",
+            one = @One(select = "org.openlmis.vaccine.repository.mapper.StorageTypeMapper.getById"))
     })
     List<VaccineStorage> getByFacilityId(Long facilityId);
 

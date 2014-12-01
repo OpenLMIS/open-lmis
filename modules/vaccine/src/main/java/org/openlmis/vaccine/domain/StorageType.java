@@ -22,5 +22,6 @@ import org.openlmis.upload.Importable;
 @EqualsAndHashCode(callSuper = false)
 public class StorageType extends BaseModel implements Importable {
     private String storageTypeName;
+    private String name;
 
 }

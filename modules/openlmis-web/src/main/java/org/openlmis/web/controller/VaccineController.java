@@ -176,6 +176,34 @@ public class VaccineController extends BaseController {
         return response;
     }
 
+    @RequestMapping(value = "/distribute-vaccine", method = POST, headers = ACCEPT_JSON)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
+    public ResponseEntity distributeVaccine(@RequestBody ReceiveVaccine receiveVaccine, HttpServletRequest request){
+
+        receiveVaccine.setCreatedBy(loggedInUserId(request));
+        receiveVaccine.setModifiedBy(loggedInUserId(request));
+
+        ResponseEntity<OpenLmisResponse> response;
+        InventoryTransaction inventoryTransaction = null;
+        List<InventoryBatch> inventoryBatches = null;
+
+        try {
+            inventoryTransaction = receiveVaccine.getInventoryTransaction();
+            inventoryBatches  = receiveVaccine.getInventoryBatches();
+
+            distributionBatchService.receiveVaccine(inventoryTransaction, inventoryBatches);
+
+        }catch (DataException exception) {
+            OpenLmisResponse openLmisResponse = new OpenLmisResponse("receiveVaccine", receiveVaccine);
+            return openLmisResponse.errorEntity(exception, BAD_REQUEST);
+        }
+        response = success(messageService.message("message.receive.vaccine.created.success"));
+        receiveVaccine.setInventoryTransaction(inventoryTransaction);
+        receiveVaccine.setInventoryBatches(inventoryBatches);
+        response.getBody().addData("receiveVaccine", receiveVaccine);
+        return response;
+    }
+
     /*@RequestMapping(value = "/distribution-batches/{id}", method = PUT, headers = ACCEPT_JSON)
     //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE_DISTRIBUTION_BATCH')")
     public ResponseEntity<OpenLmisResponse> update(@PathVariable("id") Long id,
