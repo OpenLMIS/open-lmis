@@ -27,6 +27,7 @@ public class LogisticsLineItem extends BaseModel{
   private Long productId;
   private String productCode;
   private String productName;
+  private String productCategory;
 
   private Integer displayOrder;
 

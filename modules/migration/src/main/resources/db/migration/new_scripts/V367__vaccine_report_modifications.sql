@@ -25,5 +25,5 @@ CREATE TABLE vaccine_report_campaign_line_items
   pregnantWomanVaccinated INTEGER NULL,
   otherObjectives     VARCHAR (2000) NULL,
   vaccinated          VARCHAR (200) NULL,
-  remarks             VARCHAR (2000)
+  remarks             VARCHAR (2000) NULL
 )

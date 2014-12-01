@@ -20,9 +20,9 @@ import java.util.List;
 public interface VaccineReportLogisticsLineItemMapper {
 
   @Insert("INSERT INTO vaccine_report_logistics_line_items " +
-    " (reportId, productId, productCode, productName, displayOrder, openingBalance, quantityReceived, quantityIssued, quantityVvmAlerted, quantityFreezed, quantityExpired, quantityDiscardedUnopened, quantityDiscardedOpened, quantityWastedOther, endingBalance, createdBy, createdDate, modifiedBy, modifiedDate)" +
+    " (reportId, productId, productCode, productName, productCategory, displayOrder, openingBalance, quantityReceived, quantityIssued, quantityVvmAlerted, quantityFreezed, quantityExpired, quantityDiscardedUnopened, quantityDiscardedOpened, quantityWastedOther, endingBalance, createdBy, createdDate, modifiedBy, modifiedDate)" +
     " values " +
-    " (#{reportId}, #{productId}, #{productCode}, #{productName}, #{displayOrder}, #{openingBalance}, #{quantityReceived}, #{quantityIssued}, #{quantityVvmAlerted}, #{quantityFreezed}, #{quantityExpired}, #{quantityDiscardedUnopened}, #{quantityDiscardedOpened}, #{quantityWastedOther}, #{endingBalance}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+    " (#{reportId}, #{productId}, #{productCode}, #{productName}, #{productCategory} , #{displayOrder}, #{openingBalance}, #{quantityReceived}, #{quantityIssued}, #{quantityVvmAlerted}, #{quantityFreezed}, #{quantityExpired}, #{quantityDiscardedUnopened}, #{quantityDiscardedOpened}, #{quantityWastedOther}, #{endingBalance}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
   void insert(LogisticsLineItem lineItem);
 
@@ -31,6 +31,7 @@ public interface VaccineReportLogisticsLineItemMapper {
     " reportId = #{reportId} " +
     ", productId = #{productId} " +
     ", productCode = #{productCode} " +
+    ", productCategory = #{productCategory} " +
     ", productName = #{productName} " +
     ", displayOrder = #{displayOrder} " +
     ", openingBalance = #{openingBalance} " +
