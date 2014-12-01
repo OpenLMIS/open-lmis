@@ -50,6 +50,7 @@ public enum Right {
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage System Settings", 4),
   FACILITY_FILL_SHIPMENT("right.fulfillment.fill.shipment", FULFILLMENT, "Permission to fill shipment data for facility", 19),
   MANAGE_POD("right.fulfillment.manage.pod", FULFILLMENT, "Permission to manage proof of delivery", 20),
+  MANAGE_VACCINE_SETTINGS("Manage Vaccine", ADMIN, "Permission to manage vaccine",22 ),
 
   DELETE_REQUISITION("Delete Requisition", REQUISITION, "Permission to delete requisitions", 21),
   

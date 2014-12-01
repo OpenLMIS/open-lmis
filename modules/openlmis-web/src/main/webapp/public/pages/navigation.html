@@ -62,7 +62,7 @@
     <li>
         <a ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')" id="equipment-inventory" href="/public/pages/admin/equipment/inventory/index.html">Equipment Inventory</a>
     </li>
-    <li>
+    <li ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')" >
       <a  id="vaccine" >Vaccine</a>
       <div class="submenu">
         <ul>
@@ -425,8 +425,8 @@
                         </div>
                     </li>
 
-                    <li class="has-children">
-                      <a  id="vaccine-admin" >Vaccine</a>
+                    <li class="has-children" ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')" >
+                      <a  id="vaccine-admin"  >Vaccine</a>
                       <div class="submenu">
                         <ul>
                           <li>
