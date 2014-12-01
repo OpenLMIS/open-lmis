@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping(value="/equipment/inventory/")
 public class EquipmentInventoryController extends BaseController {
@@ -33,6 +35,12 @@ public class EquipmentInventoryController extends BaseController {
   @RequestMapping(value="list", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getFacilityInventory(@RequestParam("programId") Long programId, @RequestParam("facilityId") Long facilityId ){
     return OpenLmisResponse.response("inventory",service.getInventoryForFacility(facilityId, programId));
+  }
+
+  @RequestMapping(value="programs", method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> getPrograms(HttpServletRequest request){
+    Long userId = loggedInUserId(request);
+    return OpenLmisResponse.response("programs",service.getProgramList(userId));
   }
 
   @RequestMapping(value="by-id", method = RequestMethod.GET)

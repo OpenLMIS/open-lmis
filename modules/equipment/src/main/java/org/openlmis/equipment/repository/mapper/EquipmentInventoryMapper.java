@@ -11,6 +11,7 @@
 package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Program;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.springframework.stereotype.Repository;
@@ -50,4 +51,14 @@ public interface EquipmentInventoryMapper {
       " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
       " WHERE id = #{id}")
   void update(EquipmentInventory inventory);
+
+  @Select({"SELECT DISTINCT p.*",
+    "FROM programs p",
+    "INNER JOIN role_assignments ra ON p.id = ra.programId",
+    "INNER JOIN role_rights rr ON ra.roleId = rr.roleId",
+    "WHERE ra.userId = #{userId}",
+    "AND ra.supervisoryNodeId IS NOT NULL",
+    "AND p.active = TRUE",
+    })
+  List<Program> getListOfProgramsForUser(@Param("userId") Long userId);
 }
