@@ -7,7 +7,7 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-function CreateVaccineReportController($scope, $location, report, VaccineReportSave, VaccineReportSubmit) {
+function CreateVaccineReportController($scope, $location, $filter, report, VaccineReportSave, VaccineReportSubmit) {
   // initial state of the display
   $scope.report = report;
   $scope.visibleTab = 'stockMovement';
@@ -31,6 +31,9 @@ function CreateVaccineReportController($scope, $location, report, VaccineReportS
 
 
   $scope.showAdverseEffect = function(effect, editMode){
+    effect.date = $filter('date')(new Date(effect.date), 'yyyy-MM-dd');
+    effect.expiry = $filter('date')(new Date(effect.expiry), 'yyyy-MM-dd');
+
     $scope.currentEffect = effect;
     $scope.currentEffectMode = editMode;
 
@@ -46,11 +49,14 @@ function CreateVaccineReportController($scope, $location, report, VaccineReportS
 
   $scope.closeAdverseEffectsModal = function(){
     $scope.adverseEffectModal = false;
-  }
+  };
 
-  $scope.showCampaignForm = function(campagin, editMode){
+  $scope.showCampaignForm = function(campaign, editMode){
 
-    $scope.currentCampaign = campagin;
+    campaign.startDate = $filter('date')(new Date(campaign.startDate), 'yyyy-MM-dd');
+    campaign.endDate = $filter('date')(new Date(campaign.endDate), 'yyyy-MM-dd');
+
+    $scope.currentCampaign = campaign;
     $scope.currentCampaignMode = editMode;
 
     $scope.campaignsModal = true;
