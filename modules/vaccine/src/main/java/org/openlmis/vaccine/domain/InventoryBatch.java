@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -35,4 +37,14 @@ public class InventoryBatch extends BaseModel{
     private Integer vvm3;
     private Integer vvm4;
     private String note;
+
+    @SuppressWarnings("unused")
+    public String getStringProductionDate() throws ParseException {
+        return this.productionDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.productionDate);
+    }
+
+    @SuppressWarnings("unused")
+    public String getStringExpiryDate() throws ParseException {
+        return this.expiryDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.expiryDate);
+    }
 }

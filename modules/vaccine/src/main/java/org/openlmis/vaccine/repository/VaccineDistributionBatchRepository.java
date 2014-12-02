@@ -11,10 +11,7 @@
 package org.openlmis.vaccine.repository;
 
 import org.openlmis.core.exception.DataException;
-import org.openlmis.vaccine.domain.DistributionBatch;
-import org.openlmis.vaccine.domain.InventoryBatch;
-import org.openlmis.vaccine.domain.InventoryTransaction;
-import org.openlmis.vaccine.domain.OnHand;
+import org.openlmis.vaccine.domain.*;
 import org.openlmis.vaccine.repository.mapper.VaccineDistributionBatchMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,59 +29,26 @@ public class VaccineDistributionBatchRepository {
     @Autowired
     private VaccineDistributionBatchMapper distributionBatchMapper;
 
-    public List<DistributionBatch> getByDispatchId(String dispatchId){
-        return distributionBatchMapper.getByDispatchId(dispatchId);
-    }
-
-    public DistributionBatch getById(Long id){
-        return distributionBatchMapper.getById(id);
-    }
-
-    public List<DistributionBatch> getAll(){
-        return distributionBatchMapper.getAll();
-    }
-    public List<DistributionBatch> searchDistributionBatches(String query){
-        return distributionBatchMapper.searchDistributionBatches(query);
-    }
-
     public List<InventoryTransaction> getReceivedVaccinesForFacility(Long facilityId){
         return distributionBatchMapper.getInventoryTransactionsByReceivingFacility(facilityId);
     }
+    public InventoryTransaction getReceivedVaccineById(Long id){
+        return distributionBatchMapper.getInventoryTransactionsById(id);
+    }
+
 
     public List<InventoryBatch> getUsableBatches(Long productId){
         return distributionBatchMapper.getUsableBatches(productId);
     }
 
-    public List<Map<String,Object>> filterDistributionBatches(Map<String, Objects> query){
-        return null;
-       // return distributionBatchMapper.searchDistributionBatches(query);
-    }
-
-    public void update(DistributionBatch distributionBatch){
-        try {
-            if (distributionBatch.getId() == null) {
-                distributionBatchMapper.insert(distributionBatch);
-            } else {
-                distributionBatchMapper.update(distributionBatch);
-            }
-        } catch (DuplicateKeyException duplicateKeyException) {
-            throw new DataException("error.duplicate");
-        } catch (DataIntegrityViolationException integrityViolationException) {
-            String errorMessage = integrityViolationException.getMessage().toLowerCase();
-            if (errorMessage.contains("foreign key") || errorMessage.contains("not-null constraint")) {
-                throw new DataException("error.reference.data.missing");
-            }
-            throw new DataException("error.incorrect.length");
-        }
-    }
     @Transactional
-    public void updateInventoryTransaction(InventoryTransaction inventoryTransaction, List<InventoryBatch> inventoryBatches){
+    public void updateInventoryTransaction(InventoryTransaction inventoryTransaction, boolean isReceived){
         try {
             if (inventoryTransaction.getId() == null) {
                 distributionBatchMapper.insertInventoryTransaction(inventoryTransaction);
-                if(inventoryTransaction.getId() != null){
+                if(inventoryTransaction.getId() != null && inventoryTransaction.getInventoryBatches() != null ){
                     //insert list of batches
-                    for(InventoryBatch inventoryBatch : inventoryBatches){
+                    for(InventoryBatch inventoryBatch : inventoryTransaction.getInventoryBatches()){
                         inventoryBatch.setInventoryTransaction(inventoryTransaction);
                         distributionBatchMapper.insertInventoryBatch(inventoryBatch);
 
@@ -95,7 +59,11 @@ public class VaccineDistributionBatchRepository {
                         onHand.setTransactionType(inventoryTransaction.getTransactionType());
                         onHand.setInventoryBatch(inventoryBatch);
                         onHand.setProduct(inventoryTransaction.getProduct());
-                        onHand.setQuantity(inventoryBatch.getQuantity());
+                        if(isReceived){
+                            onHand.setQuantity(inventoryBatch.getQuantity());
+                        }else {
+                            onHand.setQuantity(-1*inventoryBatch.getQuantity());
+                        }
                         onHand.setFacility(inventoryTransaction.getToFacility());
 
                         distributionBatchMapper.insertOnHand(onHand);
@@ -103,7 +71,26 @@ public class VaccineDistributionBatchRepository {
                 }
 
             } else {
-                //distributionBatchMapper.update(distributionBatch);
+                distributionBatchMapper.updateInventoryTransaction(inventoryTransaction);
+                //Update list of batches
+                for(InventoryBatch inventoryBatch : inventoryTransaction.getInventoryBatches()){
+                    distributionBatchMapper.updateInventoryBatch(inventoryBatch);
+
+                    //insert onHand
+                    OnHand onHand = new OnHand();
+                    onHand.setInventoryTransaction(inventoryTransaction);
+                    onHand.setTransactionType(inventoryTransaction.getTransactionType());
+                    onHand.setInventoryBatch(inventoryBatch);
+                    onHand.setProduct(inventoryTransaction.getProduct());
+                    if(isReceived){
+                        onHand.setQuantity(inventoryBatch.getQuantity());
+                    }else {
+                        onHand.setQuantity(-1*inventoryBatch.getQuantity());
+                    }
+                    onHand.setFacility(inventoryTransaction.getToFacility());
+
+                    distributionBatchMapper.updateOnHand(onHand);
+                }
             }
         } catch (DuplicateKeyException duplicateKeyException) {
             throw new DataException("error.duplicate");
@@ -113,6 +100,8 @@ public class VaccineDistributionBatchRepository {
                 throw new DataException("error.reference.data.missing");
             }
             throw new DataException("error.incorrect.length");
+        }catch (Exception e){
+            throw e;
         }
     }
 
