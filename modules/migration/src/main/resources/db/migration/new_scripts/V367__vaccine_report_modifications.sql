@@ -6,10 +6,10 @@ CREATE TABLE vaccine_report_cold_chain_line_items
 (
   id                  SERIAL PRIMARY KEY,
   reportId            INTEGER NOT NULL REFERENCES vaccine_reports(id),
-  equipmentId         INTEGER NOT NULL REFERENCES facility_program_equipments(id),
+  equipmentInventoryId INTEGER NOT NULL REFERENCES facility_program_equipments(id),
   minTemp             DECIMAL NULL,
   maxTemp             DECIMAL NULL,
-  minEpisoidTemp      DECIMAL NULL,
+  minEpisodeTemp      DECIMAL NULL,
   maxEpisodeTemp      DECIMAL NULL,
   remarks             VARCHAR (2000),
 
