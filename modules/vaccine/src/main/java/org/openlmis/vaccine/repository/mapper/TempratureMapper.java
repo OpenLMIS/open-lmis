@@ -48,4 +48,6 @@ public interface TempratureMapper {
     @Delete("DELETE from temperature " +
             " WHERE id=#{id};")
     void delete(Temperature temperature);
+    @Select(value = "SELECT * FROM temperature WHERE LOWER(temperaturename) LIKE '%'|| LOWER(#{param}) ||'%'")
+    List<Temperature> searchTempratureList(String param);
 }

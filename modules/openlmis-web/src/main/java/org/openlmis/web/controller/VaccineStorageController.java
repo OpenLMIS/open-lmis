@@ -364,8 +364,14 @@ public class VaccineStorageController extends BaseController  {
 //    }
     @RequestMapping(value = "/storageTypes", method = RequestMethod.GET)
     //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public  ResponseEntity<OpenLmisResponse>  searchUser(@RequestParam(required = true) String param) {
+    public  ResponseEntity<OpenLmisResponse>  searchStorageType(@RequestParam(required = true) String param) {
         return OpenLmisResponse.response(STORAGETYPELIST, this.storageTypeService.searchForStorageTypeList(param));
+    }
+    @RequestMapping(value = "/tempratures")
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> searchTempratureList(@RequestParam(required = true) String param) {
+
+        return OpenLmisResponse.response(TEMPERATURELIST, this.tempratureService.searchForTempratureList(param));
     }
 //    end of storrage type crud
     }

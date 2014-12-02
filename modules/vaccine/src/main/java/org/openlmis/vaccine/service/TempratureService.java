@@ -34,4 +34,8 @@ public class TempratureService {
     public void removeTemprature(Temperature temperature){
         this.tempratureRepository.removeTemprature(temperature);
     }
+
+    public List<Temperature> searchForTempratureList(String param) {
+        return this.tempratureRepository.searchForTempratureList(param);
+    }
 }
