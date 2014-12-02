@@ -44,6 +44,7 @@ public class VaccineReport extends BaseModel {
 
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;
+  private List<CampaignLineItem> campaignLineItems;
 
   @JsonIgnore
   private List<VaccineCoverageItem> coverageItems;

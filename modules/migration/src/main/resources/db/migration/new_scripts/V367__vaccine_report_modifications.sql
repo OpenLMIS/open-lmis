@@ -1,5 +1,6 @@
 ALTER TABLE vaccine_report_logistics_line_items
 ADD productCategory VARCHAR (200) NULL;
+DROP TABLE IF EXISTS vaccine_report_cold_chain_line_items;
 
 CREATE TABLE vaccine_report_cold_chain_line_items
 (
@@ -10,8 +11,16 @@ CREATE TABLE vaccine_report_cold_chain_line_items
   maxTemp             DECIMAL NULL,
   minEpisoidTemp      DECIMAL NULL,
   maxEpisodeTemp      DECIMAL NULL,
-  remarks             VARCHAR (2000)
+  remarks             VARCHAR (2000),
+
+  createdBy         INTEGER,
+  createdDate       TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy        INTEGER,
+  modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
 );
+
+
+DROP TABLE IF EXISTS vaccine_report_campaign_line_items;
 
 CREATE TABLE vaccine_report_campaign_line_items
 (
@@ -25,5 +34,10 @@ CREATE TABLE vaccine_report_campaign_line_items
   pregnantWomanVaccinated INTEGER NULL,
   otherObjectives     VARCHAR (2000) NULL,
   vaccinated          VARCHAR (200) NULL,
-  remarks             VARCHAR (2000) NULL
-)
+  remarks             VARCHAR (2000) NULL,
+
+  createdBy         INTEGER,
+  createdDate       TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy        INTEGER,
+  modifiedDate      TIMESTAMP  DEFAULT CURRENT_TIMESTAMP
+);
