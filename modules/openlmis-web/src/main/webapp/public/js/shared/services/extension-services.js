@@ -901,23 +901,8 @@ services.factory('StorageFacilityList', function ($resource) {
 
 /* Begin: Vaccine Supply Line */
 
-services.factory('VaccineDistributionBatches', function ($resource) {
-    return $resource('/vaccine/distribution-batches/:id.json', {id: '@id'}, update);
-});
-
-services.factory('FilterDistributionBatches', function ($resource) {
-    return $resource('/vaccine/distribution-batches/filter.json',{},{});
-});
-
-services.factory('VaccineDistributionLineItems', function ($resource) {
-    return $resource('/vaccine/distribution-batch-line-items/:id.json', {id: '@id'}, update);
-});
-
 services.factory('Manufacturers', function($resource){
     return $resource('/vaccine/manufacturers.json',{},{});
-});
-services.factory('DistributionTypes', function($resource){
-    return $resource('/vaccine/distributionTypes.json',{},{});
 });
 
 services.factory('VaccineDistributionStatus', function($resource){

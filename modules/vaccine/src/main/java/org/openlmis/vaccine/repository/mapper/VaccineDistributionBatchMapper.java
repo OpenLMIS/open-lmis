@@ -20,105 +20,7 @@ import java.util.Map;
 
 @Repository
 public interface VaccineDistributionBatchMapper {
-    @Select("select * from vaccine_distribution_batches where dispatchId = #{dispatchId}")
-    List<DistributionBatch> getByDispatchId(@Param("dispatchId") String dispatchId);
-
-    @Select("select * from vaccine_distribution_batches where id = #{id}")
-    @Results({
-            @Result(property = "donor.id", column = "donorId"),
-            @Result(property = "product.code", column = "productCode"),
-            @Result(property = "toFacility.id", column = "toFacilityId"),
-            @Result(property = "fromFacility.id", column = "fromFacilityId"),
-            @Result(property = "manufacturer.id", column = "manufacturerId")
-    })
-    DistributionBatch getById(@Param("id") Long id);
-
-    @Select("select * from vaccine_distribution_batches")
-    @Results({
-            @Result(property = "donor", javaType = Donor.class, column = "donorId",
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.DonorMapper2.getById")),
-            @Result(property = "product", javaType = Product.class, column = "productCode",
-                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode")),
-            @Result(property = "toFacility", javaType = Facility.class, column = "toFacilityId",
-                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
-            @Result(property = "fromFacility", javaType = Facility.class, column = "fromFacilityId",
-                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
-    })
-    List<DistributionBatch> getAll();
-
-    @Select("select * from vaccine_distribution_batches where dispatchId like LOWER(#{query})||'%' ")
-    @Results({
-            @Result(property = "donor", javaType = Donor.class, column = "donorId",
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.DonorMapper2.getById")),
-            @Result(property = "product", javaType = Product.class, column = "productCode",
-                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode")),
-            @Result(property = "toFacility", javaType = Facility.class, column = "toFacilityId",
-                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
-            @Result(property = "fromFacility", javaType = Facility.class, column = "fromFacilityId",
-                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
-    })
-    List<DistributionBatch> searchDistributionBatches(@Param("query")String query);
-
-
-    @Select("select * from vaccine_distribution_batches where dispatchId like LOWER(#{query})||'%' ")
-    @Results({
-            @Result(property = "donor", javaType = Donor.class, column = "donorId",
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.DonorMapper2.getById")),
-            @Result(property = "product", javaType = Product.class, column = "productCode",
-                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode")),
-            @Result(property = "toFacility", javaType = Facility.class, column = "toFacilityId",
-                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
-            @Result(property = "fromFacility", javaType = Facility.class, column = "fromFacilityId",
-                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
-    })
-    List<Map<String, Object>> filterDistributionBatches(@Param("query")String query);
-
-    @Insert("INSERT INTO vaccine_distribution_batches(" +
-            " dispatchId, batchid,originid, expirydate, productiondate, manufacturerid, donorid, \n" +
-            "            receivedate,recalldate, productcode,voucherNumber, fromfacilityid, tofacilityid, distributiontypeid, \n" +
-            "            vialsperbox, boxlength, boxwidth, boxheight, unitcost, totalcost, \n" +
-            "            purposeid,freight, createdby, createddate, modifiedby, modifieddate)  " +
-            "VALUES (  " +
-            "  #{dispatchId},  " +
-            "  #{batchId},  " +
-            "  #{originId},  " +
-            "  #{expiryDate},  " +
-            "  #{productionDate},  " +
-            "  #{manufacturer.id},  " +
-            "  #{donor.id},  " +
-            "  #{receiveDate},  " +
-            "  #{recallDate},  " +
-            "  #{product.code},  " +
-            "  #{voucherNumber},  " +
-            "  #{fromFacility.id},  " +
-            "  #{toFacility.id},  " +
-            "  #{distributionTypeId},  " +
-            "  #{vialsPerBox},   " +
-            "  #{boxLength},   " +
-            "  #{boxWidth},   " +
-            "  #{boxHeight},   " +
-            "  #{unitCost},   " +
-            "  #{totalCost},   " +
-            "  #{purposeId},   " +
-            "  #{freight},   " +
-            "  #{createdBy},   " +
-            "  COALESCE(#{createdDate}, NOW()),   " +
-            "  #{modifiedBy},   " +
-            "  COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)  " +
-            ")  ")
-    @Options(useGeneratedKeys = true)
-    void insert(DistributionBatch distributionBatch);
-
-    @Update("UPDATE vaccine_distribution_batches\n" +
-            "   SET batchid=#{batchId}, dispatchId=#{dispatchId}, expirydate=#{expiryDate}, productiondate=#{productionDate}, manufacturerid=#{manufacturer.id}, \n" +
-            "       donorid=#{donor.id}, receivedate=#{receiveDate},recalldate=#{recallDate}, productcode=#{product.code},voucherNumber=#{voucherNumber}, fromfacilityid=#{fromFacility.id}, tofacilityid=#{toFacility.id}, \n" +
-            "       distributiontypeid=#{distributionTypeId}, vialsperbox=#{vialsPerBox}, boxlength=#{boxLength}, boxwidth=#{boxWidth}, \n" +
-            "       boxheight=#{boxHeight}, unitcost=#{unitCost}, totalcost=#{totalCost}, purposeid=#{purposeId},freight=#{freight}, createdby=#{createdBy}, \n" +
-            "       createddate= COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
-            " WHERE id=#{id}")
-    void update(DistributionBatch distributionBatch);
-
-    @Insert("INSERT INTO inventory_transactions(transactiontypeid, fromfacilityid, tofacilityid, productid, \n" +
+   @Insert("INSERT INTO inventory_transactions(transactiontypeid, fromfacilityid, tofacilityid, productid, \n" +
             "            dispatchreference, dispatchdate, bol, donorid, origincountryid, \n" +
             "            manufacturerid, statusid, purpose, vvmtracked, barcoded, gs1, \n" +
             "            quantity, packsize, unitprice, totalcost, locationid, expecteddate, \n" +
@@ -132,6 +34,15 @@ public interface VaccineDistributionBatchMapper {
     @Options(useGeneratedKeys = true)
     void insertInventoryTransaction(InventoryTransaction    inventoryTransaction);
 
+    @Update("UPDATE inventory_transactions  \n" +
+            "SET    productid= #{product.id}, dispatchreference=#{dispatchReference}, dispatchdate=#{dispatchDate}, bol=#{bol}, donorid=#{donor.id}, \n" +
+            "       origincountryid=#{originId}, manufacturerid=#{manufacturer.id}, statusid=#{status.id}, purpose=#{purpose}, vvmtracked=#{vvmTracked}, \n" +
+            "       barcoded=#{barCoded}, gs1=#{gs1}, quantity=#{quantity}, packsize=#{packSize}, unitprice=#{unitPrice}, totalcost=#{totalCost}, \n" +
+            "       locationid=#{storageLocation.id}, expecteddate=#{expectedDate}, arrivaldate=#{arrivalDate}, confirmedby=#{confirmedBy.id}, note=#{note}, \n" +
+            "       createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))\n" +
+            " WHERE id = #{id};")
+    void updateInventoryTransaction(InventoryTransaction inventoryTransaction);
+
     @Insert("INSERT INTO inventory_batches(transactionid, batchnumber, manufacturedate, expirydate, \n" +
             "            quantity, vvm1_qty, vvm2_qty, vvm3_qty, vvm4_qty, note, createdby, \n" +
             "            createddate, modifiedby, modifieddate)\n" +
@@ -140,6 +51,13 @@ public interface VaccineDistributionBatchMapper {
     @Options(useGeneratedKeys = true)
     void insertInventoryBatch(InventoryBatch inventoryBatch);
 
+    @Update("UPDATE inventory_batches\n" +
+            "   SET batchnumber=#{batchNumber}, manufacturedate=#{productionDate}, expirydate=#{expiryDate}, \n" +
+            "       quantity=#{quantity}, vvm1_qty=#{vvm1}, vvm2_qty=#{vvm2}, vvm3_qty=#{vvm3}, vvm4_qty=#{vvm4}, note=#{note}, \n" +
+            "       createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))\n" +
+            " WHERE id=#{id}")
+    void updateInventoryBatch(InventoryBatch inventoryBatch);
+
     @Insert("INSERT INTO on_hand(transactionid, transactiontypeid, productid, facilityid, \n" +
             "            batchnumber, quantity, vvm1_qty, vvm2_qty, vvm3_qty, vvm4_qty, \n" +
             "            note, createdby, createddate, modifiedby, modifieddate)\n" +
@@ -147,6 +65,14 @@ public interface VaccineDistributionBatchMapper {
             "#{quantity},#{vvm1},#{vvm2},#{vvm3},#{vvm4},#{note},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
     @Options(useGeneratedKeys = true)
     void insertOnHand(OnHand onHand);
+
+    @Update("UPDATE on_hand\n" +
+            "   SET productid=#{product.id}, facilityid=#{facility.id},\n" +
+            "   quantity=#{quantity}, vvm1_qty=#{vvm1}, vvm2_qty=#{vvm2}, vvm3_qty=#{vvm3}, \n" +
+            "       vvm4_qty=#{vvm4}, note=#{note}, modifiedby=#{modifiedBy}, \n" +
+            "       modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))\n" +
+            " WHERE id = #{id}")
+    void updateOnHand(OnHand onHand);
 
     @Select("select * from inventory_transactions where toFacilityId = #{toFacilityId} ")
     @Results({
@@ -163,17 +89,36 @@ public interface VaccineDistributionBatchMapper {
     })
     List<InventoryTransaction> getInventoryTransactionsByReceivingFacility(Long toFacilityId);
 
+    @Select("select * from inventory_transactions where id = #{id} ")
+    @Results({
+            @Result(property = "transactionType", javaType = TransactionType.class, column = "transactionTypeId",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.TransactionTypeMapper.getById")),
+            @Result(property = "product", javaType = Product.class, column = "productId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
+            @Result(property = "toFacility", javaType = Facility.class, column = "toFacilityId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+            @Result(property = "fromFacility", javaType = Facility.class, column = "fromFacilityId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+            @Result(property = "status", javaType = Status.class, column = "statusId",
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.StatusMapper.getById")),
+            @Result(property = "manufacturer.id", column = "manufacturerId"),
+            @Result(property = "originId", column = "originCountryId" ),
+            @Result(property = "donor.id", column = "donorId")
+    })
+    InventoryTransaction getInventoryTransactionsById(Long id);
+
     @Select("SELECT ib.* \n" +
             "FROM inventory_transactions inv\n" +
             "INNER JOIN Inventory_batches ib on inv.id = ib.transactionId\n" +
             "WHERE inv.productId = #{productId} \n" +
-            "AND CASE WHEN inv.vvmtracked THEN (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0)) > 0 END\n" +
+          //  "AND CASE WHEN inv.vvmtracked THEN (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0)) > 0 END\n" +
             "order by ib.expiryDate \n")
     @Results({
             @Result(property = "vvm1", column = "vvm1_qty"),
             @Result(property = "vvm2", column = "vvm2_qty"),
             @Result(property = "vvm3", column = "vvm3_qty"),
-            @Result(property = "vvm4", column = "vvm4_qty")
+            @Result(property = "vvm4", column = "vvm4_qty"),
+            @Result(property = "productionDate", column = "manufactureDate")
 
     })
     List<InventoryBatch> getUsableBatches(Long productId);

@@ -7,10 +7,9 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineDistributeController($scope,$route,$location,messageService,Products,DistributionTypes,VaccineDistributionStatus,GeographicZones,UsableBatches,DistributeVaccines){
+function VaccineDistributeController($scope,$route,$location,messageService,Products,VaccineDistributionStatus,GeographicZones,UsableBatches,DistributeVaccines){
 
     $scope.message = "";
-    $scope.batches = [];
 
     if(!isUndefined($route.current.params.facilityId)){
         $scope.selectedFacilityId = $route.current.params.facilityId;
@@ -45,10 +44,6 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         $scope.spanLength = "span"+(Math.round(12/$scope.receivedStatus.length));
     });
 
-    DistributionTypes.get({}, function(data){
-        $scope.distributionTypes = data.distributionTypes;
-    });
-
     Products.get({}, function(data){
         $scope.products = data.productList;
     });
@@ -80,14 +75,12 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
             $scope.usableBatches = null;
 
         }
-
-
         $scope.addBatchesModal = true;
     };
     $scope.resetAddBatchesModal = function () {
         $scope.addBatchesModal = false;
         $scope.error = undefined;
-        $scope.distribution = undefined;
+       // $scope.distribution = undefined;
     };
 
     $scope.saveDistributionBatch = function(){
@@ -120,19 +113,30 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
             $scope.message = "";
             $scope.error = response.data.error;
         };
-        $scope.inventoryTransaction.confirmedBy = {id:2};
-        $scope.inventoryTransaction.fromFacility = {id:$scope.selectedFacilityId};
-        $scope.inventoryTransaction.toFacility = {id:$scope.selectedFacilityId};
+        $scope.inventoryTransaction.fromFacility = {id:14277};
+        $scope.inventoryTransaction.toFacility = {id:14277};
 
-        var receiveVaccine = {inventoryTransaction:$scope.inventoryTransaction, inventoryBatches:$scope.usableBatches};
-
-        DistributeVaccines.save({},receiveVaccine, saveSuccessHandler, errorHandler);
+        DistributeVaccines.save({},$scope.inventoryTransaction, saveSuccessHandler, errorHandler);
 
     };
 
     $scope.saveBatches = function(){
-
-        $scope.batches.push($scope.batch);
+        if ($scope.addBatchForm.$error.required) {
+            $scope.error = messageService.get("form.error");
+            $scope.showError = true;
+            return false;
+        }else{
+            $scope.showError = false;
+            $scope.error = '';
+        }
+        $scope.batches = [];
+        angular.forEach($scope.usableBatches, function(batch){
+            if(batch.selected){
+                batch.quantity = batch.dispatchQuantity;
+                $scope.batches.push(batch);
+            }
+        });
         $scope.addBatchesModal = undefined;
     };
+
 }
