@@ -44,8 +44,12 @@ function CreateVaccineReportController($scope, $location, report, VaccineReportS
     $scope.adverseEffectModal = false;
   };
 
+  $scope.closeAdverseEffectsModal = function(){
+    $scope.adverseEffectModal = false;
+  }
 
   $scope.showCampaignForm = function(campagin, editMode){
+
     $scope.currentCampaign = campagin;
     $scope.currentCampaignMode = editMode;
 
@@ -58,6 +62,11 @@ function CreateVaccineReportController($scope, $location, report, VaccineReportS
     }
     $scope.campaignsModal = false;
   };
+
+  $scope.closeCampaign = function(){
+    $scope.campaignsModal=false;
+  };
+
 
 }
 

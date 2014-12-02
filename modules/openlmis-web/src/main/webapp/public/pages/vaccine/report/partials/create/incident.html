@@ -43,7 +43,7 @@
   </div>
 </div>
 
-<div id="adverseEffectModal" modal="adverseEffectModal"
+<div id="adverseEffectModal" modal="adverseEffectModal" close="closeAdverseEffectsModal()"
      options="{ backdrop: 'static', escape: false}">
   <div class="modal-header"><h3>Add / Edit Adverse Effect</h3></div>
   <div class="modal-body">
@@ -95,7 +95,7 @@
       <div class="span2">
         <label>&nbsp;</label>
         <input type="button" href="" class="btn btn-primary"
-               ng-click="adverseEffectModal=false"
+               ng-click="closeAdverseEffectsModal()"
               openlmis-message="button.cancel"/>
         <input type="button" href="" id="addNonFullSupply" class="btn btn-primary"
                ng-click="applyAdverseEffect()"

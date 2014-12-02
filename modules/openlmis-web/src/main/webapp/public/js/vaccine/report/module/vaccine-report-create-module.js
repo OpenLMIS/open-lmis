@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('vaccine-report-create', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
+angular.module('vaccine-report-create', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.dialog']).
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
       when('/create/:id', { controller:CreateVaccineReportController, templateUrl:'partials/create.html', resolve: CreateVaccineReportController.resolve}).

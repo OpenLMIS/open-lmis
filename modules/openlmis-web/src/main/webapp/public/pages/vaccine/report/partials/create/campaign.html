@@ -12,7 +12,7 @@
 
   <h2>Campaigns</h2>
 
-  <a href="" class="btn btn-primary pull-right" ng-click="showCampaignForm({}, false)">Register new Campaign</a>
+  <input type="button" class="btn btn-primary pull-right" ng-click="showCampaignForm({}, false)" value="Register new Campaign" />
   <div ng-show="report.campaignLineItems.length > 0">
     <table class="table table-bordered">
       <thead>
@@ -31,79 +31,81 @@
       <tr ng-repeat="campaign in report.campaignLineItems">
         <td style="height: 35px" class="cell-input"><span class="cell-text">{{campaign.name}}</span></td>
         <td class="cell-input cell-text"><span class="cell-text">{{campaign.venue}}</span></td>
-        <td class="cell-input cell-text"><span class="cell-text">{{campaign.startDate}}</span></td>
-        <td class="cell-input cell-text"><span class="cell-text">{{campaign.endDate}}</span></td>
+        <td class="cell-input cell-text"><span class="cell-text">{{campaign.startDate | date : 'dd MMM, yyyy'}}</span></td>
+        <td class="cell-input cell-text"><span class="cell-text">{{campaign.endDate | date : 'dd MMM, yyyy'}}</span></td>
         <td class="cell-input cell-text"><span class="cell-text">{{campaign.childrenVaccinated}}</span></td>
         <td class="number cell-input"><span class="cell-text">{{campaign.pregnantWomanVaccinated}}</span></td>
         <td class="cell-input cell-text"><span class="cell-text">{{campaign.otherObjectives}}</span></td>
         <td class="cell-input cell-text"><span class="cell-text">{{campaign.vaccinated}}</span></td>
         <td class="cell-input cell-text"><a href="" ng-click="showCampaignForm(campaign, true)"><span class="cell-text">Edit</span></a></td>
       </tr>
-
     </table>
   </div>
   <div ng-show="report.campaignLineItems.length == 0">
     No campaigns registered for this Period.
   </div>
 </div>
+<form name="campaignForm">
+  <div id="campaignsModalBox" modal="campaignsModal" close="closeCampaign()"
+       options="{ backdrop: 'static', escape: false}">
+    <div class="modal-header"><h3>Add / Edit Campaign</h3></div>
+    <div class="modal-body">
 
-<div id="campaignsModal" modal="campaignsModal"
-     options="{ backdrop: 'static', escape: false}">
-  <div class="modal-header"><h3>Add / Edit Campaign</h3></div>
-  <div class="modal-body">
+      <div class="row-fluid">
+        <div class="span6">
+          <label for="name">Campaign Name</label>
+          <input type="text" name="name" id="name" ng-model="currentCampaign.name" />
+        </div>
+        <div class="span6">
+          <label for="venue">Venue</label>
+          <input type="text" name="venue" id="venue" ng-model="currentCampaign.venue" />
+        </div>
+      </div>
 
-    <div class="row-fluid">
-      <div class="span6">
-        <label for="name">Campaign Name</label>
-        <input type="text" name="name" id="name" ng-model="currentCampaign.name" />
+      <div class="row-fluid">
+        <div class="span6">
+          <label >Start Date</label>
+          <input type="date" ng-model="currentCampaign.startDate" />
+        </div>
+        <div class="span6">
+          <label >End Date</label>
+          <input type="date" ng-model="currentCampaign.endDate" />
+        </div>
       </div>
-      <div class="span6">
-        <label for="venue">Venue</label>
-        <input type="text" name="venue" id="venue" ng-model="currentCampaign.venue" />
+
+      <div class="row-fluid">
+        <div class="span6">
+          <label >Children Vaccinated</label>
+          <input type="text" ng-model="currentCampaign.childrenVaccinated" >
+        </div>
+        <div class="span6">
+          <label >Pregnant Woman Vaccinated</label>
+          <input type="text" ng-model="currentCampaign.pregnantWomanVaccinated" >
+        </div>
       </div>
+
+      <div class="row-fluid">
+        <div class="span6">
+          <label >Other Objectives</label>
+          <textarea type="text" ng-model="currentCampaign.otherObjectives" ></textarea>
+        </div>
+
+      </div>
+
+
+      <div class="clearfix"></div>
+
     </div>
-
-    <div class="row-fluid">
-      <div class="span6">
-        <label >Start Date</label>
-        <input type="date" ng-model="currentCampaign.startDate" />
+    <div class="modal-footer">
+      <div class="span2">
+        <input type="button" href="" class="btn btn-primary"
+               ng-click="closeCampaign();"
+               openlmis-message="button.cancel"/>
+        <input type="button" href="" id="addCampaign" class="btn btn-primary"
+               ng-click="applyCampaign()"
+               openlmis-message="button.add"/>
       </div>
-      <div class="span6">
-        <label >End Date</label>
-        <input type="date" ng-model="currentCampaign.endDate" />
-      </div>
-    </div>
-
-    <div class="row-fluid">
-      <div class="span6">
-        <label >Children Vaccinated</label>
-        <input type="text" ng-model="currentCampaign.childrenVaccinated" >
-      </div>
-      <div class="span6">
-        <label >Pregnant Woman Vaccinated</label>
-        <input type="text" ng-model="currentCampaign.pregnantWomanVaccinated" >
-      </div>
-    </div>
-
-    <div class="row-fluid">
-      <div class="span6">
-        <label >Other Objectives</label>
-        <textarea type="text" ng-model="currentCampaign.otherObjectives" ></textarea>
-      </div>
-
-    </div>
-
-
-    <div class="clearfix"></div>
-    <div class="span2">
-      <label>&nbsp;</label>
-      <input type="button" href="" class="btn btn-primary"
-             ng-click="campaignsModal=false"
-             openlmis-message="button.cancel"/>
-      <input type="button" href="" id="addCampaign" class="btn btn-primary"
-             ng-click="applyCampaign()"
-             openlmis-message="button.add"/>
     </div>
   </div>
-</div>
+  </form>
 </div>
