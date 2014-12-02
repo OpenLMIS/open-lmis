@@ -34,4 +34,8 @@ private StorageTypeRepository storageTypeRepository;
         this.storageTypeRepository.removeStorageType(storageType);
     }
 
+    public  List<StorageType> searchForStorageTypeList(String param) {
+
+       return this.storageTypeRepository.searchForStorageTypes(param);
+    }
 }

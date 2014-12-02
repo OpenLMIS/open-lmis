@@ -880,6 +880,15 @@ services.factory('StorageTypeDetail', function ($resource) {
 services.factory('DeleteStorageType', function ($resource) {
     return $resource('/deleteStorageType.json', {}, {post:{method:'POST'}});
 });
+services.factory('StorageTypes', function ($resource) {
+    var resource = $resource('/storageTypes/:id.json', {id: '@id'}, update);
+
+    resource.disable = function (pathParams, success, error) {
+        $resource('/storageTypes/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
+    };
+
+    return resource;
+});
 //temprature
 services.factory('CreateTemprature', function ($resource) {
 
