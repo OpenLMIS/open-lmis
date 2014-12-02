@@ -9,9 +9,9 @@
   -->
 
 <div>
-  <h2>Cold Chain Equipment Statuses</h2>
+  <h2>Cold Chain Temperature Statuses</h2>
 
-  <table class="table table-bordered">
+  <table class="table table-bordered" ng-show="report.coldChainLineItems.length > 0">
     <thead>
     <tr>
       <th rowspan="2" class="span3">Cold chain assets</th>
@@ -42,4 +42,7 @@
     </tr>
     </tbody>
     </table>
+  <div ng-show="report.coldChainLineItems.length == 0">
+    No cold chain equipments have been registered for this facility and the Vaccine program. Please register those equipments by going to the equipment inventory page.
+  </div>
 </div>
