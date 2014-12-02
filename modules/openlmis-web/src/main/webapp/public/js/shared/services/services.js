@@ -65,6 +65,11 @@ services.factory('ProgramSupportedByFacility', function ($resource) {
   return $resource('/facilities/:facilityId/programs.json', {}, {});
 });
 
+services.factory('ManageEquipmentInventoryProgramList', function ($resource) {
+  return $resource('/equipment/inventory/programs.json', {}, {});
+});
+
+
 services.factory('FacilityReferenceData', function ($resource) {
   return $resource('/facilities/reference-data.json', {}, {});
 });

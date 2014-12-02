@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram,navigateBackService, $routeParams, messageService ) {
+function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, CreateRequisitionProgramList, ManageEquipmentInventoryProgramList, UserSupervisedFacilitiesForProgram,navigateBackService, $routeParams, messageService ) {
 
   if($routeParams.selectedType !== undefined){
     $scope.selectedType = $routeParams.selectedType;
@@ -68,8 +68,8 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
         }
       }, {});
     } else if (selectedType === "1") { // Supervised facility
-      CreateRequisitionProgramList.get({}, function (data) {
-        $scope.programs = data.programList;
+      ManageEquipmentInventoryProgramList.get({}, function (data) {
+        $scope.programs = data.programs;
         
         if($scope.programs && $routeParams.programId !== undefined){
           $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.programId})[0];

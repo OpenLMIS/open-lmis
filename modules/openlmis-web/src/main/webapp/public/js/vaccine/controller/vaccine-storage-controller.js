@@ -7,10 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineStorageController($scope, $location, $route, $dialog, messageService, CreateVaccineStorage,
-                                  UpdateVaccineStorage,VaccineStorageList,VaccineStorageDetail,DeleteVaccineStorage,StorageTypeList ,TempratureList,StorageFacilityList) {
-
-
+function VaccineStorageController($scope, $location, $route, $dialog, messageService, CreateVaccineStorage, UpdateVaccineStorage, VaccineStorageList, VaccineStorageDetail, DeleteVaccineStorage, StorageTypeList, TempratureList, StorageFacilityList) {
 
 
     $scope.disabled = false;
@@ -61,20 +58,20 @@ function VaccineStorageController($scope, $location, $route, $dialog, messageSer
 
             $scope.errorMessage = messageService.get(data.data.error);
         };
-                $scope.error = "";
-        if($scope.vaccineStorage.id){
+        $scope.error = "";
+        if ($scope.vaccineStorage.id) {
 
             UpdateVaccineStorage.save($scope.vaccineStorage, createSuccessCallback, errorCallback);
         }
-        else{
+        else {
             CreateVaccineStorage.save($scope.vaccineStorage, createSuccessCallback, errorCallback);
         }
 
     };
 
-    $scope.editVaccineStorage=function(id){
-        if(id){
-            VaccineStorageDetail.get({id:id}, function(data){
+    $scope.editVaccineStorage = function (id) {
+        if (id) {
+            VaccineStorageDetail.get({id: id}, function (data) {
                 $scope.vaccineStorage = data.vaccineStorage;
 //            if($scope.editHelpTopic.active === false){
 //                $scope.disableAllFields();
@@ -82,8 +79,8 @@ function VaccineStorageController($scope, $location, $route, $dialog, messageSer
             });
         }
     };
-    $scope.deleteVaccineStorage=function(result){
-        if(result){
+    $scope.deleteVaccineStorage = function (result) {
+        if (result) {
 
             var deleteSuccessCallback = function (data) {
                 $scope.$parent.message = 'New Vaccine Storage Information created successfully';
@@ -101,21 +98,21 @@ function VaccineStorageController($scope, $location, $route, $dialog, messageSer
 
                 $scope.errorMessage = messageService.get(data.data.error);
             };
-            DeleteVaccineStorage.save( $scope.vaccineStorage,deleteSuccessCallback,deleteErorCallback);
+            DeleteVaccineStorage.save($scope.vaccineStorage, deleteSuccessCallback, deleteErorCallback);
         }
     };
     $scope.showDeleteConfirmDialog = function (vaccineStorage) {
-        $scope.vaccineStorage=vaccineStorage;
+        $scope.vaccineStorage = vaccineStorage;
         var options = {
             id: "removeDonorMemberConfirmDialog",
             header: "Confirmation",
-            body: "Are you sure you want to remove the Vaccine Storage: "+vaccineStorage.id
+            body: "Are you sure you want to remove the Vaccine Storage: " + vaccineStorage.id
         };
-        OpenLmisDialog.newDialog(options,$scope.deleteVaccineStorage, $dialog, messageService);
+        OpenLmisDialog.newDialog(options, $scope.deleteVaccineStorage, $dialog, messageService);
     };
-$scope.clearForm=function(){
-    $scope.vaccineStorage = {};
-};
+    $scope.clearForm = function () {
+        $scope.vaccineStorage = {};
+    };
 }
 
 

@@ -45,6 +45,20 @@ function CreateVaccineReportController($scope, $location, report, VaccineReportS
   };
 
 
+  $scope.showCampaignForm = function(campagin, editMode){
+    $scope.currentCampaign = campagin;
+    $scope.currentCampaignMode = editMode;
+
+    $scope.campaignsModal = true;
+  };
+
+  $scope.applyCampaign = function(){
+    if(!$scope.currentCampaignMode){
+      $scope.report.campaignLineItems.push($scope.currentCampaign);
+    }
+    $scope.campaignsModal = false;
+  };
+
 }
 
 

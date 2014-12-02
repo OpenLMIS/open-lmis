@@ -26,7 +26,7 @@
 
                             <div class="form-field">
 
-                                <select name="storageType" id="storageType" ng-model="vaccineStorage.storageTypeId.id"
+                                <select name="storageType" id="storageType" ng-model="vaccineStorage.storageType.id"
                                         ng-options="i.id as i.storageTypeName for i in storageTypeList" ng-required="true">
                                     <option value="" label="Select Storage Type" ></option>
                                 </select>
@@ -73,7 +73,7 @@
                         <label for="locationName">Location Name: <span class="label-required"> *</span></label>
 
                         <div class="form-field">
-                            <input ng-model="vaccineStorage.locationName" name="locationName" id="locationName" type="text"
+                            <input ng-model="vaccineStorage.name" name="locationName" id="locationName" type="text"
                                    maxlength="50"
                                    ng-required="true"/>
                                   <span class="field-error" ng-show="vaccineStorageForm.locationName.$error.required && showError"
@@ -106,7 +106,7 @@
                         <label for="dimension">Dimension: <span class="label-required"> *</span></label>
 
                         <div class="form-field">
-                            <input ng-model="vaccineStorage.dimenstion" name="dimension" id="dimension" type="text"
+                            <input ng-model="vaccineStorage.dimension" name="dimension" id="dimension" type="text"
                                    maxlength="50"
                                    ng-required="true" />
                                   <span class="field-error" ng-show="vaccineStorageForm.dimension.$error.required && showError"
@@ -139,7 +139,7 @@
 
                             <div class="form-field">
 
-                                <select name="temperature" id="temperature" ng-model="vaccineStorage.tempretureId.id"
+                                <select name="temperature" id="temperature" ng-model="vaccineStorage.temperature.id"
                                         ng-options="i.id as i.tempratureName for i in tempratureList" ng-required="true">
                                     <option value="" label="Select Temprature" ></option>
                                 </select>
@@ -184,7 +184,7 @@
             <tbody>
             <tr ng-repeat="vs in vaccineStorageList ">
                 <td>
-                    <div>{{vs.storageTypeId.storageTypeName}}</div>
+                    <div>{{vs.storageType.storageTypeName}}</div>
                 </td>
                 <td>
                     <div>{{vs.location}}</div>
@@ -196,7 +196,7 @@
                     <div>{{vs.netCapacity}}</div>
                 </td>
                 <td>
-                    <div>{{vs.tempretureId.tempratureName}}</div>
+                    <div>{{vs.temperature.tempratureName}}</div>
                 </td>
                 <td>
                     <a href="" ng-click="editVaccineStorage(vs.id)">Edit</a>|

@@ -83,6 +83,7 @@ public class RoleRightsServiceTest {
             FACILITY_FILL_SHIPMENT,
             MANAGE_POD,
             DELETE_REQUISITION,
+            MANAGE_VACCINE_SETTINGS,
             ACCESS_ILS_GATEWAY,
             MANAGE_PRODUCT_ALLOWED_FOR_FACILITY,
             MANAGE_SETTING,
