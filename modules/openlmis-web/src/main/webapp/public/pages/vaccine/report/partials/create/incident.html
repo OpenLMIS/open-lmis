@@ -96,7 +96,7 @@
 
       <div class="span6">
         <label >Number of Cases</label>
-        <input type="text" ng-model="currentEffect.cases" />
+        <input  numeric-validator="positiveInteger"  type="text" ng-model="currentEffect.cases" />
       </div>
     </div>
 

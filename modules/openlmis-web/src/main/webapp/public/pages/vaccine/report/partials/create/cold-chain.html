@@ -35,10 +35,10 @@
       <td class="cell-input col-beginningBalance"><span class="cell-text">{{item.serial}}</span></td>
       <td class="cell-input col-beginningBalance"><span class="cell-text">{{item.model}}</span></td>
       <td class="cell-input col-beginningBalance"><span class="cell-text">{{item.energySource}}</span></td>
-      <td class="cell-input col-beginningBalance"><input ng-model="item.minTemp" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input ng-model="item.maxTemp" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input ng-model="item.minEpisodeTemp" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input ng-model="item.maxEpisodeTemp" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="item.minTemp" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="item.maxTemp" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="item.minEpisodeTemp" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="item.maxEpisodeTemp" type="text" /></td>
     </tr>
     </tbody>
     </table>
