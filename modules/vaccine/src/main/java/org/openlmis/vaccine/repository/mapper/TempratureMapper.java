@@ -37,6 +37,7 @@ public interface TempratureMapper {
             @Result(column = "temperaturename", property = "tempratureName")
     })
     Temperature getById(Long id);
+
     @Update("UPDATE temperature " +
             "   SET temperaturename= #{tempratureName}," +
             " modifiedby=#{modifiedBy}, " +
@@ -48,6 +49,11 @@ public interface TempratureMapper {
     @Delete("DELETE from temperature " +
             " WHERE id=#{id};")
     void delete(Temperature temperature);
+
     @Select(value = "SELECT * FROM temperature WHERE LOWER(temperaturename) LIKE '%'|| LOWER(#{param}) ||'%'")
+    @Results({
+            @Result(column = "id", property = "id"),
+            @Result(column = "temperaturename", property = "tempratureName")
+    })
     List<Temperature> searchTempratureList(String param);
 }
