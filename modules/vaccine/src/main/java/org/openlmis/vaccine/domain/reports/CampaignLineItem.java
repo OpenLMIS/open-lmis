@@ -10,36 +10,37 @@
 
 package org.openlmis.vaccine.domain.reports;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class LogisticsLineItem extends BaseModel{
+public class CampaignLineItem extends BaseModel {
 
   private Long reportId;
-  private Long productId;
-  private String productCode;
-  private String productName;
-  private String productCategory;
 
-  private Integer displayOrder;
+  private String name;
 
-  private Long openingBalance;
-  private Long quantityReceived;
-  private Long quantityIssued;
-  private Long quantityVvmAlerted;
-  private Long quantityFreezed;
-  private Long quantityExpired;
-  private Long quantityDiscardedUnopened;
-  private Long quantityDiscardedOpened;
-  private Long quantityWastedOther;
+  private String venue;
 
-  private Long endingBalance;
+  private Date startDate;
+
+  private Date endDate;
+
+  private Long childrenVaccinated;
+
+  private Long pregnantWomanVaccinated;
+
+  private String otherObjectives;
+
+  private String vaccinated;
+
+  private String remarks;
 }

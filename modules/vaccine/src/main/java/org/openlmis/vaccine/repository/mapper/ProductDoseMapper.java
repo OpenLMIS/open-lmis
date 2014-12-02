@@ -44,6 +44,6 @@ public interface ProductDoseMapper {
     " where id = #{id}")
   void update(VaccineProductDose dose);
 
-  @Select("select * from vaccine_product_doses where programId = #{programId}")
+  @Select("select d.* from vaccine_product_doses d  where programId = #{programId}")
   List<VaccineProductDose> getProgramProductDoses(@Param("programId") Long programId);
 }

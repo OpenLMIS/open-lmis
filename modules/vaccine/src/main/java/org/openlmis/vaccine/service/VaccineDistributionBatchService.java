@@ -9,17 +9,13 @@
  */
 package org.openlmis.vaccine.service;
 
-import org.openlmis.vaccine.domain.DistributionBatch;
 import org.openlmis.vaccine.domain.InventoryBatch;
 import org.openlmis.vaccine.domain.InventoryTransaction;
-import org.openlmis.vaccine.dto.ReceiveVaccine;
 import org.openlmis.vaccine.repository.VaccineDistributionBatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class VaccineDistributionBatchService {
@@ -33,49 +29,30 @@ public class VaccineDistributionBatchService {
     @Autowired
     private TransactionTypeService transactionTypeService;
 
-    public List<DistributionBatch> getByDispatchId(String dispatchId){
-        return distributionBatchRepository.getByDispatchId(dispatchId);
-    }
-
-    public DistributionBatch getById(Long id){
-        return distributionBatchRepository.getById(id);
-    }
-
-    public List<DistributionBatch> getAll(){
-        return distributionBatchRepository.getAll();
-    }
-   /* public List<DistributionBatch> searchDistributionBatches(String query){
-        return distributionBatchRepository.searchDistributionBatches(query);
-    }*/
-
     public List<InventoryTransaction> getReceivedVaccinesForFacility(Long facilityId){
         return distributionBatchRepository.getReceivedVaccinesForFacility(facilityId);
     }
 
-   /* public List<Map<String, Object>> filterDistributionBatches(Map filterCriteria){
-        return distributionBatchRepository.filterDistributionBatches(filterCriteria);
-    }*/
+    public InventoryTransaction getReceivedVaccinesById(Long id){
+        return distributionBatchRepository.getReceivedVaccineById(id);
+    }
 
     public List<InventoryBatch> getUsableBatches(Long productId){
         return  distributionBatchRepository.getUsableBatches(productId);
     }
 
-    public void update(DistributionBatch distributionBatch) {
-        distributionBatchRepository.update(distributionBatch);
-    }
-
-    public void receiveVaccine(InventoryTransaction inventoryTransaction, List<InventoryBatch> inventoryBatches) {
+    public void receiveVaccine(InventoryTransaction inventoryTransaction) {
         if(inventoryTransaction != null && inventoryTransaction.getId() == null){
             inventoryTransaction.setTransactionType(transactionTypeService.getByName(TRANSACTION_TYPE_RECEIVED));
         }
-        distributionBatchRepository.updateInventoryTransaction(inventoryTransaction,inventoryBatches);
+        distributionBatchRepository.updateInventoryTransaction(inventoryTransaction, true);
     }
 
-    public void distributeVaccine(InventoryTransaction inventoryTransaction, List<InventoryBatch> inventoryBatches) {
+    public void distributeVaccine(InventoryTransaction inventoryTransaction) {
         if(inventoryTransaction != null && inventoryTransaction.getId() == null){
-            inventoryTransaction.setTransactionType(transactionTypeService.getByName(TRANSACTION_TYPE_RECEIVED));
+            inventoryTransaction.setTransactionType(transactionTypeService.getByName(TRANSACTION_TYPE_ISSUED));
         }
-        distributionBatchRepository.updateInventoryTransaction(inventoryTransaction,inventoryBatches);
+        distributionBatchRepository.updateInventoryTransaction(inventoryTransaction,false);
     }
 
 }

@@ -83,7 +83,9 @@ public interface ProgramProductMapper {
     @Result(property = "product", column = "productId", javaType = Product.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
     @Result(property = "programProductIsa", column = "id", javaType = ProgramProductISA.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductIsaMapper.getIsaByProgramProductId"))
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductIsaMapper.getIsaByProgramProductId")),
+    @Result(property = "productCategory", column = "productCategoryId", javaType = Product.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById"))
   })
   List<ProgramProduct> getActiveByProgram(Long programId);
 

@@ -10,6 +10,7 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.core.domain.Program;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +38,9 @@ public class EquipmentInventoryService {
     } else{
       repository.update(inventory);
     }
+  }
+
+  public List<Program> getProgramList(Long userId) {
+    return repository.getProgramListForUser(userId);
   }
 }
