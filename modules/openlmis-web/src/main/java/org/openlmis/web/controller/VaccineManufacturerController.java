@@ -56,7 +56,7 @@ public class VaccineManufacturerController extends BaseController{
             return OpenLmisResponse.error("There is record with the same vaccine quantification year already.", HttpStatus.BAD_REQUEST);
         }
 
-        response = success(messageService.message("message.vaccine.Manufacturer.save.success"));
+        response = success(messageService.message("message.vaccine.manufacturer.save.success"));
         return response;
     }
 

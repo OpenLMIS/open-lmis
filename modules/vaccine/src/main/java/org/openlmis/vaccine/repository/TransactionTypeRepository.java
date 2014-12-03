@@ -15,6 +15,8 @@ import org.openlmis.vaccine.repository.mapper.TransactionTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class TransactionTypeRepository {
     @Autowired
@@ -24,4 +26,29 @@ public class TransactionTypeRepository {
         return transactionTypeMapper.getByName(name);
     }
 
+    public void delete(Long id){
+
+        transactionTypeMapper.delete(id);
+    }
+
+    public void insert(TransactionType transactionType){
+        transactionTypeMapper.insert(transactionType);
+    }
+
+    public void update(TransactionType transactionType){
+        transactionTypeMapper.update(transactionType);
+    }
+
+    public List<TransactionType> getList(){
+         return transactionTypeMapper.getList();
+    }
+
+
+    public TransactionType get(Long id) {
+        return transactionTypeMapper.getById(id);
+    }
+
+    public List<TransactionType> search(String param) {
+        return transactionTypeMapper.search(param);
+    }
 }

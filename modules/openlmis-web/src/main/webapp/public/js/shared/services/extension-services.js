@@ -978,3 +978,26 @@ services.factory('GetManufacturerProduct', function ($resource) {
 services.factory('DeleteManufacturerProductMapping', function ($resource) {
     return $resource('/vaccineManufacturer/deleteProduct/:id.json', {}, {});
 });
+
+services.factory('VaccineTransactionTypeList', function ($resource) {
+    return $resource('/vaccine/transaction-type/list.json', {}, {});
+});
+
+services.factory('GetVaccineTransactionType', function ($resource) {
+    return $resource('/vaccine/transaction-type/get/:id.json', {}, {});
+});
+
+services.factory('VaccineTransactionTypeSave', function ($resource) {
+    return $resource('/vaccine/transaction-type/save.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('DeleteVaccineTransactionType', function ($resource) {
+    return $resource('/vaccine/transaction-type/delete/:id.json', {}, {});
+});
+
+services.factory('SearchVaccineTransactionType', function ($resource) {
+    return $resource('/vaccine/transaction-type/search.json', {}, {});
+});
+
+
+
