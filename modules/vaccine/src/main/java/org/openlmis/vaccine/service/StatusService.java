@@ -10,19 +10,60 @@
 
 package org.openlmis.vaccine.service;
 
+import org.openlmis.core.exception.DataException;
 import org.openlmis.vaccine.domain.Status;
 import org.openlmis.vaccine.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class StatusService {
+
     @Autowired
     private StatusRepository statusRepository;
 
     public List<Status> getAll(){
         return statusRepository.getAll();
+    }
+
+    public void deleteStatus(Long id){
+
+        try{
+
+            statusRepository.delete(id);
+        }
+        catch(DataIntegrityViolationException exp){
+            throw new DataException("Can not delete status. Data already in use.");
+        }
+    }
+
+    public void saveStatus(Status transactionType) {
+
+        try {
+            if (transactionType.getId() == null)
+                statusRepository.insert(transactionType);
+            else
+                statusRepository.update(transactionType);
+
+        } catch (DuplicateKeyException duplicateKeyException) {
+            throw new DataException("Status already exists");
+        }
+    }
+
+    public List<Status> getStatusList(){
+        return statusRepository.getList();
+    }
+
+    public Status getStatus(Long id){
+        return statusRepository.get(id);
+    }
+
+    public List<Status> search(String param) {
+
+        return statusRepository.search(param);
     }
 }

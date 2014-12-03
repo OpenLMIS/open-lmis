@@ -1003,4 +1003,24 @@ services.factory('SearchVaccineTransactionType', function ($resource) {
 });
 
 
+services.factory('VaccineReceivedStatusList', function ($resource) {
+    return $resource('/vaccine/received-status/list.json', {}, {});
+});
+
+services.factory('GetVaccineReceivedStatus', function ($resource) {
+    return $resource('/vaccine/received-status/get/:id.json', {}, {});
+});
+
+services.factory('VaccineReceivedStatusSave', function ($resource) {
+    return $resource('/vaccine/received-status/save.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('DeleteVaccineReceivedStatus', function ($resource) {
+    return $resource('/vaccine/received-status/delete/:id.json', {}, {});
+});
+
+services.factory('SearchVaccineReceivedStatus', function ($resource) {
+    return $resource('/vaccine/received-status/search.json', {}, {});
+});
+
 

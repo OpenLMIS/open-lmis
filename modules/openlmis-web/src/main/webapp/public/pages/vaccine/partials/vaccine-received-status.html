@@ -10,8 +10,8 @@
 
 <div>
     <h2>
-        <span id="vaccineTransactionTypeHeader" >Transaction Types</span>
-        <a id="vaccine-target-new" ng-href="#/transaction-type-edit/0" class="pull-right btn btn-primary"
+        <span id="vaccineReceivedStatusHeader" >Received Status</span>
+        <a id="vaccine-target-new" ng-href="#/received-status-edit/0" class="pull-right btn btn-primary"
            openlmis-message="button.add.new"></a>
     </h2>
 
@@ -20,7 +20,7 @@
 
 
     <input id="search" class="search-query input-xxlarge" type="text" ng-model="query"
-           on-keyup="showUserSearchResults()" placeholder="Enter transaction type name"/>
+           on-keyup="showReceivedStatusSearchResults()" placeholder="Enter received status name"/>
     <br/> <br/>
 
     <div class="form-tip" openlmis-message="search.threeCharacters"></div>
@@ -35,14 +35,14 @@
 
         <a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
 
-        <ul id="tTypeList" ng-model="filteredTransactionType">
-            <li ng-repeat="types in filteredTransactionType">
-                <a href="#/transaction-type-edit/{{types.id}}">
-                    <span>{{types.name}}</span>
+        <ul id="tTypeList" ng-model="filteredReceivedStatus">
+            <li ng-repeat="status in filteredReceivedStatus">
+                <a href="#/received-status-edit/{{status.id}}">
+                    <span>{{status.name}}</span>
                 </a>
 
                 <div class="search-actions">
-                    <a href ng-click="showRemoveVaccineTransactionTypeDialog(types)">Delete</a></div>
+                    <a href ng-click="showRemoveVaccineReceivedStatusDialog(status)">Delete</a></div>
             </li>
         </ul>
     </div>
@@ -57,10 +57,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="transactionTypes in vaccineTransactionTypes">
+        <tr ng-repeat="receivedStatus in vaccineReceivedStatus">
             <td>{{$index+1}}</td>
-            <td>{{transactionTypes.name}}</td>
-            <td> <a href ng-click="showRemoveVaccineTransactionTypeDialog(transactionTypes)">Delete</a> | <a href="#/transaction-type-edit/{{transactionTypes.id}}">Edit</a></td>
+            <td>{{receivedStatus.name}}</td>
+            <td> <a href ng-click="showRemoveVaccineReceivedStatusDialog(receivedStatus)">Delete</a> | <a href="#/received-status-edit/{{receivedStatus.id}}">Edit</a></td>
         </tr>
         </tbody>
     </table>

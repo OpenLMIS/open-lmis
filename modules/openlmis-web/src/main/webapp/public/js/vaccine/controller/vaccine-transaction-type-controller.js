@@ -55,7 +55,6 @@ function VaccineTransactionTypeController($scope, $dialog, messageService, $rout
         $location.path('/transaction-type');
     };
 
-
     function loadVaccineTransactionTypeList(){
         VaccineTransactionTypeList.get({}, function(data){
             $scope.vaccineTransactionTypes = data.transactionTypes;
@@ -87,7 +86,7 @@ function VaccineTransactionTypeController($scope, $dialog, messageService, $rout
 
     $scope.previousQuery = '';
 
-    $scope.showUserSearchResults = function () {
+    $scope.showTransactionTypeSearchResults = function () {
         var query = $scope.query;
 
         var len = (query === undefined) ? 0 : query.length;
@@ -95,14 +94,14 @@ function VaccineTransactionTypeController($scope, $dialog, messageService, $rout
         if (len >= 3) {
             if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3)) {
                 $scope.previousQuery = query;
-                filterUserByName(query);
+                filterReceivedStatusByName(query);
                 return true;
             }
 
             $scope.previousQuery = query;
             SearchVaccineTransactionType.get({param: $scope.query.substr(0, 3)}, function (data) {
                 $scope.transactionTypeList = data.transactionTypes;
-                filterUserByName(query);
+                filterReceivedStatusByName(query);
             });
             return true;
         } else {
@@ -116,17 +115,16 @@ function VaccineTransactionTypeController($scope, $dialog, messageService, $rout
         angular.element("#search").focus();
     };
 
-    $scope.showUserSearchResults();
+    $scope.showTransactionTypeSearchResults();
 
-    var filterUserByName = function (query) {
+    var filterReceivedStatusByName = function (query) {
         $scope.filteredTransactionType = [];
         query = query || "";
 
-        angular.forEach($scope.transactionTypeList, function (user) {
+        angular.forEach($scope.transactionTypeList, function (transactionType) {
 
-            if (user.name.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
-                console.log(user);
-                $scope.filteredTransactionType.push(user);
+            if (transactionType.name.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
+                $scope.filteredTransactionType.push(transactionType);
             }
         });
         $scope.resultCount = $scope.filteredTransactionType.length;
