@@ -51,7 +51,7 @@ public class VaccineReport extends BaseModel {
 
   private List<CoverageLineItemDTO> coverageLineItems;
   private List<DiseaseLineItem> diseaseLineItems;
-
+  private List<ColdChainLineItem> coldChainLineItems;
 
   public void initializeLogisticsLineItems(List<ProgramProduct> programProducts){
     logisticsLineItems = new ArrayList<>();
@@ -128,5 +128,9 @@ public class VaccineReport extends BaseModel {
       dto.setItems(items);
       coverageLineItems.add(dto);
     }
+  }
+
+  public void initializeColdChainLineItems(List<ColdChainLineItem> lineItems) {
+    coldChainLineItems = lineItems;
   }
 }

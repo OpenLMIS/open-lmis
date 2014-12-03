@@ -13,15 +13,14 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /*
  * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
@@ -304,5 +303,76 @@ public class VaccineStorageController extends BaseController  {
         //System.out.println(" here calling");
         return OpenLmisResponse.response(FACILLYLIST, this.storageService.loadFacillityList());
     }
+//    crurd for storage type
+
+
+        /*
+
+         */
+
+    @RequestMapping(value = "/storageTypes/{id}", method = RequestMethod.GET)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> getStorageTypeDetail1(@PathVariable("id") Long id) {
+        //System.out.println(" here calling");
+        StorageType storageType = this.storageTypeService.loadStorageTypeDetail(id);
+        return OpenLmisResponse.response(   STORAGETYPE, storageType);
+    }
+
+
+
+    @RequestMapping(value = "/storageTypes/{id}", method = PUT, headers = ACCEPT_JSON)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> updateStorageType1(@RequestBody StorageType storageType, HttpServletRequest request) {
+        //System.out.println(" updating ");
+        storageType.setModifiedBy(loggedInUserId(request));
+        storageType.setModifiedDate(new Date());
+
+        //System.out.println(" help topic id is" + helpTopic.getName());
+        return saveStorageType(storageType, false);
+    }
+    //////////////////////////////////////////////////////////////////////////
+    @RequestMapping(value = "/storageTypes", method = RequestMethod.POST, headers = ACCEPT_JSON)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> createStorageType(@RequestBody StorageType storageType, HttpServletRequest request) {
+        //System.out.println(" here saving help Content");
+        storageType.setCreatedBy(loggedInUserId(request));
+        storageType.setModifiedBy(loggedInUserId(request));
+        storageType.setModifiedDate(new Date());
+        storageType.setCreatedDate(new Date());
+        //System.out.println(" help content id is " + helpContent.getName());
+
+
+        return saveStorageType(storageType, true);
+    }
+
+
+    @RequestMapping(value = "/storageTypes/{id}", method = DELETE, headers = ACCEPT_JSON)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> removeStorageType(@RequestBody StorageType storageType, HttpServletRequest request) {
+
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + storageType.getId()) + "Deleted successfully");
+        response.getBody().addData(STORAGETYPE, storageType);
+        response.getBody().addData(STORAGETYPELIST, this.storageTypeService.loadStorageTypeList());
+        this.storageTypeService.removeStorageType(storageType);
+        return response;
+    }
+//    @RequestMapping(value = "/storageTypes", method = RequestMethod.GET, headers = "Accept=application/json")
+////    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+//    public ResponseEntity<OpenLmisResponse> getAllStorageTypeList() {
+//        //System.out.println(" here calling");
+//        return OpenLmisResponse.response(STORAGETYPELIST, this.storageTypeService.loadStorageTypeList());
+//    }
+    @RequestMapping(value = "/storageTypes", method = RequestMethod.GET)
+    //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public  ResponseEntity<OpenLmisResponse>  searchStorageType(@RequestParam(required = true) String param) {
+        return OpenLmisResponse.response(STORAGETYPELIST, this.storageTypeService.searchForStorageTypeList(param));
+    }
+    @RequestMapping(value = "/tempratures")
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> searchTempratureList(@RequestParam(required = true) String param) {
+
+        return OpenLmisResponse.response(TEMPERATURELIST, this.tempratureService.searchForTempratureList(param));
+    }
+//    end of storrage type crud
     }
 

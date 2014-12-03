@@ -18,8 +18,10 @@
     <thead>
       <tr>
         <th>Product</th>
+        <th>Date</th>
         <th>Manufacturer</th>
         <th>Batch</th>
+        <th>Expiry Date</th>
         <th>Cases</th>
         <th>Investigation</th>
         <th>Notes</th>
@@ -28,8 +30,10 @@
     </thead>
     <tr ng-repeat="effect in report.adverseEffectLineItems">
       <td style="height: 35px" class="cell-input"><span class="cell-text">{{effect.productName}}</span></td>
+      <td style="height: 35px" class="cell-input"><span class="cell-text">{{effect.date | date : 'dd MMM, yyyy'}}</span></td>
       <td class="cell-input cell-text"><span class="cell-text">{{effect.manufacturerName}}</span></td>
       <td class="cell-input cell-text"><span class="cell-text">{{effect.batch}}</span></td>
+      <td class="cell-input cell-text"><span class="cell-text">{{effect.expiry | date : 'MMM, yyyy'}}</span></td>
       <td class="number cell-input"><span class="cell-text">{{effect.cases}}</span></td>
       <td class="cell-input cell-text"><span class="cell-text">{{effect.investigation}}</span></td>
       <td class="cell-input cell-text"><span class="cell-text">{{effect.notes}}</span></td>
@@ -43,10 +47,18 @@
   </div>
 </div>
 
-<div id="adverseEffectModal" modal="adverseEffectModal"
+<div id="adverseEffectModal" modal="adverseEffectModal" close="closeAdverseEffectsModal()"
      options="{ backdrop: 'static', escape: false}">
   <div class="modal-header"><h3>Add / Edit Adverse Effect</h3></div>
   <div class="modal-body">
+
+    <div class="row-fluid">
+
+      <div class="span6">
+        <label >Event Date</label>
+        <input type="date" ng-model="currentEffect.date" />
+      </div>
+    </div>
 
     <div class="row-fluid">
       <div class="span6">
@@ -75,8 +87,16 @@
         <input type="text" ng-model="currentEffect.batch" />
       </div>
       <div class="span6">
+        <label >Expiry Date</label>
+        <input type="date" ng-model="currentEffect.expiry" />
+      </div>
+    </div>
+
+    <div class="row-fluid">
+
+      <div class="span6">
         <label >Number of Cases</label>
-        <input type="text" ng-model="currentEffect.cases" />
+        <input  numeric-validator="positiveInteger"  type="text" ng-model="currentEffect.cases" />
       </div>
     </div>
 
@@ -95,7 +115,7 @@
       <div class="span2">
         <label>&nbsp;</label>
         <input type="button" href="" class="btn btn-primary"
-               ng-click="adverseEffectModal=false"
+               ng-click="closeAdverseEffectsModal()"
               openlmis-message="button.cancel"/>
         <input type="button" href="" id="addNonFullSupply" class="btn btn-primary"
                ng-click="applyAdverseEffect()"

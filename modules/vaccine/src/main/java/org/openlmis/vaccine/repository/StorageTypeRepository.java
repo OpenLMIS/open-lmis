@@ -35,4 +35,8 @@ public class StorageTypeRepository {
     public void removeStorageType(StorageType storageType){
         this.storageTypeMapper.delete(storageType);
     }
+
+    public List<StorageType> searchForStorageTypes(String param) {
+        return this.storageTypeMapper.searchForStorageTypeList(param);
+    }
 }

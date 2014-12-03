@@ -22,8 +22,8 @@
     <tbody>
       <tr ng-repeat="disease in report.diseaseLineItems">
         <td class="cell-input"><span class="cell-text">{{disease.diseaseName}}</span></td>
-        <td class="cell-input col-beginningBalance"><input type="text" ng-model="disease.cases" /></td>
-        <td class="cell-input col-beginningBalance"><input type="text" ng-model="disease.death" /></td>
+        <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" type="text" ng-model="disease.cases" /></td>
+        <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" type="text" ng-model="disease.death" /></td>
       </tr>
     </tbody>
     </table>

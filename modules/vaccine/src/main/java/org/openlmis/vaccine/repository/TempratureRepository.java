@@ -33,4 +33,8 @@ public class TempratureRepository {
     public void removeTemprature(Temperature temperature){
         this.tempratureMapper.delete(temperature);
     }
+
+    public List<Temperature> searchForTempratureList(String param) {
+        return this.tempratureMapper.searchTempratureList(param);
+    }
 }

@@ -38,7 +38,7 @@
     <tr ng-repeat="product in report.coverageLineItems">
       <td class="col-product cell-input" ng-class="{'span2': report.trackCampaignCoverage, 'span5':!report.trackCampaignCoverage }" ><span class="cell-text">{{product.productName}}</span></td>
       <td class="cell-input col-beginningBalance" ng-repeat-start="dose in product.items">
-        <input ng-disabled="!dose.isActive" ng-model="dose.regular" type="text" />
+        <input  numeric-validator="positiveInteger"  ng-disabled="!dose.isActive" ng-model="dose.regular" type="text" />
       </td>
       <td ng-show="report.trackCampaignCoverage" class="cell-input col-beginningBalance" ng-repeat-end>
         <input ng-disabled="!dose.isActive" ng-model="dose.outreach" type="text" />
