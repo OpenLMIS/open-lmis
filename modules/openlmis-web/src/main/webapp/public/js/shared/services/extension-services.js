@@ -845,23 +845,23 @@ services.factory('TempratureList', function ($resource) {
 });
 
 services.factory('VaccineQuantificationUpdate', function ($resource) {
-    return $resource('/vaccineQuantification/create.json', {}, {post:{method:'POST'}});
+    return $resource('/vaccine/quantification/create.json', {}, {post:{method:'POST'}});
 });
 
 services.factory('VaccineQuantificationList', function ($resource) {
-    return $resource('/vaccineQuantification/list.json', {}, {});
+    return $resource('/vaccine/quantification/list.json', {}, {});
 });
 
 services.factory('GetVaccineQuantification', function ($resource) {
-    return $resource('/vaccineQuantification/get/:id.json', {}, {});
+    return $resource('/vaccine/quantification/get/:id.json', {}, {});
 });
 
 services.factory('DeleteVaccineQuantification', function ($resource) {
-    return $resource('/vaccineQuantification/delete/:id.json', {}, {});
+    return $resource('/vaccine/quantification/delete/:id.json', {}, {});
 });
 
 services.factory('VaccineQuantificationFormLookUps', function ($resource) {
-    return $resource('/vaccineQuantification/formLookups.json', {}, {});
+    return $resource('/vaccine/quantification/formLookups.json', {}, {});
 });
 
 //storage type
@@ -965,33 +965,76 @@ services.factory('DistributeVaccines', function ($resource) {
 
 
 services.factory('VaccineManufacturerUpdate', function ($resource) {
-    return $resource('/vaccineManufacturer/create.json', {}, {post:{method:'POST'}});
+    return $resource('/vaccine/manufacturer/create.json', {}, {post:{method:'POST'}});
 });
 
 services.factory('VaccineManufacturerList', function ($resource) {
-    return $resource('/vaccineManufacturer/list.json', {}, {});
+    return $resource('/vaccine/manufacturer/list.json', {}, {});
 });
 
 services.factory('GetVaccineManufacturer', function ($resource) {
-    return $resource('/vaccineManufacturer/get/:id.json', {}, {});
+    return $resource('/vaccine/manufacturer/get/:id.json', {}, {});
 });
 
 services.factory('DeleteVaccineManufacturer', function ($resource) {
-    return $resource('/vaccineManufacturer/delete/:id.json', {}, {});
+    return $resource('/vaccine/manufacturer/delete/:id.json', {}, {});
 });
 
 services.factory('GetVaccineManufacturerProductMapping', function ($resource) {
-    return $resource('/vaccineManufacturer/getManufacturerProducts/:id.json', {}, {});
+    return $resource('/vaccine/manufacturer/getManufacturerProducts/:id.json', {}, {});
 });
 
 services.factory('VaccineManufacturerProductUpdate', function ($resource) {
-    return $resource('/vaccineManufacturer/createProduct.json', {}, {post:{method:'POST'}});
+    return $resource('/vaccine/manufacturer/createProduct.json', {}, {post:{method:'POST'}});
 });
 
 services.factory('GetManufacturerProduct', function ($resource) {
-    return $resource('/vaccineManufacturer/getProduct/:id.json', {}, {});
+    return $resource('/vaccine/manufacturer/getProduct/:id.json', {}, {});
 });
 
 services.factory('DeleteManufacturerProductMapping', function ($resource) {
-    return $resource('/vaccineManufacturer/deleteProduct/:id.json', {}, {});
+    return $resource('/vaccine/manufacturer/deleteProduct/:id.json', {}, {});
 });
+
+services.factory('VaccineTransactionTypeList', function ($resource) {
+    return $resource('/vaccine/transaction-type/list.json', {}, {});
+});
+
+services.factory('GetVaccineTransactionType', function ($resource) {
+    return $resource('/vaccine/transaction-type/get/:id.json', {}, {});
+});
+
+services.factory('VaccineTransactionTypeSave', function ($resource) {
+    return $resource('/vaccine/transaction-type/save.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('DeleteVaccineTransactionType', function ($resource) {
+    return $resource('/vaccine/transaction-type/delete/:id.json', {}, {});
+});
+
+services.factory('SearchVaccineTransactionType', function ($resource) {
+    return $resource('/vaccine/transaction-type/search.json', {}, {});
+});
+
+
+services.factory('VaccineReceivedStatusList', function ($resource) {
+    return $resource('/vaccine/received-status/list.json', {}, {});
+});
+
+services.factory('GetVaccineReceivedStatus', function ($resource) {
+    return $resource('/vaccine/received-status/get/:id.json', {}, {});
+});
+
+services.factory('VaccineReceivedStatusSave', function ($resource) {
+    return $resource('/vaccine/received-status/save.json', {}, {post:{method:'POST'}});
+});
+
+services.factory('DeleteVaccineReceivedStatus', function ($resource) {
+    return $resource('/vaccine/received-status/delete/:id.json', {}, {});
+});
+
+services.factory('SearchVaccineReceivedStatus', function ($resource) {
+    return $resource('/vaccine/received-status/search.json', {}, {});
+});
+
+

@@ -13,7 +13,6 @@
   <h2>Vaccine Monthly Reporting</h2>
   <div class="info-box padding2px">
     <div class="requisition-head-block">
-
       <div class="row-fluid" id="requisition-head-block">
         <div class="span3">
           <strong id='facilityLabel' openlmis-message="label.facility"> </strong>:&nbsp;<span
@@ -23,7 +22,7 @@
           <strong id='operatedByLabel' openlmis-message="label.facility.operatedBy"></strong>: &nbsp;<span
             id='operatedBy' ng-bind="report.facility.operatedBy.text"></span>
         </div>
-
+        <div class="span3"></div>
       </div>
       <div class="row-fluid">
         <div class="span3">
@@ -36,16 +35,12 @@
           </strong><span
             id='parentLevel' ng-bind="report.facility.geographicZone.parent.name"></span>
         </div>
-        <div class="span6">
+        <div class="span3">
           <strong id='reportingPeriodLabel' openlmis-message="label.facility.reportingPeriod"></strong>:&nbsp;<span
             id='reportingPeriod' ng-bind="report.period.name"></span>
         </div>
       </div>
-
-
     </div>
-
-
   </div>
   <hr />
   <div class="rnr-tabs clearfix">
@@ -62,6 +57,8 @@
         <a href="" ng-click="visibleTab = 'coldChain'" >Cold Chain</a></li>
       <li  ng-class="{'selected': visibleTab == 'campaign'}">
         <a href="" ng-click="visibleTab = 'campaign'" >Campaign</a></li>
+      <li  ng-class="{'selected': visibleTab == 'target'}">
+        <a href="" ng-click="visibleTab = 'target'" >Targets</a></li>
     </ul>
 
   </div>
@@ -83,7 +80,9 @@
   <span ng-show="visibleTab == 'campaign'">
       <ng-include src="'/public/pages/vaccine/report/partials/create/campaign.html'"></ng-include>
   </span>
-
+  <span ng-show="visibleTab == 'target'">
+      <ng-include src="'/public/pages/vaccine/report/partials/create/target.html'"></ng-include>
+  </span>
 
   <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">

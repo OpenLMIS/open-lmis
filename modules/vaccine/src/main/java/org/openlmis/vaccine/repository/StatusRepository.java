@@ -25,4 +25,30 @@ public class StatusRepository {
     public List<Status> getAll(){
         return statusMapper.getAll();
     }
+
+    public void delete(Long id){
+
+        statusMapper.delete(id);
+    }
+
+    public void insert(Status receivedStatus){
+        statusMapper.insert(receivedStatus);
+    }
+
+    public void update(Status receivedStatus){
+        statusMapper.update(receivedStatus);
+    }
+
+    public List<Status> getList(){
+        return statusMapper.getList();
+    }
+
+
+    public Status get(Long id) {
+        return statusMapper.get(id);
+    }
+
+    public List<Status> search(String param) {
+        return statusMapper.search(param);
+    }
 }

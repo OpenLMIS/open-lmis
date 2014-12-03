@@ -8,10 +8,11 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.web.controller;
+package org.openlmis.web.controller.vaccine;
 
 import org.openlmis.vaccine.domain.VaccineQuantification;
 import org.openlmis.vaccine.service.VaccineQuantificationService;
+import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -24,15 +25,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.Date;
-
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-@RequestMapping(value="/vaccineQuantification")
+@RequestMapping(value="/vaccine/quantification")
 public class VaccineQuantificationController extends BaseController{
 
 
@@ -54,8 +53,7 @@ public class VaccineQuantificationController extends BaseController{
             return OpenLmisResponse.error("There is record with the same vaccine quantification year already.", HttpStatus.BAD_REQUEST);
         }
 
-        response = success(messageService.message("message.vaccine.Quantification.created.success"));
-        //response.getBody().addData("vaccineQuantification", vaccineQuantification);
+        response = success("Vaccine quantification created successfully");
         return response;
     }
 
@@ -67,7 +65,7 @@ public class VaccineQuantificationController extends BaseController{
         vaccineQuantificationService.deleteVaccineQuantification(id);
 
         ResponseEntity<OpenLmisResponse> response;
-        response = success(messageService.message("message.vaccine.Quantification.created.success"));
+        response = success("Vaccine quantification deleted successfully");
         return response;
     }
 

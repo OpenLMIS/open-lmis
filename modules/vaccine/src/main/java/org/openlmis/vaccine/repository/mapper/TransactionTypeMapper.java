@@ -10,15 +10,39 @@
 
 package org.openlmis.vaccine.repository.mapper;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.openlmis.vaccine.domain.TransactionType;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TransactionTypeMapper {
+
     @Select("Select * from transaction_types where id = #{id}")
     TransactionType getById(Long id);
 
     @Select("Select * from transaction_types where name = #{name}")
     TransactionType getByName(String name);
+
+    @Select("INSERT INTO transaction_types(\n" +
+            "            name, createdby, createddate)\n" +
+            "    VALUES (#{name}, #{createdBy},  COALESCE(#{createdDate}, NOW()) );\n")
+    void insert(TransactionType transactionType);
+
+    @Update("UPDATE transaction_types\n" +
+            "   SET name=#{name}, modifiedby=#{modifiedBy}, modifiedDate=#{modifiedDate}\n" +
+            " WHERE id= #{id} ")
+    void update(TransactionType transactionType);
+
+    @Delete("delete from transaction_types where id = #{id}")
+    void delete(Long id);
+
+    @Select("select * from transaction_types")
+    List<TransactionType> getList();
+
+    @Select("select * from transaction_types where LOWER(name) LIKE  '%'|| LOWER(#{param}) ||'%'")
+    List<TransactionType> search(String param);
 }
