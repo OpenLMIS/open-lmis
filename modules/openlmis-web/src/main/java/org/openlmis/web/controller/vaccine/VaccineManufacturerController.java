@@ -8,11 +8,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.web.controller;
+package org.openlmis.web.controller.vaccine;
 
 import org.openlmis.vaccine.domain.Manufacturer;
 import org.openlmis.vaccine.domain.ManufacturerProduct;
 import org.openlmis.vaccine.service.ManufacturerService;
+import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,14 +27,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-@RequestMapping(value="/vaccineManufacturer")
+@RequestMapping(value="/vaccine/manufacturer")
 public class VaccineManufacturerController extends BaseController{
 
 
@@ -56,7 +56,7 @@ public class VaccineManufacturerController extends BaseController{
             return OpenLmisResponse.error("There is record with the same vaccine quantification year already.", HttpStatus.BAD_REQUEST);
         }
 
-        response = success(messageService.message("message.vaccine.manufacturer.save.success"));
+        response = success("Vaccine manufacuted saved successfully");
         return response;
     }
 
@@ -75,7 +75,7 @@ public class VaccineManufacturerController extends BaseController{
 
 
         ResponseEntity<OpenLmisResponse> response;
-        response = success(messageService.message("message.vaccine.Manufacturer.delete.success"));
+        response = success("Vaccine manufacutrer deleted successfully");
         return response;
     }
 
@@ -112,7 +112,7 @@ public class VaccineManufacturerController extends BaseController{
         manufacturerService.deleteProductMapping(id);
 
         ResponseEntity<OpenLmisResponse> response;
-        response = success(messageService.message("message.Manufacturer.product.mapping.delete.success"));
+        response = success("Product mapping deleted successfully");
         return response;
     }
 
@@ -133,7 +133,7 @@ public class VaccineManufacturerController extends BaseController{
             return OpenLmisResponse.error("Invalid product code", HttpStatus.BAD_REQUEST);
         }
 
-        response = success(messageService.message("message.manufacturer.product.save.success"));
+        response = success("Product mapping saved successfully");
         return response;
     }
 
