@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
@@ -22,7 +23,11 @@ import org.openlmis.core.domain.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
 @Data
 @AllArgsConstructor
@@ -32,6 +37,7 @@ import java.util.Date;
 public class InventoryTransaction extends BaseModel{
     private Date today;
     private TransactionType transactionType;
+    private List<InventoryBatch> inventoryBatches;
     private Facility fromFacility;
     private Facility toFacility;
     private Product product;

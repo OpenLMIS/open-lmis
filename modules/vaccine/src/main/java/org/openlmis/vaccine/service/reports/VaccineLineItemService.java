@@ -39,6 +39,9 @@ public class VaccineLineItemService {
   @Autowired
   VaccineReportCampaignLineItemRepository campaignLineItemRepository;
 
+  @Autowired
+  VaccineReportColdChainRepository coldChainRepository;
+
   public void saveLogisticsLineItems(List<LogisticsLineItem> lineItems){
     for(LogisticsLineItem lineItem: lineItems){
       if(lineItem.getId() == null){
@@ -89,6 +92,18 @@ public class VaccineLineItemService {
       }
       else{
         campaignLineItemRepository.update(lineItem);
+      }
+    }
+  }
+
+  public void saveColdChainLIneItems(List<ColdChainLineItem> coldChainLineItems, Long reportId) {
+    for(ColdChainLineItem lineItem: coldChainLineItems){
+      lineItem.setReportId(reportId);
+      if(lineItem.getId() == null){
+        coldChainRepository.insert(lineItem);
+      }
+      else{
+        coldChainRepository.update(lineItem);
       }
     }
   }

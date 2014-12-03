@@ -880,6 +880,15 @@ services.factory('StorageTypeDetail', function ($resource) {
 services.factory('DeleteStorageType', function ($resource) {
     return $resource('/deleteStorageType.json', {}, {post:{method:'POST'}});
 });
+services.factory('StorageTypes', function ($resource) {
+    var resource = $resource('/storageTypes/:id.json', {id: '@id'}, update);
+
+    resource.disable = function (pathParams, success, error) {
+        $resource('/storageTypes/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
+    };
+
+    return resource;
+});
 //temprature
 services.factory('CreateTemprature', function ($resource) {
 
@@ -895,29 +904,23 @@ services.factory('TempratureDetail', function ($resource) {
 services.factory('DeleteTemprature', function ($resource) {
     return $resource('/deleteTemprature.json', {}, {post:{method:'POST'}});
 });
+services.factory('Tempratures', function ($resource) {
+    var resource = $resource('/tempratures/:id.json', {id: '@id'}, update);
+
+    resource.disable = function (pathParams, success, error) {
+        $resource('/tempratures/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
+    };
+
+    return resource;
+});
 services.factory('StorageFacilityList', function ($resource) {
     return $resource('/facilityList.json', {}, {});
 });
 
 /* Begin: Vaccine Supply Line */
 
-services.factory('VaccineDistributionBatches', function ($resource) {
-    return $resource('/vaccine/distribution-batches/:id.json', {id: '@id'}, update);
-});
-
-services.factory('FilterDistributionBatches', function ($resource) {
-    return $resource('/vaccine/distribution-batches/filter.json',{},{});
-});
-
-services.factory('VaccineDistributionLineItems', function ($resource) {
-    return $resource('/vaccine/distribution-batch-line-items/:id.json', {id: '@id'}, update);
-});
-
 services.factory('Manufacturers', function($resource){
     return $resource('/vaccine/manufacturers.json',{},{});
-});
-services.factory('DistributionTypes', function($resource){
-    return $resource('/vaccine/distributionTypes.json',{},{});
 });
 
 services.factory('VaccineDistributionStatus', function($resource){

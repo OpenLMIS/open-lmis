@@ -7,24 +7,22 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineReceiveController($scope,$route,VaccineDistributionBatches,$location,messageService,GetDonors,Products,Manufacturers,DistributionTypes,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccines){
+function VaccineReceiveController($scope,$route,$location,messageService,GetDonors,Products,Manufacturers,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccines){
 
     $scope.message = "";
 
     $scope.selectedStorages = [];
     $scope.batches = [];
 
-    if(!isUndefined($route.current.params.distributionBatchId)){
-        VaccineDistributionBatches.get({id: $route.current.params.distributionBatchId}, function (data){
-
-            $scope.distributionBatch = $scope.getDistributionBatchWithDateObjects(data.distributionBatch);
-
-        });
-    }
     if(!isUndefined($route.current.params.facilityId)){
         $scope.selectedFacilityId = $route.current.params.facilityId;
     }
+    if(!isUndefined($route.current.params.transactionId)){
 
+        ReceiveVaccines.get({id:$route.current.params.transactionId},function(data){
+            $scope.inventoryTransaction = data.receivedVaccine;
+        });
+    }
 
     $scope.convertStringToCorrectDateFormat = function(stringDate) {
         if (stringDate) {
@@ -55,10 +53,10 @@ function VaccineReceiveController($scope,$route,VaccineDistributionBatches,$loca
            }
        });
     });
-
+/*
     DistributionTypes.get({}, function(data){
         $scope.distributionTypes = data.distributionTypes;
-    });
+    });*/
     Manufacturers.get({}, function (data) {
         $scope.manufacturers = data.manufacturers;
     });
@@ -91,20 +89,21 @@ function VaccineReceiveController($scope,$route,VaccineDistributionBatches,$loca
             }
         });
     });
+
     $scope.cancelDistributionBatchSave = function () {
         $location.path('#/distribution-batch');
     };
 
 
     $scope.addBatches = function (distribution) {
-        $scope.batch = undefined;
-        $scope.distribution = distribution;
+        $scope.resetAddBatchesModal();
+      //  $scope.batch = null;
         $scope.addBatchesModal = true;
     };
     $scope.resetAddBatchesModal = function () {
+        $scope.error = '';
+        $scope.showError = false;
         $scope.addBatchesModal = false;
-        $scope.error = undefined;
-        $scope.distribution = undefined;
     };
 
     $scope.saveDistributionBatch = function(){
@@ -124,7 +123,7 @@ function VaccineReceiveController($scope,$route,VaccineDistributionBatches,$loca
         };
 
         var saveSuccessHandler = function (response) {
-            $scope.inventoryTransaction = response.receiveVaccine.inventoryTransaction;
+            $scope.inventoryTransaction = response.receiveVaccine;
             successHandler(response.success);
         };
 
@@ -137,22 +136,30 @@ function VaccineReceiveController($scope,$route,VaccineDistributionBatches,$loca
             $scope.message = "";
             $scope.error = response.data.error;
         };
-        $scope.inventoryTransaction.confirmedBy = {id:2};
         $scope.inventoryTransaction.fromFacility = {id:$scope.selectedFacilityId};
         $scope.inventoryTransaction.toFacility = {id:$scope.selectedFacilityId};
 
-        var receiveVaccine = {inventoryTransaction:$scope.inventoryTransaction, inventoryBatches:$scope.batches};
+        $scope.inventoryTransaction.inventoryBatches = $scope.batches;
 
         if ($scope.inventoryTransaction.id) {
-            ReceiveVaccines.update({id:$scope.distributionBatch.id}, receiveVaccine, updateSuccessHandler, errorHandler);
+            ReceiveVaccines.update({id:$scope.inventoryTransaction.id}, $scope.inventoryTransaction, updateSuccessHandler, errorHandler);
         } else {
-            ReceiveVaccines.save({}, receiveVaccine, saveSuccessHandler, errorHandler);
+            ReceiveVaccines.save({}, $scope.inventoryTransaction, saveSuccessHandler, errorHandler);
         }
     };
 
     $scope.saveBatches = function(){
 
+        if ($scope.addBatchForm.$error.required) {
+            $scope.error = messageService.get("form.error");
+            $scope.showError = true;
+            return false;
+        }else{
+            $scope.showError = false;
+            $scope.error = '';
+        }
         $scope.batches.push($scope.batch);
+        $scope.batch = undefined;
         $scope.addBatchesModal = undefined;
     };
 }

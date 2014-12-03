@@ -17,8 +17,12 @@ angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootst
         when('/disease/add', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
         when('/disease/edit/:id', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
         when('/template', {controller:LogisticsColumnTemplate, templateUrl:'partials/column-template.html', resolve: LogisticsColumnTemplate.resolve }).
-        when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html'}).
-        when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html'}).
+        when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html', resolve: StorageTypeController.resolve}).
+        when('/storage-type-create', {controller:StorageTypeController, templateUrl:'partials/storage-type-create.html', resolve: StorageTypeController.resolve}).
+        when('/storage-type-manage/:id', {controller:StorageTypeEditController, templateUrl:'partials/storage-type-manage.html'}).
+        when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html', resolve: TempratureLookupController.resolve}).
+        when('/temperature-create', {controller:TempratureLookupController, templateUrl:'partials/temprature-create.html', resolve: TempratureLookupController.resolve}).
+        when('/temperature-update/:id', {controller:TempratureUpdateController, templateUrl:'partials/temprature-update.html'}).
         otherwise({redirectTo:'/protocol'});
   }]).run(function ($rootScope, AuthorizationService) {
     //AuthorizationService.preAuthorize('VIEW_REPORT');

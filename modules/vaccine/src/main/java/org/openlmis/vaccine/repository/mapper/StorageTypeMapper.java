@@ -48,4 +48,6 @@ public interface StorageTypeMapper {
     @Delete("DELETE from storage_types " +
             " WHERE id=#{id};")
     void delete(StorageType storageType);
+    @Select(value = "SELECT * FROM storage_types WHERE LOWER(storagetypename) LIKE '%'|| LOWER(#{param}) ||'%'")
+    List<StorageType> searchForStorageTypeList(String param);
 }
