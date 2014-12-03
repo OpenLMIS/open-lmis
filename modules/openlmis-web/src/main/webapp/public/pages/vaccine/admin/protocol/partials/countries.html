@@ -1,0 +1,100 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+
+    <div>
+        <h2>Country Information</h2>
+    </div>
+
+    <h2><span>{{title}}</span>
+        <a href="#countries-create" id="country-add-new"
+           class="pull-right btn btn-primary"
+           ng-disabled="AddEditMode"
+                >Add New</a>
+    </h2>
+
+    <input id="searchCountries" class="search-query input-xxlarge" type="text" ng-model="query"
+           ng-keyup="showCountriesSearch()" openlmis-message="placeholder.search"/>
+
+    <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+    <div class="facility-list" ng-show="query.length > 2">
+        <div ng-switch on="resultCount">
+            <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+
+            <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+
+            <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+        </div>
+        <a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
+        <ul id="countriesList" class="user-list" ng-model="filteredStorageTypes">
+            <li ng-repeat="c in filteredCountries" >
+                <a id="st{{$index}}" href=""   ng-click="editCountries(c.id)">
+                    <span class="user-name">{{c.name}}</span>
+
+                </a>
+
+                <div class="user-actions">
+
+
+                    <a id="editStorageType{{$index}}" href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
+                       ng-click="editStorageType(c.id)"></a>
+                    <a id="showDeleteConfirmDialog{{$index}}" href="" ng-click="showDeleteConfirmDialog(c)" class="btn btn-primary btn-small" openlmis-message="button.delete"></a>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div ng-hide="query.length > 2">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr class="gradient-header">
+
+
+                <th>Name</th>
+                <th>Long Name</th>
+                <th>ISO Code2</th>
+                <th>ISO Code3</th>
+
+                <th> Action</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="c in countriesList ">
+                <td>
+                    <div>{{c.name}}</div>
+                </td>
+                <td>
+                    <div>{{c.longName}}</div>
+                </td>
+                <td>
+                <div>{{c.isoCode2}}</div>
+            </td>
+                <td>
+                    <div>{{c.isoCode3}}</div>
+                </td>
+                <td>
+                    <a href="" ng-click="editCountries(c.id)">Edit</a>|
+                    <a href="" ng-click="showDeleteConfirmDialog(c)">Delete</a>
+                </td>
+
+
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+

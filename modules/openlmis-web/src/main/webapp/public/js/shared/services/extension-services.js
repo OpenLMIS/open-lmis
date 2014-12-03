@@ -913,6 +913,20 @@ services.factory('Tempratures', function ($resource) {
 
     return resource;
 });
+services.factory('Countries', function ($resource) {
+    var resource = $resource('/countries/:id.json', {},  {
+        update: {
+            method: 'PUT',params: {id: '@id'}
+        },
+        remove: {method:'DELETE'}
+    });
+
+//    resource.disable = function (pathParams, success, error) {
+//        $resource('/countries/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
+//    };
+
+    return resource;
+});
 services.factory('StorageFacilityList', function ($resource) {
     return $resource('/facilityList.json', {}, {});
 });

@@ -23,6 +23,9 @@ angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootst
         when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html', resolve: TempratureLookupController.resolve}).
         when('/temperature-create', {controller:TempratureLookupController, templateUrl:'partials/temprature-create.html', resolve: TempratureLookupController.resolve}).
         when('/temperature-update/:id', {controller:TempratureUpdateController, templateUrl:'partials/temprature-update.html'}).
+        when('/countries', {controller:CountriesLookupController, templateUrl:'partials/countries.html', resolve: CountriesLookupController.resolve}).
+        when('/countries-create', {controller:CountriesLookupController, templateUrl:'partials/countries-create.html', resolve: CountriesLookupController.resolve}).
+        when('/countries-update/:id', {controller:CountriesUpdateController, templateUrl:'partials/countries-update.html',  resolve: CountriesUpdateController.resolve}).
         otherwise({redirectTo:'/protocol'});
   }]).run(function ($rootScope, AuthorizationService) {
     //AuthorizationService.preAuthorize('VIEW_REPORT');
