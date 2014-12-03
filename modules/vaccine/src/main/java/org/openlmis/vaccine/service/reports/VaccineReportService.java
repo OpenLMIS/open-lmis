@@ -17,8 +17,11 @@ import org.openlmis.core.service.*;
 import org.openlmis.vaccine.RequestStatus;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
+import org.openlmis.vaccine.domain.reports.CampaignLineItem;
+import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
+import org.openlmis.vaccine.repository.reports.VaccineReportColdChainRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportRepository;
 import org.openlmis.vaccine.service.DiseaseService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
@@ -53,10 +56,11 @@ public class VaccineReportService {
   @Autowired
   ConfigurationSettingService settingService;
 
+  @Autowired
+  VaccineReportColdChainRepository coldChainRepository;
 
   @Autowired
   ProgramService programService;
-
 
 
   public VaccineReport initialize(Long facilityId, Long programId, Long periodId){
@@ -78,6 +82,7 @@ public class VaccineReportService {
     List<ProgramProduct> programProducts = programProductService.getActiveByProgram(programId);
     List<VaccineDisease> diseases = diseaseService.getAll();
     List<VaccineProductDose> dosesToCover = productDoseService.getForProgram(programId);
+    List<ColdChainLineItem> coldChainLineItems = coldChainRepository.getNewEquipmentLineItems(programId, facilityId);
 
     // 1. copy the products list and initiate the logistics tab.
     report.initializeLogisticsLineItems(programProducts);
@@ -88,13 +93,14 @@ public class VaccineReportService {
     // 3. copy the disease list and initiate the disease tab.
     report.initializeDiseaseLineItems(diseases);
 
-    // 4. initiate the cold chain tab.
-    //TODO:
+    // 4. initialize the cold chain line items.
+    report.initializeColdChainLineItems(coldChainLineItems);
 
     // save all the child records
     lLineItemService.saveLogisticsLineItems(report.getLogisticsLineItems());
     lLineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());
     lLineItemService.saveCoverageLineItems(report.getCoverageItems());
+    lLineItemService.saveColdChainLIneItems(report.getColdChainLineItems(), report.getId());
     return report;
   }
 
@@ -153,6 +159,7 @@ public class VaccineReportService {
     lLineItemService.saveCoverageLineItems(report.getCoverageItems());
     lLineItemService.saveAdverseEffectLineItems(report.getAdverseEffectLineItems(), report.getId());
     lLineItemService.saveCampaignLineItems(report.getCampaignLineItems(),report.getId());
+    lLineItemService.saveColdChainLIneItems(report.getColdChainLineItems(), report.getId());
   }
 
   public VaccineReport getById(Long id) {

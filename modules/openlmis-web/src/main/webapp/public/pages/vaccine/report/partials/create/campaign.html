@@ -76,11 +76,11 @@
       <div class="row-fluid">
         <div class="span6">
           <label >Children Vaccinated</label>
-          <input type="text" ng-model="currentCampaign.childrenVaccinated" >
+          <input type="text"  numeric-validator="positiveInteger"  ng-model="currentCampaign.childrenVaccinated" >
         </div>
         <div class="span6">
           <label >Pregnant Woman Vaccinated</label>
-          <input type="text" ng-model="currentCampaign.pregnantWomanVaccinated" >
+          <input type="text"  numeric-validator="positiveInteger"  ng-model="currentCampaign.pregnantWomanVaccinated" >
         </div>
       </div>
 
