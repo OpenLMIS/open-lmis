@@ -167,7 +167,7 @@ public class VaccineController extends BaseController {
             return openLmisResponse.errorEntity(exception, BAD_REQUEST);
         }
         response = success(messageService.message("Vaccine distributed successfully"));
-       // response.getBody().addData("distributeVaccine", inventoryTransaction);
+        response.getBody().addData("distributeVaccine", inventoryTransaction);
         return response;
     }
 

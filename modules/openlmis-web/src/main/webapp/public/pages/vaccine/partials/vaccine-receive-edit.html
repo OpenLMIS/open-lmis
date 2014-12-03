@@ -56,16 +56,16 @@
                 </span>
                 </div>
                 <div class="span4">
-                    <label for="receivedDate">Received date<span class="label-required"> *</span></label>
+                    <label for="arrival-date">Received date<span class="label-required"> *</span></label>
 
-                    <input id="receivedDate" name="productionDate" type="text" ng-model="inventoryTransaction.arrivalDate"
+                    <input id="receivedDate" name="receivedDate" type="text" ng-model="inventoryTransaction.arrivalDate"
                            readonly
                            ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
                            ui-date-format="yy-mm-dd"
                            ng-required="true"/>
-                <span class="field-error" ng-show="inventoryTransactionForm.receivedDate.$error.required && showError"
-                      openlmis-message="missing.value">
-                </span>
+                    <span class="field-error" ng-show="inventoryTransactionForm.receivedDate.$error.required && showError"
+                          openlmis-message="missing.value">
+                    </span>
                 </div>
 
                 <div class="span4">
@@ -271,20 +271,20 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-click="rowClickedEvent(distribution)" style="cursor: pointer" ng-repeat="batchItem in batches">
+                <tr  style="cursor: pointer" ng-repeat="batchItem in inventoryTransaction.inventoryBatches">
                     <td>{{ batchItem.batchNumber }}</td>
-                    <td>{{ convertStringToCorrectDateFormat(batchItem.expiryDate) }}</td>
-                    <td>{{ convertStringToCorrectDateFormat(batchItem.productionDate)}}</td>
+                    <td>{{ convertStringToCorrectDateFormat(batchItem.stringExpiryDate)}}</td>
+                    <td>{{ convertStringToCorrectDateFormat(batchItem.stringProductionDate)}}</td>
                     <td>{{ batchItem.quantity }}</td>
                     <td>{{ batchItem.vvm1 }}</td>
                     <td>{{ batchItem.vvm2 }}</td>
                     <td>{{ batchItem.vvm3 }}</td>
                     <td>{{ batchItem.vvm4 }}</td>
                     <td>
-                        <a href="" ng-click="addReceive(distribution)" class="btn btn-primary btn-small" openlmis-message="button.receive"></a>
                         <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
-                           ng-click="editDistributionBatch(distribution.id)"></a>
-                        <a href="/public/pages/admin/user/preference/index.html#/edit-user-preference/{{user.id}}" class="btn btn-primary btn-small" openlmis-message="button.delete"></a>
+                           ng-click="editBatch(batchItem)"></a>
+                        <a href="" class="btn btn-primary btn-small" openlmis-message="button.delete"
+                           ng-click="deleteBatch(batchItem)"     ></a>
                     </td>
                 </tr>
                 </tbody>
@@ -297,7 +297,7 @@
                 <label for="notes" >note</label>
                 <textarea id="notes" type="text"
                           name="notes"
-                          ng-model="distributionBatch.notes"/>
+                          ng-model="inventoryTransaction.note"/>
             </div>
         </div>
 
@@ -314,7 +314,7 @@
     </form>
 
 
-    <div id="addBatchesModal" modal="addBatchesModal" options="{'backdrop':'static', 'escape':false}">
+    <div id="addBatchesModal" class="addBatchesModal" style="width:85%; left:30%;" modal="addBatchesModal" options="{'backdrop':'static', 'escape':false}">
         <div class="modal-header">
             <h3>
                 <span>Add Received Batch</span>&nbsp;
@@ -337,7 +337,11 @@
                     </div>
                     <div class="span6">
                         <label for="expiryDate">Expiry date<span class="label-required">*</span></label>
-                        <input id="expiryDate" name="expiryDate" type="date" ng-model="batch.expiryDate" ng-required="true"/>
+                       <input id="expiryDate" name="expiryDate" type="text" ng-model="batch.expiryDate"
+                               readonly
+                               ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
+                               ui-date-format="yy-mm-dd"
+                               ng-required="true"/>
                          <span class="field-error" ng-show="addBatchForm.expiryDate.$error.required && showError"
                                openlmis-message="missing.value">
                                     </span>
@@ -346,7 +350,11 @@
                 <div class="row-fluid">
                     <div class="span6">
                         <label for="productionDate">Production date<span class="label-required">*</span></label>
-                        <input id="productionDate" name="productionDate" type="date" ng-model="batch.productionDate" ng-required="true"/>
+                        <input id="productionDate" name="productionDate" type="text" ng-model="batch.productionDate"
+                               readonly
+                               ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
+                               ui-date-format="yy-mm-dd"
+                               ng-required="true"/>
                         <span class="field-error" ng-show="addBatchForm.productionDate.$error.required && showError"
                                openlmis-message="missing.value">
                                     </span>
