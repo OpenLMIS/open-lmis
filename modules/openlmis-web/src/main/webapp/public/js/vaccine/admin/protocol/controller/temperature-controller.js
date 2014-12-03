@@ -7,19 +7,17 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function TempratureLookupController($scope, $location, $route, $dialog, messageService, CreateTemprature,
-                                    UpdateTemprature,TempratureDetail,DeleteTemprature,TempratureList) {
+function TempratureLookupController($scope, $location,  $dialog, messageService, CreateTemprature,
+                                    UpdateTemprature,navigateBackService,DeleteTemprature,TempratureList,Tempratures,tempratureList) {
 
 
 
 
     $scope.disabled = false;
     $scope.temprature = {};
-    TempratureList.get({}, function (data) {
-        $scope.tempratureList = data.temperatureList;
-    }, function (data) {
-        $location.path($scope.$parent.sourceUrl);
-    });
+
+        $scope.tempratureList = tempratureList;
+
 
     $scope.createTemperature = function () {
 
@@ -56,17 +54,14 @@ function TempratureLookupController($scope, $location, $route, $dialog, messageS
 
             CreateTemprature.save($scope.temprature, createSuccessCallback, errorCallback);
         }
-
+        $location.path('/temperature');
     };
-
+$scope.cancelCreate=function(){
+    $location.path('/temperature');
+};
     $scope.editTemprature=function(id){
         if(id){
-            TempratureDetail.get({id:id}, function(data){
-                $scope.temprature = data.temprature;
-//            if($scope.editHelpTopic.active === false){
-//                $scope.disableAllFields();
-//            }
-            });
+            $location.path('/temperature-update/'+id);
         }
     };
     $scope.deleteTemprature=function(result){
@@ -103,6 +98,71 @@ function TempratureLookupController($scope, $location, $route, $dialog, messageS
     $scope.clearForm=function(){
         $scope.temprature = {};
     };
-}
+//    temrature search
+    $scope.showTempratureSearch = function () {
 
+        var query = $scope.query;
+
+        var len = (query === undefined) ? 0 : query.length;
+
+        if (len >= 3) {
+
+            if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3)) {
+                $scope.previousQuery = query;
+
+                filterTempratureByName(query);
+                return true;
+            }
+            $scope.previousQuery = query;
+            Tempratures.get({param: $scope.query.substr(0, 3)}, function (data) {
+                $scope.tempratureList1 = data.temperatureList;
+                filterTempratureByName(query);
+            }, {});
+
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    $scope.previousQuery = '';
+    $scope.query = navigateBackService.query;
+    $scope.showTempratureSearch();
+    var filterTempratureByName = function (query) {
+        $scope.filteredTempratureList = [];
+        query = query || "";
+
+        angular.forEach($scope.tempratureList1, function (temprature) {
+            var tempratureName = temprature.tempratureName.toLowerCase();
+
+            if (tempratureName.indexOf() >= 0 ||
+                tempratureName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ) {
+                $scope.filteredTempratureList.push(temprature);
+            }
+        });
+        $scope.resultCount = $scope.filteredTempratureList.length;
+    };
+    $scope.clearSearch = function () {
+        $scope.query = "";
+        $scope.resultCount = 0;
+        angular.element("#searchTemprature").focus();
+
+    };
+//    end of search
+}
+///////////////////////////
+TempratureLookupController.resolve = {
+    tempratureList: function ($q, $timeout, Tempratures) {
+        var deferred = $q.defer();
+
+        $timeout(function () {
+            // show the list of users by a default
+            Tempratures.get({param: ''}, function(data){
+                deferred.resolve( data.temperatureList );
+            },{});
+
+        }, 100);
+        return deferred.promise;
+    }
+};
 

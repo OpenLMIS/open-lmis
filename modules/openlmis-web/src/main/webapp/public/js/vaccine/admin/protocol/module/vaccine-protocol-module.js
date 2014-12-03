@@ -20,7 +20,9 @@ angular.module('vaccine-protocol', ['openlmis', 'ui.bootstrap.modal', 'ui.bootst
         when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html', resolve: StorageTypeController.resolve}).
         when('/storage-type-create', {controller:StorageTypeController, templateUrl:'partials/storage-type-create.html', resolve: StorageTypeController.resolve}).
         when('/storage-type-manage/:id', {controller:StorageTypeEditController, templateUrl:'partials/storage-type-manage.html'}).
-        when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html'}).
+        when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html', resolve: TempratureLookupController.resolve}).
+        when('/temperature-create', {controller:TempratureLookupController, templateUrl:'partials/temprature-create.html', resolve: TempratureLookupController.resolve}).
+        when('/temperature-update/:id', {controller:TempratureUpdateController, templateUrl:'partials/temprature-update.html'}).
         otherwise({redirectTo:'/protocol'});
   }]).run(function ($rootScope, AuthorizationService) {
     //AuthorizationService.preAuthorize('VIEW_REPORT');

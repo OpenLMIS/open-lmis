@@ -904,6 +904,15 @@ services.factory('TempratureDetail', function ($resource) {
 services.factory('DeleteTemprature', function ($resource) {
     return $resource('/deleteTemprature.json', {}, {post:{method:'POST'}});
 });
+services.factory('Tempratures', function ($resource) {
+    var resource = $resource('/tempratures/:id.json', {id: '@id'}, update);
+
+    resource.disable = function (pathParams, success, error) {
+        $resource('/tempratures/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
+    };
+
+    return resource;
+});
 services.factory('StorageFacilityList', function ($resource) {
     return $resource('/facilityList.json', {}, {});
 });
