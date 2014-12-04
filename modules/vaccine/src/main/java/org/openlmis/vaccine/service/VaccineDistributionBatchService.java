@@ -9,6 +9,8 @@
  */
 package org.openlmis.vaccine.service;
 
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.vaccine.domain.InventoryBatch;
 import org.openlmis.vaccine.domain.InventoryTransaction;
 import org.openlmis.vaccine.repository.VaccineDistributionBatchRepository;
@@ -29,6 +31,9 @@ public class VaccineDistributionBatchService {
     @Autowired
     private TransactionTypeService transactionTypeService;
 
+    @Autowired
+    private FacilityService facilityService;
+
     public List<InventoryTransaction> getReceivedVaccinesForFacility(Long facilityId){
         return distributionBatchRepository.getReceivedVaccinesForFacility(facilityId);
     }
@@ -42,9 +47,17 @@ public class VaccineDistributionBatchService {
     }
 
     public void receiveVaccine(InventoryTransaction inventoryTransaction) {
-        if(inventoryTransaction != null && inventoryTransaction.getId() == null){
+        if (inventoryTransaction == null)
+            return;
+
+        if(inventoryTransaction.getId() == null){
             inventoryTransaction.setTransactionType(transactionTypeService.getByName(TRANSACTION_TYPE_RECEIVED));
         }
+
+        List<Facility> facilities = facilityService.getAllForGeographicZone(inventoryTransaction.getReceivedAt());
+        if (facilities != null && facilities.size() > 0)
+            inventoryTransaction.setToFacility(facilities.get(0));
+
         distributionBatchRepository.updateInventoryTransaction(inventoryTransaction, true);
     }
 

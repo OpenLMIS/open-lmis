@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineReceiveController($scope,$route,$location,messageService,GetDonors,Products,Manufacturers,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccines){
+function VaccineReceiveController($scope,$route,$location,messageService,GetDonors,Products,Manufacturers,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccines,Countries){
 
     $scope.message = "";
 
@@ -24,6 +24,7 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         ReceiveVaccines.get({id:$route.current.params.transactionId},function(data){
             $scope.inventoryTransaction = data.receivedVaccine;
             $scope.inventoryTransaction.arrivalDate = $scope.convertStringToCorrectDateFormat($scope.inventoryTransaction.stringArrivalDate);
+            $scope.inventoryTransaction.today = $scope.convertStringToCorrectDateFormat($scope.inventoryTransaction.stringTodayDate);
 
         });
     }
@@ -35,7 +36,7 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         return null;
     };
 
-    $scope.getDistributionBatchWithDateObjects = function(distributionBatch) {
+    /*$scope.getDistributionBatchWithDateObjects = function(distributionBatch) {
         if(!isUndefined(distributionBatch)){
             distributionBatch.productionDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringProductionDate);
             distributionBatch.expiryDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringExpiryDate);
@@ -44,9 +45,11 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         }
 
         return distributionBatch;
-    };
+    };*/
 
-    $scope.origins = [{id:0,name:'France'},{id:1,name:'USA'}];
+    Countries.get({param:''}, function(data){
+        $scope.origins = data.countriesList;
+    });
 
     VaccineDistributionStatus.get({}, function(data){
        $scope.status = data.status;

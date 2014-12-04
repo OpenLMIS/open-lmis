@@ -46,6 +46,7 @@ public class InventoryTransaction extends BaseModel{
     private String bol;
     private Donor donor;
     private Long originId;
+    private Long receivedAt;
     private Manufacturer manufacturer;
     private Status status;
     private String purpose;
@@ -66,4 +67,10 @@ public class InventoryTransaction extends BaseModel{
     public String getStringArrivalDate() throws ParseException {
         return this.arrivalDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.arrivalDate);
     }
+
+    @SuppressWarnings("unused")
+    public String getStringTodayDate() throws ParseException {
+        return this.today == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.today);
+    }
+
 }

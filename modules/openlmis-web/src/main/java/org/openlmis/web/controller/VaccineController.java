@@ -124,10 +124,14 @@ public class VaccineController extends BaseController {
             OpenLmisResponse openLmisResponse = new OpenLmisResponse("receiveVaccine", inventoryTransaction);
             return openLmisResponse.errorEntity(exception, BAD_REQUEST);
         }
-        response = success(messageService.message("Vaccine received successfully"));
+       /* response = success(messageService.message("Vaccine received successfully"));
 
         response.getBody().addData("receiveVaccine", inventoryTransaction);
-        return response;
+        return response;*/
+
+        String successMessage = messageService.message("Vaccine received successfully");
+        OpenLmisResponse openLmisResponse = new OpenLmisResponse("receiveVaccine", inventoryTransaction);
+        return openLmisResponse.successEntity(successMessage);
     }
 
     @RequestMapping(value = "/receive-vaccine/{id}", method = PUT, headers = ACCEPT_JSON)

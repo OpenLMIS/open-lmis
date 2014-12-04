@@ -292,4 +292,8 @@ public interface FacilityMapper {
             "            ORDER BY username")
     List<FacilitySupervisor> getFacilitySupervisors(Long facilityId);
 
+
+  @Select("SELECT * FROM facilities where geographiczoneId = #{geographicZoneId}")
+  List<Facility> getForGeographicZone(Long geographicZoneId);
+
 }

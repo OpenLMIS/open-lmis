@@ -24,13 +24,13 @@ public interface VaccineDistributionBatchMapper {
             "            dispatchreference, dispatchdate, bol, donorid, origincountryid, \n" +
             "            manufacturerid, statusid, purpose, vvmtracked, barcoded, gs1, \n" +
             "            quantity, packsize, unitprice, totalcost, locationid, expecteddate, \n" +
-            "            arrivaldate, confirmedby, note, createdby, createddate, modifiedby, \n" +
+            "            arrivaldate, confirmedby, note,today, receivedAt, createdby, createddate, modifiedby, \n" +
             "            modifieddate) " +
             "VALUES (#{transactionType.id},#{fromFacility.id},#{toFacility.id},#{product.id}," +
             "#{dispatchReference},#{dispatchDate},#{bol},#{donor.id},#{originId}," +
             "#{manufacturer.id},#{status.id},#{purpose},#{vvmTracked},#{barCoded},#{gs1}," +
             "#{quantity},#{packSize},#{unitPrice},#{totalCost},#{storageLocation.id},#{expectedDate}," +
-            "#{arrivalDate},#{confirmedBy.id},#{note},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+            "#{arrivalDate},#{confirmedBy.id},#{note},#{today},#{receivedAt},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
     @Options(useGeneratedKeys = true)
     void insertInventoryTransaction(InventoryTransaction    inventoryTransaction);
 
@@ -39,7 +39,7 @@ public interface VaccineDistributionBatchMapper {
             "       origincountryid=#{originId}, manufacturerid=#{manufacturer.id}, statusid=#{status.id}, purpose=#{purpose}, vvmtracked=#{vvmTracked}, \n" +
             "       barcoded=#{barCoded}, gs1=#{gs1}, quantity=#{quantity}, packsize=#{packSize}, unitprice=#{unitPrice}, totalcost=#{totalCost}, \n" +
             "       locationid=#{storageLocation.id}, expecteddate=#{expectedDate}, arrivaldate=#{arrivalDate}, confirmedby=#{confirmedBy.id}, note=#{note}, \n" +
-            "       createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
+            "       today=#{today}, receivedAt = #{receivedAt}, createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
             " WHERE id = #{id};")
     void updateInventoryTransaction(InventoryTransaction inventoryTransaction);
 
