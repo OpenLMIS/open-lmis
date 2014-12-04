@@ -11,6 +11,7 @@
 package org.openlmis.vaccine.repository.mapper.reports;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Product;
 import org.openlmis.vaccine.domain.reports.LogisticsLineItem;
 import org.springframework.stereotype.Repository;
 
@@ -50,6 +51,11 @@ public interface VaccineReportLogisticsLineItemMapper {
   void update(LogisticsLineItem lineItem);
 
   @Select("select * from vaccine_report_logistics_line_items where reportId = #{reportId}")
+    @Results(value = {
+      @Result(property = "productId", column = "productId"),
+      @Result(property = "product", column = "productId", javaType = Product.class,
+        one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+    })
   List<LogisticsLineItem> getLineItems(@Param("reportId") Long reportId);
 
 }

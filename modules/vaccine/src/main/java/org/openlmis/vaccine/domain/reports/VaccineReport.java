@@ -87,6 +87,7 @@ public class VaccineReport extends BaseModel {
   public void initializeCoverageLineItems(List<VaccineProductDose> dosesToCover) {
     coverageItems = new ArrayList<>();
     for(VaccineProductDose dose: dosesToCover){
+
       VaccineCoverageItem item = new VaccineCoverageItem();
 
       item.setReportId(id);
@@ -126,7 +127,9 @@ public class VaccineReport extends BaseModel {
         }
       }
       dto.setItems(items);
-      coverageLineItems.add(dto);
+      if(items.size() > 0) {
+        coverageLineItems.add(dto);
+      }
     }
   }
 

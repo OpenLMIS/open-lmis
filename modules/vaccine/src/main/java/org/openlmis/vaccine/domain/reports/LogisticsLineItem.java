@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Product;
 
 @Data
 @NoArgsConstructor
@@ -28,6 +29,8 @@ public class LogisticsLineItem extends BaseModel{
   private String productCode;
   private String productName;
   private String productCategory;
+
+  private Product product;
 
   private Integer displayOrder;
 
