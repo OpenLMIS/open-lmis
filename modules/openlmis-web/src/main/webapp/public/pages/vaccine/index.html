@@ -20,6 +20,8 @@
   <script src="/public/lib/angular/angular-resource.min.js"></script>
   <script src="/public/lib/bootstrap/js/bootstrap.min.js"></script>
   <script src="/public/lib/underscore/underscore-min.js"></script>
+  <script src="/public/lib/nsPopover/nsPopover.js"></script>
+  <link rel="stylesheet" href="/public/lib/nsPopover/nsPopover.css">
   <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/public/lib/select2/select2.css">
   <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
@@ -42,6 +44,7 @@
   <script src="/public/js/shared/directives/ui-nav.js"></script>
   <script src="/public/js/shared/directives/tab-scroll.js"></script>
   <script src="/public/js/shared/directives/modal-events.js"></script>
+    <script src="/public/js/shared/directives/angular-flot.js"></script>
 
   <link rel="stylesheet" href="/public/css/app.css">
   <script src="/public/js/shared/services/navigate-back-service.js"></script>
@@ -57,6 +60,7 @@
     <script src="/public/js/vaccine/controller/vaccine-receive-controller.js"></script>
     <script src="/public/js/vaccine/controller/vaccine-receive-search-controller.js"></script>
     <script src="/public/js/vaccine/controller/vaccine-distribute-controller.js"></script>
+    <script src="/public/js/vaccine/controller/vaccine-report-controller.js"></script>
     <script src="/public/js/vaccine/controller/vaccine-storage-controller.js"></script>
     <script src="/public/js/vaccine/controller/vaccine-targets-controller.js"></script>
     <script src="/public/js/vaccine/controller/vaccine-quantification-controller.js"></script>
@@ -64,11 +68,15 @@
     <script src="/public/js/vaccine/controller/vaccine-product-mapping-controller.js"></script>
 
 
+    <script src="/public/lib/flot/jquery.flot.min.js"></script>
+
+
   <script src="/public/lib/localstorage/localStorage.js"></script>
   <script src="/public/lib/select2/select2.js"></script>
   <script src="/public/js/shared/select2-ext.js"></script>
   <script src="/public/js/shared/localStorageKeys.js"></script>
   <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
+
   <!--[if IE 9]>
   <link rel="stylesheet" href="/public/css/ie9.css"/>
   <![endif]-->

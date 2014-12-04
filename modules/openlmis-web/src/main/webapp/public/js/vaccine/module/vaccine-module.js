@@ -8,13 +8,14 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var vaccine = angular.module('vaccine', ['openlmis', 'ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
+var vaccine = angular.module('vaccine', ['openlmis', 'ui.bootstrap','nsPopover']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
         when('/distribute', {controller: VaccineDistributeController, templateUrl: 'partials/vaccine-distribute-edit.html'}).
         when('/receive', {controller: VaccineReceiveSearchController, templateUrl: 'partials/vaccine-receive-search.html'}).
         when('/edit-receive-vaccine/:transactionId', {controller: VaccineReceiveController, templateUrl: 'partials/vaccine-receive-edit.html'}).
         when('/create-receive-vaccine/:facilityId', {controller: VaccineReceiveController, templateUrl: 'partials/vaccine-receive-edit.html'}).
+        when('/vaccine-report', {controller: VaccineReportPOCReportController, templateUrl: 'partials/vaccine-report.html'}).
         when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
         when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
         when('/vaccine-storage', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage.html'}).
