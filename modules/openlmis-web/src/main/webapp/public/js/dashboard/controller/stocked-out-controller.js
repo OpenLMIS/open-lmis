@@ -274,6 +274,8 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
                         }else{
                             $scope.filterObject.year = date.getFullYear() - 1;
                         }
+
+                        $scope.changeSchedule();
                     });
                 }
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];

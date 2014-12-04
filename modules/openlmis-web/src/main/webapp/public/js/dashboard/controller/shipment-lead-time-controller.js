@@ -177,6 +177,8 @@ function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryServi
                         }else{
                             $scope.filterObject.year = date.getFullYear() - 1;
                         }
+
+                        $scope.changeSchedule();
                     });
                 }
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
