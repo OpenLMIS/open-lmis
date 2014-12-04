@@ -11,17 +11,18 @@
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
 
     <div>
-        <h2>Temprature Lookup List Search</h2>
+        <h2>Country Information</h2>
     </div>
+
     <h2><span>{{title}}</span>
-        <a href="#temperature-create" id="help-category-add-new"
+        <a href="#countries-create" id="country-add-new"
            class="pull-right btn btn-primary"
            ng-disabled="AddEditMode"
                 >Add New</a>
     </h2>
 
-    <input id="searchTemprature" class="search-query input-xxlarge" type="text" ng-model="query"
-           ng-keyup="showTempratureSearch()" openlmis-message="placeholder.search"/>
+    <input id="searchCountries" class="search-query input-xxlarge" type="text" ng-model="query"
+           ng-keyup="showCountriesSearch()" openlmis-message="placeholder.search"/>
 
     <div class="form-tip" openlmis-message="search.threeCharacters"></div>
     <div class="facility-list" ng-show="query.length > 2">
@@ -33,19 +34,19 @@
             <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
         </div>
         <a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
-        <ul id="tempratureList" class="user-list" ng-model="filteredTempratureList">
-            <li ng-repeat="t in filteredTempratureList" >
-                <a id="st{{$index}}" href="" ng-click="editTemprature(t.id)">
-                    <span class="user-name">{{t.tempratureName}}</span>
+        <ul id="countriesList" class="user-list" ng-model="filteredStorageTypes">
+            <li ng-repeat="c in filteredCountries" >
+                <a id="st{{$index}}" href=""   ng-click="editCountries(c.id)">
+                    <span class="user-name">{{c.name}}</span>
 
                 </a>
 
                 <div class="user-actions">
 
 
-                    <a id="editTemprature{{$index}}" href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
-                       ng-click="editTemprature(t.id)"></a>
-                    <a id="showDeleteConfirmDialog{{$index}}" href="" ng-click="showDeleteConfirmDialog(t)" class="btn btn-primary btn-small" openlmis-message="button.delete"></a>
+                    <a id="editStorageType{{$index}}" href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
+                       ng-click="editStorageType(c.id)"></a>
+                    <a id="showDeleteConfirmDialog{{$index}}" href="" ng-click="showDeleteConfirmDialog(c)" class="btn btn-primary btn-small" openlmis-message="button.delete"></a>
 
                 </div>
             </li>
@@ -53,27 +54,37 @@
     </div>
 
     <div ng-hide="query.length > 2">
-
         <table class="table table-striped table-bordered">
             <thead>
             <tr class="gradient-header">
 
 
-                <th>Temperature Name</th>
+                <th>Name</th>
+                <th>Long Name</th>
+                <th>ISO Code2</th>
+                <th>ISO Code3</th>
 
                 <th> Action</th>
 
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="t in tempratureList ">
+            <tr ng-repeat="c in countriesList ">
                 <td>
-                    <div>{{t.tempratureName}}</div>
+                    <div>{{c.name}}</div>
                 </td>
-
                 <td>
-                    <a href="" ng-click="editTemprature(t.id)">Edit</a>|
-                    <a href="" ng-click="showDeleteConfirmDialog(t)">Delete</a>
+                    <div>{{c.longName}}</div>
+                </td>
+                <td>
+                <div>{{c.isoCode2}}</div>
+            </td>
+                <td>
+                    <div>{{c.isoCode3}}</div>
+                </td>
+                <td>
+                    <a href="" ng-click="editCountries(c.id)">Edit</a>|
+                    <a href="" ng-click="showDeleteConfirmDialog(c)">Delete</a>
                 </td>
 
 

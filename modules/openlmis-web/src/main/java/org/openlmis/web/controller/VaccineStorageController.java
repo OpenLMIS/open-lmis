@@ -1,9 +1,12 @@
 package org.openlmis.web.controller;
 
+import org.apache.poi.hssf.record.formula.functions.Count;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.vaccine.domain.Countries;
 import org.openlmis.vaccine.domain.StorageType;
 import org.openlmis.vaccine.domain.Temperature;
 import org.openlmis.vaccine.domain.VaccineStorage;
+import org.openlmis.vaccine.service.CountriesService;
 import org.openlmis.vaccine.service.StorageTypeService;
 import org.openlmis.vaccine.service.TempratureService;
 import org.openlmis.vaccine.service.VaccineStorageService;
@@ -39,6 +42,8 @@ public class VaccineStorageController extends BaseController  {
     private StorageTypeService storageTypeService;
     @Autowired
     private TempratureService tempratureService;
+    @Autowired
+    private CountriesService countriesService;
 
     public static final String VACCINESTORAGE = "vaccineStorage";
     public static final String VACCINESTORAGEDATAIL = "vaccineStorage";
@@ -48,6 +53,8 @@ public class VaccineStorageController extends BaseController  {
     public static final String FACILLYLIST = "facilityList";
     public static final String STORAGETYPE="storageType";
     public static final String TEMPRATURE="temprature";
+    public static final String COUNTRIESLIST = "countriesList";
+    public static final String COUNTRIES="countries";
     @RequestMapping(value = "/createVaccineStorage", method = RequestMethod.POST, headers = ACCEPT_JSON)
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineStorage vaccineStorage, HttpServletRequest request) {
@@ -374,5 +381,99 @@ public class VaccineStorageController extends BaseController  {
         return OpenLmisResponse.response(TEMPERATURELIST, this.tempratureService.searchForTempratureList(param));
     }
 //    end of storrage type crud
+
+//    start of countries crud
+
+     /*
+
+         */
+     private ResponseEntity<OpenLmisResponse> saveCountries(Countries countries, boolean createOperation) {
+         try {
+             if (createOperation) {
+                 System.out.println("creating "+countries.getName());
+                 this.countriesService.addCountries(countries);
+             } else {
+                 this.countriesService.updateCountries(countries);
+             }
+             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + countries.getId()) + "' " + (createOperation ? "created" : "updated") + " successfully");
+             response.getBody().addData(COUNTRIES, this.countriesService.loadCountriesDetail(countries.getId()));
+             response.getBody().addData(COUNTRIESLIST, this.countriesService.loadCountriesList());
+             return response;
+         } catch (DuplicateKeyException exp) {
+             System.out.println(exp.getStackTrace());
+             return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
+         } catch (DataException e) {
+             System.out.println(e.getStackTrace());
+             return error(e, HttpStatus.BAD_REQUEST);
+         } catch (Exception e) {
+             System.out.println(e.getMessage());
+             return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
+         }
+     }
+
+    @RequestMapping(value = "/countries/{id}", method = RequestMethod.GET)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> getCountriesDetail1(@PathVariable("id") Long id) {
+        //System.out.println(" here calling");
+        Countries countries = this.countriesService.loadCountriesDetail(id);
+        return OpenLmisResponse.response(   COUNTRIES, countries);
+    }
+
+
+
+    @RequestMapping(value = "/countries/{id}", method = PUT, headers = ACCEPT_JSON)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> updateCountries(@RequestBody Countries countries, HttpServletRequest request) {
+        //System.out.println(" updating ");
+        countries.setModifiedBy(loggedInUserId(request));
+        countries.setModifiedDate(new Date());
+
+        //System.out.println(" help topic id is" + helpTopic.getName());
+        return saveCountries(countries, false);
+    }
+    //////////////////////////////////////////////////////////////////////////
+    @RequestMapping(value = "/countries", method = RequestMethod.POST, headers = ACCEPT_JSON)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> createCountries(@RequestBody Countries countries, HttpServletRequest request) {
+        //System.out.println(" here saving help Content");
+        countries.setCreatedBy(loggedInUserId(request));
+        countries.setModifiedBy(loggedInUserId(request));
+        countries.setModifiedDate(new Date());
+        countries.setCreatedDate(new Date());
+        //System.out.println(" help content id is " + helpContent.getName());
+
+
+        return saveCountries(countries, true);
+    }
+
+
+    @RequestMapping(value = "/countries", method = DELETE, headers = ACCEPT_JSON)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> removeCountries(@RequestBody Countries countries, HttpServletRequest request) {
+
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + countries.getId()) + "Deleted successfully");
+        response.getBody().addData(COUNTRIES, countries);
+        response.getBody().addData(COUNTRIESLIST, this.countriesService.loadCountriesList());
+        System.out.println(" here deleting "+ countries.getName());
+        this.countriesService.removeCountries(countries);
+        return response;
+    }
+    //    @RequestMapping(value = "/storageTypes", method = RequestMethod.GET, headers = "Accept=application/json")
+////    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+//    public ResponseEntity<OpenLmisResponse> getAllStorageTypeList() {
+//        //System.out.println(" here calling");
+//        return OpenLmisResponse.response(STORAGETYPELIST, this.storageTypeService.loadStorageTypeList());
+//    }
+    @RequestMapping(value = "/countries", method = RequestMethod.GET)
+    //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public  ResponseEntity<OpenLmisResponse>  searchCountries(@RequestParam(required = true) String param) {
+        return OpenLmisResponse.response(COUNTRIESLIST, this.countriesService.searchForCountries(param));
+    }
+    @RequestMapping(value = "/countriesList", method = RequestMethod.GET)
+    //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public  ResponseEntity<OpenLmisResponse>  loadAllCountries() {
+        return OpenLmisResponse.response(COUNTRIESLIST, this.countriesService.loadCountriesList());
+    }
+    //end of countries crud
     }
 

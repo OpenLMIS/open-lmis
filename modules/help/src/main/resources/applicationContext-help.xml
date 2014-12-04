@@ -19,7 +19,7 @@
     <context:annotation-config/>
     <context:spring-configured/>
 
-    <context:component-scan base-package="org.openelmis.help"/>
+    <context:component-scan base-package="org.openlmis.help"/>
 
     <import resource="classpath:applicationContext-db.xml"/>
     <import resource="classpath:applicationContext-core.xml"/>

@@ -1,4 +1,4 @@
-/*
+package org.openlmis.vaccine.service;/*
  * This program is part of the OpenLMIS logistics management information system platform software.
  *   Copyright © 2013 VillageReach
  *
@@ -8,47 +8,35 @@
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.vaccine.repository;
-
-import org.openlmis.vaccine.domain.Status;
-import org.openlmis.vaccine.repository.mapper.StatusMapper;
+import org.openlmis.vaccine.domain.Countries;
+import org.openlmis.vaccine.repository.CountriesRepository;
+import org.openlmis.vaccine.repository.mapper.CountriesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class StatusRepository {
+public class CountriesService {
     @Autowired
-    private StatusMapper statusMapper;
-
-    public List<Status> getAll(){
-        return statusMapper.getAll();
+    private CountriesRepository countriesRepository;
+    public List<Countries> loadCountriesList(){
+        return this.countriesRepository.loadCountriesList();
+    }
+    public void addCountries(Countries countries){
+        this.countriesRepository.addCountries(countries);
+    }
+    public Countries loadCountriesDetail(long id){
+        return  this.countriesRepository.loadCountriesDetail(id);
+    }
+    public void updateCountries(Countries countries){
+        this.countriesRepository.updateCountries(countries);
+    }
+    public void removeCountries(Countries countries){
+        this.countriesRepository.removeCountries(countries);
     }
 
-    public void delete(Long id){
-
-        statusMapper.delete(id);
-    }
-
-    public void insert(Status receivedStatus){
-        statusMapper.insert(receivedStatus);
-    }
-
-    public void update(Status receivedStatus){
-        statusMapper.update(receivedStatus);
-    }
-
-    public List<Status> getList(){
-        return statusMapper.getList();
-    }
-
-
-    public Status get(Long id) {
-        return statusMapper.get(id);
-    }
-
-    public List<Status> search(String param) {
-        return statusMapper.search(param);
+    public List<Countries> searchForCountries(String param) {
+        return this.countriesRepository.searchForCountries(param);
     }
 }

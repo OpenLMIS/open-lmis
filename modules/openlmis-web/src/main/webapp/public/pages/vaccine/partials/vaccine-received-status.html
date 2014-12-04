@@ -1,0 +1,71 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div>
+    <h2>
+        <span id="vaccineReceivedStatusHeader" >Received Status</span>
+        <a id="vaccine-target-new" ng-href="#/received-status-edit/0" class="pull-right btn btn-primary"
+           openlmis-message="button.add.new"></a>
+    </h2>
+
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+    <div class="alert alert-danger" id="errorMsgDiv" ng-bind="error" ng-show="error"/>
+
+
+    <input id="search" class="search-query input-xxlarge" type="text" ng-model="query"
+           on-keyup="showReceivedStatusSearchResults()" placeholder="Enter received status name"/>
+    <br/> <br/>
+
+    <div class="form-tip" openlmis-message="search.threeCharacters"></div>
+    <div class="search-list" ng-show="query.length > 2">
+        <div ng-switch on="resultCount">
+            <h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>
+
+            <h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>
+
+            <h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>
+        </div>
+
+        <a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
+
+        <ul id="tTypeList" ng-model="filteredReceivedStatus">
+            <li ng-repeat="status in filteredReceivedStatus">
+                <a href="#/received-status-edit/{{status.id}}">
+                    <span>{{status.name}}</span>
+                </a>
+
+                <div class="search-actions">
+                    <a href ng-click="showRemoveVaccineReceivedStatusDialog(status)">Delete</a></div>
+            </li>
+        </ul>
+    </div>
+
+    <div ng-hide="query.length > 2">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr class="gradient-header">
+            <th>#</th>
+            <th> Name </th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="receivedStatus in vaccineReceivedStatus">
+            <td>{{$index+1}}</td>
+            <td>{{receivedStatus.name}}</td>
+            <td> <a href ng-click="showRemoveVaccineReceivedStatusDialog(receivedStatus)">Delete</a> | <a href="#/received-status-edit/{{receivedStatus.id}}">Edit</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    </div>
+    </div>
+
+

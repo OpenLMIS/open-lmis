@@ -27,6 +27,10 @@ var vaccine = angular.module('vaccine', ['openlmis', 'ui.bootstrap','nsPopover']
         when('/manufacturerEdit/:id', {controller: VaccineManufacturerController, templateUrl: 'partials/vaccine-manufacturer-edit.html'}).
         when('/productMappingEdit/:manufacturerId/:productId', {controller: VaccineProductMappingController, templateUrl: 'partials/vaccine-product-mapping.html'}).
         when('/productMappingCreate/:manufacturerId', {controller: VaccineProductMappingController, templateUrl: 'partials/vaccine-product-mapping.html'}).
+        when('/transaction-type', {controller: VaccineTransactionTypeController, templateUrl: 'partials/vaccine-transaction-type.html'}).
+        when('/transaction-type-edit/:id', {controller: VaccineTransactionTypeController, templateUrl: 'partials/vaccine-transaction-type-edit.html'}).
+        when('/received-status', {controller: VaccineReceivedStatusController, templateUrl: 'partials/vaccine-received-status.html'}).
+        when('/received-status-edit/:id', {controller: VaccineReceivedStatusController, templateUrl: 'partials/vaccine-received-status-edit.html'}).
         otherwise({redirectTo: '/receive'});
 }]).directive('onKeyup', function () {
         return function (scope, elm, attrs) {

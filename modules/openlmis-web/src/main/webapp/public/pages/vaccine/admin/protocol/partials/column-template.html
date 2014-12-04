@@ -20,7 +20,7 @@
   <div class="rnr-template-columns">
 
     <ul ui-sortable ng-model="rnrSortableColumns" id="sortable">
-      <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in sortableColumns">
+      <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in sortableColumns" style="position: relative;">
         <div class="drag-handle"></div>
           <span class="tpl-visible">
             <input type="checkbox" ng-model="rnrColumn.visible" ng-disabled="rnrColumn.mandatory"/>
