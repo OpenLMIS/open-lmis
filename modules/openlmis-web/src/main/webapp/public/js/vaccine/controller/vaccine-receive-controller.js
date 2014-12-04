@@ -21,12 +21,17 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
     }
     if(!isUndefined($route.current.params.transactionId)){
 
+        $scope.showStatus = true;
+
         ReceiveVaccines.get({id:$route.current.params.transactionId},function(data){
             $scope.inventoryTransaction = data.receivedVaccine;
             $scope.inventoryTransaction.arrivalDate = $scope.convertStringToCorrectDateFormat($scope.inventoryTransaction.stringArrivalDate);
             $scope.inventoryTransaction.today = $scope.convertStringToCorrectDateFormat($scope.inventoryTransaction.stringTodayDate);
 
         });
+
+    }else{
+        $scope.showStatus = false;
     }
 
     $scope.convertStringToCorrectDateFormat = function(stringDate) {
@@ -35,17 +40,6 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         }
         return null;
     };
-
-    /*$scope.getDistributionBatchWithDateObjects = function(distributionBatch) {
-        if(!isUndefined(distributionBatch)){
-            distributionBatch.productionDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringProductionDate);
-            distributionBatch.expiryDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringExpiryDate);
-            distributionBatch.receiveDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringReceiveDate);
-            distributionBatch.recallDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringRecallDate);
-        }
-
-        return distributionBatch;
-    };*/
 
     Countries.get({param:''}, function(data){
         $scope.origins = data.countriesList;
@@ -141,8 +135,6 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         };
         $scope.inventoryTransaction.fromFacility = {id:$scope.selectedFacilityId};
         $scope.inventoryTransaction.toFacility = {id:$scope.selectedFacilityId};
-
-       // $scope.inventoryTransaction.inventoryBatches = $scope.batches;
 
         if ($scope.inventoryTransaction.id) {
             ReceiveVaccines.update({id:$scope.inventoryTransaction.id}, $scope.inventoryTransaction, updateSuccessHandler, errorHandler);
