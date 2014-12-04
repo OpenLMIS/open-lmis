@@ -85,9 +85,10 @@ function VaccineReportPOCReportController($scope){
     };
 
     $scope.renderGraph = function(){
-      //alert('mouse over');
-        $.plot("#placeholder", $scope.barChartData, $scope.barChartOption);
+        $scope.renderIt = true;
     };
+    $scope.renderIt = false;
+
 
 
 
