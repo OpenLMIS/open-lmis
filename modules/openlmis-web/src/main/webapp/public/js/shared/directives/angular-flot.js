@@ -15,6 +15,16 @@ app.directive('aFloat', function() {
             init(scope.afData,scope.afOption);
         });
 
+        scope.$watch('afRender', function(){
+            if(scope.afRender){
+
+               // alert('render chart is '+scope.afRender);
+                $.plot(element,scope.afData,scope.afOption);
+               // init(scope.afData,scope.afOption);
+            }
+
+        },true);
+
 
         function init(o,d){
             var totalWidth = element.width(), totalHeight = element.height();
@@ -35,7 +45,8 @@ app.directive('aFloat', function() {
         replace:true,
         scope: {
             afOption: '=',
-            afData: '='
+            afData: '=',
+            afRender:'='
         }
     };
 });
