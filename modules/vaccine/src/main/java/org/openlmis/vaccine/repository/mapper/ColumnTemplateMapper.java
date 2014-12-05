@@ -29,7 +29,8 @@ public interface ColumnTemplateMapper {
   @Select("select v.*, c.indicator, c.mandatory, c.description, c.name from vaccine_program_logistics_columns v " +
     "           join vaccine_logistics_master_columns c " +
     "               on c.id = v.masterColumnId " +
-    "         where v.programId = #{programId}")
+    "         where v.programId = #{programId} " +
+    "         order by v.displayOrder")
   List<LogisticsColumn> getForProgram(@Param("programId") Long programId);
 
 

@@ -18,8 +18,14 @@ function LogisticsColumnTemplate($scope, programs, VaccineColumnTemplate, Vaccin
     });
   };
 
+  updateDisplayOrder = function(){
+    angular.forEach($scope.sortableColumns, function(column, index){
+      column.displayOrder = index + 1;
+    });
+  };
 
   $scope.onSave = function(){
+    updateDisplayOrder();
     VaccineColumnTemplateSave.update({columns: $scope.sortableColumns}, function(data){
       $scope.sortableColumns       = data.columns;
       $scope.message = 'Your changes have been saved!';
