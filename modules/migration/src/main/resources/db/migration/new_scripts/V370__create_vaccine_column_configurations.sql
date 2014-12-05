@@ -15,9 +15,9 @@ CREATE TABLE vaccine_logistics_master_columns
 );
 
 
-CREATE TABLE vaccine_program_columns
+CREATE TABLE vaccine_program_logistics_columns
 (
-  id SERAL          PRIMARY KEY,
+  id                SERIAL PRIMARY KEY,
   programId         INT NOT NULL REFERENCES programs(id),
   masterColumnId    INT NOT NULL REFERENCES vaccine_logistics_master_columns(id),
   label             VARCHAR (200) NOT NULL,

@@ -8,36 +8,14 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function LogisticsColumnTemplate($scope, programs, VaccineColumnTemplate, VaccineColumnTemplateSave){
+package org.openlmis.vaccine.dto;
 
-  $scope.programs = programs;
+import lombok.Data;
+import org.openlmis.vaccine.domain.reports.LogisticsColumn;
 
-  $scope.onProgramChanged = function(){
-    VaccineColumnTemplate.get( {id: $scope.programId}, function(data){
-      $scope.sortableColumns       = data.columns;
-    });
-  };
+import java.util.List;
 
-
-  $scope.onSave = function(){
-    VaccineColumnTemplateSave.update({columns: $scope.sortableColumns}, function(data){
-      $scope.sortableColumns       = data.columns;
-      $scope.message = 'Your changes have been saved!';
-    });
-  };
-
+@Data
+public class ProgramColumnTemplateDTO {
+  List<LogisticsColumn> columns;
 }
-
-LogisticsColumnTemplate.resolve = {
-  programs: function($q, $timeout, Programs){
-    var deferred = $q.defer();
-
-    $timeout(function(){
-      Programs.get({type: 'push'}, function(data){
-        deferred.resolve(data.programs);
-      });
-    },100);
-
-    return deferred.promise;
-  }
-};

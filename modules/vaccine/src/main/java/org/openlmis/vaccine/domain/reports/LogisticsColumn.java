@@ -8,36 +8,30 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function LogisticsColumnTemplate($scope, programs, VaccineColumnTemplate, VaccineColumnTemplateSave){
+package org.openlmis.vaccine.domain.reports;
 
-  $scope.programs = programs;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 
-  $scope.onProgramChanged = function(){
-    VaccineColumnTemplate.get( {id: $scope.programId}, function(data){
-      $scope.sortableColumns       = data.columns;
-    });
-  };
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class LogisticsColumn extends BaseModel {
 
+  String name;
+  String description;
+  Integer displayOrder;
+  String label;
+  String indicator;
+  Boolean mandatory;
 
-  $scope.onSave = function(){
-    VaccineColumnTemplateSave.update({columns: $scope.sortableColumns}, function(data){
-      $scope.sortableColumns       = data.columns;
-      $scope.message = 'Your changes have been saved!';
-    });
-  };
+  Long programId;
+  Long masterColumnId;
+
+  Boolean visible;
 
 }
-
-LogisticsColumnTemplate.resolve = {
-  programs: function($q, $timeout, Programs){
-    var deferred = $q.defer();
-
-    $timeout(function(){
-      Programs.get({type: 'push'}, function(data){
-        deferred.resolve(data.programs);
-      });
-    },100);
-
-    return deferred.promise;
-  }
-};

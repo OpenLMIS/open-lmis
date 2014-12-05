@@ -8,36 +8,35 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function LogisticsColumnTemplate($scope, programs, VaccineColumnTemplate, VaccineColumnTemplateSave){
+package org.openlmis.vaccine.repository;
 
-  $scope.programs = programs;
+import org.openlmis.vaccine.domain.reports.LogisticsColumn;
+import org.openlmis.vaccine.repository.mapper.ColumnTemplateMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-  $scope.onProgramChanged = function(){
-    VaccineColumnTemplate.get( {id: $scope.programId}, function(data){
-      $scope.sortableColumns       = data.columns;
-    });
-  };
+import java.util.List;
 
+@Component
+public class ColumnTemplateRepository {
 
-  $scope.onSave = function(){
-    VaccineColumnTemplateSave.update({columns: $scope.sortableColumns}, function(data){
-      $scope.sortableColumns       = data.columns;
-      $scope.message = 'Your changes have been saved!';
-    });
-  };
+  @Autowired
+  ColumnTemplateMapper mapper;
+
+  public List<LogisticsColumn> getMasterColumns(){
+    return mapper.getAll();
+  }
+
+  public List<LogisticsColumn> getTemplateForProgram(Long programId){
+    return mapper.getForProgram(programId);
+  }
+
+  public void updateProgramColumn(LogisticsColumn column){
+    mapper.updateProgramColumn(column);
+  }
+
+  public void insertProgramColumn(LogisticsColumn column){
+    mapper.insertProgramColumn(column);
+  }
 
 }
-
-LogisticsColumnTemplate.resolve = {
-  programs: function($q, $timeout, Programs){
-    var deferred = $q.defer();
-
-    $timeout(function(){
-      Programs.get({type: 'push'}, function(data){
-        deferred.resolve(data.programs);
-      });
-    },100);
-
-    return deferred.promise;
-  }
-};

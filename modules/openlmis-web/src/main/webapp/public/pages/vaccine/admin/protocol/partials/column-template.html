@@ -10,38 +10,48 @@
 
 <div>
   <h3>Vaccine Logistics Configuration</h3>
-  <div>
-    <div class="info-box">
-      <p><strong openlmis-message="template.programName"></strong> Vaccine <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
-      </p>
-    </div>
-  </div>
-  <form name="configureRnRTemplateForm" ng-submit="save()">
-  <div class="rnr-template-columns">
 
-    <ul ui-sortable ng-model="rnrSortableColumns" id="sortable">
-      <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in sortableColumns" style="position: relative;">
-        <div class="drag-handle"></div>
-          <span class="tpl-visible">
-            <input type="checkbox" ng-model="rnrColumn.visible" ng-disabled="rnrColumn.mandatory"/>
-          </span>
-          <span class="tpl-indicator">
-            <div class="indicator" openlmis-message="rnrColumn.indicator"></div>
-          </span>
-          <span class="tpl-label">
-            <!--<input name="label" type="text" ng-model="rnrColumn.label" required maxlength="200"/>-->
-            <span class="col-desc" openlmis-message="rnrColumn.description"></span>
-          </span>
-      </li>
-    </ul>
+  <div ng-hide="programId">
+    <select ng-model="programId"
+            ng-options="program.id as program.name for program in programs"
+            ng-change="onProgramChanged(  )">
+    </select>
   </div>
-
-  <div form-toolbar id="action_buttons" class="action-buttons">
-    <div class="form-cell button-row">
-      <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-      <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
+  <div ng-show="programId">
+    <div>
+      <div class="info-box">
+        <p><strong openlmis-message="template.programName"></strong> Vaccine
+        </p>
+      </div>
     </div>
-    <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
-  </div>
-  </form>
+    <form name="configureRnRTemplateForm" ng-submit="onSave()">
+    <div class="rnr-template-columns">
+
+      <ul ui-sortable ng-model="rnrSortableColumns" id="sortable">
+        <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in sortableColumns" style="position: relative;">
+          <div class="drag-handle"></div>
+            <span class="tpl-visible">
+              <input type="checkbox" ng-model="rnrColumn.visible" ng-disabled="rnrColumn.mandatory"/>
+            </span>
+            <span class="tpl-indicator">
+              <div class="indicator" openlmis-message="rnrColumn.indicator"></div>
+            </span>
+            <span class="tpl-label">
+              <!--<input name="label" type="text" ng-model="rnrColumn.label" required maxlength="200"/>-->
+              <span class="col-desc" openlmis-message="rnrColumn.description"></span>
+            </span>
+        </li>
+      </ul>
+    </div>
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+      <div class="form-cell button-row">
+        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+        <a ng-href="/" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
+      </div>
+      <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+      <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+    </div>
+    </form>
+    </div>
 </div>
