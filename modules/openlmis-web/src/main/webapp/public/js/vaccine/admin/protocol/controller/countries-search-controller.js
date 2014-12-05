@@ -16,13 +16,13 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function CountriesLookupController($scope, $location,  $dialog, messageService,navigateBackService, countriesList,Countries) {
+function CountriesLookupController($scope, $location, $filter, $dialog,DeleteCountries, messageService,navigateBackService,ngTableParams, countriesList,Countries) {
 
 
     $scope.disabled = false;
     $scope.country = {};
 
-    $scope.countriesList = countriesList;
+    $scope.countries = countriesList;
 
 //    storage type search
 
@@ -43,7 +43,7 @@ function CountriesLookupController($scope, $location,  $dialog, messageService,n
             $scope.previousQuery = query;
 
             Countries.get({param: $scope.query.substr(0, 3)}, function (data) {
-                $scope.countries = data.countriesList;
+                $scope.countryList = data.countriesList;
                 filterCountiresByName(query);
             }, {});
 
@@ -62,11 +62,11 @@ function CountriesLookupController($scope, $location,  $dialog, messageService,n
         $scope.filteredCountries = [];
         query = query || "";
 
-        angular.forEach($scope.countries, function (country) {
+        angular.forEach($scope.countryList, function (country) {
             var name = country.name.toLowerCase();
 
             if (name.indexOf() >= 0 ||
-                name.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ) {
+                name.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
                 $scope.filteredCountries.push(country);
             }
         });
@@ -102,7 +102,7 @@ function CountriesLookupController($scope, $location,  $dialog, messageService,n
 
         $location.path('/countries');
     };
-    $scope.cancelEdit=function(){
+    $scope.cancelEdit = function () {
         $location.path('/countries');
     };
     $scope.clearSearch = function () {
@@ -114,7 +114,7 @@ function CountriesLookupController($scope, $location,  $dialog, messageService,n
     $scope.editCountries = function (id) {
         if (id) {
 
-            $location.path('/countries-update/'+id);
+            $location.path('/countries-update/' + id);
         }
     };
     $scope.deleteCountries = function (result) {
@@ -122,20 +122,20 @@ function CountriesLookupController($scope, $location,  $dialog, messageService,n
 
             var deleteSuccessCallback = function (data) {
                 $scope.$parent.message = 'Country Deleted Successfully';
-
+alert('here');
                 $scope.country = {};
 
-                    $scope.countries = countriesList;
+                $scope.countries = countriesList;
 
             };
 
             var deleteErorCallback = function (data) {
                 $scope.showError = true;
-
+                alert('here errr'+ messageService.get(data.data.error));
                 $scope.errorMessage = messageService.get(data.data.error);
             };
-
-            Countries.remove($scope.country, deleteSuccessCallback, deleteErorCallback);
+            alert('here '+ $scope.country.id);
+            DeleteCountries.save($scope.country, deleteSuccessCallback, deleteErorCallback);
 
         }
     };
@@ -152,8 +152,59 @@ function CountriesLookupController($scope, $location,  $dialog, messageService,n
         $scope.country = {};
         $location.path('/countries');
     };
+//start of pagination////////////////////////////////////////////////
 
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
 
+    $scope.paramsChanged = function(params) {
+        // slice array data on pages
+
+        $scope.countries = [];
+        $scope.data = countriesList;
+            params.total =  $scope.data.length;
+
+            var data = $scope.data;
+            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+         orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+      
+            params.total = orderedData.length;
+            $scope.countries = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            var i = 0;
+            var baseIndex = params.count * (params.page - 1) + 1;
+
+            while(i < $scope.countries.length){
+
+                $scope.countries[i].no = baseIndex + i;
+
+                i++;
+
+        }
+    };
+
+    // watch for changes of parameters
+    $scope.$watch('tableParams', $scope.paramsChanged , true);
+
+    $scope.getPagedDataAsync = function (pageSize, page) {
+        // Clear the results on the screen
+        $scope.countries = [];
+        $scope.data = [];
+        var params =  {
+            "max" : 10000,
+            "page" : 1
+        };
+
+        $.each($scope.filterObject, function(index, value) {
+            if(value !== undefined)
+                params[index] = value;
+        });
+        $scope.paramsChanged($scope.tableParams);
+//
+    };
 }
 CountriesLookupController.resolve = {
     countriesList: function ($q, $timeout, Countries) {

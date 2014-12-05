@@ -927,6 +927,9 @@ services.factory('Countries', function ($resource) {
 
     return resource;
 });
+services.factory('DeleteCountries', function ($resource) {
+    return $resource('/countries_remove.json', {}, {post:{method:'POST'}});
+});
 services.factory('StorageFacilityList', function ($resource) {
     return $resource('/facilityList.json', {}, {});
 });

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var vaccine = angular.module('vaccine', ['openlmis', 'ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
+var vaccine = angular.module('vaccine', ['openlmis', 'ngTable','ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
         when('/distribute', {controller: VaccineDistributeController, templateUrl: 'partials/vaccine-distribute-edit.html'}).
@@ -19,6 +19,8 @@ var vaccine = angular.module('vaccine', ['openlmis', 'ui.bootstrap']).config(['$
         when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
         when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
         when('/vaccine-storage', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage.html'}).
+        when('/vaccine-storage-edit/:id', {controller: VaccineStorageUpdateController, templateUrl: 'partials/vaccine-storage-update.html'}).
+        when('/vaccine-storage-create', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage-create.html'}).
         when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
         when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
         when('/quantification', {controller: VaccineQuantificationController, templateUrl: 'partials/vaccine-quantification.html'}).
