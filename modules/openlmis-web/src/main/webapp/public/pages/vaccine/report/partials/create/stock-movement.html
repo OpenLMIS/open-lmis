@@ -16,35 +16,33 @@
   <table class="table table-bordered">
     <thead>
     <tr>
-      <th class="span5">Product</th>
-      <th class="span1">Opening Balance</th>
-      <th class="span1">Received</th>
-      <th class="span1">Issued</th>
-      <th class="span1">Closing Balance</th>
-      <th class="gray-cascade span1">VVM Alerted</th>
-      <th class="gray-cascade span1">Freezed</th>
-      <th class="gray-cascade span1">Expired</th>
-      <!--<th class="gray-cascade span1">Other</th>-->
-      <!--<th class="gray-cascade span1">Discarded unopened</th>-->
-      <!--<th class="gray-cascade span1">Discarded opened</th>-->
+      <th ng-repeat-start="column in report.columnTemplate | filter : {visible:true}" ng-if="false"></th>
+      <th class="span5" ng-if="column.name == 'productName'">Product</th>
+      <th ng-repeat-end="" class="span1" ng-if="column.name != 'productName' && column.name != 'skipped'">{{column.label}}</th>
+
     </tr>
     </thead>
     <tbody>
     <tr class="productCategory" ng-repeat-start="product in report.logisticsLineItems" ng-show="$index == 0 || ( $index > 0 && product.productCategory != report.logisticsLineItems[$index - 1].productCategory)">
-      <td colspan="10">{{product.productCategory}}</td>
+      <td colspan="11">{{product.productCategory}}</td>
     </tr>
     <tr ng-repeat-end >
-      <td class="cell-input"><span class="cell-text">{{product.productName}}</span></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.openingBalance" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityReceived" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityIssued" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.closingBalance" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityVvmAlerted" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityFreezed" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityExpired" type="text" /></td>
-      <!--<td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityOtherWasted" type="text" /></td>-->
-      <!--<td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityDiscardedUnopened" type="text" /></td>-->
-      <!--<td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityDiscardedOpened" type="text" /></td>-->
+      <td ng-repeat-start="column in report.columnTemplate | filter : {visible:true}" ng-if="false"></td>
+        <td ng-if="column.name == 'productName'"  class="cell-input"><span class="cell-text">{{product.productName}}</span></td>
+        <!--<td ng-if="column.name == 'skipped'" class="cell-input col-beginningBalance">-->
+          <!--<input type="checkbox" ng-model="product.skipped"/>-->
+        <!--</td>-->
+        <td ng-if="column.name == 'openingBalance'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.openingBalance" type="text" /></td>
+        <td ng-if="column.name == 'quantityReceived'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityReceived" type="text" /></td>
+        <td ng-if="column.name == 'quantityIssued'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityIssued" type="text" /></td>
+        <td ng-if="column.name == 'closingBalance'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.closingBalance" type="text" /></td>
+        <td ng-if="column.name == 'quantityVvmAlerted'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityVvmAlerted" type="text" /></td>
+        <td ng-if="column.name == 'quantityFreezed'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityFreezed" type="text" /></td>
+        <td ng-if="column.name == 'quantityExpired'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityExpired" type="text" /></td>
+        <td ng-if="column.name == 'quantityOtherWasted'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityOtherWasted" type="text" /></td>
+        <td ng-if="column.name == 'quantityDiscardedUnopened'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityDiscardedUnopened" type="text" /></td>
+        <td ng-if="column.name == 'quantityDiscardedOpened'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityDiscardedOpened" type="text" /></td>
+      <td ng-repeat-end="" ng-if="false"></td>
     </tr>
     </tbody>
   </table>
