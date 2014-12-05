@@ -122,7 +122,7 @@ function CountriesLookupController($scope, $location, $filter, $dialog,DeleteCou
 
             var deleteSuccessCallback = function (data) {
                 $scope.$parent.message = 'Country Deleted Successfully';
-alert('here');
+
                 $scope.country = {};
 
                 $scope.countries = countriesList;
@@ -131,10 +131,10 @@ alert('here');
 
             var deleteErorCallback = function (data) {
                 $scope.showError = true;
-                alert('here errr'+ messageService.get(data.data.error));
+
                 $scope.errorMessage = messageService.get(data.data.error);
             };
-            alert('here '+ $scope.country.id);
+
             DeleteCountries.save($scope.country, deleteSuccessCallback, deleteErorCallback);
 
         }
