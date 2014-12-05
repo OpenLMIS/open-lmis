@@ -24,13 +24,13 @@ public interface VaccineDistributionBatchMapper {
             "            dispatchreference, dispatchdate, bol, donorid, origincountryid, \n" +
             "            manufacturerid, statusid, purpose, vvmtracked, barcoded, gs1, \n" +
             "            quantity, packsize, unitprice, totalcost, locationid, expecteddate, \n" +
-            "            arrivaldate, confirmedby, note, createdby, createddate, modifiedby, \n" +
+            "            arrivaldate, confirmedby, note,today, receivedAt, createdby, createddate, modifiedby, \n" +
             "            modifieddate) " +
             "VALUES (#{transactionType.id},#{fromFacility.id},#{toFacility.id},#{product.id}," +
             "#{dispatchReference},#{dispatchDate},#{bol},#{donor.id},#{originId}," +
             "#{manufacturer.id},#{status.id},#{purpose},#{vvmTracked},#{barCoded},#{gs1}," +
             "#{quantity},#{packSize},#{unitPrice},#{totalCost},#{storageLocation.id},#{expectedDate}," +
-            "#{arrivalDate},#{confirmedBy.id},#{note},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+            "#{arrivalDate},#{confirmedBy.id},#{note},#{today},#{receivedAt},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
     @Options(useGeneratedKeys = true)
     void insertInventoryTransaction(InventoryTransaction    inventoryTransaction);
 
@@ -39,7 +39,7 @@ public interface VaccineDistributionBatchMapper {
             "       origincountryid=#{originId}, manufacturerid=#{manufacturer.id}, statusid=#{status.id}, purpose=#{purpose}, vvmtracked=#{vvmTracked}, \n" +
             "       barcoded=#{barCoded}, gs1=#{gs1}, quantity=#{quantity}, packsize=#{packSize}, unitprice=#{unitPrice}, totalcost=#{totalCost}, \n" +
             "       locationid=#{storageLocation.id}, expecteddate=#{expectedDate}, arrivaldate=#{arrivalDate}, confirmedby=#{confirmedBy.id}, note=#{note}, \n" +
-            "       createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))\n" +
+            "       today=#{today}, receivedAt = #{receivedAt}, createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
             " WHERE id = #{id};")
     void updateInventoryTransaction(InventoryTransaction inventoryTransaction);
 
@@ -54,7 +54,7 @@ public interface VaccineDistributionBatchMapper {
     @Update("UPDATE inventory_batches\n" +
             "   SET batchnumber=#{batchNumber}, manufacturedate=#{productionDate}, expirydate=#{expiryDate}, \n" +
             "       quantity=#{quantity}, vvm1_qty=#{vvm1}, vvm2_qty=#{vvm2}, vvm3_qty=#{vvm3}, vvm4_qty=#{vvm4}, note=#{note}, \n" +
-            "       createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))\n" +
+            "       createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
             " WHERE id=#{id}")
     void updateInventoryBatch(InventoryBatch inventoryBatch);
 
@@ -70,9 +70,12 @@ public interface VaccineDistributionBatchMapper {
             "   SET productid=#{product.id}, facilityid=#{facility.id},\n" +
             "   quantity=#{quantity}, vvm1_qty=#{vvm1}, vvm2_qty=#{vvm2}, vvm3_qty=#{vvm3}, \n" +
             "       vvm4_qty=#{vvm4}, note=#{note}, modifiedby=#{modifiedBy}, \n" +
-            "       modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))\n" +
+            "       modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
             " WHERE id = #{id}")
     void updateOnHand(OnHand onHand);
+
+    @Delete("DELETE FROM on_hand where batchnumber = #{batchId}")
+    void deleteOnHandForBatchId(Long batchId);
 
     @Select("select * from inventory_transactions where toFacilityId = #{toFacilityId} ")
     @Results({
@@ -91,6 +94,7 @@ public interface VaccineDistributionBatchMapper {
 
     @Select("select * from inventory_transactions where id = #{id} ")
     @Results({
+            @Result(property = "id", column = "id"),
             @Result(property = "transactionType", javaType = TransactionType.class, column = "transactionTypeId",
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.TransactionTypeMapper.getById")),
             @Result(property = "product", javaType = Product.class, column = "productId",
@@ -103,7 +107,10 @@ public interface VaccineDistributionBatchMapper {
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.StatusMapper.getById")),
             @Result(property = "manufacturer.id", column = "manufacturerId"),
             @Result(property = "originId", column = "originCountryId" ),
-            @Result(property = "donor.id", column = "donorId")
+            @Result(property = "donor.id", column = "donorId"),
+            @Result(property = "storageLocation.id", column = "locationId"),
+            @Result(property = "inventoryBatches", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.VaccineDistributionBatchMapper.getBatchesByTransactionId"))
     })
     InventoryTransaction getInventoryTransactionsById(Long id);
 
@@ -122,6 +129,16 @@ public interface VaccineDistributionBatchMapper {
 
     })
     List<InventoryBatch> getUsableBatches(Long productId);
+
+    @Select("SELECT * from inventory_batches where transactionId = #{transactionId}")
+    @Results({
+            @Result(property = "vvm1", column = "vvm1_qty"),
+            @Result(property = "vvm2", column = "vvm2_qty"),
+            @Result(property = "vvm3", column = "vvm3_qty"),
+            @Result(property = "vvm4", column = "vvm4_qty"),
+            @Result(property = "productionDate", column = "manufactureDate")
+    })
+    List<InventoryBatch> getBatchesByTransactionId(Long transactionId);
 
 
 }

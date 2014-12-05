@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineReceiveController($scope,$route,$location,messageService,GetDonors,Products,Manufacturers,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccines){
+function VaccineReceiveController($scope,$route,$location,messageService,GetDonors,Products,Manufacturers,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccines,Countries){
 
     $scope.message = "";
 
@@ -16,12 +16,22 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
 
     if(!isUndefined($route.current.params.facilityId)){
         $scope.selectedFacilityId = $route.current.params.facilityId;
+    }else{
+        $scope.selectedFacilityId = $scope.$parent.selectedFacilityId;
     }
     if(!isUndefined($route.current.params.transactionId)){
 
+        $scope.showStatus = true;
+
         ReceiveVaccines.get({id:$route.current.params.transactionId},function(data){
             $scope.inventoryTransaction = data.receivedVaccine;
+            $scope.inventoryTransaction.arrivalDate = $scope.convertStringToCorrectDateFormat($scope.inventoryTransaction.stringArrivalDate);
+            $scope.inventoryTransaction.today = $scope.convertStringToCorrectDateFormat($scope.inventoryTransaction.stringTodayDate);
+
         });
+
+    }else{
+        $scope.showStatus = false;
     }
 
     $scope.convertStringToCorrectDateFormat = function(stringDate) {
@@ -31,18 +41,9 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         return null;
     };
 
-    $scope.getDistributionBatchWithDateObjects = function(distributionBatch) {
-        if(!isUndefined(distributionBatch)){
-            distributionBatch.productionDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringProductionDate);
-            distributionBatch.expiryDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringExpiryDate);
-            distributionBatch.receiveDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringReceiveDate);
-            distributionBatch.recallDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringRecallDate);
-        }
-
-        return distributionBatch;
-    };
-
-    $scope.origins = [{id:0,name:'France'},{id:1,name:'USA'}];
+    Countries.get({param:''}, function(data){
+        $scope.origins = data.countriesList;
+    });
 
     VaccineDistributionStatus.get({}, function(data){
        $scope.status = data.status;
@@ -53,10 +54,7 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
            }
        });
     });
-/*
-    DistributionTypes.get({}, function(data){
-        $scope.distributionTypes = data.distributionTypes;
-    });*/
+
     Manufacturers.get({}, function (data) {
         $scope.manufacturers = data.manufacturers;
     });
@@ -95,9 +93,8 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
     };
 
 
-    $scope.addBatches = function (distribution) {
+    $scope.addBatches = function () {
         $scope.resetAddBatchesModal();
-      //  $scope.batch = null;
         $scope.addBatchesModal = true;
     };
     $scope.resetAddBatchesModal = function () {
@@ -128,7 +125,7 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         };
 
         var updateSuccessHandler = function () {
-            successHandler("message.distribution.batch.updated.success");
+            successHandler("Received vaccine updated successfully");
         };
 
         var errorHandler = function (response) {
@@ -138,8 +135,6 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         };
         $scope.inventoryTransaction.fromFacility = {id:$scope.selectedFacilityId};
         $scope.inventoryTransaction.toFacility = {id:$scope.selectedFacilityId};
-
-        $scope.inventoryTransaction.inventoryBatches = $scope.batches;
 
         if ($scope.inventoryTransaction.id) {
             ReceiveVaccines.update({id:$scope.inventoryTransaction.id}, $scope.inventoryTransaction, updateSuccessHandler, errorHandler);
@@ -158,8 +153,41 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
             $scope.showError = false;
             $scope.error = '';
         }
-        $scope.batches.push($scope.batch);
+        if(isUndefined($scope.inventoryTransaction.inventoryBatches)){
+            $scope.inventoryTransaction.inventoryBatches = [];
+        }
+        if(!isUndefined($scope.batch.id)){
+            var rejected = _.reject($scope.inventoryTransaction.inventoryBatches, function(batch){
+                return batch.id == $scope.batch.id;
+
+            });
+            $scope.inventoryTransaction.inventoryBatches = rejected;
+            $scope.inventoryTransaction.inventoryBatches.push(getDataFormattedInventoryBatch($scope.batch));
+        }else{
+            $scope.inventoryTransaction.inventoryBatches.push(getDataFormattedInventoryBatch($scope.batch));
+        }
         $scope.batch = undefined;
         $scope.addBatchesModal = undefined;
+    };
+
+    var getDataFormattedInventoryBatch = function(batch){
+        if(!isUndefined(batch)){
+            batch.stringExpiryDate = batch.expiryDate;
+            batch.stringProductionDate = batch.productionDate;
+        }
+        return batch;
+    };
+
+    $scope.editBatch = function(batch){
+        $scope.batch = batch;
+        if(!isUndefined($scope.batch)){
+            $scope.batch.expiryDate = $scope.convertStringToCorrectDateFormat($scope.batch.stringExpiryDate);
+            $scope.batch.productionDate = $scope.convertStringToCorrectDateFormat($scope.batch.stringProductionDate);
+        }
+        $scope.addBatches();
+    };
+
+    $scope.deleteBatch = function(batch){
+
     };
 }

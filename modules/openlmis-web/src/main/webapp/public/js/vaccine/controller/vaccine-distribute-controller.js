@@ -100,7 +100,7 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         };
 
         var saveSuccessHandler = function (response) {
-            $scope.inventoryTransaction = response.receiveVaccine.inventoryTransaction;
+            $scope.inventoryTransaction = response.distributeVaccine;
             successHandler(response.success);
         };
 

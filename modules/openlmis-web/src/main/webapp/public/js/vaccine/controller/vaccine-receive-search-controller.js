@@ -55,6 +55,7 @@ function VaccineReceiveSearchController($scope,ReceiveVaccines,UserFacilityList,
 
 
     $scope.$watch('selectedFacilityId', function(){
+        $scope.$parent.selectedFacilityId = $scope.selectedFacilityId;
         if(!isUndefined($scope.selectedFacilityId)){
             ReceiveVaccines.get({facilityId:$scope.selectedFacilityId}, function(data){
                 $scope.inventoryTransactions = data.receivedVaccines;

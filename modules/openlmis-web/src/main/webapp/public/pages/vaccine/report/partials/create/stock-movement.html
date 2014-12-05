@@ -20,12 +20,13 @@
       <th class="span1">Opening Balance</th>
       <th class="span1">Received</th>
       <th class="span1">Issued</th>
+      <th class="span1">Closing Balance</th>
       <th class="gray-cascade span1">VVM Alerted</th>
       <th class="gray-cascade span1">Freezed</th>
       <th class="gray-cascade span1">Expired</th>
-      <th class="gray-cascade span1">Other</th>
-      <th class="gray-cascade span1">Discarded unopened</th>
-      <th class="gray-cascade span1">Discarded opened</th>
+      <!--<th class="gray-cascade span1">Other</th>-->
+      <!--<th class="gray-cascade span1">Discarded unopened</th>-->
+      <!--<th class="gray-cascade span1">Discarded opened</th>-->
     </tr>
     </thead>
     <tbody>
@@ -34,15 +35,16 @@
     </tr>
     <tr ng-repeat-end >
       <td class="cell-input"><span class="cell-text">{{product.productName}}</span></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.openingBalance" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.openingBalance" type="text" /></td>
       <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityReceived" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityIssued" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityVvmAlerted" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityFreezed" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityExpired" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityIssued" type="text" /></td>
       <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityOtherWasted" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityDiscardedUnopened" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityDiscardedOpened" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityVvmAlerted" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityFreezed" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-disabled="!product.product.fullSupply" ng-model="product.quantityExpired" type="text" /></td>
+      <!--<td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityOtherWasted" type="text" /></td>-->
+      <!--<td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityDiscardedUnopened" type="text" /></td>-->
+      <!--<td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="product.quantityDiscardedOpened" type="text" /></td>-->
     </tr>
     </tbody>
   </table>

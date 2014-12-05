@@ -73,8 +73,15 @@ public class VaccineDistributionBatchRepository {
             } else {
                 distributionBatchMapper.updateInventoryTransaction(inventoryTransaction);
                 //Update list of batches
+
                 for(InventoryBatch inventoryBatch : inventoryTransaction.getInventoryBatches()){
-                    distributionBatchMapper.updateInventoryBatch(inventoryBatch);
+                    if(inventoryBatch.getId() != null){
+                        distributionBatchMapper.updateInventoryBatch(inventoryBatch);
+                        distributionBatchMapper.deleteOnHandForBatchId(inventoryBatch.getId());//first delete all on hands for existing batch and recreate
+                    }else{
+                        inventoryBatch.setInventoryTransaction(inventoryTransaction);
+                        distributionBatchMapper.insertInventoryBatch(inventoryBatch);
+                    }
 
                     //insert onHand
                     OnHand onHand = new OnHand();
@@ -89,7 +96,7 @@ public class VaccineDistributionBatchRepository {
                     }
                     onHand.setFacility(inventoryTransaction.getToFacility());
 
-                    distributionBatchMapper.updateOnHand(onHand);
+                    distributionBatchMapper.insertOnHand(onHand);
                 }
             }
         } catch (DuplicateKeyException duplicateKeyException) {

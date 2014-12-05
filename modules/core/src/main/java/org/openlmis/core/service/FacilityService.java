@@ -284,4 +284,8 @@ public class FacilityService {
     return facilityRepository.getAllInRequisitionGroups(requisitionGroups);
  }
 
+ public List<Facility> getAllForGeographicZone(Long geographizZoneId){
+     return facilityRepository.getAllForGeographicZone(geographizZoneId);
+ }
+
 }

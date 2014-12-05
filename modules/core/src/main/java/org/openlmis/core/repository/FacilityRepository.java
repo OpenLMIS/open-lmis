@@ -239,4 +239,8 @@ public class FacilityRepository {
   public List<FacilityImages> getFacilityImages(Long facilityId) {
     return mapper.getFacilityImages(facilityId);
   }
+
+  public List<Facility> getAllForGeographicZone(Long geographicZoneId){
+      return mapper.getForGeographicZone(geographicZoneId);
+  }
 }
