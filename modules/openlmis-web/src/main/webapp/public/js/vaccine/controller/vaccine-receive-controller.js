@@ -120,7 +120,6 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         };
 
         var saveSuccessHandler = function (response) {
-            alert('success '+JSON.stringify(response));
             $scope.inventoryTransaction = response.receiveVaccine;
             successHandler(response.success);
         };

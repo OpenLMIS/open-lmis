@@ -273,13 +273,15 @@
                                         <tr ng-repeat="data in stocksData.data">
                                             <td>{{data.vaccine}}</td>
                                             <td class="number" ng-class="colorify(data.received)">{{data.received === null ? '-' : (data.received | number)}}</td>
-                                            <td class="number" ng-class="colorify(data.amc)"><a ng-mouseover="renderGraph($index)" href="" ns-popover
+                                            <td class="number" ng-class="colorify(data.amc)">
+                                                <a ng-mouseover="renderGraph($index)" href="" ns-popover
                                                 ns-popover-template="amc"
                                                 ns-popover-trigger="mouseenter"
                                                 ns-popover-timeout="0.2"
                                                 ns-popover-placement="right|center"
                                                 ns-popover-theme="ns-popover-tooltip-theme">{{data.amc === null ? '-': (data.amc | number)}}
-                                                </a></td>
+                                                </a>
+                                            </td>
                                             <td class="number" ng-class="colorify(data.soh)">
                                                 <a ng-mouseover="renderGraph($index)" href="" ns-popover
                                                    ns-popover-template="soh"

@@ -213,32 +213,11 @@ function VaccineReportPOCReportController($scope, GeoZoneFacilityTrees){
     }
 
     var amcTickLabel =  [[1, "Jan"], [2, "Feb"], [3, "March"],[4, "April"],[5, "May"],[6, "Jun"],[7, "Jul"],[8, "Aug"],[9, "Sep"],[10, "Oct"],[11, "Nov"],[12, "Dec"]];
-    var amcXAxisLabel = 'AMC';
+
     $scope.amcChartOption = generateBarsOption(1,amcTickLabel,'AMC');
-    $scope.sohChartOption = generateBarsOption(2,amcTickLabel,'SOH');
+    $scope.sohChartOption = generateBarsOption(1,amcTickLabel,'SOH');
     $scope.amcChart = [{
-        label: "AMC",
-        data: GenerateSeries(0),
-        color: "#5eb95e",
-        bars: {
-            show: true,
-            showNumbers: true,
-            numbers : {
-                yAlign: function(y) { if(y!==0){ return y ; }else{return null;}}
-                //show: true
-            },
-
-            barWidth: 0.8,
-            fill: 0.9/*,
-            align: "center",
-            barWidth: 0.5,
-            fill: 0.9,
-            lineWidth:1*/
-        }
-    }];
-
-    $scope.sohChart = [{
-        //label:"SOH",
+        label:"AMC",
         data: GenerateSeries(0),
         color: "#faa732",
         points: { fillColor: "#faa732", show: true },
@@ -248,6 +227,28 @@ function VaccineReportPOCReportController($scope, GeoZoneFacilityTrees){
                 //show: true
             }}
     }];
+
+    $scope.sohChart = [
+        {
+            label: "SOH",
+            data: GenerateSeries(0),
+            color: "#5eb95e",
+            bars: {
+                show: true,
+                showNumbers: true,
+                numbers : {
+                    yAlign: function(y) { if(y!==0){ return y ; }else{return null;}}
+                    //show: true
+                },
+
+                barWidth: 0.8,
+                fill: 0.9/*,
+                 align: "center",
+                 barWidth: 0.5,
+                 fill: 0.9,
+                 lineWidth:1*/
+            }
+        }];
 
     function generateBarsOption(id, tickLabel, yaxizLabel){
         return {
@@ -301,56 +302,6 @@ function VaccineReportPOCReportController($scope, GeoZoneFacilityTrees){
 
     }
 
-
-
-    /*$scope.barChartData =  [{ label: "Random Tabs Data Size", data:  GenerateSeries(0), color: "#5482FF" }];
-    $scope.barChartOption = {
-        series: {
-            bars: {show: true,
-                align: "center",
-                lineWidth:0,
-                fill: 0.6,
-                barWidth: 0.3
-            }
-        },
-        xaxis: {
-            axisLabel: "Sample tabs",
-            axisLabelUseCanvas: false,
-            ticks: barChartTicks
-        },
-        yaxis: {
-            axisLabel: "Data Size",
-            axisLabelUseCanvas: false,
-            tickFormatter: function (v, axis) {
-                return v + "kb";
-            }
-        },
-        legend: {
-            container:$("#barChartLegend"),
-            noColumns: 0
-        },
-        grid:{
-            clickable:true,
-            hoverable: true,
-            //autoHighlight: true,
-            borderWidth: 1,
-            borderColor: "#d6d6d6",
-            minBorderMargin: 20,
-            labelMargin: 10,
-            backgroundColor: {
-                colors: ["#FFF", "#CCC"]
-            }
-        },tooltip: true,
-        tooltipOpts: {
-            content: "%s of %x.0 is %y",
-            shifts: {
-                x: 20,
-                y: 0
-            },
-            defaultTheme: false
-        }
-    };
-*/
     $scope.renderGraph = function(index){
         //alert('index is '+index)
         $scope.renderIt = true;

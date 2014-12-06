@@ -82,8 +82,8 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         var successHandler = function (msgKey) {
             $scope.showError = false;
             $scope.error = "";
-            $scope.$parent.message = messageService.get(msgKey, $scope.inventoryTransaction.id);
-            $scope.$parent.inventoryTransactionId = $scope.inventoryTransaction.id;
+            $scope.$parent.message = messageService.get(msgKey);
+            //$scope.$parent.inventoryTransactionId = $scope.inventoryTransaction.id;
             $location.path('/');
         };
 

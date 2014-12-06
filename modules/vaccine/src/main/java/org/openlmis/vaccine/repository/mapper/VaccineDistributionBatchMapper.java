@@ -115,16 +115,17 @@ public interface VaccineDistributionBatchMapper {
     InventoryTransaction getInventoryTransactionsById(Long id);
 
     @Select("WITH tempBatch AS(\n" +
-            "SELECT ib.* \n" +
-            "FROM inventory_transactions inv\n" +
-            "INNER JOIN Inventory_batches ib on inv.id = ib.transactionId\n" +
-            "WHERE inv.productId =2396 AND vvmtracked = true and (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0)) > 0\n" +
-            "UNION ALL\n" +
-            "SELECT ib.* \n" +
-            "FROM inventory_transactions inv\n" +
-            "INNER JOIN Inventory_batches ib on inv.id = ib.transactionId\n" +
-            "WHERE inv.productId =2396 AND vvmtracked = false and (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0) + COALESCE(ib.vvm3_qty,0) + COALESCE(ib.vvm4_qty,0)) = 0)\n" +
-            "SELECT * FROM tempBatch order by tempBatch.expirydate")
+            "            SELECT ib.* \n" +
+            "            FROM inventory_transactions inv\n" +
+            "            INNER JOIN Inventory_batches ib on inv.id = ib.transactionId\n" +
+            "            WHERE inv.productId =#{productId} AND vvmtracked = true and (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0)) > 0 and statusId in (select id from received_status  where name in ('QA inspected','Put to storage'))\n" +
+            "            UNION ALL\n" +
+            "            SELECT ib.* \n" +
+            "            FROM inventory_transactions inv\n" +
+            "            INNER JOIN Inventory_batches ib on inv.id = ib.transactionId\n" +
+            "            WHERE inv.productId =#{productId} AND vvmtracked = false and (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0) + COALESCE(ib.vvm3_qty,0) + COALESCE(ib.vvm4_qty,0)) = 0\n" +
+            "            and  statusId in (select id from received_status  where name in ('QA inspected','Put to storage')))\n" +
+            "            SELECT * FROM tempBatch order by tempBatch.expirydate")
     @Results({
             @Result(property = "vvm1", column = "vvm1_qty"),
             @Result(property = "vvm2", column = "vvm2_qty"),
