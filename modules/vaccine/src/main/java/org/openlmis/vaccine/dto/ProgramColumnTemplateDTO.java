@@ -8,42 +8,14 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.domain.reports;
+package org.openlmis.vaccine.dto;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.Product;
+import org.openlmis.vaccine.domain.reports.LogisticsColumn;
+
+import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class LogisticsLineItem extends BaseModel{
-
-  private Long reportId;
-  private Long productId;
-  private String productCode;
-  private String productName;
-  private String productCategory;
-
-  private Product product;
-
-  private Integer displayOrder;
-
-  private Long openingBalance;
-  private Long quantityReceived;
-  private Long quantityIssued;
-  private Long closingBalance;
-  private Long quantityVvmAlerted;
-  private Long quantityFreezed;
-  private Long quantityExpired;
-  private Long quantityDiscardedUnopened;
-  private Long quantityDiscardedOpened;
-  private Long quantityWastedOther;
-
-  private Long endingBalance;
+public class ProgramColumnTemplateDTO {
+  List<LogisticsColumn> columns;
 }

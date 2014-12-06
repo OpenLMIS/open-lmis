@@ -32,6 +32,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class VaccineReport extends BaseModel {
+
   private Long   periodId;
   private Long   programId;
   private Long   facilityId;
@@ -45,6 +46,8 @@ public class VaccineReport extends BaseModel {
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;
   private List<CampaignLineItem> campaignLineItems;
+
+  private List<LogisticsColumn> columnTemplate;
 
   @JsonIgnore
   private List<VaccineCoverageItem> coverageItems;
@@ -87,6 +90,7 @@ public class VaccineReport extends BaseModel {
   public void initializeCoverageLineItems(List<VaccineProductDose> dosesToCover) {
     coverageItems = new ArrayList<>();
     for(VaccineProductDose dose: dosesToCover){
+
       VaccineCoverageItem item = new VaccineCoverageItem();
 
       item.setReportId(id);
@@ -126,7 +130,9 @@ public class VaccineReport extends BaseModel {
         }
       }
       dto.setItems(items);
-      coverageLineItems.add(dto);
+      if(items.size() > 0) {
+        coverageLineItems.add(dto);
+      }
     }
   }
 

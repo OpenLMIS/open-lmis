@@ -8,74 +8,42 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function LogisticsColumnTemplate($scope){
+function LogisticsColumnTemplate($scope, programs, VaccineColumnTemplate, VaccineColumnTemplateSave){
 
-  $scope.sortableColumns = [{
-                              mandatory: true,
-                              visible: true,
-                              description: 'Product Name',
-                              label: 'Product',
-                              indicator: 'A'
-                            },
-                            {
-                              mandatory: false,
-                              visible: true,
-                              description: 'Opening Balance',
-                              label: 'Opening Balance',
-                              indicator: 'B'
-                            },
-                            {
-                              mandatory: false,
-                              visible: true,
-                              description: 'Received',
-                              label: 'Received',
-                              indicator: 'C'
-                            },
-                            {
-                              mandatory: false,
-                              visible: true,
-                              description: 'VVM Alerted',
-                              label: 'VVM Alerted',
-                              indicator: 'D'
-                            },
-                            {
-                              mandatory: false,
-                              visible: true,
-                              description: 'Freezed',
-                              label: 'Freezed',
-                              indicator: 'E'
-                            },
-                            {
-                              mandatory: false,
-                              visible: true,
-                              description: 'Expired',
-                              label: 'Expired',
-                              indicator: 'F'
-                            },
-                            {
-                              mandatory: false,
-                              visible: true,
-                              description: 'Other',
-                              label: 'Other',
-                              indicator: 'G'
-                            },
-                            {
-                              mandatory: false,
-                              visible: true,
-                              description: 'Discarded Unopened',
-                              label: 'Discarded Unopened',
-                              indicator: 'H'
-                            },
-                            {
-                              mandatory: false,
-                              visible: true,
-                              description: 'Discarded Opened',
-                              label: 'Discarded Opened',
-                              indicator: 'I'
-                            } ];
+  $scope.programs = programs;
+
+  $scope.onProgramChanged = function(){
+    VaccineColumnTemplate.get( {id: $scope.programId}, function(data){
+      $scope.sortableColumns       = data.columns;
+    });
+  };
+
+  updateDisplayOrder = function(){
+    angular.forEach($scope.sortableColumns, function(column, index){
+      column.displayOrder = index + 1;
+    });
+  };
+
+  $scope.onSave = function(){
+    updateDisplayOrder();
+    VaccineColumnTemplateSave.update({columns: $scope.sortableColumns}, function(data){
+      $scope.sortableColumns       = data.columns;
+      $scope.message = 'Your changes have been saved!';
+    });
+  };
 
 }
 
 LogisticsColumnTemplate.resolve = {
+  programs: function($q, $timeout, Programs){
+    var deferred = $q.defer();
 
+    $timeout(function(){
+      Programs.get({type: 'push'}, function(data){
+        deferred.resolve(data.programs);
+      });
+    },100);
+
+    return deferred.promise;
+  }
 };

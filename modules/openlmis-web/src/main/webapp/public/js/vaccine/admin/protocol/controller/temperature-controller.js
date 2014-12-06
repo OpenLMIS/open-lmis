@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function TempratureLookupController($scope, $location,  $dialog, messageService, CreateTemprature,
+function TempratureLookupController($scope, $location, $filter,ngTableParams, $dialog, messageService, CreateTemprature,
                                     UpdateTemprature,navigateBackService,DeleteTemprature,TempratureList,Tempratures,tempratureList) {
 
 
@@ -149,6 +149,60 @@ $scope.cancelCreate=function(){
 
     };
 //    end of search
+    //start of pagination////////////////////////////////////////////////
+
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
+
+    $scope.paramsChanged = function (params) {
+        // slice array data on pages
+
+        $scope.tempratureList = [];
+        $scope.data = tempratureList;
+
+        params.total = $scope.data.length;
+
+        var data = $scope.data;
+        var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+        orderedData = params.sorting ? $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+        params.total = orderedData.length;
+        $scope.tempratureList = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+        var i = 0;
+        var baseIndex = params.count * (params.page - 1) + 1;
+
+        while (i < $scope.tempratureList.length) {
+
+            $scope.tempratureList[i].no = baseIndex + i;
+
+            i++;
+
+        }
+    };
+
+    // watch for changes of parameters
+    $scope.$watch('tableParams', $scope.paramsChanged, true);
+
+    $scope.getPagedDataAsync = function (pageSize, page) {
+        // Clear the results on the screen
+        $scope.tempratureList = [];
+        $scope.data = [];
+        var params = {
+            "max": 10000,
+            "page": 1
+        };
+
+        $.each($scope.filterObject, function (index, value) {
+            if (value !== undefined)
+                params[index] = value;
+        });
+        $scope.paramsChanged($scope.tableParams);
+    };
+// end of pagination
 }
 ///////////////////////////
 TempratureLookupController.resolve = {

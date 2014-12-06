@@ -35,6 +35,9 @@ public class VaccineProductDoseService {
     List<ProductDoseProtocolDTO> protocols= new ArrayList<>();
     List<ProgramProduct> pp = programProductRepository.getActiveByProgram(programId);
     for(ProgramProduct p : pp){
+      if(!p.getProduct().getFullSupply()){
+        continue;
+      }
       ProductDoseProtocolDTO protocol= new ProductDoseProtocolDTO();
       protocol.setProductId(p.getProduct().getId());
       protocol.setProductName(p.getProduct().getName());

@@ -7,10 +7,11 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineStorageController($scope, $location, $route, $dialog, messageService, CreateVaccineStorage, UpdateVaccineStorage, VaccineStorageList, VaccineStorageDetail, DeleteVaccineStorage, StorageTypeList, TempratureList, StorageFacilityList) {
+function VaccineStorageController($scope, $location, $filter,ngTableParams, $route, $dialog, messageService, CreateVaccineStorage, UpdateVaccineStorage, VaccineStorageList, VaccineStorageDetail, DeleteVaccineStorage, StorageTypeList, TempratureList, StorageFacilityList) {
 
 
     $scope.disabled = false;
+    $scope.title = 'Vaccine Storage List View';
     StorageFacilityList.get({}, function (data) {
         $scope.facillityList = data.facilityList;
     }, function (data) {
@@ -66,17 +67,14 @@ function VaccineStorageController($scope, $location, $route, $dialog, messageSer
         else {
             CreateVaccineStorage.save($scope.vaccineStorage, createSuccessCallback, errorCallback);
         }
-
+        $location.path('/vaccine-storage');
     };
-
+    $scope.cancelEdit = function () {
+        $location.path('/vaccine-storage');
+    };
     $scope.editVaccineStorage = function (id) {
         if (id) {
-            VaccineStorageDetail.get({id: id}, function (data) {
-                $scope.vaccineStorage = data.vaccineStorage;
-//            if($scope.editHelpTopic.active === false){
-//                $scope.disableAllFields();
-//            }
-            });
+            $location.path('/vaccine-storage-edit/' + id);
         }
     };
     $scope.deleteVaccineStorage = function (result) {
@@ -113,6 +111,64 @@ function VaccineStorageController($scope, $location, $route, $dialog, messageSer
     $scope.clearForm = function () {
         $scope.vaccineStorage = {};
     };
+
+    //start of pagination////////////////////////////////////////////////
+
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
+
+    $scope.paramsChanged = function (params) {
+        // slice array data on pages
+
+        $scope.vaccineStorageList = [];
+        VaccineStorageList.get({}, function (data) {
+            $scope.data = data.vaccineStorageList;
+        }, function (data) {
+            $location.path($scope.$parent.sourceUrl);
+        });
+        params.total = $scope.data.length;
+
+        var data = $scope.data;
+        var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+        orderedData = params.sorting ? $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+        params.total = orderedData.length;
+        $scope.vaccineStorageList = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+        var i = 0;
+        var baseIndex = params.count * (params.page - 1) + 1;
+
+        while (i < $scope.vaccineStorageList.length) {
+
+            $scope.vaccineStorageList[i].no = baseIndex + i;
+
+            i++;
+
+        }
+    };
+
+    // watch for changes of parameters
+    $scope.$watch('tableParams', $scope.paramsChanged, true);
+
+    $scope.getPagedDataAsync = function (pageSize, page) {
+        // Clear the results on the screen
+        $scope.vaccineStorageList = [];
+        $scope.data = [];
+        var params = {
+            "max": 10000,
+            "page": 1
+        };
+
+        $.each($scope.filterObject, function (index, value) {
+            if (value !== undefined)
+                params[index] = value;
+        });
+        $scope.paramsChanged($scope.tableParams);
+    };
+// end of pagination
 }
 
 

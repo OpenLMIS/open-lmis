@@ -469,6 +469,17 @@ public class VaccineStorageController extends BaseController  {
     public  ResponseEntity<OpenLmisResponse>  searchCountries(@RequestParam(required = true) String param) {
         return OpenLmisResponse.response(COUNTRIESLIST, this.countriesService.searchForCountries(param));
     }
+    @RequestMapping(value = "/countries_remove", method = RequestMethod.POST, headers = "Accept=application/json")
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> deleteCountries(@RequestBody Countries countries, HttpServletRequest request) {
+        System.out.println(" here deleting "+ countries.getName());
+        this.countriesService.removeCountries(countries);
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + countries.getId()) + "Deleted successfully");
+        response.getBody().addData(COUNTRIES, countries);
+        response.getBody().addData(COUNTRIESLIST, this.countriesService.loadCountriesList());
+
+        return response;
+    }
     @RequestMapping(value = "/countriesList", method = RequestMethod.GET)
     //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public  ResponseEntity<OpenLmisResponse>  loadAllCountries() {

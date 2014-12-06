@@ -11,6 +11,7 @@
 package org.openlmis.vaccine.repository.mapper.reports;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Product;
 import org.openlmis.vaccine.domain.reports.LogisticsLineItem;
 import org.springframework.stereotype.Repository;
 
@@ -20,9 +21,9 @@ import java.util.List;
 public interface VaccineReportLogisticsLineItemMapper {
 
   @Insert("INSERT INTO vaccine_report_logistics_line_items " +
-    " (reportId, productId, productCode, productName, productCategory, displayOrder, openingBalance, quantityReceived, quantityIssued, quantityVvmAlerted, quantityFreezed, quantityExpired, quantityDiscardedUnopened, quantityDiscardedOpened, quantityWastedOther, endingBalance, createdBy, createdDate, modifiedBy, modifiedDate)" +
+    " (reportId, productId, productCode, productName, productCategory, displayOrder, openingBalance, quantityReceived, quantityIssued, closingBalance, quantityVvmAlerted, quantityFreezed, quantityExpired, quantityDiscardedUnopened, quantityDiscardedOpened, quantityWastedOther, endingBalance, createdBy, createdDate, modifiedBy, modifiedDate)" +
     " values " +
-    " (#{reportId}, #{productId}, #{productCode}, #{productName}, #{productCategory} , #{displayOrder}, #{openingBalance}, #{quantityReceived}, #{quantityIssued}, #{quantityVvmAlerted}, #{quantityFreezed}, #{quantityExpired}, #{quantityDiscardedUnopened}, #{quantityDiscardedOpened}, #{quantityWastedOther}, #{endingBalance}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+    " (#{reportId}, #{productId}, #{productCode}, #{productName}, #{productCategory} , #{displayOrder}, #{openingBalance}, #{quantityReceived}, #{quantityIssued}, #{closingBalance}, #{quantityVvmAlerted}, #{quantityFreezed}, #{quantityExpired}, #{quantityDiscardedUnopened}, #{quantityDiscardedOpened}, #{quantityWastedOther}, #{endingBalance}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
   void insert(LogisticsLineItem lineItem);
 
@@ -37,6 +38,7 @@ public interface VaccineReportLogisticsLineItemMapper {
     ", openingBalance = #{openingBalance} " +
     ", quantityReceived = #{quantityReceived} " +
     ", quantityIssued = #{quantityIssued} " +
+    ", closingBalance = #{closingBalance} " +
     ", quantityVvmAlerted = #{quantityVvmAlerted}" +
     ", quantityFreezed = #{quantityFreezed} " +
     ", quantityExpired = #{quantityExpired} " +
@@ -50,6 +52,11 @@ public interface VaccineReportLogisticsLineItemMapper {
   void update(LogisticsLineItem lineItem);
 
   @Select("select * from vaccine_report_logistics_line_items where reportId = #{reportId}")
+    @Results(value = {
+      @Result(property = "productId", column = "productId"),
+      @Result(property = "product", column = "productId", javaType = Product.class,
+        one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+    })
   List<LogisticsLineItem> getLineItems(@Param("reportId") Long reportId);
 
 }
