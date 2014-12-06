@@ -120,6 +120,7 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         };
 
         var saveSuccessHandler = function (response) {
+            alert('success '+JSON.stringify(response));
             $scope.inventoryTransaction = response.receiveVaccine;
             successHandler(response.success);
         };
@@ -129,6 +130,7 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         };
 
         var errorHandler = function (response) {
+            alert('error '+JSON.stringify(response));
             $scope.showError = true;
             $scope.message = "";
             $scope.error = response.data.error;

@@ -960,6 +960,10 @@ services.factory('DistributeVaccines', function ($resource) {
     return $resource('/vaccine/distribute-vaccine.json', {}, {});
 });
 
+services.factory('GeoZoneFacilityTrees', function($resource){
+   return $resource('/vaccine/geographic-zone-facility/tree.json',{},{});
+});
+
 
 /* End: Vaccine Supply Line */
 

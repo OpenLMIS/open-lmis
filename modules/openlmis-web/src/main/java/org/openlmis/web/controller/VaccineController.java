@@ -50,6 +50,9 @@ public class VaccineController extends BaseController {
     @Autowired
     private StatusService statusService;
 
+    @Autowired
+    private VaccineDashboardReportService vaccineReportService;
+
     @RequestMapping(value = "/target/create", method = POST, headers = ACCEPT_JSON)
     // TODO: Add appropriate permission
     //  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE')")
@@ -116,7 +119,7 @@ public class VaccineController extends BaseController {
         inventoryTransaction.setCreatedBy(loggedInUserId(request));
         inventoryTransaction.setModifiedBy(loggedInUserId(request));
 
-        ResponseEntity<OpenLmisResponse> response;
+        //ResponseEntity<OpenLmisResponse> response;
         try {
             distributionBatchService.receiveVaccine(inventoryTransaction);
 
@@ -129,9 +132,11 @@ public class VaccineController extends BaseController {
         response.getBody().addData("receiveVaccine", inventoryTransaction);
         return response;*/
 
-        String successMessage = messageService.message("Vaccine received successfully");
+        return success("Vaccine received successfully");
+
+        /*String successMessage = messageService.message("Vaccine received successfully");
         OpenLmisResponse openLmisResponse = new OpenLmisResponse("receiveVaccine", inventoryTransaction);
-        return openLmisResponse.successEntity(successMessage);
+        return openLmisResponse.successEntity(successMessage);*/
     }
 
     @RequestMapping(value = "/receive-vaccine/{id}", method = PUT, headers = ACCEPT_JSON)
@@ -148,9 +153,10 @@ public class VaccineController extends BaseController {
             return openLmisResponse.errorEntity(exception, BAD_REQUEST);
         }
 
-        String successMessage = messageService.message("Inventory transaction updated successfully");
+        return success("Inventory transaction updated successfully");
+       /* String successMessage = messageService.message("Inventory transaction updated successfully");
         OpenLmisResponse openLmisResponse = new OpenLmisResponse("receiveVaccine", inventoryTransaction);
-        return openLmisResponse.successEntity(successMessage);
+        return openLmisResponse.successEntity(successMessage);*/
     }
 
     @RequestMapping(value = "/distribute-vaccine", method = POST, headers = ACCEPT_JSON)
@@ -175,6 +181,11 @@ public class VaccineController extends BaseController {
         return response;
     }
 
+
+    @RequestMapping(value = "/geographic-zone-facility/tree", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity getGeoZoneFacilityTree(HttpServletRequest request){
+        return OpenLmisResponse.response("geoZoneFacilities",vaccineReportService.getGeoZoneTree(loggedInUserId(request)));
+    }
     @RequestMapping(value = "/manufacturers", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getManufacturers(){
         return OpenLmisResponse.response("manufacturers", manufacturerService.getAll());

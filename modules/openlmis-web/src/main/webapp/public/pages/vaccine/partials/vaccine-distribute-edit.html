@@ -37,11 +37,11 @@
                 </span>
                 </div>
                 <div class="span4">
-                    <label for="receivedAt">Distribute to<span class="label-required"> *</span></label>
-                    <select   id="receivedAt"  name="receivedAt" ng-model="inventoryTransaction.receivedAt" ng-required="true" style="width:90%;">
+                    <label for="distributedTo">Distribute to<span class="label-required"> *</span></label>
+                    <select   id="distributedTo"  name="distributedTo" ng-model="inventoryTransaction.distributedTo" ng-required="true" style="width:90%;">
                         <option  ng-repeat="option in regions | orderBy : 'name' " value="{{ option.id }}">{{ option.name }}</option>
                     </select>
-                <span class="field-error" ng-show="inventoryTransactionForm.receivedAt.$error.required && showError"
+                <span class="field-error" ng-show="inventoryTransactionForm.distributedTo.$error.required && showError"
                       openlmis-message="missing.value">
                 </span>
                 </div>
@@ -176,10 +176,10 @@
 
         <div class="row-fluid">
             <div class="span12">
-                <label for="notes" openlmis-message="label.notes"></label>
-                <textarea id="notes" type="text"
+                <label for="notes">Note</label>
+                <textarea id="notes" 
                           name="notes"
-                          ng-model="distributionBatch.notes"/>
+                          ng-model="distributionBatch.notes" style="width: 400px;height: 200px;"/>
             </div>
         </div>
 

@@ -24,13 +24,13 @@ public interface VaccineDistributionBatchMapper {
             "            dispatchreference, dispatchdate, bol, donorid, origincountryid, \n" +
             "            manufacturerid, statusid, purpose, vvmtracked, barcoded, gs1, \n" +
             "            quantity, packsize, unitprice, totalcost, locationid, expecteddate, \n" +
-            "            arrivaldate, confirmedby, note,today, receivedAt, createdby, createddate, modifiedby, \n" +
+            "            arrivaldate, confirmedby, note,today, receivedAt,distributedTo, createdby, createddate, modifiedby, \n" +
             "            modifieddate) " +
             "VALUES (#{transactionType.id},#{fromFacility.id},#{toFacility.id},#{product.id}," +
             "#{dispatchReference},#{dispatchDate},#{bol},#{donor.id},#{originId}," +
             "#{manufacturer.id},#{status.id},#{purpose},#{vvmTracked},#{barCoded},#{gs1}," +
             "#{quantity},#{packSize},#{unitPrice},#{totalCost},#{storageLocation.id},#{expectedDate}," +
-            "#{arrivalDate},#{confirmedBy.id},#{note},#{today},#{receivedAt},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+            "#{arrivalDate},#{confirmedBy.id},#{note},#{today},#{receivedAt},#{distributedTo},#{createdBy},COALESCE(#{createdDate}, NOW()),#{modifiedBy},COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
     @Options(useGeneratedKeys = true)
     void insertInventoryTransaction(InventoryTransaction    inventoryTransaction);
 
@@ -39,7 +39,7 @@ public interface VaccineDistributionBatchMapper {
             "       origincountryid=#{originId}, manufacturerid=#{manufacturer.id}, statusid=#{status.id}, purpose=#{purpose}, vvmtracked=#{vvmTracked}, \n" +
             "       barcoded=#{barCoded}, gs1=#{gs1}, quantity=#{quantity}, packsize=#{packSize}, unitprice=#{unitPrice}, totalcost=#{totalCost}, \n" +
             "       locationid=#{storageLocation.id}, expecteddate=#{expectedDate}, arrivaldate=#{arrivalDate}, confirmedby=#{confirmedBy.id}, note=#{note}, \n" +
-            "       today=#{today}, receivedAt = #{receivedAt}, createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
+            "       today=#{today}, receivedAt = #{receivedAt},distributedTo=#{distributedTo}, createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
             " WHERE id = #{id};")
     void updateInventoryTransaction(InventoryTransaction inventoryTransaction);
 
@@ -114,12 +114,17 @@ public interface VaccineDistributionBatchMapper {
     })
     InventoryTransaction getInventoryTransactionsById(Long id);
 
-    @Select("SELECT ib.* \n" +
+    @Select("WITH tempBatch AS(\n" +
+            "SELECT ib.* \n" +
             "FROM inventory_transactions inv\n" +
             "INNER JOIN Inventory_batches ib on inv.id = ib.transactionId\n" +
-            "WHERE inv.productId = #{productId} \n" +
-          //  "AND CASE WHEN inv.vvmtracked THEN (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0)) > 0 END\n" +
-            "order by ib.expiryDate \n")
+            "WHERE inv.productId =2396 AND vvmtracked = true and (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0)) > 0\n" +
+            "UNION ALL\n" +
+            "SELECT ib.* \n" +
+            "FROM inventory_transactions inv\n" +
+            "INNER JOIN Inventory_batches ib on inv.id = ib.transactionId\n" +
+            "WHERE inv.productId =2396 AND vvmtracked = false and (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0) + COALESCE(ib.vvm3_qty,0) + COALESCE(ib.vvm4_qty,0)) = 0)\n" +
+            "SELECT * FROM tempBatch order by tempBatch.expirydate")
     @Results({
             @Result(property = "vvm1", column = "vvm1_qty"),
             @Result(property = "vvm2", column = "vvm2_qty"),

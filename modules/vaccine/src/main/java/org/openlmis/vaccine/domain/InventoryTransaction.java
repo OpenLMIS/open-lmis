@@ -47,6 +47,7 @@ public class InventoryTransaction extends BaseModel{
     private Donor donor;
     private Long originId;
     private Long receivedAt;
+    private Long distributedTo;
     private Manufacturer manufacturer;
     private Status status;
     private String purpose;

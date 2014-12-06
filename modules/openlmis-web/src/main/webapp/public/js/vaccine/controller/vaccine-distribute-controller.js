@@ -22,17 +22,6 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         return null;
     };
 
-    $scope.getDistributionBatchWithDateObjects = function(distributionBatch) {
-        if(!isUndefined(distributionBatch)){
-            distributionBatch.productionDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringProductionDate);
-            distributionBatch.expiryDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringExpiryDate);
-            distributionBatch.receiveDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringReceiveDate);
-            distributionBatch.recallDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringRecallDate);
-        }
-
-        return distributionBatch;
-    };
-
     VaccineDistributionStatus.get({}, function(data){
        $scope.status = data.status;
         $scope.receivedStatus = [];
@@ -80,7 +69,6 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
     $scope.resetAddBatchesModal = function () {
         $scope.addBatchesModal = false;
         $scope.error = undefined;
-       // $scope.distribution = undefined;
     };
 
     $scope.saveDistributionBatch = function(){
@@ -117,6 +105,10 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         $scope.inventoryTransaction.toFacility = {id:14277};
 
         DistributeVaccines.save({},$scope.inventoryTransaction, saveSuccessHandler, errorHandler);
+
+    };
+
+    $scope.validateQuantityToDistribute = function(batch){
 
     };
 
