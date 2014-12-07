@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineDistributeController($scope,$route,$location,messageService,Products,VaccineDistributionStatus,GeographicZones,UsableBatches,DistributeVaccines){
+function VaccineDistributeController($scope,$route,$location,messageService,PushProgramProducts,VaccineDistributionStatus,GeographicZones,UsableBatches,DistributeVaccines){
 
     $scope.message = "";
 
@@ -33,8 +33,8 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         $scope.spanLength = "span"+(Math.round(12/$scope.receivedStatus.length));
     });
 
-    Products.get({}, function(data){
-        $scope.products = data.productList;
+    PushProgramProducts.get({}, function(data){
+        $scope.products = data.products;
     });
 
     $scope.regions = [];
