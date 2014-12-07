@@ -967,6 +967,10 @@ services.factory('GeoZoneFacilityTrees', function($resource){
    return $resource('/vaccine/geographic-zone-facility/tree.json',{},{});
 });
 
+services.factory('PushProgramProducts', function($resource){
+   return $resource('/reports/push-program/products.json',{},{});
+});
+
 
 /* End: Vaccine Supply Line */
 

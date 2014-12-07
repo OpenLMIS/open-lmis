@@ -174,6 +174,11 @@ public class ReportLookupController extends BaseController {
     return this.reportLookupService.getProductsActiveUnderProgram(programId);
   }
 
+  @RequestMapping(value = "/push-program/products", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getPushProgramProducts(HttpServletRequest request){
+    return OpenLmisResponse.response("products", reportLookupService.getPushProgramProducts());
+  }
+
   @RequestMapping(value="/products_by_category", method = GET, headers = BaseController.ACCEPT_JSON)
   public List<Product> getProductsByCategory(@RequestParam(value = "category", required = true, defaultValue = "0") int category, @RequestParam(value = "program", required = true, defaultValue = "0") int programId){
       return this.reportLookupService.getProductListByCategory(programId, category);

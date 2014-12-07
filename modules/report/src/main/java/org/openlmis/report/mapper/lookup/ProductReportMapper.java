@@ -63,6 +63,19 @@ public interface ProductReportMapper {
   )
   List<Product> getProductsForProgram(Long programId);
 
+  @Select("SELECT p.id, p.primaryname as name, p.code, pp.productcategoryid categoryid, \n" +
+          "    CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer\n" +
+          "     \n" +
+          "       FROM \n" +
+          "           products as p \n" +
+          "                 join product_forms as form on form.id = p.formid \n" +
+          "                 join dosage_units as du on du.id = p.dosageunitid\n" +
+          "             join program_products pp on p.id = pp.productId \n" +
+          "             join programs pg on pg.id = pp.programId\n" +
+          "         where pg.push = True  and pp.active = true \n" +
+          "     order by name ")
+  List<Product> getPushProgramProducts();
+
   @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, pp.productcategoryid as categoryid, " +
     "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
     " " +
