@@ -51,7 +51,7 @@ public class InventoryTransaction extends BaseModel{
     private Manufacturer manufacturer;
     private Status status;
     private String purpose;
-    private Boolean vvmTracked;
+    private Boolean vvmTracked = Boolean.FALSE;
     private Boolean barCoded;
     private Boolean gs1;
     private Integer quantity;

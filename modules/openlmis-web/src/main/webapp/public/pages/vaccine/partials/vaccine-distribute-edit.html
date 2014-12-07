@@ -116,8 +116,8 @@
         <div class="row-fluid">
             <a href="" ng-click="addBatches()" class="pull-right btn btn-primary"><span id="distribution-batch-add-new"
                                                                                         openlmis-message="button.add.new"></span></a>
-
-            <table ng-show="batches || batches.length > 0"  class="table table-striped table-bordered">
+            <label for="batches" >Batches</label>
+            <table class="table table-striped table-bordered">
                 <thead class="gradient-header">
                 <th>Batch Number</th>
                 <th>Expiry Date</th>
@@ -204,7 +204,7 @@
             </h3>
         </div>
 
-        <div class="modal-body">
+        <div class="modal-body vaccine-report">
             <form ng-submit="saveBatches()" id="add-batch" name="addBatchForm" novalidate>
                 <table ng-show="usableBatches == undefined || usableBatches.length == 0"  class="table table-striped table-bordered">
                     <thead class="gradient-header">
@@ -222,22 +222,28 @@
                 </table>
                 <table ng-show="usableBatches || usableBatches.length > 0"  class="table table-striped table-bordered">
                     <thead class="gradient-header">
-                        <th><div openlmis-message="label.select.all"></div><div><input type="checkbox" ng-model="formFilter.selectAll" ng-change="selectAllFacilities()"/></div></th>
+                        <th><div openlmis-message="label.select.all"></div><div><input type="checkbox" ng-model="selectAll" ng-change="selectAllBatches()"/></div></th>
                         <th>Batch Number</th>
                         <th>Expiry Date</th>
                         <th>Production Date</th>
-                        <th>SOH</th>
+                        <th>VVVM Tracked</th>
+                        <th style="text-align: right">SOH</th>
+                        <th style="text-align: right">VVM1</th>
+                        <th style="text-align: right">VVM2</th>
                         <th>Quantity to send</th>
                     </thead>
                     <tbody>
                         <tr ng-repeat="batch in usableBatches">
                             <td><input type="checkbox" ng-model="batch.selected" ng-change="facilitySelectChange(row.selected)"/></td>
 
-                            <td>{{batch.batchNumber}}</td>
-                            <td>{{ convertStringToCorrectDateFormat(batch.stringExpiryDate) }}</td>
-                            <td>{{ convertStringToCorrectDateFormat(batch.stringProductionDate) }}</td>
-                            <td>{{batch.quantity}}</td>
-                            <td><input type="number" ng-model="batch.dispatchQuantity"/>
+                            <td style="width: 120px;">{{batch.batchNumber}}</td>
+                            <td style="width: 90px;">{{ convertStringToCorrectDateFormat(batch.stringExpiryDate) }}</td>
+                            <td style="width: 98px;">{{ convertStringToCorrectDateFormat(batch.stringProductionDate) }}</td>
+                            <td style="width: 100px; text-align: center"><input type="checkbox" ng-disabled="true" value="{{batch.inventoryTransaction.vvmTracked}}"/></td>
+                            <td style="width: 98px;" class="number">{{batch.quantity | number}}</td>
+                            <td style="width: 98px;" class="number">{{batch.vvm1 | number}}</td>
+                            <td style="width: 98px;" class="number">{{batch.vvm2 | number}}</td>
+                            <td><input style="width: 85px;" type="number" ng-model="batch.dispatchQuantity"/>
 
                             </td>
                         </tr>

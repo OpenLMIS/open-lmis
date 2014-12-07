@@ -115,15 +115,15 @@ public interface VaccineDistributionBatchMapper {
     InventoryTransaction getInventoryTransactionsById(Long id);
 
     @Select("WITH tempBatch AS(\n" +
-            "            SELECT ib.* \n" +
+            "            SELECT ib.*, inv.vvmtracked \n" +
             "            FROM inventory_transactions inv\n" +
             "            INNER JOIN Inventory_batches ib on inv.id = ib.transactionId\n" +
-            "            WHERE inv.productId =#{productId} AND vvmtracked = true and (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0)) > 0 and statusId in (select id from received_status  where name in ('QA inspected','Put to storage'))\n" +
+            "            WHERE inv.productId =#{productId} AND COALESCE(vvmtracked, false) = true and (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0)) > 0 and statusId in (select id from received_status  where name in ('QA inspected','Put to storage'))\n" +
             "            UNION ALL\n" +
-            "            SELECT ib.* \n" +
+            "            SELECT ib.*, inv.vvmtracked \n" +
             "            FROM inventory_transactions inv\n" +
             "            INNER JOIN Inventory_batches ib on inv.id = ib.transactionId\n" +
-            "            WHERE inv.productId =#{productId} AND vvmtracked = false and (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0) + COALESCE(ib.vvm3_qty,0) + COALESCE(ib.vvm4_qty,0)) = 0\n" +
+            "            WHERE inv.productId =#{productId} AND COALESCE(vvmtracked, false) = false and (COALESCE(ib.vvm1_qty,0) + COALESCE(ib.vvm2_qty,0) + COALESCE(ib.vvm3_qty,0) + COALESCE(ib.vvm4_qty,0)) = 0\n" +
             "            and  statusId in (select id from received_status  where name in ('QA inspected','Put to storage')))\n" +
             "            SELECT * FROM tempBatch order by tempBatch.expirydate")
     @Results({
@@ -131,7 +131,8 @@ public interface VaccineDistributionBatchMapper {
             @Result(property = "vvm2", column = "vvm2_qty"),
             @Result(property = "vvm3", column = "vvm3_qty"),
             @Result(property = "vvm4", column = "vvm4_qty"),
-            @Result(property = "productionDate", column = "manufactureDate")
+            @Result(property = "productionDate", column = "manufactureDate"),
+            @Result(property = "inventoryTransaction.vvmTracked", column = "vvmTracked", javaType = Boolean.class)
 
     })
     List<InventoryBatch> getUsableBatches(Long productId);

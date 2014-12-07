@@ -49,7 +49,10 @@ public class VaccineDistributionBatchRepository {
                 if(inventoryTransaction.getId() != null && inventoryTransaction.getInventoryBatches() != null ){
                     //insert list of batches
                     for(InventoryBatch inventoryBatch : inventoryTransaction.getInventoryBatches()){
-                        inventoryBatch.setInventoryTransaction(inventoryTransaction);
+
+                        InventoryTransaction transaction = new InventoryTransaction();
+                        transaction.setId(inventoryTransaction.getId());
+                        inventoryBatch.setInventoryTransaction(transaction);
                         distributionBatchMapper.insertInventoryBatch(inventoryBatch);
 
 
@@ -79,7 +82,9 @@ public class VaccineDistributionBatchRepository {
                         distributionBatchMapper.updateInventoryBatch(inventoryBatch);
                         distributionBatchMapper.deleteOnHandForBatchId(inventoryBatch.getId());//first delete all on hands for existing batch and recreate
                     }else{
-                        inventoryBatch.setInventoryTransaction(inventoryTransaction);
+                        InventoryTransaction transaction = new InventoryTransaction();
+                        transaction.setId(inventoryTransaction.getId());
+                        inventoryBatch.setInventoryTransaction(transaction);
                         distributionBatchMapper.insertInventoryBatch(inventoryBatch);
                     }
 

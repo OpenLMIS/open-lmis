@@ -91,10 +91,10 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
             $scope.inventoryTransaction = response.distributeVaccine;
             successHandler(response.success);
         };
-
+/*
         var updateSuccessHandler = function () {
             successHandler("message.distribution.batch.updated.success");
-        };
+        };*/
 
         var errorHandler = function (response) {
             $scope.showError = true;
@@ -103,6 +103,7 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         };
         $scope.inventoryTransaction.fromFacility = {id:14277};
         $scope.inventoryTransaction.toFacility = {id:14277};
+        $scope.inventoryTransaction.inventoryBatches = $scope.batches;
 
         DistributeVaccines.save({},$scope.inventoryTransaction, saveSuccessHandler, errorHandler);
 
@@ -124,11 +125,49 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         $scope.batches = [];
         angular.forEach($scope.usableBatches, function(batch){
             if(batch.selected){
-                batch.quantity = batch.dispatchQuantity;
-                $scope.batches.push(batch);
+                if($scope.validateDispatchQuantity(batch)){
+                    batch.quantity = batch.dispatchQuantity;
+                    $scope.batches.push(batch);
+                    $scope.addBatchesModal = undefined;
+                }else{
+                    $scope.error = messageService.get("Quantity to dispatch should not be greater than available quantity");
+                    $scope.showError = true;
+                    return false;
+                }
+
             }
         });
-        $scope.addBatchesModal = undefined;
+
+    };
+
+    $scope.validateDispatchQuantity = function(batch){
+        if(isUndefined(batch)){
+            return false;
+        }
+        if(batch.inventoryTransaction.vvmTracked){
+            return batch.dispatchQuantity <= (batch.vvm1+batch.vvm2);
+        }
+        return batch.dispatchQuantity <= batch.quantity;
+    };
+
+    $scope.selectAllBatches = function(){
+        if($scope.selectAll === true){
+            if(!isUndefined($scope.usableBatches)){
+                var markAllBatches = _.map($scope.usableBatches,function(batch){
+                    batch.selected = true;
+                    return batch;
+                });
+                $scope.usableBatches = markAllBatches;
+            }
+        }else{
+            if(!isUndefined($scope.usableBatches)){
+                var unmarkAllBatches = _.map($scope.usableBatches,function(batch){
+                    batch.selected = false;
+                    return batch;
+                });
+                $scope.usableBatches = unmarkAllBatches;
+            }
+        }
     };
 
 }

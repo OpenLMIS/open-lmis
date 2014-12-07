@@ -89,7 +89,7 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
     });
 
     $scope.cancelDistributionBatchSave = function () {
-        $location.path('#/distribution-batch');
+        $location.path('#/receive');
     };
 
 
@@ -114,8 +114,8 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         var successHandler = function (msgKey) {
             $scope.showError = false;
             $scope.error = "";
-            $scope.$parent.message = messageService.get(msgKey, $scope.inventoryTransaction.id);
-            $scope.$parent.inventoryTransactionId = $scope.inventoryTransaction.id;
+            $scope.$parent.message = messageService.get(msgKey);
+           // $scope.$parent.inventoryTransactionId = $scope.inventoryTransaction.id;
             $location.path('/');
         };
 
@@ -129,7 +129,6 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         };
 
         var errorHandler = function (response) {
-            alert('error '+JSON.stringify(response));
             $scope.showError = true;
             $scope.message = "";
             $scope.error = response.data.error;
