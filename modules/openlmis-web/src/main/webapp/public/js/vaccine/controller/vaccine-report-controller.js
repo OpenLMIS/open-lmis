@@ -46,6 +46,8 @@ function VaccineReportPOCReportController($scope, GeoZoneFacilityTrees){
                 {name:'No. of Outreach/Mobile sessions during the month', value: null}
             ]}
     ];
+    $scope.randomData = GenerateSeries(0);
+    $scope.amcValue = $scope.sohValue = $scope.randomData[11][1];
     $scope.getDemographicData = function(){
         $scope.demogData = _.findWhere($scope.demographicData,{facilityId:138});
         $scope.completnessData = _.findWhere($scope.completeness,{facilityId:138});
@@ -111,16 +113,16 @@ function VaccineReportPOCReportController($scope, GeoZoneFacilityTrees){
     $scope.iec = [];
     $scope.stocks = [{facilityId: 138,
                     data: [
-                        {vaccine:'BCG', received:null, amc:null, soh:null, vvmStatus:null, freezing:null, expired:null, noOpened:401841, wastage:16},
-                        {vaccine:'OPV', received:null, amc:null, soh:null, vvmStatus:null, freezing:null, expired:null, noOpened:1040875, wastage:2},
-                        {vaccine:'Penta', received:null, amc:null, soh:null, vvmStatus:null, freezing:null, expired:null, noOpened:839570, wastage:-2},
-                        {vaccine:'Pneumo', received:null, amc:null, soh:null, vvmStatus:null, freezing:null, expired:null, noOpened:423050, wastage:-19},
-                        {vaccine:'Rota', received:null, amc:null, soh:null, vvmStatus:null, freezing:null, expired:null, noOpened:null, wastage:null},
-                        {vaccine:'Measles', received:null, amc:null, soh:null, vvmStatus:null, freezing:null, expired:null, noOpened:296138, wastage:12},
-                        {vaccine:'YF', received:null, amc:null, soh:null, vvmStatus:null, freezing:null, expired:null, noOpened:298364, wastage:14},
-                        {vaccine:'TT', received:null, amc:null, soh:null, vvmStatus:null, freezing:null, expired:null, noOpened:446224, wastage:15},
-                        {vaccine:'HPV', received:null, amc:null, soh:null, vvmStatus:null, freezing:null, expired:null, noOpened:null, wastage:null},
-                        {vaccine:'DT', received:null, amc:null, soh:null, vvmStatus:null, freezing:null, expired:null, noOpened:null, wastage:null}
+                        {vaccine:'BCG', received:null, amc:$scope.amcValue, soh:$scope.sohValue, vvmStatus:null, freezing:null, expired:null, noOpened:401841, wastage:16},
+                        {vaccine:'OPV', received:null, amc:$scope.amcValue, soh:$scope.sohValue, vvmStatus:null, freezing:null, expired:null, noOpened:1040875, wastage:2},
+                        {vaccine:'Penta', received:null, amc:$scope.amcValue, soh:$scope.sohValue, vvmStatus:null, freezing:null, expired:null, noOpened:839570, wastage:-2},
+                        {vaccine:'Pneumo', received:null, amc:$scope.amcValue, soh:$scope.sohValue, vvmStatus:null, freezing:null, expired:null, noOpened:423050, wastage:-19},
+                        {vaccine:'Rota', received:null, amc:$scope.amcValue, soh:$scope.sohValue, vvmStatus:null, freezing:null, expired:null, noOpened:null, wastage:null},
+                        {vaccine:'Measles', received:null, amc:$scope.amcValue, soh:$scope.sohValue, vvmStatus:null, freezing:null, expired:null, noOpened:296138, wastage:12},
+                        {vaccine:'YF', received:null, amc:$scope.amcValue, soh:$scope.sohValue, vvmStatus:null, freezing:null, expired:null, noOpened:298364, wastage:14},
+                        {vaccine:'TT', received:null, amc:$scope.amcValue, soh:$scope.sohValue, vvmStatus:null, freezing:null, expired:null, noOpened:446224, wastage:15},
+                        {vaccine:'HPV', received:null, amc:$scope.amcValue, soh:$scope.sohValue, vvmStatus:null, freezing:null, expired:null, noOpened:null, wastage:null},
+                        {vaccine:'DT', received:null, amc:$scope.amcValue, soh:$scope.sohValue, vvmStatus:null, freezing:null, expired:null, noOpened:null, wastage:null}
 
                     ]
     }];
@@ -218,7 +220,7 @@ function VaccineReportPOCReportController($scope, GeoZoneFacilityTrees){
     $scope.sohChartOption = generateBarsOption(1,amcTickLabel,'SOH');
     $scope.amcChart = [{
         label:"AMC",
-        data: GenerateSeries(0),
+        data:  $scope.randomData,
         color: "#faa732",
         points: { fillColor: "#faa732", show: true },
         lines: {show:true, showNumbers: true,
@@ -231,7 +233,7 @@ function VaccineReportPOCReportController($scope, GeoZoneFacilityTrees){
     $scope.sohChart = [
         {
             label: "SOH",
-            data: GenerateSeries(0),
+            data:  $scope.randomData,
             color: "#5eb95e",
             bars: {
                 show: true,
