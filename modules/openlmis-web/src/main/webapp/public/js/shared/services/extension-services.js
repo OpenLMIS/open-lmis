@@ -107,6 +107,10 @@ services.factory('ReportSchedules', function ($resource) {
     return $resource('/reports/schedules.json', {}, {});
 });
 
+services.factory('ReportProgramSchedules', function ($resource) {
+    return $resource('/reports/schedules-by-program.json', {}, {});
+});
+
 services.factory('ReportFacilityTypes', function ($resource) {
     return $resource('/reports/facilityTypes.json', {}, {});
 });
