@@ -10,6 +10,7 @@
 
 package org.openlmis.report.mapper.lookup;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.Schedule;
 import org.springframework.stereotype.Repository;
@@ -18,8 +19,16 @@ import java.util.List;
 @Repository
 public interface ScheduleReportMapper {
 
-    @Select("SELECT id, name, description, code " +
-            "   FROM " +
-            "       processing_schedules order by name")
-    List<Schedule> getAll();
+  @Select("SELECT id, name, description, code " +
+          "   FROM " +
+          "       processing_schedules order by name")
+  List<Schedule> getAll();
+
+  @Select("SELECT id, name, description, code " +
+    "   FROM " +
+    "       processing_schedules s " +
+    "   where s.id in " +
+    "         (select scheduleId from requisition_group_program_schedules where programId = #{programId}) " +
+    "     order by name")
+  List<Schedule> getSchedulesForProgram(@Param("programId")long programId);
 }

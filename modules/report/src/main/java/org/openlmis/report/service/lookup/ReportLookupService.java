@@ -556,4 +556,8 @@ public class ReportLookupService {
     public List<Donor> getAllDonors() {
         return donorRepository.getAll();
     }
+
+    public List<Schedule> getSchedulesByProgram(long program) {
+        return scheduleMapper.getSchedulesForProgram(program);
+    }
 }

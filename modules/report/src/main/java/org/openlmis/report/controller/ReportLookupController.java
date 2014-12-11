@@ -96,6 +96,11 @@ public class ReportLookupController extends BaseController {
       return OpenLmisResponse.response( "schedules", this.reportLookupService.getAllSchedules() ) ;
   }
 
+  @RequestMapping(value="/schedules-by-program", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getSchedulesByProgram(@RequestParam(value = "program", required = true, defaultValue = "0") long program ){
+    return OpenLmisResponse.response( "schedules", this.reportLookupService.getSchedulesByProgram(program) ) ;
+  }
+
   @RequestMapping(value="/facilityTypes", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getFacilityTypes(){
       return OpenLmisResponse.response( "facilityTypes", this.reportLookupService.getFacilityTypes() ) ;
