@@ -218,17 +218,18 @@ function CreateRequisitionController($scope, requisitionData, hideAdditionalComm
     var setError = false;
     $.each($scope.rnr.regimenLineItems, function (index, regimenLineItem) {
       regimenLineItem.hasError = false;
-      $.each($scope.visibleRegimenColumns, function (index, regimenColumn) {
-
-        if ((regimenColumn.name !== "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) ) {
-
-          regimenLineItem.hasError = true;
-          setError = true;
-          $scope.regimenLineItemInValid = true;
-        }
-      });
+      if(!regimenLineItem.skipped) {
+        $.each($scope.visibleRegimenColumns, function (index, regimenColumn) {
+          if ((regimenColumn.name !== "remarks" && isUndefined(regimenLineItem[regimenColumn.name]))) {
+            regimenLineItem.hasError = true;
+            setError = true;
+            $scope.regimenLineItemInValid = true;
+          }
+        });
+      }
     });
-    if (!setError) $scope.regimenLineItemInValid = false;
+    if (!setError)
+      $scope.regimenLineItemInValid = false;
   }
 
   var submitValidatedRnr = function () {

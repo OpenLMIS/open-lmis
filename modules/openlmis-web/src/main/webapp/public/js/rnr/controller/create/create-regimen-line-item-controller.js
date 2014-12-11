@@ -20,6 +20,7 @@ function CreateRegimenLineItemController($scope) {
 
   $scope.setSkipAll = function(value){
     _.each($scope.page.regimen, function (regimen) {
+      $scope.saveRnrForm.$dirty = true;
       regimen.skipped = value;
     });
   };

@@ -359,7 +359,9 @@ public class Rnr extends BaseModel {
   public void validateRegimenLineItems(RegimenTemplate regimenTemplate) {
     for (RegimenLineItem regimenLineItem : this.regimenLineItems) {
       try {
-        regimenLineItem.validate(regimenTemplate);
+        if(!regimenLineItem.getSkipped()) {
+          regimenLineItem.validate(regimenTemplate);
+        }
       } catch (NoSuchFieldException | IllegalAccessException e) {
         throw new DataException(RNR_VALIDATION_ERROR);
       }
