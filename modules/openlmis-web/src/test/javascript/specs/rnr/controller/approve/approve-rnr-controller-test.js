@@ -38,6 +38,8 @@ describe('Approve Requisition controller', function () {
     scope.approvalForm = {};
     programRnrColumnList = [
       {'name': 'ProductCode', 'label': 'Product Code', 'visible': true},
+      {'name': 'quantityRequested'},
+      {'name': 'reasonForRequestedQuantity'},
       {'name': 'quantityApproved', 'label': 'quantity approved', 'visible': true},
       {'name': 'remarks', 'label': 'remarks', 'visible': true}
     ];

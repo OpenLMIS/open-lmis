@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OpenLMIS-StockImbalanceByFacility" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="b406d512-c5b3-455b-a0fc-03bb05345fc5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Open-LMIS - Localhost"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.background" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.border" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.0" value="title"/>
+	<parameter name="DistrictName" class="java.lang.String">
+		<property name="displayName" value="District Name"/>
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="Program" class="java.lang.String">
+		<property name="displayName" value="Program Name"/>
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="Date" class="java.util.Date">
+		<property name="displayName" value="Month"/>
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="UnderstockPercentage" class="java.lang.Integer">
+		<property name="displayName" value="Percentage-threshold for Understock"/>
+		<parameterDescription><![CDATA[for example entering 15 uses 15%]]></parameterDescription>
+	</parameter>
+	<parameter name="OverstockPercentage" class="java.lang.Integer">
+		<property name="displayName" value="Percentage-threshold for Overstock"/>
+		<parameterDescription><![CDATA[for example entering 15 uses 15%]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT facilities.code AS FacCode
+  , facilities.name AS FacName
+  , processing_periods.name AS Period
+  , products.primaryname AS ProductPrimaryName
+  , products.fullname AS ProductDisplayName
+  , products.code AS ProductCode
+  , requisition_line_items.amc
+  , requisition_line_items.stockinhand
+  , rli.MonthsOnHand AS MonthsOnHand
+  , requisition_line_items.maxmonthsofstock AS IdealMonths
+  , rli.OverstockPoint AS OverstockPoint
+  , rli.UnderstockPoint AS UnderstockPoint
+  , geographic_zones.name AS DistName
+  , CASE 
+      WHEN rli.MonthsOnHand = 0 THEN 'Stocked Out'
+      WHEN rli.MonthsOnHand < rli.UnderstockPoint THEN 'Under stocked'
+      WHEN rli.MonthsOnHand > rli.OverstockPoint THEN 'Over stocked'
+      ELSE 'OK'
+    END AS StockStatus
+FROM geographic_zones 
+INNER JOIN facilities ON geographic_zones.id = facilities.geographiczoneid
+INNER JOIN requisitions ON facilities.id = requisitions.facilityid
+INNER JOIN processing_periods ON requisitions.periodid = processing_periods.id
+INNER JOIN requisition_line_items ON requisitions.id = requisition_line_items.rnrid
+INNER JOIN (SELECT id
+  , stockinhand / amc AS MonthsOnHand
+  , maxmonthsofstock * (1 + CAST($P{OverstockPercentage} as integer) / 100) AS OverstockPoint
+  , maxMonthsOfStock * (1 - CAST($P{UnderstockPercentage} as integer) / 100) as UnderstockPoint
+  FROM requisition_line_items) AS rli ON requisition_line_items.id=rli.id 
+INNER JOIN products ON requisition_line_items.productcode = products.code
+INNER JOIN programs ON requisitions.programid = programs.id
+WHERE geographic_zones.name=$P{DistrictName}
+  AND geographic_zones.levelid=3
+  AND programs.name=$P{Program}
+  AND CAST($P{Date} as date) Between processing_periods.startdate And processing_periods.enddate
+  AND products.fullsupply=True 
+  AND requisition_line_items.skipped=False
+ORDER BY facilities.name, products.primaryname;]]>
+	</queryString>
+	<field name="faccode" class="java.lang.String"/>
+	<field name="facname" class="java.lang.String"/>
+	<field name="period" class="java.lang.String"/>
+	<field name="productprimaryname" class="java.lang.String"/>
+	<field name="productdisplayname" class="java.lang.String"/>
+	<field name="productcode" class="java.lang.String"/>
+	<field name="amc" class="java.lang.Integer"/>
+	<field name="stockinhand" class="java.lang.Integer"/>
+	<field name="monthsonhand" class="java.lang.Integer"/>
+	<field name="idealmonths" class="java.math.BigDecimal"/>
+	<field name="overstockpoint" class="java.math.BigDecimal"/>
+	<field name="understockpoint" class="java.math.BigDecimal"/>
+	<field name="distname" class="java.lang.String"/>
+	<field name="stockstatus" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="180" y="0" width="400" height="40" uuid="11f3a3e7-8367-499f-b5d5-83231cc79499"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Stock Imbalance By Facility]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="650" y="0" width="100" height="20" uuid="bb0866e5-88b1-4b47-bc0e-29c11d11fa61"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a z">
+				<reportElement x="650" y="20" width="100" height="20" uuid="8ad6326f-b839-44be-835c-136c4a51a73e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="40" width="400" height="39" uuid="943a3320-b921-4ebb-8274-a767336ea133"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA["For " + $P{Program} + " program, for requisitions from the month of " + $P{Date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="30" uuid="79f8abc9-3345-43c0-96be-683864bf86ac"/>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Facility Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="0" width="100" height="29" uuid="8cc01a62-66c0-4e15-b3c9-1d2ff72b17eb">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Product Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="0" width="100" height="29" uuid="6b3d5625-5555-45d8-baed-4b1cc7059259">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Product Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="0" width="100" height="29" uuid="aa3e8ecb-8cd9-4054-b573-e68c4c536406">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Average Monthly Consumption]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="0" width="100" height="29" uuid="c0531eda-d236-4185-91ff-76cb117a26f3">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Stock on Hand]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="550" y="0" width="80" height="29" uuid="b9091a36-6fa5-4a8d-ab94-6ec3a2931c16">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Months of Stock on Hand]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="660" y="0" width="92" height="30" uuid="cd315c92-2c3e-49fc-8569-60fd8c584aec"/>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Stocking Status]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-1" y="29" width="753" height="1" uuid="0cb8c3f9-7362-489c-ae10-5e8402317af8"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="28f231c5-8a7b-4f94-a9aa-a337bdd2d499"/>
+				<textFieldExpression><![CDATA[$F{facname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="0" width="100" height="20" uuid="607a3f16-1679-4509-84ee-1c63aa158673"/>
+				<textFieldExpression><![CDATA[$F{productprimaryname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="100" height="20" uuid="1a693f92-9b38-4c0b-8d16-248b33946b61"/>
+				<textFieldExpression><![CDATA[$F{productcode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="0" width="100" height="20" uuid="7304db6a-f89b-4e5f-9033-3f10a1678400"/>
+				<textFieldExpression><![CDATA[$F{amc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="0" width="100" height="20" uuid="cb3a3989-dfdf-4fc7-b580-d6247792bb5a"/>
+				<textFieldExpression><![CDATA[$F{stockinhand}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="550" y="0" width="80" height="20" uuid="8655d526-0652-416e-acfc-82695c57c8ea"/>
+				<textFieldExpression><![CDATA[$F{monthsonhand}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="660" y="0" width="92" height="20" uuid="2758bd45-660d-4019-9508-ab88fffc6815"/>
+				<textFieldExpression><![CDATA[$F{stockstatus}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
