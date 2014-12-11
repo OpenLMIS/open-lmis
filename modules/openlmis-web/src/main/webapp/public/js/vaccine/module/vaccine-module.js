@@ -16,7 +16,6 @@ var vaccine = angular.module('vaccine', ['openlmis', 'ngTable','ui.bootstrap','n
         when('/edit-receive-vaccine/:transactionId', {controller: VaccineReceiveController, templateUrl: 'partials/vaccine-receive-edit.html'}).
         when('/create-receive-vaccine/:facilityId', {controller: VaccineReceiveController, templateUrl: 'partials/vaccine-receive-edit.html'}).
         when('/vaccine-report', {controller: VaccineReportPOCReportController, templateUrl: 'partials/vaccine-report.html'}).
-       // when('/edit-distribution-batch/:distributionBatchId', {controller: VaccineReceiveController, templateUrl: 'partials/vaccine-receive-edit.html', resolve:VaccineReceiveController.resolve}).
         when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
         when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
         when('/vaccine-storage', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage.html'}).
