@@ -228,7 +228,8 @@ function CreateRequisitionController($scope, requisitionData, hideAdditionalComm
         });
       }
     });
-    if (!setError) $scope.regimenLineItemInValid = false;
+    if (!setError)
+      $scope.regimenLineItemInValid = false;
   }
 
   var submitValidatedRnr = function () {
