@@ -28,7 +28,7 @@
  <br/>
     <input ng-show="hide_skipped_products"
            id="showSkippedProductModal"
-           ng-disabled="(rnr.status != 'INITIATED' && !hasPermission('AUTHORIZE_REQUISITION'))"
+           ng-disabled="((rnr.status != 'INITIATED' && rnr.status != 'SUBMITTED') || rnr.status == 'SUBMITTED' && !hasPermission('AUTHORIZE_REQUISITION'))"
            type="button"
            ng-click="showAddSkippedProductsModal()"
            class="pull-right btn btn-primary"
