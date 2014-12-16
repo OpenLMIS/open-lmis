@@ -8,14 +8,14 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('setting', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).config(['$routeProvider', function ($routeProvider) {
+angular.module('setting', ['openlmis', 'ui.bootstrap','ui.bootstrap.modal', 'ui.bootstrap.dialog','ui.bootstrap.tabs']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/list', {controller:ListSettingController, templateUrl:'partials/list.html'}).
     otherwise({redirectTo:'/list'});
 }]).run(function($rootScope, AuthorizationService) {
     $rootScope.roleSelected = "selected";
     AuthorizationService.preAuthorize('MANAGE_SETTING');
-  });
+});
 
 
 app.directive('setting', function ($compile, $http, $templateCache) {
@@ -33,7 +33,7 @@ app.directive('setting', function ($compile, $http, $templateCache) {
             templateMap = {
                 TEXT: 'text.html',
                 TEXT_AREA: 'text-area.html',
-                NUBMER: 'number.html',
+                NUMBER: 'number.html',
                 OPTIONS: 'options.html',
                 BOOLEAN: 'boolean.html',
                 EMAIL: 'email.html'

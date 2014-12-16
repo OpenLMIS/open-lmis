@@ -17,8 +17,14 @@ function ListSettingController($scope, $location, Settings, SettingUpdator) {
     return showHeader;
   };
 
+  $scope.changeTab = function(tab){
+    $scope.visibleTab = tab;
+  };
+
   Settings.get(function (data){
      $scope.settings = data.settings;
+    $scope.grouped_settings = _.groupBy($scope.settings.list,'groupName');
+
   });
 
   $scope.saveSettings = function(){
