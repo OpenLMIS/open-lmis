@@ -42,4 +42,17 @@ function HelpTopicCreateController($scope,$route, $location,messageService,Creat
         });
     };
     $scope.intializeHelpTopic($route.current.params.id);
+    $scope.selectAll=function(){
+        angular.forEach( $scope.helpTopic.roleList, function(item) {
+            item.currentlyAssigned = true;
+        });
+    };
+    $scope.deSelectAll=function(){
+        angular.forEach( $scope.helpTopic.roleList, function(item) {
+            item.currentlyAssigned = false;
+        });
+    };
+    $scope.cancel=function(){
+        $location.path('/treeView');
+    };
 }
