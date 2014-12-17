@@ -37,6 +37,7 @@ public class LogisticsLineItem extends BaseModel{
   private Long openingBalance;
   private Long quantityReceived;
   private Long quantityIssued;
+  private Long closingBalance;
   private Long quantityVvmAlerted;
   private Long quantityFreezed;
   private Long quantityExpired;

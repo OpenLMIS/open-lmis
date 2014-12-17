@@ -173,6 +173,10 @@ public class ReportLookupService {
         return productMapper.getProductListByCategory(programId, categoryId);
     }
 
+    public List<Product> getPushProgramProducts() {
+        return productMapper.getPushProgramProducts();
+    }
+
     public List<org.openlmis.core.domain.Product> getFullProductList() {
         return productMapper.getFullProductList();
     }
@@ -551,5 +555,9 @@ public class ReportLookupService {
 
     public List<Donor> getAllDonors() {
         return donorRepository.getAll();
+    }
+
+    public List<Schedule> getSchedulesByProgram(long program) {
+        return scheduleMapper.getSchedulesForProgram(program);
     }
 }

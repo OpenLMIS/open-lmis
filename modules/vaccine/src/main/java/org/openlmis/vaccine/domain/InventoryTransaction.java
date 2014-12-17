@@ -47,10 +47,11 @@ public class InventoryTransaction extends BaseModel{
     private Donor donor;
     private Long originId;
     private Long receivedAt;
+    private Long distributedTo;
     private Manufacturer manufacturer;
     private Status status;
     private String purpose;
-    private Boolean vvmTracked;
+    private Boolean vvmTracked = Boolean.FALSE;
     private Boolean barCoded;
     private Boolean gs1;
     private Integer quantity;

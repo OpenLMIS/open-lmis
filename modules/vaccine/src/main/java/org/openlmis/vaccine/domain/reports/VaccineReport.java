@@ -32,6 +32,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class VaccineReport extends BaseModel {
+
   private Long   periodId;
   private Long   programId;
   private Long   facilityId;
@@ -45,6 +46,8 @@ public class VaccineReport extends BaseModel {
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;
   private List<CampaignLineItem> campaignLineItems;
+
+  private List<LogisticsColumn> columnTemplate;
 
   @JsonIgnore
   private List<VaccineCoverageItem> coverageItems;

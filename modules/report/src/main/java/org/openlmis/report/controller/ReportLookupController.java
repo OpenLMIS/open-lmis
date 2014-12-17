@@ -96,6 +96,11 @@ public class ReportLookupController extends BaseController {
       return OpenLmisResponse.response( "schedules", this.reportLookupService.getAllSchedules() ) ;
   }
 
+  @RequestMapping(value="/schedules-by-program", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getSchedulesByProgram(@RequestParam(value = "program", required = true, defaultValue = "0") long program ){
+    return OpenLmisResponse.response( "schedules", this.reportLookupService.getSchedulesByProgram(program) ) ;
+  }
+
   @RequestMapping(value="/facilityTypes", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getFacilityTypes(){
       return OpenLmisResponse.response( "facilityTypes", this.reportLookupService.getFacilityTypes() ) ;
@@ -172,6 +177,11 @@ public class ReportLookupController extends BaseController {
   @RequestMapping(value="/program-products/{programId}.json", method = GET, headers = BaseController.ACCEPT_JSON)
   public List<Product> getProgramProducts( @PathVariable("programId") Long programId){
     return this.reportLookupService.getProductsActiveUnderProgram(programId);
+  }
+
+  @RequestMapping(value = "/push-program/products", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getPushProgramProducts(HttpServletRequest request){
+    return OpenLmisResponse.response("products", reportLookupService.getPushProgramProducts());
   }
 
   @RequestMapping(value="/products_by_category", method = GET, headers = BaseController.ACCEPT_JSON)

@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineDistributeController($scope,$route,$location,messageService,Products,VaccineDistributionStatus,GeographicZones,UsableBatches,DistributeVaccines){
+function VaccineDistributeController($scope,$route,$location,messageService,PushProgramProducts,VaccineDistributionStatus,GeographicZones,UsableBatches,DistributeVaccines){
 
     $scope.message = "";
 
@@ -22,17 +22,6 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         return null;
     };
 
-    $scope.getDistributionBatchWithDateObjects = function(distributionBatch) {
-        if(!isUndefined(distributionBatch)){
-            distributionBatch.productionDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringProductionDate);
-            distributionBatch.expiryDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringExpiryDate);
-            distributionBatch.receiveDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringReceiveDate);
-            distributionBatch.recallDate = $scope.convertStringToCorrectDateFormat(distributionBatch.stringRecallDate);
-        }
-
-        return distributionBatch;
-    };
-
     VaccineDistributionStatus.get({}, function(data){
        $scope.status = data.status;
         $scope.receivedStatus = [];
@@ -44,8 +33,8 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         $scope.spanLength = "span"+(Math.round(12/$scope.receivedStatus.length));
     });
 
-    Products.get({}, function(data){
-        $scope.products = data.productList;
+    PushProgramProducts.get({}, function(data){
+        $scope.products = data.products;
     });
 
     $scope.regions = [];
@@ -80,7 +69,6 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
     $scope.resetAddBatchesModal = function () {
         $scope.addBatchesModal = false;
         $scope.error = undefined;
-       // $scope.distribution = undefined;
     };
 
     $scope.saveDistributionBatch = function(){
@@ -94,8 +82,8 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         var successHandler = function (msgKey) {
             $scope.showError = false;
             $scope.error = "";
-            $scope.$parent.message = messageService.get(msgKey, $scope.inventoryTransaction.id);
-            $scope.$parent.inventoryTransactionId = $scope.inventoryTransaction.id;
+            $scope.$parent.message = messageService.get(msgKey);
+            //$scope.$parent.inventoryTransactionId = $scope.inventoryTransaction.id;
             $location.path('/');
         };
 
@@ -103,10 +91,10 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
             $scope.inventoryTransaction = response.distributeVaccine;
             successHandler(response.success);
         };
-
+/*
         var updateSuccessHandler = function () {
             successHandler("message.distribution.batch.updated.success");
-        };
+        };*/
 
         var errorHandler = function (response) {
             $scope.showError = true;
@@ -115,8 +103,13 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         };
         $scope.inventoryTransaction.fromFacility = {id:14277};
         $scope.inventoryTransaction.toFacility = {id:14277};
+        $scope.inventoryTransaction.inventoryBatches = $scope.batches;
 
         DistributeVaccines.save({},$scope.inventoryTransaction, saveSuccessHandler, errorHandler);
+
+    };
+
+    $scope.validateQuantityToDistribute = function(batch){
 
     };
 
@@ -132,11 +125,49 @@ function VaccineDistributeController($scope,$route,$location,messageService,Prod
         $scope.batches = [];
         angular.forEach($scope.usableBatches, function(batch){
             if(batch.selected){
-                batch.quantity = batch.dispatchQuantity;
-                $scope.batches.push(batch);
+                if($scope.validateDispatchQuantity(batch)){
+                    batch.quantity = batch.dispatchQuantity;
+                    $scope.batches.push(batch);
+                    $scope.addBatchesModal = undefined;
+                }else{
+                    $scope.error = messageService.get("Quantity to dispatch should not be greater than available quantity");
+                    $scope.showError = true;
+                    return false;
+                }
+
             }
         });
-        $scope.addBatchesModal = undefined;
+
+    };
+
+    $scope.validateDispatchQuantity = function(batch){
+        if(isUndefined(batch)){
+            return false;
+        }
+        if(batch.inventoryTransaction.vvmTracked){
+            return batch.dispatchQuantity <= (batch.vvm1+batch.vvm2);
+        }
+        return batch.dispatchQuantity <= batch.quantity;
+    };
+
+    $scope.selectAllBatches = function(){
+        if($scope.selectAll === true){
+            if(!isUndefined($scope.usableBatches)){
+                var markAllBatches = _.map($scope.usableBatches,function(batch){
+                    batch.selected = true;
+                    return batch;
+                });
+                $scope.usableBatches = markAllBatches;
+            }
+        }else{
+            if(!isUndefined($scope.usableBatches)){
+                var unmarkAllBatches = _.map($scope.usableBatches,function(batch){
+                    batch.selected = false;
+                    return batch;
+                });
+                $scope.usableBatches = unmarkAllBatches;
+            }
+        }
     };
 
 }

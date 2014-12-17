@@ -57,3 +57,12 @@ services.factory('VaccineReportSave', function ($resource) {
 services.factory('VaccineReportSubmit', function ($resource) {
   return $resource('/vaccine/report/submit.json', {}, update);
 });
+
+
+services.factory('VaccineColumnTemplate', function ($resource) {
+  return $resource('/vaccine/columns/get/:id.json', {id : '@id'}, {});
+});
+
+services.factory('VaccineColumnTemplateSave', function ($resource) {
+  return $resource('/vaccine/columns/save.json', {}, update);
+});

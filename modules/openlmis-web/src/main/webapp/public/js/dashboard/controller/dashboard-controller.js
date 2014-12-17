@@ -88,8 +88,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         });
         $scope.loadStockingData();
         $scope.loadReportingPerformance();
-
-
     };
 
     $scope.processProductsFilter = function (){
@@ -641,6 +639,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                         }else{
                             $scope.filterObject.year = date.getFullYear() - 1;
                         }
+                        $scope.changeSchedule();
                     });
                 }
                 $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];

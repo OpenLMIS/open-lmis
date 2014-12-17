@@ -8,27 +8,35 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.mapper.lookup;
+package org.openlmis.vaccine.repository;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.openlmis.report.model.dto.Schedule;
-import org.springframework.stereotype.Repository;
+import org.openlmis.vaccine.domain.reports.LogisticsColumn;
+import org.openlmis.vaccine.repository.mapper.ColumnTemplateMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
-@Repository
-public interface ScheduleReportMapper {
+@Component
+public class ColumnTemplateRepository {
 
-  @Select("SELECT id, name, description, code " +
-          "   FROM " +
-          "       processing_schedules order by name")
-  List<Schedule> getAll();
+  @Autowired
+  ColumnTemplateMapper mapper;
 
-  @Select("SELECT id, name, description, code " +
-    "   FROM " +
-    "       processing_schedules s " +
-    "   where s.id in " +
-    "         (select scheduleId from requisition_group_program_schedules where programId = #{programId}) " +
-    "     order by name")
-  List<Schedule> getSchedulesForProgram(@Param("programId")long programId);
+  public List<LogisticsColumn> getMasterColumns(){
+    return mapper.getAll();
+  }
+
+  public List<LogisticsColumn> getTemplateForProgram(Long programId){
+    return mapper.getForProgram(programId);
+  }
+
+  public void updateProgramColumn(LogisticsColumn column){
+    mapper.updateProgramColumn(column);
+  }
+
+  public void insertProgramColumn(LogisticsColumn column){
+    mapper.insertProgramColumn(column);
+  }
+
 }

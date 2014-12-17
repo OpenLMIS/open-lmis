@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function VaccineReceiveController($scope,$route,$location,messageService,GetDonors,Products,Manufacturers,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccines,Countries){
+function VaccineReceiveController($scope,$route,$location,messageService,GetDonors,PushProgramProducts,Manufacturers,VaccineDistributionStatus,VaccineStorageByFacility,GeographicZones,ReceiveVaccines,Countries){
 
     $scope.message = "";
 
@@ -62,8 +62,9 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         $scope.donors = data.donors;
     });
 
-    Products.get({}, function(data){
-        $scope.products = data.productList;
+    PushProgramProducts.get({}, function(data){
+        $scope.products = data.products;
+
     });
 
     $scope.zones = [];
@@ -89,7 +90,7 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
     });
 
     $scope.cancelDistributionBatchSave = function () {
-        $location.path('#/distribution-batch');
+        $location.path('#/receive');
     };
 
 
@@ -114,8 +115,8 @@ function VaccineReceiveController($scope,$route,$location,messageService,GetDono
         var successHandler = function (msgKey) {
             $scope.showError = false;
             $scope.error = "";
-            $scope.$parent.message = messageService.get(msgKey, $scope.inventoryTransaction.id);
-            $scope.$parent.inventoryTransactionId = $scope.inventoryTransaction.id;
+            $scope.$parent.message = messageService.get(msgKey);
+           // $scope.$parent.inventoryTransactionId = $scope.inventoryTransaction.id;
             $location.path('/');
         };
 

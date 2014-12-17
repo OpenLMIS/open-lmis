@@ -1,30 +1,3 @@
-//services.factory('reportService', function($q,ReportPrograms){
-//
-//  var programs = function(ReportPrograms){
-//    var deferred = $q.defer();
-//
-//    $timeout(function(){
-//      ReportPrograms.get(function (data) {
-//        var ps = data.programs;
-//
-//        ps.unshift({
-//          'name': '-- Select Programs --'
-//        });
-//
-//        deferred.resolve(ps);
-//      });
-//      return deferred.promise();
-//    },100);
-//  };
-//
-//  return {
-//    programs: programs
-//  }
-//
-//});
-
-
-
 app.directive('filterContainer', ['$routeParams', '$location',function ($location) {
   return {
     restrict: 'EA',
@@ -155,8 +128,20 @@ app.directive('facilityTypeFilter', ['ReportFacilityTypes','ReportFacilityTypesB
     };
 }]);
 
-app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
-  function (ReportSchedules, $routeParams) {
+app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$routeParams',
+  function (ReportSchedules, ReportProgramSchedules, $routeParams) {
+
+    function onCascadedVarsChanged(scope, value){
+      if(value !== undefined){
+        ReportProgramSchedules.get({program: value},function(data){
+          scope.schedules = data.schedules;
+          scope.schedules.unshift({
+            'id':0,
+            'name': '-- Select Group --'
+          });
+        });
+      }
+    }
 
     return {
       restrict: 'E',
@@ -164,10 +149,7 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
       link: function (scope, elm, attr) {
 
         scope.schedules = [];
-       /* scope.schedules.unshift({
 
-          name: '-- Select Group --'
-        });*/
         scope.filter.schedule = (isUndefined($routeParams.schedule) || $routeParams.schedule === '')? 0: $routeParams.schedule;//$routeParams.schedule;
 
         if (attr.required) {
@@ -181,6 +163,10 @@ app.directive('scheduleFilter', ['ReportSchedules','$routeParams',
               'name': '-- Select Group --'
             });
           });
+        });
+
+        scope.$watch('filter.program', function (value) {
+          onCascadedVarsChanged(scope, value);
         });
       },
       templateUrl: 'filter-schedule-template'

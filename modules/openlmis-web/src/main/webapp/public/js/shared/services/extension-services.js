@@ -107,6 +107,10 @@ services.factory('ReportSchedules', function ($resource) {
     return $resource('/reports/schedules.json', {}, {});
 });
 
+services.factory('ReportProgramSchedules', function ($resource) {
+    return $resource('/reports/schedules-by-program.json', {}, {});
+});
+
 services.factory('ReportFacilityTypes', function ($resource) {
     return $resource('/reports/facilityTypes.json', {}, {});
 });
@@ -961,6 +965,14 @@ services.factory('UsableBatches', function ($resource) {
 
 services.factory('DistributeVaccines', function ($resource) {
     return $resource('/vaccine/distribute-vaccine.json', {}, {});
+});
+
+services.factory('GeoZoneFacilityTrees', function($resource){
+   return $resource('/vaccine/geographic-zone-facility/tree.json',{},{});
+});
+
+services.factory('PushProgramProducts', function($resource){
+   return $resource('/reports/push-program/products.json',{},{});
 });
 
 

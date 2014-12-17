@@ -62,9 +62,18 @@ public class VaccineDistributionBatchService {
     }
 
     public void distributeVaccine(InventoryTransaction inventoryTransaction) {
-        if(inventoryTransaction != null && inventoryTransaction.getId() == null){
+        if(inventoryTransaction == null)
+            return;
+        if(inventoryTransaction.getId() == null){
             inventoryTransaction.setTransactionType(transactionTypeService.getByName(TRANSACTION_TYPE_ISSUED));
         }
+
+        inventoryTransaction.setReceivedAt(inventoryTransaction.getDistributedTo());
+        List<Facility> facilities = facilityService.getAllForGeographicZone(inventoryTransaction.getDistributedTo());
+        if (facilities != null && facilities.size() > 0)
+            inventoryTransaction.setToFacility(facilities.get(0));
+
+
         distributionBatchRepository.updateInventoryTransaction(inventoryTransaction,false);
     }
 

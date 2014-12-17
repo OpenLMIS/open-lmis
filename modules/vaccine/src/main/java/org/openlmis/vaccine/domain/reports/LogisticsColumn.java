@@ -8,27 +8,30 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.mapper.lookup;
+package org.openlmis.vaccine.domain.reports;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.openlmis.report.model.dto.Schedule;
-import org.springframework.stereotype.Repository;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 
-@Repository
-public interface ScheduleReportMapper {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class LogisticsColumn extends BaseModel {
 
-  @Select("SELECT id, name, description, code " +
-          "   FROM " +
-          "       processing_schedules order by name")
-  List<Schedule> getAll();
+  String name;
+  String description;
+  Integer displayOrder;
+  String label;
+  String indicator;
+  Boolean mandatory;
 
-  @Select("SELECT id, name, description, code " +
-    "   FROM " +
-    "       processing_schedules s " +
-    "   where s.id in " +
-    "         (select scheduleId from requisition_group_program_schedules where programId = #{programId}) " +
-    "     order by name")
-  List<Schedule> getSchedulesForProgram(@Param("programId")long programId);
+  Long programId;
+  Long masterColumnId;
+
+  Boolean visible;
+
 }

@@ -26,7 +26,11 @@
 <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
 
  <br/>
-    <input ng-show="hide_skipped_products" id="showSkippedProductModal" type="button" ng-click="showAddSkippedProductsModal()"
+    <input ng-show="hide_skipped_products"
+           id="showSkippedProductModal"
+           ng-disabled="((rnr.status != 'INITIATED' && rnr.status != 'SUBMITTED') || rnr.status == 'SUBMITTED' && !hasPermission('AUTHORIZE_REQUISITION'))"
+           type="button"
+           ng-click="showAddSkippedProductsModal()"
            class="pull-right btn btn-primary"
            openlmis-message="button.add"/>  
 <div class="clearfix"></div>  
