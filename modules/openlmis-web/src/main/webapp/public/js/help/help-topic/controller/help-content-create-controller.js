@@ -55,6 +55,9 @@ function ContentCreateController($scope, $location, $route, messageService, Crea
 
     };
     $scope.intializeHelpContent($route.current.params.id);
+    $scope.cancel=function(){
+        $location.path('/treeView');
+    };
 }
 
 
