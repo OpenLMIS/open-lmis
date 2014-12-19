@@ -122,8 +122,11 @@ public class DashboardLookupService {
         return rnRStatusSummaryReportMapper.getRnRStatusSummaryData(requisionGroupId);
     }
 
-    public List<HashMap> getReportingPerformance(Long userId,Long periodId, Long programId,  Long zoneId){
-        return dashboardMapper.getReportingPerformance(userId,periodId,programId, zoneId);
+    public ReportingStatus getReportingPerformance(Long userId,Long periodId, Long programId,  Long zoneId){
+        ReportingStatus status = dashboardMapper.getReportingPerformance(userId,periodId,programId, zoneId);
+        if (status != null)
+            status.setNonReporting(status.getTotal() - status.getReporting());
+        return status;
     }
     public List<ReportingPerformance> getReportingPerformanceDetail(Long userId,Long periodId, Long programId, Long zoneId, String status){
         return dashboardMapper.getReportingPerformanceDetail(userId,periodId,programId,zoneId, status);

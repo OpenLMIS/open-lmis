@@ -18,7 +18,7 @@
                         <label class="labels" openlmis-message="label.program"><span class="label-required">*</span></label>
 
                         <div class="form-fields">
-                            <select ui-select2 style="width:160px;" class="large-input" name="program"  ng-model="formFilter.programId" ng-change="filterProductsByProgram()">
+                            <select ui-select2 style="width:160px;" class="large-input" name="program"  ng-model="formFilter.programId" >
                                 <option ng-repeat="option in programs" value="{{option.id}}">{{option.name}}</option>
                             </select>
                         </div>
@@ -70,7 +70,7 @@
 
                         <div class="form-fields">
                             <select class="input-large"  ng-change="processZoneFilter();" ng-model="formFilter.zoneId">
-                                <option selected="selected" value="{{zones.id}}" ng-model="formFilter.zoneId">-- National --</option>
+                                <option selected="selected"></option>
                                     <optgroup ng-repeat="value in zones.children"  label="{{value.name}}">
                                     <option value="{{value.id}}"><b class="green">All of {{value.name}}</b></option>
                                     <option ng-repeat-start="v in value.children" value="{{v.id}}">{{v.name}}</option>
@@ -90,19 +90,28 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-cell horizontalFilters" ng-show="showFacilitiesFilter" >
+                    <!--<div class="form-cell horizontalFilters" ng-show="showFacilitiesFilter" >
                         <label class="labels" openlmis-message="label.facility"></label>
 
                         <div class="form-field">
                             <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="formFilter.facilityId"  required="true">
-                                <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
+                                <option  ng-repeat="option in allFacilities " value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                             </select>
                         </div>
-                    </div>
+                    </div>-->
+
 
                     <div class="clearfix"></div>
 
                 </div>
+                <div class="form-cell horizontalFilters" >
+
+                    <div class="form-field">
+                        <input type="submit" ng-click="search()" class="btn btn-primary" openlmis-message="button.search" value="Search"/>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
             </form>
         </div>
 

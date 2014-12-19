@@ -9,15 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMenuService,messageService,FlatGeographicZoneList,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,ReportingPerformance,GetPeriod, userPreferredFilterValues,formInputValue,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneTree, OrderFillRate, ItemFillRate, StockEfficiency, SyncDashboard,AuthorizationService) {
-
-    $scope.filterObject = {};
-
-    $scope.formFilter = {
-    };
-    $scope.formPanel = {openPanel:true};
-
-    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
+function AdminDashboardController($scope,$timeout,$filter,$location,userPreferredFilters,dashboardMenuService,FlatGeographicZoneList,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,ReportingPerformance,formInputValue,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneTree, OrderFillRate, ItemFillRate, StockEfficiency, SyncDashboard,AuthorizationService) {
 
     initialize();
 
@@ -26,6 +18,19 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         $scope.$parent.currentTab = 'SUMMARY';
         $scope.showProductsFilter = true;
     }
+
+    var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
+
+    if(isUndefined(filterHistory)){
+        $scope.formFilter = $scope.filterObject  = userPreferredFilters || {};
+
+    }else{
+        $scope.formFilter = $scope.filterObject  = filterHistory || {};
+    }
+
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
 
     FlatGeographicZoneList.get(function (data) {
         $scope.geographicZones = data.zones;
@@ -44,9 +49,13 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
 
 
    $scope.loadGeoZones = function(){
-      UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
-         $scope.zones = data.zone;
-      });
+       if(!isUndefined($scope.formFilter.programId)){
+           UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
+               $scope.zones = data.zone;
+               $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
+
+           });
+       }
    };
 
 
@@ -64,21 +73,14 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     $scope.processFacilityFilter = function(){
         $scope.filterObject.facilityId = $scope.formFilter.facilityId;
         $scope.formFilter.facilityName = getSelectedItemName($scope.formFilter.facilityId, $scope.allFacilities);
-        $scope.loadFillRates();
     };
 
     $scope.filterProductsByProgram = function (){
-
         $scope.loadGeoZones();
+        loadProducts();
+    };
 
-        if(isUndefined($scope.formFilter.programId)){
-            $scope.products = null;
-            $scope.requisitionGroups  = null;
-            $scope.resetFillRates();
-            $scope.resetStockingChartData();
-            $scope.resetReportingPerformanceData();
-           return;
-        }
+    var loadProducts = function(){
         $scope.filterObject.programId = $scope.formFilter.programId;
 
         $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
@@ -86,17 +88,12 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
             $scope.products = data.productList;
         });
-        $scope.loadStockingData();
-        $scope.loadReportingPerformance();
     };
 
     $scope.processProductsFilter = function (){
 
         $scope.filterObject.productIdList = $scope.formFilter.productIdList;
         $scope.formFilter.productNamesList = getSelectedItemNames($scope.filterObject.productIdList, $scope.products);
-        $scope.loadFillRates();
-        $scope.loadStockingData();
-
     };
 
     $scope.fillRates = {openPanel:true};
@@ -107,9 +104,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     };
     $scope.loadFillRates = function(){
         //For managing visibility of chart rendering container. All most all javascript chart rendering tools needs the container to be visible before the render process starts.
-
-        getFilterValues();
-
         $scope.showItemFill = false;
         $scope.showOrderFill = false;
 
@@ -190,7 +184,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     };
 
     $scope.setFilterData = function(){
-
         var data = {};
         $scope.filterObject = $scope.formFilter;
         angular.extend(data,$scope.filterObject);
@@ -199,17 +192,23 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     };
 
     $scope.loadFacilities = function(){
-        FacilitiesByGeographicZoneTree.get({zoneId: $scope.filterObject.zoneId}, function(data){
+        if(isUndefined($scope.formFilter.zoneId) || isUndefined($scope.formFilter.programId)){
+            $scope.allFacilities = null;
+            return;
+        }
+
+        FacilitiesByGeographicZoneTree.get({zoneId: $scope.formFilter.zoneId, programId: $scope.formFilter.programId}, function(data){
             $scope.allFacilities = data.facilities;
-            if(!isUndefined($scope.allFacilities)){
+            if(!isUndefined(data.facilities)){
                 $scope.allFacilities.unshift({code:formInputValue.facilityOptionSelect});
             }
+            $scope.formFilter.facilityName = getSelectedItemName($scope.formFilter.facilityId,$scope.allFacilities);
+
         });
 
     };
 
     $scope.changeSchedule = function(){
-
     if ($scope.formFilter.scheduleId !== undefined || $scope.formFilter.scheduleId === "") {
             $scope.filterObject.scheduleId = $scope.formFilter.scheduleId;
         }
@@ -219,17 +218,19 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
                 ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
                     $scope.periods = data.periods;
                     $scope.periods.unshift({'name':formInputValue.periodOptionSelect});
+                    $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
+
                 });
             }else{
                 ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
                     $scope.periods = data.periods;
                     $scope.periods.unshift({'name': formInputValue.periodOptionSelect});
+                    $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
 
                 });
             }
 
         }
-        $scope.loadStockingData();
     };
 
     $scope.processZoneFilter = function(){
@@ -237,18 +238,12 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
 
         $scope.loadFacilities();
-        $scope.loadStockingData();
-        $scope.loadReportingPerformance();
     };
 
     $scope.processPeriodFilter = function (){
         $scope.filterObject.periodId = $scope.formFilter.periodId;
 
         $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
-
-        $scope.loadFillRates();
-        $scope.loadStockingData();
-        $scope.loadReportingPerformance();
     };
 
     $scope.changeScheduleByYear = function (){
@@ -342,7 +337,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
     }
 
     $scope.loadReportingPerformance = function(){
-
         if(isUndefined($scope.filterObject.programId) || isUndefined($scope.filterObject.periodId)){
             $scope.resetReportingPerformanceData();
             return;
@@ -350,23 +344,23 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
 
          ReportingPerformance.get({periodId :$scope.filterObject.periodId, zoneId: $scope.filterObject.zoneId,programId: $scope.filterObject.programId}, function(data){
                  $scope.reportingChartData = [];
-
                  if(!isUndefined(data.reportingPerformance)){
                      var reporting = data.reportingPerformance;
 
-                     var colors = {R:"#078B07",N:"#CC0505", L:"#FFFF05"};
+                     if(reporting.total > 0){
+                         //var colors = {R:"#078B07",N:"#CC0505", L:"#FFFF05"};
+                         $scope.reportingChartData[0] = {label: 'reporting',
+                             data: reporting.reporting,
+                             color: "#078B07"};
+                         $scope.reportingChartData[1] = {label: 'nonreporting',
+                             data: reporting.nonReporting,
+                             color: "#CC0505"};
+                         $scope.reportingRenderedData = {
+                             status : [[0,"reporting"],[1,"nonReporting"]]
 
-                     for(var i=0; i < reporting.length; i++){
-                         var labelKey = 'label.district.reporting.status.'+reporting[i].status;
-                         var label = messageService.get(labelKey);
-                         $scope.reportingChartData[i] = {label: label,
-                             data: reporting[i].total,
-                             color: colors[reporting[i].status]};
+                         };
+
                      }
-                     $scope.reportingRenderedData = {
-                         status : _.pairs(_.object(_.range(reporting.length), _.pluck(reporting,'status')))
-
-                     };
 
                      bindChartEvent("#district-reporting","plothover",flotChartHoverCursorHandler);
                      bindChartEvent("#district-reporting","plotclick",$scope.reportingPerformanceClickHandler);
@@ -403,74 +397,10 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
 
     /* End Pie Chart */
 
-   /* Calendar  */
 
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
-
-    /* event source that contains custom events on the scope */
-    $scope.events = [
-        {title: 'All Day Event',start: new Date(y, m, 1)},
-        {title: 'Long Event',start: new Date(y, m, d - 5),end: new Date(y, m, d - 2)},
-        {id: 999,title: 'Repeating Event',start: new Date(y, m, d - 3, 16, 0),allDay: false},
-        {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: false},
-        {title: 'Birthday Party',start: new Date(y, m, d + 1, 19, 0),end: new Date(y, m, d + 1, 22, 30),allDay: false},
-        {title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
-    ];
-
-    /* alert on eventClick */
-    $scope.alertOnEventClick = function( event, allDay, jsEvent, view ){
-        alert(event.title + 'was clicked');
-
-    };
-    /* alert on Drop */
-    $scope.alertOnDrop = function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view){
-        alert('Event Droped to make dayDelta ' + dayDelta);
-
-    };
-    /* alert on Resize */
-    $scope.alertOnResize = function(event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ){
-        alert('Event Resized to make dayDelta ' + minuteDelta);
-    };
-
-    /* add custom event*/
-    $scope.addEvent = function() {
-        $scope.events.push({
-            title: 'eLMIS V2 kickoff meeting',
-            start: new Date(y, m, 28),
-            end: new Date(y, m, 29)
-        });
-    };
-    /* remove event */
-    $scope.remove = function(index) {
-        $scope.events.splice(index,1);
-    };
-    /* Change View */
-    $scope.changeView = function(view,calendar) {
-        calendar.fullCalendar('changeView',view);
-    };
-
-    /* config object */
-    $scope.uiConfig = {
-        calendar:{
-            height: 450,
-            editable: true,
-            header:{
-                left: 'title',
-                center: '',
-                right: 'today prev,next'
-            },
-            eventClick: $scope.alertOnEventClick,
-            eventDrop: $scope.alertOnDrop,
-            eventResize: $scope.alertOnResize
-        }
-    };
 
 
     /* event sources array*/
-    $scope.eventSources = [$scope.events];
 
     /* End Calendar  */
    // $scope.itemFillRates = [55,45,-60];
@@ -492,8 +422,9 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
 
 
     $scope.loadStockingData = function(){
-
-        if(!isUndefined($scope.filterObject.productIdList)){
+        if(!isUndefined($scope.filterObject.productIdList) &&
+        !isUndefined($scope.filterObject.periodId) &&
+        !isUndefined($scope.filterObject.zoneId)){
             StockEfficiency.get({
                 periodId: $scope.filterObject.periodId,
                 programId: $scope.filterObject.programId,
@@ -618,75 +549,26 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
 
          return flotItem.series.xaxis.ticks[xval].label+' '+yval+' '+'facilities'+' ' +label;
      }
+    $scope.$on('$viewContentLoaded', function () {
+        $timeout(function(){
+            $scope.search();
 
-     $scope.$on('$viewContentLoaded', function () {
-        var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
+        },10);
 
-        if(isUndefined(filterHistory)){
-            if(!_.isEmpty(userPreferredFilterValues)){
-                var date = new Date();
+    });
 
-                $scope.filterObject.programId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM], $scope.programs) ?
-                     userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
-
-                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
-
-                if(!isUndefined($scope.filterObject.periodId)){
-
-                    GetPeriod.get({id:$scope.filterObject.periodId}, function(period){
-                        if(!isUndefined(period.year)){
-                            $scope.filterObject.year = period.year;
-                        }else{
-                            $scope.filterObject.year = date.getFullYear() - 1;
-                        }
-                        $scope.changeSchedule();
-                    });
-                }
-                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
-
-                $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
-
-                $scope.filterObject.productIdList = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',');
-                $scope.loadFacilities();
-                $scope.filterObject.facilityId = $scope.formFilter.facilityId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY],$scope.allFacilities) ?
-                    userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY] : $scope.formFilter.facilityId;
-
-                $scope.filterObject.facilityId = $scope.formFilter.facilityId  = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY];
-                $scope.registerWatches();
-
-                $scope.formFilter = $scope.filterObject;
-
-            }
-        }else{
-            $scope.registerWatches();
-            $scope.formFilter = $scope.filterObject = filterHistory;
-
-        }
-
-     });
-    $scope.registerWatches = function(){
-
-        $scope.$watch('formFilter.programId',function(){
-            $scope.filterProductsByProgram();
-        });
-        $scope.$watch('formFilter.scheduleId', function(){
-            $scope.changeSchedule();
-        });
-
+    $scope.search = function(){
+        $scope.loadStockingData();
+        $scope.loadReportingPerformance();
+        $scope.loadFillRates();
     };
 
-    var getFilterValues = function(){
-
-        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
-        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId,$scope.programs);
-        $scope.formFilter.facilityName = getSelectedItemName($scope.formFilter.facilityId,$scope.allFacilities);
-
-        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
-        $scope.formFilter.productNamesList = getSelectedItemNames($scope.filterObject.productIdList, $scope.products);
-        $scope.filterObject = $scope.formFilter;
-
-    };
-
+    $scope.$watch('formFilter.programId',function(){
+        $scope.filterProductsByProgram();
+    });
+    $scope.$watch('formFilter.scheduleId', function(){
+        $scope.changeSchedule();
+    });
 
     $scope.stockBarClickHandler = function (event, pos, item){
 
@@ -790,5 +672,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,dashboardMen
         var newItemNo = $scope.items.length + 1;
         $scope.items.push('Item ' + newItemNo);
     };
+
 
 }

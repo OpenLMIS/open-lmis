@@ -296,9 +296,10 @@ public class ReportLookupController extends BaseController {
     @RequestMapping(value = "/geographic-zone/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilities(
             @RequestParam("zoneId") Long zoneId,
+            @RequestParam("programId") Long programId,
             HttpServletRequest request
     ) {
-        return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZoneTree(loggedInUserId(request),zoneId));
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZoneTree(loggedInUserId(request),zoneId, programId));
     }
 
     @RequestMapping(value = "notification/facilities", method = GET, headers = BaseController.ACCEPT_JSON)

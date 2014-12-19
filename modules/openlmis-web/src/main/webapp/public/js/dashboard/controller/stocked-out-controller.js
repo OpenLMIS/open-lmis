@@ -6,14 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function StockedOutController($scope, $location,  dashboardMenuService,programsList,FlatGeographicZoneList,UserGeographicZoneTree, formInputValue,GetPeriod,dashboardFiltersHistoryService,userPreferredFilterValues,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
-    $scope.filterObject = {};
-
-    $scope.formFilter = {};
-
-    $scope.formPanel = {openPanel:true};
-
-    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
+function StockedOutController($scope, $location,userPreferredFilters, $timeout, dashboardMenuService,programsList,FlatGeographicZoneList,UserGeographicZoneTree, formInputValue,dashboardFiltersHistoryService,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,StockedOutFacilities, ngTableParams) {
 
     initialize();
 
@@ -25,6 +18,20 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
         $scope.productSelectOption = {maximumSelectionSize : 1};
 
     }
+
+    var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
+
+    if(isUndefined(filterHistory)){
+        $scope.formFilter = $scope.filterObject  = userPreferredFilters || {};
+
+    }else{
+        $scope.formFilter = $scope.filterObject  = filterHistory || {};
+    }
+
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
+
     FlatGeographicZoneList.get(function (data) {
         $scope.geographicZones = data.zones;
     });
@@ -253,7 +260,17 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
     function bindChartEvent(elementSelector, eventType, callback){
         $(elementSelector).bind(eventType, callback);
     }
+    $scope.$on('$viewContentLoaded', function () {
+        $timeout(function(){
+            $scope.search();
 
+        },10);
+
+    });
+    $scope.search = function(){
+        $scope.loadStockedOutData();
+    };
+/*
     $scope.$on('$viewContentLoaded', function () {
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
@@ -295,19 +312,16 @@ function StockedOutController($scope, $location,  dashboardMenuService,programsL
 
         }
 
+    });*/
+
+    $scope.$watch('formFilter.programId',function(){
+        $scope.filterProductsByProgram();
+
     });
-    $scope.registerWatches = function(){
+    $scope.$watch('formFilter.scheduleId', function(){
+        $scope.changeSchedule();
 
-        $scope.$watch('formFilter.programId',function(){
-            $scope.filterProductsByProgram();
-
-        });
-        $scope.$watch('formFilter.scheduleId', function(){
-            $scope.changeSchedule();
-
-        });
-
-    };
+    });
 
     var getFilterValues = function(){
 
