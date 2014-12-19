@@ -189,11 +189,11 @@ public class DashboardControllerTest {
 
     @Test
     public void shouldReturnReportingPerformance() throws Exception {
-       List<HashMap> expectedReportingPerformance = new ArrayList<>(1);
+        ReportingStatus expectedReportingPerformance = new ReportingStatus();
 
         when(lookupService.getReportingPerformance(userId,1L,1L, 1L)).thenReturn(expectedReportingPerformance);
         ResponseEntity<OpenLmisResponse> fetchedReportingPerformance = dashboardController.getReportingPerformance(1L,1L,1L,httpServletRequest);
-        assertThat((List<HashMap>) fetchedReportingPerformance.getBody().getData().get(REPORTING_PERFORMANCE), is(expectedReportingPerformance));
+        assertThat((ReportingStatus) fetchedReportingPerformance.getBody().getData().get(REPORTING_PERFORMANCE), is(expectedReportingPerformance));
         verify(lookupService).getReportingPerformance(userId,1L,1L,1L);
 
     }
