@@ -187,24 +187,24 @@ function CountriesLookupController($scope, $location, $filter, $dialog,DeleteCou
     };
 
     // watch for changes of parameters
-    $scope.$watch('tableParams', $scope.paramsChanged , true);
+    $scope.$watch('tableParams', $scope.paramsChanged , false);
 
-    $scope.getPagedDataAsync = function (pageSize, page) {
-        // Clear the results on the screen
-        $scope.countries = [];
-        $scope.data = [];
-        var params =  {
-            "max" : 10000,
-            "page" : 1
-        };
-
-        $.each($scope.filterObject, function(index, value) {
-            if(value !== undefined)
-                params[index] = value;
-        });
-        $scope.paramsChanged($scope.tableParams);
+//    $scope.getPagedDataAsync = function (pageSize, page) {
+//        // Clear the results on the screen
+//        $scope.countries = [];
+//        $scope.data = [];
+//        var params =  {
+//            "max" : 10000,
+//            "page" : 1
+//        };
 //
-    };
+//        $.each($scope.filterObject, function(index, value) {
+//            if(value !== undefined)
+//                params[index] = value;
+//        });
+//        $scope.paramsChanged($scope.tableParams);
+////
+//    };
 }
 CountriesLookupController.resolve = {
     countriesList: function ($q, $timeout, Countries) {

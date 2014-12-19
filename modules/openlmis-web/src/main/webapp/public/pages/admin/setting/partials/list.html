@@ -13,25 +13,34 @@
         <div ng-hide="settings" openlmis-message="msg.loading"></div>
         <div ng-show="settings">
             <h2>
-                <span openlmis-message="configure.setting.header"></span>
+                <span>Configuration Settings</span>
             </h2>
-            <div class="tab-content">
-                    <div style="padding-left: 30px;" ng-repeat="setting in settings.list">
-                        <h3 style="padding-left: -30px;" ng-show="CreateHeader(setting.groupName)">{{setting.groupName}}</h3>
-                        <div class="control-group">
-                            <div class="row">
-                                <div class="span4">
-                                   <label >{{setting.name}}</label>
-                                </div>
-                                <div class="span8">
-                                    <setting ng-model="setting"></setting>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+          <div class="rnr-tabs clearfix">
+            <ul>
+              <li ng-class="{'selected': visibleTab == grp }" ng-repeat="(grp, things) in grouped_settings">
+                <a href="" ng-click="changeTab(grp)">{{grp}}</a>
+              </li>
+            </ul>
+          </div>
+            <div ng-repeat="(grp, things) in grouped_settings" heading="{{grp}}">
+              <div ng-show="visibleTab == grp" class="tab-content">
+                      <div ng-repeat="setting in things">
+                          <h3 style="padding-left: -30px;" ng-show="CreateHeader(setting.groupName)">{{setting.groupName}}</h3>
+                          <div class="control-group">
+                              <div class="row">
+                                  <div class="span4 col-desc">
+                                     {{setting.name}}
+                                  </div>
+                                  <div class="span8">
+                                      <setting ng-model="setting"></setting>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+              </div>
             </div>
-        </div>
+          </div>
+
 
         <div form-toolbar id="action_buttons" class="action-buttons">
             <div class="form-cell button-row">

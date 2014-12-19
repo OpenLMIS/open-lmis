@@ -78,22 +78,22 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="c in countries ">
+            <tr ng-repeat="c1 in countries ">
                 <td data-title="'Name'" style="width:20px" sortable="name">
-                    <div>{{c.name}}</div>
+                    <div>{{c1.name}}</div>
                 </td>
                 <td data-title="'Long Name'" style="width:100px">
-                    <div>{{c.longName}}</div>
+                    <div>{{c1.longName}}</div>
                 </td>
                 <td data-title="'ISO Code2'" style="width:100px">
-                <div>{{c.isoCode2}}</div>
+                <div>{{c1.isoCode2}}</div>
             </td>
                 <td data-title="'ISO Code3'" style="width:100px">
-                    <div>{{c.isoCode3}}</div>
+                    <div>{{c1.isoCode3}}</div>
                 </td>
                 <td data-title="'Action'" style="width:100px">
-                    <a href="" ng-click="editCountries(c.id)">Edit</a>|
-                    <a href="" ng-click="showDeleteConfirmDialog(c)">Delete</a>
+                    <a href="" ng-click="editCountries(c1.id)">Edit</a>|
+                    <a id="showDeleteConfirmDialog1{{$index}}" href="" ng-click="showDeleteConfirmDialog(c1)">Delete</a>
                 </td>
 
 

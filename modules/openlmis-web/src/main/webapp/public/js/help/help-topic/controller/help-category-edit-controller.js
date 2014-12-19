@@ -46,4 +46,17 @@ function HelpCategoryEditController($scope, $route, $location, $dialog, messageS
 
 
 $scope.startHelpTopicEdit($route.current.params.id);
+    $scope.selectAll=function(){
+        angular.forEach( $scope.editHelpTopic.roleList, function(item) {
+            item.currentlyAssigned = true;
+        });
+    };
+    $scope.deSelectAll=function(){
+        angular.forEach( $scope.editHelpTopic.roleList, function(item) {
+            item.currentlyAssigned = false;
+        });
+    };
+    $scope.cancel=function(){
+        $location.path('/treeView');
+    };
 }
