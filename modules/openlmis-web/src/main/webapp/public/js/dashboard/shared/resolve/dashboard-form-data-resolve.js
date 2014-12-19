@@ -1,10 +1,3 @@
-/**
- * Created with IntelliJ IDEA.
- * User: issa
- * Date: 2/26/14
- * Time: 9:37 PM
- * To change this template use File | Settings | File Templates.
- */
 
 ResolveDashboardFormData = {
     programsList : function($q, $timeout, $rootScope, UserSupervisedActivePrograms){
@@ -20,16 +13,7 @@ ResolveDashboardFormData = {
 
         return deferred.promise;
 
-    }/*,
-    userPreferredFilterValues : function(localStorageService){
-        var preferredFilterValues = {};
-        for(var prefKey in localStorageKeys.PREFERENCE){
-            preferredFilterValues[localStorageKeys.PREFERENCE[prefKey]] =  localStorageService.get(localStorageKeys.PREFERENCE[prefKey]);
-        }
-
-        return preferredFilterValues;
-
-    }*/,
+    },
     formInputValue : function(messageService){
                return {
                 yearOptionAll : messageService.get('input.year.option.all'),
@@ -66,11 +50,11 @@ ResolveDashboardFormData = {
         filterObject.zoneId = preferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
 
         filterObject.productIdList = !isUndefined(preferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS]) ? preferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCTS].split(',') : null;
-       // $scope.loadFacilities();
+
         filterObject.facilityId = preferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY];
 
         filterObject.facilityId = preferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_FACILITY];
-        // $scope.registerWatches();
+
 
         return filterObject;
     }
