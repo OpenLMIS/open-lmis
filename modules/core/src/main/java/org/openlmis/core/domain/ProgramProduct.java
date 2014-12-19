@@ -49,6 +49,8 @@ public class ProgramProduct extends BaseModel implements Importable {
 
   private Long productCategoryId;
 
+  private boolean fullSupply;
+
   @ImportField(name = "Display Order", type = "int")
   private Integer displayOrder;
 
@@ -84,5 +86,6 @@ public class ProgramProduct extends BaseModel implements Importable {
     this.currentPrice = programProduct.currentPrice;
     this.programProductIsa = programProduct.programProductIsa;
     this.displayOrder = programProduct.displayOrder;
+    this.fullSupply = programProduct.fullSupply;
   }
 }
