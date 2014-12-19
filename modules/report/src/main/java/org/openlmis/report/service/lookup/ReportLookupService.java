@@ -336,8 +336,8 @@ public class ReportLookupService {
 
     }
 
-    public List<Facility> getFacilityByGeographicZoneTree(Long userId, Long zoneId) {
-        return facilityReportMapper.getFacilitiesByGeographicZoneTree(userId, zoneId);
+    public List<Facility> getFacilityByGeographicZoneTree(Long userId, Long zoneId, Long programId) {
+        return facilityReportMapper.getFacilitiesByGeographicZoneTree(userId, zoneId, programId);
     }
 
     public List<HashMap> getFacilitiesForNotifications(Long userId, Long zoneId) {

@@ -8,15 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RequisitionStatusSummaryController($scope, messageService, $filter, RnRStatusSummary, programsList, FlatGeographicZoneList, UserGeographicZoneTree, dashboardMenuService, $location, dashboardFiltersHistoryService, formInputValue, GetPeriod, userPreferredFilterValues, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
-
-    $scope.filterObject = {};
-
-    $scope.formFilter = {};
-
-    $scope.formPanel = {openPanel: true};
-    $scope.rnrStatus = {openPanel: true};
-
+function RequisitionStatusSummaryController($scope, messageService, $timeout,userPreferredFilters, $filter, RnRStatusSummary, programsList, FlatGeographicZoneList, UserGeographicZoneTree, dashboardMenuService, $location, dashboardFiltersHistoryService, formInputValue, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
 
     initialize();
 
@@ -25,6 +17,19 @@ function RequisitionStatusSummaryController($scope, messageService, $filter, RnR
         $scope.$parent.currentTab = "RNR-STATUS-SUMMARY";
 
     }
+    var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
+
+    if(isUndefined(filterHistory)){
+        $scope.formFilter = $scope.filterObject  = userPreferredFilters || {};
+
+    }else{
+        $scope.formFilter = $scope.filterObject  = filterHistory || {};
+    }
+
+
+    $scope.formPanel = {openPanel: true};
+    $scope.rnrStatus = {openPanel: true};
+
 
     $scope.programs = programsList;
     $scope.programs.unshift({'name': formInputValue.programOptionSelect});
@@ -59,18 +64,16 @@ function RequisitionStatusSummaryController($scope, messageService, $filter, RnR
         $scope.filterObject.programId = $scope.formFilter.programId;
         $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
 
-        //$scope.loadRnRStatus();
-
     };
 
     $scope.processZoneFilter = function () {
         $scope.filterObject.zoneId = $scope.formFilter.zoneId;
         $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
 
-        $scope.loadRnRStatus();
     };
 
     $scope.loadRnRStatus = function () {
+        getFilterValues();
         if (isUndefined($scope.filterObject.periodId) || isUndefined($scope.filterObject.programId)) {
             $scope.resetRnRStatusData();
             return;
@@ -252,7 +255,6 @@ function RequisitionStatusSummaryController($scope, messageService, $filter, RnR
     $scope.processPeriodFilter = function () {
         $scope.filterObject.periodId = $scope.formFilter.periodId;
         $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
-        $scope.loadRnRStatus();
     };
 
     $scope.changeSchedule = function () {
@@ -297,7 +299,7 @@ function RequisitionStatusSummaryController($scope, messageService, $filter, RnR
         dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
     });
 
-    $scope.$on('$viewContentLoaded', function () {
+    /*$scope.$on('$viewContentLoaded', function () {
 
         var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
@@ -339,18 +341,25 @@ function RequisitionStatusSummaryController($scope, messageService, $filter, RnR
         }
 
     });
+*/
+    $scope.$on('$viewContentLoaded', function () {
+        $timeout(function(){
+            $scope.search();
 
-    $scope.registerWatches = function () {
+        },10);
 
-        $scope.$watch('formFilter.programId', function () {
-            $scope.filterProductsByProgram();
-
-        });
-        $scope.$watch('formFilter.scheduleId', function () {
-            $scope.changeSchedule();
-
-        });
+    });
+    $scope.search = function(){
+        $scope.loadRnRStatus();
     };
+    $scope.$watch('formFilter.programId', function () {
+        $scope.filterProductsByProgram();
+
+    });
+    $scope.$watch('formFilter.scheduleId', function () {
+        $scope.changeSchedule();
+
+    });
 
     $scope.paramsChanged = function (params) {
 
