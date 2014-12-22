@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewOrderListController($scope, Orders, messageService, $location, $routeParams, supplylines, programs, schedules, years, ReportPeriodsByScheduleAndYear) {
+function ViewOrderListController($scope, Orders, messageService, $location, $routeParams, supplylines, programs, schedules, years, ReportPeriodsByScheduleAndYear, ReportProgramSchedules) {
 
   $scope.supplylines = supplylines;
   $scope.programs = programs;
@@ -22,6 +22,13 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
     }, function (data) {
       $scope.periods = data.periods;
     });
+  };
+    
+  $scope.OnProgramChanged = function(){
+    // load the schedules based on the program. 
+     ReportProgramSchedules.get({program: $scope.program},function(data){
+          $scope.schedules = data.schedules;
+        });
   };
 
   function refreshGrid() {
