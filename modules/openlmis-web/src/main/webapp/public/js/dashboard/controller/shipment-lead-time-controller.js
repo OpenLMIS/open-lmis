@@ -6,15 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryService,programsList,FlatGeographicZoneList,UserGeographicZoneTree, formInputValue,GetPeriod,userPreferredFilterValues, ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
+function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout, dashboardFiltersHistoryService,programsList,FlatGeographicZoneList,UserGeographicZoneTree, formInputValue, ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear,ShipmentLeadTime, ngTableParams) {
 
-    $scope.filterObject = {};
-
-    $scope.formFilter = {};
-
-    $scope.formPanel = {openPanel:true};
-
-    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
 
     initialize();
 
@@ -24,6 +17,21 @@ function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryServi
         $scope.$parent.currentTab = 'ORDER';
 
     }
+
+    var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
+
+    if(isUndefined(filterHistory)){
+        $scope.formFilter = $scope.filterObject  = userPreferredFilters || {};
+
+    }else{
+        $scope.formFilter = $scope.filterObject  = filterHistory || {};
+    }
+
+
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
+
     FlatGeographicZoneList.get(function (data) {
         $scope.geographicZones = data.zones;
     });
@@ -155,62 +163,26 @@ function ShipmentLeadTimeController($scope,$filter, dashboardFiltersHistoryServi
 
         dashboardFiltersHistoryService.add($scope.$parent.currentTab,data);
     };
-
-
     $scope.$on('$viewContentLoaded', function () {
-        var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
+        $timeout(function(){
+            $scope.search();
 
-        if(isUndefined(filterHistory)){
-            if(!_.isEmpty(userPreferredFilterValues)){
-                var date = new Date();
-
-                $scope.filterObject.programId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM], $scope.programs) ?
-                    userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
-
-                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
-
-                if(!isUndefined($scope.filterObject.periodId)){
-
-                    GetPeriod.get({id:$scope.filterObject.periodId}, function(period){
-                        if(!isUndefined(period.year)){
-                            $scope.filterObject.year = period.year;
-                        }else{
-                            $scope.filterObject.year = date.getFullYear() - 1;
-                        }
-
-                        $scope.changeSchedule();
-                    });
-                }
-                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
-
-                $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
-                $scope.filterObject.productIdList = [userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCT]];
-
-                $scope.registerWatches();
-
-                $scope.formFilter = $scope.filterObject;
-
-            }
-        }else{
-
-            $scope.registerWatches();
-            $scope.formFilter = $scope.filterObject = filterHistory;
-
-        }
+        },10);
 
     });
-    $scope.registerWatches = function(){
-
-        $scope.$watch('formFilter.programId',function(){
-            $scope.filterProductsByProgram();
-
-        });
-        $scope.$watch('formFilter.scheduleId', function(){
-            $scope.changeSchedule();
-
-        });
-
+    $scope.search = function(){
+        $scope.getShipmentLeadTimeData();
     };
+
+    $scope.$watch('formFilter.programId',function(){
+        $scope.filterProductsByProgram();
+
+    });
+    $scope.$watch('formFilter.scheduleId', function(){
+        $scope.changeSchedule();
+
+    });
+
 
     var getFilterValues = function(){
 

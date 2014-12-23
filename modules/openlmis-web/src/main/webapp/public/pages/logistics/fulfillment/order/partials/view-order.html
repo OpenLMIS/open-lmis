@@ -15,6 +15,13 @@
   <div class="pull-right">
 
     <div class="pull-left">
+      <label for="program" openlmis-message="label.program"> <span class="label-required"> *</span></label>
+      <select id="program" ng-change="OnProgramChanged();OnFilterChanged()" ng-model="program">
+        <option ng-repeat="line in programs" value="{{line.id}}">{{line.name}}</option>
+      </select>
+    </div>
+      
+    <div class="pull-left">
       <label for="schedule" openlmis-message="label.schedule"> <span class="label-required"> *</span></label>
       <select id="schedule" ng-change="LoadPeriods()" ng-model="schedule">
         <option ng-repeat="line in schedules" value="{{line.id}}">{{line.name}}</option>
@@ -36,12 +43,7 @@
     </div>
 
 
-    <div class="pull-left">
-      <label for="program" openlmis-message="label.program"> <span class="label-required"> *</span></label>
-      <select id="program" ng-change="OnFilterChanged()" ng-model="program">
-        <option ng-repeat="line in programs" value="{{line.id}}">{{line.name}}</option>
-      </select>
-    </div>
+   
 
     <div class="pull-left">
       <label for="depot" openlmis-message="label.supplying.depot"> <span class="label-required">*</span></label>

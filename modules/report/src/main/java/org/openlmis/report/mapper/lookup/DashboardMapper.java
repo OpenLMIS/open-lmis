@@ -11,11 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * User: Issa
- * Date: 2/18/14
- * Time: 5:32 PM
- */
 @Repository
 public interface DashboardMapper {
 
@@ -140,54 +135,29 @@ public interface DashboardMapper {
     @Select("select date_Part('year',startdate) from processing_periods where id = #{id}")
     public String getYearOfPeriodById(@Param("id")Long id);
 
-    @Select("WITH reportingPerf as(\n" +
-            "            select distinct dw.reporting AS status,uf.facilityid,uf.facilityname,uf.geographiczonename,\n" +
-            "            (select count(*) > 0 from users where users.active = true and users.facilityId = uf.facilityid) as hasContacts\n" +
-            "            from vw_user_geo_facilities uf\n" +
-            "            join dw_orders dw on dw.facilityid = uf.facilityid\n" +
-            "            where uf.geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
-            "            and dw.programid = #{programId} and dw.periodid= #{periodId}  and uf.userid = #{userId}\n" +
-            "            UNION ALL\n" +
-            "               SELECT \n" +
-            "                'N' AS Status, \n" +
-            "                facilityid, \n" +
-            "                facilityname, \n" +
-            "                geographiczonename, \n" +
-            "                 (select count(*) > 0 from users where users.active = true and users.facilityId = vw_expected_facilities.facilityid) as hasContacts \n" +
-            "               FROM \n" +
-            "                vw_expected_facilities \n" +
-            "               WHERE \n" +
-            "                programid = #{programId} \n" +
-            "               AND periodid =  #{periodId} \n" +
-            "               AND facilityid not in (select facilityid from dw_orders where programid = #{programId} and periodid = #{periodId})\n" +
-            "               AND geographiczoneid IN ( \n" +
-            "                SELECT \n" +
-            "                 geographiczoneid \n" +
-            "                FROM \n" +
-            "                 fn_get_user_geographiczone_children (#{userId}::int,#{zoneId}::int) \n" +
-            "               ) )\n" +
-            "            SELECT status, count(*) as total\n" +
-            "            FROM reportingPerf\n" +
-            "            GROUP BY status")
-    List<HashMap> getReportingPerformance(@Param("userId") Long userId,@Param("periodId")  Long periodId, @Param("programId") Long programId, @Param("zoneId") Long zoneId);
+    @Select("SELECT count(*) total, \n" +
+            "(SELECT count(*) from requisitions where programid = #{programId} and periodid = #{periodId} \n" +
+            "and facilityid in (select facilityid FROM vw_expected_facilities WHERE  programid = #{programId} AND periodid = #{periodId}) \n" +
+            "and facilityid in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{programId} and district_id in (SELECT geographiczoneid FROM fn_get_user_geographiczone_children (#{userId}::int,#{zoneId}::int)))\n" +
+            "and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and emergency = false) as reporting\n" +
+            "\n" +
+            "FROM vw_expected_facilities WHERE  programid = #{programId} AND periodid = #{periodId} \n" +
+            "and geographiczoneid in (SELECT geographiczoneid FROM fn_get_user_geographiczone_children (#{userId}::int,#{zoneId}::int));" )
+    ReportingStatus getReportingPerformance(@Param("userId") Long userId,@Param("periodId")  Long periodId, @Param("programId") Long programId, @Param("zoneId") Long zoneId);
 
-    @Select("WITH reportingPerf as(\n" +
-            "select distinct dw.reporting AS status,uf.facilityid,uf.facilityname as name,uf.geographiczonename as district,\n" +
-            "(select count(*) > 0 from users where users.active = true and users.facilityId = uf.facilityid) as hasContacts\n" +
-            "from vw_user_geo_facilities uf\n" +
-            "join dw_orders dw on dw.facilityid = uf.facilityid\n" +
-            "where uf.geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))\n" +
-            "and dw.programid = #{programId} and dw.periodid= #{periodId} and uf.userid = #{userId}\n" +
-            "UNION ALL\n" +
-            "select 'N' AS status, facilityid,facilityname,geographiczonename,\n" +
-            "(select count(*) > 0 from users where users.active = true and users.facilityId = vw_user_geo_facilities.facilityid) as hasContacts\n" +
-            "from vw_user_geo_facilities \n" +
-            "where facilityid not in (select facilityid from dw_orders where programid = #{programId} and periodid = #{periodId} \n" +
-            "and geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children( #{userId}::int,#{zoneId}::int)))\n" +
-            "and userid =  #{userId} and  geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children( #{userId}::int,#{zoneId}::int)))\n" +
-            "SELECT * \n" +
-            "FROM reportingPerf\n" +
-            "WHERE status = #{status}")
+   @Select("WITH reportingFac as (SELECT facilityid from requisitions where programid = #{programId} and periodid = #{periodId} \n" +
+           "and facilityid in (select facilityid FROM vw_expected_facilities WHERE  programid = #{programId} AND periodid = #{periodId}) \n" +
+           "and facilityid in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{programId} and district_id in (SELECT geographiczoneid FROM fn_get_user_geographiczone_children (#{userId}::int,#{zoneId}::int)))\n" +
+           "and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and emergency = false)\n" +
+           "SELECT facilityname as name, geographiczonename as district,\n" +
+           "           (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts ,\n" +
+           "           #{status} as status\n" +
+           "FROM vw_expected_facilities \n" +
+           "JOIN facilities f on f.id = facilityid\n" +
+           "WHERE  programid = #{programId} AND periodid = #{periodId} \n" +
+           "and vw_expected_facilities.geographiczoneid in (SELECT geographiczoneid FROM fn_get_user_geographiczone_children (#{userId}::int,#{zoneId}::int))\n" +
+           "and CASE WHEN #{status} = 'reporting' THEN facilityid  in (select facilityId from reportingFac) \n" +
+           "         WHEN #{status} = 'nonReporting' THEN facilityid not in (select facilityId from reportingFac) END")
     List<ReportingPerformance> getReportingPerformanceDetail(@Param("userId") Long userId, @Param("periodId") Long periodId, @Param("programId") Long programId, @Param("zoneId") Long zoneId, @Param("status") String status);
 
 }

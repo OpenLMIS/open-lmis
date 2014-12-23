@@ -219,7 +219,9 @@ Edit Product
     <div class="form-cell">
         <div class="form-field">
             <table>
-                <tr>
+               <!--
+                Left commented out for a legacy reasone
+               <tr>
                     <td><input ng-model="editProduct.fullSupply" name="fullSupply" id="fullSupply"
                                type="checkbox"
                                ng-show="editProduct"
@@ -228,7 +230,7 @@ Edit Product
                     <td>&nbsp;</td>
                     </td>
                     <td>Full Supply</td>
-                </tr>
+                </tr> -->
                 <tr>
                     <td>
                         <input ng-model="editProduct.tracer" name="tracer" id="tracer" type="checkbox"
@@ -271,13 +273,14 @@ Edit Product
             <th></th>
             <th>R&R Display Order</th>
             <th>Category</th>
+            <th>Full Supply</th>
             <th style="text-align: left">Price Per Pack</th>
             <th style="text-align: left">Doses Per Month</th>
         </tr>
         <tr ng-repeat="pp in editProduct.programProducts" tab-scroll>
             <td>&nbsp;</td>
             <td style="width: 200px;text-align:left;">{{pp.program.code}}</td>
-            <td style="width: 200px;text-align:left;">
+            <td style="width: 100px;text-align:left;">
                 <input type="checkbox" ng-disabled="!editProduct.active" ng-model="pp.active"/>
             </td>
             <td>
@@ -296,6 +299,13 @@ Edit Product
 
                 </select>
 
+            </td>
+            <td style="text-align: center;">
+                <input ng-model="pp.fullSupply"
+                       type="checkbox"
+                       ng-disabled="(!pp.active || !editProduct.active)"
+                       ng-show="editProduct"
+                       ng-required="false"/>
             </td>
             <td><input type="text" ng-disabled="(!pp.active || !editProduct.active)" ng-required="pp.active"
                        ng-model="pp.currentPrice"/></td>

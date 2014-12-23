@@ -37,6 +37,12 @@ public class OrderFillRateQueryBuilder {
 
     private static void writePredicates(String zone, String program, String period, String schedule, String facility, String product, String facilityType, String productCategory) {
 
+            WHERE("programid = cast(" + program + " as int4)");
+
+            WHERE("periodid = cast(" + period + " as int4)");
+
+            WHERE("scheduleid = cast(" + schedule + " as int4)");
+
         if (zone != null && !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0") && !zone.equals("-1")) {
             WHERE(" (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone + " or gz.parent = " + zone + " )");
         }
@@ -45,25 +51,14 @@ public class OrderFillRateQueryBuilder {
             WHERE("facilityid = cast(" + facility + " as int4)");
         }
 
-        if (!product.equals("0") && !product.equals("-1") && product != null && !product.isEmpty() && !product.equals("{}") && !product.equals("{0}") && !product.endsWith("undefined")) {
+        if (!product.equals("0") && !product.equals("-1") && product != null && !product.isEmpty() && !product.equals("{}") && !product.equals("{0}") && !product.endsWith("undefined") && !product.isEmpty()) {
             WHERE("productId =  ANY(array" + product + "::INT[]) ");
         }
 
-        if (period != "" && !period.endsWith("undefined")) {
-            WHERE("periodid = cast(" + period + " as int4)");
-        }
-
-
-        if (program != "" && !program.endsWith("undefined")) {
-            WHERE("programid = cast(" + program + " as int4)");
-        }
-
-        if (schedule != "" && !schedule.endsWith("undefined")) {
-            WHERE("scheduleid = cast(" + schedule + " as int4)");
-        }
         if (facilityType != null && !facilityType.equals("undefined") && !facilityType.isEmpty() && !facilityType.equals("0") && !facilityType.equals("-1")) {
             WHERE("facilityTypeId = cast(" + facilityType + " as int4)");
         }
+
         if (productCategory != null && !productCategory.equals("undefined") && !productCategory.isEmpty() && !productCategory.equals("0") && !productCategory.equals("-1")) {
             WHERE("productCategoryId = cast(" + productCategory + " as int4)");
         }
@@ -77,8 +72,7 @@ public class OrderFillRateQueryBuilder {
                 "                                     END AS item_fill_rate ");
         FROM("vw_order_fill_rate join vw_districts gz on gz.district_id = vw_order_fill_rate.zoneId");
         WHERE("facilityid in (select facility_id from vw_user_facilities where user_id = cast(" + userId + " as int4) and program_id = cast(" + program + " as int4))");
-        WHERE(" status in ('RELEASED') and totalproductsapproved > 0 and periodid = cast (" + period + " as int4)" +
-                "and facilityid= cast(" + facility + " as int4) and programid = cast(" + program + " as int4)");
+        WHERE(" status in ('RELEASED') and totalproductsapproved > 0 ");
 
         writePredicates(zone, program, period, schedule, facility, product, facilityType, productCategory);
         GROUP_BY("product, approved, \n" +

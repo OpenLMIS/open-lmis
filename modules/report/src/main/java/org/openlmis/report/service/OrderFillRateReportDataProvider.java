@@ -16,6 +16,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.report.mapper.OrderFillRateReportMapper;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.model.report.MasterReport;
 import org.openlmis.report.model.report.OrderFillRateReport;
 import org.openlmis.report.util.StringHelper;
@@ -55,19 +56,31 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         // TODO: move this to other section of the application
         OrderFillRateReport percentage = new OrderFillRateReport();
         percentage.setName("Order Fill Rate:");
-        percentage.setNameLabel("Facility Name: ");
-        percentage.setFacility(this.reportMapper.getFacility(Integer.parseInt(facility)).get(0).getName());
 
-        String totalProductsReceived = reportMapper.getTotalProductsReceived(filterCriteria, this.getUserId()).get(0).toString();
-        String totalProductsOrdered = reportMapper.getTotalProductsOrdered(filterCriteria, this.getUserId()).get(0).toString();
+        List<RequisitionGroup> facilityList = this.reportMapper.getFacility(Integer.parseInt(facility));
 
-        // Assume by default that the 100% of facilities didn't report
-        Long percent = Long.parseLong("0");
-        if (totalProductsOrdered != "0") {
-            percent = Math.round((Double.parseDouble(totalProductsReceived) / Double.parseDouble(totalProductsOrdered)) * 100);
+        //to be safe from a repetitive exception when ever facility id not selected
+        if(facilityList!=null && facilityList.size() > 0) {
+            percentage.setNameLabel("Facility Name: ");
+            percentage.setFacility(this.reportMapper.getFacility(Integer.parseInt(facility)).get(0).getName());
         }
 
-        percentage.setCount(percent.toString() + "%");
+        List<Integer> totalProductsReceivedList = reportMapper.getTotalProductsReceived(filterCriteria, this.getUserId());
+        List<Integer> totalProductsOrderedList = reportMapper.getTotalProductsOrdered(filterCriteria, this.getUserId());
+
+        if(totalProductsReceivedList.size() > 0 && totalProductsOrderedList.size() > 0) {
+            String totalProductsReceived = totalProductsReceivedList.get(0).toString();
+            String totalProductsOrdered = totalProductsOrderedList.get(0).toString();
+
+            // Assume by default that the 100% of facilities didn't report
+            Long percent = Long.parseLong("0");
+            if (totalProductsOrdered != "0") {
+                percent = Math.round((Double.parseDouble(totalProductsReceived) / Double.parseDouble(totalProductsOrdered)) * 100);
+            }
+
+            percentage.setCount(percent.toString() + "%");
+        }
+
         summary.add(0, percentage);
 
         report.summary = summary;
