@@ -620,58 +620,8 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
         $location.path("/");
     };
 
-    /* End Custom Bar Chart */
-
-    /* Bootstrap Dynamic Tab Utility  */
-    function createTab(tabId){
-        var tabNum = tabId.substr(tabId.length - 1);
-        var contentId = tabId +'-'+ tabNum;
-
-        if($('#'+tabId).length === 0){ //tab does not exist
-            $('.nav-tabs').prepend('<li id="'+tabId+'"><a href="#' + contentId + '" data-toggle="tab"'+'><button class="close closeTab" type="button" >×</button>Tab '+tabNum +'</a></li>');
-            showTab(tabId);
-
-            registerCloseEvent();
-
-        }else{
-            showTab(tabId);
-        }
-    }
-
-    function registerCloseEvent() {
-        $('#dashboard-tabs').on('click', ' li a .close', function(e) {
-            e.preventDefault();
-            $(this).parents('li').remove('li');
-            $('#dashboard-tabs a:first').tab('show');
-        });
-    }
-    function showTab(tabId) {
-
-        $('#dashboard-tabs #' + tabId + ' a').tab('show');
-    }
-
-    $scope.oneAtATime = true;
-
     $scope.stocking = {};
     $scope.stocking.openPanel = true;
-    //$scope.$watch()
-    $scope.groups = [
-        {
-            title: "Dynamic Group Header - 1",
-            content: "Dynamic Group Body - 1"
-        },
-        {
-            title: "Dynamic Group Header - 2",
-            content: "Dynamic Group Body - 2"
-        }
-    ];
-
-    $scope.items = ['Item 1', 'Item 2', 'Item 3'];
-
-    $scope.addItem = function() {
-        var newItemNo = $scope.items.length + 1;
-        $scope.items.push('Item ' + newItemNo);
-    };
-
+    /* End Custom Bar Chart */
 
 }

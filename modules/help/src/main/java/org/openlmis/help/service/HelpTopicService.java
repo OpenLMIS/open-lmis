@@ -15,6 +15,7 @@ import org.openlmis.help.Repository.HelpContentRepository;
 import org.openlmis.help.Repository.HelpTopicRepository;
 import org.openlmis.help.Repository.HelpTopicRoleRepository;
 import org.openlmis.help.domain.HelpContent;
+import org.openlmis.help.domain.HelpDocument;
 import org.openlmis.help.domain.HelpTopic;
 import org.openlmis.help.domain.HelpTopicRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,4 +171,15 @@ public class HelpTopicService {
     }
 
     private List<HelpTopic> helpTopicList;
+
+    public Object uploadHelpDocument(HelpDocument helpDocument) {
+        this.repository.uploadHelpDocument(helpDocument);
+        return null;
+    }
+
+    public List<HelpDocument> loadHelpDocumentList() {
+        List<HelpDocument> helpDocumentList=null;
+        helpDocumentList=this.repository.loadHelpDocumentList();
+        return helpDocumentList;
+    }
 }

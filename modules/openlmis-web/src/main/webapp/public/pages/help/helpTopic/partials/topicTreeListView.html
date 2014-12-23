@@ -34,19 +34,51 @@
 
 
         </div>
+
     </div>
     <div ng-model="showMinDir" ng-value="false">
+        <div   class="pull-right control-accordion">
+            Help Document List &nbsp;
+            <a class="pull-right" href="#uploadDocument" id="country-add-new"
 
 
-        <div class="pull-right control-accordion">
+                    >Attach New File</a>
+           <div style="height: 300px; overflow: scroll;">
+            <table class="table table-striped table-bordered" ng-table="tableParams" >
+                <thead>
+                <tr class="gradient-header">
+
+                    <th>Url
+                    </th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="hd in helpDocumentList ">
+                    <td >
+                        <div>{{hd.fileUrl}}</div>
+                    </td>
+
+
+
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+        <div class="pull-left control-accordion">
             <a ng-click="my_tree.expand_all()" href="javascript:void(0);">Expand All</a>|
             <a ng-click="my_tree.collapse_all()" href="javascript:void(0);">Collapse All</a>
         </div>
-        <div>
+        <div >
+
+            <div style="width:60%">
             <tree-grid tree-data="tree_data" tree-control="my_tree" col-defs="col_defs"
                        expand-on="expanding_property"
                        on-select="my_tree_handler(branch)" expand-level="2"
                        icon-leaf="glyphicon glyphicon-globe"></tree-grid>
+            </div>
 
     <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">

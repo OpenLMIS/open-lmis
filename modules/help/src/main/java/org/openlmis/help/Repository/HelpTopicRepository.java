@@ -11,6 +11,7 @@
 package org.openlmis.help.Repository;
 
 import org.openlmis.help.Repository.mapper.HelpTopicMapper;
+import org.openlmis.help.domain.HelpDocument;
 import org.openlmis.help.domain.HelpTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -61,4 +62,11 @@ public List<HelpTopic> loadChildrenOfHelpTopic(Long loggedUserId, HelpTopic pare
     return this.mapper.getRoleHelpTopicChildrenList(loggedUserId,parentHTopic.getId());
     }
 
+    public void uploadHelpDocument(HelpDocument helpDocument) {
+        this.mapper.addHelpDocuemnt(helpDocument);
+    }
+
+    public List<HelpDocument> loadHelpDocumentList() {
+        return this.mapper.loadHelpDocumentList();
+    }
 }

@@ -1051,5 +1051,8 @@ services.factory('DeleteVaccineReceivedStatus', function ($resource) {
 services.factory('SearchVaccineReceivedStatus', function ($resource) {
     return $resource('/vaccine/received-status/search.json', {}, {});
 });
+services.factory('HelpDocumentList', function ($resource) {
+    return $resource('/loadDocumentList.json', {}, {});
+});
 
 

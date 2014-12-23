@@ -9,6 +9,7 @@ helpModule.config(['$routeProvider', function ($routeProvider) {
         when('/edit/:id', {controller: HelpCategoryEditController, templateUrl: 'partials/edit.html'}).
         when('/create/:id', {controller: HelpTopicCreateController, templateUrl: 'partials/create.html'}).
         when('/create/', {controller: HelpTopicCreateController, templateUrl: 'partials/create.html'}).
+        when('/uploadDocument/', {controller: HelpUploadController, templateUrl: 'partials/uploadDocument.html'}).
         when('/createHelpContent/:id', {controller: ContentCreateController, templateUrl: 'partials/createHelpContent.html'}).
         when('/editHelpContent/:id', {controller: HelpContentEditCotntroller, templateUrl: 'partials/editHelpContent.html'}).
         otherwise({redirectTo: '/treeView'});
