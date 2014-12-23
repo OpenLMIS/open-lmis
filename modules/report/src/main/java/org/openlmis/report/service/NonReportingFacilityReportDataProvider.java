@@ -72,11 +72,11 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
       percentageNonReporting.setName("Percentage not-reporting");
       percentageNonReporting.setCount(percentNonReporting.toString() + "%");
-      summary.add(0, percentageNonReporting);
+      summary.add(1, percentageNonReporting);
 
       percentageReporting.setName("Percentage reporting");
       percentageReporting.setCount(percentReporting.toString() + "%");
-      summary.add(1, percentageReporting);
+      summary.add(percentageReporting);
 
     report.summary = summary;
 

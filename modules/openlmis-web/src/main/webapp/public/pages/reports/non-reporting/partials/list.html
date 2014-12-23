@@ -43,11 +43,20 @@
                     <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
 
                     <div class="span9 offset1">
-                       <div ng-repeat="summary in summaries">
-                        <div class="pull-left" style="font-size:13px; font-weight: bold;">
-                            <span>{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span></strong>
+
+                        <div ng-repeat="summary in summaries">
+                            <div class="pull-left" style="font-size:13px; font-weight: bold;" ng-if="$index ===2 || $index ===3">
+                                <span>{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span></strong>
+                            </div>
                         </div>
-                       </div>
+
+                        <div ng-repeat="summary in summaries">
+                            <div class="pull-left" style="font-size:13px; font-weight: bold;" ng-if="$index ===0 || $index ===1">
+                                <span>{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span></strong>
+                            </div>
+                        </div>
+
+
                     </div>
                     <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
 
