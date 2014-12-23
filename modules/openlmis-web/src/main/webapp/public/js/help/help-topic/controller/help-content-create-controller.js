@@ -3,7 +3,7 @@
  */
 
 
-function ContentCreateController($scope, $location, $route, messageService, CreateHelpTopic) {
+function ContentCreateController($scope, $location, $route, messageService, CreateHelpTopic,HelpDocumentList) {
 
     $scope.disabled = false;
     $scope.htmlContent = $scope.htmlcontent;
@@ -11,7 +11,19 @@ function ContentCreateController($scope, $location, $route, messageService, Crea
 //    Masquerade perfers the scope value over the innerHTML
 //    Uncomment this line to see the effect:
     $scope.htmlcontenttwo = "Override originalContents";
+    HelpDocumentList.get({}, function (data) {
 
+        $scope.helpDocumentList = data.helpDocumentList;
+
+
+
+    }, function (data) {
+
+
+        $location.path($scope.$parent.sourceUrl);
+
+
+    });
     $scope.createHelpContent = function () {
         //////alert('here ii am');
         $scope.error = "";

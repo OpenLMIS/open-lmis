@@ -16,7 +16,7 @@
     <form ng-submit="updateHelpContent()" id="updateHelpContentForm" name="updateHelpContentForm"
           novalidate select2-blur>
 
-        <div class="app-form">
+        <div style="width: 70%"  class="app-form">
 
             <div class="form-group">
 
@@ -40,15 +40,41 @@
                 </div>
             </div>
             </div>
-                    <div class="form-cell">
-                        <h3>Help Content</h3>
 
-                        <div style="width: 100%" text-angular="text-angular" name="htmlcontent" ng-model="editHelpContent.htmlContent"
+                    <div class="form-cell">
+                        <h2>Help Content</h2>
+
+                        <div style="width: 70%" text-angular="text-angular" name="htmlcontent" ng-model="editHelpContent.htmlContent"
                              ta-disabled='disabled'></div>
                     </div>
 
 
+        <div style=" position:absolute;top:180px;right: 20px; width: 25%"  class="pull-right control-accordion">
+            Help Document List &nbsp;
 
+            <div style="height: 300px; overflow: scroll;">
+                <table class="table table-striped table-bordered" ng-table="tableParams" >
+                    <thead>
+                    <tr class="gradient-header">
+
+                        <th>Url
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="hd in helpDocumentList ">
+                        <td >
+                            <div>{{hd.fileUrl}}</div>
+                        </td>
+
+
+
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">

@@ -1,6 +1,7 @@
 package org.openlmis.help.Repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.help.domain.HelpDocument;
 import org.openlmis.help.domain.HelpTopic;
 import org.springframework.stereotype.Repository;
 
@@ -134,4 +135,17 @@ public interface HelpTopicMapper {
             @Result(column = "is_category", property = "category")
     })
     List<HelpTopic> getRoleHelpTopicChildrenList(@Param(value = "id")Long loggedUserId,@Param(value = "parentId") Long parentId);
+    @Insert({"INSERT INTO elmis_help_document",
+            "( document_type, url, created_date,created_by) ",
+            "VALUES",
+            "( #{documentType}, #{fileUrl},#{createdDate}, #{createdBy})"})
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    void addHelpDocuemnt(HelpDocument helpDocument);
+    @Select("SELECT * FROM elmis_help_document order by document_type")
+    @Results({
+            @Result(column = "id", property = "id"),
+            @Result(column = "document_type", property = "documentType"),
+            @Result(column = "url", property = "fileUrl")
+    })
+    List<HelpDocument> loadHelpDocumentList();
 }

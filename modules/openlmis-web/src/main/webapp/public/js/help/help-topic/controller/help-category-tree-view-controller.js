@@ -1,4 +1,4 @@
-function HelpTopicTreeViewController($scope, $timeout, $resource, $location, $route, HelpTopicList) {
+function HelpTopicTreeViewController($scope, $timeout, $resource, $location, $route, HelpTopicList,HelpDocumentList) {
     var tree;
     var rawTreeData;
     var myTreeData = getTree(rawTreeData, 'id', 'parentHelpTopic');
@@ -10,7 +10,19 @@ function HelpTopicTreeViewController($scope, $timeout, $resource, $location, $ro
 
     ];
 
+    HelpDocumentList.get({}, function (data) {
 
+        $scope.helpDocumentList = data.helpDocumentList;
+
+
+
+    }, function (data) {
+
+
+        $location.path($scope.$parent.sourceUrl);
+
+
+    });
 //    rawTreeData=$resource('/helpTopicList');
     HelpTopicList.get({}, function (data) {
 

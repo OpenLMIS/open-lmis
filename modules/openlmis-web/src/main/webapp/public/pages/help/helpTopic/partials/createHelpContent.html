@@ -16,7 +16,7 @@
     <form ng-submit="createHelpContent()" id="createHelpContentForm" name="createHelpContentForm"
           novalidate select2-blur>
 
-        <div class="app-form">
+        <div style="width: 70%" class="app-form">
 
             <div class="form-group">
 
@@ -50,7 +50,32 @@
                                 ></div>
                     </div>
 
+<div style=" position:absolute;top:180px;right: 20px; width: 25%"  class="pull-right control-accordion">
+    Help Document List &nbsp;
 
+    <div style="height: 300px; overflow: scroll;">
+        <table class="table table-striped table-bordered" ng-table="tableParams" >
+            <thead>
+            <tr class="gradient-header">
+
+                <th>Url
+                </th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="hd in helpDocumentList ">
+                <td >
+                    <div>{{hd.fileUrl}}</div>
+                </td>
+
+
+
+
+            </tr>
+            </tbody>
+        </table>
+</div>
 
                     <div form-toolbar id="action_buttons" class="action-buttons">
                         <div class="form-cell button-row">
@@ -62,6 +87,8 @@
                             }}
                         </div>
                     </div>
+
+
 
 
     </form>

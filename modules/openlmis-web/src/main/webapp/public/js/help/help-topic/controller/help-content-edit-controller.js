@@ -2,7 +2,7 @@
  * Created by seifu on 10/26/2014.
  */
 
-function HelpContentEditCotntroller($scope, $route, $location, $dialog, messageService, SettingsByKey, HelpTopicDetail, HelpTopicList,UpdateHelpTopic) {
+function HelpContentEditCotntroller($scope, $route, $location, $dialog, messageService, SettingsByKey, HelpTopicDetail, HelpTopicList,UpdateHelpTopic,HelpDocumentList) {
 
 
     $scope.startHelpContentEdit = function (id) {
@@ -23,6 +23,19 @@ function HelpContentEditCotntroller($scope, $route, $location, $dialog, messageS
 
 
     };
+    HelpDocumentList.get({}, function (data) {
+
+        $scope.helpDocumentList = data.helpDocumentList;
+
+
+
+    }, function (data) {
+
+
+        $location.path($scope.$parent.sourceUrl);
+
+
+    });
     $scope.updateHelpContent = function () {
         ////alert('loading help topic for edit');
         $scope.error = "";
