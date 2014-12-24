@@ -77,6 +77,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
           $scope.error = "";
           $scope.message = response.success;
           $scope.showSuccess = true;
+          $scope.requisitionGroupMember = null;
           $scope.loadMemberFacilities();
         };
 
@@ -87,9 +88,9 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
         };
 
         $scope.requisitionGroupMember.requisitionGroup = $scope.requisitionGroup;
-
+        console.log($scope.requisitionGroupMember);
         SaveRequisitionGroupMember.save($scope.requisitionGroupMember,successHandler,errorHandler);
-        $scope.closeModal();
+       // $scope.closeModal();
         return true;
     };
 
