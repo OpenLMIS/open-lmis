@@ -9,7 +9,10 @@
  */
 
 /* App Module */
-var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies', 'ngRoute'],
+
+
+
+var app = angular.module('openlmis', ['openlmis.services', 'angular-google-analytics', 'openlmis.localStorage', 'ui.directives', 'ngCookies', 'ngRoute'],
   function ($httpProvider) {
     var interceptor = ['$q', '$window', 'loginConfig', function ($q, $window, loginConfig) {
       var requestCount = 0;
@@ -209,3 +212,45 @@ function isUndefined(value) {
 }
 
 
+var _gaq = _gaq || [];
+
+angular.module('angular-google-analytics', []).run(
+  ['gglAnalytics','localStorageService',
+  function (gglAnalytics, localStorageService) {
+    if(gglAnalytics){
+
+      var googleAccount = localStorageService.get('GOOGLE_ANALYTICS_TRACKING_CODE');
+      if(googleAccount !== null){
+        _gaq.push(['_setAccount', googleAccount]);
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = false;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+      } 
+    }
+
+  }])
+  .service('gglAnalytics',
+  ['$rootScope', 'localStorageService' ,'$window',
+  function ($rootScope, localStorageService, $window) {
+
+    var enableTracking = localStorageService.get('ENABLE_GOOGLE_ANALYTICS');
+    if(enableTracking === null || !enableTracking){
+      return false;
+    }
+    function track() {
+      var path = $window.location.href;
+      var user = localStorageService.get('USERNAME');
+
+      $window._gaq.push(['_setCustomVar',1, 'Who', user, 2]);
+      $window._gaq.push(['set','&uid',user]);
+      $window._gaq.push(['_trackPageview', path]);
+    }
+
+    //fire on each route change
+    $rootScope.$on('$viewContentLoaded', track);
+
+    return true;
+  }]);
