@@ -52,6 +52,7 @@ public class NonReportingFacilityQueryBuilder {
          ORDER_BY(QueryHelpers.getSortOrder(params, "name"));
          // cache the string query for debugging purposes
          String strQuery = SQL();
+         System.out.println(" querey i "+strQuery);
          return strQuery;
      }
 
@@ -86,6 +87,7 @@ public class NonReportingFacilityQueryBuilder {
       String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
       String program          = ((String[])params.get("program"))[0];
       String schedule         = ((String[])params.get("schedule"))[0];
+String filerterValue =("user Id "+ userId+ " period "+ period + " facilityType "+facilityType+" program "+ program +" schedule "+ schedule);
 
         BEGIN();
         SELECT("COUNT (*)");
@@ -148,7 +150,7 @@ public class NonReportingFacilityQueryBuilder {
         String query = SQL();
         RESET();
         BEGIN();
-        SELECT("'Reporting for this Program' AS name");
+        SELECT("'Facilities required to report for this program' AS name");
         SELECT("COUNT (*)");
         FROM("facilities");
         INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
