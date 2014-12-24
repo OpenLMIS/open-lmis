@@ -47,7 +47,7 @@ public class NonReportingFacilityQueryBuilder {
          INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
          INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
          WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = cast(" + userId+ " as int4) and program_id = cast(" + program + " as int4))");
-         WHERE("facilities.id not in (select r.facilityid from requisitions r where r.status in ('RELEASED','APPROVED') and r.periodid = cast (" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
+         WHERE("facilities.id not in (select r.facilityid from requisitions r where r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')  and r.periodid = cast (" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
          writePredicates(program, period, zone, facilityType, schedule);
          ORDER_BY(QueryHelpers.getSortOrder(params, "name"));
          // cache the string query for debugging purposes
@@ -118,7 +118,7 @@ String filerterValue =("user Id "+ userId+ " period "+ period + " facilityType "
          INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
          INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and ps.programid = rgps.programid");
          WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = " + userId+ " and program_id = " + program + ")");
-         WHERE("facilities.id not in (select r.facilityid from requisitions r where  r.status in ('RELEASED','APPROVED') and r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
+         WHERE("facilities.id not in (select r.facilityid from requisitions r where  r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
          writePredicates(program, period, reportingGroup, facilityType, schedule);
          return SQL();
      }
@@ -143,7 +143,7 @@ String filerterValue =("user Id "+ userId+ " period "+ period + " facilityType "
         INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id") ;
         INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
       WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = " + userId+ " and program_id = " + program + ")");
-        WHERE("facilities.id not in (select r.facilityid from requisitions r where  r.status in ('RELEASED','APPROVED') and r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
+        WHERE("facilities.id not in (select r.facilityid from requisitions r where  r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
         writePredicates(program, period, zone, facilityType,schedule);
 
         String query = SQL();
