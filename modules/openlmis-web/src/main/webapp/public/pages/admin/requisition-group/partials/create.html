@@ -82,9 +82,7 @@
                 </div>
             </div>
             <div>
-                <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="showSuccess">
-                    <span ng-bind="message"></span>.
-                </div>
+
                 <h2><span>Associated Facilities</span> <br>
                     <input id="txtFilterAssociatedFacilities" class="search-query input-xlarge" type="text" ng-model="facilityFilterToken"
                            ng-keyup="filterAssociatedFacilityList()" placeholder="Filter Facility Name/Code"/>
@@ -172,9 +170,35 @@
                 </div>
 
             </form>
-            <div class="alert alert-error" id="saveFailMessage" openlmis-message="error" ng-show="error">
-
+            <div class="alert alert-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
+            <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="showSuccess">
+                <span ng-bind="message"></span>.
             </div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr class="gradient-header">
+
+                    <th>Facility Name
+                    </th>
+                    <th>Type
+                    </th>
+                    <th>Action
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="facility in facilities | filter:facilityFilterToken">
+                    <td>
+                        <div>{{facility.code}} - {{facility.name}}</div>
+                    </td>
+                    <td>
+                        <div>{{facility.facilityType.name}}</div>
+                    </td>
+                    <td>
+                        <a href="" class="btn btn-danger" ng-click="showRemoveRequisitionGroupMemberConfirmDialog($index)">Remove</a>
+                    </td>
+                <tr>
+            </table>
         </div>
 
         <div class="modal-footer">
