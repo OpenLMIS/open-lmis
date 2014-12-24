@@ -52,7 +52,6 @@ public class NonReportingFacilityQueryBuilder {
          ORDER_BY(QueryHelpers.getSortOrder(params, "name"));
          // cache the string query for debugging purposes
          String strQuery = SQL();
-         System.out.println(" querey i "+strQuery);
          return strQuery;
      }
 
