@@ -131,7 +131,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
                                    barColor = item.color;
                                }
                            });
-                           $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent': $filter('number')( idx.fillRate, 0), 'name': idx.product});
+                           $scope.productItemFillRates.push({'option': {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}, 'percent':  idx.fillRate, 'name': idx.product});
                        });
                    }
                });
