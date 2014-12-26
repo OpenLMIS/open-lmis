@@ -55,7 +55,7 @@ public class DashboardLookupServiceTest {
         productsId.add(2L);
 
         List<ItemFillRate> expectedItemFillRate = new ArrayList<>(1);
-        expectedItemFillRate.add(new ItemFillRate(50, "Product A"));
+        expectedItemFillRate.add(new ItemFillRate(50f, "Product A"));
 
         when(mapper.getItemFillRate(1L,1L,1L, getCommaSeparatedIds(productsId))).thenReturn(expectedItemFillRate);
         assertThat(lookupService.getItemFillRate(1L,1L,1L,productsId),is(expectedItemFillRate));

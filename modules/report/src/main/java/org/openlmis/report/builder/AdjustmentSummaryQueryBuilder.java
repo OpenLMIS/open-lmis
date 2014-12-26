@@ -31,11 +31,13 @@ public class AdjustmentSummaryQueryBuilder {
         "join losses_adjustments_types t on t.name = vw_requisition_adjustment.adjustment_type ");
     writePredicates(filter);
     ORDER_BY(QueryHelpers.getSortOrder(params, " product, adjustment_type, facility_type_name,facility_name, supplying_facility_name, product_category_name "));
-    return SQL();
+      // cache the string query for debugging purposes
+      String strQuery = SQL();
+      return strQuery;
   }
 
   private static void writePredicates(AdjustmentSummaryReportParam filter) {
-    WHERE("req_status in ('APPROVED','RELEASED')");
+    WHERE("req_status not in ('INITIATED','SUBMITTED','SKIPPED')");
     //WHERE("program_id = #{filterCriteria.programId}");
     WHERE("f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.programId})");
     if (filter != null) {

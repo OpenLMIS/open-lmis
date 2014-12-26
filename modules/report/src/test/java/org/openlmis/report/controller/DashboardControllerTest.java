@@ -71,7 +71,7 @@ public class DashboardControllerTest {
         productsId.add(2L);
 
         List<ItemFillRate> expectedItemFillRate = new ArrayList<>(1);
-        expectedItemFillRate.add(new ItemFillRate(50, "Product A"));
+        expectedItemFillRate.add(new ItemFillRate(50f, "Product A"));
 
         when(lookupService.getItemFillRate(periodId, facilityId, programId, productsId)).thenReturn(expectedItemFillRate);
 
