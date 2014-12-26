@@ -104,4 +104,11 @@ public class SupplyLineController extends BaseController {
   public SupplyLine getById(@PathVariable(value = "id") Long id) {
     return service.getById(id);
   }
+
+  @RequestMapping(value = "/supplying-depots.json", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getSupplyingDepots(HttpServletRequest request){
+
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("supplylines", service.getSupplyDepots(loggedInUserId(request)));
+    return response;
+  }
 }
