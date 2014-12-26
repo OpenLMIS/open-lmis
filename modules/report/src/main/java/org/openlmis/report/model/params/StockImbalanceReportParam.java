@@ -25,7 +25,8 @@ public class StockImbalanceReportParam
   extends BaseParam implements ReportParameter {
   private int facilityTypeId;
   private String facilityType;
-  private int productId;
+//  private int productId;
+private String productId;
   private String product;
   private int productCategoryId;
   private String productCategory;

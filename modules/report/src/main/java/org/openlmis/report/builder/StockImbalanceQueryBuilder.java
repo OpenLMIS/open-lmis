@@ -55,11 +55,16 @@ public class StockImbalanceQueryBuilder {
                 WHERE("categoryid = #{filterCriteria.productCategoryId}");
             }
 
-            if(filter.getProductId() != 0 && filter.getProductId() != -1){
-                WHERE("productid= #{filterCriteria.productId}");
-            } else if (filter.getProductId() == -1){
-                WHERE("indicator_product = true");
+//            if(filter.getProductId() != 0 && filter.getProductId() != -1){
+            if(!filter.getProductId().equals("0")){
+//                WHERE("productid= #{filterCriteria.productId}");
+//                WHERE("productid= ANY(#{filterCriteria.productId})");
+                WHERE("productid= ANY(#{filterCriteria.productId}::int[])");
+//                predicates = predicates + " and p.id = ANY(array" + filter.getProductId()+"::INT[])";
             }
+//            else if (filter.getProductId() == -1){
+//                WHERE("indicator_product = true");
+//            }
 
             if(filter.getZoneId() > 0 ){
               WHERE("( d.district_id = #{filterCriteria.zoneId} or d.zone_id = #{filterCriteria.zoneId} or d.region_id = #{filterCriteria.zoneId} or d.parent = #{filterCriteria.zoneId} )");
