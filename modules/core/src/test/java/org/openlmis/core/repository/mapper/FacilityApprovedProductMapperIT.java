@@ -46,7 +46,7 @@ import static org.openlmis.core.builder.ProgramBuilder.programCode;
 @Category(IntegrationTests.class)
 public class FacilityApprovedProductMapperIT {
 
-  public static final Double MAX_MONTHS_OF_STOCK = 3.3;
+  public static final Double MAX_MONTHS_OF_STOCK = 3.0;
 
   @Autowired
   ProductMapper productMapper;
