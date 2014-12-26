@@ -12,7 +12,7 @@
   <div id="programAssociationTable" class="prog-role-grid">
   <div class="fluid-grid">
     <div class="row-fluid fluid-grid-header">
-      <div class="span3">
+      <div class="span2">
         <div id="programHeader" class="fluid-grid-cell" openlmis-message="program.header"></div>
       </div>
       <div class="span3">
@@ -20,6 +20,9 @@
       </div>
       <div class="span1">
         <div id="activeHeader" class="fluid-grid-cell" openlmis-message="label.active"></div>
+      </div>
+      <div class="span1">
+        <div id="fullSupplyHeader" class="fluid-grid-cell" openlmis-message="label.product.fullSupply"></div>
       </div>
       <div class="span3">
         <div class="row-fluid">
@@ -37,7 +40,7 @@
     </div>
 
     <div class="row-fluid" ng-repeat="programProduct in programProducts" tab-scroll>
-      <div class="span3">
+      <div class="span2">
         <div class="fluid-grid-cell">
           <span id="programSelected{{$index}}" ng-bind="programProduct.program.name"></span>
         </div>
@@ -65,6 +68,14 @@
           <i id="activeIcon{{$index}}" class="icon icon-ok"
              ng-show="programProduct.active && !programProduct.underEdit"></i>
           <input type="checkbox" id="active{{$index}}" ng-model="programProduct.active"
+                 ng-show="programProduct.underEdit"/>
+        </div>
+      </div>
+      <div class="span1">
+        <div class="fluid-grid-cell">
+          <i id="fullSupplyIcon{{$index}}" class="icon icon-ok"
+             ng-show="programProduct.fullSupply && !programProduct.underEdit"></i>
+          <input type="checkbox" id="fullSupply{{$index}}" ng-model="programProduct.fullSupply"
                  ng-show="programProduct.underEdit"/>
         </div>
       </div>
@@ -126,7 +137,7 @@
     </div>
 
     <div class="row-fluid add-program-schedule" tab-scroll>
-      <div class="span3 fluid-grid-cell">
+      <div class="span2 fluid-grid-cell">
         <select class="select2-container span10" id="addProgramSelect"
                 ng-options="program as program.name for program in programs | orderBy: 'name'"
                 ng-model="newProgramProduct.program">
@@ -144,6 +155,9 @@
 
       <div class="span1 fluid-grid-cell">
         <input type="checkbox" id="activeAdd" ng-model="newProgramProduct.active" ng-false-value="false"/>
+      </div>
+      <div class="span1 fluid-grid-cell">
+        <input type="checkbox" id="fullSupply" ng-model="newProgramProduct.fullSupply" ng-false-value="false"/>
       </div>
 
       <div class="span3">
