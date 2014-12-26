@@ -119,11 +119,12 @@ public class RnrLineItemTest {
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
     programProduct.setDisplayOrder(9);
     programProduct.setProductCategory(category);
+    programProduct.setFullSupply(product.getFullSupply());
 
     RnrLineItem rnrLineItem = new RnrLineItem(1L, new FacilityTypeApprovedProduct("warehouse", programProduct, 3.2), 1L,
       1L);
 
-    assertThat(rnrLineItem.getFullSupply(), is(product.getFullSupply()));
+    assertThat(rnrLineItem.getFullSupply(), is(programProduct.isFullSupply()));
     assertThat(rnrLineItem.getMaxMonthsOfStock(), is(3.2));
     assertThat(rnrLineItem.getRnrId(), is(1L));
     assertThat(rnrLineItem.getDispensingUnit(), is("Strip"));

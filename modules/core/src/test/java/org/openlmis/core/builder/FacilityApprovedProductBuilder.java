@@ -29,7 +29,7 @@ public class FacilityApprovedProductBuilder {
   public static final Long defaultFacilityTypeId = 1L;
   public static final String defaultProgramCode = "YELL_FVR";
   public static final String defaultProductCode = "P999";
-  public static final Double defaultMaxMonthsOfStock = 3.2;
+  public static final Double defaultMaxMonthsOfStock = 3.0;
 
   public static final Instantiator<FacilityTypeApprovedProduct> defaultFacilityApprovedProduct = new Instantiator<FacilityTypeApprovedProduct>() {
 
@@ -41,8 +41,10 @@ public class FacilityApprovedProductBuilder {
 
       Product product = new Product();
       product.setCode(lookup.valueOf(productCode, defaultProductCode));
+      product.setFullSupply(true);
 
       ProgramProduct programProduct = new ProgramProduct(program, product, 1, true);
+      programProduct.setFullSupply(product.getFullSupply());
 
       FacilityType facilityType = new FacilityType(lookup.valueOf(facilityTypeCode, defaultFacilityTypeCode));
       facilityType.setId(lookup.valueOf(facilityTypeId, defaultFacilityTypeId));

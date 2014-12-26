@@ -18,6 +18,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.view.pdf.requisition.RequisitionPdfModel;
@@ -46,6 +47,9 @@ public class RequisitionPdfWriterTest {
   MessageService messageService;
 
   @Mock
+  ConfigurationSettingService configService;
+
+  @Mock
   OutputStream outputStream;
 
   @InjectMocks
@@ -66,7 +70,7 @@ public class RequisitionPdfWriterTest {
     PdfPTable regimenTable = new PdfPTable(3);
     PdfPTable summary = new PdfPTable(4);
 
-    whenNew(RequisitionPdfModel.class).withArguments(model, messageService).thenReturn(requisitionPdfModel);
+    whenNew(RequisitionPdfModel.class).withArguments(model, messageService, configService).thenReturn(requisitionPdfModel);
 
     when(requisitionPdfModel.getRequisitionHeader()).thenReturn(requisitionHeader);
     when(requisitionPdfModel.getFullSupplyHeader()).thenReturn(fullSupplyHeader);

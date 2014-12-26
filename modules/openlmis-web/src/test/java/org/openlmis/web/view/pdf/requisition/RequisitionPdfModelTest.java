@@ -116,7 +116,7 @@ public class RequisitionPdfModelTest {
     PdfPTable header = requisitionPdfModel.getRequisitionHeader();
     assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Warehouse)");
     assertRowValues(header.getRow(1), "Facility: F1", "Operated By: MOH", "Maximum Stock level: 100", "Emergency Order Point: 50.5");
-    assertRowValues(header.getRow(2), "levelName: Arusha", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Emergency");
+    assertRowValues(header.getRow(2), "Facility Code: F10010", "levelName: Arusha", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Emergency");
     assertThat(header.getSpacingAfter(), is(RequisitionPdfModel.PARAGRAPH_SPACING));
   }
 
@@ -130,7 +130,7 @@ public class RequisitionPdfModelTest {
     PdfPTable header = requisitionPdfModel.getRequisitionHeader();
     assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Warehouse)");
     assertRowValues(header.getRow(1), "Facility: F1", "Operated By: MOH", "Maximum Stock level: 100", "Emergency Order Point: 50.5");
-    assertRowValues(header.getRow(2), "levelName: Arusha", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Regular");
+    assertRowValues(header.getRow(2), "Facility Code: F10010", "levelName: Arusha", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Regular");
     assertThat(header.getSpacingAfter(), is(RequisitionPdfModel.PARAGRAPH_SPACING));
   }
 
@@ -142,6 +142,7 @@ public class RequisitionPdfModelTest {
     when(messageService.message("label.emergency.order.point")).thenReturn("Emergency Order Point");
     when(messageService.message("label.facility.reportingPeriod")).thenReturn("Reporting Period");
     when(messageService.message("label.requisition.type")).thenReturn("Requisition Type");
+    when(messageService.message("header.facility.code")).thenReturn("Facility Code");
   }
 
   @Test

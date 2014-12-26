@@ -848,6 +848,7 @@ public class RequisitionMapperIT {
   private ProgramProduct insertProgramProductWithProductCategory(Product product, Program program) {
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
     programProduct.setProductCategory(productCategory);
+    programProduct.setFullSupply(product.getFullSupply());
     programProductMapper.insert(programProduct);
     return programProduct;
   }
