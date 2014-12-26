@@ -24,14 +24,16 @@ import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
+import static org.openlmis.core.domain.RightType.FULFILLMENT;
 
 @Category(IntegrationTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -48,13 +50,12 @@ public class FulfillmentPermissionServiceTest {
 
   @Test
   public void shouldReturnTrueIfUserHasGivenRightOnAWarehouse() {
-    Set<Right> rights = new HashSet<Right>() {{
-      add(MANAGE_POD);
-      add(FACILITY_FILL_SHIPMENT);
-    }};
-    long userId = 1L;
-    long orderId = 2L;
-    long facilityID = 12345L;
+    Right right1 = new Right(MANAGE_POD, FULFILLMENT);
+    Right right2 = new Right(FACILITY_FILL_SHIPMENT, FULFILLMENT);
+    List<Right> rights = new ArrayList<>(asList(right1,right2));
+    Long userId = 1L;
+    Long orderId = 2L;
+    Long facilityID = 12345L;
     when(roleRightsService.getRightsForUserAndWarehouse(userId, facilityID)).thenReturn(rights);
     Order order = mock(Order.class);
     when(order.getSupplyingFacility()).thenReturn(new Facility(facilityID));
@@ -67,10 +68,9 @@ public class FulfillmentPermissionServiceTest {
 
   @Test
   public void shouldReturnFalseIfUserDoesNotHaveGivenRightOnAWarehouse() {
-    Set<Right> rights = new HashSet<Right>() {{
-      add(VIEW_ORDER);
-      add(FACILITY_FILL_SHIPMENT);
-    }};
+    Right right1 = new Right(VIEW_ORDER, FULFILLMENT);
+    Right right2 = new Right(FACILITY_FILL_SHIPMENT, FULFILLMENT);
+    List<Right> rights = new ArrayList<>(asList(right1,right2));
     long userId = 1l;
     long orderId = 2L;
     long facilityID = 12345L;

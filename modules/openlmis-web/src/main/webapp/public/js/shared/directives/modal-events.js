@@ -13,7 +13,7 @@
 
 app.directive('modal', function () {
   return {
-    restrict: 'EA',
+    restrict: 'AC',
     link: function (scope, elm, attrs) {
       var shownExpr = attrs.modal;
 

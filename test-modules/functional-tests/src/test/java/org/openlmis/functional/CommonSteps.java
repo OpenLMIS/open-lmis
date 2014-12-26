@@ -15,12 +15,14 @@ import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.PageObjectFactory;
+import org.openlmis.pageobjects.RequisitionPage;
 import org.openqa.selenium.JavascriptExecutor;
 
 import java.sql.SQLException;
@@ -51,7 +53,7 @@ public class CommonSteps extends TestCaseHelper {
     String[] rightList = rights.split(",");
     List<String> rightsList = new ArrayList<>();
     Collections.addAll(rightsList, rightList);
-    setupTestUserRoleRightsData("200", user, rightsList);
+    setupTestUserRoleRightsData(user, rightsList);
   }
 
   @When("^I have \"([^\"]*)\" role having \"([^\"]*)\" based \"([^\"]*)\" rights$")
@@ -64,8 +66,8 @@ public class CommonSteps extends TestCaseHelper {
     String password = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data) {
-      dbWrapper.insertUser(map.get("UserId").toString(), map.get("UserName").toString(), password, map.get("FacilityCode").toString(), map.get("Email").toString());
-      dbWrapper.insertRoleAssignment(map.get("UserId").toString(), map.get("Role").toString());
+      dbWrapper.insertUser(map.get("UserName").toString(), password, map.get("FacilityCode").toString(), map.get("Email").toString());
+      dbWrapper.insertRoleAssignment(map.get("UserName").toString(), map.get("Role").toString());
     }
   }
 
@@ -82,6 +84,31 @@ public class CommonSteps extends TestCaseHelper {
   @And("^I reload the page$")
   public void reloadPage() {
     testWebDriver.refresh();
+  }
+
+  @When("^I click print$")
+  public void clickOnPrintButton() {
+    RequisitionPage requisitionPage = PageObjectFactory.getRequisitionPage(testWebDriver);
+    requisitionPage.clickPrintButton();
+    testWebDriver.sleep(500);
+  }
+
+  @And("^I click full view print button$")
+  public void clickOnPrintButtonOnFullViewScreen() {
+    RequisitionPage requisitionPage = PageObjectFactory.getRequisitionPage(testWebDriver);
+    requisitionPage.clickFullViewPrintButton();
+  }
+
+  @When("^I click resize button$")
+  public void clickOnResizeViewButton() {
+    RequisitionPage requisitionPage = PageObjectFactory.getRequisitionPage(testWebDriver);
+    requisitionPage.clickResizeViewButton();
+    testWebDriver.sleep(1000);
+  }
+
+  @Then("^I close new window$")
+  public void closeTab() {
+    testWebDriver.closeBrowser();
   }
 
   @After

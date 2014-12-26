@@ -16,10 +16,6 @@ var DistributionStatus = {
   DUPLICATE: 'is-duplicate'
 };
 
-String.prototype.endsWith = function (suffix) {
-  return this.indexOf(suffix, this.length - suffix.length) !== -1;
-};
-
 var distributionModule = angular.module('distribution',
   ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal']);
 
@@ -72,6 +68,7 @@ distributionModule.directive('notRecorded', function ($timeout) {
     require: '?ngModel',
     link: function (scope, element, attrs, ctrl) {
       $timeout(function () {
+        element.attr('tabindex', '-1');      //Not focusing on NR checkboxes while tabbing
         $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
           ele.disabled = element.attr('disabled') || ctrl.$modelValue;
         });

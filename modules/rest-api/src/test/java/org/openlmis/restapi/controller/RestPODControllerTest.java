@@ -64,7 +64,7 @@ public class RestPODControllerTest {
     ResponseEntity<RestResponse> response = new ResponseEntity<>(new RestResponse(SUCCESS, "success"), OK);
     PowerMockito.when(success("message.success.pod.updated")).thenReturn(response);
 
-    ResponseEntity<RestResponse> responseEntity = controller.savePOD(orderPod, 1L, principal);
+    ResponseEntity<RestResponse> responseEntity = controller.savePOD(orderPod, "ON123", principal);
 
     assertThat(responseEntity.getBody().getSuccess(), is("success"));
     verify(restPODService).updatePOD(orderPod, 2L);
@@ -80,7 +80,7 @@ public class RestPODControllerTest {
     ResponseEntity<RestResponse> response = new ResponseEntity<>(new RestResponse(ERROR, "error"), BAD_REQUEST);
     PowerMockito.when(error(dataException.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(response);
 
-    ResponseEntity<RestResponse> responseEntity = controller.savePOD(orderPod, 1L, principal);
+    ResponseEntity<RestResponse> responseEntity = controller.savePOD(orderPod, "ON123", principal);
 
     assertThat(responseEntity.getBody().getError(), is("error"));
   }

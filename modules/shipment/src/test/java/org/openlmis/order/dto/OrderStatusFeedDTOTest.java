@@ -32,6 +32,7 @@ public class OrderStatusFeedDTOTest {
     Rnr rnr = make(a(defaultRequisition));
     Order order = new Order(rnr);
     order.setStatus(READY_TO_PACK);
+    order.setOrderNumber("1");
     OrderStatusFeedDTO feed = new OrderStatusFeedDTO(order);
 
     long startDate = rnr.getPeriod().getStartDate().getTime();
@@ -42,12 +43,12 @@ public class OrderStatusFeedDTOTest {
     assertThat(feed.isEmergency(), is(rnr.isEmergency()));
     assertThat(feed.getStartDate(), is(startDate));
     assertThat(feed.getEndDate(), is(endDate));
-    assertThat(feed.getOrderId(), is(order.getId()));
+    assertThat(feed.getOrderId(), is(order.getOrderNumber()));
     assertThat(feed.getOrderStatus(), is(order.getStatus()));
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     String stringStartDate = dateFormat.format(rnr.getPeriod().getStartDate());
     String stringEndDate = dateFormat.format(rnr.getPeriod().getEndDate());
 
-    assertThat(feed.getSerializedContents(), is("{\"requisitionId\":1,\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":" + startDate + ",\"endDate\":" + endDate + ",\"stringStartDate\":\"" + stringStartDate + "\",\"stringEndDate\":\"" + stringEndDate + "\",\"orderId\":1,\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertThat(feed.getSerializedContents(), is("{\"requisitionId\":1,\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":" + startDate + ",\"endDate\":" + endDate + ",\"stringStartDate\":\"" + stringStartDate + "\",\"stringEndDate\":\"" + stringEndDate + "\",\"orderId\":\"1\",\"orderStatus\":\"READY_TO_PACK\"}"));
   }
 }

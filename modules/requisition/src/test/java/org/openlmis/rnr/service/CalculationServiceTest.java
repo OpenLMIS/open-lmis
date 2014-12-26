@@ -620,7 +620,7 @@ public class CalculationServiceTest {
   }
 
   private Date setLineItemDatesAndReturnDate() {
-    Calendar currentDate = Calendar.getInstance();
+    Calendar currentDate = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
     Calendar previousDate = (Calendar) currentDate.clone();
     previousDate.add(Calendar.DATE, -5);
 

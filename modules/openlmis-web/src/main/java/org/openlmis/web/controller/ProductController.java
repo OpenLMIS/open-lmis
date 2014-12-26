@@ -1,26 +1,30 @@
 /*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
- *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.web.controller;
 
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.DosageUnit;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.ProductForm;
+import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ProductCategoryService;
+import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.core.service.ProgramService;
+import org.openlmis.web.form.ProductDTO;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,165 +32,112 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.openlmis.report.service.lookup.ReportLookupService;
-import org.openlmis.report.service.lookup.ProductListDataProvider;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import java.util.List;
 
-import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
-
+/**
+ * This controller handles endpoint related to listing products.
+ */
+@RequestMapping(value = "/products")
 @Controller
-@NoArgsConstructor
 public class ProductController extends BaseController {
 
-  public static final String PRODUCTS = "products";
-  public static final String PRODUCT = "product";
-  public static final String PRODUCTLIST = "productList";
-  public static final String DOSAGEUNITS = "dosageUnits";
-  public static final String PRODUCTCOST = "productCost";
-  public static final String ALLPRODUCTCOST = "allProductCost";
+  @Autowired
+  private ProductGroupService groupService;
 
   @Autowired
-  private ProductService productService;
+  private ProductFormService formService;
 
   @Autowired
-  private ProductListDataProvider productListService;
-
-  @Autowired
-  private ReportLookupService reportLookupService;
+  private ProductCategoryService productCategoryService;
 
   @Autowired
   private ProgramProductService programProductService;
 
   @Autowired
-  private ProgramService programService;
+  private ProductService service;
 
-  @Autowired
-  private ProductGroupService productGroupService;
-
-
-  @Autowired
-  public ProductController(ProductService productService) {
-    this.productService = productService;
-  }
-
-  // supply line list for view
-  @RequestMapping(value = "/productslist", method = RequestMethod.GET, headers = "Accept=application/json")
+  @RequestMapping(value = "/groups", method = RequestMethod.GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-  public ResponseEntity<OpenLmisResponse> getProductsList() {
-    return OpenLmisResponse.response(PRODUCTLIST, productListService.getProductList());
+  public List<ProductGroup> getAllGroups() {
+    return groupService.getAll();
   }
 
-
-  @RequestMapping(value = "programProducts/program/{programId}/all")
-  public ResponseEntity<OpenLmisResponse> getProductsCompleteListByProgram(@PathVariable("programId") Long programId) {
-    Program program = programService.getById(programId);
-    return OpenLmisResponse.response("products", programProductService.getByProgram(program));
-  }
-
-  @RequestMapping(value = "/productDetail/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/forms", method = RequestMethod.GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-  public ResponseEntity<OpenLmisResponse> getProductDetails(@PathVariable("id") Long id) {
-    Product product = productListService.get(id);
-    product.setProgramProducts(programProductService.getOptionsByProduct(product));
-    return OpenLmisResponse.response("product", product);
+  public List<ProductForm> getAllForms() {
+    return formService.getAll();
   }
 
-  @RequestMapping(value = "/removeProduct/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/dosageUnits", method = RequestMethod.GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-  public ResponseEntity<OpenLmisResponse> delete(@PathVariable("id") Long id, HttpServletRequest request) {
+  public List<DosageUnit> getAllDosageUnits() {
+    return service.getAllDosageUnits();
+  }
+
+  @RequestMapping(value = "/{id}", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+  public ProductDTO getById(@PathVariable(value = "id") Long id) {
+    Product product = service.getById(id);
+
+    if(product == null) return null;
+
+    List<ProgramProduct> programProducts = programProductService.getByProductCode(product.getCode());
+    return new ProductDTO(product, product.getModifiedDate(), programProducts);
+  }
+
+  @RequestMapping(method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody ProductDTO productDTO, HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> response;
+    Product product = productDTO.getProduct();
+    List<ProgramProduct> programProducts = productDTO.getProgramProducts();
+
     try {
-      productListService.deleteById(id);
-      ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("Product deactivated successfully");
-      response.getBody().addData(PRODUCTLIST, productListService.getProductList());
-      return response;
+      Long userId = loggedInUserId(request);
+      product.setCreatedBy(userId);
+      product.setModifiedBy(userId);
+      service.save(product);
+      programProductService.saveAll(programProducts, product);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      response = OpenLmisResponse.error(e, BAD_REQUEST);
+      return response;
     }
+    response = OpenLmisResponse.success(messageService.message("message.product.created.success", product.getName()));
+    response.getBody().addData("productId", product.getId());
+    return response;
   }
 
-  @RequestMapping(value = "/restoreProduct/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-  public ResponseEntity<OpenLmisResponse> restore(@PathVariable("id") Long id, HttpServletRequest request) {
-    try {
-      productListService.restoreById(id);
-      ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("Product restored successfully");
-      response.getBody().addData(PRODUCTLIST, productListService.getProductList());
-      return response;
-    } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  @RequestMapping(value = "/updateProduct", method = RequestMethod.PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-  public ResponseEntity<OpenLmisResponse> update(@RequestBody Product product,
+  public ResponseEntity<OpenLmisResponse> update(@RequestBody ProductDTO productDTO, @PathVariable(value = "id") Long id,
                                                  HttpServletRequest request) {
-    //product.setId(id);
-    product.setModifiedBy(loggedInUserId(request));
-    product.setModifiedDate(new Date());
-    return saveProduct(product, false);
-  }
+    Product product = productDTO.getProduct();
+    List<ProgramProduct> programProducts = productDTO.getProgramProducts();
 
-  // create product
-  @RequestMapping(value = "/createProduct", method = RequestMethod.POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody Product product, HttpServletRequest request) {
-    product.setModifiedBy(loggedInUserId(request));
-    product.setModifiedDate(new Date());
-    return saveProduct(product, true);
-  }
-
-  // save/update
-  private ResponseEntity<OpenLmisResponse> saveProduct(Product product, boolean createOperation) {
     try {
-      setReferenceObjects(product);
-      productService.save(product);
-
-      for (org.openlmis.core.domain.ProgramProduct pp : product.getProgramProducts()) {
-        // set the product for each of the program products ... for the save functionalitiy to work
-        pp.setProduct(product);
-        // save only those that need to be saved
-        if ((pp.getId() == null && pp.isActive()) || pp.getId() != null) {
-          programProductService.saveAndLogPriceChange(pp);
-        }
-      }
-
-      ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("'" + product.getPrimaryName() + "' " + (createOperation ? "created" : "updated") + " successfully");
-      response.getBody().addData(PRODUCT, productListService.get(product.getId()));
-      response.getBody().addData(PRODUCTLIST, productListService.getProductList());
-      return response;
+      Long userId = loggedInUserId(request);
+      product.setId(id);
+      product.setModifiedBy(userId);
+      service.save(product);
+      programProductService.saveAll(programProducts, product);
+    } catch (DataException e) {
+      return OpenLmisResponse.error(e, BAD_REQUEST);
     }
-    catch(DuplicateKeyException exp){
-      return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
-    }
-    catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
-    }
+    ResponseEntity<OpenLmisResponse> success = success(messageService.message("message.product.updated.success", product.getName()));
+    success.getBody().addData("productId", product.getId());
+    return success;
   }
 
-  // TODO: move this method to some other class
-  // may be the service or the domain object itself.
-  private void setReferenceObjects(Product product) {
-    // prepare the reference data
-    // set from reference information for the online form... that returns it using the id columns
-    if (product.getForm() == null && product.getFormId() != null) {
-      product.setForm(new ProductForm());
-      product.getForm().setId(product.getFormId());
-    }
-
-    if (product.getDosageUnit() == null && product.getDosageUnitId() != null) {
-      product.setDosageUnit(new DosageUnit());
-      product.getDosageUnit().setId(product.getDosageUnitId());
-    }
-
-    if (product.getProductGroup() == null && product.getProductGroupId() != null) {
-      product.setProductGroup(new ProductGroup());
-      product.getProductGroup().setId(product.getProductGroupId());
-    }
-
+  @RequestMapping(value = "/categories", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+  public List<ProductCategory> getAllCategories() {
+    return productCategoryService.getAll();
   }
-
 }
+

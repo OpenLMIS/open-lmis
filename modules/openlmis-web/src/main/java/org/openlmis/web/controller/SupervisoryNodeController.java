@@ -11,6 +11,8 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -18,19 +20,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.springframework.web.bind.annotation.RequestMethod;
-import static org.openlmis.web.response.OpenLmisResponse.*;
-
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * This controller handles request to get list of supervisory nodes.
+ * This controller handle endpoints to list, search, create, update supervisory nodes.
  */
 
 @Controller
@@ -42,57 +44,81 @@ public class SupervisoryNodeController extends BaseController {
   @Autowired
   private SupervisoryNodeService supervisoryNodeService;
 
-  @RequestMapping(value = "/supervisory-nodes", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER, MANAGE_REQUISITION_GROUP')")
+  @RequestMapping(value = "/supervisory-nodes", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getAll() {
     return OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getAll());
   }
 
-  @RequestMapping(value = "/supervisory-nodes/list", method = RequestMethod.GET)
-  public ResponseEntity<OpenLmisResponse> getAllReadOnly() {
-    return OpenLmisResponse.response(SUPERVISORY_NODES, supervisoryNodeService.getAll());
-  }
-
-  @RequestMapping(value="/supervisoryNode/getList",method= RequestMethod.GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/paged-search-supervisory-nodes", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
-  public ResponseEntity<OpenLmisResponse> getSupervisoryNodeList(HttpServletRequest request){
-      return OpenLmisResponse.response("supervisoryNodes", supervisoryNodeService.getCompleteList());
+  public ResponseEntity<OpenLmisResponse> searchSupervisoryNode(@RequestParam(value = "page", required = true, defaultValue = "1") Integer page,
+                                                                @RequestParam(required = true) String param,
+                                                                @RequestParam(required = true) Boolean parent) {
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(SUPERVISORY_NODES,
+      supervisoryNodeService.getSupervisoryNodesBy(page, param, parent));
+    Pagination pagination = supervisoryNodeService.getPagination(page);
+    pagination.setTotalRecords(supervisoryNodeService.getTotalSearchResultCount(param, parent));
+    response.getBody().addData("pagination", pagination);
+    return response;
   }
 
-  @RequestMapping(value="/supervisoryNode/insert.json",method=RequestMethod.POST,headers = ACCEPT_JSON)
+  @RequestMapping(value = "/supervisory-nodes/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
-  public ResponseEntity<OpenLmisResponse> insert(@RequestBody SupervisoryNode supervisoryNode, HttpServletRequest request){
-      ResponseEntity<OpenLmisResponse> successResponse;
-      supervisoryNode.setModifiedBy(loggedInUserId(request));
-      try {
-          supervisoryNodeService.save_Ext(supervisoryNode);
-      } catch (DataException e) {
-          return error(e, HttpStatus.BAD_REQUEST);
-      }
-      successResponse = success(String.format("Supervisory node '%s' has been successfully saved", supervisoryNode.getName()));
-      successResponse.getBody().addData("supervisoryNode", supervisoryNode);
-      return successResponse;
+  public SupervisoryNode getById(@PathVariable(value = "id") Long id) {
+    return supervisoryNodeService.getSupervisoryNode(id);
   }
 
+  @RequestMapping(value = "/search-supervisory-nodes", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP')")
+  public List<SupervisoryNode> getFilteredNodes(@RequestParam(value = "searchParam") String param) {
+    return supervisoryNodeService.getFilteredSupervisoryNodesByName(param);
+  }
 
-  @RequestMapping(value="/supervisoryNode/getDetails/{id}",method = RequestMethod.GET,headers = ACCEPT_JSON)
+  @RequestMapping(value = "/supervisory-nodes", method = POST)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
-  public ResponseEntity<OpenLmisResponse> getDetailsForSupervisoryNode(@PathVariable(value="id") Long id){
-      return OpenLmisResponse.response("supervisoryNode", supervisoryNodeService.loadSupervisoryNodeById(id));
+  public ResponseEntity<OpenLmisResponse> insert(@RequestBody SupervisoryNode supervisoryNode,
+                                                 HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> response;
+    Long userId = loggedInUserId(request);
+    supervisoryNode.setCreatedBy(userId);
+    supervisoryNode.setModifiedBy(userId);
+    try {
+      supervisoryNodeService.save(supervisoryNode);
+    } catch (DataException de) {
+      response = OpenLmisResponse.error(de, BAD_REQUEST);
+      return response;
+    }
+    response = OpenLmisResponse.success(
+      messageService.message("message.supervisory.node.created.success", supervisoryNode.getName()));
+    response.getBody().addData("supervisoryNodeId", supervisoryNode.getId());
+    return response;
   }
 
-  @RequestMapping(value="/supervisoryNode/remove/{id}",method = RequestMethod.GET,headers = ACCEPT_JSON)
+  @RequestMapping(value = "/supervisory-nodes/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPERVISORY_NODE')")
-  public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value="id") Long supervisoryNodeId, HttpServletRequest request){
-      ResponseEntity<OpenLmisResponse> successResponse;
-      try {
-          supervisoryNodeService.removeSupervisoryNode(supervisoryNodeId);
-      } catch (DataException e) {
-          return error(e, HttpStatus.BAD_REQUEST);
-      }
-      successResponse = success(String.format("Supervisory node has been successfully removed"));
-      return successResponse;
+  public ResponseEntity<OpenLmisResponse> update(@RequestBody SupervisoryNode supervisoryNode,
+                                                 @PathVariable(value = "id") Long supervisoryNodeId,
+                                                 HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> response;
+    Long userId = loggedInUserId(request);
+    supervisoryNode.setModifiedBy(userId);
+    supervisoryNode.setId(supervisoryNodeId);
+    try {
+      supervisoryNodeService.save(supervisoryNode);
+    } catch (DataException de) {
+      response = OpenLmisResponse.error(de, BAD_REQUEST);
+      return response;
+    }
+    response = OpenLmisResponse.success(
+      messageService.message("message.supervisory.node.updated.success", supervisoryNode.getName()));
+    response.getBody().addData("supervisoryNodeId", supervisoryNode.getId());
+    return response;
   }
 
-
+  @RequestMapping(value = "/topLevelSupervisoryNodes", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SUPPLY_LINE')")
+  public List<SupervisoryNode> searchTopLevelSupervisoryNodesByName(@RequestParam(value = "searchParam") String param) {
+    return supervisoryNodeService.searchTopLevelSupervisoryNodesByName(param);
+  }
 }

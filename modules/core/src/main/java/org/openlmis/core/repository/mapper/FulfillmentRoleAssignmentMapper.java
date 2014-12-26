@@ -19,7 +19,6 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.FulfillmentRoleAssignment;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.User;
 import org.springframework.stereotype.Repository;
 
@@ -44,5 +43,5 @@ public interface FulfillmentRoleAssignmentMapper {
   @Select({"SELECT userId, facilityId, array_agg(FRA.roleId) as roleAsString FROM fulfillment_role_assignments FRA",
     "INNER JOIN role_rights RR ON RR.rightName = #{right}",
     "WHERE userId = #{userId} GROUP BY userId, facilityId"})
-  List<FulfillmentRoleAssignment> getRolesWithRight(@Param("userId") Long userId, @Param("right") Right right);
+  List<FulfillmentRoleAssignment> getRolesWithRight(@Param("userId") Long userId, @Param("right") String rightName);
 }

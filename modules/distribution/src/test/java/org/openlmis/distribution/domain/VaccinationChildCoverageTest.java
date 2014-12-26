@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -28,6 +29,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -38,11 +40,13 @@ public class VaccinationChildCoverageTest {
 
   private Facility facility;
   private FacilityVisit facilityVisit;
+  private ProcessingPeriod period;
 
   @Before
   public void setUp() {
     facility = mock(Facility.class);
     facilityVisit = mock(FacilityVisit.class);
+    period = mock(ProcessingPeriod.class);
   }
 
   @Test
@@ -55,13 +59,12 @@ public class VaccinationChildCoverageTest {
     ProductVial productVial = new ProductVial("bcg", "BCG", true);
     List<ProductVial> productVials = asList(productVial);
 
-    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, targetGroupProduct, "BCG").thenReturn(
+    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, targetGroupProduct, "BCG", 3).thenReturn(
       lineItem);
     whenNew(OpenedVialLineItem.class).withArguments(facilityVisit, facility, productVial, "BCG").thenReturn(
       openedVialLineItem);
 
-    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility,
-      targetGroupProducts, productVials);
+    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, productVials);
 
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(12));
     assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(7));
@@ -80,17 +83,16 @@ public class VaccinationChildCoverageTest {
 
     OpenedVialLineItem openedVialLineItem = new OpenedVialLineItem();
 
-    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG").thenReturn(lineItem);
-    whenNew(OpenedVialLineItem.class).withArguments(facilityVisit, facility, productVial, "BCG").thenReturn(
-      openedVialLineItem);
+    when(period.getNumberOfMonths()).thenReturn(2);
+    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG", 2).thenReturn(lineItem);
+    whenNew(OpenedVialLineItem.class).withArguments(facilityVisit, facility, productVial, "BCG").thenReturn(openedVialLineItem);
 
-    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility,
-      targetGroupProducts, asList(productVial));
+    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, asList(productVial));
 
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(12));
     assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(7));
     assertTrue(vaccinationChildCoverage.getChildCoverageLineItems().get(0).getVaccination().equals("BCG"));
-    verifyNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG");
+    verifyNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG", 2);
   }
 
   @Test
@@ -108,11 +110,11 @@ public class VaccinationChildCoverageTest {
     OpenedVialLineItem openedVialLineItem = new OpenedVialLineItem();
     openedVialLineItem.setProductVialName("BCG");
 
-    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG").thenReturn(lineItem);
+    when(period.getNumberOfMonths()).thenReturn(2);
+    whenNew(ChildCoverageLineItem.class).withArguments(facilityVisit, facility, null, "BCG", 2).thenReturn(lineItem);
     whenNew(OpenedVialLineItem.class).withArguments(facilityVisit, facility, null, "BCG").thenReturn(openedVialLineItem);
 
-    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility,
-      targetGroupProducts, productVials);
+    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, productVials);
 
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(12));
     assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(7));
@@ -136,8 +138,7 @@ public class VaccinationChildCoverageTest {
     List<ProductVial> productVials = emptyList();
     OpenedVialLineItem openedVialLineItem = new OpenedVialLineItem();
     whenNew(OpenedVialLineItem.class).withAnyArguments().thenReturn(openedVialLineItem);
-    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility,
-      targetGroupProducts, productVials);
+    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, productVials);
 
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(12));
     assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(7));
@@ -160,8 +161,7 @@ public class VaccinationChildCoverageTest {
     ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem();
     whenNew(ChildCoverageLineItem.class).withAnyArguments().thenReturn(childCoverageLineItem);
 
-    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility,
-      targetGroupProducts, productVials);
+    VaccinationChildCoverage vaccinationChildCoverage = new VaccinationChildCoverage(facilityVisit, facility, period, targetGroupProducts, productVials);
 
     assertThat(vaccinationChildCoverage.getChildCoverageLineItems().size(), is(12));
     assertThat(vaccinationChildCoverage.getOpenedVialLineItems().size(), is(7));

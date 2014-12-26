@@ -11,7 +11,9 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.dto.GeographicZoneGeometry;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.mapper.GeographicZoneGeoJSONMapper;
@@ -19,34 +21,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+
 /**
  * Exposes the services for handling GeographicZone entity.
  */
-
-import java.util.List;
 
 @Service
 @NoArgsConstructor
 public class GeographicZoneService {
 
+  private Integer pageSize;
+
+  @Autowired
+  GeographicZoneGeoJSONMapper geoJsonMapper;
+  
   @Autowired
   GeographicZoneRepository repository;
 
   @Autowired
-  GeographicZoneGeoJSONMapper geoJsonMapper;
+  public void setPageSize(@Value("${search.page.size}") String pageSize) {
+    this.pageSize = Integer.parseInt(pageSize);
+  }
 
-  @Autowired
-  SMSManagementService smsManagementService;
-
-  @Autowired
-  ConfigurationSettingService configurationSettingService;
-
-    public void save(GeographicZone geographicZone) {
+  public void save(GeographicZone geographicZone) {
+    geographicZone.validateMandatoryFields();
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
     geographicZone.validateLevel();
 
     if (!geographicZone.isRootLevel()) {
-      geographicZone.validateParentExists();
       geographicZone.setParent(repository.getByCode(geographicZone.getParent().getCode()));
       geographicZone.validateParentExists();
       geographicZone.validateParentIsHigherInHierarchy();
@@ -59,32 +64,48 @@ public class GeographicZoneService {
     return repository.getByCode(geographicZone.getCode());
   }
 
-  public GeographicZone getById(long id) {
+  public GeographicZone getById(Long id) {
     return repository.getById(id);
   }
 
-
-  public List<GeographicZone> searchGeographicZone(String geographicZoneSearchParam) {
-    return repository.searchGeographicZone(geographicZoneSearchParam);
+  public List<GeographicZone> searchBy(String searchParam, String columnName, Integer page) {
+    if (columnName.equals("parentName")) {
+      return repository.searchByParentName(searchParam, getPagination(page));
+    }
+    if (columnName.equals("name")) {
+      return repository.searchByName(searchParam, getPagination(page));
+    }
+    return emptyList();
   }
 
-  public List<GeographicZone> getAll() {
-    return repository.getAllGeographicZones();
+  public List<GeographicLevel> getAllGeographicLevels() {
+    return repository.getAllGeographicLevels();
   }
 
-  public void saveNew(GeographicZone geographicZone) {
-    String smsTestNotificationNumber = configurationSettingService.getConfigurationStringValue("SMS_TEST_PHONE_NO");
-    repository.insert_Ext(geographicZone);
-    String message = String.format("Geographic zone %s added to the database.",geographicZone.getName());
-    smsManagementService.SendSMSMessage(message,smsTestNotificationNumber);
+  public List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel level) {
+    return repository.getAllGeographicZonesAbove(level);
   }
 
-  public void update(GeographicZone geographicZone) {
-    repository.update(geographicZone);
+  public Pagination getPagination(Integer page) {
+    return new Pagination(page, pageSize);
   }
 
-  public GeographicZone getById(int id) {
-    return repository.getById(id);
+  public Integer getTotalSearchResultCount(String param, String columnName) {
+    if (columnName.equals("parentName")) {
+      return repository.getTotalParentSearchResultCount(param);
+    }
+    if (columnName.equals("name")) {
+      return repository.getTotalSearchResultCount(param);
+    }
+    return 0;
+  }
+
+  public List<GeographicZone> getGeographicZonesByCodeOrName(String searchParam) {
+    return repository.getGeographicZonesByCodeOrName(searchParam);
+  }
+
+  public Integer getGeographicZonesCountBy(String searchParam) {
+    return repository.getGeographicZonesCountBy(searchParam);
   }
 
   public void saveGisInfo(List<GeographicZoneGeometry> geoZoneGeometries, Long userId) {
@@ -102,8 +123,5 @@ public class GeographicZoneService {
     }
   }
 
-    public GeographicZone getDistrictOfFacilityByFacilityId(Long facilityId)
-    {
-        return repository.getDistrictOfFacilityByFacilityId(facilityId);
-    }
+
 }

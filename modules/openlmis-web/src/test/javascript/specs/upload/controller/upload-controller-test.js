@@ -20,7 +20,7 @@ describe('Upload Controller Test', function () {
     httpBackend = $httpBackend;
     http = $http;
     messageService = _messageService_;
-    loginConfig = {modalShown: false, preventReload: true}
+    loginConfig = {modalShown: false, preventReload: true};
     spyOn(messageService, 'get').andCallFake(function (messageKey) {
       if (messageKey == 'upload.select.type') return 'select upload type';
       if (messageKey == 'upload.select.file') return 'select file';
@@ -36,6 +36,15 @@ describe('Upload Controller Test', function () {
   it('should get uploads supported by system data', function () {
     httpBackend.flush();
     expect(scope.supportedUploads).toEqual({'product': {'displayName': 'Product'}});
+  });
+
+  it('should clear messages', function () {
+    scope.successMsg = scope.errorMsg = "Message";
+
+    scope.clearMessages();
+
+    expect(scope.successMsg).toEqual("");
+    expect(scope.errorMsg).toEqual("");
   });
 
   describe('Upload form', function () {
@@ -96,6 +105,4 @@ describe('Upload Controller Test', function () {
       expect(scope.successMsg).toEqual('');
     });
   });
-
-
 });

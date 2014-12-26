@@ -116,7 +116,7 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
       header += "Program: " + this.reportMapper.getProgram(Integer.parseInt(program)).get(0).getName();
     }
     if (!zone.equals("0") && !zone.isEmpty() && !zone.endsWith("undefined")) {
-      header += "\nGeographic Zone: " + this.geographicZoneMapper.getById(Integer.parseInt(zone)).getName();
+      header += "\nGeographic Zone: " + this.geographicZoneMapper.getById(Long.parseLong(zone)).getName();
     }
 
     if (!facilityType.isEmpty() && !facilityType.equals("0") && !facilityType.endsWith("undefined")) {

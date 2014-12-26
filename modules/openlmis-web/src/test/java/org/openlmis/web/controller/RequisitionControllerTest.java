@@ -20,6 +20,10 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RightName;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -52,6 +56,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 import static org.openlmis.rnr.service.RequisitionService.RNR_SUBMITTED_SUCCESSFULLY;
@@ -161,7 +166,7 @@ public class RequisitionControllerTest {
     rnr.setStatus(RnrStatus.AUTHORIZED);
 
     when(requisitionService.getFullRequisitionById(1000L)).thenReturn(rnr);
-    when(requisitionPermissionService.hasPermission(USER_ID, rnr, Right.APPROVE_REQUISITION)).thenReturn(true);
+    when(requisitionPermissionService.hasPermission(USER_ID, rnr, APPROVE_REQUISITION)).thenReturn(true);
 
     ResponseEntity<OpenLmisResponse> requisitionData = controller.getById(1000L, request);
     assertTrue((boolean) requisitionData.getBody().getData().get(CAN_APPROVE_RNR));
@@ -174,7 +179,7 @@ public class RequisitionControllerTest {
     rnr.setStatus(RnrStatus.RELEASED);
 
     when(requisitionService.getFullRequisitionById(1000L)).thenReturn(rnr);
-    when(requisitionPermissionService.hasPermission(1L, rnr, Right.APPROVE_REQUISITION)).thenReturn(true);
+    when(requisitionPermissionService.hasPermission(1L, rnr, APPROVE_REQUISITION)).thenReturn(true);
 
     ResponseEntity<OpenLmisResponse> requisitionData = controller.getById(1000L, request);
     assertFalse((boolean) requisitionData.getBody().getData().get(CAN_APPROVE_RNR));
@@ -187,7 +192,7 @@ public class RequisitionControllerTest {
     rnr.setStatus(RnrStatus.AUTHORIZED);
 
     when(requisitionService.getFullRequisitionById(1000L)).thenReturn(rnr);
-    when(requisitionPermissionService.hasPermission(1L, rnr, Right.APPROVE_REQUISITION)).thenReturn(false);
+    when(requisitionPermissionService.hasPermission(1L, rnr, APPROVE_REQUISITION)).thenReturn(false);
 
     ResponseEntity<OpenLmisResponse> requisitionData = controller.getById(1000L, request);
     assertFalse((boolean) requisitionData.getBody().getData().get(CAN_APPROVE_RNR));
@@ -385,16 +390,16 @@ public class RequisitionControllerTest {
     Integer pageNumber = 1;
 
     when(requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, USER_ID,
-      Right.CONVERT_TO_ORDER)).thenReturn(1);
+      RightName.CONVERT_TO_ORDER)).thenReturn(1);
     when(requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-      1, USER_ID, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expectedRequisitions);
+      1, USER_ID, RightName.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expectedRequisitions);
     List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForListApproval(expectedRequisitions)).thenReturn(expectedRnrList);
 
     ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder(searchType, searchVal, pageNumber, sortBy, sortDirection, request);
 
     verify(requisitionService).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-      1, USER_ID, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      1, USER_ID, RightName.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat((List<RnrDTO>) responseEntity.getBody().getData().get(RNR_LIST), is(expectedRnrList));
   }

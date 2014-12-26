@@ -109,7 +109,7 @@ public class ManageDistribution extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true,
-      programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+      programFirst, userSIC, rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
   }
 
   @And("^I setup mapping for child coverage$")
@@ -676,7 +676,7 @@ public class ManageDistribution extends TestCaseHelper {
                                      Integer totalNumberOfPeriods) throws SQLException {
 
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200",
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC,
       rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
 
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
@@ -792,14 +792,14 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyNoFacilityToBeShownIfInactive(String userSIC, String password, String deliveryZoneCodeFirst,
-                                                      String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
-                                                      String deliveryZoneNameSecond, String facilityCodeFirst,
-                                                      String facilityCodeSecond, String programFirst, String programSecond,
-                                                      String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
+  public void testVerifyNoFacilityToBeShownIfInactiveAndDistributionNotInitiated(String userSIC, String password, String deliveryZoneCodeFirst,
+                                                                                 String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                                                 String deliveryZoneNameSecond, String facilityCodeFirst,
+                                                                                 String facilityCodeSecond, String programFirst, String programSecond,
+                                                                                 String schedule, String period, Integer totalNumberOfPeriods) throws SQLException {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
 
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
@@ -817,6 +817,10 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);
     distributionPage.clickInitiateDistribution();
     distributionPage.verifyFacilityNotSupportedMessage(programFirst, deliveryZoneNameFirst);
+    dbWrapper.updateFieldValue("facilities", "active", "true", "code", facilityCodeFirst);
+    dbWrapper.updateFieldValue("facilities", "active", "true", "code", facilityCodeSecond);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.clickRecordData(1);
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
@@ -828,7 +832,7 @@ public class ManageDistribution extends TestCaseHelper {
     String geoZoneFirst = "District1";
     String geoZoneSecond = "Ngorongoro";
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, rightsList,
       programSecond, geoZoneFirst, geoZoneSecond, geoZoneSecond);
 
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond,
@@ -845,8 +849,6 @@ public class ManageDistribution extends TestCaseHelper {
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     facilityListPage.clickFacilityListDropDown();
     facilityListPage.verifyGeographicZoneOrder(geoZoneFirst, geoZoneSecond);
-
-
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
@@ -904,7 +906,7 @@ public class ManageDistribution extends TestCaseHelper {
   private void setupData(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
                          String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond, String programFirst, String programSecond, String schedule) throws SQLException {
     List<String> rightsList = asList("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, rightsList,
       programSecond, "District1", "Ngorongoro", "Ngorongoro");
 
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,

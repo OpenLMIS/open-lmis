@@ -20,6 +20,7 @@ import org.openlmis.core.domain.EDIConfiguration;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
 import org.openlmis.shipment.domain.ShipmentLineItem;
@@ -165,10 +166,11 @@ public class ShipmentFileProcessorTest {
 
     when(mockedCsvListReader.read()).thenReturn(asList("", "OYELL_FVR00000123R")).thenReturn(null);
     ShipmentLineItem lineItem = new ShipmentLineItem();
-    lineItem.setOrderNumber("OYELL_FVR00000123R");
     when(shipmentLineItemTransformer.transform(any(ShipmentLineItemDTO.class), anyString(), anyString(), any(Date.class))).thenReturn(lineItem);
     when(applicationContext.getBean(ShipmentFileProcessor.class)).thenReturn(shipmentFileProcessor);
     when(orderService.isShippable("OYELL_FVR00000123R")).thenReturn(true);
+    Order order = new Order(123L);
+    when(orderService.getByOrderNumber("OYELL_FVR00000123R")).thenReturn(order);
 
     shipmentFileProcessor.process(message);
 
@@ -230,12 +232,14 @@ public class ShipmentFileProcessorTest {
     shipmentLineItemDTO.setOrderNumber("OYELL_FVR00000123R");
     shipmentLineItemDTO.setPackedDate("11/13");
     shipmentLineItemDTO.setShippedDate("11/11/2011");
+    shipmentLineItemDTO.setOrderId(123L);
     ShipmentLineItem shipmentLineItem = mock(ShipmentLineItem.class);
-    when(shipmentLineItem.getOrderId()).thenReturn(333L);
     when(orderService.isShippable("OYELL_FVR00000123R")).thenReturn(true);
 
     when(shipmentLineItemTransformer.transform(shipmentLineItemDTO, "MM/yy", "dd/MM/yyyy", creationDate)).thenReturn(shipmentLineItem);
     when(applicationContext.getBean(ShipmentFileProcessor.class)).thenReturn(shipmentFileProcessor);
+    Order order = new Order(123L);
+    when(orderService.getByOrderNumber("OYELL_FVR00000123R")).thenReturn(order);
 
     shipmentFileProcessor.process(message);
 

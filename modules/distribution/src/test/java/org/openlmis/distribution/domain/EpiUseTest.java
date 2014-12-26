@@ -51,4 +51,38 @@ public class EpiUseTest {
     assertThat(lineItems.get(0).getProductGroup().getName(), is("PG1"));
   }
 
+  @Test
+  public void shouldSortLineItemsByProductGroupCode() throws Exception {
+    Facility facility = new Facility(2L);
+    ProgramSupported programSupported = new ProgramSupported(1L, true, new Date());
+
+    FacilityProgramProduct facilityProgramProduct1 = mock(FacilityProgramProduct.class);
+    FacilityProgramProduct facilityProgramProduct2 = mock(FacilityProgramProduct.class);
+    FacilityProgramProduct facilityProgramProduct3 = mock(FacilityProgramProduct.class);
+
+    ProductGroup productGroup1 = new ProductGroup("PG3", "PG3");
+    ProductGroup productGroup2 = new ProductGroup("PG1", "PG1");
+
+    when(facilityProgramProduct1.getActiveProductGroup()).thenReturn(productGroup1);
+    when(facilityProgramProduct2.getActiveProductGroup()).thenReturn(null);
+    when(facilityProgramProduct3.getActiveProductGroup()).thenReturn(productGroup2);
+
+    List<FacilityProgramProduct> programProducts = asList(facilityProgramProduct1, facilityProgramProduct2, facilityProgramProduct3);
+    programSupported.setProgramProducts(programProducts);
+    facility.setSupportedPrograms(asList(programSupported));
+
+    mockStatic(FacilityProgramProduct.class);
+    when(FacilityProgramProduct.filterActiveProducts(programProducts)).thenReturn(programProducts);
+    FacilityVisit facilityVisit = new FacilityVisit();
+
+    EpiUse epiUse = new EpiUse(facility, facilityVisit);
+
+    List<EpiUseLineItem> lineItems = epiUse.getLineItems();
+    assertThat(lineItems.size(), is(2));
+    assertThat(lineItems.get(0).getProductGroup().getCode(), is(productGroup2.getCode()));
+    assertThat(lineItems.get(0).getProductGroup().getName(), is(productGroup2.getName()));
+    assertThat(lineItems.get(1).getProductGroup().getCode(), is(productGroup1.getCode()));
+    assertThat(lineItems.get(1).getProductGroup().getName(), is(productGroup1.getName()));
+  }
+
 }

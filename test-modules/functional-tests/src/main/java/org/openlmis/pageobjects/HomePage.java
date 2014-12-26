@@ -15,12 +15,14 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.edi.ConfigureSystemSettingsPage;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import java.util.NoSuchElementException;
+
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
@@ -91,7 +93,7 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "viewOrderHeader")
   private static WebElement viewOrdersHeader = null;
 
-  @FindBy(how = ID, using = "add-new-facility")
+  @FindBy(how = ID, using = "facilityAddNew")
   private static WebElement createFacility = null;
 
   @FindBy(how = ID, using = "addNewFacilityHeader")
@@ -116,7 +118,7 @@ public class HomePage extends Page {
   private static WebElement requisitionsLink = null;
 
   @FindBy(how = XPATH, using = "//div[@class='submenu']")
-  private static WebElement SubMenuItem = null;
+  private static WebElement subMenuItem = null;
 
   @FindBy(how = ID, using = "createRnr")
   private static WebElement createLink = null;
@@ -129,18 +131,6 @@ public class HomePage extends Page {
 
   @FindBy(how = XPATH, using = "//input[@ng-click='initRnr(row.entity)']")
   private static WebElement proceedButton = null;
-
-  @FindBy(how = ID, using = "facility-tab")
-  private static WebElement facilitiesTab = null;
-
-  @FindBy(how = ID, using = "role-tab")
-  private static WebElement rolesTab = null;
-
-  @FindBy(how = ID, using = "schedule-tab")
-  private static WebElement schedulesTab = null;
-
-  @FindBy(how = ID, using = "user-tab")
-  private static WebElement usersTab = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
   private static WebElement startDate = null;
@@ -178,6 +168,54 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "managePodHeader")
   private static WebElement viewManagePODHeader = null;
 
+  @FindBy(how = ID, using = "requisitionGroupTab")
+  private static WebElement requisitionGroupTab = null;
+
+  @FindBy(how = ID, using = "supervisoryNodeTab")
+  private static WebElement supervisoryNodesTab = null;
+
+  @FindBy(how = ID, using = "geoZoneTab")
+  private static WebElement geoZoneTab = null;
+
+  @FindBy(how = ID, using = "supplyLineTab")
+  private static WebElement supplyLineTab = null;
+
+  @FindBy(how = ID, using = "facilityApprovedProductTab")
+  private static WebElement facilityApprovedProductTab;
+
+  @FindBy(how = ID, using = "productTab")
+  private static WebElement productTab;
+
+  @FindBy(how = ID, using = "facilityMenu")
+  private static WebElement facilityMenu;
+
+  @FindBy(how = ID, using = "rolesMenu")
+  private static WebElement rolesMenu;
+
+  @FindBy(how = ID, using = "schedulesMenu")
+  private static WebElement schedulesMenu;
+
+  @FindBy(how = ID, using = "usersMenu")
+  private static WebElement usersMenu;
+
+  @FindBy(how = ID, using = "geographicZonesMenu")
+  private static WebElement geographicZonesMenu;
+
+  @FindBy(how = ID, using = "supervisoryNodesMenu")
+  private static WebElement supervisoryNodesMenu;
+
+  @FindBy(how = ID, using = "requisitionGroupsMenu")
+  private static WebElement requisitionGroupsMenu;
+
+  @FindBy(how = ID, using = "supplyLinesMenu")
+  private static WebElement supplyLinesMenu;
+
+  @FindBy(how = ID, using = "facilityApprovedProductsMenu")
+  private static WebElement facilityApprovedProductsMenu;
+
+  @FindBy(how = ID, using = "productsMenu")
+  private static WebElement productsMenu;
+
   public HomePage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -194,12 +232,24 @@ public class HomePage extends Page {
     return PageObjectFactory.getLoginPage(testWebDriver, baseUrl);
   }
 
-  public ManageFacilityPage navigateManageFacility() {
+  public FacilityPage navigateManageFacility() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(manageLink);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(facilityMenu);
+    facilityMenu.click();
+    return PageObjectFactory.getFacilityPage(testWebDriver);
+  }
+
+  public GeographicZonePage navigateManageGeographicZonesPage() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     AdministrationMenuItem.click();
     testWebDriver.waitForElementToAppear(manageLink);
-    manageLink.click();
-    return ManageFacilityPage.getInstance(testWebDriver);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(geographicZonesMenu);
+    geographicZonesMenu.click();
+    return PageObjectFactory.getGeographicZonePage(testWebDriver);
   }
 
   public void clickCreateFacilityButton() {
@@ -214,12 +264,59 @@ public class HomePage extends Page {
     assertEquals(addNewFacilityHeader.getText().trim(), headingToVerify);
   }
 
-  public void verifyAdminTabs() {
-    testWebDriver.waitForElementToAppear(facilitiesTab);
-    assertTrue(facilitiesTab.isDisplayed());
-    assertTrue(rolesTab.isDisplayed());
-    assertTrue(schedulesTab.isDisplayed());
-    assertTrue(usersTab.isDisplayed());
+  public boolean isSupervisoryNodeTabDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(supervisoryNodesTab);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return supervisoryNodesTab.isDisplayed();
+  }
+
+  public boolean isSupplyLineTabDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(supplyLineTab);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return supplyLineTab.isDisplayed();
+  }
+
+  public boolean isRequisitionGroupTabDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(requisitionGroupTab);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return requisitionGroupTab.isDisplayed();
+  }
+
+  public boolean isFacilityApprovedProductTabDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(facilityApprovedProductTab);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return facilityApprovedProductTab.isDisplayed();
+  }
+
+  public boolean isProductTabDisplayed() {
+    try {
+      testWebDriver.waitForElementToAppear(productTab);
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+    return productTab.isDisplayed();
   }
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
@@ -281,7 +378,7 @@ public class HomePage extends Page {
   }
 
   public void verifySubMenuItems(String[] expectedSubMenuItem) {
-    String[] subMenuItem = SubMenuItem.getText().split("\n");
+    String[] subMenuItem = HomePage.subMenuItem.getText().split("\n");
     assertEquals(subMenuItem, expectedSubMenuItem);
   }
 
@@ -310,23 +407,13 @@ public class HomePage extends Page {
     return PageObjectFactory.getReportPage(testWebDriver);
   }
 
-  public ManageFacilityPage navigateSearchFacility() {
+  public RolesPage navigateToRolePage() {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
     testWebDriver.keyPress(manageLink);
-    testWebDriver.waitForElementToAppear(facilitiesTab);
-    facilitiesTab.click();
-    return ManageFacilityPage.getInstance(testWebDriver);
-  }
-
-  public RolesPage navigateRoleAssignments() {
-    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
-    testWebDriver.keyPress(AdministrationMenuItem);
-    testWebDriver.waitForElementToAppear(manageLink);
-    testWebDriver.keyPress(manageLink);
-    testWebDriver.waitForElementToAppear(rolesTab);
-    testWebDriver.keyPress(rolesTab);
+    testWebDriver.waitForElementToAppear(rolesMenu);
+    testWebDriver.keyPress(rolesMenu);
     return PageObjectFactory.getRolesPage(testWebDriver);
   }
 
@@ -343,8 +430,8 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
     testWebDriver.keyPress(manageLink);
-    testWebDriver.waitForElementToAppear(schedulesTab);
-    schedulesTab.click();
+    testWebDriver.waitForElementToAppear(schedulesMenu);
+    schedulesMenu.click();
     return PageObjectFactory.getManageSchedulePage(testWebDriver);
   }
 
@@ -353,8 +440,8 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
     testWebDriver.keyPress(manageLink);
-    testWebDriver.waitForElementToAppear(usersTab);
-    usersTab.click();
+    testWebDriver.waitForElementToAppear(usersMenu);
+    usersMenu.click();
     return PageObjectFactory.getUserPage(testWebDriver);
   }
 
@@ -364,7 +451,9 @@ public class HomePage extends Page {
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(approveLink);
     testWebDriver.keyPress(approveLink);
+    testWebDriver.sleep(500);
     ApprovePage approvePage = PageObjectFactory.getApprovePage(testWebDriver);
+    testWebDriver.waitForAjax();
     approvePage.waitForPageToAppear();
     return approvePage;
   }
@@ -462,7 +551,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToBeEnabled(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
     testWebDriver.waitForElementToBeEnabled(createLink);
-    testWebDriver.sleep(1000);
     testWebDriver.keyPress(createLink);
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(myFacilityRadioButton);
@@ -507,6 +595,56 @@ public class HomePage extends Page {
     testWebDriver.keyPress(viewManagePODMenuItem);
     testWebDriver.waitForElementToAppear(viewManagePODHeader);
     return PageObjectFactory.getManagePodPage(testWebDriver);
+  }
+
+  public SupervisoryNodesPage navigateToSupervisoryNodes() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(manageLink);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(supervisoryNodesMenu);
+    supervisoryNodesMenu.click();
+    return PageObjectFactory.getSupervisoryNodesPage(testWebDriver);
+  }
+
+  public RequisitionGroupPage navigateToRequisitionGroupPage() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(manageLink);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(requisitionGroupsMenu);
+    requisitionGroupsMenu.click();
+    return PageObjectFactory.getRequisitionGroupPage(testWebDriver);
+  }
+
+  public SupplyLinePage navigateToSupplyLine() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(manageLink);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(supplyLinesMenu);
+    supplyLinesMenu.click();
+    return PageObjectFactory.getSupplyLinePage(testWebDriver);
+  }
+
+  public FacilityApprovedProductPage navigateToFacilityApprovedProductPage() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(manageLink);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(facilityApprovedProductsMenu);
+    facilityApprovedProductsMenu.click();
+    return PageObjectFactory.getFacilityApprovedProductPage(testWebDriver);
+  }
+
+  public ProductPage navigateToProductPage() {
+    testWebDriver.waitForElementToAppear(AdministrationMenuItem);
+    testWebDriver.keyPress(AdministrationMenuItem);
+    testWebDriver.waitForElementToAppear(manageLink);
+    testWebDriver.keyPress(manageLink);
+    testWebDriver.waitForElementToAppear(productsMenu);
+    productsMenu.click();
+    return PageObjectFactory.getProductPage(testWebDriver);
   }
 }
 

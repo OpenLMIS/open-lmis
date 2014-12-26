@@ -1,0 +1,22 @@
+Product Code,Program Code,Doses Per Month,Is Active,Product Category,Display Order
+P10,HIV,30,TRUE,Antibiotic,1
+P11,HIV,30,TRUE,Antibiotic,1
+P12,HIV,30,TRUE,Antibiotic,1
+P13,HIV,30,TRUE,anaesthetics,1
+P14,HIV,30,FALSE,Antibiotic,1
+P15,HIV,30,FALSE,anaesthetics,1
+P16,HIV,30,FALSE,Antibiotic,1
+P17,HIV,30,TRUE,anaesthetics,1
+P18,HIV,30,TRUE,Antibiotic,1
+P19,HIV,30,TRUE,category3,5
+AP10,HIV,30,TRUE,category3,1
+AP11,HIV,30,TRUE,category3,1
+AP12,HIV,30,TRUE,anaesthetics,1
+AP13,HIV,30,TRUE,category3,1
+AP14,HIV,30,TRUE,anaesthetics,1
+AP15,HIV,30,TRUE,category3,1
+AP16,HIV,30,TRUE,anaesthetics,1
+AP17,HIV,30,TRUE,category3,4
+AP18,HIV,30,TRUE,anaesthetics,3
+AP19,HIV,30,TRUE,anaesthetics,2
+P20,HIV,30,TRUE,anaesthetics,2

@@ -330,13 +330,13 @@ offlineTest.doFirst() {
     buildOpenLmis.execute()
 }
 
-task createTestRequisition(type: Test) {
+task orderAndPod(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'firefox'
         systemProperties['dbUrl'] = connectionString
         systemProperties['baseurl'] = "$baseurl"
 
-        suites 'src/test/java/org/openlmis/functional/testng-createTestRequisition.xml'
+        suites 'src/test/java/org/openlmis/functional/testng-orderAndPod.xml'
     }
     options {
         listeners << 'org.uncommons.reportng.HTMLReporter'
@@ -345,7 +345,7 @@ task createTestRequisition(type: Test) {
     workingDir = 'build/'
 }
 
-createTestRequisition.doFirst() {
+orderAndPod.doFirst() {
     buildOpenLmis.execute()
 }
 

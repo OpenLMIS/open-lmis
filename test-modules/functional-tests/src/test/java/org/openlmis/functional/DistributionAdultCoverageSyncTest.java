@@ -179,7 +179,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     adultCoveragePage.verifyIndicator("RED");
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      assertEquals("360", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("30", adultCoveragePage.getTargetGroup(rowNumber));
       assertEquals("0", adultCoveragePage.getCoverageRate(rowNumber));
     }
 
@@ -207,7 +207,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     adultCoveragePage.verifyIndicator("RED");
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      assertEquals("35956", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("2997", adultCoveragePage.getTargetGroup(rowNumber));
       assertEquals("0", adultCoveragePage.getCoverageRate(rowNumber));
     }
 
@@ -286,7 +286,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     adultCoveragePage.verifyIndicator("RED");
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
-      assertEquals("40", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("4", adultCoveragePage.getTargetGroup(rowNumber));
       assertEquals("0", adultCoveragePage.getCoverageRate(rowNumber));
     }
 
@@ -294,6 +294,7 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
     assertEquals("100", adultCoveragePage.getWastageRate());
 
     adultCoveragePage.enterHealthCenterFirstInput(1, "544");
+    assertEquals("13600", adultCoveragePage.getCoverageRate(1));
     assertEquals("40", adultCoveragePage.getWastageRate());
   }
 
@@ -389,16 +390,16 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
       adultCoveragePage.enterOutreachFirstInput(rowNumber, "5612" + (rowNumber * 20));
-      assertEquals("360", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("31", adultCoveragePage.getTargetGroup(rowNumber));
     }
 
-    assertEquals("155894", adultCoveragePage.getCoverageRate(1));
-    assertEquals("155900", adultCoveragePage.getCoverageRate(2));
-    assertEquals("155906", adultCoveragePage.getCoverageRate(3));
-    assertEquals("155911", adultCoveragePage.getCoverageRate(4));
-    assertEquals("1558917", adultCoveragePage.getCoverageRate(5));
-    assertEquals("1558922", adultCoveragePage.getCoverageRate(6));
-    assertEquals("1558928", adultCoveragePage.getCoverageRate(7));
+    assertEquals("1810387", adultCoveragePage.getCoverageRate(1));
+    assertEquals("1810452", adultCoveragePage.getCoverageRate(2));
+    assertEquals("1810516", adultCoveragePage.getCoverageRate(3));
+    assertEquals("1810581", adultCoveragePage.getCoverageRate(4));
+    assertEquals("18103548", adultCoveragePage.getCoverageRate(5));
+    assertEquals("18103613", adultCoveragePage.getCoverageRate(6));
+    assertEquals("18103677", adultCoveragePage.getCoverageRate(7));
 
     adultCoveragePage.enterOpenedVialInputField("90");
     assertEquals("-2120051", adultCoveragePage.getWastageRate());
@@ -436,16 +437,16 @@ public class DistributionAdultCoverageSyncTest extends TestCaseHelper {
 
     for (int rowNumber = 1; rowNumber <= 7; rowNumber++) {
       adultCoveragePage.enterOutreachFirstInput(rowNumber, "5612" + (rowNumber * 20));
-      assertEquals("360", adultCoveragePage.getTargetGroup(rowNumber));
+      assertEquals("31", adultCoveragePage.getTargetGroup(rowNumber));
     }
 
-    assertEquals("155894", adultCoveragePage.getCoverageRate(1));
-    assertEquals("155900", adultCoveragePage.getCoverageRate(2));
-    assertEquals("155906", adultCoveragePage.getCoverageRate(3));
-    assertEquals("155911", adultCoveragePage.getCoverageRate(4));
-    assertEquals("1558917", adultCoveragePage.getCoverageRate(5));
-    assertEquals("1558922", adultCoveragePage.getCoverageRate(6));
-    assertEquals("1558928", adultCoveragePage.getCoverageRate(7));
+    assertEquals("1810387", adultCoveragePage.getCoverageRate(1));
+    assertEquals("1810452", adultCoveragePage.getCoverageRate(2));
+    assertEquals("1810516", adultCoveragePage.getCoverageRate(3));
+    assertEquals("1810581", adultCoveragePage.getCoverageRate(4));
+    assertEquals("18103548", adultCoveragePage.getCoverageRate(5));
+    assertEquals("18103613", adultCoveragePage.getCoverageRate(6));
+    assertEquals("18103677", adultCoveragePage.getCoverageRate(7));
 
     adultCoveragePage.enterOpenedVialInputField("90");
     assertEquals("-2120051", adultCoveragePage.getWastageRate());

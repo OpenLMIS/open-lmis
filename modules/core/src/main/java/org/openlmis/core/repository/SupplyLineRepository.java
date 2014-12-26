@@ -10,13 +10,15 @@
 
 package org.openlmis.core.repository;
 
-import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.dto.SupplyDepot;
 import org.openlmis.core.repository.mapper.SupplyLineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,45 +28,48 @@ import java.util.List;
  */
 
 @Repository
-@NoArgsConstructor
 public class SupplyLineRepository {
 
-  private SupplyLineMapper supplyLineMapper;
-
   @Autowired
-  public SupplyLineRepository(SupplyLineMapper supplyLineMapper) {
-    this.supplyLineMapper = supplyLineMapper;
-  }
+  private SupplyLineMapper mapper;
 
   public void insert(SupplyLine supplyLine) {
-    supplyLineMapper.insert(supplyLine);
+    try {
+      mapper.insert(supplyLine);
+    } catch (DuplicateKeyException ex) {
+      throw new DataException("error.supplying.facility.already.assigned");
+    }
   }
 
   public SupplyLine getSupplyLineBy(SupervisoryNode supervisoryNode, Program program) {
-    return supplyLineMapper.getSupplyLineBy(supervisoryNode, program);
+    return mapper.getSupplyLineBy(supervisoryNode, program);
   }
 
   public void update(SupplyLine supplyLine) {
-    supplyLineMapper.update(supplyLine);
+    try {
+      mapper.update(supplyLine);
+    } catch (DuplicateKeyException ex) {
+      throw new DataException("error.supplying.facility.already.assigned");
+    }
   }
 
   public SupplyLine getById(Long id) {
-    return supplyLineMapper.getById(id);
-  }
-  
-  public SupplyLine get(Long id) {
-        return supplyLineMapper.getById(id);
+    return mapper.getById(id);
   }
 
-  public SupplyLine getSupplyLineBySupervisoryNodeProgramAndFacility(SupplyLine supplyLine) {
-    return supplyLineMapper.getSupplyLineBySupervisoryNodeProgramAndFacility(supplyLine);
+  public List<SupplyLine> search(String searchParam, String column, Pagination pagination) {
+    return mapper.search(searchParam, column, pagination);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam, String column) {
+    return mapper.getSearchedSupplyLinesCount(searchParam, column);
   }
 
   public List<SupplyDepot> getSupplyDepots(Long userId){
-    return supplyLineMapper.getSupplyDepots(userId);
+    return mapper.getSupplyDepots(userId);
   }
 
   public SupplyLine getSupplyLineByFacilityProgram(Long facilityId, Long programId) {
-    return supplyLineMapper.getByFacilityByProgram(facilityId, programId);
+    return mapper.getByFacilityByProgram(facilityId, programId);
   }
 }

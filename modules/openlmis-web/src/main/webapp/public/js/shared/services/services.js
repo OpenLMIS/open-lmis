@@ -35,6 +35,14 @@ services.factory('Facility', function ($resource) {
   return resource;
 });
 
+services.factory("Facilities", function ($resource) {
+  return $resource('/filter-facilities.json', {}, {});
+});
+
+services.factory("FacilityTypes", function ($resource) {
+  return $resource('/facility-types.json', {}, {});
+});
+
 services.factory('UserContext', function ($resource) {
   return $resource('/user-context.json', {}, {});
 });
@@ -186,8 +194,8 @@ services.factory('Messages', function ($resource) {
   return $resource('/messages.json', {}, {});
 });
 
-services.factory('SupervisoryNodes', function ($resource) {
-  return $resource('/supervisory-nodes.json', {}, {});
+services.factory('SupervisoryNodesPagedSearch', function ($resource) {
+  return $resource('/paged-search-supervisory-nodes.json', {}, {});
 });
 
 services.factory('FacilityProgramRights', function ($resource) {
@@ -277,7 +285,11 @@ services.factory('ProgramRegimenTemplate', function ($resource) {
 });
 
 services.factory('GeographicZones', function ($resource) {
-  return $resource('/geographicZones/:id.json', {}, {});
+  return $resource('/geographicZones/:id.json', {id: '@id'}, update);
+});
+
+services.factory("GeographicZoneSearch", function ($resource) {
+  return $resource('/filtered-geographicZones.json', {}, {});
 });
 
 services.factory('Distributions', function ($resource) {
@@ -326,8 +338,82 @@ services.factory('OrderPOD', function ($resource) {
 });
 
 services.factory('OrderNumberConfiguration', function ($resource) {
-  return $resource('/order-number-configuration.json',{},  {post: {method: 'POST'}});
+  return $resource('/order-number-configuration.json', {}, {post: {method: 'POST'}});
 });
+
+services.factory('GeoLevels', function ($resource) {
+  return $resource('/geographicLevels.json', {}, {});
+});
+
+services.factory('GeographicZonesAboveLevel', function ($resource) {
+  return $resource('/parentGeographicZones/:geoLevelCode.json', {}, {});
+});
+
+services.factory('SupervisoryNodes', function ($resource) {
+  return $resource('/supervisory-nodes/:id.json', {}, update);
+});
+
+services.factory('SupplyLines', function ($resource) {
+  return $resource('/supplyLines/:id.json', {}, update);
+});
+
+services.factory('ParentSupervisoryNodes', function ($resource) {
+  return $resource('/search-supervisory-nodes.json', {}, {});
+});
+
+services.factory('RequisitionGroups', function ($resource) {
+  return $resource('/requisitionGroups/:id.json', {id: '@id'}, update);
+});
+
+services.factory('SupervisoryNodesSearch', function ($resource) {
+  return $resource('/search-supervisory-nodes.json', {}, {});
+});
+
+services.factory('TopLevelSupervisoryNodes', function ($resource) {
+  return $resource('/topLevelSupervisoryNodes.json', {}, {});
+});
+
+services.factory('SupplyLinesSearch', function ($resource) {
+  return $resource('/supplyLines/search.json', {}, {});
+});
+
+services.factory('ProgramProductsFilter', function ($resource) {
+  return $resource('/programProducts/filter/programId/:programId/facilityTypeId/:facilityTypeId.json',
+      {programId: '@programId', facilityTypeId: '@facilityTypeId'}, {}, {});
+});
+
+services.factory('FacilityTypeApprovedProducts', function ($resource) {
+  return $resource('/facilityApprovedProducts/:id.json', {id: '@id'}, update);
+});
+
+services.factory('ProgramProductsSearch', function ($resource) {
+  return $resource('/programProducts/search.json', {}, {});
+});
+
+services.factory('Reports', function ($resource) {
+  return $resource('/reports/:id/:format.json', {}, {});
+});
+
+services.factory('ProductGroups', function ($resource) {
+  return $resource('/products/groups.json', {}, {});
+});
+
+services.factory('ProductForms', function ($resource) {
+  return $resource('/products/forms.json', {}, {});
+});
+
+services.factory('DosageUnits', function ($resource) {
+  return $resource('/products/dosageUnits.json', {}, {});
+});
+
+services.factory('Products', function ($resource) {
+  return $resource('/products/:id.json', {id: '@id'}, update);
+});
+
+services.factory('ProductCategories', function ($resource) {
+  return $resource('/products/categories.json', {}, {});
+});
+
 
 services.factory('EquipmentOperationalStatus', function ($resource) {
   return $resource('/equipment/type/operational-status.json',{},  {});
@@ -348,6 +434,5 @@ services.factory('Supplylines', function ($resource) {
 services.factory('SupplyingDepots', function ($resource) {
   return $resource('/supplyingDepots.json', {});
 });
-/*
-these are services done for help module
- */
+
+

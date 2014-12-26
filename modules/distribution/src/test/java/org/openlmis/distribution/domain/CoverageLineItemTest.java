@@ -8,15 +8,15 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-
 package org.openlmis.distribution.domain;
 
-
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -29,33 +29,41 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class CoverageLineItemTest {
 
+  private ProcessingPeriod period;
+
+  @Before
+  public void setUp() {
+    period = mock(ProcessingPeriod.class);
+  }
+
   @Test
-  public void shouldCreateCoverageLineItemWhenTargetGroupProductIsNotNull(){
+  public void shouldCreateCoverageLineItemWhenTargetGroupProductIsNotNull() {
     FacilityVisit facilityVisit = new FacilityVisit();
     facilityVisit.setId(1L);
     Facility facility = mock(Facility.class);
+
+    when(period.getNumberOfMonths()).thenReturn(1);
     when(facility.getCatchmentPopulation()).thenReturn(100L);
     String productCode = "P10";
     TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", productCode, true);
     when(facility.getWhoRatioFor(productCode)).thenReturn(67D);
 
-    CoverageLineItem coverageLineItem = new CoverageLineItem(facilityVisit, facility, targetGroupProduct);
+    CoverageLineItem coverageLineItem = new CoverageLineItem(facilityVisit, facility, targetGroupProduct, period.getNumberOfMonths());
 
     assertThat(coverageLineItem.getFacilityVisitId(), is(facilityVisit.getId()));
-    assertThat(coverageLineItem.getTargetGroup(), is(67));
+    assertThat(coverageLineItem.getTargetGroup(), is(6));
   }
 
   @Test
-  public void shouldCreateCoverageLineItemWhenTargetGroupProductIsNull(){
+  public void shouldCreateCoverageLineItemWhenTargetGroupProductIsNull() {
     FacilityVisit facilityVisit = new FacilityVisit();
     facilityVisit.setId(1L);
     Facility facility = mock(Facility.class);
 
-    CoverageLineItem coverageLineItem = new CoverageLineItem(facilityVisit, facility, null);
+    when(period.getNumberOfMonths()).thenReturn(1);
+    CoverageLineItem coverageLineItem = new CoverageLineItem(facilityVisit, facility, null, period.getNumberOfMonths());
 
     assertThat(coverageLineItem.getFacilityVisitId(), is(facilityVisit.getId()));
     assertThat(coverageLineItem.getTargetGroup(), is(nullValue()));
   }
-
-
 }

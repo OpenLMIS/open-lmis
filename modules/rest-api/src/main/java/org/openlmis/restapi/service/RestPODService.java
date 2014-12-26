@@ -2,6 +2,7 @@ package org.openlmis.restapi.service;
 
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.domain.OrderPODLineItem;
@@ -38,6 +39,10 @@ public class RestPODService {
   public void updatePOD(OrderPOD orderPod, Long userId) {
     orderPod.setCreatedBy(userId);
     orderPod.setModifiedBy(userId);
+    Order order = orderService.getByOrderNumber(orderPod.getOrderNumber());
+    if(order == null )
+      throw new DataException("error.restapi.invalid.order");
+    orderPod.setOrderId(order.getId());
     orderPod.validate();
     validateOrderForPOD(orderPod);
     podService.checkPermissions(orderPod);
@@ -64,9 +69,6 @@ public class RestPODService {
   }
 
   private void validatePODLineItems(List<OrderPODLineItem> orderPodLineItems) {
-    if (orderPodLineItems == null) {
-      return;
-    }
     List<String> invalidProductCodes = getInvalidProductCodes(orderPodLineItems);
     if (invalidProductCodes.size() > 0) {
       throw new DataException("error.invalid.product.code", invalidProductCodes.toString());
@@ -74,9 +76,6 @@ public class RestPODService {
   }
 
   private void validateOrderForPOD(OrderPOD orderPod) {
-    if (orderService.getOrder(orderPod.getOrderId()) == null) {
-      throw new DataException("error.restapi.invalid.order");
-    }
     if (podService.getPODByOrderId(orderPod.getOrderId()) != null) {
       throw new DataException("error.restapi.delivery.already.confirmed");
     }

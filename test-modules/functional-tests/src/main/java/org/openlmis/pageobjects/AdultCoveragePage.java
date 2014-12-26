@@ -456,13 +456,6 @@ public class AdultCoveragePage extends DistributionTab {
     removeFocusFromElement();
   }
 
-  public void applyOutreachFirstNr(int rowNumber) {
-    WebElement outreach1Nr = testWebDriver.getElementById("outreach1Nr_" + rowNumber);
-    testWebDriver.waitForElementToAppear(outreach1Nr);
-    outreach1Nr.click();
-    removeFocusFromElement();
-  }
-
   public void applyOutreach2To5Nr(int rowNumber) {
     WebElement outreach2To5Nr = testWebDriver.getElementById("outreach2To5Nr_" + rowNumber);
     testWebDriver.waitForElementToAppear(outreach2To5Nr);

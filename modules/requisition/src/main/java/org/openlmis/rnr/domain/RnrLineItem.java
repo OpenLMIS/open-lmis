@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.floor;
+import static java.lang.Math.round;
 import static java.math.BigDecimal.valueOf;
 import static java.math.RoundingMode.HALF_UP;
 import static org.apache.commons.collections.CollectionUtils.find;
@@ -62,7 +63,7 @@ public class RnrLineItem extends LineItem {
   private Integer dosesPerMonth;
   private Integer dosesPerDispensingUnit;
   private String dispensingUnit;
-  private Integer maxMonthsOfStock;
+  private Double maxMonthsOfStock;
   private Boolean fullSupply;
   private Integer quantityReceived;
   private Integer quantityDispensed;
@@ -91,7 +92,10 @@ public class RnrLineItem extends LineItem {
   @SuppressWarnings("unused")
   private Boolean skipped = false;
 
-  public RnrLineItem(Long rnrId, FacilityTypeApprovedProduct facilityTypeApprovedProduct, Long modifiedBy, Long createdBy) {
+  public RnrLineItem(Long rnrId,
+                     FacilityTypeApprovedProduct facilityTypeApprovedProduct,
+                     Long modifiedBy,
+                     Long createdBy) {
     this.rnrId = rnrId;
     this.maxMonthsOfStock = facilityTypeApprovedProduct.getMaxMonthsOfStock();
     ProgramProduct programProduct = facilityTypeApprovedProduct.getProgramProduct();
@@ -126,7 +130,8 @@ public class RnrLineItem extends LineItem {
     quantityApproved = (quantityRequested == null) ? calculatedOrderQuantity : quantityRequested;
   }
 
-  public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem previousLineItem, Boolean beginningBalanceVisible) {
+  public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem previousLineItem,
+                                                                  Boolean beginningBalanceVisible) {
     if (previousLineItem == null || (!beginningBalanceVisible && previousLineItem.getSkipped())) {
       this.beginningBalance = 0;
       return;
@@ -259,7 +264,7 @@ public class RnrLineItem extends LineItem {
       maxStockQuantity = this.quantityDispensed * 2;
     } else{
       // apply the default calculation if there was no other calculation that works here
-      maxStockQuantity = maxMonthsOfStock * amc;
+      maxStockQuantity = (int) round(maxMonthsOfStock * amc);
     }
   }
 
@@ -501,7 +506,8 @@ public class RnrLineItem extends LineItem {
     return true;
   }
 
-  private Boolean getAdditive(final LossesAndAdjustments lossAndAdjustment, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  private Boolean getAdditive(final LossesAndAdjustments lossAndAdjustment,
+                              List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     Predicate predicate = new Predicate() {
       @Override
       public boolean evaluate(Object o) {
@@ -509,7 +515,8 @@ public class RnrLineItem extends LineItem {
       }
     };
 
-    LossesAndAdjustmentsType lossAndAdjustmentTypeFromList = (LossesAndAdjustmentsType) find(lossesAndAdjustmentsTypes, predicate);
+    LossesAndAdjustmentsType lossAndAdjustmentTypeFromList = (LossesAndAdjustmentsType) find(lossesAndAdjustmentsTypes,
+      predicate);
 
     return lossAndAdjustmentTypeFromList.getAdditive();
   }

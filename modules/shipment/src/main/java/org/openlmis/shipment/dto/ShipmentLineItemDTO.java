@@ -34,7 +34,7 @@ public class ShipmentLineItemDTO {
 
   private static Logger logger = Logger.getLogger(ShipmentLineItemDTO.class);
   private String orderNumber;
-  private String orderId;
+  private Long orderId;
   private String concatenatedOrderId;
   private String facilityCode;
   private String programCode;
@@ -49,6 +49,17 @@ public class ShipmentLineItemDTO {
   private String packSize;
   private String packedDate;
   private String shippedDate;
+
+  public ShipmentLineItemDTO(String orderNumber, String productCode, String replacedProductCode, String quantityShipped,
+                             String cost, String packedDate, String shippedDate) {
+    this.orderNumber = orderNumber;
+    this.productCode = productCode;
+    this.replacedProductCode = replacedProductCode;
+    this.quantityShipped = quantityShipped;
+    this.cost = cost;
+    this.packedDate = packedDate;
+    this.shippedDate = shippedDate;
+  }
 
   public void checkMandatoryFields() {
     if (isBlank(this.productCode) ||
