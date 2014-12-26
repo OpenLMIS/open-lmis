@@ -419,7 +419,8 @@ public class RnrLineItem extends LineItem {
     this.roundToZero = product.getRoundToZero();
     this.packRoundingThreshold = product.getPackRoundingThreshold();
     this.product = product.getName();
-    this.fullSupply = product.getFullSupply();
+    // use the program product setting instead of the one on the product table.
+    this.fullSupply = programProduct.isFullSupply();
     this.productDisplayOrder = programProduct.getDisplayOrder();
   }
 

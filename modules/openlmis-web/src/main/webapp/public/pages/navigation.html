@@ -60,19 +60,247 @@
     </li>
 
     <li ng-show="hasReportingPermission()">
-      <a id="reports-menu" href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
+      <a id="report-menu" href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
     </li>
 
     <li>
-      <a id="distributions-menu" href="javascript: void(0)" openlmis-message="link.distributions"></a>
+      <a id="equipment-menu" href="javascript: void(0)">Equipments</a>
+      <div class="submenu">
+        <ul>
+          <li>
+            <a ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')" id="equipment-inventory"
+               href="/public/pages/admin/equipment/inventory/index.html">Equipment Inventory</a>
+          </li>
+          <li ng-show="hasPermission('SERVICE_VENDOR_RIGHT')">
+            <a href="/public/pages/admin/equipment/my-requests/index.html">Maintenance Requests</a>
+          </li>
+          <li ng-show="hasPermission('SERVICE_VENDOR_RIGHT')">
+            <a href="/public/pages/admin/equipment/my-contracts/index.html">Service Contracts</a>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')">
+      <a id="vaccine">Vaccine</a>
 
       <div class="submenu">
         <ul>
+          <li>
+            <a href="/public/pages/vaccine/report/index.html">Create / Submit Report</a>
+          </li>
           <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
             <a id="manage-distribution" href="/public/pages/logistics/distribution/index.html#/manage"
-               openlmis-message="link.manage"></a>
+                >Manage Distribution</a>
           </li>
           <li class="beak"></li>
+          <!--<li>-->
+          <!--<a href="/public/pages/vaccine/view/index.html">View Report</a>-->
+          <!--</li>-->
+          <li>
+            <a href="/public/pages/vaccine/index.html#/vaccine-report">Vaccine report - POC</a>
+          </li>
+
+          <li class="has-children">
+            <a href="javascript: void(0);">Inventory</a>
+
+            <div class="submenu">
+              <ul>
+                <li>
+                  <a href="/public/pages/vaccine/index.html#/receive">Receive at Central</a>
+                </li>
+                <li>
+                  <a href="/public/pages/vaccine/index.html#/distribute">Distribute to Regions</a>
+                </li>
+
+                <li class="beak"></li>
+              </ul>
+            </div>
+          </li>
+          <li class="has-children">
+            <a href="javascript: void(0);">Manage</a>
+
+            <div class="submenu">
+              <ul>
+                <li>
+                  <a href="/public/pages/vaccine/index.html#/targets">Targets</a>
+                </li>
+                <li>
+                  <a href="/public/pages/vaccine/index.html#/quantification">Quantification</a>
+                </li>
+
+                <li class="beak"></li>
+              </ul>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </li>
+    <li>
+      <a id="reports-menu" href="javascript: void(0)" openlmis-message="link.reports"></a>
+
+      <div class="submenu">
+        <ul>
+          <li class="has-children">
+            <a href="javascript: void(0);">Admin</a>
+
+            <div class="submenu">
+              <ul>
+                <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
+                  <a href="/public/pages/reports/facility-list/index.html">Facility List</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_MAILING_LABEL_REPORT')">
+                  <a href="/public/pages/reports/mailing-labels/index.html">Facility List (V2)</a>
+                </li>
+
+
+                <li ng-show="hasPermission('VIEW_USER_SUMMARY_REPORT')">
+                  <a href="/public/pages/reports/user-summary/index.html">User Summary Report</a>
+                </li>
+
+                <li class="beak"></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="has-children">
+            <a href="javascript: void(0);">Consumption</a>
+
+            <div class="submenu">
+              <ul>
+                <li ng-show="hasPermission('VIEW_DISTRICT_CONSUMPTION_REPORT')">
+                  <a href="/public/pages/reports/aggregate-consumption/index.html">Aggregate Consumption</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_AVERAGE_CONSUMPTION_REPORT')">
+                  <a href="/public/pages/reports/average-consumption/index.html">Consumption Average by
+                    Product</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_DISTRICT_CONSUMPTION_REPORT')">
+                  <a href="/public/pages/reports/district-consumption/index.html">District Consumption
+                    Comparison</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="has-children">
+            <a href="javascript: void(0);">Equipment Reports</a>
+
+            <div class="submenu">
+              <ul>
+                <li ng-show="hasPermission('VIEW_LAB_EQUIPMENT_LIST_REPORT')">
+                  <a href="/public/pages/reports/lab-equipment-list/index.html">Lab Equipment list</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_FUNDING_SOURCE')">
+                  <a href="/public/pages/reports/lab-equipments-by-donor/index.html">Lab Equipments by Funding
+                    Source</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT')">
+                  <a href="/public/pages/reports/lab-equipments-by-location/index.html">Lab Equipments by
+                    location</a>
+                </li>
+                <li class="beak"></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="has-children">
+            <a href="javascript: void(0);">Order Fulfillment</a>
+
+            <div class="submenu">
+              <ul>
+
+                <li ng-show="hasPermission('VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT')">
+                  <a href="/public/pages/reports/district-financial-summary/index.html">District Order Compilation</a>
+                </li>
+
+                <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_SUMMARY_REPORT')">
+                  <a href="/public/pages/reports/order-fill-rate-summary/index.html">Order Fill Rate Report Summary</a>
+                </li>
+
+                <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_REPORT')">
+                  <a href="/public/pages/reports/order-fill-rate/index.html">Order Fill Rate Report by Facility</a>
+                </li>
+
+                <li ng-show="hasPermission('VIEW_ORDER_REPORT')">
+                  <a href="/public/pages/reports/order/index.html">Order Report</a>
+                </li>
+
+                <li ng-show="hasPermission('VIEW_RNR_FEEDBACK_REPORT')">
+                  <a href="/public/pages/reports/rnr-feedback/index.html">Report and Requisition Feedback</a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
+          <li class="has-children">
+            <a href="javascript: void(0);">Regimen / Patient</a>
+
+            <div class="submenu">
+              <ul>
+                <li ng-show="hasPermission('VIEW_REGIMEN_SUMMARY_REPORT')">
+                  <a href="/public/pages/reports/aggregate-regimen/index.html">Aggregate Regimen</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_REGIMEN_SUMMARY_REPORT')">
+                  <a href="/public/pages/reports/regimen-summary/index.html">Regimen Summary</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_REGIMEN_SUMMARY_REPORT')">
+                  <a href="/public/pages/reports/regimen-distribution/index.html">Regimen Distribution by District</a>
+                </li>
+                <li class="beak"></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="has-children">
+            <a href="javascript: void(0);">Report Status</a>
+
+            <div class="submenu">
+              <ul>
+                <li ng-show="hasPermission('VIEW_NON_REPORTING_FACILITIES')">
+                  <a href="/public/pages/reports/non-reporting/index.html">Non Reporting Facilities</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_REPORTING_RATE_REPORT')">
+                  <a href="/public/pages/reports/reporting-rate/index.html">Reporting Rate</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="has-children">
+            <a href="javascript: void(0);">Stock Keeping</a>
+
+            <div class="submenu">
+              <ul>
+                <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
+                  <a href="/public/pages/reports/adjustment-summary/index.html">Adjustment Summary</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_STOCKED_OUT_REPORT')">
+                  <a href="/public/pages/reports/stocked-out/index.html">Stocked Out</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+                  <a href="/public/pages/reports/stock-imbalance/index.html">Stock Imbalance by Facility</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_SUMMARY_REPORT')">
+                  <a href="/public/pages/reports/summary/index.html">Summary Report</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_SUPPLY_STATUS_REPORT')">
+                  <a href="/public/pages/reports/supply-status/index.html">Supply Status by Facility</a>
+                </li>
+                <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+                  <a href="/public/pages/reports/stock-status/index.html">Stock Status By Location</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li ng-show="hasPermission('VIEW_REPORT')">
+            <a id="other-reports-menu" href="/public/pages/report/index.html">Other</a>
+          </li>
+          <li class="beak"></li>
+
+
         </ul>
       </div>
     </li>
@@ -111,9 +339,17 @@
                   <a id='configureEdi' href="/public/pages/admin/edi/index.html#/configure-system-settings"
                      openlmis-message="link.admin.system.settings"></a>
                 </li>
+                <li ng-show="hasPermission('MANAGE_SETTING')">
+                    <a href="/public/pages/admin/setting/index.html"
+                       openlmis-message="link.admin.configure.setting"></a>
+                </li>
                 <li class="beak"></li>
               </ul>
             </div>
+          </li>
+
+          <li ng-show="hasPermission('MANAGE_SETTING')">
+              <a href="/public/pages/admin/sms/index.html">Messages</a>
           </li>
 
           <li class="has-children">
@@ -165,12 +401,103 @@
               </ul>
             </div>
           </li>
+                  <li class="has-children">
+                      <a id="manage-equipment-option" href="/public/pages/admin/equipment/manage/index.html" >Equipment</a>
+                      <div class="submenu">
+                          <ul>
+                              <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                  <a href="/public/pages/admin/equipment/type/index.html">Equipment Types</a>
+                              </li>
+                              <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                  <a href="/public/pages/admin/equipment/manage/index.html">Equipment List</a>
+                              </li>
+                            <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                              <a href="/public/pages/admin/equipment/program-equipment-products/index.html">Products for Equipments</a>
+                            </li>
+                            <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                              <a href="/public/pages/admin/equipment/service-type/index.html">
+                                <span id="equipment-service-type">Service Types</span>
+                              </a>
+                            </li>
+                            <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                              <a href="/public/pages/admin/equipment/vendor/index.html">
+                                <span id="service-vendor">Service Vendors</span>
+                              </a>
+                            </li>
+                            <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                              <a href="/public/pages/admin/equipment/service-contract/index.html">
+                                <span id="service-contract">Service Contracts</span>
+                              </a>
+                            </li>
+                            <li ng-show="hasPermission('MANAGE_DONOR')">
+                              <a href="/public/pages/admin/equipment/donors/index.html">
+                                <span id="manage-donor">Donors</span>
+                              </a>
+                            </li>
+                          </ul>
+                      </div>
+                  </li>
+
+                  <li class="has-children" ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')" >
+                    <a  id="vaccine-admin"  >Vaccine</a>
+                    <div class="submenu">
+                      <ul>
+                        <li>
+                          <a href="/public/pages/vaccine/admin/protocol/index.html">Protocols</a>
+                        </li>
+                        <li>
+                          <a href="/public/pages/vaccine/admin/protocol/index.html#/template">Logistics Template</a>
+                        </li>
+                        <li>
+                          <a href="/public/pages/vaccine/admin/protocol/index.html#/disease">Diseases</a>
+                        </li>
+                        <li>
+                          <a href="/public/pages/vaccine/index.html#/manufacturer">Manufacturer</a>
+                        </li>
+                        <li >
+                          <a href="/public/pages/vaccine/index.html#/transaction-type">Transaction Type</a>
+                        </li>
+                        <li>
+                          <a href="/public/pages/vaccine/index.html#/received-status">Received Status</a>
+                        </li>
+                        <li>
+                          <a href="/public/pages/vaccine/index.html#/vaccine-storage">Vaccine Storage</a>
+                        </li>
+                        <li>
+                          <a href="/public/pages/vaccine/admin/protocol/index.html#/storage-type">Storage Type</a>
+                        </li>
+                        <li>
+                          <a href="/public/pages/vaccine/admin/protocol/index.html#/temperature">Temperature</a>
+                        </li>
+                        <li>
+                          <a href="/public/pages/vaccine/admin/protocol/index.html#/countries">Countries</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="has-children">
+                      <a id="manage-help-option" href="/public/pages/help/helpTopic/index.html" >Help</a>
+                      <div class="submenu">
+                          <ul>
+                          <li >
+                              <a href="/public/pages/help/helpTopic/index.html">Help Topics</a>
+                          </li>
+                          <li >
+                              <a href="/public/pages/help/helpContent/index.html">Help Contents</a>
+                          </li>
+                          </ul>
+                      </div>
+                  </li>
           <li class="beak"></li>
         </ul>
       </div>
 
+    <li ng-show="hasPermission('ACCESS_ILS_GATEWAY')">
+        <a href="/public/pages/ils-gateway/index.html#/dashboard">ILS Gateway</a>
     </li>
-
+    <li ng-show="hasPermission('VIEW_DASHBOARD_POC')">
+        <a href="/public/pages/dashboard/index.html#/dashboard" openlmis-message="link.dashboard"></a>
+    </li>
   </ul>
 </div>
 <div class="navigation-locale-bar">
