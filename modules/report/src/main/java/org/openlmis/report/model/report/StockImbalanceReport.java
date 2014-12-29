@@ -21,6 +21,7 @@ import javax.persistence.Column;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StockImbalanceReport implements ReportData {
+    private String facilityType;
     private String facility;
     private String districtName;
     private String zoneName;
