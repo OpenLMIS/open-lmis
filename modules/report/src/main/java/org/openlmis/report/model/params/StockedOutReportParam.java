@@ -31,7 +31,7 @@ public class StockedOutReportParam
   private Long programId;
   private int rgroupId;
   private int productCategoryId;
-  private int productId;
+  private String productId;
   private Long facilityTypeId;
   private int facilityId;
   private int zoneId;
