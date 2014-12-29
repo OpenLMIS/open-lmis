@@ -113,7 +113,17 @@
         </div>
     </div>
 </script>
-
+<!--product multi category-->
+<script type="text/ng-template" id="filter-product-category-multi-template">
+    <div>
+        <label class="labels">Product Category<span ng-show="requiredFilters.productCategory" class="label-required">*</span></label><div>
+        <select ui-select2="wideOption" multiple data-placeholder="-- All product Categories --" class="input-large" ng-model="filter.productCategory" ng-change="filterChanged();">
+            <option  ng-repeat="option in productCategories" value="{{ option.id }}" ng-selected="filter.productCategory == option.id">{{ option.name }}</option>
+        </select>
+    </div>
+    </div>
+</script>
+        <!--end-->
 <script type="text/ng-template" id="filter-product-template">
     <div>
         <label class="labels">Product <span ng-show="requiredFilters.product" class="label-required">*</span></label><div>

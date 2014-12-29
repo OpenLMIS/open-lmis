@@ -28,7 +28,8 @@ public class StockImbalanceReportParam
 //  private int productId;
 private String productId;
   private String product;
-  private int productCategoryId;
+//  private int productCategoryId;
+    private String productCategoryId;
   private String productCategory;
   private String facility;
   private int programId;

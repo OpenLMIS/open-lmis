@@ -52,8 +52,9 @@ public class StockImbalanceQueryBuilder {
                 WHERE("facility_id = #{filterCriteria.facility}::numeric");
             }
 
-            if(filter.getProductCategoryId() != 0 && filter.getProductCategoryId() != -1 ){
-                WHERE("categoryid = #{filterCriteria.productCategoryId}");
+            if(!filter.getProductCategoryId().equals("0") ){
+//                WHERE("categoryid = #{filterCriteria.productCategoryId}");
+                WHERE("categoryid= ANY(#{filterCriteria.productCategoryId}::int[])");
             }
 
 //            if(filter.getProductId() != 0 && filter.getProductId() != -1){
