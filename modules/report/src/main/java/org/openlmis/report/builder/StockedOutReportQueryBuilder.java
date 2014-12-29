@@ -56,11 +56,14 @@ public class StockedOutReportQueryBuilder {
             if(filter.getRgroupId() != 0 && filter.getRgroupId() != -1){
                 WHERE("rgid = #{filterCriteria.rgroupId}");
             }
-            if(filter.getProductId() > 0){
-                WHERE("productid= #{filterCriteria.productId}");
-            } else if (filter.getProductId() == 0) {
+
+            if(!filter.getProductId().equals("0")){
+                WHERE("productid = ANY(array" + filter.getProductId()+"::INT[])");
+            }
+            else if(filter.getProductId().equals("-1")) {
                 WHERE("indicator_product = true");
             }
+
             if(filter.getProgramId() != 0 && filter.getProgramId() != -1){
                  WHERE("programid = #{filterCriteria.programId}");
             }
