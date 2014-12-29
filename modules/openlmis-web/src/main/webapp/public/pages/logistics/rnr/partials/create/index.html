@@ -29,15 +29,16 @@
             </li>
         </ul>
     <span class="pull-right">
-      <a full-screen href="" class="btn">
-          <i class="icon-resize-full"></i>
+      <a id="resizeViewButton" full-screen href="" class="btn">
+        <i class="icon-resize-full"></i>
       </a>
     </span>
     <span class="pull-right print-button">
-      <a class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf" openlmis-message="button.print"
+      <a id="printButton" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf"
+         openlmis-message="button.print"
          target="_blank"></a>
     </span>
-    </div>
+  </div>
 
     <div ng-hide="programRnrColumnList"></div>
     <form name="saveRnrForm" action="#" id="rnr-form" novalidate>
@@ -54,10 +55,11 @@
       <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-full-supply.html'"></ng-include>
     </span>
 
-        <div set-focus>
-            <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
-                                 check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
-        </div>
+    <div set-focus>
+      <openlmis-pagination ng-show="page[visibleTab].length" num-pages="numberOfPages" current-page="currentPage"
+                           max-size="10"
+                           check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
+    </div>
 
         <div form-toolbar id="action_buttons" class="action-buttons">
             <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>

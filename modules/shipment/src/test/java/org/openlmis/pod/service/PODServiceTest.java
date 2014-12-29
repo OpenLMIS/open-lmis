@@ -43,7 +43,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.core.domain.RightName.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
 
 @Category(UnitTests.class)
@@ -95,8 +95,7 @@ public class PODServiceTest {
   @Test
   public void shouldCreatePODFromPackedOrder() throws Exception {
     long orderId = 4L;
-    OrderPOD orderPOD = new OrderPOD(orderId, orderNumber , 8L);
-    orderPOD.setOrderNumber(orderNumber);
+    OrderPOD orderPOD = new OrderPOD(orderId, orderNumber, 8L);
     OrderPOD spyOrderPOD = spy(orderPOD);
 
     doNothing().when(podService).checkPermissions(spyOrderPOD);
@@ -120,8 +119,7 @@ public class PODServiceTest {
   @Test
   public void shouldCreatePODFromReleasedOrder() throws Exception {
     long orderId = 6L;
-    OrderPOD orderPOD = new OrderPOD(orderId, orderNumber ,8L);
-    orderPOD.setOrderNumber(orderNumber);
+    OrderPOD orderPOD = new OrderPOD(orderId, orderNumber, 8L);
     OrderPOD spyOrderPOD = spy(orderPOD);
 
     doNothing().when(podService).checkPermissions(spyOrderPOD);
@@ -265,7 +263,9 @@ public class PODServiceTest {
 
     podService.submit(podId, userId);
 
-    verify(orderService).updateOrderStatus(new Order(3L, RECEIVED));
+    Order order = new Order(3L, RECEIVED);
+    order.setOrderNumber(orderNumber);
+    verify(orderService).updateOrderStatus(order);
   }
 
   @Test

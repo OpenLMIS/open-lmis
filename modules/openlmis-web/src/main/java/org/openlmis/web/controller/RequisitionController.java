@@ -39,8 +39,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
-import static org.openlmis.core.domain.Right.CONVERT_TO_ORDER;
+import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.RightName.CONVERT_TO_ORDER;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
 import static org.openlmis.rnr.service.RequisitionService.NUMBER_OF_PAGES;

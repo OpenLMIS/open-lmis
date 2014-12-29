@@ -16,7 +16,7 @@ import static org.junit.Assert.assertThat;
 
 public class ShipmentLineItemDTOTest {
 
-  private String orderId = "1l";
+  private String orderId = "1";
   private String orderNumber = "123";
   private String concatenatedOrderId = "EM000001R";
   private String facilityCode = "F001";
@@ -41,7 +41,7 @@ public class ShipmentLineItemDTOTest {
 
     ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO(
        orderNumber ,
-       orderId,
+       Long.parseLong(orderId),
        concatenatedOrderId,
        facilityCode,
        programCode,
@@ -95,7 +95,7 @@ public class ShipmentLineItemDTOTest {
   public void shouldThrowErrorIfQuantityIsMissing() throws Exception {
     ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO(
         orderNumber ,
-        orderId,
+        Long.parseLong(orderId),
         concatenatedOrderId,
         null,
         programCode,

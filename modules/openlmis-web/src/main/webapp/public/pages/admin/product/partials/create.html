@@ -1,310 +1,372 @@
 <!--
-  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
   ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
   ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
-  ~
-  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
+
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-<h2>{{title}}</h2>
 
-<div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
+  <div ng-hide="product.id">
+    <h2 id="addNewProductHeader" openlmis-message="header.product.add.new"></h2>
+  </div>
 
-<!-- Add Product -->
-<form ng-submit="createProduct()" id="createProductForm" name="createProductForm"
-      novalidate select2-blur>
+  <div ng-show="product.id">
+    <h2 id="editProductHeader" openlmis-message="header.product.edit"></h2>
+  </div>
 
-<div>
-<h3>Basic Information</h3>
+  <form id="productForm" name="productForm" novalidate>
 
-<div class="row">
+    <div class="app-form" id="productFormGroup">
 
-<fieldset class="span4">
-<!-- Product code-->
-<div class="form-cell">
-    <label for="code">Code<span
-            class="label-required"> *</span></label>
+      <div class="form-group">
+      <h3 id="basicInformationLabel" openlmis-message="label.basicInformation"></h3>
 
-    <div class="form-field" style="width: 40%;">
+      <div class="form-row clearfix row-fluid">
+        <div class="span4">
+          <div class="form-cell">
+            <label id="productCodeLabel">
+              <span openlmis-message="header.product.code"></span>
+              <span class="label-required"> *</span>
+            </label>
 
-        <input ng-model="product.code" name="code" id="code" type="text"
-               maxlength="50"
-               ng-required="true"/>
-        <span class="field-error"
-              ng-show="createProductForm.code.$error.required && showError"
-              openlmis-message="missing.value">
-        </span>
-    </div>
-</div>
-
-<!-- Product Pack Size-->
-<div class="form-cell">
-    <label for="packSize">Pack Size<span
-            class="label-required"> *</span></label>
-
-    <div class="form-field" style="width: 40%;">
-        <input ng-model="product.packSize" name="packSize" id="packSize" type="number"
-               ng-required="true"/>
-        <span class="field-error"
-              ng-show="createProductForm.packSize.$error.required && showError"
-              openlmis-message="missing.value">
-        </span>
-    </div>
-</div>
-
-<!-- product name-->
-<div class="form-cell">
-    <label for="primaryName">Product Name<span
-            class="label-required"> *</span></label>
-
-    <div class="form-field" style="width: 40%;">
-        <input ng-model="product.primaryName" name="primaryName" id="primaryName" type="text"
-               maxlength="150"
-               ng-required="true"/>
-        <span class="field-error"
-              ng-show="createProductForm.primaryName.$error.required && showError"
-              openlmis-message="missing.value">
-        </span>
-    </div>
-</div>
-
-<!-- Dispensing Units-->
-<div class="form-cell">
-    <label for="dispensingUnit">Dispensing Unit<span
-            class="label-required"> *</span></label>
-
-    <div class="form-field" style="width: 40%;">
-        <input ng-model="product.dispensingUnit" name="dispensingUnit" id="dispensingUnit"
-               type="text"
-               maxlength="20"
-               ng-required="true"/>
-        <span class="field-error"
-              ng-show="createProductForm.dispensingUnit.$error.required && showError"
-              openlmis-message="missing.value">
-        </span>
-
-    </div>
-</div>
-</fieldset>
-<fieldset class="span4">
-<!-- product strength-->
-<div class="form-cell">
-    <label for="strength">Strength</label>
-    <div class="form-field" style="width: 40%;">
-        <input ng-model="product.strength" name="strength" id="strength" type="text"
-               maxlength="50"/>
-        <span class="field-error"
-              ng-show="createProductForm.strength.$error.required && showError"
-              openlmis-message="missing.value">
-        </span>
-    </div>
-</div>
-
-<!-- Dosage Units-->
-<div class="form-cell">
-    <label for="dosageUnit">Dosage Unit</label>
-
-    <div class="form-field" style="width: 40%;">
-
-        <select style="width:200px;" name="dosageUnit" id="dosageUnit" ng-model="product.dosageUnitId"
-                ng-options="option.id as option.code for option in dosageUnits" ng-required="true">
-
-        </select>
-           <span class="field-error"
-                 ng-show="createProductForm.dosageUnit.$error.required && showError"
-                 openlmis-message="missing.value">
-            </span>
-    </div>
-</div>
-
-<!-- Product Form-->
-<div class="form-cell">
-    <label for="formid">Product Form</label>
-
-    <div class="form-field" style="width: 40%;">
-
-        <select style="width:200px;" name="formid" id="formid" ng-model="product.formId"
-                ng-options="option.id as option.code for option in productForms" ng-required="true">
-
-        </select>
-       <span class="field-error"
-             ng-show="createProductForm.formid.$error.required && showError"
-             openlmis-message="missing.value">
-        </span>
-    </div>
-</div>
-
-<!-- Product Groups-->
-<div class="form-cell">
-    <label for="productGroupId">Product Group</label>
-
-    <div class="form-field" style="width: 40%;">
-
-        <select style="width:200px;" ng-model="product.productGroupId" id="productgroupid" name="productgroupid"
-                ng-options="option.id as option.name for option in productGroups" ng-required="true">
-
-        </select>
-       <span class="field-error"
-             ng-show="createProductForm.productgroupid.$error.required && showError"
-             openlmis-message="missing.value">
-        </span>
-    </div>
-</div>
-</fieldset>
-<fieldset class="span4">
-
-    <!-- Type-->
-    <div class="form-cell">
-        <label for="type">Type</label>
-
-        <div class="form-field" style="width: 40%;">
-            <input ng-model="product.type" name="type" id="type" type="text"
-                   maxlength="20"/>
-        <span class="field-error"
-              ng-show="createProductForm.type.$error.required && showError"
-              openlmis-message="missing.value">
-        </span>
+            <div class="form-field">
+              <input ng-model="product.code" name="code" id="code" type="text" maxlength="50"
+                     ng-required="true"/>
+              <span class="field-error" ng-show="!product.code && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
         </div>
-    </div>
+        <div class="span8">
+          <div class="form-cell">
+            <label id="productPrimaryNameLabel">
+              <span openlmis-message="header.product.primary.name"></span>
+              <span class="label-required"> *</span>
+            </label>
 
-    <!-- Doses Per Dispensing Units-->
-    <div class="form-cell">
-        <label for="dosesPerDispensingUnit">Doses Per Dispensing Unit<span
-                class="label-required"> *</span></label>
-
-        <div class="form-field" style="width: 40%;">
-            <input ng-model="product.dosesPerDispensingUnit" name="dosesPerDispensingUnit" id="dosesPerDispensingUnit"
-                   type="text"
-                   maxlength="20"
-                   ng-required="true"/>
-            <span class="field-error"
-                  ng-show="createProductForm.dosesPerDispensingUnit.$error.required && showError"
-                  openlmis-message="missing.value">
-            </span>
-
+            <div class="form-field">
+              <input ng-model="product.primaryName" name="primaryName" id="primaryName" type="text"
+                     maxlength="150"
+                     ng-required="true"/>
+              <span class="field-error" ng-show="!product.primaryName && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- Thresh hold-->
-    <div class="form-cell">
-        <label for="packRoundingThreshold">Threshold<span
-                class="label-required"> *</span></label>
+      <div class="form-row clearfix row-fluid">
+        <div class="span4">
+          <div class="form-cell">
+            <label id="productTypeLabel" for="type" openlmis-message="label.product.type"></label>
 
-        <div class="form-field" style="width: 40%;">
-            <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold"
-                   type="number"
-                   ng-required="true"/>
-        <span class="field-error"
-              ng-show="createProductForm.packRoundingThreshold.$error.required && showError"
-              openlmis-message="missing.value">
-        </span>
+            <div class="form-field">
+              <input ng-model="product.type" name="type" id="type" type="text" maxlength="100"/>
+            </div>
+          </div>
         </div>
-    </div>
+        <div class="span8">
+          <div class="form-cell">
+            <label id="productFullNameLabel" for="fullName" openlmis-message="label.product.fullName"></label>
 
-    <!-- Product Full Supply-->
-    <div class="form-cell">
-        <div class="form-field">
-            <table>
-                <tr>
-                    <td><input ng-model="product.fullSupply" type="checkbox"/>
-                    </td>
-                    <td>&nbsp;</td>
-                    </td>
-                    <td>Full Supply</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input ng-model="product.tracer" type="checkbox" >
-                    </td>
-                    <td>&nbsp;</td>
-                    </td>
-                    <td>Tracer</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input ng-model="product.active" checked="checked" type="checkbox">
-                    </td>
-                    <td>&nbsp;</td>
-                    </td>
-                    <td>Active</td>
-                </tr>
-                <tr>
-                    <td>
-                        <input ng-model="product.roundToZero" type="checkbox">
-                    </td>
-                    <td>&nbsp;</td>
-                    </td>
-                    <td>Round to Zero</td>
-                </tr>
-
-
-            </table>
+            <div class="form-field">
+              <input ng-model="product.fullName" name="fullName" id="fullName" type="text" maxlength="250"/>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="form-row clearfix row-fluid">
+        <div class="span4">
+          <div class="form-cell">
+            <label id="productGroupLabel" for="productGroup" openlmis-message="label.product.group"></label>
+
+            <div class="form-field">
+              <select class="ui-select-width" id="productGroup" ui-select2 ng-model="selectedProductGroupCode"
+                      ng-options="productGroup.code as productGroup.name for productGroup in productGroups | orderBy: 'name'">
+                <option value="" openlmis-message="placeholder.select.product.group"></option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="span8">
+          <div class="form-cell">
+            <label id="productDescriptionLabel" for="description" openlmis-message="label.product.description"></label>
+
+            <div class="form-field">
+              <input ng-model="product.description" name="description" id="description" type="text"
+                     maxlength="250"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row clearfix row-fluid">
+        <div class="span4">
+          <div class="form-cell">
+            <label id="productFormLabel" for="form" openlmis-message="label.product.form"></label>
+
+            <div class="form-field">
+              <select class="ui-select-width" id="form" ui-select2 ng-model="selectedProductFormCode"
+                      ng-options="productForm.code as productForm.code for productForm in productForms | orderBy: 'code'">
+                <option value="" openlmis-message="placeholder.select.product.form"></option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="span2">
+          <div class="form-cell">
+            <label id="productStrengthLabel" for="strength" openlmis-message="label.product.strength"></label>
+
+            <div class="form-field">
+              <input ng-model="product.strength" name="strength" id="strength" type="text" maxlength="14"/>
+            </div>
+          </div>
+        </div>
+        <div class="span2">
+          <div class="form-cell">
+            <label id="dosageUnitLabel" for="dosageUnit" openlmis-message="label.product.dosageUnit"></label>
+
+            <div class="form-field">
+              <select class="ui-select-width" id="dosageUnit" ui-select2 ng-model="selectedProductDosageUnitCode"
+                      ng-options="dosageUnit.code as dosageUnit.code for dosageUnit in dosageUnits | orderBy: 'code'">
+                <option value="" openlmis-message="placeholder.select.product.dosageUnit"></option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row clearfix row-fluid">
+        <div class="span4">
+          <div class="form-cell">
+            <label id="productDispensingUnitLabel">
+              <span openlmis-message="label.product.dispensingUnit"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <input ng-model="product.dispensingUnit" name="dispensingUnit" id="dispensingUnit" type="text"
+                     maxlength="20"
+                     ng-required="true"/>
+              <span class="field-error" ng-show="!product.dispensingUnit && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+        <div class="span2">
+          <div class="form-cell">
+            <label id="productDosesPerDispensingUnitLabel" for="dosesPerDispensingUnit">
+              <span openlmis-message="label.product.dosesPerDispensingUnit"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <div class="position-relative">
+                <input ng-model="product.dosesPerDispensingUnit" name="dosesPerDispensingUnit"
+                       id="product.dosesPerDispensingUnit" class="right-justified"
+                       type="text" maxlength="5" ng-required="true" numeric-validator="positiveInteger"/>
+                <span class="rnr-form-error" style="display:none;" id="dosesPerDispensingUnit"
+                      openlmis-message="error.number.only"></span>
+              </div>
+              <span class="field-error" ng-show="!product.dosesPerDispensingUnit && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+        <div class="span2">
+          <div class="form-cell">
+            <label id="productPackSizeLabel" for="product.packSize">
+              <span openlmis-message="label.product.packSize"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <div class="position-relative">
+                <input ng-model="product.packSize" name="packSize" id="product.packSize" type="text"
+                       maxlength="5" class="right-justified"
+                       ng-required="true" numeric-validator="positiveInteger"/>
+                <span class="rnr-form-error" style="display:none;" id="packSize"
+                      openlmis-message="error.number.only"></span>
+              </div>
+              <span class="field-error" ng-show="!product.dosesPerDispensingUnit && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+        <div class="span2">
+          <div class="form-cell">
+            <label id="productPackRoundingThresholdLabel" for="packRoundingThreshold">
+              <span openlmis-message="label.product.packRoundingThreshold"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <div class="position-relative">
+                <input ng-model="product.packRoundingThreshold" name="packRoundingThreshold"
+                       id="product.packRoundingThreshold" class="right-justified"
+                       type="text" maxlength="5" ng-required="true" numeric-validator="positiveInteger"/>
+                <span class="rnr-form-error" style="display:none;" id="packRoundingThreshold"
+                      openlmis-message="error.number.only"></span>
+              </div>
+              <span class="field-error" ng-show="!product.packRoundingThreshold && showError"
+                    openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+        <div class="span2">
+          <div class="form-cell">
+            <label id="productRoundToZeroLabel">
+              <span openlmis-message="label.product.roundToZero"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <input id="roundToZeroTrue" ng-model="product.roundToZero" type="radio" name="roundToZero"
+                     ng-value="true"
+                     ng-required="true"/>
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="roundToZeroFalse" ng-model="product.roundToZero" type="radio" name="roundToZero"
+                     ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+              <span class="field-error"
+                    ng-show="(product.roundToZero === undefined || product.roundToZero === null) && showError"
+                    openlmis-message="select.value"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row clearfix row-fluid">
+        <div class="span2">
+          <div class="form-cell">
+            <label id="productActiveLabel">
+              <span openlmis-message="label.product.active"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <input id="activeTrue" ng-model="product.active" type="radio" name="active" ng-value="true"
+                     ng-required="true"/>
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="activeFalse" ng-model="product.active" type="radio" name="active" ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+              <span class="field-error"
+                    ng-show="(product.active === undefined || product.active === null) && showError"
+                    openlmis-message="select.value"></span>
+            </div>
+          </div>
+        </div>
+        <div class="span2">
+          <div class="form-cell">
+            <label id="productFullSupplyLabel">
+              <span openlmis-message="label.product.fullSupply"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <input id="fullSupplyTrue" ng-model="product.fullSupply" type="radio" name="fullSupply"
+                     ng-value="true"
+                     ng-required="true"/>
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="fullSupplyFalse" ng-model="product.fullSupply" type="radio" name="fullSupply"
+                     ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+              <span class="field-error"
+                    ng-show="(product.fullSupply === undefined || product.fullSupply === null) && showError"
+                    openlmis-message="select.value"></span>
+            </div>
+          </div>
+        </div>
+        <div class="span2">
+          <div class="form-cell">
+            <label id="productTracerLabel">
+              <span openlmis-message="label.product.tracer"></span>
+              <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+              <input id="tracerTrue" ng-model="product.tracer" type="radio" name="tracer" ng-value="true"
+                     ng-required="true"/>
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="tracerFalse" ng-model="product.tracer" type="radio" name="tracer" ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+              <span class="field-error"
+                    ng-show="(product.tracer === undefined || product.tracer === null) && showError"
+                    openlmis-message="select.value"></span>
+            </div>
+          </div>
+        </div>
+        <div class="span2">
+          <div class="form-cell">
+            <label id="productArchivedLabel" openlmis-message="label.product.archived"></label>
+
+            <div class="form-field">
+              <input id="archivedTrue" ng-model="product.archived" type="radio" name="archived"
+                     ng-value="true"/>
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+              <input id="archivedFalse" ng-model="product.archived" type="radio" name="archived"
+                     ng-value="false"/>
+              <strong openlmis-message="button.no"></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class="accordion">
+            <div class="pull-right control-accordion">
+              <a id="expandAll" href="" onClick="accordion.expandCollapse('expand')" openlmis-message="label.expand.all"></a>
+              &nbsp;/
+              <a id="collapseAll" href="" onClick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all"></a>
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="accordion-section">
+              <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                <span>
+                  <b>+</b>
+                  <a id="productOtherInformation" href="" openlmis-message="link.product.other.information"></a>
+                </span>
+              </div>
+              <div class="accordion-body">
+                <ng-include src="'/public/pages/admin/product/partials/other-information.html'"></ng-include>
+              </div>
+            </div>
+
+            <div class="accordion-section">
+              <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                <span>
+                  <b>+</b>
+                  <a id="programAssociation" href="" openlmis-message="link.product.programs.associated"></a>
+                </span>
+              </div>
+              <div class="accordion-body">
+                <ng-include src="'/public/pages/admin/product/partials/programs-associated.html'"></ng-include>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div form-toolbar id="action_buttons" class="action-buttons">
+        <div class="form-cell button-row">
+          <input id="saveButton" type="submit" class="btn btn-primary save-button" openlmis-message="button.save"
+                 ng-click="save()"/>
+          <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                 ng-click="cancel()"/>
+        </div>
+        <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+      </div>
     </div>
-</fieldset>
+  </form>
 </div>
-
-<!--Program Association-->
-<div class="form-group">
-    <h3>Program Association</h3>
-
-    <table border="0">
-        <tr>
-            <th style="width:200px;text-align: left;">Program</th>
-            <th style="width:50px"></th>
-            <th>R&R Display Order</th>
-            <th>Category</th>
-            <th style="text-align: left; width:200px;">Price Per Pack</th>
-            <th style="text-align:left;width:200px">Doses Per Month</th>
-        </tr>
-        <tr ng-repeat="pg in product.programProducts">
-            <td>{{ pg.programName }}</td>
-            <td><input type="checkbox" ng-model="pg.active"/></td>
-
-            <td>
-
-                <input type="number" ng-required="pg.active" ng-model="pg.displayOrder"/>
-                <span ng-show="(pg.active && !pg.displayOrder)" class="label-required"><- required </span>
-            </td>
-            <td>
-
-                <select style="width:200px;" ng-model="pg.productCategoryId"
-                        ng-disabled="(!pg.active )"
-                        ng-required="(categoryPerProgramProductIsRequired && pg.active)"
-                        ng-options="option.id as option.name for option in productCategories">
-                </select>
-                <span ng-show="(pg.active && categoryPerProgramProductIsRequired && !pg.productCategoryId)"
-                      class="label-required"><- required</span>
-            </td>
-            <td>
-                <input ng-model="pg.currentPrice"
-                       type="text"/>
-            </td>
-            <td>
-                <input ng-model="pg.dosesPerMonth"
-                       type="text"/>
-            </td>
-        </tr>
-    </table>
-
-</div>
-
-<div form-toolbar id="action_buttons" class="action-buttons">
-    <div class="form-cell button-row">
-        <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-        <a ng-click="cancelAddNewProduct()" class="btn btn-cancel cancel-button"><span
-                openlmis-message="button.cancel"></span></a>
-    </div>
-    <div class="toolbar-error" id="saveErrorMsgDiv" ng-show="showError || error">{{ errorMessage }}</div>
-</div>
-
-</div>
-</form>
-
-</div>
-
-
 
 

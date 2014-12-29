@@ -91,7 +91,7 @@ public class RequisitionGroupMemberMapperIT {
   }
 
   @Test
-  public void shouldDeleteRequisitionGroupToFacilityMapping(){
+  public void shouldDeleteRequisitionGroupToFacilityMapping() {
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
 
     requisitionGroupMemberMapper.deleteMembersFor(facility);
@@ -161,7 +161,6 @@ public class RequisitionGroupMemberMapperIT {
     requisitionGroupMember.setFacility(rootFacility);
 
     requisitionGroupMemberMapper.insert(requisitionGroupMember);
-
     requisitionGroupMemberMapper.copyToVirtualFacilities(facility);
 
     List<RequisitionGroupMember> member1 = requisitionGroupMemberMapper.getAllRequisitionGroupMembersByFacility(virtualFacility1.getId());
@@ -170,5 +169,33 @@ public class RequisitionGroupMemberMapperIT {
     assertThat(member2.size(), is(1));
     List<RequisitionGroupMember> requisitionGroupMembersRoot = requisitionGroupMemberMapper.getAllRequisitionGroupMembersByFacility(rootFacility.getId());
     assertThat(requisitionGroupMembersRoot.size(), is(1));
+  }
+
+  @Test
+  public void shouldGetAllRequisitionGroupMembersByRequisitionGroupId() throws Exception {
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+    List<RequisitionGroupMember> actualMembers = requisitionGroupMemberMapper.getMembersBy(requisitionGroupMember.getRequisitionGroup().getId());
+
+    assertThat(actualMembers.size(), is(1));
+    assertThat(actualMembers.get(0).getFacility().getId(), is(requisitionGroupMember.getFacility().getId()));
+    assertThat(actualMembers.get(0).getFacility().getFacilityType().getName(), is("Warehouse"));
+    assertThat(actualMembers.get(0).getFacility().getName(), is("Apollo Hospital"));
+    assertThat(actualMembers.get(0).getFacility().getCode(), is("F10010"));
+    assertThat(actualMembers.get(0).getFacility().getEnabled(), is(true));
+    assertThat(actualMembers.get(0).getFacility().getGeographicZone().getName(), is(requisitionGroupMember.getFacility().getGeographicZone().getName()));
+  }
+
+  @Test
+  public void shouldDeleteRequisitionGroupMemberByRequisitionGroup() {
+
+    Long requisitionGroupId = requisitionGroup.getId();
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+    List<RequisitionGroupMember> members = requisitionGroupMemberMapper.getMembersBy(requisitionGroupId);
+    assertThat(members.size(), is(1));
+
+    requisitionGroupMemberMapper.deleteMemberForGroup(requisitionGroupId);
+
+    members = requisitionGroupMemberMapper.getMembersBy(requisitionGroupId);
+    assertThat(members.size(), is(0));
   }
 }

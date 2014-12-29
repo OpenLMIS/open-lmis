@@ -27,11 +27,11 @@ import java.util.List;
 @Repository
 public interface ShipmentMapper {
 
- 
-  @Insert({"INSERT INTO shipment_line_items ",
-    "(orderId, concatenatedOrderId, facilityCode, programCode, productCode, quantityOrdered,replacedProductCode, quantityShipped, cost, substitutedProductCode, substitutedProductName, substitutedProductQuantityShipped, packSize, packedDate, shippedDate, productName, dispensingUnit, productCategory, packsToShip, productCategoryDisplayOrder, productDisplayOrder, fullSupply )",
-    "VALUES",
-    "(#{orderId}, #{concatenatedOrderId}, #{facilityCode}, #{programCode}, #{productCode}, #{quantityOrdered},#{replacedProductCode}, #{quantityShipped}, #{cost}, #{substitutedProductCode}, #{substitutedProductName}, #{substitutedProductQuantityShipped}, #{packSize}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory}, #{packsToShip}, #{productCategoryDisplayOrder},#{productDisplayOrder}, #{fullSupply})"})
+  @Insert({"INSERT INTO shipment_line_items",
+    "(orderId, orderNumber, productCode, replacedProductCode, quantityShipped, cost, packedDate, shippedDate, productName, dispensingUnit, productCategory,",
+    "packsToShip, productCategoryDisplayOrder, productDisplayOrder, fullSupply) VALUES",
+    "(#{orderId}, #{orderNumber}, #{productCode}, #{replacedProductCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate}, #{productName}, #{dispensingUnit}, #{productCategory},",
+    "#{packsToShip}, #{productCategoryDisplayOrder}, #{productDisplayOrder}, #{fullSupply})"})
   @Options(useGeneratedKeys = true)
   public void insertShippedLineItem(ShipmentLineItem shipmentLineItem);
 

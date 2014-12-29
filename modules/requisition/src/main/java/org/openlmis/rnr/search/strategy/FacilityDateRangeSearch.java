@@ -24,7 +24,7 @@ import org.openlmis.rnr.service.RequisitionPermissionService;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.core.domain.RightName.VIEW_REQUISITION;
 
 /**
  * This class is a strategy to search for requisitions based on facility and date range.

@@ -8,19 +8,34 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function HeaderController($scope, localStorageService, loginConfig, $window) {
+function HeaderController($scope, localStorageService, loginConfig, ConfigSettingsByKey, $window) {
   $scope.loginConfig = loginConfig;
   $scope.user = localStorageService.get(localStorageKeys.USERNAME);
   $scope.userId = localStorageService.get(localStorageKeys.USER_ID);
 
-  if(!$scope.user) {
-    $window.location = "/public/pages/login.html";
+  var isGoogleAnalyticsEnabled  = localStorageService.get('ENABLE_GOOGLE_ANALYTICS');
+  // load this only once
+  if(isGoogleAnalyticsEnabled === null){
+
+    ConfigSettingsByKey.get({key: 'ENABLE_GOOGLE_ANALYTICS'}, function (data){
+      localStorageService.add('ENABLE_GOOGLE_ANALYTICS', data.settings.value == 'true');
+    });
+
+    ConfigSettingsByKey.get({key: 'GOOGLE_ANALYTICS_TRACKING_CODE'}, function (data){
+      localStorageService.add('GOOGLE_ANALYTICS_TRACKING_CODE', data.settings.value);
+    });
   }
+
+
 
   $scope.logout = function () {
     localStorageService.remove(localStorageKeys.RIGHT);
     localStorageService.remove(localStorageKeys.USERNAME);
-      $.each(localStorageKeys.REPORTS, function(itm,idx){
+    localStorageService.remove(localStorageKeys.USER_ID);
+    localStorageService.remove('ENABLE_GOOGLE_ANALYTICS');
+    localStorageService.remove('GOOGLE_ANALYTICS_TRACKING_CODE');
+
+    $.each(localStorageKeys.REPORTS, function(itm,idx){
 
           localStorageService.remove(idx);
       });

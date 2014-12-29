@@ -11,13 +11,13 @@
 //  Description:
 //  Freezing the top header of R&R products table upon scroll
 
-app.directive('fixedTableHeader', function ($timeout) {
+app.directive('fixedTableHeader', function ($timeout, $compile) {
   return {
     restrict: 'EA',
     link: function (scope, element) {
       var windowElement = angular.element(window);
+      var parentElement = element.closest('.parent');
       var fixedHeader = $("<div class='header-fixed'></div>");
-      var previousWidth = 0, previousHeight = 0;
       fixedHeader.hide();
 
       var cloneAndAppendTableHeader = function () {
@@ -25,6 +25,7 @@ app.directive('fixedTableHeader', function ($timeout) {
         table.append(element.find('thead').clone());
         fixedHeader.append(table);
         element.parent().append(fixedHeader);
+        fixedHeader = $compile(fixedHeader)(scope);
       };
 
       var removeLinksFromFixedHeader = function () {
@@ -34,24 +35,44 @@ app.directive('fixedTableHeader', function ($timeout) {
       $timeout(function () {
         cloneAndAppendTableHeader();
         removeLinksFromFixedHeader();
-        element.parent().scroll(function () {
-          fixedHeader.scrollLeft(element.parent().scrollLeft());
+        parentElement.scroll(function () {
+          fixedHeader.scrollLeft(parentElement.scrollLeft());
         });
+        windowElement.scrollTop(0); //Reset scroll on page refresh in firefox
       });
 
       function setWidthAndHeightFromParent() {
-        var parentWidth = element.parent().width();
-        var parentHeight = element.find('thead').height();
+        var setFixedHeaderWidth = function() {
+          fixedHeader.width(parentElement.width());
+        };
 
-        if (previousWidth != parentWidth) {
-          fixedHeader.width(parentWidth);
-          previousWidth = parentWidth;
-        }
+        var setFixedHeaderRowCellsWidth = function(fixedRow, parentRow) {
+          var fixedRowHeadCells = $(fixedRow).find('th').toArray();
+          var parentRowHeadCells = parentRow.find('th').toArray();
+          fixedRowHeadCells.forEach(function(fixedTH, thIndex) {
+            var parentTH = $(parentRowHeadCells[thIndex]);
+            $(fixedTH).width(parentTH.width());
+            $(fixedTH).css('min-width', parentTH.width());
+          });
+        };
 
-        if (previousHeight != parentHeight) {
-          fixedHeader.find('thead tr').height(parentHeight);
-          previousHeight = parentHeight;
-        }
+        var setFixedHeaderRowsWidth = function() {
+          var fixedHeaderRows = fixedHeader.find('tr').toArray();
+          var parentHeaderRows = parentElement.find('tr').toArray();
+
+
+          fixedHeaderRows.forEach(function(fixedRow, rowIndex) {
+            var parentRow = $(parentHeaderRows[rowIndex]);
+            $(fixedRow).width(parentRow.width());
+            $(fixedRow).css('min-width', parentRow.width());
+
+            setFixedHeaderRowCellsWidth(fixedRow, parentRow);
+
+          });
+        };
+
+        setFixedHeaderWidth();
+        setFixedHeaderRowsWidth();
       }
 
       var fixedHeaderHidden = true;
@@ -63,7 +84,7 @@ app.directive('fixedTableHeader', function ($timeout) {
             return;
           setWidthAndHeightFromParent();
           fixedHeader.show();
-          fixedHeader.scrollLeft(element.parent().scrollLeft());
+          fixedHeader.scrollLeft(parentElement.scrollLeft());
           fixedHeaderHidden = false;
           return;
         }

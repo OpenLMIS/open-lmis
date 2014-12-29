@@ -33,7 +33,8 @@
                               <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
                               <facility-filter class="form-cell horizontalFilters"></facility-filter>
                               <product-category-filter class="form-cell horizontalFilters" ></product-category-filter>
-                              <product-filter class="form-cell horizontalFilters"></product-filter>
+                              <!--<product-filter class="form-cell horizontalFilters"></product-filter>-->
+                                <product-multi-filter class="form-cell horizontalFilters"></product-multi-filter>
                             </div>
                          </form>
                     <div class="clearfix"></div>
@@ -58,6 +59,8 @@
                   <tr ng-repeat="row in datarows">
                     <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
                     <td data-title="'Facility Name'" style="width:150px" sortable="facility" >{{ row.facility }}</td>
+                    <td data-title="'District'" style="width:150px" sortable="districtName" >{{ row.districtName }}</td>
+                    <td data-title="'Zone'" style="width:150px" sortable="zoneName" >{{ row.zoneName }}</td>
                     <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
                     <td data-title="'AMC'" class="number" style="width:80px" sortable="amc"  >{{ row.amc | number }}</td>
                     <td data-title="'Closing Balance'" class="number" style="width:80px" sortable="physicalCount"  >{{ row.physicalCount | number }}</td>

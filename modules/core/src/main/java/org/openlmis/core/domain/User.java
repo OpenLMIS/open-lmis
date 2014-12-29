@@ -15,7 +15,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
@@ -84,6 +83,8 @@ public class User extends BaseModel implements Importable {
   private RoleAssignment reportRoles;
 
   private RoleAssignment adminRole;
+  
+  private RoleAssignment reportingRole;
 
   private Boolean verified;
 

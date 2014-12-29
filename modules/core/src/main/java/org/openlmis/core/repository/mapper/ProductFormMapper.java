@@ -14,15 +14,22 @@ import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.ProductForm;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * ProductFormMapper maps the ProductForm entity to corresponding representation in database.
  */
 @Repository
 public interface ProductFormMapper {
 
-    // Used by ProductMapper
+  // Used by ProductMapper
   @SuppressWarnings("unused")
-    @Select("SELECT * FROM product_forms WHERE id = #{id}")
-    ProductForm getById(Integer id);
+  @Select("SELECT * FROM product_forms WHERE id = #{id}")
+  ProductForm getById(Long id);
 
+  @Select("SELECT * FROM product_forms")
+  List<ProductForm> getAll();
+
+  @Select("SELECT * FROM product_forms WHERE LOWER(code) = LOWER(#{code})")
+  ProductForm getByCode(String code);
 }

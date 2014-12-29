@@ -55,7 +55,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
 import static org.openlmis.order.domain.DateFormat.*;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
@@ -277,14 +277,14 @@ public class OrderServiceTest {
       add(order2);
     }};
 
-    when(orderRepository.getOrdersForPage(2, 3, 1l, Right.VIEW_ORDER)).thenReturn(expectedOrders);
+    when(orderRepository.getOrdersForPage(2, 3, 1l, VIEW_ORDER)).thenReturn(expectedOrders);
     when(requisitionService.getFullRequisitionById(rnr1.getId())).thenReturn(rnr1);
     when(requisitionService.getFullRequisitionById(rnr2.getId())).thenReturn(rnr2);
 
-    List<Order> orders = orderService.getOrdersForPage(2, 1l, Right.VIEW_ORDER);
+    List<Order> orders = orderService.getOrdersForPage(2, 1l, VIEW_ORDER);
 
     assertThat(orders, is(expectedOrders));
-    verify(orderRepository).getOrdersForPage(2, 3, 1l, Right.VIEW_ORDER);
+    verify(orderRepository).getOrdersForPage(2, 3, 1l, VIEW_ORDER);
     verify(requisitionService).getFullRequisitionById(rnr1.getId());
     verify(requisitionService).getFullRequisitionById(rnr2.getId());
   }

@@ -188,7 +188,7 @@ public class VisitInformationPage extends DistributionTab {
     verifiedByTitleField.sendKeys(Keys.TAB);
   }
 
-  public void enterVisitDateAsFirstOfCurrentMonth() {
+  public void enterVisitDateAsCurrentDate() {
     testWebDriver.waitForElementToAppear(visitDateField);
     visitDateField.click();
     testWebDriver.waitForElementToAppear(calender);
@@ -251,24 +251,6 @@ public class VisitInformationPage extends DistributionTab {
     removeFocusFromElement();
   }
 
-  public void selectReasonFacilityClosed() {
-    testWebDriver.waitForElementToAppear(facilityClosed);
-    facilityClosed.click();
-    removeFocusFromElement();
-  }
-
-  public void selectReasonUnavailableFunds() {
-    testWebDriver.waitForElementToAppear(unavailableFunds);
-    facilityVisitedNoRadioButton.click();
-    removeFocusFromElement();
-  }
-
-  public void selectReasonNotPartOfProgram() {
-    testWebDriver.waitForElementToAppear(notPartOfProgram);
-    notPartOfProgram.click();
-    removeFocusFromElement();
-  }
-
   public void selectReasonOther() {
     testWebDriver.waitForElementToAppear(other);
     other.click();
@@ -306,7 +288,7 @@ public class VisitInformationPage extends DistributionTab {
   public void enterDataWhenFacilityVisited(String confirmName, String confirmTitle, String verifierName,
                                            String verifierTitle) {
     selectFacilityVisitedYes();
-    enterVisitDateAsFirstOfCurrentMonth();
+    enterVisitDateAsCurrentDate();
     enterConfirmedByName(confirmName);
     enterConfirmedByTitle(confirmTitle);
     enterVerifiedByName(verifierName);
@@ -322,36 +304,6 @@ public class VisitInformationPage extends DistributionTab {
   public boolean isOtherReasonSelected() {
     testWebDriver.waitForElementToAppear(other);
     return other.isSelected();
-  }
-
-  public String getObservations() {
-    testWebDriver.waitForElementToAppear(observationsField);
-    return observationsField.getAttribute("value");
-  }
-
-  public String getConfirmedByName() {
-    testWebDriver.waitForElementToAppear(confirmedByNameField);
-    return confirmedByNameField.getAttribute("value");
-  }
-
-  public String getConfirmedByTitle() {
-    testWebDriver.waitForElementToAppear(confirmedByTitleField);
-    return confirmedByTitleField.getAttribute("value");
-  }
-
-  public String getVerifiedByName() {
-    testWebDriver.waitForElementToAppear(verifiedByNameField);
-    return verifiedByNameField.getAttribute("value");
-  }
-
-  public String getVerifiedByTitle() {
-    testWebDriver.waitForElementToAppear(verifiedByTitleField);
-    return verifiedByTitleField.getAttribute("value");
-  }
-
-  public String getVehicleId() {
-    testWebDriver.waitForElementToAppear(vehicleIdField);
-    return vehicleIdField.getAttribute("value");
   }
 
   public String getOtherReason() {

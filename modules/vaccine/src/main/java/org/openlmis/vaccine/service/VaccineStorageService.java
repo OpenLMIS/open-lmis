@@ -40,7 +40,7 @@ public class VaccineStorageService {
         this.storageRepository.deleteVccineStorage(vaccineStorage);
     }
     public List<Facility> loadFacillityList(){
-        return this.facilityService.getAll();
+        return null;//this.facilityService.getAll();
     }
 
     public List<VaccineStorage> getByFacilityId(Long facilityId){

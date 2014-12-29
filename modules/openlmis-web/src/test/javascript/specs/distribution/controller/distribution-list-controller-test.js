@@ -70,7 +70,7 @@ describe('DistributionListController', function () {
 
         distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8,
           'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'},
-          'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true}, 'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1}, 'status': 'INITIATED', 'zpp': '8_5_9',
+          'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true}, 'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1}, 'status': {name: 'INITIATED'}, 'zpp': '8_5_9',
           'facilityDistributions': {
             '44': facilityDistribution1,
             '45': facilityDistribution2

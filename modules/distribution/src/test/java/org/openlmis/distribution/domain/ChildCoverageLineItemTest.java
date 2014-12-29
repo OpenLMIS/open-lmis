@@ -10,11 +10,13 @@
 
 package org.openlmis.distribution.domain;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.core.Is.is;
@@ -28,6 +30,13 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ChildCoverageLineItemTest {
 
+  private ProcessingPeriod period;
+
+  @Before
+  public void setUp() {
+    period = mock(ProcessingPeriod.class);
+  }
+
   @Test
   public void shouldCreateChildCoverageLineItem() throws Exception {
     Facility facility = mock(Facility.class);
@@ -36,13 +45,14 @@ public class ChildCoverageLineItemTest {
     facilityVisit.setCreatedBy(33L);
     TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", "BCG", true);
 
+    when(period.getNumberOfMonths()).thenReturn(2);
     when(facility.getWhoRatioFor("BCG")).thenReturn(2.4);
-    when(facility.getCatchmentPopulation()).thenReturn((long) 80);
+    when(facility.getCatchmentPopulation()).thenReturn((long) 10000);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG", period.getNumberOfMonths());
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
-    assertThat(childCoverageLineItem.getTargetGroup(), is(2));
+    assertThat(childCoverageLineItem.getTargetGroup(), is(40));
     assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
     assertThat(childCoverageLineItem.getCreatedBy(), is(33L));
   }
@@ -54,13 +64,14 @@ public class ChildCoverageLineItemTest {
     facilityVisit.setId(3L);
     TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", "BCG", true);
 
+    when(period.getNumberOfMonths()).thenReturn(1);
     when(facility.getWhoRatioFor("BCG")).thenReturn(2.6);
-    when(facility.getCatchmentPopulation()).thenReturn((long) 80);
+    when(facility.getCatchmentPopulation()).thenReturn((long) 20000);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG", period.getNumberOfMonths());
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
-    assertThat(childCoverageLineItem.getTargetGroup(), is(2));
+    assertThat(childCoverageLineItem.getTargetGroup(), is(44));
     assertThat(childCoverageLineItem.getFacilityVisitId(), is(3L));
   }
 
@@ -71,10 +82,11 @@ public class ChildCoverageLineItemTest {
     facilityVisit.setId(3L);
     TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", "BCG", true);
 
+    when(period.getNumberOfMonths()).thenReturn(1);
     when(facility.getWhoRatioFor("BCG")).thenReturn(null);
     when(facility.getCatchmentPopulation()).thenReturn((long) 8);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG", period.getNumberOfMonths());
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(nullValue()));
@@ -88,10 +100,11 @@ public class ChildCoverageLineItemTest {
     facilityVisit.setId(3L);
     TargetGroupProduct targetGroupProduct = new TargetGroupProduct("BCG", "BCG", true);
 
+    when(period.getNumberOfMonths()).thenReturn(1);
     when(facility.getWhoRatioFor("BCG")).thenReturn((double) 2);
     when(facility.getCatchmentPopulation()).thenReturn(null);
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG");
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, targetGroupProduct, "BCG", period.getNumberOfMonths());
 
     assertThat(childCoverageLineItem.getVaccination(), is("BCG"));
     assertThat(childCoverageLineItem.getTargetGroup(), is(nullValue()));
@@ -103,7 +116,8 @@ public class ChildCoverageLineItemTest {
     Facility facility = mock(Facility.class);
     FacilityVisit facilityVisit = new FacilityVisit();
 
-    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, null, "BCG");
+    when(period.getNumberOfMonths()).thenReturn(1);
+    ChildCoverageLineItem childCoverageLineItem = new ChildCoverageLineItem(facilityVisit, facility, null, "BCG", period.getNumberOfMonths());
 
     assertNull(childCoverageLineItem.getTargetGroup());
   }

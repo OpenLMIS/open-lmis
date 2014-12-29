@@ -24,6 +24,7 @@ import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -70,9 +71,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @When("^I create \"([^\"]*)\" program supported facility$")
   public void createFacilityForProgram(String program) {
-    ManageFacilityPage manageFacilityPage = ManageFacilityPage.getInstance(testWebDriver);
+    FacilityPage facilityPage = PageObjectFactory.getFacilityPage(testWebDriver);
 
-    date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
+    date_time = facilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, catchmentPopulation);
     facility_code = facilityCodePrefix + date_time;
     facility_name = facilityNamePrefix + date_time;
@@ -80,8 +81,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("^I should see message for successfully created facility$")
   public void verify() {
-    ManageFacilityPage manageFacilityPage = PageObjectFactory.getManageFacilityPage(testWebDriver);
-    manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    FacilityPage facilityPage = PageObjectFactory.getFacilityPage(testWebDriver);
+    facilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
   }
 
   @When("^I create \"([^\"]*)\" role having \"([^\"]*)\" based \"([^\"]*)\" rights$")
@@ -95,8 +96,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I setup supervisory node data$")
   public void supervisoryNodeDataSetup() throws SQLException {
     dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.deleteSupervisoryNodes();
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node 2", "N1");
+    dbWrapper.insertSupervisoryNode("F11", "N2", "Node 2", "N1");
   }
 
   @And("^I setup warehouse data$")
@@ -149,12 +151,12 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I have period \"([^\"]*)\" associated with schedule \"([^\"]*)\"$")
   public void insertPeriodAndAssociateItWithSchedule(String period, String schedule) throws SQLException {
-    dbWrapper.insertPeriodAndAssociateItWithSchedule(period, schedule);
+    dbWrapper.insertProcessingPeriod(period, period, "2013-09-29", "2020-09-30", 66, schedule);
   }
 
   @And("^I update \"([^\"]*)\" home facility$")
   public void updateHomeFacility(String user) throws SQLException {
-    dbWrapper.allocateFacilityToUser(dbWrapper.getAttributeFromTable("users", "id", "userName", user), facility_code);
+    dbWrapper.allocateFacilityToUser(user, facility_code);
   }
 
   @And("^I configure \"([^\"]*)\" template$")
@@ -441,6 +443,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I verify order status as \"([^\"]*)\" in row \"([^\"]*)\"$")
   public void verifyOrderStatus(String orderStatus, String rowNumber) {
     ViewOrdersPage viewOrdersPage = PageObjectFactory.getViewOrdersPage(testWebDriver);
+    testWebDriver.sleep(500);
     assertEquals(orderStatus, viewOrdersPage.getOrderStatus(Integer.parseInt(rowNumber)));
   }
 
@@ -501,16 +504,21 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   private void createRoleAndAssignRights(List<String> userRoleList, String roleName, String roleDescription, String roleType) {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
-    RolesPage rolesPage = homePage.navigateRoleAssignments();
+    RolesPage rolesPage = homePage.navigateToRolePage();
     rolesPage.createRole(roleName, roleDescription, userRoleList, roleType);
-    rolesPage.verifyCreatedRoleMessage(roleName);
+    assertEquals(rolesPage.getSuccessMessage(), "\"" + roleName + "\" created successfully");
   }
 
   private void verifyOrderedList(boolean downloadFlag) throws SQLException {
     ViewOrdersPage viewOrdersPage = PageObjectFactory.getViewOrdersPage(testWebDriver);
     String[] periods = periodTopSNUser.split("-");
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", program);
-    viewOrdersPage.verifyOrderListElements(program, dbWrapper.getMaxRnrID(), facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);
+    NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+    numberFormat.setMinimumIntegerDigits(8);
+    numberFormat.setGroupingUsed(false);
+    int id = dbWrapper.getMaxRnrID();
+    String orderNumber = "O" + program.substring(0, Math.min(program.length(), 35)) + numberFormat.format(id);
+    viewOrdersPage.verifyOrderListElements(program, orderNumber, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);
   }
 
   public int calculatedExpectedNC(Integer numberOfNewPatients, Integer stockOutDays, Integer quantityDispensed) throws SQLException {

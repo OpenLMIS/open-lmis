@@ -36,18 +36,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.core.builder.UserBuilder.*;
+import static org.openlmis.core.domain.RightName.VIEW_ORDER;
+import static org.openlmis.core.domain.RightType.FULFILLMENT;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 
@@ -126,7 +128,7 @@ public class OrderMapperIT {
 
     Long userId = insertUserAndRoleForOrders();
 
-    List<Order> orders = mapper.getOrders(2, 2, userId, Right.VIEW_ORDER);
+    List<Order> orders = mapper.getOrders(2, 2, userId, VIEW_ORDER);
 
     assertThat(orders.size(), is(2));
     assertThat(orders.get(0).getId(), is(order3.getId()));
@@ -147,11 +149,11 @@ public class OrderMapperIT {
     shipmentFileInfo.setFileName("abc.csv");
     shipmentFileInfo.setProcessingError(false);
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
-
-
     mapper.updateShipmentAndStatus(order.getOrderNumber(), RELEASED, shipmentFileInfo.getId());
     Long userId = insertUserAndRoleForOrders();
-    List<Order> orders = mapper.getOrders(1, 0, userId, Right.VIEW_ORDER);
+
+    List<Order> orders = mapper.getOrders(1, 0, userId, VIEW_ORDER);
+
     assertThat(orders.get(0).getShipmentFileInfo().getFileName(), is("abc.csv"));
     assertThat(orders.get(0).getShipmentFileInfo().isProcessingError(), is(false));
   }
@@ -166,11 +168,10 @@ public class OrderMapperIT {
     mapper.updateShipmentAndStatus(order.getOrderNumber(), PACKED, shipmentFileInfo.getId());
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", order.getRnr().getId());
-
     resultSet.next();
-
     assertThat(resultSet.getString("status"), is(PACKED.name()));
     assertThat(resultSet.getLong("shipmentId"), is(shipmentFileInfo.getId()));
+    assertThat(resultSet.getDate("modifiedDate"),is(not(order.getModifiedDate())));
   }
 
   @Test
@@ -231,6 +232,7 @@ public class OrderMapperIT {
     Order savedOrder = mapper.getById(order.getId());
     assertThat(savedOrder.getStatus(), is(TRANSFER_FAILED));
     assertThat(savedOrder.getFtpComment(), is(ftpComment));
+    assertThat(savedOrder.getModifiedDate(), is(not(order.getModifiedDate())));
   }
 
   private Long insertUserAndRoleForOrders() throws SQLException {
@@ -239,17 +241,17 @@ public class OrderMapperIT {
     User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
     userMapper.insert(someUser);
 
-    Role role = new Role("r1", "random description", new HashSet<>(asList(Right.VIEW_ORDER)));
+    Right right1 = new Right(VIEW_ORDER, FULFILLMENT);
+    Role role = new Role("r1", "random description",asList(right1));
     Long roleId = Long.valueOf(roleRightsMapper.insertRole(role));
     role.setId(roleId);
     for (Right right : role.getRights()) {
-      roleRightsMapper.createRoleRight(role, right);
+      roleRightsMapper.createRoleRight(role, right.getName());
     }
 
     queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", userId, facility.getId(), role.getId());
     return userId;
   }
-
 
   @Test
   public void shouldGetOrderStatusById() throws Exception {
@@ -320,7 +322,6 @@ public class OrderMapperIT {
     processingPeriodMapper.insert(processingPeriod);
     return processingPeriod;
   }
-
 
   private SupervisoryNode insertSupervisoryNode() {
     supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));

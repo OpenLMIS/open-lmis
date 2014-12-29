@@ -9,28 +9,28 @@
   -->
 
 <ng-include
-        src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+  src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 <div class="clearfix facility-container">
-    <ng-include
-            src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+  <ng-include
+    src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
-    <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
-        <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('epi-inventory')}}">
-            <h3>
-                <span id="epiInventoryPageLabel" openlmis-message="label.epi.inventory.header"></span>
-                <input id="epiInventoryApplyNRAll" type="button" ng-click="applyNRAll()" class="pull-right btn"
-                       openlmis-message="button.apply.nr.all"/>
-            </h3>
+  <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
+    <div class="refrigerator-container" disable-form="{{facilityData.isDisabled('epi-inventory')}}">
+      <h3>
+        <span id="epiInventoryPageLabel" openlmis-message="label.epi.inventory.header"></span>
+        <input id="epiInventoryApplyNRAll" type="button" ng-click="applyNRAll()" class="pull-right btn"
+               openlmis-message="button.apply.nr.all"/>
+      </h3>
 
-            <div class="clearfix"></div>
-            <div class="alert alert-info" id="noLineItems" ng-hide="facilityData.epiInventory.lineItems.length">
-                <span openlmis-message="message.no.product.groups"></span>
-            </div>
+      <div class="clearfix"></div>
+      <div class="alert alert-info" id="noLineItems" ng-hide="facilityData.epiInventory.lineItems.length">
+        <span openlmis-message="message.no.product.groups"></span>
+      </div>
 
-            <div id="epiInventoryContainer" class="facility-distribution-form-table" tab-scroll bottom-offset="180"
+            <div id="epiInventoryContainer" class="parent facility-distribution-form-table" tab-scroll bottom-offset="180"
                  ng-show="facilityData.epiInventory.lineItems.length">
                 <form auto-save="distribution" object-store="distributions">
-                    <table id="epiInventoryTable" class="table table-bordered">
+                    <table id="epiInventoryTable" class="table table-bordered" fixed-table-header>
                         <thead>
                         <tr>
                             <th id="vialsUnitsLabel" class="col-vials" openlmis-message="label.vials.unit"></th>
@@ -52,65 +52,68 @@
                             <td id="idealQuantity{{ $index }}" class="col-ideal-quantity">
                 <span ng-show="(lineItem.idealQuantity === 0) || (lineItem.idealQuantity)"
                       ng-bind="lineItem.idealQuantity"></span>
-                                <span ng-hide="(lineItem.idealQuantity === 0) || (lineItem.idealQuantity)">--</span>
-                            </td>
-                            <td class="col-existing-quantity">
-                                <div>
-                  <span class="input-error-parent-cell">
+                <span ng-hide="(lineItem.idealQuantity === 0) || (lineItem.idealQuantity)">--</span>
+              </td>
+              <td class="col-existing-quantity">
+                <div>
+                  <span class="position-relative">
                     <input id="existingQuantity{{ $index }}" type="text" ng-model="lineItem.existingQuantity.value"
                            name="existingQuantityNR{{$index}}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="existingQuantityError{{$index}}"/>
+                           error-holder="existingQuantityError{{$index}}"
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-inventory') && !(lineItem.existingQuantity.value || lineItem.existingQuantity.notRecorded)}"/>
                     <span id="existingQuantityError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
-                                </div>
-                                <input id="existingQuantityNR{{$index}}" type="checkbox"
-                                       ng-model="lineItem.existingQuantity.notRecorded"
-                                       not-recorded/>
-                                <label class="checkbox-label" for="existingQuantityNR{{$index}}"
-                                       openlmis-message="label.not.recorded"></label>
-                            </td>
-                            <td class="col-delivered-quantity">
-                                <div>
-                  <span class="input-error-parent-cell">
+                </div>
+                <input id="existingQuantityNR{{$index}}" type="checkbox"
+                       ng-model="lineItem.existingQuantity.notRecorded"
+                       not-recorded/>
+                <label class="checkbox-label" for="existingQuantityNR{{$index}}"
+                       openlmis-message="label.not.recorded"></label>
+              </td>
+              <td class="col-delivered-quantity">
+                <div>
+                  <span class="position-relative">
                     <input id="deliveredQuantity{{ $index }}" type="text" ng-model="lineItem.deliveredQuantity"
                            name="deliveredQuantityNR{{ $index }}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="deliveredQuantityError{{$index}}"/>
+                           error-holder="deliveredQuantityError{{$index}}"
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-inventory') && !lineItem.deliveredQuantity}"/>
                     <span id="deliveredQuantityError{{$index}}"
                           class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
-                                </div>
-                            </td>
-                            <td class="col-spoiled-quantity">
-                                <div>
-                  <span class="input-error-parent-cell">
+                </div>
+              </td>
+              <td class="col-spoiled-quantity">
+                <div>
+                  <span class="position-relative">
                     <input id="spoiledQuantity{{ $index }}" type="text"
                            ng-model="lineItem.spoiledQuantity.value"
                            name="spoiledQuantityNR{{ $index }}" ng-trim=false
                            numeric-validator="positiveInteger" maxlength="7"
-                           error-holder="spoiledQuantityError{{$index}}"/>
+                           error-holder="spoiledQuantityError{{$index}}"
+                           ng-class="{'required-error': !facilityData.isDisabled('epi-inventory') && !(lineItem.spoiledQuantity.value || lineItem.spoiledQuantity.notRecorded)}"/>
                     <span id="spoiledQuantityError{{$index}}" class="rnr-form-error"
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </span>
-                                </div>
-                                <input id="spoiledQuantityNR{{ $index }}" type="checkbox"
-                                       ng-model="lineItem.spoiledQuantity.notRecorded"
-                                       not-recorded/>
-                                <label class="checkbox-label" for="spoiledQuantityNR{{ $index }}"
-                                       openlmis-message="label.not.recorded"></label>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-        </div>
+                </div>
+                <input id="spoiledQuantityNR{{ $index }}" type="checkbox"
+                       ng-model="lineItem.spoiledQuantity.notRecorded"
+                       not-recorded/>
+                <label class="checkbox-label" for="spoiledQuantityNR{{ $index }}"
+                       openlmis-message="label.not.recorded"></label>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
     </div>
+  </div>
 </div>

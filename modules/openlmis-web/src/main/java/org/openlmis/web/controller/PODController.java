@@ -83,7 +83,7 @@ public class PODController extends BaseController {
     if (existingPOD != null) {
       response = response(ORDER_POD, existingPOD);
     } else {
-      OrderPOD orderPOD = new OrderPOD(orderId, order.getOrderNumber() , loggedInUserId(request));
+      OrderPOD orderPOD = new OrderPOD(orderId, order.getOrderNumber(), loggedInUserId(request));
       OrderPOD createdPOD = service.createPOD(orderPOD);
       response = response(ORDER_POD, createdPOD, HttpStatus.CREATED);
     }
@@ -138,7 +138,7 @@ public class PODController extends BaseController {
     ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
     map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
 
-    Resource reportResource = new ClassPathResource("subreports");
+    Resource reportResource = new ClassPathResource("reports");
     Resource imgResource = new ClassPathResource("images");
 
     String separator = System.getProperty("file.separator");

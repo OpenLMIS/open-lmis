@@ -18,8 +18,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.serializer.DateDeserializer;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -55,6 +57,7 @@ public class ProgramSupported extends BaseModel implements Importable {
   private Boolean active = false;
 
   @ImportField(name = "Program Start Date", type = "Date")
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date startDate;
 
   private List<FacilityProgramProduct> programProducts;

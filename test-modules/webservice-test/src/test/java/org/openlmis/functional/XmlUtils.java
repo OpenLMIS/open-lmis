@@ -34,9 +34,9 @@ public class XmlUtils {
 
       Element rootElement = document.getDocumentElement();
 
-      List<String> arrayList = new ArrayList<String>();
+      List<String> arrayList = new ArrayList<>();
       NodeList list = rootElement.getElementsByTagName(tagName);
-      NodeList subList = null;
+      NodeList subList;
       if (list != null && list.getLength() > 0) {
         for (int k = 0; k < list.getLength(); k++) {
           subList = list.item(k).getChildNodes();

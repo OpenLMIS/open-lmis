@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.commaSeparateRightNames;
+import static org.openlmis.core.domain.RightName.commaSeparateRightNames;
 
 /**
  * FacilityRepository is repository class for Facility related database operations.
@@ -44,25 +44,11 @@ public class FacilityRepository {
 
   @Autowired
   private GeographicZoneRepository geographicZoneRepository;
-
-  public List<Facility> getAll() {
-    return mapper.getAll();
-  }
-
-  public List<Facility> getAllFacilitiesDetail(){
-      return mapper.getAllFacilitiesDetail();
-  }
-
-  public List<Facility> getFacilitiesForAFacilityType(Long facilityTypeId){
-      if(facilityTypeId == null || facilityTypeId == 0 || facilityTypeId == -1)
-          return mapper.getAll();
-      return mapper.getFacilitiesListForAFacilityType(facilityTypeId);
-  }
-
+  
   public List<Facility> getMailingLabels(){
-      return mapper.getMailingLabels();
+    return mapper.getMailingLabels();
   }
-
+  
   public void save(Facility facility) {
     try {
       validateAndSetFacilityOperatedBy(facility);
@@ -170,12 +156,8 @@ public class FacilityRepository {
     return facilityId;
   }
 
-  public List<Facility> searchFacilitiesByCodeOrName(String searchParam) {
-    return mapper.searchFacilitiesByCodeOrName(searchParam);
-  }
-
-  public Facility getHomeFacilityForRights(Long userId, Right... rights) {
-    return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rights));
+  public Facility getHomeFacilityForRights(Long userId, String... rightNames) {
+    return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rightNames));
   }
 
   public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
@@ -198,14 +180,6 @@ public class FacilityRepository {
     return mapper.getAllByProgramSupportedModifiedDate(dateModified);
   }
 
-  public List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(String query, Boolean virtualFacility) {
-    return mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
-  }
-
-  public List<Facility> getSupplyingFacilitiesCompleteList() {
-      return mapper.getSupplyingFacilitiesCompleteList();
-  }
-
   public List<Facility> getEnabledWarehouses() {
     return mapper.getEnabledWarehouses();
   }
@@ -224,6 +198,26 @@ public class FacilityRepository {
 
   public List<Facility> getAllParentsByModifiedDate(Date modifiedDate) {
     return mapper.getAllParentsByModifiedDate(modifiedDate);
+  }
+
+  public Integer getFacilitiesCountBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled) {
+    return mapper.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
+  }
+
+  public List<Facility> searchFacilitiesBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled) {
+    return mapper.searchFacilitiesBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return mapper.getTotalSearchResultCount(searchParam);
+  }
+
+  public Integer getTotalSearchResultCountByGeographicZone(String searchParam) {
+    return mapper.getTotalSearchResultCountByGeographicZone(searchParam);
+  }
+
+  public List<Facility> searchBy(String searchParam, String columnName, Pagination pagination) {
+    return mapper.search(searchParam,columnName,pagination);
   }
 
   public List<FacilityContact> getEmailContacts(Long facilityId) {

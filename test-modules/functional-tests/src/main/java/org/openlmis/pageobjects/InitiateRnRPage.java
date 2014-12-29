@@ -15,6 +15,7 @@ import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -98,9 +99,6 @@ public class InitiateRnRPage extends RequisitionPage {
 
   @FindBy(how = ID, using = "cost_0")
   private static WebElement totalCost = null;
-
-  @FindBy(how = ID, using = "price_0")
-  private static WebElement pricePerPackForFirstProduct = null;
 
   @FindBy(how = ID, using = "packsToShip_0")
   private static WebElement packsToShipForFirstProduct = null;
@@ -554,7 +552,8 @@ public class InitiateRnRPage extends RequisitionPage {
     actualTotalCostFullSupply = getCostForAllItems(numberOfProducts);
     assertEquals(totalCostFooter.getText().trim().substring(1),
       new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,
-        BigDecimal.ROUND_HALF_UP).toString());
+        BigDecimal.ROUND_HALF_UP).toString()
+    );
     showRnrCostDetailsIcon.click();
     testWebDriver.sleep(500);
   }
@@ -779,15 +778,16 @@ public class InitiateRnRPage extends RequisitionPage {
     assertTrue("RnR Fail message not displayed", submitErrorMessage.isDisplayed());
   }
 
-  public void verifyAuthorizeButtonNotPresent() {
-    boolean authorizeButtonPresent;
+  public boolean isAuthorizeButtonPresent() {
     try {
-      authorizeButton.click();
-      authorizeButtonPresent = true;
-    } catch (ElementNotVisibleException e) {
-      authorizeButtonPresent = false;
+      testWebDriver.waitForElementToAppear(authorizeButton);
+      authorizeButton.isDisplayed();
+    } catch (TimeoutException e) {
+      return false;
+    } catch (NoSuchElementException e) {
+      return false;
     }
-    assertFalse(authorizeButtonPresent);
+    return authorizeButton.isDisplayed();
   }
 
   public void verifyApproveButtonNotPresent() {

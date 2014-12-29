@@ -21,7 +21,6 @@ import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
-import org.openlmis.pod.service.PODService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
@@ -32,14 +31,17 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.apache.commons.lang.ArrayUtils.contains;
-import static org.openlmis.core.domain.Right.FACILITY_FILL_SHIPMENT;
-import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.core.domain.RightName.FACILITY_FILL_SHIPMENT;
+import static org.openlmis.core.domain.RightName.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
 
 /**
@@ -78,13 +80,11 @@ public class OrderService {
   private StatusChangeEventService statusChangeEventService;
 
   @Autowired
-  private PODService podService;
-
-  public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
-  @Autowired
   private UserService userService;
 
-  private int pageSize;
+  public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
+
+  private Integer pageSize;
 
   @Autowired
   public void setPageSize(@Value("${order.page.size}") String pageSize) {
@@ -105,7 +105,7 @@ public class OrderService {
         supplyLine = supplyLineService.getByFacilityProgram(depotId, rnr.getProgram().getId());
       }
       order.setSupplyLine(supplyLine);
-      if (!fulfillmentPermissionService.hasPermissionOnWarehouse(userId, supplyLine.getSupplyingFacility().getId(), Right.CONVERT_TO_ORDER)) {
+      if (!fulfillmentPermissionService.hasPermissionOnWarehouse(userId, supplyLine.getSupplyingFacility().getId(), RightName.CONVERT_TO_ORDER)) {
         throw new AccessDeniedException("user.not.authorized");
       }
       OrderStatus status;
@@ -141,12 +141,12 @@ public class OrderService {
       requisition.getProgram(), requisition.getPeriod(), order.getStatus().toString());
   }
 
-  public List<Order> getOrdersForPage(int page, Long userId, Right right) {
-    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right);
+  public List<Order> getOrdersForPage(int page, Long userId, String rightName) {
+    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, rightName);
     return fillOrders(orders);
   }
 
-  public List<Order> getOrdersForPage(int page, Long userId, Right right, Long supplyDepot, Long program, Long period) {
+  public List<Order> getOrdersForPage(int page, Long userId, String right, Long supplyDepot, Long program, Long period) {
     List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right, supplyDepot, program, period);
     return fillOrders(orders);
   }
@@ -232,8 +232,8 @@ public class OrderService {
     return pageSize;
   }
 
-  public List<Order> searchByStatusAndRight(Long userId, Right right, List<OrderStatus> statuses) {
-    List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, right);
+  public List<Order> searchByStatusAndRight(Long userId, String rightName, List<OrderStatus> statuses) {
+    List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, rightName);
 
     List<Order> orders = orderRepository.searchByWarehousesAndStatuses((List<Long>) collect(fulfilmentRolesWithRight, new Transformer() {
       @Override
@@ -270,6 +270,10 @@ public class OrderService {
 
   public boolean hasStatus(String orderNumber, OrderStatus... statuses) {
     return contains(statuses, orderRepository.getStatus(orderNumber));
+  }
+
+  public Order getByOrderNumber(String orderNumber) {
+    return orderRepository.getByOrderNumber(orderNumber);
   }
 
   public List<Order> getSearchedOrdersForPage(Long userId, int page, String query, String searchType) {

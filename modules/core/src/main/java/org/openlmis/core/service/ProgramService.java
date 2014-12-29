@@ -13,7 +13,6 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.ict4h.atomfeed.server.service.EventService;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.event.ProgramChangeEvent;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramRepository;
@@ -54,12 +53,12 @@ public class ProgramService {
     return programRepository.getAllPushPrograms();
   }
 
-  public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, Right... rights) {
-    return programRepository.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, rights);
+  public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
+    return programRepository.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, rightNames);
   }
 
-  public List<Program> getProgramForSupervisedFacilities(Long userId, Right... rights) {
-    return programRepository.getUserSupervisedActiveProgramsWithRights(userId, rights);
+  public List<Program> getProgramForSupervisedFacilities(Long userId, String... rightNames) {
+    return programRepository.getUserSupervisedActiveProgramsWithRights(userId, rightNames);
   }
 
   public Long getIdForCode(String code) {
@@ -78,8 +77,8 @@ public class ProgramService {
     programRepository.setTemplateConfigured(id);
   }
 
-  public List<Program> getProgramsForUserByFacilityAndRights(Long facilityId, Long userId, Right... rights) {
-    return programRepository.getProgramsForUserByFacilityAndRights(facilityId, userId, rights);
+  public List<Program> getProgramsForUserByFacilityAndRights(Long facilityId, Long userId, String... rightNames) {
+    return programRepository.getProgramsForUserByFacilityAndRights(facilityId, userId, rightNames);
   }
 
   public List<Program> getAll() {

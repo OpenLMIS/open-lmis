@@ -16,10 +16,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 
-import java.util.Set;
+import java.util.List;
 
+import static com.google.common.collect.Iterables.any;
+import static java.util.Arrays.asList;
 import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.core.domain.RightName.*;
+import static org.openlmis.core.utils.RightUtil.contains;
+import static org.openlmis.core.utils.RightUtil.with;
 
 /**
  * Role represents Role entity which is a set of rights. Also provides methods to validate if a role contains related rights.
@@ -31,7 +35,7 @@ import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 public class Role extends BaseModel {
   private String name;
   private String description;
-  private Set<Right> rights;
+  private List<Right> rights;
 
   public Role(String name, String description) {
     this(name, description, null);
@@ -45,17 +49,12 @@ public class Role extends BaseModel {
   }
 
   private void validateForRelatedRights() {
-    if ((rights.contains(Right.CREATE_REQUISITION) ||
-      rights.contains(Right.APPROVE_REQUISITION) ||
-      rights.contains(Right.AUTHORIZE_REQUISITION)) && !rights.contains(VIEW_REQUISITION)) {
+    if (any(rights, contains(asList(CREATE_REQUISITION, APPROVE_REQUISITION, AUTHORIZE_REQUISITION)))
+      && (!any(rights, with(VIEW_REQUISITION)))) {
       throw new DataException("error.role.related.right.not.selected");
     }
-
-    if (rights.contains(Right.MANAGE_REPORT) && !rights.contains(Right.VIEW_REPORT)) {
-      throw new DataException("error.role.related.right.not.selected");
-    }
-    if ((rights.contains(Right.CONVERT_TO_ORDER) || rights.contains(Right.MANAGE_POD) || rights.contains(Right.FACILITY_FILL_SHIPMENT))
-      && !rights.contains(Right.VIEW_ORDER)) {
+    if (any(rights, contains(asList(CONVERT_TO_ORDER, MANAGE_POD, FACILITY_FILL_SHIPMENT)))
+      && (!any(rights,with(VIEW_ORDER)))) {
       throw new DataException("error.role.related.right.not.selected");
     }
   }

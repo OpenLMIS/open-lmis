@@ -17,6 +17,8 @@ import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.ProductGroup;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * ProductGroupMapper maps the ProductGroup entity to corresponding representation in database.
  */
@@ -35,4 +37,7 @@ public interface ProductGroupMapper {
 
   @Select("SELECT * FROM product_groups WHERE id=#{id}")
   ProductGroup getById(Long id);
+
+  @Select("SELECT * FROM product_groups")
+  List<ProductGroup> getAll();
 }

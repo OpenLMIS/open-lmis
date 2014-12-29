@@ -75,12 +75,12 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
       Date originalStart = new Date();
       Date originalEnd = new Date();
 
-      averageConsumptionReportParam.setZoneId(StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
+      averageConsumptionReportParam.setZoneId(StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0L : Long.parseLong(filterCriteria.get("zoneId")[0]));  //defaults to 0
       averageConsumptionReportParam.setFacilityTypeId(StringUtils.isBlank(filterCriteria.get("facilityTypeId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
       averageConsumptionReportParam.setFacilityType(StringUtils.isBlank(filterCriteria.get("facilityType")[0]) ? "All Facility Types" : filterCriteria.get("facilityType")[0]);
 
 
-      averageConsumptionReportParam.setProductCategoryId(StringUtils.isBlank(filterCriteria.get("productCategoryId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
+      averageConsumptionReportParam.setProductCategoryId(StringUtils.isBlank(filterCriteria.get("productCategoryId")[0]) ? 0 : Long.parseLong(filterCriteria.get("productCategoryId")[0])); //defaults to 0
       averageConsumptionReportParam.setProductId(StringUtils.isBlank(filterCriteria.get("productId")[0]) ? "0" : (filterCriteria.get("productId")[0]).toString().replace("]", "}").replace("[", "{").replaceAll("\"", ""));
       averageConsumptionReportParam.setRgroupId(StringUtils.isBlank(filterCriteria.get("rgroupId")[0]) ? 0 : Long.parseLong(filterCriteria.get("rgroupId")[0])); //defaults to 0
       averageConsumptionReportParam.setProgramId(StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0])); //defaults to 0

@@ -24,16 +24,17 @@ public class StockImbalanceQueryBuilder {
         StockImbalanceReportParam filter  = (StockImbalanceReportParam)params.get("filterCriteria");
         Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
-        SELECT("distinct supplyingfacility,  facility,  product,  stockinhand physicalCount,  amc,  mos months,  required orderQuantity, CASE WHEN status = 'SO' THEN  'Stocked Out' WHEN status ='US' then  'Below Minimum' WHEN status ='OS' then  'Over Stocked' END AS status ");
+        SELECT("distinct supplyingfacility,  facility, d.district_name districtName, d.zone_name zoneName, product,  stockinhand physicalCount,  amc,  mos months,  required orderQuantity, CASE WHEN status = 'SO' THEN  'Stocked Out' WHEN status ='US' then  'Below Minimum' WHEN status ='OS' then  'Over Stocked' END AS status ");
         FROM("vw_stock_status join facilities f on f.id = facility_id join vw_districts d on d.district_id = f.geographicZoneId ");
         writePredicates(filter);
         ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockImbalanceReport.class, "supplyingFacility asc, facility asc, product asc"));
-        return SQL();
-
+        // cache the string query for debugging purposes
+        String strQuery = SQL();
+        return strQuery;
         }
     private static void writePredicates(StockImbalanceReportParam filter){
         WHERE("status <> 'SP'");
-        WHERE("req_status in ('APPROVED','RELEASED')");
+        WHERE("req_status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')");
         WHERE("(amc != 0 or stockinhand != 0 )");
         WHERE("periodid = #{filterCriteria.periodId}");
         WHERE("psid = #{filterCriteria.scheduleId}");
@@ -55,11 +56,16 @@ public class StockImbalanceQueryBuilder {
                 WHERE("categoryid = #{filterCriteria.productCategoryId}");
             }
 
-            if(filter.getProductId() != 0 && filter.getProductId() != -1){
-                WHERE("productid= #{filterCriteria.productId}");
-            } else if (filter.getProductId() == -1){
-                WHERE("indicator_product = true");
+//            if(filter.getProductId() != 0 && filter.getProductId() != -1){
+            if(!filter.getProductId().equals("0")){
+//                WHERE("productid= #{filterCriteria.productId}");
+//                WHERE("productid= ANY(#{filterCriteria.productId})");
+                WHERE("productid= ANY(#{filterCriteria.productId}::int[])");
+//                predicates = predicates + " and p.id = ANY(array" + filter.getProductId()+"::INT[])";
             }
+//            else if (filter.getProductId() == -1){
+//                WHERE("indicator_product = true");
+//            }
 
             if(filter.getZoneId() > 0 ){
               WHERE("( d.district_id = #{filterCriteria.zoneId} or d.zone_id = #{filterCriteria.zoneId} or d.region_id = #{filterCriteria.zoneId} or d.parent = #{filterCriteria.zoneId} )");

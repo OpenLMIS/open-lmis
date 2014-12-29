@@ -106,6 +106,7 @@ public class RnrLineItemMapperIT {
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
     programProduct.setProductCategory(category);
+    programProduct.setFullSupply(product.getFullSupply());
     programProductMapper.insert(programProduct);
 
     facility = make(a(defaultFacility));
@@ -316,6 +317,7 @@ public class RnrLineItemMapperIT {
       productMapper.insert(product);
 
       ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
+      programProduct.setFullSupply(product.getFullSupply());
       programProduct.setProductCategory(category);
       programProductMapper.insert(programProduct);
 

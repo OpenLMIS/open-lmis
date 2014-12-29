@@ -15,20 +15,22 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.UserRepository;
 import org.openlmis.db.categories.UnitTests;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -38,30 +40,38 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.RightName.CREATE_REQUISITION;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(SupervisoryNodeService.class)
 public class SupervisoryNodeServiceTest {
 
   @Mock
   SupervisoryNodeRepository supervisoryNodeRepository;
+
   @Mock
   private FacilityRepository facilityRepository;
 
-  SupervisoryNodeService supervisoryNodeService;
   @Mock
   private UserRepository userRepository;
+
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
-  SupervisoryNode supervisoryNodeWithParent;
 
+  @InjectMocks
+  SupervisoryNodeService supervisoryNodeService;
+
+  private SupervisoryNode supervisoryNodeWithParent;
+
+  private Integer pageSize = 100;
 
   @Before
   public void setUp() throws Exception {
-    initMocks(this);
+    supervisoryNodeService.setPageSize(String.valueOf(pageSize));
     supervisoryNodeWithParent = new SupervisoryNode();
     supervisoryNodeWithParent.setId(10L);
     supervisoryNodeWithParent.setFacility(new Facility());
@@ -70,7 +80,6 @@ public class SupervisoryNodeServiceTest {
     parent.setId(20L);
     supervisoryNodeWithParent.setParent(parent);
 
-    supervisoryNodeService = new SupervisoryNodeService(supervisoryNodeRepository, userRepository, facilityRepository);
   }
 
   @Test
@@ -267,5 +276,29 @@ public class SupervisoryNodeServiceTest {
     verify(supervisoryNodeRepository).getIdForCode(supervisoryNodeWithParent.getParent().getCode());
   }
 
+  @Test
+  public void shouldGetSupervisoryNodesForParentSearchCriteria() throws Exception {
+    String searchCriteria = "parentName";
+    int page = 10;
+    Pagination pagination = new Pagination(0, 0);
+    whenNew(Pagination.class).withArguments(page, pageSize).thenReturn(pagination);
+    when(supervisoryNodeRepository.getSupervisoryNodesByParent(pagination, searchCriteria)).thenReturn(Collections.EMPTY_LIST);
+    List<SupervisoryNode> searchResult = supervisoryNodeService.getSupervisoryNodesBy(page, searchCriteria, true);
+    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(pagination, searchCriteria);
+    assertThat(searchResult, is(Collections.EMPTY_LIST));
+  }
+
+  @Test
+  public void shouldGetSupervisoryNodesSearchCriteria() throws Exception {
+    String searchCriteria = "nodeName";
+    int page = 10;
+    Pagination pagination = new Pagination(0, 0);
+    whenNew(Pagination.class).withArguments(page, pageSize).thenReturn(pagination);
+
+    when(supervisoryNodeRepository.getSupervisoryNodesBy(pagination, searchCriteria)).thenReturn(Collections.EMPTY_LIST);
+    List<SupervisoryNode> searchResult = supervisoryNodeService.getSupervisoryNodesBy(page, searchCriteria, true);
+    verify(supervisoryNodeRepository).getSupervisoryNodesByParent(pagination, searchCriteria);
+    assertThat(searchResult, is(Collections.EMPTY_LIST));
+  }
 
 }

@@ -16,6 +16,8 @@ import org.openlmis.core.repository.RequisitionGroupProgramScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Exposes the services for handling RequisitionGroupProgramSchedule entity.
  */
@@ -23,31 +25,28 @@ import org.springframework.stereotype.Service;
 @Service
 @NoArgsConstructor
 public class RequisitionGroupProgramScheduleService {
-  private RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
 
   @Autowired
-  public RequisitionGroupProgramScheduleService(RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository) {
-    this.requisitionGroupProgramScheduleRepository = requisitionGroupProgramScheduleRepository;
-  }
+  private RequisitionGroupProgramScheduleRepository repository;
 
   public void save(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
     if (requisitionGroupProgramSchedule.getId() != null) {
-      requisitionGroupProgramScheduleRepository.update(requisitionGroupProgramSchedule);
+      repository.update(requisitionGroupProgramSchedule);
       return;
     }
-    requisitionGroupProgramScheduleRepository.insert(requisitionGroupProgramSchedule);
+    repository.insert(requisitionGroupProgramSchedule);
   }
 
   public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupCodeAndProgramCode(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
-    return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupCodeAndProgramCode(
+    return repository.getScheduleForRequisitionGroupCodeAndProgramCode(
       requisitionGroupProgramSchedule.getRequisitionGroup().getCode(), requisitionGroupProgramSchedule.getProgram().getCode());
   }
 
-    public RequisitionGroupProgramSchedule getScheduleForRequisitionGroupIdAndProgramId(Long requisitionGroupId, Long programId) {
-        return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(requisitionGroupId, programId);
-    }
+  public List<RequisitionGroupProgramSchedule> getByRequisitionGroupId(Long requisitionGroupId) {
+    return repository.getByRequisitionGroupId(requisitionGroupId);
+  }
 
-  public void delete(Long requisitionGroupProgramScheduleId) {
-    requisitionGroupProgramScheduleRepository.delete(requisitionGroupProgramScheduleId);
+  public void deleteRequisitionGroupProgramSchedulesFor(Long requisitionGroupId) {
+    repository.deleteRequisitionGroupProgramSchedulesFor(requisitionGroupId);
   }
 }

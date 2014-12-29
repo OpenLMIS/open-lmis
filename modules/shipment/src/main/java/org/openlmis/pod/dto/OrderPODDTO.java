@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 public class OrderPODDTO {
 
   private Long id;
+  private String orderNumber;
   private String stringCreatedDate;
   private String facilityCode;
   private String facilityName;
@@ -42,6 +43,7 @@ public class OrderPODDTO {
   public static OrderPODDTO getOrderDetailsForPOD(Order order) throws ParseException {
     OrderPODDTO orderPODDTO = new OrderPODDTO();
     orderPODDTO.setId(order.getId());
+    orderPODDTO.setOrderNumber(order.getOrderNumber());
 
     String createdDate = order.getCreatedDate() == null ? null : new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(order.getCreatedDate());
     orderPODDTO.setStringCreatedDate(createdDate);

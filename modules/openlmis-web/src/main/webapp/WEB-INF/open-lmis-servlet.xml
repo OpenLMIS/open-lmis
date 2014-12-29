@@ -37,8 +37,8 @@
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="order" value="3"/>
-        <property name="prefix" value="/public/pages/admin/"/>
-        <property name="suffix" value=".jsp"/>
+        <property name="prefix" value="/public/pages/"/>
+        <property name="suffix" value=".html"/>
     </bean>
 
 </beans>

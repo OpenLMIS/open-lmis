@@ -9,7 +9,10 @@
  */
 
 /* App Module */
-var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies', 'ngRoute'],
+
+
+
+var app = angular.module('openlmis', ['openlmis.services', 'angular-google-analytics', 'openlmis.localStorage', 'ui.directives', 'ngCookies', 'ngRoute'],
   function ($httpProvider) {
     var interceptor = ['$q', '$window', 'loginConfig', function ($q, $window, loginConfig) {
       var requestCount = 0;
@@ -135,11 +138,11 @@ app.numericValue = function (value, errorHolder, integerPartLength, fractionalPa
   str = '^-?\\d*\\.?\\d{1,' + fractionalPartLength + '}$';
   var NUMBER_REGEXP = new RegExp(str);
 
-  var valid = (value === undefined || value.length === 0) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
+  var valid = (value === undefined || value === null || value.length === 0) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
 
   if (errorHolder !== undefined && REGEX_FOR_DIGITS_AFTER_DECIMAL.test(value) === false) {
     document.getElementById(errorHolder).style.display =
-      ((value === undefined || value.length === 0) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
+      ((value === undefined || value === null || value.length === 0) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
   }
 
   return valid;
@@ -151,27 +154,30 @@ app.positiveNumericValue = function (value, errorHolder, integerPartLength, frac
   var NUMERIC_REGEXP_FIXED_PRECISION = new RegExp(str);
   str = '\\.\\d{'.concat(fractionalPartLength).concat('}.$');
   var REGEX_FOR_DIGITS_AFTER_DECIMAL = new RegExp(str);
-  str = '^\\d*\\.?\\d{1,'.concat(fractionalPartLength).concat('}$');
+  str = '^\\d*\\.?(\\d{1,'.concat(fractionalPartLength).concat('})?$');
   var NUMBER_REGEXP = new RegExp(str);
 
   var valid = (value === undefined) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
+  if (value === '.') valid = false;
 
   if (errorHolder !== undefined && REGEX_FOR_DIGITS_AFTER_DECIMAL.test(value) === false) {
-    document.getElementById(errorHolder).style.display = ((value === undefined) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
+    document.getElementById(errorHolder).style.display = ((value === undefined || value === "") ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
   }
 
   return valid;
 };
 
 
-app.integer = function (value, errorHolder) {
-  var INTEGER_REGEXP_FIXED_LENGTH = /^[-]?\d{0,6}$/;
-  var REGEX_FOR_SIX_DIGITS = /\d{6}.$/;
+app.integer = function (value, errorHolder, length) {
+  var str = '^[-]?\\d{0,'.concat(length).concat('}$');
+  var INTEGER_REGEXP_FIXED_LENGTH = new RegExp(str);
+  str = '\\d{'.concat(length).concat('}.$');
+  var REGEX_FOR_SIX_DIGITS = new RegExp(str);
   var INTEGER_REGEXP = /^[-]?\d*$/;
-  var valid = (value === undefined) ? true : INTEGER_REGEXP_FIXED_LENGTH.test(value);
+  var valid = (value === undefined || value === null) ? true : INTEGER_REGEXP_FIXED_LENGTH.test(value);
 
   if (errorHolder !== undefined && REGEX_FOR_SIX_DIGITS.test(value) === false) {
-    document.getElementById(errorHolder).style.display = ((value === undefined) ? true : (INTEGER_REGEXP.test(value))) ? 'none' : 'block';
+    document.getElementById(errorHolder).style.display = ((value === undefined || value === null) ? true : (INTEGER_REGEXP.test(value))) ? 'none' : 'block';
   }
 
   return valid;
@@ -202,6 +208,28 @@ app.run(function ($rootScope) {
     angular.element('body > .modal-backdrop').hide();
     angular.element('.dialog').parent('.modal').remove();
   });
+
+  var setState = function(state) {
+    $rootScope.appCacheState = state;
+    $rootScope.$apply();
+  };
+
+  window.applicationCache.addEventListener('progress', function () {
+    setState("progress");
+  });
+
+  window.applicationCache.addEventListener('error', function () {
+    setState("error");
+  });
+
+  window.applicationCache.addEventListener('cached', function () {
+    setState("cached");
+  });
+
+  window.applicationCache.addEventListener('updateready', function () {
+    setState("cached");
+  });
+
 });
 
 function isUndefined(value) {
@@ -209,3 +237,45 @@ function isUndefined(value) {
 }
 
 
+var _gaq = _gaq || [];
+
+angular.module('angular-google-analytics', []).run(
+  ['gglAnalytics','localStorageService',
+  function (gglAnalytics, localStorageService) {
+    if(gglAnalytics){
+
+      var googleAccount = localStorageService.get('GOOGLE_ANALYTICS_TRACKING_CODE');
+      if(googleAccount !== null){
+        _gaq.push(['_setAccount', googleAccount]);
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = false;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+      } 
+    }
+
+  }])
+  .service('gglAnalytics',
+  ['$rootScope', 'localStorageService' ,'$window',
+  function ($rootScope, localStorageService, $window) {
+
+    var enableTracking = localStorageService.get('ENABLE_GOOGLE_ANALYTICS');
+    if(enableTracking === null || !enableTracking){
+      return false;
+    }
+    function track() {
+      var path = $window.location.href;
+      var user = localStorageService.get('USERNAME');
+
+      $window._gaq.push(['_setCustomVar',1, 'Who', user, 2]);
+      $window._gaq.push(['set','&uid',user]);
+      $window._gaq.push(['_trackPageview', path]);
+    }
+
+    //fire on each route change
+    $rootScope.$on('$viewContentLoaded', track);
+
+    return true;
+  }]);

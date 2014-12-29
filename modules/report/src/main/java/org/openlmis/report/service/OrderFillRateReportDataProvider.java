@@ -132,7 +132,7 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
             header += "\nPeriod : " + periodObject.getName() + " - " + periodObject.getStringYear();
         }
         if (!zone.equals("0") && !zone.isEmpty() && !zone.endsWith("undefined")) {
-            header += "\nGeographic Zone: " + this.geographicZoneMapper.getById(Integer.parseInt(zone)).getName();
+            header += "\nGeographic Zone: " + this.geographicZoneMapper.getById(Long.parseLong(zone)).getName();
         }
         if (!facilityType.isEmpty() && !facilityType.equals("0") && !facilityType.endsWith("undefined")) {
             header += "\nFacility Type : " + this.reportMapper.getFacilityType(Integer.parseInt(facilityType)).get(0).getName();

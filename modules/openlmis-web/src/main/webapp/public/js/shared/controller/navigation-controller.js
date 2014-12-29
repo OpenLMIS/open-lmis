@@ -9,7 +9,6 @@
  */
 
 function NavigationController($scope, localStorageService, Locales, $location, $window) {
-  //Deleting browser cookie explicitly in case logout was done when user was offline # 1391
   $scope.loadRights = function () {
     $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
 
@@ -22,16 +21,34 @@ function NavigationController($scope, localStorageService, Locales, $location, $
     });
   }();
 
-  $scope.hasPermission = function (permission) {
-    return ($scope.rights && ($scope.rights.indexOf(permission) > -1));
+  $scope.hasReportingPermission = function () {
+    if ($scope.rights !== undefined && $scope.rights !== null) {
+      var rights = JSON.parse($scope.rights);
+      var rightTypes = _.pluck(rights, 'type');
+      return rightTypes.indexOf('REPORTING') > -1;
+    }
+    return false;
   };
 
+  $scope.hasPermission = function (permission) {
+    if ($scope.rights !== undefined && $scope.rights !== null) {
+      var rights = JSON.parse($scope.rights);
+      var rightNames = _.pluck(rights, 'name');
+      return rightNames.indexOf(permission) > -1;
+    }
+    return false;
+  };
 
   $scope.goOnline = function () {
     Locales.get({}, function (data) {
       if (data.locales) {
         var currentURI = $location.absUrl();
-        $window.location = currentURI.replace('offline.html', 'index.html').replace('#/list', '#/manage');
+        if (currentURI.endsWith('offline.html')) {
+          $window.location = currentURI.replace('public/pages/offline.html', '');
+        }
+        else {
+          $window.location = currentURI.replace('offline.html', 'index.html').replace('#/list', '#/manage');
+        }
         $scope.showNetworkError = false;
         return;
       }

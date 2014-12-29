@@ -12,7 +12,6 @@ package org.openlmis.rnr.search.strategy;
 
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -41,11 +40,11 @@ public class RequisitionOnlySearch extends RequisitionSearchStrategy {
   }
 
   @Override
-  boolean isSearchable(Right right) {
+  boolean isSearchable(String rightName) {
     Facility facility = new Facility(criteria.getFacilityId());
     Program program = new Program(criteria.getProgramId());
 
-    return requisitionPermissionService.hasPermission(criteria.getUserId(), facility, program, right);
+    return requisitionPermissionService.hasPermission(criteria.getUserId(), facility, program, rightName);
   }
 
   @Override

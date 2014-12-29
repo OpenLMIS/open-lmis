@@ -40,6 +40,7 @@ public class ReplenishmentDTOTest {
 
     Order order = new Order(rnr.getId());
     order.setStatus(OrderStatus.RELEASED);
+    order.setOrderNumber("ONI101");
     SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
     order.setSupplyLine(supplyLine);
 
@@ -55,7 +56,7 @@ public class ReplenishmentDTOTest {
     assertThat(simpleDateFormat.format(rnr.getPeriod().getEndDate()), is(replenishmentDTO.getStringPeriodEndDate()));
     assertThat(rnr.getStatus().name(), is(replenishmentDTO.getRequisitionStatus()));
     assertThat(replenishmentDTO.getProducts().size(), is(2));
-    assertThat(replenishmentDTO.getOrderId(), is(order.getId()));
+    assertThat(replenishmentDTO.getOrderId(), is(order.getOrderNumber()));
     assertThat(replenishmentDTO.getOrderStatus(), is(order.getStatus().name()));
     assertThat(replenishmentDTO.getSupplyingFacilityCode(), is(supplyLine.getSupplyingFacility().getCode()));
   }

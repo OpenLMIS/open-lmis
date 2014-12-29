@@ -10,15 +10,15 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.GeographicZoneService;
-import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.web.model.GeoZoneInfo;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,100 +28,105 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.List;
 
-import static org.openlmis.web.response.OpenLmisResponse.error;
+import static java.lang.Integer.parseInt;
 import static org.openlmis.web.response.OpenLmisResponse.success;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * This controller handles endpoint related to get geographicZones details for given id.
+ * This controller handles endpoint related to GET, PUT, POST and other operations on geographicZones.
  */
 
 @Controller
 public class GeographicZoneController extends BaseController {
 
+  public static final String GEO_ZONES = "geoZones";
   @Autowired
   private GeographicZoneService service;
 
-  @Autowired
-  private ReportLookupService reportLookupService;
-
   @RequestMapping(value = "/geographicZones/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION, MANAGE_GEOGRAPHIC_ZONE')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
     return OpenLmisResponse.response("geoZone", service.getById(id));
   }
 
-
-  @RequestMapping(value = "/geographicZone/insert.json", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
-  public ResponseEntity<OpenLmisResponse> insert(@RequestBody GeographicZone geographicZone, HttpServletRequest request) {
-    ResponseEntity<OpenLmisResponse> successResponse;
-    geographicZone.setCreatedBy(loggedInUserId(request));
-    geographicZone.setModifiedBy(loggedInUserId(request));
-    geographicZone.setModifiedDate(new Date());
-
-    try {
-      service.saveNew(geographicZone);
-    } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
-    }
-
-    successResponse = success("Geographic zone " + geographicZone.getName() + " has been successfully created");
-    successResponse.getBody().addData("geographicZone", geographicZone);
-    successResponse.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-    return successResponse;
-  }
-
-
-  @RequestMapping(value = "/geographicZone/setDetails", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
-  public ResponseEntity<OpenLmisResponse> update(@RequestBody GeographicZone geographicZone,
+  @RequestMapping(value = "/geographicZones", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
+  public ResponseEntity<OpenLmisResponse> insert(@RequestBody GeographicZone geographicZone,
                                                  HttpServletRequest request) {
-    ResponseEntity<OpenLmisResponse> successResponse;
-    geographicZone.setModifiedBy(loggedInUserId(request));
+    Long userId = loggedInUserId(request);
+    geographicZone.setCreatedBy(userId);
+    geographicZone.setModifiedBy(userId);
     try {
-      if (geographicZone.getId() == null) {
-        service.saveNew(geographicZone);
-      } else {
-        service.update(geographicZone);
-      }
+      service.save(geographicZone);
     } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+      return OpenLmisResponse.error(e, BAD_REQUEST);
     }
-
-    successResponse = success("Geographic zone '" + geographicZone.getName() + "' has been successfully saved");
-    successResponse.getBody().addData("geographicZone", geographicZone);
-    return successResponse;
+    ResponseEntity<OpenLmisResponse> success = success(
+      messageService.message("message.geo.zone.created.success", geographicZone.getName()));
+    success.getBody().addData("geoZone", geographicZone);
+    return success;
   }
 
-  @RequestMapping(value = "/geographicZone/getDetails/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
-  public ResponseEntity<OpenLmisResponse> getGeographicZone(@PathVariable(value = "id") int id) {
-    return OpenLmisResponse.response("geographicZone", service.getById(id));
+  @RequestMapping(value = "/geographicZones/{id}", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
+  public ResponseEntity<OpenLmisResponse> update(@RequestBody GeographicZone geographicZone,
+                                                 @PathVariable("id") Long id,
+                                                 HttpServletRequest request) {
+    Long userId = loggedInUserId(request);
+    geographicZone.setId(id);
+    geographicZone.setModifiedBy(userId);
+    try {
+      service.save(geographicZone);
+    } catch (DataException e) {
+      return OpenLmisResponse.error(e, BAD_REQUEST);
+    }
+    ResponseEntity<OpenLmisResponse> success = success(
+      messageService.message("message.geo.zone.updated.success", geographicZone.getName()));
+    success.getBody().addData("geoZone", geographicZone);
+    return success;
   }
 
-  @RequestMapping(value = "/geographicZones", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
-  public List<GeographicZone> searchGeographicZone(@RequestParam(required = true) String param) {
-    return service.searchGeographicZone(param);
+  @RequestMapping(value = "/geographicZones", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
+  public ResponseEntity<OpenLmisResponse> search(@RequestParam(value = "searchParam") String searchParam,
+                                                 @RequestParam(value = "columnName") String columnName,
+                                                 @RequestParam(value = "page", defaultValue = "1") Integer page) {
+    Pagination pagination = service.getPagination(page);
+    pagination.setTotalRecords(service.getTotalSearchResultCount(searchParam, columnName));
+    List<GeographicZone> geographicZones = service.searchBy(searchParam, columnName, page);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(GEO_ZONES, geographicZones);
+    response.getBody().addData("pagination", pagination);
+    return response;
   }
-
 
   @RequestMapping(value = "/geographicLevels", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getAllGeographicLevels(HttpServletRequest request) {
-    return OpenLmisResponse.response("geographicLevels", reportLookupService.getAllGeographicLevels());
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
+  public List<GeographicLevel> getAllGeographicLevels() {
+    return service.getAllGeographicLevels();
   }
 
-  @RequestMapping(value = "/geographicZone/getList", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES, MANAGE_REQUISITION_GROUP')")
-  public ResponseEntity<OpenLmisResponse> getGeographicZoneList(HttpServletRequest request) {
-    return OpenLmisResponse.response("geographicZones", service.getAll());
+  @RequestMapping(value = "/parentGeographicZones/{geoLevelCode}", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
+  public List<GeographicZone> getAllGeographicZonesAbove(@PathVariable("geoLevelCode") String geographicLevelCode) {
+    GeographicLevel geographicLevel = new GeographicLevel(geographicLevelCode, null, null);
+    return service.getAllGeographicZonesAbove(geographicLevel);
   }
 
+  @RequestMapping(value = "/filtered-geographicZones", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE, MANAGE_USER')")
+  public ResponseEntity<OpenLmisResponse> getGeographicZoneByCodeOrName(@RequestParam(value = "searchParam") String searchParam,
+                                                                        @Value("${search.results.limit}") String searchLimit) {
+    Integer count = service.getGeographicZonesCountBy(searchParam);
+    if (count <= parseInt(searchLimit)) {
+      List<GeographicZone> geographicZones = service.getGeographicZonesByCodeOrName(searchParam);
+      return OpenLmisResponse.response(GEO_ZONES, geographicZones);
+    } else {
+      return OpenLmisResponse.response("message", messageService.message("too.many.results.found"));
+    }
+  }
 
   @RequestMapping(value = "/geographic-zone/save-gis", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
@@ -129,5 +134,4 @@ public class GeographicZoneController extends BaseController {
     service.saveGisInfo(geoZoneGeometries.getFeatures(), loggedInUserId(request));
     return OpenLmisResponse.response("status", true);
   }
-
 }

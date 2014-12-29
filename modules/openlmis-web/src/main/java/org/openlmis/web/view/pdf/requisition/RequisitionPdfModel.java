@@ -164,7 +164,6 @@ public class RequisitionPdfModel {
     table.addCell(cell);
   }
 
-
   public PdfPTable getNonFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException, IOException {
     List<RnrLineItem> nonFullSupplyLineItems = requisition.getNonFullSupplyLineItems();
     Collections.sort(nonFullSupplyLineItems, new LineItemComparator());
@@ -183,7 +182,6 @@ public class RequisitionPdfModel {
     table.setSpacingAfter(PARAGRAPH_SPACING);
     return table;
   }
-
 
   private void addHeading(PdfPTable table) throws DocumentException {
     Chunk chunk = new Chunk(String.format(messageService.message("label.requisition") + ": %s (%s)",
@@ -206,7 +204,7 @@ public class RequisitionPdfModel {
     text = String.format(messageService.message("label.facility.maximumStock") + ": %s",
       facility.getFacilityType().getNominalMaxMonth());
     insertCell(table, text, 1);
-    text = String.format(messageService.message("label.facility.emergencyOrder") + ": %s",
+    text = String.format(messageService.message("label.emergency.order.point") + ": %s",
       facility.getFacilityType().getNominalEop());
     insertCell(table, text, 1);
     insertCell(table, "", 1);
@@ -243,7 +241,6 @@ public class RequisitionPdfModel {
     builder = new StringBuilder();
     builder.append(messageService.message("label.requisition.type")).append(": ").append(messageService.message(label));
     insertCell(table, builder.toString(), 1);
-
   }
 
   private PdfPTable prepareRequisitionHeaderTable() throws DocumentException {
@@ -341,7 +338,6 @@ public class RequisitionPdfModel {
   public Money getTotalCost(Rnr requisition) {
     return new Money(requisition.getFullSupplyItemsSubmittedCost().getValue().add(requisition.getNonFullSupplyItemsSubmittedCost().getValue()));
   }
-
 
   public Paragraph getRegimenHeader() {
     return new Paragraph(messageService.message("label.regimens"), H2_FONT);

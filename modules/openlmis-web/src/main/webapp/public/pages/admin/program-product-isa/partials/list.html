@@ -33,7 +33,7 @@
          openlmis-message="message.no.products.mapped">
     </div>
 
-    <div class="list-header-container">
+    <div class="list-header-container" ng-show="programProducts.length">
         <div class="row-fluid list-header">
             <div class="span4">
                 <span id='productNameLabel' class="first-column" openlmis-message="label.product.name"></span>
@@ -145,7 +145,7 @@
                     <div class="span4">
                         <input id="adjustment-value" name="adjustmentValue" type="text" ng-required="true"
                                ng-model="currentProgramProduct.programProductIsa.adjustmentValue"
-                               ng-change="error=''" maxlength="7" numeric-validator="integer" ng-trim="false"
+                               ng-change="error=''" maxlength="7" numeric-validator="integer,6" ng-trim="false"
                                ng-class="highlightRequired(currentProgramProduct.programProductIsa.adjustmentValue)"/>
                         <span>(+/-)</span>
 

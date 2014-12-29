@@ -119,11 +119,13 @@ public class RnrLineItemTest {
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true);
     programProduct.setDisplayOrder(9);
     programProduct.setProductCategory(category);
+    programProduct.setFullSupply(product.getFullSupply());
 
-    RnrLineItem rnrLineItem = new RnrLineItem(1L, new FacilityTypeApprovedProduct("warehouse", programProduct, 3), 1L, 1L);
+    RnrLineItem rnrLineItem = new RnrLineItem(1L, new FacilityTypeApprovedProduct("warehouse", programProduct, 3.2), 1L,
+      1L);
 
-    assertThat(rnrLineItem.getFullSupply(), is(product.getFullSupply()));
-    assertThat(rnrLineItem.getMaxMonthsOfStock(), is(3));
+    assertThat(rnrLineItem.getFullSupply(), is(programProduct.isFullSupply()));
+    assertThat(rnrLineItem.getMaxMonthsOfStock(), is(3.2));
     assertThat(rnrLineItem.getRnrId(), is(1L));
     assertThat(rnrLineItem.getDispensingUnit(), is("Strip"));
     assertThat(rnrLineItem.getProductCode(), is("ASPIRIN"));
@@ -338,7 +340,8 @@ public class RnrLineItemTest {
   @Test
   public void shouldCopyEditableFieldsForNonFullSupplyBasedOnTemplate() throws Exception {
     lineItem.copyCreatorEditableFieldsForNonFullSupply(make(a(defaultRnrLineItem, with(quantityRequested, 9),
-      with(reasonForRequestedQuantity, "no reason"), with(remarks, "no remarks"))), new ProgramRnrTemplate(getRnrColumnsForNonFullSupply()));
+      with(reasonForRequestedQuantity, "no reason"), with(remarks, "no remarks"))),
+      new ProgramRnrTemplate(getRnrColumnsForNonFullSupply()));
 
     assertThat(lineItem.getReasonForRequestedQuantity(), is("no reason"));
     assertThat(lineItem.getRemarks(), is("no remarks"));
@@ -415,7 +418,8 @@ public class RnrLineItemTest {
     ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
       add(make(a(defaultRnrColumn, with(source, CALCULATED), with(columnName, STOCK_IN_HAND))));
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
-      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, NEW_PATIENT_COUNT), with(option, new RnrColumnOption("newPatientCount", "NPC")))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, NEW_PATIENT_COUNT),
+        with(option, new RnrColumnOption("newPatientCount", "NPC")))));
     }};
 
     ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(columns);
@@ -433,10 +437,12 @@ public class RnrLineItemTest {
     ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, STOCK_IN_HAND))));
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
-      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, NEW_PATIENT_COUNT), with(option, new RnrColumnOption("newPatientCount", "NPC")))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, NEW_PATIENT_COUNT),
+        with(option, new RnrColumnOption("newPatientCount", "NPC")))));
     }};
 
-    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList, numberOfMonths);
+    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList,
+      numberOfMonths);
 
     verify(spyLineItem, never()).calculateStockInHand();
   }
@@ -447,10 +453,12 @@ public class RnrLineItemTest {
     ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, STOCK_IN_HAND))));
       add(make(a(defaultRnrColumn, with(source, CALCULATED), with(columnName, QUANTITY_DISPENSED))));
-      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, NEW_PATIENT_COUNT), with(option, new RnrColumnOption("newPatientCount", "NPC")))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, NEW_PATIENT_COUNT),
+        with(option, new RnrColumnOption("newPatientCount", "NPC")))));
     }};
 
-    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList, numberOfMonths);
+    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList,
+      numberOfMonths);
 
     verify(spyLineItem).calculateQuantityDispensed();
   }
@@ -461,10 +469,12 @@ public class RnrLineItemTest {
     ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, STOCK_IN_HAND))));
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
-      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, NEW_PATIENT_COUNT), with(option, new RnrColumnOption("newPatientCount", "NPC")))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, NEW_PATIENT_COUNT),
+        with(option, new RnrColumnOption("newPatientCount", "NPC")))));
     }};
 
-    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList, numberOfMonths);
+    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList,
+      numberOfMonths);
 
     verify(spyLineItem, never()).calculateQuantityDispensed();
   }
@@ -601,12 +611,12 @@ public class RnrLineItemTest {
   @Test
   public void shouldCalculateMaxStockQuantity() throws Exception {
     RnrLineItem lineItem = new RnrLineItem();
-    lineItem.setMaxMonthsOfStock(2);
+    lineItem.setMaxMonthsOfStock(2.4);
     lineItem.setAmc(5);
 
     lineItem.calculateMaxStockQuantity(template);
 
-    assertThat(lineItem.getMaxStockQuantity(), is(10));
+    assertThat(lineItem.getMaxStockQuantity(), is(12));
   }
 
   @Test
@@ -836,12 +846,15 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(columnName, QUANTITY_DISPENSED), with(visible, false),
         with(source, CALCULATED))));
       add(make(a(defaultRnrColumn, with(columnName, LOSSES_AND_ADJUSTMENTS), with(visible, true))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.NEW_PATIENT_COUNT), with(visible, false),
+        with(option, new RnrColumnOption("newPatientCount", "NPC")))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.NEW_PATIENT_COUNT), with(visible, false), with(option, new RnrColumnOption(ProgramRnrTemplate.NEW_PATIENT_COUNT, ProgramRnrTemplate.NEW_PATIENT_COUNT) ) )));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.STOCK_OUT_DAYS), with(visible, false))));
       add(make(a(defaultRnrColumn, with(columnName, STOCK_IN_HAND), with(visible, false),
         with(source, CALCULATED))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.BEGINNING_BALANCE), with(visible, false))));
-      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.REMARKS), with(visible, true), with(source, USER_INPUT))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.REMARKS), with(visible, true),
+        with(source, USER_INPUT))));
       add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_APPROVED), with(visible, true),
         with(source, USER_INPUT))));
 
@@ -850,10 +863,13 @@ public class RnrLineItemTest {
 
   private ArrayList<RnrColumn> getRnrColumnsForNonFullSupply() {
     return new ArrayList<RnrColumn>() {{
-      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_REQUESTED), with(visible, true), with(source, USER_INPUT))));
-      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.REMARKS), with(visible, true), with(source, USER_INPUT))));
-      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.REASON_FOR_REQUESTED_QUANTITY), with(visible, true),
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.QUANTITY_REQUESTED), with(visible, true),
         with(source, USER_INPUT))));
+      add(make(a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.REMARKS), with(visible, true),
+        with(source, USER_INPUT))));
+      add(make(
+        a(defaultRnrColumn, with(columnName, ProgramRnrTemplate.REASON_FOR_REQUESTED_QUANTITY), with(visible, true),
+          with(source, USER_INPUT))));
     }};
   }
 
@@ -867,7 +883,10 @@ public class RnrLineItemTest {
     addColumnToTemplate(templateColumns, ProgramRnrTemplate.REASON_FOR_REQUESTED_QUANTITY, true, null);
   }
 
-  private void addColumnToTemplate(List<RnrColumn> templateColumns, String columnName, Boolean visible, Boolean formulaValidation) {
+  private void addColumnToTemplate(List<RnrColumn> templateColumns,
+                                   String columnName,
+                                   Boolean visible,
+                                   Boolean formulaValidation) {
     RnrColumn rnrColumn = new RnrColumn();
     rnrColumn.setName(columnName);
     rnrColumn.setVisible(visible);

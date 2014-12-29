@@ -108,7 +108,7 @@ function CreateRequisitionController($scope, requisitionData, hideAdditionalComm
   }
   $scope.hasPermission = function (permission) {
     return _.find($scope.requisitionRights, function (right) {
-      return right.right === permission;
+      return right.name === permission;
     });
   };
 

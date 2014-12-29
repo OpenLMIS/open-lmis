@@ -13,6 +13,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,23 +31,22 @@ import java.util.List;
 public class FacilityApprovedProductService {
 
   public static final String FACILITY_TYPE_DOES_NOT_EXIST = "facilityType.invalid";
-
-  private FacilityApprovedProductRepository repository;
-  private ProgramService programService;
-  private ProductService productService;
-  private ProgramProductService programProductService;
-  private FacilityService facilityService;
+  public static final String FACILITY_APPROVED_PRODUCT_DOES_NOT_EXIST = "facility.approved.product.does.not.exist";
 
   @Autowired
-  public FacilityApprovedProductService(FacilityApprovedProductRepository repository,
-                                        ProgramService programService, ProductService productService,
-                                        ProgramProductService programProductService, FacilityService facilityService) {
-    this.repository = repository;
-    this.programService = programService;
-    this.productService = productService;
-    this.programProductService = programProductService;
-    this.facilityService = facilityService;
-  }
+  private FacilityApprovedProductRepository repository;
+
+  @Autowired
+  private ProgramService programService;
+
+  @Autowired
+  private ProductService productService;
+
+  @Autowired
+  private ProgramProductService programProductService;
+
+  @Autowired
+  private FacilityService facilityService;
 
   public List<FacilityTypeApprovedProduct> getFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId) {
     return repository.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
@@ -54,26 +54,6 @@ public class FacilityApprovedProductService {
 
   public List<FacilityTypeApprovedProduct> getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId) {
     return repository.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
-  }
-
-  public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityAndProgram(Long facilityId, Long programId){
-      return repository.getProductsCompleteListByFacilityAndProgram(facilityId, programId);
-  }
-
-  public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityTypeAndProgram(Long facilityTypeId, Long programId){
-      return repository.getProductsCompleteListByFacilityTypeAndProgram(facilityTypeId, programId);
-  }
-
-  public List<FacilityTypeApprovedProduct> getProductsAlreadyApprovedListByFacilityTypeAndProgram(Long facilityTypeId, Long programId){
-      return repository.getProductsAlreadyApprovedListByFacilityTypeAndProgram(facilityTypeId, programId);
-  }
-
-  public FacilityTypeApprovedProduct  getFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
-      return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
-  }
-
-  public void removeFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
-      repository.removeFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
   }
 
   public void save(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
@@ -84,36 +64,26 @@ public class FacilityApprovedProductService {
     facilityTypeApprovedProduct.getFacilityType().setId(facilityType.getId());
 
     if (facilityTypeApprovedProduct.getId() != null) {
+      if(repository.get(facilityTypeApprovedProduct.getId()) == null){
+        throw new DataException(FACILITY_APPROVED_PRODUCT_DOES_NOT_EXIST);
+      }
       repository.update(facilityTypeApprovedProduct);
     } else {
       repository.insert(facilityTypeApprovedProduct);
     }
   }
 
-  public void save_ext(FacilityTypeApprovedProduct facilityTypeApprovedProduct, Long userID){
-      facilityTypeApprovedProduct.setModifiedBy(userID);
-      facilityTypeApprovedProduct.setModifiedDate(new Date());
-
-
-      if (facilityTypeApprovedProduct.getId() != null) {
-          repository.update(facilityTypeApprovedProduct);
-      } else {
-        FacilityTypeApprovedProduct fproduct = repository.getFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeApprovedProduct.getFacilityType().getId(), facilityTypeApprovedProduct.getProgramProduct().getProgram().getId(), facilityTypeApprovedProduct.getProgramProduct().getProduct().getId() );
-        if(fproduct == null){
-          facilityTypeApprovedProduct.setCreatedBy(userID);
-          repository.insert(facilityTypeApprovedProduct);
-        } else{
-          fproduct.setMaxMonthsOfStock( facilityTypeApprovedProduct.getMaxMonthsOfStock() );
-          fproduct.setMinMonthsOfStock( facilityTypeApprovedProduct.getMinMonthsOfStock() );
-          repository.update(fproduct);
-        }
-
-      }
-  }
-
   public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     fillProgramProductIds(facilityTypeApprovedProduct);
     return repository.getFacilityApprovedProductByProgramProductAndFacilityTypeCode(facilityTypeApprovedProduct);
+  }
+
+  public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId, Long programId, String searchParam, Pagination pagination) {
+    return repository.getAllBy(facilityTypeId, programId, searchParam, pagination);
+  }
+
+  public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId, String searchParam) {
+    return repository.getTotalSearchResultCount(facilityTypeId, programId, searchParam);
   }
 
   private void fillProgramProductIds(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
@@ -123,5 +93,16 @@ public class FacilityApprovedProductService {
     facilityTypeApprovedProduct.getProgramProduct().getProgram().setId(programId);
     facilityTypeApprovedProduct.getProgramProduct().getProduct().setId(productId);
     facilityTypeApprovedProduct.getProgramProduct().setId(programProductId);
+  }
+
+  public void saveAll(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, Long userId) {
+    for (FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
+      facilityTypeApprovedProduct.setCreatedBy(userId);
+      save(facilityTypeApprovedProduct);
+    }
+  }
+
+  public void delete(Long id) {
+    repository.delete(id);
   }
 }

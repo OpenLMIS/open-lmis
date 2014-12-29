@@ -17,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
@@ -29,6 +28,7 @@ import static java.util.Collections.emptyList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
+import static org.openlmis.core.domain.RightName.MANAGE_DISTRIBUTION;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -51,7 +51,7 @@ public class DistributionPermissionServiceTest {
     deliveryZone.setCode("DZ");
     Distribution distribution = new Distribution();
     distribution.setDeliveryZone(deliveryZone);
-    when(deliveryZoneService.getByUserForRight(userId, Right.MANAGE_DISTRIBUTION)).thenReturn(asList(deliveryZone));
+    when(deliveryZoneService.getByUserForRight(userId, MANAGE_DISTRIBUTION)).thenReturn(asList(deliveryZone));
     when(distributionService.getBy(distributionId)).thenReturn(distribution);
 
     assertThat(distributionPermissionService.hasPermission(userId, "MANAGE_DISTRIBUTION", distributionId), is(true));
@@ -62,7 +62,7 @@ public class DistributionPermissionServiceTest {
     Long userId = 1L;
     Long distributionId = 2L;
     List<DeliveryZone> deliveryZones = emptyList();
-    when(deliveryZoneService.getByUserForRight(userId, Right.MANAGE_DISTRIBUTION)).thenReturn(
+    when(deliveryZoneService.getByUserForRight(userId, MANAGE_DISTRIBUTION)).thenReturn(
       deliveryZones);
     when(distributionService.getBy(distributionId)).thenReturn(new Distribution());
 

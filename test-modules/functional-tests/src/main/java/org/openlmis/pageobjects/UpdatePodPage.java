@@ -100,6 +100,9 @@ public class UpdatePodPage extends Page {
   @FindBy(how = ID, using = "receivedDate")
   private WebElement receivedDate = null;
 
+  @FindBy(how = ID, using = "printButton")
+  private WebElement printButton = null;
+
   public UpdatePodPage(TestWebDriver testWebDriver) {
     super(testWebDriver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -173,66 +176,6 @@ public class UpdatePodPage extends Page {
     WebElement tickIcon = testWebDriver.getElementById("tickIcon" + (rowNumber - 1));
     testWebDriver.waitForElementToAppear(tickIcon);
     return tickIcon.isDisplayed();
-  }
-
-  public boolean isFirstPageLinkEnabled() {
-    testWebDriver.waitForElementToAppear(firstPageLink);
-    return firstPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
-  }
-
-  public boolean isFirstPageLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(firstPageLink);
-    return firstPageLink.isDisplayed();
-  }
-
-  public boolean isPreviousPageLinkEnabled() {
-    testWebDriver.waitForElementToAppear(previousPageLink);
-    return previousPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
-  }
-
-  public boolean isPreviousPageLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(previousPageLink);
-    return previousPageLink.isDisplayed();
-  }
-
-  public boolean isNextPageLinkEnabled() {
-    testWebDriver.waitForElementToAppear(nextPageLink);
-    return nextPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
-  }
-
-  public boolean isNextPageLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(nextPageLink);
-    return nextPageLink.isDisplayed();
-  }
-
-  public boolean isLastPageLinkEnabled() {
-    testWebDriver.waitForElementToAppear(lastPageLink);
-    return lastPageLink.getCssValue("color").contains("rgba(119, 119, 119, 1)");
-  }
-
-  public boolean isLastPageLinkDisplayed() {
-    testWebDriver.waitForElementToAppear(lastPageLink);
-    return lastPageLink.isDisplayed();
-  }
-
-  public void navigateToNextPage() {
-    testWebDriver.waitForElementToAppear(nextPageLink);
-    nextPageLink.click();
-  }
-
-  public void navigateToFirstPage() {
-    testWebDriver.waitForElementToAppear(firstPageLink);
-    firstPageLink.click();
-  }
-
-  public void navigateToLastPage() {
-    testWebDriver.waitForElementToAppear(lastPageLink);
-    lastPageLink.click();
-  }
-
-  public void navigateToPreviousPage() {
-    testWebDriver.waitForElementToAppear(previousPageLink);
-    previousPageLink.click();
   }
 
   public String getRequisitionTypeColor() {
@@ -454,5 +397,10 @@ public class UpdatePodPage extends Page {
     testWebDriver.waitForElementToAppear(receivedDate);
     testWebDriver.scrollToElement(receivedDate);
     return receivedDate.isEnabled();
+  }
+
+  public void clickPrintButton() {
+    testWebDriver.waitForElementToAppear(printButton);
+    printButton.click();
   }
 }

@@ -232,7 +232,7 @@ function InitiateRnrController($scope, $location, Requisitions, AuthorizationSer
       var rights = data.rights;
       var hasPermission = function (permission) {
         return _.find(rights, function (right) {
-          return right.right === permission;
+          return right.name === permission;
         });
       };
 

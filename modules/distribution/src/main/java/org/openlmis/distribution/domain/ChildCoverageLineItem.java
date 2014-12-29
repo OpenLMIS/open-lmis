@@ -38,8 +38,9 @@ public class ChildCoverageLineItem extends CoverageLineItem {
   private Integer healthCenter23Months;
   private Integer outreach23Months;
 
-  public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct, String vaccination) {
-    super(facilityVisit, facility, targetGroupProduct);
+  public ChildCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct,
+                               String vaccination, Integer processingPeriodMonths) {
+    super(facilityVisit, facility, targetGroupProduct, processingPeriodMonths);
     this.vaccination = vaccination;
   }
 }

@@ -11,7 +11,6 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.OrderNumberConfiguration;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
@@ -28,15 +27,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import static org.openlmis.core.domain.RightName.VIEW_ORDER;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.core.domain.RightName.MANAGE_POD;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.order.dto.OrderDTO.getOrdersForView;
 import static org.openlmis.web.response.OpenLmisResponse.error;
@@ -82,22 +80,21 @@ public class OrderController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page",
     required = true,
     defaultValue = "1") Integer page,
-    @RequestParam(value="supplyDepot", defaultValue = "0") Long supplyDepot,
-    @RequestParam(value="period", defaultValue = "0") Long period,
-    @RequestParam(value="program", defaultValue = "0") Long program,
-    HttpServletRequest request) {
-
+     @RequestParam(value="supplyDepot", defaultValue = "0") Long supplyDepot,
+     @RequestParam(value="period", defaultValue = "0") Long period,
+     @RequestParam(value="program", defaultValue = "0") Long program,
+     HttpServletRequest request) {
     ResponseEntity<OpenLmisResponse> response;
     if(supplyDepot != 0 || program != 0){
 
       response = response(ORDERS,
-          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER, supplyDepot, program, period)));
+          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), VIEW_ORDER, supplyDepot, program, period)));
       response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
       response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages(supplyDepot, program,period));
 
     }else {
       response = response(ORDERS,
-          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));
+          getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), VIEW_ORDER)));
       response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
       response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
     }
