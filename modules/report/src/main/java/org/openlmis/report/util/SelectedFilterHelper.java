@@ -56,7 +56,7 @@ public class SelectedFilterHelper {
     // these filters are essential for all reports and these lines should be fairly re-used.
 
     ProcessingPeriod periodObject = periodService.getById(Long.parseLong(period));
-    GeographicZone zoneObject = geoZoneRepsotory.getById(Integer.parseInt(zone));
+    GeographicZone zoneObject = geoZoneRepsotory.getById(Long.parseLong(zone));
 
     filterSummary = "Program: " + programService.getById(Long.parseLong(program)).getName();
     filterSummary += "\nPeriod: " + periodObject.getName() + ", " + periodObject.getStringYear();
@@ -78,7 +78,7 @@ public class SelectedFilterHelper {
         String facility = StringHelper.isBlank(params, "facility")?"0" : params.get("facility")[0];
 
         filterSummary = "Program: " + programService.getById(Long.parseLong(program)).getName();
-        GeographicZone zoneObject = geoZoneRepsotory.getById(Integer.parseInt(zone));
+        GeographicZone zoneObject = geoZoneRepsotory.getById(Long.parseLong(zone));
         Facility facilityObject = facilityRepository.getById(Long.parseLong(facility));
 
         if(zoneObject == null){

@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class is acts as a authentication provider.
+ * This class acts as an authentication provider. It authenticates user credentials.
  */
 
 public class UserAuthenticationProvider implements AuthenticationProvider {

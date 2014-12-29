@@ -26,7 +26,7 @@ public class SupplyLineBuilder {
 
   public static final Property<SupplyLine, SupervisoryNode> supervisoryNode = newProperty();
   public static final Property<SupplyLine, Facility> facility = newProperty();
-  public static final Property<SupplyLine, Program> defaultProgram = newProperty();
+  public static final Property<SupplyLine, Program> program = newProperty();
 
   private static SupervisoryNode defaultSupervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
 
@@ -39,7 +39,7 @@ public class SupplyLineBuilder {
       SupplyLine supplyLine = new SupplyLine();
       supplyLine.setSupervisoryNode(lookup.valueOf(supervisoryNode, defaultSupervisoryNode));
       supplyLine.setSupplyingFacility(lookup.valueOf(facility, defaultFacility));
-      supplyLine.setProgram(lookup.valueOf(defaultProgram, program));
+      supplyLine.setProgram(lookup.valueOf(SupplyLineBuilder.program, program));
       supplyLine.setExportOrders(true);
 
       return supplyLine;

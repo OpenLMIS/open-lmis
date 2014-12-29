@@ -11,6 +11,7 @@
 package org.openlmis.web.controller.vaccine;
 
 import org.openlmis.core.domain.Right;
+import org.openlmis.core.domain.RightName;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.vaccine.RequestStatus;
@@ -51,7 +52,7 @@ public class VaccineReportController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getFacilities(@PathVariable Long programId, HttpServletRequest request){
     Long userId = loggedInUserId(request);
     //TODO: make sure this method also supports home facility.
-    return OpenLmisResponse.response("facilities", facilityService.getUserSupervisedFacilities(userId, programId, Right.CREATE_REQUISITION));
+    return OpenLmisResponse.response("facilities", facilityService.getUserSupervisedFacilities(userId, programId, RightName.CREATE_REQUISITION));
   }
 
   @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)

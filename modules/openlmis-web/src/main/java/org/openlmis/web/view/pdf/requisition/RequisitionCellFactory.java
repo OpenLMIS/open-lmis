@@ -108,7 +108,6 @@ public class RequisitionCellFactory {
     }
   }
 
-
   public static PdfPCell imageCell() throws BadElementException, IOException {
     Resource resource = new ClassPathResource(OK_IMAGE);
     Image image = Image.getInstance(resource.getFile().getAbsolutePath());

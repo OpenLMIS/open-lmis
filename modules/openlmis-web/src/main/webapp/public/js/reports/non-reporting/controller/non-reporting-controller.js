@@ -14,18 +14,83 @@ function NonReportingController($scope, NonReportingFacilities) {
     // clear old data if there was any
     $scope.data = $scope.datarows = [];
     $scope.filter.max = 10000;
+
     NonReportingFacilities.get($scope.filter, function(data) {
       if (data.pages !== undefined && data.pages.rows !== undefined) {
         $scope.summaries    =  data.pages.rows[0].summary;
+
         $scope.data = data.pages.rows[0].details;
         $scope.paramsChanged($scope.tableParams);
+
+         $scope.facilityEquipStatusPieChartData = [];
+
+          $scope.facilityEquipStatusPieChartData[0] = {
+              label: $scope.summaries[5].name,
+              data:  $scope.summaries[5].count,
+              color: '#A3CC29'
+          };
+
+          $scope.facilityEquipStatusPieChartData[1] = {
+              label:  $scope.summaries[4].name,
+              data:   $scope.summaries[4].count,
+              color: '#FFB445'
+          };
       }
     });
   };
+
 
   $scope.exportReport   = function (type){
     var paramString = jQuery.param($scope.filter);
     var url = '/reports/download/non_reporting/' + type + '?' + paramString;
     window.open(url);
   };
+
+  // Summary pie chart options
+    $scope.nonReportingReportSummaryPieChartOption = {
+        series: {
+            pie: {
+                show: true,
+                radius: 1,
+                label: {
+                    show: true,
+                    radius: 2 / 3,
+                    formatter: function (label, series) {
+                        return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">' + Math.round(series.percent) + '%</div>';
+                    },
+                    threshold: 0.1
+                }
+            }
+        },
+        legend: {
+            container:$("#nonReportingReportSummary"),
+            noColumns: 0,
+            labelBoxBorderColor: "none",
+            sorted:"descending",
+            backgroundOpacity:1,
+            labelFormatter: function(label, series) {
+                var percent= Math.round(series.percent);
+                var number= series.data[0][1];
+                return('<b>'+label+'</b>');
+            }
+        },
+        grid:{
+            hoverable: true,
+            clickable: true,
+            borderWidth: 1,
+            borderColor: "#000",
+            backgroundColor: {
+                colors: ["red", "green", "yellow"]
+            }
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: "%p.0%, %s",
+            shifts: {
+                x: 20,
+                y: 0
+            },
+            defaultTheme: false
+        }
+    };
 }

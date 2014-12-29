@@ -16,9 +16,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.serializer.DateDeserializer;
 
 import java.util.Date;
 
@@ -42,7 +44,10 @@ public class FacilityVisit extends BaseModel {
   private Facilitator confirmedBy;
   private Facilitator verifiedBy;
   private String observations;
+
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date visitDate;
+
   private Boolean visited;
   private String vehicleId;
   private ReasonForNotVisiting reasonForNotVisiting;

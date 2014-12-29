@@ -61,13 +61,13 @@ public class AverageConsumptionReportParam extends BaseParam
   private int facilityTypeId;
   private String facilityType;
 
-  private int zoneId;
+  private Long zoneId;
   private String zone;
 
   private String productNames;
   private String productId;
 
-  private long productCategoryId;
+  private Long productCategoryId;
   private String productCategories;
 
   private Long rgroupId;
@@ -107,7 +107,7 @@ public class AverageConsumptionReportParam extends BaseParam
       }
 
       if (rgroupId != 0 && rgroupId != null) {
-        setRequisitionGroup(requisitionGroupService.getById(rgroupId).getName());
+        setRequisitionGroup(requisitionGroupService.getBy(rgroupId).getName());
       } else {
         setRequisitionGroup("All requisition groups");
       }

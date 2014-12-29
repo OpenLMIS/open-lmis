@@ -11,8 +11,8 @@
 package org.openlmis.reporting.controller;
 
 import org.openlmis.reporting.model.Template;
-import org.openlmis.reporting.repository.mapper.TemplateMapper;
 import org.openlmis.reporting.service.JasperReportsViewFactory;
+import org.openlmis.reporting.service.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -32,47 +31,38 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 public class ReportController {
-  public static final String PDF_VIEW = "pdf";
+
   public static final String USER_ID = "USER_ID";
-  public static final String USER_ID_PARAM = "userId";
 
   @Autowired
   private JasperReportsViewFactory jasperReportsViewFactory;
 
   @Autowired
-  private TemplateMapper templateMapper;
+  private TemplateService templateService;
 
   private Long loggedInUserId(HttpServletRequest request) {
     return (Long) request.getSession().getAttribute(USER_ID);
   }
 
-  @RequestMapping(method = GET, value = "/reports/{id}/{format}")
-  public ModelAndView generateReport(HttpServletRequest request, @PathVariable("id") Long id,
-                                     @PathVariable("format") String format) throws Exception {
-
-    String viewFormat = format == null ? PDF_VIEW : format;
-
-    Template template = templateMapper.getById(id);
-
-    JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(template);
-
-    Map<String, Object> map = new HashMap<>();
-    map.put("format", viewFormat);
-
-    setReportParameters(request, template, map);
-
-    return new ModelAndView(jasperView, map);
+  @RequestMapping(method = GET, value = "/reports/{id}")
+  public Template getReportWithParameters(@PathVariable("id") Long id) {
+    return templateService.getLWById(id);
   }
 
-  private void setReportParameters(HttpServletRequest request,
-                                   Template template, Map<String, Object> map) {
-    if (template.getParameters() != null) {
-      for (String parameter : template.getParameters()) {
-        if (parameter.equalsIgnoreCase(USER_ID_PARAM)) {
-          map.put(parameter, loggedInUserId(request).intValue());
-        }
-      }
+  @RequestMapping(method = GET, value = "/reports/{id}/{format}")
+  public ModelAndView generateReport(HttpServletRequest request, @PathVariable("id") Long id,
+                                     @PathVariable("format") String format) {
+    JasperReportsMultiFormatView jasperView;
+    Map<String, Object> map;
+    try {
+      int userId = loggedInUserId(request).intValue();
+      Template template = templateService.getById(id);
+      jasperView = jasperReportsViewFactory.getJasperReportsView(template);
+      map = templateService.getParametersMap(template, userId, request, format);
+    } catch (Exception e) {
+      return new ModelAndView("error-page");
     }
+    return new ModelAndView(jasperView, map);
   }
 
 }

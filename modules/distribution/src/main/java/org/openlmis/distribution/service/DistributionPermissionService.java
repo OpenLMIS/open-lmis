@@ -13,7 +13,6 @@ package org.openlmis.distribution.service;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.DeliveryZone;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.service.DeliveryZoneService;
 import org.openlmis.distribution.domain.Distribution;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,7 @@ public class DistributionPermissionService {
   }
 
   private Boolean hasPermissionForDeliveryZone(Long userId, String permission, final Distribution distribution) {
-    List<DeliveryZone> deliveryZones = deliveryZoneService.getByUserForRight(userId, Right.valueOf(permission));
+    List<DeliveryZone> deliveryZones = deliveryZoneService.getByUserForRight(userId, permission);
     boolean deliveryZoneExists = CollectionUtils.exists(deliveryZones, new Predicate() {
       @Override
       public boolean evaluate(Object o) {

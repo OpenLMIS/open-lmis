@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -41,7 +40,7 @@ public class PODPagination extends TestCaseHelper {
 
   UpdatePodPage updatePodPage;
 
-  @BeforeMethod(groups = {"requisition"})
+  @BeforeMethod(groups = {"orderAndPod"})
   public void setUp() throws Exception {
     super.setup();
     updatePodPage = PageObjectFactory.getUpdatePodPage(testWebDriver);
@@ -50,19 +49,19 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.configureTemplate(podPaginationData.get(PROGRAM));
     List<String> rightsList = asList("VIEW_ORDER", "MANAGE_POD");
 
-    setupTestUserRoleRightsData("200", podPaginationData.get(USER), rightsList);
+    setupTestUserRoleRightsData(podPaginationData.get(USER), rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-    dbWrapper.insertRoleAssignment("200", "store in-charge");
+    dbWrapper.insertRoleAssignment(podPaginationData.get(USER), "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", podPaginationData.get(PROGRAM), "F10", true);
-    dbWrapper.insertFulfilmentRoleAssignment("storeInCharge", "store in-charge", "F10");
+    dbWrapper.insertFulfilmentRoleAssignment(podPaginationData.get(USER), "store in-charge", "F10");
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testRnRPaginationAndDefaultDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C1", null);
@@ -79,47 +78,47 @@ public class PODPagination extends TestCaseHelper {
     verifyPageNumberLinksDisplayed();
     verifyPageNumberSelected(1);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksDisabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F10", "F2", "F3", "F4", "F5", "F6", "F7", "F8"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C1", "", "", "", "", "", "", "", "", ""});
 
     navigateToPage(2);
     verifyPageNumberSelected(2);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"F9", "NF0", "NF1", "NF10", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C1", "", "", "", "", "", "", "", "", ""});
 
-    updatePodPage.navigateToNextPage();
+    navigateToNextPage();
     verifyPageNumberSelected(3);
     verifyNextAndLastPageLinksDisabled();
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(2);
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(2);
     verifyProductDisplayOrderOnPage(new String[]{"NF8", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C1", ""});
 
-    updatePodPage.navigateToFirstPage();
+    navigateToFirstPage();
     verifyPageNumberSelected(1);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksDisabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
 
-    updatePodPage.navigateToLastPage();
+    navigateToLastPage();
     verifyPageNumberSelected(3);
     verifyNextAndLastPageLinksDisabled();
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(2);
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(2);
 
-    updatePodPage.navigateToPreviousPage();
+    navigateToPreviousPage();
     verifyPageNumberSelected(2);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testRnRPaginationAndSpecificDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
@@ -138,12 +137,12 @@ public class PODPagination extends TestCaseHelper {
     verifyProductDisplayOrderOnPage(new String[]{"F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8", "F9", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C1", "", "", "", "", "", "", "", "", ""});
 
-    updatePodPage.navigateToNextPage();
+    navigateToNextPage();
     verifyProductDisplayOrderOnPage(new String[]{"F10", "NF10"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C1", ""});
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testCategoryDefaultDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
@@ -162,12 +161,12 @@ public class PODPagination extends TestCaseHelper {
     verifyProductDisplayOrderOnPage(new String[]{"F4", "NF4", "F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C4", "", "C5", "", "C6", "", "C7", "", "C8", ""});
 
-    updatePodPage.navigateToNextPage();
+    navigateToNextPage();
     verifyProductDisplayOrderOnPage(new String[]{"F9", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C9", ""});
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testCategorySpecificDisplayOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C3", null);
@@ -192,12 +191,12 @@ public class PODPagination extends TestCaseHelper {
     verifyProductDisplayOrderOnPage(new String[]{"F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8", "F9", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C5", "", "C6", "", "C7", "", "C8", "", "C9", ""});
 
-    updatePodPage.navigateToNextPage();
+    navigateToNextPage();
     verifyProductDisplayOrderOnPage(new String[]{"F10", "NF10"});
     verifyCategoryDisplayOrderOnPage(new String[]{"C10", ""});
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testRnRPaginationAndDefaultDisplayOrderForPackedOrdersAndSave() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
     dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C1", null);
@@ -222,8 +221,8 @@ public class PODPagination extends TestCaseHelper {
     verifyPageNumberLinksDisplayed();
     verifyPageNumberSelected(1);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksDisabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"});
     assertEquals(updatePodPage.getReplacedProductCode(1), "NF0");
     assertEquals(updatePodPage.getReplacedProductCode(10), "NF9");
@@ -252,8 +251,8 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.enterDeliveryDetailsInPodScreen("Delivered Person new openLMIS", " ", "25/02/2014");
     navigateToPage(2);
     verifyPageNumberSelected(2);
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
     verifyProductDisplayOrderOnPage(new String[]{"NF0", "NF1", "NF2", "NF3", "NF4", "NF5", "NF6", "NF7", "NF8", "NF9"});
     assertEquals(updatePodPage.getReplacedProductCode(1), "");
     assertEquals(updatePodPage.getReplacedProductCode(10), "");
@@ -262,16 +261,17 @@ public class PODPagination extends TestCaseHelper {
     verifyDeliveryDetailsOfPodScreenInDatabase("Delivered Person new openLMIS", " ", "2014-02-25 00:00:00");
     updatePodPage.enterPodData("10", "openlmis", "7", 1);
     updatePodPage.clickSave();
+    testWebDriver.sleep(500);
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
     testWebDriver.refresh();
     updatePodPage.enterPodData("5", "openlmis openlmis", null, 1);
     updatePodPage.enterPodData("11", "openlmis openlmis project", "99999999", 10);
 
-    updatePodPage.navigateToLastPage();
+    navigateToLastPage();
     verifyPageNumberSelected(3);
     verifyNextAndLastPageLinksDisabled();
-    verifyFirstAndPreviousPageLinksEnabled();
-    verifyNumberOfProductsVisibleOnPage(2);
+    verifyPreviousAndFirstPageLinksEnabled();
+    verifyNumberOfLineItemsVisibleOnPage(2);
     verifyProductDisplayOrderOnPage(new String[]{"ZX", "ZX1"});
     assertEquals(updatePodPage.getReplacedProductCode(1), "");
     assertEquals(updatePodPage.getReplacedProductCode(2), "");
@@ -281,11 +281,11 @@ public class PODPagination extends TestCaseHelper {
     updatePodPage.enterPodData("110", "Notes", null, 2);
     updatePodPage.enterDeliveryDetailsInPodScreen("Delivered", "Received by facility incharge", "25/02/2013");
 
-    updatePodPage.navigateToFirstPage();
+    navigateToFirstPage();
     verifyPageNumberSelected(1);
     verifyNextAndLastPageLinksEnabled();
-    verifyFirstAndPreviousPageLinksDisabled();
-    verifyNumberOfProductsVisibleOnPage(10);
+    verifyPreviousAndFirstPageLinksDisabled();
+    verifyNumberOfLineItemsVisibleOnPage(10);
     updatePodPage.verifyQuantityReturnedOnUI("", 10);
     updatePodPage.verifyDeliveryDetailsOnPodScreenUI("Delivered", "Received by facility incharge", "25/02/2013");
 
@@ -311,7 +311,7 @@ public class PODPagination extends TestCaseHelper {
     verifyDeliveryDetailsOfPodScreenInDatabase("Delivered", "Received by facility incharge", "2013-02-25 00:00:00");
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testCategorySpecificDisplayOrderForPackedOrder() throws SQLException {
     dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertProgramProductsWithCategory("F5", "TB", "C3", null);
@@ -345,12 +345,47 @@ public class PODPagination extends TestCaseHelper {
     verifyProductDisplayOrderOnPage(new String[]{"F4", "NF4", "F5", "NF5", "F6", "NF6", "F7", "NF7", "F8", "NF8"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics4", "", "Antibiotics5", "", "Antibiotics6", "", "Antibiotics7", "", "Antibiotics8", ""});
 
-    updatePodPage.navigateToNextPage();
+    navigateToNextPage();
     verifyProductDisplayOrderOnPage(new String[]{"F9", "NF9"});
     verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics9", ""});
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
+  public void testDisplayOrderAndCategoryForProductsNotSupportedByProgram() throws SQLException {
+    dbWrapper.setupMultipleCategoryProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, true);
+    dbWrapper.insertRequisitionWithMultipleLineItems(9, podPaginationData.get(PROGRAM), true, "F10", false);
+    dbWrapper.convertRequisitionToOrder(dbWrapper.getMaxRnrID(), "READY_TO_PACK", podPaginationData.get(USER));
+    dbWrapper.insertProduct("R1", "R1");
+    dbWrapper.insertProduct("A1", "A1");
+    dbWrapper.insertProduct("O1", "O1");
+
+    dbWrapper.insertProgramProductsWithCategory("R1", "MALARIA", "C1", 5);
+    dbWrapper.insertProgramProductsWithCategory("O1", "MALARIA", "C5", 10);
+
+    dbWrapper.updateFieldValue("orders", "status", "RELEASED", null, null);
+    testDataForShipment(3, true, "F1", 78);
+    testDataForShipment(4, true, "F2", 785);
+    testDataForShipment(6, false, "NF1", 378);
+    testDataForShipment(8, false, "NF2", 678);
+    testDataForShipment(6, true, "R1", 278);
+    testDataForShipment(6, false, "O1", 1378);
+    testDataForShipment(4, true, "F10", 478);
+    testDataForShipment(4, true, "F9", 378);
+    testDataForShipment(56, false, "NF10", 478);
+    dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
+
+    LoginPage loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(podPaginationData.get(USER), podPaginationData.get(PASSWORD));
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.selectRequisitionToUpdatePod(1);
+    verifyNumberOFPageLinksDisplayed(9, 10);
+    verifyPageNumberLinksDisplayed();
+    verifyProductDisplayOrderOnPage(new String[]{"F1", "NF1", "F10", "NF10", "F2", "NF2", "F9", "O1", "R1"});
+    verifyCategoryDisplayOrderOnPage(new String[]{"Antibiotics1", "", "Antibiotics10", "", "Antibiotics2", "", "Antibiotics9"});
+    assertEquals("Other", testWebDriver.getElementById("category").getText());
+  }
+
+  @Test(groups = {"orderAndPod"})
   public void testSubmitPod() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
@@ -422,7 +457,7 @@ public class PODPagination extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"requisition"})
+  @Test(groups = {"orderAndPod"})
   public void testSubmitPodFail() throws SQLException {
     dbWrapper.setupMultipleProducts(podPaginationData.get(PROGRAM), "Lvl3 Hospital", 11, false);
     dbWrapper.insertRequisitionWithMultipleLineItems(11, podPaginationData.get(PROGRAM), true, "F10", false);
@@ -489,7 +524,9 @@ public class PODPagination extends TestCaseHelper {
 
     updatePodPage.clickSubmitButton();
     updatePodPage.clickOkButton();
+    testWebDriver.waitForAjax();
     assertTrue(updatePodPage.isPodSuccessMessageDisplayed());
+    testWebDriver.sleep(500);
 
     assertFalse(updatePodPage.isQuantityReceivedEnabled(1));
     assertFalse(updatePodPage.isNotesEnabled(1));
@@ -513,62 +550,6 @@ public class PODPagination extends TestCaseHelper {
     dbWrapper.updateFieldValue("orders", "status", "PACKED", null, null);
   }
 
-  private void verifyNextAndLastPageLinksDisabled() {
-    assertFalse(updatePodPage.isNextPageLinkEnabled());
-    assertFalse(updatePodPage.isLastPageLinkEnabled());
-  }
-
-  private void verifyFirstAndPreviousPageLinksEnabled() {
-    assertTrue(updatePodPage.isFirstPageLinkEnabled());
-    assertTrue(updatePodPage.isPreviousPageLinkEnabled());
-  }
-
-  private void navigateToPage(int pageNumber) {
-    WebElement page = testWebDriver.getElementById(String.valueOf(pageNumber));
-    testWebDriver.waitForElementToAppear(page);
-    page.click();
-  }
-
-  private void verifyNumberOfProductsVisibleOnPage(int numberOfProducts) {
-    assertEquals(numberOfProducts, testWebDriver.getElementsSizeByXpath("//table[@id='podTable']/tbody"));
-  }
-
-  private void verifyFirstAndPreviousPageLinksDisabled() {
-    assertFalse(updatePodPage.isFirstPageLinkEnabled());
-    assertFalse(updatePodPage.isPreviousPageLinkEnabled());
-  }
-
-  private void verifyNextAndLastPageLinksEnabled() {
-    assertTrue(updatePodPage.isNextPageLinkEnabled());
-    assertTrue(updatePodPage.isLastPageLinkEnabled());
-  }
-
-  private void verifyPageNumberSelected(int pageNumber) {
-    WebElement page = testWebDriver.getElementById(String.valueOf(pageNumber));
-    testWebDriver.waitForElementToAppear(page);
-    assertEquals("rgba(96, 172, 175, 1)", page.getCssValue("background-color"));
-  }
-
-  private void verifyPageNumberLinksDisplayed() {
-    assertTrue(updatePodPage.isFirstPageLinkDisplayed());
-    assertTrue(updatePodPage.isPreviousPageLinkDisplayed());
-    assertTrue(updatePodPage.isNextPageLinkDisplayed());
-    assertTrue(updatePodPage.isLastPageLinkDisplayed());
-  }
-
-  private void verifyNumberOFPageLinksDisplayed(int numberOfProducts, int numberOfLineItemsPerPage) {
-    testWebDriver.waitForAjax();
-    int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
-    if (numberOfProducts % numberOfLineItemsPerPage != 0) {
-      numberOfPages = numberOfPages + 1;
-    }
-    for (int i = 1; i <= numberOfPages; i++) {
-      WebElement page = testWebDriver.getElementById(String.valueOf(i));
-      testWebDriver.waitForElementToAppear(page);
-      assertTrue(page.isDisplayed());
-    }
-  }
-
   private void verifyProductDisplayOrderOnPage(String[] productCodes) {
     for (int i = 1; i < productCodes.length; i++) {
       assertEquals(productCodes[i - 1], updatePodPage.getProductCode(i));
@@ -581,7 +562,11 @@ public class PODPagination extends TestCaseHelper {
     }
   }
 
-  @AfterMethod(groups = {"requisition"})
+  private void verifyNumberOfLineItemsVisibleOnPage(int numberOfLineItems) {
+    assertEquals(numberOfLineItems, testWebDriver.getElementsSizeByXpath("//table[@id='podTable']/tbody"));
+  }
+
+  @AfterMethod(groups = {"orderAndPod"})
   public void tearDown() throws SQLException {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);

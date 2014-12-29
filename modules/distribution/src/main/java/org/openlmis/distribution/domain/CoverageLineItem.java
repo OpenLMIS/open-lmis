@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 
-import static java.lang.Math.round;
+import static java.lang.Math.ceil;
 
 /**
- *  CoverageLineItem is a base class holding facilityVisitId and targetGroup. TargetGroup is calculated on basis of
- *  target population percentage and catchment population of the corresponding facility.
+ * CoverageLineItem is a base class holding facilityVisitId and targetGroup. TargetGroup is calculated on basis of
+ * target population percentage and catchment population of the corresponding facility.
  */
 
 @Data
@@ -33,18 +33,18 @@ public class CoverageLineItem extends BaseModel {
   protected Long facilityVisitId;
   protected Integer targetGroup;
 
-  public CoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct) {
+  public CoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupProduct, Integer processingPeriodMonths) {
     this.facilityVisitId = facilityVisit.getId();
     this.targetGroup = targetGroupProduct != null ? calculateTargetGroup(facility.getWhoRatioFor(targetGroupProduct.getProductCode()),
-      facility.getCatchmentPopulation()) : null;
+      facility.getCatchmentPopulation(), processingPeriodMonths) : null;
     this.createdBy = facilityVisit.getCreatedBy();
     this.modifiedBy = facilityVisit.getModifiedBy();
   }
 
-  protected Integer calculateTargetGroup(Double whoRatio, Long catchmentPopulation) {
+  protected Integer calculateTargetGroup(Double whoRatio, Long catchmentPopulation, Integer processingPeriodMonths) {
     Integer targetGroup = null;
     if (whoRatio != null && catchmentPopulation != null) {
-      targetGroup = (int) round(catchmentPopulation * whoRatio / 100);
+      targetGroup = (int) ceil((catchmentPopulation * whoRatio * processingPeriodMonths) / (100 * 12));
     }
     return targetGroup;
   }

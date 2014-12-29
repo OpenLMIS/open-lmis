@@ -19,6 +19,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * ProductGroupRepository is Repository class for ProductGroup related database operations.
  */
@@ -27,12 +29,8 @@ import org.springframework.stereotype.Repository;
 @NoArgsConstructor
 public class ProductGroupRepository {
 
-  ProductGroupMapper mapper;
-
   @Autowired
-  public ProductGroupRepository(ProductGroupMapper mapper) {
-    this.mapper = mapper;
-  }
+  ProductGroupMapper mapper;
 
   public void insert(ProductGroup productGroup) {
     try {
@@ -55,5 +53,9 @@ public class ProductGroupRepository {
 
   public void update(ProductGroup productGroup) {
     mapper.update(productGroup);
+  }
+
+  public List<ProductGroup> getAll() {
+    return mapper.getAll();
   }
 }

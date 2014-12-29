@@ -288,7 +288,7 @@ public class ReportLookupController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
           HttpServletRequest request
   ) {
-      return OpenLmisResponse.response("facilities", facilityService.getForUserAndRights(loggedInUserId(request),Right.VIEW_REQUISITION));
+      return OpenLmisResponse.response("facilities", facilityService.getForUserAndRights(loggedInUserId(request),"VIEW_REQUISITION"));
   }
 
 
@@ -365,14 +365,6 @@ public class ReportLookupController extends BaseController {
       List<Program> programList = reportLookupService.getUserSupervisedActiveProgramsBySupervisoryNode(loggedInUserId(request), supervisoryNodeId);
       return OpenLmisResponse.response("programs",programList);
   }
-  /*@RequestMapping(value = "/user/default-supervisory-node", method = GET, headers = BaseController.ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getUserDefaultSupervisoryNode(HttpServletRequest request){
-      List<SupervisoryNode> defaultSupervisoryNode = reportLookupService.getAllSupervisoryNodesByUserHavingActiveProgram(loggedInUserId(request));
-      if (defaultSupervisoryNode != null && defaultSupervisoryNode.size() > 0){
-          return OpenLmisResponse.response("supervisoryNode",defaultSupervisoryNode.get(0));
-      }
-      return OpenLmisResponse.response("supervisoryNode",null);
-  }*/
 
   @RequestMapping(value = "/user/supervisory-nodes", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getUserSupervisoryNodes(HttpServletRequest request){

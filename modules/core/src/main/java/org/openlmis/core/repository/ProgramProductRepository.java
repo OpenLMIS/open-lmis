@@ -11,7 +11,10 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
@@ -49,12 +52,6 @@ public class ProgramProductRepository {
 
     Long productId = productRepository.getIdByCode(programProduct.getProduct().getCode());
     programProduct.getProduct().setId(productId);
-
-    // handle the case where the program products are set from the category,
-    if(programProduct.getProductCategory() == null && programProduct.getProductCategoryId() != null){
-      programProduct.setProductCategory(new ProductCategory());
-      programProduct.getProductCategory().setId(programProduct.getProductCategoryId());
-    }
 
     try {
       if (programProduct.getId() == null) {
@@ -112,10 +109,6 @@ public class ProgramProductRepository {
     return mapper.getByProgram(program);
   }
 
-  public List<ProgramProduct> getOptionsByProduct(Product product) {
-    return mapper.getOptionsByProduct(product);
-  }
-
   public ProgramProduct getById(Long id) {
     return mapper.getById(id);
   }
@@ -130,6 +123,18 @@ public class ProgramProductRepository {
 
   public List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program) {
     return mapper.getNonFullSupplyProductsForProgram(program);
+  }
+
+  public List<ProgramProduct> searchByProgram(String searchParam, Pagination pagination) {
+    return mapper.searchByProgram(searchParam, pagination);
+  }
+
+  public Integer getTotalSearchResultCount(String searchParam) {
+    return mapper.getTotalSearchResultCount(searchParam);
+  }
+
+  public List<ProgramProduct> searchByProduct(String searchParam, Pagination pagination) {
+    return mapper.searchByProduct(searchParam, pagination);
   }
 
   public List<ProgramProduct> getActiveByProgram(Long programId) {

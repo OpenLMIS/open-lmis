@@ -411,11 +411,11 @@ public class ReportLookupService {
     }
 
     public List<ProgramProduct> getAllProgramProducts() {
-        return programProductMapper.getAllProgramProducts();
+        return programProductMapper.getAll();
     }
 
     public List<FacilityTypeApprovedProduct> getAllFacilityTypeApprovedProducts() {
-        return facilityApprovedProductMapper.getAllFacilityApprovedProducts();
+        return facilityApprovedProductMapper.getAll();
     }
 
     public List<UserRoleAssignmentsReport> getAllRolesBySupervisoryNodeHavingProgram(Long roleId, Long programId, Long supervisoryNodeId) {

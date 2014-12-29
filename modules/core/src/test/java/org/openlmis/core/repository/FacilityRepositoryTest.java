@@ -254,26 +254,6 @@ public class FacilityRepositoryTest {
   }
 
   @Test
-  public void shouldSearchFacilitiesByCodeOrName() throws Exception {
-    List<Facility> facilityList = asList(new Facility());
-    when(mapper.searchFacilitiesByCodeOrName("query")).thenReturn(facilityList);
-
-    List<Facility> returnedFacilities = repository.searchFacilitiesByCodeOrName("query");
-
-    assertThat(returnedFacilities, is(facilityList));
-  }
-
-  @Test
-  public void shouldSearchFacilitiesByCodeOrNameAndVirtualFacilityFlag() throws Exception {
-    List<Facility> facilityList = asList(new Facility());
-    when(mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true)).thenReturn(facilityList);
-
-    List<Facility> returnedFacilities = repository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true);
-
-    assertThat(returnedFacilities, is(facilityList));
-  }
-
-  @Test
   public void shouldSetGeographicZoneFromCodeAfterValidation() throws Exception {
     Facility facility = make(a(defaultFacility));
     GeographicZone existingZone = new GeographicZone();
@@ -319,7 +299,7 @@ public class FacilityRepositoryTest {
   public void shouldGetHomeFacilityForUserWithRight() throws Exception {
     Facility expectedFacility = new Facility();
     when(mapper.getHomeFacilityWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}")).thenReturn(expectedFacility);
-    Facility userHomeFacility = repository.getHomeFacilityForRights(1L, Right.APPROVE_REQUISITION, Right.CREATE_REQUISITION);
+    Facility userHomeFacility = repository.getHomeFacilityForRights(1L, RightName.APPROVE_REQUISITION, RightName.CREATE_REQUISITION);
 
     assertThat(userHomeFacility, is(expectedFacility));
     verify(mapper).getHomeFacilityWithRights(1L, "{APPROVE_REQUISITION, CREATE_REQUISITION}");

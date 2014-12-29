@@ -9,18 +9,18 @@
  */
 
 var OpenLmisDialog = {
-  newDialog:function (overrideOpts, callback, $dialog) {
+  newDialog: function (overrideOpts, callback, $dialog) {
     var defaults = {
-      id:"",
-      header:"Header",
-      body:"Body",
-      ok:{label:"button.ok", value:true},
-      cancel:{label:"button.cancel", value:false}
+      id: "",
+      header: "Header",
+      body: "Body",
+      ok: {label: "button.ok", value: true},
+      cancel: {label: "button.cancel", value: false}
     };
 
     var opts = {
-      templateUrl:'/public/pages/partials/dialogbox.html',
-      controller:function ($scope, dialog) {
+      templateUrl: '/public/pages/template/dialog/dialogbox.html',
+      controller: function ($scope, dialog) {
 
         $scope.dialogClose = function (result) {
           dialog.close(result);
@@ -29,7 +29,7 @@ var OpenLmisDialog = {
         $scope.dialogOptions = _.extend(defaults, overrideOpts);
       }
     };
-    var closeCallback = function(result) {
+    var closeCallback = function (result) {
       var tabbables = olDialog.modalEl.find(":tabbable");
       tabbables.last().unbind("keydown");
       tabbables.first().unbind("keydown");
@@ -41,19 +41,18 @@ var OpenLmisDialog = {
     olDialog.open().then(closeCallback);
 
 
-
-    var autoFocus = function() {
-      if(olDialog.isOpen()) {
+    var autoFocus = function () {
+      if (olDialog.isOpen()) {
         var tabbables = olDialog.modalEl.find(":tabbable");
         tabbables.first().focus();
-        tabbables.last().bind("keydown", function(e) {
+        tabbables.last().bind("keydown", function (e) {
           if (e.which == 9 && !e.shiftKey) {
             tabbables.first().focus();
             e.preventDefault();
           }
 
         });
-        tabbables.first().bind("keydown", function(e) {
+        tabbables.first().bind("keydown", function (e) {
           if (e.which == 9 && e.shiftKey) {
             tabbables.last().focus();
             e.preventDefault();
@@ -61,7 +60,7 @@ var OpenLmisDialog = {
         });
       }
       else {
-        setTimeout(function() {
+        setTimeout(function () {
           autoFocus();
         }, 10);
       }

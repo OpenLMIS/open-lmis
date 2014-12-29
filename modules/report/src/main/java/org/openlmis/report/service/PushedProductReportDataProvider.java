@@ -69,7 +69,7 @@ public class PushedProductReportDataProvider extends ReportDataProvider {
             header += "\nPeriod : " + periodObject.getName() + " - " + periodObject.getStringYear();
         }
         if (!zone.equals("0") && !zone.isEmpty() && !zone.endsWith("undefined")) {
-            header += "\nGeographic Zone: " + this.geographicZoneMapper.getById(Integer.parseInt(zone)).getName();
+            header += "\nGeographic Zone: " + this.geographicZoneMapper.getById(Long.parseLong(zone)).getName();
         }else{
             header += "\nGeographic Zone : All Geographic Zones";
 

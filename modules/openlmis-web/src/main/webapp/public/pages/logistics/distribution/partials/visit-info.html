@@ -38,7 +38,9 @@
             <span id="visitDateContainer">
               <label for="visitDate" openlmis-message="label.visit.date"></label>
               <input id="visitDate" type="text" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                     readonly ng-model="facilityData.facilityVisit.visitDate"/>
+                     ui-date-format="yy-mm-dd"
+                     readonly ng-model="facilityData.facilityVisit.visitDate"
+                     ng-class="{'required-error': !facilityData.facilityVisit.visitDate}"/>
             </span>
 
             <span id="vehicleIdContainer">
@@ -60,26 +62,31 @@
                 <label openlmis-message="label.name" for="verifiedByName"></label>
                 <input type="text" maxlength="50"
                        ng-model="facilityData.facilityVisit.verifiedBy.name"
-                       id="verifiedByName"/>
+                       id="verifiedByName"
+                       ng-class="{'required-error': !facilityData.facilityVisit.verifiedBy.name}"/>
                 <label openlmis-message="label.title" for="verifiedByTitle"></label>
                 <input type="text" maxlength="50"
                        ng-model="facilityData.facilityVisit.verifiedBy.title"
-                       id="verifiedByTitle"/>
+                       id="verifiedByTitle"
+                       ng-class="{'required-error': !facilityData.facilityVisit.verifiedBy.title}"/>
               </div>
             </div>
 
             <div class="details-container">
-              <span openlmis-message="label.confirmed.by" class="list-header-container list-header"></span>
+                            <span openlmis-message="label.confirmed.by"
+                                  class="list-header-container list-header"></span>
 
               <div>
                 <label openlmis-message="label.name" for="confirmedByName"></label>
                 <input type="text" maxlength="50"
                        ng-model="facilityData.facilityVisit.confirmedBy.name"
-                       id="confirmedByName"/>
+                       id="confirmedByName"
+                       ng-class="{'required-error': !facilityData.facilityVisit.confirmedBy.name}"/>
                 <label openlmis-message="label.title" for="confirmedByTitle"></label>
                 <input type="text" maxlength="50"
                        ng-model="facilityData.facilityVisit.confirmedBy.title"
-                       id="confirmedByTitle"/>
+                       id="confirmedByTitle"
+                       ng-class="{'required-error': !facilityData.facilityVisit.confirmedBy.title}"/>
               </div>
             </div>
           </div>
@@ -136,7 +143,9 @@
               <textarea ng-model="facilityData.facilityVisit.otherReasonDescription"
                         id="otherTextBox"
                         ng-show="facilityData.facilityVisit.reasonForNotVisiting === reasons.other"
-                        maxlength="255"></textarea>
+                        maxlength="255"
+                        ng-class="{'required-error': !facilityData.facilityVisit.otherReasonDescription}">
+              </textarea>
             </div>
           </div>
         </div>

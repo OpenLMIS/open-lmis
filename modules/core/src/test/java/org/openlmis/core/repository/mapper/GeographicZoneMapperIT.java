@@ -15,6 +15,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -41,7 +42,8 @@ public class GeographicZoneMapperIT {
 
   @Test
   public void shouldSaveGeographicZone() throws Exception {
-    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2L,"state", "State", 2), null);
+    GeographicZone geographicZone = new GeographicZone(null, "code", "name",
+      new GeographicLevel(2L, "state", "State", 2), null);
     geographicZone.setCatchmentPopulation(10000L);
     geographicZone.setLongitude(333.9874);
     geographicZone.setLatitude(-256.7249);
@@ -83,9 +85,133 @@ public class GeographicZoneMapperIT {
   }
 
   @Test
+  public void shouldGetAllGeographicZonesSortedAndSearchedByParentName() throws Exception {
+    GeographicZone geographicZone1 = new GeographicZone(null, "code4", "nameA", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone1);
+
+    GeographicZone geographicZone2 = new GeographicZone(null, "code5", "NameB", new GeographicLevel(1L),
+      geographicZone1);
+    mapper.insert(geographicZone2);
+
+    GeographicZone geographicZone3 = new GeographicZone(null, "code6", "name-c", new GeographicLevel(1L),
+      geographicZone2);
+    mapper.insert(geographicZone3);
+
+    GeographicZone geographicZone4 = new GeographicZone(null, "code1", "NameD", new GeographicLevel(3L),
+      geographicZone1);
+    mapper.insert(geographicZone4);
+
+    GeographicZone geographicZone5 = new GeographicZone(null, "code2", "naameD", new GeographicLevel(3L),
+      geographicZone1);
+    mapper.insert(geographicZone5);
+
+    GeographicZone geographicZone6 = new GeographicZone(null, "code3", "nameE", new GeographicLevel(4L),
+      geographicZone3);
+    mapper.insert(geographicZone6);
+
+    List<GeographicZone> allGeographicZones = mapper.searchByParentName("ame", new Pagination(1, 10));
+    assertThat(allGeographicZones.size(), is(5));
+
+    assertThat(allGeographicZones.get(0).getCode(), is("code5"));
+    assertThat(allGeographicZones.get(1).getCode(), is("code6"));
+    assertThat(allGeographicZones.get(2).getCode(), is("code2"));
+    assertThat(allGeographicZones.get(3).getCode(), is("code1"));
+    assertThat(allGeographicZones.get(4).getCode(), is("code3"));
+  }
+
+  @Test
+  public void shouldReturnSearchByParentNameResultsEqualToPageSize() throws Exception {
+    GeographicZone geographicZone1 = new GeographicZone(null, "code1", "nameA", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone1);
+
+    mapper.insert(new GeographicZone(null, "code2", "NameB", new GeographicLevel(1L), geographicZone1));
+    mapper.insert(new GeographicZone(null, "code3", "name-c", new GeographicLevel(1L), geographicZone1));
+    mapper.insert(new GeographicZone(null, "code4", "name-c", new GeographicLevel(1L), geographicZone1));
+    mapper.insert(new GeographicZone(null, "code5", "name-c", new GeographicLevel(1L), geographicZone1));
+    mapper.insert(new GeographicZone(null, "code6", "name-c", new GeographicLevel(1L), geographicZone1));
+
+    List<GeographicZone> allGeographicZones = mapper.searchByParentName("nameA", new Pagination(1, 3));
+    assertThat(allGeographicZones.size(), is(3));
+  }
+
+  @Test
+  public void shouldReturnSearchByNameResultsEqualToPageSize() throws Exception {
+    mapper.insert(new GeographicZone(null, "code2", "nameA", new GeographicLevel(1L), null));
+    mapper.insert(new GeographicZone(null, "code3", "nameA", new GeographicLevel(1L), null));
+    mapper.insert(new GeographicZone(null, "code4", "nameA", new GeographicLevel(1L), null));
+    mapper.insert(new GeographicZone(null, "code5", "nameA", new GeographicLevel(1L), null));
+    mapper.insert(new GeographicZone(null, "code6", "name-c", new GeographicLevel(1L), null));
+
+    List<GeographicZone> allGeographicZones = mapper.searchByName("nameA", new Pagination(1, 3));
+    assertThat(allGeographicZones.size(), is(3));
+  }
+
+  @Test
+  public void shouldReturnTotalCountOfSearchByParentNameResults() throws Exception {
+    GeographicZone geographicZone1 = new GeographicZone(null, "code1", "nameA", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone1);
+
+    mapper.insert(new GeographicZone(null, "code2", "NameB", new GeographicLevel(1L), geographicZone1));
+    mapper.insert(new GeographicZone(null, "code3", "name-c", new GeographicLevel(1L), geographicZone1));
+    mapper.insert(new GeographicZone(null, "code4", "name-c", new GeographicLevel(1L), geographicZone1));
+    mapper.insert(new GeographicZone(null, "code5", "name-c", new GeographicLevel(1L), geographicZone1));
+    mapper.insert(new GeographicZone(null, "code6", "name-c", new GeographicLevel(1L), geographicZone1));
+
+    Integer totalRecords = mapper.getTotalParentSearchResultCount("nameA");
+    assertThat(totalRecords, is(5));
+  }
+
+  @Test
+  public void shouldReturnTotalCountOfSearchByNameResults() throws Exception {
+    mapper.insert(new GeographicZone(null, "code2", "nameA", new GeographicLevel(1L), null));
+    mapper.insert(new GeographicZone(null, "code3", "nameA", new GeographicLevel(1L), null));
+    mapper.insert(new GeographicZone(null, "code4", "nameA", new GeographicLevel(1L), null));
+    mapper.insert(new GeographicZone(null, "code5", "nameA", new GeographicLevel(1L), null));
+    mapper.insert(new GeographicZone(null, "code6", "name-c", new GeographicLevel(1L), null));
+
+    Integer totalRecords = mapper.getTotalSearchResultCount("nameA");
+    assertThat(totalRecords, is(4));
+  }
+
+  @Test
+  public void shouldGetAllGeographicZonesSortedAndSearchedByGeoZoneName() throws Exception {
+    GeographicZone geographicZone1 = new GeographicZone(null, "code4", "nameA", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone1);
+
+    GeographicZone geographicZone2 = new GeographicZone(null, "code5", "NameB", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone2);
+
+    GeographicZone geographicZone3 = new GeographicZone(null, "code6", "namec", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone3);
+
+    GeographicZone geographicZone4 = new GeographicZone(null, "code1", "NameD", new GeographicLevel(3L),
+      geographicZone1);
+    mapper.insert(geographicZone4);
+
+    GeographicZone geographicZone5 = new GeographicZone(null, "code2", "naameD", new GeographicLevel(3L),
+      geographicZone1);
+    mapper.insert(geographicZone5);
+
+    GeographicZone geographicZone6 = new GeographicZone(null, "code3", "nameE", new GeographicLevel(4L),
+      geographicZone3);
+    mapper.insert(geographicZone6);
+
+    List<GeographicZone> allGeographicZones = mapper.searchByName("ame", new Pagination(1, 10));
+    assertThat(allGeographicZones.size(), is(6));
+
+    assertThat(allGeographicZones.get(0).getCode(), is("code4"));
+    assertThat(allGeographicZones.get(1).getCode(), is("code5"));
+    assertThat(allGeographicZones.get(2).getCode(), is("code6"));
+    assertThat(allGeographicZones.get(3).getCode(), is("code2"));
+    assertThat(allGeographicZones.get(4).getCode(), is("code1"));
+    assertThat(allGeographicZones.get(5).getCode(), is("code3"));
+  }
+
+  @Test
   public void shouldGetGeographicZoneWithParent() throws Exception {
     GeographicZone parent = new GeographicZone(null, "Dodoma", "Dodoma", new GeographicLevel(null, "province", "Province", null), null);
-    GeographicZone expectedZone = new GeographicZone(5L, "Ngorongoro", "Ngorongoro", new GeographicLevel(null, "district", "District", 4), parent);
+    GeographicZone expectedZone = new GeographicZone(5L, "Ngorongoro", "Ngorongoro",
+      new GeographicLevel(null, "district", "District", 4), parent);
 
     GeographicZone zone = mapper.getWithParentById(5L);
 
@@ -94,13 +220,14 @@ public class GeographicZoneMapperIT {
 
   @Test
   public void shouldUpdateGeographicZone() throws Exception {
-    GeographicZone geographicZone = new GeographicZone(null, "code", "name", new GeographicLevel(2L,"state", "State", 2), null);
+    GeographicZone geographicZone = new GeographicZone(null, "code", "name",
+      new GeographicLevel(2L, "state", "State", 2), null);
     geographicZone.setLongitude(123.9878);
 
     mapper.insert(geographicZone);
 
     geographicZone.setName("new name");
-    geographicZone.setLevel(new GeographicLevel(1L,"country", "Country", 1));
+    geographicZone.setLevel(new GeographicLevel(1L, "country", "Country", 1));
     geographicZone.setLongitude(-111.9877);
 
     mapper.update(geographicZone);
@@ -109,5 +236,51 @@ public class GeographicZoneMapperIT {
     returnedZone.setModifiedDate(null);
 
     assertThat(returnedZone, is(geographicZone));
+  }
+
+  @Test
+  public void shouldReturnGeographicZonesAboveGivenLevel() throws Exception {
+    GeographicLevel level = new GeographicLevel(4L, "district", "level3", 3);
+    List<GeographicZone> geographicZones = mapper.getAllGeographicZonesAbove(level);
+    assertThat(geographicZones.size(), is(10));
+  }
+
+  @Test
+  public void shouldGetGeographicZonesByCodeOrName() {
+    GeographicZone geographicZone1 = new GeographicZone(null, "code5", "nameE", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone1);
+
+    GeographicZone geographicZone2 = new GeographicZone(null, "code2", "nameB", new GeographicLevel(3L), null);
+    mapper.insert(geographicZone2);
+
+    GeographicZone geographicZone3 = new GeographicZone(null, "code3", "nameC", new GeographicLevel(2L), null);
+    mapper.insert(geographicZone3);
+
+    GeographicZone geographicZone4 = new GeographicZone(null, "code4", "nameA", new GeographicLevel(4L), null);
+    mapper.insert(geographicZone4);
+
+    GeographicZone geographicZone5 = new GeographicZone(null, "code1", "nameD", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone5);
+
+    GeographicZone geographicZone6 = new GeographicZone(null, "code6", "gameC", new GeographicLevel(1L), null);
+    mapper.insert(geographicZone6);
+
+    String searchParam = "name";
+
+    List<GeographicZone> geographicZones = mapper.getGeographicZonesByCodeOrName(searchParam);
+
+    assertThat(geographicZones.size(), is(5));
+    assertThat(geographicZones.get(0).getCode(), is(geographicZone5.getCode()));
+    assertThat(geographicZones.get(1).getCode(), is(geographicZone1.getCode()));
+    assertThat(geographicZones.get(2).getCode(), is(geographicZone3.getCode()));
+    assertThat(geographicZones.get(3).getCode(), is(geographicZone2.getCode()));
+    assertThat(geographicZones.get(4).getCode(), is(geographicZone4.getCode()));
+  }
+
+  @Test
+  public void getGeographicZoneCountBySearchParam() {
+    Integer count = mapper.getGeographicZonesCountBy("district");
+
+    assertThat(count, is(9));
   }
 }

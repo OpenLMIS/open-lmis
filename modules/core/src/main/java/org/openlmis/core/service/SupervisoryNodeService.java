@@ -17,11 +17,12 @@ import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
+import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
 
 /**
  * Exposes the services for handling SupervisoryNode entity.
@@ -31,15 +32,20 @@ import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 @NoArgsConstructor
 public class SupervisoryNodeService {
 
+  @Autowired
   private SupervisoryNodeRepository supervisoryNodeRepository;
-  private UserRepository userRepository;
-  private FacilityRepository facilityRepository;
 
   @Autowired
-  public SupervisoryNodeService(SupervisoryNodeRepository supervisoryNodeRepository, UserRepository userRepository, FacilityRepository facilityRepository) {
-    this.supervisoryNodeRepository = supervisoryNodeRepository;
-    this.userRepository = userRepository;
-    this.facilityRepository = facilityRepository;
+  private UserRepository userRepository;
+
+  @Autowired
+  private FacilityRepository facilityRepository;
+
+  private Integer pageSize;
+
+  @Autowired
+  public void setPageSize(@Value("${search.page.size}") String pageSize) {
+    this.pageSize = Integer.parseInt(pageSize);
   }
 
   public void save(SupervisoryNode supervisoryNode) {
@@ -51,6 +57,13 @@ public class SupervisoryNodeService {
       supervisoryNodeRepository.update(supervisoryNode);
   }
 
+  public List<SupervisoryNode> getSupervisoryNodesBy(Integer page, String nameSearchCriteria, Boolean parent) {
+    if (parent) {
+      return supervisoryNodeRepository.getSupervisoryNodesByParent(getPagination(page), nameSearchCriteria);
+    }
+    return supervisoryNodeRepository.getSupervisoryNodesBy(getPagination(page), nameSearchCriteria);
+  }
+
   private void validateParentNode(SupervisoryNode supervisoryNode) {
     SupervisoryNode parentNode = supervisoryNode.getParent();
     if (parentNode != null) {
@@ -59,15 +72,15 @@ public class SupervisoryNodeService {
       } catch (DataException e) {
         throw new DataException("error.supervisory.node.parent.not.exist");
       }
+      supervisoryNode.validateParent();
     }
   }
-
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Long programId, Right... rights) {
-    return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, programId, rights);
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Long programId, String... rightNames) {
+    return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, programId, rightNames);
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, Right... rights) {
-    return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, rights);
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId, String... rightNames) {
+    return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId, rightNames);
   }
 
   public SupervisoryNode getFor(Facility facility, Program program) {
@@ -111,30 +124,30 @@ public class SupervisoryNodeService {
     return supervisoryNodeRepository.getByCode(supervisoryNode);
   }
 
-  public List<SupervisoryNode> getCompleteList(){
-      return supervisoryNodeRepository.getCompleteList();
+  public Pagination getPagination(Integer page) {
+    return new Pagination(page, pageSize);
   }
 
-  public SupervisoryNode loadSupervisoryNodeById(Long id){
-      return supervisoryNodeRepository.loadSupervisoryNodeById(id);
+  public Integer getTotalSearchResultCount(String param, Boolean parent) {
+    if(parent) {
+      return supervisoryNodeRepository.getTotalParentSearchResultCount(param);
+    }
+    return supervisoryNodeRepository.getTotalSearchResultCount(param);
   }
 
-  public void save_Ext(SupervisoryNode supervisoryNode) {
-      if (supervisoryNode.getId() == null)
-          supervisoryNodeRepository.insert(supervisoryNode);
-      else
-          supervisoryNodeRepository.update(supervisoryNode);
+  public SupervisoryNode getSupervisoryNode(Long id) {
+    return supervisoryNodeRepository.getSupervisoryNode(id);
   }
 
-  public void removeSupervisoryNode(long id){
-      supervisoryNodeRepository.removeSupervisoryNode(id);
+  public List<SupervisoryNode> getFilteredSupervisoryNodesByName(String param) {
+    return supervisoryNodeRepository.getFilteredSupervisoryNodesByName(param);
   }
 
-   public Long getTotalUnassignedSupervisoryNodeOfUserBy(Long userId, Long programId){
-       return supervisoryNodeRepository.getTotalUnassignedSupervisoryNodeOfUserBy(userId, programId);
+  public List<SupervisoryNode> searchTopLevelSupervisoryNodesByName(String param) {
+    return supervisoryNodeRepository.searchTopLevelSupervisoryNodesByName(param);
   }
 
-  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyBy(Long userId) {
-      return supervisoryNodeRepository.getAllSupervisoryNodesInHierarchyBy(userId);
+  public Long getTotalUnassignedSupervisoryNodeOfUserBy(Long userId, Long programId){
+    return supervisoryNodeRepository.getTotalUnassignedSupervisoryNodeOfUserBy(userId, programId);
   }
 }

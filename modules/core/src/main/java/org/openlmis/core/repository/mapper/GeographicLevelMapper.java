@@ -13,6 +13,9 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.GeographicLevel;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
 /**
  * GeographicLevelMapper maps the GeographicLevel entity to corresponding representation in database. Provides methods
  * like finding lowest Geographic Level.
@@ -22,10 +25,11 @@ public interface GeographicLevelMapper {
 
   @Select("SELECT MAX(levelNumber) FROM geographic_levels")
   Integer getLowestGeographicLevel();
-
-
+  
   @Select("SELECT * FROM geographic_levels" +
       " WHERE id=#{id}")
   GeographicLevel getGeographicLevelById(int id);
 
+  @Select("SELECT * FROM geographic_levels ORDER BY levelNumber")
+  List<GeographicLevel> getAll();
 }

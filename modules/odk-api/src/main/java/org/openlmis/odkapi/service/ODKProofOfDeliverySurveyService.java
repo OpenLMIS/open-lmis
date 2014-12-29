@@ -98,7 +98,7 @@ public class ODKProofOfDeliverySurveyService {
 
         // get the district
 
-        GeographicZone district = geographicZoneService.getDistrictOfFacilityByFacilityId(facility.getId());
+        GeographicZone district = facility.getGeographicZone();
 
         odkProofOfDeliveryXFormBuilder = new ODKProofOfDeliveryXFormBuilder();
 

@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('non_reporting', ['openlmis', 'ngTable', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('non_reporting', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.
                 when('/list', {controller:NonReportingController, templateUrl:'partials/list.html',reloadOnSearch:false}).

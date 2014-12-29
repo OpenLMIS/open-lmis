@@ -25,8 +25,8 @@
         </li>
     </ul>
   <span class="pull-right">
-    <a full-screen href="" class="btn">
-        <i class="icon-resize-full"></i>
+    <a id="resizeViewButton" full-screen href="" class="btn">
+      <i class="icon-resize-full"></i>
     </a>
   </span>
   <span class="pull-right print-button">
@@ -55,10 +55,10 @@
                              check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
     </div>
 
-    <br><br>
+  <br><br>
 
-    <div form-toolbar id="action_buttons" class="action-buttons">
-        <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
 
         <div class="form-cell button-row">
           <input ng-show="rnr.status != 'SKIPPED' && rnr.status != 'RELEASED'" type="button" class="btn btn-primary submit-button" ng-click="rejectRnR();" openlmis-message="button.rnr.reject" />

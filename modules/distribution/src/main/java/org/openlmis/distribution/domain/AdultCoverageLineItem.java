@@ -39,8 +39,9 @@ public class AdultCoverageLineItem extends CoverageLineItem {
   private Integer outreachTetanus2To5;
 
 
-  public AdultCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupForLineItem, String demographicGroup) {
-    super(facilityVisit, facility, targetGroupForLineItem);
+  public AdultCoverageLineItem(FacilityVisit facilityVisit, Facility facility, TargetGroupProduct targetGroupForLineItem,
+                               String demographicGroup, Integer processingPeriodMonths) {
+    super(facilityVisit, facility, targetGroupForLineItem, processingPeriodMonths);
     this.demographicGroup = demographicGroup;
   }
 }

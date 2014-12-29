@@ -12,7 +12,6 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FulfillmentRoleAssignment;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.RoleAssignmentRepository;
@@ -57,12 +56,12 @@ public class RoleAssignmentService {
     return roleAssignmentRepository.getAllocationRoles(userId);
   }
 
-  public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Long userId, Long programId, Right... rights) {
-    return roleAssignmentRepository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, rights);
+  public List<RoleAssignment> getHomeFacilityRolesForUserOnGivenProgramWithRights(Long userId, Long programId, String... rightNames) {
+    return roleAssignmentRepository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, rightNames);
   }
 
-  public List<RoleAssignment> getRoleAssignments(Right right, Long userId) {
-    return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(right, userId);
+  public List<RoleAssignment> getRoleAssignments(String rightName, Long userId) {
+    return roleAssignmentRepository.getRoleAssignmentsForUserWithRight(rightName, userId);
   }
 
   public void saveRolesForUser(User user) {
@@ -72,6 +71,7 @@ public class RoleAssignmentService {
     roleAssignmentRepository.insert(user.getAllocationRoles(), user.getId());
     roleAssignmentRepository.insert(asList(user.getReportRoles()), user.getId());
     roleAssignmentRepository.insert(asList(user.getAdminRole()), user.getId());
+    roleAssignmentRepository.insert(asList(user.getReportingRole()), user.getId());
     fulfillmentRoleService.saveFulfillmentRoles(user);
   }
 
@@ -79,7 +79,11 @@ public class RoleAssignmentService {
     return fulfillmentRoleService.getRolesForUser(userId);
   }
 
-  public List<FulfillmentRoleAssignment> getFulfilmentRolesWithRight(Long userId, Right right) {
-    return fulfillmentRoleService.getRolesWithRight(userId, right);
+  public List<FulfillmentRoleAssignment> getFulfilmentRolesWithRight(Long userId, String rightName) {
+    return fulfillmentRoleService.getRolesWithRight(userId, rightName);
+  }
+
+  public RoleAssignment getReportingRole(Long userId) {
+    return roleAssignmentRepository.getReportingRole(userId);
   }
 }

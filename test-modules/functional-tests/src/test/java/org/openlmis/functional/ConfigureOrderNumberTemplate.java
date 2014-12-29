@@ -6,7 +6,6 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.PageObjectFactory;
 import org.openlmis.pageobjects.edi.ConfigureOrderNumberPage;
-import org.openlmis.pageobjects.edi.ConfigureShipmentPage;
 import org.openlmis.pageobjects.edi.ConfigureSystemSettingsPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -33,7 +32,9 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
-    dbWrapper.setupShipmentFileConfiguration("false");
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", "SYSTEM_SETTINGS");
+    dbWrapper.setupOrderNumberConfiguration("O", true, true, true, true);
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
@@ -45,6 +46,8 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
 
     assertEquals(configureOrderNumberPage.getOrderNumberPrefix(), "O");
     assertTrue(configureOrderNumberPage.isProgramCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeDisabled());
     assertTrue(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
   }
 
@@ -59,15 +62,36 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
     configureOrderNumberPage.verifyMessage("Order number configuration saved successfully");
 
     testWebDriver.refresh();
-
     configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
     configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
 
     assertEquals(configureOrderNumberPage.getOrderNumberPrefix(), "P");
     assertTrue(configureOrderNumberPage.isProgramCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeDisabled());
     assertTrue(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
   }
 
+  @Test(groups = {"admin"})
+  public void testMixedValueInOrderNumberField() {
+    HomePage homePage = loginPage.loginAs(user, password);
+    configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
+    configureOrderNumberPage.deletePreExistingData();
+    configureOrderNumberPage.setOrderNumberPrefix("P#67hj89");
+    configureOrderNumberPage.clickSaveButton();
+    configureOrderNumberPage.verifyMessage("Order number configuration saved successfully");
+
+    testWebDriver.refresh();
+    configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
+    configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
+
+    assertEquals(configureOrderNumberPage.getOrderNumberPrefix(), "P#67hj89");
+    assertTrue(configureOrderNumberPage.isProgramCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeDisabled());
+    assertTrue(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
+  }
 
   @Test(groups = {"admin"})
   public void verifyAfterUnCheckingAllFields() {
@@ -82,24 +106,26 @@ public class ConfigureOrderNumberTemplate extends TestCaseHelper {
     configureOrderNumberPage.verifyMessage("Order number configuration saved successfully");
 
     testWebDriver.refresh();
-
     configureSystemSettingsPage = homePage.navigateSystemSettingsScreen();
     configureOrderNumberPage = configureSystemSettingsPage.navigateConfigureOrderNumberPage();
 
     assertFalse(configureOrderNumberPage.isOrderNumberPrefixSelected());
     assertFalse(configureOrderNumberPage.isProgramCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeChecked());
+    assertTrue(configureOrderNumberPage.isIncludeSequenceCodeDisabled());
     assertFalse(configureOrderNumberPage.isIncludeRnrTypeSuffixChecked());
   }
 
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
 }

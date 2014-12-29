@@ -227,9 +227,6 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//*[@id='newPatientCount']/span[5]/span/select/option[2]")
   private static WebElement patientOption2 = null;
 
-  @FindBy(how = How.XPATH, using = "//*[@id='newPatientCount']/span[5]/span/select")
-  private static WebElement patientOptionSelect = null;
-
   private static String USER_INPUT = "User Input";
   private static String CALCULATED = "Calculated";
 
@@ -595,14 +592,6 @@ public class TemplateConfigPage extends Page {
   public boolean isPatientOption2Selected() {
     testWebDriver.waitForElementToAppear(patientOption2);
     return patientOption2.isSelected();
-  }
-
-  public void selectPatientOption1() {
-    testWebDriver.waitForElementToAppear(patientOptionSelect);
-    patientOptionSelect.click();
-    testWebDriver.waitForElementToAppear(patientOption1);
-    patientOption1.click();
-    assertTrue(isPatientOption1Selected());
   }
 
   public void selectPatientOption2() {

@@ -13,7 +13,6 @@
 package org.openlmis.order.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
@@ -48,7 +47,7 @@ public interface OrderMapper {
     @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
       one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
-  List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") Right right);
+  List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") String rightName);
 
 
   @Select({"SELECT DISTINCT O.*, f.name FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
@@ -56,7 +55,7 @@ public interface OrderMapper {
        "INNER JOIN requisitions r on r.id = O.id ",
       "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId " ,
           " INNER JOIN facilities f on f.id = r.facilityid ",
-      "WHERE FRA.userid = #{userId} AND RR.rightName = #{right} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " +
+      "WHERE FRA.userid = #{userId} AND RR.rightName = #{rightName} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " +
           "ORDER BY f.name ASC LIMIT #{limit} OFFSET #{offset}"})
   @Results({
       @Result(property = "id", column = "id"),
@@ -66,7 +65,7 @@ public interface OrderMapper {
       @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
           one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
-  List<Order> getOrdersByDepot(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") Right right, @Param("supplyDepot") Long supplyDepot, @Param("program") Long program, @Param("period") Long period);
+  List<Order> getOrdersByDepot(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("rightName") String rightName, @Param("supplyDepot") Long supplyDepot, @Param("program") Long program, @Param("period") Long period);
 
 
   @SelectProvider(type = ViewOrderSearch.class, method = "getOrderByCriteria")
@@ -92,7 +91,7 @@ public interface OrderMapper {
   @Update({"UPDATE orders SET",
     "shipmentId = #{shipmentId},",
     "status = #{status},",
-    "modifiedDate = DEFAULT",
+    "modifiedDate = CURRENT_TIMESTAMP",
     "WHERE orderNumber = #{orderNumber}"})
   void updateShipmentAndStatus(@Param("orderNumber") String orderNumber,
                                @Param("status") OrderStatus status,
@@ -109,7 +108,7 @@ public interface OrderMapper {
   void insertOrderFileColumn(OrderFileColumn orderFileColumn);
 
 
-  @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment}, modifiedDate = DEFAULT WHERE id = #{id}")
+  @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment}, modifiedDate = CURRENT_TIMESTAMP WHERE id = #{id}")
   void updateOrderStatus(Order order);
 
   @Select("SELECT status FROM orders WHERE orderNumber = #{orderNumber}")

@@ -17,6 +17,10 @@ import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.OrderNumberConfiguration;
 import org.springframework.stereotype.Repository;
 
+/**
+ * OrderNumberConfigurationMapper maps the OrderNumberConfiguration entity to corresponding representation in database.
+ */
+
 @Repository
 public interface OrderNumberConfigurationMapper {
 

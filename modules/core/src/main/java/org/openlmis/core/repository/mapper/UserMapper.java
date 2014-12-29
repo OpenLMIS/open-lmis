@@ -11,8 +11,8 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.springframework.stereotype.Repository;
@@ -58,11 +58,7 @@ public interface UserMapper {
     "WHERE RA.programId = #{program.id} AND COALESCE(RA.supervisoryNodeId, -1) = COALESCE(#{supervisoryNode.id}, -1) AND RR.rightName = #{right}"})
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   List<User> getUsersWithRightInNodeForProgram(@Param("program") Program program, @Param("supervisoryNode") SupervisoryNode supervisoryNode,
-                                               @Param("right") Right right);
-
-  @Select(value = "SELECT id, firstName, lastName, email, username, active FROM users WHERE LOWER(firstName) LIKE '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(lastName) LIKE '%'|| " +
-    "LOWER(#{userSearchParam}) ||'%' OR LOWER(email) LIKE '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(username) LIKE '%'|| LOWER(#{userSearchParam}) ||'%'")
-  List<User> getUserWithSearchedName(String userSearchParam);
+                                               @Param("right") String right);
 
   @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, " +
     "employeeId = #{employeeId},restrictLogin = #{restrictLogin}, facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
@@ -98,12 +94,6 @@ public interface UserMapper {
   @Update("UPDATE users SET active = FALSE, modifiedBy = #{modifiedBy}, modifiedDate = NOW() WHERE id = #{userId}")
   void disable(@Param(value = "userId") Long userId, @Param(value = "modifiedBy") Long modifiedBy);
 
-  @Select("select userPreferenceKey as key, value from user_preferences where userId = #{userId} " +
-      "UNION " +
-      "select key, defaultValue as value from user_preference_master " +
-      "   where key not in (select userPreferenceKey from user_preferences where userId = #{userId})")
-  List<LinkedHashMap> getPreferences(@Param(value = "userId") Long userId);
-
   @Select({"SELECT id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod,",
     "officePhone, cellPhone, email, supervisorId, verified, active from users inner join role_assignments on users.id = role_assignments.userId ",
     "INNER JOIN role_rights ON role_rights.roleId = role_assignments.roleId ",
@@ -113,16 +103,35 @@ public interface UserMapper {
     "SELECT c.id, c.parentId  FROM supervisoryNodesRec AS p, supervisory_nodes AS c WHERE p.parentId = c.id)",
     "SELECT id FROM supervisoryNodesRec) ",
     "AND programId = #{programId} AND role_rights.rightName = #{rightName}"})
-  List<User> getUsersWithRightInHierarchyUsingBaseNode(@Param(value = "nodeId") Long nodeId, @Param(value = "programId") Long programId, @Param(value = "rightName") Right right);
+  List<User> getUsersWithRightInHierarchyUsingBaseNode(@Param(value = "nodeId") Long nodeId, @Param(value = "programId") Long programId, @Param(value = "rightName") String right);
 
   @Select({"SELECT id, userName, u.facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod," +
     "officePhone, cellPhone, email, supervisorId, verified, active FROM users u INNER JOIN fulfillment_role_assignments f ON u.id = f.userId " +
     "INNER JOIN role_rights rr ON f.roleId = rr.roleId",
     "WHERE f.facilityId = #{facilityId} AND rr.rightName = #{rightName}"})
-  List<User> getUsersWithRightOnWarehouse(@Param("facilityId") Long facilityId, @Param("rightName") Right right);
+  List<User> getUsersWithRightOnWarehouse(@Param("facilityId") Long facilityId, @Param("rightName") String rightName);
 
-  @Select(value = "SELECT id, firstName, lastName, email, username, active FROM users WHERE active = TRUE")
-  List<User> getAllUsers();
+  @Select({"SELECT COUNT(*) FROM users",
+    "WHERE LOWER(firstName) LIKE '%'|| LOWER(#{searchParam}) ||'%'",
+    "OR LOWER(lastName) LIKE '%' || LOWER(#{searchParam}) ||'%' ",
+    "OR LOWER(email) LIKE '%'|| LOWER(#{searchParam}) || '%' ",
+    "OR LOWER(username) LIKE '%'|| LOWER(#{searchParam}) ||'%'"})
+  Integer getTotalSearchResultCount(String searchParam);
+
+  @Select({"SELECT id, firstName, lastName, email, username, active, verified FROM users",
+    "WHERE LOWER(firstName) LIKE '%'|| LOWER(#{searchParam}) ||'%'",
+    "OR LOWER(lastName) LIKE '%' || LOWER(#{searchParam}) ||'%' ",
+    "OR LOWER(email) LIKE '%'|| LOWER(#{searchParam}) || '%' ",
+    "OR LOWER(username) LIKE '%'|| LOWER(#{searchParam}) ||'%'",
+    "ORDER BY LOWER(firstName), LOWER(lastName)"})
+  List<User> search(String searchParam, RowBounds rowBounds);
+
+  @Select("select userPreferenceKey as key, value from user_preferences where userId = #{userId} " +
+    "UNION " +
+    "select key, defaultValue as value from user_preference_master " +
+    "   where key not in (select userPreferenceKey from user_preferences where userId = #{userId})")
+  List<LinkedHashMap> getPreferences(@Param(value = "userId") Long userId);
+
 
   @Select("select * from fn_save_user_preference(#{userId}::int,#{programId}::int,#{facilityId}::int,#{products})")
   String updateUserPreferences(@Param(value = "userId") Long userId, @Param("programId") Long programId, @Param("facilityId") Long facilityId, @Param(value = "products") String products);

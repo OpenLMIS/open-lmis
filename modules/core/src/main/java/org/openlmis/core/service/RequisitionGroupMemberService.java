@@ -50,10 +50,6 @@ public class RequisitionGroupMemberService {
   }
 
   public void save(RequisitionGroupMember requisitionGroupMember) {
-    insertIfDoesNotExist(requisitionGroupMember);
-  }
-
-  private void insertIfDoesNotExist(RequisitionGroupMember requisitionGroupMember) {
     setIdsForRequisitionGroupMemberEntitiesAndValidate(requisitionGroupMember);
 
     if (requisitionGroupMember.getId() == null) {
@@ -122,5 +118,20 @@ public class RequisitionGroupMemberService {
 
   public void deleteMembersFor(Facility facility) {
     requisitionGroupMemberRepository.deleteMembersFor(facility);
+  }
+
+  public List<RequisitionGroupMember> getMembersBy(Long requisitionGroupId) {
+    return requisitionGroupMemberRepository.getMembersBy(requisitionGroupId);
+  }
+
+  public void deleteMembersForGroup(Long requisitionGroupId) {
+    requisitionGroupMemberRepository.deleteMembersForGroup(requisitionGroupId);
+  }
+
+  public void insert(RequisitionGroupMember member) {
+    Long facilityId = facilityRepository.getIdForCode(member.getFacility().getCode());
+    member.getFacility().setId(facilityId);
+    validateIfFacilityIsAlreadyAssignedToRequisitionGroupForProgram(member);
+    requisitionGroupMemberRepository.insert(member);
   }
 }

@@ -42,6 +42,8 @@ public class ManageProgramProductISA extends TestCaseHelper {
   @BeforeMethod(groups = "admin")
   public void setUp() throws InterruptedException, SQLException, IOException {
     super.setup();
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", "MANAGE_PROGRAM_PRODUCT");
     homePage = PageObjectFactory.getHomePage(testWebDriver);
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
@@ -291,6 +293,8 @@ public class ManageProgramProductISA extends TestCaseHelper {
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);

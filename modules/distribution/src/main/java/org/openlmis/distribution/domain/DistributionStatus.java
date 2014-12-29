@@ -10,15 +10,30 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.Getter;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.distribution.serializer.StatusDeSerializer;
+import org.openlmis.distribution.serializer.StatusSerializer;
+
 /**
  *  Enum for statuses of a distribution. These distribution statuses are used to get/set the current status of an
  *  initiated distribution.
  */
 
+@JsonSerialize(using = StatusSerializer.class)
+@JsonDeserialize(using = StatusDeSerializer.class)
 public enum DistributionStatus {
 
-  INITIATED,
-  COMPLETED,
-  SYNCED
+  INITIATED("msg.status.initiated"),
+  COMPLETED("msg.status.completed"),
+  SYNCED("msg.status.synced");
+
+  @Getter
+  private final String statusKey;
+
+  DistributionStatus(String statusKey) {
+    this.statusKey = statusKey;
+  }
 
 }

@@ -10,11 +10,9 @@
 
 package org.openlmis.core.repository;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
-import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,60 +23,45 @@ import java.util.List;
  */
 
 @Component
-@NoArgsConstructor
 public class FacilityApprovedProductRepository {
 
-  private FacilityApprovedProductMapper facilityApprovedProductMapper;
-
-  private FacilityMapper facilityMapper;
-
-  private ProductMapper productMapper;
-
   @Autowired
-  public FacilityApprovedProductRepository(FacilityApprovedProductMapper facilityApprovedProductMapper, FacilityMapper facilityMapper, ProductMapper productMapper) {
-    this.facilityApprovedProductMapper = facilityApprovedProductMapper;
-    this.facilityMapper = facilityMapper;
-    this.productMapper = productMapper;
-  }
+  private FacilityApprovedProductMapper mapper;
 
   public List<FacilityTypeApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return  facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+    return mapper.getFullSupplyProductsBy(facilityId, programId);
   }
 
   public List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
-  }
-
-  public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityAndProgram(Long facilityId, Long programId) {
-      return facilityApprovedProductMapper.getProductsCompleteListByFacilityAndProgram(facilityId, programId);
-  }
-
-  public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityTypeAndProgram(Long facilityTypeId, Long programId) {
-      return facilityApprovedProductMapper.getProductsCompleteListByFacilityTypeAndProgram(facilityTypeId, programId);
-  }
-
-  public List<FacilityTypeApprovedProduct> getProductsAlreadyApprovedListByFacilityTypeAndProgram(Long facilityTypeId, Long programId) {
-      return facilityApprovedProductMapper.getProductsAlreadyApprovedListByFacilityTypeAndProgram(facilityTypeId, programId);
-  }
-
-  public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
-      return facilityApprovedProductMapper.getFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
-  }
-
-  public void removeFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
-      facilityApprovedProductMapper.removeFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
+    return mapper.getNonFullSupplyProductsBy(facilityId, programId);
   }
 
   public void insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
-    facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
+    mapper.insert(facilityTypeApprovedProduct);
   }
 
   public void update(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
-    facilityApprovedProductMapper.updateFacilityApprovedProduct(facilityTypeApprovedProduct);
+    mapper.update(facilityTypeApprovedProduct);
   }
 
-  public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
-    return facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(
-      facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
+  public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(
+    FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
+    return mapper.getBy(facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
+  }
+
+  public List<FacilityTypeApprovedProduct> getAllBy(Long facilityTypeId, Long programId, String searchParam, Pagination pagination) {
+    return mapper.getAllBy(facilityTypeId, programId, searchParam, pagination);
+  }
+
+  public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId, String searchParam) {
+    return mapper.getTotalSearchResultCount(facilityTypeId, programId, searchParam);
+  }
+
+  public void delete(Long id) {
+    mapper.delete(id);
+  }
+
+  public FacilityTypeApprovedProduct get(Long id){
+    return mapper.get(id);
   }
 }

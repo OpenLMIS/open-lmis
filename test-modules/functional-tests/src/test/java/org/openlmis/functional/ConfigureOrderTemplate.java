@@ -19,8 +19,8 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.PageObjectFactory;
-import org.openlmis.pageobjects.edi.ConfigureSystemSettingsPage;
 import org.openlmis.pageobjects.edi.ConfigureOrderPage;
+import org.openlmis.pageobjects.edi.ConfigureSystemSettingsPage;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -40,6 +40,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     super.setup();
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
     dbWrapper.deleteRowFromTable("order_file_columns", "openLMISField", "false");
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.assignRight("Admin", "SYSTEM_SETTINGS");
     loginPage = PageObjectFactory.getLoginPage(testWebDriver, baseUrlGlobal);
   }
 
@@ -226,6 +228,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   @AfterMethod(groups = "admin")
   public void tearDown() throws SQLException {
     testWebDriver.sleep(500);
+    dbWrapper.removeAllExistingRights("Admin");
+    dbWrapper.insertAllAdminRightsAsSeedData();
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);

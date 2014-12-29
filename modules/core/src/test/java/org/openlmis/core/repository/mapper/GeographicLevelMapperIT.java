@@ -21,6 +21,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -41,8 +43,12 @@ public class GeographicLevelMapperIT {
   }
 
   @Test
-  public void shouldGetGeographicLevelById() throws Exception {
-    GeographicLevel actualLevel = mapper.getGeographicLevelById(1);
-    assertNotNull(actualLevel);
+  public void shouldReturnAllTheGeoLevels() {
+    List<GeographicLevel> levels = mapper.getAll();
+    assertThat(levels.size(), is(4));
+    assertThat(levels.get(0).getLevelNumber(), is(1));
+    assertThat(levels.get(1).getLevelNumber(), is(2));
+    assertThat(levels.get(2).getLevelNumber(), is(3));
+    assertThat(levels.get(3).getLevelNumber(), is(4));
   }
 }

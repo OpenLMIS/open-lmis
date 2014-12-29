@@ -21,7 +21,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.core.domain.RightName.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -520,7 +520,7 @@ public class RequisitionService {
   }
 
   public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber,
-                                                                   Integer totalNumberOfPages, Long userId, Right right,
+                                                                   Integer totalNumberOfPages, Long userId, String rightName,
                                                                    String sortBy, String sortDirection) {
     if (pageNumber.equals(1) && totalNumberOfPages.equals(0))
       return new ArrayList<>();
@@ -531,15 +531,15 @@ public class RequisitionService {
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
 
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-      pageNumber, pageSize, userId, right, sortBy, sortDirection);
+      pageNumber, pageSize, userId, rightName, sortBy, sortDirection);
 
     fillFacilityPeriodProgramWithAuditFields(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
     return requisitions;
   }
 
-  public Integer getNumberOfPagesOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, Right right) {
-    Integer approvedRequisitionsByCriteria = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, userId, right);
+  public Integer getNumberOfPagesOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, String rightName) {
+    Integer approvedRequisitionsByCriteria = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, userId, rightName);
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
     return (int) Math.ceil(approvedRequisitionsByCriteria.doubleValue() / pageSize.doubleValue());
   }

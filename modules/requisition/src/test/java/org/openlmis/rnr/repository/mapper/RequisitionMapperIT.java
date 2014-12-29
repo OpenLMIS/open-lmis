@@ -34,7 +34,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -48,10 +51,11 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.ProgramBuilder.programName;
-import static org.openlmis.core.builder.SupplyLineBuilder.defaultProgram;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.core.builder.UserBuilder.active;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.domain.RightName.CONVERT_TO_ORDER;
+import static org.openlmis.core.domain.RightType.FULFILLMENT;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -82,7 +86,7 @@ public class RequisitionMapperIT {
   @Autowired
   private RequisitionMapper mapper;
   @Autowired
-  RnrLineItemMapper lineItemMapper;
+  private RnrLineItemMapper lineItemMapper;
   @Autowired
   LossesAndAdjustmentsMapper lossesAndAdjustmentsMapper;
   @Autowired
@@ -375,7 +379,7 @@ public class RequisitionMapperIT {
     String sortDirection = "asc";
     String sortBy = "submittedDate";
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "F10", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -402,7 +406,7 @@ public class RequisitionMapperIT {
     String sortBy = "submittedDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Apollo", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -428,7 +432,7 @@ public class RequisitionMapperIT {
     String sortDirection = "asc";
     String sortBy = "submittedDate";
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "apollo", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -453,7 +457,7 @@ public class RequisitionMapperIT {
     String sortDirection = "asc";
     String sortBy = "submittedDate";
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Yellow", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -514,7 +518,7 @@ public class RequisitionMapperIT {
     String sortBy = "programName";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -541,7 +545,7 @@ public class RequisitionMapperIT {
     String sortBy = "facilityName";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -568,7 +572,7 @@ public class RequisitionMapperIT {
     String sortBy = "facilityCode";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -603,7 +607,7 @@ public class RequisitionMapperIT {
     String sortBy = "supplyingDepotName";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -631,7 +635,7 @@ public class RequisitionMapperIT {
     String sortBy = "modifiedDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -655,7 +659,7 @@ public class RequisitionMapperIT {
     String sortBy = "emergency";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -692,7 +696,7 @@ public class RequisitionMapperIT {
     String sortBy = "periodStartDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -729,7 +733,7 @@ public class RequisitionMapperIT {
     String sortBy = "periodEndDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, userId, CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -785,11 +789,13 @@ public class RequisitionMapperIT {
   }
 
   private Role insertRole() {
-    Role role = new Role("r1", "random description", new HashSet<>(asList(Right.CONVERT_TO_ORDER, Right.VIEW_ORDER)));
+    Right right1 = new Right(CONVERT_TO_ORDER, FULFILLMENT);
+    Right right2 = new Right(RightName.VIEW_ORDER, FULFILLMENT);
+    Role role = new Role("r1", "random description", asList(right1,right2));
     Long roleId = Long.valueOf(roleRightsMapper.insertRole(role));
     role.setId(roleId);
     for (Right right : role.getRights()) {
-      roleRightsMapper.createRoleRight(role, right);
+      roleRightsMapper.createRoleRight(role, right.getName());
     }
     return role;
   }
@@ -842,6 +848,7 @@ public class RequisitionMapperIT {
   private ProgramProduct insertProgramProductWithProductCategory(Product product, Program program) {
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, true, new Money("12.5000"));
     programProduct.setProductCategory(productCategory);
+    programProduct.setFullSupply(product.getFullSupply());
     programProductMapper.insert(programProduct);
     return programProduct;
   }
@@ -877,7 +884,7 @@ public class RequisitionMapperIT {
 
   private void insertSupplyLine(Facility facility, SupervisoryNode supervisoryNode) {
     SupplyLine supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
-      with(SupplyLineBuilder.supervisoryNode, supervisoryNode), with(defaultProgram, program)));
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode), with(SupplyLineBuilder.program, program)));
     supplyLineMapper.insert(supplyLine);
   }
 

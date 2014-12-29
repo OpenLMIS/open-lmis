@@ -13,8 +13,10 @@
     <div class="row-fluid">
       <div class="span6">
         <div class="fluid-grid-cell">
-          <select id="adminRoles" ui-select2 ng-model="user.adminRole.roleIds" openlmis-message="placeholder.add.role"
-                  multiple="multiple" name="roles" id="roles" ng-options="role.id as role.name for role in rolesMap.ADMIN" >
+          <select id="adminRoles" ui-select2 ng-model="user.adminRole.roleIds" class="full-width"
+                  openlmis-message="placeholder.add.role"
+                  multiple="multiple" name="roles" id="roles"
+                  ng-options="role.id as role.name for role in rolesMap.ADMIN">
           </select>
           <span ng-show="roleAssignment.roleIds.length == 0" class="field-error" openlmis-message="missing.value">
           </span>

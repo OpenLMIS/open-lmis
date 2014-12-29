@@ -17,7 +17,9 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.OutputType.BYTES;
@@ -180,6 +182,10 @@ public class TestWebDriver {
     return driver.findElements(By.xpath(Xpath));
   }
 
+  public List<WebElement> getElementsByLinkText(String linkText) {
+    return driver.findElements(By.linkText(linkText));
+  }
+
   public int getElementsSizeByXpath(String Xpath) {
     return driver.findElements(By.xpath(Xpath)).size();
   }
@@ -193,8 +199,23 @@ public class TestWebDriver {
   }
 
   public List<WebElement> getOptions(WebElement element) {
-
     return new Select(element).getOptions();
+  }
+
+  public List<String> getListOfOptions(WebElement element) {
+    List<String> listOfOptions = new ArrayList<>();
+    for (WebElement option : new Select(element).getOptions()) {
+      listOfOptions.add(option.getText());
+    }
+    return listOfOptions;
+  }
+
+  public List<String> getListOfOptionGroupsWithOptions(WebElement element) {
+    List<String> listOfOptionGroupsWithOptions = new ArrayList<>();
+    for (WebElement option : element.findElements(By.tagName("optgroup"))) {
+      listOfOptionGroupsWithOptions.add(option.getAttribute("label") + "\n" + option.getText());
+    }
+    return listOfOptionGroupsWithOptions;
   }
 
   public String getText(WebElement element) {
@@ -231,7 +252,6 @@ public class TestWebDriver {
       Actions action = new Actions(driver);
       action.click(element).perform();
     }
-
   }
 
   public void keyPress(final WebElement element) {
@@ -258,12 +278,33 @@ public class TestWebDriver {
   }
 
   public byte[] getScreenshot() {
-    byte[] screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(BYTES);
-    return screenshotFile;
+    return ((TakesScreenshot) driver).getScreenshotAs(BYTES);
   }
 
   public void scrollToElement(WebElement elementToClick) {
     // Scroll the browser to the element's Y position
     ((org.openqa.selenium.JavascriptExecutor) driver).executeScript(String.format("window.scrollTo(0, %s);", elementToClick.getLocation().getY()));
+  }
+
+  public void closeBrowser() {
+    String base = driver.getWindowHandle();
+    Set<String> set = driver.getWindowHandles();
+    set.remove(base);
+
+    if (set.size() >= 1) {
+      driver.switchTo().window((String) set.toArray()[0]);
+      driver.close();
+      driver.switchTo().window(base);
+    }
+  }
+
+  public void switchWindow() {
+    String base = driver.getWindowHandle();
+    Set<String> set = driver.getWindowHandles();
+    set.remove(base);
+
+    if (set.size() >= 1) {
+      driver.switchTo().window((String) set.toArray()[0]);
+    }
   }
 }

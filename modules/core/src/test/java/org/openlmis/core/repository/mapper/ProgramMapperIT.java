@@ -31,7 +31,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -92,6 +91,9 @@ public class ProgramMapperIT {
     List<Program> programs = programMapper.getAllPullPrograms();
     assertEquals(4, programs.size());
     assertThat(programs.get(0).getCode(), is("ESS_MEDS"));
+    assertThat(programs.get(1).getCode(), is("HIV"));
+    assertThat(programs.get(2).getCode(), is("MALARIA"));
+    assertThat(programs.get(3).getCode(), is("TB"));
   }
 
   @Test
@@ -160,7 +162,7 @@ public class ProgramMapperIT {
 
     Role createRnrRole = new Role("R1", "Create Requisition");
     roleRightsMapper.insertRole(createRnrRole);
-    roleRightsMapper.createRoleRight(createRnrRole, Right.CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(createRnrRole, RightName.CREATE_REQUISITION);
     insertRoleAssignments(activeProgramWithCreateRight, user, createRnrRole, supervisoryNode);
     insertRoleAssignments(inactiveProgram, user, createRnrRole, supervisoryNode);
     insertRoleAssignments(activeProgramForHomeFacility, user, createRnrRole, null);
@@ -168,7 +170,7 @@ public class ProgramMapperIT {
 
     Role configureRnrRole = new Role("R2", "View Rnr Role");
     roleRightsMapper.insertRole(configureRnrRole);
-    roleRightsMapper.createRoleRight(configureRnrRole, Right.CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(configureRnrRole, RightName.CONFIGURE_RNR);
     insertRoleAssignments(activeProgramWithConfigureRight, user, configureRnrRole, supervisoryNode);
 
     List<Program> programs = programMapper.getUserSupervisedActivePrograms(user.getId(), "{CREATE_REQUISITION, CONFIGURE_RNR}");
@@ -191,11 +193,11 @@ public class ProgramMapperIT {
 
     Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
-    roleRightsMapper.createRoleRight(r1, Right.CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(r1, RightName.CREATE_REQUISITION);
 
     Role r2 = new Role("r2", "authorize role");
     roleRightsMapper.insertRole(r2);
-    roleRightsMapper.createRoleRight(r2, Right.AUTHORIZE_REQUISITION);
+    roleRightsMapper.createRoleRight(r2, RightName.AUTHORIZE_REQUISITION);
 
     insertRoleAssignments(activeProgram, user, r1, null);
     insertRoleAssignments(anotherActiveProgram, user, r2, null);
@@ -215,9 +217,7 @@ public class ProgramMapperIT {
     assertTrue(programs.contains(activeProgram));
     assertTrue(programs.contains(anotherActiveProgram));
     assertFalse(programs.contains(activePushProgram));
-
   }
-
 
   @Test
   public void shouldGetActiveProgramsForUserWithGivenRights() throws Exception {
@@ -229,7 +229,7 @@ public class ProgramMapperIT {
 
     Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
-    roleRightsMapper.createRoleRight(r1, Right.APPROVE_REQUISITION);
+    roleRightsMapper.createRoleRight(r1, RightName.APPROVE_REQUISITION);
 
     insertRoleAssignments(activeProgram, user, r1, null);
     insertRoleAssignments(inactiveProgram, user, r1, null);
@@ -272,7 +272,7 @@ public class ProgramMapperIT {
 
     Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
-    roleRightsMapper.createRoleRight(r1, Right.VIEW_REQUISITION);
+    roleRightsMapper.createRoleRight(r1, RightName.VIEW_REQUISITION);
 
     insertRoleAssignments(activeProgram, user, r1, null);
     insertRoleAssignments(inactiveProgram, user, r1, null);

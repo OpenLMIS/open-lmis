@@ -13,42 +13,40 @@ services.factory('AuthorizationService', function (localStorageService, $window)
   var rights = localStorageService.get(localStorageKeys.RIGHT);
 
   var preAuthorize = function () {
-    if (rights === undefined || rights === null) return false;
-
     var permissions = Array.prototype.slice.call(arguments);
-    var permitted = false;
-    $(permissions).each(function (i, permission) {
-      if (rights.indexOf(permission) > -1) {
-        permitted = true;
-        return false;
-      }
-      return true;
-    });
-    if (permitted) return true;
+    if(!hasRight(permissions)){
+      $window.location = "/public/pages/access-denied.html";
+      return false;
+    }
+    return true;
+  };
 
-    $window.location = "/public/pages/access-denied.html";
-    return false;
+  var hasRight = function(permissions){
+    if (rights) {
+      var rightNames = _.pluck(JSON.parse(rights), 'name');
+      var hasRight = _.intersection(permissions, rightNames);
+      if(hasRight.length > 0){
+        return true;
+      }}
+    else{
+      return false;
+    }
+  };
+
+  var preAuthorizeReporting = function () {
+    return rights && _.find(JSON.parse(rights), function (right) {
+      return right.type === 'REPORTING';
+    });
   };
 
   var hasPermission = function () {
-    if (rights === undefined || rights === null) return false;
-
     var permissions = Array.prototype.slice.call(arguments);
-    var permitted = false;
-
-    $(permissions).each(function (i, permission) {
-      if (rights.indexOf(permission) > -1) {
-        permitted = true;
-        return false;
-      }
-      return true;
-    });
-
-    return permitted;
+    return hasRight(permissions);
   };
 
   return{
     preAuthorize: preAuthorize,
-    hasPermission: hasPermission
+    hasPermission: hasPermission,
+    preAuthorizeReporting: preAuthorizeReporting
   };
 });

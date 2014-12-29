@@ -24,7 +24,7 @@ import java.util.List;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
- * Product represents real world entity Product. It also defines the contract for creation/upload of products like
+ * Product represents real world entity Product. It also defines the contract for creation/upload of product entity.
  */
 @Data
 @NoArgsConstructor

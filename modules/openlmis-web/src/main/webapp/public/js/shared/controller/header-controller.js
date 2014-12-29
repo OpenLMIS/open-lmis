@@ -28,10 +28,6 @@ function HeaderController($scope, localStorageService, loginConfig, ConfigSettin
 
 
 
-  if(!$scope.user) {
-    $window.location = "/public/pages/login.html";
-  }
-
   $scope.logout = function () {
     localStorageService.remove(localStorageKeys.RIGHT);
     localStorageService.remove(localStorageKeys.USERNAME);
