@@ -401,93 +401,92 @@
               </ul>
             </div>
           </li>
-                  <li class="has-children">
-                      <a id="manage-equipment-option" href="/public/pages/admin/equipment/manage/index.html" >Equipment</a>
-                      <div class="submenu">
-                          <ul>
-                              <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                                  <a href="/public/pages/admin/equipment/type/index.html">Equipment Types</a>
-                              </li>
-                              <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                                  <a href="/public/pages/admin/equipment/manage/index.html">Equipment List</a>
-                              </li>
-                            <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                              <a href="/public/pages/admin/equipment/program-equipment-products/index.html">Products for Equipments</a>
-                            </li>
-                            <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                              <a href="/public/pages/admin/equipment/service-type/index.html">
-                                <span id="equipment-service-type">Service Types</span>
-                              </a>
-                            </li>
-                            <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                              <a href="/public/pages/admin/equipment/vendor/index.html">
-                                <span id="service-vendor">Service Vendors</span>
-                              </a>
-                            </li>
-                            <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                              <a href="/public/pages/admin/equipment/service-contract/index.html">
-                                <span id="service-contract">Service Contracts</span>
-                              </a>
-                            </li>
-                            <li ng-show="hasPermission('MANAGE_DONOR')">
-                              <a href="/public/pages/admin/equipment/donors/index.html">
-                                <span id="manage-donor">Donors</span>
-                              </a>
-                            </li>
-                          </ul>
-                      </div>
+            <li class="has-children">
+                <a id="manage-equipment-option" href="/public/pages/admin/equipment/manage/index.html" >Equipment</a>
+                <div class="submenu">
+                    <ul>
+                        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                            <a href="/public/pages/admin/equipment/type/index.html">Equipment Types</a>
+                        </li>
+                        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                            <a href="/public/pages/admin/equipment/manage/index.html">Equipment List</a>
+                        </li>
+                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                        <a href="/public/pages/admin/equipment/program-equipment-products/index.html">Products for Equipments</a>
+                      </li>
+                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                        <a href="/public/pages/admin/equipment/service-type/index.html">
+                          <span id="equipment-service-type">Service Types</span>
+                        </a>
+                      </li>
+                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                        <a href="/public/pages/admin/equipment/vendor/index.html">
+                          <span id="service-vendor">Service Vendors</span>
+                        </a>
+                      </li>
+                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                        <a href="/public/pages/admin/equipment/service-contract/index.html">
+                          <span id="service-contract">Service Contracts</span>
+                        </a>
+                      </li>
+                      <li ng-show="hasPermission('MANAGE_DONOR')">
+                        <a href="/public/pages/admin/equipment/donors/index.html">
+                          <span id="manage-donor">Donors</span>
+                        </a>
+                      </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="has-children" ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')" >
+              <a  id="vaccine-admin"  >Vaccine</a>
+              <div class="submenu">
+                <ul>
+                  <li>
+                    <a href="/public/pages/vaccine/admin/protocol/index.html">Protocols</a>
                   </li>
-
-                  <li class="has-children" ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')" >
-                    <a  id="vaccine-admin"  >Vaccine</a>
-                    <div class="submenu">
-                      <ul>
-                        <li>
-                          <a href="/public/pages/vaccine/admin/protocol/index.html">Protocols</a>
-                        </li>
-                        <li>
-                          <a href="/public/pages/vaccine/admin/protocol/index.html#/template">Logistics Template</a>
-                        </li>
-                        <li>
-                          <a href="/public/pages/vaccine/admin/protocol/index.html#/disease">Diseases</a>
-                        </li>
-                        <li>
-                          <a href="/public/pages/vaccine/index.html#/manufacturer">Manufacturer</a>
-                        </li>
-                        <li >
-                          <a href="/public/pages/vaccine/index.html#/transaction-type">Transaction Type</a>
-                        </li>
-                        <li>
-                          <a href="/public/pages/vaccine/index.html#/received-status">Received Status</a>
-                        </li>
-                        <li>
-                          <a href="/public/pages/vaccine/index.html#/vaccine-storage">Vaccine Storage</a>
-                        </li>
-                        <li>
-                          <a href="/public/pages/vaccine/admin/protocol/index.html#/storage-type">Storage Type</a>
-                        </li>
-                        <li>
-                          <a href="/public/pages/vaccine/admin/protocol/index.html#/temperature">Temperature</a>
-                        </li>
-                        <li>
-                          <a href="/public/pages/vaccine/admin/protocol/index.html#/countries">Countries</a>
-                        </li>
-                      </ul>
-                    </div>
+                  <li>
+                    <a href="/public/pages/vaccine/admin/protocol/index.html#/template">Logistics Template</a>
                   </li>
-                  <li class="has-children">
-                      <a id="manage-help-option" href="/public/pages/help/helpTopic/index.html" >Help</a>
-                      <div class="submenu">
-                          <ul>
-                          <li >
-                              <a href="/public/pages/help/helpTopic/index.html">Help Topics</a>
-                          </li>
-                          <li >
-                              <a href="/public/pages/help/helpContent/index.html">Help Contents</a>
-                          </li>
-                          </ul>
-                      </div>
+                  <li>
+                    <a href="/public/pages/vaccine/admin/protocol/index.html#/disease">Diseases</a>
                   </li>
+                  <li>
+                    <a href="/public/pages/vaccine/index.html#/manufacturer">Manufacturer</a>
+                  </li>
+                  <li >
+                    <a href="/public/pages/vaccine/index.html#/transaction-type">Transaction Type</a>
+                  </li>
+                  <li>
+                    <a href="/public/pages/vaccine/index.html#/received-status">Received Status</a>
+                  </li>
+                  <li>
+                    <a href="/public/pages/vaccine/index.html#/vaccine-storage">Vaccine Storage</a>
+                  </li>
+                  <li>
+                    <a href="/public/pages/vaccine/admin/protocol/index.html#/storage-type">Storage Type</a>
+                  </li>
+                  <li>
+                    <a href="/public/pages/vaccine/admin/protocol/index.html#/temperature">Temperature</a>
+                  </li>
+                  <li>
+                    <a href="/public/pages/vaccine/admin/protocol/index.html#/countries">Countries</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="has-children">
+                <a id="manage-help-option" href="/public/pages/help/helpTopic/index.html" >Help</a>
+                <div class="submenu">
+                    <ul>
+                    <li >
+                        <a href="/public/pages/help/helpTopic/index.html">Help Topics</a>
+                    </li>
+                    <li >
+                        <a href="/public/pages/help/helpContent/index.html">Help Contents</a>
+                    </li>
+                    </ul>
+                </div>
+            </li>
           <li class="beak"></li>
         </ul>
       </div>
