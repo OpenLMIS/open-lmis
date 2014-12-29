@@ -78,6 +78,19 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
       percentageReporting.setCount(percentReporting.toString() + "%");
       summary.add(percentageReporting);
 
+      NameCount percentageNonReportingChart = new NameCount();
+      NameCount percentageReportingChart = new NameCount();
+
+      percentageNonReportingChart.setName("Percentage not-reporting");
+      percentageNonReportingChart.setCount(percentNonReporting.toString());
+      summary.add(percentageNonReportingChart);
+
+      percentageReportingChart.setName("Percentage reporting");
+      percentageReportingChart.setCount(percentReporting.toString());
+      summary.add(percentageReportingChart);
+
+
+
     report.summary = summary;
 
     reportList.add(report);

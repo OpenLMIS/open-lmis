@@ -19,7 +19,6 @@
                             <a id="xls-button" href="#list" ng-click="exportReport('xls')" class='btn-small btn-info'>Excel</a>
                         </div>
                     </div>
-
             <div>
                 <div class="app-form">
 
@@ -58,19 +57,34 @@
 
 
                     </div>
-                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
 
-                        <tbody>
-                        <tr ng-repeat="row in datarows">
-                            <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                            <td data-title="'Code'" style="width:50px" sortable="code" >{{ row.code }}</td>
-                            <td data-title="'Facility Name'" style="width:30%" sortable="name" >{{ row.name }}</td>
-                            <td data-title="'Facility Type'" style="width:30%" sortable="facilityType" >{{ row.facilityType }}</td>
-                            <td data-title="'Location'" style="width:30%" sortable="location"  >{{ row.location }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="container-fluid">
+                        <div class="row-fluid">
+                            <div class="span4">
+                                <a-float id="equipment-status-summary" af-option="nonReportingReportSummaryPieChartOption"
+                                         af-data="facilityEquipStatusPieChartData" class="chart"></a-float>
+                                <div id="nonReportingReportSummary" class="container-legend-drifted span12 chartLegend"></div>
+                            </div>
+                            <div class="span8">
+                                <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                                    <tbody>
+                                    <tr ng-repeat="row in datarows">
+                                        <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                                        <td data-title="'Code'" style="width:50px" sortable="code" >{{ row.code }}</td>
+                                        <td data-title="'Facility Name'" style="width:30%" sortable="name" >{{ row.name }}</td>
+                                        <td data-title="'Facility Type'" style="width:30%" sortable="facilityType" >{{ row.facilityType }}</td>
+                                        <td data-title="'Location'" style="width:30%" sortable="location"  >{{ row.location }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
    </div>
   </div>
+
+
 
