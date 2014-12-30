@@ -1,16 +1,7 @@
 /**
  * Created by issa on 4/24/14.
  */
-function SendNotificationController($scope,$timeout,$filter,SendNotification,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,messageService, NotificationAlerts, GetPeriod, formInputValue,FacilitiesForNotifications,userPreferredFilterValues,ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
-    $scope.filterObject = {};
-
-    $scope.formFilter = {};
-
-    $scope.formPanel = {openPanel:true};
-
-    $scope.alertsPanel = {openPanel:true};
-
-    $scope.selectedNotification = { selectAllFacilities: true};
+function SendNotificationController($scope,$timeout,$filter,userPreferredFilters,SendNotification,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,messageService, NotificationAlerts, formInputValue,FacilitiesForNotifications,ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear, ngTableParams) {
 
     initialize();
 
@@ -24,6 +15,23 @@ function SendNotificationController($scope,$timeout,$filter,SendNotification,das
         $scope.showFacilitiesFilter = false;
         $scope.maxSmsText = 160;
     }
+
+    var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
+
+    if(isUndefined(filterHistory)){
+        $scope.formFilter = $scope.filterObject  = userPreferredFilters || {};
+
+    }else{
+        $scope.formFilter = $scope.filterObject  = filterHistory || {};
+    }
+
+    $scope.formPanel = {openPanel:true};
+
+    $scope.alertsPanel = {openPanel:true};
+
+    $scope.selectedNotification = { selectAllFacilities: true};
+
+
 
     $scope.notificationMethodsChange = function(notification){
         $scope.selectedNotification = notification;
@@ -267,59 +275,14 @@ function SendNotificationController($scope,$timeout,$filter,SendNotification,das
         }
     };
 
-
     $scope.$on('$viewContentLoaded', function () {
-        var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
-
-        if(isUndefined(filterHistory)){
-            if(!_.isEmpty(userPreferredFilterValues)){
-                var date = new Date();
-
-                $scope.filterObject.programId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM], $scope.programs) ?
-                    userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
-
-                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
-                if(!isUndefined($scope.filterObject.periodId)){
-
-                    GetPeriod.get({id:$scope.filterObject.periodId}, function(period){
-                        if(!isUndefined(period.year)){
-                            $scope.filterObject.year = period.year;
-                        }else{
-                            $scope.filterObject.year = date.getFullYear() - 1;
-                        }
-
-                        $scope.changeSchedule();
-                    });
-                }
-                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
-
-                $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
-
-                $scope.registerWatches();
-
-                $scope.formFilter = $scope.filterObject;
-
-            }
-        }else{
-
-            $scope.registerWatches();
-            $scope.formFilter = $scope.filterObject = filterHistory;
-
-        }
-
+        $timeout(function(){
+            $scope.search();
+        },10);
     });
-    $scope.registerWatches = function(){
 
-        $scope.$watch('formFilter.programId',function(){
-            $scope.filterProductsByProgram();
-
-        });
-
-        $scope.$watch('formFilter.scheduleId', function(){
-            $scope.changeSchedule();
-
-        });
-
+    $scope.search = function(){
+        $scope.loadFacilities();
     };
 
     $scope.$on('$routeChangeStart', function(){
