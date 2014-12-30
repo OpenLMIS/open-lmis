@@ -21,6 +21,7 @@ import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,12 +48,16 @@ public class SelectedFilterHelper {
   @Autowired
   private FacilityRepository facilityRepository;
 
+  @Autowired
+  private SupervisoryNodeService supervisoryNodeService;
+
   public String getProgramPeriodGeoZone(Map<String, String[]> params){
     String filterSummary = "";
 
     String program = StringHelper.isBlank(params, "program")? "0": params.get("program")[0];
     String period =  StringHelper.isBlank(params, "period")? "0": params.get("period")[0];
     String zone = StringHelper.isBlank(params, "zone")?"0" : params.get("zone")[0];
+    String userId = StringHelper.isBlank(params, "userId")?"0" : params.get("userId")[0];
     // these filters are essential for all reports and these lines should be fairly re-used.
 
     ProcessingPeriod periodObject = periodService.getById(Long.parseLong(period));
@@ -61,7 +66,14 @@ public class SelectedFilterHelper {
     filterSummary = "Program: " + programService.getById(Long.parseLong(program)).getName();
     filterSummary += "\nPeriod: " + periodObject.getName() + ", " + periodObject.getStringYear();
     if(zoneObject == null){
-      filterSummary += "\nGeographic Zone: National";
+       // Lets determine the user's supervisory node is either National or not
+      Long totalSNods = supervisoryNodeService.getTotalUnassignedSupervisoryNodeOfUserBy(Long.parseLong(userId), Long.parseLong(program));
+
+      if(totalSNods == 0)
+        filterSummary += "\nGeographic Zone: National";
+      else
+          filterSummary += "\nGeographic Zone: All Zones";
+
     }else{
       filterSummary += "\nGeographic Zone: " + zoneObject.getName();
     }
