@@ -73,7 +73,7 @@ function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout
             $scope.processProductsFilter();
         }
 
-        $scope.getShipmentLeadTimeData();
+       // $scope.getShipmentLeadTimeData();
 
     };
 
@@ -81,13 +81,13 @@ function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout
         $scope.filterObject.zoneId = $scope.formFilter.zoneId;
         $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
 
-        $scope.getShipmentLeadTimeData();
+       // $scope.getShipmentLeadTimeData();
     };
 
     $scope.processProductsFilter = function (){
 
         $scope.filterObject.productIdList = $scope.formFilter.productIdList;
-        $scope.getShipmentLeadTimeData();
+      //  $scope.getShipmentLeadTimeData();
 
     };
 
@@ -113,7 +113,7 @@ function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout
 
         }
 
-        $scope.getShipmentLeadTimeData();
+       // $scope.getShipmentLeadTimeData();
     };
 
 
@@ -123,7 +123,7 @@ function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout
         }
         $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
 
-        $scope.getShipmentLeadTimeData();
+       // $scope.getShipmentLeadTimeData();
 
     };
 
@@ -172,6 +172,11 @@ function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout
     });
     $scope.search = function(){
         $scope.getShipmentLeadTimeData();
+
+        $timeout(function(){
+            //Alert Controller listens this event to update its own data
+            $scope.$broadcast('dashboardFiltering', null);
+        },10);
     };
 
     $scope.$watch('formFilter.programId',function(){

@@ -231,6 +231,11 @@ function StockController($scope,userPreferredFilters,$timeout,dashboardFiltersHi
 
     $scope.search = function(){
         $scope.loadStockingData();
+
+        $timeout(function(){
+            //Alert Controller listens this event to update its own data
+            $scope.$broadcast('dashboardFiltering', null);
+        },10);
     };
 
     $scope.$watch('formFilter.programId',function(){

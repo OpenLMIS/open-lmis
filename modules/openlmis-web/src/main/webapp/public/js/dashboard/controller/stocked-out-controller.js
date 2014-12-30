@@ -14,11 +14,8 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
 
         $scope.showProductsFilter = true;
         $scope.$parent.currentTab = 'STOCK-OUT';
-
         $scope.productSelectOption = {maximumSelectionSize : 1};
-
     }
-
     var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
     if(isUndefined(filterHistory)){
@@ -72,23 +69,15 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
             $scope.formFilter.productIdList = undefined;
             $scope.processProductsFilter();
         }
-
-        $scope.loadStockedOutData();
-
     };
 
     $scope.processZoneFilter = function(){
         $scope.filterObject.zoneId = $scope.formFilter.zoneId;
         $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
-
-        $scope.loadStockedOutData();
     };
 
     $scope.processProductsFilter = function (){
-
         $scope.filterObject.productIdList = $scope.formFilter.productIdList;
-        $scope.loadStockedOutData();
-
     };
 
     $scope.changeSchedule = function(){
@@ -107,13 +96,9 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
                 ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
                     $scope.periods = data.periods;
                     $scope.periods.unshift({'name': formInputValue.periodOptionSelect});
-
                 });
             }
-
         }
-
-        $scope.loadStockedOutData();
     };
 
 
@@ -122,19 +107,14 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
             $scope.filterObject.periodId = $scope.formFilter.periodId;
         }
         $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
-
-        $scope.loadStockedOutData();
-
     };
 
     $scope.changeScheduleByYear = function (){
 
         if (!isUndefined($scope.formFilter.year)) {
             $scope.filterObject.year = $scope.formFilter.year;
-
         }
         $scope.changeSchedule();
-
     };
 
     $scope.stockedOutPieChartOption = {
@@ -212,7 +192,6 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
             });
         } else{
             $scope.resetStockedOutData();
-
         }
     };
 
@@ -263,56 +242,17 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
     $scope.$on('$viewContentLoaded', function () {
         $timeout(function(){
             $scope.search();
-
         },10);
 
     });
     $scope.search = function(){
         $scope.loadStockedOutData();
+
+        $timeout(function(){
+            //Alert Controller listens this event to update its own data
+            $scope.$broadcast('dashboardFiltering', null);
+        },10);
     };
-/*
-    $scope.$on('$viewContentLoaded', function () {
-        var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
-
-        if(isUndefined(filterHistory)){
-            if(!_.isEmpty(userPreferredFilterValues)){
-                var date = new Date();
-
-                $scope.filterObject.programId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM], $scope.programs) ?
-                    userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
-
-                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
-
-                if(!isUndefined($scope.filterObject.periodId)){
-
-                    GetPeriod.get({id:$scope.filterObject.periodId}, function(period){
-                        if(!isUndefined(period.year)){
-                            $scope.filterObject.year = period.year;
-                        }else{
-                            $scope.filterObject.year = date.getFullYear() - 1;
-                        }
-
-                        $scope.changeSchedule();
-                    });
-                }
-                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
-
-                $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
-                $scope.filterObject.productIdList = [userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PRODUCT]];
-
-                $scope.registerWatches();
-
-                $scope.formFilter = $scope.filterObject;
-
-            }
-        }else{
-
-            $scope.registerWatches();
-            $scope.formFilter = $scope.filterObject = filterHistory;
-
-        }
-
-    });*/
 
     $scope.$watch('formFilter.programId',function(){
         $scope.filterProductsByProgram();
