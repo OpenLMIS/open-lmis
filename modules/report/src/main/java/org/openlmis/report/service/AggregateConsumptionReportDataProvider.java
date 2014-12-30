@@ -21,6 +21,7 @@ import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,13 @@ public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    return filterHelper.getProgramPeriodGeoZone(params);
+
+      // Instead of overiding filterHelper.getProgramPeriodGeoZone method, we can pass additional params
+      Map<String, String[]> modifiableParams = new HashMap<String, String[]>();
+      modifiableParams.putAll(params);
+      modifiableParams.put("userId", new String[]{String.valueOf(this.getUserId())});
+
+      return filterHelper.getProgramPeriodGeoZone(modifiableParams);
   }
 
 }
