@@ -8,9 +8,13 @@
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
 <div>
-  <h2>Diseases Tracked</h2>
-  <a href="#/disease/add" class="pull-right btn btn-primary">Add New Disease</a>
-  <p>Manage vaccine related diseases that are tracked here</p>
+  <h2>
+    <span openlmis-message="header.track.disease"></span>
+  </h2>
+  <a href="#/disease/add" class="pull-right btn btn-primary"><span openlmis-message="link.add.new"></span></a>
+  <p>
+    <span openlmis-message="label.track.disease.intro"></span>
+  </p>
 </div>
 <div class="">
 
@@ -18,9 +22,9 @@
     <thead>
       <tr>
         <th class="span1">#</th>
-        <th class="span5">Disease Name</th>
-        <th>Description</th>
-        <th>Display Order</th>
+        <th class="span5"><span openlmis-message="label.disease.name"></span></th>
+        <th><span openlmis-message="label.disease.description"></span></th>
+        <th><span openlmis-message="label.disease.display.order"></span></th>
       </tr>
     </thead>
     <tbody>

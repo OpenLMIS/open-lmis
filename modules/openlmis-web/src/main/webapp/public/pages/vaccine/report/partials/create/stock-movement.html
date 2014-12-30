@@ -10,14 +10,14 @@
   -->
 
 <div class="rnr-table">
-  <h2>Stock Movement</h2>
+  <h2><span openlmis-message="label.vaccine.stock.status"></span></h2>
 
 
   <table class="table table-bordered">
     <thead>
     <tr>
       <th ng-repeat-start="column in report.columnTemplate | filter : {visible:true}" ng-if="false"></th>
-      <th class="span5" ng-if="column.name == 'productName'">Product</th>
+      <th class="span5" ng-if="column.name == 'productName'"><span openlmis-message="label.vaccine.stock.status.product"></span></th>
       <th ng-repeat-end="" class="span1" ng-if="column.name != 'productName' && column.name != 'skipped'">{{column.label}}</th>
 
     </tr>

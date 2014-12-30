@@ -10,11 +10,12 @@
 
 <div>
   <div ng-show="!disease.id">
-    <h2>Diseases Tracked : Add New Disease</h2>
+
+    <h2><span openlmis-message="header.track.disease"></span> : <span openlmis-message="label.disease.add.new"></span></h2>
   </div>
 
   <div ng-show="disease.id">
-    <h2>Diseases Tracked : Edit Disease</h2>
+    <h2><span openlmis-message="header.track.disease"></span> : <span openlmis-message="label.disease.edit"></span></h2>
   </div>
 
   <form id="diseaseForm" name="diseaseForm" novalidate>
@@ -27,7 +28,7 @@
           <div class="span4">
             <div class="form-cell">
               <label id="diseaseName">
-                <span>Disease Name</span>
+                <span openlmis-message="label.disease.name"></span>
                 <span class="label-required"> *</span>
               </label>
 
@@ -45,7 +46,7 @@
           <div class="span4">
             <div class="form-cell">
               <label id="diseaseDescription">
-                <span>Disease Description</span>
+                <span openlmis-message="label.disease.description"></span>
                 <span class="label-required"> *</span>
               </label>
 
@@ -63,7 +64,7 @@
           <div class="span4">
             <div class="form-cell">
               <label>
-                <span >Display Order</span>
+                <span openlmis-message="label.disease.display.order"></span>
                 <span class="label-required"> *</span>
               </label>
 

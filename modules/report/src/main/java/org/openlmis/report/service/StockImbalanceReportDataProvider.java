@@ -60,8 +60,8 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
 
       stockImbalanceReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType")? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
 
-      stockImbalanceReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,"productCategory") ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
-
+//      stockImbalanceReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,"productCategory") ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
+        stockImbalanceReportParam.setProductCategoryId(!filterCriteria.containsKey("productCategory") ? "0" : java.util.Arrays.toString(filterCriteria.get("productCategory")).replace("]", "}").replace("[", "{").replaceAll("\"", ""));
 //      stockImbalanceReportParam.setProductId(StringHelper.isBlank(filterCriteria,"productId") ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
         stockImbalanceReportParam.setProductId(!filterCriteria.containsKey("product") ? "0" : java.util.Arrays.toString(filterCriteria.get("product")).replace("]", "}").replace("[", "{").replaceAll("\"", "")); //defaults to 0
       //stockImbalanceReportParam.setRgroupId(StringHelper.isBlank( filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
@@ -92,6 +92,7 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
       }
 
     }
+
     return stockImbalanceReportParam;
   }
 

@@ -73,10 +73,7 @@ function CreateVaccineReportController($scope, $location, $filter, report, Vacci
     $scope.campaignsModal=false;
   };
 
-
 }
-
-
 CreateVaccineReportController.resolve = {
   report: function($q, $timeout, $route, VaccineReport) {
     var deferred = $q.defer();

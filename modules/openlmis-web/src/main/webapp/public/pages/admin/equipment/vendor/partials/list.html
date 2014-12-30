@@ -10,7 +10,7 @@
 
 <div xmlns="http://www.w3.org/1999/html">
   <h2>
-    <span>Manage Equipment Service Vendors</span>
+    <span openlmis-message="label.manage.equipment.vendors"></span>
     <a id="add-new-vendor" href="#/create" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
   </h2>
 
@@ -22,10 +22,15 @@
     <table class="table table-bordered table-striped">
       <thead>
         <tr class="gradient-header">
-          <th style="width: 30px;">#</th>
-          <th>Name</th>
-          <th>Primary Phone</th>
-          <th>Email</th>
+          <th class="span1">#</th>
+          <th>
+            <span openlmis-message="label.manage.vendor.name"></span>
+          </th>
+          <th>
+            <span openlmis-message="label.manage.vendor.phone"></span>
+          </th>
+          <th>
+            <span openlmis-message="label.manage.vendor.email"></span></th>
         </tr>
       </thead>
       <tbody>
