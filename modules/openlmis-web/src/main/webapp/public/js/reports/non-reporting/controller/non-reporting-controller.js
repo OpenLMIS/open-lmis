@@ -22,15 +22,15 @@ function NonReportingController($scope, NonReportingFacilities) {
         $scope.data = data.pages.rows[0].details;
         $scope.paramsChanged($scope.tableParams);
 
-         $scope.facilityEquipStatusPieChartData = [];
+         $scope.nonReportingFacilitiesPieChartData = [];
 
-          $scope.facilityEquipStatusPieChartData[0] = {
+          $scope.nonReportingFacilitiesPieChartData[0] = {
               label: $scope.summaries[5].name,
               data:  $scope.summaries[5].count,
               color: '#A3CC29'
           };
 
-          $scope.facilityEquipStatusPieChartData[1] = {
+          $scope.nonReportingFacilitiesPieChartData[1] = {
               label:  $scope.summaries[4].name,
               data:   $scope.summaries[4].count,
               color: '#FFB445'

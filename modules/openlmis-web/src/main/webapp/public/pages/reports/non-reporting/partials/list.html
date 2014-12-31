@@ -41,7 +41,7 @@
                 <div ng-show="datarows.length > 0">
                     <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
 
-                    <div class="span9 offset1">
+                    <div class="span12 offset1">
 
                         <div ng-repeat="summary in summaries">
                             <div class="pull-left" style="font-size:13px; font-weight: bold;" ng-if="$index ===2 || $index ===3">
@@ -61,8 +61,8 @@
                     <div class="container-fluid">
                         <div class="row-fluid">
                             <div class="span4">
-                                <a-float id="equipment-status-summary" af-option="nonReportingReportSummaryPieChartOption"
-                                         af-data="facilityEquipStatusPieChartData" class="chart"></a-float>
+                                <a-float id="non-reporting-facilities-summary" af-option="nonReportingReportSummaryPieChartOption"
+                                         af-data="nonReportingFacilitiesPieChartData" class="chart"></a-float>
                                 <div id="nonReportingReportSummary" class="container-legend-drifted span12 chartLegend"></div>
                             </div>
                             <div class="span8">
