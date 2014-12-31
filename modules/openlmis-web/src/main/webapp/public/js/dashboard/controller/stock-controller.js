@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockController($scope,userPreferredFilters,$timeout,dashboardFiltersHistoryService,programsList,FlatGeographicZoneList,UserGeographicZoneTree, formInputValue,GetPeriod, ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
+function StockController($scope,userPreferredFilters,$timeout,$routeParams,dashboardFiltersHistoryService,programsList,FlatGeographicZoneList,UserGeographicZoneTree, formInputValue,GetPeriod, ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, StockEfficiencyDetail, ngTableParams) {
 
 
     initialize();
@@ -28,13 +28,16 @@ function StockController($scope,userPreferredFilters,$timeout,dashboardFiltersHi
     }
 
     var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
-
-    if(isUndefined(filterHistory)){
+    if(_.isEmpty($routeParams) && isUndefined(filterHistory)){
         $scope.formFilter = $scope.filterObject  = userPreferredFilters || {};
 
+    }else if(!_.isEmpty($routeParams)){
+        $scope.formFilter = $scope.filterObject  = $routeParams;
+        $scope.formFilter.productIdList = $scope.filterObject.productIdList = [$routeParams.productId];
     }else{
         $scope.formFilter = $scope.filterObject  = filterHistory || {};
     }
+
 
     $scope.formPanel = {openPanel:true};
 
@@ -52,7 +55,6 @@ function StockController($scope,userPreferredFilters,$timeout,dashboardFiltersHi
         UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
             $scope.zones = data.zone;
             $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
-
         });
     };
 
@@ -64,7 +66,6 @@ function StockController($scope,userPreferredFilters,$timeout,dashboardFiltersHi
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
         $scope.schedules.unshift({'name': formInputValue.scheduleOptionSelect}) ;
-
     });
 
     $scope.filterProductsByProgram = function (){
@@ -85,9 +86,6 @@ function StockController($scope,userPreferredFilters,$timeout,dashboardFiltersHi
 
     $scope.processProductsFilter = function (){
         $scope.filterObject.productIdList = $scope.formFilter.productIdList;
-
-        $scope.loadStockingData();
-
     };
 
     $scope.changeSchedule = function(){
@@ -110,20 +108,15 @@ function StockController($scope,userPreferredFilters,$timeout,dashboardFiltersHi
                     $scope.periods.unshift({'name': formInputValue.periodOptionSelect});
 
                     $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
-
                 });
             }
-
         }
-
-        $scope.loadStockingData();
     };
 
     $scope.changeScheduleByYear = function (){
 
         if (!isUndefined($scope.formFilter.year)) {
             $scope.filterObject.year = $scope.formFilter.year;
-
         }
         $scope.changeSchedule();
 
@@ -134,17 +127,13 @@ function StockController($scope,userPreferredFilters,$timeout,dashboardFiltersHi
             $scope.filterObject.periodId = $scope.formFilter.periodId;
         }
         $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
-
-        //$scope.loadStockingData();
     };
 
     $scope.processStockStatusFilter = function(){
         if(!isUndefined($scope.formFilter.status)) {
-            $scope.formFilter.status = $scope.formFilter.status;
         }else{
             $scope.formFilter.status = -1;
         }
-       // $scope.loadStockingData();
     };
     // the grid options
     $scope.tableParams = new ngTableParams({
@@ -222,11 +211,12 @@ function StockController($scope,userPreferredFilters,$timeout,dashboardFiltersHi
        // $scope.loadStockingData();
     };
     $scope.$on('$viewContentLoaded', function () {
+
+
+        alert('filter is '+JSON.stringify($scope.formFilter));
         $timeout(function(){
             $scope.search();
-
         },10);
-
     });
 
     $scope.search = function(){
