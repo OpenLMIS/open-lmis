@@ -159,6 +159,7 @@ public interface DashboardMapper {
            "and CASE WHEN #{status} = 'reporting' THEN facilityid  in (select facilityId from reportingFac) \n" +
            "         WHEN #{status} = 'nonReporting' THEN facilityid not in (select facilityId from reportingFac) END")
     List<ReportingPerformance> getReportingPerformanceDetail(@Param("userId") Long userId, @Param("periodId") Long periodId, @Param("programId") Long programId, @Param("zoneId") Long zoneId, @Param("status") String status);
-
+    @Select("select fullname from products where id = #{id}")
+    String getProductNameById(Long id);
 }
 

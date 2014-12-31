@@ -146,4 +146,7 @@ public class DashboardLookupService {
         return rnRStatusSummaryReportMapper.getRnRStatusDetail(userId,periodId,programId, zoneId, status);
     }
 
+    public String getProductNameById(Long id) {
+        return dashboardMapper.getProductNameById(id);
+    }
 }
