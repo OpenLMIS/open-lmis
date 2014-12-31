@@ -14,7 +14,7 @@ apply plugin: 'cobertura'
 buildscript {
     repositories {
         mavenCentral();
-        jcenter();
+        //jcenter();
     }
 }
 
