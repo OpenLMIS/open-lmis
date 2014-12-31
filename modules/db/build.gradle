@@ -109,7 +109,6 @@ task migrateDB() << {
     ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
     ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword, outOfOrder: true)
 }
-}
 
 task testSeed(type: Exec) {
     environment("PGPASSWORD", dbPassword)
