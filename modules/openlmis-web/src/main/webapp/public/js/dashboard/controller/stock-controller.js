@@ -211,9 +211,6 @@ function StockController($scope,userPreferredFilters,$timeout,$routeParams,dashb
        // $scope.loadStockingData();
     };
     $scope.$on('$viewContentLoaded', function () {
-
-
-        alert('filter is '+JSON.stringify($scope.formFilter));
         $timeout(function(){
             $scope.search();
         },10);
