@@ -27,17 +27,19 @@ function NotificationsDetailController($scope, $routeParams, messageService, Set
             $scope.programDetail = data.program;
 
         });
-        GetPeriod.get({id: $routeParams.periodId}, function (data) {
-            $scope.periodDetail = data.year;
-
-        });
+//        GetPeriod.get({id: $routeParams.periodId}, function (data) {
+//            $scope.periodDetail = data.year;
+//
+//        });
 //        Products.get({id:$routeParams.productId}, function(data){
 //            $scope.productDetail = data.productDTO.product;
 //
 //        });
-        GetProduct.get({id: $routeParams.productId}, function (data) {
-
-            $scope.productDetail = data.product_name;
+        GetProduct.get({id: $routeParams.productId, periodId: $routeParams.periodId}, function (data) {
+            var dahshboardHeader = {};
+            dahshboardHeader = data.product_name;
+            $scope.productDetail = dahshboardHeader.productName;
+            $scope.periodDetail = dahshboardHeader.periodName;
         }, {});
 
         DashboardNotificationsDetail.get({programId: $routeParams.programId, periodId: $routeParams.periodId, productId: $routeParams.productId, zoneId: $routeParams.zoneId, detailTable: $routeParams.detailTable}, function (stockData) {

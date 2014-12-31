@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.report.model.DashboardLookUpReportHeader;
 import org.openlmis.report.model.dto.Notification;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.DashboardBatchDataUpdateExecutorService;
@@ -171,9 +172,9 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response("year", this.lookupService.getYearOfPeriodById(id));
     }
 
-    @RequestMapping(value = "/productDetail/{id}", method = GET, headers = BaseController.ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getProductById(@PathVariable("id") Long id) {
-        String productName = this.lookupService.getProductNameById(id);
+    @RequestMapping(value = "/productDetail/{id}/{periodId}", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getProductById(@PathVariable("id") Long id,@PathVariable("periodId") Long periodId) {
+        DashboardLookUpReportHeader productName = this.lookupService.getProductNameById(id,periodId);
         return OpenLmisResponse.response("product_name", productName);
     }
 

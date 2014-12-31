@@ -3,6 +3,7 @@ package org.openlmis.report.service.lookup;
 import org.openlmis.core.domain.User;
 import org.openlmis.report.mapper.lookup.DashboardMapper;
 import org.openlmis.report.mapper.lookup.RnRStatusSummaryReportMapper;
+import org.openlmis.report.model.DashboardLookUpReportHeader;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +147,12 @@ public class DashboardLookupService {
         return rnRStatusSummaryReportMapper.getRnRStatusDetail(userId,periodId,programId, zoneId, status);
     }
 
-    public String getProductNameById(Long id) {
-        return dashboardMapper.getProductNameById(id);
+    public DashboardLookUpReportHeader getProductNameById(Long id,long periodId) {
+        DashboardLookUpReportHeader dashboardLookUpReportHeader= new DashboardLookUpReportHeader();
+        String productName=dashboardMapper.getProductNameById(id);
+        String periodName= dashboardMapper.getPeriodName(periodId);
+        dashboardLookUpReportHeader.setProductName(productName);
+        dashboardLookUpReportHeader.setPeriodName(periodName);
+        return dashboardLookUpReportHeader;
     }
 }
