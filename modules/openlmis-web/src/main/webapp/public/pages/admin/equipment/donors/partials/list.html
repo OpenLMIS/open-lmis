@@ -9,8 +9,8 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html">
-    <h2><span>Donors List</span>
-        <a href="#/create-donor" class="pull-right btn btn-primary"><span id="donor-add-new">Add New</span></a>
+    <h2><span openlmis-message="label.donor.list"></span>
+        <a href="#/create-donor" class="pull-right btn btn-primary"><span id="donor-add-new" openlmis-message="label.donor.add"></span></a>
     </h2>
 
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="donorId">
@@ -35,35 +35,20 @@
         <table class="table table-striped table-bordered">
             <thead>
             <tr class="gradient-header">
-                <th>#
-                </th>
-                <th>Code
-                </th>
-                <th>Short Name
-                </th>
-                <th>Long Name
-                </th>
-                <th>Donation Count
-                </th>
+                <th>#</th>
+                <th><span openlmis-message="label.donor.code"></span></th>
+                <th><span openlmis-message="label.donor.short.name"></span></th>
+                <th><span openlmis-message="label.donor.name"></span></th>
+                <th><span openlmis-message="label.donor.donation.count"></span></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="donor in filteredDonors">
-                <td>
-                    {{$index + 1}}
-                </td>
-                <td>
-                    <div>{{donor.code}}</div>
-                </td>
-                <td>
-                    <a href="" ng-click="editDonor(donor.id, donor.countOfDonations)">{{donor.shortName}}</a>
-                </td>
-                <td>
-                    <div>{{donor.longName}}</div>
-                </td>
-                <td>
-                    <div>{{donor.countOfDonations}}</div>
-                </td>
+                <td>{{$index + 1}}</td>
+                <td><div>{{donor.code}}</div></td>
+                <td><a href="" ng-click="editDonor(donor.id, donor.countOfDonations)">{{donor.shortName}}</a></td>
+                <td><div>{{donor.longName}}</div></td>
+                <td><div>{{donor.countOfDonations}}</div></td>
             </tr>
             </tbody>
         </table>

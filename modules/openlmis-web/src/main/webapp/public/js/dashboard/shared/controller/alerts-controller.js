@@ -16,16 +16,7 @@ function AlertsController($scope, $filter, Alerts,StockedOutAlerts,$location, da
         typeSummary = 'SUMMARY';
 /*
     $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};*/
-
-    $scope.$watch('formFilter.zoneId', function(){
-        $scope.getAlerts();
-    });
-
-    $scope.$watch('formFilter.programId', function(){
-        $scope.getAlerts();
-    });
-
-    $scope.$watch('formFilter.periodId', function(){
+    $scope.$on('dashboardFiltering', function(event, mass) {
         $scope.getAlerts();
     });
 
@@ -40,8 +31,6 @@ function AlertsController($scope, $filter, Alerts,StockedOutAlerts,$location, da
             }else{
                 resetAlertsData();
             }
-
-
         });
         StockedOutAlerts.get({programId: $scope.formFilter.programId, periodId: $scope.formFilter.periodId, zoneId: $scope.formFilter.zoneId},function(data){
             $scope.stockOutData = data.alerts;
