@@ -40,7 +40,7 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
         UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
             $scope.zones = data.zone;
             if(!isUndefined($scope.zones)){
-                $scope.rootZone = $scope.zones.id
+                $scope.rootZone = $scope.zones.id;
             }
         });
     };
