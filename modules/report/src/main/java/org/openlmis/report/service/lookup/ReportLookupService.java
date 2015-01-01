@@ -560,4 +560,8 @@ public class ReportLookupService {
     public List<Schedule> getSchedulesByProgram(long program) {
         return scheduleMapper.getSchedulesForProgram(program);
     }
+
+    public List<Facility> getFacilities(Long type) {
+       return  facilityReportMapper.getFacilitiesBytype(type);
+    }
 }
