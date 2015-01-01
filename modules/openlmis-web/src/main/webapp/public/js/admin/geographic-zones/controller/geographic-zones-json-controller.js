@@ -74,7 +74,7 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
   };
 
   GeographicLevels.get(function (data) {
-    $scope.geographicLevels = data.geographicLevels;
+    $scope.geographicLevels = data.geographicLevelList;
   });
 
   FlatGeographicZoneList.get(function (data) {

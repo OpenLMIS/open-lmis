@@ -530,7 +530,9 @@ services.factory('SendNotification', function($resource){
 services.factory('GetPeriod', function($resource){
    return $resource('/dashboard/period/:id.json',{},{});
 });
-
+services.factory('GetProduct', function($resource){
+    return $resource('/dashboard/productDetail/:id/:periodId.json',{},{});
+});
 services.factory('ReportingPerformance',function($resource){
     return $resource('/dashboard/reportingPerformance.json',{},{});
 });

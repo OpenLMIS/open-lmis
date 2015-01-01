@@ -9,7 +9,9 @@
   -->
 
 <div>
-  <h2>Manage Equipment Inventory</h2>
+  <h2>
+    <span openlmis-message="label.equipment.inventory.manage"></span>
+  </h2>
   <br>
   <div class="row-fluid">
     <div class="span12">
@@ -44,7 +46,6 @@
     <div class="row-fluid">
       <input type="text" class="span3" ng-model="facilityDisplayName" readonly="readonly" />
     </div>
-
     <br/>
 
     <div class="row-fluid">
@@ -99,17 +100,17 @@
   <div ng-show="selectedFacilityId != undefined && selectedProgram != undefined">
     <a id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/{{selectedFacilityId}}/{{selectedProgram.id}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
     <div ng-show="inventory.length == 0">
-      There are no equipments registered for this facility.
+      <span openlmis-message="label.equipment.none.found"></span>
     </div>
     <table ng-show="inventory.length > 0" class="table table-bordered">
       <thead>
         <tr class="gradient-header">
           <th>#</th>
-          <th>Equipment</th>
-          <th>Manufacturer</th>
-          <th>Model</th>
-          <th>Source of Fund</th>
-          <th>Action</th>
+          <th><span openlmis-message="label.equipment.equipment"></span></th>
+          <th><span openlmis-message="label.equipment.manufacturer"></span></th>
+          <th><span openlmis-message="label.equipment.model"></span></th>
+          <th><span openlmis-message="label.equipment.source.of.fund"></span></th>
+          <th><span openlmis-message="label.equipment.actions"></span></th>
         </tr>
       </thead>
       <tbody>
@@ -120,9 +121,13 @@
           <td>{{item.model}}</td>
           <td>{{item.sourceOfFund}}</td>
           <td>
-            <span class="btn-mini" ng-show="!item.isActive">de-commissioned</span>
-            <a ng-show="item.isActive" class="btn-mini btn-primary" ng-href="#/request/{{item.id}}?facilityId={{item.facilityId}}">Request Service</a>
-            <a class="btn-mini btn-cont" ng-href="#/log/{{item.id}}">Log</a>
+            <span class="btn-mini" ng-show="!item.isActive" openlmis-message="label.equipment.status.decommissioned"></span>
+            <a ng-show="item.isActive" class="btn-mini btn-primary" ng-href="#/request/{{item.id}}?facilityId={{item.facilityId}}">
+              <span openlmis-message="label.equipment.request.service"></span>
+            </a>
+            <a class="btn-mini btn-cont" ng-href="#/log/{{item.id}}">
+              <span openlmis-message="label.equipment.request.logs"></span>
+            </a>
           </td>
 
         </tr>
