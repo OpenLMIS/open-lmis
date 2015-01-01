@@ -552,7 +552,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
     $scope.$on('$viewContentLoaded', function () {
         $timeout(function(){
             $scope.search();
-
         },10);
 
     });
@@ -561,6 +560,11 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
         $scope.loadStockingData();
         $scope.loadReportingPerformance();
         $scope.loadFillRates();
+
+        $timeout(function(){
+            //Alert Controller listens this event to update its own data
+            $scope.$broadcast('dashboardFiltering', null);
+        },10);
     };
 
     $scope.$watch('formFilter.programId',function(){

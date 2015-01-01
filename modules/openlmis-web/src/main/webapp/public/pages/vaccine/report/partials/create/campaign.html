@@ -10,26 +10,26 @@
 
 <div class="rnr-table">
 
-  <h2>Campaigns</h2>
+  <h2><span openlmis-message="label.vaccine.campaigns"></span></h2>
 
-  <input type="button" class="btn btn-primary pull-right" ng-click="showCampaignForm({}, false)" value="Register new Campaign" />
+  <input type="button" class="btn btn-primary pull-right" ng-click="showCampaignForm({}, false)" openlmis-message="link.add.new" />
   <div ng-show="report.campaignLineItems.length > 0">
     <table class="table table-bordered">
       <thead>
       <tr>
-        <th>Campaign Name</th>
-        <th>Venue</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Children Vaccinated</th>
-        <th>Pregnant Woman Vaccinated</th>
-        <th>Other Objectives</th>
-        <th>Vaccinations</th>
+        <th><span openlmis-message="label.vaccine.campaign.name"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.venue"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.start.date"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.end.date"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.children.vaccinated"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.women.vaccinated"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.other.objectives"></span></th>
+        <th><span openlmis-message="label.vaccine.campaign.vaccinations"></span></th>
         <th></th>
       </tr>
       </thead>
       <tr ng-repeat="campaign in report.campaignLineItems">
-        <td style="height: 35px" class="cell-input"><span class="cell-text">{{campaign.name}}</span></td>
+        <td class="span1 cell-input"><span class="cell-text">{{campaign.name}}</span></td>
         <td class="cell-input cell-text"><span class="cell-text">{{campaign.venue}}</span></td>
         <td class="cell-input cell-text"><span class="cell-text">{{campaign.startDate | date : 'dd MMM, yyyy'}}</span></td>
         <td class="cell-input cell-text"><span class="cell-text">{{campaign.endDate | date : 'dd MMM, yyyy'}}</span></td>
@@ -41,58 +41,55 @@
       </tr>
     </table>
   </div>
-  <div ng-show="report.campaignLineItems.length == 0">
-    No campaigns registered for this Period.
+  <div ng-show="report.campaignLineItems.length == 0" openlmis-message="label.vaccine.campaign.none.found">
+
   </div>
 </div>
 <form name="campaignForm">
   <div id="campaignsModalBox" modal="campaignsModal" close="closeCampaign()"
        options="{ backdrop: 'static', escape: false}">
-    <div class="modal-header"><h3>Add / Edit Campaign</h3></div>
+    <div class="modal-header"><h3><span openlmis-message="label.vaccine.campaign.add.edit"></span></h3></div>
     <div class="modal-body">
 
       <div class="row-fluid">
         <div class="span6">
-          <label for="name">Campaign Name</label>
+          <label for="name"><span openlmis-message="label.vaccine.campaign.name"></span></label>
           <input type="text" name="name" id="name" ng-model="currentCampaign.name" />
         </div>
         <div class="span6">
-          <label for="venue">Venue</label>
+          <label for="venue"><span openlmis-message="label.vaccine.campaign.venue"></span></label>
           <input type="text" name="venue" id="venue" ng-model="currentCampaign.venue" />
         </div>
       </div>
 
       <div class="row-fluid">
         <div class="span6">
-          <label >Start Date</label>
+          <label><span openlmis-message="label.vaccine.campaign.start.date"></span></label>
           <input type="date" ng-model="currentCampaign.startDate" />
         </div>
         <div class="span6">
-          <label >End Date</label>
+          <label><span openlmis-message="label.vaccine.campaign.end.date"></span></label>
           <input type="date" ng-model="currentCampaign.endDate" />
         </div>
       </div>
 
       <div class="row-fluid">
         <div class="span6">
-          <label >Children Vaccinated</label>
+          <label><span openlmis-message="label.vaccine.campaign.children.vaccinated"></span></label>
           <input type="text"  numeric-validator="positiveInteger"  ng-model="currentCampaign.childrenVaccinated" >
         </div>
         <div class="span6">
-          <label >Pregnant Woman Vaccinated</label>
+          <label><span openlmis-message="label.vaccine.campaign.women.vaccinated"></span></label>
           <input type="text"  numeric-validator="positiveInteger"  ng-model="currentCampaign.pregnantWomanVaccinated" >
         </div>
       </div>
 
       <div class="row-fluid">
         <div class="span6">
-          <label >Other Objectives</label>
+          <label ><span openlmis-message="label.vaccine.campaign.other.objectives"></span></label>
           <textarea type="text" ng-model="currentCampaign.otherObjectives" ></textarea>
         </div>
-
       </div>
-
-
       <div class="clearfix"></div>
 
     </div>

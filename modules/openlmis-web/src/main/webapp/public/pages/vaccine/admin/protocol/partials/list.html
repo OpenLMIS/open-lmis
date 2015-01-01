@@ -8,33 +8,31 @@
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
 <div>
-  <h2>Vaccine Protocols</h2>
+  <h2><span openlmis-message="label.vaccine.configurations"></span></h2>
 
-  <p>Please choose a program</p>
+  <span openlmis-message="label.vaccine.coverage.choose.program"></span>
   <div>
     <select ng-model="program"
             ng-options="program.id as program.name for program in programs"
             ng-change="onProgramChanged(  )">
     </select>
   </div>
-
-
 </div>
 <div ng-show="program">
   <div class="form-group">
     <div class="pull-right">
-      <span>Does this program track Vaccine campaign coverage?</span>: <input type="checkbox" ng-model="protocol.trackCampaign" />
+      <span openlmis-message="label.vaccine.coverage.check.campaign"></span>: <input type="checkbox" ng-model="protocol.trackCampaign" />
     </div>
-    <p>Please check the doses that apply for this program.</p>
+    <p><span openlmis-message="label.vaccine.coverage.check.doses"></span></p>
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th class="span5">Product</th>
-          <th>Dose 1</th>
-          <th>Dose 2</th>
-          <th>Dose 3</th>
-          <th>Dose 4</th>
-          <th>Dose 5</th>
+          <th class="span5"><span openlmis-message="label.vaccine.coverage.product"></span></th>
+          <th><span openlmis-message="label.vaccine.coverage.dose1"></span></th>
+          <th><span openlmis-message="label.vaccine.coverage.dose2"></span></th>
+          <th><span openlmis-message="label.vaccine.coverage.dose3"></span></th>
+          <th><span openlmis-message="label.vaccine.coverage.dose4"></span></th>
+          <th><span openlmis-message="label.vaccine.coverage.dose5"></span></th>
         </tr>
       </thead>
       <tbody>
@@ -54,7 +52,6 @@
         <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                ng-click="cancel()"/>
       </div>
-
 
       <div class="toolbar-error" id="saveErrorMsgDiv">
         <span openlmis-message="error" ng-show="error"></span>&nbsp;
