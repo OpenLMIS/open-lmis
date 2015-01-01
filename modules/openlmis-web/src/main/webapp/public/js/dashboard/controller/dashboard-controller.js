@@ -52,8 +52,10 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
        if(!isUndefined($scope.formFilter.programId)){
            UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
                $scope.zones = data.zone;
+               if(!isUndefined($scope.zones)){
+                   $scope.rootZone = $scope.zones.id
+               }
                $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
-
            });
        }
    };
@@ -552,19 +554,21 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
     $scope.$on('$viewContentLoaded', function () {
         $timeout(function(){
             $scope.search();
-        },10);
+        },1000);
 
     });
 
     $scope.search = function(){
+        if($scope.rootZone == $scope.formFilter.zoneId){
+            return;
+        }
         $scope.loadStockingData();
         $scope.loadReportingPerformance();
         $scope.loadFillRates();
 
-        $timeout(function(){
-            //Alert Controller listens this event to update its own data
-            $scope.$broadcast('dashboardFiltering', null);
-        },10);
+        //Alert Controller listens this event to update its own data
+        $scope.$broadcast('dashboardFiltering', null);
+
     };
 
     $scope.$watch('formFilter.programId',function(){

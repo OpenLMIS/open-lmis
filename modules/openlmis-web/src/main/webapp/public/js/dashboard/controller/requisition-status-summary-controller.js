@@ -37,6 +37,9 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
     $scope.loadGeoZones = function () {
         UserGeographicZoneTree.get({programId: $scope.formFilter.programId}, function (data) {
             $scope.zones = data.zone;
+            if(!isUndefined($scope.zones)){
+                $scope.rootZone = $scope.zones.id
+            }
         });
     };
 
@@ -346,10 +349,13 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
         $timeout(function(){
             $scope.search();
 
-        },10);
+        },1000);
 
     });
     $scope.search = function(){
+        if($scope.rootZone == $scope.formFilter.zoneId){
+            return;
+        }
         $scope.loadRnRStatus();
     };
     $scope.$watch('formFilter.programId', function () {
