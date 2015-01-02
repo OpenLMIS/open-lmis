@@ -27,7 +27,6 @@ function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout
         $scope.formFilter = $scope.filterObject  = filterHistory || {};
     }
 
-
     $scope.formPanel = {openPanel:true};
 
     $scope.alertsPanel = {openAlertPanel:true, openStockPanel:true};
@@ -57,15 +56,11 @@ function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
         $scope.schedules.unshift({'name': formInputValue.scheduleOptionSelect}) ;
-
     });
 
     $scope.filterProductsByProgram = function (){
         $scope.loadGeoZones();
         $scope.filterObject.programId = $scope.formFilter.programId;
-
-        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
-
         if(!isUndefined($scope.formFilter.programId)){
             ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
                 $scope.products = data.productList;
@@ -75,23 +70,14 @@ function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout
             $scope.formFilter.productIdList = undefined;
             $scope.processProductsFilter();
         }
-
-       // $scope.getShipmentLeadTimeData();
-
     };
 
     $scope.processZoneFilter = function(){
         $scope.filterObject.zoneId = $scope.formFilter.zoneId;
-        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
-
-       // $scope.getShipmentLeadTimeData();
     };
 
     $scope.processProductsFilter = function (){
-
         $scope.filterObject.productIdList = $scope.formFilter.productIdList;
-      //  $scope.getShipmentLeadTimeData();
-
     };
 
     $scope.changeSchedule = function(){
@@ -113,35 +99,24 @@ function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout
 
                 });
             }
-
         }
-
-       // $scope.getShipmentLeadTimeData();
     };
-
 
     $scope.processPeriodFilter = function (){
         if (!isUndefined($scope.formFilter.periodId)) {
             $scope.filterObject.periodId = $scope.formFilter.periodId;
         }
-        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
-
-       // $scope.getShipmentLeadTimeData();
-
     };
 
     $scope.changeScheduleByYear = function (){
 
         if (!isUndefined($scope.formFilter.year)) {
             $scope.filterObject.year = $scope.formFilter.year;
-
         }
         $scope.changeSchedule();
-
     };
 
     $scope.getShipmentLeadTimeData = function () {
-        getFilterValues();
         if(isUndefined($scope.filterObject.periodId) || isUndefined($scope.filterObject.programId)){
             return;
         }
@@ -173,7 +148,14 @@ function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout
         },1000);
 
     });
+
+    var getFilterValues = function () {
+        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
+        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
+        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
+    };
     $scope.search = function(){
+        getFilterValues();
         if($scope.rootZone == $scope.formFilter.zoneId){
             return;
         }
@@ -190,18 +172,6 @@ function ShipmentLeadTimeController($scope,$filter,userPreferredFilters,$timeout
         $scope.changeSchedule();
 
     });
-
-
-    var getFilterValues = function(){
-
-        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
-        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId,$scope.programs);
-
-        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
-
-        $scope.filterObject = $scope.formFilter;
-
-    };
 
     $scope.$on('$routeChangeStart', function(){
         $scope.setFilterData();

@@ -54,7 +54,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
                if(!isUndefined($scope.zones)){
                    $scope.rootZone = $scope.zones.id;
                }
-               $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
+
            });
        }
    };
@@ -73,7 +73,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
 
     $scope.processFacilityFilter = function(){
         $scope.filterObject.facilityId = $scope.formFilter.facilityId;
-        $scope.formFilter.facilityName = getSelectedItemName($scope.formFilter.facilityId, $scope.allFacilities);
+
     };
 
     $scope.filterProductsByProgram = function (){
@@ -83,16 +83,12 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
 
     var loadProducts = function(){
         $scope.filterObject.programId = $scope.formFilter.programId;
-
-        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
-
         ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
             $scope.products = data.productList;
         });
     };
 
     $scope.processProductsFilter = function (){
-
         $scope.filterObject.productIdList = $scope.formFilter.productIdList;
         $scope.formFilter.productNamesList = getSelectedItemNames($scope.filterObject.productIdList, $scope.products);
     };
@@ -203,7 +199,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
             if(!isUndefined(data.facilities)){
                 $scope.allFacilities.unshift({code:formInputValue.facilityOptionSelect});
             }
-            $scope.formFilter.facilityName = getSelectedItemName($scope.formFilter.facilityId,$scope.allFacilities);
 
         });
 
@@ -219,15 +214,11 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
                 ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
                     $scope.periods = data.periods;
                     $scope.periods.unshift({'name':formInputValue.periodOptionSelect});
-                    $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
-
                 });
             }else{
                 ReportPeriods.get({ scheduleId : $scope.filterObject.scheduleId },function(data) {
                     $scope.periods = data.periods;
                     $scope.periods.unshift({'name': formInputValue.periodOptionSelect});
-                    $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
-
                 });
             }
 
@@ -236,15 +227,11 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
 
     $scope.processZoneFilter = function(){
         $scope.filterObject.zoneId = $scope.formFilter.zoneId;
-        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
-
         $scope.loadFacilities();
     };
 
     $scope.processPeriodFilter = function (){
         $scope.filterObject.periodId = $scope.formFilter.periodId;
-
-        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
     };
 
     $scope.changeScheduleByYear = function (){
@@ -552,13 +539,22 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
      }
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadFacilities();
+
         $timeout(function(){
             $scope.search();
         },1000);
 
     });
 
+    var getFilterValues = function () {
+        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
+        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
+        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
+        $scope.formFilter.facilityName = getSelectedItemName($scope.formFilter.facilityId,$scope.allFacilities);
+    };
+
     $scope.search = function(){
+        getFilterValues();
         if($scope.rootZone == $scope.formFilter.zoneId){
             return;
         }
