@@ -11,7 +11,6 @@
 function ListSettingController($scope, $location, Settings, SettingUpdator) {
 
   $scope.current = '';
-    $scope.saveDisabled=true;
   $scope.CreateHeader = function(setting) {
     showHeader = (setting.toUpperCase() != $scope.current.toUpperCase());
     $scope.current = setting;
@@ -20,8 +19,6 @@ function ListSettingController($scope, $location, Settings, SettingUpdator) {
 
   $scope.changeTab = function(tab){
     $scope.visibleTab = tab;
-      $scope.saveDisabled=false;
-
   };
 
   Settings.get(function (data){
@@ -34,8 +31,6 @@ function ListSettingController($scope, $location, Settings, SettingUpdator) {
       SettingUpdator.post({}, $scope.settings, function (data){
           $location.path('');
           $scope.$parent.message = "The configuration changes were successfully updated.";
-          $scope.saveDisabled=true;
-
       });
   };
 }
