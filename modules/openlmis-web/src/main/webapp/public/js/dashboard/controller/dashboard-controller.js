@@ -23,7 +23,6 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
 
     if(isUndefined(filterHistory)){
         $scope.formFilter = $scope.filterObject  = userPreferredFilters || {};
-
     }else{
         $scope.formFilter = $scope.filterObject  = filterHistory || {};
     }
@@ -552,6 +551,7 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
          return flotItem.series.xaxis.ticks[xval].label+' '+yval+' '+'facilities'+' ' +label;
      }
     $scope.$on('$viewContentLoaded', function () {
+        $scope.loadFacilities();
         $timeout(function(){
             $scope.search();
         },1000);
