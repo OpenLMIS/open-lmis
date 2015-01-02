@@ -25,7 +25,7 @@
             <th openlmis-message="label.vaccine.manufacturer.name"></th>
             <th openlmis-message="label.vaccine.manufacturer.primary.phone"></th>
             <th openlmis-message="label.vaccine.manufacturer.email"></th>
-            <th openlmis-message="label.vaccine.manufacturer.action"> </th>
+            <th openlmis-message="label.action"> </th>
         </tr>
         </thead>
         <tbody>
@@ -34,7 +34,7 @@
             <td>{{manufacturer.name}}</td>
             <td>{{manufacturer.primaryPhone}}</td>
             <td>{{manufacturer.email}}</td>
-            <td> <a href ng-click="showRemoveVaccineManufacturerDialog(manufacturer)" openlmis-message="label.vaccine.manufacturer.delete">Delete</a> | <a href="#/manufacturerEdit/{{manufacturer.id}}" openlmis-message="label.vaccine.manufacturer.edit">Edit</a></td>
+            <td> <a href ng-click="showRemoveVaccineManufacturerDialog(manufacturer)" openlmis-message="button.delete">Delete</a> | <a href="#/manufacturerEdit/{{manufacturer.id}}" openlmis-message="button.edit">Edit</a></td>
         </tr>
         </tbody>
     </table>
