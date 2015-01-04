@@ -742,16 +742,6 @@ services.factory('UpdateUserPreference', function ($resource) {
     return $resource('/users/:userId/preferences.json', {}, update);
 });
 
-services.factory('EditUserPreference', function ($resource) {
-    var resource = $resource('/preference/users/:id.json', {id: '@id'}, update);
-
-    resource.disable = function (pathParams, success, error) {
-        $resource('/preference/users/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
-    };
-
-    return resource;
-});
-
 services.factory('SyncDashboard', function($resource){
    return $resource('/dashboard/sync.json', {},update);
 });

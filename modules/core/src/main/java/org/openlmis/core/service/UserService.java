@@ -233,8 +233,10 @@ public class UserService {
     return userRepository.getTotalSearchResultCount(searchParam);
   }
 
-  public String updateUserPreferences(Long userId, Long programId, Long facilityId, List<Long> products) {
-    return userRepository.updateUserPreferences(userId, programId, facilityId, getCommaSeparatedIds(products));
+  @Transactional
+  public String updateUserPreferences(Long userId, User user, Long programId, Long facilityId, List<Long> products) {
+    return userRepository.updateUserPreferences(userId, user, programId, facilityId, getCommaSeparatedIds(products));
 
   }
+
 }
