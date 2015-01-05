@@ -50,6 +50,9 @@ public class AverageConsumptionQueryBuilder {
             if (filter.getFacilityTypeId() != 0) {
                 WHERE("ft.id = #{filterCriteria.facilityTypeId}");
             }
+            if (filter.getFacilityId() != 0) {
+                WHERE("f.id = #{filterCriteria.facilityId}");
+            }
             if (filter.getZoneId() != 0) {
                 WHERE("f.geographiczoneid = #{filterCriteria.zoneId}");
             }

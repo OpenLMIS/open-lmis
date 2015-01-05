@@ -283,7 +283,21 @@ public class ReportLookupController extends BaseController {
 
     return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type, requisitionGroup, zone, loggedInUserId(request) ));
   }
+    @RequestMapping(value = "/facilitiesByType/{facilityTypeId}.json", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilitiesByFacilityType(
 
+            @PathVariable("facilityTypeId") Long type,
+
+            HttpServletRequest request
+
+    ) {
+        // set default for optional parameters
+        // turns out spring's optional parameter and default config is not cutting it.
+        type = (type != null)? type: 0L;
+
+
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilities(  type ));
+    }
   @RequestMapping(value = "/user/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
           HttpServletRequest request

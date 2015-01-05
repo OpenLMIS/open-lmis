@@ -40,7 +40,7 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
         UserGeographicZoneTree.get({programId:$scope.formFilter.programId}, function(data){
             $scope.zones = data.zone;
             if(!isUndefined($scope.zones)){
-                $scope.rootZone = $scope.zones.id
+                $scope.rootZone = $scope.zones.id;
             }
         });
     };
@@ -60,9 +60,6 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
     $scope.filterProductsByProgram = function (){
         $scope.loadGeoZones();
         $scope.filterObject.programId = $scope.formFilter.programId;
-
-        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
-
         if(!isUndefined($scope.formFilter.programId)){
             ReportProductsByProgram.get({programId:  $scope.filterObject.programId}, function(data){
                 $scope.products = data.productList;
@@ -76,7 +73,6 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
 
     $scope.processZoneFilter = function(){
         $scope.filterObject.zoneId = $scope.formFilter.zoneId;
-        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
     };
 
     $scope.processProductsFilter = function (){
@@ -109,7 +105,6 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
         if (!isUndefined($scope.formFilter.periodId)) {
             $scope.filterObject.periodId = $scope.formFilter.periodId;
         }
-        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
     };
 
     $scope.changeScheduleByYear = function (){
@@ -161,7 +156,6 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
     };
 
     $scope.loadStockedOutData = function(){
-        getFilterValues();
         if(!isUndefined($scope.filterObject.programId) &&
             !isUndefined($scope.filterObject.periodId) &&
             !isUndefined($scope.filterObject.productIdList) && $scope.filterObject.productIdList.length > 0){
@@ -248,7 +242,14 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
         },1000);
 
     });
+
+    var getFilterValues = function () {
+        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
+        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
+        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
+    };
     $scope.search = function(){
+        getFilterValues();
         if($scope.rootZone == $scope.formFilter.zoneId){
             return;
         }
@@ -265,18 +266,6 @@ function StockedOutController($scope, $location,userPreferredFilters, $timeout, 
         $scope.changeSchedule();
 
     });
-
-    var getFilterValues = function(){
-
-        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
-        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId,$scope.programs);
-
-        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
-
-        $scope.filterObject = $scope.formFilter;
-
-    };
-
     $scope.$on('$routeChangeStart', function(){
        $scope.setFilterData();
     });

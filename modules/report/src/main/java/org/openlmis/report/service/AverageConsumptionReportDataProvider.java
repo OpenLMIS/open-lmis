@@ -78,6 +78,7 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
       averageConsumptionReportParam.setZoneId(StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0L : Long.parseLong(filterCriteria.get("zoneId")[0]));  //defaults to 0
       averageConsumptionReportParam.setFacilityTypeId(StringUtils.isBlank(filterCriteria.get("facilityTypeId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
       averageConsumptionReportParam.setFacilityType(StringUtils.isBlank(filterCriteria.get("facilityType")[0]) ? "All Facility Types" : filterCriteria.get("facilityType")[0]);
+       averageConsumptionReportParam.setFacilityId(StringUtils.isBlank(filterCriteria.get("facility")[0]) ? 0 : Long.parseLong(filterCriteria.get("facility")[0])); //defaults to 0
 
 
       averageConsumptionReportParam.setProductCategoryId(StringUtils.isBlank(filterCriteria.get("productCategoryId")[0]) ? 0 : Long.parseLong(filterCriteria.get("productCategoryId")[0])); //defaults to 0
@@ -100,7 +101,6 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
 
       int monthFrom = 0;
       int monthTo = 0;
-
       String periodType = averageConsumptionReportParam.getPeriodType();
 
       if (periodType.equals(Constants.PERIOD_TYPE_QUARTERLY)) {

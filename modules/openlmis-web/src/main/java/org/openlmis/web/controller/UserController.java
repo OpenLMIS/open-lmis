@@ -232,14 +232,21 @@ public class UserController extends BaseController {
   }
     @RequestMapping(value = "/users/{userId}/preferences", method = PUT, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> updateUserPreferences(@PathVariable(value = "userId") Long userId, @RequestParam("programId") Long programId,
-                                                                  @RequestParam("facilityId") Long facilityId, @RequestParam("products") List<Long> productListId) {
-        String result = null;
+                                                                  @RequestParam("facilityId") Long facilityId, @RequestParam("products") List<Long> productListId,
+                                                                  @RequestBody User user,
+                                                                  HttpServletRequest request) {
+      Long currentUser = loggedInUserId(request);
+      if (userId.equals(currentUser) || roleRightService.getRights(currentUser).contains(MANAGE_USER)){
+        user.setModifiedBy(currentUser);
+        user.setId(userId);
         try {
-          result =  userService.updateUserPreferences(userId, programId, facilityId, productListId);
+          userService.updateUserPreferences(userId, user, programId, facilityId, productListId);
         } catch (DataException e) {
-            return error(e, BAD_REQUEST);
+          return error(e, BAD_REQUEST);
         }
         return success(messageService.message("user.preference.set.successfully"));
+      }
+      return new OpenLmisResponse().errorEntity(FORBIDDEN.getReasonPhrase(),FORBIDDEN);
     }
 
 
@@ -250,25 +257,6 @@ public class UserController extends BaseController {
       return userService.getById(id);
     }
     return null;
-  }
-
-  @RequestMapping(value = "/preference/users/{id}", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> updateUser(@RequestBody User user,
-                                                     @PathVariable("id") Long id,
-                                                     HttpServletRequest request) {
-    Long userId = loggedInUserId(request);
-    if (id == userId || roleRightService.getRights(userId).contains(MANAGE_USER)){
-      user.setModifiedBy(userId);
-      user.setId(id);
-      try {
-        userService.update(user);
-      } catch (DataException e) {
-        return error(e, BAD_REQUEST);
-      }
-      return new OpenLmisResponse().response(OK);
-    }
-    return new OpenLmisResponse().errorEntity(FORBIDDEN.getReasonPhrase(),FORBIDDEN);
-
   }
   
 }

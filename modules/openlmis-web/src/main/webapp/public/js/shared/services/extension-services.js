@@ -251,7 +251,9 @@ services.factory('FacilityCompleteListInRequisitionGroup',function($resource){
 services.factory('GetFacilityByFacilityType',function($resource){
     return $resource('/facilities/facilityType/:facilityTypeId.json',{},{});
 });
-
+services.factory('FacilityByFacilityType',function($resource){
+    return $resource('/reports/facilitiesByType/:facilityTypeId.json',{},{});
+});
 services.factory('SaveRequisitionGroupMember',function($resource){
     return $resource('/requisitionGroupMember/insert.json',{},{});
 });
@@ -738,16 +740,6 @@ services.factory('UserPreferences', function ($resource) {
 });
 services.factory('UpdateUserPreference', function ($resource) {
     return $resource('/users/:userId/preferences.json', {}, update);
-});
-
-services.factory('EditUserPreference', function ($resource) {
-    var resource = $resource('/preference/users/:id.json', {id: '@id'}, update);
-
-    resource.disable = function (pathParams, success, error) {
-        $resource('/preference/users/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
-    };
-
-    return resource;
 });
 
 services.factory('SyncDashboard', function($resource){
