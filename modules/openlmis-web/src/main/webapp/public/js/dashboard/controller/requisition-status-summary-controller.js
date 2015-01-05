@@ -65,24 +65,17 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
             return;
         }
         $scope.filterObject.programId = $scope.formFilter.programId;
-        $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
-
     };
 
     $scope.processZoneFilter = function () {
         $scope.filterObject.zoneId = $scope.formFilter.zoneId;
-        $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
-
     };
 
     $scope.loadRnRStatus = function () {
-        getFilterValues();
         if (isUndefined($scope.filterObject.periodId) || isUndefined($scope.filterObject.programId)) {
             $scope.resetRnRStatusData();
             return;
         }
-        //$scope.filterObject.requisitionGroupId= $scope.formFilter.rgroupId;
-
         RnRStatusSummary.get({zoneId: $scope.filterObject.zoneId,
                 periodId: $scope.filterObject.periodId,
                 programId: $scope.filterObject.programId
@@ -143,14 +136,11 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
         $scope.datarows = null;
     };
 
+
     var getFilterValues = function () {
-
-        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
         $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
-
+        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
         $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
-        $scope.filterObject = $scope.formFilter;
-
     };
 
     $scope.rnrStatusPieChartOptionFunction = function () {
@@ -257,7 +247,6 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
 
     $scope.processPeriodFilter = function () {
         $scope.filterObject.periodId = $scope.formFilter.periodId;
-        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
     };
 
     $scope.changeSchedule = function () {
@@ -302,49 +291,6 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
         dashboardFiltersHistoryService.add($scope.$parent.currentTab, data);
     });
 
-    /*$scope.$on('$viewContentLoaded', function () {
-
-        var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
-
-        if (isUndefined(filterHistory)) {
-            if (!_.isEmpty(userPreferredFilterValues)) {
-                var date = new Date();
-                $scope.filterObject.programId = isItemWithIdExists(userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM], $scope.programs) ?
-                    userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PROGRAM] : $scope.filterObject.programId;
-
-                $scope.filterObject.periodId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_PERIOD];
-
-                if (!isUndefined($scope.filterObject.periodId)) {
-
-                    GetPeriod.get({id: $scope.filterObject.periodId}, function (period) {
-                        if (!isUndefined(period.year)) {
-                            $scope.filterObject.year = period.year;
-                        } else {
-                            $scope.filterObject.year = date.getFullYear() - 1;
-                        }
-
-                        $scope.changeSchedule();
-                    });
-                }
-                $scope.filterObject.scheduleId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_SCHEDULE];
-
-                $scope.filterObject.zoneId = userPreferredFilterValues[localStorageKeys.PREFERENCE.DEFAULT_GEOGRAPHIC_ZONE];
-
-                $scope.registerWatches();
-
-                $scope.formFilter = $scope.filterObject;
-
-            }
-
-        } else {
-
-            $scope.registerWatches();
-
-            $scope.formFilter = $scope.filterObject = filterHistory;
-        }
-
-    });
-*/
     $scope.$on('$viewContentLoaded', function () {
         $timeout(function(){
             $scope.search();
@@ -353,6 +299,7 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
 
     });
     $scope.search = function(){
+        getFilterValues();
         if($scope.rootZone == $scope.formFilter.zoneId){
             return;
         }

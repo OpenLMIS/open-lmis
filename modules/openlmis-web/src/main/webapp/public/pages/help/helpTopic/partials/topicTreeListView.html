@@ -1,16 +1,16 @@
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-    <div><h2 id="addNewFacilityHeader">Help Topic View</h2></div>
+    <div><h2 id="helpTopicTreeViewHeader" openlmis-message="label.help.helptopic.helpTopicTreeView"></h2></div>
 
 
     <div class="app-form">
 
         <div class="form-group">
 
-            <h3>Selected Help Topic</h3>
+            <h3 openlmis-message="header.help.helptopic.selectedTopic"></h3>
 
             <div class="form-row clearfix">
                 <div class="form-cell">
-                    <label for="name" openlmis-message="Name"><span class="label-required">*</span></label>
+                    <label for="name" openlmis-message="label.help.helptopic.name"><span class="label-required">*</span></label>
 
                     <div class="form-field">
                         <input ng-model="selectedHelpTopic.name" disabled="true" name="name" id="name" type="text"
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="form-cell">
-                    <label for="level" openlmis-message="Level"></label>
+                    <label for="level" openlmis-message="label.help.helptopic.level"></label>
 
                     <div class="form-field">
                         <input disabled="true" ng-model="selectedHelpTopic.level" id="level" type="text"
@@ -37,74 +37,71 @@
 
     </div>
     <div ng-model="showMinDir" ng-value="false">
-        <div   class="pull-right control-accordion">
-            Help Document List &nbsp;
+        <div class="pull-right control-accordion">
+            <span openlmis-message="link.help.helptopic.helpDocumentList"></span>
             <a class="pull-right" href="#uploadDocument" id="country-add-new"
+               openlmis-message="link.help.helptopic.attachNewFile"></a>
+
+            <div style="height: 300px; overflow: scroll;">
+                <table class="table table-striped table-bordered" ng-table="tableParams">
+                    <thead>
+                    <tr class="gradient-header">
+
+                        <th>Url
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="hd in helpDocumentList ">
+                        <td>
+                            <div>{{hd.fileUrl}}</div>
+                        </td>
 
 
-                    >Attach New File</a>
-           <div style="height: 300px; overflow: scroll;">
-            <table class="table table-striped table-bordered" ng-table="tableParams" >
-                <thead>
-                <tr class="gradient-header">
-
-                    <th>Url
-                    </th>
-
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="hd in helpDocumentList ">
-                    <td >
-                        <div>{{hd.fileUrl}}</div>
-                    </td>
-
-
-
-
-                </tr>
-                </tbody>
-            </table>
-        </div>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="pull-left control-accordion">
-            <a ng-click="my_tree.expand_all()" href="javascript:void(0);">Expand All</a>|
-            <a ng-click="my_tree.collapse_all()" href="javascript:void(0);">Collapse All</a>
+            <a ng-click="my_tree.expand_all()" href="javascript:void(0);" openlmis-message="link.help.helptopic.expandAll"></a>|
+            <a ng-click="my_tree.collapse_all()" href="javascript:void(0);" openlmis-message="link.help.helptopic.collapseAll"></a>
         </div>
-        <div >
+        <div>
 
             <div style="width:60%">
-            <tree-grid tree-data="tree_data" tree-control="my_tree" col-defs="col_defs"
-                       expand-on="expanding_property"
-                       on-select="my_tree_handler(branch)" expand-level="2"
-                       icon-leaf="glyphicon glyphicon-globe"></tree-grid>
+                <tree-grid tree-data="tree_data" tree-control="my_tree" col-defs="col_defs"
+                           expand-on="expanding_property"
+                           on-select="my_tree_handler(branch)" expand-level="2"
+                           icon-leaf="glyphicon glyphicon-globe"></tree-grid>
             </div>
 
-    <div form-toolbar id="action_buttons" class="action-buttons">
-        <div class="form-cell button-row">
-            <input ng-click="add_help_topic()" id="addTopic" type="button" id="add-topic-button"
-                   class="btn btn-primary save-button"
-                   value="add Topic"/>
-            <input ng-click="editHelpTopic()" id="editTopic" type="button" id="edit-topic-button"
-                   class="btn btn-primary save-button"
-                   value="edit"/>
-            <input ng-click="add_help_content()" id="AddHelpContent" type="button" id="add-content-button"
-                   class="btn btn-primary save-button"
-                   value="add content"/>
+            <div form-toolbar id="action_buttons" class="action-buttons">
+                <div class="form-cell button-row">
+                    <input ng-click="add_help_topic()" id="addTopic" type="button" id="add-topic-button"
+                           class="btn btn-primary save-button"
+                           openlmis-message="button.help.helptopic.addNewTopic"/>
+                    <input ng-click="editHelpTopic()" id="editTopic" type="button" id="edit-topic-button"
+                           class="btn btn-primary save-button"
+                           openlmis-message="button.help.helptopic.editTopic"/>
+                    <input ng-click="add_help_content()" id="AddHelpContent" type="button" id="add-content-button"
+                           class="btn btn-primary save-button"
+                           openlmis-message="button.help.helptopic.addNewContent"/>
 
-            <input id="disableButton" type="button" class="btn btn-danger delete-button"
-                   ng-show="facility.id != null && facility.enabled"
-                   ng-click="showConfirmFacilityDisableWindow()" openlmis-message="button.disable"/>
+                    <input id="disableButton" type="button" class="btn btn-danger delete-button"
+                           ng-show="facility.id != null && facility.enabled"
+                           ng-click="showConfirmFacilityDisableWindow()" openlmis-message="button.disable"/>
+                </div>
+
+
+                <div class="toolbar-error" id="saveErrorMsgDiv">
+                    <span openlmis-message="error" ng-show="error"></span>&nbsp;
+                    <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+                </div>
+                <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+            </div>
+
         </div>
 
-
-        <div class="toolbar-error" id="saveErrorMsgDiv">
-            <span openlmis-message="error" ng-show="error"></span>&nbsp;
-            <span ng-show="errorProgram" ng-bind="errorProgram"></span>
-        </div>
-        <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
     </div>
-
-        </div>
-
-</div>

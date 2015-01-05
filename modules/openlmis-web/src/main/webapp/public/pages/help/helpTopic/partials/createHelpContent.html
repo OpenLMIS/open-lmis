@@ -8,7 +8,6 @@
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-    <h2>{{title}}</h2>
 
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 
@@ -20,12 +19,12 @@
 
             <div class="form-group">
 
-                <h3>Help Content Information</h3>
+                <h3 openlmis-message="header.help.helpcontent.title"></h3>
 
                 <div class="form-row clearfix">
 
                     <div class="form-cell">
-                        <label for="name">Help Name<span
+                        <label for="name" openlmis-message="label.help.helpcontent.name"><span
                                 class="label-required"> *</span></label>
 
                         <div class="form-field" style="width: 60%;">
@@ -39,56 +38,53 @@
                     </div>
                 </div>
             </div>
-                        <div class="form-cell">
-                            <label for="name">HTML Content<span
-                                    class="label-required"> *</span></label>
+            <div class="form-cell">
+                <label for="name" openlmis-message="label.help.helpcontent.HTMLContent"><span
+                        class="label-required"> *</span></label>
 
 
+            </div>
+            <div style="width: 100%" id="htmlcontent" text-angular="text-angular" name="htmlcontent"
+                 ng-model="helpContent.htmlContent"
+                    ></div>
+        </div>
 
-                        </div>
-                        <div style="width: 100%" id="htmlcontent" text-angular="text-angular" name="htmlcontent" ng-model="helpContent.htmlContent"
-                                ></div>
-                    </div>
-
-<div style=" position:absolute;top:180px;right: 20px; width: 25%"  class="pull-right control-accordion">
-    Help Document List &nbsp;
-
-    <div style="height: 300px; overflow: scroll;">
-        <table class="table table-striped table-bordered" ng-table="tableParams" >
-            <thead>
-            <tr class="gradient-header">
-
-                <th>Url
-                </th>
-
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="hd in helpDocumentList ">
-                <td >
-                    <div>{{hd.fileUrl}}</div>
-                </td>
+        <div style=" position:absolute;top:180px;right: 20px; width: 25%" class="pull-right control-accordion"
+             openlmis-message="link.help.helptopic.helpDocumentList">
 
 
+            <div style="height: 300px; overflow: scroll;">
+                <table class="table table-striped table-bordered" ng-table="tableParams">
+                    <thead>
+                    <tr class="gradient-header">
+
+                        <th>Url
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="hd in helpDocumentList ">
+                        <td>
+                            <div>{{hd.fileUrl}}</div>
+                        </td>
 
 
-            </tr>
-            </tbody>
-        </table>
-</div>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                    <div form-toolbar id="action_buttons" class="action-buttons">
-                        <div class="form-cell button-row">
-                            <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
-                            <a ng-click="cancel()" class="btn btn-cancel cancel-button"><span
-                                    openlmis-message="button.cancel"></span></a>
-                        </div>
-                        <div class="toolbar-error" id="saveErrorMsgDiv" ng-show="showError || error">{{ errorMessage
-                            }}
-                        </div>
-                    </div>
-
-
+            <div form-toolbar id="action_buttons" class="action-buttons">
+                <div class="form-cell button-row">
+                    <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
+                    <a ng-click="cancel()" class="btn btn-cancel cancel-button"><span
+                            openlmis-message="button.cancel"></span></a>
+                </div>
+                <div class="toolbar-error" id="saveErrorMsgDiv" ng-show="showError || error">{{ errorMessage
+                    }}
+                </div>
+            </div>
 
 
     </form>
