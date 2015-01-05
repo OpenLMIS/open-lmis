@@ -8,7 +8,7 @@
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-    <h2>{{title}}</h2>
+    <h2 openlmis-message="header.help.helptopic.title"></h2>
 
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
 
@@ -27,7 +27,7 @@
 
                     <!-- Help level-->
                     <div class="form-cell">
-                        <label for="level">Level<span
+                        <label for="level" openlmis-message="label.help.helptopic.level"><span
                                 class="label-required"> *</span></label>
 
                         <div class="form-field" style="width: 40%;">
@@ -42,7 +42,7 @@
 
                     <!--Help Topic name-->
                     <div class="form-cell">
-                        <label for="name">Help Category Name<span
+                        <label for="name" openlmis-message="label.help.helptopic.name"><span
                                 class="label-required"> *</span></label>
 
                         <div class="form-field" style="width: 40%;">
@@ -56,7 +56,7 @@
                         </div>
                         <div>
                             <div class="form-cell">
-                                <label for="name">Roles<span
+                                <label for="name" openlmis-message="label.help.helptopic.selectRole"><span
                                         class="label-required"> *</span></label>
                                 </div>
                             <table class="table table-striped table-bordered">
@@ -65,8 +65,8 @@
                                     <th> <a href="" ng-click="selectAll()">Select All</a>|
                                         <a href="" ng-click="deSelectAll()">None</a>
                                     </th>
-                                    <th>Name</th>
-                                    <th>Description</th>
+                                    <th openlmis-message="label.help.helptopic.name">Name</th>
+                                    <th openlmis-message="label.help.helptopic.descripton"></th>
 
 
                                 </tr>
