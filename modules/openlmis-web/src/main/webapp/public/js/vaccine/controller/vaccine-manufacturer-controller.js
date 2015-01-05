@@ -11,7 +11,7 @@
 
 function VaccineManufacturerController($scope, $dialog, messageService, $routeParams, $location, GetVaccineManufacturerProductMapping, VaccineManufacturerList,Products,  VaccineManufacturerUpdate, GetVaccineManufacturer, DeleteVaccineManufacturer, DeleteManufacturerProductMapping) {
 
-    $scope.vaccineManufacturers = {};
+    $scope.vaccineManufacturers = [];
 
 
     // manufacturer list
@@ -32,6 +32,7 @@ function VaccineManufacturerController($scope, $dialog, messageService, $routePa
                id: $routeParams.id
            }, function (data) {
                $scope.manufacturer = data.vaccineManufacturer;
+               $scope.manufacturer.registrationDate = data.vaccineManufacturer.registrationDateString;
                $scope.productMappings = data.productMapping;
            });
        }

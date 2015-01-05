@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -95,9 +97,12 @@ public class VaccineManufacturerController extends BaseController{
     @RequestMapping(value = "/getManufacturerProducts/{id}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity getVaccineManufacturerProductMapping(@PathVariable(value="id") Long id){
 
+        Manufacturer manufacturer = manufacturerService.getManufacturer(id);
+        List<ManufacturerProduct> product = manufacturerService.getProductMapping(id);
+
         ResponseEntity<OpenLmisResponse> response;
-        response = OpenLmisResponse.response("vaccineManufacturer", manufacturerService.getManufacturer(id));
-        response.getBody().addData("productMapping", manufacturerService.getProductMapping(id));
+        response = OpenLmisResponse.response("vaccineManufacturer", manufacturer);
+        response.getBody().addData("productMapping", product);
         return response;
     }
 
