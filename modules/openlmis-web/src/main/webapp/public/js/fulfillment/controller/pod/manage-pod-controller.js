@@ -10,9 +10,16 @@
 
 function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPOD, $location) {
 
-  OrdersForManagePOD.get({}, function (data) {
-    $scope.orders = data.ordersForPOD || [];
-  });
+  //OrdersForManagePOD.get({}, function (data) {
+  //  $scope.orders = data.ordersForPOD || [];
+  //});
+
+  $scope.toggleSlider = function () {
+    if (!$scope.facilitySelected) {
+      $scope.showSlider = !$scope.showSlider;
+      $scope.extraParams = {"virtualFacility": false, "enabled": null };
+    }
+  };
 
   $scope.gridOptions = { data: 'orders',
     showFooter: false,

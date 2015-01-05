@@ -17,6 +17,29 @@
         <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders && orders.length">
             <span openlmis-message="message.no.order"></span>
         </div>
+
+        <!--<div class="form-row clearfix">-->
+          <!--<div class="form-cell">-->
+            <!--<label id="associatedFacilityLabel">-->
+              <!--<span openlmis-message="manage.pod.facility"></span>-->
+            <!--</label>-->
+
+            <!--<div class="form-field input-div associate-facility suggest-field">-->
+              <!--<div id="associatedFacilityField" ng-click="toggleSlider()" class="clearfix">-->
+                <!--<div class="facility-associated">-->
+                  <!--<span class="placeholder" ng-show="!facilitySelected" openlmis-message="label.no.facility.selected"></span>-->
+                  <!--<span ng-show="facilitySelected">{{facilitySelected.code}} - {{facilitySelected.name}}</span>-->
+                <!--</div>-->
+                <!--<a href="" class="btn" ng-show="!facilitySelected">-->
+                  <!--<i class="icon icon-ellipsis-horizontal"></i>-->
+                <!--</a>-->
+              <!--</div>-->
+              <!--<a id="clearFacility" ng-show="facilitySelected"-->
+                 <!--href="" class="clear-search" ng-click="void()"></a>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+
         <div ng-show="orders && orders.length" class="gridStyle" ng-grid="gridOptions"></div>
     </div>
 </div>
