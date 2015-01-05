@@ -14,6 +14,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
+import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
@@ -48,6 +49,8 @@ public class TemplateService {
 
   public static final String PDF_VIEW = "pdf";
   public static final String USER_ID_PARAM = "userId";
+
+  private static Logger logger = Logger.getLogger(TemplateService.class);
 
   @Autowired
   TemplateRepository repository;
@@ -120,18 +123,33 @@ public class TemplateService {
 
   private TemplateParameter createParameter(Long createdBy, JRParameter jrParameter) {
     String[] propertyNames = jrParameter.getPropertiesMap().getPropertyNames();
-    if (propertyNames.length > 1) {
+
+    // check # of properties and that required ones are given
+    if (propertyNames.length > 2) {
       throw new DataException(messageService.message("report.template.extra.properties", jrParameter.getName()));
     }
     String displayName = jrParameter.getPropertiesMap().getProperty("displayName");
     if (isBlank(displayName)) {
       throw new DataException(messageService.message("report.template.parameter.display.name.missing", jrParameter.getName()));
     }
+
+    // look for sql for select and that data type is supported string
+    String dataType = jrParameter.getValueClassName();
+    String selectSql = jrParameter.getPropertiesMap().getProperty("selectSql");
+    if(isBlank(selectSql) == false && dataType.equals("java.lang.String") == false) // sql selects need String data type
+      throw new DataException(messageService.message("report.template.parameter.sql.data.type.not.string")
+        , jrParameter.getName());
+
+    // set parameters
     TemplateParameter templateParameter = new TemplateParameter();
     templateParameter.setName(jrParameter.getName());
     templateParameter.setDisplayName(displayName);
     templateParameter.setDescription(jrParameter.getDescription());
-    templateParameter.setDataType(jrParameter.getValueClassName());
+    templateParameter.setDataType(dataType);
+    if(isBlank(selectSql) == false) {
+      logger.debug("SQL from report parameter: " + selectSql);
+      templateParameter.setSelectSql(selectSql);
+    }
     if (jrParameter.getDefaultValueExpression() != null) {
       templateParameter.setDefaultValue(jrParameter.getDefaultValueExpression().getText().replace("\"", "").replace("\'", ""));
     }
