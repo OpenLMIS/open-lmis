@@ -1,7 +1,7 @@
 /**
  * Created by issa on 10/24/14.
  */
-function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,supervisoryNodes,EditUserPreference,UserFacilitiesForProgram,programs,$location,messageService,
+function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,supervisoryNodes,UserFacilitiesForProgram,programs,$location,messageService,
                                   UpdateUserPreference,userDashboardPreferenceValues, UserPreferences, localStorageService){
     $scope.user = user || {};
     $scope.programs = programs;
@@ -63,14 +63,12 @@ function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,
         };
 
         if ($scope.user.id) {
-            EditUserPreference.update({id: $scope.user.id}, $scope.user, updateSuccessHandler, errorHandler);
-
-            $scope.preference.program = isUndefined($scope.preference.program)? 1: $scope.preference.program;
+             $scope.preference.program = isUndefined($scope.preference.program)? 1: $scope.preference.program;
             $scope.preference.facility = isUndefined($scope.preference.facility)? 1: $scope.preference.facility;
             $scope.preference.products = isUndefined($scope.preference.products)? [1]: $scope.preference.products;
 
             UpdateUserPreference.update({userId: $scope.user.id, programId: $scope.preference.program,
-                facilityId:$scope.preference.facility, products:$scope.preference.products},{},updateSuccessPreferenceHandler, errorHandler);
+                facilityId:$scope.preference.facility, products:$scope.preference.products}, $scope.user ,updateSuccessPreferenceHandler, errorHandler);
 
             //if user preference of currently logged-in user changes, reload the new user preference to localstorage
             if($scope.user.id == localStorageService.get(localStorageKeys.USER_ID)){
@@ -130,14 +128,12 @@ UserPreferenceController.resolve = {
     programs: function ($q, UserPrograms,$route, $timeout) {
 
         var userId = $route.current.params.userId;
-
         if (!userId) return undefined;
         var deferred = $q.defer();
 
         $timeout(function () {
             UserPrograms.get({userId:userId}, function (data) {
                 deferred.resolve(data.programs);
-
             }, function () {
             });
         }, 100);
@@ -162,7 +158,7 @@ UserPreferenceController.resolve = {
         return deferred.promise;
     },
     supervisoryNodes: function ($q, SupervisoryNodesList, $timeout) {
-        var deferred = $q.defer();
+      /*  var deferred = $q.defer();
 
         $timeout(function () {
             SupervisoryNodesList.get({}, function (data) {
@@ -171,7 +167,7 @@ UserPreferenceController.resolve = {
             });
         }, 100);
 
-        return deferred.promise;
+        return deferred.promise;*/
     },
     roles_map: function ($q, RolesList, $timeout) {
         var deferred = $q.defer();
