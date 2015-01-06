@@ -10,7 +10,7 @@
 
 <div>
     <h2>
-        <span id="vaccineManufacturerHeader" >Manufacturer</span>
+        <span id="vaccineManufacturerHeader" openlmis-message="header.vaccine.manufacturer"></span>
         <a id="vaccine-target-new" ng-href="#/manufacturerEdit/0" class="pull-right btn btn-primary"
            openlmis-message="button.add.new"></a>
     </h2>
@@ -34,7 +34,7 @@
             <td>{{manufacturer.name}}</td>
             <td>{{manufacturer.primaryPhone}}</td>
             <td>{{manufacturer.email}}</td>
-            <td> <a href ng-click="showRemoveVaccineManufacturerDialog(manufacturer)" openlmis-message="button.delete">Delete</a> | <a href="#/manufacturerEdit/{{manufacturer.id}}" openlmis-message="button.edit">Edit</a></td>
+            <td> <a href ng-click="showRemoveVaccineManufacturerDialog(manufacturer)" openlmis-message="button.delete"></a> | <a href="#/manufacturerEdit/{{manufacturer.id}}" openlmis-message="button.edit"></a></td>
         </tr>
         </tbody>
     </table>
