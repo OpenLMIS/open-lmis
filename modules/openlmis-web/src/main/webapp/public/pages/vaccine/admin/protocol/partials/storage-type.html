@@ -11,14 +11,14 @@
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
 
     <div>
-        <h2>Storage Type Information</h2>
+        <h2 openlmis-message="header.vaccine.storagetype.title"></h2>
     </div>
 
-    <h2><span>{{title}}</span>
+
         <a href="#storage-type-create" id="help-category-add-new"
            class="pull-right btn btn-primary"
            ng-disabled="AddEditMode"
-                >Add New</a>
+           openlmis-message="button.vaccine.addNew" ></a>
     </h2>
 
         <input id="searchStorageType" class="search-query input-xxlarge" type="text" ng-model="query"
@@ -56,7 +56,7 @@
     <div ng-hide="query.length > 2">
         <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
             <tr>
-                <td>No data to show under selected filters</td>
+                <td openlmis-message="message.vaccine.noDataToshowInDatatable"></td>
             </tr>
         </table>
         <table  class="table table-striped table-bordered" ng-table="tableParams" >
@@ -64,9 +64,9 @@
             <tr class="gradient-header">
 
 
-                <th>Storage Type Name</th>
+                <th openlmis-message="message.vaccine.typeName"></th>
 
-                <th> Action</th>
+                <th openlmis-message="label.vaccine.countries.action"> </th>
 
             </tr>
             </thead>
@@ -77,8 +77,8 @@
                 </td>
 
                 <td>
-                    <a href="" ng-click="editStorageType(st.id)">Edit</a>|
-                    <a href="" ng-click="showDeleteConfirmDialog(st)">Delete</a>
+                    <a href="" ng-click="editStorageType(st.id)" openlmis-message="button.edit"></a> &nbsp;|
+                    <a href="" ng-click="showDeleteConfirmDialog(st)" openlmis-message="button.delete"></a>
                 </td>
 
 

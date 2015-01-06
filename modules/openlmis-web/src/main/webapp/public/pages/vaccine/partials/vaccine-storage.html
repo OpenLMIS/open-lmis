@@ -13,18 +13,18 @@
 <div class="container-fluid">
 
 
-    <h2><span>{{title}}</span>
+    <h2><span openlmis-message="label.vaccine.storage.title"></span>
         <a href="#vaccine-storage-create" id="country-add-new"
            class="pull-right btn btn-primary"
            ng-disabled="AddEditMode"
-                >Add New</a>
+           openlmis-message="button.vaccine.addNew" ></a>
     </h2>
 
     <div>
 
         <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
             <tr>
-                <td>No data to show under selected filters</td>
+                <td openlmis-message="message.vaccine.noDataToshowInDatatable" ></td>
             </tr>
         </table>
         <table class="table table-striped table-bordered" ng-table="tableParams" >
@@ -32,12 +32,12 @@
             <tr class="gradient-header">
 
 
-                <th>CCS Type</th>
-                <th> Identification</th>
-                <th>Gross Capacity</th>
-                <th> Net Capacity</th>
-                <th>Tempracture</th>
-                <th> Action</th>
+                <th openlmis-message="label.vaccine.storage.CCSType" ></th>
+                <th openlmis-message="label.vaccine.storage.identification" > </th>
+                <th openlmis-message="label.vaccine.storage.grossCapacity" ></th>
+                <th openlmis-message="label.vaccine.storage.netCapacity" > </th>
+                <th openlmis-message="label.vaccine.storage.temprature" ></th>
+                <th openlmis-message="label.vaccine.countries.action" > </th>
 
             </tr>
             </thead>
@@ -59,8 +59,8 @@
                     <div>{{vs.temperature.tempratureName}}</div>
                 </td>
                 <td>
-                    <a href="" ng-click="editVaccineStorage(vs.id)">Edit</a>|
-                    <a href="" ng-click="showDeleteConfirmDialog(vs)">Delete</a>
+                    <a href="" ng-click="editVaccineStorage(vs.id)" openlmis-message="link.vaccine.countries.edit"></a>|
+                    <a href="" ng-click="showDeleteConfirmDialog(vs)" openlmis-message="link.vaccine.countries.delete"></a>
                 </td>
 
 
