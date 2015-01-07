@@ -35,7 +35,7 @@ public class StockStatusController extends BaseController {
 
 
   @RequestMapping(value = "/rest-api/stock-status/quarter", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> getStockStatusQuarterly(
+  public ResponseEntity getStockStatusQuarterly(
                       @RequestParam("quarter") Long quarter,
                       @RequestParam("year") Long year,
                       @RequestParam("program") String program,
@@ -44,7 +44,7 @@ public class StockStatusController extends BaseController {
   }
 
   @RequestMapping(value = "/rest-api/stock-status/monthly", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> getStockStatusMonthly(
+  public ResponseEntity getStockStatusMonthly(
     @RequestParam("month") Long month,
     @RequestParam("year") Long year,
     @RequestParam("program") String program,
