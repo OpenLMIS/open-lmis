@@ -9,9 +9,8 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-    <div ng-hide="donor.id"><h2>Storage Type Information</h2></div>
-    <div ng-show="donor.id">
-        <h2>Storage Type Information</h2>
+    <div>
+        <h2 openlmis-message="header.vaccine.storagetype.title"></h2>
     </div>
 
     <form ng-submit="createStorageType()" id="storageTypeForm" name="storageTypeForm"

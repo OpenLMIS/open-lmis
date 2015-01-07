@@ -11,13 +11,13 @@
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
 
     <div>
-        <h2>Temprature Lookup List Search</h2>
+        <h2 openlmis-message="header.vaccine.temprature.search"></h2>
     </div>
-    <h2><span>{{title}}</span>
+
         <a href="#temperature-create" id="help-category-add-new"
            class="pull-right btn btn-primary"
            ng-disabled="AddEditMode"
-                >Add New</a>
+           openlmis-message="button.vaccine.addNew" ></a>
     </h2>
 
     <input id="searchTemprature" class="search-query input-xxlarge" type="text" ng-model="query"
@@ -56,7 +56,7 @@
 
         <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
         <tr>
-            <td>No data to show under selected filters</td>
+            <td openlmis-message="message.vaccine.noDataToshowInDatatable"></td>
         </tr>
         </table>
         <table class="table table-striped table-bordered" ng-table="tableParams" >
@@ -64,9 +64,9 @@
             <tr class="gradient-header">
 
 
-                <th>Temperature Name</th>
+                <th openlmis-message="label.vaccine.temprature.tempratureName"></th>
 
-                <th> Action</th>
+                <th openlmis-message="label.vaccine.countries.action"> </th>
 
             </tr>
             </thead>
@@ -77,8 +77,8 @@
                 </td>
 
                 <td>
-                    <a href="" ng-click="editTemprature(t.id)">Edit</a>|
-                    <a href="" ng-click="showDeleteConfirmDialog(t)">Delete</a>
+                    <a href="" ng-click="editTemprature(t.id)" openlmis-message="link.vaccine.countries.edit"></a>|
+                    <a href="" ng-click="showDeleteConfirmDialog(t)" openlmis-message="link.vaccine.countries.delete"></a>
                 </td>
 
 
