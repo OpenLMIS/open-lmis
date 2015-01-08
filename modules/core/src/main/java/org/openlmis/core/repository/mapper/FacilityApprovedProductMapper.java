@@ -44,7 +44,7 @@ public interface FacilityApprovedProductMapper {
       "WHERE",
       "pp.programId = #{programId}",
       "AND f.id = #{facilityId}",
-      //"AND p.fullSupply = TRUE",
+      "AND pp.fullSupply = TRUE",
       "AND p.active = TRUE",
       "AND pp.active = TRUE",
       "ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code"})
