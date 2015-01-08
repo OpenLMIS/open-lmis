@@ -8,87 +8,116 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ReportingRateController($scope, leafletData, ReportingFacilityList, SendMessagesReportAttachment, GetFacilitySupervisors , NonReportingFacilityList, SettingsByKey, ContactList, SendMessages, $filter , $dialog, messageService) {
+function ReportingRateController($scope, leafletData, ReportingFacilityList, SendMessagesReportAttachment, GetFacilitySupervisors, NonReportingFacilityList, SettingsByKey, ContactList, SendMessages, $filter, $dialog, messageService) {
 
+    $scope.viewOptins = [
+        {id: '0', name: 'Non Reporting Only'},
+        {id: '1', name: 'Reporting Only'},
+        {id: '2', name: 'All'}
+    ];
+//    $scope.viewOptins.push({option:'All'});
+    var allFacilities = [];
+    $scope.default_indicator = "period_over_expected";
+    $scope.$watch('view.selectedOption', function (value) {
 
-  $scope.default_indicator = "period_over_expected";
+        var reportingFacilities = [];
 
-  // get configurations
-  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'}, function (data){
-    $scope.sms_template           = data.settings.value;
-  });
+        $scope.facilities=[];
+        if (value && value === '1') {
+            angular.forEach(allFacilities, function (item) {
+                if (item.reported) {
+                    $scope.facilities.push(item);
+                }
+            });
+        }  else if (value && value === '0') {
+            angular.forEach(allFacilities, function (item) {
+                if (!item.reported) {
+                    $scope.facilities.push(item);
+                }
+            });
+        }
+        else{
 
-  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data){
-    $scope.email_template         = data.settings.value;
-  });
+            $scope.facilities=allFacilities;
+        }
 
-  SettingsByKey.get({key: 'SMS_ENABLED'},function (data){
-    $scope.sms_enabled            = data.settings.value;
-  });
-
-    SettingsByKey.get({key: 'LATE_RNR_SUPERVISOR_NOTIFICATION_EMAIL_TEMPLATE'},function (data){
-        $scope.email_template_supervisor           = data.settings.value;
+    });
+    // get configurations
+    SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'}, function (data) {
+        $scope.sms_template = data.settings.value;
     });
 
-  // end of configurations
-
-  // show dialog box contents
-
-  $scope.showSendEmail = function(facility){
-    $scope.selected_facility = facility;
-    ContactList.get({type:'email', facilityId: facility.id}, function(data){
-      $scope.contacts = data.contacts;
+    SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data) {
+        $scope.email_template = data.settings.value;
     });
-    $scope.show_email = !$scope.show_email;
-  };
 
-   $scope.showSendEmailSupervisor = function(facility){
-       $scope.selected_facility = facility;
-       GetFacilitySupervisors.get({
-           facilityId : facility.id
-       }, function(data){
-           $scope.contacts = data.supervisors;
-           $scope.attachementCaption = "Attachement: Non reporting facility report for "+ $scope.zoneName+ ' district';
-           var fullReportfilter = $.extend($scope.filter, {zone: $scope.zoneid});
-           $scope.reportFilter = '/reports/download/non_reporting/PDF?max=10000&' + $.param(fullReportfilter);
-           console.log($scope.reportFilter);
-       });
+    SettingsByKey.get({key: 'SMS_ENABLED'}, function (data) {
+        $scope.sms_enabled = data.settings.value;
+    });
 
-       $scope.show_email_supervisor = !$scope.show_email_supervisor;
+    SettingsByKey.get({key: 'LATE_RNR_SUPERVISOR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data) {
+        $scope.email_template_supervisor = data.settings.value;
+    });
+
+    // end of configurations
+
+    // show dialog box contents
+
+    $scope.showSendEmail = function (facility) {
+        $scope.selected_facility = facility;
+        ContactList.get({type: 'email', facilityId: facility.id}, function (data) {
+            $scope.contacts = data.contacts;
+        });
+        $scope.show_email = !$scope.show_email;
+    };
+
+    $scope.showSendEmailSupervisor = function (facility) {
+        $scope.selected_facility = facility;
+        GetFacilitySupervisors.get({
+            facilityId: facility.id
+        }, function (data) {
+            $scope.contacts = data.supervisors;
+            $scope.attachementCaption = "Attachement: Non reporting facility report for " + $scope.zoneName + ' district';
+            var fullReportfilter = $.extend($scope.filter, {zone: $scope.zoneid});
+            $scope.reportFilter = '/reports/download/non_reporting/PDF?max=10000&' + $.param(fullReportfilter);
+            console.log($scope.reportFilter);
+        });
+
+        $scope.show_email_supervisor = !$scope.show_email_supervisor;
 
     };
 
-  $scope.showSendSms = function(facility){
-    $scope.selected_facility = facility;
-    ContactList.get({type:'sms', facilityId: facility.id}, function(data){
-      $scope.contacts = data.contacts;
-    });
-    $scope.show_sms = !$scope.show_sms;
-  };
-  // end of dialog box contents
+    $scope.showSendSms = function (facility) {
+        $scope.selected_facility = facility;
+        ContactList.get({type: 'sms', facilityId: facility.id}, function (data) {
+            $scope.contacts = data.contacts;
+        });
+        $scope.show_sms = !$scope.show_sms;
+    };
+    // end of dialog box contents
 
-  // start send actions
+    // start send actions
 
-  $scope.doSend = function(){
+    $scope.doSend = function () {
 
-    if($scope.show_sms){
-      $scope.sendSms();
-      $scope.show_sms=false;
-    }
-    else if($scope.show_email_supervisor){
-        $scope.sendSupervisorEmail();
-        $scope.show_email_supervisor = false;
-    }
-    else{
-      $scope.sendFacilityEmail();
-      $scope.show_email = false;
-    }
+        if ($scope.show_sms) {
+            $scope.sendSms();
+            $scope.show_sms = false;
+        }
+        else if ($scope.show_email_supervisor) {
+            $scope.sendSupervisorEmail();
+            $scope.show_email_supervisor = false;
+        }
+        else {
+            $scope.sendFacilityEmail();
+            $scope.show_email = false;
+        }
 
-    $scope.selected_facility.sent=true;
+        $scope.selected_facility.sent = true;
 
-  };
+    };
 
-    $scope.sendSupervisorEmail = function(){
+    $scope.sendSupervisorEmail = function () {
 
         var messages = constructMessage();
 
@@ -101,69 +130,100 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Sen
         });
     };
 
-    $scope.sendFacilityEmail = function(){
+    $scope.sendFacilityEmail = function () {
 
         var messages = constructMessage();
 
-        SendMessages.post({messages: messages}, function(data){
+        SendMessages.post({messages: messages}, function (data) {
             $scope.sent_confirmation = true;
         });
     };
 
-  var constructMessage = function(){
+    var constructMessage = function () {
 
-    // construct the messges here
-    var messages  = [];
+        // construct the messges here
+        var messages = [];
 
-    for(var i = 0; i < $scope.contacts.length; i++){
-      var template = $scope.show_email_supervisor ? $scope.email_template_supervisor : $scope.email_template;
-      var contact = $scope.contacts[i];
+        for (var i = 0; i < $scope.contacts.length; i++) {
+            var template = $scope.show_email_supervisor ? $scope.email_template_supervisor : $scope.email_template;
+            var contact = $scope.contacts[i];
 
-      template = template.replace( '{name}' , contact.name);
-      template = template.replace( '{facility_name}', $scope.selected_facility.name );
-      template = template.replace( '{period}', $scope.selected_facility.name );
+            template = template.replace('{name}', contact.name);
+            template = template.replace('{facility_name}', $scope.selected_facility.name);
+            template = template.replace('{period}', $scope.selected_facility.name);
 
-      messages.push({type: 'email', facility_id: $scope.selected_facility.id, contact: contact.contact, message: template });
-    }
+            messages.push({type: 'email', facility_id: $scope.selected_facility.id, contact: contact.contact, message: template });
+        }
 
-      return messages;
-  };
+        return messages;
+    };
 
-  // end send actions
-  $scope.ReportingFacilities = function(feature, element) {
-    ReportingFacilityList.get({
-      program: $scope.filter.program,
-      period: $scope.filter.period,
-      geo_zone: feature.id
-    }, function(data) {
-      $scope.facilities = data.facilities;
-      $scope.successModal = true;
-      $scope.show_email = $scope.show_sms = $scope.show_email_supervisor = false;
-      $scope.zoneid = feature.id;
-      $scope.zoneName = feature.name;
-      $scope.title = 'Properly Reporting Facilities in ' + feature.name;
-    });
-    $scope.zoomToSelectedFeature(feature);
-  };
+    // end send actions
+    $scope.ReportingFacilities = function (feature, element) {
+        ReportingFacilityList.get({
+            program: $scope.filter.program,
+            period: $scope.filter.period,
+            geo_zone: feature.id
+        }, function (data) {
+            $scope.facilities = data.facilities;
+            $scope.successModal = true;
+            $scope.show_email = $scope.show_sms = $scope.show_email_supervisor = false;
+            $scope.zoneid = feature.id;
+            $scope.zoneName = feature.name;
+            $scope.title = 'Properly Reporting Facilities in ' + feature.name;
+            ///////////
+            NonReportingFacilityList.get({
+                program: $scope.filter.program,
+                period: $scope.filter.period,
+                geo_zone: feature.id
+            }, function (data) {
+                var reportingFacilities = [];
+                reportingFacilities = data.facilities;
 
-  $scope.NonReportingFacilities = function(feature, element) {
-    NonReportingFacilityList.get({
-      program: $scope.filter.program,
-      period: $scope.filter.period,
-      geo_zone: feature.id
-    }, function(data) {
-      $scope.facilities = data.facilities;
-      $scope.successModal = true;
-      $scope.zoneid = feature.id;
-      $scope.zoneName = feature.name;
-      $scope.show_email = $scope.show_sms = $scope.show_email_supervisor = false;
-      $scope.title = 'Non Reporting Facilities in ' + feature.name;
-    });
+                angular.forEach(reportingFacilities, function (item) {
 
-      console.log(feature.id);
-  };
+                    $scope.facilities.push(item);
+                });
+                allFacilities = $scope.facilities;
+            });
+        });
+        $scope.view.selectedOption='';
+        $scope.zoomToSelectedFeature(feature);
+    };
 
-    $scope.expectedFilter = function(item) {
+    $scope.NonReportingFacilities = function (feature, element) {
+        NonReportingFacilityList.get({
+            program: $scope.filter.program,
+            period: $scope.filter.period,
+            geo_zone: feature.id
+        }, function (data) {
+            $scope.facilities = data.facilities;
+            $scope.successModal = true;
+            $scope.zoneid = feature.id;
+            $scope.zoneName = feature.name;
+            $scope.show_email = $scope.show_sms = $scope.show_email_supervisor = false;
+            $scope.title = 'Non Reporting Facilities in ' + feature.name;
+            //////////
+            ReportingFacilityList.get({
+                program: $scope.filter.program,
+                period: $scope.filter.period,
+                geo_zone: feature.id
+            }, function (data) {
+                var reportingFacilities = [];
+                reportingFacilities = data.facilities;
+
+                angular.forEach(reportingFacilities, function (item) {
+
+                    $scope.facilities.push(item);
+                });
+                allFacilities = $scope.facilities;
+            });
+        });
+        $scope.view.selectedOption='';
+        console.log(feature.id);
+    };
+
+    $scope.expectedFilter = function (item) {
         return item.expected > 0;
     };
 
@@ -189,24 +249,26 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Sen
         },
         legend: {
             position: 'bottomleft',
-            colors: [ '#FF0000', '#FFFF00', '#5eb95e',"#000000" ],
-            labels: [ 'Non Reporting', 'Partial Reporting ', 'Fully Reporting','Not expected to Report']
+            colors: [ '#FF0000', '#FFFF00', '#5eb95e', "#000000" ],
+            labels: [ 'Non Reporting', 'Partial Reporting ', 'Fully Reporting', 'Not expected to Report']
         }
     });
 
 
-
-    $scope.indicator_types = [{
-        code: 'ever_over_total',
-        name: 'Ever Reported / Total Facilities'
-    }, {
-        code: 'ever_over_expected',
-        name: 'Ever Reported / Expected Facilities'
-    }, {
-        code: 'period_over_expected',
-        name: 'Reported during period / Expected Facilities'
-    }];
-
+    $scope.indicator_types = [
+        {
+            code: 'ever_over_total',
+            name: 'Ever Reported / Total Facilities'
+        },
+        {
+            code: 'ever_over_expected',
+            name: 'Ever Reported / Expected Facilities'
+        },
+        {
+            code: 'period_over_expected',
+            name: 'Reported during period / Expected Facilities'
+        }
+    ];
 
 
     $scope.geojson = {};
@@ -217,28 +279,28 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Sen
         return interpolator(val).hex();
     }
 
-    $scope.style = function(feature) {
-        if($scope.filter !== undefined && $scope.filter.indicator_type !== undefined){
+    $scope.style = function (feature) {
+        if ($scope.filter !== undefined && $scope.filter.indicator_type !== undefined) {
             $scope.indicator_type = $scope.filter.indicator_type;
         }
-        else{
+        else {
             $scope.indicator_type = $scope.default_indicator;
         }
         var color = ($scope.indicator_type == 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.indicator_type == 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
 
         return {
-            fillColor:  color,
-            weight:     1,
-            opacity:    1,
-            color:      'white',
-            dashArray:  '1',
+            fillColor: color,
+            weight: 1,
+            opacity: 1,
+            color: 'white',
+            dashArray: '1',
             fillOpacity: 0.7
         };
     };
 
-    $scope.centerJSON = function() {
+    $scope.centerJSON = function () {
 
-        leafletData.getMap().then(function(map) {
+        leafletData.getMap().then(function (map) {
             var latlngs = [];
             for (var c = 0; c < $scope.features.length; c++) {
                 if ($scope.features[c].geometry === null || angular.isUndefined($scope.features[c].geometry))
@@ -250,26 +312,26 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Sen
                     for (var j in coord) {
                         var points = coord[j];
                         var latlng = L.GeoJSON.coordsToLatLng(points);
-                       
-                       //this is a hack to make the tz shape files to work
-                       //sadly the shapefiles for tz and zm have some areas that are in europe, 
+
+                        //this is a hack to make the tz shape files to work
+                        //sadly the shapefiles for tz and zm have some areas that are in europe,
                         //which indicates that the quality of the shapes is not good, 
                         //however the zoom neeeds to show the correct country boundaries. 
-                        if(latlng.lat < 0 && latlng.lng > 0){
-                          latlngs.push(latlng);
+                        if (latlng.lat < 0 && latlng.lng > 0) {
+                            latlngs.push(latlng);
                         }
                     }
                 }
             }
-          
-           thevar = latlngs;
+
+            thevar = latlngs;
             theMap = map;
             map.fitBounds(latlngs);
         });
     };
 
 
-    $scope.drawMap = function(json) {
+    $scope.drawMap = function (json) {
 
         angular.extend($scope, {
             geojson: {
@@ -300,15 +362,15 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Sen
     }
 
     function zoomToFeature(e) {
-      //todo: complete this
+        //todo: complete this
     }
 
-    $scope.OnFilterChanged = function() {
+    $scope.OnFilterChanged = function () {
 
-        $.getJSON('/gis/reporting-rate.json', $scope.filter, function(data) {
+        $.getJSON('/gis/reporting-rate.json', $scope.filter, function (data) {
             $scope.features = data.map;
 
-            angular.forEach($scope.features, function(feature) {
+            angular.forEach($scope.features, function (feature) {
                 feature.geometry_text = feature.geometry;
                 feature.geometry = JSON.parse(feature.geometry);
                 feature.type = "Feature";
