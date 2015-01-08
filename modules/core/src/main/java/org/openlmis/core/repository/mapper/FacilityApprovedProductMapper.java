@@ -44,7 +44,7 @@ public interface FacilityApprovedProductMapper {
       "WHERE",
       "pp.programId = #{programId}",
       "AND f.id = #{facilityId}",
-      "AND p.fullSupply = TRUE",
+      "AND pp.fullSupply = TRUE",
       "AND p.active = TRUE",
       "AND pp.active = TRUE",
       "ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code"})
@@ -52,6 +52,7 @@ public interface FacilityApprovedProductMapper {
     @Result(property = "programProduct.id", column = "programProductId"),
     @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
     @Result(property = "programProduct.active", column = "active"),
+    @Result(property = "programProduct.fullSupply", column = "fullSupply"),
     @Result(property = "programProduct.currentPrice", column = "currentPrice"),
     @Result(property = "programProduct.program.id", column = "programId"),
     @Result(property = "programProduct.program.code", column = "program_code"),
@@ -92,7 +93,7 @@ public interface FacilityApprovedProductMapper {
       "WHERE",
       "pp.programId = #{programId}",
       "AND f.id = #{facilityId}",
-      "AND p.fullSupply = FALSE",
+      "AND pp.fullSupply = FALSE",
       "AND p.active = TRUE",
       "AND pp.active = TRUE",
       "ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code"})

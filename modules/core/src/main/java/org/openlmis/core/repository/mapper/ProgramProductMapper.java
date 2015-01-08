@@ -114,7 +114,7 @@ public interface ProgramProductMapper {
                                                          @Param("facilityTypeCode") String facilityTypeCode);
 
   @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id",
-    "WHERE programId = #{id} AND p.fullSupply = FALSE"})
+    "WHERE programId = #{id} AND pp.fullSupply = FALSE"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "product", column = "productId", javaType = Product.class,
