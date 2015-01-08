@@ -105,6 +105,7 @@ public class RnrLineItem extends LineItem {
     this.productCategoryDisplayOrder = category.getDisplayOrder();
     this.populateFromProduct(programProduct);
     this.dosesPerMonth = programProduct.getDosesPerMonth();
+
     this.modifiedBy = modifiedBy;
     this.createdBy = createdBy;
   }
