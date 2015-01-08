@@ -14,14 +14,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Manufacturer extends BaseModel {
 
     private String name;
@@ -33,5 +36,19 @@ public class Manufacturer extends BaseModel {
     private String specialization;
     private String geographicCoverage;
     private Date registrationDate;
+
+    private String formatDate(Date date){
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
+            return date == null ? null : simpleDateFormat.format(date);
+        }catch(Exception exp){
+
+        }
+        return null;
+    }
+
+    public String getRegistrationDateString()  {
+        return formatDate(this.registrationDate);
+    }
 
 }

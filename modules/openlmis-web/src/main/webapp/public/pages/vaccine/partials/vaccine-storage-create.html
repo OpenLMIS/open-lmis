@@ -9,10 +9,7 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-<div ng-hide="vaccineStorage.id"><h2>Vaccine Storage Information</h2></div>
-<div ng-show="vaccineStorage.id">
-    <h2>Vaccine Storage Information</h2>
-</div>
+        <h2><span openlmis-message="label.vaccine.storage.title"></span></h2>
 
 <form ng-submit="createVaccineStorage()" id="vaccineStorageForm" name="vaccineStorageForm"
       select2-blur>
@@ -22,7 +19,7 @@
             <div class="form-row clearfix">
                 <div class="form-cell">
 
-                    <label for="storageType">Cold Chain Storage Type: <span class="label-required"> *</span></label>
+                    <label for="storageType" openlmis-message="label.vaccine.storage.coldChainStorageType"> <span class="label-required"> *</span></label>
 
                     <div class="form-field">
 
@@ -37,7 +34,7 @@
                     </div>
                 </div>
                 <div class="form-cell">
-                    <label for="locationCode">Location Code: <span class="label-required"> *</span></label>
+                    <label for="locationCode"  openlmis-message="label.vaccine.storage.locationCode"> <span class="label-required"> *</span></label>
 
                     <div class="form-field">
                         <input ng-model="vaccineStorage.location" name="locationCode" id="locationCode" type="text"
@@ -55,7 +52,7 @@
                 <!--start-->
                 <div class="form-cell">
 
-                    <label for="faciliyt">Facility: <span class="label-required"> *</span></label>
+                    <label for="faciliyt" openlmis-message="label.vaccine.storage.facility"><span class="label-required"> *</span></label>
 
                     <div class="form-field">
 
@@ -70,7 +67,7 @@
                     </div>
                 </div>
                 <div class="form-cell">
-                    <label for="locationName">Location Name: <span class="label-required"> *</span></label>
+                    <label for="locationName" openlmis-message="label.vaccine.storage.locationName"><span class="label-required"> *</span></label>
 
                     <div class="form-field">
                         <input ng-model="vaccineStorage.name" name="locationName" id="locationName" type="text"
@@ -87,7 +84,7 @@
                 </div>
                 <!--end-->
                 <div class="form-cell">
-                    <label for="grossCapacity">Gross Capacity(liters): <span class="label-required"> *</span></label>
+                    <label for="grossCapacity"  openlmis-message="label.vaccine.storage.grossCapacity"><span class="label-required"> *</span></label>
 
                     <div class="form-field">
                         <input ng-model="vaccineStorage.grossCapacity" name="grossCapacity" id="grossCapacity" type="text"
@@ -103,7 +100,7 @@
                     </div>
                 </div>
                 <div class="form-cell">
-                    <label for="dimension">Dimension: <span class="label-required"> *</span></label>
+                    <label for="dimension" openlmis-message="label.vaccine.storage.dimension"> <span class="label-required"> *</span></label>
 
                     <div class="form-field">
                         <input ng-model="vaccineStorage.dimension" name="dimension" id="dimension" type="text"
@@ -119,7 +116,7 @@
                     </div>
                 </div>
                 <div class="form-cell">
-                    <label for="netCapacity">Net Capacity(liters): <span class="label-required"> *</span></label>
+                    <label for="netCapacity" openlmis-message="label.vaccine.storage.netCapacity"><span class="label-required"> *</span></label>
 
                     <div class="form-field">
                         <input ng-model="vaccineStorage.netCapacity" name="netCapacity" id="netCapacity" type="text"
@@ -135,7 +132,7 @@
                     </div>
                 </div>
                 <div class="form-cell">
-                    <label for="temperature">Temperature: <span class="label-required"> *</span></label>
+                    <label for="temperature" openlmis-message="label.vaccine.storage.temprature"><span class="label-required"> *</span></label>
 
                     <div class="form-field">
 
@@ -158,7 +155,7 @@
             </div>
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
-                    <input ng-disabled="countriesForm.$invalid" type="submit" class="btn btn-primary save-button" value="Save"/>
+                    <input ng-disabled="countriesForm.$invalid" type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
                     <a ng-click="cancelEdit()" class="btn btn-cancel cancel-button"><span
                             openlmis-message="button.cancel"></span></a>
                 </div>
