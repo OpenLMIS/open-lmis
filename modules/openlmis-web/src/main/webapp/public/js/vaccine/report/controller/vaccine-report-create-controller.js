@@ -88,6 +88,16 @@ function CreateVaccineReportController($scope, $location, $filter, report, Vacci
     $scope.campaignsModal=false;
   };
 
+  $scope.getColSpan = function(){
+   if( $scope.report.trackCampaignCoverage && $scope.report.trackOutreachCoverage){
+     return 3;
+   }
+   if($scope.report.trackCampaignCoverage || $scope.report.trackOutreachCoverage){
+     return 2;
+   }
+    return 1;
+  };
+
 }
 CreateVaccineReportController.resolve = {
   report: function($q, $timeout, $route, VaccineReport) {
