@@ -175,7 +175,7 @@ public class GeoDataController extends BaseController {
                 this.geographicZoneReportMapper.getFacilitiesEquipments(program, zone,  facilityType, facility, equipmentType, userId, equipment));
     }
 
-    @RequestMapping(value="/facilitiesEquipmentsStatusGeo2", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value="/facilitiesEquipmentsStatusGeo", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilitiesLabEquipmentStatus2(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
                                                                              @RequestParam(value = "zone", required = true, defaultValue = "0") Long zone,
                                                                              @RequestParam(value = "facilityType", required = true, defaultValue = "0") Long facilityType,
@@ -187,7 +187,7 @@ public class GeoDataController extends BaseController {
     ){
         Long userId = loggedInUserId(request);
         return  OpenLmisResponse.response("equipmentsStatus", this.geographicZoneReportMapper
-                .getFacilityEquipmentStatusGeo2(program, zone,  facilityType, facility, equipmentType, userId, equipment));
+                .getFacilityEquipmentStatusGeo(program, zone,  facilityType, facility, equipmentType, userId, equipment));
     }
 
     @RequestMapping(value="/facilitiesByEquipmentOperationalStatus", method = GET, headers = BaseController.ACCEPT_JSON)
