@@ -17,19 +17,29 @@
         <div class="alert alert-info" id="noOrdersPresent" ng-hide="orders && orders.length">
             <span openlmis-message="message.no.order"></span>
         </div>
-        <input id="searchPodList" class="search-query input-xxlarge" type="text" ng-model="query"
-               ng-keyup="showPodSearch()" openlmis-message="placeholder.search"/>
 
-        <div class="form-tip" openlmis-message="search.threeCharacters"></div>
-        <!--<div class="facility-list" ng-show="query.length > 2">-->
-            <!--<div ng-switch on="resultCount">-->
-                <!--<h3 ng-switch-when="0" openlmis-message="msg.no.matches|query"></h3>-->
+        <!--<div class="form-row clearfix">-->
+          <!--<div class="form-cell">-->
+            <!--<label id="associatedFacilityLabel">-->
+              <!--<span openlmis-message="manage.pod.facility"></span>-->
+            <!--</label>-->
 
-                <!--<h3 ng-switch-when="1" openlmis-message="msg.one.match|query"></h3>-->
-
-                <!--<h3 ng-switch-default openlmis-message="msg.many.matches|resultCount|query"></h3>-->
+            <!--<div class="form-field input-div associate-facility suggest-field">-->
+              <!--<div id="associatedFacilityField" ng-click="toggleSlider()" class="clearfix">-->
+                <!--<div class="facility-associated">-->
+                  <!--<span class="placeholder" ng-show="!facilitySelected" openlmis-message="label.no.facility.selected"></span>-->
+                  <!--<span ng-show="facilitySelected">{{facilitySelected.code}} - {{facilitySelected.name}}</span>-->
+                <!--</div>-->
+                <!--<a href="" class="btn" ng-show="!facilitySelected">-->
+                  <!--<i class="icon icon-ellipsis-horizontal"></i>-->
+                <!--</a>-->
+              <!--</div>-->
+              <!--<a id="clearFacility" ng-show="facilitySelected"-->
+                 <!--href="" class="clear-search" ng-click="void()"></a>-->
             <!--</div>-->
-            <!--<a class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>-->
-        <div ng-show="filteredOrdersForPOD && filteredOrdersForPOD.length" class="gridStyle" ng-grid="gridOptions"></div>
+          <!--</div>-->
+        <!--</div>-->
+
+        <div ng-show="orders && orders.length" class="gridStyle" ng-grid="gridOptions"></div>
     </div>
 </div>

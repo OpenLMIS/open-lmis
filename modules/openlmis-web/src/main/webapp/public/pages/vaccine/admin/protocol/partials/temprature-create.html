@@ -9,9 +9,8 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-    <div ng-hide="donor.id"><h2>Temprature Information</h2></div>
-    <div ng-show="donor.id">
-        <h2>Temprature Storage Information</h2>
+    <div >
+        <h2 openlmis-message="header.vaccine.temprature.title"></h2>
     </div>
 
     <form ng-submit="createTemperature()" id="tempratureForm" name="tempratureForm"
@@ -22,7 +21,7 @@
                 <div class="form-row clearfix">
                     <div class="form-cell">
 
-                        <label for="tempratureName">Temprature Name: <span class="label-required"> *</span></label>
+                        <label for="tempratureName" openlmis-message="label.vaccine.temprature.tempratureName"> <span class="label-required"> *</span></label>
 
                         <div class="form-field">
                             <input ng-model="temprature.tempratureName" name="tempratureName" id="tempratureName" type="text"
@@ -46,7 +45,7 @@
             </div>
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
-                    <input ng-disabled="tempratureForm.$invalid" type="submit" class="btn btn-primary save-button" value="Save"/>
+                    <input ng-disabled="tempratureForm.$invalid" type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
 
                     <a ng-click="cancelCreate()" class="btn btn-cancel cancel-button"><span
                             openlmis-message="button.cancel"></span></a>

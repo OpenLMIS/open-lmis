@@ -12,15 +12,15 @@
 
 <div class="container-fluid">
 
-    <div>
-        <h2>Country Information</h2>
+    <div >
+        <h2 openlmis-message="header.vaccine.countries.header"></h2>
     </div>
 
-    <h2><span>{{title}}</span>
+
         <a href="#countries-create" id="country-add-new"
            class="pull-right btn btn-primary"
            ng-disabled="AddEditMode"
-                >Add New</a>
+           openlmis-message="button.vaccine.addNew" ></a>
     </h2>
 
     <input id="searchCountries" class="search-query input-xxlarge" type="text" ng-model="query"
@@ -59,21 +59,21 @@
 
         <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
             <tr>
-                <td>No data to show under selected filters</td>
+                <td openlmis-message="message.vaccine.noDataToshowInDatatable"></td>
             </tr>
         </table>
         <table class="table table-striped table-bordered" ng-table="tableParams" >
             <thead>
             <tr class="gradient-header">
-                <th data-title="'Name'" style="width:20px" sortable="name">Name
+                <th data-title="'Name'" style="width:20px" sortable="name" openlmis-message="label.vaccine.countries.name">
                 </th>
-                <th>Long Name
+                <th openlmis-message="label.vaccine.countries.longName">
                 </th>
-                <th>ISO Code2
+                <th openlmis-message="label.vaccine.countries.ISOCode2">
                 </th>
-                <th>ISO Code3
+                <th openlmis-message="label.vaccine.countries.ISOCode3">
                 </th>
-                <th>Action
+                <th openlmis-message="label.vaccine.countries.action">
                 </th>
             </tr>
             </thead>
@@ -92,8 +92,8 @@
                     <div>{{c1.isoCode3}}</div>
                 </td>
                 <td data-title="'Action'" style="width:100px">
-                    <a href="" ng-click="editCountries(c1.id)">Edit</a>|
-                    <a id="showDeleteConfirmDialog1{{$index}}" href="" ng-click="showDeleteConfirmDialog(c1)">Delete</a>
+                    <a href="" ng-click="editCountries(c1.id)" openlmis-message="button.edit"></a>|
+                    <a id="showDeleteConfirmDialog1{{$index}}" href="" ng-click="showDeleteConfirmDialog(c1)" openlmis-message="button.delete"></a>
                 </td>
 
 

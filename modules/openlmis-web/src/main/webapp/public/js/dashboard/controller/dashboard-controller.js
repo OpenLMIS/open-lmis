@@ -9,7 +9,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdminDashboardController($scope,$timeout,$filter,$location,userPreferredFilters,dashboardMenuService,FlatGeographicZoneList,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,ReportingPerformance,formInputValue,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneTree, OrderFillRate, ItemFillRate, StockEfficiency, SyncDashboard,AuthorizationService) {
+function AdminDashboardController($scope,$timeout,$filter,$location,userPreferredFilters,messageService,dashboardMenuService,FlatGeographicZoneList,dashboardFiltersHistoryService,UserGeographicZoneTree,programsList,ReportingPerformance,formInputValue,ReportSchedules, ReportPeriods, ReportProductsByProgram, OperationYears, ReportPeriodsByScheduleAndYear, FacilitiesByGeographicZoneTree, OrderFillRate, ItemFillRate, StockEfficiency, SyncDashboard,AuthorizationService) {
 
     initialize();
 
@@ -337,10 +337,10 @@ function AdminDashboardController($scope,$timeout,$filter,$location,userPreferre
 
                      if(reporting.total > 0){
                          //var colors = {R:"#078B07",N:"#CC0505", L:"#FFFF05"};
-                         $scope.reportingChartData[0] = {label: 'reporting',
+                         $scope.reportingChartData[0] = {label: messageService.get('label.district.reporting.status.reporting'),
                              data: reporting.reporting,
                              color: "#078B07"};
-                         $scope.reportingChartData[1] = {label: 'nonreporting',
+                         $scope.reportingChartData[1] = {label: messageService.get('label.district.reporting.status.nonReporting'),
                              data: reporting.nonReporting,
                              color: "#CC0505"};
                          $scope.reportingRenderedData = {
