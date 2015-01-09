@@ -118,7 +118,7 @@ function CreateVendorController($scope, $routeParams, $location, $dialog, messag
             body: "Please confirm that you want to delete vendor with name: <strong>" + $scope.vendorToRemove.name +'</strong>?'
         };
         OpenLmisDialog.newDialog(options, $scope.removeVendorConfirm, $dialog, messageService);
-    }
+    };
 
     $scope.removeVendorConfirm = function (result) {
         if (result) {
