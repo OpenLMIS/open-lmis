@@ -16,10 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.*;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.dto.CoverageLineItemDTO;
@@ -42,6 +39,9 @@ public class VaccineReport extends BaseModel {
   private Facility facility;
 
   private Boolean trackCampaignCoverage;
+  private Boolean trackOutreachCoverage;
+
+  private List<ConfigurationSetting> tabVisibilitySettings;
 
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;
