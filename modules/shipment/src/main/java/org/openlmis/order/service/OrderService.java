@@ -232,7 +232,7 @@ public class OrderService {
     return pageSize;
   }
 
-  public List<Order> searchByStatusAndRight(Long userId, String rightName, List<OrderStatus> statuses) {
+  public List<Order> searchByStatusAndRight(Long userId, String rightName, List<OrderStatus> statuses, Long programId, Long facilityId) {
     List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, rightName);
 
     List<Order> orders = orderRepository.searchByWarehousesAndStatuses((List<Long>) collect(fulfilmentRolesWithRight, new Transformer() {
@@ -240,7 +240,7 @@ public class OrderService {
       public Object transform(Object o) {
         return ((FulfillmentRoleAssignment) o).getFacilityId();
       }
-    }), statuses);
+    }), statuses,programId, facilityId);
 
     orders = fillOrders(orders);
     sort(orders);
