@@ -92,4 +92,8 @@ public class ConfigurationSettingService {
     setting.setValue(value.toString());
     configurationSettingRepository.setValue(setting);
   }
+
+  public List<ConfigurationSetting> getSearchResults(String s) {
+    return configurationSettingRepository.getSearchResults(s);
+  }
 }

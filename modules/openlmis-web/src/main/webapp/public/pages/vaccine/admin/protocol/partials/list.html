@@ -18,46 +18,39 @@
     </select>
   </div>
 </div>
-<div ng-show="program">
-  <div class="form-group">
-    <div class="pull-right">
-      <span openlmis-message="label.vaccine.coverage.check.campaign"></span>: <input type="checkbox" ng-model="protocol.trackCampaign" />
-    </div>
-    <p><span openlmis-message="label.vaccine.coverage.check.doses"></span></p>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th class="span5"><span openlmis-message="label.vaccine.coverage.product"></span></th>
-          <th><span openlmis-message="label.vaccine.coverage.dose1"></span></th>
-          <th><span openlmis-message="label.vaccine.coverage.dose2"></span></th>
-          <th><span openlmis-message="label.vaccine.coverage.dose3"></span></th>
-          <th><span openlmis-message="label.vaccine.coverage.dose4"></span></th>
-          <th><span openlmis-message="label.vaccine.coverage.dose5"></span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="product in protocol.protocols">
-          <th>{{product.productName}}</th>
-          <td ng-repeat="dose in product.doses">
-            <input type="checkbox" ng-model="dose.isActive" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+<div  ng-show="program">
+<div class="rnr-tabs clearfix">
+  <ul class="clearfix">
+    <li ng-class="{'selected': (visibleTab == 'tabVisibility' || visibleTab == undefined)}">
+      <a href="" ng-click="visibleTab ='tabVisibility'" ><span openlmis-message="label.vaccine.tab.visibility">Tab Visibility</span></a></li>
+    <li  ng-class="{'selected': visibleTab == 'coverage'}">
+      <a href="" ng-click="visibleTab = 'coverage'" ><span openlmis-message="label.vaccine.tab.coverage"></span></a></li>
 
-    <div form-toolbar id="action_buttons" class="action-buttons">
-      <div class="form-cell button-row">
-        <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button" ng-click="save()"
-               openlmis-message="button.save"/>
-        <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
-               ng-click="cancel()"/>
-      </div>
+  </ul>
 
-      <div class="toolbar-error" id="saveErrorMsgDiv">
-        <span openlmis-message="error" ng-show="error"></span>&nbsp;
-        <span ng-show="errorProgram" ng-bind="errorProgram"></span>
-      </div>
-      <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+</div>
+
+  <span ng-show="visibleTab == 'tabVisibility' || visibleTab == undefined">
+    <ng-include src="'/public/pages/vaccine/admin/protocol/partials/tab-settings.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'coverage'">
+    <ng-include src="'/public/pages/vaccine/admin/protocol/partials/coverage.html'"></ng-include>
+  </span>
+
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button" ng-click="save()"
+             openlmis-message="button.save"/>
+      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+             ng-click="cancel()"/>
     </div>
+
+    <div class="toolbar-error" id="saveErrorMsgDiv">
+      <span openlmis-message="error" ng-show="error"></span>&nbsp;
+      <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
   </div>
+
+
 </div>

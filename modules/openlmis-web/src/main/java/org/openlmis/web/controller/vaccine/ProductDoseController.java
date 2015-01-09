@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller.vaccine;
 
+import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.vaccine.dto.VaccineServiceProtocolDTO;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
@@ -35,6 +36,8 @@ public class ProductDoseController extends BaseController{
     VaccineServiceProtocolDTO dto = new VaccineServiceProtocolDTO();
     dto.setProtocols(service.getProductDoseForProgram(programId));
     dto.setTrackCampaign(settingService.getBoolValue("TRACK_VACCINE_CAMPAIGN_COVERAGE"));
+    dto.setTrackOutreach(settingService.getBoolValue("TRACK_VACCINE_OUTREACH_COVERAGE"));
+    dto.setTabVisibilitySettings(settingService.getSearchResults("VACCINE_TAB%"));
     return OpenLmisResponse.response("protocol",dto );
   }
 
@@ -43,6 +46,10 @@ public class ProductDoseController extends BaseController{
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineServiceProtocolDTO protocol){
     service.save( protocol.getProtocols() );
     settingService.saveBooleanValue("TRACK_VACCINE_CAMPAIGN_COVERAGE", protocol.getTrackCampaign());
+    settingService.saveBooleanValue("TRACK_VACCINE_OUTREACH_COVERAGE", protocol.getTrackOutreach());
+    for(ConfigurationSetting setting: protocol.getTabVisibilitySettings()){
+      settingService.saveBooleanValue(setting.getKey(), Boolean.parseBoolean(setting.getValue()));
+    }
     return OpenLmisResponse.response("status","success");
   }
 
