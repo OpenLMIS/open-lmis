@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateVendorController($scope, $routeParams, $location, $dialog, messageService, Vendor, SaveVendor, UserListForVendor, UserListAvailableForVendor, SaveVendorUserAssociation, RemoveVendorUserAssociation) {
+function CreateVendorController($scope, $routeParams, $location, $dialog, messageService, Vendor, SaveVendor, UserListForVendor, UserListAvailableForVendor, SaveVendorUserAssociation, RemoveVendorUserAssociation, DeleteVendor) {
     $scope.vendorUser = {};
     $scope.loadUsersForVendor = function(){
         UserListForVendor.get({id:$routeParams.id},function(data){
@@ -110,4 +110,31 @@ function CreateVendorController($scope, $routeParams, $location, $dialog, messag
         RemoveVendorUserAssociation.get({userId: $scope.userToRemove.id, vendorId: $scope.current.id});
     };
 
+    $scope.showDeleteVendorConfirmDialog = function(vendor){
+        $scope.vendorToRemove = vendor;
+        var options = {
+            id: "deleteVendorConfirmDialog",
+            header: "Confirmation",
+            body: "Please confirm that you want to delete vendor with name: <strong>" + $scope.vendorToRemove.name +'</strong>?'
+        };
+        OpenLmisDialog.newDialog(options, $scope.removeVendorConfirm, $dialog, messageService);
+    }
+
+    $scope.removeVendorConfirm = function (result) {
+        if (result) {
+            DeleteVendor.get({ id: $scope.vendorToRemove.id}, function(){
+                $scope.$parent.message = 'Vendor deleted successfully';
+                $location.path('/');
+
+            }, function(data){
+                $scope.error = data.data.error;
+                console.log(data.data.error);
+            });
+
+        }
+
+
+        //$scope.vendorToRemove = undefined;
+        //$scope.loadAvailableUsersForVendor();
+    };
 }

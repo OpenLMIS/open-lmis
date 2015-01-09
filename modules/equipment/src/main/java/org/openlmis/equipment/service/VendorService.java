@@ -15,6 +15,7 @@ import org.openlmis.equipment.domain.Vendor;
 import org.openlmis.equipment.repository.EquipmentRepository;
 import org.openlmis.equipment.repository.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -40,4 +41,15 @@ public class VendorService {
       repository.update(vendor);
     }
   }
+
+    public void removeVendor(Long id) {
+
+        try {
+            repository.remove(id);
+        }
+        catch(DataIntegrityViolationException ex){
+            throw(ex);
+        }
+
+    }
 }

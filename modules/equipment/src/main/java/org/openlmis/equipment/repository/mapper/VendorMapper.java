@@ -10,10 +10,7 @@
 
 package org.openlmis.equipment.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.domain.Vendor;
 import org.springframework.stereotype.Repository;
@@ -39,4 +36,7 @@ public interface VendorMapper {
       "name = #{name}, website = #{website}, contactPerson = #{contactPerson}, primaryPhone = #{primaryPhone}, email = #{email}, description = #{description}, specialization = #{specialization}, geographicCoverage = #{geographicCoverage}, registrationDate = #{registrationDate}, modifiedBy = #{modifiedBy}, modifiedDate = NOW()" +
       " WHERE id = #{id}")
   void update(Vendor vendor);
+
+  @Delete("DELETE FROM equipment_service_vendors WHERE ID = #{id}")
+  void remove(Long id);
 }
