@@ -108,7 +108,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
             geojson: {
                 data: json,
                 style: $scope.style,
-                //onEachFeature: onEachFeature,
+
                 resetStyleOnMouseout: true
             }
         });
@@ -116,13 +116,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
         $scope.$apply();
     };
 
-    function onEachFeature(feature, layer) {
 
-        layer.on({
-            click: zoomToFeature
-        });
-        layer.bindPopup(popupFormat(feature));
-    }
 
     function popupFormat(facility, equipmentStatus) {
 
@@ -143,10 +137,6 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
             '<table class="table table-bordered" style="width: 450px">' +
             '<tr><th>Serial No.</th><th>Equipment Name</th><th>Status</th></tr>' + popUpContent +
             '</table>';
-    }
-
-    function zoomToFeature(e) {
-        //todo: complete this
     }
 
     $scope.OnFilterChanged = function () {
@@ -180,7 +170,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
     //===== GIS =============
     var addressPointsToMarkers2 = function () {
 
-        $.getJSON('/gis/facilitiesEquipmentsStatusGeo2.json', $scope.filter, function (data) {
+        $.getJSON('/gis/facilitiesEquipmentsStatusGeo.json', $scope.filter, function (data) {
 
             plotMarkers(data);
 
@@ -275,10 +265,7 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
                });
                 $scope.pieChartSummary = $scope.FacilityEquipStatusPieChartData;
             }
-
-
         });
-
     };
 
 

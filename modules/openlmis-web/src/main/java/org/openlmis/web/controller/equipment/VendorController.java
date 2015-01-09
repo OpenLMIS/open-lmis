@@ -11,6 +11,7 @@
 package org.openlmis.web.controller.equipment;
 
 
+import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.ServiceType;
 import org.openlmis.equipment.domain.Vendor;
 import org.openlmis.equipment.service.ServiceTypeService;
@@ -18,14 +19,21 @@ import org.openlmis.equipment.service.VendorService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
+import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -56,4 +64,19 @@ public class VendorController extends BaseController {
     }
     return OpenLmisResponse.response("status","success");
   }
+
+    @RequestMapping(value="delete/{id}",method = GET,headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value="id") Long vendorId, HttpServletRequest request){
+        ResponseEntity<OpenLmisResponse> successResponse;
+        try {
+            service.removeVendor(vendorId);
+        } catch (DataIntegrityViolationException ex) {
+            return OpenLmisResponse.error("Can't delete vendor. Data already in use.", HttpStatus.BAD_REQUEST);
+        }
+        catch (DataException e) {
+            return error(e, HttpStatus.BAD_REQUEST);
+        }
+        successResponse = success(String.format("Vendor has been successfully removed"));
+        return successResponse;
+    }
 }

@@ -42,4 +42,7 @@ public class VendorRepository {
   public void update(Vendor vendor){
     mapper.update(vendor);
   }
+
+    public void remove(Long id) { mapper.remove(id);
+    }
 }
