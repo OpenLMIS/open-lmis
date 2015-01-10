@@ -46,10 +46,10 @@
         <input  numeric-validator="positiveInteger"  ng-disabled="!dose.isActive" ng-model="dose.regular" type="text" />
       </td>
       <td ng-show="report.trackOutreachCoverage" class="cell-input col-beginningBalance">
-        <input ng-disabled="!dose.isActive" ng-model="dose.outreach" type="text" />
+        <input numeric-validator="positiveInteger" ng-disabled="!dose.isActive" ng-model="dose.outreach" type="text" />
       </td>
       <td ng-show="report.trackCampaignCoverage" class="cell-input col-beginningBalance" ng-repeat-end>
-        <input ng-disabled="!dose.isActive" ng-model="dose.campaign" type="text" />
+        <input numeric-validator="positiveInteger" ng-disabled="!dose.isActive" ng-model="dose.campaign" type="text" />
       </td>
     </tr>
   </table>

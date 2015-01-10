@@ -240,7 +240,7 @@ public class OrderService {
       public Object transform(Object o) {
         return ((FulfillmentRoleAssignment) o).getFacilityId();
       }
-    }), statuses,programId, facilityId);
+    }), statuses, programId, facilityId);
 
     orders = fillOrders(orders);
     sort(orders);

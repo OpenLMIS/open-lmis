@@ -20,9 +20,12 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
       $scope.facilities = data.facilities;
     });
 
-    OrdersForManagePOD.get({program: $scope.filter.program}, function (data) {
-      $scope.orders = data.ordersForPOD || [];
-    });
+    if($scope.option.all){
+      OrdersForManagePOD.get({program: $scope.filter.program}, function (data) {
+        $scope.orders = data.ordersForPOD || [];
+      });
+    }
+
   };
 
   $scope.onFacilityChanged = function(){
