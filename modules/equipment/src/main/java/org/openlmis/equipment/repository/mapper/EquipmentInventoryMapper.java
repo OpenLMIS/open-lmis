@@ -36,18 +36,19 @@ public interface EquipmentInventoryMapper {
       " ( facilityId, equipmentId, programId, operationalStatusId, serialNumber, manufacturerName, model" +
       ", energySource, yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
       ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned, hasServiceContract, serviceContractEndDate" +
-      ", primaryDonorId, createdBy, createdDate, modifiedBy, modifiedDate) " +
+      ", primaryDonorId, dimension, capacity, minTemperature, maxTemperature, accessories , createdBy, createdDate, modifiedBy, modifiedDate) " +
       "values " +
       " ( #{facilityId}, #{equipmentId}, #{programId}, #{operationalStatusId}, #{serialNumber}, #{manufacturerName}, #{model}" +
       ", #{energySource}, #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
       ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}, #{hasServiceContract}, #{serviceContractEndDate} " +
-      ", #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+      ", #{primaryDonorId}, #{dimension}, #{capacity}, #{minTemperature}, #{maxTemperature}, #{accessories} , #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   void insert(EquipmentInventory inventory);
 
   @Update("UPDATE facility_program_equipments " +
       "SET " +
       " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, operationalStatusId = #{operationalStatusId}, serialNumber = #{serialNumber}, manufacturerName = #{manufacturerName}, model = #{model}, energySource = #{energySource}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, sourceOfFund = #{sourceOfFund},replacementRecommended = #{replacementRecommended},reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, dateLastAssessed = #{dateLastAssessed} " +
-      " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, hasServiceContract = #{hasServiceContract}, serviceContractEndDate = #{serviceContractEndDate} , primaryDonorId = #{primaryDonorId}" +
+      " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, hasServiceContract = #{hasServiceContract}, serviceContractEndDate = #{serviceContractEndDate} , primaryDonorId = #{primaryDonorId} " +
+      " , dimension = #{dimension},capacity = #{capacity}, minTemperature = #{minTemperature}, maxTemperature = #{maxTemperature}, accessories = #{accessories} " +
       " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
       " WHERE id = #{id}")
   void update(EquipmentInventory inventory);
