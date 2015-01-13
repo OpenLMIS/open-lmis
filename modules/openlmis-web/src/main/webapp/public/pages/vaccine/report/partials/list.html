@@ -23,12 +23,10 @@
     <select ui-select2
             id="programListMyFacility" class="span3"
           ng-model="filter.program"   ng-change="onProgramChanged()">
-
+      <option>Select Program</option>
       <option value="{{program.id}}" ng-repeat="program in programs">{{program.name}}</option>
     </select>
   </div>
-
-
   <div class="row-fluid">
     <div class="span12">
       <label openlmis-message="label.facility"></label>
@@ -38,6 +36,7 @@
     <select ui-select2
             id="facility" class="span3"
            ng-model="filter.facility"  ng-change="onFacilityChanged()">
+      <option>Select Facility</option>
       <option value="{{facility.id}}" ng-repeat="facility in facilities">{{facility.name}}</option>
 
     </select>

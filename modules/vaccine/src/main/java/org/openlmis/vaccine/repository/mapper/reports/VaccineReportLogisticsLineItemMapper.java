@@ -51,7 +51,7 @@ public interface VaccineReportLogisticsLineItemMapper {
     "WHERE id = #{id} ")
   void update(LogisticsLineItem lineItem);
 
-  @Select("select * from vaccine_report_logistics_line_items where reportId = #{reportId}")
+  @Select("select * from vaccine_report_logistics_line_items where reportId = #{reportId} order by id")
     @Results(value = {
       @Result(property = "productId", column = "productId"),
       @Result(property = "product", column = "productId", javaType = Product.class,

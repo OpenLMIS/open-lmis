@@ -58,7 +58,7 @@ public interface VaccineReportColdChainMapper {
     "   join facility_program_equipments e on e.id = i.equipmentInventoryId " +
     "   join equipments eq on eq.id = e.equipmentId " +
     " where " +
-    " i.reportId = #{reportId}")
+    " i.reportId = #{reportId} order by i.id")
   List<ColdChainLineItem> getLineItems(@Param("reportId") Long reportId);
 
   @Select("select e.id as equipmentInventoryId, eq.name as equipmentName, e.model as model, e.serialNumber as serial, e.energySource " +
@@ -66,6 +66,7 @@ public interface VaccineReportColdChainMapper {
     "   facility_program_equipments e " +
     "     join equipments eq on eq.id = e.equipmentId " +
     "   where" +
-    "  e.programId = #{programId} and e.facilityId = #{facilityId}")
+    "  e.programId = #{programId} and e.facilityId = #{facilityId} " +
+    " order by eq.name")
   List<ColdChainLineItem> getNewEquipmentLineItems(@Param("programId")Long programId, @Param("facilityId") Long facilityId);
 }

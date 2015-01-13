@@ -13,6 +13,7 @@ package org.openlmis.vaccine.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ConfigurationSetting;
 
 import java.util.List;
 
@@ -22,6 +23,8 @@ import java.util.List;
 public class VaccineServiceProtocolDTO {
 
   private Boolean trackCampaign;
+  private Boolean trackOutreach;
+  private List<ConfigurationSetting> tabVisibilitySettings;
   private List<ProductDoseProtocolDTO> protocols;
 
 }

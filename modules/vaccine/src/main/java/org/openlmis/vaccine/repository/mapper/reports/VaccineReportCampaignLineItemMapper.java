@@ -55,6 +55,7 @@ public interface VaccineReportCampaignLineItemMapper {
     " WHERE id = #{id}")
   void update(CampaignLineItem lineItem);
 
-  @Select("SELECT e.* from vaccine_report_campaign_line_items e where reportId = #{reportId}")
+  @Select("SELECT e.* from vaccine_report_campaign_line_items e where reportId = #{reportId} " +
+    " order by id")
   List<CampaignLineItem> getLineItems(@Param("reportId") Long reportId);
 }

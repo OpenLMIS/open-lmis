@@ -20,6 +20,8 @@
     <import resource="classpath:/applicationContext-requisition.xml"/>
     <context:component-scan base-package="org.openlmis.restapi"/>
 
+    <!--<bean class="com.mangofactory.swagger.configuration.SpringSwaggerConfig"></bean>-->
+
     <bean id="restAuthenticationManager" class="org.springframework.security.authentication.ProviderManager">
         <constructor-arg>
             <list>

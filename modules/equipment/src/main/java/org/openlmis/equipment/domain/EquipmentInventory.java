@@ -54,6 +54,11 @@ public class EquipmentInventory extends BaseModel {
   private Boolean isActive;
   private Date dateDecommissioned;
   private Date dateLastAssessed;
+  private Long capacity;
+  private Long minTemperature;
+  private Long maxTemperature;
+  private String dimension;
+  private String accessories;
 
   private String formatDate(Date date){
     try {

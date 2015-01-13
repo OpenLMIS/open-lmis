@@ -33,5 +33,6 @@ public class VaccineCoverageItem extends BaseModel{
   private Long doseId;
   private Long regular;
   private Long outreach;
+  private Long campaign;
 
 }

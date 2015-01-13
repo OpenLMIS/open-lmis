@@ -72,6 +72,10 @@ services.factory('SaveVendor', function ($resource) {
     return $resource('/equipment/vendor/save.json', {}, {});
 });
 
+services.factory('DeleteVendor', function ($resource) {
+    return $resource('/equipment/vendor/delete/:id.json', {}, {});
+});
+
 /* Contract management  */
 services.factory('Contracts', function ($resource) {
     return $resource('/equipment/service-contracts/list.json', {}, {});

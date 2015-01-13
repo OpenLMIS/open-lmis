@@ -56,7 +56,7 @@ public class ConfigurationSettingMapperIT {
 
   @Test
   public void shouldGetAll() throws Exception {
-    ResultSet resultSet = queryExecutor.execute("select count(*) count from configuration_settings");
+    ResultSet resultSet = queryExecutor.execute("select count(*) count from configuration_settings where isConfigurable");
     resultSet.next();
     int expectedCount = resultSet.getInt("count");
 

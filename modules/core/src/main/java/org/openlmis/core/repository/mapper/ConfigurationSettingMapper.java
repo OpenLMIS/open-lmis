@@ -10,6 +10,7 @@
 
 package org.openlmis.core.repository.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.domain.ConfigurationSetting;
@@ -26,8 +27,12 @@ public interface ConfigurationSettingMapper {
   @Select("SELECT * FROM configuration_settings WHERE LOWER(key) = LOWER(#{key})")
   ConfigurationSetting getByKey(String key);
 
-  @Select("SELECT * FROM configuration_settings order by groupName, displayOrder, name")
+  @Select("SELECT * FROM configuration_settings where isConfigurable = true order by groupName, displayOrder, name")
   List<ConfigurationSetting> getAll();
+
+
+  @Select("SELECT * FROM configuration_settings where key like #{searchString} order by groupName, displayOrder, name")
+  List<ConfigurationSetting> getSearchResults(@Param("searchString")String searchString);
 
   @Update("UPDATE configuration_settings set value = #{value} where KEY = #{key} ")
   void updateValue(ConfigurationSetting config );

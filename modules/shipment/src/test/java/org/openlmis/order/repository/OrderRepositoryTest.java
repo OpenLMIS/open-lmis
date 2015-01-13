@@ -147,11 +147,11 @@ public class OrderRepositoryTest {
   @Test
   public void shouldSearchOrdersByWarehouseIdsAndStatuses() throws Exception {
     List<Order> expectedOrders = asList(new Order());
-    when(orderMapper.getByWarehouseIdsAndStatuses("{3, 6}", "{RELEASED, READY_TO_PACK}")).thenReturn(expectedOrders);
+    when(orderMapper.getByWarehouseIdsAndStatuses("{3, 6}", "{RELEASED, READY_TO_PACK}",1L)).thenReturn(expectedOrders);
 
-    List<Order> actualOrders = orderRepository.searchByWarehousesAndStatuses(asList(3l, 6l), asList(RELEASED, READY_TO_PACK));
+    List<Order> actualOrders = orderRepository.searchByWarehousesAndStatuses(asList(3l, 6l), asList(RELEASED, READY_TO_PACK),1L,0L);
 
-    verify(orderMapper).getByWarehouseIdsAndStatuses("{3, 6}", "{RELEASED, READY_TO_PACK}");
+    verify(orderMapper).getByWarehouseIdsAndStatuses("{3, 6}", "{RELEASED, READY_TO_PACK}",1L);
     assertThat(actualOrders, is(expectedOrders));
   }
 }

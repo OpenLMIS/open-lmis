@@ -11,16 +11,20 @@
   <h2>
     <span ng-show="equipment.id" openlmis-message="label.equipment.inventory.edit"></span>
     <span ng-show="equipment.id == undefined" openlmis-message="label.equipment.inventory.add"></span>
+    For
+    <b>{{facility.name}}</b>
   </h2>
 
-  <div>
-    <span class="pull-left">
-      <span openlmis-message="label.equipment.inventory.facility"></span> <b>{{facility.name}}</b>
-    </span>
-  </div>
+  <!--<div>-->
+    <!--<span class="pull-left">-->
+      <!--<span openlmis-message="label.equipment.inventory.facility"></span> <b>{{facility.name}}</b>-->
+    <!--</span>-->
+  <!--</div>-->
   <div class="clearfix"></div>
+
   <form ng-submit="saveEquipment()" name="equipmentForm" novalidate>
     <div class="form-group">
+      <h3 id="basicInformationLabel" openlmis-message="label.basicInformation"></h3>
       <div class="form-row">
         <div class="form-cell">
           <label for="type">
@@ -72,257 +76,90 @@
           <div class="form-cell">
             <label for="serialNumber">
               <span openlmis-message="label.equipment.serial"></span>
-              <span class="label-required">*</span>
             </label>
 
             <div class="form-field">
               <input ng-model="equipment.serialNumber" name="serialNumber" id="serialNumber" type="text" maxlength="50"
-                     ng-required="true"/>
+                     />
               <span class="field-error" ng-show="equipmentForm.serialNumber.$error.required && showError"
                     openlmis-message="missing.value"></span>
             </div>
           </div>
 
           <div class="form-cell">
-            <label for="manuf">
+            <label for="manufacturer">
               <span openlmis-message="label.equipment.manufacturer"></span>
-              <span class="label-required">*</span>
             </label>
 
             <div class="form-field">
-              <input ng-model="equipment.manufacturerName" name="manuf" id="manuf" type="text" maxlength="50"
-                     ng-required="true"/>
+              <input ng-model="equipment.manufacturerName" name="manufacturer" id="manufacturer" type="text" maxlength="50"
+                     />
               <span class="field-error" ng-show="equipmentForm.manuf.$error.required && showError"
                     openlmis-message="missing.value"></span>
             </div>
           </div>
-        </div>
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="donor">
-              <span openlmis-message="label.equipment.primary.donor"></span>
-              <span class="label-required">*</span>
-            </label>
 
-            <div class="form-field">
-              <select style="width: 250px;" ui-select2 ng-model="equipment.primaryDonorId" id="donor" ng-required="true"
-                      name="donor">
-                <option ng-repeat="type in donors" ng-selected="type.id == equipment.primaryDonorId"
-                        value="{{type.id}}">{{type.shortName}}
-                </option>
-              </select>
-              <span class="field-error" ng-show="equipmentForm.donor.$error.required && showError"
-                    openlmis-message="missing.value"></span>
-            </div>
-          </div>
-
-          <div class="form-cell clearfix">
-            <label for="manuf">
-              <span openlmis-message="label.equipment.source.of.fund"></span>
-              <span class="label-required">*</span>
-            </label>
-
-            <div class="form-field">
-              <input ng-model="equipment.sourceOfFund" name="sourceOfFund" id="sourceOfFund" type="text" maxlength="50"
-                     ng-required="true"/>
-              <span class="field-error" ng-show="equipmentForm.sourceOfFund.$error.required && showError"
-                    openlmis-message="missing.value"></span>
-            </div>
-          </div>
-
-          <div class="form-cell">
-            <label for="purchasePrice">
-              <span openlmis-message="label.equipment.purchase.price"></span>
-              <span class="label-required">*</span>
-            </label>
-
-            <div class="form-field">
-              <input ng-model="equipment.purchasePrice" name="purchasePrice" id="purchasePrice" type="number"
-                     maxlength="50" min="0" ng-required="true"/>
-              <span class="field-error" ng-show="equipmentForm.purchasePrice.$error.required && showError"
-                    openlmis-message="missing.value"></span>
-              <span class="field-error"
-                    ng-show="equipmentForm.purchasePrice.$error.min && !equipmentForm.purchasePrice.$error.required && showError">Enter a valid purchase price</span>
-            </div>
-          </div>
-
-        </div>
-        <div class="form-row clearfix">
           <div class="form-cell">
             <label for="source">
               <span openlmis-message="label.equipment.energy.source"></span>
-              <span class="label-required">*</span>
             </label>
 
             <div class="form-field">
               <input ng-model="equipment.energySource" name="source" id="source" type="text" maxlength="50"
-                     ng-required="true"/>
+                     />
               <span class="field-error" ng-show="equipmentForm.source.$error.required && showError"
                     openlmis-message="missing.value"></span>
             </div>
           </div>
+        </div>
+        </div>
 
-          <div class="form-cell">
-            <label for="year">
-              <span openlmis-message="label.equipment.year.of.installation"></span>
-              <span class="label-required">*</span>
-            </label>
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class="accordion">
+            <div class="pull-right control-accordion">
+              <a id="expandAll" href="" onClick="accordion.expandCollapse('expand')" openlmis-message="label.expand.all"></a>
+              &nbsp;/
+              <a id="collapseAll" href="" onClick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all"></a>
+            </div>
 
-            <div class="form-field">
-              <input ng-model="equipment.yearOfInstallation" name="year" id="year" type="number" min="1950"
-                     max="{{max_year}}" ng-required="true"/>
-              <span class="field-error" ng-show="equipmentForm.year.$error.required && showError"
-                    openlmis-message="missing.value"></span>
-              <span class="field-error"
-                    ng-show="(equipmentForm.year.$error.min || equipmentForm.year.$error.max) && showError">Enter a valid Year</span>
+            <div class="clearfix"></div>
+            <div class="accordion-section">
+              <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                <span>
+                  <b>+</b>
+                  <a id="fundingInformation" href="" openlmis-message="label.equipment.group.funding.information"></a>
+                </span>
+              </div>
+              <div class="accordion-body">
+                <ng-include src="'/public/pages/admin/equipment/inventory/partials/funding-information.html'"></ng-include>
+              </div>
+            </div>
+
+            <div class="accordion-section">
+              <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                <span>
+                  <b>+</b>
+                  <a id="assessmentInformation" href="" openlmis-message="label.equipment.group.assessment.information"></a>
+                </span>
+              </div>
+              <div class="accordion-body">
+                <ng-include src="'/public/pages/admin/equipment/inventory/partials/assessment-information.html'"></ng-include>
+              </div>
+            </div>
+            <div class="accordion-section">
+              <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                <span>
+                  <b>+</b>
+                  <a id="coldChainInformation" href="" openlmis-message="label.equipment.group.cold.chain.information"></a>
+                </span>
+              </div>
+              <div class="accordion-body">
+                <ng-include src="'/public/pages/admin/equipment/inventory/partials/cold-chain-information.html'"></ng-include>
+              </div>
             </div>
           </div>
         </div>
-
-        <div class="form-row clearfix">
-
-          <div class="form-cell">
-            <label for="hasServiceContract">
-              <input
-                  ng-model="equipment.hasServiceContract"
-                  name="hasServiceContract"
-                  id="hasServiceContract"
-                  type="checkbox"
-                  />
-              <span openlmis-message="label.equipment.has.service.contract"></span>
-            </label>
-
-            <div class="form-field">
-
-            </div>
-          </div>
-
-          <div class="form-cell">
-            <label for="serviceContractEndDate">
-              <span openlmis-message="label.equipment.end.date.of.service.contract"></span>
-            </label>
-
-            <div class="form-field">
-              <input
-                  ng-model="equipment.serviceContractEndDate"
-                  name="serviceContractEndDate"
-                  id="serviceContractEndDate"
-                  ng-change="blurDateFields();"
-                  ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                  ui-date-format="yy-dd-mm"
-                  />
-
-            </div>
-          </div>
-
-        </div>
-
-        <div class="form-row clearfix">
-          <div class="form-cell">
-            <label for="nameOfAssessor">
-              <span openlmis-message="label.equipment.name.of.assessor"></span>
-              <span class="label-required">*</span>
-            </label>
-
-            <div class="form-field">
-              <input ng-model="equipment.nameOfAssessor" name="nameOfAssessor" id="nameOfAssessor" type="text"
-                     maxlength="50" ng-required="true"/>
-              <span class="field-error" ng-show="equipmentForm.nameOfAssessor.$error.required && showError"
-                    openlmis-message="missing.value"></span>
-            </div>
-          </div>
-
-          <div class="form-cell">
-            <label for="replacementRecommended">
-              <span openlmis-message="label.equipment.date.last.assessed"></span>
-              <span class="label-required">*</span>
-            </label>
-
-            <div class="form-field">
-              <input
-                  ng-model="equipment.dateLastAssessed"
-                  name="dateLastAssessed"
-                  id="dateLastAssessed"
-                  ng-change="blurDateFields();"
-                  ui-date="{maxDate: 'today', dateFormat: 'dd/mm/yy', changeYear: true}"
-                  ui-date-format="yy-dd-mm"
-
-                  ng-required="true"/>
-              <span class="field-error" ng-show="equipmentForm.dateLastAssessed.$error.required && showError"
-                    openlmis-message="missing.value"></span>
-            </div>
-          </div>
-        </div>
-        <div class="form-row clearfix">
-
-          <div class="form-cell">
-            <label for="isActive"><input
-                ng-model="equipment.isActive"
-                name="isActive"
-                id="isActive"
-                type="checkbox"
-                />
-              <span openlmis-message="label.equipment.is.active"></span>
-              <span class="label-required">*</span>
-            </label>
-
-            <div class="form-field">
-
-            </div>
-          </div>
-
-          <div class="form-cell">
-            <label for="dateDecommissioned">
-              <span openlmis-message="label.equipment.date.decommissioned"></span>
-            </label>
-
-            <div class="form-field">
-              <input
-                  ng-model="equipment.dateDecommissioned"
-                  ng-disabled="equipment.isActive"
-                  name="dateDecommissioned"
-                  ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                  ui-date-format="yy-dd-mm"
-                  id="dateDecommissioned">
-              <span class="field-error"
-                    ng-show="equipmentForm.dateDecommissioned.$error.required && showError"
-                    openlmis-message="missing.value"></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row clearfix">
-
-          <div class="form-cell">
-            <label for="replacementRecommended"> <input
-                ng-model="equipment.replacementRecommended"
-                name="replacementRecommended"
-                id="replacementRecommended"
-                type="checkbox"
-                />
-              <span openlmis-message="label.equipment.replacement.recommended"></span>
-
-            </label>
-
-            <div class="form-field">
-
-            </div>
-          </div>
-
-          <div class="form-cell">
-            <label for="reasonForReplacement">
-              <span openlmis-message="label.equipment.reason.for.replacement"></span>
-            </label>
-
-            <div class="form-field">
-              <textarea ng-model="equipment.reasonForReplacement" ng-disabled="!equipment.replacementRecommended"
-                        name="reasonForReplacement" id="reasonForReplacement" style="width: 400px"></textarea>
-              <span class="field-error" ng-show="equipmentForm.reasonForReplacement.$error.required && showError"
-                    openlmis-message="missing.value"></span>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <div form-toolbar id="action_buttons" class="action-buttons">

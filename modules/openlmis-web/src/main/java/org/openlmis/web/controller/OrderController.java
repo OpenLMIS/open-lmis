@@ -154,10 +154,10 @@ public class OrderController extends BaseController {
 
   @RequestMapping(value = "/manage-pod-orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
-  public ResponseEntity<OpenLmisResponse> getOrdersForPOD(HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> getOrdersForPOD(@RequestParam("program") Long program, @RequestParam(value = "facility", defaultValue = "0") Long facility, HttpServletRequest request) {
     List<Order> ordersForPOD = orderService.searchByStatusAndRight(loggedInUserId(request),
       MANAGE_POD,
-      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK));
+      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),program, facility);
     return response(ORDERS_FOR_POD, getOrdersForView(ordersForPOD));
   }
 }

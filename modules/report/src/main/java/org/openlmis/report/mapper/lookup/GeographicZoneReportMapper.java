@@ -529,7 +529,7 @@ public interface GeographicZoneReportMapper {
 
 
     @SelectProvider(type=LabEquipmentStatusByLocationQueryBuilder.class, method="getFacilityEquipmentStatusGeoData")
-    List<GeoZoneEquipmentStatus> getFacilityEquipmentStatusGeo2(@Param("program") Long program,
+    List<GeoZoneEquipmentStatus> getFacilityEquipmentStatusGeo(@Param("program") Long program,
                                                                 @Param("zone") Long zone,
                                                                 @Param("facilityType") Long facilityType,
                                                                 @Param("facility") Long facility,

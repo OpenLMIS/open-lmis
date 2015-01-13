@@ -62,10 +62,10 @@
             <span openlmis-message="label.manage.vendor.phone"></span>
             <span class="label-required">*</span>
           </label>
-
           <div class="form-field">
-            <input ui-mask="{{'(999) 999-9999'}}"   ng-model="current.primaryPhone" name="phone" id="phone" type="text" maxlength="12" ng-required="true" />
+            <input ng-pattern="/^[+]?\d+$/" ng-model="current.primaryPhone" name="phone" id="phone" type="text" maxlength="12" ng-required="true" />
             <span class="field-error" ng-show="vendorForm.phone.$error.required && showError" openlmis-message="missing.value"></span>
+              <span class="field-error" ng-show="!vendorForm.phone.$valid && !vendorForm.phone.$error.required" openlmis-message="error.invalid.phone"></span>
           </div>
         </div>
       </div>
@@ -118,6 +118,7 @@
       <div class="form-cell button-row">
         <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button" openlmis-message="button.save" />
         <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancel()" />
+        <input id="deletedButton" type="button"  class="btn btn-danger delete-button" openlmis-message="button.delete" ng-show="current.id" ng-click="showDeleteVendorConfirmDialog(current)"/>
       </div>
 
 
@@ -195,6 +196,8 @@
       <input type="button"
              ng-click="closeModal();error=''"
              class="btn btn-cancel" openlmis-message="button.cancel"/>
+
+
     </div>
   </div>
 </div>

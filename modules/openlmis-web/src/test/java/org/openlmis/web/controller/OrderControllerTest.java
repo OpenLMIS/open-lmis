@@ -185,16 +185,16 @@ public class OrderControllerTest {
     List<Order> ordersForPOD = null;
     when(orderService.searchByStatusAndRight(USER_ID,
       MANAGE_POD,
-      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK))).thenReturn(ordersForPOD);
+      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L)).thenReturn(ordersForPOD);
     mockStatic(OrderDTO.class);
     List<OrderDTO> orderDTOs = new ArrayList<>();
     when(OrderDTO.getOrdersForView(ordersForPOD)).thenReturn(orderDTOs);
 
-    ResponseEntity<OpenLmisResponse> response = orderController.getOrdersForPOD(request);
+    ResponseEntity<OpenLmisResponse> response = orderController.getOrdersForPOD(1L,0L,request);
 
     assertThat((List<OrderDTO>) response.getBody().getData().get(ORDERS_FOR_POD), is(orderDTOs));
     verify(orderService).searchByStatusAndRight(USER_ID,
       MANAGE_POD,
-      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK));
+      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L);
   }
 }

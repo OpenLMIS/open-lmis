@@ -40,4 +40,8 @@ public class ConfigurationSettingRepository {
   public void setValue(ConfigurationSetting config){
     mapper.updateValue(config);
   }
+
+  public List<ConfigurationSetting> getSearchResults(String s) {
+    return mapper.getSearchResults(s);
+  }
 }

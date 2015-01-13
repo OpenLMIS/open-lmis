@@ -87,8 +87,11 @@ public class OrderRepository {
     return orderMapper.getNumberOfPagesByDepot(pageSize, supplyDepot, program, period);
   }
 
-  public List<Order> searchByWarehousesAndStatuses(List<Long> facilityIds, List<OrderStatus> orderStatuses) {
-    return orderMapper.getByWarehouseIdsAndStatuses(format(facilityIds.toString()), format(orderStatuses.toString()));
+  public List<Order> searchByWarehousesAndStatuses(List<Long> facilityIds, List<OrderStatus> orderStatuses, Long programId, Long facilityId) {
+    if(facilityId != 0 && facilityId != null){
+      return orderMapper.getByWarehouseIdsAndStatusesByFacility(format(facilityIds.toString()), format(orderStatuses.toString()),programId, facilityId);
+    }
+    return orderMapper.getByWarehouseIdsAndStatuses(format(facilityIds.toString()), format(orderStatuses.toString()), programId);
   }
 
   private String format(String listString) {
