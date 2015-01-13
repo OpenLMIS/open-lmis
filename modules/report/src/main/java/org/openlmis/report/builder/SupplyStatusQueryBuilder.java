@@ -26,7 +26,7 @@ public class SupplyStatusQueryBuilder {
                 "  li_quantitydispensed issues," +
                 "  li_totallossesandadjustments adjustments," +
                 "  li_stockinhand closingBalance," +
-                "  CASE li_amc when 0 then 0 else li_stockinhand / li_amc end monthsOfStock," +
+                "  CASE li_amc when 0 then 0 else ROUND((li_stockinhand::NUMERIC / li_amc)::NUMERIC,2) end monthsOfStock," +
                 "  li_amc averageMonthlyConsumption," +
                 "  li_amc * fp_maxmonthsofstock maximumStock, " +
                 "  li_calculatedorderquantity reorderAmount, " +
