@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AverageConsumptionReportController($scope, $filter, ReportProductsByProgram, ngTableParams, FacilityByFacilityType, AverageConsumptionReport, RequisitionGroupsByProgram, ReportPrograms, ProductCategoriesByProgram, RequisitionGroups, ReportFacilityTypes, GeographicZones, OperationYears, Months) {
+function AverageConsumptionReportController($scope, $filter, ReportProductsByProgram, ngTableParams, FacilityByFacilityType,FacilityByProgramByFacilityType, AverageConsumptionReport, RequisitionGroupsByProgram, ReportPrograms, ProductCategoriesByProgram, RequisitionGroups, ReportFacilityTypes, GeographicZones, OperationYears, Months) {
 
     // product filter customizations
     $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
@@ -195,10 +195,12 @@ function AverageConsumptionReportController($scope, $filter, ReportProductsByPro
             $scope.filterObject.facilityTypeId = selection;
 //            GetFacilityByFacilityType
 
-            FacilityByFacilityType.get({facilityTypeId: selection}, function (data) {
-                $scope.facillities = data.facilities;
-                $scope.facillities.unshift({name: '-- All Facilities --'});
-            });
+//            FacilityByFacilityType.get({facilityTypeId: selection}, function (data) {
+//                $scope.facillities = data.facilities;
+//                $scope.facillities.unshift({name: '-- All Facilities --'});
+//            });
+
+            $scope.getFacilitiesList();
 
             $.each($scope.facilityTypes, function (item, idx) {
                 if (idx.id == selection) {
@@ -500,5 +502,20 @@ function AverageConsumptionReportController($scope, $filter, ReportProductsByPro
             }
         });
     };
+$scope.getFacilitiesList=function(){
+    var params = {
+        "max": 10000,
+        "page": 1
+    };
 
+    $.each($scope.filterObject, function (index, value) {
+        if (value !== undefined)
+            params[index] = value;
+    });
+    FacilityByProgramByFacilityType.get(params, function (data) {
+
+        $scope.facillities = data.facilities;
+        $scope.facillities.unshift({name: '-- All Facilities --'});
+    });
+};
 }

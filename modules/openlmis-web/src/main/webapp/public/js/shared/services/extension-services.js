@@ -254,6 +254,9 @@ services.factory('GetFacilityByFacilityType',function($resource){
 services.factory('FacilityByFacilityType',function($resource){
     return $resource('/reports/facilitiesByType/:facilityTypeId.json',{},{});
 });
+services.factory('FacilityByProgramByFacilityType',function($resource){
+    return $resource('/reports/facilitiesByType.json',{},{});
+});
 services.factory('SaveRequisitionGroupMember',function($resource){
     return $resource('/requisitionGroupMember/insert.json',{},{});
 });

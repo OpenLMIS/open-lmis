@@ -11,6 +11,7 @@
 package org.openlmis.report.service.lookup;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
@@ -319,7 +320,7 @@ public class ReportLookupService {
             return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup, zone, userId);
         }
 
-        if(requisitionGroup == 0 && type != 0){
+        if (requisitionGroup == 0 && type != 0) {
             return facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, userId, type);
         }
 
@@ -481,31 +482,31 @@ public class ReportLookupService {
         return orderFillRateSummaryListMapper.getOrderFillRateSummaryReportData(programId, periodId, scheduleId, facilityTypeId, userId, zoneId, status);
     }
 
-  public List<ProductCategoryProductTree> getProductCategoryProductByProgramId(int programId) {
+    public List<ProductCategoryProductTree> getProductCategoryProductByProgramId(int programId) {
 
-      List<ProductCategory> productCategory = this.productCategoryMapper.getForProgramUsingProgramProductCategory(programId);
+        List<ProductCategory> productCategory = this.productCategoryMapper.getForProgramUsingProgramProductCategory(programId);
 
-      List<ProductCategoryProductTree> productCategoryProducts = productCategoryMapper.getProductCategoryProductByProgramId(programId);
+        List<ProductCategoryProductTree> productCategoryProducts = productCategoryMapper.getProductCategoryProductByProgramId(programId);
 
-      List<ProductCategoryProductTree> newTreeList = new ArrayList<ProductCategoryProductTree>();
+        List<ProductCategoryProductTree> newTreeList = new ArrayList<ProductCategoryProductTree>();
 
-      for (ProductCategory pc : productCategory) {
+        for (ProductCategory pc : productCategory) {
 
-          ProductCategoryProductTree object = new ProductCategoryProductTree();
-          object.setCategory(pc.getName());
-          object.setCategory_id(pc.getId());
+            ProductCategoryProductTree object = new ProductCategoryProductTree();
+            object.setCategory(pc.getName());
+            object.setCategory_id(pc.getId());
 
-          for (ProductCategoryProductTree productCategoryProduct : productCategoryProducts) {
+            for (ProductCategoryProductTree productCategoryProduct : productCategoryProducts) {
 
-              if (pc.getId() == productCategoryProduct.getCategory_id()) {
-                  object.getChildren().add(productCategoryProduct);
-              }
-          }
+                if (pc.getId() == productCategoryProduct.getCategory_id()) {
+                    object.getChildren().add(productCategoryProduct);
+                }
+            }
 
-          newTreeList.add(object);
-      }
-      return newTreeList;
-  }
+            newTreeList.add(object);
+        }
+        return newTreeList;
+    }
 
     public List<YearSchedulePeriodTree> getYearSchedulePeriodTree() {
 
@@ -517,36 +518,36 @@ public class ReportLookupService {
         List<YearSchedulePeriodTree> yearList = new ArrayList<YearSchedulePeriodTree>();
 
         //add the year layer
-        for(Integer year : years){
+        for (Integer year : years) {
 
             YearSchedulePeriodTree yearObject = new YearSchedulePeriodTree();
             yearObject.setYear(year.toString());
 
             // Add the schedule layer
-            for(Schedule schedule : schedules){
+            for (Schedule schedule : schedules) {
 
-                        YearSchedulePeriodTree scheduleObject = new YearSchedulePeriodTree();
-                        scheduleObject.setGroupname(schedule.getName());
+                YearSchedulePeriodTree scheduleObject = new YearSchedulePeriodTree();
+                scheduleObject.setGroupname(schedule.getName());
 
-                        for(YearSchedulePeriodTree period : yearSchedulePeriodTree){
+                for (YearSchedulePeriodTree period : yearSchedulePeriodTree) {
 
-                            if(schedule.getId() == period.getGroupid() && period.getYear().equals(year.toString())){
-                                scheduleObject.getChildren().add(period);
-                            }
-                        }
-
-                        yearObject.getChildren().add(scheduleObject);
+                    if (schedule.getId() == period.getGroupid() && period.getYear().equals(year.toString())) {
+                        scheduleObject.getChildren().add(period);
                     }
+                }
+
+                yearObject.getChildren().add(scheduleObject);
+            }
 
             yearList.add(yearObject);
-            }
+        }
 
         return yearList;
     }
 
-    public List<Equipment> getEquipmentsByType(Long equipmentType){
+    public List<Equipment> getEquipmentsByType(Long equipmentType) {
 
-        if(equipmentType == 0)
+        if (equipmentType == 0)
             return equipmentReportMapper.getEquipmentAll();
         else
             return equipmentReportMapper.getEquipmentsByType(equipmentType);
@@ -562,6 +563,22 @@ public class ReportLookupService {
     }
 
     public List<Facility> getFacilities(Long type) {
-       return  facilityReportMapper.getFacilitiesBytype(type);
+        return facilityReportMapper.getFacilitiesBytype(type);
+    }
+
+    public List<Facility> getFacilities(Map<String, String[]> filterCriteria, long userId) {
+        List<Facility> facilitiesList = null;
+//        (@Param("program") Long program, @Param("zone") Long zone, @Param("userId") Long userId, @Param("type") Long type);
+        long program = 0;
+        long zone;
+
+        long type;
+        program = StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0]);
+        zone = StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Long.parseLong(filterCriteria.get("zoneId")[0]);
+        type = StringUtils.isBlank(filterCriteria.get("facilityTypeId")[0]) ? 0 : Long.parseLong(filterCriteria.get("facilityTypeId")[0]);
+
+        facilitiesList = this.facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, userId, type);
+
+        return facilitiesList;
     }
 }

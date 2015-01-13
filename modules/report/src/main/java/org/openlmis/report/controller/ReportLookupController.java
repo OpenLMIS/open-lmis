@@ -298,11 +298,22 @@ public class ReportLookupController extends BaseController {
 
         return OpenLmisResponse.response("facilities", reportLookupService.getFacilities(  type ));
     }
+    @RequestMapping(value = "/facilitiesByType", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getProgramFacilitiesList(
+
+                      HttpServletRequest request
+
+    ) {
+
+        long userId=this.loggedInUserId(request);
+
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilities(  request.getParameterMap(),userId ));
+    }
   @RequestMapping(value = "/user/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
           HttpServletRequest request
   ) {
-      return OpenLmisResponse.response("facilities", facilityService.getForUserAndRights(loggedInUserId(request),"VIEW_REQUISITION"));
+            return OpenLmisResponse.response("facilities", facilityService.getForUserAndRights(loggedInUserId(request),"VIEW_REQUISITION"));
   }
 
 
