@@ -10,7 +10,7 @@
 
 <div>
     <h2>
-        <span id="vaccineReceivedStatusHeader" >Received Status</span>
+        <span id="vaccineReceivedStatusHeader" openlmis-message="header.received.status"></span>
         <a id="vaccine-target-new" ng-href="#/received-status-edit/0" class="pull-right btn btn-primary"
            openlmis-message="button.add.new"></a>
     </h2>
@@ -42,7 +42,8 @@
                 </a>
 
                 <div class="search-actions">
-                    <a href ng-click="showRemoveVaccineReceivedStatusDialog(status)">Delete</a></div>
+                    <a href ng-click="showRemoveVaccineReceivedStatusDialog(status)"
+                       openlmis-message="button.delete"></a></div>
             </li>
         </ul>
     </div>
@@ -52,15 +53,16 @@
         <thead>
         <tr class="gradient-header">
             <th>#</th>
-            <th> Name </th>
-            <th> Action </th>
+            <th openlmis-message="label.received.status.name"></th>
+            <th openlmis-message="label.received.status.action"> </th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="receivedStatus in vaccineReceivedStatus">
             <td>{{$index+1}}</td>
             <td>{{receivedStatus.name}}</td>
-            <td> <a href ng-click="showRemoveVaccineReceivedStatusDialog(receivedStatus)">Delete</a> | <a href="#/received-status-edit/{{receivedStatus.id}}">Edit</a></td>
+            <td> <a href ng-click="showRemoveVaccineReceivedStatusDialog(receivedStatus)" openlmis-message="button.delete"></a> |
+                <a href="#/received-status-edit/{{receivedStatus.id}}" openlmis-message="button.edit"></a></td>
         </tr>
         </tbody>
     </table>
