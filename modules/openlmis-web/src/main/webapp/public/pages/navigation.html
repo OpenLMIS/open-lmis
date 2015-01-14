@@ -127,11 +127,11 @@
                openlmis-message="link.vaccine.manage"></a>
             <div class="submenu">
               <ul>
-                <li>
+                <li ng-show="hasPermission('MANAGE_VACCINE_TARGETS')">
                   <a href="/public/pages/vaccine/index.html#/targets"
                      openlmis-message="link.vaccine.manage.targets"></a>
                 </li>
-                <li>
+                <li  ng-show="hasPermission('MANAGE_VACCINE_QUANTIFICATION')">
                   <a href="/public/pages/vaccine/index.html#/quantification"
                       openlmis-message="link.vaccine.manage.quantification"></a>
                 </li>

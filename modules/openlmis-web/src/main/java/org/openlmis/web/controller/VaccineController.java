@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,8 +55,7 @@ public class VaccineController extends BaseController {
     private VaccineDashboardReportService vaccineReportService;
 
     @RequestMapping(value = "/target/create", method = POST, headers = ACCEPT_JSON)
-    // TODO: Add appropriate permission
-    //  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE_TARGETS')")
     public ResponseEntity insert(@RequestBody VaccineTarget vaccineTarget, HttpServletRequest request) {
 
         vaccineTarget.setCreatedBy(loggedInUserId(request));
@@ -75,8 +75,7 @@ public class VaccineController extends BaseController {
     }
 
     @RequestMapping(value = "/target/delete/{id}", method = DELETE, headers = ACCEPT_JSON)
-    // TODO: Add appropriate permission
-    //  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE_TARGETS')")
     public ResponseEntity deleteVaccineTarget(@PathVariable(value="id") Long id){
 
         vaccineTargetService.deleteVaccineTarget(id);
