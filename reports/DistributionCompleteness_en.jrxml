@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
+<!-- 2015-01-23T16:41:26 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DataCompleteness" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4143d326-c43c-4353-92cc-93e1adfb6ab1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Open-LMIS - Localhost"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="synced_delta" mode="Transparent" forecolor="#000000">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{facilities_synced_delta} > 0]]></conditionExpression>
+			<style forecolor="#00CC33" isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{facilities_synced_delta} < 0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<style name="visited_delta">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{facilities_visited_delta} > 0]]></conditionExpression>
+			<style forecolor="#00CC33" isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{facilities_visited_delta} < 0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<style name="upload_percentage">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{PercentSynced} == 1.0]]></conditionExpression>
+			<style forecolor="#00CC33"/>
+		</conditionalStyle>
+	</style>
+	<style name="visited_percentage">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{PercentVisited} == 1.0]]></conditionExpression>
+			<style forecolor="#00CC33"/>
+		</conditionalStyle>
+	</style>
+	<queryString language="SQL">
+		<![CDATA[select pp.name AS period_name
+  , pp.startdate as period_start_date
+  , dz.name AS dzname
+  , split_part(dz.name, ' ', 1) AS dzname_first
+  , split_part(dz.name, ' ', 2) AS dzname_prov
+  , u.firstname || ' ' || u.lastname AS initiated_by
+  , fvcomp.synched_num AS facilities_synced
+  , fvcomp.synched_delta AS facilities_synced_delta
+  , fvcomp.fac_total AS facilities_total
+  , fvcomp.visited_num AS facilities_visited
+  , fvcomp.visited_delta AS facilities_visited_delta
+from processing_periods pp
+cross join delivery_zones dz
+left join distributions d on (d.periodid=pp.id AND d.deliveryzoneid=dz.id)
+left join (
+  select cte.*
+    , cte.synched_num - lag(cte.synched_num, 1) over (partition by cte.deliveryzoneid order by cte.periodid) as synched_delta
+    , cte.visited_num - lag(cte.visited_num, 1) over (partition by cte.deliveryzoneid order by cte.periodid) as visited_delta
+  from (
+    select pp.id as periodid
+      , dz.id as deliveryzoneid
+      , count (CASE WHEN fv.synced THEN 1 ELSE null END) AS synched_num
+      , count (fv.id) as fac_total
+      , count (CASE WHEN fv.visited=true THEN 1 ELSE null END) as visited_num
+    from facility_visits fv
+    join distributions d on (fv.distributionid=d.id)
+    join processing_periods pp on (d.periodid=pp.id)
+    join delivery_zones dz on (d.deliveryzoneid=dz.id)
+    group by pp.id, dz.id
+  ) as cte
+) as fvcomp on (fvcomp.periodid=pp.id and fvcomp.deliveryzoneid=dz.id)
+left join users u on (d.createdby=u.id)
+where pp.startdate <= NOW()
+order by pp.startdate desc
+  , dzname_prov ASC
+  , dzname_first ASC]]>
+	</queryString>
+	<field name="period_name" class="java.lang.String"/>
+	<field name="dzname" class="java.lang.String"/>
+	<field name="dzname_first" class="java.lang.String"/>
+	<field name="dzname_prov" class="java.lang.String"/>
+	<field name="initiated_by" class="java.lang.String"/>
+	<field name="facilities_synced" class="java.lang.Long"/>
+	<field name="facilities_total" class="java.lang.Long"/>
+	<field name="facilities_visited" class="java.lang.Long"/>
+	<field name="facilities_synced_delta" class="java.lang.Long"/>
+	<field name="facilities_visited_delta" class="java.lang.Long"/>
+	<field name="period_start_date" class="java.sql.Timestamp"/>
+	<variable name="PercentSynced" class="java.lang.Float">
+		<variableExpression><![CDATA[$F{facilities_synced} / $F{facilities_total}]]></variableExpression>
+	</variable>
+	<variable name="PercentVisited" class="java.lang.Float">
+		<variableExpression><![CDATA[$F{facilities_visited}/$F{facilities_total}]]></variableExpression>
+	</variable>
+	<group name="Period Name Group" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{period_name}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<property name="local_mesure_unitheight" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="79" uuid="5deb6f08-ba71-44dd-bf34-9718a06877e0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Distribution Upload Completeness]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="80" y="0" width="170" height="20" uuid="c5426ee7-e4c9-4575-922c-c7d34d287a9f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{period_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="20" uuid="ad654881-d230-480b-8185-5c3f3ec238a4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Distribution Period]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="46">
+			<staticText>
+				<reportElement x="40" y="0" width="70" height="30" uuid="9de1886f-227a-425b-8832-baefd5098598"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Serif" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Delivery Zone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="0" width="100" height="30" uuid="829dea9b-a68a-49bc-a369-18a73e60cf4d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Serif" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Distribution Initiated By]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="0" width="70" height="30" uuid="7677dd5b-8f66-4de6-b962-f7d25056fed9"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Serif" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Upload Percentage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="424" y="0" width="70" height="30" uuid="66459a2d-910b-407a-bfc2-ce524b9dd621"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Serif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Visited Percentage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="330" y="30" width="180" height="15" forecolor="#737373" uuid="f99c7d08-563c-4d6c-982c-b26bf10f00db"/>
+				<textElement verticalAlignment="Middle" rotation="None">
+					<font fontName="Serif" size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[* colored number is change from previous month]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="53" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="40" y="0" width="130" height="30" uuid="3de64872-d1ed-4e5d-9137-a273c4321b39"/>
+				<textElement>
+					<font fontName="Serif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dzname}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="" x="190" y="0" width="100" height="30" uuid="6f240cbe-966f-454b-a9fe-7a81a4f55e2c">
+					<printWhenExpression><![CDATA[new java.util.Date(114, 2, 31).before($F{period_start_date})]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Serif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{initiated_by}]]></textFieldExpression>
+			</textField>
+			<textField pattern="### %" isBlankWhenNull="true">
+				<reportElement key="" style="upload_percentage" x="320" y="0" width="50" height="21" uuid="97dcb36d-fa17-486f-bcf8-e2dee2374c18"/>
+				<textElement textAlignment="Right">
+					<font fontName="Serif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PercentSynced}]]></textFieldExpression>
+			</textField>
+			<textField pattern="### / ###" isBlankWhenNull="true">
+				<reportElement x="320" y="21" width="50" height="21" uuid="0f3d7ab0-5881-4948-a5a0-79aeb6b91558">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$F{facilities_synced} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Serif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA['(' + $F{facilities_synced} + '/' + $F{facilities_total} + ')']]></textFieldExpression>
+			</textField>
+			<textField pattern="### %" isBlankWhenNull="true">
+				<reportElement key="" style="visited_percentage" x="424" y="0" width="56" height="21" uuid="267b3afb-2b0d-404b-b711-989e48881b0c"/>
+				<textElement textAlignment="Right">
+					<font fontName="Serif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PercentVisited}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="21" width="56" height="21" uuid="dda9095e-8139-44db-b6c8-ae143b0bc986">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$F{facilities_synced} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Serif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA['(' + $F{facilities_visited} + '/' + $F{facilities_total} + ')']]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="" style="synced_delta" x="380" y="21" width="20" height="21" uuid="f21e3f91-48dd-438b-8322-3ec58e2962ad">
+					<printWhenExpression><![CDATA[$F{facilities_synced_delta} != null && $F{facilities_synced_delta} != 0]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Serif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facilities_synced_delta} > 0 
+  ? '+' + $F{facilities_synced_delta} + '*' 
+  : $F{facilities_synced_delta} + '*']]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement style="visited_delta" x="490" y="21" width="20" height="21" uuid="f7aaf3aa-5763-475c-bdb3-40144fcde6dd">
+					<printWhenExpression><![CDATA[$F{facilities_visited_delta} != null && $F{facilities_visited_delta} != 0]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Serif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facilities_visited_delta} > 0 
+  ? '+' + $F{facilities_visited_delta} + '*'
+  : $F{facilities_visited_delta} + '*']]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
