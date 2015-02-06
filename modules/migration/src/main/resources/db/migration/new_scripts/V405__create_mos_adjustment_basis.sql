@@ -7,7 +7,7 @@ CREATE TABLE mos_adjustment_basis
   description character varying(100),
   displayOrder integer, -- displayOrder
   createdBy integer, -- createdBy
-  createdBate TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- createdDate
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- createdDate
   modifiedBy integer, -- modifiedBy
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- modifiedDate
 );

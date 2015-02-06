@@ -9,7 +9,7 @@ CREATE TABLE mos_adjustment_products
   startDate date, -- startDate
   endDate date, -- endDate
   createdBy integer, -- createdBy
-  createdBate TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- createdDate
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- createdDate
   modifiedBy integer, -- modifiedBy
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- modifiedDate
 );
@@ -22,7 +22,7 @@ COMMENT ON COLUMN mos_adjustment_products.startDate IS 'startDate';
 COMMENT ON COLUMN mos_adjustment_products.endDate IS 'endDate';
 COMMENT ON COLUMN mos_adjustment_products.productID IS 'productID';
 COMMENT ON COLUMN mos_adjustment_products.createdBy IS 'createdBy';
-COMMENT ON COLUMN mos_adjustment_products.createdBate IS 'createdBate';
+COMMENT ON COLUMN mos_adjustment_products.createdDate IS 'createdDate';
 COMMENT ON COLUMN mos_adjustment_products.modifiedBy IS 'modifiedBy';
 COMMENT ON COLUMN mos_adjustment_products.modifiedDate IS 'modifiedDate';
 

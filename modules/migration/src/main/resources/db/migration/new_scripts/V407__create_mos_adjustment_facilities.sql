@@ -6,7 +6,7 @@ CREATE TABLE mos_adjustment_facilities
   typeId integer REFERENCES mos_adjustment_products (id) NOT NULL, -- typeID                             ,
   facilityId integer REFERENCES facilities (id) NOT NULL, --facilityid
   createdBy integer, -- createdBy
-  createdBate TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- createdDate
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- createdDate
   modifiedBy integer, -- modifiedBy
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- modifiedDate
 );
@@ -16,6 +16,6 @@ COMMENT ON COLUMN mos_adjustment_facilities.id IS 'id';
 COMMENT ON COLUMN mos_adjustment_facilities.typeId IS 'typeId';
 COMMENT ON COLUMN mos_adjustment_facilities.facilityId IS 'facilityid';
 COMMENT ON COLUMN mos_adjustment_facilities.createdBy IS 'createdBy';
-COMMENT ON COLUMN mos_adjustment_facilities.createdBate IS 'createdBate';
+COMMENT ON COLUMN mos_adjustment_facilities.createdDate IS 'createdDate';
 COMMENT ON COLUMN mos_adjustment_facilities.modifiedBy IS 'modifiedBy';
 COMMENT ON COLUMN mos_adjustment_facilities.modifiedDate IS 'modifiedDate';
