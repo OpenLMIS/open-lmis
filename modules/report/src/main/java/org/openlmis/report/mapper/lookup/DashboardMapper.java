@@ -73,7 +73,7 @@ public interface DashboardMapper {
 
    List<StockOut> getStockOutFacilities(@Param("userId") Long userId, @Param("periodId")  Long periodId, @Param("programId") Long programId , @Param("productId") Long productId, @Param("zoneId") Long zoneId);
 
-   @Select("select d.facilityId,d.facilityCode ,d.facilityName,d.programId,d.periodId,d.productId,d.productFullName as product, d.suppliedInPast,d.geographiczonename as location,d.mosSuppliedInPast \n" +
+   @Select("select d.rnrid, d.facilityId,d.facilityCode ,d.facilityName,d.programId,d.periodId,d.productId,d.productFullName as product, d.suppliedInPast,d.geographiczonename as location,d.mosSuppliedInPast \n" +
            "from dw_orders d\n" +
            "where d.stockedOutInPast=true\n" +
            "and  d.programId = #{programId}\n" +

@@ -82,10 +82,12 @@ function DistrictStockedOutController($scope,$location,$routeParams,dashboardMen
                         $scope.location = _.pluck(stockData.stockOut,'location')[0];
 
                         $scope.datarows = [{label:messageService.get('label.facility.supplied.in.past'),
-                            total: suppliedInPast.length
+                            total: suppliedInPast.length,
+                            color: "#F47900"
                         },
                             {label:messageService.get('label.facility.not.supplied.in.past'),
-                                total: $scope.totalStockOuts - suppliedInPast.length
+                                total: $scope.totalStockOuts - suppliedInPast.length,
+                                color:"#CC0505"
                             }];
 
 
@@ -93,7 +95,8 @@ function DistrictStockedOutController($scope,$location,$routeParams,dashboardMen
                         for (var i = 0; i < $scope.datarows.length; i++) {
                             $scope.stockedOutPieChartData[i] = {
                                 label: $scope.datarows[i].label,
-                                data: $scope.datarows[i].total
+                                data: $scope.datarows[i].total,
+                                color: $scope.datarows[i].color
                             };
                         }
                         bindChartEvent("#stocked-out-reporting","plotclick",$scope.stockedOutChartClickHandler);

@@ -16,8 +16,7 @@
                     <td data-title="'Facility Code'" >{{row.facilityCode}}</td>
                     <td data-title="'Facility Name'" >{{row.facilityName}}</td>
                     <td data-title="'Supplied in past 6 months ?'" style="width:25px;"><div class="{{(row.suppliedInPast == true) ? 'green': 'red'}}">{{row.suppliedInPast}}</div></td>
-                    <td data-title="'MOS supplied'" class="number" style="width:25px;">{{row.mosSuppliedInPast | number}}</td>
-                    <td data-title="'Total months stocked out'" class="number" style="width:25px;">{{6-row.mosSuppliedInPast | number}}</td>
+                    <td data-title="'MOS supplied'" class="number" style="width:25px;"><a ng-href="/public/pages/logistics/rnr/indexpop.html#/requisition/{{ row.rnrId }}/1?page=1&supplyType=fullSupply" onclick="popUp(this.href); return false;" target="newWin">{{row.mosSuppliedInPast | number}}</a></cfif></td>
                 </tr>
                 </tbody>
             </table>
