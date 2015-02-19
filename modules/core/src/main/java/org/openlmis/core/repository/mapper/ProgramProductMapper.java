@@ -25,9 +25,9 @@ import java.util.List;
 @Repository
 public interface ProgramProductMapper {
 
-  @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, productCategoryId, displayOrder, fullSupply, createdBy, modifiedBy, modifiedDate)",
+  @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, productCategoryId, displayOrder, fullSupply, currentprice, createdBy, modifiedBy, modifiedDate)",
     "VALUES (#{program.id},",
-    "#{product.id}, #{dosesPerMonth}, #{active}, #{productCategory.id}, #{displayOrder}, #{fullSupply}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))"})
+    "#{product.id}, #{dosesPerMonth}, #{active}, #{productCategory.id}, #{displayOrder}, #{fullSupply}, #{currentPrice}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))"})
   @Options(useGeneratedKeys = true)
   Integer insert(ProgramProduct programProduct);
 
@@ -45,10 +45,10 @@ public interface ProgramProductMapper {
   ProgramProduct getByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
 
   @Update({"UPDATE program_products SET dosesPerMonth = #{dosesPerMonth}, productCategoryId = #{productCategory.id}, ",
-    "displayOrder = #{displayOrder}, active = #{active}, modifiedBy = #{modifiedBy}, fullSupply = #{fullSupply},  ",
+    "displayOrder = #{displayOrder}, active = #{active}, modifiedBy = #{modifiedBy}, fullSupply = #{fullSupply}, currentprice = #{currentPrice}, ",
     "modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) ",
     "WHERE programId = #{program.id} AND productId = #{product.id}"})
-  void update(ProgramProduct programProduct);
+    void update(ProgramProduct programProduct);
 
   @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE pp.programId = #{id} ",
     "ORDER BY pp.displayOrder NULLS LAST, LOWER(p.code)"})

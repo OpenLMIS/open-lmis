@@ -14,13 +14,13 @@
 <div class="app-form">
        <div class="form-group">
 
-            <h3 >Transaction Type</h3>
+            <h3  openlmis-message="header.transaction.types"></h3>
            <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
            <div class="form-row clearfix">
                <!-- Name -->
                <div class="form-cell">
 
-                   <label for="name" >Name<span class="label-required"> *</span></label>
+                   <label for="name"  openlmis-message="label.transaction.name"><span class="label-required"> *</span></label>
                    <div class="form-field">
 
                        <input ng-model="transactionType.name" name="name" id="name" type="text" ng-required="true"/>
@@ -31,11 +31,7 @@
                </div>
 </div>
 
-   </div>
-
-
-
-
+</div>
 <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
         <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
@@ -44,16 +40,12 @@
                ng-click="cancelTransactionTypeForm()"/>
     </div>
 
-
     <div class="toolbar-error" id="saveErrorMsgDiv">
         <span openlmis-message="error" ng-show="error"></span>&nbsp;
     </div>
     <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
 </div>
 
-
 </form>
 </div>
-
-
 <div>

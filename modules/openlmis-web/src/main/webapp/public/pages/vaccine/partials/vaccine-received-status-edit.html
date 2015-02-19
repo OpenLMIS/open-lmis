@@ -14,13 +14,13 @@
 <div class="app-form">
        <div class="form-group">
 
-            <h3 >Received Status</h3>
+            <h3  openlmis-message="header.received.status"></h3>
            <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
            <div class="form-row clearfix">
                <!-- Name -->
                <div class="form-cell">
 
-                   <label for="name" >Name<span class="label-required"> *</span></label>
+                   <label for="name" openlmis-message="label.received.status.name"><span class="label-required"> *</span></label>
                    <div class="form-field">
 
                        <input ng-model="receivedStatus.name" name="name" id="name" type="text" ng-required="true"/>
@@ -36,7 +36,7 @@
            <div class="form-row clearfix">
                <div class="form-cell">
 
-                   <label for="name" >Transaction Type<span class="label-required"> *</span></label>
+                   <label for="name"  openlmis-message="header.received.status.trans.type"><span class="label-required"> *</span></label>
                    <div class="form-field">
 
                        <select ng-model="receivedStatus.transactionType.id" name="transactionTypeId" id="transactionTypeId" ng-required="true" style="width:210px;">

@@ -10,7 +10,7 @@
 
 <div>
     <h2>
-        <span id="vaccineTransactionTypeHeader" >Transaction Types</span>
+        <span id="vaccineTransactionTypeHeader" openlmis-message="header.transaction.types" ></span>
         <a id="vaccine-target-new" ng-href="#/transaction-type-edit/0" class="pull-right btn btn-primary"
            openlmis-message="button.add.new"></a>
     </h2>
@@ -20,7 +20,7 @@
 
 
     <input id="search" class="search-query input-xxlarge" type="text" ng-model="query"
-           on-keyup="showUserSearchResults()" placeholder="Enter transaction type name"/>
+           on-keyup="showTransactionTypeSearchResults()" placeholder="Enter transaction type name"/>
     <br/> <br/>
 
     <div class="form-tip" openlmis-message="search.threeCharacters"></div>
@@ -42,7 +42,7 @@
                 </a>
 
                 <div class="search-actions">
-                    <a href ng-click="showRemoveVaccineTransactionTypeDialog(types)">Delete</a></div>
+                    <a href ng-click="showRemoveVaccineTransactionTypeDialog(types)"  openlmis-message="button.delete" ></a></div>
             </li>
         </ul>
     </div>
@@ -52,15 +52,16 @@
         <thead>
         <tr class="gradient-header">
             <th>#</th>
-            <th> Name </th>
-            <th> Action </th>
+            <th openlmis-message="label.transaction.name" >  </th>
+            <th openlmis-message="label.transaction.action" >  </th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="transactionTypes in vaccineTransactionTypes">
             <td>{{$index+1}}</td>
             <td>{{transactionTypes.name}}</td>
-            <td> <a href ng-click="showRemoveVaccineTransactionTypeDialog(transactionTypes)">Delete</a> | <a href="#/transaction-type-edit/{{transactionTypes.id}}">Edit</a></td>
+            <td> <a href ng-click="showRemoveVaccineTransactionTypeDialog(transactionTypes)"  openlmis-message="button.delete"></a>
+                | <a href="#/transaction-type-edit/{{transactionTypes.id}}"  openlmis-message="button.edit"></a></td>
         </tr>
         </tbody>
     </table>

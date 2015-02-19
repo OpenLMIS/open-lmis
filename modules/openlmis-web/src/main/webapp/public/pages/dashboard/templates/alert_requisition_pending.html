@@ -9,6 +9,7 @@
                ng-table="tableParams">
             <tbody>
                 <tr  ng-repeat="row in content.datarows">
+                    <td>{{$index+1}}</td>
                     <td data-title="'Facility Name'">{{ row.facilityname }}</td>
                     <td data-title="'Zone'">{{ row.geographiczonename }}</td>
                     <td data-title="'RnR Type'">{{ row.rnrtype }}</td>

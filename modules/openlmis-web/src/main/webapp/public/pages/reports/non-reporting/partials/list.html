@@ -43,17 +43,30 @@
 
                     <div class="span12 offset1">
 
-                        <div ng-repeat="summary in summaries">
-                            <div class="pull-left" style="font-size:13px; font-weight: bold;" ng-if="$index ===2 || $index ===3">
-                                <span>{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span></strong>
+                        <div>
+                            <div class="pull-left" style="font-size:13px; font-weight: bold;"  >
+                                <span>{{summaries[0].name}}</span> : <span class="report-data">{{summaries[0].count}}</span></strong>
                             </div>
                         </div>
 
-                        <div ng-repeat="summary in summaries">
-                            <div class="pull-left" style="font-size:13px; font-weight: bold;" ng-if="$index ===0 || $index ===1">
-                                <span>{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span></strong>
+                        <div>
+                            <div class="pull-left" style="font-size:13px; font-weight: bold;" >
+                                <span>{{summaries[3].name}}</span> : <span class="report-data">{{summaries[3].count}}</span></strong>
                             </div>
                         </div>
+
+                        <div>
+                            <div class="pull-left" style="font-size:13px; font-weight: bold;" >
+                                <span>{{summaries[2].name}}</span> : <span class="report-data">{{summaries[2].count}}</span></strong>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="pull-left" style="font-size:13px; font-weight: bold;" >
+                                <span>{{summaries[1].name}}</span> : <span class="report-data">{{summaries[1].count}}</span></strong>
+                            </div>
+                        </div>
+
 
 
                     </div>
