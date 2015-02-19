@@ -175,7 +175,7 @@ services.factory('ReportFilteredPeriods', function ($resource) {
     return $resource('/reports/periods.json', {}, {});
 });
 
-services.factory('GeographicZones', function ($resource) {
+services.factory('ReportGeographicZones', function ($resource) {
     return $resource('/reports/geographicZones.json', {}, {});
 });
 
