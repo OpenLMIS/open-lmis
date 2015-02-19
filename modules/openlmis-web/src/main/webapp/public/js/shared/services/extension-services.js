@@ -11,9 +11,7 @@ services.factory('AverageConsumptionReport', function ($resource) {
     return $resource('/reports/reportdata/averageConsumption.json', {}, {});
 });
 
-services.factory('Products', function($resource){
-    return $resource('/reports/products.json', {}, {});
-}) ;
+
 services.factory('ReportRegimenCategories', function($resource){
    return $resource('/reports/regimenCategories.json', {}, {}) ;
 } );
@@ -22,14 +20,9 @@ services.factory('ProductsByCategory', function($resource){
     return $resource('/reports/products_by_category.json', {}, {});
 });
 
-services.factory('ProductCategories', function($resource){
-    return $resource('/reports/productCategories.json', {}, {});
-}) ;
-
 services.factory('ProductCategoriesByProgram', function($resource){
     return $resource('/reports/programs/:programId/productCategories.json', {}, {});
 }) ;
-
 
 services.factory('SummaryReport', function($resource){
     return $resource('/reports/reportdata/summary.json', {}, {});
@@ -263,46 +256,6 @@ services.factory('SaveRequisitionGroupMember',function($resource){
 
 services.factory('RemoveRequisitionGroupMember',function($resource){
     return $resource('/requisitionGroupMember/remove/:rgId/:facId.json',{},{});
-});
-
-services.factory("ProductForms",function($resource)  {
-    return   $resource('/reports/productForms.json', {}, {});
-});
-
-services.factory("DosageUnits",function($resource)  {
-    return   $resource('/reports/dosageUnits.json', {}, {});
-});
-
-services.factory("ProductGroups",function($resource)  {
-    return   $resource('/reports/productGroups.json', {}, {});
-});
-
-// mahmed 07.13.2013
-services.factory('CreateProduct', function ($resource) {
-    return $resource('/createProduct.json', {}, {post:{method:'POST'}});
-});
-
-// mahmed 07.13.2013
-services.factory('UpdateProduct', function ($resource) {
-    return $resource('/updateProduct.json', {}, {update:{method:'PUT'}});
-});
-
-// mahmed 07.13.2013
-services.factory('RemoveProduct', function ($resource) {
-    return $resource('/removeProduct/:id.json', {}, {update:{method:'PUT'}});
-});
-
-// mahmed 07.13.2013
-services.factory('RestoreProduct', function ($resource) {
-    return $resource('/restoreProduct/:id.json', {}, {update:{method:'PUT'}});
-});
-
-services.factory('ProductCost', function ($resource) {
-    return $resource('/programs/:productId/productcost.json', {}, {});
-});
-
-services.factory('AllProductCost', function ($resource) {
-    return $resource('/allproductcost.json', {}, {});
 });
 
 services.factory("AllFacilites",function($resource)  {
