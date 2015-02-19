@@ -45,7 +45,7 @@ public interface ProgramProductMapper {
   ProgramProduct getByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
 
   @Update({"UPDATE program_products SET dosesPerMonth = #{dosesPerMonth}, productCategoryId = #{productCategory.id}, ",
-    "displayOrder = #{displayOrder}, active = #{active}, modifiedBy = #{modifiedBy}, fullSupply = #{fullSupply}, currentprice = ${currentPrice}, ",
+    "displayOrder = #{displayOrder}, active = #{active}, modifiedBy = #{modifiedBy}, fullSupply = #{fullSupply}, currentprice = #{currentPrice}, ",
     "modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) ",
     "WHERE programId = #{program.id} AND productId = #{product.id}"})
     void update(ProgramProduct programProduct);
