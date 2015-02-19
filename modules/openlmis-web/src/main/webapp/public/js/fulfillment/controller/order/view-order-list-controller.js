@@ -54,7 +54,7 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
 
   $scope.$on('$routeUpdate', refreshGrid);
 
-  //refreshGrid();
+  refreshGrid();
 
   $scope.gridOptions = { data: 'orders',
     showFooter: false,
