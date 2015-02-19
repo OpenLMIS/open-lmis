@@ -1,7 +1,13 @@
 package org.openlmis.web.controller;
 
-/**
- * Created by Teklu  on 10/19/2014.
+/*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 import org.apache.log4j.Logger;
@@ -11,6 +17,7 @@ import org.openlmis.help.domain.HelpTopic;
 import org.openlmis.help.service.HelpTopicService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +57,10 @@ public class HelpCateoryController extends BaseController {
     public static final Logger LOGGER = Logger.getLogger(HelpCateoryController.class);
     @Autowired
     private HelpTopicService helpTopicService;
+    @Value("${help.document.uploadLocation}")
+    private String fileStoreLocation;
+    @Value("${help.document.accessBaseUrl}")
+    private String fileAccessBaseUrl;
 
     // create product
     @RequestMapping(value = "/createHelpTopic", method = RequestMethod.POST, headers = ACCEPT_JSON)
@@ -147,6 +158,7 @@ public class HelpCateoryController extends BaseController {
     @RequestMapping(value = "/uploadDocument", method = RequestMethod.POST)
     public ResponseEntity<OpenLmisResponse> uploadHelpDocuments(MultipartFile helpDocuments, String documentType, HttpServletRequest request) {
         try {
+
             String fileName = null;
             String fileType = null;
             Long userId = loggedInUserId(request);
@@ -158,8 +170,6 @@ public class HelpCateoryController extends BaseController {
             uriPath = request.getRequestURL().toString();
             int index = uriPath.indexOf("/uploadDocument");
             uriPath = uriPath.substring(0, index);
-
-            System.out.println(" and server name is " + uriPath);
             HelpDocument helpDocument = new HelpDocument();
             inputStream = helpDocuments.getInputStream();
             int val = inputStream.available();
@@ -168,10 +178,10 @@ public class HelpCateoryController extends BaseController {
             fileName = helpDocuments.getOriginalFilename();
             fileType = helpDocuments.getContentType();
 
-            System.out.println(" file name is " + fileName+ " file type is "+fileType);
-            filePath = request.getSession().getServletContext().getRealPath("public\\images\\help\\" + fileName);
-            System.out.println(" here  uploading calling " + documentType + " path is " + filePath);
-            System.out.println(" here calling and size is " + val + documentType);
+
+//            filePath = request.getSession().getServletContext().getRealPath("public/images/help/" + fileName);
+            filePath = this.fileStoreLocation + fileName;
+
             helpDocument.setDocumentType(documentType);
             helpDocument.setFileUrl(fileName);
             helpDocument.setCreatedDate(new Date());
@@ -182,7 +192,7 @@ public class HelpCateoryController extends BaseController {
             this.helpTopicService.uploadHelpDocument(helpDocument);
             return this.successPage(1);
         } catch (Exception ex) {
-System.out.println(ex.getMessage());
+            System.out.println(ex.getMessage());
         }
 
 
@@ -190,30 +200,33 @@ System.out.println(ex.getMessage());
 //        LOGGER.log(null, " uploading ");
         return null;
     }
+
     private ResponseEntity<OpenLmisResponse> successPage(int recordsProcessed) {
         Map<String, String> responseMessages = new HashMap<>();
         String message = messageService.message(UPLOAD_FILE_SUCCESS, recordsProcessed);
         responseMessages.put(SUCCESS, message);
         return response(responseMessages, OK, TEXT_HTML_VALUE);
     }
+
     ///////////////////////////////////////
     @RequestMapping(value = "/loadDocumentList", method = RequestMethod.GET, headers = "Accept=application/json")
-    public ResponseEntity<OpenLmisResponse> loadHelpDocumentList(HttpServletRequest request){
-        List<HelpDocument> helpDocumentList=null;
-        String uriPath=null;
+    public ResponseEntity<OpenLmisResponse> loadHelpDocumentList(HttpServletRequest request) {
+        List<HelpDocument> helpDocumentList = null;
+        String uriPath = null;
 
-        System.out.println("i am here "+uriPath);
-        helpDocumentList=this.helpTopicService.loadHelpDocumentList();
-        System.out.println("i am here ");
-        uriPath = request.getRequestURL().toString();
-        int firstIndex=uriPath.indexOf("://");
-        int index = uriPath.indexOf("/",firstIndex+3);
-        uriPath = uriPath.substring(0, index);
-        System.out.println("i am here "+uriPath);
-        for(HelpDocument helpDocument: helpDocumentList){
-            String imageUrl= uriPath+"/public/images/help/"+helpDocument.getFileUrl();
+
+        helpDocumentList = this.helpTopicService.loadHelpDocumentList();
+
+//        uriPath = request.getRequestURL().toString();
+//        int firstIndex=uriPath.indexOf("://");
+//        int index = uriPath.indexOf("/",firstIndex+3);
+//        uriPath = uriPath.substring(0, index);
+        uriPath = this.fileAccessBaseUrl;
+
+        for (HelpDocument helpDocument : helpDocumentList) {
+            String imageUrl = uriPath + helpDocument.getFileUrl();
             helpDocument.setFileUrl(imageUrl);
         }
-        return OpenLmisResponse.response(  HELPDOCUMENTLIST, helpDocumentList);
+        return OpenLmisResponse.response(HELPDOCUMENTLIST, helpDocumentList);
     }
 }
