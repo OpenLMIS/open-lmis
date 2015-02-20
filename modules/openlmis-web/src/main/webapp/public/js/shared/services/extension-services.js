@@ -35,14 +35,9 @@ services.factory('NonReportingFacilities', function($resource){
     return $resource('/reports/reportdata/non_reporting.json', {}, {});
 });
 
-services.factory('RequisitionGroups', function($resource){
-    return $resource('/reports/rgroups.json', {}, {});
-});
-
 services.factory('RequisitionGroupsByProgramSchedule', function($resource){
     return $resource('/reports/reporting_groups_by_program_schedule.json', {}, {});
 });
-
 
 services.factory('RequisitionGroupsByProgram', function($resource){
     return $resource('/reports/reporting_groups_by_program.json', {}, {});

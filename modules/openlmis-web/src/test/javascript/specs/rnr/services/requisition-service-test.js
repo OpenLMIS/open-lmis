@@ -86,7 +86,7 @@ describe("requisitionService", function () {
     scope.rnr = {fullSupplyLineItems: []};
     requisitionService.refreshGrid(scope, location, routeParams, false);
 
-    expect(scope.page).toEqual({fullSupply: [], nonFullSupply: [], regimen: []});
+    expect(scope.page).toEqual({fullSupply: [], nonFullSupply: [], regimen: [], equipment : []});
     expect(scope.visibleTab).toEqual("fullSupply");
     expect(location.search).toHaveBeenCalledWith('supplyType', 'fullSupply');
     expect(scope.numberOfPages).toEqual(1);
@@ -102,7 +102,7 @@ describe("requisitionService", function () {
     scope.rnr = {nonFullSupplyLineItems: []};
     requisitionService.refreshGrid(scope, location, routeParams, true);
 
-    expect(scope.page).toEqual({fullSupply: [], nonFullSupply: [], regimen: []});
+    expect(scope.page).toEqual({fullSupply: [], nonFullSupply: [], regimen: [], equipment: []});
     expect(scope.visibleTab).toEqual("nonFullSupply");
     expect(location.search).toHaveBeenCalledWith('supplyType', 'nonFullSupply');
     expect(scope.numberOfPages).toEqual(1);
