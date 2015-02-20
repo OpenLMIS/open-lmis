@@ -4,7 +4,12 @@
 
 
 function ContentCreateController($scope, $location, $route, messageService, CreateHelpTopic,HelpDocumentList) {
+    $scope.cancelContentCreate = function(){
 
+
+        $location.path('treeView');
+
+    };
     $scope.disabled = false;
     $scope.htmlContent = $scope.htmlcontent;
     ////
@@ -25,7 +30,7 @@ function ContentCreateController($scope, $location, $route, messageService, Crea
 
     });
     $scope.createHelpContent = function () {
-        //////alert('here ii am');
+        alert('here ii am');
         $scope.error = "";
         if ($scope.createHelpContentForm.$invalid) {
             $scope.showError = true;
@@ -66,10 +71,9 @@ function ContentCreateController($scope, $location, $route, messageService, Crea
 
 
     };
+
     $scope.intializeHelpContent($route.current.params.id);
-    $scope.cancel=function(){
-        $location.path('/treeView');
-    };
+
 }
 
 
