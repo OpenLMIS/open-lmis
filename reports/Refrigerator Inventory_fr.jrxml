@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.1.final using JasperReports Library version 5.6.1  -->
+<!-- 2015-02-20T15:17:04 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Refrigerator Inventory" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="328c3fcd-b393-4fef-ac15-e0acb44cfdfc">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Open-LMIS - Localhost"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.background" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.border" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.0" value="title"/>
+	<queryString language="SQL">
+		<![CDATA[select r.id as refrig_id
+  , f.code as facility_code
+  , f.name as facility
+  , gz_dist.name as district
+  , gz_prov.name as province
+  , r.serialnumber as brand
+  , r.model as model
+  , r.brand as type
+  , r.enabled as isEnabled
+  , r.coldlife as coldLife
+from refrigerators r
+join facilities f on (r.facilityid=f.id)
+join geographic_zones gz_dist on (f.geographiczoneid=gz_dist.id)
+join geographic_zones gz_prov on (gz_dist.parentid=gz_prov.id)
+order by facility_code, district, brand, type]]>
+	</queryString>
+	<field name="refrig_id" class="java.lang.Integer"/>
+	<field name="facility_code" class="java.lang.String"/>
+	<field name="facility" class="java.lang.String"/>
+	<field name="district" class="java.lang.String"/>
+	<field name="province" class="java.lang.String"/>
+	<field name="brand" class="java.lang.String"/>
+	<field name="model" class="java.lang.String"/>
+	<field name="type" class="java.lang.String"/>
+	<field name="isenabled" class="java.lang.Boolean"/>
+	<field name="coldlife" class="java.math.BigDecimal"/>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="752" height="79" uuid="7f558679-5c0e-4685-a99e-a96a40c2046f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Refrigerator Inventory]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="33" splitType="Prevent">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<staticText>
+				<reportElement key="" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="31" y="0" width="120" height="30" isRemoveLineWhenBlank="true" uuid="ed32e860-afef-4387-a5de-abde853750ec">
+					<printWhenExpression><![CDATA[$P{IS_IGNORE_PAGINATION} == false]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[Formation Lauitaire]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="161" y="0" width="100" height="30" uuid="aade564c-b8d4-4761-a3a9-87b4f984bb6b"/>
+				<text><![CDATA[Commune de Livraison]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="0" width="70" height="30" uuid="130bb78a-5c5b-47c8-83cd-b5e79dcce0e1"/>
+				<text><![CDATA[Marque-Modèle]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="491" y="0" width="70" height="30" uuid="29878c14-2996-402a-88f2-23d7f10fddb1"/>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="571" y="0" width="70" height="30" uuid="8f32827a-8aac-474f-acc7-06174f296544">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<text><![CDATA[Année d'installation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="651" y="0" width="42" height="30" uuid="b1dec07e-0366-4605-811c-58cb22a046cf">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<text><![CDATA[Enabled]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="271" y="0" width="130" height="30" uuid="5679e674-d3b5-4d60-8a5b-118a174a18d2"/>
+				<text><![CDATA[Départment]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="699" y="0" width="52" height="30" uuid="9cad6913-d853-4bb9-aba6-21fa9cf89617">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[La vie à froid]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="43" splitType="Prevent">
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="31" y="0" width="120" height="30" backcolor="#FFFFFF" uuid="717b9296-d377-487b-be86-e142edd1d69e">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="161" y="0" width="100" height="29" uuid="b8f8d35e-8668-4abe-ac05-9a6a96479674">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="411" y="0" width="70" height="29" uuid="1d376155-808b-4adc-9fe2-708144b1f725">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{brand}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="491" y="0" width="70" height="31" uuid="bdf24d81-6de4-4ea0-9ab3-3438bfd4d75a">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{model}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="571" y="0" width="70" height="29" uuid="8772e458-777a-4ace-b44f-5c2306c90477">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="651" y="0" width="42" height="29" uuid="5f209a26-f594-4f62-bbf0-8648bf191549">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{isenabled} == true ? 'Y' : 'N']]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="20" height="30" uuid="1b861104-8ef2-4ba2-ae1b-e94f600a3667">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="271" y="0" width="130" height="30" uuid="2558a43b-2c50-4dab-8c4d-ffc42bfd0d1d">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{province}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="699" y="0" width="52" height="30" uuid="bbae0707-5f95-411f-8d05-555b93aca68e"/>
+				<textFieldExpression><![CDATA[$F{coldlife}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
