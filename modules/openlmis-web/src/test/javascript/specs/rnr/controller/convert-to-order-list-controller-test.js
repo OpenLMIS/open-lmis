@@ -42,7 +42,8 @@ describe('ConvertToOrderListController', function () {
 
   it('should set page line items based on pageSize', function () {
     routeParams.page = 2;
-    httpBackend.expect('GET',
+    httpBackend.when('GET','/supplyLines/supplying-depots.json').respond(200, {supplylines:[]});
+    httpBackend.when('GET',
             '/requisitions-for-convert-to-order.json?page=2&searchType=all&sortBy=submittedDate&sortDirection=asc').
         respond(200, {"rnr_list": [requisitions[2]]});
 
@@ -58,7 +59,9 @@ describe('ConvertToOrderListController', function () {
     routeParams.page = 2;
     routeParams.searchType = 'facilityCode';
     routeParams.searchVal = 'first';
-    httpBackend.expect('GET',
+
+    httpBackend.when('GET','/supplyLines/supplying-depots.json').respond(200, {supplylines:[]});
+    httpBackend.when('GET',
             '/requisitions-for-convert-to-order.json?page=2&searchType=facilityCode&searchVal=first&sortBy=submittedDate&sortDirection=asc')
         .respond(200,
         {"rnr_list": [requisitions[2]], "number_of_pages": 3});
@@ -78,7 +81,8 @@ describe('ConvertToOrderListController', function () {
     routeParams.page = 2;
     routeParams.searchType = 'facilityCode';
     routeParams.searchVal = 'first';
-    httpBackend.expect('GET',
+    httpBackend.when('GET','/supplyLines/supplying-depots.json').respond(200, {supplylines:[]});
+    httpBackend.when('GET',
         '/requisitions-for-convert-to-order.json?page=2&searchType=facilityCode&searchVal=first&sortBy=submittedDate&sortDirection=asc').respond(404);
 
     scope.$broadcast('$routeUpdate');
@@ -89,7 +93,8 @@ describe('ConvertToOrderListController', function () {
   });
 
   it('should set page to 1 and search type to all by default on route update', function () {
-    httpBackend.expect('GET',
+    httpBackend.when('GET','/supplyLines/supplying-depots.json').respond(200, {supplylines:[]});
+    httpBackend.when('GET',
             '/requisitions-for-convert-to-order.json?page=1&searchType=all&sortBy=submittedDate&sortDirection=asc').respond(200,
         {rnr_list: [requisitions[0]]});
 
@@ -148,7 +153,8 @@ describe('ConvertToOrderListController', function () {
 
   it('should convert selected requisitions to order upon click of ok of dialog', function () {
     httpBackend.expect('POST', '/orders.json', [requisitions[0], requisitions[1]]).respond(200);
-    httpBackend.expect('GET',
+    httpBackend.when('GET','/supplyLines/supplying-depots.json').respond(200, {supplylines:[]});
+    httpBackend.when('GET',
         '/requisitions-for-convert-to-order.json?page=1&searchType=all&sortBy=submittedDate&sortDirection=asc').respond({rnr_list: [requisitions[0]]});
 
     getDialogCallback()(true);
@@ -158,7 +164,8 @@ describe('ConvertToOrderListController', function () {
 
   it('should show success message requisitions converted to order', function () {
     httpBackend.expect('POST', '/orders.json').respond(200);
-    httpBackend.expect('GET',
+    httpBackend.when('GET','/supplyLines/supplying-depots.json').respond(200, {supplylines:[]});
+    httpBackend.when('GET',
         '/requisitions-for-convert-to-order.json?page=1&searchType=all&sortBy=submittedDate&sortDirection=asc').respond({rnr_list: [requisitions[0]]});
 
     getDialogCallback()(true);
@@ -171,6 +178,7 @@ describe('ConvertToOrderListController', function () {
 
   it('should give error message if convert to order fails with conflicting data', function () {
     httpBackend.expect('POST', '/orders.json').respond(409, {error: 'error!!'});
+    httpBackend.when('GET','/supplyLines/supplying-depots.json').respond(200, {supplylines:[]});
     httpBackend.expect('GET',
         '/requisitions-for-convert-to-order.json?page=1&searchType=all&sortBy=submittedDate&sortDirection=asc').respond({rnr_list: [requisitions[0]]});
 
@@ -184,6 +192,7 @@ describe('ConvertToOrderListController', function () {
 
   it('should give error message if convert to order fails for some reason', function () {
     httpBackend.expect('POST', '/orders.json').respond(400);
+    httpBackend.when('GET','/supplyLines/supplying-depots.json').respond(200, {supplylines:[]});
     httpBackend.expect('GET',
         '/requisitions-for-convert-to-order.json?page=1&searchType=all&sortBy=submittedDate&sortDirection=asc').respond({rnr_list: [requisitions[0]]});
 
@@ -196,6 +205,8 @@ describe('ConvertToOrderListController', function () {
   });
 
   it('should not make convert to order if cancel clicked', function () {
+    httpBackend.when('GET','/supplyLines/supplying-depots.json').respond(200, {supplylines:[]});
+
     httpBackend.flush();
 
     getDialogCallback()(false);
