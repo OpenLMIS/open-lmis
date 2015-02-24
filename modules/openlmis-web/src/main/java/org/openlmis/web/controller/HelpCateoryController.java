@@ -15,6 +15,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.help.domain.HelpDocument;
 import org.openlmis.help.domain.HelpTopic;
 import org.openlmis.help.service.HelpTopicService;
+import org.openlmis.upload.exception.UploadException;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,10 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,7 +40,9 @@ import java.util.Map;
 
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
 
 @Controller
@@ -157,12 +157,13 @@ public class HelpCateoryController extends BaseController {
 //   video image and file uploads
     @RequestMapping(value = "/uploadDocument", method = RequestMethod.POST)
     public ResponseEntity<OpenLmisResponse> uploadHelpDocuments(MultipartFile helpDocuments, String documentType, HttpServletRequest request) {
+        FileOutputStream outputStream = null;
         try {
 
             String fileName = null;
             String fileType = null;
             Long userId = loggedInUserId(request);
-            FileOutputStream outputStream = null;
+
             String filePath = null;
             String uriPath = null;
             byte[] byteFile = null;
@@ -186,19 +187,30 @@ public class HelpCateoryController extends BaseController {
             helpDocument.setFileUrl(fileName);
             helpDocument.setCreatedDate(new Date());
             helpDocument.setCreatedBy(userId);
-            outputStream = new FileOutputStream(new File(filePath));
-            outputStream.write(byteFile);
-            outputStream.flush();
-            this.helpTopicService.uploadHelpDocument(helpDocument);
-            return this.successPage(1);
+            File file= new File(filePath);
+            File directory=new File(this.fileStoreLocation);
+
+            boolean isFileExist=directory.exists();
+            if(isFileExist) {
+                boolean isWritePermitted= directory.canWrite();
+                if (isWritePermitted) {
+                    outputStream = new FileOutputStream(file);
+
+                    outputStream.write(byteFile);
+                    outputStream.flush();
+                    this.helpTopicService.uploadHelpDocument(helpDocument);
+                    return this.successPage(1);
+                } else {
+                    return this.errorPage("No Permission To Upload At Specified Path");
+                }
+            }else{
+                return this.errorPage("Upload Path do not Exist");
+            }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
+            return this.errorPage("Cannot upload in this location");
         }
 
-
-        //System.out.println(" uz" + userId);
-//        LOGGER.log(null, " uploading ");
-        return null;
     }
 
     private ResponseEntity<OpenLmisResponse> successPage(int recordsProcessed) {
@@ -206,6 +218,12 @@ public class HelpCateoryController extends BaseController {
         String message = messageService.message(UPLOAD_FILE_SUCCESS, recordsProcessed);
         responseMessages.put(SUCCESS, message);
         return response(responseMessages, OK, TEXT_HTML_VALUE);
+    }
+    private ResponseEntity<OpenLmisResponse> errorPage(String message) {
+        Map<String, String> responseMessages = new HashMap<>();
+//        String message = "File Location Not Authorized";//messageService.message(UploadException);
+        responseMessages.put(ERROR, message);
+        return response(responseMessages,NOT_FOUND , TEXT_HTML_VALUE);
     }
 
     ///////////////////////////////////////
