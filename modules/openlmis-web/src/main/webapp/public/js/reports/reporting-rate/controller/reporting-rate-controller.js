@@ -8,62 +8,11 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ReportingRateController($scope, leafletData, ReportingFacilityList, NonReportingFacilityList) {
+function ReportingRateController($scope, leafletData) {
 
   $scope.geojson = {};
 
   $scope.default_indicator = "period_over_expected";
-
-  $scope.ReportingFacilities = function (feature) {
-    ReportingFacilityList.get({
-      program: $scope.filter.program,
-      period: $scope.filter.period,
-      geo_zone: feature.id
-    }, function (data) {
-      $scope.facilities = data.facilities;
-      $scope.successModal = true;
-      $scope.show_email = $scope.show_sms = $scope.show_email_supervisor = false;
-      $scope.zoneid = feature.id;
-      $scope.zoneName = feature.name;
-      $scope.title = 'Properly Reporting Facilities in ' + feature.name;
-
-      NonReportingFacilityList.get({
-        program: $scope.filter.program,
-        period: $scope.filter.period,
-        geo_zone: feature.id
-      }, function (data) {
-        angular.forEach(data.facilities, function (item) {
-          $scope.facilities.push(item);
-        });
-      });
-    });
-
-  };
-
-  $scope.NonReportingFacilities = function (feature) {
-    NonReportingFacilityList.get({
-      program: $scope.filter.program,
-      period: $scope.filter.period,
-      geo_zone: feature.id
-    }, function (data) {
-      $scope.facilities = data.facilities;
-      $scope.successModal = true;
-      $scope.zoneid = feature.id;
-      $scope.zoneName = feature.name;
-      $scope.show_email = $scope.show_sms = $scope.show_email_supervisor = false;
-      $scope.title = 'Non Reporting Facilities in ' + feature.name;
-      ReportingFacilityList.get({
-        program: $scope.filter.program,
-        period: $scope.filter.period,
-        geo_zone: feature.id
-      }, function (data) {
-        angular.forEach(data.facilities, function (item) {
-          $scope.facilities.push(item);
-        });
-
-      });
-    });
-  };
 
   $scope.expectedFilter = function (item) {
     return item.expected > 0;
@@ -154,4 +103,9 @@ function ReportingRateController($scope, leafletData, ReportingFacilityList, Non
   };
 
   initiateMap($scope);
+
+  $scope.onDetailClicked = function(feature){
+    $scope.currentFeature = feature;
+    $scope.$broadcast('openDialogBox');
+  };
 }

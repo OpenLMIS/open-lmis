@@ -8,32 +8,28 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ReportMessageController($scope, SendMessagesReportAttachment, GetFacilitySupervisors, SettingsByKey, ContactList, SendMessages) {
+function ReportMessageController($scope, SendMessagesReportAttachment, GetFacilitySupervisors, SettingsByKey, ContactList, SendMessages, ReportingFacilityList, NonReportingFacilityList) {
 
   var allFacilities = [];
+  // get configurations
+  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'}, function (data) {
+    $scope.sms_template = data.settings.value;
+  });
 
+  SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data) {
+    $scope.email_template = data.settings.value;
+  });
+
+  SettingsByKey.get({key: 'SMS_ENABLED'}, function (data) {
+    $scope.sms_enabled = data.settings.value;
+  });
+
+  SettingsByKey.get({key: 'LATE_RNR_SUPERVISOR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data) {
+    $scope.email_template_supervisor = data.settings.value;
+  });
 
   $scope.$watch('view.selectedOption', function (value) {
-
-    // get configurations
-    SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'}, function (data) {
-      $scope.sms_template = data.settings.value;
-    });
-
-    SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data) {
-      $scope.email_template = data.settings.value;
-    });
-
-    SettingsByKey.get({key: 'SMS_ENABLED'}, function (data) {
-      $scope.sms_enabled = data.settings.value;
-    });
-
-    SettingsByKey.get({key: 'LATE_RNR_SUPERVISOR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data) {
-      $scope.email_template_supervisor = data.settings.value;
-    });
-
     $scope.facilities = [];
-
 
     if (value && value === '1') {
       angular.forEach(allFacilities, function (item) {
@@ -49,7 +45,6 @@ function ReportMessageController($scope, SendMessagesReportAttachment, GetFacili
       });
     }
     else {
-
       $scope.facilities = allFacilities;
     }
 
@@ -70,8 +65,8 @@ function ReportMessageController($scope, SendMessagesReportAttachment, GetFacili
     }, function (data) {
       $scope.contacts = data.supervisors;
       $scope.attachementCaption = "Attachment: Non reporting facility report for " + $scope.zoneName + ' district';
-      var fullReportfilter = angular.extend($scope.$parent.filter, {zone: $scope.zoneid});
-      $scope.reportFilter = '/reports/download/non_reporting/PDF?max=10000&' + $.param(fullReportfilter);
+      var fullReportFilter = angular.extend($scope.$parent.filter, {zone: $scope.zoneid});
+      $scope.reportFilter = '/reports/download/non_reporting/PDF?max=10000&' + $.param(fullReportFilter);
 
     });
 
@@ -157,8 +152,42 @@ function ReportMessageController($scope, SendMessagesReportAttachment, GetFacili
   };
 
 
-  $scope.$watch('$parent.facilities', function (data) {
-    $scope.facilities = $scope.$parent.facilities;
+  $scope.ReportingFacilities = function (feature) {
+    ReportingFacilityList.get({
+      program: $scope.$parent.filter.program,
+      period: $scope.$parent.filter.period,
+      geo_zone: feature.id
+    }, function (data) {
+      $scope.facilities = data.facilities;
+      $scope.currentFeature = feature;
+      NonReportingFacilityList.get({
+        program: $scope.$parent.filter.program,
+        period: $scope.$parent.filter.period,
+        geo_zone: feature.id
+      }, function (data) {
+        angular.forEach(data.facilities, function (item) {
+          $scope.facilities.push(item);
+        });
+        allFacilities = $scope.facilities;
+      });
+
+    });
+  };
+
+  function openDialogBox (feature) {
+    $scope.show_email = $scope.show_sms = $scope.show_email_supervisor = false;
+    $scope.zoneid = feature.id;
+    $scope.zoneName = feature.name;
+    $scope.ReportingFacilities(feature);
+    $scope.title = 'Facilities in ' + feature.name;
+    $scope.$parent.successModal = true;
+  }
+
+  $scope.$on('openDialogBox',function(){
+    openDialogBox($scope.$parent.currentFeature);
   });
+
+
+
 
 }
