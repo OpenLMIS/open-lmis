@@ -27,10 +27,17 @@ function CreateFullSupplyController($scope, messageService) {
     $scope.clearAndCloseLossesAndAdjustmentModal();
   };
 
+  $scope.cancelAndCloseLossesAndAdjustmentModal = function () {
+
+    // restore the old losses and adjustments because the changes have been canceled
+    $scope.currentRnrLineItem.lossesAndAdjustments = $scope.oldLossAndAdjustment;
+    $scope.currentRnrLineItem.reEvaluateTotalLossesAndAdjustments();
+    $scope.clearAndCloseLossesAndAdjustmentModal();
+  };
+
   $scope.clearAndCloseLossesAndAdjustmentModal = function () {
     $scope.lossAndAdjustment = undefined;
     $scope.lossesAndAdjustmentsModal = false;
-
     $('#' + $scope.currentLinkId).focus();
   };
 
@@ -40,6 +47,9 @@ function CreateFullSupplyController($scope, messageService) {
   };
 
   $scope.showLossesAndAdjustments = function (lineItem) {
+    // keep a copy of the old losses an adjustments for just in case the dialog box is canceled;
+
+    $scope.oldLossAndAdjustment = angular.copy(lineItem.lossesAndAdjustments);
     $scope.currentRnrLineItem = lineItem;
     updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem);
     $scope.lossesAndAdjustmentsModal = true;
