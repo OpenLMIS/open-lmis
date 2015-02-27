@@ -36,6 +36,6 @@ angular.module('geographic-zones', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 
     })
     .run(function ($rootScope, AuthorizationService) {
       $rootScope.geographicZonesSelected = "selected";
-      AuthorizationService.preAuthorize('MANAGE_GEOGRAPHIC_ZONES');
+      AuthorizationService.preAuthorize('MANAGE_GEOGRAPHIC_ZONE');
     });
 

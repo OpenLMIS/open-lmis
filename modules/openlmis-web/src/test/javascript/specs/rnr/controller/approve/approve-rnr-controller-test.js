@@ -11,7 +11,7 @@
 describe('Approve Requisition controller', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, controller, requisition, regimenTemplate,
-    programRnrColumnList, nonFullSupplyLineItems, lineItems, regimenLineItems, dialog, rnrLineItem, regimenColumns, requisitionService, pageSize;
+    programRnrColumnList, nonFullSupplyLineItems, lineItems, regimenLineItems, equipmentLineItems, dialog, rnrLineItem, regimenColumns, requisitionService, pageSize;
   beforeEach(module('openlmis'));
   beforeEach(module('ui.bootstrap.dialog'));
 
@@ -32,8 +32,9 @@ describe('Approve Requisition controller', function () {
     lineItems = [];
     nonFullSupplyLineItems = [];
     regimenLineItems = [];
+    equipmentLineItems = [];
     requisition = {'status': "AUTHORIZED", 'lineItems': lineItems, 'nonFullSupplyLineItems': nonFullSupplyLineItems,
-      regimenLineItems: regimenLineItems, period: {numberOfMonths: 5}};
+      regimenLineItems: regimenLineItems, equipmentLineItems: equipmentLineItems, period: {numberOfMonths: 5}};
     $rootScope.pageSize = 2;
     scope.approvalForm = {};
     programRnrColumnList = [
@@ -48,15 +49,23 @@ describe('Approve Requisition controller', function () {
     regimenTemplate = {regimenColumns: regimenColumns};
     rnrLineItem = new RegularRnrLineItem({"fullSupply": true});
     ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: {rnr: requisition, canApproveRnr: true, numberOfMonths: 5}, rnrColumns: programRnrColumnList,
-      regimenTemplate: regimenTemplate, pageSize: pageSize, $location: location, $routeParams: routeParams, requisitionService: requisitionService});
+      regimenTemplate: regimenTemplate, pageSize: pageSize, $location: location, $routeParams: routeParams, requisitionService: requisitionService,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      comments: [],
+      equipmentOperationalStatus:[]});
   }));
 
   it('should set rnr in scope', function () {
     var spyOnRnr = spyOn(window, 'Rnr').andCallThrough();
     var requisitionData = {rnr: requisition, canApproveRnr: true};
     ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, regimenTemplate: regimenTemplate,
-      currency: '$', pageSize: pageSize, $location: location, $routeParams: routeParams});
-    expect(spyOnRnr).toHaveBeenCalledWith(requisitionData.rnr, programRnrColumnList, requisitionData.numberOfMonths);
+      currency: '$', pageSize: pageSize, $location: location, $routeParams: routeParams,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      comments: [],
+      equipmentOperationalStatus:[]});
+    //expect(spyOnRnr).toHaveBeenCalledWith(requisitionData.rnr, programRnrColumnList, requisitionData.numberOfMonths);
   });
 
   it('should set scope variables', function () {
@@ -189,7 +198,11 @@ describe('Approve Requisition controller', function () {
     var requisitionData = {rnr: requisition, canApproveRnr: true};
 
     ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
-      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
+      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     expect(2).toEqual(scope.numberOfPages);
   });
@@ -205,7 +218,11 @@ describe('Approve Requisition controller', function () {
     var requisitionData = {rnr: requisition, canApproveRnr: true};
 
     ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
-      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
+      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     expect(2).toEqual(scope.numberOfPages);
   });
@@ -220,7 +237,11 @@ describe('Approve Requisition controller', function () {
     var requisitionData = {rnr: requisition, canApproveRnr: true};
 
     ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
-      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
+      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     expect(scope.page.fullSupply[0].id).toEqual(1);
     expect(scope.page.fullSupply[1].id).toEqual(2);
@@ -238,7 +259,11 @@ describe('Approve Requisition controller', function () {
     var requisitionData = {rnr: requisition, canApproveRnr: true};
 
     ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
-      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
+      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     expect(scope.page.fullSupply[0].id).toEqual(3);
     expect(scope.page.fullSupply[1].id).toEqual(4);
@@ -254,7 +279,11 @@ describe('Approve Requisition controller', function () {
     var requisitionData = {rnr: requisition, canApproveRnr: true};
 
     ctrl = controller(ApproveRnrController, {$scope: scope, requisitionData: requisitionData, rnrColumns: programRnrColumnList, currency: '$', pageSize: pageSize,
-      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams});
+      regimenTemplate: regimenTemplate, $location: location, $routeParams: routeParams,
+      hideAdditionalCommoditiesTab: false,
+      hideSkippedProducts: false,
+      comments: [],
+      equipmentOperationalStatus:[]});
 
     expect(scope.currentPage).toEqual(1);
   });

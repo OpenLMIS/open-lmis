@@ -15,6 +15,9 @@ describe('ViewOrderListController', function () {
   beforeEach(inject(function ($rootScope, $controller, _messageService_, _$routeParams_, _$location_, _$httpBackend_) {
     scope = $rootScope.$new();
     scope.currentPage = 1;
+    scope.supplyDepot = 1;
+    scope.program = 1;
+    scope.period = 1;
     $routeParams = _$routeParams_;
     controller = $controller;
     $location = _$location_;
@@ -26,9 +29,15 @@ describe('ViewOrderListController', function () {
       {"id": 1}
     ], pageSize: 5, numberOfPages: 10};
 
-    $httpBackend.expect('GET', '/orders.json?page=1').respond(200, data);
+    $httpBackend.expect('GET', '/orders.json?page=1&period=1&program=1&supplyDepot=1').respond(200, data);
 
-    controller(ViewOrderListController, {$scope: scope});
+    controller(ViewOrderListController, {
+                                        $scope: scope,
+                                        supplylines : [],
+                                        programs: [{id:1, name: 'ARV'}],
+                                        schedules: [{id: 1, name: 'Group A'}],
+                                        years: [{id: 1, name: '2014'}]
+                });
     $httpBackend.flush();
   }));
 
@@ -49,7 +58,7 @@ describe('ViewOrderListController', function () {
       {id: 2},
       {id: 4}
     ];
-    $httpBackend.expect('GET', '/orders.json?page=3').respond(200, data);
+    $httpBackend.expect('GET', '/orders.json?page=3&period=1&program=1&supplyDepot=1').respond(200, data);
     $routeParams.page = 3;
     scope.$broadcast('$routeUpdate');
 
@@ -71,7 +80,7 @@ describe('ViewOrderListController', function () {
   it('should redirect to page 1 if call returns 0 orders and current page not 1', function () {
     data.orders = [];
     $routeParams.page = 3;
-    $httpBackend.expect('GET', '/orders.json?page=3').respond(200, data);
+    $httpBackend.expect('GET', '/orders.json?page=3&period=1&program=1&supplyDepot=1').respond(200, data);
     scope.$broadcast('$routeUpdate');
 
     $httpBackend.flush();

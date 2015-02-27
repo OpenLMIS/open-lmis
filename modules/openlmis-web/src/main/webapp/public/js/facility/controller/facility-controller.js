@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, FacilityImages, facilityImages, $q, $dialog, messageService) {
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, facilityImages, $q, $dialog, messageService) {
   $scope.$parent.facilityId = null;
   $scope.message = "";
   $scope.$parent.message = "";
