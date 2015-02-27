@@ -27,13 +27,16 @@ function DistrictConsumptionReportController($scope,  AggregateConsumptionReport
 
         ReportUserPrograms.get(function (data) {
             $scope.programs = data.programs;
+            $scope.isProgramFieldILS = false;
 
             $scope.programs.forEach( function(program) {
 
                 if(program.id == $scope.filter.program) {
 
-                    if (program.name == 'ILS')
+                    if (program.name == 'ILS') {
                         $scope.reportFooterNote = 'Note: Estimated consumption is the sum of dispensed quantity. Adjusted Consumption is adjusted for days out of stock.';
+                        $scope.isProgramFieldILS = true;
+                    }
                     else if (program.name == 'ARV')
                         $scope.reportFooterNote = 'Note: Estimated consumption is the sum of dispensed quantity, adjusted consumption includes the estimates for new patients';
                 }
