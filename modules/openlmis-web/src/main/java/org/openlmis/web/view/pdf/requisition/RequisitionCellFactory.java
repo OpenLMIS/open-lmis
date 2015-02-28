@@ -12,6 +12,7 @@ package org.openlmis.web.view.pdf.requisition;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
+import org.apache.commons.lang.NumberUtils;
 import org.apache.log4j.Logger;
 import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.ColumnType;
@@ -93,13 +94,13 @@ public class RequisitionCellFactory {
         result.add(pdfPCell);
         break;
       case NUMERIC:
-        if(!columnValue.isEmpty())
+        if(!columnValue.isEmpty() && NumberUtils.isNumber(columnValue.toString()))
           result.add(numberCell(formatter.format(Double.parseDouble(columnValue.toString())).toString()));
         else
           result.add(numberCell(columnValue));
         break;
       case CURRENCY:
-        if(!columnValue.isEmpty())
+        if(!columnValue.isEmpty() && NumberUtils.isNumber(columnValue.toString()))
           result.add(numberCell(currency + moneyFormatter.format(Double.parseDouble(columnValue.toString())).toString()));
         else
           result.add(numberCell(currency));
