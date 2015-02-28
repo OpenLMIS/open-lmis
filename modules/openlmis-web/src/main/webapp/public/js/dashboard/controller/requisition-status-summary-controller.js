@@ -154,7 +154,7 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
                         show: true,
                         radius: 3 / 4,
                         formatter: function (label, series) {
-                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:#000000;">' + Math.round(series.percent) + '%</div>';
+                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + Math.round(series.percent) + '%</div>';
                         },
                         threshold: 0.1
                     }
