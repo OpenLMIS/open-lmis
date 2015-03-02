@@ -23,10 +23,13 @@ public class RnRStatusSummaryReport {
 
     private String status;
     private Integer totalStatus;
+    private Integer totalEmergencyRnRStatus;
     private String programname;
     private String facilitycode;
     private String facilityname;
     private Date createddate;
     private String periodname;
     private String facilitytypename;
+    private String geographiczonename;
+    private String region;
 }

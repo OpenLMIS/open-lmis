@@ -543,6 +543,10 @@ services.factory('RnRStatusSummary',function($resource){
     return $resource('/dashboard/RnRStatus/:zoneId/:periodId/:programId/rnrStatus.json',{},{});
   });
 
+services.factory("EmergencyRnRStatusSummary", function($resource){
+    return $resource('/dashboard/EmergencyRnRStatus/:zoneId/:periodId/:programId/rnrStatus.json',{},{});
+});
+
 services.factory("SendMessages",function($resource){
   return $resource('/messages/send.json',{}, {post: {method:'POST'}});
 });

@@ -139,6 +139,9 @@ public class DashboardLookupService {
     public List<RnRStatusSummaryReport> getRnRStatusSummary(Long userId, Long zoneId, Long periodId, Long programId){
         return  rnRStatusSummaryReportMapper.getRnRStatusSummary(userId, zoneId, periodId, programId);
     }
+    public List<RnRStatusSummaryReport> getEmergencyRnRStatusSummary(Long userId, Long zoneId, Long periodId, Long programId){
+        return  rnRStatusSummaryReportMapper.getEmergencyRnRStatusSummary(userId, zoneId, periodId, programId);
+    }
     public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriodData(Long requisitionGroupId,Long periodId){
         return rnRStatusSummaryReportMapper.getRnRStatusByRequisitionGroupAndPeriodData(requisitionGroupId,periodId);
     }
