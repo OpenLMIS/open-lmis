@@ -29,7 +29,7 @@ public interface RnrLineItemMapper {
     "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, previousStockInHand, beginningBalance,",
     "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
     "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
-    "newPatientCount, stockOutDays, previousNormalizedConsumptions, reportingDays, ",
+    "newPatientCount, stockOutDays, previousNormalizedConsumptions, reportingDays, skipped, ",
     "modifiedBy,createdBy)",
     "VALUES (",
     "#{lineItem.rnrId}, #{lineItem.productCode}, #{lineItem.product}, #{lineItem.productDisplayOrder}, #{lineItem.productCategory},",
@@ -37,7 +37,7 @@ public interface RnrLineItemMapper {
     "#{lineItem.dispensingUnit},#{lineItem.dosesPerMonth}, #{lineItem.dosesPerDispensingUnit}, #{lineItem.maxMonthsOfStock},",
     "#{lineItem.totalLossesAndAdjustments}, #{lineItem.packsToShip}, #{lineItem.packSize}, #{lineItem.price},#{lineItem.roundToZero},",
     "#{lineItem.packRoundingThreshold}, #{lineItem.fullSupply}, #{lineItem.newPatientCount}, #{lineItem.stockOutDays},",
-    "#{previousNormalizedConsumptions}, #{lineItem.reportingDays}, #{lineItem.modifiedBy}, #{lineItem.createdBy})"})
+    "#{previousNormalizedConsumptions}, #{lineItem.reportingDays}, #{lineItem.skipped} , #{lineItem.modifiedBy}, #{lineItem.createdBy})"})
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 

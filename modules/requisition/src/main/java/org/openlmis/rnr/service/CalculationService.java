@@ -20,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.collections.CollectionUtils.collect;
 
@@ -92,6 +94,30 @@ public class CalculationService {
     }
 
     fillPreviousNCsInLineItems(requisition, numberOfMonths, trackingDate);
+  }
+
+  public void copySkippedFieldFromPreviousPeriod(Rnr requisition){
+    List<ProcessingPeriod> fivePreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
+
+    if(fivePreviousPeriods.size() ==0)
+    {
+      return;
+    }
+
+    Rnr previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
+      requisition.getProgram(), fivePreviousPeriods.get(0));
+    Map map = new HashMap<String, RnrLineItem>();
+
+
+    for(RnrLineItem lineItem: previousRequisition.getFullSupplyLineItems()){
+     map.put(lineItem.getProductCode(), lineItem);
+    }
+    for(RnrLineItem lineItem: requisition.getFullSupplyLineItems()){
+      RnrLineItem previous = (RnrLineItem) map.get(lineItem.getProductCode());
+      if(previous != null) {
+        lineItem.setSkipped(previous.getSkipped());
+      }
+    }
   }
 
   private Integer getReportingDaysBasedOnRequisition(Rnr requisition, String lineItemProductCode, Date startDate, Integer numberOfMonths) {

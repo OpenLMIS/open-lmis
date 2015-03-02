@@ -135,6 +135,7 @@ public class RequisitionService {
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);
+    calculationService.copySkippedFieldFromPreviousPeriod(requisition);
 
     // if program supports equipments, initialize it here.
     if(program.isEquipmentConfigured()){
