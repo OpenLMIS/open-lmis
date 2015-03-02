@@ -82,22 +82,22 @@
                     <span ng-bind="equipmentLineItem.equipmentSerial" class="cell-text"></span>
                 </td>
                 <td class="cell-input" style="padding-top:5px;">
-                     <select class="cell-text" ng-model="equipmentLineItem.operationalStatusId">
+                     <select ng-disabled="formDisabled" class="cell-text" ng-model="equipmentLineItem.operationalStatusId">
                          <option  ng-repeat="status in equipmentOperationalStatus" value="{{status.id}}" ng-selected="equipmentLineItem.operationalStatusId == status.id">{{status.name}}</option>
                      </select>
                 </td>
                 <td class="cell-input">
-                    <input class="cell-text" ng-disable="disableForm || !equipmentLineItem.enableTestCount" type="text" ng-model="equipmentLineItem.testCount">
+                    <input ng-disabled="formDisabled" class="cell-text" ng-disable="disableForm || !equipmentLineItem.enableTestCount" type="text" ng-model="equipmentLineItem.testCount">
                 </td>
                 <td class="cell-input">
-                    <input class="cell-text" ng-disable="disableForm || !equipmentLineItem.enableTotalCount" type="text" ng-model="equipmentLineItem.totalCount">
+                    <input ng-disabled="formDisabled" class="cell-text" ng-disable="disableForm || !equipmentLineItem.enableTotalCount" type="text" ng-model="equipmentLineItem.totalCount">
                 </td>
                 <td class="cell-input">
-                    <input class="cell-text" type="text" ng-model="equipmentLineItem.daysOutOfUse">
+                    <input ng-disabled="formDisabled" class="cell-text" type="text" ng-model="equipmentLineItem.daysOutOfUse">
                 </td>
                 <td class="cell-input" >
                   <span  ng-class="( ( equipmentLineItem.remarks == undefined || equipmentLineItem.remarks == '' ) && equipmentLineItem.operationalStatusId == 3)?'cell-error-highlight':''" class="input-error-parent-cell" >
-                    <input class="cell-text" type="text" ng-model="equipmentLineItem.remarks">
+                    <input ng-disabled="formDisabled" class="cell-text" type="text" ng-model="equipmentLineItem.remarks">
                   </span>
                     
                 </td>
