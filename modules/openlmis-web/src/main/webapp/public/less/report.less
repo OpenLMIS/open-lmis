@@ -169,3 +169,41 @@ th.header{
   padding: 2px 4px;
   background-color: rgba(0, 0, 0, 0.7);
 }
+
+.scroll table {
+  width: 100%;
+}
+
+.scroll thead, .scroll tbody, .scroll tr, .scroll td, .scroll th { display: block; }
+
+.scroll tr:after {
+  content: ' ';
+  display: block;
+  visibility: hidden;
+  clear: both;
+}
+
+.scroll thead th {
+  height: 20px;
+
+  /*text-align: left;*/
+}
+
+.scroll tbody {
+  height: 500px;
+  overflow-y: auto;
+}
+
+.scroll thead {
+  /* fallback */
+}
+
+.scroll thead th {
+  /*width: 25%;*/
+  float: left;
+}
+
+.scroll tbody td {
+  /*width: 25%;*/
+  float: left;
+}
