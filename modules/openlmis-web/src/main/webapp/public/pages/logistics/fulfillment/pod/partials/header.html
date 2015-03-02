@@ -13,7 +13,7 @@
   <div class="info-box padding2px">
     <div class="pull-left">
       <div id="requisitionTypeClass" ng-class="{'emergency': order.emergency, 'regular': !order.emergency}">
-        <span id="requisitionType" openlmis-message="requisitionType"></span>
+        <span id="requisitionType" openlmis-message="requisitionType"></span> <span ng-bind="order.programName"></span>
       </div>
 
     </div>
@@ -40,6 +40,14 @@
         <div class="span6">
           <strong id="reportingPeriodLabel" openlmis-message="label.facility.reportingPeriod"></strong>:&nbsp;<span
             id="periodStartDate" ng-bind="order.periodStartDate + ' - ' + order.periodEndDate"></span>
+        </div>
+        <div class="span3">
+          <strong id="districtLabel" openlmis-message="label.district"></strong>: &nbsp;<span
+          id="district" ng-bind="order.district"></span>
+        </div>
+        <div class="span3">
+          <strong id="regionLabel" openlmis-message="label.region"></strong>: &nbsp;<span
+          id="regionCode" ng-bind="order.region"></span>
         </div>
       </div>
     </div>

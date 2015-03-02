@@ -37,8 +37,12 @@ public class OrderPODDTO {
   private String supplyingDepot;
   private String periodStartDate;
   private String periodEndDate;
+  private String programName;
+  private String district;
+  private String region;
   private Boolean emergency;
   private Boolean alreadyReceived;
+
 
   public static OrderPODDTO getOrderDetailsForPOD(Order order) throws ParseException {
     OrderPODDTO orderPODDTO = new OrderPODDTO();
@@ -51,6 +55,10 @@ public class OrderPODDTO {
 
     orderPODDTO.setFacilityCode(order.getRnr().getFacility().getCode());
     orderPODDTO.setFacilityName(order.getRnr().getFacility().getName());
+
+    orderPODDTO.setProgramName(order.getRnr().getProgram().getName());
+    orderPODDTO.setDistrict(order.getRnr().getFacility().getGeographicZone().getName());
+    orderPODDTO.setRegion(order.getRnr().getFacility().getGeographicZone().getParent().getName());
 
     orderPODDTO.setPeriodStartDate(order.getRnr().getPeriod().getStringStartDate());
     orderPODDTO.setPeriodEndDate(order.getRnr().getPeriod().getStringEndDate());

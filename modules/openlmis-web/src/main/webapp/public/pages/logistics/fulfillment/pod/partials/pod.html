@@ -15,7 +15,7 @@
        target="_blank"></a>
   </span>
 
-  <h2 id="podPageTitle" openlmis-message="header.proof.of.delivery"></h2>
+  <h2 id="podPageTitle" ><span openlmis-message="header.proof.of.delivery"></span> <span ng-bind="order.programName"></span></h2>
   <ng-include src="'/public/pages/logistics/fulfillment/pod/partials/header.html'"></ng-include>
 
   <div id="pageErrors" class="page-errors" ng-show="errorPages">
