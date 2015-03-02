@@ -31,7 +31,7 @@
     </div>
 
   </div>
-  <form id="podForm" name="podForm">
+  <form name="podForm">
     <div ng-hide="pageLineItems.length" class="alert alert-info" id="noProductsLabel"
          openlmis-message="label.no.products"></div>
     <div id="pod" ng-show="pageLineItems.length" class="rnr-table">
@@ -124,7 +124,8 @@
     <openlmis-pagination ng-show="pageLineItems.length" num-pages="numberOfPages" current-page="currentPage"
                          max-size="10"
                          error-pages="errorPages"></openlmis-pagination>
-    <div id="podFooter">
+
+    <div>
       <div class="info-box clearfix">
         <div class="row-fluid">
           <div class="span3 cell-input">
