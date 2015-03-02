@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RequisitionStatusSummaryController($scope, messageService, $timeout,userPreferredFilters, $filter, RnRStatusSummary, programsList, FlatGeographicZoneList, UserGeographicZoneTree, dashboardMenuService, $location, dashboardFiltersHistoryService, formInputValue, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
+function RequisitionStatusSummaryController($scope, messageService, EmergencyRnRStatusSummary, $timeout, userPreferredFilters, $filter, RnRStatusSummary, programsList, FlatGeographicZoneList, UserGeographicZoneTree, dashboardMenuService, $location, dashboardFiltersHistoryService, formInputValue, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
 
     initialize();
 
@@ -17,13 +17,15 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
         $scope.$parent.currentTab = "RNR-STATUS-SUMMARY";
 
     }
+
+    // $scope.emergencyData = emergencies;
     var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
-    if(isUndefined(filterHistory)){
-        $scope.formFilter = $scope.filterObject  = userPreferredFilters || {};
+    if (isUndefined(filterHistory)) {
+        $scope.formFilter = $scope.filterObject = userPreferredFilters || {};
 
-    }else{
-        $scope.formFilter = $scope.filterObject  = filterHistory || {};
+    } else {
+        $scope.formFilter = $scope.filterObject = filterHistory || {};
     }
 
 
@@ -37,7 +39,7 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
     $scope.loadGeoZones = function () {
         UserGeographicZoneTree.get({programId: $scope.formFilter.programId}, function (data) {
             $scope.zones = data.zone;
-            if(!isUndefined($scope.zones)){
+            if (!isUndefined($scope.zones)) {
                 $scope.rootZone = $scope.zones.id;
             }
         });
@@ -76,6 +78,28 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
             $scope.resetRnRStatusData();
             return;
         }
+
+        $scope.totalEmergency = 0;
+
+        $scope.$watch(EmergencyRnRStatusSummary.get({zoneId: $scope.filterObject.zoneId,
+                periodId: $scope.filterObject.periodId,
+                programId: $scope.filterObject.programId
+            },
+            function (data) {
+
+                if (!isUndefined(data.emergencyRnrStatus)) {
+                    $scope.emergency = [];
+                    $scope.emergency = data.emergencyRnrStatus;
+
+                    for (var i = 0; i < $scope.emergency.length; i++) {
+                        $scope.totalEmergency += $scope.emergency[i].totalEmergencyRnRStatus;
+                    }
+                }
+
+                $scope.paramsChanged($scope.tableParams);
+            }));
+
+
         RnRStatusSummary.get({zoneId: $scope.filterObject.zoneId,
                 periodId: $scope.filterObject.periodId,
                 programId: $scope.filterObject.programId
@@ -96,8 +120,11 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
                     var statusData = _.pluck($scope.dataRows, 'status');
                     var totalData = _.pluck($scope.dataRows, 'totalStatus');
                     var color = {AUTHORIZED: '#FF0000', IN_APPROVAL: '#FFFF00', APPROVED: '#0000FF', RELEASED: '#008000'};
+                    $scope.value = 0;
                     for (var i = 0; i < $scope.dataRows.length; i++) {
+
                         $scope.total += $scope.dataRows[i].totalStatus;
+
                         var labelKey = 'label.rnr.status.summary.' + statusData[i];
                         var label = messageService.get(labelKey);
                         $scope.RnRStatusPieChartData[i] = {
@@ -121,11 +148,16 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
                 } else {
                     $scope.resetRnRStatusReportData();
                 }
+                $scope.overAllTotal();
                 $scope.paramsChanged($scope.tableParams);
             });
-        // }
-
     };
+
+    $scope.allTotal = 0;
+    $scope.overAllTotal = function () {
+    $scope.allTotal = $scope.totalEmergency + $scope.total;
+    };
+
 
     $scope.resetRnRStatusData = function () {
         $scope.rnrStatusRenderedData = null;
@@ -139,7 +171,7 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
 
     var getFilterValues = function () {
         $scope.formFilter.programName = getSelectedItemName($scope.formFilter.programId, $scope.programs);
-        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId,$scope.periods);
+        $scope.formFilter.periodName = getSelectedItemName($scope.formFilter.periodId, $scope.periods);
         $scope.formFilter.zoneName = getSelectedZoneName($scope.formFilter.zoneId, $scope.zones, $scope.geographicZones);
     };
 
@@ -154,7 +186,7 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
                         show: true,
                         radius: 3 / 4,
                         formatter: function (label, series) {
-                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:#000000;">' + Math.round(series.percent) + '%</div>';
+                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + Math.round(series.percent) + '%</div>';
                         },
                         threshold: 0.1
                     }
@@ -292,15 +324,15 @@ function RequisitionStatusSummaryController($scope, messageService, $timeout,use
     });
 
     $scope.$on('$viewContentLoaded', function () {
-        $timeout(function(){
+        $timeout(function () {
             $scope.search();
 
-        },1000);
+        }, 1000);
 
     });
-    $scope.search = function(){
+    $scope.search = function () {
         getFilterValues();
-        if($scope.rootZone == $scope.formFilter.zoneId){
+        if ($scope.rootZone == $scope.formFilter.zoneId) {
             return;
         }
         $scope.loadRnRStatus();

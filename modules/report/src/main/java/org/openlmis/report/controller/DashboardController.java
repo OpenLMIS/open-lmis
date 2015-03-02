@@ -50,7 +50,7 @@ public class DashboardController extends BaseController {
     public static final String REPORTING_DETAILS = "reporting";
     public static final String RNR_STATUS_DETAILS = "rnrDetails";
     private static final String RNR_STATUS_BY_REQUISITION_GROUP = "rnrStatus";
-    private static final String RNR_STATUS_BY_REQUISITION_GROUP_DETAILS = "rnrStatusDetailTest";
+    private static final String EMERGENCY_RNR_STATUS_SUMMARY = "emergencyRnrStatus";
     @Autowired
     DashboardLookupService lookupService;
 
@@ -218,6 +218,17 @@ public class DashboardController extends BaseController {
 
         return OpenLmisResponse.response(RNR_STATUS_BY_REQUISITION_GROUP, this.lookupService.getRnRStatusSummary(loggedInUserId(request), zoneId, periodId, programId));
     }
+
+
+    @RequestMapping(value = "/EmergencyRnRStatus/{zoneId}/{periodId}/{programId}/rnrStatus", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getEmergencyRnRStatusSummary(@PathVariable("zoneId") Long zoneId,
+                                                                @PathVariable("periodId") Long periodId,
+                                                                @PathVariable("programId") Long programId,
+                                                                HttpServletRequest request) {
+
+        return OpenLmisResponse.response(EMERGENCY_RNR_STATUS_SUMMARY, this.lookupService.getEmergencyRnRStatusSummary(loggedInUserId(request), zoneId, periodId, programId));
+    }
+
 
     /*@RequestMapping(value="/RnRStatusByRequisitionGroupDetails",method = GET,headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>getRnRStatusDetails(

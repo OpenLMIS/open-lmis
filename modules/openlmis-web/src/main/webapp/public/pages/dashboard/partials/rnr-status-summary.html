@@ -77,15 +77,27 @@
                                ng-table="tableParams">
                             <tbody>
                             <tr ng-repeat="row in dataRows">
-                                <td data-title="'Status'"><span
+                                <td  style="text-align: left;" data-title="'Pending at'"><span
                                         openlmis-message="label.rnr.status.summary.{{row.status}}"></span></td>
-                                <td data-title="'Number Of RnR Created'">{{row.totalStatus}}</td>
+                                <td data-title="'Number Of RnR'">{{row.totalStatus}}</td>
 
 
                             </tr>
                             <tr>
-                                <td>Total:</td>
+                                <td style="font-weight: bold;text-align: left;" openlmis-message="label.rnr.status.total.regular"></td>
                                 <td class="number" style="font-weight: bold;text-align: left;">{{total}}
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;text-align: left;" openlmis-message="label.rnr.status.total.emergency"></td>
+                                <td class="number" style="font-weight: bold;text-align: left;">{{totalEmergency}}
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;text-align: left;" openlmis-message="label.rnr.status.total.overall">Overall Total R&R's :</td>
+                                <td class="number" style="font-weight: bold;text-align: left;">{{allTotal}}
 
                                 </td>
                             </tr>
