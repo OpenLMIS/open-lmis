@@ -92,4 +92,24 @@ public interface RnRStatusSummaryReportMapper {
             "group by programname, status " +
             "order by status")
     public List<RnRStatusSummaryReport> getRnRStatusByRequisitionGroupAndPeriodData(@Param("requisitionGroupId") Long requisitionGroupId, @Param("periodId") Long periodId);
+
+
+    @Select(" select x.status,y.expected,x.totalrnrstatus from  " +
+            " ( " +
+            " SELECT distinct requisition_status_changes.status,count(*) totalrnrstatus " +
+            " from " +
+            " requisitions " +
+            " INNER JOIN requisition_status_changes on requisition_status_changes.rnrid = requisitions.id " +
+            " INNER JOIN facilities on requisitions.facilityid = facilities.id " +
+            " INNER JOIN geographic_zones on facilities.geographiczoneid = geographic_zones.id " +
+            " where " +
+            " requisitions.programid = #{programId} and  requisitions.periodid=#{periodId} and requisitions.emergency = false  " +
+            " and requisition_status_changes.status  IN ('IN_APPROVAL','AUTHORIZED','APPROVED','RELEASED') " +
+            " and geographic_zones.Id in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int)) " +
+            " group by requisition_status_changes.status " +
+            "  )x, " +
+            "  (select count(*) expected from vw_expected_facilities where programId=#{programId} and periodid=#{periodId} " +
+            "   and geographiczoneId in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int)) " +
+            "  )y")
+    public List<RnRStatusSummaryReport> getExtraAnalyticsDataForRnRSummary(@Param("userId") Long userId,@Param("zoneId") Long zoneId,@Param("periodId") Long periodId, @Param("programId") Long programId);
 }

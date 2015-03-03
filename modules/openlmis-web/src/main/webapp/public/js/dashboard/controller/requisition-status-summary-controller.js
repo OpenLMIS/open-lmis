@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RequisitionStatusSummaryController($scope, messageService, EmergencyRnRStatusSummary, $timeout, userPreferredFilters, $filter, RnRStatusSummary, programsList, FlatGeographicZoneList, UserGeographicZoneTree, dashboardMenuService, $location, dashboardFiltersHistoryService, formInputValue, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
+function RequisitionStatusSummaryController($scope, messageService, EmergencyRnRStatusSummary,ExtraAnalyticDataForRnRStatus,$timeout, userPreferredFilters, $filter, RnRStatusSummary, programsList, FlatGeographicZoneList, UserGeographicZoneTree, dashboardMenuService, $location, dashboardFiltersHistoryService, formInputValue, ReportSchedules, ReportPeriods, OperationYears, ReportPeriodsByScheduleAndYear) {
 
     initialize();
 
@@ -18,7 +18,6 @@ function RequisitionStatusSummaryController($scope, messageService, EmergencyRnR
 
     }
 
-    // $scope.emergencyData = emergencies;
     var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
     if (isUndefined(filterHistory)) {
@@ -99,6 +98,20 @@ function RequisitionStatusSummaryController($scope, messageService, EmergencyRnR
                 $scope.paramsChanged($scope.tableParams);
             }));
 
+        $scope.analyticData= [];
+        ExtraAnalyticDataForRnRStatus.get({zoneId: $scope.filterObject.zoneId,
+                periodId: $scope.filterObject.periodId,
+                programId: $scope.filterObject.programId
+            },
+            function (data) {
+                $scope.analyticData = data.analyticsData;
+
+            });
+
+        $scope.onDetailClicked = function(feature){
+            $scope.currentFeature = feature;
+            $scope.$broadcast('openDialogBox');
+        };
 
         RnRStatusSummary.get({zoneId: $scope.filterObject.zoneId,
                 periodId: $scope.filterObject.periodId,
@@ -119,7 +132,7 @@ function RequisitionStatusSummaryController($scope, messageService, EmergencyRnR
                     }
                     var statusData = _.pluck($scope.dataRows, 'status');
                     var totalData = _.pluck($scope.dataRows, 'totalStatus');
-                    var color = {AUTHORIZED: '#FF0000', IN_APPROVAL: '#FFFF00', APPROVED: '#0000FF', RELEASED: '#008000'};
+                    var color = {AUTHORIZED: '#FF0000', IN_APPROVAL: '#FFA500', APPROVED: '#0000FF', RELEASED: '#008000'};
                     $scope.value = 0;
                     for (var i = 0; i < $scope.dataRows.length; i++) {
 
@@ -184,7 +197,7 @@ function RequisitionStatusSummaryController($scope, messageService, EmergencyRnR
                     radius: 1,
                     label: {
                         show: true,
-                        radius: 3 / 4,
+                        radius: 2 / 4,
                         formatter: function (label, series) {
                             return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + Math.round(series.percent) + '%</div>';
                         },
