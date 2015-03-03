@@ -93,6 +93,8 @@ public class RequisitionService {
   private StatusChangeEventService statusChangeEventService;
   @Autowired
   private EquipmentInventoryService equipmentInventoryService;
+  @Autowired
+  private ConfigurationSettingService configurationSettingsService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -135,7 +137,9 @@ public class RequisitionService {
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);
-
+    if(configurationSettingsService.getBoolValue("RNR_COPY_SKIPPED_FROM_PREVIOUS_RNR")) {
+      calculationService.copySkippedFieldFromPreviousPeriod(requisition);
+    }
     // if program supports equipments, initialize it here.
     if(program.isEquipmentConfigured()){
        populateEquipments(requisition);

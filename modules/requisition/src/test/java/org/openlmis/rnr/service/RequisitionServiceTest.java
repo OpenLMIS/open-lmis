@@ -129,6 +129,8 @@ public class RequisitionServiceTest {
   @Mock
   private CalculationService calculationService;
   @Mock
+  private ConfigurationSettingService configurationSettingsService;
+  @Mock
   private DbMapper dbMapper;
   @Mock
   private BudgetLineItemService budgetLineItemService;
@@ -147,6 +149,7 @@ public class RequisitionServiceTest {
     initiatedRnr = make(a(RequisitionBuilder.defaultRequisition, with(status, INITIATED), with(modifiedBy, USER_ID)));
     authorizedRnr = make(a(RequisitionBuilder.defaultRequisition, with(status, AUTHORIZED), with(modifiedBy, USER_ID)));
     inApprovalRnr = make(a(defaultRequisition, with(status, IN_APPROVAL), with(modifiedBy, USER_ID)));
+    when(configurationSettingsService.getBoolValue("RNR_COPY_SKIPPED_FROM_PREVIOUS_RNR")).thenReturn(false);
     rnrColumns = new ArrayList<RnrColumn>() {{
       add(new RnrColumn());
     }};
