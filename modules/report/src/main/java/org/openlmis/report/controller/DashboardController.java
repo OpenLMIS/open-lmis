@@ -230,13 +230,13 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response(EMERGENCY_RNR_STATUS_SUMMARY, this.lookupService.getEmergencyRnRStatusSummary(loggedInUserId(request), zoneId, periodId, programId));
     }
 
-    @RequestMapping(value = "/ExtraAnalyticsRnRStatus/{periodId}/{programId}/statusData", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getExtraAnalyticsDataForRnRStatusSummary(
+    @RequestMapping(value = "/extraAnalyticsRnRStatus/{zoneId}/{periodId}/{programId}/statusData", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getExtraAnalyticsDataForRnRStatusSummary(@PathVariable("zoneId") Long zoneId,
                                                                          @PathVariable("periodId") Long periodId,
                                                                          @PathVariable("programId") Long programId,
                                                                          HttpServletRequest request) {
 
-        return OpenLmisResponse.response(EXTRA_ANALYTICS_DATA_FOR_RNR_SUMMARY, this.lookupService.getExtraAnalyticsDataForRnRSummary(periodId, programId));
+        return OpenLmisResponse.response(EXTRA_ANALYTICS_DATA_FOR_RNR_SUMMARY, this.lookupService.getExtraAnalyticsDataForRnRSummary(loggedInUserId(request), zoneId,periodId, programId));
     }
 
     @RequestMapping(value = "/rnrStatus-detail", method = GET, headers = ACCEPT_JSON)

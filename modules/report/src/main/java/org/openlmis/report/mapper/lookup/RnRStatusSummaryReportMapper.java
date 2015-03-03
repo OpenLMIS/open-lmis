@@ -94,27 +94,22 @@ public interface RnRStatusSummaryReportMapper {
     public List<RnRStatusSummaryReport> getRnRStatusByRequisitionGroupAndPeriodData(@Param("requisitionGroupId") Long requisitionGroupId, @Param("periodId") Long periodId);
 
 
-    @Select("WITH Q as (select x.status,x.totalRnRStatus,y.expected FROM \n" +
-            "(SELECT status,count(*) totalRnRStatus FROM requisition_status_changes\n" +
-            "WHERE rnrId IN \n" +
-            "(SELECT id from requisitions \n" +
-            "JOIN vw_facility_requisitions ON requisitions.ID = vw_facility_requisitions.RNRid \n" +
-            " WHERE requisitions.programId=#{programId} AND requisitions.periodId=#{periodId}  and "+
-            "requisitions.status NOT IN ('INITIATED', 'SUBMITTED', 'SKIPPED','Not yet started') and requisitions.emergency = false\n" +
-            ") and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED','Not yet started')\n" +
-            " GROUP BY Status) x,\n" +
-            " (SELECT count(*) expected FROM vw_expected_facilities WHERE " +
-            "vw_expected_facilities.programId=#{programId} AND  vw_expected_facilities.periodId=#{periodId} "+
-            " )y\n" +
-            "\n" +
-            ") SELECT status,totalRnRStatus,expected,\n" +
-            " \n" +
-            " ROUND(\n" +
-            "  100.0 * (\n" +
-            "      SUM(CASE WHEN expected > 0 THEN totalRnRStatus ELSE 0 END) / expected\n" +
-            "  ), 0) AS percent_total\n" +
-            " FROM q\n" +
-            " GROUP BY q.status,q.totalRnRStatus,q.expected\n")
-    public List<RnRStatusSummaryReport> getExtraAnalyticsDataForRnRSummary(@Param("periodId") Long periodId,
-            @Param("programId") Long programId);
+    @Select(" select x.status,y.expected,x.totalrnrstatus from  " +
+            " ( " +
+            " SELECT distinct requisition_status_changes.status,count(*) totalrnrstatus " +
+            " from " +
+            " requisitions " +
+            " INNER JOIN requisition_status_changes on requisition_status_changes.rnrid = requisitions.id " +
+            " INNER JOIN facilities on requisitions.facilityid = facilities.id " +
+            " INNER JOIN geographic_zones on facilities.geographiczoneid = geographic_zones.id " +
+            " where " +
+            " requisitions.programid = #{programId} and  requisitions.periodid=#{periodId} and requisitions.emergency = false  " +
+            " and requisition_status_changes.status  IN ('IN_APPROVAL','AUTHORIZED','APPROVED','RELEASED') " +
+            " and geographic_zones.Id in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int)) " +
+            " group by requisition_status_changes.status " +
+            "  )x, " +
+            "  (select count(*) expected from vw_expected_facilities where programId=#{programId} and periodid=#{periodId} " +
+            "   and geographiczoneId in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int)) " +
+            "  )y")
+    public List<RnRStatusSummaryReport> getExtraAnalyticsDataForRnRSummary(@Param("userId") Long userId,@Param("zoneId") Long zoneId,@Param("periodId") Long periodId, @Param("programId") Long programId);
 }

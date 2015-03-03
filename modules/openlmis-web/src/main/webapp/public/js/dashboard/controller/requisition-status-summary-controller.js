@@ -18,7 +18,6 @@ function RequisitionStatusSummaryController($scope, messageService, EmergencyRnR
 
     }
 
-    // $scope.emergencyData = emergencies;
     var filterHistory = dashboardFiltersHistoryService.get($scope.$parent.currentTab);
 
     if (isUndefined(filterHistory)) {
@@ -100,7 +99,7 @@ function RequisitionStatusSummaryController($scope, messageService, EmergencyRnR
             }));
 
         $scope.analyticData= [];
-        ExtraAnalyticDataForRnRStatus.get({
+        ExtraAnalyticDataForRnRStatus.get({zoneId: $scope.filterObject.zoneId,
                 periodId: $scope.filterObject.periodId,
                 programId: $scope.filterObject.programId
             },
