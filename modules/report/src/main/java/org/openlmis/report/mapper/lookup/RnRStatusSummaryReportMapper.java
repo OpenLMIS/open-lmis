@@ -92,4 +92,29 @@ public interface RnRStatusSummaryReportMapper {
             "group by programname, status " +
             "order by status")
     public List<RnRStatusSummaryReport> getRnRStatusByRequisitionGroupAndPeriodData(@Param("requisitionGroupId") Long requisitionGroupId, @Param("periodId") Long periodId);
+
+
+    @Select("WITH Q as (select x.status,x.totalRnRStatus,y.expected FROM \n" +
+            "(SELECT status,count(*) totalRnRStatus FROM requisition_status_changes\n" +
+            "WHERE rnrId IN \n" +
+            "(SELECT id from requisitions \n" +
+            "JOIN vw_facility_requisitions ON requisitions.ID = vw_facility_requisitions.RNRid \n" +
+            " WHERE requisitions.programId=#{programId} AND requisitions.periodId=#{periodId}  and "+
+            "requisitions.status NOT IN ('INITIATED', 'SUBMITTED', 'SKIPPED','Not yet started') and requisitions.emergency = false\n" +
+            ") and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED','Not yet started')\n" +
+            " GROUP BY Status) x,\n" +
+            " (SELECT count(*) expected FROM vw_expected_facilities WHERE " +
+            "vw_expected_facilities.programId=#{programId} AND  vw_expected_facilities.periodId=#{periodId} "+
+            " )y\n" +
+            "\n" +
+            ") SELECT status,totalRnRStatus,expected,\n" +
+            " \n" +
+            " ROUND(\n" +
+            "  100.0 * (\n" +
+            "      SUM(CASE WHEN expected > 0 THEN totalRnRStatus ELSE 0 END) / expected\n" +
+            "  ), 0) AS percent_total\n" +
+            " FROM q\n" +
+            " GROUP BY q.status,q.totalRnRStatus,q.expected\n")
+    public List<RnRStatusSummaryReport> getExtraAnalyticsDataForRnRSummary(@Param("periodId") Long periodId,
+            @Param("programId") Long programId);
 }

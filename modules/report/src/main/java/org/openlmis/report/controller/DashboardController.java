@@ -51,6 +51,7 @@ public class DashboardController extends BaseController {
     public static final String RNR_STATUS_DETAILS = "rnrDetails";
     private static final String RNR_STATUS_BY_REQUISITION_GROUP = "rnrStatus";
     private static final String EMERGENCY_RNR_STATUS_SUMMARY = "emergencyRnrStatus";
+    private static  final String EXTRA_ANALYTICS_DATA_FOR_RNR_SUMMARY = "analyticsData";
     @Autowired
     DashboardLookupService lookupService;
 
@@ -229,15 +230,14 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response(EMERGENCY_RNR_STATUS_SUMMARY, this.lookupService.getEmergencyRnRStatusSummary(loggedInUserId(request), zoneId, periodId, programId));
     }
 
+    @RequestMapping(value = "/ExtraAnalyticsRnRStatus/{periodId}/{programId}/statusData", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getExtraAnalyticsDataForRnRStatusSummary(
+                                                                         @PathVariable("periodId") Long periodId,
+                                                                         @PathVariable("programId") Long programId,
+                                                                         HttpServletRequest request) {
 
-    /*@RequestMapping(value="/RnRStatusByRequisitionGroupDetails",method = GET,headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse>getRnRStatusDetails(
-            @RequestParam("requisitionGroupId") Long requisitionGroupId,
-            @RequestParam("periodId") Long periodId
-    ){
-        return OpenLmisResponse.response(RNR_STATUS_BY_REQUISITION_GROUP_DETAILS,this.lookupService.getRnRStatusByRequisitionGroupAndPeriodData(requisitionGroupId,periodId));
+        return OpenLmisResponse.response(EXTRA_ANALYTICS_DATA_FOR_RNR_SUMMARY, this.lookupService.getExtraAnalyticsDataForRnRSummary(periodId, programId));
     }
-*/
 
     @RequestMapping(value = "/rnrStatus-detail", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getRnRStatusDetail(@RequestParam("periodId") Long periodId,

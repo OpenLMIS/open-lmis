@@ -149,6 +149,9 @@ public class DashboardLookupService {
     public List<RnRStatusSummaryReport> getRnRStatusDetail(Long userId, Long periodId, Long programId,  Long zoneId, String status){
         return rnRStatusSummaryReportMapper.getRnRStatusDetail(userId,periodId,programId, zoneId, status);
     }
+    public List<RnRStatusSummaryReport>getExtraAnalyticsDataForRnRSummary(Long periodId, Long programId){
+        return rnRStatusSummaryReportMapper.getExtraAnalyticsDataForRnRSummary(periodId,programId);
+    }
 
     public DashboardLookUpReportHeader getProductNameById(Long id,long periodId) {
         DashboardLookUpReportHeader dashboardLookUpReportHeader= new DashboardLookUpReportHeader();

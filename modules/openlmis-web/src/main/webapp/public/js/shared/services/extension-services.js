@@ -1005,3 +1005,6 @@ services.factory('HelpDocumentList', function ($resource) {
 });
 
 
+services.factory('ExtraAnalyticDataForRnRStatus',function($resource){
+   return $resource('/dashboard/ExtraAnalyticsRnRStatus/:periodId/:programId/statusData.json',{},{});
+});

@@ -23,6 +23,8 @@ public class RnRStatusSummaryReport {
 
     private String status;
     private Integer totalStatus;
+    private Integer expected;
+    private Integer totalRnRStatus;
     private Integer totalEmergencyRnRStatus;
     private String programname;
     private String facilitycode;
