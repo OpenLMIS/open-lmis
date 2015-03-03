@@ -111,7 +111,6 @@ function RequisitionStatusSummaryController($scope, messageService, EmergencyRnR
 
         $scope.onDetailClicked = function(feature){
             $scope.currentFeature = feature;
-            alert(JSON.stringify($scope.currentFeature));
             $scope.$broadcast('openDialogBox');
         };
 
