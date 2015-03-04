@@ -110,9 +110,25 @@ function RequisitionStatusSummaryController($scope, messageService, EmergencyRnR
 
         $scope.onDetailClicked = function(feature){
             $scope.currentFeature = feature;
-            $scope.$broadcast('openDialogBox');
+            //console.log($scope.currentFeature.status);
+            rnrStatusSummaryDetails($scope.currentFeature.status);
+
         };
 
+        function rnrStatusSummaryDetails(item) {
+            if (item) {
+                var status;
+                if (!isUndefined( $scope.currentFeature.status)) {
+                    status =  $scope.currentFeature.status;
+                }
+                var rnrDetailPath = '/rnr-status-report/program/' + $scope.filterObject.programId + '/period/' + $scope.filterObject.periodId;
+                dashboardMenuService.addTab('menu.header.dashboard.rnr.status.detail', '/public/pages/dashboard/index.html#' + rnrDetailPath, 'RNR-STATUS-DETAIL', true, 8);
+                $location.path(rnrDetailPath).search("status=" + status + "&zoneId=" + $scope.filterObject.zoneId);
+
+                $scope.$apply();
+            }
+
+        }
         RnRStatusSummary.get({zoneId: $scope.filterObject.zoneId,
                 periodId: $scope.filterObject.periodId,
                 programId: $scope.filterObject.programId
