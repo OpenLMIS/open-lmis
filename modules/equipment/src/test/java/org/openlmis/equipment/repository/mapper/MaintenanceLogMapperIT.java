@@ -14,6 +14,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.equipment.builder.MaintenanceLogBuilder;
 import org.openlmis.equipment.domain.MaintenanceLog;
@@ -39,6 +42,9 @@ public class MaintenanceLogMapperIT {
   @Autowired
   private MaintenanceLogMapper mapper;
 
+  @Autowired
+  private FacilityMapper facilityMapper;
+
   @Before
   public void setup(){
 
@@ -46,7 +52,11 @@ public class MaintenanceLogMapperIT {
 
   @Test
   public void testGetById() throws Exception {
+    Facility facility  = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
+
     MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
+    log.setFacilityId(facility.getId());
     mapper.insert(log);
 
     MaintenanceLog log2 = mapper.getById(log.getId());
@@ -55,9 +65,14 @@ public class MaintenanceLogMapperIT {
 
   @Test
   public void testGetAll() throws Exception {
+    Facility facility  = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
+
     List<MaintenanceLog> logs = mapper.getAll();
     assertEquals(0, logs.size());
+
     MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
+    log.setFacilityId(facility.getId());
     mapper.insert(log);
 
     logs = mapper.getAll();
@@ -66,21 +81,61 @@ public class MaintenanceLogMapperIT {
 
   @Test
   public void testGetAllForFacility() throws Exception {
+    Facility facility  = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
+
+    assertEquals(0, mapper.getAllForFacility(facility.getId()).size());
+
+    MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
+    log.setFacilityId(facility.getId());
+    mapper.insert(log);
+
+    List<MaintenanceLog> logs = mapper.getAllForFacility(facility.getId());
+    assertEquals(1, logs.size());
 
   }
 
   @Test
   public void testGetAllForVendor() throws Exception {
+    int initialSize = mapper.getAllForVendor(1L).size();
+    Facility facility  = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
 
+    MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
+    log.setFacilityId(facility.getId());
+    log.setVendorId(1L);
+    mapper.insert(log);
+
+    List<MaintenanceLog> logs = mapper.getAllForVendor(1L);
+    assertEquals(initialSize + 1, logs.size());
   }
 
   @Test
   public void testInsert() throws Exception {
+    int initialSize = mapper.getAllForVendor(1L).size();
+    Facility facility  = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
 
+    MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
+    log.setFacilityId(facility.getId());
+    log.setVendorId(1L);
+    mapper.insert(log);
+
+    List<MaintenanceLog> logs = mapper.getAll();
+    assertEquals(initialSize + 1, logs.size());
   }
 
   @Test
   public void testUpdate() throws Exception {
+    int initialSize = mapper.getAllForVendor(1L).size();
+    Facility facility  = make(a(FacilityBuilder.defaultFacility));
+    facilityMapper.insert(facility);
 
+    MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
+    log.setFacilityId(facility.getId());
+    log.setVendorId(1L);
+    mapper.insert(log);
+
+    log.setFinding("New Finding");
   }
 }

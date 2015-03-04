@@ -44,7 +44,7 @@ public class DonorMapperIT {
   @Test
   public void testGetAll() throws Exception {
     List<Donor> donors = mapper.getAll();
-    assertEquals( 0, donors.size());
+    assertEquals( 1, donors.size());
   }
 
   @Test
@@ -52,7 +52,7 @@ public class DonorMapperIT {
     Donor donor =  make(a(DonorBuilder.defaultDonor));
     mapper.insert(donor);
     List<Donor> donors = mapper.getAllWithDetails();
-    assertEquals( 1, donors.size());
+    assertEquals( 2, donors.size());
   }
 
   @Test
