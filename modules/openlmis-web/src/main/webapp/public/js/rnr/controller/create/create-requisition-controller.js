@@ -88,7 +88,7 @@ function CreateRequisitionController($scope, requisitionData, hideAdditionalComm
   $scope.equipmentOperationalStatus = equipmentOperationalStatus;
 
   $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
-      ['quantityApproved']);
+      ['quantityApproved','remarks']);
 
   $scope.programRnrColumnList = rnrColumns;
   $scope.requisitionRights = requisitionRights;
