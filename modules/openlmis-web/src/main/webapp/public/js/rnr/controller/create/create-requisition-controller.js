@@ -114,7 +114,9 @@ function CreateRequisitionController($scope, requisitionData, hideAdditionalComm
 
   $scope.toggleSkipFlag = function () {
     _.each($scope.page.fullSupply, function (rnrLineItem) {
-      rnrLineItem.skipped = $scope.rnr.skipAll;
+      if(rnrLineItem.canSkip()){
+        rnrLineItem.skipped = $scope.rnr.skipAll;
+      }
     });
     $scope.rnr.calculateFullSupplyItemsSubmittedCost();
   };

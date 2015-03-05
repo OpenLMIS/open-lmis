@@ -341,6 +341,17 @@ var RegularRnrLineItem = base2.Base.extend({
   formulaValid: function () {
     return !(this.stockInHand < 0 || this.quantityDispensed < 0 || this.arithmeticallyInvalid());
   },
+  canSkip : function(){
+    var rnrLineItem = this;
+    var visibleColumns = ['beginningBalance','quantityReceived','quantityDispensed','stockInHand','quantityRequested'];
+    var skip = true;
+    $(visibleColumns).each(function (i, column) {
+      if(!isUndefined(rnrLineItem[column])){
+        skip = false;
+      }
+    });
+    return skip;
+  },
 
   validateRequiredFieldsForNonFullSupply: function () {
     if (_.findWhere(this.programRnrColumnList, {name: 'quantityRequested'}).visible) {
