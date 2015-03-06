@@ -16,28 +16,20 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
     var reader = new FileReader();
     var fi = document.getElementById('jsonfile');
     reader.onload = function (fi) {
-      $scope.json = JSON.parse(fi.target.result);
-      theJson = $scope.json;
-
-      $scope.json.features.forEach(function (feature) {
+        $scope.json = JSON.parse(fi.target.result);
+        $scope.json.features.forEach(function (feature) {
         $scope.features.push(feature);
       });
 
       $scope.drawMap($scope.json);
-      $scope.centerJSON();
+      zoomAndCenterMap(leafletData, $scope);
     };
     reader.readAsText(fi.files[0]);
   };
 
-  function interpolate(value, count){
-    var val =  parseFloat( value ) / parseFloat(count);
-    var interpolator = chroma.interpolate.bezier(['green', 'yellow', 'red' ]);
-    return interpolator(val).hex();
-  }
-
   $scope.style = function(feature){
     return {
-      fillColor: (feature.properties.mapped)?"red":interpolate(feature.properties.ID, $scope.features.length),
+      fillColor: (feature.properties.active)?"black" : (feature.properties.mapped)?"green":"gray",
       weight: 1,
       opacity: 1,
       color: 'white',
@@ -47,29 +39,15 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
   };
 
   $scope.drawMap = function(json){
-
     angular.extend($scope, {
       geojson: {
         data: json,
         style: $scope.style,
+        onEachFeature: function(feature){
+          return (feature.properties.ADM3)?feature.properties.ADM3 : feature.properties.ADM2;
+        },
         resetStyleOnMouseout: true
       }
-    });
-    $scope.$apply();
-  };
-
-  $scope.centerJSON = function () {
-    leafletData.getMap().then(function (map) {
-      var latlngs = [];
-      for (var c = 0; c < $scope.geojson.data.features.length; c++)
-        for (var i = 0; i < $scope.geojson.data.features[c].geometry.coordinates.length; i++) {
-          var coord = $scope.geojson.data.features[c].geometry.coordinates[i];
-          for (var j in coord) {
-            var points = coord[j];
-            latlngs.push(L.GeoJSON.coordsToLatLng(points));
-          }
-        }
-      map.fitBounds(latlngs);
     });
   };
 
@@ -95,31 +73,51 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
     }
   };
 
-  angular.extend($scope, {
-    center: {
-      lat: 0.0,
-      lng: 0.0,
-      zoom: 2
-    },
-    defaults: {
-      scrollWheelZoom: false
+  $scope.onDrag = function($data, $event){
+    if($scope.current_feature !== undefined){
+      $scope.current_feature.properties.active = false;
     }
-  });
+    $scope.current_feature = $data;
+    $data.properties.active = true;
+    // refresh the map here.
+    $scope.drawMap( {
+      "type": "FeatureCollection",
+      "features": $scope.features
+    } );
 
+    console.info('I am here');
+  };
 
-  $scope.dropSuccessHandler = function ($event, dragged) {
-    dragged.properties.mapped = true;
+  $scope.onDrop = function ($data, $event, zone) {
+
+    zone.mapped = true;
+    $data.properties.mapped = true;
+    zone.newId = $data.properties.ID;
+    zone.geometry = $data.geometry;
     $scope.drawMap( {
       "type": "FeatureCollection",
       "features": $scope.features
     } );
   };
 
-  $scope.onDrop = function ($event, $data, zone) {
-    zone.mapped = true;
-    $data.properties.mapped = true;
-    zone.newId = $data.properties.ID;
-    zone.geometry = $data.geometry;
+  $scope.search = function(features, search_string){
+
+
+    if(search_string === undefined || search_string === ''){
+      return features;
+    }
+    var array = [];
+
+    angular.forEach(features, function (feature){
+      if(feature.properties.ADM1 !== undefined && feature.properties.ADM1.indexOf(search_string) >= 0)
+        array.push(feature);
+      if(feature.properties.ADM2 !== undefined && feature.properties.ADM2.indexOf(search_string)>= 0)
+        array.push(feature);
+      if(feature.properties.ADM3 !== undefined && feature.properties.ADM3.indexOf(search_string)>= 0)
+        array.push(feature);
+    });
+    return array;
+
   };
 
   $scope.save = function () {
@@ -137,6 +135,6 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
     });
   };
 
-
+  initiateMap($scope);
 }
 

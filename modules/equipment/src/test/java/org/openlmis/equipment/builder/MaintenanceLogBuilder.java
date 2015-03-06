@@ -59,9 +59,10 @@ public class MaintenanceLogBuilder {
       MaintenanceLog item = new MaintenanceLog();
       item.setUserId(lookup.valueOf(userId, USER_ID));
       item.setEquipmentId(lookup.valueOf(equipmentId, EQUIPMENT_ID));
+      item.setFacilityId(lookup.valueOf(facilityId, FACILITY_ID));
       item.setVendorId(lookup.valueOf(vendorId, VENDOR_ID));
       item.setContractId(lookup.valueOf(contractId, CONTRACT_ID));
-      item.setContractId(lookup.valueOf(requestId, REQUEST_ID));
+      //item.setContractId(lookup.valueOf(requestId, REQUEST_ID));
       item.setMaintenanceDate(lookup.valueOf(maintenanceDate, MAINTENANCE_DATE));
       item.setNextVisitDate(lookup.valueOf(nextVisitDate, NEXT_VISIT_DATE));
       item.setServicePerformed(lookup.valueOf(servicePerformed, SERVICE_PERFORMED));

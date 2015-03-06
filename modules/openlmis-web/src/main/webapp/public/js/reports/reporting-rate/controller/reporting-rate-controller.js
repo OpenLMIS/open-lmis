@@ -37,34 +37,6 @@ function ReportingRateController($scope, leafletData) {
     };
   };
 
-  $scope.centerJSON = function () {
-    leafletData.getMap().then(function (map) {
-      var latlngs = [];
-      for (var c = 0; c < $scope.features.length; c++) {
-        if ($scope.features[c].geometry === null || angular.isUndefined($scope.features[c].geometry))
-          continue;
-        if ($scope.features[c].geometry.coordinates === null || angular.isUndefined($scope.features[c].geometry.coordinates))
-          continue;
-        for (var i = 0; i < $scope.features[c].geometry.coordinates.length; i++) {
-          var coord = $scope.features[c].geometry.coordinates[i];
-          for (var j in coord) {
-            var points = coord[j];
-            var latlng = L.GeoJSON.coordsToLatLng(points);
-
-            //this is a hack to make the tz shape files to work
-            //sadly the shapefiles for tz and zm have some areas that are in europe,
-            //which indicates that the quality of the shapes is not good,
-            //however the zoom neeeds to show the correct country boundaries.
-            if (latlng.lat < 0 && latlng.lng > 0) {
-              latlngs.push(latlng);
-            }
-          }
-        }
-      }
-      map.fitBounds(latlngs);
-    });
-  };
-
   $scope.drawMap = function (json) {
 
     angular.extend($scope, {
@@ -75,7 +47,6 @@ function ReportingRateController($scope, leafletData) {
         resetStyleOnMouseout: true
       }
     });
-
     $scope.$apply();
   };
 
@@ -97,7 +68,7 @@ function ReportingRateController($scope, leafletData) {
         "type": "FeatureCollection",
         "features": $scope.features
       });
-      $scope.centerJSON();
+      zoomAndCenterMap(leafletData, $scope);
     });
 
   };
