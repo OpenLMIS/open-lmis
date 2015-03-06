@@ -12,7 +12,7 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
   
   // separate the skipped products from the not so skipped. 
   rnr.allSupplyLineItems = rnr.fullSupplyLineItems;
-  if(rnr.program.hideSkippedProducts){
+  if(rnr.program && rnr.program.hideSkippedProducts){
     rnr.skippedLineItems = _.where(rnr.allSupplyLineItems, { skipped:true});
     rnr.fullSupplyLineItems =  _.where(rnr.allSupplyLineItems, {skipped: false});
   }
