@@ -141,7 +141,7 @@ public class RequisitionService {
       calculationService.copySkippedFieldFromPreviousPeriod(requisition);
     }
     // if program supports equipments, initialize it here.
-    if(program.isEquipmentConfigured()){
+    if(program.getIsEquipmentConfigured()){
        populateEquipments(requisition);
     }
 

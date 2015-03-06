@@ -117,9 +117,9 @@ describe('CreateRequisitionController', function () {
   }));
 
   it("should toggle skip flag for all rnrLineItems", function () {
-    var lineItem1 = {skipped: true};
+    var lineItem1 = {skipped: true, canSkip: function(){return true}};
     lineItem1.cost = 100;
-    var lineItem2 = {skipped: true};
+    var lineItem2 = {skipped: true, canSkip: function(){return true}};
     lineItem2.cost = 200;
 
     scope.page = {fullSupply: [lineItem1, lineItem2]};

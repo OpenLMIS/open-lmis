@@ -16,12 +16,24 @@
     </p>
   </div>
 
+  <div class="rnr-tabs clearfix">
+    <ul class="clearfix">
+      <li ng-class="{'selected': (visibleTab == 'template' || visibleTab == undefined)}">
+        <a href="" ng-click="visibleTab ='template'" ><span openlmis-message="admin.label.template"></span></a></li>
+      <li ng-class="{'selected': (visibleTab == 'basic')}">
+        <a href="" ng-click="visibleTab ='basic'" ><span openlmis-message="admin.label.other.settings"></span></a></li>
+    </ul>
+  </div>
+  <span ng-show="visibleTab == 'template' || visibleTab == undefined">
+
   <div class="rnr-template-head">
     <span class="tpl-visible" openlmis-message="template.header.display"></span>
     <span class="tpl-indicator">&nbsp;</span>
     <span class="tpl-label" openlmis-message="template.header.label"></span>
     <span class="tpl-source" openlmis-message="template.header.source"></span>
   </div>
+
+
   <form name="configureRnRTemplateForm" ng-submit="save()">
     <div class="rnr-template-columns">
 
@@ -125,4 +137,8 @@
       <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
     </div>
   </form>
+  </span>
+  <span ng-show="visibleTab == 'basic'">
+    <div ng-include="'/public/pages/admin/rnr-template/partials/basic-settings.html'"></div>
+  </span>
 </div>

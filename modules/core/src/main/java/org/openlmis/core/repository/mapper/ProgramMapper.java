@@ -132,4 +132,14 @@ public interface ProgramMapper {
 
   @Select("SELECT * FROM programs WHERE sendFeed = TRUE")
   List<Program> getProgramsForNotification();
+
+  @Update("UPDATE programs SET " +
+    "code = #{code}, name = #{name}, " +
+    "isEquipmentConfigured = #{isEquipmentConfigured}, " +
+    "showNonFullSupplyTab = #{showNonFullSupplyTab}, " +
+    "hideSkippedProducts = #{hideSkippedProducts}, " +
+    "enableSkipPeriod = #{enableSkipPeriod},  " +
+    "budgetingApplies = #{budgetingApplies} " +
+    "WHERE id = #{id}")
+  void update(Program program);
 }
