@@ -33,12 +33,12 @@ public class Program extends BaseModel {
   private String description;
   private Boolean active;
   private Boolean budgetingApplies;
-  private boolean templateConfigured;
-  private boolean regimenTemplateConfigured;
-  private boolean isEquipmentConfigured;
-  private boolean enableSkipPeriod;
-  private boolean showNonFullSupplyTab;
-  private boolean hideSkippedProducts;
+  private Boolean templateConfigured;
+  private Boolean regimenTemplateConfigured;
+  private Boolean isEquipmentConfigured;
+  private Boolean enableSkipPeriod;
+  private Boolean showNonFullSupplyTab;
+  private Boolean hideSkippedProducts;
   private boolean push;
 
   public Program(Long id) {
