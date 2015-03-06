@@ -8,11 +8,11 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var Rnr = function (rnr, programRnrColumns, numberOfMonths, hideSkippedProduct) {
+var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
   
   // separate the skipped products from the not so skipped. 
   rnr.allSupplyLineItems = rnr.fullSupplyLineItems;
-  if(hideSkippedProduct == 'true'){
+  if(rnr.program.hideSkippedProducts){
     rnr.skippedLineItems = _.where(rnr.allSupplyLineItems, { skipped:true});
     rnr.fullSupplyLineItems =  _.where(rnr.allSupplyLineItems, {skipped: false});
   }

@@ -2,7 +2,7 @@ ALTER TABLE programs
 ADD hideSkippedProducts BOOLEAN NOT NULL DEFAULT(false);
 
 ALTER TABLE programs
-ADD showNonFullSupplyColumn BOOLEAN NOT NULL DEFAULT(true);
+ADD showNonFullSupplyTab BOOLEAN NOT NULL DEFAULT(true);
 
 ALTER TABLE programs
 ADD enableSkipPeriod BOOLEAN NOT NULL DEFAULT (false);

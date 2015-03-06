@@ -36,6 +36,9 @@ public class Program extends BaseModel {
   private boolean templateConfigured;
   private boolean regimenTemplateConfigured;
   private boolean isEquipmentConfigured;
+  private boolean enableSkipPeriod;
+  private boolean showNonFullSupplyTab;
+  private boolean hideSkippedProducts;
   private boolean push;
 
   public Program(Long id) {

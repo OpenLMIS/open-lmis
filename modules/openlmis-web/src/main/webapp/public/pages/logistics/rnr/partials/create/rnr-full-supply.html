@@ -26,7 +26,7 @@
 <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
 
  <br/>
-    <input ng-show="hide_skipped_products"
+    <input ng-show="rnr.program.hideSkippedProducts"
            id="showSkippedProductModal"
            ng-disabled="((rnr.status != 'INITIATED' && rnr.status != 'SUBMITTED') || rnr.status == 'SUBMITTED' && !hasPermission('AUTHORIZE_REQUISITION'))"
            type="button"
