@@ -17,6 +17,10 @@ services.factory('Programs', function ($resource) {
   return $resource('/programs/:type.json', {type: '@type'}, {});
 });
 
+services.factory('UpdateProgram', function ($resource) {
+  return $resource('/programs/save.json', {}, update);
+});
+
 services.factory('RnRColumnList', function ($resource) {
   return $resource('/program/:programId/rnr-template.json', {}, {});
 });
