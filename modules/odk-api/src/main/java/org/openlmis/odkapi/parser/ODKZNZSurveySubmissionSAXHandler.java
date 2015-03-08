@@ -87,6 +87,7 @@ public class ODKZNZSurveySubmissionSAXHandler extends DefaultHandler {
 
     // GPS and pictures
 
+    boolean bfacilityGPSLocation;
     boolean blatitude;
     boolean blongitude;
     boolean baltitude;
@@ -96,6 +97,10 @@ public class ODKZNZSurveySubmissionSAXHandler extends DefaultHandler {
     boolean bthirdPicture;
 
     boolean bdeviceID;
+
+    double storageTotalPercentage = 0;
+    double lmisTotalPercentage = 0;
+    double randrTotalPercentage = 0;
 
 
     @Override
@@ -325,6 +330,11 @@ public class ODKZNZSurveySubmissionSAXHandler extends DefaultHandler {
         }
 
         // GPS and pictures
+
+        if (qName.equals("facility_gps_location"))
+        {
+            bfacilityGPSLocation = true;
+        }
 
         if (qName.equals("Latitude"))
         {
@@ -596,6 +606,11 @@ public class ODKZNZSurveySubmissionSAXHandler extends DefaultHandler {
 
 
         // GPS and pictures
+        if (qName.equals("facility_gps_location"))
+        {
+            bfacilityGPSLocation = false;
+        }
+
         if (qName.equals("Latitude"))
         {
             blatitude = false;
@@ -681,105 +696,120 @@ public class ODKZNZSurveySubmissionSAXHandler extends DefaultHandler {
         else if (badequateStorageSpace)
         {
             tempString = new String(ch, start, length);
-            odkStorageSurveySubmission.setAdequateStorageSpace(Byte.parseByte(tempString));
+            if (Integer.parseInt(tempString) == 1) {
+                storageTotalPercentage ++;
+            }
+            odkStorageSurveySubmission.setAdequateStorageSpace(Integer.parseInt(tempString));
             badequateStorageSpace = false;
         }
 
         else if (badequateShelves)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setAdequateShelves(Byte.parseByte(tempString));
+            if (Integer.parseInt(tempString) == 1) {
+                storageTotalPercentage ++;
+            }
+            odkStorageSurveySubmission.setAdequateShelves(Integer.parseInt(tempString));
             badequateShelves = false;
         }
 
         else if (bstoreRoomClean)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setStoreRoomClean(Byte.parseByte(tempString));
+            if (Integer.parseInt(tempString) == 1) {
+                storageTotalPercentage ++;
+            }
+            odkStorageSurveySubmission.setStoreRoomClean(Integer.parseInt(tempString));
             bstoreRoomClean = false;
         }
 
         else if (bproductsArrangedAppropriately)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setProductsArrangedAppropriately(Byte.parseByte(tempString));
+            if (Integer.parseInt(tempString) == 1) {
+                storageTotalPercentage ++;
+            }
+            odkStorageSurveySubmission.setProductsArrangedAppropriately(Integer.parseInt(tempString));
             bproductsArrangedAppropriately = false;
         }
 
         else if (bproductsStoredIssued)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setProductsStoredIssued(Byte.parseByte(tempString));
+            if (Integer.parseInt(tempString) == 1) {
+                storageTotalPercentage ++;
+            }
+            odkStorageSurveySubmission.setProductsStoredIssued(Integer.parseInt(tempString));
             bproductsStoredIssued = false;
         }
 
         else if (bmedicinesStoredSeparately)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setMedicinesStoredSeparately(Byte.parseByte(tempString));
+            odkStorageSurveySubmission.setMedicinesStoredSeparately(Integer.parseInt(tempString));
             bmedicinesStoredSeparately = false;
         }
 
         else if (bcoldChainFollowed)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setColdChainFollowed(Byte.parseByte(tempString));
+            odkStorageSurveySubmission.setColdChainFollowed(Integer.parseInt(tempString));
             bcoldChainFollowed = false;
         }
 
         else if (bproductsFreeFromDusts)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setProductsFreeFromDusts(Byte.parseByte(tempString));
+            odkStorageSurveySubmission.setProductsFreeFromDusts(Integer.parseInt(tempString));
             bproductsFreeFromDusts = false;
         }
 
         else if (bproductsFreeFromMoisture)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setProductsFreeFromMoisture(Byte.parseByte(tempString));
+            odkStorageSurveySubmission.setProductsFreeFromMoisture(Integer.parseInt(tempString));
             bproductsFreeFromMoisture = false;
         }
 
         else if (bproductsFreeFromSunlight)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setProductsFreeFromSunlight(Byte.parseByte(tempString));
+            odkStorageSurveySubmission.setProductsFreeFromSunlight(Integer.parseInt(tempString));
             bproductsFreeFromSunlight = false;
         }
 
         else if (bstoreRoomPreventedFromInfestation)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setStoreRoomPreventedFromInfestation(Byte.parseByte(tempString));
+            odkStorageSurveySubmission.setStoreRoomPreventedFromInfestation(Integer.parseInt(tempString));
             bstoreRoomPreventedFromInfestation = false;
         }
 
         else if (badequateSecurity)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setAdequateSecurity(Byte.parseByte(tempString));
+            odkStorageSurveySubmission.setAdequateSecurity(Integer.parseInt(tempString));
             badequateSecurity = false;
         }
 
         else if (bfireExtinguisherAvailable)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setFireExtinguisherAvailable(Byte.parseByte(tempString));
+            odkStorageSurveySubmission.setFireExtinguisherAvailable(Integer.parseInt(tempString));
             bfireExtinguisherAvailable = false;
         }
 
         else if (bstoreRoomConditionConductive)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setStoreRoomConditionConductive(Byte.parseByte(tempString));
+            odkStorageSurveySubmission.setStoreRoomConditionConductive(Integer.parseInt(tempString));
             bstoreRoomConditionConductive = false;
         }
 
         else if (bcontrolForUnauthorizedPersonnel)
         {
             tempString =  new String(ch, start, length);
-            odkStorageSurveySubmission.setControlForUnauthorizedPersonnel(Byte.parseByte(tempString));
+            odkStorageSurveySubmission.setControlForUnauthorizedPersonnel(Integer.parseInt(tempString));
             bcontrolForUnauthorizedPersonnel = false;
         }
 
@@ -789,77 +819,77 @@ public class ODKZNZSurveySubmissionSAXHandler extends DefaultHandler {
         {
             odkLmisSurveySubmission = new ODKLMISSurveySubmission();
             tempString =  new String(ch, start, length);
-            odkLmisSurveySubmission.setStoreLedgerAvailable(Byte.parseByte(tempString));
+            odkLmisSurveySubmission.setStoreLedgerAvailable(Integer.parseInt(tempString));
             bstoreLedgerAvailable= false;
         }
 
         else if (bstoreLedgersInStoreRoom)
         {
             tempString =  new String(ch, start, length);
-            odkLmisSurveySubmission.setStoreLedgersInStoreRoom(Byte.parseByte(tempString));
+            odkLmisSurveySubmission.setStoreLedgersInStoreRoom(Integer.parseInt(tempString));
             bstoreLedgersInStoreRoom= false;
         }
 
         else if (bbinCardsAvailable)
         {
             tempString =  new String(ch, start, length);
-            odkLmisSurveySubmission.setBinCardsAvailable(Byte.parseByte(tempString));
+            odkLmisSurveySubmission.setBinCardsAvailable(Integer.parseInt(tempString));
             bbinCardsAvailable= false;
         }
 
         else if (bbinCardsKeptWithProducts)
         {
             tempString =  new String(ch, start, length);
-            odkLmisSurveySubmission.setBinCardsKeptWithProducts(Byte.parseByte(tempString));
+            odkLmisSurveySubmission.setBinCardsKeptWithProducts(Integer.parseInt(tempString));
             bbinCardsKeptWithProducts= false;
         }
 
         else if (bendingBalancesEqualToStocks)
         {
             tempString =  new String(ch, start, length);
-            odkLmisSurveySubmission.setEndingBalancesEqualToStocks(Byte.parseByte(tempString));
+            odkLmisSurveySubmission.setEndingBalancesEqualToStocks(Integer.parseInt(tempString));
             bendingBalancesEqualToStocks= false;
         }
 
         else if (blossesAdjustmentsCorrectlyFilled)
         {
             tempString =  new String(ch, start, length);
-            odkLmisSurveySubmission.setLossesAdjustmentsCorrectlyFilled(Byte.parseByte(tempString));
+            odkLmisSurveySubmission.setLossesAdjustmentsCorrectlyFilled(Integer.parseInt(tempString));
             blossesAdjustmentsCorrectlyFilled= false;
         }
 
         else if (bledgersBinCardsFilledCorrectly)
         {
             tempString =  new String(ch, start, length);
-            odkLmisSurveySubmission.setLedgersBinCardsFilledCorrectly(Byte.parseByte(tempString));
+            odkLmisSurveySubmission.setLedgersBinCardsFilledCorrectly(Integer.parseInt(tempString));
             bledgersBinCardsFilledCorrectly= false;
         }
 
         else if (bphysicalStockCountsExercisesConducted)
         {
             tempString =  new String(ch, start, length);
-            odkLmisSurveySubmission.setPhysicalStockCountsExercisesConducted(Byte.parseByte(tempString));
+            odkLmisSurveySubmission.setPhysicalStockCountsExercisesConducted(Integer.parseInt(tempString));
             bphysicalStockCountsExercisesConducted= false;
         }
 
         else if (bddrAvailable)
         {
             tempString =  new String(ch, start, length);
-            odkLmisSurveySubmission.setDdrAvailable(Byte.parseByte(tempString));
+            odkLmisSurveySubmission.setDdrAvailable(Integer.parseInt(tempString));
             bddrAvailable= false;
         }
 
         else if (binvoicesKeptInFile)
         {
             tempString =  new String(ch, start, length);
-            odkLmisSurveySubmission.setInvoicesKeptInFile(Byte.parseByte(tempString));
+            odkLmisSurveySubmission.setInvoicesKeptInFile(Integer.parseInt(tempString));
             binvoicesKeptInFile= false;
         }
 
         else if (blastSupervisionVisitInFile)
         {
             tempString =  new String(ch, start, length);
-            odkLmisSurveySubmission.setLastSupervisionVisitInFile(Byte.parseByte(tempString));
+            odkLmisSurveySubmission.setLastSupervisionVisitInFile(Integer.parseInt(tempString));
             blastSupervisionVisitInFile= false;
         }
 
@@ -869,60 +899,96 @@ public class ODKZNZSurveySubmissionSAXHandler extends DefaultHandler {
         {
             odkRandRSubmission = new ODKRandRSubmission();
             tempString =  new String(ch, start, length);
-            odkRandRSubmission.setRandrAvailable(Byte.parseByte(tempString));
+            odkRandRSubmission.setRandrAvailable(Integer.parseInt(tempString));
             brandrAvailable= false;
         }
 
         else if (bopeningEndingBalancesEqual)
         {
             tempString =  new String(ch, start, length);
-            odkRandRSubmission.setOpeningEndingBalancesEqual(Byte.parseByte(tempString));
+            odkRandRSubmission.setOpeningEndingBalancesEqual(Integer.parseInt(tempString));
             bopeningEndingBalancesEqual= false;
         }
 
         else if (bendingBalancesEqualToStocks)
         {
             tempString =  new String(ch, start, length);
-            odkRandRSubmission.setEndingBalanceCorrespondsToLedger(Byte.parseByte(tempString));
+            odkRandRSubmission.setEndingBalanceCorrespondsToLedger(Integer.parseInt(tempString));
             bendingBalancesEqualToStocks= false;
         }
 
         else if (bconsumptionEstimationCorrectlyFilled)
         {
             tempString =  new String(ch, start, length);
-            odkRandRSubmission.setConsumptionEstimationCorrectlyFilled(Byte.parseByte(tempString));
+            odkRandRSubmission.setConsumptionEstimationCorrectlyFilled(Integer.parseInt(tempString));
             bconsumptionEstimationCorrectlyFilled= false;
         }
 
         else if (bstockOutAdjustmentCorrect)
         {
             tempString =  new String(ch, start, length);
-            odkRandRSubmission.setStockOutAdjustmentCorrect(Byte.parseByte(tempString));
+            odkRandRSubmission.setStockOutAdjustmentCorrect(Integer.parseInt(tempString));
             bstockOutAdjustmentCorrect= false;
         }
 
         else if (bquantityRequiredCorrectlyFilled)
         {
             tempString =  new String(ch, start, length);
-            odkRandRSubmission.setStockOutAdjustmentCorrect(Byte.parseByte(tempString));
+            odkRandRSubmission.setStockOutAdjustmentCorrect(Integer.parseInt(tempString));
             bquantityRequiredCorrectlyFilled= false;
         }
 
         else if (bcolumnOfCostsFilledCorrectly)
         {
             tempString =  new String(ch, start, length);
-            odkRandRSubmission.setColumnOfCostsFilledCorrectly(Byte.parseByte(tempString));
+            odkRandRSubmission.setColumnOfCostsFilledCorrectly(Integer.parseInt(tempString));
             bcolumnOfCostsFilledCorrectly= false;
         }
 
         else if (brandrFormsFilled)
         {
             tempString =  new String(ch, start, length);
-            odkRandRSubmission.setRandrFormsFilled(Byte.parseByte(tempString));
+            odkRandRSubmission.setRandrFormsFilled(Integer.parseInt(tempString));
             brandrFormsFilled= false;
         }
 
         // GPS and pictures
+
+        else if (bfacilityGPSLocation)
+        {
+            // format : 8.9602334 38.7691866 0.0 2828.0
+            String temp = new String(ch, start, length);
+            String[] vals = temp.split(" ");
+            if (vals.length > 0) {
+                odkStorageSurveySubmission.setGPSLatitude(Double.parseDouble(vals[0]));
+                odkStorageSurveySubmission.setGPSLongitude(Double.parseDouble(vals[1]));
+                odkStorageSurveySubmission.setGPSAltitude(Double.parseDouble(vals[2]));
+                odkStorageSurveySubmission.setGPSAccuracy(Double.parseDouble(vals[3]));
+            }
+            bfacilityGPSLocation = false;
+        }
+
+        else if (blatitude)
+        {
+            // odkStorageSurveySubmission.setGPSLatitude(Double.parseDouble(new String(ch, start, length)));
+            blatitude = false;
+        }
+        else if (blongitude)
+        {
+            // odkStorageSurveySubmission.setGPSLongitude(Double.parseDouble(new String(ch, start, length)));
+            blongitude = false;
+        }
+        else if (baltitude)
+        {
+            // odkStorageSurveySubmission.setGPSAltitude(Double.parseDouble(new String(ch, start, length)));
+            baltitude = false;
+        }
+
+        else if (baccuracy)
+        {
+            // odkStorageSurveySubmission.setGPSAccuracy(Double.parseDouble(new String(ch, start, length)));
+            baccuracy = false;
+        }
 
         else if (bfirstPicture)
         {

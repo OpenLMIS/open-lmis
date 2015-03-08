@@ -28,21 +28,21 @@ public class ODKStorageSurveySubmission extends BaseModel {
 
     private Long ODKSubmissionId;
     private Long facilityId;
-    private byte adequateStorageSpace;
-    private byte adequateShelves;
-    private byte storeRoomClean;
-    private byte productsArrangedAppropriately;
-    private byte productsStoredIssued;
-    private byte medicinesStoredSeparately;
-    private byte coldChainFollowed;
-    private byte productsFreeFromDusts;
-    private byte productsFreeFromMoisture;
-    private byte productsFreeFromSunlight;
-    private byte storeRoomPreventedFromInfestation;
-    private byte adequateSecurity;
-    private byte fireExtinguisherAvailable;
-    private byte storeRoomConditionConductive;
-    private byte controlForUnauthorizedPersonnel;
+    private int adequateStorageSpace;
+    private int adequateShelves;
+    private int storeRoomClean;
+    private int productsArrangedAppropriately;
+    private int productsStoredIssued;
+    private int medicinesStoredSeparately;
+    private int coldChainFollowed;
+    private int productsFreeFromDusts;
+    private int productsFreeFromMoisture;
+    private int productsFreeFromSunlight;
+    private int storeRoomPreventedFromInfestation;
+    private int adequateSecurity;
+    private int fireExtinguisherAvailable;
+    private int storeRoomConditionConductive;
+    private int controlForUnauthorizedPersonnel;
     private double totalPercentage;
 
     // GPS and facility pictures

@@ -12,27 +12,27 @@
  * User: Messay Yohannes <deliasmes@gmail.com>
  * To change this template use File | Settings | File Templates.
  */
-package org.openlmis.odkapi.domain;
+package org.openlmis.odkapi.repository;
 
-import org.openlmis.core.domain.BaseModel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import org.openlmis.odkapi.domain.ODKStorageSurveySubmission;
+import org.openlmis.odkapi.repository.mapper.ODKStorageSurveySubmissionMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-@Data
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class ODKRandRSubmission extends BaseModel {
+@Repository
+public class ODKStorageSurveySubmissionRepository {
 
-    private Long ODKSubmissionId;
-    private int randrAvailable;
-    private int openingEndingBalancesEqual;
-    private int endingBalanceCorrespondsToLedger;
-    private int consumptionEstimationCorrectlyFilled;
-    private int stockOutAdjustmentCorrect;
-    private int quantityRequiredCorrectlyFilled;
-    private int columnOfCostsFilledCorrectly;
-    private int randrFormsFilled;
-    private double totalPercentage;
-    private String comment;
+    @Autowired
+    private ODKStorageSurveySubmissionMapper odkStorageSurveySubmissionMapper;
+
+    public void insert(ODKStorageSurveySubmission odkStorageSurveySubmission)
+    {
+        odkStorageSurveySubmissionMapper.insert(odkStorageSurveySubmission);
+    }
+
+    public Long getLastId()
+    {
+        return odkStorageSurveySubmissionMapper.getLastId();
+    }
+
 }

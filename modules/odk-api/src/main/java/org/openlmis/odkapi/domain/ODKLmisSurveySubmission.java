@@ -27,17 +27,17 @@ import org.openlmis.core.domain.BaseModel;
 public class ODKLMISSurveySubmission extends BaseModel {
 
     private Long ODKSubmissionId;
-    private byte storeLedgerAvailable;
-    private byte storeLedgersInStoreRoom;
-    private byte binCardsAvailable;
-    private byte binCardsKeptWithProducts;
-    private byte endingBalancesEqualToStocks;
-    private byte lossesAdjustmentsCorrectlyFilled;
-    private byte ledgersBinCardsFilledCorrectly;
-    private byte physicalStockCountsExercisesConducted;
-    private byte ddrAvailable;
-    private byte invoicesKeptInFile;
-    private byte lastSupervisionVisitInFile;
+    private int storeLedgerAvailable;
+    private int storeLedgersInStoreRoom;
+    private int binCardsAvailable;
+    private int binCardsKeptWithProducts;
+    private int endingBalancesEqualToStocks;
+    private int lossesAdjustmentsCorrectlyFilled;
+    private int ledgersBinCardsFilledCorrectly;
+    private int physicalStockCountsExercisesConducted;
+    private int ddrAvailable;
+    private int invoicesKeptInFile;
+    private int lastSupervisionVisitInFile;
     private double totalPercentage;
     private String comment;
 
