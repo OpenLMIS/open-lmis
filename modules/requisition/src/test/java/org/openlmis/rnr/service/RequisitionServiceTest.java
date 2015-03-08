@@ -158,6 +158,8 @@ public class RequisitionServiceTest {
   @Test
   public void shouldSetFieldValuesAccordingToTemplateOnInitiate() throws Exception {
     PROGRAM.setBudgetingApplies(true);
+    PROGRAM.setPush(false);
+    PROGRAM.setIsEquipmentConfigured(false);
     Rnr requisition = createRequisition(PERIOD.getId(), null);
     requisition.setProgram(PROGRAM);
     setupForInitRnr();
@@ -226,6 +228,8 @@ public class RequisitionServiceTest {
 
     Program requisitionProgram = new Program(1234L);
     requisitionProgram.setBudgetingApplies(true);
+    requisitionProgram.setPush(false);
+    requisitionProgram.setIsEquipmentConfigured(false);
     when(
       requisitionPermissionService.hasPermission(USER_ID, FACILITY, requisitionProgram, CREATE_REQUISITION)).thenReturn(
       true);
@@ -268,6 +272,8 @@ public class RequisitionServiceTest {
     DateTime date3 = date1.minusMonths(2);
     DateTime date4 = date1.minusMonths(3);
 
+    PROGRAM.setPush(false);
+
     ProcessingPeriod processingPeriod1 = createProcessingPeriod(10L, date1);
     ProcessingPeriod processingPeriod2 = createProcessingPeriod(20L, date2);
     ProcessingPeriod processingPeriod3 = createProcessingPeriod(30L, date3);
@@ -298,6 +304,8 @@ public class RequisitionServiceTest {
   public void shouldGetAllPeriodsForInitiatingRequisitionWhenThereIsNoRequisitionInThePostSubmitFlow() throws Exception {
     DateTime date1 = new DateTime();
     DateTime date2 = date1.minusMonths(1);
+
+    PROGRAM.setPush(false);
 
     ProcessingPeriod processingPeriod1 = createProcessingPeriod(10L, date1);
     ProcessingPeriod processingPeriod2 = createProcessingPeriod(20L, date2);
@@ -932,6 +940,8 @@ public class RequisitionServiceTest {
   @Test
   public void shouldNotifyStatusChangeEvent() throws Exception {
     PROGRAM.setBudgetingApplies(true);
+    PROGRAM.setPush(false);
+    PROGRAM.setIsEquipmentConfigured(false);
     Rnr requisition = spy(createRequisition(PERIOD.getId(), INITIATED));
     setupForInitRnr();
     requisition.setProgram(PROGRAM);
@@ -1434,7 +1444,8 @@ public class RequisitionServiceTest {
     ProcessingPeriod previousPeriod = new ProcessingPeriod(3L);
     Program requisitionProgram = new Program(1234L);
     requisitionProgram.setBudgetingApplies(true);
-
+    requisitionProgram.setPush(false);
+    requisitionProgram.setIsEquipmentConfigured(false);
     RequisitionService spyRequisitionService = spy(requisitionService);
 
     when(

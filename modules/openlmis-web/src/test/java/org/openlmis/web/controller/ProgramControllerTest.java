@@ -65,13 +65,14 @@ public class ProgramControllerTest {
   @Test
   public void shouldGetListOfUserSupportedProgramsForAFacilityForGivenRights() {
     Program program = new Program();
+    program.setPush(false);
     List<Program> programs = new ArrayList<>(Arrays.asList(program));
 
     Long facilityId = 12345L;
 
     when(programService.getProgramsForUserByFacilityAndRights(facilityId, USER_ID, VIEW_REQUISITION)).thenReturn(programs);
 
-    assertEquals(programs, controller.getProgramsToViewRequisitions(facilityId, httpServletRequest));
+    assertThat(programs, is(controller.getProgramsToViewRequisitions(facilityId, httpServletRequest)));
 
   }
 

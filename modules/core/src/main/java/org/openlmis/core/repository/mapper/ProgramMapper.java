@@ -24,8 +24,8 @@ import java.util.List;
 @Repository
 public interface ProgramMapper {
 
-  @Insert({"INSERT INTO programs(code, name, description, active, push)",
-    "VALUES (#{code}, #{name}, #{description}, #{active}, #{push})"})
+  @Insert({"INSERT INTO programs(code, name, description, active, push, templateConfigured, regimenTemplateConfigured)",
+    "VALUES (#{code}, #{name}, #{description}, #{active}, #{push}, #{templateConfigured}, #{regimenTemplateConfigured})"})
   @Options(useGeneratedKeys = true)
   Integer insert(Program program);
 

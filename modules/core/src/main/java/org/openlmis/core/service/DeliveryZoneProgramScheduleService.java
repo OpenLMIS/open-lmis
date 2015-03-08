@@ -65,7 +65,7 @@ public class DeliveryZoneProgramScheduleService {
   private void fillProgram(DeliveryZoneProgramSchedule deliveryZoneProgramSchedule) {
     Program program = programService.getByCode(deliveryZoneProgramSchedule.getProgram().getCode());
     if (program == null) throw new DataException("program.code.invalid");
-    if (!program.isPush()) throw new DataException("error.program.not.push");
+    if (!program.getPush()) throw new DataException("error.program.not.push");
 
     deliveryZoneProgramSchedule.setProgram(program);
   }

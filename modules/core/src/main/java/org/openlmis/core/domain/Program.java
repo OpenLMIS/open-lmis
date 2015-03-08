@@ -39,7 +39,7 @@ public class Program extends BaseModel {
   private Boolean enableSkipPeriod;
   private Boolean showNonFullSupplyTab;
   private Boolean hideSkippedProducts;
-  private boolean push;
+  private Boolean push;
 
   public Program(Long id) {
     this.id = id;

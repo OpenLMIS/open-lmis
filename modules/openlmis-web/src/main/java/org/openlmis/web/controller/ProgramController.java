@@ -59,7 +59,7 @@ public class ProgramController extends BaseController {
     List<Program> programs = programService.getProgramsForUserByFacilityAndRights(facilityId, loggedInUserId(request), VIEW_REQUISITION);
     List<Program> pullPrograms = new ArrayList<>();
     for (Program program : programs) {
-      if (!program.isPush())
+      if (!program.getPush())
         pullPrograms.add(program);
     }
     return pullPrograms;
