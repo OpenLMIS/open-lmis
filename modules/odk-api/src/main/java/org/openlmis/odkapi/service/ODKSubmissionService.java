@@ -22,9 +22,7 @@ import org.openlmis.core.service.ProductService;
 import org.openlmis.odkapi.domain.*;
 import org.openlmis.odkapi.exception.*;
 import org.openlmis.odkapi.parser.*;
-import org.openlmis.odkapi.repository.ODKProofOfDeliverySubmissionDataRepository;
-import org.openlmis.odkapi.repository.ODKSubmissionDataRepository;
-import org.openlmis.odkapi.repository.ODKSubmissionRepository;
+import org.openlmis.odkapi.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +36,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
@@ -75,6 +74,15 @@ public class ODKSubmissionService {
     private ProductService productService;
 
     @Autowired
+    private ODKRandRSubmissionRepository odkRandRSubmissionRepository;
+
+    @Autowired
+    private ODKLMISSurveySubmissionRepository odklmisSurveySubmissionRepository;
+
+    @Autowired
+    private ODKStorageSurveySubmissionRepository odkStorageSurveySubmissionRepository;
+
+    @Autowired
     ServletContext servletContext;
 
     @Autowired
@@ -90,6 +98,11 @@ public class ODKSubmissionService {
     private ODKSubmission odkSubmission;
     private HashMap<Long,ArrayList<String>> associatedFacilityPictures;
     private ArrayList<String> associatedProofOfDeliveryPictures;
+
+    private ODKLMISSurveySubmission odkLmisSurveySubmission;
+    private ODKRandRSubmission odkRandRSubmission;
+    private ODKStorageSurveySubmission odkStorageSurveySubmission;
+    private ArrayList<String> pictures;
 
 
     Long tempFacilityId;
@@ -180,12 +193,261 @@ public class ODKSubmissionService {
             saveProofOfDeliverySurveyData(XMLSubmissionFile);
         }
 
+        else if (surveyType.getSurveyName().equals("ZNZ Survey"))
+        {
+            saveZNZSurveyData(XMLSubmissionFile);
+        }
+
         else
         {
             // Handle
         }
 
     }
+
+    public void saveZNZSurveyData(MultipartFile XMLSubmissionFile)throws ODKAccountNotFoundException,
+            FacilityPictureNotFoundException, ODKCollectXMLSubmissionFileNotFoundException,
+            ODKCollectXMLSubmissionParserConfigurationException, ODKCollectXMLSubmissionSAXException
+    {
+        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+        ODKZNZSurveySubmissionSAXHandler handler;
+        handler = new ODKZNZSurveySubmissionSAXHandler();
+
+        String filePath = "/public/odk-collect-submissions/";
+        InputStream inputStream;
+        FileOutputStream outputStream;
+
+        // first save the xml submission file
+
+
+        try
+        {
+            inputStream = XMLSubmissionFile.getInputStream();
+            File newFile = new File(servletContext.getRealPath(filePath + XMLSubmissionFile.getOriginalFilename()));
+            outputStream = new FileOutputStream(newFile);
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+
+            inputStream.close();
+            outputStream.close();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+        // read the submission file into a string
+
+        String xmlString = "";
+        try
+        {
+            File savedSubmissionFile = new File(servletContext.getRealPath(filePath + XMLSubmissionFile.getOriginalFilename()));
+            xmlString = readFile(servletContext.getRealPath(filePath + XMLSubmissionFile.getOriginalFilename()), Charset.defaultCharset());
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+
+        // use XML Formatter
+
+        XmlFormatter formatter = new XmlFormatter();
+        String formattedXmlSubmission = formatter.format(xmlString);
+
+        // get input stream from the document object of the formatted xml
+
+        Document  xmlSubmissionDocument;
+        try
+        {
+            xmlSubmissionDocument = stringToDom(formattedXmlSubmission);
+        }
+        catch(SAXException exception )
+        {
+            throw new ODKCollectXMLSubmissionSAXException();
+
+        }
+        catch(IOException e)
+        {
+            throw new ODKCollectXMLSubmissionFileNotFoundException();
+        }
+        catch(ParserConfigurationException e)
+        {
+            throw new ODKCollectXMLSubmissionParserConfigurationException();
+        }
+
+        ByteArrayOutputStream outputStreamForDocument = new ByteArrayOutputStream();
+        Source xmlSource = new DOMSource(xmlSubmissionDocument);
+        Result outputTarget = new StreamResult(outputStreamForDocument);
+        try
+        {
+            TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
+
+        }
+        catch(TransformerConfigurationException transformerConfigurationException)
+        {
+            transformerConfigurationException.printStackTrace();
+        }
+        catch(TransformerException transformerException)
+        {
+            transformerException.printStackTrace();
+        }
+
+        InputStream inputStreamForDocument = new ByteArrayInputStream(outputStreamForDocument.toByteArray());
+
+        try
+        {
+            SAXParser saxParser = saxParserFactory.newSAXParser();
+            saxParser.parse(inputStreamForDocument, handler);
+        }
+        catch(SAXException exception )
+        {
+            throw new ODKCollectXMLSubmissionSAXException();
+
+        }
+        catch(IOException e)
+        {
+            throw new ODKCollectXMLSubmissionFileNotFoundException();
+        }
+        catch(ParserConfigurationException e)
+        {
+            throw new ODKCollectXMLSubmissionParserConfigurationException();
+        }
+
+        odkSubmission = handler.getOdkSubmission();
+        odkAccount = handler.getOdkAccount();
+        pictures = handler.getPictures();
+
+        ODKAccount tempAccount;
+
+        tempAccount =  odkAccountService.authenticate(odkAccount);
+
+        odkSubmission.setOdkAccountId(tempAccount.getId());
+        odkSubmission.setActive(true);
+        this.insertODKSubmission(odkSubmission);
+        Long lastODKSubmissionId =  odkSubmissionRepository.getLastSubmissionId();
+
+        // save storage part  with gps coordinates and pictures
+        odkStorageSurveySubmission = handler.getOdkStorageSurveySubmission();
+        odkStorageSurveySubmission.setODKSubmissionId(lastODKSubmissionId);
+        ArrayList<byte[]> facilityPictures = getZNZSurveyPictures();
+
+        for (int count = 0; count < facilityPictures.size(); count ++)
+        {
+            try
+            {
+            Method picMethod = odkStorageSurveySubmission.getClass().getMethod(pictureSetMethods[count], new Class[] {byte[].class});
+            picMethod.invoke(odkStorageSurveySubmission, facilityPictures.get(count));
+            }
+            catch (IllegalAccessException ex)
+            {
+                // TO DO handle
+            }
+
+            catch (NoSuchMethodException ex)
+            {
+                // TO DO handle
+
+            }
+            catch (SecurityException ex)
+            {
+                // TO DO handle
+            }
+            catch (IllegalArgumentException ex)
+            {
+                // TO DO handle
+
+            }
+            catch (InvocationTargetException ex)
+            {
+                // TO DO handle
+            }
+        }
+
+        odkStorageSurveySubmission.setTotalPercentage(getTotalPercentage(odkStorageSurveySubmission, 15));
+        odkStorageSurveySubmissionRepository.insert(odkStorageSurveySubmission);
+
+        // save lmis part
+        odkLmisSurveySubmission = handler.getOdkLmisSurveySubmission();
+        odkLmisSurveySubmission.setODKSubmissionId(lastODKSubmissionId);
+        odkLmisSurveySubmission.setTotalPercentage(getTotalPercentage(odkLmisSurveySubmission, 11));
+        odklmisSurveySubmissionRepository.insert(odkLmisSurveySubmission);
+
+
+        // save r and r part
+        odkRandRSubmission = handler.getOdkRandRSubmission();
+        odkRandRSubmission.setODKSubmissionId(lastODKSubmissionId);
+        odkRandRSubmission.setTotalPercentage(getTotalPercentage(odkRandRSubmission, 8));
+        odkRandRSubmissionRepository.insert(odkRandRSubmission);
+
+    }
+
+    public ArrayList<byte[]> getZNZSurveyPictures() throws FacilityPictureNotFoundException
+    {
+
+        MultipartFile tempPicture;
+        InputStream imageInputStream;
+        ArrayList<byte[]> facilityPictures = new ArrayList<>();
+        for (String fileName:pictures)
+        {
+            tempPicture = submissionPictures.get(fileName);
+            try
+            {
+                imageInputStream = tempPicture.getInputStream();
+                byte[] bytes = IOUtils.toByteArray(imageInputStream);
+                facilityPictures.add(bytes);
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+                throw new FacilityPictureNotFoundException("Facility picture not found.");
+
+            }
+            catch(NullPointerException e)
+            {
+                System.out.println("Picture for:" + fileName + "not found");
+            }
+
+
+        }
+
+        return facilityPictures;
+    }
+
+    public double getTotalPercentage(Object obj, int numberOfQuestions) {
+
+        Field[] fields = obj.getClass().getDeclaredFields();
+        Field field;
+        double value;
+        int index;
+        double count = 0;
+        for(index = 0; index < fields.length ; index ++)
+        {
+               field = fields[index];
+               if ( ((Class) field.getType()).getSimpleName().equals("int")) {
+                   field.setAccessible(true);
+                   try {
+                        value = (int)field.get(obj);
+                        count += value == 1 ? 1 : 0;
+
+                   }
+                   catch (Exception e) {
+                       e.printStackTrace();
+                   }
+               }
+        }
+
+        return (count / numberOfQuestions) * 100;
+
+
+    }
+
+
+
 
     public void saveProofOfDeliverySurveyData(MultipartFile XMLSubmissionFile) throws ODKAccountNotFoundException,
             FacilityPictureNotFoundException, ODKCollectXMLSubmissionFileNotFoundException,
