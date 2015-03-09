@@ -60,7 +60,7 @@
 
                             <div id="rnrStatusReportLegend" style="" class="rnrStatusChartLegend"></div>
                             <a-float id="rnr-status-report" af-option="rnRStatusPieChartOption"
-                                     af-data="RnRStatusPieChartData" class="chart" ></a-float>
+                                     af-data="RnRStatusPieChartData" class="rnrStatusChart" ></a-float>
 
                         </div>
 
@@ -74,8 +74,8 @@
                                class="table table-striped table-scrollable pull-right"
                                ng-table="tableParams">
                             <tbody>
-                            <tr ng-repeat="row in dataRows">
-                                <td  style="text-align: left;" data-title="'Pending at'"><span
+                            <tr ng-repeat="row in dataRows" >
+                                <td  data-title="'Pending at'"  ><span
                                         openlmis-message="label.rnr.status.summary.{{row.status}}"></span></td>
                                 <td data-title="'Number Of RnR'">{{row.totalStatus}}</td>
 
