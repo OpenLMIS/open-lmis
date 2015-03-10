@@ -26,11 +26,22 @@ public class StockStatusService {
   private StockStatusMapper mapper;
 
   public List<StockStatusDTO> getStockStatusByQuarter(String programCode, Long year, Long quarter, Long userId){
+
+    //TODO: remove this hard coded program code and move it to the programs table (may be as a flag).
+    if(programCode.toUpperCase().equals("RMNCH")){
+      return mapper.getStockStatusByQuarterAll(programCode, year,quarter);
+    }
+
     //todo: check if user has permission
     return mapper.getStockStatusByQuarter(programCode, year, quarter);
   }
 
   public List<StockStatusDTO> getStockStatusByMonth(String programCode, Long year, Long quarter, Long userId){
+    //TODO: remove this hard coded program code and move it to the programs table (may be as a flag).
+
+    if (programCode.toUpperCase().equals("RMNCH")){
+      return mapper.getStockStatusByMonthAll(programCode, year,quarter);
+    }
     //todo: check if user has permission
     return mapper.getStockStatusByMonth(programCode, year, quarter);
   }
