@@ -14,7 +14,7 @@ configurations {
 }
 
 dependencies {
-    compile 'org.springframework:spring-core:3.1.1.RELEASE',
+    compile 'org.springframework:spring-core:4.1.5.RELEASE',
             'org.springframework:spring-web:3.1.1.RELEASE',
             'org.springframework:spring-context:3.1.1.RELEASE',
             'org.springframework:spring-aop:3.1.1.RELEASE',

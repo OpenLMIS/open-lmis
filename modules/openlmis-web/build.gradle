@@ -150,19 +150,19 @@ build.doLast {
 }
 
 dependencies {
-    compile 'org.springframework:spring-webmvc:3.1.1.RELEASE',
-            'org.springframework:spring-core:3.1.1.RELEASE',
-            'org.springframework:spring-web:3.1.1.RELEASE',
-            'javax.servlet:servlet-api:2.5',
+    compile 'org.springframework:spring-webmvc:4.1.5.RELEASE',
+            'org.springframework:spring-core:4.1.5.RELEASE',
+            'org.springframework:spring-web:4.1.5.RELEASE',
+            'javax.servlet:javax.servlet-api:3.1.0',
             'commons-collections:commons-collections:20040616',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
-            'org.springframework.security:spring-security-taglibs:3.1.2.RELEASE',
+            'org.springframework.security:spring-security-taglibs:3.2.6.RELEASE',
             'org.json:json:20090211',
             'log4j:log4j:1.2.15',
             'org.aspectj:aspectjweaver:1.7.0',
             'cglib:cglib:2.2.2',
             'commons-fileupload:commons-fileupload:1.2.2',
-            'javax.servlet:servlet-api:2.5',
+            'javax.servlet:javax.servlet-api:3.1.0',
             'org.testng:testng:6.1.1',
             'com.itextpdf:itextpdf:5.4.0',
             project(':modules:authentication'),
@@ -179,10 +179,9 @@ dependencies {
             project(':modules:help')
 
 
-    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
+    testCompile 'org.springframework:spring-test:4.1.5.RELEASE',
             'org.springframework:spring-test-mvc:1.0.0.M1',
-            'javax.servlet:servlet-api:2.5',
-            'javax.servlet:servlet-api:2.5',
+            'javax.servlet:servlet-api:3.0',
             'org.powermock:powermock-api-mockito:1.4.12',
             'org.powermock:powermock-module-junit4:1.4.12',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
