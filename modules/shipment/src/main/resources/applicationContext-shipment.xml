@@ -53,7 +53,7 @@
     <property name="bufferSize" value="100000"/>
   </bean>
 
-  <int-ftp:inbound-channel-adapter cache-sessions="false"
+  <int-ftp:inbound-channel-adapter
                                    channel="ftpInputChannel"
                                    session-factory="ftpSessionFactory"
                                    filename-pattern="*.csv"
@@ -66,7 +66,7 @@
 
   <int:channel id="ftpErrorChannel"/>
 
-  <int-ftp:outbound-channel-adapter cache-sessions="false"
+  <int-ftp:outbound-channel-adapter
                                     channel="ftpErrorChannel"
                                     remote-directory="${shipment.ftp.remote.error.directory}"
                                     session-factory="ftpSessionFactory"
@@ -76,7 +76,7 @@
 
   <int:channel id="ftpArchiveOutputChannel"/>
 
-  <int-ftp:outbound-channel-adapter cache-sessions="false"
+  <int-ftp:outbound-channel-adapter
                                     channel="ftpArchiveOutputChannel"
                                     remote-directory="${shipment.ftp.remote.archive.directory}"
                                     session-factory="ftpSessionFactory"

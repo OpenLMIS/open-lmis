@@ -14,9 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonMethod;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.RecordHandler;
 
@@ -26,7 +26,7 @@ import org.openlmis.upload.RecordHandler;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonAutoDetect(value = JsonMethod.NONE, fieldVisibility = JsonAutoDetect.Visibility.NONE)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE)
 public class UploadBean {
 
   @Setter

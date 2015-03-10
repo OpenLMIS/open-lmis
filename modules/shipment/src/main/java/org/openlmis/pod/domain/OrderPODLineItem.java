@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -23,7 +23,7 @@ import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion;
 
 /**
  *  OrderPODLineItem represents an entity that keeps track of delivered and returned quantities of a product.

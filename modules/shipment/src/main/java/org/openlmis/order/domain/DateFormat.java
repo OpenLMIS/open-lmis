@@ -15,7 +15,7 @@ package org.openlmis.order.domain;
  */
 
 import lombok.Getter;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.order.serializer.DateFormatSerializer;
 
 @JsonSerialize(using = DateFormatSerializer.class)

@@ -10,12 +10,13 @@
 
 package org.openlmis.distribution.serializer;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.ObjectCodec;
-import org.codehaus.jackson.map.DeserializationContext;
-import org.codehaus.jackson.map.JsonDeserializer;
 import org.openlmis.distribution.dto.Reading;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
 
@@ -32,8 +33,8 @@ public class DistributionReadingDeSerializer extends JsonDeserializer<Reading> {
     JsonNode value = jsonNode.get("value");
     JsonNode notRecorded = jsonNode.get("notRecorded");
 
-    String stringValue = value != null ? value.getTextValue() : null;
-    Boolean notRecordedValue = notRecorded != null && notRecorded.getBooleanValue();
+    String stringValue = value != null ? value.textValue() : null;
+    Boolean notRecordedValue = notRecorded != null && notRecorded.booleanValue();
 
     return new Reading(stringValue, notRecordedValue);
   }

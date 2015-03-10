@@ -16,7 +16,6 @@ dependencies {
             'org.springframework:spring-aspects:4.1.5.RELEASE',
             'commons-collections:commons-collections:20040616',
             'commons-lang:commons-lang:2.6',
-            project(':modules:core'),
             project(':modules:core')
 
    
