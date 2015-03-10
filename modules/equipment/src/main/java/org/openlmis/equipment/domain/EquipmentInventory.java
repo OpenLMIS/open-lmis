@@ -14,12 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.codehaus.jackson.map.ser.std.DateSerializer;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.serializer.DateDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

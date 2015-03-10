@@ -28,6 +28,8 @@
     <mvc:annotation-driven/>
     <aop:aspectj-autoproxy/>
     <task:annotation-driven/>
+
+    <!--<bean class="com.mangofactory.swagger.configuration.SpringSwaggerConfig"></bean>-->
     <context:component-scan base-package="org.openlmis.web"/>
 
     <bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

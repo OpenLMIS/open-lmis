@@ -7,9 +7,10 @@ dependencies {
       'org.springframework:spring-aspects:4.1.5.RELEASE',
       'org.springframework.integration:spring-integration-ftp:2.2.3.RELEASE',
       'org.aspectj:aspectjrt:1.7.0',
-          'org.projectlombok:lombok:1.16.2',
-      'org.codehaus.jackson:jackson-mapper-asl:1.9.11',
-      'joda-time:joda-time:2.1',
+      'org.projectlombok:lombok:1.16.2',
+      'com.fasterxml.jackson.core:jackson-databind:2.5.1',
+      'com.fasterxml.jackson.core:jackson-core:2.5.1',
+      'com.fasterxml.jackson.core:jackson-annotations:2.5.1',
       'commons-codec:commons-codec:1.7',
       project(':modules:db'),
       project(':modules:core')

@@ -13,8 +13,9 @@ apply plugin: 'war'
 
 buildscript {
     repositories {
-        mavenCentral();
+       mavenCentral();
        jcenter();
+
     }
 }
 
@@ -26,7 +27,7 @@ dependencies {
             'commons-lang:commons-lang:2.6',
             'commons-collections:commons-collections:20040616',
             'org.springframework.security:spring-security-core:3.2.6.RELEASE',
-            'com.mangofactory:swagger-springmvc:0.9.5',
+
             project(':modules:requisition'),
             project(':modules:report'),
             project(':modules:shipment')

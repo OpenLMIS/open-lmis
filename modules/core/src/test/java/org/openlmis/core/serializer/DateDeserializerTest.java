@@ -10,8 +10,9 @@
 
 package org.openlmis.core.serializer;
 
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.DeserializationContext;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.UnitTests;
