@@ -10,8 +10,11 @@
 
 package org.openlmis.report.mapper.lookup;
 
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.mapping.ResultSetType;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.model.dto.Facility;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +27,8 @@ public interface FacilityLookupReportMapper {
     @Select("SELECT *" +
             "   FROM " +
             "       facilities order by name")
-    List<Facility> getAll();
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    List<Facility> getAll(@Param("RowBounds") RowBounds rowBounds);
 
     @Select("SELECT * " +
             "   FROM " +
