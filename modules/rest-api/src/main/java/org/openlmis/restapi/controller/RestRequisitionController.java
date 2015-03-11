@@ -10,6 +10,7 @@
 
 package org.openlmis.restapi.controller;
 
+import com.wordnik.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.domain.Report;
@@ -39,6 +40,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
 @NoArgsConstructor
+@Api(value="Requisitions", description = "Submit Requisitions", position = 5)
 public class RestRequisitionController extends BaseController {
 
   public static final String RNR = "requisitionId";

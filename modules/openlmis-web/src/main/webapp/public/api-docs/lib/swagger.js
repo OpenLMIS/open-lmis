@@ -254,14 +254,17 @@
       var newName = response.resourcePath.replace(/\//g, '');
       this.resourcePath = response.resourcePath;
       var res = new SwaggerResource(response, this);
+
       this.apis[newName] = res;
       this.apisArray.push(res);
     } else {
       for (k = 0; k < response.apis.length; k++) {
         resource = response.apis[k];
-        var res = new SwaggerResource(resource, this);
-        this.apis[res.name] = res;
-        this.apisArray.push(res);
+
+          var res = new SwaggerResource(resource, this);
+          this.apis[res.name] = res;
+          this.apisArray.push(res);
+
       }
     }
     this.isValid = true;

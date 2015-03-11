@@ -36,7 +36,11 @@
     <camel:template id="camelTemplate"/>
   </camel:camelContext>
 
-  <context:component-scan base-package="org.openlmis"/>
+  <context:component-scan base-package="org.openlmis.shipment"/>
+    <context:component-scan base-package="org.openlmis.pod"/>
+    <context:component-scan base-package="org.openlmis.order"/>
+    <context:component-scan base-package="org.openlmis.fulfillment"/>
+
 
   <import resource="classpath*:applicationContext-upload.xml"/>
   <import resource="classpath*:applicationContext-core.xml"/>

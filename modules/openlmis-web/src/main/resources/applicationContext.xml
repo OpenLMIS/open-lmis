@@ -25,12 +25,13 @@
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <context:annotation-config/>
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven />
     <aop:aspectj-autoproxy/>
     <task:annotation-driven/>
 
     <bean class="org.openlmis.config.MySwaggerConfig"></bean>
     <!--<bean class="com.mangofactory.swagger.configuration.SpringSwaggerConfig"></bean>-->
+
     <context:component-scan base-package="org.openlmis.web" />
 
     <bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

@@ -21,7 +21,7 @@ dependencies {
     compile 'org.projectlombok:lombok:1.16.2',
             'org.aspectj:aspectjrt:1.7.0',
             'commons-beanutils:commons-beanutils:20030211.134440',
-            'commons-collections:commons-collections:20040616'
+            'commons-collections:commons-collections:3.2.1'
 
 
     compile('net.sf.supercsv:super-csv-dozer:2.0.1') {

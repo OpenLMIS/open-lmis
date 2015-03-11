@@ -10,6 +10,7 @@
 
 package org.openlmis.restapi.controller;
 
+import com.wordnik.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.report.service.lookup.ReportLookupService;
@@ -29,6 +30,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Controller
 @NoArgsConstructor
+@Api(value="Lookups", description = "Returns shared lookup data from the e-LMIS", position = 1)
 public class LookupController {
 
     public static final String ACCEPT_JSON = "Accept=application/json";

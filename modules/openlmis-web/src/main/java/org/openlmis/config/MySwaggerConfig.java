@@ -20,6 +20,11 @@ public class MySwaggerConfig {
   @Autowired
   public void setSpringSwaggerConfig(SpringSwaggerConfig springSwaggerConfig) {
     this.springSwaggerConfig = springSwaggerConfig;
+    // hack - remove duplicate handlers that were injected erronously.
+    // this avoids the duplicate api endpoints on the swagger ui.
+    do {
+      this.springSwaggerConfig.swaggerRequestMappingHandlerMappings().remove(1);
+    }while(this.springSwaggerConfig.swaggerRequestMappingHandlerMappings().size()  > 1);
   }
 
   @Bean

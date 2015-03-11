@@ -10,6 +10,7 @@
 
 package org.openlmis.restapi.controller;
 
+import com.wordnik.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Closure;
 import org.openlmis.core.domain.ProgramProduct;
@@ -39,6 +40,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 @NoArgsConstructor
+@Api(value="Program Products", description = "List of products with details", position = 4)
 public class RestProgramProductController extends BaseController {
 
   public static final String PROGRAM_PRODUCT_LIST = "programProductList";

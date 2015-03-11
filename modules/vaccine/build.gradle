@@ -12,7 +12,7 @@ apply plugin: 'cobertura'
 
 dependencies {
 
-    compile 'commons-collections:commons-collections:20040616',
+    compile 'commons-collections:commons-collections:3.2.1',
             'commons-lang:commons-lang:2.6',
             project(':modules:core')
 
