@@ -1,4 +1,4 @@
-package org.openlmis.web.config;
+package org.openlmis.config;
 
 import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
 import com.mangofactory.swagger.models.dto.ApiInfo;
@@ -8,11 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@Configuration
 @EnableSwagger
-@ComponentScan( basePackages = "org.openlmis.restapi")
 public class MySwaggerConfig {
 
   private SpringSwaggerConfig springSwaggerConfig;
@@ -28,12 +27,15 @@ public class MySwaggerConfig {
 
     return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
       .apiInfo(apiInfo())
+      .swaggerGroup("Rest API")
+      .genericModelSubstitutes(ResponseEntity.class)
+      //.requestMappingPatternMatcher()
       .includePatterns(".*rest-api.*"); // assuming the API lives at something like http://myapp/api
   }
 
   private ApiInfo apiInfo() {
     ApiInfo apiInfo = new ApiInfo(
-      "ELMIS REST API",
+      "e-LMIS REST API",
       "Please use this API to connect to the e-LMIS. This service allows you to build applications that directly interact with the e-LMIS",
       "TOS",
       "info@elmis-dev.org",

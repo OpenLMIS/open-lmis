@@ -20,9 +20,7 @@
     <context:spring-configured/>
 
     <import resource="classpath*:applicationContext-report.xml"/>
-
-    <context:component-scan base-package="org.openlmis.report"/>
-
+    
     <tx:annotation-driven proxy-target-class="false"/>
 
 </beans>

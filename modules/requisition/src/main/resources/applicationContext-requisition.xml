@@ -23,6 +23,6 @@
   <import resource="classpath*:applicationContext-equipment.xml"/>
   <import resource="classpath*:atomFeedContext.xml" />
 
-  <context:component-scan base-package="org.openlmis"/>
+  <context:component-scan base-package="org.openlmis.rnr"/>
 
 </beans>
