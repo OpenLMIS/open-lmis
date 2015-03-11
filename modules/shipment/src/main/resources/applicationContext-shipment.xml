@@ -15,11 +15,16 @@
        xmlns:int="http://www.springframework.org/schema/integration"
        xmlns:int-jdbc="http://www.springframework.org/schema/integration/jdbc"
        xmlns:camel="http://camel.apache.org/schema/spring"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/ftp
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-4.1.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/integration
+                           http://www.springframework.org/schema/integration/ftp
        	                   http://www.springframework.org/schema/integration/ftp/spring-integration-ftp.xsd
-       http://www.springframework.org/schema/integration/jdbc http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd
+       http://www.springframework.org/schema/integration/jdbc
+       http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
@@ -48,7 +53,7 @@
     <property name="bufferSize" value="100000"/>
   </bean>
 
-  <int-ftp:inbound-channel-adapter cache-sessions="false"
+  <int-ftp:inbound-channel-adapter
                                    channel="ftpInputChannel"
                                    session-factory="ftpSessionFactory"
                                    filename-pattern="*.csv"
@@ -61,7 +66,7 @@
 
   <int:channel id="ftpErrorChannel"/>
 
-  <int-ftp:outbound-channel-adapter cache-sessions="false"
+  <int-ftp:outbound-channel-adapter
                                     channel="ftpErrorChannel"
                                     remote-directory="${shipment.ftp.remote.error.directory}"
                                     session-factory="ftpSessionFactory"
@@ -71,7 +76,7 @@
 
   <int:channel id="ftpArchiveOutputChannel"/>
 
-  <int-ftp:outbound-channel-adapter cache-sessions="false"
+  <int-ftp:outbound-channel-adapter
                                     channel="ftpArchiveOutputChannel"
                                     remote-directory="${shipment.ftp.remote.archive.directory}"
                                     session-factory="ftpSessionFactory"

@@ -10,11 +10,13 @@
 
 package org.openlmis.distribution.serializer;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.ObjectCodec;
-import org.codehaus.jackson.map.DeserializationContext;
-import org.codehaus.jackson.map.JsonDeserializer;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.openlmis.distribution.domain.DistributionStatus;
 
 import java.io.IOException;
@@ -28,6 +30,6 @@ public class StatusDeSerializer extends JsonDeserializer<DistributionStatus> {
   public DistributionStatus deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
     ObjectCodec oc = jsonParser.getCodec();
     JsonNode node = oc.readTree(jsonParser);
-    return DistributionStatus.valueOf(node.get("name").getTextValue());
+    return DistributionStatus.valueOf(node.get("name").textValue());
   }
 }

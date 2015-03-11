@@ -23,8 +23,8 @@ import org.openlmis.shipment.handler.ShipmentFilePostProcessHandler;
 import org.openlmis.shipment.service.ShipmentService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageChannel;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 
 import java.io.File;
 import java.util.HashSet;

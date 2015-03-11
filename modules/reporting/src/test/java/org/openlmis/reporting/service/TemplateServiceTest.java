@@ -308,7 +308,7 @@ public class TemplateServiceTest {
     template.setParameters(asList(parameter1, parameter2));
 
     HttpServletRequest request = mock(HttpServletRequest.class);
-    Map<String, String> requestParamMap = new HashMap<>();
+    Map requestParamMap = new HashMap<>();
     requestParamMap.put("param1", "2");
     requestParamMap.put("param2", "23.2");
 
@@ -343,7 +343,7 @@ public class TemplateServiceTest {
     template.setParameters(asList(parameter1, parameter2, parameter3));
 
     HttpServletRequest request = mock(HttpServletRequest.class);
-    Map<String, String> requestParamMap = new HashMap<>();
+    Map requestParamMap = new HashMap<>();
     requestParamMap.put("param1", "null");
     requestParamMap.put("param2", "undefined");
     requestParamMap.put("param3", "");

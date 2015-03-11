@@ -8,25 +8,19 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.domain;
+describe('Filter container tests', function(){
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.Program;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ProgramEquipment extends BaseModel{
-  Program program;
-  Equipment equipment;
-  Boolean enableTestCount;
-  Boolean enableTotalColumn;
-  Integer displayOrder;
-}
+  var $scope, $compile;
+
+    beforeEach(module('openlmis'));
+    beforeEach(inject(function (_$rootScope_, _$compile_) {
+      $scope = _$rootScope_;
+      $compile = _$compile_;
+    }));
+
+  it('checks if all required functions are available.', function(){
+
+  })
+
+});

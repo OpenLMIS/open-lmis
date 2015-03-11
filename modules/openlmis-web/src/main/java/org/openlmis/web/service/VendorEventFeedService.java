@@ -10,16 +10,16 @@
 
 package org.openlmis.web.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sun.syndication.feed.atom.Content;
 import com.sun.syndication.feed.atom.Entry;
 import com.sun.syndication.feed.atom.Feed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.WireFeedOutput;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.JsonNodeFactory;
-import org.codehaus.jackson.node.ObjectNode;
 import org.ict4h.atomfeed.server.service.EventFeedService;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -134,7 +134,7 @@ public class VendorEventFeedService {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode rootNode = objectMapper.readTree(value);
     ObjectNode returnedNode = new ObjectNode(JsonNodeFactory.instance);
-    Iterator<Map.Entry<String, JsonNode>> iterator = rootNode.getFields();
+    Iterator<Map.Entry<String, JsonNode>> iterator = rootNode.fields();
     while (iterator.hasNext()) {
       Map.Entry<String, JsonNode> mapEntry = iterator.next();
       String fieldName = mapEntry.getKey();

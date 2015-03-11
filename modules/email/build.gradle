@@ -12,18 +12,13 @@ apply plugin: 'cobertura'
 
 dependencies {
 
-    compile 'org.springframework:spring-aspects:3.1.1.RELEASE',
-            'org.springframework:spring-webmvc:3.1.1.RELEASE',
-            'javax.mail:mail:1.4.5',
-            'org.springframework.integration:spring-integration-core:2.2.3.RELEASE',
-            'org.springframework.integration:spring-integration-jdbc:2.2.3.RELEASE',
+    compile 'javax.mail:javax.mail-api:1.5.2',
+            'org.springframework.integration:spring-integration-core:4.1.2.RELEASE',
+            'org.springframework.integration:spring-integration-jdbc:4.1.2.RELEASE',
+            'org.springframework:spring-context-support:4.1.5.RELEASE',
             'commons-collections:commons-collections:20040616',
             'commons-lang:commons-lang:2.6',
             project(':modules:db')
-
-    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
-            'org.springframework:spring-aspects:3.1.1.RELEASE',
-            'javax.mail:mail:1.4.5'
 
     configurations {
         testFixtures {

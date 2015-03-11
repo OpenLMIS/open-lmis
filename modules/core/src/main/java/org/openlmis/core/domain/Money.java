@@ -13,8 +13,8 @@ package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.serializer.MoneyDeSerializer;
 import org.openlmis.core.serializer.MoneySerializer;
 

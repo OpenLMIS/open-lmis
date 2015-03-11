@@ -23,7 +23,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationContext;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.supercsv.io.CsvListReader;
 
 import java.io.File;

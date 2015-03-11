@@ -11,6 +11,7 @@
 package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.restapi.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -35,7 +37,6 @@ public class LookupController {
 
     @Autowired
     private ReportLookupService lookupService;
-
 
     @RequestMapping(value = "/rest-api/lookup/product-categories", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getProductCategories( Principal principal) {
