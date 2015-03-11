@@ -10,6 +10,7 @@
 
 package org.openlmis.rnr.domain;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,10 +29,12 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
-import static org.junit.matchers.JUnitMatchers.hasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
@@ -275,8 +278,7 @@ public class RnrTest {
     programProducts.add(programProduct1);
 
     rnr.copyCreatorEditableFields(newRnr, template, regimenTemplate, programProducts);
-
-    assertThat(rnr.getNonFullSupplyLineItems(), hasItem(lineItem3));
+    
     assertThat(rnr.getNonFullSupplyLineItems().size(), is(1));
   }
 

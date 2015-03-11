@@ -182,11 +182,7 @@ dependencies {
             project(':modules:help')
 
 
-    testCompile 'org.springframework:spring-test:4.1.5.RELEASE',
-            'org.springframework:spring-test-mvc:1.0.0.M1',
-            'javax.servlet:servlet-api:3.0',
-            'org.powermock:powermock-api-mockito:1.4.12',
-            'org.powermock:powermock-module-junit4:1.4.12',
+    testCompile 'org.springframework:spring-test-mvc:1.0.0.M1',
             'com.fasterxml.jackson.core:jackson-core:2.5.1',
             'cglib:cglib:2.2.2',
             project(path: ':modules:core', configuration: 'testFixtures'),

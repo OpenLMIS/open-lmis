@@ -31,7 +31,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
+//@RunWith(PowerMockRunner.class)
 @PrepareForTest(TimeZone.class)
 public class DateDeserializerTest {
 
