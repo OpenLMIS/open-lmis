@@ -11,7 +11,7 @@
 
 
 apply plugin: 'idea'
-apply plugin: 'versions'
+apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'properties'
 
 
@@ -20,14 +20,13 @@ idea.project.jdkName = '1.7'
 
 buildscript {
   repositories {
-    mavenCentral()
+        mavenCentral()
+        jcenter()
   }
   dependencies {
-    classpath "net.saliman:gradle-cobertura-plugin:1.2.0"
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.3'
-    classpath 'net.saliman:gradle-properties-plugin:1.2.0'
-
-
+      classpath "net.saliman:gradle-cobertura-plugin:2.2.7"
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.8'
+    classpath "net.saliman:gradle-properties-plugin:1.4.2"
   }
 }
 subprojects {
@@ -55,7 +54,8 @@ subprojects {
             'org.springframework:spring-web:4.1.5.RELEASE',
             'org.springframework:spring-aspects:4.1.5.RELEASE',
             'org.springframework:spring-messaging:4.1.5.RELEASE',
-
+            'xml-apis:xml-apis:2.0.2',
+            'commons-collections:commons-collections:3.2.1',
             'org.springframework.security:spring-security-taglibs:3.2.6.RELEASE',
             'org.springframework.security:spring-security-core:3.2.6.RELEASE',
             'org.springframework.security:spring-security-web:3.2.6.RELEASE',

@@ -125,7 +125,7 @@ def executeSql(String statement, Boolean includeDbName = false) {
         gradle.class.classLoader.addURL(file.toURI().toURL())
     }
 
-    Class.forName(dbDriver)
+   // Class.forName(dbDriver)
 
     Sql.newInstance(connectionString, dbUser, dbPassword, dbDriver).execute(statement)
 }

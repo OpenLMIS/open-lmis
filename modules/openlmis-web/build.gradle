@@ -88,10 +88,10 @@ task lesswatch(type: GruntTask) {
 buildscript {
     repositories {
         mavenCentral();
-        add(new org.apache.ivy.plugins.resolver.URLResolver()) {
-            name = 'GitHub'
-            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
-        };
+//        add(new org.apache.ivy.plugins.resolver.URLResolver()) {
+//            name = 'GitHub'
+//            addArtifactPattern 'http://cloud.github.com/downloads/[organisation]/[module]/[module]-[revision].[ext]'
+//        };
 
     }
 }
@@ -151,13 +151,9 @@ build.doLast {
 }
 
 dependencies {
-    compile 'commons-collections:commons-collections:20040616',
-            'org.json:json:20090211',
-            'log4j:log4j:1.2.15',
-            'org.aspectj:aspectjweaver:1.7.0',
+    compile 'log4j:log4j:1.2.15',
             'cglib:cglib:2.2.2',
             'commons-fileupload:commons-fileupload:1.2.2',
-            'org.testng:testng:6.1.1',
             'com.itextpdf:itextpdf:5.4.0',
             'com.mangofactory:swagger-models:0.9.5',
             'com.mangofactory:swagger-springmvc:0.9.5',
@@ -175,10 +171,7 @@ dependencies {
             project(':modules:help')
 
 
-    testCompile 'org.springframework:spring-test-mvc:1.0.0.M1',
-            'com.fasterxml.jackson.core:jackson-core:2.5.1',
-            'cglib:cglib:2.2.2',
-            project(path: ':modules:core', configuration: 'testFixtures'),
+    testCompile  project(path: ':modules:core', configuration: 'testFixtures'),
             project(path: ':modules:rest-api', configuration: 'testFixtures'),
             project(path: ':modules:requisition', configuration: 'testFixtures'),
             project(path: ':modules:shipment', configuration: 'testFixtures'),
