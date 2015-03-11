@@ -278,7 +278,7 @@ public class RnrTest {
     programProducts.add(programProduct1);
 
     rnr.copyCreatorEditableFields(newRnr, template, regimenTemplate, programProducts);
-    
+
     assertThat(rnr.getNonFullSupplyLineItems().size(), is(1));
   }
 

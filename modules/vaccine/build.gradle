@@ -12,15 +12,12 @@ apply plugin: 'cobertura'
 
 dependencies {
 
-    compile 'org.springframework:spring-core:4.1.5.RELEASE',
-            'org.springframework:spring-aspects:4.1.5.RELEASE',
-            'commons-collections:commons-collections:20040616',
+    compile 'commons-collections:commons-collections:20040616',
             'commons-lang:commons-lang:2.6',
             project(':modules:core')
 
    
-    testCompile 'org.springframework:spring-test:4.1.5.RELEASE',
-            project(path: ':modules:core', configuration: 'testFixtures')
+    testCompile project(path: ':modules:core', configuration: 'testFixtures')
 
 
     configurations {

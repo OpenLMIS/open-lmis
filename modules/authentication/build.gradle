@@ -11,18 +11,9 @@
 apply plugin: 'cobertura'
 
 dependencies {
-    compile 'org.springframework:spring-core:4.1.5.RELEASE',
-            'org.springframework:spring-aspects:4.1.5.RELEASE',
-            'org.aspectj:aspectjrt:1.7.0',
-            project(':modules:db'),
-            project(':modules:core'),
-            'org.springframework.security:spring-security-taglibs:3.2.6.RELEASE',
-            'org.springframework.security:spring-security-core:3.2.6.RELEASE',
-            'org.springframework.security:spring-security-web:3.2.6.RELEASE',
-            'org.springframework.security:spring-security-config:3.2.6.RELEASE',
-            'javax.servlet:javax.servlet-api:3.1.0'
+    compile project(':modules:db'),
+            project(':modules:core')
 
-    testCompile 'org.springframework:spring-test:4.1.5.RELEASE'
 }
 
 cobertura {

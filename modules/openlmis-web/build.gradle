@@ -151,13 +151,7 @@ build.doLast {
 }
 
 dependencies {
-    compile 'org.springframework:spring-webmvc:4.1.5.RELEASE',
-            'org.springframework:spring-core:4.1.5.RELEASE',
-            'org.springframework:spring-web:4.1.5.RELEASE',
-            'javax.servlet:javax.servlet-api:3.1.0',
-            'commons-collections:commons-collections:20040616',
-            'com.fasterxml.jackson.core:jackson-core:2.5.1',
-            'org.springframework.security:spring-security-taglibs:3.2.6.RELEASE',
+    compile 'commons-collections:commons-collections:20040616',
             'org.json:json:20090211',
             'log4j:log4j:1.2.15',
             'org.aspectj:aspectjweaver:1.7.0',
@@ -165,7 +159,6 @@ dependencies {
             'commons-fileupload:commons-fileupload:1.2.2',
             'org.testng:testng:6.1.1',
             'com.itextpdf:itextpdf:5.4.0',
-//            "com.mangofactory:swagger-springmvc:0.9.5",
             'com.mangofactory:swagger-models:0.9.5',
             'com.mangofactory:swagger-springmvc:0.9.5',
             project(':modules:authentication'),
