@@ -11,6 +11,7 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.FacilityService;
@@ -263,7 +264,7 @@ public class ReportLookupController extends BaseController {
 
   @RequestMapping(value = "/allFacilities", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getAllFacilities(HttpServletRequest request) {
-      return OpenLmisResponse.response("allFacilities", reportLookupService.getAllFacilities());
+      return OpenLmisResponse.response("allFacilities", reportLookupService.getAllFacilities(new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT)));
   }
 
   @RequestMapping(value = "/facilities", method = GET, headers = BaseController.ACCEPT_JSON)

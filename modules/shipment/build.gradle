@@ -12,9 +12,7 @@ apply plugin: 'cobertura'
 
 dependencies {
 
-    compile 'commons-lang:commons-lang:2.6',
-            'org.slf4j:slf4j-api:1.7.5',
-            'org.springframework.integration:spring-integration-ftp:4.1.2.RELEASE',
+    compile 'org.slf4j:slf4j-api:1.7.5',
 
             'org.apache.camel:camel-core:2.11.1',
             'org.apache.camel:camel-spring:2.11.1',

@@ -11,8 +11,15 @@
 package org.openlmis.restapi.controller;
 
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import lombok.NoArgsConstructor;
+import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.report.model.dto.Facility;
+import org.openlmis.report.model.dto.StockStatusDTO;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.restapi.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +29,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.openlmis.restapi.response.RestResponse.error;
@@ -30,7 +38,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Controller
 @NoArgsConstructor
-@Api(value="Lookups", description = "Returns shared lookup data from the e-LMIS", position = 1)
+@Api(value="Lookups", description = "Returns shared Lookup data", position = 1)
 public class LookupController {
 
     public static final String ACCEPT_JSON = "Accept=application/json";
@@ -41,13 +49,24 @@ public class LookupController {
     private ReportLookupService lookupService;
 
     @RequestMapping(value = "/rest-api/lookup/product-categories", method = RequestMethod.POST, headers = ACCEPT_JSON)
-    public ResponseEntity getProductCategories( Principal principal) {
+    public ResponseEntity getProductCategories( Principal principal ) {
+
+
         return RestResponse.response("product-categories", lookupService.getAllProductCategories());
     }
 
+    @ApiOperation(value = "Returns list of products", notes = "Returns a list of products.", response = Facility.class)
+    @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Successful request", response = Product.class),
+      @ApiResponse(code = 500, message = "Internal server error")}
+    )
     @RequestMapping(value = "/rest-api/lookup/products", method = RequestMethod.POST, headers = ACCEPT_JSON)
-    public ResponseEntity getProducts( Principal principal) {
-    return RestResponse.response("products", lookupService.getFullProductList());
+    public ResponseEntity getProducts(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                                      @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                      @RequestParam(value = "paging", defaultValue = "true") Boolean paging,
+                                      Principal principal) {
+      RowBounds rowBounds = paging ? new RowBounds(page, pageSize) : new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    return RestResponse.response("products", lookupService.getFullProductList(rowBounds));
     }
 
     @RequestMapping(value = "/rest-api/lookup/product-by-code", method = RequestMethod.POST, headers = ACCEPT_JSON)
@@ -66,9 +85,15 @@ public class LookupController {
         return RestResponse.response("facility-types", lookupService.getAllFacilityTypes());
     }
 
+    @ApiOperation(value = "Returns list of facilities", notes = "Returns a list of facilities.", response = Facility.class)
+    @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Successful request", response = Facility.class),
+      @ApiResponse(code = 500, message = "Internal server error")}
+    )
     @RequestMapping(value = "/rest-api/lookup/facilities", method = RequestMethod.POST, headers = ACCEPT_JSON)
-    public ResponseEntity getFacilities( Principal principal) {
-        return RestResponse.response("facilities", lookupService.getAllFacilities());
+    public ResponseEntity getFacilities( @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize, @RequestParam(value = "paging", defaultValue = "true") Boolean paging,  Principal principal) {
+      RowBounds rowBounds = paging ? new RowBounds(page, pageSize) : new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+      return RestResponse.response("facilities", lookupService.getAllFacilities(rowBounds));
     }
 
     @RequestMapping(value = "/rest-api/lookup/facility-by-code", method = RequestMethod.POST, headers = ACCEPT_JSON)

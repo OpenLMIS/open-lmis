@@ -10,8 +10,11 @@
 
 package org.openlmis.report.mapper.lookup;
 
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.mapping.ResultSetType;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.model.dto.Product;
 import org.springframework.stereotype.Repository;
 
@@ -32,8 +35,9 @@ public interface ProductReportMapper {
 
     @Select("SELECT * " +
             "   FROM " +
-            "       products")
-    List<org.openlmis.core.domain.Product> getFullProductList();
+            "       products order by primaryname")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    List<org.openlmis.core.domain.Product> getFullProductList(@Param("RowBounds")RowBounds rowBounds);
 
   @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, pp.productcategoryid as categoryid, " +
     "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +

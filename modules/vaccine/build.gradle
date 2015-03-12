@@ -12,9 +12,7 @@ apply plugin: 'cobertura'
 
 dependencies {
 
-    compile 'commons-collections:commons-collections:3.2.1',
-            'commons-lang:commons-lang:2.6',
-            project(':modules:core')
+    compile  project(':modules:core')
 
    
     testCompile project(path: ':modules:core', configuration: 'testFixtures')

@@ -12,6 +12,7 @@ package org.openlmis.report.service.lookup;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
@@ -178,8 +179,8 @@ public class ReportLookupService {
         return productMapper.getPushProgramProducts();
     }
 
-    public List<org.openlmis.core.domain.Product> getFullProductList() {
-        return productMapper.getFullProductList();
+    public List<org.openlmis.core.domain.Product> getFullProductList(RowBounds rowBounds) {
+        return productMapper.getFullProductList(rowBounds);
     }
 
     public Product getProductByCode(String code) {
@@ -294,8 +295,8 @@ public class ReportLookupService {
         return dosageUnitMapper.getAll();
     }
 
-    public List<Facility> getAllFacilities() {
-        return facilityReportMapper.getAll();
+    public List<Facility> getAllFacilities(RowBounds bounds) {
+        return facilityReportMapper.getAll(bounds);
     }
 
     public Facility getFacilityByCode(String code) {

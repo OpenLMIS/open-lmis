@@ -2,7 +2,7 @@ apply plugin: 'cobertura'
 
 dependencies {
     compile "postgresql:postgresql:9.1-901.jdbc4",
-            'org.springframework.integration:spring-integration-ftp:2.2.3.RELEASE',
+
             'commons-codec:commons-codec:1.7',
             project(':modules:db'),
             project(':modules:core')
