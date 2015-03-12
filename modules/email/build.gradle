@@ -12,8 +12,7 @@ apply plugin: 'cobertura'
 
 dependencies {
 
-    compile 'javax.mail:javax.mail-api:1.5.2',
-            project(':modules:db')
+    compile  project(':modules:db')
 
     configurations {
         testFixtures {

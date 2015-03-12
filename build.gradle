@@ -78,6 +78,9 @@ subprojects {
             'com.fasterxml.jackson.core:jackson-core:2.5.1',
             'com.fasterxml.jackson.core:jackson-annotations:2.5.1',
 
+            'javax.mail:javax.mail-api:1.5.2',
+            'com.sun.mail:javax.mail:1.5.2',
+
             'commons-codec:commons-codec:1.10',
             'commons-lang:commons-lang:2.6',
             'commons-io:commons-io:2.4'
