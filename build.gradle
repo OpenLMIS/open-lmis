@@ -49,23 +49,36 @@ subprojects {
     }
   }
   dependencies {
-    compile 'org.springframework:spring-webmvc:4.1.5.RELEASE',
+    compile 'cglib:cglib:3.1',
+            'org.springframework:spring-webmvc:4.1.5.RELEASE',
             'org.springframework:spring-core:4.1.5.RELEASE',
             'org.springframework:spring-web:4.1.5.RELEASE',
             'org.springframework:spring-aspects:4.1.5.RELEASE',
+            'org.springframework:spring-aop:4.1.5.RELEASE',
             'org.springframework:spring-messaging:4.1.5.RELEASE',
-            'xml-apis:xml-apis:2.0.2',
-            'commons-collections:commons-collections:3.2.1',
+            'org.springframework:spring-context-support:4.1.5.RELEASE',
+
             'org.springframework.security:spring-security-taglibs:3.2.6.RELEASE',
             'org.springframework.security:spring-security-core:3.2.6.RELEASE',
             'org.springframework.security:spring-security-web:3.2.6.RELEASE',
             'org.springframework.security:spring-security-config:3.2.6.RELEASE',
-            'org.aspectj:aspectjrt:1.7.0',
+
+            'org.springframework.integration:spring-integration-core:4.1.2.RELEASE',
+            'org.springframework.integration:spring-integration-jdbc:4.1.2.RELEASE',
+            'org.springframework.integration:spring-integration-ftp:4.1.2.RELEASE',
+
+            'xml-apis:xml-apis:2.0.2',
+            'commons-collections:commons-collections:3.2.1',
             'javax.servlet:javax.servlet-api:3.1.0',
+
             'org.projectlombok:lombok:1.16.2',
+
             'com.fasterxml.jackson.core:jackson-databind:2.5.1',
             'com.fasterxml.jackson.core:jackson-core:2.5.1',
             'com.fasterxml.jackson.core:jackson-annotations:2.5.1',
+
+            'commons-codec:commons-codec:1.10',
+            'commons-lang:commons-lang:2.6',
             'commons-io:commons-io:2.4'
 
 
