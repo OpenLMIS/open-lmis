@@ -31,7 +31,7 @@ import static java.math.BigDecimal.ROUND_HALF_UP;
  */
 @Data
 @JsonSerialize(as = BigDecimal.class)
-@JsonDeserialize(as = BigDecimal.class)
+@JsonDeserialize(using = MoneyDeSerializer.class)
 public class Money extends Number {
 
   private BigDecimal value;
