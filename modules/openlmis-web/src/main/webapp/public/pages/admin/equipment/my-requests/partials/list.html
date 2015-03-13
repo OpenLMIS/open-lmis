@@ -10,12 +10,9 @@
 
 
 <div>
-  <h2>My Equipment Maintenance Requests</h2>
+  <h2 openlmis-message="label.equipment.my.maintenance.request"></h2>
 
-  <p>
-    These are maintenance requests that have been received in the system. please register vendors response for each
-    request.
-  </p>
+  <p openlmis-message="label.equipment.my.maintenance.request.description"></p>
 
   <div class="alert alert-success" ng-show="message">
     <span ng-bind="message"></span>
@@ -26,12 +23,12 @@
       <thead>
       <tr class="gradient-header">
         <th>#</th>
-        <th>Facility</th>
-        <th>Equipment</th>
-        <th>Request Date</th>
-        <th>Reason</th>
-        <th>Recommended Date</th>
-        <th>Actions</th>
+        <th openlmis-message="label.equipment.maintenance.requesting.facility"></th>
+        <th openlmis-message="label.equipment.equipment"></th>
+        <th openlmis-message="label.equipment.maintenance.request.date"></th>
+        <th openlmis-message="label.equipment.maintenance.request.reason"></th>
+        <th openlmis-message="label.equipment.maintenance.request.recommended.date"></th>
+        <th></th>
       </tr>
       </thead>
       <tbody>
@@ -95,20 +92,18 @@
             </div>
             <div class="span4">
               <input
-                     ng-model="currentRequest.maintenanceDetails.nextVisitDate"
-                     id="nextVisitDateValue"
-                     name="nextVisitDateValue"
-                     ng-required="false"
-                     type="date"
-                  />
+                ng-model="currentRequest.maintenanceDetails.nextVisitDate"
+                id="nextVisitDateValue"
+                name="nextVisitDateValue"
+                ng-required="false"
+                type="date"
+                />
             </div>
           </div>
         </div>
 
       </form>
-      <div class="alert alert-error" id="saveFailMessage" openlmis-message="error" ng-show="error">
-
-      </div>
+      <div class="alert alert-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
     </div>
 
     <div class="modal-footer">

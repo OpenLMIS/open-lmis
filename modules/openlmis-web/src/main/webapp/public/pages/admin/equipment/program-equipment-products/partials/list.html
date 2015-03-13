@@ -9,22 +9,20 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html">
-  <h2><span>Associate Products to Equipments and Programs</span>
-  </h2>
+  <h2 openlmis-message="label.equipment.associated.product"></h2>
 
   <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="showMessage">
     <span ng-bind="message"></span>.
   </div>
 
-
   <form ng-submit="saveProgramEquipmentChanges()" id="manipulate-program-equipment-product"
         name="programEquipmentProduct" novalidate select2-blur>
-    <div> <!-- class="app-form">-->
+    <div>
       <div>
         <select class="large-input"
                 ng-change="listEquipmentsForProgram()"
                 ng-model="currentProgramEquipment.program" ng-options="option as option.name for option in programs">
-          <option value="">Choose Programs</option>
+          <option value=""><span openlmis-message="label.equipment.choose.program"></span></option>
           <option ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
         </select>
       </div>
@@ -32,18 +30,18 @@
       <table class="table" style="vertical-align: top">
         <tr>
           <td>
-            <div><input id="equipment-add-new" type="button" value="Add New" ng-click="addNewEquipment()"  ng-show="equipmentsLoaded" ng-disabled="currentProgramEquipment.program == null || currentProgramEquipment.program == undefined" class="pull-right btn btn-primary"/></div>
+            <div>
+              <input id="equipment-add-new" type="button" value="Add New" ng-click="addNewEquipment()"
+                     ng-show="equipmentsLoaded"
+                     ng-disabled="currentProgramEquipment.program == null || currentProgramEquipment.program == undefined"
+                     class="pull-right btn btn-primary"/></div>
             <table class="table table-hover table-bordered">
               <thead>
               <tr class="gradient-header">
-                <th>Name Of Equipment
-                </th>
-                <th>Test Count
-                </th>
-                <th>Total Count
-                </th>
-                <th>Action
-                </th>
+                <th openlmis-message="label.equipment.equipment"></th>
+                <th openlmis-message="rnr.equipment.test.count"></th>
+                <th openlmis-message="rnr.equipment.total.count"></th>
+                <th></th>
               </tr>
               </thead>
               <tbody>
@@ -56,7 +54,7 @@
                 <td>
                   <div>
                     <input type="checkbox" name="testCount-enabled"
-                              ng-model="programEquipment.enableTestCount" ng-change="setDataChanged(programEquipment)"/>
+                           ng-model="programEquipment.enableTestCount" ng-change="setDataChanged(programEquipment)"/>
                   </div>
                 </td>
                 <td>
@@ -65,38 +63,41 @@
                            ng-model="programEquipment.enableTotalColumn" ng-change="setDataChanged(programEquipment)"/>
                   </div>
                 </td>
-                 <td>
-                    <div>
-                        <input type="button" class="btn btn-danger delete-button" value="Delete"
-                               ng-click="showRemoveProgramEquipmentConfirmDialog($index)"/>
-                    </div>
-                  </td>
-                 </td>
+                <td>
+                  <div>
+                    <input type="button" class="btn btn-danger delete-button" value="Delete"
+                           ng-click="showRemoveProgramEquipmentConfirmDialog($index)"/>
+                  </div>
+                </td>
+                </td>
               </tr>
               </tbody>
             </table>
           </td>
           <td>&nbsp;</td>
           <td>
-            <div><input id="product-add-new" type="button" value="Add New" ng-click="addNewProduct()" ng-show="productsLoaded" ng-disabled="currentProgramEquipment.id == null || currentProgramEquipment.id == undefined" class="pull-right btn btn-primary"/></div>
+            <div><input id="product-add-new" type="button" value="Add New" ng-click="addNewProduct()"
+                        ng-show="productsLoaded"
+                        ng-disabled="currentProgramEquipment.id == null || currentProgramEquipment.id == undefined"
+                        class="pull-right btn btn-primary"/></div>
             <table class="table table-hover table-bordered">
               <thead>
               <tr class="gradient-header">
-                <th>Name of Product
-                </th>
-                <th>Action
-                </th>
+                <th openlmis-message="label.product"></th>
+                <th></th>
               </tr>
               </thead>
               <tbody>
               <tr ng-repeat="programEquipmentProduct in programEquipmentProducts">
                 <td>
-                  <div>{{programEquipmentProduct.product.primaryName.concat('(').concat(programEquipmentProduct.product.fullName).concat(')')}}</div>
+                  <div>
+                    {{programEquipmentProduct.product.primaryName.concat('(').concat(programEquipmentProduct.product.fullName).concat(')')}}
+                  </div>
                 </td>
                 <td>
                   <div>
                     <input type="button" class="btn btn-danger delete-button" value="Delete"
-                         ng-click="showRemoveProgramEquipmentProductConfirmDialog($index)"/>
+                           ng-click="showRemoveProgramEquipmentProductConfirmDialog($index)"/>
                   </div>
                 </td>
               </tr>
@@ -114,13 +115,10 @@
     </div>
   </form>
 
-  <!-- modal for adding equipment -->
   <div id="equipmentDialogDiv" modal="equipmentDialogModal"
        options="{'backdrop':'static', 'escape':false}">
     <div class="modal-header">
-      <h3>
-        <span>Add Equipment</span>
-      </h3>
+      <h3 openlmis-message="label.equipment.add"></h3>
     </div>
 
     <div class="modal-body">
@@ -128,7 +126,7 @@
         <div>
           <div class="row-fluid">
             <div class="span6">
-              <label for="equipmentValue"><span>Equipment</span></label>
+              <label for="equipmentValue"><span openlmis-message="label.equipment.equipment"></span></label>
             </div>
             <div class="span4">
               <select style="width:200px;" ng-required="true" size="7" name="equipmentValue"
@@ -141,7 +139,8 @@
         </div>
 
       </form>
-      <div class="alert alert-error" id="equipmentSaveFailMessage" openlmis-message="equipmentErrorMessage" ng-show="equipmentError">
+      <div class="alert alert-error" id="equipmentSaveFailMessage" openlmis-message="equipmentErrorMessage"
+           ng-show="equipmentError">
 
       </div>
     </div>
@@ -156,14 +155,11 @@
 
   </div>
 
-  <!-- modal for adding products -->
 
   <div id="productsDialogDiv" modal="productDialogModal"
        options="{'backdrop':'static', 'escape':false}">
     <div class="modal-header">
-      <h3>
-        <span>Add a Product</span>
-      </h3>
+      <h3 openlmis-message="label.product.add"></h3>
     </div>
 
     <div class="modal-body">
@@ -171,7 +167,7 @@
         <div>
           <div class="row-fluid">
             <div class="span6">
-              <label for="productValue"><span>Product</span></label>
+              <label for="productValue"><span openlmis-message="label.product"></span></label>
             </div>
             <div class="span4">
               <select style="width:200px;" ng-required="true" size="7" name="productValue"
@@ -184,7 +180,8 @@
         </div>
 
       </form>
-      <div class="alert alert-error" id="productSaveFailMessage" openlmis-message="productErrorMessage" ng-show="productError">
+      <div class="alert alert-error" id="productSaveFailMessage" openlmis-message="productErrorMessage"
+           ng-show="productError">
 
       </div>
     </div>
