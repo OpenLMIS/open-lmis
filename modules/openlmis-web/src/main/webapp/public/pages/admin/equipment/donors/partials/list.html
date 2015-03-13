@@ -9,50 +9,44 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html">
-    <h2><span openlmis-message="label.donor.list"></span>
+  <h2><span openlmis-message="label.donor.list"></span>
         <a href="#/create-donor" class="pull-right btn btn-primary"><span id="donor-add-new" openlmis-message="label.donor.add"></span></a>
-    </h2>
+  </h2>
 
-    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="donorId">
-        <span ng-bind="message"></span>
-    </div>
+  <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="donorId">
+    <span ng-bind="message"></span>
+  </div>
+  <input id="txtFilterDonors" class="search-query input-xlarge" type="text" ng-model="query" ng-init="showDonorsList('txtFilterDonors')" on-keyup="filterDonors('txtFilterDonors')" placeholder="Enter donor name" />
+  <div>
+    <h3 ng-show="query.length>0">
+        <ng-pluralize count="resultCount"
+                      when="{ 0: 'No matches found for \'{{query}}\'',
+                        1: '1 match found for \'{{query}}\'',
+                        other: '{} matches found for \'{{query}}\''}">
+        </ng-pluralize>
+    </h3>
+ 
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr class="gradient-header">
+          <th>#</th>
+          <th><span openlmis-message="label.donor.code"></span></th>
+          <th><span openlmis-message="label.donor.short.name"></span></th>
+          <th><span openlmis-message="label.donor.name"></span></th>
+          <th><span openlmis-message="label.donor.donation.count"></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="donor in filteredDonors">
+          <td>{{$index + 1}}</td>
+          <td><div>{{donor.code}}</div></td>
+          <td><a href="" ng-click="editDonor(donor.id, donor.countOfDonations)">{{donor.shortName}}</a></td>
+          <td>{{donor.longName}}</td>
+          <td><div>{{donor.countOfDonations}}</div></td>
+        </tr>
+      </tbody>
+    </table>
 
-    <input id="txtFilterDonors" class="search-query input-xlarge" type="text" ng-model="query"
-           ng-init="showDonorsList('txtFilterDonors')"
-           on-keyup="filterDonors('txtFilterDonors')" placeholder="Enter donor name"/>
-
-
-    <div>
-        <h3 ng-show="query.length>0">
-            <ng-pluralize count="resultCount"
-                          when="{ 0: 'No matches found for \'{{query}}\'',
-                            1: '1 match found for \'{{query}}\'',
-                            other: '{} matches found for \'{{query}}\''}">
-
-            </ng-pluralize>
-        </h3>
-        <br/>
-        <table class="table table-striped table-bordered">
-            <thead>
-            <tr class="gradient-header">
-                <th>#</th>
-                <th><span openlmis-message="label.donor.code"></span></th>
-                <th><span openlmis-message="label.donor.short.name"></span></th>
-                <th><span openlmis-message="label.donor.name"></span></th>
-                <th><span openlmis-message="label.donor.donation.count"></span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="donor in filteredDonors">
-                <td>{{$index + 1}}</td>
-                <td><div>{{donor.code}}</div></td>
-                <td><a href="" ng-click="editDonor(donor.id, donor.countOfDonations)">{{donor.shortName}}</a></td>
-                <td><div>{{donor.longName}}</div></td>
-                <td><div>{{donor.countOfDonations}}</div></td>
-            </tr>
-            </tbody>
-        </table>
-
-    </div>
+  </div>
 
 </div>

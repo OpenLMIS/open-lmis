@@ -10,13 +10,15 @@
 
 <div xmlns="http://www.w3.org/1999/html">
   <h2>
-    <span>{{(equipment_type.id == undefined)?'New': 'Edit'}} Equipment Types</span>
+    <span ng-show="equipment_type.id" openlmis-message="label.equipment.edit.equipment.type"></span>
+    <span ng-show="!equipment_type.id" openlmis-message="label.equipment.new.equipment.type"></span>
   </h2>
   <form ng-submit="saveEquipmentType()" id="equipmentTypeForm" name="equipmentTypeForm" >
     <div class="form-group">
       <div class="form-row clearfix">
         <div class="form-cell">
-          <label for="code">Code
+          <label for="code">
+            <span openlmis-message="label.code"></span>
             <span class="label-required">*</span>
           </label>
 
@@ -28,7 +30,8 @@
       </div>
       <div class="form-row clearfix">
         <div class="form-cell">
-          <label for="name">Name
+          <label for="name">
+            <span openlmis-message="label.name"></span>
             <span class="label-required">*</span>
           </label>
 

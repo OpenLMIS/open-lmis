@@ -10,7 +10,7 @@
 
 <div xmlns="http://www.w3.org/1999/html">
   <h2>
-    <span>Manage Equipment Service Contracts</span>
+    <span openlmis-message="label.equipment.manage.service.contracts"></span>
     <a id="add-new-vendor" href="#/create" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
   </h2>
 
@@ -19,19 +19,17 @@
       <thead>
         <tr class="gradient-header">
           <th style="width: 30px;">#</th>
-          <th>Contract #</th>
-          <th>Description</th>
-          <th>Coverage</th>
-          <th>Start Date</th>
-          <th>End Date</th>
+          <th openlmis-message="label.equipment.contract.number"></th>
+          <th openlmis-message="label.equipment.contract.description"></th>
+          <th openlmis-message="label.equipment.contract.coverage"></th>
+          <th openlmis-message="label.equipment.contract.start.date"></th>
+          <th openlmis-message="label.equipment.contract.end.date"></th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="row in list">
           <td>{{$index + 1}}</td>
-          <td>
-            <a ng-href="#/edit/{{row.id}}">{{row.identifier}}</a>
-          </td>
+          <td> <a ng-href="#/edit/{{row.id}}">{{row.identifier}}</a></td>
           <td>{{row.description}}</td>
           <td>{{row.coverage}}</td>
           <td>{{row.startDateString}}</td>

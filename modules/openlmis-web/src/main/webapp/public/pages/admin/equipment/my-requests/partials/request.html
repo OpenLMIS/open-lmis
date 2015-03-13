@@ -9,10 +9,9 @@
   -->
 
 <div>
-  <h2>Maintenance Request Form</h2>
-  <p>
-    This form can be used to request maintenance for the equipment you selected. The requests will be automatically forwarded to the service contract holder (if any)
-  </p>
+  <h2 openlmis-message="label.equipment.maintenance.request.form"></h2>
+
+  <p openlmis-message="message.equipment.maintenance.request.description"></p>
 
   <form ng-submit="save()" name="requestForm" novalidate>
     <table class="table table-full-width">
@@ -20,55 +19,62 @@
         <td width="50%">
           <div>
             <div class="form-row clearfix">
-              <label>Equipment: <b>{{equipment.name}}</b></label>
+              <label><span openlmis-message="label.equipment.equipment"></span>: <b>{{equipment.name}}</b></label>
             </div>
 
             <div class="form-row clearfix">
-              <label>Model : <b>{{equipment.model}}</b></label>
+              <label><span openlmis-message="label.equipment.model"></span> : <b>{{equipment.model}}</b>
+              </label>
             </div>
 
             <div class="form-row clearfix">
-              <label>Serial Number: <b>{{equipment.serialNumber}}</b></label>
+              <label><span openlmis-message="label.equipment.serial"></span>: <b>{{equipment.serialNumber}}</b>
+              </label>
             </div>
           </div>
-
-
           <div>
             <div class="form-row clearfix">
-              <label>Maintenance Service Vendor</label>
+              <label><span openlmis-message="label.equipment.maintenance.service.vendor"></span> <span
+                class="label-required">*</span>
+              </label>
+
               <div class="form-field">
                 <select name="vendor" ng-model="current.vendorId" ng-required="true">
                   <option value="{{vendor.id}}" ng-repeat="vendor in vendors">{{vendor.name}}</option>
                 </select>
-                <span class="field-error" ng-show="requestForm.vendor.$error.required && showError" openlmis-message="missing.value"></span>
+                <span class="field-error" ng-show="requestForm.vendor.$error.required && showError"
+                      openlmis-message="missing.value"></span>
               </div>
             </div>
             <div class="form-row clearfix">
-              <label>Reason for requesting maintenance</label>
+              <label><span openlmis-message="label.equipment.reason.for.requesting.maintenance"></span> <span
+                class="label-required">*</span>
+              </label>
+
               <div class="form-field">
                 <textarea style="width:100%" name="reason" ng-model="current.reason" ng-required="true"></textarea>
-                <span class="field-error" ng-show="requestForm.reason.$error.required && showError" openlmis-message="missing.value"></span>
+                <span class="field-error" ng-show="requestForm.reason.$error.required && showError"
+                      openlmis-message="missing.value"></span>
               </div>
             </div>
 
             <div class="form-row clearfix">
-              <label >Recommended Maintenance Visit Date</label>
+              <label><span openlmis-message="label.equipment.recommended.maintenance.visit.date"></span><span
+                class="label-required">*</span>
+              </label>
 
               <div class="form-field">
-                <input ng-required="true"
-                    ng-model="current.recommendedDate"
-                    name="recommendedDate"
-                    id="recommendedDate"
-                    ng-change="blurDateFields();"
-                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                    ui-date-format="yy-dd-mm"
-                    />
-                <span class="field-error" ng-show="requestForm.recommendedDate.$error.required && showError" openlmis-message="missing.value"></span>
+                <input ng-required="true" ng-model="current.recommendedDate" name="recommendedDate" id="recommendedDate"
+                       ng-change="blurDateFields();" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                       ui-date-format="yy-dd-mm"/>
+                <span class="field-error" ng-show="requestForm.recommendedDate.$error.required && showError"
+                      openlmis-message="missing.value"></span>
               </div>
             </div>
 
             <div class="form-row clearfix">
-              <label>Other Comments</label>
+              <label openlmis-message="label.equipment.other.comments"></label>
+
               <div class="form-field">
                 <textarea style="width:100%" ng-model="current.comment"></textarea>
               </div>
@@ -80,17 +86,18 @@
     </table>
 
     <div form-toolbar id="action_buttons" class="action-buttons">
-    <div class="form-cell button-row">
-      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button" openlmis-message="button.save" />
-      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancel()" />
-    </div>
+      <div class="form-cell button-row">
+        <input id="saveButton" ng-disabled="!requestForm.$valid" type="submit" id="save-button"
+               class="btn btn-primary save-button" openlmis-message="button.save"/>
+        <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+               ng-click="cancel()"/>
+      </div>
 
-
-    <div class="toolbar-error" id="saveErrorMsgDiv">
-      <span openlmis-message="error" ng-show="error"></span>&nbsp;
-      <span ng-show="errorMessage" ng-bind="errorMessage"></span>
+      <div class="toolbar-error" id="saveErrorMsgDiv">
+        <span openlmis-message="error" ng-show="error"></span>&nbsp;
+        <span ng-show="errorMessage" ng-bind="errorMessage"></span>
+      </div>
+      <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
     </div>
-    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
-  </div>
   </form>
 </div>

@@ -19,15 +19,18 @@
         <td width="80%">
           <div>
             <div class="form-row clearfix">
-              <label><span openlmis-message="label.equipment.equipment"></span>: <b>{{equipment.name}}</b></label>
+              <label><span openlmis-message="label.equipment.equipment"></span>: <b>{{equipment.name}}</b>
+              </label>
             </div>
 
             <div class="form-row clearfix">
-              <label><span openlmis-message="label.equipment.model"></span> : <b>{{equipment.model}}</b></label>
+              <label><span openlmis-message="label.equipment.model"></span> : <b>{{equipment.model}}</b>
+              </label>
             </div>
 
             <div class="form-row clearfix">
-              <label><span openlmis-message="label.equipment.serial"></span>: <b>{{equipment.serialNumber}}</b></label>
+              <label><span openlmis-message="label.equipment.serial"></span>: <b>{{equipment.serialNumber}}</b>
+              </label>
             </div>
           </div>
         </td>
@@ -36,11 +39,14 @@
     <div>
       <table class="table table-bordered table-scrollable">
         <thead>
-        <tr>
-          <th><span openlmis-message="label.date"></span></th>
-          <th><span openlmis-message="label.equipment.status"></span></th>
-          <th><span openlmis-message="label.remarks"></span></th>
-        </tr>
+          <tr>
+            <th><span openlmis-message="label.date"></span>
+            </th>
+            <th><span openlmis-message="label.equipment.status"></span>
+            </th>
+            <th><span openlmis-message="label.remarks"></span>
+            </th>
+          </tr>
         </thead>
         <tr ng-repeat="row in logs">
           <td>{{row.dateString}}</td>
@@ -52,8 +58,7 @@
   </div>
   <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
-      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
-             ng-click="cancel()"/>
+      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancel()" />
     </div>
     <div class="toolbar-error" id="saveErrorMsgDiv">
       <span openlmis-message="error" ng-show="error"></span>&nbsp;
