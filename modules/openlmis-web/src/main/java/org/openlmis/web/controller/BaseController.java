@@ -36,7 +36,7 @@ public class BaseController {
   public static final String FORBIDDEN_EXCEPTION = "error.authorisation";
   public static final String ACCEPT_JSON = "Accept=application/json";
   public static final String ACCEPT_PDF = "Accept=application/pdf";
-  public static final String ACCEPT_CSV = "Accept=application/csv";
+  public static final String ACCEPT_CSV = "Accept=*/*";
 
   @Autowired
   MessageService messageService;

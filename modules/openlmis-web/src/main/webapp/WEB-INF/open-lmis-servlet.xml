@@ -12,11 +12,9 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-       http://www.springframework.org/schema/util
-       http://www.springframework.org/schema/util/spring-util.xsd">
+       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
 
     <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
 
@@ -26,14 +24,12 @@
                     <bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
                         <constructor-arg>
                             <map>
-                                <entry key="json">
-                                    <util:constant static-field="org.springframework.http.MediaType.APPLICATION_JSON_VALUE" />
-                                </entry>
-                                <entry key="xml">
-                                    <util:constant static-field="org.springframework.http.MediaType.APPLICATION_XML_VALUE" />
-                                </entry>
+                                <entry key="pdf" value="application/pdf" />
+                                <entry key="json" value="application/json" />
+                                <entry key="xml" value="application/xml" />
                             </map>
                         </constructor-arg>
+
                     </bean>
                 </constructor-arg>
             </bean>
@@ -44,7 +40,7 @@
                 <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
             </list>
         </property>
-
+        <property name="order" value="1"/>
     </bean>
 
     <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
