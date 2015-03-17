@@ -18,23 +18,24 @@ System Requirement
 - JDK 7
 - Postgresql 9
 - Git
-- Gradle 1.6
-  ### For Linux users
+- Gradle 2.3
+  #### For Linux users
    * Download the source binary directly from the gradle website.
-   Copy the downloaded folder to /usr/bin. 
+   * Copy the downloaded folder to /usr/bin. 
    * Add the path to gradle bin folder to your /etc/profile file
-   export PATH="$PATH:/usr/bin/gradle-1.6/bin"
    
-  ### For Mac users
+   export PATH="$PATH:/usr/bin/gradle-2.3/bin"
+   
+  #### For Mac users
    * Install HomeBrew
    * Run ```brew install gradle```         
 
 - Node.js
 
-  ### For Linux users
+  #### For Linux users
    * Install Nodejs as described [here](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager#rhelcentosscientific-linux-6) based on your Linux flavour.
 
-  ### For Mac users
+  #### For Mac users
   * Install Node.js [directly](http://nodejs.org/) or using homebrew using `brew install nodejs`
   * Those who install Node.js using Homebrew should export the following (or include in ```$HOME/.bash_profile``` or ```$HOME/.profile``` or ```$HOME/.bashrc``` or ```$HOME/.zshrc```, depending on your shell.
       - **export NODE_PATH="/usr/local/bin/node"**
@@ -71,7 +72,7 @@ Running App on embedded Jetty server
 
  - ```build``` is to build the app.
  - ```setupdb``` is to recreate the database and schema.
- - ```setupExtensions``` is to apply the database schema exentions added.
+ - ```setupExtensions``` is to apply the database schema extensions added.
  - ```seed``` is to seed in the reference data.
  - ```testseed``` puts in some test data which can be used to browse through basic functionality in the system.
  - ```run``` is to start the embedded jetty server.
