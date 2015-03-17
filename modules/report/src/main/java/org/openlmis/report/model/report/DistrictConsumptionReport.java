@@ -25,6 +25,7 @@ public class DistrictConsumptionReport implements ReportData {
   private String level;
   private String district;
   private Double consumption;
+  private Double consumptionInPacks;
   private Double dispensed;
   private Double totalPercentage;
 }

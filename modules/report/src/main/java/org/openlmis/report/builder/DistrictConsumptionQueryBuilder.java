@@ -89,7 +89,8 @@ public class DistrictConsumptionQueryBuilder {
       predicates = predicates + " and (d.zone_id = " + filter.getZoneId() +" or d.parent = " +filter.getZoneId() + " or d.region_id = " + filter.getZoneId() + " or d.district_id = " + filter.getZoneId() + ") " ;
     }
 
-    String query = "SELECT li.productCode code, li.product, sum(li.quantityDispensed) dispensed, sum(li.normalizedConsumption) consumption FROM requisition_line_items li \n" +
+    String query = "SELECT li.productCode code, li.product, sum(li.quantityDispensed) dispensed, sum(li.normalizedConsumption) consumption, sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode)) consumptionInPacks \n" +
+            " FROM requisition_line_items li \n" +
               " JOIN requisitions r on r.id = li.rnrid " +
 
               " JOIN facilities f on r.facilityId = f.id " +
