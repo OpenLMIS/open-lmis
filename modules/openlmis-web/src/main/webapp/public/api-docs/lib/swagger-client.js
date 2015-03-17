@@ -420,6 +420,7 @@ SwaggerClient.prototype.buildFromSpec = function(response) {
   var path;
   var operations = [];
   for(path in response.paths) {
+    console.info(path);
     if(typeof response.paths[path] === 'object') {
       var httpMethod;
       for(httpMethod in response.paths[path]) {

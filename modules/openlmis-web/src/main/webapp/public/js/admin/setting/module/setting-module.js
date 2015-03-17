@@ -20,13 +20,6 @@ angular.module('setting', ['openlmis', 'ui.bootstrap','ui.bootstrap.modal', 'ui.
 
 app.directive('setting', function ($compile, $http, $templateCache) {
 
-    var noteTemplate = '<div class="entry-note">' +
-                            '<div class="entry-text">' +
-                                '<div class="entry-title">{{name}}</div>' +
-                                '<div class="entry-copy">{{content.data}}</div>' +
-                            '</div>' +
-                        '</div>';
-
     var getTemplate = function(contentType) {
         var templateLoader,
             baseUrl = '/public/pages/admin/setting/templates/',

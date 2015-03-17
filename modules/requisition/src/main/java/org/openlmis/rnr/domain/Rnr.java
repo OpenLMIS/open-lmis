@@ -14,9 +14,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 
@@ -28,7 +28,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.apache.commons.collections.CollectionUtils.selectRejected;
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -185,7 +185,7 @@ public class Rnr extends BaseModel {
   }
 
   public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
-    this.program = program.basicInformation();
+    this.program = program;
     this.period = period;
     this.facility = facility.basicInformation();
   }

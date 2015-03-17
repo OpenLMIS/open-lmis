@@ -1,5 +1,6 @@
 package org.openlmis.restapi.controller; 
 
+import org.apache.ibatis.session.RowBounds;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -36,6 +37,7 @@ public class LookupControllerTest {
 
   Principal principal;
 
+  RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
   @Before
   public void setUp() throws Exception {
     principal = mock(Principal.class);
@@ -60,11 +62,11 @@ public class LookupControllerTest {
   public void shouldGetProducts() throws Exception {
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
     when(RestResponse.response("products", new ArrayList<ProductList>())).thenReturn(expectResponse);
-    when(lookupService.getFullProductList()).thenReturn(new ArrayList<org.openlmis.core.domain.Product>());
+    when(lookupService.getFullProductList(rowBounds)).thenReturn(new ArrayList<org.openlmis.core.domain.Product>());
 
-    ResponseEntity<RestResponse> response = controller.getProducts(principal);
+    ResponseEntity<RestResponse> response = controller.getProducts(1,10,false, principal);
 
-    verify(lookupService).getFullProductList();
+    verify(lookupService).getFullProductList(rowBounds);
     assertThat(response, is(expectResponse));
   }
 
@@ -112,11 +114,12 @@ public class LookupControllerTest {
   public void shouldGetFacilities() throws Exception {
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
     when(RestResponse.response("facilities", new ArrayList<Facility>())).thenReturn(expectResponse);
-    when(lookupService.getAllFacilities()).thenReturn(new ArrayList<Facility>());
 
-    ResponseEntity<RestResponse> response = controller.getFacilities(principal);
+    when(lookupService.getAllFacilities(rowBounds)).thenReturn(new ArrayList<Facility>());
 
-    verify(lookupService).getAllFacilities();
+    ResponseEntity<RestResponse> response = controller.getFacilities(1,10, false, principal);
+
+    verify(lookupService).getAllFacilities(rowBounds);
     assertThat(response, is(expectResponse));
   }
 

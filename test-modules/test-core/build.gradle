@@ -20,7 +20,7 @@ dependencies {
             project(':modules:db')
 
 
-    testCompile 'org.springframework:spring-test:3.1.1.RELEASE',
+    testCompile 'org.springframework:spring-test:4.1.5.RELEASE',
             'org.testng:testng:6.1.1',
             'net.sf.json-lib:json-lib:0.9',
             'postgresql:postgresql:9.0-801.jdbc4',

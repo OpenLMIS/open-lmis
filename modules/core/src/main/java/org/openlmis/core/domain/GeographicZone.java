@@ -14,15 +14,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * GeographicZone represents a real world entity for Geographic Zone. Also defines the contract for creation/upload of Geographic zone entity.

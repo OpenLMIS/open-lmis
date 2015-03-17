@@ -12,37 +12,37 @@
     <ul class="clearfix">
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="equipmentTypeSelected">
             <a href="/public/pages/admin/equipment/type/index.html">
-                <span id="equipmentTypes" >Equipment Types</span>
+                <span id="equipmentTypes" openlmis-message="label.equipment.types"></span>
             </a>
         </li>
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageEquipmentSelected">
             <a href="/public/pages/admin/equipment/manage/index.html">
-                <span id="equipment-list">Equipment List</span>
+                <span id="equipment-list" openlmis-message="label.equipment.list" ></span>
             </a>
         </li>
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageProgramEquipmentProductSelected">
           <a href="/public/pages/admin/equipment/program-equipment-products/index.html">
-            <span id="programEquipmentProduct-list">Products for Equipments</span>
+            <span id="programEquipmentProduct-list" openlmis-message="label.equipment.products" ></span>
           </a>
         </li>
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageServiceTypeSelected">
           <a href="/public/pages/admin/equipment/service-type/index.html">
-            <span id="equipment-service-type">Service Types</span>
+            <span id="equipment-service-type" openlmis-message="label.equipment.service.types" ></span>
           </a>
         </li>
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageVendorSelected">
           <a href="/public/pages/admin/equipment/vendor/index.html">
-            <span id="service-vendor">Service Vendors</span>
+            <span id="service-vendor" openlmis-message="label.equipment.service.vendors" ></span>
           </a>
         </li>
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageServiceContactsSelected">
           <a href="/public/pages/admin/equipment/service-contract/index.html">
-            <span id="service-contract">Service Contracts</span>
+            <span id="service-contract" openlmis-message="label.equipment.service.contracts" ></span>
           </a>
         </li>
         <li ng-show="hasPermission('MANAGE_DONOR')" ng-class="donorSelected">
           <a href="/public/pages/admin/equipment/donors/index.html#/list">
-            <span id="donor-tab">Donors</span>
+            <span id="donor-tab" openlmis-message="label.equipment.donors" ></span>
           </a>
         </li>
     </ul>

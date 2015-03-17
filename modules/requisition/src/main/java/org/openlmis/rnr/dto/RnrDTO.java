@@ -13,7 +13,7 @@ package org.openlmis.rnr.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.rnr.domain.Rnr;
 
 import java.text.SimpleDateFormat;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * DTO for Rnr. It is a client side representation of Rnr with its attributes.

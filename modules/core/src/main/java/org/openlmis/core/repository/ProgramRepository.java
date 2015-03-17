@@ -105,4 +105,9 @@ public class ProgramRepository {
   public List<Program> getProgramsForNotification() {
     return mapper.getProgramsForNotification();
   }
+
+  public Program update(Program program) {
+    mapper.update(program);
+    return mapper.getById(program.getId());
+  }
 }

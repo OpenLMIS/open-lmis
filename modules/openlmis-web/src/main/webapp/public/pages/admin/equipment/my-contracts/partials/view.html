@@ -10,7 +10,8 @@
 
 <div xmlns="http://www.w3.org/1999/html">
   <h2>
-    <span>{{(current.id == undefined)?'New': 'Edit'}} Service Contract</span>
+    <span ng-show="current.id" openlmis-message="label.equipment.edit.service.contract"></span>
+    <span ng-show="!current.id" openlmis-message="label.equipment.new.service.contract"></span>
   </h2>
   <form ng-submit="save()" id="create-service-type" name="contractForm" novalidate>
 
@@ -18,10 +19,9 @@
       <tr>
         <td width="50%" style="vertical-align: top;padding: 10px">
           <div>
-
             <div class="form-row clearfix">
               <div class="form-cell">
-                <label for="name">Identifier
+                <label for="name"><span openlmis-message="label.equipment.contract.identifier"></span>
                   <span class="label-required">*</span>
                 </label>
 
@@ -34,7 +34,8 @@
 
             <div class="form-row clearfix">
               <div class="form-cell">
-                <label for="startDate">Start Date
+                <label for="startDate">
+                  <span openlmis-message="label.equipment.contract.start.date"></span>
                   <span class="label-required">*</span>
                 </label>
 
@@ -53,7 +54,8 @@
 
             <div class="form-row clearfix">
               <div class="form-cell">
-                <label for="endDate">End Date
+                <label for="endDate">
+                  <span openlmis-message="label.equipment.contract.end.date"></span>
                   <span class="label-required">*</span>
                 </label>
 
@@ -72,7 +74,8 @@
 
             <div class="form-row clearfix">
               <div class="form-cell">
-                <label for="description">Description
+                <label for="description">
+                  <span openlmis-message="label.equipment.contract.description"></span>
                   <span class="label-required">*</span>
                 </label>
 
@@ -85,7 +88,8 @@
 
             <div class="form-row clearfix">
               <div class="form-cell">
-                <label for="terms">Terms
+                <label for="terms">
+                  <span openlmis-message="label.equipment.contract.terms"></span>
                   <span class="label-required">*</span>
                 </label>
 
@@ -98,7 +102,8 @@
 
             <div class="form-row clearfix">
               <div class="form-cell">
-                <label for="coverage">Coverage
+                <label for="coverage">
+                  <span openlmis-message="label.equipment.contract.coverage"></span>
                   <span class="label-required">*</span>
                 </label>
 
@@ -111,7 +116,8 @@
 
             <div class="form-row clearfix">
               <div class="form-cell">
-                <label for="contractDate">Contract Date
+                <label for="contractDate">
+                  <span openlmis-message="label.equipment.contract.date"></span>
                   <span class="label-required">*</span>
                 </label>
 
@@ -131,7 +137,7 @@
         <div ng-show="!isNew">
           <div class="form-row clearfix">
             <div class="form-cell">
-              <label class="bold">Service Types</label>
+              <label class="bold" openlmis-message="label.equipment.contract.service.types"></label>
             </div>
             <div class="form-field">
               <label ng-repeat="type in current.serviceTypes | filter : {isActive: true}"><input ng-disabled="true" type="checkbox" ng-model="type.isActive"  /> {{type.name}}</label>
@@ -139,15 +145,14 @@
           </div>
           <div class="form-row clearfix">
             <div class="form-cell">
-              <label class="bold">Equipments Covered</label>
+              <label class="bold" openlmis-message="label.equipment.contract.equipments.covered"></label>
             </div>
             <div class="form-field">
               <label  ng-repeat="type in current.equipments | filter : {isActive: true}"><input ng-disabled="true" type="checkbox" ng-model="type.isActive"  /> {{type.name}}</label>
             </div>
           </div>
           <div class="panel">
-            <div class="header-nav bold">
-              Facilities Covered
+            <div class="header-nav bold" openlmis-message="label.equipment.contact.facilities.covered">
             </div>
             <div class="content-body">
 
@@ -165,9 +170,6 @@
           </div>
         </div>
       </td>
-
-
-
       </tr>
     </table>
     

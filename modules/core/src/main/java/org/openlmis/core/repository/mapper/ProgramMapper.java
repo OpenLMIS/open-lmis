@@ -24,8 +24,8 @@ import java.util.List;
 @Repository
 public interface ProgramMapper {
 
-  @Insert({"INSERT INTO programs(code, name, description, active, push)",
-    "VALUES (#{code}, #{name}, #{description}, #{active}, #{push})"})
+  @Insert({"INSERT INTO programs(code, name, description, active, push, templateConfigured, regimenTemplateConfigured)",
+    "VALUES (#{code}, #{name}, #{description}, #{active}, #{push}, #{templateConfigured}, #{regimenTemplateConfigured})"})
   @Options(useGeneratedKeys = true)
   Integer insert(Program program);
 
@@ -132,4 +132,14 @@ public interface ProgramMapper {
 
   @Select("SELECT * FROM programs WHERE sendFeed = TRUE")
   List<Program> getProgramsForNotification();
+
+  @Update("UPDATE programs SET " +
+    "code = #{code}, name = #{name}, " +
+    "isEquipmentConfigured = #{isEquipmentConfigured}, " +
+    "showNonFullSupplyTab = #{showNonFullSupplyTab}, " +
+    "hideSkippedProducts = #{hideSkippedProducts}, " +
+    "enableSkipPeriod = #{enableSkipPeriod},  " +
+    "budgetingApplies = #{budgetingApplies} " +
+    "WHERE id = #{id}")
+  void update(Program program);
 }

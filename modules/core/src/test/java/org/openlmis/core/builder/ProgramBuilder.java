@@ -29,7 +29,12 @@ public class ProgramBuilder {
   public static final Property<Program, Boolean> templateStatus = newProperty();
   public static final Property<Program, Boolean> regimenTemplateConfigured = newProperty();
   public static final Property<Program, Boolean> budgetingApplies = newProperty();
+  public static final Property<Program, Boolean> isEquipmentConfigured = newProperty();
+  public static final Property<Program, Boolean> enableSkipPeriod = newProperty();
+  public static final Property<Program, Boolean> showNonFullSupplyTab = newProperty();
+  public static final Property<Program, Boolean> hideSkippedProducts = newProperty();
   public static final Property<Program, Boolean> push = newProperty();
+
   public static Property<Program, Long> programId = newProperty();
 
   public static final Instantiator<Program> defaultProgram = new Instantiator<Program>() {
@@ -40,11 +45,16 @@ public class ProgramBuilder {
       program.setName(lookup.valueOf(programName, PROGRAM_NAME));
       program.setCode(lookup.valueOf(programCode, PROGRAM_CODE));
       program.setDescription("Yellow Fever program");
-      program.setActive(lookup.valueOf(programActive, true));
-      program.setTemplateConfigured(lookup.valueOf(templateStatus, false));
-      program.setPush(lookup.valueOf(push, false));
+      program.setActive(lookup.valueOf(programActive, Boolean.TRUE));
+      program.setTemplateConfigured(lookup.valueOf(templateStatus, Boolean.FALSE));
+      program.setPush(lookup.valueOf(push, Boolean.FALSE));
       program.setRegimenTemplateConfigured(lookup.valueOf(regimenTemplateConfigured, Boolean.FALSE));
       program.setBudgetingApplies(lookup.valueOf(budgetingApplies, Boolean.FALSE));
+      program.setIsEquipmentConfigured(lookup.valueOf(isEquipmentConfigured, Boolean.FALSE));
+      program.setEnableSkipPeriod(lookup.valueOf(enableSkipPeriod, Boolean.FALSE));
+      program.setShowNonFullSupplyTab(lookup.valueOf(showNonFullSupplyTab, Boolean.TRUE));
+      program.setHideSkippedProducts(lookup.valueOf(hideSkippedProducts, Boolean.FALSE));
+
       return program;
     }
   };

@@ -14,9 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * Program represents a Program and its attributes.
@@ -33,10 +33,13 @@ public class Program extends BaseModel {
   private String description;
   private Boolean active;
   private Boolean budgetingApplies;
-  private boolean templateConfigured;
-  private boolean regimenTemplateConfigured;
-  private boolean isEquipmentConfigured;
-  private boolean push;
+  private Boolean templateConfigured;
+  private Boolean regimenTemplateConfigured;
+  private Boolean isEquipmentConfigured;
+  private Boolean enableSkipPeriod;
+  private Boolean showNonFullSupplyTab;
+  private Boolean hideSkippedProducts;
+  private Boolean push;
 
   public Program(Long id) {
     this.id = id;

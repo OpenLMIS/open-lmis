@@ -13,7 +13,7 @@ package org.openlmis.core.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.ict4h.atomfeed.server.service.Event;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.ProgramSupported;
@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * ProgramSupportedEventDTO consolidates information about programs supported by a facility

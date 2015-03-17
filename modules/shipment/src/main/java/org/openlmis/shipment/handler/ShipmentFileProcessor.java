@@ -24,7 +24,7 @@ import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

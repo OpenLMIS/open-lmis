@@ -10,13 +10,14 @@
 
 <div xmlns="http://www.w3.org/1999/html">
   <h2>
-    <span>{{(equipment.id === undefined)?'New': 'Edit'}} Equipment</span>
+    <span>{{(equipment.id === undefined)?'New': 'Edit'}} <span openlmis-message="label.equipment.equipment"></span></span>
   </h2>
-  <form ng-submit="saveEquipment()" id="equipmentForm" name="equipmentForm" >
+  <form ng-submit="saveEquipment()" id="equipmentForm" name="equipmentForm">
     <div>
       <div class="form-row clearfix">
         <div class="form-cell">
-          <label for="code">Code
+          <label for="code">
+            <span openlmis-message="label.equipment.code"></span>
             <span class="label-required">*</span>
           </label>
 
@@ -28,7 +29,9 @@
       </div>
       <div class="form-row clearfix">
         <div class="form-cell">
-          <label for="name">Name
+
+          <label for="name">
+            <span openlmis-message="label.equipment.name"></span>
             <span class="label-required">*</span>
           </label>
 
@@ -40,7 +43,8 @@
       </div>
       <div class="form-row clearfix">
         <div class="form-cell">
-          <label for="type">Equipment Type
+          <label for="type">
+            <span openlmis-message="label.equipment.type"></span>
             <span class="label-required">*</span>
           </label>
 
@@ -59,8 +63,7 @@
         <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancelCreateEquipment()" />
       </div>
 
-
-      <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
+      <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error" />
       <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
     </div>
 

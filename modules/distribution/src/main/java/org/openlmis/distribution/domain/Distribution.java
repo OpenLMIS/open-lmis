@@ -12,8 +12,8 @@ package org.openlmis.distribution.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.ProcessingPeriod;
@@ -21,7 +21,7 @@ import org.openlmis.core.domain.Program;
 
 import java.util.Map;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  *  Distribution is a mapping of DeliveryZone, Program and ProcessingPeriod which holds the data recorded for

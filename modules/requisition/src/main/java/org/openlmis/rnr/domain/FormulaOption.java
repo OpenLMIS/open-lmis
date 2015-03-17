@@ -10,11 +10,11 @@
 
 package org.openlmis.rnr.domain;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class FormulaOption {
     if(options != "DEFAULT"){
       ObjectMapper mapper = new ObjectMapper();
       try{
-        formulas = mapper.readValue(options, new TypeReference<List<Formula>>(){}  );
+        formulas = mapper.readValue(options, new TypeReference(){}  );
       } catch(Exception exp){
 
       }

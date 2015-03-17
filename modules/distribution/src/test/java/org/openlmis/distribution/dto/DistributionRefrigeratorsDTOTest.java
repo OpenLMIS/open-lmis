@@ -16,10 +16,10 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.apache.tools.ant.util.CollectionUtils.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -46,8 +46,8 @@ public class DistributionRefrigeratorsDTOTest {
 
   @Test
   public void shouldTransformRefrigeratorsDTOIntoRefrigeratorsWithBlankReadingsIfNotProvided() throws Exception {
-    List<RefrigeratorReading> refrigeratorReadings = EMPTY_LIST;
-    DistributionRefrigeratorsDTO refrigeratorsDTO = new DistributionRefrigeratorsDTO(EMPTY_LIST);
+    List<RefrigeratorReading> refrigeratorReadings = new ArrayList<>();
+    DistributionRefrigeratorsDTO refrigeratorsDTO = new DistributionRefrigeratorsDTO();
 
     DistributionRefrigerators distributionRefrigerators = refrigeratorsDTO.transform();
 

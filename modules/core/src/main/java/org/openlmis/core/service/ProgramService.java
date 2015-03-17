@@ -116,4 +116,8 @@ public class ProgramService {
     }
     return program;
   }
+
+  public Program update(Program program) {
+    return programRepository.update(program);
+  }
 }

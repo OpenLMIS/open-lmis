@@ -12,12 +12,12 @@ package org.openlmis.distribution.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.ChildCoverageLineItem;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  *  DTO for ChildCoverageLineItem. It contains the client side representation of ChildCoverageLineItem attributes.

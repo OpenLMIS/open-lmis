@@ -25,12 +25,9 @@
                 <span openlmis-message="label.donor.code"></span>
                 <span class="label-required"> *</span>
               </label>
-
               <div class="form-field">
-                <input ng-model="donor.code" name="code" id="code" type="text" maxlength="30" width="200px"
-                       ng-required="true"/>
-                <span class="field-error" ng-show="donorForm.code.$error.required && showError"
-                      openlmis-message="missing.value">
+                <input ng-model="donor.code" name="code" id="code" type="text" maxlength="30" width="200px" ng-required="true" />
+                <span class="field-error" ng-show="donorForm.code.$error.required && showError" openlmis-message="missing.value">
                 </span>
               </div>
             </div>
@@ -39,12 +36,9 @@
                 <span openlmis-message="label.donor.short.name"></span>
                 <span class="label-required"> *</span>
               </label>
-
               <div class="form-field">
-                <input ng-model="donor.shortName" name="shortName" id="shortName" type="text" maxlength="50"
-                       width="320px" ng-required="true" ng-change="validateDonorShortName()"/>
-                <span class="field-error" ng-show="donorForm.shortName.$error.required && showError"
-                      openlmis-message="missing.value">
+                <input ng-model="donor.shortName" name="shortName" id="shortName" type="text" maxlength="50" width="320px" ng-required="true" ng-change="validateDonorShortName()" />
+                <span class="field-error" ng-show="donorForm.shortName.$error.required && showError" openlmis-message="missing.value">
                 </span>
                 <span class="field-error" ng-show="donorShortNameInvalid" openlmis-message="label.donor.invalid.name">
                 </span>
@@ -55,27 +49,20 @@
                 <span openlmis-message="label.donor.name"></span>
                 <span class="label-required"> *</span>
               </label>
-
               <div class="form-field">
-                <input ng-model="donor.longName" name="longName" id="longName" type="text" maxlength="200" width="320px"
-                       ng-required="true" ng-change="validateDonorShortName()"/>
-                <span class="field-error" ng-show="donorForm.longName.$error.required && showError"
-                      openlmis-message="missing.value">
-                 </span>
-
-                <span class="field-error" ng-show="donorShortNameInvalid">
-                                      <span openlmis-message="label.donor.invalid.name"></span>
+                <input ng-model="donor.longName" name="longName" id="longName" type="text" maxlength="200" width="320px" ng-required="true" ng-change="validateDonorShortName()" />
+                <span class="field-error" ng-show="donorForm.longName.$error.required && showError" openlmis-message="missing.value"> </span>
+                <span class="field-error" ng-show="donorShortNameInvalid"> <span openlmis-message="label.donor.invalid.name"></span>
                 </span>
               </div>
             </div>
             <div form-toolbar id="action_buttons" class="action-buttons">
               <div class="form-cell button-row">
-                <input ng-disabled="donorForm.$invalid" type="submit" class="btn btn-primary save-button" value="Save"/>
-                <input type="button" class="btn btn-cancel cancel-button" value="Cancel" ng-click="cancelAddEdit()"/>
-                <input type="button" class="btn btn-danger delete-button" value="Delete"
-                       ng-click="showRemoveDonorConfirmDialog()"/>
+                <input ng-disabled="donorForm.$invalid" type="submit" class="btn btn-primary save-button" value="Save" />
+                <input type="button" class="btn btn-cancel cancel-button" value="Cancel" ng-click="cancelAddEdit()" />
+                <input type="button" class="btn btn-danger delete-button" value="Delete" ng-click="showRemoveDonorConfirmDialog()" />
               </div>
-              <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error"/>
+              <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="error" ng-show="error" />
             </div>
           </div>
         </div>
@@ -83,5 +70,3 @@
     </div>
   </form>
 </div>
-
-

@@ -90,8 +90,11 @@ public class NotificationServices {
               message.setSubject(configService.getByKey("EMAIL_SUBJECT_APPROVAL").getValue());
               message.setTo(user.getEmail());
 
-              emailService.send(message);
-
+              try {
+                emailService.send(message);
+              }catch(Exception exp){
+                //TODO: message is not sent ... try to log this error; may be preserve the message in the database to retry later 
+              }
             }
          }
 

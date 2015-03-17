@@ -10,10 +10,10 @@
 
 package org.openlmis.distribution.serializer;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.ObjectCodec;
-import org.codehaus.jackson.map.DeserializationContext;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class DistributionReadingDeSerializerTest {
   @Test
   public void shouldReturnReadingIfValueIsNotEmptyAndNRIsNull() throws Exception {
     JsonNode valueNode = mock(JsonNode.class);
-    when(valueNode.getTextValue()).thenReturn("55");
+    when(valueNode.textValue()).thenReturn("55");
     when(jsonNode.get("value")).thenReturn(valueNode);
     when(jsonNode.get("notRecorded")).thenReturn(null);
 
@@ -59,11 +59,11 @@ public class DistributionReadingDeSerializerTest {
   public void shouldReturnReadingIfValueIsNotEmptyAndNRIsFalse() throws Exception {
     JsonNode valueNode = mock(JsonNode.class);
     when(jsonNode.get("value")).thenReturn(valueNode);
-    when(valueNode.getTextValue()).thenReturn("55");
+    when(valueNode.textValue()).thenReturn("55");
 
     JsonNode notRecordedNode = mock(JsonNode.class);
     when(jsonNode.get("notRecorded")).thenReturn(notRecordedNode);
-    when(notRecordedNode.getBooleanValue()).thenReturn(false);
+    when(notRecordedNode.booleanValue()).thenReturn(false);
 
     Reading reading = new DistributionReadingDeSerializer().deserialize(jp, mock(DeserializationContext.class));
     assertThat(reading.getValue(), is("55"));

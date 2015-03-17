@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -28,6 +29,8 @@ import java.util.List;
 
 import static org.openlmis.core.domain.RightName.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * This controller handles endpoint related to listing products for a different criterias, like products related to a facility,
@@ -56,7 +59,7 @@ public class ProgramController extends BaseController {
     List<Program> programs = programService.getProgramsForUserByFacilityAndRights(facilityId, loggedInUserId(request), VIEW_REQUISITION);
     List<Program> pullPrograms = new ArrayList<>();
     for (Program program : programs) {
-      if (!program.isPush())
+      if (!program.getPush())
         pullPrograms.add(program);
     }
     return pullPrograms;
@@ -95,6 +98,12 @@ public class ProgramController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_REGIMEN_TEMPLATE, MANAGE_USER, MANAGE_PRODUCT')")
   public ResponseEntity<OpenLmisResponse> getAllPrograms() {
     return OpenLmisResponse.response(PROGRAMS, programService.getAll());
+  }
+
+  @RequestMapping(value = "/programs/save", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_REGIMEN_TEMPLATE, MANAGE_USER, MANAGE_PRODUCT')")
+  public ResponseEntity<OpenLmisResponse> saveUpdates(@RequestBody Program program) {
+    return OpenLmisResponse.response(PROGRAMS, programService.update(program));
   }
 
   @RequestMapping(value = "/facilities/{facilityId}/programsList", method = GET, headers = ACCEPT_JSON)

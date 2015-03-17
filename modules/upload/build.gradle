@@ -18,20 +18,12 @@ repositories {
 }
 
 dependencies {
-    compile 'org.projectlombok:lombok:0.11.0',
-            'org.aspectj:aspectjrt:1.7.0',
-            'commons-beanutils:commons-beanutils:20030211.134440',
-            'commons-collections:commons-collections:20040616',
-            'org.springframework:spring-context:3.1.2.RELEASE',
-            'org.springframework:spring-aspects:3.1.1.RELEASE',
-            'org.springframework:spring-beans:3.1.2.RELEASE',
-            'org.springframework:spring-tx:3.1.1.RELEASE'
+    compile 'commons-beanutils:commons-beanutils:1.9.2'
 
     compile('net.sf.supercsv:super-csv-dozer:2.0.1') {
         exclude module: 'commons-beanutils'
     }
 
-    testCompile 'org.springframework:spring-test:3.1.2.RELEASE'
 }
 
 cobertura {

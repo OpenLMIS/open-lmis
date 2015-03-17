@@ -27,9 +27,23 @@ public interface StockStatusMapper {
             "   and reportQuarter = #{quarter}")
   List<StockStatusDTO> getStockStatusByQuarter(@Param("programCode") String programCode, @Param("reportYear") Long reportYear, @Param("quarter") Long quarter);
 
+
+  @Select("select * from vw_e2e_stock_status " +
+    " where productCode in ( select p.code from products p join program_products pp on pp.productId = p.id join programs pr on pr.id = pp.programId where pr.code = #{programCode} ) " +
+    "   and reportYear = #{reportYear} " +
+    "   and reportQuarter = #{quarter}")
+  List<StockStatusDTO> getStockStatusByQuarterAll(@Param("programCode") String programCode, @Param("reportYear") Long reportYear, @Param("quarter") Long quarter);
+
+
   @Select("select * from vw_e2e_stock_status " +
     " where programCode = #{programCode} " +
     "   and reportYear = #{reportYear} " +
     "   and reportMonth = #{month}")
   List<StockStatusDTO> getStockStatusByMonth(@Param("programCode") String programCode, @Param("reportYear") Long reportYear, @Param("month") Long month);
+
+  @Select("select * from vw_e2e_stock_status " +
+    " where productCode in ( select p.code from products p join program_products pp on pp.productId = p.id join programs pr on pr.id = pp.programId where pr.code = #{programCode}) " +
+    "   and reportYear = #{reportYear} " +
+    "   and reportMonth = #{month}")
+  List<StockStatusDTO> getStockStatusByMonthAll(@Param("programCode") String programCode, @Param("reportYear") Long reportYear, @Param("month") Long month);
 }

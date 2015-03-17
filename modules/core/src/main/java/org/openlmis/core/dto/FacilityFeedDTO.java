@@ -15,14 +15,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Transformer;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.*;
 
 import java.util.List;
 
 import static lombok.AccessLevel.NONE;
 import static org.apache.commons.collections.CollectionUtils.collect;
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 /**
  * FacilityFeedDTO consolidates facility information like facility code, name, type, geographic zone, etc.
