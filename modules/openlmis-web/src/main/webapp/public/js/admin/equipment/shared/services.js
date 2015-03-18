@@ -137,29 +137,33 @@ services.factory('UserListAvailableForVendor',function($resource){
 /* Program Equipments */
 
 services.factory('SaveProgramEquipment',function($resource){
-    return $resource('/program-equipment/save.json',{},{});
+    return $resource('/equipment/program-equipment/save.json',{},{});
 });
 
 services.factory('GetProgramEquipmentByProgramId', function($resource){
-    return $resource('/program-equipment/getByProgram/:programId.json',{},{});
+    return $resource('/equipment/program-equipment/getByProgram/:programId.json',{},{});
 });
 
 services.factory('RemoveProgramEquipment',function($resource){
-    return $resource('/program-equipment/remove/:id.json',{},{});
+    return $resource('/equipment/program-equipment/remove/:id.json',{},{});
+});
+
+services.factory("PossibleProductsForProgram", function($resource){
+    return $resource('/equipment/program-equipment-product/possible-products.json', {}, {});
 });
 
 /* Program Equipment Products */
 
 services.factory('SaveProgramEquipmentProduct',function($resource){
-    return $resource('/program-equipment-product/save.json',{},{});
+    return $resource('/equipment/program-equipment-product/save.json',{},{});
 });
 
 services.factory('GetProgramEquipmentProductByProgramEquipment', function($resource){
-    return $resource('/program-equipment-product/getByProgramEquipment/:programEquipmentId',{},{});
+    return $resource('/equipment/program-equipment-product/getByProgramEquipment/:programEquipmentId',{},{});
 });
 
 services.factory('RemoveProgramEquipmentProduct',function($resource){
-    return $resource('/program-equipment-product/remove/:id.json',{},{});
+    return $resource('/equipment/program-equipment-product/remove/:id.json',{},{});
 });
 
 

@@ -9,6 +9,7 @@ package org.openlmis.equipment.repository;
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
+import org.openlmis.core.domain.Product;
 import org.openlmis.equipment.domain.ProgramEquipmentProduct;
 import org.openlmis.equipment.repository.mapper.ProgramEquipmentProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,25 +21,29 @@ import java.util.List;
 public class ProgramEquipmentProductRepository {
 
   @Autowired
-  ProgramEquipmentProductMapper programEquipmentProductMapper;
+  ProgramEquipmentProductMapper mapper;
 
   public List<ProgramEquipmentProduct> getByProgramEquipmentId(Long programEquipmentId){
-    return programEquipmentProductMapper.getByProgramEquipmentId(programEquipmentId);
+    return mapper.getByProgramEquipmentId(programEquipmentId);
   }
 
   public void insert(ProgramEquipmentProduct programEquipmentProduct){
-    programEquipmentProductMapper.insert(programEquipmentProduct);
+    mapper.insert(programEquipmentProduct);
   }
 
   public void update(ProgramEquipmentProduct programEquipmentProduct){
-    programEquipmentProductMapper.update(programEquipmentProduct);
+    mapper.update(programEquipmentProduct);
   }
 
   public void remove(Long programEquipmentId) {
-    programEquipmentProductMapper.remove(programEquipmentId);
+    mapper.remove(programEquipmentId);
   }
 
    public void removeEquipmentProducts(Long programEquipmentId){
-       programEquipmentProductMapper.removeEquipmentProducts(programEquipmentId);
+       mapper.removeEquipmentProducts(programEquipmentId);
    }
+
+  public List<Product> getAvailableProductsToLink(Long programId, Long equipmentId) {
+    return mapper.getAvailableProductsToLink(programId, equipmentId);
+  }
 }

@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Controller
-@RequestMapping(value = "/program-equipment/")
+@RequestMapping(value = "/equipment/program-equipment/")
 public class ProgramEquipmentController extends BaseController {
 
   @Autowired

@@ -11,6 +11,7 @@
 package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Product;
 import org.openlmis.equipment.domain.ProgramEquipmentProduct;
 import org.springframework.stereotype.Repository;
 
@@ -45,4 +46,10 @@ public interface ProgramEquipmentProductMapper {
   @Delete("DELETE FROM program_equipment_products WHERE programequipmentid = #{programEquipmentId}")
   void removeEquipmentProducts(@Param(value = "programEquipmentId") Long programEquipmentId);
 
+  @Select("SELECT p.* from products p " +
+    "       join program_products pp on pp.productId = p.id " +
+    "     where " +
+    "           pp.programId = #{programId} " +
+    "     order by pp.displayOrder")
+  List<Product> getAvailableProductsToLink(@Param("programId") Long programId, @Param("equipmentId") Long equipmentId);
 }

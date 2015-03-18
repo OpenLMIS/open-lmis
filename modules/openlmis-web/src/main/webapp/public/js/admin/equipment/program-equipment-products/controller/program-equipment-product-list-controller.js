@@ -8,9 +8,9 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ProgramEquipmentProductController($scope,$dialog,messageService, navigateBackService, Equipments, ProgramCompleteList,GetProductsCompleteListForAProgram, GetProgramEquipmentByProgramId, SaveProgramEquipment, GetProgramEquipmentProductByProgramEquipment, SaveProgramEquipmentProduct, RemoveProgramEquipmentProduct, RemoveProgramEquipment) {
+function ProgramEquipmentProductController($scope,$dialog,messageService, navigateBackService, Equipments, ProgramCompleteList, PossibleProductsForProgram, GetProgramEquipmentByProgramId, SaveProgramEquipment, GetProgramEquipmentProductByProgramEquipment, SaveProgramEquipmentProduct, RemoveProgramEquipmentProduct, RemoveProgramEquipment) {
     $scope.$on('$viewContentLoaded', function () {
-        $scope.$apply($scope.query = navigateBackService.query);
+       // $scope.$apply($scope.query = navigateBackService.query);
         $scope.getAllEquipments();
         $scope.getAllPrograms();
     });
@@ -28,7 +28,10 @@ function ProgramEquipmentProductController($scope,$dialog,messageService, naviga
     };
 
     $scope.getAllProductsForAProgram = function(){
-        GetProductsCompleteListForAProgram.get({programId:$scope.currentProgramEquipment.program.id},function(data){
+      PossibleProductsForProgram.get({
+                                        program : $scope.currentProgramEquipment.program.id,
+                                        equipment: $scope.currentProgramEquipment.equipmentId
+                    },function(data){
             $scope.allProducts = data.products;
             $scope.productsLoaded = true;
         });

@@ -19,15 +19,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-@RequestMapping(value="/program-equipment-product/")
+@RequestMapping(value="/equipment/program-equipment-product/")
 @Controller
 public class ProgramEquipmentProductController extends BaseController{
 
@@ -82,4 +79,9 @@ public class ProgramEquipmentProductController extends BaseController{
     return successResponse;
   }
 
+
+  @RequestMapping(value="possible-products",headers = ACCEPT_JSON,method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> getProducts(@RequestParam("program") Long programId, @RequestParam(value = "equipment", defaultValue = "0") Long equipmentId ){
+    return OpenLmisResponse.response("products", programEquipmentProductService.getAvailableProductsToLink(programId, equipmentId));
+  }
 }

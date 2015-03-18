@@ -76,8 +76,9 @@
           </td>
           <td>&nbsp;</td>
           <td>
-            <div><input id="product-add-new" type="button" value="Add New" ng-click="addNewProduct()"
-                        ng-show="productsLoaded"
+            <div>
+              <input id="product-add-new" type="button" value="Add New" ng-click="addNewProduct()"
+
                         ng-disabled="currentProgramEquipment.id == null || currentProgramEquipment.id == undefined"
                         class="pull-right btn btn-primary"/></div>
             <table class="table table-hover table-bordered">
@@ -159,20 +160,20 @@
   <div id="productsDialogDiv" modal="productDialogModal"
        options="{'backdrop':'static', 'escape':false}">
     <div class="modal-header">
-      <h3 openlmis-message="label.product.add"></h3>
+      <h3 openlmis-message="header.product.add.new"></h3>
     </div>
 
     <div class="modal-body">
       <form name="addProductForm">
         <div>
           <div class="row-fluid">
-            <div class="span6">
+            <div class="span3">
               <label for="productValue"><span openlmis-message="label.product"></span></label>
             </div>
-            <div class="span4">
-              <select style="width:200px;" ng-required="true" size="7" name="productValue"
+            <div class="span9">
+              <select style="width: 100%" ng-required="true" size="7" name="productValue"
                       id="productValue" ng-model="currentProgramEquipmentProduct.product.id"
-                      ng-options="option.product.id as option.product.primaryName.concat('(').concat(option.product.fullName).concat(')') for option in allProducts">
+                      ng-options="option.id as option.code.concat(' - ( ').concat(option.fullName).concat(' )') for option in allProducts">
               </select>
             </div>
           </div>
