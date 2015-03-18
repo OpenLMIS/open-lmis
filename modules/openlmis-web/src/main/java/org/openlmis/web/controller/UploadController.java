@@ -94,7 +94,17 @@ public class UploadController extends BaseController {
   @RequestMapping(value = "/supported-uploads", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOADS')")
   public ResponseEntity<OpenLmisResponse> getSupportedUploads() {
-    return response(SUPPORTED_UPLOADS, uploadBeansMap);
+    // this is a hack to make the new version of jackson to work
+    // fasterxml jackson does currenly was failing to serialize
+    HashMap<String, UploadBean> beanDefinitions = new HashMap<>();
+    for(String key :uploadBeansMap.keySet()){
+      UploadBean proxy = uploadBeansMap.get(key);
+      UploadBean bean = new UploadBean();
+      bean.setDisplayName(proxy.getDisplayName());
+      beanDefinitions.put(key,bean);
+    }
+
+    return response(SUPPORTED_UPLOADS, beanDefinitions);
   }
 
   private OpenLmisMessage validateFile(String model, MultipartFile csvFile) {
