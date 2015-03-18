@@ -148,8 +148,8 @@ INSERT INTO order_quantity_adjustment_factors(name, description, displayOrder)  
 INSERT INTO order_quantity_adjustment_factors(name, description, displayOrder)   VALUES ('Based on Noel Watson','Based on Noel Watson',2);
 INSERT INTO order_quantity_adjustment_factors(name, description, displayOrder)   VALUES ('Based on MOS Adjustment','Based on MOS Adjustment',3);
 
-INSERT INTO order_quantity_adjustment_products (facilityid, productid, typeid, factorid, minMonthsofStock, maxMonthsOfStock) 
-VALUES ((select max(id) from facilities),(select max(id) from products),(select max(id) from order_quantity_adjustment_types),(select max(id) from order_quantity_adjustment_factors),1,2);
+-- INSERT INTO order_quantity_adjustment_products (facilityid, productid, typeid, factorid, minMonthsofStock, maxMonthsOfStock)
+-- VALUES ((select max(id) from facilities),(select max(id) from products),(select max(id) from order_quantity_adjustment_types),(select max(id) from order_quantity_adjustment_factors),1,2);
 --select * from order_quantity_adjustment_types;
 --select * from order_quantity_adjustment_factors;
 --select * from order_quantity_adjustment_products;
