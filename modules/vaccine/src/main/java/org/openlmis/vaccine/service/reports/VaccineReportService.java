@@ -10,6 +10,7 @@
 
 package org.openlmis.vaccine.service.reports;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
@@ -33,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@NoArgsConstructor
 public class VaccineReportService {
 
   @Autowired

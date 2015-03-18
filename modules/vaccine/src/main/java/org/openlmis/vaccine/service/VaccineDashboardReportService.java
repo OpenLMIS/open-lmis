@@ -10,6 +10,7 @@
 
 package org.openlmis.vaccine.service;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.vaccine.domain.GeoZoneFacility;
 import org.openlmis.vaccine.domain.GeoZoneTree;
 import org.openlmis.vaccine.repository.VaccineDashboardReportRepository;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
 @Service
 public class VaccineDashboardReportService {
 
