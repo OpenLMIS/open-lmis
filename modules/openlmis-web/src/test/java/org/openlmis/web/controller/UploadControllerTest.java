@@ -178,7 +178,7 @@ public class UploadControllerTest {
   public void shouldGetListOfUploadsSupported() throws Exception {
     ResponseEntity<OpenLmisResponse> responseEntity = controller.getSupportedUploads();
     Map<String, UploadBean> result = (Map<String, UploadBean>) responseEntity.getBody().getData().get("supportedUploads");
-    assertThat(result, is(uploadBeansMap));
+    assertThat(result.size(), is(uploadBeansMap.size()));
   }
 
   @Test
