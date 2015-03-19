@@ -20,6 +20,7 @@ import org.openlmis.core.hash.Encoder;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -32,9 +33,12 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(Encoder.class)
 public class UserTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 

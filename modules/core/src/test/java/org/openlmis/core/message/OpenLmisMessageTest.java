@@ -10,12 +10,14 @@
 
 package org.openlmis.core.message;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ResourceBundle;
 
@@ -23,9 +25,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(ResourceBundle.class)
 public class OpenLmisMessageTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Test
   public void shouldGetMessageWithCodeAndParams() {

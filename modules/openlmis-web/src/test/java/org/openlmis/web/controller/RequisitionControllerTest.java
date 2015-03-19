@@ -13,6 +13,7 @@ package org.openlmis.web.controller;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -37,6 +38,7 @@ import org.openlmis.rnr.service.*;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -64,9 +66,11 @@ import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({RnrDTO.class, RequisitionController.class})
 public class RequisitionControllerTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   public static final String FACILITY_CODE = "F14";
   public static final String FACILITY_NAME = "Facility";

@@ -13,6 +13,7 @@ package org.openlmis.reporting.service;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperReport;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.reporting.model.Template;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
 import javax.sql.DataSource;
@@ -40,10 +42,12 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.*;
 
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({JasperReportsViewFactory.class})
 @Category(UnitTests.class)
 public class JasperReportsViewFactoryTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   private DataSource dataSource;

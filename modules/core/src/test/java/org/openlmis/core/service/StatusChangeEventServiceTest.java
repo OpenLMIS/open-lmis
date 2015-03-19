@@ -10,6 +10,7 @@
 
 package org.openlmis.core.service;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.email.service.EmailService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.mail.SimpleMailMessage;
 
 import java.util.ArrayList;
@@ -37,9 +39,11 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessin
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(StatusChangeEventService.class)
 public class StatusChangeEventServiceTest {
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+  
   @Mock
   String baseUrl = "http://localhost:9091";
 

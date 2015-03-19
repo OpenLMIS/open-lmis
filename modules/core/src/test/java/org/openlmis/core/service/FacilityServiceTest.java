@@ -35,6 +35,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,9 +60,12 @@ import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({DateTime.class, FacilityService.class, FacilityServiceTest.class})
 public class FacilityServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 

@@ -1,5 +1,6 @@
 package org.openlmis.distribution.domain;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -10,6 +11,7 @@ import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.Date;
 import java.util.List;
@@ -20,9 +22,11 @@ import static org.junit.Assert.assertThat;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(FacilityProgramProduct.class)
 public class EpiUseTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Test
   public void shouldNotGetProductGroupForAllInactiveProducts() throws Exception {

@@ -29,6 +29,7 @@ import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.mail.SimpleMailMessage;
 
 import java.util.ArrayList;
@@ -50,9 +51,11 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({Encoder.class, UserService.class})
 public class UserServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   public static final String FORGET_PASSWORD_LINK = "http://openLMIS.org";
   @Rule

@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.domain;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.Date;
 
@@ -28,10 +30,12 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@RunWith(PowerMockRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest({EpiInventory.class})
 public class EpiInventoryTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Test
   public void shouldPopulateEpiInventoryLineItems() throws Exception {

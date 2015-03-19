@@ -39,6 +39,7 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.ArrayList;
@@ -63,9 +64,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderService.class)
 public class OrderServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();

@@ -11,6 +11,7 @@
 package org.openlmis.shipment.file;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -31,6 +32,7 @@ import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.context.ApplicationContext;
 import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -58,9 +60,11 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({ShipmentFileProcessor.class, MessageBuilder.class})
 public class ShipmentFileProcessorTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;

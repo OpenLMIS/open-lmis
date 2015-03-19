@@ -28,6 +28,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.Agent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.security.Principal;
 import java.util.Date;
@@ -41,10 +42,12 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.builder.AgentBuilder.defaultCHW;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@RunWith(PowerMockRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest(RestAgentService.class)
 public class RestAgentServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   FacilityService facilityService;

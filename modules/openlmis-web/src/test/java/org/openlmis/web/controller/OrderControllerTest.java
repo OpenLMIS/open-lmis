@@ -11,6 +11,7 @@
 package org.openlmis.web.controller;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -31,6 +32,7 @@ import org.openlmis.web.form.RequisitionList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -54,10 +56,13 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RunWith(PowerMockRunner.class)
+
 @PrepareForTest(OrderDTO.class)
 @Category(UnitTests.class)
 public class OrderControllerTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   private static final Long USER_ID = 1L;
   private MockHttpServletRequest request;

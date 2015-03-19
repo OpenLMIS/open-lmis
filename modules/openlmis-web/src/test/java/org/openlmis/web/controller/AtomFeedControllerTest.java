@@ -12,6 +12,7 @@ package org.openlmis.web.controller;
 
 import org.ict4h.atomfeed.server.service.EventFeedService;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.service.VendorEventFeedService;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,8 +30,10 @@ import static org.junit.Assert.assertThat;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 public class AtomFeedControllerTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   EventFeedService eventFeedService;

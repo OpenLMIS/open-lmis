@@ -11,6 +11,7 @@
 package org.openlmis.restapi.controller;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import org.openlmis.restapi.service.RestRequisitionService;
 import org.openlmis.rnr.domain.Rnr;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -43,9 +45,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.http.HttpStatus.*;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({RestResponse.class, ReplenishmentDTO.class})
 public class RestRequisitionControllerTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   RestRequisitionService service;

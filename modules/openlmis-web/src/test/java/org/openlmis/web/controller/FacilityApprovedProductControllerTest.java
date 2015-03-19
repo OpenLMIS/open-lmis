@@ -11,6 +11,7 @@
 package org.openlmis.web.controller;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import org.openlmis.web.form.FacilityTypeApprovedProductList;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -45,9 +47,11 @@ import static org.powermock.api.mockito.PowerMockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(FacilityApprovedProductController.class)
 public class FacilityApprovedProductControllerTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   private static final String USER_ID = "USER_ID";
   public static final long userId = 1L;

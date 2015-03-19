@@ -11,6 +11,7 @@
 package org.openlmis.authentication.service;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -31,10 +33,12 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(Encoder.class)
 public class UserAuthenticationServiceTest {
   private UserAuthenticationService userAuthenticationService;
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   @SuppressWarnings("unused")

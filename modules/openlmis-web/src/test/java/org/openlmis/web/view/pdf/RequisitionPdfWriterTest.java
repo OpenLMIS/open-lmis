@@ -13,6 +13,7 @@ package org.openlmis.web.view.pdf;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfPTable;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import org.openlmis.web.view.pdf.requisition.RequisitionPdfWriter;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -36,9 +38,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(RequisitionPdfWriter.class)
 public class RequisitionPdfWriterTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   PdfDocument document;

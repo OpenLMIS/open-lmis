@@ -10,6 +10,7 @@
 
 package org.openlmis.rnr.service;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ import org.openlmis.rnr.domain.RegimenTemplate;
 import org.openlmis.rnr.repository.RegimenColumnRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +38,12 @@ import static org.openlmis.rnr.builder.RegimenColumnBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(RegimenColumnService.class)
 @Category(UnitTests.class)
 public class RegimenColumnServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   RegimenColumnRepository repository;

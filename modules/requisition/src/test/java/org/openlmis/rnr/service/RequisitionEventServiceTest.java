@@ -11,6 +11,7 @@
 package org.openlmis.rnr.service;
 
 import org.ict4h.atomfeed.server.service.EventService;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.event.RequisitionStatusChangeEvent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -30,9 +32,11 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(RequisitionEventService.class)
 public class RequisitionEventServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   private EventService eventService;

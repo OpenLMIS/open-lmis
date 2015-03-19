@@ -22,6 +22,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,9 +52,12 @@ import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(RnrLineItem.class)
 public class RnrLineItemTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();

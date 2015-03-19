@@ -11,6 +11,7 @@
 package org.openlmis.restapi.controller;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestAgentService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -32,10 +34,12 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(RestResponse.class)
 @Category(UnitTests.class)
 public class RestAgentControllerTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   RestAgentService restAgentService;

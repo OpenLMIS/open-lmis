@@ -161,34 +161,33 @@ public class TemplateService {
   }
 
   public Map<String, Object> getParametersMap(Template template, int userId, HttpServletRequest request, String format) throws ParseException {
-//    List<TemplateParameter> templateParameters = template.getParameters();
-//    Map<String, String> requestParameterMap = request.getParameterMap();
-//    Map<String, Object> map = new HashMap<>();
-//
-//    if (templateParameters != null) {
-//      for (TemplateParameter templateParameter : templateParameters) {
-//        String templateParameterName = templateParameter.getName();
-//
-//        if (templateParameterName.equalsIgnoreCase(USER_ID_PARAM)) {
-//          map.put(templateParameterName, userId);
-//        }
-//
-//        for (String requestParamName : requestParameterMap.keySet()) {
-//
-//          if (templateParameterName.equalsIgnoreCase(requestParamName)) {
-//            String requestParamValue = request.getParameter(templateParameterName);
-//
-//            if (!(isBlank(requestParamValue) || requestParamValue.equals("null") || requestParamValue.equals("undefined"))) {
-//              map.put(templateParameterName, templateParameter.getParsedValueOf(requestParamValue));
-//            }
-//          }
-//        }
-////      }
-//    }
-//    String viewFormat = format == null ? PDF_VIEW : format;
-//    map.put("format", viewFormat);
+    List<TemplateParameter> templateParameters = template.getParameters();
+    Map<String, String[]> requestParameterMap = request.getParameterMap();
+    Map<String, Object> map = new HashMap<>();
 
-//    return map;
-    return null;
+    if (templateParameters != null) {
+      for (TemplateParameter templateParameter : templateParameters) {
+        String templateParameterName = templateParameter.getName();
+
+        if (templateParameterName.equalsIgnoreCase(USER_ID_PARAM)) {
+          map.put(templateParameterName, userId);
+        }
+
+        for (String requestParamName : requestParameterMap.keySet()) {
+
+          if (templateParameterName.equalsIgnoreCase(requestParamName)) {
+            String requestParamValue = request.getParameter(templateParameterName);
+
+            if (!(isBlank(requestParamValue) || requestParamValue.equals("null") || requestParamValue.equals("undefined"))) {
+              map.put(templateParameterName, templateParameter.getParsedValueOf(requestParamValue));
+            }
+          }
+        }
+      }
+    }
+    String viewFormat = format == null ? PDF_VIEW : format;
+    map.put("format", viewFormat);
+
+    return map;
   }
 }

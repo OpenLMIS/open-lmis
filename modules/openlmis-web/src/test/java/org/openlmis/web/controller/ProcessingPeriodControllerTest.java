@@ -26,6 +26,7 @@ import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -42,8 +43,10 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 public class ProcessingPeriodControllerTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Rule
   public ExpectedException exException = none();

@@ -13,12 +13,14 @@ package org.openlmis.core.serializer;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.testng.annotations.Test;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.io.IOException;
 import java.util.Date;
@@ -31,9 +33,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
-//@RunWith(PowerMockRunner.class)
 @PrepareForTest(TimeZone.class)
 public class DateDeserializerTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   JsonParser jsonParser = mock(JsonParser.class);
 

@@ -10,6 +10,7 @@
 
 package org.openlmis.core.service;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ import org.openlmis.core.repository.FacilityProgramProductRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +38,11 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(FacilityProgramProduct.class)
 public class FacilityProgramProductServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @InjectMocks
   private FacilityProgramProductService service;

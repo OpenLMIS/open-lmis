@@ -12,6 +12,7 @@ package org.openlmis.core.dto;
 
 import org.ict4h.atomfeed.server.service.Event;
 import org.joda.time.DateTime;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -19,6 +20,7 @@ import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.List;
 
@@ -33,9 +35,12 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSu
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @PrepareForTest(DateTime.class)
-@RunWith(PowerMockRunner.class)
 @Category(UnitTests.class)
 public class ProgramSupportedEventDTOTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+
   @Test
   public void shouldCreateProgramSupportedEventDTO() throws Exception {
     ProgramSupported programSupported = make(a(defaultProgramSupported));

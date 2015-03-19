@@ -9,6 +9,7 @@
  */
 package org.openlmis.core.service;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import org.openlmis.core.repository.BudgetFileTemplateRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +34,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(BudgetFileTemplateService.class)
 @Category(UnitTests.class)
 public class BudgetFileTemplateServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   BudgetFileTemplateRepository budgetFileTemplateRepository;

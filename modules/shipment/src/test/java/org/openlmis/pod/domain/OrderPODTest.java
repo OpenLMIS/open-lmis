@@ -28,6 +28,7 @@ import org.openlmis.shipment.builder.ShipmentLineItemBuilder;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.List;
 
@@ -44,9 +45,11 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderPOD.class)
 public class OrderPODTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();

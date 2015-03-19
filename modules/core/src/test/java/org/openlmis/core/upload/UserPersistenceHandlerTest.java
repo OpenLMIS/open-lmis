@@ -22,6 +22,7 @@ import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ArrayList;
 
@@ -30,9 +31,11 @@ import static org.mockito.Mockito.verify;
 import static org.openlmis.core.upload.UserPersistenceHandler.RESET_PASSWORD_PATH;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(UserPersistenceHandler.class)
 public class UserPersistenceHandlerTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   private UserPersistenceHandler userPersistenceHandler;
 

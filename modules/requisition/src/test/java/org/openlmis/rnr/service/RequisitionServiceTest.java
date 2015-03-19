@@ -39,6 +39,7 @@ import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.search.strategy.RequisitionSearchStrategy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -74,9 +75,12 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(RequisitionService.class)
 public class RequisitionServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+
 
   private Facility FACILITY = new Facility(1L);
   private Program PROGRAM = new Program(3L);

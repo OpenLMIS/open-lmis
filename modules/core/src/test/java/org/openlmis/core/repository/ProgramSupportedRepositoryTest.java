@@ -28,6 +28,7 @@ import org.openlmis.core.repository.mapper.ProgramSupportedMapper;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
@@ -50,9 +51,12 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({DateTime.class})
 public class ProgramSupportedRepositoryTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 

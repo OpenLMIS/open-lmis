@@ -15,6 +15,7 @@
 package org.openlmis.restapi.controller;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -30,6 +31,7 @@ import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestFacilityService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.ResponseEntity;
 
 import static org.hamcrest.Matchers.is;
@@ -41,9 +43,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(RestResponse.class)
 public class RestFacilityControllerTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   RestFacilityService restFacilityService;

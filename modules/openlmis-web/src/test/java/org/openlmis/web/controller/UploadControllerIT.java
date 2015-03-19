@@ -12,6 +12,7 @@ package org.openlmis.web.controller;
 
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -29,6 +30,7 @@ import org.openlmis.web.controller.upload.NonMandatoryFields;
 import org.openlmis.web.model.UploadBean;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -45,9 +47,11 @@ import static org.mockito.Mockito.when;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @ContextConfiguration(locations = "classpath*:applicationContext-upload.xml")
 public class UploadControllerIT {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   public static final Long USER = 1L;
 

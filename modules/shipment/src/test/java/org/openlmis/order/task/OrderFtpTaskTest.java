@@ -11,6 +11,7 @@
 package org.openlmis.order.task;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -29,6 +30,7 @@ import org.openlmis.order.helper.OrderCsvHelper;
 import org.openlmis.order.service.OrderService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -41,9 +43,11 @@ import static org.openlmis.order.task.OrderFtpTask.FTP_CREDENTIAL_MISSING_COMMEN
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderFtpTask.class)
 public class OrderFtpTaskTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   OrderService orderService;

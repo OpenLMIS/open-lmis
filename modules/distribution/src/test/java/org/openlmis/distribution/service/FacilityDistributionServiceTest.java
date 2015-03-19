@@ -27,6 +27,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,9 +45,11 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest(FacilityDistributionService.class)
 public class FacilityDistributionServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   private FacilityService facilityService;

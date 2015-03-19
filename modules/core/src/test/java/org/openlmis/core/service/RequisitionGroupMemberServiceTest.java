@@ -28,6 +28,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +46,13 @@ import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisiti
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 
-@RunWith(PowerMockRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest(RequisitionGroupMemberService.class)
 public class RequisitionGroupMemberServiceTest {
 
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+  
   RequisitionGroupMemberService service;
 
   public static final Long RG_ID = 1L;

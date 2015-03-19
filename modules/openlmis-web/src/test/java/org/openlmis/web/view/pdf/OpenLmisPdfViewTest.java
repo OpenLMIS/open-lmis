@@ -11,6 +11,7 @@
 package org.openlmis.web.view.pdf;
 
 import com.itextpdf.text.pdf.PdfDocument;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.view.pdf.requisition.RequisitionPdfWriter;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -33,9 +35,11 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({OpenLmisPdfView.class, PdfDocument.class})
 public class OpenLmisPdfViewTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   MessageService messageService;

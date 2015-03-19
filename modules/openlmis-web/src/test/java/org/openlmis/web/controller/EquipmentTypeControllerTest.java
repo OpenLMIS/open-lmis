@@ -11,6 +11,7 @@
 package org.openlmis.web.controller;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.service.EquipmentTypeService;
 import org.openlmis.web.controller.equipment.EquipmentTypeController;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
@@ -30,8 +32,10 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 public class EquipmentTypeControllerTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   EquipmentTypeService service;

@@ -35,6 +35,7 @@ import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,8 +53,10 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 
 @Category(UnitTests.class)
-@RunWith(PowerMockRunner.class)
 public class RestRequisitionCalculatorTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   private RequisitionService requisitionService;

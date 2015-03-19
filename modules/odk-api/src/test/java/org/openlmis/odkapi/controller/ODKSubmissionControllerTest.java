@@ -13,7 +13,9 @@
  * To change this template use File | Settings | File Templates.
  */
 package org.openlmis.odkapi.controller;
+
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -23,6 +25,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.odkapi.service.ODKSubmissionService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,31 +35,31 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(PowerMockRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest(ResponseEntity.class)
 public class ODKSubmissionControllerTest {
-    @Mock
-    ODKSubmissionService odkSubmissionService;
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
-    @Mock
-    private HttpServletRequest request;
-    @Mock
-    private HttpServletResponse response;
+  @Mock
+  ODKSubmissionService odkSubmissionService;
+
+  @Mock
+  private HttpServletRequest request;
+  @Mock
+  private HttpServletResponse response;
 
 
-    @InjectMocks
-    private ODKSubmissionController odkSubmissionController;
+  @InjectMocks
+  private ODKSubmissionController odkSubmissionController;
 
-    @Before
-    public void setUp() throws Exception
-    {
+  @Before
+  public void setUp() throws Exception {
 
-    }
+  }
 
-    @Test
-    public void testSubmission() throws Exception
-    {
-        assert (true);
-    }
+  @Test
+  public void testSubmission() throws Exception {
+    assert (true);
+  }
 }
