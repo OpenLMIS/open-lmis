@@ -45,7 +45,7 @@ import static org.openlmis.order.domain.OrderStatus.TRANSFER_FAILED;
 
 @Component
 public class OrderFtpTask {
-  
+
   @Autowired
   private ConfigurationSettingService configurationSettingService;
 
