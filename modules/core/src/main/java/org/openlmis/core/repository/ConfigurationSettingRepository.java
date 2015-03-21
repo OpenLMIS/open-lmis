@@ -29,15 +29,15 @@ public class ConfigurationSettingRepository {
     this.mapper = configurationSettingMapper;
   }
 
-  public ConfigurationSetting getByKey(String  key) {
-     return mapper.getByKey(key);
+  public ConfigurationSetting getByKey(String key) {
+    return mapper.getByKey(key);
   }
 
-  public List<ConfigurationSetting> getAll(){
+  public List<ConfigurationSetting> getAll() {
     return mapper.getAll();
   }
 
-  public void setValue(ConfigurationSetting config){
+  public void setValue(ConfigurationSetting config) {
     mapper.updateValue(config);
   }
 
