@@ -70,7 +70,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Given("^I have the following data for regimen:$")
   public void theFollowingDataExistForRegimen(DataTable data) {
-    List<String> dataString = data.flatten();
+    List<String> dataString = data.asList(String.class);
     program = dataString.get(0);
     userSIC = dataString.get(1);
     categoryCode = dataString.get(2);

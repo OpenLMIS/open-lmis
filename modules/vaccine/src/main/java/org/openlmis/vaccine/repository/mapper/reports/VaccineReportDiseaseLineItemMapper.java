@@ -20,9 +20,9 @@ import java.util.List;
 public interface VaccineReportDiseaseLineItemMapper {
 
   @Insert("INSERT into vaccine_report_disease_line_items " +
-    " (reportId, diseaseId, diseaseName, displayOrder, cases, death, createdBy, createdDate, modifiedBy, modifiedDate) " +
+    " (reportId, diseaseId, diseaseName, displayOrder, cases, death, cumulative, createdBy, createdDate, modifiedBy, modifiedDate) " +
     " values" +
-    " (#{reportId}, #{diseaseId}, #{diseaseName}, #{displayOrder}, #{cases}, #{death}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+    " (#{reportId}, #{diseaseId}, #{diseaseName}, #{displayOrder}, #{cases}, #{death}, #{cumulative}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
   void insert(DiseaseLineItem lineItem);
 
@@ -34,6 +34,7 @@ public interface VaccineReportDiseaseLineItemMapper {
     " , displayOrder = #{displayOrder} " +
     " , cases = #{cases} " +
     " , death = #{death} " +
+    " , cumulative = #{cumulative} " +
     " , modifiedBy = #{modifiedBy} " +
     " , modifiedDate = NOW()" +
     " WHERE id = #{id}")

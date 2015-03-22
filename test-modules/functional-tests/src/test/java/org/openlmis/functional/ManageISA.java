@@ -57,7 +57,7 @@ public class ManageISA extends TestCaseHelper {
 
   @Given("^I have the following data for override ISA:$")
   public void theFollowingDataExist(DataTable tableData) throws SQLException {
-    List<Map<String, String>> data = tableData.asMaps();
+    List<Map<String, String>> data = tableData.asMaps(String.class, String.class);
     for (Map map : data) {
       user = map.get("user").toString();
       program = map.get("program").toString();
