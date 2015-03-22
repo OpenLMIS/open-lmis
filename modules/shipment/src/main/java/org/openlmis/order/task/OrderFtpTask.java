@@ -69,10 +69,9 @@ public class OrderFtpTask {
 
   Boolean sendFtp;
 
-  public OrderFtpTask(){
+  private void initiateSettings(){
     sendFtp = configurationSettingService.getBoolValue("USE_FTP_TO_SEND_ORDERS");
     localFileDirectory = configurationSettingService.getConfigurationStringValue("LOCAL_ORDER_EXPORT_DIRECTORY");
-
   }
 
   private static Logger logger = Logger.getLogger(OrderFtpTask.class);
@@ -88,6 +87,7 @@ public class OrderFtpTask {
 
   public void processOrder(@Payload List<Order> orders) {
 
+    initiateSettings();
 
     for (Order order : orders) {
       order = orderService.getOrder(order.getId());
