@@ -14,6 +14,7 @@ public class DiseaseLineItemBuilder {
 
       item.setDiseaseName("Yellow Fever");
       item.setDiseaseId(1L);
+      item.setDisplayOrder(1);
       item.setReportId(1L);
       item.setCases(20L);
       item.setCumulative(20L);
