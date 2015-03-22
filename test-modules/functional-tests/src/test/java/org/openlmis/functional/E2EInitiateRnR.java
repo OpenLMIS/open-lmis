@@ -108,7 +108,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I create users:$")
   public void createUser(DataTable userTable) throws SQLException {
-    List<Map<String, String>> data = userTable.asMaps();
+    List<Map<String, String>> data = userTable.asMaps(String.class, String.class);
     for (Map map : data) {
       createUserAndAssignRoles(passwordUsers, map.get("Email").toString(), map.get("FirstName").toString(), map.get("LastName").toString(), map.get("UserName").toString(), map.get("FacilityCode").toString(), map.get("Program").toString(), map.get("Node").toString(), map.get("Role").toString(), map.get("RoleType").toString(), map.get("Warehouse").toString(), map.get("WarehouseRole").toString());
     }

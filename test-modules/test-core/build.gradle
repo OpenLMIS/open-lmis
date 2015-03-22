@@ -9,22 +9,33 @@
  */
 
 apply plugin: 'jetty'
+apply plugin: 'java'
 
 
 dependencies {
-    compile 'org.testng:testng:6.1.1',
-            'org.seleniumhq.selenium:selenium-java:2.44.0',
-            'org.seleniumhq.selenium:selenium-firefox-driver:2.44.0',
+    compile 'org.testng:testng:6.8.21',
+            'xml-apis:xml-apis:1.4.01',
+            'org.seleniumhq.selenium:selenium-java:2.45.0',
+            'org.seleniumhq.selenium:selenium-firefox-driver:2.45.0',
             'net.sf.json-lib:json-lib:0.9',
             'postgresql:postgresql:9.0-801.jdbc4',
             project(':modules:db')
 
+    compile("org.apache.poi:poi-ooxml:3.11") {
+        exclude group: "xml-apis", module: "xml-apis"
+    }
 
     testCompile 'org.springframework:spring-test:4.1.5.RELEASE',
-            'org.testng:testng:6.1.1',
+            'org.testng:testng:6.8.21',
+            'xml-apis:xml-apis:1.4.01',
             'net.sf.json-lib:json-lib:0.9',
             'postgresql:postgresql:9.0-801.jdbc4',
             project(':modules:db')
 }
 
+configurations.all {
+    resolutionStrategy {
+        force 'xml-apis:xml-apis:1.4.01'
+    }
+}
 
