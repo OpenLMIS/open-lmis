@@ -1008,3 +1008,9 @@ services.factory('HelpDocumentList', function ($resource) {
 services.factory('ExtraAnalyticDataForRnRStatus',function($resource){
    return $resource('/dashboard/extraAnalyticsRnRStatus/:zoneId/:periodId/:programId/statusData.json',{},{});
 });
+
+
+services.factory('SeasonalityRationingReport',function($resource){
+    return $resource('/reports/reportdata/seasonalityRationing.json',{},{});
+});
+
