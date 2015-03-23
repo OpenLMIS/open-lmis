@@ -1013,7 +1013,6 @@ services.factory('ExtraAnalyticDataForRnRStatus',function($resource){
 services.factory('SeasonalityRationingReport',function($resource){
     return $resource('/reports/reportdata/seasonalityRationing.json',{},{});
 });
-////////////////////////////////////////////////////////////////////////
 services.factory('SeasonalityRationingTypes', function ($resource) {
 
     var resource = $resource('/season-rationing/seasonalityRationingTypes/:id.json', {},  {
@@ -1026,16 +1025,11 @@ services.factory('SeasonalityRationingTypes', function ($resource) {
         }
     });
 
-//    resource.disable = function (pathParams, success, error) {
-//        $resource('/countries/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
-//    };
-
     return resource;
 });
 services.factory('DeleteSeasonalityRationings', function ($resource) {
     return $resource('/season-rationing/remove-seasonality-rationing-types.json', {}, {post:{method:'POST'}});
 });
-////////////////////////////////////
 services.factory('AdjustmentFactors', function ($resource) {
 
     var resource = $resource('/season-rationing/adjustmentFactors/:id.json', {},  {
@@ -1047,11 +1041,6 @@ services.factory('AdjustmentFactors', function ($resource) {
             method:'delete',params:{id: '@id'}
         }
     });
-
-//    resource.disable = function (pathParams, success, error) {
-//        $resource('/countries/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
-//    };
-
     return resource;
 });
 services.factory('DeleteAdjustmentFactors', function ($resource) {
