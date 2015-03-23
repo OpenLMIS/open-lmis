@@ -276,6 +276,15 @@
                     <property name="title" value="Non Functioning equipment with service contract status"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="seasonality_rationing"/>
+                    <property name="template" value="seasonality-rationing.jasper"/>
+                    <property name="reportDataProvider" ref="seasonalRationingReportDataProvider"/>
+                    <property name="id" value="RP-seasonality-rationing-Report"/>
+                    <property name="name" value="Seasonality/Rationing report"/>
+                    <property name="title" value="Seasonality/Rationing Adjustments Applied"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>
