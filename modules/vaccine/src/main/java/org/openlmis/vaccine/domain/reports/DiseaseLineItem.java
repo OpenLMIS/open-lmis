@@ -31,5 +31,6 @@ public class DiseaseLineItem extends BaseModel {
 
   private Long cases;
   private Long death;
+  private Long cumulative;
 
 }

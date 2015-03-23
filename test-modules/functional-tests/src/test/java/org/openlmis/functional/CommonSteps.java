@@ -64,7 +64,7 @@ public class CommonSteps extends TestCaseHelper {
   @And("^I have users:$")
   public void createUser(DataTable userTable) throws SQLException {
     String password = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-    List<Map<String, String>> data = userTable.asMaps();
+    List<Map<String, String>> data = userTable.asMaps(String.class, String.class);
     for (Map map : data) {
       dbWrapper.insertUser(map.get("UserName").toString(), password, map.get("FacilityCode").toString(), map.get("Email").toString());
       dbWrapper.insertRoleAssignment(map.get("UserName").toString(), map.get("Role").toString());

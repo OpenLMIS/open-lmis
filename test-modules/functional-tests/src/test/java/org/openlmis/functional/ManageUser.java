@@ -64,7 +64,7 @@ public class ManageUser extends TestCaseHelper {
   public void createUser(DataTable userTable) {
     HomePage homePage = PageObjectFactory.getHomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
-    List<Map<String, String>> data = userTable.asMaps();
+    List<Map<String, String>> data = userTable.asMaps(String.class, String.class);
     for (Map map : data)
       userPage.enterUserDetails(map.get("UserName").toString(), map.get("Email").toString(),
         map.get("FirstName").toString(), map.get("LastName").toString());

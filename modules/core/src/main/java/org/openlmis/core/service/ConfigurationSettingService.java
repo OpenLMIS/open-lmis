@@ -32,60 +32,58 @@ public class ConfigurationSettingService {
     this.configurationSettingRepository = configurationSettingRepository;
   }
 
-  public ConfigurationSetting getByKey(String key){
-      return configurationSettingRepository.getByKey(key);
+  public ConfigurationSetting getByKey(String key) {
+    return configurationSettingRepository.getByKey(key);
   }
 
-  public int getConfigurationIntValue(String key){
+  public int getConfigurationIntValue(String key) {
     ConfigurationSetting configuration = getByKey(key);
-    if(configuration == null || configuration.getValue() == null || configuration.getValue().isEmpty())
-        return 0;
+    if (configuration == null || configuration.getValue() == null || configuration.getValue().isEmpty())
+      return 0;
     return Integer.parseInt(configuration.getValue());
   }
 
 
-
-  public String getConfigurationStringValue(String key){
-      ConfigurationSetting configurationSetting = getByKey(key);
-      if (configurationSetting == null || configurationSetting.getValue() == null || configurationSetting.getValue().isEmpty())
-          return "";
-      return configurationSetting.getValue();
+  public String getConfigurationStringValue(String key) {
+    ConfigurationSetting configurationSetting = getByKey(key);
+    if (configurationSetting == null || configurationSetting.getValue() == null || configurationSetting.getValue().isEmpty())
+      return "";
+    return configurationSetting.getValue();
   }
 
-  public Boolean getBoolValue(String key){
+  public Boolean getBoolValue(String key) {
     String value = getConfigurationStringValue(key);
 
     // if the configuration was not set at all in the configurations table ... return false
-    if(value.isEmpty())
-         return false;
+    if (value.isEmpty())
+      return false;
 
     return Boolean.parseBoolean(value);
   }
 
-  public List<Object> getConfigurationListValue(String key, String delimiter){
+  public List<Object> getConfigurationListValue(String key, String delimiter) {
     ConfigurationSetting configuration = getByKey(key);
 
-      if(configuration == null || configuration.getValue() == null || configuration.getValue().isEmpty())
-        return null;
-      List<Object> values = new ArrayList<>();
-      if(configuration.getValue().contains(delimiter)){
-          for(String value : configuration.getValue().split(delimiter)){
-              values.add(value);
-          }
+    if (configuration == null || configuration.getValue() == null || configuration.getValue().isEmpty())
+      return null;
+    List<Object> values = new ArrayList<>();
+    if (configuration.getValue().contains(delimiter)) {
+      for (String value : configuration.getValue().split(delimiter)) {
+        values.add(value);
       }
-      return values;
+    }
+    return values;
   }
 
-  public List<ConfigurationSetting> getConfigurations(){
+  public List<ConfigurationSetting> getConfigurations() {
     return configurationSettingRepository.getAll();
   }
 
-  public void update(List<ConfigurationSetting> settings){
-    for(ConfigurationSetting conf : settings){
-         configurationSettingRepository.setValue(conf);
+  public void update(List<ConfigurationSetting> settings) {
+    for (ConfigurationSetting conf : settings) {
+      configurationSettingRepository.setValue(conf);
     }
   }
-
 
   public void saveBooleanValue(String key, Boolean value) {
     ConfigurationSetting setting = configurationSettingRepository.getByKey(key);

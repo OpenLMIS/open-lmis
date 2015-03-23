@@ -89,7 +89,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @When("^I add new regimen:$")
   public void addRegimen(DataTable regimenTable) {
-    List<Map<String, String>> data = regimenTable.asMaps();
+    List<Map<String, String>> data = regimenTable.asMaps(String.class, String.class);
     regimenTemplateConfigPage = PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
     for (Map map : data)
       regimenTemplateConfigPage.addNewRegimen(map.get("Category").toString(), map.get("Code").toString(),
@@ -120,7 +120,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @When("^I add new regimen reporting field:$")
   public void addRegimenReportingField(DataTable regimenReportingTable) {
-    List<Map<String, String>> data = regimenReportingTable.asMaps();
+    List<Map<String, String>> data = regimenReportingTable.asMaps(String.class, String.class);
     regimenTemplateConfigPage = PageObjectFactory.getRegimenTemplateConfigPage(testWebDriver);
     for (Map map : data) {
       regimenTemplateConfigPage.NoOfPatientsOnTreatmentCheckBox(
@@ -131,7 +131,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
 
   @Then("^I should see created regimen and reporting fields:$")
   public void verifyRegimenAndReportingFields(DataTable dataTable) {
-    List<Map<String, String>> data = dataTable.asMaps();
+    List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
     for (Map map : data)
       verifyProgramDetailsSaved(map.get("Code").toString(), map.get("Name").toString(), map.get("Remarks").toString());
   }
