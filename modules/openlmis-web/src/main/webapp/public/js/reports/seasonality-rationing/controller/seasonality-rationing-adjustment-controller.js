@@ -8,29 +8,30 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.domain.reports;
+function SeasonalRationingAdjustment($scope, $window, SeasonalityRationingReport ) {
+    //to minimize and maximize the filter section
+    $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
+    $scope.OnFilterChanged = function () {
 
+        $scope.data = $scope.datarows = [];
+        $scope.filter.max = 10000;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+        SeasonalityRationingReport.get($scope.filter, function (data) {
+            if (data.pages !== undefined && data.pages.rows !== undefined) {
+                $scope.data = data.pages.rows;
+                $scope.paramsChanged($scope.tableParams);
+            }
+        });
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class DiseaseLineItem extends BaseModel {
+    };
 
-  private Long reportId;
+    $scope.exportReport = function (type) {
+        $scope.filter.pdformat = 1;
+        var params = jQuery.param($scope.filter);
+        var url;
 
-  private Long diseaseId;
-  private String diseaseName;
-  private Integer displayOrder;
+            url = '/reports/download/seasonality_rationing/' + type + '?' + params;
 
-  private Long cases;
-  private Long death;
-  private Long cumulative;
-
+        $window.open(url);
+    };
 }

@@ -8,29 +8,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.domain.reports;
-
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class DiseaseLineItem extends BaseModel {
-
-  private Long reportId;
-
-  private Long diseaseId;
-  private String diseaseName;
-  private Integer displayOrder;
-
-  private Long cases;
-  private Long death;
-  private Long cumulative;
-
-}
+angular.module('seasonality_rationing_adjustment', ['openlmis', 'ngTable', 'angularCombine','ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+    .config(['$routeProvider', function ($routeProvider) {
+        $routeProvider.
+            when('/list', {controller:SeasonalRationingAdjustment, templateUrl:'partials/list.html',reloadOnSearch:false}).
+            otherwise({redirectTo:'/list'});
+    }]).run(function ($rootScope, AuthorizationService) {
+        AuthorizationService.preAuthorize('VIEW_REGIMEN_SUMMARY_REPORT');
+    }).config(function (angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+    });

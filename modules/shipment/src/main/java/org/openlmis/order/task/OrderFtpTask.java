@@ -11,11 +11,13 @@
 
 package org.openlmis.order.task;
 
+import lombok.Setter;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.FailedToCreateProducerException;
 import org.apache.log4j.Logger;
 import org.openlmis.core.domain.FacilityFtpDetails;
 import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.FacilityFtpDetailsService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.order.domain.Order;
@@ -45,6 +47,9 @@ import static org.openlmis.order.domain.OrderStatus.TRANSFER_FAILED;
 public class OrderFtpTask {
 
   @Autowired
+  private ConfigurationSettingService configurationSettingService;
+
+  @Autowired
   private SupplyLineService supplyLineService;
 
   @Autowired
@@ -62,6 +67,13 @@ public class OrderFtpTask {
   @Value("${order.ftp.local.directory}")
   String localFileDirectory;
 
+  Boolean sendFtp;
+
+  private void initiateSettings(){
+    sendFtp = configurationSettingService.getBoolValue("USE_FTP_TO_SEND_ORDERS");
+    localFileDirectory = configurationSettingService.getConfigurationStringValue("LOCAL_ORDER_EXPORT_DIRECTORY");
+  }
+
   private static Logger logger = Logger.getLogger(OrderFtpTask.class);
 
   private static String CONNECTION_REFUSED = "Connection refused";
@@ -74,6 +86,9 @@ public class OrderFtpTask {
   public static String FTP_CREDENTIAL_MISSING_COMMENT = "order.ftpComment.ftpcredential.missing";
 
   public void processOrder(@Payload List<Order> orders) {
+
+    initiateSettings();
+
     for (Order order : orders) {
       order = orderService.getOrder(order.getId());
 
@@ -81,7 +96,7 @@ public class OrderFtpTask {
 
       supplyLine = supplyLineService.getById(supplyLine.getId());
       FacilityFtpDetails supplyingFacilityFtpDetails = facilityFtpDetailsService.getByFacilityId(supplyLine.getSupplyingFacility());
-      if (supplyingFacilityFtpDetails == null) {
+      if (sendFtp && supplyingFacilityFtpDetails == null) {
         updateOrder(order, TRANSFER_FAILED, FTP_CREDENTIAL_MISSING_COMMENT);
         continue;
       }
@@ -96,7 +111,9 @@ public class OrderFtpTask {
       try (FileWriter fileWriter = new FileWriter(file)) {
         orderCsvHelper.writeCsvFile(order, orderFileTemplateDTO, fileWriter);
         fileWriter.flush();
-        ftpSender.sendFile(supplyingFacilityFtpDetails, file);
+        if(sendFtp) {
+          ftpSender.sendFile(supplyingFacilityFtpDetails, file);
+        }
         updateOrder(order, RELEASED, null);
       } catch (FailedToCreateProducerException producerException) {
         updateOrder(order, TRANSFER_FAILED, CONNECTION_REFUSED_COMMENT);

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-master-landscape" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_NAME" class="java.lang.String"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="COUNTRY_NAME" class="java.lang.String"/>
+	<parameter name="GENERATED_BY" class="java.lang.String"/>
+	<parameter name="REPORT_VERSION" class="java.lang.String"/>
+	<parameter name="REPORT_ID" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
+	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
+	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT  facilities.name facilityname, gz.district_name as district, products.primaryname || ' (' || products.code || ')' as productname, adjustmentTypes.name adjustmenttype,  adjustmentfactors.name as adjustmentbasis, adjustment.startdate, adjustment.enddate, adjustment.minmonthsofstock, adjustment.maxmonthsofstock, adjustment.formula
+FROM  order_quantity_adjustment_products adjustment
+JOIN facilities ON adjustment.facilityid = facilities.id
+JOIN products ON products.id = adjustment.productid
+JOIN order_quantity_adjustment_types adjustmentTypes ON adjustmentTypes.id = adjustment.typeid
+JOIN order_quantity_adjustment_factors adjustmentfactors ON  adjustmentfactors.id = adjustment.factorid
+JOIN program_products ON program_products.productid = products.id
+JOIN product_categories ON program_products.productcategoryid = product_categories.id
+JOIN vw_districts gz on gz.district_id = facilities.geographiczoneid]]>
+	</queryString>
+	<field name="facilityname" class="java.lang.String"/>
+	<field name="district" class="java.lang.String"/>
+	<field name="productname" class="java.lang.String"/>
+	<field name="adjustmenttype" class="java.lang.String"/>
+	<field name="adjustmentbasis" class="java.lang.String"/>
+	<field name="startdate" class="java.util.Date"/>
+	<field name="enddate" class="java.util.Date"/>
+	<field name="minmonthsofstock" class="java.lang.Integer"/>
+	<field name="maxmonthsofstock" class="java.lang.Integer"/>
+	<field name="formula" class="java.lang.String"/>
+	<variable name="TOTAL_PAGES" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="PAGE_NO">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="LOGO">
+					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_NAME">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_SUB_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_NAME">
+					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_FILTER_PARAM_VALUES">
+					<subreportParameterExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_LOGO">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="29" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="1" width="802" height="28" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+				</reportElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="1" width="107" height="27" uuid="e73cd188-e289-4086-9518-2127e022fdff"/>
+				<text><![CDATA[Facility Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="107" y="1" width="83" height="27" uuid="1b74103d-a792-475d-8cae-487fa1bfc2f3"/>
+				<text><![CDATA[District]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="0" width="87" height="29" uuid="735a654a-a8e8-4866-9dac-51d6f5c0fc0e"/>
+				<text><![CDATA[Product Name (Code)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="277" y="1" width="100" height="28" uuid="6143ce86-5d52-4669-9980-3ed2538c9326"/>
+				<text><![CDATA[MOS Adjustment Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="1" width="100" height="28" uuid="8dbafeb1-dd51-4b44-8f93-cb4c3cc3d08b"/>
+				<text><![CDATA[Adjustment Basis]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="477" y="1" width="85" height="28" uuid="398ed95c-18f9-4be5-8a61-832ff833faff"/>
+				<text><![CDATA[From Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="562" y="1" width="88" height="28" uuid="8b068166-1d62-4b3d-a934-6f4b8cadb1a8"/>
+				<text><![CDATA[To Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="650" y="1" width="39" height="28" uuid="3ce8a769-2e2e-4a3a-871c-a54a8f0ae19f"/>
+				<text><![CDATA[MIN MOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="689" y="0" width="39" height="28" uuid="7c81d532-135b-44ae-9214-1593bb340e27"/>
+				<text><![CDATA[MAX MOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="728" y="0" width="74" height="29" uuid="adfc8597-47d1-421b-8488-ec4835a7ebae"/>
+				<text><![CDATA[Formula]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="72" y="0" width="759" height="20" forecolor="#006666" uuid="497dba92-6949-4bb2-9beb-1f85a98456e5">
+					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="19" width="801" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="0" y="0" width="107" height="20" uuid="d99886b8-b922-4734-8a7e-3faf6421ffae"/>
+				<textFieldExpression><![CDATA[$F{facilityname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="107" y="0" width="83" height="20" uuid="c83e4c65-639a-4b6d-a89e-ae590278b5bd"/>
+				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="0" width="87" height="20" uuid="53762c11-eee4-445b-8751-0d0a77e4d18b"/>
+				<textFieldExpression><![CDATA[$F{productname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="377" y="0" width="100" height="20" uuid="c9790912-d989-428f-a318-f02bc60f1597"/>
+				<textFieldExpression><![CDATA[$F{adjustmentbasis}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="477" y="0" width="85" height="20" uuid="a6b14350-2e02-457b-9f9d-395ce665f34c"/>
+				<textFieldExpression><![CDATA[$F{startdate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="650" y="0" width="39" height="20" uuid="3f0ecf6c-09af-461d-93e0-ce2159078708"/>
+				<textFieldExpression><![CDATA[$F{minmonthsofstock}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="689" y="0" width="39" height="20" uuid="4ae0057d-42b2-40bf-8fe7-b317ea2a0e06"/>
+				<textFieldExpression><![CDATA[$F{maxmonthsofstock}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="277" y="0" width="100" height="20" uuid="e679dcd4-018e-45dc-99b5-9f8cee9ca75d"/>
+				<textFieldExpression><![CDATA[$F{adjustmenttype}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="562" y="0" width="88" height="20" uuid="0853a0c1-fa07-4610-8468-9d760ed93ebd"/>
+				<textFieldExpression><![CDATA[$F{enddate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="730" y="0" width="71" height="20" uuid="a681af4f-6124-4567-9d51-1c6457e9f421"/>
+				<textFieldExpression><![CDATA[$F{formula}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50">
+			<subreport>
+				<reportElement x="1" y="0" width="801" height="50" uuid="6c28a0d6-8846-4753-944f-eefca1041e24">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} >= 1]]></printWhenExpression>
+				</reportElement>
+                <subreportParameter name="REPORT_ID">
+					<subreportParameterExpression><![CDATA[$P{REPORT_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_VERSION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_VERSION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="GENERATED_BY">
+					<subreportParameterExpression><![CDATA[$P{GENERATED_BY}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PAGE_NO">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="TOTAL_PAGES">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+				<subreportExpression><![CDATA["openlmis-report-footer-landscape.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+</jasperReport>
