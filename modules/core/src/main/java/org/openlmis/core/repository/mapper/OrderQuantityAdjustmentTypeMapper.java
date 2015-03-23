@@ -18,10 +18,10 @@ import java.util.List;
 @Repository
 public interface OrderQuantityAdjustmentTypeMapper {
     @Insert({"INSERT INTO order_quantity_adjustment_types",
-            "(id, name, displayOrder,createdBy" +
+            "(name, displayOrder,createdBy" +
                     ",createdDate, modifiedBy, modifiedDate)",
             "VALUES",
-            "(#{id}, #{name},#{displayOrder} , #{createdBy},NOW(), #{modifiedBy}, NOW()))"})
+            "( #{name},#{displayOrder} , #{createdBy},NOW(), #{modifiedBy}, NOW())"})
     @Options(useGeneratedKeys = true)
     public void insert(OrderQuantityAdjustmentType quantityAdjustmentType);
 
@@ -38,4 +38,7 @@ public interface OrderQuantityAdjustmentTypeMapper {
     public List<OrderQuantityAdjustmentType> getAll();
     @Delete({"DELETE order_quantity_adjustment_types  where id = #{id}"})
    public void delete(OrderQuantityAdjustmentType quantityAdjustmentType);
+    @Select("SELECT * FROM order_quantity_adjustment_types" +
+            " where LOWER(name) LIKE '%'|| LOWER(#{param}) ||'%'")
+    List<OrderQuantityAdjustmentType> search(String param);
 }

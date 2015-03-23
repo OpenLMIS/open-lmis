@@ -329,6 +329,16 @@
                      href="/public/pages/admin/regimen-template/index.html"
                      openlmis-message="label.admin.configure.regimenTemplate"></a>
                 </li>
+                  <li ng-show="hasPermission('MANAGE_REGIMEN_TEMPLATE')">
+                      <a id='configureSeasoningRationingType'
+                         href="/public/pages/admin/seasonality-rationing/index.html#/list"
+                         openlmis-message="label.admin.menu.seasoningRationingType"></a>
+                  </li>
+                  <li ng-show="hasPermission('MANAGE_REGIMEN_TEMPLATE')">
+                      <a id='configureAdjustmentBasis'
+                         href="/public/pages/admin/seasonality-rationing/index.html#/list_adustment_factor"
+                         openlmis-message="label.admin.menu.adjustmentBasisFormula"></a>
+                  </li>
                 <li ng-show="hasPermission('MANAGE_PROGRAM_PRODUCT')">
                   <a id='configureProgramProductIsa'
                      href="/public/pages/admin/program-product-isa/index.html"

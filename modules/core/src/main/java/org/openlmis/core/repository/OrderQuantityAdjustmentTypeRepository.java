@@ -37,4 +37,12 @@ public class OrderQuantityAdjustmentTypeRepository {
     public List<OrderQuantityAdjustmentType> loadOrderQuantityAdjustmentTypeList() {
       return  this.quantityAdjustmentTypeMapper.getAll();
     }
+
+    public OrderQuantityAdjustmentType loadOrderQuantityAdjustmentType(Long id) {
+        return  this.quantityAdjustmentTypeMapper.getById(id);
+    }
+
+    public List<OrderQuantityAdjustmentType> searchForQuantityAdjustmentType(String param) {
+        return  this.quantityAdjustmentTypeMapper.search(param);
+    }
 }
