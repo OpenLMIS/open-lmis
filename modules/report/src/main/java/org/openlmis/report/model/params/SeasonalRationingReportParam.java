@@ -8,40 +8,24 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.core.repository;
+package org.openlmis.report.model.params;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ConfigurationSetting;
-import org.openlmis.core.repository.mapper.ConfigurationSettingMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.openlmis.report.model.ReportParameter;
 
-import java.util.List;
-
-@Component
+@Data
 @NoArgsConstructor
-public class ConfigurationSettingRepository {
+@EqualsAndHashCode(callSuper=false)
+@AllArgsConstructor
+public class SeasonalRationingReportParam  extends BaseParam implements ReportParameter {
 
-  private ConfigurationSettingMapper mapper;
+    private Long zoneId;
+    private Long productCategoryId;
+    private Long productId;
+    private Long programId;
 
-  @Autowired
-  public ConfigurationSettingRepository(ConfigurationSettingMapper configurationSettingMapper) {
-    this.mapper = configurationSettingMapper;
-  }
-
-  public ConfigurationSetting getByKey(String key) {
-    return mapper.getByKey(key);
-  }
-
-  public List<ConfigurationSetting> getAll() {
-    return mapper.getAll();
-  }
-
-  public void setValue(ConfigurationSetting config) {
-    mapper.updateValue(config);
-  }
-
-  public List<ConfigurationSetting> getSearchResults(String s) {
-    return mapper.getSearchResults(s);
-  }
 }
+

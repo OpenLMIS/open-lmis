@@ -12,33 +12,45 @@ apply plugin: 'jetty'
 apply plugin: 'java'
 
 dependencies {
-    compile 'org.seleniumhq.selenium:selenium-java:2.44.0',
-            'org.seleniumhq.selenium:selenium-firefox-driver:2.44.0',
-            'org.seleniumhq.selenium:selenium-ie-driver:2.44.0',
-            'org.seleniumhq.selenium:selenium-chrome-driver:2.44.0',
+    compile 'org.seleniumhq.selenium:selenium-java:2.45.0',
+            'org.seleniumhq.selenium:selenium-htmlunit-driver:2.45.0',
+            'org.seleniumhq.selenium:selenium-firefox-driver:2.45.0',
+            'org.seleniumhq.selenium:selenium-ie-driver:2.45.0',
+            'org.seleniumhq.selenium:selenium-chrome-driver:2.45.0',
+            'xml-apis:xml-apis:1.4.01',
+            'xmlunit:xmlunit:1.6',
             'net.sf.json-lib:json-lib:0.9',
             'postgresql:postgresql:9.0-801.jdbc4',
             project(':test-modules:test-core')
 
 
-    testCompile 'org.springframework:spring-test:4.1.5.RELEASE'
-    testCompile 'org.testng:testng:6.1.1'
+    testCompile 'org.springframework:spring-test:4.1.5.RELEASE',
+            'xml-apis:xml-apis:1.4.01',
+            'org.testng:testng:6.8.21'
+
+
     testCompile group: 'com.google.inject', name: 'guice', version: '3.0'
-    testCompile("org.uncommons:reportng:1.1.2") {
+    testCompile("org.uncommons:reportng:1.1.4") {
         exclude group: "org.testng", module: "testng"
     }
     testCompile 'net.sf.json-lib:json-lib:0.9'
     testCompile 'postgresql:postgresql:9.0-801.jdbc4'
     testCompile project(':test-modules:test-core')
 
-    testCompile 'info.cukes:cucumber-core:1.1.2'
-    testCompile 'info.cukes:cucumber-java:1.1.2'
+    testCompile 'info.cukes:cucumber-core:1.2.2'
+    testCompile 'info.cukes:cucumber-java:1.2.2'
     testCompile 'info.cukes:cucumber-html:0.2.3'
-    testCompile 'info.cukes:cucumber-junit:1.1.2'
-    testCompile 'info.cukes:cucumber-jvm:1.1.2'
+    testCompile 'info.cukes:cucumber-junit:1.2.2'
+    testCompile 'info.cukes:cucumber-jvm:1.2.2'
     testCompile 'info.cukes:cucumber-jvm-deps:1.0.3'
-    testCompile 'junit:junit:4.10'
+    testCompile 'junit:junit:4.12'
     testCompile 'postgresql:postgresql:9.0-801.jdbc4'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'xml-apis:xml-apis:1.4.01'
+    }
 }
 
 String connectionString = "$dbUrlPrefix$databaseHostName:$databasePort/$dbName"
@@ -125,7 +137,6 @@ task e2eTestChrome(type: Test) {
     dependsOn assemble, compileTestJava
 
     doLast {
-
         htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {

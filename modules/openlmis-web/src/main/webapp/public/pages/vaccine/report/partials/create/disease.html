@@ -16,6 +16,7 @@
     <tr>
       <th class="span5"><span openlmis-message="label.vaccine.disease.name"></span></th>
       <th class="span1"><span openlmis-message="label.vaccine.disease.cases"></span></th>
+      <th class="span1"><span openlmis-message="label.vaccine.disease.cumulative"></span></th>
       <th class="span1"><span openlmis-message="label.vaccine.disease.death"></span></th>
     </tr>
     </thead>
@@ -23,6 +24,7 @@
       <tr ng-repeat="disease in report.diseaseLineItems">
         <td class="cell-input"><span class="cell-text">{{disease.diseaseName}}</span></td>
         <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" type="text" ng-model="disease.cases" /></td>
+        <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" type="text" ng-model="disease.cumulative" /></td>
         <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" type="text" ng-model="disease.death" /></td>
       </tr>
     </tbody>

@@ -92,7 +92,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Given("^I have the following data for distribution:$")
   public void theFollowingDataExist(DataTable tableData) throws SQLException {
-    List<Map<String, String>> data = tableData.asMaps();
+    List<Map<String, String>> data = tableData.asMaps(String.class, String.class);
     for (Map map : data) {
       userSIC = map.get("userSIC").toString();
       deliveryZoneCodeFirst = map.get("deliveryZoneCodeFirst").toString();
@@ -160,7 +160,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @When("^I Enter \"([^\"]*)\" values:$")
   public void enterValuesInForm(String tabName, DataTable tableData) {
-    List<Map<String, String>> data = tableData.asMaps();
+    List<Map<String, String>> data = tableData.asMaps(String.class, String.class);
     tabMap.get(tabName).enterValues(data);
     tabMap.get(tabName).removeFocusFromElement();
   }
@@ -172,7 +172,7 @@ public class ManageDistribution extends TestCaseHelper {
     refrigeratorPage.navigateToRefrigeratorTab();
     DistributionTab tab = tabMap.get(tabName);
     tab.navigate();
-    List<Map<String, String>> data = tableData.asMaps();
+    List<Map<String, String>> data = tableData.asMaps(String.class, String.class);
     tab.verifyData(data);
   }
 
@@ -390,7 +390,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I view visit information in DB for facility \"([^\"]*)\":$")
   public void verifyVisitInformationDataInDB(String facility, DataTable tableData) throws SQLException {
-    List<Map<String, String>> data = tableData.asMaps();
+    List<Map<String, String>> data = tableData.asMaps(String.class, String.class);
     for (Map<String, String> map : data) {
       Map<String, String> facilityVisitDetails = dbWrapper.getFacilityVisitDetails(facility);
       assertEqualsAndNulls(facilityVisitDetails.get("observations"), map.get("observations"));
@@ -414,7 +414,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I view epi use data in DB for facility \"([^\"]*)\" and product group \"([^\"]*)\":$")
   public void verifyEpiUseDataInDB(String facilityCode, String productGroupCode, DataTable tableData) throws SQLException {
-    List<Map<String, String>> data = tableData.asMaps();
+    List<Map<String, String>> data = tableData.asMaps(String.class, String.class);
     Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
     for (Map map : data) {
       assertEqualsAndNulls(epiDetails.get("stockAtFirstOfMonth".toLowerCase()), map.get("firstOfMonth").toString());
@@ -428,7 +428,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @And("^I view refrigerator readings in DB for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\":$")
   public void verifyRefrigeratorReadingDataInDB(String refrigeratorSerialNumber, String facilityCode, DataTable tableData) throws SQLException {
-    List<Map<String, String>> data = tableData.asMaps();
+    List<Map<String, String>> data = tableData.asMaps(String.class, String.class);
     ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     for (Map map : data) {
       assertEqualsAndNulls(resultSet.getString("temperature"), map.get("temperature").toString());
@@ -442,7 +442,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @And("^I view full coverage readings in DB for facility \"([^\"]*)\":$")
   public void verifyFullCoverageDataInDB(String facilityCode, DataTable tableData) throws SQLException {
-    List<Map<String, String>> data = tableData.asMaps();
+    List<Map<String, String>> data = tableData.asMaps(String.class, String.class);
     Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
     for (Map map : data) {
       assertEqualsAndNulls(fullCoveragesDetails.get("femaleHealthCenter".toLowerCase()), map.get("femaleHealthCenter").toString());
@@ -455,7 +455,7 @@ public class ManageDistribution extends TestCaseHelper {
   @And("^I view epi inventory readings in DB for facility \"([^\"]*)\" for product \"([^\"]*)\":$")
   public void
   verifyEpiInventoryDataInDB(String facilityCode, String productCode, DataTable tableData) throws SQLException {
-    List<Map<String, String>> data = tableData.asMaps();
+    List<Map<String, String>> data = tableData.asMaps(String.class, String.class);
     for (Map map : data) {
       ResultSet epiInventoryDetails = dbWrapper.getEpiInventoryDetails(productCode, facilityCode);
 
@@ -470,7 +470,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", facilityCode);
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
-    List<Map<String, String>> data = tableData.asMaps();
+    List<Map<String, String>> data = tableData.asMaps(String.class, String.class);
     for (Map map : data) {
       List<String> vaccinations = asList("BCG", "Polio (Newborn)", "Polio 1st dose", "Polio 2nd dose", "Polio 3rd dose", "Penta 1st dose", "Penta 2nd dose", "Penta 3rd dose", "PCV10 1st dose", "PCV10 2nd dose", "PCV10 3rd dose", "Measles");
 
@@ -498,7 +498,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     String facilityId = dbWrapper.getAttributeFromTable("facilities", "id", "code", facilityCode);
     String facilityVisitId = dbWrapper.getAttributeFromTable("facility_visits", "id", "facilityId", facilityId);
-    Map<String, String> dataMap = tableData.asMaps().get(0);
+    Map<String, String> dataMap = tableData.asMaps(String.class, String.class).get(0);
     ResultSet adultCoverageDetails = dbWrapper.getAdultCoverageDetails("Pregnant Women", facilityVisitId);
     assertEquals(dataMap.get("targetGroup"), adultCoverageDetails.getString("targetGroup"));
     assertEquals(dataMap.get("healthCenter1"), adultCoverageDetails.getString("healthCenterTetanus1"));

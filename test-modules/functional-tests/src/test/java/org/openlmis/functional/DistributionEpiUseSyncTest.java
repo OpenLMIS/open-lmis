@@ -386,7 +386,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
   @When("^I Enter EPI values without end of month:$")
   public void enterEPIValues(DataTable tableData) {
-    Map<String, String> epiData = tableData.asMaps().get(0);
+    Map<String, String> epiData = tableData.asMaps(String.class, String.class).get(0);
     epiUsePage = PageObjectFactory.getEpiUsePage(testWebDriver);
     epiUsePage.enterValueInDistributed(epiData.get("distributed"), 1);
     epiUsePage.enterValueInExpirationDate(epiData.get("expirationDate"), 1);
@@ -400,7 +400,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUsePage = PageObjectFactory.getEpiUsePage(testWebDriver);
     epiUsePage.navigateToRefrigerators();
     epiUsePage.navigateToEpiUse();
-    List<Map<String, String>> epiData = tableData.asMaps();
+    List<Map<String, String>> epiData = tableData.asMaps(String.class, String.class);
     epiUsePage.verifyData(epiData);
   }
 
