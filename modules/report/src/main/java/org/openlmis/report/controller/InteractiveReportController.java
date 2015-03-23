@@ -464,7 +464,7 @@ public class InteractiveReportController extends BaseController {
 
 
     @RequestMapping(value = "/reportdata/seasonalityRationing", method = GET, headers = BaseController.ACCEPT_JSON)
-    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_SEASONALITY_RATIONING_REPORT')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_SEASONALITY_RATIONING_REPORT')")
     public Pages getSeasonalityRationingAdjustmentReport(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                                                     HttpServletRequest request) {
