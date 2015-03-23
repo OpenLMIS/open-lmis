@@ -117,7 +117,6 @@ public class VaccineReportDiseaseLineItemMapperIT {
 
     List<DiseaseLineItem> lineItemList = mapper.getLineItems(report.getId());
     assertEquals(1, lineItemList.size());
-    assertEquals(item, is(lineItemList.get(0)));
-
+    assertThat(item, is(lineItemList.get(0)));
   }
 }
