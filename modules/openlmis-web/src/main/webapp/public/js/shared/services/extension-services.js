@@ -1013,4 +1013,36 @@ services.factory('ExtraAnalyticDataForRnRStatus',function($resource){
 services.factory('SeasonalityRationingReport',function($resource){
     return $resource('/reports/reportdata/seasonalityRationing.json',{},{});
 });
+services.factory('SeasonalityRationingTypes', function ($resource) {
 
+    var resource = $resource('/season-rationing/seasonalityRationingTypes/:id.json', {},  {
+
+        update: {
+            method: 'PUT',params: {id: '@id'}
+        },
+        delete: {
+            method:'delete',params:{id: '@id'}
+        }
+    });
+
+    return resource;
+});
+services.factory('DeleteSeasonalityRationings', function ($resource) {
+    return $resource('/season-rationing/remove-seasonality-rationing-types.json', {}, {post:{method:'POST'}});
+});
+services.factory('AdjustmentFactors', function ($resource) {
+
+    var resource = $resource('/season-rationing/adjustmentFactors/:id.json', {},  {
+
+        update: {
+            method: 'PUT',params: {id: '@id'}
+        },
+        delete: {
+            method:'delete',params:{id: '@id'}
+        }
+    });
+    return resource;
+});
+services.factory('DeleteAdjustmentFactors', function ($resource) {
+    return $resource('/season-rationing/adjustmentFactors_remove.json', {}, {post:{method:'POST'}});
+});

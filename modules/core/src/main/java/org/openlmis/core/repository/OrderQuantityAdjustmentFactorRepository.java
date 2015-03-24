@@ -13,11 +13,11 @@ import org.openlmis.core.domain.OrderQuantityAdjustmentType;
 import org.openlmis.core.repository.mapper.OrderQuantityAdjustmentFactorMapper;
 import org.openlmis.core.repository.mapper.OrderQuantityAdjustmentTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Repository
+@Component
 public class OrderQuantityAdjustmentFactorRepository {
     @Autowired
     private OrderQuantityAdjustmentFactorMapper quantityAdjustmentFactorMapper;
@@ -37,6 +37,14 @@ public class OrderQuantityAdjustmentFactorRepository {
     }
 
     public List<OrderQuantityAdjustmentFactor> loadOrderQuantityAdjustmentFactorList() {
-        return  this.quantityAdjustmentFactorMapper.getAll();
+        return this.quantityAdjustmentFactorMapper.getAll();
+    }
+
+    public OrderQuantityAdjustmentFactor loadOrderQuantityAdjustmentFactorDetail(long id) {
+        return  this.quantityAdjustmentFactorMapper.getById(id);
+    }
+
+    public List<OrderQuantityAdjustmentFactor> searchAdjustmentFactor(String param) {
+       return this.quantityAdjustmentFactorMapper.searchAdjustmentFactor(param);
     }
 }
