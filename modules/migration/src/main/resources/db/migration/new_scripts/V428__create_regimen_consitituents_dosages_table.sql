@@ -7,13 +7,13 @@ CREATE TABLE regimen_constituents_dosages
   dosageunitid integer,
   dosagefrequencyid integer,
   CONSTRAINT egimen_product_dosage_pkey PRIMARY KEY (id),
-  CONSTRAINT regimens_product_dosage_fkey FOREIGN KEY (regimen_product_id)
+  CONSTRAINT regimens_product_dosage_fkey FOREIGN KEY (regimenproductid)
       REFERENCES regimen_combination_constituents (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT dosage_frequency_id_fkey FOREIGN KEY (dosage_frequency_id)
+  CONSTRAINT dosage_frequency_id_fkey FOREIGN KEY (dosagefrequencyid)
       REFERENCES dosage_frequencies (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT dosage_unit_id_fkey FOREIGN KEY (dosage_unit_id)
+  CONSTRAINT dosage_unit_id_fkey FOREIGN KEY (dosageunitid)
       REFERENCES dosage_units (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
