@@ -696,6 +696,9 @@ services.factory('UserPreferences', function ($resource) {
 services.factory('UpdateUserPreference', function ($resource) {
     return $resource('/users/:userId/preferences.json', {}, update);
 });
+services.factory('UserProfile', function ($resource) {
+   return $resource('/preference/users/:id.json', {}, {});
+});
 
 services.factory('SyncDashboard', function($resource){
    return $resource('/dashboard/sync.json', {},update);

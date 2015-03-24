@@ -111,13 +111,13 @@ function UserPreferenceController($scope,ReportProductsByProgram,user,roles_map,
 
 UserPreferenceController.resolve = {
 
-    user: function ($q, Users,EditUserPreference, $route, $timeout) {
+    user: function ($q, Users,UserProfile, $route, $timeout) {
 
         var userId = $route.current.params.userId;
         if (!userId) return undefined;
         var deferred = $q.defer();
         $timeout(function () {
-            EditUserPreference.get({id: userId}, function (data) {
+            UserProfile.get({id: userId}, function (data) {
                 deferred.resolve(data.user);
             }, function () {
             });
@@ -158,7 +158,7 @@ UserPreferenceController.resolve = {
         return deferred.promise;
     },
     supervisoryNodes: function ($q, SupervisoryNodesList, $timeout) {
-      /*  var deferred = $q.defer();
+        var deferred = $q.defer();
 
         $timeout(function () {
             SupervisoryNodesList.get({}, function (data) {
@@ -167,7 +167,7 @@ UserPreferenceController.resolve = {
             });
         }, 100);
 
-        return deferred.promise;*/
+        return deferred.promise;
     },
     roles_map: function ($q, RolesList, $timeout) {
         var deferred = $q.defer();
