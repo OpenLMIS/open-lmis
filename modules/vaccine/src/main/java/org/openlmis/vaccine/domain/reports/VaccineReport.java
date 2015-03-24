@@ -27,7 +27,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 public class VaccineReport extends BaseModel {
 
   private Long   periodId;

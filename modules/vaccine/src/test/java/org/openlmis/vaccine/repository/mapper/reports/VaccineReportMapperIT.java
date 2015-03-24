@@ -14,7 +14,9 @@ import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.vaccine.builders.reports.DiseaseLineItemBuilder;
 import org.openlmis.vaccine.builders.reports.VaccineReportBuilder;
+import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,14 +24,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.*;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,16 +42,19 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 public class VaccineReportMapperIT {
 
   @Autowired
-  VaccineReportMapper vaccineReportMapper;
+  private VaccineReportMapper vaccineReportMapper;
 
   @Autowired
-  ProcessingScheduleMapper processingScheduleMapper;
+  private ProcessingScheduleMapper processingScheduleMapper;
 
   @Autowired
-  ProcessingPeriodMapper processingPeriodMapper;
+  private ProcessingPeriodMapper processingPeriodMapper;
 
   @Autowired
-  FacilityMapper facilityMapper;
+  private FacilityMapper facilityMapper;
+
+  @Autowired
+  private VaccineReportDiseaseLineItemMapper diseaseLineItemMapper;
 
 
   private ProcessingPeriod processingPeriod;
@@ -58,7 +64,7 @@ public class VaccineReportMapperIT {
   @Before
   public void setUp(){
 
-    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
 
     ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
@@ -90,17 +96,48 @@ public class VaccineReportMapperIT {
     Integer count = vaccineReportMapper.insert(report);
 
     VaccineReport newReport = vaccineReportMapper.getById(report.getId());
-    assertThat(newReport, is(report));
+    assertThat(newReport.getId(), is(report.getId()));
   }
 
   @Test
-  public void testGetByPeriodFacilityProgram() throws Exception {
+  public void shouldGetByPeriodFacilityProgram() throws Exception {
+    VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
+    report.setPeriodId(processingPeriod.getId());
+    report.setFacilityId(facility.getId());
+    Integer count = vaccineReportMapper.insert(report);
 
+    VaccineReport returnedReport = vaccineReportMapper.getByPeriodFacilityProgram(facility.getId(),processingPeriod.getId(), 1L);
+    assertThat(returnedReport.getId(), is(report.getId()));
+  }
+
+
+  @Test
+  public void shouldGetNullWhenPeriodDoesNotMatchByPeriodFacilityProgram() throws Exception {
+    VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
+    report.setPeriodId(processingPeriod.getId());
+    report.setFacilityId(facility.getId());
+    Integer count = vaccineReportMapper.insert(report);
+
+    VaccineReport returnedReport = vaccineReportMapper.getByPeriodFacilityProgram(facility.getId(),processingPeriod.getId() + 1, 1L);
+    assertThat(returnedReport, is(nullValue()));
   }
 
   @Test
-  public void shouldGetByIdWithFullDetails() throws Exception {
+  public void shouldGetByIdWithFullDiseaseLineItemDetails() throws Exception {
+    VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
+    report.setPeriodId(processingPeriod.getId());
+    report.setFacilityId(facility.getId());
+    Integer count = vaccineReportMapper.insert(report);
 
+    DiseaseLineItem diseaseLineItem = make(a(DiseaseLineItemBuilder.defaultDiseaseLineItem));
+    diseaseLineItem.setReportId(report.getId());
+    diseaseLineItemMapper.insert(diseaseLineItem);
+
+    VaccineReport returnedReport = vaccineReportMapper.getByIdWithFullDetails(report.getId());
+
+    assertThat(returnedReport.getDiseaseLineItems(), hasSize(1));
+    assertThat(returnedReport.getDiseaseLineItems(), hasItem(diseaseLineItem));
+    //TODO insert and check all the other line item types too.
   }
 
   @Test
@@ -116,16 +153,7 @@ public class VaccineReportMapperIT {
 
 
     VaccineReport newReport = vaccineReportMapper.getById(report.getId());
-    assertThat(newReport, is(report));
+    assertThat(newReport.getMajorImmunizationActivities(), is(report.getMajorImmunizationActivities()));
   }
-
-  @Test
-  public void testGetScheduleFor() throws Exception {
-
-  }
-
-  @Test
-  public void testGetLastReport() throws Exception {
-
-  }
+  
 }
