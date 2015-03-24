@@ -38,4 +38,7 @@ function AdjustmentBasisCreateController($scope, $location, messageService,Adjus
 
         $location.path('/list_adustment_factor');
     };
+    $scope.cancelCreate=function(){
+        $location.path('/list_adustment_factor');
+    };
 }

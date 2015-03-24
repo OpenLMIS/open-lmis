@@ -18,10 +18,10 @@ import java.util.List;
 @Repository
 public interface OrderQuantityAdjustmentTypeMapper {
     @Insert({"INSERT INTO order_quantity_adjustment_types",
-            "(name, displayOrder,createdBy" +
+            "(name,description, displayOrder,createdBy" +
                     ",createdDate, modifiedBy, modifiedDate)",
             "VALUES",
-            "( #{name},#{displayOrder} , #{createdBy},NOW(), #{modifiedBy}, NOW())"})
+            "( #{name},#{description},#{displayOrder} , #{createdBy},NOW(), #{modifiedBy}, NOW())"})
     @Options(useGeneratedKeys = true)
     public void insert(OrderQuantityAdjustmentType quantityAdjustmentType);
 

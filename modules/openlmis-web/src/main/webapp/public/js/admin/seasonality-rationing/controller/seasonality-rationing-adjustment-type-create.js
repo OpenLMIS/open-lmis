@@ -39,4 +39,7 @@ function SeasonRationingAdjustmentTypeCreateController($scope, $location, $filte
 
         $location.path('/list');
     };
+    $scope.cancelCreate=function(){
+        $location.path('/list');
+    };
 }
