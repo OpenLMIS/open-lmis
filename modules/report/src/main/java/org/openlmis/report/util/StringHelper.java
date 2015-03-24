@@ -13,4 +13,11 @@ public class StringHelper {
     }
     return true;
   }
+
+  public static String getValue(Map<String, String[]> map, String key){
+    if(!isBlank(map, key)){
+      return map.get(key)[0];
+    }
+    return null;
+  }
 }
