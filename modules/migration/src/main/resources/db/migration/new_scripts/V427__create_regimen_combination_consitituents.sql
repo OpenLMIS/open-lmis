@@ -1,11 +1,12 @@
+DROP TABLE IF EXISTS regimen_combination_constituents;
 CREATE TABLE regimen_combination_constituents
 (
   id SERIAL   NOT NULL,
-  default_dosage_id integer,
-  product_combo_id integer,
-  product_id integer,
+  defaultdosageid integer,
+  productcomboid integer,
+  productid integer,
   CONSTRAINT regimen_constituents_pkey PRIMARY KEY (id),
-  CONSTRAINT fk_combo_id FOREIGN KEY (product_combo_id)
+  CONSTRAINT combo_id_fkey FOREIGN KEY (productcomboid)
       REFERENCES regimen_product_combinations (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 )

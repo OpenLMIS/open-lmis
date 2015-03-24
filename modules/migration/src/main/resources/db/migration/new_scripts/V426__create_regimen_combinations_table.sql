@@ -1,10 +1,11 @@
+DROP TABLE IF EXISTS regimen_product_combinations;
 CREATE TABLE regimen_product_combinations
 (
   id serial NOT NULL,
-  regimen_id integer,
+  regimenid integer,
   name character varying(50),
-  CONSTRAINT pk_regimen_product_combo_id PRIMARY KEY (id),
-  CONSTRAINT fk_regimen_id FOREIGN KEY (regimen_id)
+  CONSTRAINT regimen_product_combo_id_pkey PRIMARY KEY (id),
+  CONSTRAINT regimen_id_fkey FOREIGN KEY (regimenid)
       REFERENCES regimens (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 )

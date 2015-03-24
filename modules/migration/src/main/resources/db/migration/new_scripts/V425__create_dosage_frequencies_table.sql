@@ -1,9 +1,10 @@
+DROP TABLE IF EXISTS  dosage_frequencies;
 CREATE TABLE dosage_frequencies
 (
   id SERIAL   NOT NULL,
   name character varying(20),
-  numeric_quantity_per_day numeric,
-  CONSTRAINT pk_dosage_frequency PRIMARY KEY (id)
+  numericquantityperday numeric,
+  CONSTRAINT dosage_frequency_pkey PRIMARY KEY (id)
 )
 WITH (
   OIDS=FALSE
