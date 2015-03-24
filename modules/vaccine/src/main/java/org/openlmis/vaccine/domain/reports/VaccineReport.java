@@ -37,6 +37,9 @@ public class VaccineReport extends BaseModel {
   private Long   supervisoryNodeId;
   private ProcessingPeriod period;
   private Facility facility;
+  private String majorImmunizationActivities;
+
+
 
   private Boolean trackCampaignCoverage;
   private Boolean trackOutreachCoverage;
