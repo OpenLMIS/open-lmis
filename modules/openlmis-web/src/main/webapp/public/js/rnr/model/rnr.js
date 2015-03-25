@@ -101,13 +101,9 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
       lineItem.isEquipmentValid = true;
       if(lineItem.equipments !== undefined && lineItem.calculatedOrderQuantity > 0){
         //TODO: remove the hardcoded status
-        //TODO: iterate through all the equipments and check if all are not functional
         for(var i = 0; i < lineItem.equiments.length; i++){
           if(lineItem.equipments[i].operationalStatusId === 3 && (lineItem.equipments[i].remarks === '' || lineItem.equipments[i].remarks === undefined)){
             lineItem.isEquipmentValid = false;
-            //errorMessage = "error.rnr.validation";
-            this.equipmentErrorMessage = lineItem.equipments[i].equipmentName + " is not operational but you are placing order for " + lineItem.product  + '<br />';
-            console.error(this.equipmentErrorMessage);
             return false;
           }
         }
