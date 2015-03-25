@@ -27,7 +27,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 public class VaccineReport extends BaseModel {
 
   private Long   periodId;
@@ -37,6 +37,9 @@ public class VaccineReport extends BaseModel {
   private Long   supervisoryNodeId;
   private ProcessingPeriod period;
   private Facility facility;
+  private String majorImmunizationActivities;
+
+
 
   private Boolean trackCampaignCoverage;
   private Boolean trackOutreachCoverage;
