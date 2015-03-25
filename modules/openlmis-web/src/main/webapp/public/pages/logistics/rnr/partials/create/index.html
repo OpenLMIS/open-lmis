@@ -13,7 +13,7 @@
     
     <div class="rnr-tabs clearfix">
         <ul class="clearfix" set-focus>
-            <li ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
+            <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined), 'has-error': fullSupplyTabError}">
                 <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
                    openlmis-message="label.full.supply.products"></a></li>
             <li ng-show="rnr.program.showNonFullSupplyTab" ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
