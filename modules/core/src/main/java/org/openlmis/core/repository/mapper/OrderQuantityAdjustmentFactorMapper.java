@@ -41,7 +41,7 @@ public interface OrderQuantityAdjustmentFactorMapper {
     @Select("SELECT * FROM order_quantity_adjustment_factors")
     public List<OrderQuantityAdjustmentFactor> getAll();
 
-    @Delete({"DELETE order_quantity_adjustment_factors  where id = #{id}"})
+    @Delete({"DELETE from order_quantity_adjustment_factors  where id = #{id}"})
     public void delete(OrderQuantityAdjustmentFactor quantityAdjustmentFactor);
 
     @Select("SELECT * FROM order_quantity_adjustment_factors" +
