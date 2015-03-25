@@ -82,7 +82,7 @@
                     <span ng-bind="equipmentLineItem.equipmentSerial" class="cell-text"></span>
                 </td>
                 <td class="cell-input" style="padding-top:5px;">
-                     <select ng-disabled="formDisabled" class="cell-text" ng-model="equipmentLineItem.operationalStatusId">
+                     <select ng-disabled="formDisabled" class="cell-text" ng-model="equipmentLineItem.operationalStatusId" ng-change="equipmentStatusChanged(equipmentLineItem);">
                          <option  ng-repeat="status in equipmentOperationalStatus" value="{{status.id}}" ng-selected="equipmentLineItem.operationalStatusId == status.id">{{status.name}}</option>
                      </select>
                 </td>

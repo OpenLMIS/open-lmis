@@ -59,7 +59,7 @@ public class HomeControllerTest {
   @Test
   public void shouldRedirectToHomePage() {
     String homePageURl = homeController.homeDefault();
-    assertEquals("redirect:/public/pages/index.html", homePageURl);
+    assertEquals("redirect:/public/pages/dashboard/index.html#/dashboard", homePageURl);
   }
 
   @Test

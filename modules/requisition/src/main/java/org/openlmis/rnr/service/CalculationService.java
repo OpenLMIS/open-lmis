@@ -96,11 +96,10 @@ public class CalculationService {
     fillPreviousNCsInLineItems(requisition, numberOfMonths, trackingDate);
   }
 
-  public void copySkippedFieldFromPreviousPeriod(Rnr requisition){
+  public void copySkippedFieldFromPreviousPeriod(Rnr requisition) {
     List<ProcessingPeriod> fivePreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
 
-    if(fivePreviousPeriods.size() ==0)
-    {
+    if (fivePreviousPeriods.size() == 0) {
       return;
     }
 
@@ -108,14 +107,15 @@ public class CalculationService {
       requisition.getProgram(), fivePreviousPeriods.get(0));
     Map map = new HashMap<String, RnrLineItem>();
 
-
-    for(RnrLineItem lineItem: previousRequisition.getFullSupplyLineItems()){
-     map.put(lineItem.getProductCode(), lineItem);
-    }
-    for(RnrLineItem lineItem: requisition.getFullSupplyLineItems()){
-      RnrLineItem previous = (RnrLineItem) map.get(lineItem.getProductCode());
-      if(previous != null) {
-        lineItem.setSkipped(previous.getSkipped());
+    if (previousRequisition != null) {
+      for (RnrLineItem lineItem : previousRequisition.getFullSupplyLineItems()) {
+        map.put(lineItem.getProductCode(), lineItem);
+      }
+      for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+        RnrLineItem previous = (RnrLineItem) map.get(lineItem.getProductCode());
+        if (previous != null) {
+          lineItem.setSkipped(previous.getSkipped());
+        }
       }
     }
   }

@@ -16,91 +16,119 @@ import java.util.Map;
 
 public class SummaryQueryBuilder {
 
-    public static String getQuery(Map params){
+  private static String getAggregateSelect(){
+    return "select " +
+      " li.productCode as code" +
+      ", li.product" +
+      ", li.productCategory as category" +
+      ", li.dispensingUnit as unit" +
+      ", sum(li.beginningBalance) as openingBalance" +
+      ", sum(li.quantityReceived) as receipts" +
+      ", sum(li.quantityDispensed) as issued" +
+      ", sum(li.totalLossesAndAdjustments) as adjustments" +
+      ", sum(li.stockInHand) as closingBalance " +
+      ", sum(li.quantityApproved) as reorderAmount " +
+      ", sum(0) as stockOutRate " +
+      "    from facilities   " +
+      "    inner join requisitions r ON  r.facilityId = facilities.id   " +
+      "    inner join requisition_line_items li ON li.rnrId = r.id    " +
+      "    inner join products ON products.code  ::text =   li.productCode  ::text      " +
+      "    inner join vw_districts gz on gz.district_id = facilities.geographicZoneId " +
+      "    inner join programs ON  r.programId = programs.id " +
+      "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityId " +
+      "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitionGroupId " +
+      "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programId = programs.id   " +
+      "               AND requisition_group_program_schedules.requisitionGroupId = requisition_groups.id " +
+      "    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.scheduleId  " +
+      "    inner join processing_periods ON processing_periods.id = r.periodId  ";
+  }
 
-        String query = "select " +
-                    " li.productcode as code" +
-                    ", li.product" +
-                    ", li.productcategory as category" +
-                    ", li.dispensingunit as unit" +
-                    ", sum(li.beginningBalance) as openingBalance" +
-                    ", sum(li.quantityReceived) as quantityReceived" +
-                    ", sum(li.quantitydispensed) as actualDispensedQuantity" +
-                    ", sum(li.quantitydispensed) as adjustedDispensedQuantity" +
-                    ", sum(li.quantitydispensed) as adjustedDistributedQuantity" +
-                    ", sum(li.stockInHand) as balanceOnHand " +
-                    ", sum(0) as stockOutRate " +
-                    ", sum(1.0) / (select count(*) from facilities) as productReportingRate " +
+  private static String getAggregateGroupBy(){
+    return  " group by li.productCode, li.productCategory, li.product, li.dispensingUnit  " +
+            " order by productCategory asc, product asc";
+  }
 
-                    "    from facilities        \n" +
-                        "    inner join requisitions r ON  r.facilityid = facilities.id         \n" +
-                        "    inner join requisition_line_items li ON li.rnrid = r.id         \n" +
-                        "    inner join products ON products.code  ::text =   li.productcode  ::text       \n" +
-                        "   -- inner join program_products ON program_products.productid = products.id \n" +
-                        "    inner join programs ON  r.programid = programs.id     \n" +
-                        "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid         \n" +
-                        "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid         \n" +
-                        "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   " +
-                                        " AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id         \n" +
-                        "    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.scheduleid         \n" +
-                        "    inner join processing_periods ON processing_periods.id = r.periodid \n" +
+  private static String getDisaggregatedSelect(){
+    return "select " +
+      " li.productCode as code " +
+      ", li.product" +
+      ", facilities.code as facilityCode" +
+      ", facilities.name as facility" +
+      ", facility_types.name as facilityType" +
+      ", li.productCategory as category" +
+      ", li.dispensingUnit as unit" +
+      ", (li.beginningBalance) as openingBalance" +
+      ", (li.quantityReceived) as receipts" +
+      ", (li.quantityDispensed) as issues" +
+      ", (li.quantityApproved) as reorderAmount " +
+      ", (li.totalLossesAndAdjustments) as adjustments" +
+      ", (li.stockInHand) as closingBalance " +
+      "    from facilities   " +
+      " inner join facility_types on facility_types.id = facilities.typeId " +
+      "    inner join requisitions r ON  r.facilityId = facilities.id   " +
+      "    inner join requisition_line_items li ON li.rnrId = r.id    " +
+      "    inner join products ON products.code  ::text =   li.productCode  ::text      " +
+      "    inner join vw_districts gz on gz.district_id = facilities.geographicZoneId " +
+      "    inner join programs ON  r.programId = programs.id " +
+      "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityId " +
+      "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitionGroupId " +
+      "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programId = programs.id   " +
+      "               AND requisition_group_program_schedules.requisitionGroupId = requisition_groups.id " +
+      "    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.scheduleId  " +
+      "    inner join processing_periods ON processing_periods.id = r.periodId  ";
+  }
 
-                writePredicates(params)+
+  private static String getDisAggregatedGroupBy(){
+    return " order by productCategory asc, product asc, facility asc";
+  }
 
-                " group by li.productcode, li.productcategory, li.product, li.dispensingunit" +
-                " order by " + QueryHelpers.getSortOrder(params, "productcategory asc, product asc");
-            return query;
+  public static String getQuery(Map params) {
+    if (params.containsKey("param1")) {
+      params = (Map) params.get("param1");
+    }
+    Boolean disaggregated = StringHelper.isBlank(params, "disaggregated")? false: Boolean.parseBoolean(StringHelper.getValue(params, "disaggregated"));
+    return (disaggregated)?  getDisaggregatedSelect() + getPredicates(params) + getDisAggregatedGroupBy() : getAggregateSelect() + getPredicates(params) + getAggregateGroupBy();
+  }
+
+  private static String getPredicates(Map params) {
+    String predicate = " WHERE r.status in ('APPROVED','RELEASED') ";
+    String facilityTypeId = StringHelper.isBlank(params, "facilityType") ? null : ((String[]) params.get("facilityType"))[0];
+    String facilityName = StringHelper.isBlank(params, "facilityName") ? null : ((String[]) params.get("facilityName"))[0];
+    String period = StringHelper.isBlank(params, "period") ? null : ((String[]) params.get("period"))[0];
+    String program = StringHelper.isBlank(params, "program") ? null : ((String[]) params.get("program"))[0];
+    String product = StringHelper.isBlank(params, "product") ? null : ((String[]) params.get("product"))[0];
+    String zone = StringHelper.isBlank(params, "zone") ? null : ((String[]) params.get("zone"))[0];
+    String schedule = StringHelper.isBlank(params, "schedule") ? null : ((String[]) params.get("schedule"))[0];
+    String facilityId = StringHelper.isBlank(params, "facility") ? null : ((String[]) params.get("facility"))[0];
+
+
+    predicate += " and r.periodId = " + period;
+    predicate += " and r.programId = " + program;
+
+    if (product != null && !product.equals("undefined") && !product.isEmpty() && !product.equals("0") && !product.equals("-1")) {
+      predicate += " and products.id = " + product;
     }
 
-    private static String writePredicates(Map params){
-        String predicate = " WHERE r.status in ('APPROVED','RELEASED') ";
-
-        // if for some reason the map is coming as a map of maps, decode it here
-        if(params.containsKey("param1")){
-          params = (Map) params.get("param1");
-        }
-        String facilityTypeId =  StringHelper.isBlank( params,"facilityType")? null :((String[])params.get("facilityType"))[0];
-        String facilityName = StringHelper.isBlank( params, "facilityName") ? null : ((String[])params.get("facilityName"))[0];
-        String period =    StringHelper.isBlank( params, "period") ? null : ((String[])params.get("period"))[0];
-        String program =   StringHelper.isBlank( params,"program") ? null : ((String[])params.get("program"))[0];
-        String product =   StringHelper.isBlank( params,"product") ? null : ((String[])params.get("product"))[0];
-        String zone =     StringHelper.isBlank( params,"zone") ? null : ((String[])params.get("zone"))[0];
-        String rgroup =     StringHelper.isBlank( params,"requisitionGroup") ? null : ((String[])params.get("requisitionGroup"))[0];
-        String schedule = StringHelper.isBlank( params,"schedule")  ? null : ((String[])params.get("schedule"))[0];
-        String facilityId = StringHelper.isBlank( params, "facility")  ? null : ((String[])params.get("facility"))[0];
-
-
-        predicate += " and r.periodid = " + period;
-        predicate += " and r.programid = " + program;
-
-        if (zone != null &&  !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0")  && !zone.equals("-1")) {
-            predicate += " and facilities.geographiczoneid = "+ zone;
-        }
-
-        if (product != null &&  !product.equals("undefined") && !product.isEmpty() && !product.equals("0") &&  !product.equals("-1")) {
-
-            predicate += " and products.id = "+ product;
-        }
-        if (schedule != null &&  !schedule.equals("undefined") && !schedule.isEmpty() && !schedule.equals("0") &&  !schedule.equals("-1")) {
-
-            predicate += " and processing_schedules.id = "+ schedule;
-        }
-        if (rgroup != null &&  !rgroup.equals("undefined") && !rgroup.isEmpty() && !rgroup.equals("0") &&  !rgroup.equals("-1")) {
-
-            predicate += " and requisition_groups.id = "+ rgroup;
-        }
-        if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1")) {
-
-            predicate += " and facilities.typeid = "+ facilityTypeId;
-        }
-        if (facilityName != null &&  !facilityName.equals("undefined") && !facilityName.isEmpty() ) {
-
-            predicate += " and facilities.name = '"+ facilityName +"'";
-        }
-        if(facilityId != null && !facilityId.equals("") && !facilityId.equals( "undefined") && !facilityId.equals("0")){
-            predicate += " and facilities.id = "+ facilityId +"";
-        }
-        return predicate;
+    if (schedule != null && !schedule.equals("undefined") && !schedule.isEmpty() && !schedule.equals("0") && !schedule.equals("-1")) {
+      predicate += " and processing_schedules.id = " + schedule;
     }
+
+    if (zone != null && !zone.equals("0") && !zone.isEmpty() && !zone.endsWith("undefined")) {
+      predicate += (" and (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone + " or gz.parent = " + zone + " )");
+    }
+
+    if (facilityTypeId != null && !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") && !facilityTypeId.equals("-1")) {
+      predicate += " and facilities.typeid = " + facilityTypeId;
+    }
+
+    if (facilityName != null && !facilityName.equals("undefined") && !facilityName.isEmpty()) {
+      predicate += " and facilities.name = '" + facilityName + "'";
+    }
+
+    if (facilityId != null && !facilityId.equals("") && !facilityId.equals("undefined") && !facilityId.equals("0")) {
+      predicate += " and facilities.id = " + facilityId + "";
+    }
+    return predicate;
+  }
 
 }

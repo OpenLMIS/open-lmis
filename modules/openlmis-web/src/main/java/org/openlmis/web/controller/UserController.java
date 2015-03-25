@@ -254,7 +254,7 @@ public class UserController extends BaseController {
   public User getUser(@PathVariable(value = "id") Long id, HttpServletRequest request) {
     Long userId = loggedInUserId(request);
     if (id == userId || roleRightService.getRights(userId).contains(MANAGE_USER)){
-      return userService.getById(id);
+      return userService.getUserWithRolesById(id);
     }
     return null;
   }

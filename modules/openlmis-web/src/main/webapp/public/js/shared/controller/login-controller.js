@@ -9,7 +9,7 @@
  */
 
 function LoginController($scope, $http, localStorageService, messageService) {
-  var HOME_PAGE = "/";
+  var HOME_PAGE = "/public/pages/dashboard/index.html#/dashboard";
   var FORGOT_PASSWORD = "/public/pages/forgot-password.html";
 
   var validateLoginForm = function () {

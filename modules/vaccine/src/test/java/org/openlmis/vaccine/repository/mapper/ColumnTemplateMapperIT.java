@@ -39,7 +39,7 @@ public class ColumnTemplateMapperIT {
   @Test
   public void testGetAll() throws Exception {
     List<LogisticsColumn> columns =  mapper.getAll();
-    assertEquals(12, columns.size());
+    assertEquals(15, columns.size());
   }
 
   @Test

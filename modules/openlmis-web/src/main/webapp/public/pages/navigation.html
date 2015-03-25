@@ -10,7 +10,8 @@
 
 <div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav>
   <ul class="clearfix" style="display:none">
-    <li><a id='homeMenu' href="/" openlmis-message="link.home"></a></li>
+    <li ng-show="hasPermission('VIEW_DASHBOARD_POC')">
+      <a id='homeMenu' href="/public/pages/dashboard/index.html#/dashboard" openlmis-message="link.home"></a></li>
 
     <li>
       <a id="requisitions-menu" href="javascript: void(0)" openlmis-message="link.requisitions"></a>
@@ -539,9 +540,9 @@
             href="/public/pages/ils-gateway/index.html#/dashboard"
             openlmis-message="link.ils"></a>
     </li>
-    <li ng-show="hasPermission('VIEW_DASHBOARD_POC')">
+    <!--<li ng-show="hasPermission('VIEW_DASHBOARD_POC')">
         <a href="/public/pages/dashboard/index.html#/dashboard" openlmis-message="link.dashboard"></a>
-    </li>
+    </li>-->
   </ul>
 </div>
 <div class="navigation-locale-bar">

@@ -33,6 +33,12 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
     $location.path('edit/' + id);
   };
 
+  $scope.addRationing = function (id) {
+    var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
+    navigateBackService.setData(data);
+    $location.path('rationing/' + id);
+  };
+
   $scope.loadProducts = function (page, lastQuery) {
     if (!($scope.query || lastQuery)) return;
     lastQuery ? getProducts(page, lastQuery) : getProducts(page, $scope.query);
