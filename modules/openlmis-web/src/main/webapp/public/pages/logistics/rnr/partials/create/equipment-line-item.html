@@ -16,47 +16,47 @@
         <table id="equipmentTable" fixed-table-header class="table table-bordered scrollable">
             <thead>
             <tr>
-                <th class="col-1" >
+                <th class="col-code" >
                     <div class="regimen-heading">
                         <span openlmis-message="rnr.equipment.code"></span>
                     </div>
                 </th>
-                <th class="col-3" >
+                <th class="col-product" >
                     <div class="regimen-heading">
                         <span openlmis-message="rnr.equipment.equipment.name"></span>
                     </div>
                 </th>
-                <th class="col-1" >
+                <th class="span1" >
                     <div class="regimen-heading">
                         <span openlmis-message="rnr.equipment.model"></span>
                     </div>
                 </th>
-                <th class="col-1" >
+                <th class="span1" >
                     <div class="regimen-heading">
                         <span openlmis-message="rnr.equipment.serial"></span>
                     </div>
                 </th>
-                <th class="col-1" >
+                <th class="span1" >
                     <div class="regimen-heading">
                         <span openlmis-message="rnr.equipment.status"></span>
                     </div>
                 </th>
-                <th class="col-1" >
+                <th class="span1" >
                     <div class="regimen-heading">
                         <span openlmis-message="rnr.equipment.test.count"></span>
                     </div>
                 </th>
-                <th class="col-1" >
+                <th class="span1" >
                     <div class="regimen-heading">
                         <span openlmis-message="rnr.equipment.total.count"></span>
                     </div>
                 </th>
-                <th class="col-1" >
+                <th class="span1" >
                     <div class="regimen-heading">
                         <span openlmis-message="rnr.equipment.days.out.of.use"></span>
                     </div>
                 </th>
-                <th class="col-3" >
+                <th class="col-remarks" >
                     <div class="regimen-heading">
                         <span openlmis-message="rnr.equipment.remarks"></span>
                     </div>
@@ -99,7 +99,11 @@
                   <span  ng-class="( ( equipmentLineItem.remarks == undefined || equipmentLineItem.remarks == '' ) && equipmentLineItem.operationalStatusId == 3)?'cell-error-highlight':''" class="input-error-parent-cell" >
                     <input ng-disabled="formDisabled" class="cell-text" type="text" ng-model="equipmentLineItem.remarks">
                   </span>
-                    
+                  <span
+                        class="alert alert-warning warning-alert"
+                        ng-show="( ( equipmentLineItem.remarks == undefined || equipmentLineItem.remarks == '' ) && equipmentLineItem.operationalStatusId == 3)"
+                        openlmis-message="equipment.error.related.products.ordered">
+                  </span>
                 </td>
             </tr>
             </tbody>
