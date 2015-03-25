@@ -155,5 +155,5 @@ public class VaccineReportMapperIT {
     VaccineReport newReport = vaccineReportMapper.getById(report.getId());
     assertThat(newReport.getMajorImmunizationActivities(), is(report.getMajorImmunizationActivities()));
   }
-  
+
 }
