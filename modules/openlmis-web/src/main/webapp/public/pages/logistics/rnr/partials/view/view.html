@@ -11,7 +11,7 @@
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div class="rnr-tabs clearfix">
   <ul class="clearfix">
-    <li ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen')}">
+    <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined)}">
       <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
          openlmis-message="label.full.supply.products"></a></li>
     <li  ng-show="rnr.program.showNonFullSupplyTab" ng-class="{'selected': visibleTab == 'nonFullSupply'}">
