@@ -34,6 +34,12 @@ public interface RegimenMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.RegimenCategoryMapper.getById"))})
   List<Regimen> getByProgram(Long programId);
 
+    @Select({"SELECT * FROM regimens"})
+    @Results(value = {
+            @Result(property = "category", column = "categoryId", javaType = Long.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.RegimenCategoryMapper.getById"))})
+    List<Regimen> getAllRegimens();
+
   @Delete("DELETE FROM regimens where programId = #{programId}")
   void deleteByProgramId(Long programId);
 
@@ -43,5 +49,6 @@ public interface RegimenMapper {
 
     @Select("SELECT * FROM regimens WHERE id = #{id}")
     Regimen getById(Long id);
+
 
 }

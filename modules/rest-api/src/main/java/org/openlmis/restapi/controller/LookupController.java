@@ -22,6 +22,8 @@ import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.domain.Regimen;
+import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.dto.Facility;
 import org.openlmis.report.model.dto.FacilityType;
@@ -214,15 +216,74 @@ public class LookupController {
     return RestResponse.response("geographic-zones", lookupService.getAllZones());
   }
 
-  @ApiOperation(value = "Geographic Levels", notes = "Returns list of geographic Levels", response = GeographicLevel.class)
+
+  @ApiOperation(value = "Regimens", notes = "Returns list of regimens", response = Regimen.class)
   @ApiResponses(value = {
-    @ApiResponse(code = 200, message = "Successful request", response = GeographicLevel.class),
+    @ApiResponse(code = 200, message = "Successful request", response = Regimen.class),
     @ApiResponse(code = 500, message = "Internal server error")}
   )
-  @RequestMapping(value = "/rest-api/lookup/geographic-levels", method = RequestMethod.GET, headers = ACCEPT_JSON)
-  public ResponseEntity getGeographicLevels(Principal principal) {
-    return RestResponse.response("geographic-levels", lookupService.getAllGeographicLevels());
+  @RequestMapping(value = "/rest-api/lookup/regimens", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity getRegimens(Principal principal) {
+    return RestResponse.response("regimens", lookupService.getAllRegimens());
   }
+
+
+    @ApiOperation(value = "Regimen Categories", notes = "Returns list of regimen categories", response = RegimenCategory.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request", response = RegimenCategory.class),
+            @ApiResponse(code = 500, message = "Internal server error")}
+    )
+    @RequestMapping(value = "/rest-api/lookup/regimen-categories", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getRegimenCategories(Principal principal) {
+        return RestResponse.response("regimen-categories", lookupService.getAllRegimenCategories());
+    }
+
+
+    @ApiOperation(value = "Dosage Frequencies", notes = "Returns list of dosage frequencies", response = DosageFrequency.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request", response = DosageFrequency.class),
+            @ApiResponse(code = 500, message = "Internal server error")}
+    )
+    @RequestMapping(value = "/rest-api/lookup/dosage-frequencies", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getDosageFrequencies(Principal principal) {
+        return RestResponse.response("dosage-frequencies", lookupService.getAllDosageFrequencies());
+    }
+
+
+
+    @ApiOperation(value = "Regimen Product Combinations", notes = "Returns list of regimen product combinations", response = RegimenProductCombination.class)
+  @ApiResponses(value = {
+          @ApiResponse(code = 200, message = "Successful request", response = RegimenProductCombination.class),
+          @ApiResponse(code = 500, message = "Internal server error")}
+  )
+  @RequestMapping(value = "/rest-api/lookup/regimen-product-combinations", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity getRegimenProductCombinations(Principal principal) {
+       return RestResponse.response("regimen-product-combinations", lookupService.getAllRegimenProductCombinations());
+  }
+
+
+ @ApiOperation(value = "Regimen Combination Constituents", notes = "Returns list of regimen combination constituents", response = RegimenCombinationConstituent.class)
+  @ApiResponses(value = {
+          @ApiResponse(code = 200, message = "Successful request", response = RegimenCombinationConstituent.class),
+          @ApiResponse(code = 500, message = "Internal server error")}
+  )
+  @RequestMapping(value = "/rest-api/lookup/regimen-combination-constituents", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity getRegimenCombinationConstituents(Principal principal) {
+      return RestResponse.response("regimen-combination-constituents", lookupService.getAllRegimenCombinationConstituents());
+  }
+
+
+  @ApiOperation(value = "Regimen Constituents' Dosages", notes = "Returns list of dosages for regimen constituents", response = RegimenConstituentDosage.class)
+  @ApiResponses(value = {
+          @ApiResponse(code = 200, message = "Successful request", response = RegimenConstituentDosage.class),
+          @ApiResponse(code = 500, message = "Internal server error")}
+   )
+  @RequestMapping(value = "/rest-api/lookup/regimen-constituent-dosages", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity getRegimenConstituentDosages(Principal principal) {
+      return RestResponse.response("regimen-constituent-dosages", lookupService.getAllRegimenConstituentDosages());
+  }
+
+
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<RestResponse> handleException(Exception ex) {
