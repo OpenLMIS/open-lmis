@@ -33,7 +33,6 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 
 @RunWith(MockitoJUnitRunner.class)
-@ContextConfiguration({"classpath*:test-applicationContext-report.xml"})
 @Category(UnitTests.class)
 @PrepareForTest(OpenLmisResponse.class)
 public class SeasonalityRationingReportControllerTest {
