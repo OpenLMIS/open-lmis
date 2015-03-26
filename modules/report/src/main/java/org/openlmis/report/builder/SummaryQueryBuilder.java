@@ -52,6 +52,7 @@ public class SummaryQueryBuilder {
     return "select " +
       " li.productCode as code " +
       ", li.product" +
+      ", facilities.code as facilityCode" +
       ", facilities.name as facility" +
       ", facility_types.name as facilityType" +
       ", li.productCategory as category" +
@@ -65,7 +66,6 @@ public class SummaryQueryBuilder {
       "    from facilities   " +
       " inner join facility_types on facility_types.id = facilities.typeId " +
       "    inner join requisitions r ON  r.facilityId = facilities.id   " +
-
       "    inner join requisition_line_items li ON li.rnrId = r.id    " +
       "    inner join products ON products.code  ::text =   li.productCode  ::text      " +
       "    inner join vw_districts gz on gz.district_id = facilities.geographicZoneId " +
@@ -104,10 +104,6 @@ public class SummaryQueryBuilder {
 
     predicate += " and r.periodId = " + period;
     predicate += " and r.programId = " + program;
-
-    if (zone != null && !zone.equals("undefined") && !zone.isEmpty() && !zone.equals("0") && !zone.equals("-1")) {
-      predicate += " and facilities.geographicZoneId = " + zone;
-    }
 
     if (product != null && !product.equals("undefined") && !product.isEmpty() && !product.equals("0") && !product.equals("-1")) {
       predicate += " and products.id = " + product;

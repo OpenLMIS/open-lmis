@@ -1,4 +1,3 @@
-
 /*
  * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
  *
@@ -8,7 +7,7 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-function AdjustmentBasisFormulaController($scope, $location, $filter, $dialog, messageService,navigateBackService,ngTableParams,adjustmentFactorList,AdjustmentFactors) {
+function AdjustmentBasisFormulaController($scope, $route, $location, $filter, $dialog, messageService, navigateBackService, ngTableParams, DeleteAdjustmentFactors, adjustmentFactorList, AdjustmentFactors) {
 
 
     $scope.disabled = false;
@@ -88,17 +87,19 @@ function AdjustmentBasisFormulaController($scope, $location, $filter, $dialog, m
                 $scope.adjustmentFactor = {};
 
                 $scope.adjustmentFactors = adjustmentFactorList;
-
+                $location.path('/list_adustment_factor');
+                $route.reload();
             };
 
             var deleteErorCallback = function (data) {
                 $scope.showError = true;
-
                 $scope.errorMessage = messageService.get(data.data.error);
 
             };
+            $adjId = $scope.adjustmentFactor.id;
 
-            AdjustmentFactors.delete($scope.adjustmentFactor, deleteSuccessCallback, deleteErorCallback);
+            AdjustmentFactors.remove({id: $adjId}, deleteSuccessCallback, deleteErorCallback);
+
 
         }
     };
@@ -124,23 +125,23 @@ function AdjustmentBasisFormulaController($scope, $location, $filter, $dialog, m
         count: 25           // count per page
     });
 
-    $scope.paramsChanged = function(params) {
+    $scope.paramsChanged = function (params) {
         // slice array data on pages
 
         $scope.adjustmentFactors = [];
         $scope.data = adjustmentFactorList;
-        params.total =  $scope.data.length;
+        params.total = $scope.data.length;
 
         var data = $scope.data;
         var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
-        orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+        orderedData = params.sorting ? $filter('orderBy')(orderedData, params.orderBy()) : data;
 
         params.total = orderedData.length;
-        $scope.adjustmentFactors = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+        $scope.adjustmentFactors = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
         var i = 0;
         var baseIndex = params.count * (params.page - 1) + 1;
 
-        while(i < $scope.adjustmentFactors.length){
+        while (i < $scope.adjustmentFactors.length) {
 
             $scope.adjustmentFactors[i].no = baseIndex + i;
 
@@ -150,7 +151,7 @@ function AdjustmentBasisFormulaController($scope, $location, $filter, $dialog, m
     };
 
     // watch for changes of parameters
-    $scope.$watch('tableParams', $scope.paramsChanged , false);
+    $scope.$watch('tableParams', $scope.paramsChanged, false);
 
 //    $scope.getPagedDataAsync = function (pageSize, page) {
 //        // Clear the results on the screen
@@ -176,9 +177,9 @@ AdjustmentBasisFormulaController.resolve = {
 
         $timeout(function () {
 
-            AdjustmentFactors.get({param: ''}, function(data){
-                deferred.resolve( data.adjustmentFactorList );
-            },{});
+            AdjustmentFactors.get({param: ''}, function (data) {
+                deferred.resolve(data.adjustmentFactorList);
+            }, {});
 
         }, 100);
         return deferred.promise;

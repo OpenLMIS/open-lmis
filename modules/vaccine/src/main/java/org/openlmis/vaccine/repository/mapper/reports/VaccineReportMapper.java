@@ -21,10 +21,10 @@ import java.util.List;
 @Repository
 public interface VaccineReportMapper {
 
-  @Insert("INSERT into vaccine_reports (periodId, programId, facilityId, status, supervisoryNodeId, createdBy, createdDate, modifiedBy, modifiedDate) " +
-    " values (#{periodId}, #{programId}, #{facilityId}, #{status}, #{supervisoryNodeId}, #{createdBy}, NOW(), #{modifiedBy}, NOW() )")
+  @Insert("INSERT into vaccine_reports (periodId, programId, facilityId, status, supervisoryNodeId, majorImmunizationActivities, createdBy, createdDate, modifiedBy, modifiedDate) " +
+    " values (#{periodId}, #{programId}, #{facilityId}, #{status}, #{supervisoryNodeId}, #{majorImmunizationActivities}, #{createdBy}, NOW(), #{modifiedBy}, NOW() )")
   @Options(useGeneratedKeys = true)
-  void insert(VaccineReport report);
+  Integer insert(VaccineReport report);
 
   @Select("SELECT * from vaccine_reports where id = #{id}")
   VaccineReport getById(@Param("id") Long id);
@@ -60,14 +60,15 @@ public interface VaccineReportMapper {
   VaccineReport getByIdWithFullDetails(@Param("id") Long id);
 
   @Update("UPDATE vaccine_reports" +
-    " set" +
-    " periodId = #{periodId}, " +
-    " programId = #{programId}, " +
-    " facilityId = #{facilityId}, " +
-    " status = #{status}, " +
-    " supervisoryNodeId = #{supervisoryNodeId}, " +
-    " modifiedBy = #{modifiedBy}, " +
-    " modifiedDate = NOW() " +
+      " set" +
+      " periodId = #{periodId}, " +
+      " programId = #{programId}, " +
+      " facilityId = #{facilityId}, " +
+      " status = #{status}, " +
+      " supervisoryNodeId = #{supervisoryNodeId}, " +
+      " majorImmunizationActivities = #{majorImmunizationActivities}, " +
+      " modifiedBy = #{modifiedBy}, " +
+      " modifiedDate = NOW() " +
     "where id = #{id}")
   void update(VaccineReport report);
 

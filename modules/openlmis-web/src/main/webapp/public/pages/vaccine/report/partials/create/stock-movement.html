@@ -1,4 +1,3 @@
-
 <!--
   ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
   ~
@@ -42,6 +41,9 @@
         <td ng-if="column.name == 'quantityOtherWasted'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityOtherWasted" type="text" /></td>
         <td ng-if="column.name == 'quantityDiscardedUnopened'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityDiscardedUnopened" type="text" /></td>
         <td ng-if="column.name == 'quantityDiscardedOpened'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityDiscardedOpened" type="text" /></td>
+        <td ng-if="column.name == 'reasonForDiscardingUnopened'" class="cell-input col-beginningBalance"><input ng-model="product.reasonForDiscardingUnopened" type="text" /></td>
+        <td ng-if="column.name == 'daysStockedOut'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.daysStockedOut" type="text" /></td>
+        <td ng-if="column.name == 'remarks'" class="cell-input col-beginningBalance"><input ng-model="product.remarks" type="text" /></td>
       <td ng-repeat-end="" ng-if="false"></td>
     </tr>
     </tbody>

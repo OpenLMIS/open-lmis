@@ -67,6 +67,7 @@
 
             <tbody>
             <tr ng-repeat="row in datarows">
+              <td ng-show="filter.disaggregated" sortable="facilityCode" data-title="'FacilityCode'">{{ row.facilityCode}} </td>
               <td ng-show="filter.disaggregated" sortable="facility" data-title="'Facility'">{{ row.facility}} </td>
               <td ng-show="filter.disaggregated" sortable="facilityType" data-title="'FacilityType'">{{
                                                                                                      row.facilityType}} </td>

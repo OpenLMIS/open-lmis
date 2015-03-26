@@ -99,19 +99,13 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
 
     function validateEquipmentStatus(lineItem){
       lineItem.isEquipmentValid = true;
-      if(lineItem.equipments !== undefined && lineItem.calculatedOrderQuantity > 0){
+      if(lineItem.equipments !== undefined && ((lineItem.calculatedOrderQuantity > 0 && lineItem.quantityRequested !== 0) || lineItem.quantityRequested > 0 )){
         //TODO: remove the hardcoded status
-        //TODO: iterate through all the equipments and check if all are not functional
-        for(var i = 0; i < lineItem.equiments.length; i++){
+        for(var i = 0; i < lineItem.equipments.length; i++){
           if(lineItem.equipments[i].operationalStatusId === 3 && (lineItem.equipments[i].remarks === '' || lineItem.equipments[i].remarks === undefined)){
             lineItem.isEquipmentValid = false;
-            //errorMessage = "error.rnr.validation";
-            this.equipmentErrorMessage = lineItem.equipments[i].equipmentName + " is not operational but you are placing order for " + lineItem.product  + '<br />';
-            console.error(this.equipmentErrorMessage);
-            return false;
           }
         }
-
       }
       return true;
     }
@@ -247,14 +241,12 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
       var eqli = this.equipmentLineItems[i];
       for(var j = 0; j < eqli.relatedProducts.length;j++){
         var prod = eqli.relatedProducts[j];
-        for(var n= 0; n < this.fullSupplyLineItems.length; n++){
-          if(this.fullSupplyLineItems[n].id === prod.id){
-            if(this.fullSupplyLineItems[n].equipments === undefined){
-              this.fullSupplyLineItems[n].equipments = [];
-            }
-            this.fullSupplyLineItems[n].equipments.push(eqli);
-            break;
+        var lineItem = _.findWhere(this.fullSupplyLineItems, {productCode: prod.code});
+        if(lineItem !== null){
+          if(lineItem.equipments === undefined){
+            lineItem.equipments = [];
           }
+          lineItem.equipments.push(eqli);
         }
       }
     }
