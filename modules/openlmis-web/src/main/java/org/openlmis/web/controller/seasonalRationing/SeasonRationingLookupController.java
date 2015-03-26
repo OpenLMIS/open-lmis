@@ -46,7 +46,7 @@ public class SeasonRationingLookupController extends BaseController {
     @Autowired
     private OrderQuantityAdjustmentFactorService adjustmentFactorService;
 
-    private ResponseEntity<OpenLmisResponse> saveSeasonalityRationingType(OrderQuantityAdjustmentType quantityAdjustmentType, boolean createOperation) {
+    public ResponseEntity<OpenLmisResponse> saveSeasonalityRationingType(OrderQuantityAdjustmentType quantityAdjustmentType, boolean createOperation) {
         try {
             if (createOperation) {
                 System.out.println("creating " + quantityAdjustmentType.getName());
@@ -72,7 +72,7 @@ public class SeasonRationingLookupController extends BaseController {
 
     @RequestMapping(value = "/seasonalityRationingTypes/{id}", method = RequestMethod.GET)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
-    public ResponseEntity<OpenLmisResponse> getCountriesDetail1(@PathVariable("id") Long id) {
+    public ResponseEntity<OpenLmisResponse> getSeasonalityRationingDetail1(@PathVariable("id") Long id) {
         OrderQuantityAdjustmentType adjustmentType = this.quantityAdjustmentTypeService.loadOrderQuantityAdjustmentType(id);
         return OpenLmisResponse.response(SEASONALRATIONINGTYPE, adjustmentType);
     }
@@ -80,7 +80,7 @@ public class SeasonRationingLookupController extends BaseController {
 
     @RequestMapping(value = "/seasonalityRationingTypes/{id}", method = PUT, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
-    public ResponseEntity<OpenLmisResponse> updateCountries(@RequestBody OrderQuantityAdjustmentType quantityAdjustmentType, HttpServletRequest request) {
+    public ResponseEntity<OpenLmisResponse> updateSeasnalityRationingType(@RequestBody OrderQuantityAdjustmentType quantityAdjustmentType, HttpServletRequest request) {
 
         quantityAdjustmentType.setModifiedBy(loggedInUserId(request));
         quantityAdjustmentType.setModifiedDate(new Date());
@@ -101,7 +101,7 @@ public class SeasonRationingLookupController extends BaseController {
 
     @RequestMapping(value = "/seasonalityRationingTypes/{id}", method = DELETE)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
-    public ResponseEntity<OpenLmisResponse> removeCountries(@PathVariable("id") long id, HttpServletRequest request) {
+    public ResponseEntity<OpenLmisResponse> removeSeasonRationingType(@PathVariable("id") long id, HttpServletRequest request) {
         System.out.println(" here deleting " +id);
         OrderQuantityAdjustmentType quantityAdjustmentType= new OrderQuantityAdjustmentType();
         quantityAdjustmentType.setId(Long.valueOf(id));
@@ -117,7 +117,7 @@ public class SeasonRationingLookupController extends BaseController {
 
     @RequestMapping(value = "/seasonalityRationingTypes", method = RequestMethod.GET)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
-    public ResponseEntity<OpenLmisResponse> searchCountries(@RequestParam(required = true) String param) {
+    public ResponseEntity<OpenLmisResponse> searchSeasonRationingTypeList(@RequestParam(required = true) String param) {
         return OpenLmisResponse.response(SEASONALRATIONINGTYPELIST, this.quantityAdjustmentTypeService.searchForQuantityAdjustmentType(param));
     }
 
@@ -135,14 +135,14 @@ public class SeasonRationingLookupController extends BaseController {
 
     @RequestMapping(value = "/seasonalityRationingTypeList", method = RequestMethod.GET)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
-    public ResponseEntity<OpenLmisResponse> loadAllCountries() {
+    public ResponseEntity<OpenLmisResponse> loadAllSeasonRationingTypes() {
         return OpenLmisResponse.response(SEASONALRATIONINGTYPELIST, this.quantityAdjustmentTypeService.loadOrderQuantityAdjustmentTypeList());
     }
     /*
     orderQuanitityAdjustmentFactory
      */
 
-    private ResponseEntity<OpenLmisResponse> saveAdjustmentFactor(OrderQuantityAdjustmentFactor adjustmentFactor, boolean createOperation) {
+    public ResponseEntity<OpenLmisResponse> saveAdjustmentFactor(OrderQuantityAdjustmentFactor adjustmentFactor, boolean createOperation) {
         try {
             if (createOperation) {
                 System.out.println("creating " + adjustmentFactor.getName());

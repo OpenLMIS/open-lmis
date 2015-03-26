@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.openlmis.core.domain.OrderQuantityAdjustmentFactor;
 import org.openlmis.core.domain.OrderQuantityAdjustmentType;
 import org.openlmis.core.query.QueryExecutor;
@@ -90,6 +91,7 @@ public class OrderQuantityAdjustmentFactorMapperIT {
         List<OrderQuantityAdjustmentFactor> orderQuantityAdjustmentTypeList= this.adjustmentFactorMapper.getAll();
         Assert.assertNotNull(orderQuantityAdjustmentTypeList);
         Assert.assertTrue(orderQuantityAdjustmentTypeList.size()>0);
+
 
     }
 }
