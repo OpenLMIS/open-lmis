@@ -346,7 +346,7 @@ var RegularRnrLineItem = base2.Base.extend({
     var visibleColumns = ['beginningBalance','quantityReceived','quantityDispensed','stockInHand','quantityRequested'];
     var skip = true;
     $(visibleColumns).each(function (i, column) {
-      if(!isUndefined(rnrLineItem[column])){
+      if(!isUndefined(rnrLineItem[column]) && rnrLineItem[column] !== 0 ){
         skip = false;
       }
     });
