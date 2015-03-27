@@ -1,4 +1,3 @@
-package org.openlmis.equipment.repository;
 /*
  * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
  *
@@ -8,6 +7,8 @@ package org.openlmis.equipment.repository;
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
+
+package org.openlmis.equipment.repository;
 
 import org.openlmis.core.domain.Product;
 import org.openlmis.equipment.domain.ProgramEquipmentProduct;

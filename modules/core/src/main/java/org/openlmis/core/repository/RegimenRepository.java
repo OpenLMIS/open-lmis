@@ -10,10 +10,8 @@
 
 package org.openlmis.core.repository;
 
-import org.openlmis.core.domain.Regimen;
-import org.openlmis.core.domain.RegimenCategory;
-import org.openlmis.core.repository.mapper.RegimenCategoryMapper;
-import org.openlmis.core.repository.mapper.RegimenMapper;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +29,19 @@ public class RegimenRepository {
 
   @Autowired
   RegimenCategoryMapper regimenCategoryMapper;
+
+  @Autowired
+  DosageFrequencyMapper dosageFrequencyMapper;
+
+  @Autowired
+  RegimenCombinationConstituentMapper regimenCombinationConstituentMapper;
+
+  @Autowired
+  RegimenProductCombinationMapper regimenProductCombinationMapper;
+
+  @Autowired
+  RegimenConstituentDosageMapper regimenConstituentDosageMapper;
+
 
   public List<Regimen> getByProgram(Long programId) {
     return mapper.getByProgram(programId);
@@ -50,6 +61,26 @@ public class RegimenRepository {
       }
       mapper.update(regimen);
     }
+  }
+
+  public List<Regimen> getAllRegimens(){
+       return mapper.getAllRegimens();
+  }
+
+  public List<DosageFrequency> getAllDosageFrequencies(){
+      return dosageFrequencyMapper.getAll();
+  }
+
+  public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents(){
+      return regimenCombinationConstituentMapper.getAll();
+  }
+
+  public List<RegimenConstituentDosage> getAllRegimenConstituentsDosages(){
+      return regimenConstituentDosageMapper.getAll();
+  }
+
+  public List<RegimenProductCombination> getAllRegimenProductCombinations(){
+      return regimenProductCombinationMapper.getAll();
   }
 
 }

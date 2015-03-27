@@ -18,4 +18,18 @@ function CreateEquipmentLineItemController($scope) {
     return prefix + "_" + parent.$parent.$index;
   };
 
+  $scope.equipmentStatusChanged = function(equipmentLineItem){
+    angular.forEach(equipmentLineItem.relatedProducts, function(product){
+      var lineItem = _.findWhere($scope.$parent.rnr.fullSupplyLineItems, {productCode: product.code});
+      if(lineItem !== undefined){
+         if(equipmentLineItem.operationalStatusId == 3 && lineItem.quantityRequested > 0){
+           lineItem.isEquipmentValid = false;
+         }else{
+           lineItem.isEquipmentValid = true;
+         }
+      }
+    });
+
+  };
+
 }

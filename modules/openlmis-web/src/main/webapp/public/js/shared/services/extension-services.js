@@ -1023,9 +1023,8 @@ services.factory('SeasonalityRationingTypes', function ($resource) {
         update: {
             method: 'PUT',params: {id: '@id'}
         },
-        delete: {
-            method:'delete',params:{id: '@id'}
-        }
+        delete: { method: 'DELETE',
+            params: {id: '@id'} }
     });
 
     return resource;
@@ -1034,7 +1033,7 @@ services.factory('SeasonalityRationingTypeList', function ($resource) {
    return $resource('/season-rationing/seasonalityRationingTypeList.json', {},{});
 });
 services.factory('DeleteSeasonalityRationings', function ($resource) {
-    return $resource('/season-rationing/remove-seasonality-rationing-types.json', {}, {post:{method:'POST'}});
+    return $resource('/season-rationing/seasonalityRationingTypes_remove.json', {}, {post:{method:'POST'}});
 });
 services.factory('AdjustmentFactors', function ($resource) {
 
@@ -1043,9 +1042,8 @@ services.factory('AdjustmentFactors', function ($resource) {
         update: {
             method: 'PUT',params: {id: '@id'}
         },
-        delete: {
-            method:'delete',params:{id: '@id'}
-        }
+        delete: { method: 'DELETE',
+                       params: {id: '@id'} }
     });
     return resource;
 });

@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.GeographicLevel;
+import org.openlmis.core.repository.RegimenRepository;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
@@ -128,10 +129,18 @@ public class ReportLookupService {
     @Autowired
     private DonorRepository donorRepository;
 
+    @Autowired
+    private RegimenRepository regimenRepository;
+
     public List<Product> getAllProducts() {
         return productMapper.getAll();
     }
 
+    public List<RegimenCategory> getAllRegimenCategories() {
+        return regimenCategoryReportMapper.getAll();
+    }
+
+    //left because referenced but identical to getAllRegimenCategories()
     public List<RegimenCategory> getAllRegimenCategory() {
         return regimenCategoryReportMapper.getAll();
     }
@@ -581,5 +590,21 @@ public class ReportLookupService {
         facilitiesList = this.facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, userId, type);
 
         return facilitiesList;
+    }
+
+    public List<DosageFrequency> getAllDosageFrequencies(){
+        return regimenRepository.getAllDosageFrequencies();
+    }
+
+    public List<RegimenProductCombination> getAllRegimenProductCombinations(){
+        return regimenRepository.getAllRegimenProductCombinations();
+    }
+
+    public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents(){
+        return regimenRepository.getAllRegimenCombinationConstituents();
+    }
+
+    public List<RegimenConstituentDosage> getAllRegimenConstituentDosages(){
+        return regimenRepository.getAllRegimenConstituentsDosages();
     }
 }
