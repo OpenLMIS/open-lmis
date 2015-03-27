@@ -24,7 +24,7 @@ public class SummaryQueryBuilder {
       ", li.dispensingUnit as unit" +
       ", sum(li.beginningBalance) as openingBalance" +
       ", sum(li.quantityReceived) as receipts" +
-      ", sum(li.quantityDispensed) as issued" +
+      ", sum(li.quantityDispensed) as issues" +
       ", sum(li.totalLossesAndAdjustments) as adjustments" +
       ", sum(li.stockInHand) as closingBalance " +
       ", sum(li.quantityApproved) as reorderAmount " +
