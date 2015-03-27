@@ -29,14 +29,14 @@ public interface OrderQuantityAdjustmentTypeMapper {
     public OrderQuantityAdjustmentType getById(Long id);
 
     @Update({"UPDATE order_quantity_adjustment_types SET name = #{name}, modifiedBy = #{modifiedBy}," +
-            "displayOrder = #{displayOrder}, modifiedDate =#{modifiedDate} where id = #{id}"})
+            "displayOrder = #{displayOrder},description=#{description}, modifiedDate =#{modifiedDate} where id = #{id}"})
     public void update(OrderQuantityAdjustmentType quantityAdjustmentType);
 
 
 
     @Select("SELECT * FROM order_quantity_adjustment_types")
     public List<OrderQuantityAdjustmentType> getAll();
-    @Delete({"DELETE order_quantity_adjustment_types  where id = #{id}"})
+    @Delete({"DELETE from order_quantity_adjustment_types  where id = #{id}"})
    public void delete(OrderQuantityAdjustmentType quantityAdjustmentType);
     @Select("SELECT * FROM order_quantity_adjustment_types" +
             " where LOWER(name) LIKE '%'|| LOWER(#{param}) ||'%'")

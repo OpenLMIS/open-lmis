@@ -46,7 +46,7 @@ public interface EquipmentLineItemMapper {
   public List<EquipmentLineItem> getEquipmentLineItemsByRnrId(@Param("rnrId") Long rnrId);
 
 
-  @Select("select rli.id, p.primaryName from " +
+  @Select("select rli.id, p.primaryName, p.code from " +
                 " requisitions r " +
       "         JOIN requisition_line_items rli on r.id = rli.rnrId " +
       "         JOIN products p on p.code::text = rli.productCode::text " +
