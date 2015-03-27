@@ -282,4 +282,8 @@ public class FacilityService {
     }
     return facilityRepository.getTotalSearchResultCountByGeographicZone(searchParam);
   }
+
+  public List<Facility> getFacilityByTypeAndRequisitionGroupId(Long facilityTypeId, Long rgroupId){
+    return facilityRepository.getFacilityByTypeAndRequisitionGroupId(facilityTypeId, rgroupId);
+  }
 }

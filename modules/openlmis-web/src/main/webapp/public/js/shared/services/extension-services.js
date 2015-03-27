@@ -1030,6 +1030,9 @@ services.factory('SeasonalityRationingTypes', function ($resource) {
 
     return resource;
 });
+services.factory('SeasonalityRationingTypeList', function ($resource) {
+   return $resource('/season-rationing/seasonalityRationingTypeList.json', {},{});
+});
 services.factory('DeleteSeasonalityRationings', function ($resource) {
     return $resource('/season-rationing/remove-seasonality-rationing-types.json', {}, {post:{method:'POST'}});
 });
@@ -1046,6 +1049,13 @@ services.factory('AdjustmentFactors', function ($resource) {
     });
     return resource;
 });
+services.factory('AdjustmentFactorList', function ($resource) {
+    return $resource('/season-rationing/adjustmentFactorList.json', {}, {});
+});
 services.factory('DeleteAdjustmentFactors', function ($resource) {
     return $resource('/season-rationing/adjustmentFactors_remove.json', {}, {post:{method:'POST'}});
 });
+services.factory('FacilityByTypeAndRequisition', function ($resource) {
+    return $resource('/facilityType/:facilityTypeId/requisitionGroup/:requisitionGroupId/facilities.json', {},{});
+});
+
