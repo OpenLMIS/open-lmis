@@ -8,14 +8,25 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function RegionsController($scope, ngTableParams, $rootScope) {
+function RegionsController($scope, ngTableParams, $rootScope, PublicSiteData) {
 
-   $scope.data =  $scope.datarows =
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1, // show first page
+        total: 0, // length of data
+        count: 3 // count per page
+    });
+
+   /*$scope.data =  $scope.datarows =
         [
             {zones: 'Lomia', regions: 'Andromeda', districtCount: 8, facilityCount: 45 },
             {zones: 'Nugorongoro', regions: 'Andromeda', districtCount: 8, facilityCount: 45 },
             {zones: 'Lomia', regions: 'Andromeda', districtCount: 8, facilityCount: 45 },
             {zones: 'Nugorongoro', regions: 'Andromeda', districtCount: 8, facilityCount: 45 }
-        ];
+        ];*/
+
+    PublicSiteData.regions().get({}, function(data){
+        $scope.data =  $scope.datarows = data.regions;
+    });
 
 }
