@@ -397,5 +397,24 @@ public interface FacilityMapper {
     @Result(property = "operatedBy", column = "operatedById", javaType = Integer.class, one = @One(select = "getFacilityOperatorById"))
   })
   List<Facility> getMailingLabels();
+
+
+  @Select("SELECT DISTINCT f.*\n" +
+          "          FROM facilities f\n" +
+          "          INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId\n" +
+          "          INNER JOIN facility_types FT on FT.id = f.typeId \n" +
+          "          WHERE ft.id = CASE WHEN COALESCE(#{facilityTypeId}, 0) = 0 THEN ft.id ELSE #{facilityTypeId} END\n" +
+          "           AND rgm.requisitionGroupId = CASE WHEN COALESCE(#{requisitionGroupId}, 0) = 0 THEN rgm.requisitionGroupId ELSE #{requisitionGroupId} END\n" +
+          "          AND f.active = TRUE\n" +
+          "          AND f.virtualFacility = FALSE ")
+  @Results(value = {
+          @Result(property = "geographicZone.id", column = "geographicZoneId"),
+          @Result(property = "facilityType", column = "typeId", javaType = Long.class,
+                  one = @One(select = "getFacilityTypeById")),
+          @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
+                  one = @One(select = "getFacilityOperatorById"))
+  })
+  List<Facility> getFacilitiesByTypeAndRequisitionGroupId(@Param(value = "facilityTypeId") Long facilityTypeId,
+                                 @Param(value = "requisitionGroupId") Long requisitionGroupId);
   
 }

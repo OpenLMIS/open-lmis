@@ -174,6 +174,11 @@ public interface ProgramProductMapper {
   })
   List<ProgramProduct> getActiveByProgram(Long programId);
 
-  @Select("SELECT * from program_products")
+    @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id"})
+    @Results(value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "program.id", column = "programid"),
+            @Result(property = "product.id", column = "productid")
+    })
   List<ProgramProduct> getAll();
 }

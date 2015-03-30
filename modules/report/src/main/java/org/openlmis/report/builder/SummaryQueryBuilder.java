@@ -24,7 +24,7 @@ public class SummaryQueryBuilder {
       ", li.dispensingUnit as unit" +
       ", sum(li.beginningBalance) as openingBalance" +
       ", sum(li.quantityReceived) as receipts" +
-      ", sum(li.quantityDispensed) as issued" +
+      ", sum(li.quantityDispensed) as issues" +
       ", sum(li.totalLossesAndAdjustments) as adjustments" +
       ", sum(li.stockInHand) as closingBalance " +
       ", sum(li.quantityApproved) as reorderAmount " +
@@ -35,6 +35,7 @@ public class SummaryQueryBuilder {
       "    inner join products ON products.code  ::text =   li.productCode  ::text      " +
       "    inner join vw_districts gz on gz.district_id = facilities.geographicZoneId " +
       "    inner join programs ON  r.programId = programs.id " +
+      "    inner join program_products pps ON  r.programId = pps.programId and products.id = pps.productId " +
       "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityId " +
       "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitionGroupId " +
       "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programId = programs.id   " +
@@ -70,6 +71,7 @@ public class SummaryQueryBuilder {
       "    inner join products ON products.code  ::text =   li.productCode  ::text      " +
       "    inner join vw_districts gz on gz.district_id = facilities.geographicZoneId " +
       "    inner join programs ON  r.programId = programs.id " +
+      "    inner join program_products pps ON  r.programId = pps.programId and products.id = pps.productId " +
       "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityId " +
       "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitionGroupId " +
       "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programId = programs.id   " +
@@ -95,6 +97,7 @@ public class SummaryQueryBuilder {
     String facilityTypeId = StringHelper.isBlank(params, "facilityType") ? null : ((String[]) params.get("facilityType"))[0];
     String facilityName = StringHelper.isBlank(params, "facilityName") ? null : ((String[]) params.get("facilityName"))[0];
     String period = StringHelper.isBlank(params, "period") ? null : ((String[]) params.get("period"))[0];
+    String productCategory = StringHelper.getValue(params, "productCategory");
     String program = StringHelper.isBlank(params, "program") ? null : ((String[]) params.get("program"))[0];
     String product = StringHelper.isBlank(params, "product") ? null : ((String[]) params.get("product"))[0];
     String zone = StringHelper.isBlank(params, "zone") ? null : ((String[]) params.get("zone"))[0];
@@ -104,6 +107,10 @@ public class SummaryQueryBuilder {
 
     predicate += " and r.periodId = " + period;
     predicate += " and r.programId = " + program;
+
+    if(productCategory != null && !productCategory.equals("undefined") && !productCategory.isEmpty() && !productCategory.equals("0") && !productCategory.equals("-1")){
+      predicate += "and pps.productCategoryId = " + productCategory;
+    }
 
     if (product != null && !product.equals("undefined") && !product.isEmpty() && !product.equals("0") && !product.equals("-1")) {
       predicate += " and products.id = " + product;
