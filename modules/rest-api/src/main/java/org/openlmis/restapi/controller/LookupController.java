@@ -17,17 +17,8 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.domain.DosageUnit;
-import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.Regimen;
-import org.openlmis.core.domain.RegimenCategory;
-import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.dto.Facility;
 import org.openlmis.report.model.dto.FacilityType;
-import org.openlmis.report.model.dto.GeographicLevel;
 import org.openlmis.report.model.dto.Program;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.restapi.response.RestResponse;
@@ -36,11 +27,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -217,7 +209,20 @@ public class LookupController {
   }
 
 
-  @ApiOperation(value = "Regimens", notes = "Returns list of regimens", response = Regimen.class)
+
+    @ApiOperation(value = "Geographic Levels", notes = "Returns list of geographic levels", response = GeographicLevel.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request", response = GeographicLevel.class),
+            @ApiResponse(code = 500, message = "Internal server error")}
+    )
+    @RequestMapping(value = "/rest-api/lookup/geographic-levels", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity getGeographicLevels( Principal principal) {
+        return RestResponse.response("geographic-levels", lookupService.getAllGeographicLevels());
+    }
+
+
+
+    @ApiOperation(value = "Regimens", notes = "Returns list of regimens", response = Regimen.class)
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Successful request", response = Regimen.class),
     @ApiResponse(code = 500, message = "Internal server error")}

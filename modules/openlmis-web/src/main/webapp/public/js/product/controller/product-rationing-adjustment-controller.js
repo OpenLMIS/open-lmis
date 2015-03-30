@@ -10,6 +10,8 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
   $scope.$parent.message = "";
   $scope.selectAll = false;
 
+  $scope.addBatchesModal = undefined;
+
   if (!isUndefined(productDTO)) {
     if (!isUndefined(productDTO.product)) {
       $scope.product = productDTO.product;
@@ -48,15 +50,16 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
 
   $scope.selectedItems = [];
 
-  $scope.openRnr = function () {
-   // alert('selectedItems '+ JSON.stringify($scope.selectedItems));
+  $scope.openModal = function () {
+    $scope.addBatchesModal = true;
+    //alert('selectedItems '+ JSON.stringify($scope.selectedItems));
    };
   var myHeaderCellTemplate = '<input type="checkbox" ng-model="selectAll" ng-click="openRnr()"/>';
   $scope.gridOptions = { data: 'facilities',
     multiSelect: true,
     selectedItems: $scope.selectedItems,
     afterSelectionChange: function (rowItem, event) {
-      $scope.openRnr();
+      $scope.openModal();
     },
     showFooter: false,
     checkboxHeaderTemplate: '<input class="ngSelectionHeader" type="checkbox" ng-model="allSelected" ng-change="toggleSelectAll(allSelected)"/>',
