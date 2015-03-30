@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Handles Exporting of Jasper reports
@@ -91,8 +93,13 @@ public class JasperReportExporter implements ReportExporter {
         if(reportExtraParams != null && (outputOption != null && !outputOption.equals(ReportOutputOption.PDF))){
             reportExtraParams.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
         }
+
+        Locale currentLocale = messageService.getCurrentLocale();
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
+
         if (reportExtraParams != null){
-            reportExtraParams.put(JRParameter.REPORT_LOCALE, messageService.getCurrentLocale() );
+            reportExtraParams.put(JRParameter.REPORT_LOCALE, currentLocale);
+            reportExtraParams.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
         }
 
         JasperPrint jasperPrint = null;
