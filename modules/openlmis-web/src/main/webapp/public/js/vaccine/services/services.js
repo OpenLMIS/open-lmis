@@ -69,4 +69,4 @@ services.factory('VaccineColumnTemplateSave', function ($resource) {
 
 services.factory('VaccineDiscardingReasons', function($resource){
   return $resource('/vaccine/discarding/reasons/all.json',{},{});
-})
+});

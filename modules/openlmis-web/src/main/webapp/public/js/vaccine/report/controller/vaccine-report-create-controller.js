@@ -100,7 +100,7 @@ function CreateVaccineReportController($scope, $location, $filter, report,discar
 
   $scope.rowRequiresExplanation = function(product){
     if(!isUndefined(product.discardingReasonId) ){
-      var reason = _.findWhere($scope.discardingReasons, {id: parseInt(product.discardingReasonId)});
+      var reason = _.findWhere($scope.discardingReasons, {id: parseInt(product.discardingReasonId, 10)});
       return reason.requiresExplanation;
     }
     return false;
