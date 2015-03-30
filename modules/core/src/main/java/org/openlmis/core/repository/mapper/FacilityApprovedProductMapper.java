@@ -186,6 +186,9 @@ public interface FacilityApprovedProductMapper {
   @Select("SELECT * from facility_approved_products WHERE id=#{id}")
   FacilityTypeApprovedProduct get(Long id);
 
-  @Select("select * from facility_approved_products")
+    @Select({"select * from facility_approved_products"})
+    @Results(value = {
+            @Result(property = "programProduct.id", column = "programProductId"),
+            @Result(property = "facilityType.id", column = "facilityTypeId")})
   List<FacilityTypeApprovedProduct> getAll();
 }
