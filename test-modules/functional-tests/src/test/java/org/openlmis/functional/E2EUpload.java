@@ -201,8 +201,8 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate entry for Supply Line found in Record No");
 
     uploadPage.uploadSupplyLines("QA_Supply_Lines_ParentNodeNotNull.csv");
-    uploadPage.verifyErrorMessageOnUploadScreen();
-    uploadPage.validateErrorMessageOnUploadScreen("Supervising Node is not the Top node in Record No");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records processed: 1\".");
 
     uploadPage.uploadSupplyLines("QA_Supply_Lines_Redundant_Warehouse.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
@@ -273,8 +273,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Code And Program Code Combination found in Record No");
 
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_PUSH_Program.csv");
-    uploadPage.verifyErrorMessageOnUploadScreen();
-    uploadPage.validateErrorMessageOnUploadScreen("Program type not supported for requisitions in Record No");
+    uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyValidRequisitionGroupUpload() {

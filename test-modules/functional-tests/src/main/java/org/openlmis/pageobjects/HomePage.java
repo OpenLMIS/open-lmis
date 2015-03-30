@@ -48,7 +48,7 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "homeMenu")
   private static WebElement homeMenuItem = null;
 
-  @FindBy(how = ID, using = "reports-menu")
+  @FindBy(how = ID, using = "report-menu")
   private static WebElement reportMenuItem = null;
 
   @FindBy(how = ID, using = "reportHeader")
