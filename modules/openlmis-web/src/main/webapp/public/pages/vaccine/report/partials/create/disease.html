@@ -10,22 +10,26 @@
 <div class="rnr-table">
   <h2><span openlmis-message="label.vaccine.disease"></span></h2>
 
-  <div class="span7" style="margin-left: 0px;">
+  <div class="span9" style="margin-left: 0px;">
   <table class="table table-bordered">
     <thead>
     <tr>
       <th class="span5"><span openlmis-message="label.vaccine.disease.name"></span></th>
       <th class="span1"><span openlmis-message="label.vaccine.disease.cases"></span></th>
+      <th class="span1"><span openlmis-message="label.vaccine.disease.calculated.cumulative.cases"></span></th>
       <th class="span1"><span openlmis-message="label.vaccine.disease.cumulative"></span></th>
       <th class="span1"><span openlmis-message="label.vaccine.disease.death"></span></th>
+      <th class="span1"><span openlmis-message="label.vaccine.disease.calculated.cumulative.deaths"></span></th>
     </tr>
     </thead>
     <tbody>
       <tr ng-repeat="disease in report.diseaseLineItems">
         <td class="cell-input"><span class="cell-text">{{disease.diseaseName}}</span></td>
-        <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" type="text" ng-model="disease.cases" /></td>
-        <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" type="text" ng-model="disease.cumulative" /></td>
-        <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" type="text" ng-model="disease.death" /></td>
+        <td class="cell-input col-general"><input numeric-validator="positiveInteger" type="text" ng-model="disease.cases" /></td>
+        <td class="cell-input col-general number"><span ng-bind="disease.calculatedCumulativeCases"></span></td>
+        <td class="cell-input col-general"><input numeric-validator="positiveInteger" type="text" ng-model="disease.cumulative" /></td>
+        <td class="cell-input col-general"><input numeric-validator="positiveInteger" type="text" ng-model="disease.death" /></td>
+        <td class="cell-input col-general number"><span ng-bind="disease.calculatedCumulativeDeaths"></span></td>
       </tr>
     </tbody>
     </table>

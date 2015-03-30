@@ -14,9 +14,11 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.*;
 import net.sf.jasperreports.engine.util.JRLoader;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.report.ReportOutputOption;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.util.Constants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletOutputStream;
@@ -32,6 +34,9 @@ import java.util.List;
  */
 @Component
 public class JasperReportExporter implements ReportExporter {
+
+    @Autowired
+    private MessageService messageService;
 
 
     @Override
@@ -86,6 +91,10 @@ public class JasperReportExporter implements ReportExporter {
         if(reportExtraParams != null && (outputOption != null && !outputOption.equals(ReportOutputOption.PDF))){
             reportExtraParams.put(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
         }
+        if (reportExtraParams != null){
+            reportExtraParams.put(JRParameter.REPORT_LOCALE, messageService.getCurrentLocale() );
+        }
+
         JasperPrint jasperPrint = null;
 
         //Check for empty report data. Fill empty datasource when there is no data to fill

@@ -237,4 +237,7 @@ public class FacilityRepository {
   public List<Facility> getAllForGeographicZone(Long geographicZoneId){
       return mapper.getForGeographicZone(geographicZoneId);
   }
+  public List<Facility> getFacilityByTypeAndRequisitionGroupId(Long facilityTypeId, Long rgroupId){
+      return mapper.getFacilitiesByTypeAndRequisitionGroupId(facilityTypeId, rgroupId);
+  }
 }
