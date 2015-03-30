@@ -27,10 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -80,8 +77,8 @@ public class LookupController {
     @ApiResponse(code = 200, message = "Successful request", response = Product.class),
     @ApiResponse(code = 500, message = "Internal server error")}
   )
-  @RequestMapping(value = "/rest-api/lookup/product-by-code", method = RequestMethod.GET, headers = ACCEPT_JSON)
-  public ResponseEntity getProductByCode(Principal principal, @RequestParam("code") String code) {
+  @RequestMapping(value = "/rest-api/lookup/product/{code}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity getProductByCode(Principal principal, @PathVariable("code") String code) {
     return RestResponse.response("product", lookupService.getProductByCode(code));
   }
 
@@ -121,8 +118,8 @@ public class LookupController {
     @ApiResponse(code = 200, message = "Successful request", response = Facility.class),
     @ApiResponse(code = 500, message = "Internal server error")}
   )
-  @RequestMapping(value = "/rest-api/lookup/facility-by-code", method = RequestMethod.GET, headers = ACCEPT_JSON)
-  public ResponseEntity getFacilityByCode(Principal principal, @RequestParam("code") String code) {
+  @RequestMapping(value = "/rest-api/lookup/facility/{code}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity getFacilityByCode(Principal principal, @PathVariable("code") String code) {
     return RestResponse.response("facility", lookupService.getFacilityByCode(code));
   }
 
@@ -162,8 +159,8 @@ public class LookupController {
     @ApiResponse(code = 200, message = "Successful request", response = Program.class),
     @ApiResponse(code = 500, message = "Internal server error")}
   )
-  @RequestMapping(value = "/rest-api/lookup/program-by-code", method = RequestMethod.GET, headers = ACCEPT_JSON)
-  public ResponseEntity getProgramByCode(Principal principal, @RequestParam("code") String code) {
+  @RequestMapping(value = "/rest-api/lookup/program/{code}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity getProgramByCode(Principal principal, @PathVariable("code") String code) {
     return RestResponse.response("program", lookupService.getProgramByCode(code));
   }
 
@@ -215,7 +212,7 @@ public class LookupController {
             @ApiResponse(code = 200, message = "Successful request", response = GeographicLevel.class),
             @ApiResponse(code = 500, message = "Internal server error")}
     )
-    @RequestMapping(value = "/rest-api/lookup/geographic-levels", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/lookup/geographic-levels", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getGeographicLevels( Principal principal) {
         return RestResponse.response("geographic-levels", lookupService.getAllGeographicLevels());
     }
