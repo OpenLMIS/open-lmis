@@ -7,7 +7,7 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-function SeasonRationingAdjustmentTypeController($scope,$route, $location, $filter, $dialog, messageService, navigateBackService, ngTableParams,DeleteSeasonalityRationings, seasonalityRationingsList, SeasonalityRationingTypes) {
+function SeasonRationingAdjustmentTypeController($scope,$route, $location, $filter, $dialog, messageService, navigateBackService, ngTableParams, seasonalityRationingsList, SeasonalityRationingTypes) {
 
 
     $scope.disabled = false;

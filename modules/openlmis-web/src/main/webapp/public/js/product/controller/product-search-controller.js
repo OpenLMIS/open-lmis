@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function ProductSearchController($scope, ProgramProductsSearch, $location, navigateBackService) {
+function ProductSearchController($scope, ProgramProductsSearch, AdjustmentProducts, $location, navigateBackService) {
 
   $scope.searchOptions = [
     {value: "product", name: "option.value.product"},
@@ -38,6 +38,11 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
     navigateBackService.setData(data);
     $location.path('rationing/' + id);
   };
+  $scope.editRationing = function (id) {
+    var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
+    navigateBackService.setData(data);
+    $location.path('edit/rationing/' + id);
+  };
 
   $scope.loadProducts = function (page, lastQuery) {
     if (!($scope.query || lastQuery)) return;
@@ -47,6 +52,7 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
   function getProducts(page, query) {
     query = query.trim();
     $scope.searchedQuery = query;
+    loadAdjustmentProducts();
     ProgramProductsSearch.get({page: page, searchParam: $scope.searchedQuery, column: $scope.selectedSearchOption.value}, function (data) {
       $scope.programProducts = data.programProductList;
       $scope.pagination = data.pagination;
@@ -55,6 +61,21 @@ function ProductSearchController($scope, ProgramProductsSearch, $location, navig
       $scope.showResults = true;
     }, {});
   }
+
+  var loadAdjustmentProducts = function(){
+    AdjustmentProducts.get({}, function (data){
+      $scope.adjustmentProducts = data.adjustmentProducts;
+    });
+  };
+  $scope.isAdjustmentExists = function (productId){
+    var recordExists = false;
+    angular.forEach($scope.adjustmentProducts, function(adjustment){
+      if(adjustment.product.id === productId) {
+        recordExists = true;
+      }
+    });
+    return recordExists;
+  };
 
   $scope.$watch('currentPage', function () {
     if ($scope.currentPage !== 0)

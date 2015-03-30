@@ -103,10 +103,10 @@
              ng-class="{'icon-ok': programProduct.active}"></i>
         </td>
         <td class="center-justified">
-            <a href="" ng-click="addRationing(programProduct.product.id)" class="btn btn-primary">
-              <span id="productAddNew" openlmis-message="button.add"></span>
+            <a ng-hide="isAdjustmentExists(programProduct.product.id)" href="" ng-click="addRationing(programProduct.product.id)" class="btn btn-primary">
+              <span id="addRationing" openlmis-message="button.add"></span>
             </a>
-            <a href="#/edit-rationing" class="btn btn-primary">
+            <a ng-show="isAdjustmentExists(programProduct.product.id)" ng-click="addRationing(programProduct.product.id)" class="btn btn-primary">
               <span id="editRationing" openlmis-message="button.edit"></span>
             </a>
         </td>

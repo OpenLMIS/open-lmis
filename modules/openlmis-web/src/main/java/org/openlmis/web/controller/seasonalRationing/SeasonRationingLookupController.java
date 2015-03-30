@@ -14,6 +14,7 @@ import org.openlmis.core.domain.OrderQuantityAdjustmentFactor;
 import org.openlmis.core.domain.OrderQuantityAdjustmentType;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.OrderQuantityAdjustmentFactorService;
+import org.openlmis.core.service.OrderQuantityAdjustmentProductService;
 import org.openlmis.core.service.OrderQuantityAdjustmentTypeService;
 import org.openlmis.vaccine.domain.Countries;
 import org.openlmis.web.controller.BaseController;
@@ -40,11 +41,15 @@ public class SeasonRationingLookupController extends BaseController {
     public static final String SEASONALRATIONINGTYPE = "seasonalityRationingType";
     public static final String ADJUSTMENTFACTOR = "adjustmentFactor";
     public static final String ADJUSTMENTFACTORLIST = "adjustmentFactorList";
+    public static final String ADJUSTMENT_PRODUCTS = "adjustmentProducts";
 
     @Autowired
     private OrderQuantityAdjustmentTypeService quantityAdjustmentTypeService;
     @Autowired
     private OrderQuantityAdjustmentFactorService adjustmentFactorService;
+
+    @Autowired
+    private OrderQuantityAdjustmentProductService adjustmentProductService;
 
     public ResponseEntity<OpenLmisResponse> saveSeasonalityRationingType(OrderQuantityAdjustmentType quantityAdjustmentType, boolean createOperation) {
         try {
@@ -229,5 +234,11 @@ public class SeasonRationingLookupController extends BaseController {
         @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
     public ResponseEntity<OpenLmisResponse> loadAllAdjustmentFactories() {
         return OpenLmisResponse.response(ADJUSTMENTFACTORLIST, this.adjustmentFactorService.loadOrderQuantityAdjustmentFactor());
+    }
+
+    @RequestMapping(value = "/adjustmentProducts", method = RequestMethod.GET)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    public ResponseEntity<OpenLmisResponse> getAllAdjustmentProducts() {
+        return OpenLmisResponse.response(ADJUSTMENT_PRODUCTS, this.adjustmentProductService.getAll());
     }
 }

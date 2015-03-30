@@ -1057,3 +1057,7 @@ services.factory('FacilityByTypeAndRequisition', function ($resource) {
     return $resource('/facilityType/:facilityTypeId/requisitionGroup/:requisitionGroupId/facilities.json', {},{});
 });
 
+services.factory('AdjustmentProducts', function ($resource) {
+   return $resource('/season-rationing/adjustmentProducts.json', {id: '@id'}, update);
+});
+
