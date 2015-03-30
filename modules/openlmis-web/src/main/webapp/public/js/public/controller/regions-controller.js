@@ -18,4 +18,4 @@ function RegionsController($scope, ngTableParams, $rootScope) {
             {zones: 'Nugorongoro', regions: 'Andromeda', districtCount: 8, facilityCount: 45 }
         ];
 
-};
+}
