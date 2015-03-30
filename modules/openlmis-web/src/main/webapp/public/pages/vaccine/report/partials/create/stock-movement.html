@@ -23,7 +23,7 @@
     </thead>
     <tbody>
     <tr class="productCategory" ng-repeat-start="product in report.logisticsLineItems" ng-show="$index == 0 || ( $index > 0 && product.productCategory != report.logisticsLineItems[$index - 1].productCategory)">
-      <td colspan="11">{{product.productCategory}}</td>
+      <td colspan="14">{{product.productCategory}}</td>
     </tr>
     <tr ng-repeat-end >
       <td ng-repeat-start="column in report.columnTemplate | filter : {visible:true}" ng-if="false"></td>
@@ -41,7 +41,16 @@
         <td ng-if="column.name == 'quantityOtherWasted'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityOtherWasted" type="text" /></td>
         <td ng-if="column.name == 'quantityDiscardedUnopened'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityDiscardedUnopened" type="text" /></td>
         <td ng-if="column.name == 'quantityDiscardedOpened'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityDiscardedOpened" type="text" /></td>
-        <td ng-if="column.name == 'reasonForDiscardingUnopened'" class="cell-input col-beginningBalance"><input ng-model="product.reasonForDiscardingUnopened" type="text" /></td>
+        <td ng-if="column.name == 'reasonForDiscardingUnopened'" class="cell-input col-general">
+          <select ng-show="!rowRequiresExplanation(product);" ng-model="product.discardingReasonId">
+            <option value="{{reason.id}}" ng-repeat="reason in discardingReasons">{{reason.name}}</option>
+          </select>
+          <span ng-show="rowRequiresExplanation(product);">
+              <input style="width: 85%; text-align: left;" ng-model="product.discardingReasonExplanation" type="text" />
+              <a  ng-click="product.discardingReasonId = undefined;"><i class="icon-remove-circle"></i></a>
+          </span>
+
+        </td>
         <td ng-if="column.name == 'daysStockedOut'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.daysStockedOut" type="text" /></td>
         <td ng-if="column.name == 'remarks'" class="cell-input col-beginningBalance"><input ng-model="product.remarks" type="text" /></td>
       <td ng-repeat-end="" ng-if="false"></td>

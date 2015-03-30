@@ -45,7 +45,10 @@ public class LogisticsLineItem extends BaseModel{
   private Long quantityDiscardedOpened;
   private Long quantityWastedOther;
   private Long daysStockedOut;
-  private String reasonForDiscardingUnopened;
+
+  private Long discardingReasonId;
+  private String discardingReasonExplanation;
+
   private String remarks;
 
   private Long endingBalance;

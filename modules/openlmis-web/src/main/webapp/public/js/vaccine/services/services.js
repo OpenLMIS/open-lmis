@@ -66,3 +66,7 @@ services.factory('VaccineColumnTemplate', function ($resource) {
 services.factory('VaccineColumnTemplateSave', function ($resource) {
   return $resource('/vaccine/columns/save.json', {}, update);
 });
+
+services.factory('VaccineDiscardingReasons', function($resource){
+  return $resource('/vaccine/discarding/reasons/all.json',{},{});
+})

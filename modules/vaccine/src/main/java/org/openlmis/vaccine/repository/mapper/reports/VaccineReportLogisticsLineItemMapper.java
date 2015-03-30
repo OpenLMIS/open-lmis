@@ -21,9 +21,9 @@ import java.util.List;
 public interface VaccineReportLogisticsLineItemMapper {
 
   @Insert("INSERT INTO vaccine_report_logistics_line_items " +
-    " (reportId, productId, productCode, productName, productCategory, displayOrder, openingBalance, quantityReceived, quantityIssued, closingBalance, quantityVvmAlerted, quantityFreezed, quantityExpired, quantityDiscardedUnopened, quantityDiscardedOpened, quantityWastedOther, endingBalance, daysStockedOut , reasonForDiscardingUnopened, remarks, createdBy, createdDate, modifiedBy, modifiedDate)" +
+    " (reportId, productId, productCode, productName, productCategory, displayOrder, openingBalance, quantityReceived, quantityIssued, closingBalance, quantityVvmAlerted, quantityFreezed, quantityExpired, quantityDiscardedUnopened, quantityDiscardedOpened, quantityWastedOther, endingBalance, daysStockedOut , discardingReasonId, discardingReasonExplanation, remarks, createdBy, createdDate, modifiedBy, modifiedDate)" +
     " values " +
-    " (#{reportId}, #{productId}, #{productCode}, #{productName}, #{productCategory} , #{displayOrder}, #{openingBalance}, #{quantityReceived}, #{quantityIssued}, #{closingBalance}, #{quantityVvmAlerted}, #{quantityFreezed}, #{quantityExpired}, #{quantityDiscardedUnopened}, #{quantityDiscardedOpened}, #{quantityWastedOther}, #{endingBalance} ,  #{daysStockedOut} , #{reasonForDiscardingUnopened}, #{remarks}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+    " (#{reportId}, #{productId}, #{productCode}, #{productName}, #{productCategory} , #{displayOrder}, #{openingBalance}, #{quantityReceived}, #{quantityIssued}, #{closingBalance}, #{quantityVvmAlerted}, #{quantityFreezed}, #{quantityExpired}, #{quantityDiscardedUnopened}, #{quantityDiscardedOpened}, #{quantityWastedOther}, #{endingBalance} ,  #{daysStockedOut} , #{discardingReasonId}, #{discardingReasonExplanation}, #{remarks}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
   Integer insert(LogisticsLineItem lineItem);
 
@@ -38,7 +38,8 @@ public interface VaccineReportLogisticsLineItemMapper {
     ", openingBalance = #{openingBalance} " +
     ", quantityReceived = #{quantityReceived} " +
     ", daysStockedOut = #{daysStockedOut} " +
-    ", reasonForDiscardingUnopened = #{reasonForDiscardingUnopened} " +
+    ", discardingReasonExplanation = #{discardingReasonExplanation} " +
+    ", discardingReasonId = #{discardingReasonId} " +
     ", remarks = #{remarks} " +
     ", quantityIssued = #{quantityIssued} " +
     ", closingBalance = #{closingBalance} " +
