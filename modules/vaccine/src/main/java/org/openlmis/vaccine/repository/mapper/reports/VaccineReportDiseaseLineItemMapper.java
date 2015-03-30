@@ -40,13 +40,14 @@ public interface VaccineReportDiseaseLineItemMapper {
     " WHERE id = #{id}")
   void update(DiseaseLineItem lineItem);
 
-  @Select("select li.* \n" +
+  @Select("select li.* " +
               ", (select sum(cases) from vaccine_report_disease_line_items l " +
                     "join vaccine_reports as r on r.id = l.reportId " +
                     "join processing_periods as pp on pp.id = r.periodid  " +
                     " where " +
-                    " extract(year from pp.startdate) = extract(year from pd.startDate) " +
+                    " extract(year from pp.startDate) = extract(year from pd.startDate) " +
                     " and pp.startDate < pd.startDate " +
+                    " and r.facilityId = rp.facilityId    " +
                     ") as calculatedCumulativeCases " +
               ", (select sum(death) from vaccine_report_disease_line_items l " +
                     "join vaccine_reports as r on r.id = l.reportId " +
@@ -54,12 +55,13 @@ public interface VaccineReportDiseaseLineItemMapper {
                     " where " +
                     " extract(year from pp.startdate) = extract(year from pd.startDate) " +
                     " and pp.startDate < pd.startDate " +
+                    " and r.facilityId = rp.facilityId    " +
                     ") as calculatedCumulativeDeaths " +
           " from " +
-          " vaccine_report_disease_line_items li\n" +
-          " join vaccine_reports rp\n" +
-          "   on rp.id = li.reportid\n" +
-          " join processing_periods pd \n" +
+          " vaccine_report_disease_line_items li " +
+          " join vaccine_reports rp " +
+          "   on rp.id = li.reportid " +
+          " join processing_periods pd " +
           "   on pd.id = rp.periodid " +
     " WHERE li.reportId = #{reportId} " +
     " order by id")
