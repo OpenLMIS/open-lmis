@@ -39,7 +39,9 @@ public class VaccineReport extends BaseModel {
   private Facility facility;
   private String majorImmunizationActivities;
 
-
+  private Long fixedImmunizationSessions;
+  private Long outreachImmunizationSessions;
+  private Long outreachImmunizationSessionsCanceled;
 
   private Boolean trackCampaignCoverage;
   private Boolean trackOutreachCoverage;

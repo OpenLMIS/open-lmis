@@ -106,7 +106,7 @@ public class VaccineReportMapperIT {
     report.setFacilityId(facility.getId());
     Integer count = vaccineReportMapper.insert(report);
 
-    VaccineReport returnedReport = vaccineReportMapper.getByPeriodFacilityProgram(facility.getId(),processingPeriod.getId(), 1L);
+    VaccineReport returnedReport = vaccineReportMapper.getByPeriodFacilityProgram(facility.getId(), processingPeriod.getId(), 1L);
     assertThat(returnedReport.getId(), is(report.getId()));
   }
 
@@ -156,4 +156,37 @@ public class VaccineReportMapperIT {
     assertThat(newReport.getMajorImmunizationActivities(), is(report.getMajorImmunizationActivities()));
   }
 
+  @Test
+  public void shouldSaveImmunizationSessions() throws Exception{
+    VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
+    report.setPeriodId(processingPeriod.getId());
+    report.setFacilityId(facility.getId());
+
+    report.setFixedImmunizationSessions(20L);
+    report.setOutreachImmunizationSessions(40L);
+    report.setOutreachImmunizationSessionsCanceled(50L);
+    vaccineReportMapper.insert(report);
+
+    VaccineReport returnedReport = vaccineReportMapper.getById(report.getId());
+    assertThat(report.getFixedImmunizationSessions(), is(returnedReport.getFixedImmunizationSessions()));
+    assertThat(report.getOutreachImmunizationSessions(), is(returnedReport.getOutreachImmunizationSessions()));
+    assertThat(report.getOutreachImmunizationSessionsCanceled(), is(returnedReport.getOutreachImmunizationSessionsCanceled()));
+  }
+
+  @Test
+  public void shouldUpdateImmunizationSessions() throws Exception{
+    VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
+    report.setPeriodId(processingPeriod.getId());
+    report.setFacilityId(facility.getId());
+
+    vaccineReportMapper.insert(report);
+    report.setFixedImmunizationSessions(20L);
+    report.setOutreachImmunizationSessions(40L);
+    report.setOutreachImmunizationSessionsCanceled(50L);
+    vaccineReportMapper.update(report);
+    VaccineReport returnedReport = vaccineReportMapper.getById(report.getId());
+    assertThat(report.getFixedImmunizationSessions(), is(returnedReport.getFixedImmunizationSessions()));
+    assertThat(report.getOutreachImmunizationSessions(), is(returnedReport.getOutreachImmunizationSessions()));
+    assertThat(report.getOutreachImmunizationSessionsCanceled(), is(returnedReport.getOutreachImmunizationSessionsCanceled()));
+  }
 }
