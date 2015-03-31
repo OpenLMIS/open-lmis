@@ -39,4 +39,5 @@ dependencies {
 
 cobertura {
     coverageFormats << 'xml'
+    coverageIgnoreTrivial = true
 }

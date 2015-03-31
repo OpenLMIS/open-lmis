@@ -1,4 +1,4 @@
-function ProductRationingAdjustmentController($scope, productDTO,seasonalityRationingTypeList, adjustmentFactorList, facilityTypes,messageService, requisitionGroups, Products, FacilityByTypeAndRequisition, $location) {
+function ProductRationingAdjustmentController($scope, $timeout,productDTO,seasonalityRationingTypeList, adjustmentFactorList, facilityTypes,messageService, requisitionGroups, AdjustmentProducts, FacilityByTypeAndRequisition, $location) {
 
   $scope.newProgramProduct = {active: false};
   $scope.product = {};
@@ -9,6 +9,7 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
   $scope.facilities = [];
   $scope.$parent.message = "";
   $scope.selectAll = false;
+  $scope.seasonalityAdjustment = {product: productDTO.product};
 
   $scope.addBatchesModal = undefined;
 
@@ -51,12 +52,20 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
   $scope.selectedItems = [];
 
   $scope.openModal = function () {
-    $scope.addBatchesModal = true;
-    //alert('selectedItems '+ JSON.stringify($scope.selectedItems));
+    //$scope.seasonalityAdjustment.facility =
+    if(!isUndefined($scope.selectedItems)){
+      $scope.seasonalityAdjustment.facility = $scope.selectedItems[0];
+    }
+    $timeout(function () {
+      $('html, body').animate({
+        scrollTop: $("#seasonality-adjustment").offset().top
+      }, 2000);
+    }, 100);
+
    };
   var myHeaderCellTemplate = '<input type="checkbox" ng-model="selectAll" ng-click="openRnr()"/>';
   $scope.gridOptions = { data: 'facilities',
-    multiSelect: true,
+    multiSelect: false,
     selectedItems: $scope.selectedItems,
     afterSelectionChange: function (rowItem, event) {
       $scope.openModal();
@@ -73,8 +82,8 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
       {field: 'name', displayName: messageService.get("header.name") },
       {field: 'code', displayName: messageService.get("header.code")},
       {field: 'geographicZone.name', displayName: messageService.get("label.district")},
-      {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
-        cellTemplate: '<div class="ngCellText checked"><a href="/public/pages/dashboard/index.html#dashoard" ng-click="">hi</a></div>',
+      {field: 'emergency', displayName: messageService.get("label.graph"),
+        cellTemplate: '<div class="ngCellText checked"><a href="/public/pages/dashboard/index.html#dashoard" ng-click=""></a></div>',
         width: 110 }
 
       /*{field: 'emergency', headerCellTemplate : myHeaderCellTemplate, displayName: messageService.get("requisition.type.emergency"),
@@ -84,18 +93,20 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
   };
 
   $scope.save = function () {
-    if ($scope.productForm.$error.required) {
+    alert(JSON.stringify($scope.seasonalityAdjustment));
+   /* if ($scope.productForm.$error.required) {
       $scope.showError = true;
       $scope.error = "form.error";
       return;
-    }
+    }*/
+    AdjustmentProducts.save({}, $scope.seasonalityAdjustment, success, error );
 
-    if ($scope.product.id) {
+   /* if ($scope.product.id) {
       Products.update({id: $scope.product.id}, {product: $scope.product, programProducts: $scope.programProducts}, success, error);
     }
     else {
       Products.save({}, {product: $scope.product, programProducts: $scope.programProducts}, success, error);
-    }
+    }*/
   };
 
   $scope.cancel = function () {

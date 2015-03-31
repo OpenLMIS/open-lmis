@@ -82,7 +82,7 @@ public class ProgramEquipmentController extends BaseController {
 
         try{
             //remove the program_equipment_products first
-            programEquipmentProductService.removeEquipmentProducts(programEquipmentId);
+            programEquipmentProductService.removeAllByEquipmentProducts(programEquipmentId);
 
             //then  go for the program_equipment
             programEquipmentService.remove(programEquipmentId);

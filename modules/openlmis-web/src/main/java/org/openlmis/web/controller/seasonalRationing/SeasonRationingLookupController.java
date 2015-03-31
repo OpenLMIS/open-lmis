@@ -11,8 +11,10 @@
 package org.openlmis.web.controller.seasonalRationing;
 
 import org.openlmis.core.domain.OrderQuantityAdjustmentFactor;
+import org.openlmis.core.domain.OrderQuantityAdjustmentProduct;
 import org.openlmis.core.domain.OrderQuantityAdjustmentType;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.OrderQuantityAdjustmentFactorService;
 import org.openlmis.core.service.OrderQuantityAdjustmentProductService;
 import org.openlmis.core.service.OrderQuantityAdjustmentTypeService;
@@ -33,6 +35,7 @@ import java.util.Date;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Controller
 @RequestMapping(value = "/season-rationing")
@@ -42,6 +45,10 @@ public class SeasonRationingLookupController extends BaseController {
     public static final String ADJUSTMENTFACTOR = "adjustmentFactor";
     public static final String ADJUSTMENTFACTORLIST = "adjustmentFactorList";
     public static final String ADJUSTMENT_PRODUCTS = "adjustmentProducts";
+
+
+    @Autowired
+    MessageService messageService;
 
     @Autowired
     private OrderQuantityAdjustmentTypeService quantityAdjustmentTypeService;
@@ -121,7 +128,7 @@ public class SeasonRationingLookupController extends BaseController {
 
 
     @RequestMapping(value = "/seasonalityRationingTypes", method = RequestMethod.GET)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> searchSeasonRationingTypeList(@RequestParam(required = true) String param) {
         return OpenLmisResponse.response(SEASONALRATIONINGTYPELIST, this.quantityAdjustmentTypeService.searchForQuantityAdjustmentType(param));
     }
@@ -139,7 +146,7 @@ public class SeasonRationingLookupController extends BaseController {
     }
 
     @RequestMapping(value = "/seasonalityRationingTypeList", method = RequestMethod.GET)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> loadAllSeasonRationingTypes() {
         return OpenLmisResponse.response(SEASONALRATIONINGTYPELIST, this.quantityAdjustmentTypeService.loadOrderQuantityAdjustmentTypeList());
     }
@@ -172,7 +179,7 @@ public class SeasonRationingLookupController extends BaseController {
     }
 
     @RequestMapping(value = "/adjustmentFactors/{id}", method = RequestMethod.GET)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getAdjustmentFactorDetail1(@PathVariable("id") Long id) {
 
         OrderQuantityAdjustmentFactor adjustmentFactor = this.adjustmentFactorService.loadOrderQuantityAdjustmentFactorDetail(id);
@@ -213,7 +220,7 @@ public class SeasonRationingLookupController extends BaseController {
     }
 
     @RequestMapping(value = "/adjustmentFactors", method = RequestMethod.GET)
-        @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+        @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> searchAdjustmentFactorList(@RequestParam(required = true) String param) {
         return OpenLmisResponse.response(ADJUSTMENTFACTORLIST, this.adjustmentFactorService.searchAdjustmentFactor(param));
     }
@@ -231,14 +238,33 @@ public class SeasonRationingLookupController extends BaseController {
     }
 
     @RequestMapping(value = "/adjustmentFactorList", method = RequestMethod.GET)
-        @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> loadAllAdjustmentFactories() {
         return OpenLmisResponse.response(ADJUSTMENTFACTORLIST, this.adjustmentFactorService.loadOrderQuantityAdjustmentFactor());
     }
 
     @RequestMapping(value = "/adjustmentProducts", method = RequestMethod.GET)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getAllAdjustmentProducts() {
         return OpenLmisResponse.response(ADJUSTMENT_PRODUCTS, this.adjustmentProductService.getAll());
+    }
+    @RequestMapping(value = "/adjustmentProducts", method = RequestMethod.POST)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> saveAdjustments(@RequestBody OrderQuantityAdjustmentProduct adjustmentProduct, HttpServletRequest request) {
+        ResponseEntity<OpenLmisResponse> response;
+
+        try {
+            Long userId = loggedInUserId(request);
+            adjustmentProduct.setCreatedBy(userId);
+            adjustmentProduct.setModifiedBy(userId);
+            this.adjustmentProductService.saveAll(adjustmentProduct);
+        } catch (DataException e) {
+            response = OpenLmisResponse.error(e, BAD_REQUEST);
+            return response;
+        }
+        response = OpenLmisResponse.success(messageService.message("message.product.seasonality.adjustment.created.success", adjustmentProduct.getProduct().getName()));
+
+        return response;
+
     }
 }
