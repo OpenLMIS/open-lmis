@@ -10,30 +10,76 @@
 
 package org.openlmis.web.controller.vaccine;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.service.MessageService;
+import org.openlmis.db.categories.UnitTests;
+import org.openlmis.vaccine.domain.VaccineDisease;
+import org.openlmis.vaccine.service.DiseaseService;
+import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
+@Category(UnitTests.class)
 public class DiseaseControllerTest {
 
-  @Before
-  public void setUp() throws Exception {
+  private MockHttpServletRequest request = new MockHttpServletRequest();
+
+  @Mock
+  DiseaseService service;
+
+  @Mock
+  private MessageService messageService;
+
+  @InjectMocks
+  DiseaseController controller;
+
+
+  @Test
+  public void shouldGetOneDisease() throws Exception {
+    VaccineDisease disease = new VaccineDisease();
+    disease.setName("Polio");
+    when(service.getById(1L)).thenReturn(disease);
+
+    ResponseEntity<OpenLmisResponse> response = controller.get(1L);
+    assertThat(disease, is(response.getBody().getData().get("disease")));
+  }
+
+  @Test
+  public void shouldGetAll() throws Exception {
+    VaccineDisease disease = new VaccineDisease();
+    disease.setName("Polio");
+    List<VaccineDisease> list = asList(disease);
+    when(service.getAll()).thenReturn(list);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getAll();
+    assertThat(list, is(response.getBody().getData().get("diseases")));
 
   }
 
   @Test
-  public void testGet() throws Exception {
+  public void shouldSaveNewRecords() throws Exception {
 
-  }
+    VaccineDisease disease = new VaccineDisease();
+    disease.setName("Polio");
+    disease.setId(1L);
+    when(service.getById(1L)).thenReturn(disease);
+    doNothing().when(service).save(disease);
 
-  @Test
-  public void testGetAll() throws Exception {
-
-  }
-
-  @Test
-  public void testGet1() throws Exception {
-
+    ResponseEntity<OpenLmisResponse> response = controller.save(disease);
+    assertThat(disease, is(response.getBody().getData().get("disease")));
   }
 }
