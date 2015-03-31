@@ -8,9 +8,9 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function RegionsController($scope, ngTableParams, $rootScope, PublicSiteData) {
+function DistrictsController($scope, ngTableParams, $rootScope, PublicSiteData) {
 
-    PublicSiteData.regions().get({}, function(data){
+    PublicSiteData.districts().get({}, function(data){
         $scope.data =  $scope.datarows = data.list;
     });
 

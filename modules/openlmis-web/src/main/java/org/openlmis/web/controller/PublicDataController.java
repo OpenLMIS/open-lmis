@@ -38,10 +38,22 @@ public class PublicDataController  extends BaseController {
     @Autowired
     PublicDataRepository publicDataRepository;
 
-    private static final String ZONE_REGION_LIST = "regions";
+    private static final String JSON_LIST = "list";
+
 
     @RequestMapping(value = "/public-data/regions", method = GET)
     public ResponseEntity<OpenLmisResponse> getProgramProductsByProgram(HttpServletRequest request) {
-        return response(ZONE_REGION_LIST, publicDataRepository.getPublicDataRegions());
+        return response(JSON_LIST, publicDataRepository.getPublicDataRegions());
     }
+
+    @RequestMapping(value = "/public-data/districts", method = GET)
+    public ResponseEntity<OpenLmisResponse> getPublicDataDistricts(HttpServletRequest request) {
+        return response(JSON_LIST, publicDataRepository.getPublicDataDistricts());
+    }
+
+    @RequestMapping(value = "/public-data/facilities", method = GET)
+    public ResponseEntity<OpenLmisResponse> getPublicDataFacilities(HttpServletRequest request) {
+        return response(JSON_LIST, publicDataRepository.getPublicDataHealthFacilities());
+    }
+
 }

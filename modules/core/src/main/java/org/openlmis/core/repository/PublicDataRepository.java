@@ -11,6 +11,8 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.dto.PublicDataDistrictsDTO;
+import org.openlmis.core.dto.PublicDataHealthFacilitiesDTO;
 import org.openlmis.core.dto.PublicDataRegionsDTO;
 import org.openlmis.core.repository.mapper.PublicDataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +34,14 @@ public class PublicDataRepository {
     public List<PublicDataRegionsDTO> getPublicDataRegions(){
         return mapper.getPublicDataRegions();
     }
+
+    public List<PublicDataDistrictsDTO> getPublicDataDistricts(){
+       return  mapper.getPublicDataDistricts();
+    }
+
+    public List<PublicDataHealthFacilitiesDTO> getPublicDataHealthFacilities(){
+        return  mapper.getPublicDataHealthFacilities();
+    }
+
 
 }
