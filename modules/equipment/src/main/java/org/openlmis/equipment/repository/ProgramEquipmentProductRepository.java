@@ -40,8 +40,8 @@ public class ProgramEquipmentProductRepository {
     mapper.remove(programEquipmentId);
   }
 
-   public void removeEquipmentProducts(Long programEquipmentId){
-       mapper.removeEquipmentProducts(programEquipmentId);
+   public void removeAllByEquipmentProducts(Long programEquipmentId){
+       mapper.removeByEquipmentProducts(programEquipmentId);
    }
 
   public List<Product> getAvailableProductsToLink(Long programId, Long equipmentId) {
