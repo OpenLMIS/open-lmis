@@ -40,13 +40,13 @@
         <select ui-select2 class="select2-container bottom-spacer span3" name="requisitionGroup" id="requisitionGroup"
                 ng-model="requisitionGroup" ng-change="search()"
                 ng-options="rg as rg.name for rg in requisitionGroups">
-          <option value="" openlmis-message="create.facility.select.facilityType"></option>
+          <option value="" openlmis-message="placeholder.select.requisition"></option>
         </select>
       </div>
     </div>
 
     <div id="approveReqList" class="gridStyle" style="height: 250px;" ng-grid="gridOptions" ng-show="facilities.length"></div>
-    <div class="app-form" ng-show="selectedItems.length > 0"  style="margin-top:5px;" >
+    <div id="seasonality-adjustment" class="app-form" ng-show="selectedItems.length > 0"  style="margin-top:5px;" >
         <div class="form-group">
           <h3 openlmis-message="header.apply.seasonality.rationing.factor"></h3>
           <div class="row-fluid">
@@ -76,7 +76,7 @@
             <div class="span4">
               <label for="fromDate" openlmis-message="label.from.date"><span class="label-required"> *</span></label>
 
-              <input id="fromDate" name="fromDate" type="text" ng-model="seasonalityAdjustment.fromDate"
+              <input id="fromDate" name="fromDate" type="text" ng-model="seasonalityAdjustment.startDate"
                      readonly
                      ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
                      ui-date-format="yy-mm-dd"
@@ -88,7 +88,7 @@
             <div class="span4">
               <label for="toDate" openlmis-message="label.to.date"><span class="label-required"> *</span></label>
 
-              <input id="toDate" name="toDate" type="text" ng-model="seasonalityAdjustment.toDate"
+              <input id="toDate" name="toDate" type="text" ng-model="seasonalityAdjustment.endDate"
                      readonly
                      ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
                      ui-date-format="yy-mm-dd"

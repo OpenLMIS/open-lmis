@@ -10,9 +10,12 @@ package org.openlmis.core.repository;/*
 
 import org.openlmis.core.domain.OrderQuantityAdjustmentFactor;
 import org.openlmis.core.domain.OrderQuantityAdjustmentProduct;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.OrderQuantityAdjustmentFactorMapper;
 import org.openlmis.core.repository.mapper.OrderQuantityAdjustmentProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,4 +28,20 @@ public class OrderQuantityAdjustmentProductRepository {
     public List<OrderQuantityAdjustmentProduct> getAll() {
        return this.orderQuantityAdjustmentProductMapper.getAll();
     }
+
+    public void insert(OrderQuantityAdjustmentProduct adjustmentProduct) {
+        try {
+            orderQuantityAdjustmentProductMapper.insert(adjustmentProduct);
+        } catch (DuplicateKeyException duplicateKeyException) {
+            throw new DataException("error.duplicate.product.code");
+        } catch (DataIntegrityViolationException dataIntegrityViolationException) {
+            String errorMessage = dataIntegrityViolationException.getMessage().toLowerCase();
+            if (errorMessage.contains("foreign key") || errorMessage.contains("violates not-null constraint")) {
+                throw new DataException("error.reference.data.missing");
+            } else {
+                throw new DataException("error.incorrect.length");
+            }
+        }
+    }
+
 }
