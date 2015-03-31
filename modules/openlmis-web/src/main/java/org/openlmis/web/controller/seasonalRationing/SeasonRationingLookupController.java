@@ -128,7 +128,7 @@ public class SeasonRationingLookupController extends BaseController {
 
 
     @RequestMapping(value = "/seasonalityRationingTypes", method = RequestMethod.GET)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> searchSeasonRationingTypeList(@RequestParam(required = true) String param) {
         return OpenLmisResponse.response(SEASONALRATIONINGTYPELIST, this.quantityAdjustmentTypeService.searchForQuantityAdjustmentType(param));
     }
@@ -146,7 +146,7 @@ public class SeasonRationingLookupController extends BaseController {
     }
 
     @RequestMapping(value = "/seasonalityRationingTypeList", method = RequestMethod.GET)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> loadAllSeasonRationingTypes() {
         return OpenLmisResponse.response(SEASONALRATIONINGTYPELIST, this.quantityAdjustmentTypeService.loadOrderQuantityAdjustmentTypeList());
     }
@@ -179,7 +179,7 @@ public class SeasonRationingLookupController extends BaseController {
     }
 
     @RequestMapping(value = "/adjustmentFactors/{id}", method = RequestMethod.GET)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getAdjustmentFactorDetail1(@PathVariable("id") Long id) {
 
         OrderQuantityAdjustmentFactor adjustmentFactor = this.adjustmentFactorService.loadOrderQuantityAdjustmentFactorDetail(id);
@@ -220,7 +220,7 @@ public class SeasonRationingLookupController extends BaseController {
     }
 
     @RequestMapping(value = "/adjustmentFactors", method = RequestMethod.GET)
-        @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+        @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> searchAdjustmentFactorList(@RequestParam(required = true) String param) {
         return OpenLmisResponse.response(ADJUSTMENTFACTORLIST, this.adjustmentFactorService.searchAdjustmentFactor(param));
     }
@@ -238,18 +238,18 @@ public class SeasonRationingLookupController extends BaseController {
     }
 
     @RequestMapping(value = "/adjustmentFactorList", method = RequestMethod.GET)
-        @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> loadAllAdjustmentFactories() {
         return OpenLmisResponse.response(ADJUSTMENTFACTORLIST, this.adjustmentFactorService.loadOrderQuantityAdjustmentFactor());
     }
 
     @RequestMapping(value = "/adjustmentProducts", method = RequestMethod.GET)
-  //  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getAllAdjustmentProducts() {
         return OpenLmisResponse.response(ADJUSTMENT_PRODUCTS, this.adjustmentProductService.getAll());
     }
     @RequestMapping(value = "/adjustmentProducts", method = RequestMethod.POST)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SEASONALITY_RATIONING, MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> saveAdjustments(@RequestBody OrderQuantityAdjustmentProduct adjustmentProduct, HttpServletRequest request) {
         ResponseEntity<OpenLmisResponse> response;
 
