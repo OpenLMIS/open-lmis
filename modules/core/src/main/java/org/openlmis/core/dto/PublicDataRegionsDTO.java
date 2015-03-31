@@ -7,49 +7,17 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
+package org.openlmis.core.dto;
 
-package org.openlmis.vaccine.domain.reports;
-
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.Product;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class LogisticsLineItem extends BaseModel{
+public class PublicDataRegionsDTO {
 
-  private Long reportId;
-  private Long productId;
-  private String productCode;
-  private String productName;
-  private String productCategory;
-
-  private Product product;
-
-  private Integer displayOrder;
-
-  private Long openingBalance;
-  private Long quantityReceived;
-  private Long quantityIssued;
-  private Long closingBalance;
-  private Long quantityVvmAlerted;
-  private Long quantityFreezed;
-  private Long quantityExpired;
-  private Long quantityDiscardedUnopened;
-  private Long quantityDiscardedOpened;
-  private Long quantityWastedOther;
-  private Long daysStockedOut;
-
-  private Long discardingReasonId;
-  private String discardingReasonExplanation;
-
-  private String remarks;
-
-  private Long endingBalance;
+    private String zone_name;
+    private String region_name;
+    private int districtcount;
+    private int facilitycount;
 }

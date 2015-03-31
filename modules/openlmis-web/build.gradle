@@ -220,4 +220,5 @@ compileJava.dependsOn less
 
 cobertura {
     coverageFormats << 'xml'
+    coverageIgnoreTrivial = true
 }

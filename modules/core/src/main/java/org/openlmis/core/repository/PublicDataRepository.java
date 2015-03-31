@@ -8,39 +8,29 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-apply plugin: 'cobertura'
+package org.openlmis.core.repository;
 
-apply plugin: 'idea'
-apply plugin: 'java'
+import lombok.NoArgsConstructor;
+import org.openlmis.core.dto.PublicDataRegionsDTO;
+import org.openlmis.core.repository.mapper.PublicDataMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-repositories {
-    mavenCentral()
-}
+import java.util.List;
 
-dependencies {
-    compile 'org.json:json:20090211',
-            'commons-fileupload:commons-fileupload:1.2.2',
-            'xerces:xercesImpl:2.8.1',
-            project(':modules:core'),
-            project(':modules:requisition')
+/**
+ * This class is intended for the purpose of returning various form of publicly viewable data
+ */
 
-    configurations {
-        testFixtures {
-            extendsFrom testRuntime
-        }
+@NoArgsConstructor
+@Repository
+public class PublicDataRepository {
+
+    @Autowired
+    private PublicDataMapper mapper;
+
+    public List<PublicDataRegionsDTO> getPublicDataRegions(){
+        return mapper.getPublicDataRegions();
     }
 
-    task testJar(type: Jar) {
-        from sourceSets.test.output
-        classifier = 'test'
-    }
-
-    artifacts {
-        testFixtures testJar
-    }
-}
-
-cobertura {
-    coverageFormats << 'xml'
-    coverageIgnoreTrivial = true
 }

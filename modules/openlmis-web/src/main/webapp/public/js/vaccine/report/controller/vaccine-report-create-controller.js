@@ -7,10 +7,10 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-function CreateVaccineReportController($scope, $location, $filter, report, VaccineReportSave, VaccineReportSubmit) {
+function CreateVaccineReportController($scope, $location, $filter, report,discardingReasons, VaccineReportSave, VaccineReportSubmit) {
   // initial state of the display
   $scope.report = report;
-
+  $scope.discardingReasons = discardingReasons;
   // populate scope with tab visibility info
   $scope.showLogistics = _.findWhere(report.tabVisibilitySettings,{key: 'VACCINE_TAB_LOGISTICS_VISIBLE'}).value;
   $scope.showCoverage = _.findWhere(report.tabVisibilitySettings,{key: 'VACCINE_TAB_COVERAGE_VISIBLE'}).value;
@@ -98,6 +98,14 @@ function CreateVaccineReportController($scope, $location, $filter, report, Vacci
     return 1;
   };
 
+  $scope.rowRequiresExplanation = function(product){
+    if(!isUndefined(product.discardingReasonId) ){
+      var reason = _.findWhere($scope.discardingReasons, {id: parseInt(product.discardingReasonId, 10)});
+      return reason.requiresExplanation;
+    }
+    return false;
+  };
+
 }
 CreateVaccineReportController.resolve = {
   report: function($q, $timeout, $route, VaccineReport) {
@@ -106,6 +114,16 @@ CreateVaccineReportController.resolve = {
     $timeout(function(){
       VaccineReport.get({id: $route.current.params.id}, function(data){
         deferred.resolve(data.report);
+      });
+    }, 100);
+    return deferred.promise;
+  },
+  discardingReasons: function($q, $timeout, $route, VaccineDiscardingReasons){
+    var deferred = $q.defer();
+
+    $timeout(function(){
+      VaccineDiscardingReasons.get( function(data){
+        deferred.resolve(data.reasons);
       });
     }, 100);
     return deferred.promise;

@@ -9,7 +9,7 @@
   -->
 
 
-        <div xmlns="http://www.w3.org/1999/html">
+        <div xmlns="http://www.w3.org/1999/html" tab-scroll>
             <h2 style="padding-top: 9px; line-height: 28px;"><span>List of Regions</span></h2>
 
             <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
@@ -23,10 +23,10 @@
                        ng-table="tableParams">
                     <tbody>
                     <tr ng-repeat="row in datarows">
-                        <td data-title="'Zones'" class="number" style="width:20px;" sortable="zones">{{ row.zones }}</td>
-                        <td data-title="'Regions'" style="width:100px" sortable="regions">{{ row.regions }}</td>
-                        <td data-title="'Number of Districts'" style="width:150px" sortable="districtCount">{{ row.districtCount }}</td>
-                        <td data-title="'Number of Facilities'" style="width:150px" sortable="facilityCount">{{ row.facilityCount }}</td>
+                        <td data-title="'Zones'" class="number" style="width:20px;" sortable="zone_name">{{ row.zone_name }}</td>
+                        <td data-title="'Regions'" style="width:100px" sortable="region_name">{{ row.region_name }}</td>
+                        <td data-title="'Number of Districts'" style="width:150px" sortable="districtcount">{{ row.districtcount }}</td>
+                        <td data-title="'Number of Facilities'" style="width:150px" sortable="facilitycount">{{ row.facilitycount }}</td>
                     </tr>
                     </tbody>
                 </table>
