@@ -11,7 +11,7 @@
 package org.openlmis.web.controller.vaccine;
 
 import org.openlmis.vaccine.dto.ProgramColumnTemplateDTO;
-import org.openlmis.vaccine.service.ColumnTemplateService;
+import org.openlmis.vaccine.service.VaccineColumnTemplateService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +20,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/vaccine/columns/")
-public class ColumnTemplate extends BaseController {
+public class VaccineColumnTemplateController extends BaseController {
 
   @Autowired
-  ColumnTemplateService service;
+  VaccineColumnTemplateService service;
 
   @RequestMapping(value="get/{id}")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {

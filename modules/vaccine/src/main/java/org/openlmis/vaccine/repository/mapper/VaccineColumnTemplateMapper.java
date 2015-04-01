@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ColumnTemplateMapper {
+public interface VaccineColumnTemplateMapper {
 
   @Select("select id as masterColumnId, * from vaccine_logistics_master_columns")
   List<LogisticsColumn> getAll();

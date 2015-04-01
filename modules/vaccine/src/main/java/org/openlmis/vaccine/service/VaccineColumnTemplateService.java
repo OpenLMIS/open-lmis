@@ -11,17 +11,17 @@
 package org.openlmis.vaccine.service;
 
 import org.openlmis.vaccine.domain.reports.LogisticsColumn;
-import org.openlmis.vaccine.repository.ColumnTemplateRepository;
+import org.openlmis.vaccine.repository.VaccineColumnTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ColumnTemplateService {
+public class VaccineColumnTemplateService {
 
   @Autowired
-  private ColumnTemplateRepository repository;
+  private VaccineColumnTemplateRepository repository;
 
   public List<LogisticsColumn> getTemplate(Long programId){
     List<LogisticsColumn> columns = repository.getTemplateForProgram(programId);

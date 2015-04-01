@@ -10,7 +10,6 @@
 
 package org.openlmis.vaccine.repository.mapper;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -33,7 +32,7 @@ import static org.junit.Assert.*;
 public class ColumnTemplateMapperIT {
 
   @Autowired
-  private ColumnTemplateMapper mapper;
+  private VaccineColumnTemplateMapper mapper;
 
 
   @Test

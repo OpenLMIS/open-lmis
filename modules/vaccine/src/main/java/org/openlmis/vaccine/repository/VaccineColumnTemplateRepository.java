@@ -11,17 +11,17 @@
 package org.openlmis.vaccine.repository;
 
 import org.openlmis.vaccine.domain.reports.LogisticsColumn;
-import org.openlmis.vaccine.repository.mapper.ColumnTemplateMapper;
+import org.openlmis.vaccine.repository.mapper.VaccineColumnTemplateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class ColumnTemplateRepository {
+public class VaccineColumnTemplateRepository {
 
   @Autowired
-  ColumnTemplateMapper mapper;
+  VaccineColumnTemplateMapper mapper;
 
   public List<LogisticsColumn> getMasterColumns(){
     return mapper.getAll();
