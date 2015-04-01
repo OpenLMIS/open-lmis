@@ -267,4 +267,9 @@ public class SeasonRationingLookupController extends BaseController {
         return response;
 
     }
+    @RequestMapping(value = "/search", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getByProductAndFacility(@RequestParam(value = "productId") Long productId,
+                                                                    @RequestParam(value = "facilityId") Long facilityId) {
+        return OpenLmisResponse.response(ADJUSTMENT_PRODUCTS, this.adjustmentProductService.getByProductAndFacility(productId, facilityId));
+    }
 }

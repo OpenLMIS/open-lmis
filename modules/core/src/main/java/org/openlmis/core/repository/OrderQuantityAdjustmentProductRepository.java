@@ -44,4 +44,8 @@ public class OrderQuantityAdjustmentProductRepository {
         }
     }
 
+    public OrderQuantityAdjustmentProduct getByProductAndFacility(Long productId, Long facilityId){
+        return this.orderQuantityAdjustmentProductMapper.getByProductAndFacility(productId, facilityId);
+    }
+
 }

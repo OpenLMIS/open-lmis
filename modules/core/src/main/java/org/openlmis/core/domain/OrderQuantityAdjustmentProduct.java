@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
@@ -29,6 +31,18 @@ public class OrderQuantityAdjustmentProduct extends BaseModel {
     private Long minMOS;
     private Long maxMOS;
     private String formula;
+
+
+    @SuppressWarnings("unused")
+    public String getStringStartDate() throws ParseException {
+        return this.startDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.startDate);
+    }
+
+    @SuppressWarnings("unused")
+    public String getStringEndDate() throws ParseException {
+        return this.endDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.endDate);
+    }
+
 
 
 }

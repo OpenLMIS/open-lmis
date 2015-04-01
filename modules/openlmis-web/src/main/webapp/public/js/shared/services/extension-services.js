@@ -1061,16 +1061,18 @@ services.factory('AdjustmentProducts', function ($resource) {
    return $resource('/season-rationing/adjustmentProducts.json', {id: '@id'}, update);
 });
 
+services.factory('AdjustmentProductSearch', function ($resource){
+    return $resource('/season-rationing/search.json', {}, {});
+});
+
 services.factory('PublicSiteData', function ($resource) {
 
     return {
-
         regions : function() {
             var resource = $resource('/public-data/regions.json', {}, {});
             return resource;
         }
     };
-
-
 });
+
 
