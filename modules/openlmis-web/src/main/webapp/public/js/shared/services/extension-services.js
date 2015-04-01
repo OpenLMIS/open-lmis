@@ -1068,11 +1068,21 @@ services.factory('AdjustmentProductSearch', function ($resource){
 services.factory('PublicSiteData', function ($resource) {
 
     return {
+
         regions : function() {
             var resource = $resource('/public-data/regions.json', {}, {});
             return resource;
-        }
+        },
+
+        districts : function() {
+            var resource = $resource('/public-data/districts.json', {}, {});
+            return resource;
+        },
+
+        facilities : function() {
+            var resource = $resource('/public-data/facilities.json', {}, {});
+            return resource;
+         }
     };
 });
-
 

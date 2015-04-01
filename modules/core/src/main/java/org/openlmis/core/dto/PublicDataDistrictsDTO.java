@@ -7,11 +7,17 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
+package org.openlmis.core.dto;
 
-angular.module('public', ['openlmis', 'ngTable', 'angularCombine', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-        when('/regions', {controller: RegionsController, templateUrl: 'partials/regions.html' }).
-        when('/districts', {controller: DistrictsController, templateUrl: 'partials/districts.html' }).
-        when('/facilities', {controller: FacilitiesController, templateUrl: 'partials/facilities.html' }).
-        otherwise({redirectTo: '/regions'});
-}]);
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class PublicDataDistrictsDTO {
+
+    private String zone_name;
+    private String region_name;
+    private String district_name;
+    private int facilitycount;
+}

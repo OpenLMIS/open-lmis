@@ -60,8 +60,8 @@ public class ProgramEquipmentProductRepositoryTest {
 
   @Test
   public void shouldRemoveEquipmentProducts() throws Exception {
-    repository.removeEquipmentProducts(66L);
-    verify(mapper).removeEquipmentProducts(66L);
+    repository.removeAllByEquipmentProducts(66L);
+    verify(mapper).removeByEquipmentProducts(66L);
   }
 
   @Test

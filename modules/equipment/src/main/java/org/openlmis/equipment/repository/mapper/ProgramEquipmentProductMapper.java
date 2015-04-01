@@ -44,7 +44,7 @@ public interface ProgramEquipmentProductMapper {
   void remove(@Param(value = "programEquipmentProductId") Long programEquipmentProductId);
 
   @Delete("DELETE FROM program_equipment_products WHERE programequipmentid = #{programEquipmentId}")
-  void removeEquipmentProducts(@Param(value = "programEquipmentId") Long programEquipmentId);
+  void removeByEquipmentProducts(@Param(value = "programEquipmentId") Long programEquipmentId);
 
   @Select("SELECT p.* from products p " +
     "       join program_products pp on pp.productId = p.id " +
