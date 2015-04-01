@@ -56,4 +56,38 @@ public class PublicDataController  extends BaseController {
         return response(JSON_LIST, publicDataRepository.getPublicDataHealthFacilities());
     }
 
+    @RequestMapping(value = "/public-data/arv-products", method = GET)
+    public ResponseEntity<OpenLmisResponse> getPublicDataProductsARV(HttpServletRequest request) {
+        return response(JSON_LIST, publicDataRepository.getPublicDataProductsARV());
+    }
+
+    @RequestMapping(value = "/public-data/ils-products", method = GET)
+    public ResponseEntity<OpenLmisResponse> getPublicDataProductsILS(HttpServletRequest request) {
+        return response(JSON_LIST, publicDataRepository.getPublicDataProductsILS());
+    }
+
+    @RequestMapping(value = "/public-data/labdist-products", method = GET)
+    public ResponseEntity<OpenLmisResponse> getPublicDataProductsLabDist(HttpServletRequest request) {
+        return response(JSON_LIST, publicDataRepository.getPublicDataProductsLabDist());
+    }
+
+    @RequestMapping(value = "/public-data/labnational-products", method = GET)
+    public ResponseEntity<OpenLmisResponse> getPublicDataProductsLabNational(HttpServletRequest request) {
+        return response(JSON_LIST, publicDataRepository.getPublicDataProductsLabNational());
+    }
+
+    @RequestMapping(value = "/public-data/labregional-products", method = GET)
+    public ResponseEntity<OpenLmisResponse> getPublicDataProductsLabReg(HttpServletRequest request) {
+        return response(JSON_LIST, publicDataRepository.getPublicDataProductsLabReg());
+    }
+
+    @RequestMapping(value = "/public-data/labzone-products", method = GET)
+    public ResponseEntity<OpenLmisResponse> getPublicDataProductsLabZone(HttpServletRequest request) {
+        return response(JSON_LIST, publicDataRepository.getPublicDataProductsLabZone());
+    }
+
+    @RequestMapping(value = "/public-data/tb-products", method = GET)
+    public ResponseEntity<OpenLmisResponse> getPublicDataProductsTB(HttpServletRequest request) {
+        return response(JSON_LIST, publicDataRepository.getPublicDataProductsTB());
+    }
 }

@@ -35,7 +35,68 @@ public interface PublicDataMapper {
             "order by zone_name, region_name, district_name, f.name")
     List<PublicDataHealthFacilitiesDTO> getPublicDataHealthFacilities();
 
-    // TO be finalized
-    @Select("select 1")
-    List<PublicDataProductsDTO> getPublicDataProducts();
+    @Select("select product_categories.name product_category, products.fullname product_name, products.code product_code, product_forms.code product_form, \n" +
+            "products.dispensingunit dispensing_unit from products \n" +
+            "join program_products ON  products.id = program_products.productid\n" +
+            "join programs on programs.id = program_products.programid\n" +
+            "join product_categories ON product_categories.id = program_products.productcategoryid\n" +
+            "join product_forms ON product_forms.id = products.formid\n" +
+            "where programs.code = 'arv'")
+    List<PublicDataProductsDTO> getPublicDataProductsARV();
+
+    @Select("select product_categories.name product_category, products.fullname product_name, products.code product_code, product_forms.code product_form, \n" +
+            "products.dispensingunit dispensing_unit from products \n" +
+            "join program_products ON  products.id = program_products.productid\n" +
+            "join programs on programs.id = program_products.programid\n" +
+            "join product_categories ON product_categories.id = program_products.productcategoryid\n" +
+            "join product_forms ON product_forms.id = products.formid\n" +
+            "where programs.code = 'ils'")
+    List<PublicDataProductsDTO> getPublicDataProductsILS();
+
+    @Select("select product_categories.name product_category, products.fullname product_name, products.code product_code, product_forms.code product_form, \n" +
+            "products.dispensingunit dispensing_unit from products \n" +
+            "join program_products ON  products.id = program_products.productid\n" +
+            "join programs on programs.id = program_products.programid\n" +
+            "join product_categories ON product_categories.id = program_products.productcategoryid\n" +
+            "join product_forms ON product_forms.id = products.formid\n" +
+            "where programs.code = 'tb'")
+    List<PublicDataProductsDTO> getPublicDataProductsTB();
+
+    @Select("select product_categories.name product_category, products.fullname product_name, products.code product_code, product_forms.code product_form, \n" +
+            "products.dispensingunit dispensing_unit from products \n" +
+            "join program_products ON  products.id = program_products.productid\n" +
+            "join programs on programs.id = program_products.programid\n" +
+            "join product_categories ON product_categories.id = program_products.productcategoryid\n" +
+            "join product_forms ON product_forms.id = products.formid\n" +
+            "where programs.code = 'labNat'")
+    List<PublicDataProductsDTO> getPublicDataProductsLabNational();
+
+
+    @Select("select product_categories.name product_category, products.fullname product_name, products.code product_code, product_forms.code product_form, \n" +
+            "products.dispensingunit dispensing_unit from products \n" +
+            "join program_products ON  products.id = program_products.productid\n" +
+            "join programs on programs.id = program_products.programid\n" +
+            "join product_categories ON product_categories.id = program_products.productcategoryid\n" +
+            "join product_forms ON product_forms.id = products.formid\n" +
+            "where programs.code = 'labZon'")
+    List<PublicDataProductsDTO> getPublicDataProductsLabZone();
+
+    @Select("select product_categories.name product_category, products.fullname product_name, products.code product_code, product_forms.code product_form, \n" +
+            "products.dispensingunit dispensing_unit from products \n" +
+            "join program_products ON  products.id = program_products.productid\n" +
+            "join programs on programs.id = program_products.programid\n" +
+            "join product_categories ON product_categories.id = program_products.productcategoryid\n" +
+            "join product_forms ON product_forms.id = products.formid\n" +
+            "where programs.code = 'labReg'")
+    List<PublicDataProductsDTO> getPublicDataProductsLabReg();
+
+    @Select("select product_categories.name product_category, products.fullname product_name, products.code product_code, product_forms.code product_form, \n" +
+            "products.dispensingunit dispensing_unit from products \n" +
+            "join program_products ON  products.id = program_products.productid\n" +
+            "join programs on programs.id = program_products.programid\n" +
+            "join product_categories ON product_categories.id = program_products.productcategoryid\n" +
+            "join product_forms ON product_forms.id = products.formid\n" +
+            "where programs.code = 'labDist'")
+    List<PublicDataProductsDTO> getPublicDataProductsLabDist();
+
 }

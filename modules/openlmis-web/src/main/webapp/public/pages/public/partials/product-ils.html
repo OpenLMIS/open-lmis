@@ -1,0 +1,37 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+    <h2 style="padding-top: 9px; line-height: 28px;"><span>List of ILS Products</span></h2>
+
+    <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
+        <tr>
+            <td>No data to show.</td>
+        </tr>
+    </table>
+    <div style="overflow: auto;">
+        <div ng-show="datarows.length > 0">
+            <table ng-show="datarows.length > 0" class="heavyTable table table-striped "
+                   ng-table="tableParams">
+                <tbody>
+                <tr ng-repeat="row in datarows">
+                    <td data-title="'Category'" class="number" style="width:20px;" sortable="product_category">{{ row.product_category }}</td>
+                    <td data-title="'Product Name'" style="width:100px" sortable="product_name">{{ row.product_name }}</td>
+                    <td data-title="'Product Code'" style="width:150px" sortable="product_code">{{ row.product_code }}</td>
+                    <td data-title="'Product Form'" style="width:150px" sortable="product_form">{{ row.product_form }}</td>
+                    <td data-title="'Dispensing Unit'" style="width:150px" sortable="dispensing_unit">{{ row.dispensing_unit }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
