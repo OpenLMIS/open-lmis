@@ -30,7 +30,7 @@ public class OrderQuantityAdjustmentProductService {
         return  this.repository.getAll();
     }
     @Transactional
-    public void saveAll(OrderQuantityAdjustmentProduct adjustmentProduct) {
+    public void save(OrderQuantityAdjustmentProduct adjustmentProduct) {
         this.repository.insert(adjustmentProduct);
     }
 
