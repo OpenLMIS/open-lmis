@@ -34,4 +34,8 @@ public class OrderQuantityAdjustmentProductService {
         this.repository.insert(adjustmentProduct);
     }
 
+    public OrderQuantityAdjustmentProduct getByProductAndFacility(Long productId, Long facilityId){
+        return this.repository.getByProductAndFacility(productId, facilityId);
+    }
+
 }

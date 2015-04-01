@@ -129,7 +129,7 @@ public class GeographicZoneController extends BaseController {
   }
 
   @RequestMapping(value = "/geographic-zone/save-gis", method = POST, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONES')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_GEOGRAPHIC_ZONE')")
   public ResponseEntity<OpenLmisResponse> saveGeographicZoneGIS(@RequestBody GeoZoneInfo geoZoneGeometries, HttpServletRequest request) {
     service.saveGisInfo(geoZoneGeometries.getFeatures(), loggedInUserId(request));
     return OpenLmisResponse.response("status", true);
