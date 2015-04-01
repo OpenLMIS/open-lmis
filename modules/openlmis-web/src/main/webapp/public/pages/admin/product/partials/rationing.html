@@ -17,57 +17,45 @@
   <form id="seasonalityAdjustmentForm" name="seasonalityAdjustmentForm" novalidate>
 
     <div class="row-fluid">
-      <div class="span12">
+      <div class="span4">
         <label id="facilityTypeLabel" openlmis-message="label.facility.type"></label>
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span12">
-        <select ui-select2 class="select2-container bottom-spacer span3" name="facilityType" id="facilityType"
+        <select  name="facilityType" id="facilityType"
                 ng-model="facilityType" ng-change="search()"
-                ng-options="ft as ft.name for ft in facilityTypes">
+                ng-options="ft as ft.name for ft in facilityTypes" style="width:300px;">
           <option value="" openlmis-message="create.facility.select.facilityType"></option>
         </select>
       </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span12">
+      <div class="span4">
         <label id="requisitionGroupLabel" openlmis-message="label.requisitionGroup"></label>
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div class="span12">
-        <select ui-select2 class="select2-container bottom-spacer span3" name="requisitionGroup" id="requisitionGroup"
+        <select  name="requisitionGroup" id="requisitionGroup"
                 ng-model="requisitionGroup" ng-change="search()"
-                ng-options="rg as rg.name for rg in requisitionGroups">
+                ng-options="rg as rg.name for rg in requisitionGroups" style="width:300px;">
           <option value="" openlmis-message="placeholder.select.requisition"></option>
         </select>
       </div>
     </div>
-
-    <div id="approveReqList" class="gridStyle" style="height: 250px;" ng-grid="gridOptions" ng-show="facilities.length"></div>
+    <div id="approveReqList" class="gridStyle" style="height: 450px;" ng-grid="gridOptions" ng-show="facilities.length"></div>
     <div id="seasonality-adjustment" class="app-form" ng-show="selectedItems.length > 0"  style="margin-top:5px;" >
         <div class="form-group">
           <h3 openlmis-message="header.apply.seasonality.rationing.factor"></h3>
           <div class="row-fluid">
             <div class="span4">
               <label for="adjustmentType" openlmis-message="label.adjustment.type"></label>
-
-              <select style="width: 300px;" ui-select2 class="select2-container bottom-spacer" name="adjustmentType" id="adjustmentType"
-                      ng-model="seasonalityAdjustment.adjustmentType"
-                      ng-options="adjType as adjType.name for adjType in seasonalityRationingTypeList">
+              <select  style="width:300px;" class="large-input" name="adjustmentType" id="adjustmentType"
+                       ng-model="seasonalityAdjustment.adjustmentType.id" >
                 <option value="" openlmis-message="select.adjustment.type"></option>
-              </select>
+                <option ng-repeat="option in seasonalityRationingTypeList" value="{{option.id}}">{{option.name}}</option>
 
+              </select>
               <span class="field-error ng-hide" ng-show="seasonalityAdjustmentForm.code.$error.required &amp;&amp; showError" openlmis-message="missing.value">Please fill this value</span>
             </div>
             <div class="span4">
               <label for="adjustmentFactor" openlmis-message="label.adjustment.factor"><span class="label-required">*</span></label>
 
-              <select style="width: 300px;" ui-select2 class="select2-container bottom-spacer" name="adjustmentFactor" id="adjustmentFactor"
-                      ng-model="seasonalityAdjustment.adjustmentFactor"
-                      ng-options="adjFact as adjFact.name for adjFact in adjustmentFactorList">
+              <select style="width: 300px;"  name="adjustmentFactor" id="adjustmentFactor"
+                      ng-model="seasonalityAdjustment.adjustmentFactor.id">
                 <option value="" openlmis-message="select.adjustment.factor"></option>
+                <option ng-repeat="option in adjustmentFactorList" value="{{option.id}}">{{option.name}}</option>
               </select>
             </div>
 

@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class PublicDataProductsDTO {
 
-    private String category;
+    private String product_category;
     private String product_name;
     private String product_code;
     private String product_form;

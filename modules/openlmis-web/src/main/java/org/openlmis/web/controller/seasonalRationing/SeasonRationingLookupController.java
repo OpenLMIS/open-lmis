@@ -18,7 +18,6 @@ import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.OrderQuantityAdjustmentFactorService;
 import org.openlmis.core.service.OrderQuantityAdjustmentProductService;
 import org.openlmis.core.service.OrderQuantityAdjustmentTypeService;
-import org.openlmis.vaccine.domain.Countries;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -257,7 +256,7 @@ public class SeasonRationingLookupController extends BaseController {
             Long userId = loggedInUserId(request);
             adjustmentProduct.setCreatedBy(userId);
             adjustmentProduct.setModifiedBy(userId);
-            this.adjustmentProductService.saveAll(adjustmentProduct);
+            this.adjustmentProductService.save(adjustmentProduct);
         } catch (DataException e) {
             response = OpenLmisResponse.error(e, BAD_REQUEST);
             return response;
@@ -266,5 +265,10 @@ public class SeasonRationingLookupController extends BaseController {
 
         return response;
 
+    }
+    @RequestMapping(value = "/search", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getByProductAndFacility(@RequestParam(value = "productId") Long productId,
+                                                                    @RequestParam(value = "facilityId") Long facilityId) {
+        return OpenLmisResponse.response(ADJUSTMENT_PRODUCTS, this.adjustmentProductService.getByProductAndFacility(productId, facilityId));
     }
 }

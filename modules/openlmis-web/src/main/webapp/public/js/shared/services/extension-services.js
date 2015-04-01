@@ -1061,6 +1061,10 @@ services.factory('AdjustmentProducts', function ($resource) {
    return $resource('/season-rationing/adjustmentProducts.json', {id: '@id'}, update);
 });
 
+services.factory('AdjustmentProductSearch', function ($resource){
+    return $resource('/season-rationing/search.json', {}, {});
+});
+
 services.factory('PublicSiteData', function ($resource) {
 
     return {
@@ -1078,7 +1082,33 @@ services.factory('PublicSiteData', function ($resource) {
         facilities : function() {
             var resource = $resource('/public-data/facilities.json', {}, {});
             return resource;
-         }
+         },
+
+        ARVProducts : function() {
+            var resource = $resource('/public-data/arv-products.json', {}, {});
+            return resource;
+        },
+
+        ILSProducts : function() {
+            var resource = $resource('/public-data/ils-products.json', {}, {});
+            return resource;
+        },
+
+        TBProducts : function() {
+            var resource = $resource('/public-data/tb-products.json', {}, {});
+            return resource;
+        },
+
+        RegionalLabProducts : function() {
+            var resource = $resource('/public-data/labregional-products.json', {}, {});
+            return resource;
+        },
+
+        NationalLabProducts : function() {
+            var resource = $resource('/public-data/labnational-products.json', {}, {});
+            return resource;
+        }
+
     };
 });
 
