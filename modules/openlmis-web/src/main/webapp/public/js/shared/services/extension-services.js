@@ -1099,15 +1099,26 @@ services.factory('PublicSiteData', function ($resource) {
             return resource;
         },
 
+        NationalLabProducts : function() {
+            var resource = $resource('/public-data/labnational-products.json', {}, {});
+            return resource;
+        },
+
         RegionalLabProducts : function() {
             var resource = $resource('/public-data/labregional-products.json', {}, {});
             return resource;
         },
 
-        NationalLabProducts : function() {
-            var resource = $resource('/public-data/labnational-products.json', {}, {});
+        DistrictLabProducts : function() {
+            var resource = $resource('/public-data/labdist-products.json', {}, {});
+            return resource;
+        },
+
+        ZoneLabProducts : function() {
+            var resource = $resource('/public-data/labzone-products.json', {}, {});
             return resource;
         }
+
 
     };
 });
