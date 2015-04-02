@@ -11,19 +11,17 @@
 package org.openlmis.email.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.email.domain.OpenlmisEmailMessage;
+import org.openlmis.email.repository.EmailNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.Payload;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -35,19 +33,18 @@ import java.util.concurrent.Future;
 @NoArgsConstructor
 public class EmailService {
 
+
   private Boolean mailSendingFlag;
 
   private MailSender mailSender;
 
-  @Autowired
-  @Qualifier("mailSender")
-  private JavaMailSender javaMailSender;
-
+  private EmailNotificationRepository repository;
 
   @Autowired
-  public EmailService(MailSender mailSender, @Value("${mail.sending.flag}") Boolean mailSendingFlag) {
+  public EmailService(MailSender mailSender, EmailNotificationRepository repository, @Value("${mail.sending.flag}") Boolean mailSendingFlag) {
     this.mailSender = mailSender;
     this.mailSendingFlag = mailSendingFlag;
+    this.repository = repository;
   }
 
   @Async
@@ -74,15 +71,7 @@ public class EmailService {
     mailSender.send(simpleMailMessage.toArray(new SimpleMailMessage[simpleMailMessage.size()]));
   }
 
-    @Async
-    public Future<Boolean> send(MimeMessage message) {
-
-        if (!mailSendingFlag) {
-            return new AsyncResult<>(true);
-        }
-
-        javaMailSender.send(message);
-
-        return new AsyncResult<>(true);
-    }
+  public void queueMessage(SimpleMailMessage message){
+    repository.queueMessage(message);
+  }
 }

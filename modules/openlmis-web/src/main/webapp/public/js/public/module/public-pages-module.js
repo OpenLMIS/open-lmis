@@ -17,6 +17,9 @@ angular.module('public', ['openlmis', 'ngTable', 'angularCombine', 'ui.bootstrap
         when('/product-ils', {controller: ILSProductsController, templateUrl: 'partials/product-ils.html' }).
         when('/product-tb', {controller: TBProductsController, templateUrl: 'partials/product-tb.html' }).
         when('/product-national-lab', {controller: NationalLabProductsController, templateUrl: 'partials/product-national-lab.html' }).
+        when('/product-regional-lab', {controller: RegionalLabProductsController, templateUrl: 'partials/product-regional-lab.html' }).
+        when('/product-zonal-lab', {controller: ZonalLabProductsController, templateUrl: 'partials/product-zonal-lab.html' }).
+        when('/product-district-lab', {controller: DistrictLabProductsController, templateUrl: 'partials/product-district-lab.html' }).
 
         otherwise({redirectTo: '/regions'});
 }]);
