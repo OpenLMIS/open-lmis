@@ -138,7 +138,7 @@ public class UserServiceTest {
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
 
-    verify(emailService).send(argThat(emailMessageMatcher(emailMessage)));
+    verify(emailService).queueMessage(argThat(emailMessageMatcher(emailMessage)));
     verify(userRepository).getByEmail(user.getEmail());
     verify(userRepository).insertPasswordResetToken(eq(user), anyString());
   }
@@ -149,7 +149,7 @@ public class UserServiceTest {
     user.setEmail("x@y.com");
     User userWithoutEmail = make(a(defaultUser, with(email, "")));
     when(userRepository.getByEmail("x@y.com")).thenReturn(userWithoutEmail);
-    doThrow(new EmailException("")).when(emailService).send(any(SimpleMailMessage.class));
+    doThrow(new EmailException("")).when(emailService).queueMessage(any(SimpleMailMessage.class));
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(UserService.USER_EMAIL_NOT_FOUND);
@@ -230,7 +230,7 @@ public class UserServiceTest {
 
     userService.create(user, FORGET_PASSWORD_LINK);
 
-    verify(emailService).send(any(SimpleMailMessage.class));
+    verify(emailService).queueMessage(any(SimpleMailMessage.class));
   }
 
   @Test

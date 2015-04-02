@@ -91,7 +91,7 @@ public class NotificationServices {
               message.setTo(user.getEmail());
 
               try {
-                emailService.send(message);
+                emailService.queueMessage(message);
               }catch(Exception exp){
                 //TODO: message is not sent ... try to log this error; may be preserve the message in the database to retry later 
               }
