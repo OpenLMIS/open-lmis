@@ -45,7 +45,7 @@ public interface VaccineReportMapper {
     @Result(property = "adverseEffectLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportAdverseEffectMapper.getLineItems")),
     @Result(property = "columnTemplate", javaType = List.class, column = "programId",
-      many = @Many(select = "org.openlmis.vaccine.repository.mapper.ColumnTemplateMapper.getForProgram")),
+      many = @Many(select = "org.openlmis.vaccine.repository.mapper.VaccineColumnTemplateMapper.getForProgram")),
     @Result(property = "coldChainLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportColdChainMapper.getLineItems")),
     @Result(property = "campaignLineItems", javaType = List.class, column = "id",
