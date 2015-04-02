@@ -7,12 +7,13 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-package org.openlmis.web.controller;
+package org.openlmis.web.controller.vaccine;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.vaccine.domain.*;
 import org.openlmis.vaccine.service.*;
+import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -37,6 +38,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @Controller
 @NoArgsConstructor
 @RequestMapping(value="/vaccine")
+@Deprecated
 public class VaccineController extends BaseController {
 
    @Autowired
