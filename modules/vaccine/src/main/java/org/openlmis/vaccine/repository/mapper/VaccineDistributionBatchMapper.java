@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
+@Deprecated
 public interface VaccineDistributionBatchMapper {
    @Insert("INSERT INTO inventory_transactions(transactiontypeid, fromfacilityid, tofacilityid, productid, \n" +
             "            dispatchreference, dispatchdate, bol, donorid, origincountryid, \n" +

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Repository
+@Deprecated
 public class VaccineDistributionBatchRepository {
 
     @Autowired

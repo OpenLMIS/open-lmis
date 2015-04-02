@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@Deprecated
 public class StatusRepository {
     @Autowired
     private StatusMapper statusMapper;
