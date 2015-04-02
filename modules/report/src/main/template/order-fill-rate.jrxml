@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order_fill_rate_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="1.3310000000000015"/>
+	<property name="ireport.x" value="5"/>
 	<property name="ireport.y" value="0"/>
 	<style name="ColorField">
 		<conditionalStyle>
@@ -45,7 +45,7 @@
 	<parameter name="TOTAL_PRODUCTS_RECEIVED_1" class="java.lang.String"/>
 	<parameter name="TOTAL_PRODUCTS_APPROVED" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES_1" class="java.lang.String"/>
-    <parameter name="OPERATOR_NAME" class="java.lang.String"/>
+	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -58,7 +58,6 @@
 	<field name="approved" class="java.lang.Integer"/>
 	<field name="item_fill_rate" class="java.lang.Integer"/>
 	<field name="ORDER_FILL_RATE" class="java.lang.Integer"/>
-
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
@@ -67,7 +66,7 @@
 		<groupHeader>
 			<band height="94">
 				<staticText>
-					<reportElement mode="Opaque" x="0" y="73" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297" uuid="027748a1-2b55-42d0-a38f-f472bd7efe21">
+					<reportElement uuid="027748a1-2b55-42d0-a38f-f472bd7efe21" mode="Opaque" x="0" y="73" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -80,95 +79,8 @@
 					</textElement>
 					<text><![CDATA[]]></text>
 				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="40" y="73" width="119" height="20" forecolor="#000000" backcolor="#333333" uuid="3170bc9e-63ea-4ba0-a1e7-bb060f28892c">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Bottom">
-						<font fontName="SansSerif" size="10" isBold="false"/>
-						<paragraph leftIndent="3"/>
-					</textElement>
-					<text><![CDATA[Product Code]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="159" y="73" width="193" height="20" forecolor="#000000" backcolor="#333333" uuid="d4994213-6d03-498f-9e98-bf142415a4d5">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Bottom">
-						<font fontName="SansSerif" size="10" isBold="false"/>
-						<paragraph leftIndent="3"/>
-					</textElement>
-					<text><![CDATA[Product Name]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="352" y="73" width="148" height="20" forecolor="#000000" backcolor="#333333" uuid="71b4a771-ae3e-4742-9369-4055101fede5">
-						<property name="local_mesure_unitwidth" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
-					</textElement>
-					<text><![CDATA[Quantity Ordered]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="500" y="73" width="156" height="20" forecolor="#000000" backcolor="#333333" uuid="497a70e0-d4a8-41ca-b1b6-82b8932fffc7"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
-					</textElement>
-					<text><![CDATA[Quantity Received]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="656" y="73" width="146" height="20" forecolor="#000000" backcolor="#333333" uuid="87102de2-1988-41e7-a306-809a0fd6e0bd">
-						<property name="local_mesure_unitx" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="local_mesure_unitwidth" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
-					</textElement>
-					<text><![CDATA[Item Fill Rate ]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="0" y="73" width="40" height="20" forecolor="#000000" backcolor="#333333" uuid="9c01d838-0023-49e0-8ef1-ba13b2f92e38">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Bottom">
-						<font fontName="SansSerif" size="10" isBold="false"/>
-						<paragraph leftIndent="3"/>
-					</textElement>
-					<text><![CDATA[Line#]]></text>
-				</staticText>
-				<staticText>
-					<reportElement positionType="Float" x="599" y="56" width="130" height="18" uuid="d7bb453e-aae8-4216-9828-9ac30823a3bc">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="local_mesure_unity" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Middle">
-						<font size="9"/>
-					</textElement>
-					<text><![CDATA[% Order Fill Rate]]></text>
-				</staticText>
-				<staticText>
-					<reportElement positionType="Float" x="599" y="20" width="130" height="18" uuid="8514f7e3-6817-4646-85fd-1bcc4d9a69f8">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Middle">
-						<font size="9"/>
-					</textElement>
-					<text><![CDATA[# Products Received:]]></text>
-				</staticText>
 				<textField>
-					<reportElement positionType="Float" x="729" y="20" width="70" height="18" uuid="d327b68a-98c1-4a8e-ac2e-5b65b12e710b">
+					<reportElement uuid="d327b68a-98c1-4a8e-ac2e-5b65b12e710b" positionType="Float" x="729" y="20" width="70" height="18">
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
@@ -178,7 +90,7 @@
 					<textFieldExpression><![CDATA[$P{TOTAL_PRODUCTS_RECEIVED}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement positionType="Float" x="729" y="38" width="70" height="18" uuid="27c7ce7b-ff11-48aa-88d9-b37aa5389328">
+					<reportElement uuid="27c7ce7b-ff11-48aa-88d9-b37aa5389328" positionType="Float" x="729" y="38" width="70" height="18">
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="local_mesure_unity" value="pixel"/>
@@ -190,7 +102,7 @@
 					<textFieldExpression><![CDATA[$P{TOTAL_PRODUCTS_APPROVED}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement positionType="Float" x="729" y="56" width="70" height="18" uuid="bbb5e20e-8461-4856-9f76-9e393946b7e4">
+					<reportElement uuid="bbb5e20e-8461-4856-9f76-9e393946b7e4" positionType="Float" x="729" y="56" width="70" height="18">
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="local_mesure_unity" value="pixel"/>
@@ -201,18 +113,58 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$P{PERCENTAGE_ORDER_FILL_RATE} + " %"]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement positionType="Float" x="599" y="38" width="130" height="18" uuid="c5d185a1-3546-4402-8022-a56bf3bd5ae9">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="local_mesure_unity" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					</reportElement>
+				<textField>
+					<reportElement uuid="cf7de1a4-f163-46be-a8b3-57531443a519" x="0" y="73" width="40" height="20"/>
 					<textElement verticalAlignment="Middle">
-						<font size="9"/>
+						<font size="12"/>
 					</textElement>
-					<text><![CDATA[# Products Approved:]]></text>
-				</staticText>
+					<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="99f26edd-b7cc-4872-ad39-9004ad414586" x="40" y="73" width="119" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.product.code}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="5ea010f3-0813-46f9-8f86-61778a7f2b22" x="159" y="73" width="193" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.product.name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="8ef52573-0395-4d69-982a-a0e21c9a92fe" x="352" y="73" width="148" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{header.quantity.ordered}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="da8653cd-9249-4321-bf01-639501fcb65f" x="500" y="73" width="156" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{header.quantity.received}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="965e210b-7d8e-448f-b43a-208337557650" x="656" y="73" width="143" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.item.fill.rate}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="8e6fd485-c396-4204-884f-c7efa97421a2" x="599" y="20" width="130" height="18"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.total.products.received}+':']]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="0fa86237-be68-44f0-b1d2-f610615825bc" x="599" y="38" width="130" height="18"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.total.products.approved}+':']]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 	</group>
@@ -222,7 +174,7 @@
 	<title>
 		<band height="79" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
+				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
@@ -232,7 +184,7 @@
 					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="OPERATOR_NAME">
-                    <subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="LOGO">
 					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
@@ -257,7 +209,7 @@
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="40" y="0" width="759" height="20" forecolor="#006666" uuid="6d1fb982-14d5-4ec9-babe-3f491ad3ee2f">
+				<reportElement uuid="6d1fb982-14d5-4ec9-babe-3f491ad3ee2f" x="40" y="0" width="759" height="20" forecolor="#006666">
 					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Top">
@@ -266,22 +218,23 @@
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="802" height="20" backcolor="#F4F4F4" uuid="fb1b77a0-4d61-465c-9e55-2aa5da7933ea">
+				<reportElement uuid="fb1b77a0-4d61-465c-9e55-2aa5da7933ea" mode="Opaque" x="0" y="0" width="802" height="20" backcolor="#F4F4F4">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 				</reportElement>
+				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="0" width="40" height="20" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
+				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" x="0" y="0" width="40" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="19" width="802" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
+				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="802" height="1" forecolor="#3D9297">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -289,7 +242,7 @@
 				</graphicElement>
 			</line>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="352" y="0" width="148" height="20" uuid="d8596805-00b4-4490-9ede-7ac22f213601">
+				<reportElement uuid="d8596805-00b4-4490-9ede-7ac22f213601" x="352" y="0" width="148" height="20">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -300,7 +253,7 @@
 				<textFieldExpression><![CDATA[$F{approved}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement style="err_received" x="500" y="0" width="156" height="20" uuid="f832e7d8-65b1-404a-9349-a14bad5d30c6">
+				<reportElement uuid="f832e7d8-65b1-404a-9349-a14bad5d30c6" style="err_received" x="500" y="0" width="156" height="20">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -310,7 +263,7 @@
 				<textFieldExpression><![CDATA[$F{receipts}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement style="item_fill_rate_style" x="656" y="0" width="146" height="20" uuid="7fa33077-7077-4fe4-8f1c-3c3e864ed87b">
+				<reportElement uuid="7fa33077-7077-4fe4-8f1c-3c3e864ed87b" style="item_fill_rate_style" x="656" y="0" width="146" height="20">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 				</reportElement>
@@ -320,19 +273,31 @@
 				<textFieldExpression><![CDATA[$F{item_fill_rate}+" %"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="40" y="0" width="119" height="20" uuid="59787138-53b0-463e-9f84-2e9ce5a14990"/>
+				<reportElement uuid="59787138-53b0-463e-9f84-2e9ce5a14990" x="40" y="0" width="119" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productcode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="159" y="0" width="193" height="20" uuid="a286a183-289b-4fc8-a14c-e600a5023660"/>
+				<reportElement uuid="a286a183-289b-4fc8-a14c-e600a5023660" x="159" y="0" width="193" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{product}=="NULL"?" ":$F{product})]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement uuid="d7bb453e-aae8-4216-9828-9ac30823a3bc" positionType="Float" x="589" y="26" width="130" height="11">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[% Order Fill Rate]]></text>
+			</staticText>
 		</band>
 	</detail>
 </jasperReport>
