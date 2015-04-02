@@ -54,6 +54,7 @@
     <intercept-url pattern="/getSMS**" access="permitAll" requires-channel="any"/>
     <intercept-url pattern="/messages.json" access="permitAll" requires-channel="any"/>
     <intercept-url pattern="/locales.json" access="permitAll" requires-channel="any"/>
+    <intercept-url pattern="/public-data/*" access="permitAll" requires-channel="any"/>
     <intercept-url pattern="/changeLocale**" access="permitAll" requires-channel="any"/>
     <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="any"/>
     <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="any"/>

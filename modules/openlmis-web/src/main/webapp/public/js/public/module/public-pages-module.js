@@ -11,5 +11,12 @@
 angular.module('public', ['openlmis', 'ngTable', 'angularCombine', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
         when('/regions', {controller: RegionsController, templateUrl: 'partials/regions.html' }).
+        when('/districts', {controller: DistrictsController, templateUrl: 'partials/districts.html' }).
+        when('/facilities', {controller: FacilitiesController, templateUrl: 'partials/facilities.html' }).
+        when('/product-arv', {controller: ARVProductsController, templateUrl: 'partials/product-arv.html' }).
+        when('/product-ils', {controller: ILSProductsController, templateUrl: 'partials/product-ils.html' }).
+        when('/product-tb', {controller: TBProductsController, templateUrl: 'partials/product-tb.html' }).
+        when('/product-national-lab', {controller: NationalLabProductsController, templateUrl: 'partials/product-national-lab.html' }).
+
         otherwise({redirectTo: '/regions'});
 }]);

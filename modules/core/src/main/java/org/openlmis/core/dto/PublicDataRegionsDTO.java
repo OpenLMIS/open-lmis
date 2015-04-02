@@ -7,36 +7,17 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
+package org.openlmis.core.dto;
 
-package org.openlmis.vaccine.repository;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import org.openlmis.vaccine.domain.reports.LogisticsColumn;
-import org.openlmis.vaccine.repository.mapper.ColumnTemplateMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class PublicDataRegionsDTO {
 
-import java.util.List;
-
-@Component
-public class ColumnTemplateRepository {
-
-  @Autowired
-  ColumnTemplateMapper mapper;
-
-  public List<LogisticsColumn> getMasterColumns(){
-    return mapper.getAll();
-  }
-
-  public List<LogisticsColumn> getTemplateForProgram(Long programId){
-    return mapper.getForProgram(programId);
-  }
-
-  public void updateProgramColumn(LogisticsColumn column){
-    mapper.updateProgramColumn(column);
-  }
-
-  public void insertProgramColumn(LogisticsColumn column){
-    mapper.insertProgramColumn(column);
-  }
-
+    private String zone_name;
+    private String region_name;
+    private int districtcount;
+    private int facilitycount;
 }

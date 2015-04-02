@@ -585,25 +585,25 @@ public class DBWrapper {
       update("delete from program_products;");
     }
 
-    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) VALUES\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product1 + "'), 30, 12.5, true, 1, (select id from product_categories where code = 'C1')),\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 12.5, true, 5, (select id from product_categories where code = 'C1'));");
+    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId, fullSupply) VALUES\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product1 + "'), 30, 12.5, true, 1, (select id from product_categories where code = 'C1'), true),\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 12.5, true, 5, (select id from product_categories where code = 'C1'), true);");
   }
 
   public void insertProgramProductsWithoutDeleting(String product1, String product2, String program) throws SQLException {
-    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) VALUES\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product1 + "'), 30, 12.5, true, 1, (select id from product_categories where code = 'C1')),\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 12.5, true, 5, (select id from product_categories where code = 'C1'));");
+    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId, fullSupply) VALUES\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product1 + "'), 30, 12.5, true, 1, (select id from product_categories where code = 'C1'), true),\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 12.5, true, 5, (select id from product_categories where code = 'C1'), true);");
   }
 
   public void insertProgramProduct(String product, String program, String doses, String active) throws SQLException {
-    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) VALUES\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), '" + doses + "', 12.5, '" + active + "', 1, (Select id from product_categories where code='C1'));");
+    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId, fullSupply) VALUES\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), '" + doses + "', 12.5, '" + active + "', 1, (Select id from product_categories where code='C1'), true);");
   }
 
   public void insertProgramProductsWithCategory(String product, String program, String category, Integer displayOrder) throws SQLException {
-    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) VALUES\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), 30, 12.5, true," + displayOrder + ", (Select id from product_categories where code='" + category + "'));");
+    update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId, fullSupply) VALUES\n" +
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), 30, 12.5, true," + displayOrder + ", (Select id from product_categories where code='" + category + "'), true);");
   }
 
   public void insertProgramProductISA(String program, String product, String whoRatio, String dosesPerYear, String wastageFactor,

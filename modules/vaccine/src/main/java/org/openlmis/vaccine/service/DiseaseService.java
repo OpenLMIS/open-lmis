@@ -27,12 +27,12 @@ public class DiseaseService {
     return repository.getAll();
   }
 
-  public void update(VaccineDisease disease){
-    repository.update(disease);
-  }
-
-  public void insert(VaccineDisease disease){
-    repository.insert(disease);
+  public void save(VaccineDisease disease){
+    if(disease.getId() == null){
+      repository.insert(disease);
+    }else {
+      repository.update(disease);
+    }
   }
 
   public VaccineDisease getById(Long id){

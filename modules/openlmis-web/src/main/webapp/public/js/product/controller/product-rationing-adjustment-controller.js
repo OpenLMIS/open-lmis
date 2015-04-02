@@ -1,4 +1,4 @@
-function ProductRationingAdjustmentController($scope, productDTO,seasonalityRationingTypeList, adjustmentFactorList, facilityTypes,messageService, requisitionGroups, Products, FacilityByTypeAndRequisition, $location) {
+function ProductRationingAdjustmentController($scope, $timeout,productDTO,seasonalityRationingTypeList, AdjustmentProductSearch, adjustmentFactorList, facilityTypes,messageService, requisitionGroups, AdjustmentProducts, FacilityByTypeAndRequisition, $location) {
 
   $scope.newProgramProduct = {active: false};
   $scope.product = {};
@@ -9,8 +9,7 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
   $scope.facilities = [];
   $scope.$parent.message = "";
   $scope.selectAll = false;
-
-  $scope.addBatchesModal = undefined;
+  $scope.seasonalityAdjustment = {product: productDTO.product};
 
   if (!isUndefined(productDTO)) {
     if (!isUndefined(productDTO.product)) {
@@ -19,7 +18,6 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
     else {
       $scope.product = {};
     }
-    $scope.productLastUpdated = productDTO.productLastUpdated;
   }
 
   var success = function (data) {
@@ -50,16 +48,43 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
 
   $scope.selectedItems = [];
 
-  $scope.openModal = function () {
-    $scope.addBatchesModal = true;
-    //alert('selectedItems '+ JSON.stringify($scope.selectedItems));
+  $scope.convertStringToCorrectDateFormat = function(stringDate) {
+    if (stringDate) {
+      return stringDate.split("-").reverse().join("-");
+    }
+    return null;
+  };
+
+  $scope.showAdjustmentForm = function () {
+    if(!isUndefined($scope.selectedItems)){
+      $scope.seasonalityAdjustment.facility = $scope.selectedItems[0];
+      AdjustmentProductSearch.get({productId: $scope.product.id, facilityId: $scope.seasonalityAdjustment.facility.id}, function (data){
+        var adjustmentData = data.adjustmentProducts;
+        if(!isUndefined(adjustmentData)){
+          $scope.seasonalityAdjustment = adjustmentData;
+          $scope.seasonalityAdjustment.startDate = $scope.convertStringToCorrectDateFormat($scope.seasonalityAdjustment.stringStartDate);
+          $scope.seasonalityAdjustment.endDate = $scope.convertStringToCorrectDateFormat($scope.seasonalityAdjustment.stringEndDate);
+
+        }else{
+          $scope.seasonalityAdjustment = {};
+          $scope.seasonalityAdjustment.facility = $scope.selectedItems[0];
+          $scope.seasonalityAdjustment.product = productDTO.product;
+        }
+      });
+    }
+    $timeout(function () {
+      $('html, body').animate({
+        scrollTop: $("#seasonality-adjustment").offset().top
+      }, 2000);
+    }, 100);
+
    };
-  var myHeaderCellTemplate = '<input type="checkbox" ng-model="selectAll" ng-click="openRnr()"/>';
+  var myHeaderCellTemplate = '<input type="checkbox" ng-model="selectAll" ng-click="cc()"/>';
   $scope.gridOptions = { data: 'facilities',
-    multiSelect: true,
+    multiSelect: false,
     selectedItems: $scope.selectedItems,
     afterSelectionChange: function (rowItem, event) {
-      $scope.openModal();
+      $scope.showAdjustmentForm();
     },
     showFooter: false,
     checkboxHeaderTemplate: '<input class="ngSelectionHeader" type="checkbox" ng-model="allSelected" ng-change="toggleSelectAll(allSelected)"/>',
@@ -73,8 +98,8 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
       {field: 'name', displayName: messageService.get("header.name") },
       {field: 'code', displayName: messageService.get("header.code")},
       {field: 'geographicZone.name', displayName: messageService.get("label.district")},
-      {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
-        cellTemplate: '<div class="ngCellText checked"><a href="/public/pages/dashboard/index.html#dashoard" ng-click="">hi</a></div>',
+      {field: 'emergency', displayName: messageService.get("label.graph"),
+        cellTemplate: '<div class="ngCellText checked"><a href="/public/pages/dashboard/index.html#dashoard" ng-click=""></a></div>',
         width: 110 }
 
       /*{field: 'emergency', headerCellTemplate : myHeaderCellTemplate, displayName: messageService.get("requisition.type.emergency"),
@@ -84,18 +109,13 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
   };
 
   $scope.save = function () {
-    if ($scope.productForm.$error.required) {
+    //alert(JSON.stringify($scope.seasonalityAdjustment));
+   /* if ($scope.productForm.$error.required) {
       $scope.showError = true;
       $scope.error = "form.error";
       return;
-    }
-
-    if ($scope.product.id) {
-      Products.update({id: $scope.product.id}, {product: $scope.product, programProducts: $scope.programProducts}, success, error);
-    }
-    else {
-      Products.save({}, {product: $scope.product, programProducts: $scope.programProducts}, success, error);
-    }
+    }*/
+    AdjustmentProducts.save({}, $scope.seasonalityAdjustment, success, error );
   };
 
   $scope.cancel = function () {
@@ -104,22 +124,6 @@ function ProductRationingAdjustmentController($scope, productDTO,seasonalityRati
     $location.path('#/search');
   };
 
-  $scope.edit = function (index) {
-    $scope.programProducts[index].previousProgramProduct = angular.copy($scope.programProducts[index]);
-    $scope.programProducts[index].underEdit = true;
-  };
-
-  $scope.cancelEdit = function (index) {
-    $scope.programProducts[index] = $scope.programProducts[index].previousProgramProduct;
-    $scope.programProducts[index].underEdit = false;
-    $scope.programProducts[index].previousProgramProduct = undefined;
-  };
-
-  $scope.updateCategory = function (index) {
-    $scope.programProducts[index].productCategory = _.find($scope.categories, function (category) {
-      return category.id === $scope.programProducts[index].productCategory.id;
-    });
-  };
 }
 
 ProductRationingAdjustmentController.resolve = {

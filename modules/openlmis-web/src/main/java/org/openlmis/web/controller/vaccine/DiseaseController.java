@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller.vaccine;
 
+import org.openlmis.core.exception.DataException;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.service.DiseaseService;
 import org.openlmis.web.controller.BaseController;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Controller
 @RequestMapping(value = "/vaccine/disease/")
@@ -42,13 +45,12 @@ public class DiseaseController extends BaseController {
 
   @RequestMapping(value="save")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineDisease disease) {
-    if(disease.getId() == null){
-      service.insert(disease);
+    try {
+      service.save(disease);
+    } catch (DataException e) {
+      return OpenLmisResponse.error(e, BAD_REQUEST);
     }
-    else{
-      service.update(disease);
-    }
-    return OpenLmisResponse.response("status", "success");
+    return OpenLmisResponse.response("disease", service.getById(disease.getId()));
   }
 
 

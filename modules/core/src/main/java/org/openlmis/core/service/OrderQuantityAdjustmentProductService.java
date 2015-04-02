@@ -17,6 +17,7 @@ import org.openlmis.core.repository.OrderQuantityAdjustmentProductRepository;
 import org.openlmis.core.repository.OrderQuantityAdjustmentTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,14 @@ public class OrderQuantityAdjustmentProductService {
 
     public List<OrderQuantityAdjustmentProduct> getAll() {
         return  this.repository.getAll();
+    }
+    @Transactional
+    public void save(OrderQuantityAdjustmentProduct adjustmentProduct) {
+        this.repository.insert(adjustmentProduct);
+    }
+
+    public OrderQuantityAdjustmentProduct getByProductAndFacility(Long productId, Long facilityId){
+        return this.repository.getByProductAndFacility(productId, facilityId);
     }
 
 }

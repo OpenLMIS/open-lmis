@@ -37,46 +37,55 @@ public class MaintenanceLogService {
   @Autowired
   ServiceContractRepository serviceContractRepository;
 
-  public List<MaintenanceLog> getAll(){
+  public List<MaintenanceLog> getAll() {
     return repository.getAll();
   }
 
-  public List<MaintenanceLog> getAllForFacility(Long facilityId){
+  public List<MaintenanceLog> getAllForFacility(Long facilityId) {
     return repository.getAllForFacility(facilityId);
   }
 
-  public List<MaintenanceLog> getAllForVendor(Long vendorId){
-    return repository.getAllForFacility(vendorId);
+  public List<MaintenanceLog> getAllForVendor(Long vendorId) {
+    return repository.getAllForVendor(vendorId);
   }
 
-  public MaintenanceLog getById(Long id){
+  public MaintenanceLog getById(Long id) {
     return repository.getById(id);
   }
 
-  public void save(MaintenanceLog log){
-    if(log.getId() == null){
+  public void save(MaintenanceLog log) {
+    if (log.getId() == null) {
       repository.insert(log);
-    }else{
+    } else {
       repository.update(log);
     }
   }
 
-  public void save(MaintenanceRequest maintenanceRequest){
+  //TODO: move this to it's own class
+  //TODO: email the service vendor that there is a request
+  public void save(MaintenanceRequest maintenanceRequest) {
     EquipmentInventory equipmentInventory = equipmentInventoryRepository.getInventoryById(maintenanceRequest.getInventoryId());
-    ServiceContract serviceContract = serviceContractRepository.getAllForEquipment(equipmentInventory.getEquipmentId()).get(0);
-    MaintenanceLog log;
-    log = new MaintenanceLog(
-        maintenanceRequest.getUserId(),
-        maintenanceRequest.getFacilityId(),
-        equipmentInventory.getEquipmentId(),
-        maintenanceRequest.getVendorId(),
-        serviceContract.getId(),
-        maintenanceRequest.getModifiedDate(),
-        maintenanceRequest.getMaintenanceDetails().getServicePerformed(),
-        maintenanceRequest.getMaintenanceDetails().getFinding(),
-        maintenanceRequest.getVendorComment(),
-        maintenanceRequest.getId(),
-        maintenanceRequest.getMaintenanceDetails().getNextVisitDate());
+
+    //TODO: check if this service contract is applicable for this specific facility.
+    List<ServiceContract> serviceContracts = serviceContractRepository.getAllForEquipment(equipmentInventory.getEquipmentId());
+    Long serviceContractId = null;
+
+    //TODO: why the first contract?
+    //check if this contract is active, unexpired and that the vendor is the same as one in the request.
+    if (serviceContracts != null && serviceContracts.size() > 0) {
+      serviceContractId = serviceContracts.get(0).getId();
+    }
+    MaintenanceLog log = new MaintenanceLog();
+    log.setUserId(maintenanceRequest.getUserId());
+    log.setFacilityId(maintenanceRequest.getFacilityId());
+    log.setEquipmentId(equipmentInventory.getEquipmentId());
+    log.setVendorId(maintenanceRequest.getVendorId());
+    log.setContractId(serviceContractId);
+    log.setModifiedDate(maintenanceRequest.getModifiedDate());
+    //log.setRecommendation(maintenanceRequest.getMaintenanceDetails().getServicePerformed());
+    //log.setFinding(maintenanceRequest.getMaintenanceDetails().getFinding());
+    log.setRequestId(maintenanceRequest.getId());
+    //log.setNextVisitDate(maintenanceRequest.getMaintenanceDetails().getNextVisitDate());
     this.save(log);
   }
 }
