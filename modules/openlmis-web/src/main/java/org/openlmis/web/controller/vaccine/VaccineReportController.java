@@ -57,8 +57,6 @@ public class VaccineReportController extends BaseController {
 
   @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request){
-    Long userId = loggedInUserId(request);
-
     return OpenLmisResponse.response("periods", service.getPeriodsFor(facilityId, programId));
   }
 

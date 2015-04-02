@@ -33,6 +33,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @RequestMapping(value="/vaccine/quantification")
+@Deprecated
 public class VaccineQuantificationController extends BaseController{
 
 

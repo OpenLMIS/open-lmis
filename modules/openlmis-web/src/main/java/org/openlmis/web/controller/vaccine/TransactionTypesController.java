@@ -36,6 +36,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @RequestMapping(value="/vaccine/transaction-type/")
+@Deprecated
 public class TransactionTypesController extends BaseController {
 
     @Autowired
