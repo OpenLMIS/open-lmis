@@ -25,6 +25,7 @@ import java.util.Date;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Deprecated
 public class Manufacturer extends BaseModel {
 
     private String name;

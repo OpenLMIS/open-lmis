@@ -20,6 +20,7 @@ import org.openlmis.core.domain.BaseModel;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@Deprecated
 public class Dilution extends BaseModel {
     String name;
 }

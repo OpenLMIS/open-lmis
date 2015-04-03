@@ -20,6 +20,7 @@ import org.openlmis.core.domain.BaseModel;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
+@Deprecated
 public class VaccineTarget  extends BaseModel {
 
     private int geographicZoneId;

@@ -21,6 +21,7 @@ import org.openlmis.upload.Importable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@Deprecated
 public class VaccineStorage extends BaseModel implements Importable {
     /*
     to be changed to storageType look up value
