@@ -28,10 +28,10 @@ CREATE TABLE vaccine_vitamin_supplementation_age_groups
 CREATE TABLE vaccine_report_vitamin_supplementation_line_items
 (
   id SERIAL NOT NULL PRIMARY KEY,
-  vaccineReportId INTEGER NOT NULL REFERENCES vaccine_reports(id),
+  reportId INTEGER NOT NULL REFERENCES vaccine_reports(id),
   vaccineVitaminId INTEGER NOT NULL REFERENCES vaccine_vitamins (id),
-  vaccineAgeGroupId INTEGER NOT NULL REFERENCES vaccine_vitamin_supplementation_age_groups(id),
-  vaccineName varchar(100) NOT NULL,
+  vitaminAgeGroupId INTEGER NOT NULL REFERENCES vaccine_vitamin_supplementation_age_groups(id),
+  vitaminName varchar(100) NOT NULL,
   displayOrder INTEGER NOT NULL,
   maleValue INTEGER NULL,
   femaleValue INTEGER NULL,
