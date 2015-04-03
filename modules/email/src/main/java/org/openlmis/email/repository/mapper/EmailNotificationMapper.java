@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmailNotificationMapper {
 
-  @Insert("INSERT INTO email_notifications(receiver, subject, content, sent) VALUES (#{receiver}, #{subject}, #{text}, false)")
+  @Insert("INSERT INTO email_notifications(receiver, subject, content, sent) VALUES (#{to}, #{subject}, #{text}, false)")
   Integer insert(SimpleMailMessage message);
 }

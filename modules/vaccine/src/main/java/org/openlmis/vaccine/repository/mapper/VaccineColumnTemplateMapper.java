@@ -23,7 +23,7 @@ import java.util.List;
 public interface VaccineColumnTemplateMapper {
 
   @Select("select id as masterColumnId, * from vaccine_logistics_master_columns")
-  List<LogisticsColumn> getAll();
+  List<LogisticsColumn> getAllMasterColumns();
 
 
   @Select("select v.*, c.indicator, c.mandatory, c.description, c.name from vaccine_program_logistics_columns v " +

@@ -24,7 +24,7 @@ public class VaccineColumnTemplateRepository {
   VaccineColumnTemplateMapper mapper;
 
   public List<LogisticsColumn> getMasterColumns(){
-    return mapper.getAll();
+    return mapper.getAllMasterColumns();
   }
 
   public List<LogisticsColumn> getTemplateForProgram(Long programId){

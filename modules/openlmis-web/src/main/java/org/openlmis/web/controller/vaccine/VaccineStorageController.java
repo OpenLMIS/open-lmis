@@ -1,6 +1,5 @@
-package org.openlmis.web.controller;
+package org.openlmis.web.controller.vaccine;
 
-import org.apache.poi.hssf.record.formula.functions.Count;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.vaccine.domain.Countries;
 import org.openlmis.vaccine.domain.StorageType;
@@ -10,6 +9,7 @@ import org.openlmis.vaccine.service.CountriesService;
 import org.openlmis.vaccine.service.StorageTypeService;
 import org.openlmis.vaccine.service.TempratureService;
 import org.openlmis.vaccine.service.VaccineStorageService;
+import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -25,17 +25,9 @@ import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
-/*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
- *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
- */
 @Controller
-public class VaccineStorageController extends BaseController  {
+@Deprecated
+public class VaccineStorageController extends BaseController {
     @Autowired
     private VaccineStorageService storageService;
     @Autowired

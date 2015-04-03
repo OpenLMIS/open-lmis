@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = "classpath*:test-applicationContext-vaccine.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class ColumnTemplateMapperIT {
+public class VaccineColumnTemplateMapperIT {
 
   @Autowired
   private VaccineColumnTemplateMapper mapper;
@@ -37,7 +37,7 @@ public class ColumnTemplateMapperIT {
 
   @Test
   public void testGetAll() throws Exception {
-    List<LogisticsColumn> columns =  mapper.getAll();
+    List<LogisticsColumn> columns =  mapper.getAllMasterColumns();
     assertEquals(15, columns.size());
   }
 
@@ -68,6 +68,6 @@ public class ColumnTemplateMapperIT {
 
   @Test
   public void testUpdateProgramColumn() throws Exception {
-
+    //TODO:
   }
 }

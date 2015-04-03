@@ -33,6 +33,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @RequestMapping(value="/vaccine/received-status/")
+@Deprecated
 public class ReceivedStatusController extends BaseController {
 
     @Autowired

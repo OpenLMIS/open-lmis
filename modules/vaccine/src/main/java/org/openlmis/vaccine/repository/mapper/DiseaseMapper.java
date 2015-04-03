@@ -10,10 +10,7 @@
 
 package org.openlmis.vaccine.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +24,8 @@ public interface DiseaseMapper {
 
   @Insert("insert into vaccine_diseases (name, description, displayOrder, modifiedBy, createdBy) values " +
     "(#{name}, #{description}, #{displayOrder}, #{modifiedBy}, #{createdBy})")
-  void insert(VaccineDisease disease);
+  @Options(flushCache = true, useGeneratedKeys = true)
+  Integer insert(VaccineDisease disease);
 
   @Update("update vaccine_diseases " +
     "set " +

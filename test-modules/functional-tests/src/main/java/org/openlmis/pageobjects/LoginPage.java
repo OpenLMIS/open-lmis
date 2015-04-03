@@ -43,9 +43,12 @@ public class LoginPage extends Page {
   @FindBy(how = ID, using = "loginError")
   private static WebElement loginErrorLabel = null;
 
+  private String baseUrl = "http://localhost:9091";
+
   public LoginPage(TestWebDriver driver, String baseUrl) {
     super(driver);
-    testWebDriver.setBaseURL(baseUrl);
+    this.baseUrl = baseUrl;
+    testWebDriver.setBaseURL(baseUrl + "/public/pages/login.html");
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(userNameField);
@@ -53,12 +56,14 @@ public class LoginPage extends Page {
 
   public LoginPage(TestWebDriver testWebDriver) {
     super(testWebDriver);
+    testWebDriver.getUrl(baseUrl + "/public/pages/login.html");
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(userNameField);
   }
 
   public HomePage loginAs(String username, String password) {
+    testWebDriver.getUrl(baseUrl + "/public/pages/login.html");
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(userNameField);
     testWebDriver.waitForElementToAppear(passwordField);
@@ -71,6 +76,7 @@ public class LoginPage extends Page {
   }
 
   public ForgotPasswordPage clickForgotPasswordLink() {
+    testWebDriver.getUrl(baseUrl + "/public/pages/login.html");
     testWebDriver.waitForElementToAppear(forgotPasswordLink);
     forgotPasswordLink.click();
     return PageObjectFactory.getForgotPasswordPage(testWebDriver);

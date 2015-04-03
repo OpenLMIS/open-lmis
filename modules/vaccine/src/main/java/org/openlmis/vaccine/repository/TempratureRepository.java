@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
+@Deprecated
 public class TempratureRepository {
     @Autowired
     private TempratureMapper tempratureMapper;

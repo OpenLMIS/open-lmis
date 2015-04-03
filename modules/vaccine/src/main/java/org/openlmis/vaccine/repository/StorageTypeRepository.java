@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
+@Deprecated
 public class StorageTypeRepository {
     @Autowired
     private StorageTypeMapper storageTypeMapper;
