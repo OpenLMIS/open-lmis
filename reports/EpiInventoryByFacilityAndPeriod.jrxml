@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2015-04-03T13:02:39 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EpiInventoryByFacilityAndPeriod" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="354e71e2-5e1d-4b08-b8d5-53eb7a20ce93">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Open-LMIS - Localhost"/>
+	<parameter name="Facility" class="java.lang.String">
+		<property name="displayName" value="Facility"/>
+		<property name="selectSql" value="select name from facilities order by code"/>
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="Month" class="java.lang.String">
+		<property name="displayName" value="Month"/>
+		<property name="selectSql" value="select name from processing_periods order by startDate desc"/>
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select eili.productname as productname
+  , f.name as facilityname
+  , pp.name as periodname
+  , (eili.existingquantity * p.packsize) as existingquanitydoses
+  , (eili.deliveredquantity * p.packsize) as deliveredquantitydoses
+  , (eili.spoiledquantity * p.packsize) as spoiledquanitydoses
+from epi_inventory_line_items eili
+join products p on (eili.productcode = p.code)
+join facility_visits fv on (eili.facilityvisitid=fv.id)
+join facilities f on (fv.facilityid=f.id)
+join distributions d on (fv.distributionid=d.id)
+join processing_periods pp on (d.periodid=pp.id)
+where f.name=$P{Facility}
+  and pp.name=$P{Month}
+order by eili.productdisplayorder asc]]>
+	</queryString>
+	<field name="productname" class="java.lang.String"/>
+	<field name="facilityname" class="java.lang.String"/>
+	<field name="periodname" class="java.lang.String"/>
+	<field name="existingquanitydoses" class="java.math.BigDecimal"/>
+	<field name="deliveredquantitydoses" class="java.math.BigDecimal"/>
+	<field name="spoiledquanitydoses" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="92" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="570" height="50" uuid="e5272b1a-94c6-4055-ac26-9e4582039f50"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[EPI Inventory]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="50" width="50" height="20" uuid="0a6ded99-4f1d-45a6-ace8-34cbbaae2875"/>
+				<text><![CDATA[Facility:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="50" width="40" height="20" uuid="66eb88d3-b475-42ce-bb9b-d1ebe6208de1"/>
+				<text><![CDATA[Month:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="140" y="50" width="100" height="20" uuid="475ee364-256d-4cb9-b5b0-806f85765ea4"/>
+				<textFieldExpression><![CDATA[$F{facilityname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="50" width="100" height="22" uuid="f4db206f-6500-410a-831b-8f9936fbf8fc"/>
+				<textFieldExpression><![CDATA[$F{periodname}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="120" y="0" width="100" height="30" uuid="b3052af1-ca99-4573-9408-bb90a898a554"/>
+				<text><![CDATA[Existing Quantity (doses)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="0" width="100" height="30" uuid="f1925132-fe59-47d4-8dc1-c79bcbcbfef0"/>
+				<text><![CDATA[Delivered Quantity (doses)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="0" width="100" height="30" uuid="8b6819d5-620e-4820-8f26-c8a6bc86ab39"/>
+				<text><![CDATA[Spoiled Quantity (doses)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="30" uuid="7de66c0f-ac0b-4cd2-860c-12ef555b88f6"/>
+				<text><![CDATA[Product]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="30" uuid="3ae31fc4-74ac-4e20-9467-0865a1e8cd74"/>
+				<textFieldExpression><![CDATA[$F{productname}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="120" y="0" width="100" height="30" uuid="556d6bde-7871-472c-9603-9e7f9dede56e"/>
+				<textFieldExpression><![CDATA[$F{existingquanitydoses}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="240" y="0" width="100" height="30" uuid="481e86d0-cb1d-488a-81e5-1ff7c916b5cd"/>
+				<textFieldExpression><![CDATA[$F{deliveredquantitydoses}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="370" y="0" width="100" height="30" uuid="bcc8a824-50f0-4aea-bdab-21a2352f61f7"/>
+				<textFieldExpression><![CDATA[$F{spoiledquanitydoses}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
