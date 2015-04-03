@@ -1,0 +1,35 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+<div class="rnr-table">
+  <h2><span openlmis-message="label.vaccine.vitamin.supplementation"></span></h2>
+
+  <div class="span9" style="margin-left: 0px;">
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th class="span5"><span openlmis-message="label.vaccine.vitamin.name"></span></th>
+      <th class="span1"><span openlmis-message="label.vaccine.vitamin.age.group"></span></th>
+      <th class="span1"><span openlmis-message="label.vaccine.vitamin.supplementation.male"></span></th>
+      <th class="span1"><span openlmis-message="label.vaccine.vitamin.supplementation.female"></span></th>
+      <th class="span1"><span openlmis-message="label.vaccine.vitamin.supplementation.total"></span></th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="vitamin in report.vitaminSupplementationLineItems">
+        <td class="cell-input"><span class="cell-text">{{vitamin.vitaminName}}</span></td>
+        <td class="cell-input"><span class="cell-text">{{vitamin.ageGroup}}</span></td>
+        <td class="cell-input col-general"><input numeric-validator="positiveInteger" type="text" ng-model="vitamin.male" /></td>
+        <td class="cell-input col-general"><input numeric-validator="positiveInteger" type="text" ng-model="vitamin.female" /></td>
+        <td class="cell-input col-general number"><span>{{vitamin.male + vitamin.female}}</span></td>
+      </tr>
+    </tbody>
+    </table>
+  </div>
+</div>
