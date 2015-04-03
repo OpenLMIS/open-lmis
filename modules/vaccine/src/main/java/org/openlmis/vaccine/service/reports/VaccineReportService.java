@@ -18,10 +18,13 @@ import org.openlmis.core.service.*;
 import org.openlmis.vaccine.RequestStatus;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
-import org.openlmis.vaccine.domain.reports.CampaignLineItem;
+import org.openlmis.vaccine.domain.Vitamin;
+import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
+import org.openlmis.vaccine.repository.VitaminSupplementationAgeGroupRepository;
+import org.openlmis.vaccine.repository.VitaminRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportColdChainRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportRepository;
 import org.openlmis.vaccine.service.DiseaseService;
@@ -62,6 +65,12 @@ public class VaccineReportService {
   VaccineReportColdChainRepository coldChainRepository;
 
   @Autowired
+  VitaminRepository vitaminRepository;
+
+  @Autowired
+  VitaminSupplementationAgeGroupRepository ageGroupRepository;
+
+  @Autowired
   ProgramService programService;
 
 
@@ -85,6 +94,9 @@ public class VaccineReportService {
     List<VaccineDisease> diseases = diseaseService.getAll();
     List<VaccineProductDose> dosesToCover = productDoseService.getForProgram(programId);
     List<ColdChainLineItem> coldChainLineItems = coldChainRepository.getNewEquipmentLineItems(programId, facilityId);
+    List<Vitamin> vitamins = vitaminRepository.getAll();
+    List<VitaminSupplementationAgeGroup> ageGroups = ageGroupRepository.getAll();
+
 
     // 1. copy the products list and initiate the logistics tab.
     report.initializeLogisticsLineItems(programProducts);
@@ -98,11 +110,15 @@ public class VaccineReportService {
     // 4. initialize the cold chain line items.
     report.initializeColdChainLineItems(coldChainLineItems);
 
+    report.initializeVitaminLineItems(vitamins, ageGroups);
+
+
     // save all the child records
     lLineItemService.saveLogisticsLineItems(report.getLogisticsLineItems());
     lLineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());
     lLineItemService.saveCoverageLineItems(report.getCoverageItems());
     lLineItemService.saveColdChainLIneItems(report.getColdChainLineItems(), report.getId());
+    lLineItemService.saveVitaminLineItems(report.getVitaminSupplementationLineItems(), report.getId());
     return report;
   }
 
