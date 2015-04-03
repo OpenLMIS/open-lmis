@@ -167,17 +167,6 @@ order by facilities.name asc,li.productcode asc,  li.product asc, li.productcate
 					</textElement>
 					<text><![CDATA[]]></text>
 				</staticText>
-				<staticText>
-					<reportElement uuid="3170bc9e-63ea-4ba0-a1e7-bb060f28892c" mode="Transparent" x="40" y="73" width="53" height="44" forecolor="#000000" backcolor="#333333">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Bottom">
-						<font fontName="SansSerif" size="10" isBold="false"/>
-						<paragraph leftIndent="3"/>
-					</textElement>
-					<text><![CDATA[Code]]></text>
-				</staticText>
 				<textField>
 					<reportElement uuid="ffcd7c55-2c98-4ac0-9832-4e99fd6a85fe" mode="Transparent" x="93" y="73" width="137" height="44" forecolor="#000000" backcolor="#333333"/>
 					<textElement verticalAlignment="Bottom" markup="none">
