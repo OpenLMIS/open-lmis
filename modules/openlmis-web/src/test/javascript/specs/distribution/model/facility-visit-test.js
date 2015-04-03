@@ -18,15 +18,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return incomplete if visit details not present', function () {
-    var facilityVisit = new FacilityVisit({visited: true, verifiedBy: {name: 'something', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
-
-    var status = facilityVisit.computeStatus();
-
-    expect(status).toEqual(DistributionStatus.INCOMPLETE);
-  });
-
-  it('should return incomplete if verified By Name not present', function () {
-    var facilityVisit = new FacilityVisit({visited: true, observations: "blah blah blah", verifiedBy: {name: '', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: true});
 
     var status = facilityVisit.computeStatus();
 
@@ -50,8 +42,7 @@ describe('Facility Visit', function () {
   });
 
   it('should return complete if visit details valid and observations not filled', function () {
-    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date(),
-      verifiedBy: {name: 'Pint', title: 'title'}, confirmedBy: {name: 'something', title: 'title'}});
+    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date()});
 
     var status = facilityVisit.computeStatus();
 
