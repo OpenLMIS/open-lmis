@@ -75,12 +75,6 @@ describe('Facility Visit', function () {
     expect(facilityVisit.computeStatus()).toEqual(DistributionStatus.COMPLETE);
   });
 
-  it('should return is-incomplete if visit info filled but observation data not filled', function () {
-    var facilityVisit = new FacilityVisit({visited: true, visitDate: new Date()});
-
-    expect(facilityVisit.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
-  });
-
   it('should return incomplete if not visited but no reason provided fields filled', function () {
     var facilityVisit = new FacilityVisit({visited: false});
 
