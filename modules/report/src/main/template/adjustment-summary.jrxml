@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Adjustment Summary" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
-	<property name="ireport.zoom" value="4.0"/>
-	<property name="ireport.x" value="1302"/>
-	<property name="ireport.y" value="144"/>
+	<property name="ireport.zoom" value="1.1586575189467514"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -83,7 +83,7 @@ order by product, adjustment_type]]>
 						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Total " + $F{adjustmentType} + " : "]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{label.total} + $F{adjustmentType} + " : "]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="GroupByProduct" pattern="###0" isBlankWhenNull="true">
 					<reportElement uuid="e568c194-d347-4f23-9085-b87665815550" mode="Transparent" x="730" y="0" width="71" height="20" forecolor="#000000" backcolor="#FFFFFF">
@@ -145,14 +145,14 @@ order by product, adjustment_type]]>
 				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<staticText>
-				<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="0" width="30" height="29" forecolor="#000000" backcolor="#333333"/>
+			<textField>
+				<reportElement uuid="d88f2f3e-d888-4b17-a67a-a356382163fc" mode="Transparent" x="0" y="0" width="30" height="29" forecolor="#000000" backcolor="#333333"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single" leftIndent="2"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[#]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement uuid="1cf0200b-7b1d-4404-a71f-173f6645c714" x="30" y="0" width="90" height="29"/>
 				<textElement verticalAlignment="Middle"/>

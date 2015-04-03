@@ -81,26 +81,26 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement uuid="0d752afd-8f4b-4ea5-b97b-a66b06176e83" mode="Transparent" x="550" y="21" width="171" height="13" forecolor="#000000" backcolor="#333333">
+				<textField>
+					<reportElement uuid="ae6fe2c8-8bb9-4e1b-a94b-ba74c237d90a" mode="Transparent" x="550" y="21" width="171" height="13" forecolor="#000000" backcolor="#333333">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" rightIndent="2"/>
+						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[Minimum Months of Stock:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="2b5a84f5-2cf1-485b-9274-b068cf1c1c86" mode="Transparent" x="550" y="34" width="171" height="13" forecolor="#000000" backcolor="#333333">
+					<textFieldExpression><![CDATA[$R{label.min.mos}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="af543431-8755-48e6-8415-18e61f870f3c" mode="Transparent" x="550" y="34" width="171" height="13" forecolor="#000000" backcolor="#333333">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" rightIndent="2"/>
+						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[Maximum Months of Stock:]]></text>
-				</staticText>
+					<textFieldExpression><![CDATA[$R{label.max.mos}]]></textFieldExpression>
+				</textField>
 				<textField pattern="" isBlankWhenNull="false">
 					<reportElement uuid="5085c676-46bf-4d74-91f7-0dfe3c6ab1b5" mode="Transparent" x="130" y="35" width="150" height="15" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
