@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_imbalance_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
-	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="116"/>
-	<property name="ireport.y" value="73"/>
+	<property name="ireport.zoom" value="1.1289478601075547"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -49,83 +49,83 @@
 					<textElement/>
 					<text><![CDATA[]]></text>
 				</staticText>
-				<staticText>
-					<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="55" y="20" width="100" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textField>
+					<reportElement uuid="b75c06cb-1783-4922-9f47-0c8934d81ae3" mode="Transparent" x="55" y="20" width="100" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[Facility]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="20" width="55" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textFieldExpression><![CDATA[$R{label.facility}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="69fcf302-e24c-42fb-8d0d-fe5abd139df6" mode="Transparent" x="0" y="20" width="55" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" leftIndent="2"/>
+						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[Line#]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="e1ba7c94-ffcb-41ca-9434-5aa3f4badeda" mode="Transparent" x="0" y="0" width="155" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="81411fd1-7cb6-4160-867f-7089ad00f76f" mode="Transparent" x="0" y="0" width="155" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" rightIndent="15"/>
+						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[Supplying Facility]]></text>
-				</staticText>
+					<textFieldExpression><![CDATA[$R{label.supplying.facility}]]></textFieldExpression>
+				</textField>
 				<textField>
 					<reportElement uuid="fc0ecd8d-a2d0-49e1-9b05-e9e7f85bb5c0" x="155" y="0" width="232" height="20"/>
 					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{supplyingFacility}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="155" y="20" width="232" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textField>
+					<reportElement uuid="5b746df3-b5af-4a3c-b268-007e7e9025d1" mode="Transparent" x="155" y="20" width="232" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[Product]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="a94b5e58-1f0e-43ca-95ab-8325ae02cd21" mode="Transparent" x="474" y="20" width="67" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textFieldExpression><![CDATA[$R{label.product.name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="02228610-f504-4311-9507-9789162b9d2a" mode="Transparent" x="474" y="20" width="67" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[AMC]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="bc10494a-a227-4f9a-8ae2-c3257bc15012" mode="Transparent" x="541" y="20" width="82" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textFieldExpression><![CDATA[$R{label.amc}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="e7a60035-6a9c-4790-864c-7a3ee7ed516d" mode="Transparent" x="541" y="20" width="82" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[MOS]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="5da33df0-700b-4566-bedd-edb87201ed94" mode="Transparent" x="623" y="20" width="86" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textFieldExpression><![CDATA[$R{label.mos}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="34cbbdc9-0c1d-4d6f-9fe3-30ec2b1d9b99" mode="Transparent" x="623" y="20" width="86" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" rightIndent="5"/>
+						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[Order Quantity]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="3c5ad69b-31ac-47f0-b88f-9032a51224cc" mode="Transparent" x="709" y="20" width="93" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textFieldExpression><![CDATA[$R{label.order.quantity}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="3972ac75-7a8f-4290-977e-3cde3c555c64" mode="Transparent" x="709" y="20" width="93" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" leftIndent="5"/>
+						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[Status]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="93764a33-dcf5-40bf-a6b9-13a857ec0547" mode="Transparent" x="387" y="20" width="87" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textFieldExpression><![CDATA[$R{label.status}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="fbfc75f4-6197-4923-8bac-68b3009c59e0" mode="Transparent" x="387" y="20" width="87" height="20" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[Physical Count]]></text>
-				</staticText>
+					<textFieldExpression><![CDATA[$R{label.physical.count}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 	</group>

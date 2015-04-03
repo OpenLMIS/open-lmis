@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order_fill_rate_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.3310000000000015"/>
-	<property name="ireport.x" value="5"/>
+	<property name="ireport.x" value="78"/>
 	<property name="ireport.y" value="0"/>
 	<style name="ColorField">
 		<conditionalStyle>
@@ -165,6 +165,11 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$R{label.total.products.approved}+':']]></textFieldExpression>
 				</textField>
+				<textField>
+					<reportElement uuid="d8df6636-e643-40d2-9bf4-98f01a7fd1c0" x="599" y="56" width="130" height="17"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.percent.order.fill.rate}+':']]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 	</group>
@@ -286,18 +291,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[($F{product}=="NULL"?" ":$F{product})]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement uuid="d7bb453e-aae8-4216-9828-9ac30823a3bc" positionType="Float" x="589" y="26" width="130" height="11">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[% Order Fill Rate]]></text>
-			</staticText>
 		</band>
 	</detail>
 </jasperReport>
