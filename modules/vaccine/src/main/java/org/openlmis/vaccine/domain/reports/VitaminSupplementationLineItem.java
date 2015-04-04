@@ -13,7 +13,10 @@ public class VitaminSupplementationLineItem extends BaseModel {
   Long reportId;
   Long vaccineVitaminId;
   Long vitaminAgeGroupId;
+
   String vitaminName;
+  String ageGroup;
+
   Long displayOrder;
   Long maleValue;
   Long femaleValue;

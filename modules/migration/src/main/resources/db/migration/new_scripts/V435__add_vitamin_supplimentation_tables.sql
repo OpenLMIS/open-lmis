@@ -53,3 +53,6 @@ INSERT INTO vaccine_vitamin_supplementation_age_groups
 VALUES
   ('9 Months', '0 to 9 months of age', 1),
   ('18 Months', '9 - 18 months of age', 2);
+
+INSERT INTO configuration_settings (key, name, groupname, description, value, valueType,displayOrder, isConfigurable)
+values ('VACCINE_TAB_VITAMIN_SUPPLEMENTATION_VISIBLE', 'Show Vitamin Supplementation Tab', 'Vaccine', '','true',  'BOOLEAN', 108, false);

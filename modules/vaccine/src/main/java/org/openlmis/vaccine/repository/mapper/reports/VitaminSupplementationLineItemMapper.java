@@ -36,9 +36,11 @@ public interface VitaminSupplementationLineItemMapper {
     " WHERE id = #{id}")
   Integer update(VitaminSupplementationLineItem lineItem);
 
-  @Select("select * " +
+  @Select("select li.*, ag.name as ageGroup " +
           " from " +
           " vaccine_report_vitamin_supplementation_line_items li " +
+    " join vaccine_vitamin_supplementation_age_groups ag " +
+    " on ag.id = li.vitaminAgeGroupId " +
     " WHERE li.reportId = #{reportId} " +
     " order by id")
   List<VitaminSupplementationLineItem> getLineItems(@Param("reportId") Long reportId);

@@ -178,6 +178,7 @@ public class VaccineReportService {
     lLineItemService.saveAdverseEffectLineItems(report.getAdverseEffectLineItems(), report.getId());
     lLineItemService.saveCampaignLineItems(report.getCampaignLineItems(),report.getId());
     lLineItemService.saveColdChainLIneItems(report.getColdChainLineItems(), report.getId());
+    lLineItemService.saveVitaminLineItems(report.getVitaminSupplementationLineItems(), report.getId());
   }
 
   public VaccineReport getById(Long id) {
