@@ -32,9 +32,9 @@ public class DonorController extends BaseController {
     return OpenLmisResponse.response("donors",donorService.getAllWithDetails());
   }
 
-  @RequestMapping(value="insert.json",method=POST,headers = ACCEPT_JSON)
+  @RequestMapping(value="insert.json",method=POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DONOR')")
-  public ResponseEntity<OpenLmisResponse> insert(@RequestBody Donor donor, HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody Donor donor, HttpServletRequest request){
     ResponseEntity<OpenLmisResponse> successResponse;
     donor.setModifiedBy(loggedInUserId(request));
     try {
