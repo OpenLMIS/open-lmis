@@ -67,7 +67,7 @@ public class DonorControllerTest {
   @Test
   public void shouldGetAll() throws Exception {
     List<Donor> list = asList(new Donor());
-    when(donorService.getAll()).thenReturn(list);
+    when(donorService.getAllWithDetails()).thenReturn(list);
     ResponseEntity<OpenLmisResponse> response = controller.getAll();
     assertThat(list, is(response.getBody().getData().get("donors")));
   }

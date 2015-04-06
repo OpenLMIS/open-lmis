@@ -36,7 +36,7 @@ public class VendorServiceTest {
   @Test
   public void shouldGetById() throws Exception {
     service.getById(3L);
-    verify(service).getById(3L);
+    verify(repository).getById(3L);
   }
 
   @Test
