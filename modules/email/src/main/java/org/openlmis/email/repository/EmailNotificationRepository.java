@@ -1,6 +1,5 @@
 package org.openlmis.email.repository;
 
-import org.openlmis.email.domain.OpenlmisEmailMessage;
 import org.openlmis.email.repository.mapper.EmailNotificationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,7 +12,8 @@ public class EmailNotificationRepository {
   EmailNotificationMapper mapper;
 
   public void queueMessage(SimpleMailMessage message){
-    mapper.insert(message);
+    //TODO: this should check if the to is a list.
+    mapper.insert(message.getTo()[0],message.getText(), message.getSubject());
   }
 
 }

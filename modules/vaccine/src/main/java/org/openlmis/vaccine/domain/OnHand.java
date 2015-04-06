@@ -22,6 +22,7 @@ import org.openlmis.core.domain.Product;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@Deprecated
 public class OnHand extends BaseModel {
     private InventoryTransaction inventoryTransaction;
     private TransactionType transactionType;

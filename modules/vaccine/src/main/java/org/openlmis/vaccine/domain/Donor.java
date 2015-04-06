@@ -20,6 +20,7 @@ import org.openlmis.core.domain.BaseModel;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@Deprecated
 public class Donor extends BaseModel {
     private String code;
     private String shortName;

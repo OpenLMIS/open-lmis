@@ -23,6 +23,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@Deprecated
 public class ManufacturerProduct extends BaseModel{
 
     private String productCode;

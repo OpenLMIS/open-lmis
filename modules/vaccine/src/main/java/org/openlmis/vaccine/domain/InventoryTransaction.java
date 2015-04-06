@@ -34,6 +34,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Deprecated
 public class InventoryTransaction extends BaseModel{
     private Date today;
     private TransactionType transactionType;

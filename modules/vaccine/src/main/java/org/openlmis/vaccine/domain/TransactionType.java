@@ -20,6 +20,7 @@ import org.openlmis.core.domain.BaseModel;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@Deprecated
 public class TransactionType extends BaseModel {
     private String name;
 }

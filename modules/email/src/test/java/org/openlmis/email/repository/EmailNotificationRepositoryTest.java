@@ -6,13 +6,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
-
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.email.domain.OpenlmisEmailMessage;
 import org.openlmis.email.repository.mapper.EmailNotificationMapper;
+import org.springframework.mail.SimpleMailMessage;
 
 
 @Category(UnitTests.class)
@@ -27,8 +26,11 @@ public class EmailNotificationRepositoryTest {
 
   @Test
   public void shouldQueueMessage() throws Exception {
-    OpenlmisEmailMessage message = new OpenlmisEmailMessage();
+    SimpleMailMessage message = new SimpleMailMessage();
+    message.setTo("test@gmail.com");
+    message.setSubject("the subject");
+    message.setText("The main message.");
     repository.queueMessage(message);
-    verify(mapper).insert(message);
+    verify(mapper).insert(anyString(), anyString(), anyString());
   }
 }

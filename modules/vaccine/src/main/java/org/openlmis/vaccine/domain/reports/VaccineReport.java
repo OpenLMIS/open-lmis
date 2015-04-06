@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.openlmis.core.domain.*;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
+import org.openlmis.vaccine.domain.Vitamin;
+import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.dto.CoverageLineItemDTO;
 
 import java.util.ArrayList;
@@ -51,6 +53,8 @@ public class VaccineReport extends BaseModel {
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;
   private List<CampaignLineItem> campaignLineItems;
+
+  private List<VitaminSupplementationLineItem> vitaminSupplementationLineItems;
 
   private List<LogisticsColumn> columnTemplate;
 
@@ -95,21 +99,17 @@ public class VaccineReport extends BaseModel {
   public void initializeCoverageLineItems(List<VaccineProductDose> dosesToCover) {
     coverageItems = new ArrayList<>();
     for(VaccineProductDose dose: dosesToCover){
-
       VaccineCoverageItem item = new VaccineCoverageItem();
-
       item.setReportId(id);
       item.setDoseId(dose.getDoseId());
       item.setIsActive(dose.getIsActive());
       item.setProductId(dose.getProductId());
-
       coverageItems.add(item);
     }
   }
 
   public void flattenCoverageLineItems() {
     coverageItems = new ArrayList<>();
-
     for(CoverageLineItemDTO lineItemDTO: coverageLineItems){
       for(VaccineCoverageItem item: lineItemDTO.getItems()){
         coverageItems.add( item );
@@ -127,7 +127,6 @@ public class VaccineReport extends BaseModel {
       dto.setProductId(lineItem.getProductId());
 
       List<VaccineCoverageItem> items = new ArrayList<VaccineCoverageItem>();
-
       // find the items and insert them appropriately on the dto
       for(VaccineCoverageItem item: coverageItems){
         if(item.getProductId().equals( dto.getProductId())){
@@ -143,5 +142,21 @@ public class VaccineReport extends BaseModel {
 
   public void initializeColdChainLineItems(List<ColdChainLineItem> lineItems) {
     coldChainLineItems = lineItems;
+  }
+
+  public void initializeVitaminLineItems(List<Vitamin> vitamins, List<VitaminSupplementationAgeGroup> ageGroups) {
+    this.vitaminSupplementationLineItems = new ArrayList<>();
+    Long displayOrder = 1L;
+    for(Vitamin vitamin: vitamins){
+      for(VitaminSupplementationAgeGroup ageGroup: ageGroups){
+        VitaminSupplementationLineItem item = new VitaminSupplementationLineItem();
+        item.setVitaminAgeGroupId(ageGroup.getId());
+        item.setDisplayOrder(displayOrder);
+        item.setVitaminName(vitamin.getName());
+        item.setVaccineVitaminId(vitamin.getId());
+        this.vitaminSupplementationLineItems.add(item);
+        displayOrder++;
+      }
+    }
   }
 }

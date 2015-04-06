@@ -26,6 +26,7 @@ import java.util.Date;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Deprecated
 public class InventoryBatch extends BaseModel{
     private InventoryTransaction inventoryTransaction;
     private String batchNumber;

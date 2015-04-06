@@ -20,6 +20,7 @@ import org.openlmis.upload.Importable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@Deprecated
 public class Temperature extends BaseModel implements Importable {
     private String tempratureName;
 }
