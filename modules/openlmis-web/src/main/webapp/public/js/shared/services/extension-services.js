@@ -573,6 +573,12 @@ services.factory('LabEquipmentListReport', function ($resource) {
     return $resource('/reports/reportdata/labEquipmentList.json', {}, {});
 });
 
+
+services.factory("PipelineExportReport", function($resource){
+    return $resource('/reports/reportdata/pipelineExport.json', {}, {});
+
+});
+
 services.factory('GetProgramWithBudgetingApplies',function($resource){
     return $resource('/reports/programsWithBudgetApplies.json',{},{});
 
