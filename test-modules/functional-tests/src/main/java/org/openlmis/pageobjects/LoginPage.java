@@ -43,11 +43,11 @@ public class LoginPage extends Page {
   @FindBy(how = ID, using = "loginError")
   private static WebElement loginErrorLabel = null;
 
-  private String baseUrl = "http://localhost:9091";
+  public static String baseUrl = "http://localhost:9091";
 
   public LoginPage(TestWebDriver driver, String baseUrl) {
     super(driver);
-    this.baseUrl = baseUrl;
+    LoginPage.baseUrl = baseUrl;
     testWebDriver.setBaseURL(baseUrl + "/public/pages/login.html");
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
