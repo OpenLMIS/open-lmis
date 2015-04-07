@@ -45,6 +45,9 @@ public class ReportExportController {
         break;
       case "HTML":
         reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.HTML, response);
+      case "CSV":
+            reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.CSV, response);
+
     }
   }
 
