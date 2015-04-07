@@ -9,9 +9,9 @@
  */
 
 
-function ManageServiceContractsController($scope, $routeParams, $location, Contracts) {
+function ManageServiceContractsController($scope, Contracts) {
 
     Contracts.get(function(data){
-        $scope.list = data.contract;
+        $scope.list = data.contracts;
     });
 }

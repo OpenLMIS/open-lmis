@@ -11,38 +11,38 @@
 
 function ViewRequestController($scope, $location, $routeParams, EquipmentInventory, Equipment, SaveMaintenanceRequest, Vendors) {
 
-    $scope.current = {};
+  $scope.current = {};
 
-    $scope.current.inventoryId = $routeParams.id;
-    $scope.current.facilityId = $routeParams.facilityId;
-    $scope.current.vendorId = 1;
+  $scope.current.inventoryId = $routeParams.id;
+  $scope.current.facilityId = $routeParams.facilityId;
+  $scope.current.vendorId = 1;
 
-    Vendors.get(function(data){
-        $scope.vendors = data.vendors;
+  Vendors.get(function (data) {
+    $scope.vendors = data.vendors;
+  });
+
+
+  EquipmentInventory.get({
+    id: $routeParams.id
+  }, function (data) {
+    $scope.equipment = data.inventory;
+    Equipment.get({id: data.inventory.equipmentId}, function (d) {
+      $scope.equipment.name = d.equipment.name;
     });
+  });
 
+  $scope.cancel = function () {
+    $location.path('');
+  };
 
-    EquipmentInventory.get({
-        id: $routeParams.id
-    }, function (data) {
-        $scope.equipment = data.inventory;
-        Equipment.get({id: data.inventory.equipmentId}, function(d){
-            $scope.equipment.name = d.equipment.name;
-        });
-    });
+  $scope.save = function () {
 
-    $scope.cancel = function(){
-      $location.path('');
-    };
-
-    $scope.save = function(){
-
-        if($scope.requestForm.$valid){
-            SaveMaintenanceRequest.save($scope.current, function(data){
-                $location.path('');
-            });
-        }else{
-            $scope.showError = true;
-        }
-    };
+    if ($scope.requestForm.$valid) {
+      SaveMaintenanceRequest.save($scope.current, function (data) {
+        $location.path('');
+      });
+    } else {
+      $scope.showError = true;
+    }
+  };
 }

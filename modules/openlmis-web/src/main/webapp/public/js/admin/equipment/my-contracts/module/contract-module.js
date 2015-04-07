@@ -10,19 +10,19 @@
 
 
 angular.module('service-contract', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider',
-    function ($routeProvider) {
-        $routeProvider.
-            when('/', {
-                controller: ManageServiceContractsController,
-                templateUrl: 'partials/list.html'
-            }).
-            when('/view/:id',{
-                controller: ViewServiceContractController,
-                templateUrl: 'partials/view.html'
-            }).
-            otherwise({
-                redirectTo: '/'
-            });
-    }]).run(function ($rootScope, AuthorizationService) {
-    AuthorizationService.preAuthorize('SERVICE_VENDOR_RIGHT');
+  function ($routeProvider) {
+    $routeProvider.
+      when('/', {
+        controller: ManageServiceContractsController,
+        templateUrl: 'partials/list.html'
+      }).
+      when('/view/:id', {
+        controller: ViewServiceContractController,
+        templateUrl: 'partials/view.html'
+      }).
+      otherwise({
+        redirectTo: '/'
+      });
+  }]).run(function ($rootScope, AuthorizationService) {
+  AuthorizationService.preAuthorize('SERVICE_VENDOR_RIGHT');
 });

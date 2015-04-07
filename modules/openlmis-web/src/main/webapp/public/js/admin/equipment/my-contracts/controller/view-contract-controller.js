@@ -11,32 +11,32 @@
 function ViewServiceContractController($scope, $routeParams, $location, Contract, Equipments, ServiceTypes) {
 
 
-    if ($routeParams.id === undefined) {
-        $scope.current = {};
-    } else {
-        Contract.get({
-            id: $routeParams.id
-        }, function (data) {
-            $scope.current = data.contract;
-            $scope.current.startDate = data.contract.startDateString;
-            $scope.current.endDate = data.contract.endDateString;
-            $scope.current.contractDate = data.contract.contractDateString;
+  if ($routeParams.id === undefined) {
+    $scope.current = {};
+  } else {
+    Contract.get({
+      id: $routeParams.id
+    }, function (data) {
+      $scope.current = data.contract;
+      $scope.current.startDate = data.contract.startDateString;
+      $scope.current.endDate = data.contract.endDateString;
+      $scope.current.contractDate = data.contract.contractDateString;
 
-        });
-    }
-
-    // get the lookups that will be checked
-    Equipments.get(function(data){
-       $scope.equipments = data.equipments;
     });
+  }
 
-    ServiceTypes.get(function(data){
-       $scope.service_types = data.service_type;
-    });
-    // facilities could be complicated, may have to depend on the program selection.
+  // get the lookups that will be checked
+  Equipments.get(function (data) {
+    $scope.equipments = data.equipments;
+  });
+
+  ServiceTypes.get(function (data) {
+    $scope.service_types = data.service_types;
+  });
+  // facilities could be complicated, may have to depend on the program selection.
 
 
-    $scope.cancel = function () {
-        $location.path('');
-    };
+  $scope.cancel = function () {
+    $location.path('');
+  };
 }

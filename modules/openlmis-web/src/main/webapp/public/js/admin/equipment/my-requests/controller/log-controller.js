@@ -8,21 +8,21 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function LogController($scope, $location, $routeParams, EquipmentInventory ,Equipment, EquipmentLogs) {
-    EquipmentInventory.get({
-        id: $routeParams.id
-    }, function (data) {
-        $scope.equipment = data.inventory;
-        Equipment.get({id: data.inventory.equipmentId}, function(d){
-            $scope.equipment.name = d.equipment.name;
-        });
+function LogController($scope, $location, $routeParams, EquipmentInventory, Equipment, EquipmentLogs) {
+  EquipmentInventory.get({
+    id: $routeParams.id
+  }, function (data) {
+    $scope.equipment = data.inventory;
+    Equipment.get({id: data.inventory.equipmentId}, function (d) {
+      $scope.equipment.name = d.equipment.name;
     });
+  });
 
-    EquipmentLogs.get({id: $routeParams.id}, function(data){
-       $scope.logs = data.logs;
-    });
+  EquipmentLogs.get({id: $routeParams.id}, function (data) {
+    $scope.logs = data.logs;
+  });
 
-    $scope.cancel = function () {
-        $location.path('');
-    };
+  $scope.cancel = function () {
+    $location.path('');
+  };
 }

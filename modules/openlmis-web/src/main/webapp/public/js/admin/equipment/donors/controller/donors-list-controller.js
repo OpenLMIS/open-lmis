@@ -11,15 +11,15 @@
 function DonorListController($scope, sharedSpace, $location, navigateBackService, Donors) {
 
 
-    Donors.get(function(data){
-       $scope.donors = data.donors;
-    });
+  Donors.get(function (data) {
+    $scope.donors = data.donors;
+  });
 
-    $scope.editDonor = function (id, donationCount) {
-        var data = {query: $scope.query};
-        navigateBackService.setData(data);
-        sharedSpace.setCountOfDonations(donationCount);
-        $location.path('edit/' + id);
-    };
+  $scope.editDonor = function (id, donationCount) {
+    var data = {query: $scope.query};
+    navigateBackService.setData(data);
+    sharedSpace.setCountOfDonations(donationCount);
+    $location.path('edit/' + id);
+  };
 
 }
