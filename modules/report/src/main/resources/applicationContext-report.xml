@@ -223,6 +223,15 @@
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="pipeline_export"/>
+                    <property name="template" value="pipeline-export.jasper"/>
+                    <property name="reportDataProvider" ref="pipelineExportReportProvider"/>
+                    <property name="id" value="RP-Pipeline-Export-Report"/>
+                    <property name="name" value="Pipeline Export"/>
+                    <property name="title" value="Pipeline Export"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="lab_equipment_list"/>
                     <property name="template" value="lab-equipment-list.jasper"/>
                     <property name="reportDataProvider" ref="labEquipmentStatusReportDataProvider"/>
