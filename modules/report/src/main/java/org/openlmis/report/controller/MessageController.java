@@ -126,7 +126,7 @@ public class MessageController extends BaseController{
                 helper.setSubject(subject);
                 helper.setText(dto.getMessage());
                 helper.addAttachment("Non Reporting facilities.pdf", attachmentDataSource);
-                emailService.send(message);
+                //emailService.queueMessage(message);
 
             } catch (MessagingException e) {
                 e.printStackTrace();

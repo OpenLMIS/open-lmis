@@ -41,7 +41,7 @@
   </int:channel>
 
   <int-jdbc:inbound-channel-adapter channel="inputChannel"
-                                    data-source="dataSource"
+                                    data-source="openlmisDataSource"
                                     query="SELECT * FROM email_notifications WHERE sent = false"
                                     row-mapper="emailMessageRowMapper"
                                     max-rows-per-poll="${email.notification.rows.per.poll}"

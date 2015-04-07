@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="district-consumption" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="13"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="3.4522712143931065"/>
+	<property name="ireport.x" value="210"/>
+	<property name="ireport.y" value="302"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -18,7 +18,7 @@
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
 	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
-    <parameter name="OPERATOR_NAME" class="java.lang.String"/>
+	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[WITH temp AS (select product,zone_name, SUM(normalizedconsumption) normalizedconsumption
 
@@ -49,69 +49,55 @@
 		<groupHeader>
 			<band height="40">
 				<staticText>
-					<reportElement mode="Opaque" x="0" y="20" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="20" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					</reportElement>
+					<textElement/>
 					<text><![CDATA[]]></text>
 				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="0" y="20" width="45" height="20" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" leftIndent="2"/>
-					</textElement>
-					<text><![CDATA[Line#]]></text>
-				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="45" y="0" width="307" height="20" uuid="987dfd20-2622-443c-9f95-62413810cbef"/>
+					<reportElement uuid="987dfd20-2622-443c-9f95-62413810cbef" x="45" y="0" width="307" height="20"/>
 					<textElement>
 						<font size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement mode="Transparent" x="45" y="20" width="140" height="20" forecolor="#000000" backcolor="#333333" uuid="b6ab5830-0e99-41b6-b051-2f2345d099e6"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single"/>
-					</textElement>
-					<text><![CDATA[District]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="185" y="20" width="192" height="20" forecolor="#000000" backcolor="#333333" uuid="89c58d94-0a3a-4ba6-8aa2-01c9de061ad0"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" rightIndent="15"/>
-					</textElement>
-					<text><![CDATA[Consumption]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="442" y="20" width="136" height="20" forecolor="#000000" backcolor="#333333" uuid="50f20458-5c27-4385-9fae-60cc7472cdec"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single"/>
-					</textElement>
-					<text><![CDATA[% of Total]]></text>
-				</staticText>
+				<textField>
+					<reportElement uuid="2f4622b7-9d0c-40de-91ca-f135c06b4287" x="0" y="20" width="45" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="58459912-f28d-43b9-82d8-bd2099f488f2" x="45" y="20" width="140" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="55b2cf9f-1c32-4ae5-91bd-d8d0c92558bb" x="185" y="20" width="257" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.consumption}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="09508062-1f95-4986-9144-76f479f979c2" x="442" y="20" width="110" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.total.percent}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 		<groupFooter>
 			<band height="20">
-				<staticText>
-					<reportElement mode="Transparent" x="115" y="0" width="126" height="20" forecolor="#000000" backcolor="#333333" uuid="489fc351-59b1-4f01-8e8d-a874b6d5a2ce"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" rightIndent="5"/>
-					</textElement>
-					<text><![CDATA[Total :]]></text>
-				</staticText>
 				<textField>
-					<reportElement mode="Transparent" x="241" y="0" width="136" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a4c069eb-7ead-42ce-8dfb-3239eb46942a"/>
+					<reportElement uuid="a4c069eb-7ead-42ce-8dfb-3239eb46942a" mode="Transparent" x="241" y="0" width="136" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{consumption_1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="49036606-a4dd-4d9c-89d0-dccd63923506" x="130" y="0" width="111" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$R{label.total}+' :']]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -122,7 +108,7 @@
 	<pageHeader>
 		<band height="79">
 			<subreport>
-				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
+				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
@@ -135,8 +121,8 @@
 					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="OPERATOR_NAME">
-                    <subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
-				</subreportParameter>	
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
 				<subreportParameter name="REPORT_SUB_TITLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -160,7 +146,7 @@
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="43" y="0" width="759" height="20" forecolor="#006666" uuid="a9fda8ef-b699-4b67-991c-cfabff61e5da">
+				<reportElement uuid="a9fda8ef-b699-4b67-991c-cfabff61e5da" x="43" y="0" width="759" height="20" forecolor="#006666">
 					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Top">
@@ -169,20 +155,21 @@
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
+				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 				</reportElement>
+				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="0" width="45" height="20" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
+				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" x="0" y="0" width="45" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="19" width="801" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
+				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="801" height="1" forecolor="#3D9297">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -190,7 +177,7 @@
 				</graphicElement>
 			</line>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="45" y="0" width="140" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5342fab3-58d3-42c9-b212-7e577dc21e8c"/>
+				<reportElement uuid="5342fab3-58d3-42c9-b212-7e577dc21e8c" mode="Transparent" x="45" y="0" width="140" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -198,12 +185,13 @@
 				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="277" y="0" width="100" height="20" uuid="5a01a3cf-e81b-4564-b06e-ad43feb067a7"/>
+				<reportElement uuid="5a01a3cf-e81b-4564-b06e-ad43feb067a7" x="277" y="0" width="100" height="20"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{consumption}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="442" y="0" width="100" height="20" uuid="10e6e842-7414-4456-8d71-a9f99b6249ed"/>
+				<reportElement uuid="10e6e842-7414-4456-8d71-a9f99b6249ed" x="442" y="0" width="100" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{totalPercentage}]]></textFieldExpression>
 			</textField>
 		</band>

@@ -51,15 +51,15 @@
               <tbody>
               <tr ng-repeat="row in datarows">
                 <td data-title="'#'" class="number" style="width:20px;">{{ row.no }}</td>
-                <td data-title="'Facility Name'" style="width:150px" sortable="facilityname">{{ row.facilityname }}</td>
-                <td data-title="'District'" style="width:120px" sortable="district">{{ row.district }} </td>
-                <td data-title="'Product Name (Code)'" style="width:30%" sortable="productname">{{ row.productname}} </td>
-                <td data-title="'MOS Adjustment Type'" style="width:100px" sortable="adjustmenttype">{{ row.adjustmenttype}} </td>
-                <td data-title="'Adjustment Basis'" class="number" style="width:80px" sortable="adjustmentbasis">{{row.adjustmentbasis }}</td>
-                <td data-title="'From Date'" class="number" style="width:80px" sortable="startdateString">{{row.startdateString }}</td>
-                <td data-title="'To Date'" class="number" style="width:80px" sortable="enddateString">{{row.enddateString }}</td>
-                <td data-title="'MIN MOS'" class="number" style="width:80px" sortable="minmonthsofstock">{{row.minmonthsofstock | number }}</td>
-                <td data-title="'MAX MOS'" class="number" style="width:80px" sortable="maxmonthsofstock">{{row.maxmonthsofstock | number }}</td>
+                <td data-title="getLocalMessage('label.facility.name')" style="width:150px" sortable="facilityname">{{ row.facilityname }}</td>
+                <td data-title="getLocalMessage('label.district')" style="width:120px" sortable="district">{{ row.district }} </td>
+                <td data-title="getLocalMessage('label.product.name')" style="width:30%" sortable="productname">{{ row.productname}} </td>
+                <td data-title="getLocalMessage('label.mos.adjustment.type')" style="width:100px" sortable="adjustmenttype">{{ row.adjustmenttype}} </td>
+                <td data-title="getLocalMessage('label.adjustmentBasis.header')" class="number" style="width:80px" sortable="adjustmentbasis">{{row.adjustmentbasis }}</td>
+                <td data-title="getLocalMessage('label.from.date')" class="number" style="width:80px" sortable="startdateString">{{row.startdateString }}</td>
+                <td data-title="getLocalMessage('label.to.date')" class="number" style="width:80px" sortable="enddateString">{{row.enddateString }}</td>
+                <td data-title="getLocalMessage('label.min.mos')" class="number" style="width:80px" sortable="minmonthsofstock">{{row.minmonthsofstock | number }}</td>
+                <td data-title="getLocalMessage('label.max.mos')" class="number" style="width:80px" sortable="maxmonthsofstock">{{row.maxmonthsofstock | number }}</td>
               </tr>
               </tbody>
             </table>

@@ -30,6 +30,8 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class HomePage extends Page {
 
+  private static String homePageUrl = "/public/pages/index.html";
+
   @FindBy(how = ID, using = "logout")
   private static WebElement logoutLink = null;
 
@@ -218,6 +220,7 @@ public class HomePage extends Page {
 
   public HomePage(TestWebDriver driver) {
     super(driver);
+    driver.getUrl(  LoginPage.baseUrl + homePageUrl );
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
   }

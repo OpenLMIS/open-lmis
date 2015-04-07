@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
-  ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
-  ~
-  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
-  -->
-
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facilities" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ead40e47-479c-4ecb-98ca-6609320f3c24">
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="1.771561000000001"/>
+	<property name="ireport.x" value="20"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 	<property name="net.sf.jasperreports.export.xls.ignore.cell.background" value="false"/>
@@ -74,42 +64,41 @@ WHERE
 				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<staticText>
-				<reportElement uuid="1f78d274-e9f4-4d62-b6d4-d9db3212a9c3" mode="Transparent" x="72" y="0" width="102" height="20" forecolor="#000000" backcolor="#333333"/>
-				<textElement verticalAlignment="Middle">
+			<textField>
+				<reportElement uuid="acd5a93e-2509-45ee-999c-862cd3e94181" mode="Transparent" x="72" y="0" width="102" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle" markup="none">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Code]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="0e6f48f2-b860-4f63-aa53-3d888c1eaca5" mode="Transparent" x="353" y="0" width="128" height="20" forecolor="#000000" backcolor="#333333"/>
-				<textElement verticalAlignment="Middle">
+				<textFieldExpression><![CDATA[$R{label.code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b67527eb-82fb-43a6-815c-cea8216b64a4" mode="Transparent" x="353" y="0" width="128" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle" markup="none">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Facility Type]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="a86f9afe-5bd8-467a-aa88-22ef560410ab" mode="Transparent" x="174" y="0" width="179" height="20" forecolor="#000000" backcolor="#333333"/>
-				<textElement verticalAlignment="Middle">
+				<textFieldExpression><![CDATA[$R{label.facility.type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="19b28723-eba3-447f-9878-6940d741d19b" mode="Transparent" x="174" y="0" width="179" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle" markup="none">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Facility Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="5a3776c8-12a4-413e-bd87-8b3dcf05f7cc" mode="Transparent" x="0" y="0" width="72" height="20" forecolor="#000000" backcolor="#333333"/>
-				<textElement verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
-					<paragraph leftIndent="2"/>
-				</textElement>
-				<text><![CDATA[Line#]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="ac75e98c-4dca-4ab8-a4e1-9228e189e1fd" mode="Transparent" x="481" y="0" width="73" height="20" forecolor="#000000" backcolor="#333333"/>
-				<textElement verticalAlignment="Middle">
+				<textFieldExpression><![CDATA[$R{label.facility.name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="263eb6ed-d743-4773-b03e-aeb29c76c621" mode="Transparent" x="0" y="0" width="72" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle" markup="none">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Is Active]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7b1a1132-a501-439e-8265-46b1e83fd2a7" mode="Transparent" x="481" y="0" width="73" height="20" forecolor="#000000" backcolor="#333333"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.is.active}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>

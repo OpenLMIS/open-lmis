@@ -68,19 +68,19 @@
               <tbody>
               <tr ng-repeat="row in datarows">
                 <td data-title="'#'" class="number" style="width:20px;">{{ row.no }}</td>
-                <td data-title="'Facility Type'" style="width:100px" sortable="facilityType">{{ row.facilityType }}</td>
-                <td data-title="'Facility Name'" style="width:150px" sortable="facilityName">{{ row.facilityName }}</td>
-                <td data-title="'Supplying Facility'" style="width:120px" sortable="supplyingFacility">{{
+                <td data-title="getLocalMessage('label.facility.type')" style="width:100px" sortable="facilityType">{{ row.facilityType }}</td>
+                <td data-title="getLocalMessage('label.facility.name')" style="width:150px" sortable="facilityName">{{ row.facilityName }}</td>
+                <td data-title="getLocalMessage('label.supplying.facility')" style="width:120px" sortable="supplyingFacility">{{
                   row.supplyingFacility }}
                 </td>
-                <td data-title="'Product'" style="width:30%" sortable="productDescription">{{ row.productDescription
+                <td data-title="getLocalMessage('label.product')" style="width:30%" sortable="productDescription">{{ row.productDescription
                   }}
                 </td>
-                <td data-title="'Adjustment Type'" style="width:100px" sortable="adjustmentType">{{ row.adjustmentType
+                <td data-title="getLocalMessage('label.adjustment.type')" style="width:100px" sortable="adjustmentType">{{ row.adjustmentType
                   }}
                 </td>
-                <td data-title="'Period'" style="width:100px" sortable="period">{{ row.period }}</td>
-                <td data-title="'Adjustment'" class="number" style="width:80px" sortable="adjustment">{{
+                <td data-title="getLocalMessage('label.period')" style="width:100px" sortable="period">{{ row.period }}</td>
+                <td data-title="getLocalMessage('label.adjustments')" class="number" style="width:80px" sortable="adjustment">{{
                   row.signedadjustment | number }}
                 </td>
               </tr>

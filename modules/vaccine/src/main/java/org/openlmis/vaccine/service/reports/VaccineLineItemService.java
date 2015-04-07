@@ -10,15 +10,11 @@
 
 package org.openlmis.vaccine.service.reports;
 
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.vaccine.domain.reports.*;
-import org.openlmis.vaccine.repository.mapper.reports.VaccineReportDiseaseLineItemMapper;
 import org.openlmis.vaccine.repository.reports.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,6 +37,9 @@ public class VaccineLineItemService {
 
   @Autowired
   VaccineReportColdChainRepository coldChainRepository;
+
+  @Autowired
+  VitaminSupplementationLineItemRepository vitaminSupplementationLineItemRepository;
 
   public void saveLogisticsLineItems(List<LogisticsLineItem> lineItems){
     for(LogisticsLineItem lineItem: lineItems){
@@ -104,6 +103,18 @@ public class VaccineLineItemService {
       }
       else{
         coldChainRepository.update(lineItem);
+      }
+    }
+  }
+
+  public void saveVitaminLineItems(List<VitaminSupplementationLineItem> vitaminSupplementationLineItems, Long reportId) {
+    for(VitaminSupplementationLineItem lineItem: vitaminSupplementationLineItems){
+      lineItem.setReportId(reportId);
+      if(lineItem.getId() == null){
+        vitaminSupplementationLineItemRepository.insert(lineItem);
+      }
+      else{
+        vitaminSupplementationLineItemRepository.update(lineItem);
       }
     }
   }

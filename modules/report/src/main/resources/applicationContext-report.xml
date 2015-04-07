@@ -41,7 +41,7 @@
                     <property name="reportDataProvider" ref="facilityReportDataProvider"/>
                     <property name="id" value="RP-FAL-ALL"/>
                     <property name="name" value="Facility list report"/>
-                    <property name="title" value="List of facilities"/>
+                    <property name="title" value="report.title.facility.list"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -50,7 +50,7 @@
                     <property name="reportDataProvider" ref="mailingLabelReportDataProvider"/>
                     <property name="id" value="RP-MAL-LAB"/>
                     <property name="name" value="Facility List: Lists facilities with contact addresses"/>
-                    <property name="title" value="Facility List"/>
+                    <property name="title" value="report.title.facility.list"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -59,7 +59,7 @@
                     <property name="reportDataProvider" ref="mailingLabelReportDataProvider"/>
                     <property name="id" value="RP-MAL-LAB"/>
                     <property name="name" value="Mailing Labels: Lists facilities with contact addresses"/>
-                    <property name="title" value=" Mailing Labels"/>
+                    <property name="title" value="report.title.facility.list"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -77,7 +77,7 @@
                     <property name="reportDataProvider" ref="nonReportingFacilityReportDataProvider"/>
                     <property name="id" value="RP-Non-Reporting"/>
                     <property name="name" value="Non Reporting Facilities"/>
-                    <property name="title" value="Non Reporting Facilities"/>
+                    <property name="title" value="report.title.non.reporting.facility"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -86,7 +86,7 @@
                     <property name="reportDataProvider" ref="averageConsumptionReportDataProvider"/>
                     <property name="id" value="RP-Avg-Consumption-Reporting"/>
                     <property name="name" value="Average Consumption Reporting"/>
-                    <property name="title" value="Consumption Averages By Product"/>
+                    <property name="title" value="report.title.consumption.average.by.product"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -95,7 +95,7 @@
                     <property name="reportDataProvider" ref="adjustmentSummaryReportDataProvider"/>
                     <property name="id" value="RP-Adjustment-Summary-Reporting"/>
                     <property name="name" value="Adjustment Summary Reporting"/>
-                    <property name="title" value="Adjustment Summary By Product"/>
+                    <property name="title" value="report.title.adjustment.summary.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -104,7 +104,7 @@
                     <property name="reportDataProvider" ref="stockedOutReportDataProvider"/>
                     <property name="id" value="RP-Stocked_Out_Facilities"/>
                     <property name="name" value="Stocked Out Facilities"/>
-                    <property name="title" value="Stocked Out Facilities"/>
+                    <property name="title" value="report.title.stocked.out.facility"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -113,7 +113,7 @@
                     <property name="reportDataProvider" ref="districtConsumptionReportDataProvider"/>
                     <property name="id" value="RP-District_Consumption_Comparison"/>
                     <property name="name" value="District Consumption Comparison"/>
-                    <property name="title" value="Summary District Consumption Comparison by Product"/>
+                    <property name="title" value="report.title.summary.district.consumption"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -122,7 +122,7 @@
                     <property name="reportDataProvider" ref="aggregateConsumptionReportDataProvider"/>
                     <property name="id" value="RP-Aggregate_Consumption"/>
                     <property name="name" value="Aggregate Consumption Report"/>
-                    <property name="title" value="Aggregate Consumption Report"/>
+                    <property name="title" value="report.title.aggregate.consumption.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
 
@@ -132,7 +132,7 @@
                     <property name="reportDataProvider" ref="orderSummaryReportDataProvider"/>
                     <property name="id" value="RP-View_Orders"/>
                     <property name="name" value="View Orders"/>
-                    <property name="title" value="Issue Voucher for Medical Supplies (PH81-N/E)"/>
+                    <property name="title" value="report.title.issue.voucher.medical.supply"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -141,7 +141,7 @@
                     <property name="reportDataProvider" ref="supplyStatusReportDataProvider"/>
                     <property name="id" value="RP-Supply-Status"/>
                     <property name="name" value="Supply Status Report"/>
-                    <property name="title" value="Supply Status by Facility Report"/>
+                    <property name="title" value="report.title.supply.status.by.facility"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -150,7 +150,7 @@
                     <property name="reportDataProvider" ref="stockImbalanceReportDataProvider"/>
                     <property name="id" value="RP-Stock-Imbalance"/>
                     <property name="name" value="Stock Imbalances by Facility Report"/>
-                    <property name="title" value="Stock Imbalances by Facility"/>
+                    <property name="title" value="report.title.stock.imbalance.by.facility"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -159,7 +159,7 @@
                     <property name="reportDataProvider" ref="rnRFeedbackReportDataProvider"/>
                     <property name="id" value="RP-RnR-Feedback"/>
                     <property name="name" value="Report and Requisition Feedback Report"/>
-                    <property name="title" value="Report and Requisition Feedback"/>
+                    <property name="title" value="report.title.rnr.feedback"/>
                     <property name="version" value="1.0"/>
                 </bean>
 
@@ -169,7 +169,7 @@
                     <property name="reportDataProvider" ref="orderFillRateReportDataProvider"/>
                     <property name="id" value="RP-Order-Fill-Rate"/>
                     <property name="name" value="Order Fill Rate by Facility Report"/>
-                    <property name="title" value="Order Fill Rate by Facility"/>
+                    <property name="title" value="report.title.order.fill.rate"/>
                     <property name="version" value="1.0"/>
                 </bean>
 
@@ -179,7 +179,7 @@
                     <property name="reportDataProvider" ref="regimenSummaryReportDataProvider"/>
                     <property name="id" value="RP-Regimen-Summary-report"/>
                     <property name="name" value="Regimen Distribution by District"/>
-                    <property name="title" value="Regimen Distribution by District"/>
+                    <property name="title" value="report.title.regimen.distribution.summary"/>
                     <property name="version" value="1.0"/>
                 </bean>
 
@@ -200,7 +200,7 @@
                     <property name="reportDataProvider" ref="regimenDistributionReportDataProvider"/>
                     <property name="id" value="RP-Regimen-Distribution-report"/>
                     <property name="name" value="Regimen Distribution by District"/>
-                    <property name="title" value="Regimen Distribution by District"/>
+                    <property name="title" value="report.title.regimen.distribution.by.district"/>
                     <property name="version" value="1.0"/>
                 </bean>
 
@@ -210,7 +210,7 @@
                     <property name="reportDataProvider" ref="districtFinancialSummaryDataProvider"/>
                     <property name="id" value="RP-District-Order-Compilation-Report"/>
                     <property name="name" value="District Order Compilation Report"/>
-                    <property name="title" value="District Order Compilation Report"/>
+                    <property name="title" value="report.title.district.order.compilation"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -219,7 +219,16 @@
                     <property name="reportDataProvider" ref="userSummaryReportProvider"/>
                     <property name="id" value="RP-User-Summary-Report"/>
                     <property name="name" value="User Summary Report"/>
-                    <property name="title" value="User Summary Report"/>
+                    <property name="title" value="report.title.user.summary"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="pipeline_export"/>
+                    <property name="template" value="pipeline-export.jasper"/>
+                    <property name="reportDataProvider" ref="pipelineExportReportProvider"/>
+                    <property name="id" value="RP-Pipeline-Export-Report"/>
+                    <property name="name" value="Pipeline Export"/>
+                    <property name="title" value="Pipeline Export"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -228,7 +237,7 @@
                     <property name="reportDataProvider" ref="labEquipmentStatusReportDataProvider"/>
                     <property name="id" value="RP-Lab-equipment-list-Report"/>
                     <property name="name" value="List of Lab Equipment by Operational Status"/>
-                    <property name="title" value="List of Lab Equipment by Operational Status"/>
+                    <property name="title" value="report.title.lab.equipment.by.status"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -237,7 +246,7 @@
                     <property name="reportDataProvider" ref="labEquipmentsByDonorReportDataProvider"/>
                     <property name="id" value="RP-Lab-equipment-list-by-donor"/>
                     <property name="name" value="List of Equipment by Funding Source"/>
-                    <property name="title" value="List of Equipment by Funding Source"/>
+                    <property name="title" value="report.title.lab.equipment.by.funding"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -255,7 +264,7 @@
                     <property name="reportDataProvider" ref="orderFillRateReportSummaryDataProvider"/>
                     <property name="id" value="RP-Order-Fill-Rate-Summary"/>
                     <property name="name" value="Order Fill Rate Summary"/>
-                    <property name="title" value="Order fill rate Summary Report"/>
+                    <property name="title" value="report.title.order.fill.rate.summary"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -264,7 +273,7 @@
                     <property name="reportDataProvider" ref="equipmentsFunctioningDataProvider"/>
                     <property name="id" value="RP-lab-equipments-functioning-Report"/>
                     <property name="name" value="Functioning equipment with service contract status"/>
-                    <property name="title" value="Functioning equipment with service contract status"/>
+                    <property name="title" value="report.title.functioning.equipment"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
@@ -273,7 +282,7 @@
                     <property name="reportDataProvider" ref="equipmentsNonFunctioningDataProvider"/>
                     <property name="id" value="RP-lab-equipments-functioning-Report"/>
                     <property name="name" value="Non Functioning equipment with service contract status"/>
-                    <property name="title" value="Non Functioning equipment with service contract status"/>
+                    <property name="title" value="report.title.non.functioning.equipment"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">

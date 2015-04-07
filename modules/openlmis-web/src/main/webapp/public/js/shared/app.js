@@ -199,7 +199,7 @@ app.positiveInteger = function (value, errorHolder) {
   return valid;
 };
 
-app.run(function ($rootScope) {
+app.run(function ($rootScope, messageService) {
   $rootScope.$on('$routeChangeStart', function () {
     angular.element('#ui-datepicker-div').hide();
     angular.element('#select2-drop').hide();
@@ -208,6 +208,10 @@ app.run(function ($rootScope) {
     angular.element('body > .modal-backdrop').hide();
     angular.element('.dialog').parent('.modal').remove();
   });
+
+  $rootScope.getLocalMessage = function(key){
+    return messageService.get(key);
+  };
 
   var setState = function(state) {
     $rootScope.appCacheState = state;

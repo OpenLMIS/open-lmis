@@ -14,6 +14,7 @@ import lombok.*;
 import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.report.exception.ReportException;
 import org.openlmis.report.exporter.ReportExporter;
@@ -49,6 +50,9 @@ public class ReportManager {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     private ConfigurationSettingService configurationService;
@@ -188,7 +192,7 @@ public class ReportManager {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put(Constants.REPORT_NAME, report.getName());
         params.put(Constants.REPORT_ID, report.getId());
-        params.put(Constants.REPORT_TITLE, report.getTitle());
+        params.put(Constants.REPORT_TITLE, messageService.message(report.getTitle()));
         params.put(Constants.REPORT_SUB_TITLE, report.getSubTitle());
         params.put(Constants.REPORT_VERSION, report.getVersion());
         params.put(Constants.REPORT_OUTPUT_OPTION, outputOption.toString());

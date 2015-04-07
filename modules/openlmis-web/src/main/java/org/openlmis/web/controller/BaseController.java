@@ -39,7 +39,7 @@ public class BaseController {
   public static final String ACCEPT_CSV = "Accept=*/*";
 
   @Autowired
-  MessageService messageService;
+  public MessageService messageService;
 
   protected Long loggedInUserId(HttpServletRequest request) {
     return (Long) request.getSession().getAttribute(USER_ID);
