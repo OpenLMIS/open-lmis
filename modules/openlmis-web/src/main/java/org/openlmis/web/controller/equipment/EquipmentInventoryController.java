@@ -52,8 +52,11 @@ public class EquipmentInventoryController extends BaseController {
   @RequestMapping(value="save", method = RequestMethod.POST)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentInventory inventory){
+    ResponseEntity<OpenLmisResponse> response;
     service.save(inventory);
-    return OpenLmisResponse.response("inventory", inventory);
+    response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.saved"));
+    response.getBody().addData("inventory", inventory);
+    return response;
   }
 
 }

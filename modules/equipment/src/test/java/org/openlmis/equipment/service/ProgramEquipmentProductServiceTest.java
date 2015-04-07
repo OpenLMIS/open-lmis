@@ -59,11 +59,13 @@ public class ProgramEquipmentProductServiceTest {
 
   @Test
   public void shouldRemoveEquipmentProducts() throws Exception {
-
+    service.removeAllByEquipmentProducts(5L);
+    verify(repository).removeAllByEquipmentProducts(5L);
   }
 
   @Test
   public void shouldGetAvailableProductsToLink() throws Exception {
-
+    service.getAvailableProductsToLink(4L, 6L);
+    verify(repository).getAvailableProductsToLink(4L, 6L);
   }
 }

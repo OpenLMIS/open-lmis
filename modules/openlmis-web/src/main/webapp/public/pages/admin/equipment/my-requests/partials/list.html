@@ -39,7 +39,10 @@
         <td>{{row.requestedDateString}}</td>
         <td>{{row.reason}}</td>
         <td>{{row.recommendedDateString}}</td>
-        <th><input type="button" class="btn btn-small" ng-click="respondToRequest(row)" value="Respond"/></th>
+        <th class="span1"><input type="button" class="btn btn-small" ng-click="respondToRequest(row)" value="Respond"/></th>
+      </tr>
+      <tr>
+        <td colspan="7" openlmis-message="label.no.maintenance.request.pending"></td>
       </tr>
       </tbody>
     </table>
