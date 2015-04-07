@@ -29,7 +29,7 @@ public class FormulaOption {
     if(options != "DEFAULT"){
       ObjectMapper mapper = new ObjectMapper();
       try{
-        formulas = mapper.readValue(options, new TypeReference(){}  );
+        formulas = mapper.readValue(options, new TypeReference<List<Formula>>(){}  );
       } catch(Exception exp){
 
       }
