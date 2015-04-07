@@ -63,41 +63,22 @@
                       </div>
 
                       <table   ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
-                          <thead>
-                              <tr>
-                                  <!--<th style="font-size:12px">#</th>-->
-                                  <th style="font-size:12px">Facility</th>
-                                  <th style="font-size:12px">Product<br>Code</th>
-                                  <th style="font-size:12px">Product<br>Name</th>
-                                  <th style="font-size:12px">Unit</th>
-                                  <th style="font-size:12px">Beginning<br>Balance</th>
-                                  <th style="font-size:12px">Quantity<br>Received</th>
-                                  <th style="font-size:12px">Quanity<br>Dispensed</th>
-                                  <th style="font-size:12px">Adjust-<br>ments</th>
-                                  <th style="font-size:12px">Physical<br>Count</th>
-                                  <th style="font-size:12px">Adjusted<br>AMC</th>
-                                  <th style="font-size:12px">New<br>EOP</th>
-                                  <th style="font-size:12px">Quantity<br>Ordered</th>
-                                  <th style="font-size:12px">Quantity<br>Supplied</th>
-                              </tr>
-                          </thead>
-
                           <tbody>
                           <tr ng-repeat="row in datarows | orderBy:['facility','productMain','productIndex']">
                               <!--<td style="width:10px" >{{row.no}}</td>-->
-                              <td style="width:150px" >{{row.facility}}</td>
-                              <td style="width:50px" sortable="productCode" >{{ row.productCode }}</td>
-                              <td style="width:200px" sortable="product"  >{{ row.product }}</td>
-                              <td style="width:80px" sortable="unit"  >{{ row.unit }}</td>
-                              <td class="number" style="{{ row.productIndex == 0 && row.err_open_balance == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="beginningBalance"  >{{ row.productIndex == 0 && (row.beginningBalance | number) || ''}}</td>
-                              <td class="number" style="{{ row.productIndex == 0 && row.err_qty_received == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="totalQuantityReceived"  >{{ row.productIndex == 0 && (row.totalQuantityReceived | number) || ''}}</td>
-                              <td class="number" style="width:80px" sortable="totalQuantityDispensed"  >{{ row.productIndex == 0 && (row.totalQuantityDispensed | number) || ''}}</td>
-                              <td class="number" style="width:80px" sortable="adjustments"  >{{ row.productIndex == 0 && (row.adjustments | number) || ''}}</td>
-                              <td class="number" style="{{ row.productIndex == 0 && row.err_qty_stockinhand == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="physicalCount"  >{{ row.productIndex == 0 && (row.physicalCount | number) || '' }}</td>
-                              <td class="number" style="width:80px" sortable="adjustedAMC"  >{{ row.productIndex == 0 && (row.adjustedAMC | number) || ''}}</td>
-                              <td class="number" style="width:80px" sortable="newEOP"  >{{ row.productIndex == 0 && (row.newEOP | number) || ''}}</td>
-                              <td class="number" style="{{ row.productIndex == 0 && row.err_qty_required == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="orderQuantity"  >{{ row.productIndex == 0 && (row.orderQuantity | number) || ''}}</td>
-                              <td class="number" style="width:80px" sortable="quantitySupplied"  >{{ row.quantitySupplied | number }}</td>
+                              <td data-title="getLocalMessage('label.facility')" style="width:150px" >{{row.facility}}</td>
+                              <td data-title="getLocalMessage('label.product.code')" style="width:50px" sortable="productCode" >{{ row.productCode }}</td>
+                              <td data-title="getLocalMessage('label.product.name')" style="width:200px" sortable="product"  >{{ row.product }}</td>
+                              <td data-title="getLocalMessage('label.unit')" style="width:80px" sortable="unit"  >{{ row.unit }}</td>
+                              <td data-title="getLocalMessage('label.beginning.balance')" class="number" style="{{ row.productIndex == 0 && row.err_open_balance == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="beginningBalance"  >{{ row.productIndex == 0 && (row.beginningBalance | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.quantity.received')" class="number" style="{{ row.productIndex == 0 && row.err_qty_received == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="totalQuantityReceived"  >{{ row.productIndex == 0 && (row.totalQuantityReceived | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.quantity.dispensed')" class="number" style="width:80px" sortable="totalQuantityDispensed"  >{{ row.productIndex == 0 && (row.totalQuantityDispensed | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.adjustments')" class="number" style="width:80px" sortable="adjustments"  >{{ row.productIndex == 0 && (row.adjustments | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.physical.count')" class="number" style="{{ row.productIndex == 0 && row.err_qty_stockinhand == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="physicalCount"  >{{ row.productIndex == 0 && (row.physicalCount | number) || '' }}</td>
+                              <td data-title="getLocalMessage('label.adjusted.amc')" class="number" style="width:80px" sortable="adjustedAMC"  >{{ row.productIndex == 0 && (row.adjustedAMC | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.new.eop')" class="number" style="width:80px" sortable="newEOP"  >{{ row.productIndex == 0 && (row.newEOP | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.quantity.ordered')" class="number" style="{{ row.productIndex == 0 && row.err_qty_required == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="orderQuantity"  >{{ row.productIndex == 0 && (row.orderQuantity | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.quantity.supplied')" class="number" style="width:80px" sortable="quantitySupplied"  >{{ row.quantitySupplied | number }}</td>
                              </tr>
                           </tbody>
                       </table>

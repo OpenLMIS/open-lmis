@@ -28,7 +28,7 @@
 
                                 <div class="clearfix ">
                                     <div class="form-cell horizontalFilters" >
-                                        <label class="labels">supervisory Node <span class="label-required">*</span></label>
+                                        <label class="labels" openlmis-message="label.supervisory.node"><span class="label-required">*</span></label>
 
                                         <div class="form-fields">
                                             <select ui-select2 style="width:200px;" class="large-input" name="supervisoryNode"  ng-model="filterObject.supervisoryNodeId" ng-change ="processSupervisoryNodeChange()">
@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="clearfix ">
                                     <div class="form-cell horizontalFilters" >
-                                        <label class="labels">Role <span class="label-required">*</span></label>
+                                        <label class="labels" openlmis-message="label.role"><span class="label-required">*</span></label>
 
                                         <div class="form-fields">
                                             <select ui-select2 style="width:200px;" class="large-input" name="role"  ng-model="filterObject.roleId">
@@ -52,7 +52,7 @@
                                 </div>
                                 <div class="clearfix ">
                                     <div class="form-cell horizontalFilters" >
-                                        <label class="labels">Program <span class="label-required">*</span></label>
+                                        <label class="labels" openlmis-message="label.program"><span class="label-required">*</span></label>
 
                                         <div class="form-fields">
                                             <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="filterObject.programId" >
@@ -78,7 +78,7 @@
                             </label>
                         </div>
                         <div ng-show ="UserRolePieChartData != undefined">
-                            <label class="labels" style="text-align: center;font-family: bold"># Of Users </span></label>
+                            <label class="labels" style="text-align: center;font-family: bold" openlmis-message="label.no.users"></span></label>
                             <div id="userSummaryReportLegend" class="chartLegend"></div>
                           <dv></dv>  <a-float id="stocked-out-reporting" style="align-items: center" af-option="userSummaryPieChartOption" af-data="UserRolePieChartData" class="chart"></a-float>
                             </div>

@@ -66,17 +66,17 @@
                                 <tbody>
                                 <tr ng-repeat="row in datarows">
                                     <td  data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
-                                    <td data-title="'District'" sortable="district">{{row.district}}</td>
-                                    <td data-title="'Primary Donor'" sortable="donor">{{row.donor}}</td>
-                                    <td data-title="'Funding Source'" sortable="sourceoffund">{{row.sourceoffund}}</td>
-                                    <td data-title="'Equipment Name'" sortable="equipment_name">{{ row.equipment_name }}</td>
-                                    <td data-title="'Model'" style="width:80px" sortable="model">{{ row.model }}</td>
-                                    <td data-title="'Year of Installation'"  sortable="yearofinstallation">{{ row.yearofinstallation }}</td>
-                                    <td data-title="'Has Service Contract?'"  sortable="test">{{row.hasservicecontract}}</td>
-                                    <td data-title="'End Date of Service Contract'" sortable="servicecontractenddate">{{row.servicecontractenddate | date }}</td>
-                                    <td data-title="'Is Active?'"  sortable="isactive">{{ row.isactive }}</td>
-                                    <td data-title="'Decommission Date'" sortable="datedecommissioned">{{ row.datedecommissioned}}</td>
-                                    <td style="width: 45px;" data-title="'Replacement Recommended?'" sortable="replacementrecommended">{{ row.replacementrecommended}}</td>
+                                    <td data-title="getLocalMessage('label.district')" sortable="district">{{row.district}}</td>
+                                    <td data-title="getLocalMessage('label.primary.donor')" sortable="donor">{{row.donor}}</td>
+                                    <td data-title="getLocalMessage('label.funding.source')" sortable="sourceoffund">{{row.sourceoffund}}</td>
+                                    <td data-title="getLocalMessage('label.equipment.name')" sortable="equipment_name">{{ row.equipment_name }}</td>
+                                    <td data-title="getLocalMessage('label.equipment.model')" style="width:80px" sortable="model">{{ row.model }}</td>
+                                    <td data-title="getLocalMessage('label.equipment.year.of.installation')"  sortable="yearofinstallation">{{ row.yearofinstallation }}</td>
+                                    <td data-title="getLocalMessage('label.equipment.has.service.contract')"  sortable="test">{{row.hasservicecontract}}</td>
+                                    <td data-title="getLocalMessage('label.equipment.end.date.of.service.contract')" sortable="servicecontractenddate">{{row.servicecontractenddate | date }}</td>
+                                    <td data-title="getLocalMessage('label.is.active')"  sortable="isactive">{{ row.isactive }}</td>
+                                    <td data-title="getLocalMessage('label.equipment.date.decommissioned')" sortable="datedecommissioned">{{ row.datedecommissioned}}</td>
+                                    <td style="width: 45px;" data-title="getLocalMessage('label.equipment.replacement.recommended')" sortable="replacementrecommended">{{ row.replacementrecommended}}</td>
                                 </tr>
                                 </tbody>
                             </table>

@@ -56,32 +56,32 @@
             <tbody>
             <tr ng-repeat="row in datarows">
               <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
-              <td data-title="'Product Code'" style="width:80px" sortable="code">{{ row.code }}</td>
-              <td data-title="'Product'" style="width:30%" sortable="product">{{ row.product }}</td>
-              <td data-title="'B. Balance'" class="number" style="width:80px" sortable="openingBalance">{{
+              <td data-title="getLocalMessage('label.product.code')" style="width:80px" sortable="code">{{ row.code }}</td>
+              <td data-title="'getLocalMessage('label.product')" style="width:30%" sortable="product">{{ row.product }}</td>
+              <td data-title="getLocalMessage('label.beginning.balance')" class="number" style="width:80px" sortable="openingBalance">{{
                 row.openingBalance | number }}
               </td>
-              <td data-title="'Qty Received'" class="number" style="width:80px" sortable="recipts">{{ row.receipts | number
+              <td data-title="getLocalMessage('label.quantity.received')" class="number" style="width:80px" sortable="recipts">{{ row.receipts | number
                 }}
               </td>
-              <td data-title="'Qty Consumed'" class="number" style="width:80px" sortable="issues">{{ row.issues | number }}
+              <td data-title="getLocalMessage('label.quantity.consumed')" class="number" style="width:80px" sortable="issues">{{ row.issues | number }}
               </td>
-              <td data-title="'Adjustments'" class="number" style="width:80px" sortable="adjustment">{{ row.adjustments
+              <td data-title="getLocalMessage('label.adjustments')" class="number" style="width:80px" sortable="adjustment">{{ row.adjustments
                 | number }}
               </td>
-              <td data-title="'C. Balance'" class="number" style="width:80px" sortable="closingBalance">{{
+              <td data-title="getLocalMessage('label.closing.balance')" class="number" style="width:80px" sortable="closingBalance">{{
                 row.closingBalance | number }}
               </td>
-              <td data-title="'MOS'" class="number" style="width:80px" sortable="monthsOfStock">{{ row.monthsOfStock |
+              <td data-title="getLocalMessage('label.mos')" class="number" style="width:80px" sortable="monthsOfStock">{{ row.monthsOfStock |
                 number }}
               </td>
-              <td data-title="'AMC'" class="number" style="width:80px" sortable="averageMonthlyConsumption">{{
+              <td data-title="getLocalMessage('label.amc')" class="number" style="width:80px" sortable="averageMonthlyConsumption">{{
                 row.averageMonthlyConsumption | number }}
               </td>
-              <td data-title="'Max Stock'" class="number" style="width:80px" sortable="maximumStock">{{ row.maximumStock
+              <td data-title="getLocalMessage('label.max.stock')" class="number" style="width:80px" sortable="maximumStock">{{ row.maximumStock
                 | number }}
               </td>
-              <td data-title="'Quantity Ordered'" class="number" style="width:80px" sortable="reorderAmount">{{
+              <td data-title="getLocalMessage('label.quantity.ordered')" class="number" style="width:80px" sortable="reorderAmount">{{
                 row.reorderAmount | number }}
               </td>
             </tr>

@@ -74,17 +74,17 @@
                                 <tbody>
                                 <tr ng-repeat="row in datarows | orderBy:'order_FILL_RATE'">
                                     <td data-title="'#'" class="number" style="width:1px">{{ row.no }}</td>
-                                    <td data-title="'District'" style="width:40px" sortable="district">
+                                    <td data-title="getLocalMessage('label.district')" style="width:40px" sortable="district">
                                         {{row.district}}
                                     </td>
-                                    <td data-title="'Facility Name'" style="width:80px" sortable="facility">
+                                    <td data-title="getLocalMessage('label.facility.name')" style="width:80px" sortable="facility">
                                         <a ng-href="/public/pages/reports/order-fill-rate/index.html#/list?schedule={{filter.schedule}}&year={{filter.year}}&program={{filter.program}}&period={{filter.period}}&facility={{row.facilityId}}">{{row.facility}} </a>
                                     </td>
-                                    <td data-title="'Facility Type'" style="width:80px" sortable="facilitytype">{{
+                                    <td data-title="getLocalMessage('label.facility.type')" style="width:80px" sortable="facilitytype">{{
                                         row.facilityType }}
                                     </td>
 
-                                    <td data-title="'Order Fill Rate'" class="number" style="width:80px"
+                                    <td data-title="getLocalMessage('label.order.fill.rate')" class="number" style="width:80px"
                                         sortable="order_FILL_RATE">{{row.order_FILL_RATE | number }}%
                                     </td>
                                 </tr>

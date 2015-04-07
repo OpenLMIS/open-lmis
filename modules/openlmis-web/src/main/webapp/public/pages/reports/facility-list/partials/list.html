@@ -55,13 +55,13 @@
                 <tbody>
                 <tr ng-repeat="row in datarows">
                     <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                    <td data-title="'Facility Code'" style="width:80px" sortable="code" >{{ row.code }}</td>
-                    <td data-title="'Facility Name'" style="width:150px" sortable="facilityName" >{{ row.facilityName }}</td>
-                    <td data-title="'Facility Type'" style="width:120px" sortable="facilityType" >{{ row.facilityType }}</td>
-                    <td data-title="'District'" style="width:80px" sortable="region"  >{{ row.region }}</td>
-                    <td data-title="'Phone'" style="width:100px" sortable="phoneNumber"  >{{ row.phoneNumber }}</td>
-                    <td data-title="'Owner'" style="width:100px" sortable="owner"  >{{ row.owner }}</td>
-                    <td data-title="'Active'" style="width:100px" sortable="active"  >{{ row.active == true?'Yes':'No' }}</td>
+                    <td data-title="getLocalMessage('label.facility.code')" style="width:80px" sortable="code" >{{ row.code }}</td>
+                    <td data-title="getLocalMessage('label.facility.name')" style="width:150px" sortable="facilityName" >{{ row.facilityName }}</td>
+                    <td data-title="getLocalMessage('label.facility.type')" style="width:120px" sortable="facilityType" >{{ row.facilityType }}</td>
+                    <td data-title="getLocalMessage('label.district')" style="width:80px" sortable="region"  >{{ row.region }}</td>
+                    <td data-title="getLocalMessage('label.phone')" style="width:100px" sortable="phoneNumber"  >{{ row.phoneNumber }}</td>
+                    <td data-title="getLocalMessage('label.owner')" style="width:100px" sortable="owner"  >{{ row.owner }}</td>
+                    <td data-title="getLocalMessage('label.active')" style="width:100px" sortable="active"  >{{ row.active == true?'Yes':'No' }}</td>
                 </tr>
                 </tbody>
             </table>

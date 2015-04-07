@@ -147,12 +147,12 @@
                             <tbody>
                             <tr ng-repeat="row in datarows">
                                 <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                                <td data-title="'Product Code'" style="width:150px" sortable="productCode" >{{ row.productCode }}</td>
-                                <td data-title="'Description'" style="width:30%" sortable="description"  >{{ row.description }}</td>
-                                <td data-title="'Facility Name'" style="width:30%" sortable="facilityName"  >{{ row.facilityName }}</td>
-                                <td data-title="'Pack Size'" class="number" style="width:80px" sortable="packSize"  >{{ row.packSize | number }}</td>
-                                <td data-title="'Packs to ship'" class="number" style="width:80px" sortable="packsToShip"  >{{ row.packsToShip | number }}</td>
-                                <td data-title="'Discrepancy or Damages'" class="number" style="width:80px" sortable="orderQuantity"  >{{row.discrepancy }}</td>
+                                <td data-title="getLocalMessage('label.product.code')" style="width:150px" sortable="productCode" >{{ row.productCode }}</td>
+                                <td data-title="getLocalMessage('label.description')" style="width:30%" sortable="description"  >{{ row.description }}</td>
+                                <td data-title="getLocalMessage('label.facility.name')" style="width:30%" sortable="facilityName"  >{{ row.facilityName }}</td>
+                                <td data-title="getLocalMessage('label.product.packSize')" class="number" style="width:80px" sortable="packSize"  >{{ row.packSize | number }}</td>
+                                <td data-title="getLocalMessage('headers.packs.to.ship')" class="number" style="width:80px" sortable="packsToShip"  >{{ row.packsToShip | number }}</td>
+                                <td data-title="getLocalMessage('label.discrepancy.or.damages')" class="number" style="width:80px" sortable="orderQuantity"  >{{row.discrepancy }}</td>
                             </tr>
                             </tbody>
                         </table>
