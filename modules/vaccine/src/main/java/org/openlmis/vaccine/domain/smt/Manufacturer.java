@@ -8,21 +8,48 @@
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.vaccine.domain;
+package org.openlmis.vaccine.domain.smt;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.vaccine.domain.smt.TransactionType;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class Status extends BaseModel {
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Deprecated
+public class Manufacturer extends BaseModel {
+
     private String name;
-    private TransactionType transactionType;
+    private String website;
+    private String contactPerson;
+    private String primaryPhone;
+    private String email;
+    private String description;
+    private String specialization;
+    private String geographicCoverage;
+    private Date registrationDate;
+
+    private String formatDate(Date date){
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
+            return date == null ? null : simpleDateFormat.format(date);
+        }catch(Exception exp){
+
+        }
+        return null;
+    }
+
+    public String getRegistrationDateString()  {
+        return formatDate(this.registrationDate);
+    }
 
 }

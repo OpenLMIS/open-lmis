@@ -8,21 +8,44 @@
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.vaccine.domain;
+package org.openlmis.vaccine.domain.smt;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.vaccine.domain.smt.TransactionType;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Status extends BaseModel {
-    private String name;
-    private TransactionType transactionType;
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Deprecated
+public class InventoryBatch extends BaseModel{
+    private InventoryTransaction inventoryTransaction;
+    private String batchNumber;
+    private Date productionDate;
+    private Date expiryDate;
+    private Integer quantity;
+    private Integer vvm1;
+    private Integer vvm2;
+    private Integer vvm3;
+    private Integer vvm4;
+    private String note;
 
+    @SuppressWarnings("unused")
+    public String getStringProductionDate() throws ParseException {
+        return this.productionDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.productionDate);
+    }
+
+    @SuppressWarnings("unused")
+    public String getStringExpiryDate() throws ParseException {
+        return this.expiryDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.expiryDate);
+    }
 }

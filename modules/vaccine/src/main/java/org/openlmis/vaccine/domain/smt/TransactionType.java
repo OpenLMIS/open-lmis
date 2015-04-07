@@ -8,21 +8,19 @@
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.vaccine.domain;
+package org.openlmis.vaccine.domain.smt;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.vaccine.domain.smt.TransactionType;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Status extends BaseModel {
+@Deprecated
+public class TransactionType extends BaseModel {
     private String name;
-    private TransactionType transactionType;
-
 }

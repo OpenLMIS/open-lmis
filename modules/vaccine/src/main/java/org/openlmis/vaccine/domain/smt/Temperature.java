@@ -1,3 +1,12 @@
+package org.openlmis.vaccine.domain.smt;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
+import org.openlmis.upload.Importable;
+
 /*
  * This program is part of the OpenLMIS logistics management information system platform software.
  *   Copyright © 2013 VillageReach
@@ -7,22 +16,11 @@
  *   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-
-package org.openlmis.vaccine.domain;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.vaccine.domain.smt.TransactionType;
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Status extends BaseModel {
-    private String name;
-    private TransactionType transactionType;
-
+@Deprecated
+public class Temperature extends BaseModel implements Importable {
+    private String tempratureName;
 }
