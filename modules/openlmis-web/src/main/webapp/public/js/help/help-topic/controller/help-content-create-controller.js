@@ -3,8 +3,8 @@
  */
 
 
-function ContentCreateController($scope, $location, $route, messageService, CreateHelpTopic,HelpDocumentList) {
-    $scope.cancelContentCreate = function(){
+function ContentCreateController($scope, $location, $route, messageService, CreateHelpTopic, HelpDocumentList) {
+    $scope.cancelContentCreate = function () {
 
 
         $location.path('treeView');
@@ -21,7 +21,6 @@ function ContentCreateController($scope, $location, $route, messageService, Crea
         $scope.helpDocumentList = data.helpDocumentList;
 
 
-
     }, function (data) {
 
 
@@ -30,7 +29,7 @@ function ContentCreateController($scope, $location, $route, messageService, Crea
 
     });
     $scope.createHelpContent = function () {
-        alert('here ii am');
+
         $scope.error = "";
         if ($scope.createHelpContentForm.$invalid) {
             $scope.showError = true;
@@ -59,15 +58,11 @@ function ContentCreateController($scope, $location, $route, messageService, Crea
 //            this.htmlContent = "";
 //
 //        }
-        var helpTopic={};
+        var helpTopic = {};
         helpTopic.parentHelpTopic = parentId;
-        ////alert('here intializing help topic and parent id is ' + parentId);
-
-        //////alert('here intializing help topic');
         $scope.title = "Help Topic Information";
         $scope.helpContent = helpTopic;
-        ////alert('here intializing help topic and parent id is ' + parentId);
-//            $scope.helpTopic.roleList=data.helpTopic.roleList;
+
 
 
     };

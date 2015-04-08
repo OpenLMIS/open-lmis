@@ -1,14 +1,14 @@
+/*
+ * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ * + *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ *
+ * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ */
+
 package org.openlmis.web.controller;
 
-/*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
- */
+
 
 import org.apache.log4j.Logger;
 import org.openlmis.core.exception.DataException;
@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,9 +63,9 @@ public class HelpCateoryController extends BaseController {
     @Value("${help.document.accessBaseUrl}")
     private String fileAccessBaseUrl;
 
-    // create product
+
     @RequestMapping(value = "/createHelpTopic", method = RequestMethod.POST, headers = ACCEPT_JSON)
-//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_HELP_CONTENT')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody HelpTopic helpTopic, HttpServletRequest request) {
         //System.out.println(" here saving help topic");
         helpTopic.setCreatedBy(loggedInUserId(request));
@@ -76,47 +77,41 @@ public class HelpCateoryController extends BaseController {
     }
 
     @RequestMapping(value = "/edit/:id", method = RequestMethod.POST, headers = ACCEPT_JSON)
-//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_HELP_CONTENT')")
     public ResponseEntity<OpenLmisResponse> edit(@RequestBody HelpTopic helpTopic, HttpServletRequest request) {
-        //System.out.println(" here updating help topic");
         helpTopic.setCreatedBy(loggedInUserId(request));
         helpTopic.setModifiedBy(loggedInUserId(request));
         helpTopic.setModifiedDate(new Date());
         helpTopic.setCreatedDate(new Date());
-        //System.out.println(" help topic id is" + helpTopic.getName());
         return saveHelpTopic(helpTopic, false);
     }
 
     private ResponseEntity<OpenLmisResponse> saveHelpTopic(HelpTopic helpTopic, boolean createOperation) {
         try {
             this.helpTopicService.addHelpTopic(helpTopic);
-
-
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(("'" + helpTopic.getName()) + "' " + (createOperation ? "created" : "updated") + " successfully");
             response.getBody().addData(HELPTOPIC, this.helpTopicService.get(helpTopic.getId()));
             response.getBody().addData(HELPTOPICLIST, this.helpTopicService.buildHelpTopicTree(null, true));
             return response;
         } catch (DuplicateKeyException exp) {
-            // //System.out.println(exp.getStackTrace());
+
             return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
         } catch (DataException e) {
-            // //System.out.println(e.getStackTrace());
+
             return error(e, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            // //System.out.println(e.getMessage());
+
             return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
         }
     }
 
-    // supply line list for view
+
     @RequestMapping(value = "/helpTopicList", method = RequestMethod.GET, headers = "Accept=application/json")
-//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
-    public ResponseEntity<OpenLmisResponse> getHelpToicsList() {
-        //System.out.println(" here calling");
-        return OpenLmisResponse.response(HELPTOPICLIST, this.helpTopicService.buildHelpTopicTree(null, true));
+      public ResponseEntity<OpenLmisResponse> getHelpToicsList() {
+       return OpenLmisResponse.response(HELPTOPICLIST, this.helpTopicService.buildHelpTopicTree(null, true));
     }
 
-    // supply line list for view
+
     @RequestMapping(value = "/helpTopicDetail/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
     public ResponseEntity<OpenLmisResponse> getHelpTopicDetail(@PathVariable("id") Long id) {
@@ -235,10 +230,6 @@ public class HelpCateoryController extends BaseController {
 
         helpDocumentList = this.helpTopicService.loadHelpDocumentList();
 
-//        uriPath = request.getRequestURL().toString();
-//        int firstIndex=uriPath.indexOf("://");
-//        int index = uriPath.indexOf("/",firstIndex+3);
-//        uriPath = uriPath.substring(0, index);
         uriPath = this.fileAccessBaseUrl;
 
         for (HelpDocument helpDocument : helpDocumentList) {
