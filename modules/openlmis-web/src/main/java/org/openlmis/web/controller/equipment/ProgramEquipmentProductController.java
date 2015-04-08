@@ -59,7 +59,7 @@ public class ProgramEquipmentProductController extends BaseController{
       return OpenLmisResponse.error(e, HttpStatus.BAD_REQUEST);
     }
 
-    successResponse = OpenLmisResponse.success("Association between program, equipment, and product successfully saved.");
+    successResponse = OpenLmisResponse.success("message.equipment.association.pep.saved");
     successResponse.getBody().addData("programEquipmentProduct",programEquipmentProduct);
     return successResponse;
   }
@@ -76,7 +76,7 @@ public class ProgramEquipmentProductController extends BaseController{
       return OpenLmisResponse.error(e,HttpStatus.BAD_REQUEST);
     }
 
-    successResponse = OpenLmisResponse.success("Product successfully removed.");
+    successResponse = OpenLmisResponse.success("message.equipment.association.pep.removed");
     return successResponse;
   }
 

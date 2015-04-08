@@ -52,14 +52,14 @@ public class VendorUserController extends BaseController {
   @RequestMapping(value="saveNewUserForVendor", method = RequestMethod.POST,headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> saveVendorUsers(@RequestBody VendorUser vendorUser, HttpServletRequest request) {
-    ResponseEntity<OpenLmisResponse> successResponse;
+
     vendorUser.setModifiedBy(loggedInUserId(request));
     try {
       vendorUserService.save(vendorUser);
     } catch (DataException e) {
       return OpenLmisResponse.error(e, HttpStatus.BAD_REQUEST);
     }
-    successResponse = OpenLmisResponse.success("User successfully associated with vendor.");
+    ResponseEntity<OpenLmisResponse>  successResponse = OpenLmisResponse.success( messageService.message("message.equipment.vendor.associated.with.user"));
     successResponse.getBody().addData("vendorUser", vendorUser);
     return successResponse;
   }
@@ -67,14 +67,13 @@ public class VendorUserController extends BaseController {
   @RequestMapping(value="remove/{vendorId}/{userId}", method = RequestMethod.GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> remove (@PathVariable(value="vendorId") Long vendorId, @PathVariable(value="userId") Long userId){
-    ResponseEntity<OpenLmisResponse> successResponse;
+
     try {
       vendorUserService.removeVendorUserAssociation(vendorId,userId);
     } catch (DataException e) {
       return error(e, HttpStatus.BAD_REQUEST);
     }
-    successResponse = success(String.format("Vendor and user association has been successfully removed"));
-    return successResponse;
+    return  OpenLmisResponse.success("message.equipment.vendor.removed.associated.user");
   }
 
 }

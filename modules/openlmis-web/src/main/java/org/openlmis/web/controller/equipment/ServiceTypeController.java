@@ -39,7 +39,7 @@ public class ServiceTypeController extends BaseController {
   @RequestMapping(method = GET, value = "list")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS') or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
   public ResponseEntity<OpenLmisResponse> getAll(){
-    return  OpenLmisResponse.response("service_type", service.getAll());
+    return  OpenLmisResponse.response("service_types", service.getAll());
   }
 
   @RequestMapping(method = GET, value = "id")
@@ -53,6 +53,8 @@ public class ServiceTypeController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody ServiceType type){
     service.save(type);
-    return OpenLmisResponse.response("status","success");
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("message.equipment.service.type.saved");
+    response.getBody().addData("service_type", type);
+    return response;
   }
 }

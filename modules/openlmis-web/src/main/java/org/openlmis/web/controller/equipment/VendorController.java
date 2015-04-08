@@ -38,45 +38,46 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-@RequestMapping(value="/equipment/vendor/")
+@RequestMapping(value = "/equipment/vendor/")
 public class VendorController extends BaseController {
 
   @Autowired
   private VendorService service;
 
   @RequestMapping(method = GET, value = "list")
-  public ResponseEntity<OpenLmisResponse> getAll(){
-    return  OpenLmisResponse.response("vendors", service.getAll());
+  public ResponseEntity<OpenLmisResponse> getAll() {
+    return OpenLmisResponse.response("vendors", service.getAll());
   }
 
   @RequestMapping(method = GET, value = "id")
-  public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("vendor", service.getById(id));
+  public ResponseEntity<OpenLmisResponse> getById(@RequestParam("id") Long id) {
+    return OpenLmisResponse.response("vendor", service.getById(id));
   }
 
 
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody Vendor vendor){
-    try{
-    service.save(vendor);
-    }catch(DuplicateKeyException exp){
-      return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody Vendor vendor) {
+    try {
+      service.save(vendor);
+    } catch (DuplicateKeyException exp) {
+      return OpenLmisResponse.error("error.equipment.vendor.code.duplicate", HttpStatus.BAD_REQUEST);
     }
-    return OpenLmisResponse.response("status","success");
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("message.equipment.successfully.saved.vendor");
+    response.getBody().addData("vendor", vendor);
+    return response;
   }
 
-    @RequestMapping(value="delete/{id}",method = GET,headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value="id") Long vendorId, HttpServletRequest request){
-        ResponseEntity<OpenLmisResponse> successResponse;
-        try {
-            service.removeVendor(vendorId);
-        } catch (DataIntegrityViolationException ex) {
-            return OpenLmisResponse.error("Can't delete vendor. Data already in use.", HttpStatus.BAD_REQUEST);
-        }
-        catch (DataException e) {
-            return error(e, HttpStatus.BAD_REQUEST);
-        }
-        successResponse = success(String.format("Vendor has been successfully removed"));
-        return successResponse;
+  @RequestMapping(value = "delete/{id}", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value = "id") Long vendorId) {
+
+    try {
+      service.removeVendor(vendorId);
+    } catch (DataIntegrityViolationException ex) {
+      return OpenLmisResponse.error("error.equipment.vendor.in.use", HttpStatus.BAD_REQUEST);
+    } catch (DataException e) {
+      return error(e, HttpStatus.BAD_REQUEST);
     }
+    return success("message.equipment.vendor.removed.successfully");
+
+  }
 }

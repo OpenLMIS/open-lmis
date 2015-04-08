@@ -35,7 +35,7 @@ public class ServiceContractController extends BaseController {
 
   @RequestMapping(method = GET, value = "list")
   public ResponseEntity<OpenLmisResponse> getAll(){
-    return  OpenLmisResponse.response("contract", service.getAll());
+    return  OpenLmisResponse.response("contracts", service.getAll());
   }
 
   @RequestMapping(method = GET, value = "id")
@@ -47,17 +47,19 @@ public class ServiceContractController extends BaseController {
 
   @RequestMapping(method = GET, value = "for-facility")
   public ResponseEntity<OpenLmisResponse> getByFacilityId( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("contract", service.getAllForFacility(id));
+    return  OpenLmisResponse.response("contracts", service.getAllForFacility(id));
   }
 
   @RequestMapping(method = GET, value = "for-vendor")
   public ResponseEntity<OpenLmisResponse> getByVendorId( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("contract", service.getAllForVendor(id));
+    return  OpenLmisResponse.response("contracts", service.getAllForVendor(id));
   }
 
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody ServiceContract type){
-    service.save(type);
-    return OpenLmisResponse.response("status","success");
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody ServiceContract contract){
+    service.save(contract);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("message.equipment.service.contract.saved");
+    response.getBody().addData("contract", contract);
+    return response;
   }
 }

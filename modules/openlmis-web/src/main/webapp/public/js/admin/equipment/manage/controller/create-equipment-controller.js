@@ -30,7 +30,7 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment, E
   $scope.saveEquipment = function () {
 
     var onSuccess = function(data){
-      $scope.$parent.message = 'Your changes have been saved!';
+      $scope.$parent.message = messageService.get(data.success);
       $location.path('');
     };
 
