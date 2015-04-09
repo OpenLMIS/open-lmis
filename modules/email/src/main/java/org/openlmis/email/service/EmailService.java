@@ -51,7 +51,7 @@ public class EmailService {
   private EmailNotificationRepository repository;
 
   @Autowired
-  public EmailService(@Qualifier("mailSender")  JavaMailSenderImpl mailSender, EmailNotificationRepository repository, @Value("#{mail.sending.flag}") Boolean mailSendingFlag) {
+  public EmailService(@Qualifier("mailSender")  JavaMailSenderImpl mailSender, EmailNotificationRepository repository, @Value("${mail.sending.flag}") Boolean mailSendingFlag) {
     this.mailSender = mailSender;
     this.mailSendingFlag = mailSendingFlag;
     this.repository = repository;
