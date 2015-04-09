@@ -10,19 +10,53 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.User;
+import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.core.service.FacilityService;
+import org.openlmis.email.service.EmailService;
+import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.domain.MaintenanceRequest;
+import org.openlmis.equipment.domain.ServiceContract;
+import org.openlmis.equipment.domain.Vendor;
 import org.openlmis.equipment.dto.Log;
+import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.openlmis.equipment.repository.MaintenanceRequestRepository;
+import org.openlmis.equipment.repository.ServiceContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class MaintenanceRequestService  {
 
   @Autowired
   private MaintenanceRequestRepository repository;
+
+  @Autowired
+  EquipmentInventoryRepository equipmentInventoryRepository;
+
+  @Autowired
+  ServiceContractRepository serviceContractRepository;
+
+  @Autowired
+  VendorUserService vendorUserService;
+
+  @Autowired
+  VendorService vendorService;
+
+  @Autowired
+  EmailService emailService;
+
+  @Autowired
+  FacilityService facilityService;
+
+
+  @Autowired
+  ConfigurationSettingService settingService;
 
 
   public List<MaintenanceRequest> getAll(){
@@ -49,12 +83,49 @@ public class MaintenanceRequestService  {
     return repository.getById(id);
   }
 
-  public void save(MaintenanceRequest contract){
-    if(contract.getId() == null){
-      repository.insert(contract);
+  public void save(MaintenanceRequest request){
+    if(request.getId() == null){
+      repository.insert(request);
+
+      notifyVendor(request);
+
     }else{
-      repository.update(contract);
+      repository.update(request);
     }
+  }
+
+  private void notifyVendor(MaintenanceRequest request) {
+    EquipmentInventory equipmentInventory = equipmentInventoryRepository.getInventoryById(request.getInventoryId());
+
+    //TODO: check if this service contract is applicable for this specific facility.
+    List<ServiceContract> serviceContracts = serviceContractRepository.getAllForEquipment(equipmentInventory.getEquipmentId());
+    Long serviceContractId = null;
+
+    Vendor vendor  = vendorService.getById(request.getVendorId());
+
+    //TODO: why the first contract?
+    //check if this contract is active, unexpired and that the vendor is the same as one in the request.
+    if (serviceContracts != null && serviceContracts.size() > 0) {
+      serviceContractId = serviceContracts.get(0).getId();
+    }
+    Facility facility = facilityService.getById(request.getFacilityId());
+    Map model = new HashMap();
+    model.put("request", request);
+    model.put("vendor", vendor);
+    model.put("facility", facility);
+    model.put("equipment", equipmentInventory);
+
+    List<User> users = vendorUserService.getAllUsersForVendor(request.getUserId());
+    String template = settingService.getConfigurationStringValue("VENDOR_MAINTENANCE_REQUEST_EMAIL_TEMPLATE");
+    String vendorEmailSubject = "A new maintenance request submitted";
+    for(User user: users){
+      if(model.containsKey("user")){
+        model.remove("user");
+      }
+      model.put("user", user);
+      emailService.queueHtmlMessage(user.getEmail(), vendorEmailSubject, template,model);
+    }
+
   }
 
   public List<Log> getFullHistory(Long inventoryId){

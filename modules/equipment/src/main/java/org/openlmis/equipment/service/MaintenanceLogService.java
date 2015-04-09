@@ -10,10 +10,10 @@
 
 package org.openlmis.equipment.service;
 
-import org.openlmis.equipment.domain.EquipmentInventory;
-import org.openlmis.equipment.domain.MaintenanceLog;
-import org.openlmis.equipment.domain.MaintenanceRequest;
-import org.openlmis.equipment.domain.ServiceContract;
+import org.openlmis.core.domain.User;
+import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.email.service.EmailService;
+import org.openlmis.equipment.domain.*;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.openlmis.equipment.repository.MaintenanceLogRepository;
 import org.openlmis.equipment.repository.MaintenanceRequestRepository;
@@ -23,7 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class MaintenanceLogService {
@@ -36,6 +38,18 @@ public class MaintenanceLogService {
 
   @Autowired
   ServiceContractRepository serviceContractRepository;
+
+  @Autowired
+  VendorUserService vendorUserService;
+
+  @Autowired
+  VendorService vendorService;
+
+  @Autowired
+  EmailService emailService;
+
+  @Autowired
+  ConfigurationSettingService settingService;
 
   public List<MaintenanceLog> getAll() {
     return repository.getAll();
@@ -61,17 +75,11 @@ public class MaintenanceLogService {
     }
   }
 
-  //TODO: move this to it's own class
-  //TODO: email the service vendor that there is a request
+
   public void save(MaintenanceRequest maintenanceRequest) {
     EquipmentInventory equipmentInventory = equipmentInventoryRepository.getInventoryById(maintenanceRequest.getInventoryId());
-
-    //TODO: check if this service contract is applicable for this specific facility.
     List<ServiceContract> serviceContracts = serviceContractRepository.getAllForEquipment(equipmentInventory.getEquipmentId());
     Long serviceContractId = null;
-
-    //TODO: why the first contract?
-    //check if this contract is active, unexpired and that the vendor is the same as one in the request.
     if (serviceContracts != null && serviceContracts.size() > 0) {
       serviceContractId = serviceContracts.get(0).getId();
     }
@@ -82,10 +90,7 @@ public class MaintenanceLogService {
     log.setVendorId(maintenanceRequest.getVendorId());
     log.setContractId(serviceContractId);
     log.setModifiedDate(maintenanceRequest.getModifiedDate());
-    //log.setRecommendation(maintenanceRequest.getMaintenanceDetails().getServicePerformed());
-    //log.setFinding(maintenanceRequest.getMaintenanceDetails().getFinding());
     log.setRequestId(maintenanceRequest.getId());
-    //log.setNextVisitDate(maintenanceRequest.getMaintenanceDetails().getNextVisitDate());
     this.save(log);
   }
 }
