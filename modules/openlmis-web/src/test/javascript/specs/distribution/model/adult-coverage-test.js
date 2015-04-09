@@ -129,7 +129,7 @@ describe('Adult coverage', function () {
           healthCenterTetanus2To5: {value: 30},
           outreachTetanus2To5: {value: 20},
           targetGroup: 100}
-      ).coverageRate()).toEqual(70);
+      ).coverageRate()).toEqual(50);
     });
 
     it("should calculate coverage rate as null when all values for line item are present and target group is undefined", function () {
