@@ -180,14 +180,14 @@
                                         <tbody>
                                         <tr ng-repeat="row in datarows">
                                             <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                                            <td data-title="'Facility Type'" style="width:100px" sortable="facilityType" >{{ row.facilityType }}</td>
-                                            <td data-title="'Facility Name'" style="width:150px" sortable="facilityName" >{{ row.facilityName }}</td>
-                                            <td data-title="'Supplying Facility'" style="width:120px" sortable="supplyingFacility" >{{ row.supplyingFacility }}</td>
-                                            <td data-title="'Schedule'" style="width:30%" sortable="scheduleName"  >{{ row.scheduleName }}</td>
-                                            <td data-title="'Period'" style="width:30%" sortable="periodName"  >{{ row.periodName }}</td>
-                                            <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
-                                            <td data-title="'Product Code'" style="width:100px" sortable="productCode"  >{{ row.productCode }}</td>
-                                            <td data-title="'Average'" class="number" style="width:80px" sortable="average"  >{{ row.average | number }}</td>
+                                            <td data-title="getLocalMessage('label.facility.type')" style="width:100px" sortable="facilityType" >{{ row.facilityType }}</td>
+                                            <td data-title="getLocalMessage('label.facility.name')" style="width:150px" sortable="facilityName" >{{ row.facilityName }}</td>
+                                            <td data-title="getLocalMessage('label.supplying.facility')" style="width:120px" sortable="supplyingFacility" >{{ row.supplyingFacility }}</td>
+                                            <td data-title="getLocalMessage('label.schedule')" style="width:30%" sortable="scheduleName"  >{{ row.scheduleName }}</td>
+                                            <td data-title="getLocalMessage('label.period')" style="width:30%" sortable="periodName"  >{{ row.periodName }}</td>
+                                            <td data-title="getLocalMessage('label.product')" style="width:30%" sortable="product"  >{{ row.product }}</td>
+                                            <td data-title="getLocalMessage('label.product.code')" style="width:100px" sortable="productCode"  >{{ row.productCode }}</td>
+                                            <td data-title="getLocalMessage('label.average')" class="number" style="width:80px" sortable="average"  >{{ row.average | number }}</td>
                                         </tr>
                                         </tbody>
                                     </table>

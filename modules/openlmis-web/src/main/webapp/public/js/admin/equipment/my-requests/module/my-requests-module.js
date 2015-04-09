@@ -8,13 +8,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('my-requests', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
+angular.module('my-requests', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
-      when('/', {controller: MyRequestsController, templateUrl: 'partials/list.html'}).
-     when('/view/:id', {controller: MyRequestsController, templateUrl: 'partials/view.html'}).
-      when('/log/:id', {controller: LogController, templateUrl: 'partials/log.html'}).
-      when('/request/:id', {controller: ViewRequestController, templateUrl: 'partials/request.html'}).
-      otherwise({redirectTo: '/'});
+    when('/', {controller: MyRequestsController, templateUrl: 'partials/list.html'}).
+    when('/view/:id', {controller: MyRequestsController, templateUrl: 'partials/view.html'}).
+    when('/log/:id', {controller: LogController, templateUrl: 'partials/log.html'}).
+    when('/request/:id', {controller: ViewRequestController, templateUrl: 'partials/request.html'}).
+    otherwise({redirectTo: '/'});
 }]).run(function ($rootScope, AuthorizationService) {
   AuthorizationService.preAuthorize('SERVICE_VENDOR_RIGHT');
 });

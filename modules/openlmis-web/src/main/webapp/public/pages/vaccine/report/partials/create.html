@@ -87,6 +87,9 @@
       <li ng-show="showCoverage" ng-class="{'selected': visibleTab == 'coverage'}">
         <a href="" ng-click="visibleTab = 'coverage'"><span openlmis-message="label.vaccine.tab.coverage"></span></a>
       </li>
+      <li ng-show="showVitamin" ng-class="{'selected': visibleTab == 'vitamin'}">
+        <a href="" ng-click="visibleTab = 'vitamin'"><span openlmis-message="label.vaccine.tab.vitamin.supplementation"></span></a>
+      </li>
       <li ng-show="showDisease" ng-class="{'selected': visibleTab == 'disease'}">
         <a href="" ng-click="visibleTab = 'disease'"><span openlmis-message="label.vaccine.tab.disease"></span></a>
       </li>
@@ -114,6 +117,9 @@
   </span>
   <span ng-show="visibleTab == 'disease'">
     <ng-include src="'/public/pages/vaccine/report/partials/create/disease.html'"></ng-include>
+  </span>
+  <span ng-show="visibleTab == 'vitamin'">
+    <ng-include src="'/public/pages/vaccine/report/partials/create/vitamin-supplementation.html'"></ng-include>
   </span>
   <span ng-show="visibleTab == 'incident'">
     <ng-include src="'/public/pages/vaccine/report/partials/create/incident.html'"></ng-include>

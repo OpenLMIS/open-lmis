@@ -66,16 +66,16 @@
                                 <tbody>
                                 <tr ng-repeat="row in datarows">
                                     <td data-title="'#'" class="number" style="width:10px">{{ row.no }}</td>
-                                    <td data-title="'Facility Code'" style="width:80px" sortable="facilityCode">{{row.facilityCode}}</td>
-                                     <td data-title="'Facility Name'" style="width:80px" sortable="facilityName">{{ row.facilityName }}</td>
-                                    <td data-title="'Facility Type'" style="width:30%" sortable="facilityType">{{ row.facilityType }}</td>
-                                    <td data-title="'District'" style="width:80px" sortable="district">{{ row.district }}</td>
-                                    <td data-title="'Zone'"  style="width:80px" sortable="zone">{{ row.zone }}</td>
-                                    <td data-title="'Equipment Type'" style="width:80px" sortable="equipmentType">{{row.equipmentType }}</td>
-                                    <td data-title="'Equipment Model'" style="width:80px" sortable="model">{{ row.model }}</td>
-                                    <td data-title="'Serial Number'" style="width:80px" sortable="serialNumber">{{ row.serialNumber }}</td>
-                                    <td data-title="'Equipment Name'" sortable="equipmentName">{{ row.equipmentName}}</td>
-                                    <td data-title="'Equipment Status'" sortable="operationalStatus">{{ row.operationalStatus}}</td>
+                                    <td data-title="getLocalMessage('label.facility.code')" style="width:80px" sortable="facilityCode">{{row.facilityCode}}</td>
+                                     <td data-title="getLocalMessage('label.facility.name')" style="width:80px" sortable="facilityName">{{ row.facilityName }}</td>
+                                    <td data-title="getLocalMessage('label.facility.type')" style="width:30%" sortable="facilityType">{{ row.facilityType }}</td>
+                                    <td data-title="getLocalMessage('label.district')" style="width:80px" sortable="district">{{ row.district }}</td>
+                                    <td data-title="getLocalMessage('label.zone')"  style="width:80px" sortable="zone">{{ row.zone }}</td>
+                                    <td data-title="getLocalMessage('label.equipment.type')" style="width:80px" sortable="equipmentType">{{row.equipmentType }}</td>
+                                    <td data-title="getLocalMessage('label.equipment.model')" style="width:80px" sortable="model">{{ row.model }}</td>
+                                    <td data-title="getLocalMessage('label.equipment.serial')" style="width:80px" sortable="serialNumber">{{ row.serialNumber }}</td>
+                                    <td data-title="getLocalMessage('label.equipment.name')" sortable="equipmentName">{{ row.equipmentName}}</td>
+                                    <td data-title="getLocalMessage('label.equipment.status')" sortable="operationalStatus">{{ row.operationalStatus}}</td>
                                 </tr>
                                 </tbody>
                             </table>

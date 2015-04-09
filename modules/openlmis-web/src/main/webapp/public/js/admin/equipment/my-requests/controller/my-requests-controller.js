@@ -11,40 +11,40 @@
 
 function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, SaveAndLogMaintenanceRequest, messageService, $routeParams, $location) {
 
-    $scope.$parent.message = '';
+  $scope.$parent.message = '';
 
-    //The following variables store information for the currently selected maintenance request
-    $scope.servicePerformedForCurrent = null;
-    $scope.findingForCurrent = null;
-    $scope.nextDateOfServiceForCurrent = null;
+  //The following variables store information for the currently selected maintenance request
+  $scope.servicePerformedForCurrent = null;
+  $scope.findingForCurrent = null;
+  $scope.nextDateOfServiceForCurrent = null;
 
-    PendingRequests.get(function(data){
-       $scope.list  = data.logs;
-    });
+  PendingRequests.get(function (data) {
+    $scope.list = data.logs;
+  });
 
-    $scope.respondToRequest = function (maintenanceRequest){
-        $scope.currentRequest = maintenanceRequest;
-        $scope.maintenanceRequestResponseModal = true;
+  $scope.respondToRequest = function (maintenanceRequest) {
+    $scope.currentRequest = maintenanceRequest;
+    $scope.maintenanceRequestResponseModal = true;
+  };
+
+  $scope.closeModal = function () {
+    $scope.maintenanceRequestResponseModal = false;
+    $scope.currentRequest = null;
+  };
+
+  $scope.saveResponse = function () {
+    var successHandler = function (response) {
+      $scope.error = "";
+      $location.path('#/');
+      $scope.closeModal();
     };
 
-    $scope.closeModal = function(){
-        $scope.maintenanceRequestResponseModal = false;
-        $scope.currentRequest = null;
+    var errorHandler = function (response) {
+      $scope.error = messageService.get(response.data.error);
     };
-
-    $scope.saveResponse = function () {
-        var successHandler = function (response) {
-            $scope.error = "";
-            $location.path('#/');
-            $scope.closeModal();
-        };
-
-        var errorHandler = function (response) {
-            $scope.error = messageService.get(response.data.error);
-        };
-        $scope.currentRequest.resolved = true;
-        SaveMaintenanceRequest.save($scope.currentRequest, successHandler, errorHandler);
-        SaveAndLogMaintenanceRequest.save($scope.currentRequest, successHandler, errorHandler);
-    };
+    $scope.currentRequest.resolved = true;
+    SaveMaintenanceRequest.save($scope.currentRequest, successHandler, errorHandler);
+    SaveAndLogMaintenanceRequest.save($scope.currentRequest, successHandler, errorHandler);
+  };
 
 }

@@ -11,6 +11,6 @@
 function ManageServiceTypeController($scope, $routeParams, $location, ServiceTypes) {
 
     ServiceTypes.get(function(data){
-        $scope.list = data.service_type;
+        $scope.list = data.service_types;
     });
 }

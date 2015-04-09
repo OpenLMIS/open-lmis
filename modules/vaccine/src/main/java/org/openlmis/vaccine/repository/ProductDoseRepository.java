@@ -27,7 +27,6 @@ public class ProductDoseRepository {
     mapper.insert(dose);
   }
 
-
   public void update(VaccineProductDose dose){
     mapper.update(dose);
   }

@@ -7,7 +7,7 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-function AdjustmentBasisFormulaController($scope, $route, $location, $filter, $dialog, messageService, navigateBackService, ngTableParams, DeleteAdjustmentFactors, adjustmentFactorList, AdjustmentFactors) {
+function AdjustmentBasisFormulaController($scope, $route, $location, $filter, $dialog, messageService, navigateBackService, ngTableParams,  adjustmentFactorList, AdjustmentFactors) {
 
 
     $scope.disabled = false;

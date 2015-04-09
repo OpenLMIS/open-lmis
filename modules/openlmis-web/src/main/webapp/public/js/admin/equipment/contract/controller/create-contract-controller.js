@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateServiceContractController($scope, $routeParams, $location, Contract, SaveContract, Vendors, ServiceTypes, Programs) {
+function CreateServiceContractController($scope, $routeParams, $location, Contract, SaveContract, Vendors, messageService, Programs) {
 
 
     $scope.$parent.message = '';
@@ -36,19 +36,15 @@ function CreateServiceContractController($scope, $routeParams, $location, Contra
     Programs.get(function(data){
        $scope.programs = data.programs;
     });
-    // facilities could be complicated, may have to depend on the program selection.
-
 
     $scope.save = function () {
         $scope.showError = true;
         if($scope.contractForm.$valid){
             SaveContract.save($scope.current, function (data) {
-                // success
-                $scope.$parent.message = 'Your changes have been saved';
+                $scope.$parent.message = messageService.get(data.success);
                 $location.path('');
             }, function (data) {
-                // error
-                $scope.error = data.messages;
+                $scope.error = messageService.get(data.error);
             });
         }
     };

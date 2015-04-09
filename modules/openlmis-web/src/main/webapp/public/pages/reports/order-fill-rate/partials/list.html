@@ -76,18 +76,18 @@
                             <tr ng-repeat="row in datarows">
 
                                 <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
-                                <td data-title="'Product Code'" style="width:80px" sortable="productcode">{{
+                                <td data-title="getLocalMessage('label.product.code')" style="width:80px" sortable="productcode">{{
                                     row.productcode }}
                                 </td>
-                                <td data-title="'Product Name'" style="width:30%" sortable="product">{{ row.product }}
+                                <td data-title="getLocalMessage('label.product.name')" style="width:30%" sortable="product">{{ row.product }}
                                 </td>
-                                <td data-title="'Quantity Ordered'" class="number" style="width:80px"
+                                <td data-title="getLocalMessage('header.quantity.ordered')" class="number" style="width:80px"
                                     sortable="approved">{{ row.approved | number }}
                                 </td>
-                                <td data-title="'Quantity Received'" class="number" style="width:80px"
+                                <td data-title="getLocalMessage('header.quantity.received')" class="number" style="width:80px"
                                     sortable="receipts">{{ row.receipts | number }}
                                 </td>
-                                <td data-title="'Item Fill Rate'" class="number" ng-class="{ red:'Item Fill Rate'}"
+                                <td data-title="getLocalMessage('label.item.fill.rate')" class="number" ng-class="{ red:'Item Fill Rate'}"
                                     style="width:120px" sortable="item_fill_rate">
                                     <div class="{{(row.item_fill_rate == 'Item Fill rate')?'red':(row.item_fill_rate < 50)?'red':(row.item_fill_rate > 110)?'blue':'black'}}">
                                         {{ row.item_fill_rate | number}} %

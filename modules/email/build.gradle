@@ -11,7 +11,7 @@
 apply plugin: 'cobertura'
 
 dependencies {
-
+    compile 'velocity:velocity:1.5'
     compile  project(':modules:db')
 
     configurations {

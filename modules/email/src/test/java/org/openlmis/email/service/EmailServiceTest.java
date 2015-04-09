@@ -10,12 +10,17 @@
 
 package org.openlmis.email.service;
 
+import com.mchange.net.MailSender;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.email.domain.OpenlmisEmailMessage;
+import org.openlmis.email.repository.EmailNotificationRepository;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -30,6 +35,7 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.openlmis.email.builder.EmailMessageBuilder.defaultEmailMessage;
 import static org.openlmis.email.builder.EmailMessageBuilder.receiver;
 
@@ -39,7 +45,17 @@ public class EmailServiceTest {
   @Rule
   public ExpectedException expectedException = none();
 
-  private JavaMailSender mailSender;
+
+
+  private JavaMailSenderImpl mailSender;
+
+  @Mock
+  MailSender sender;
+
+  @Mock
+  EmailNotificationRepository repository;
+
+
 
   @Before
   public void setUp() throws Exception {
@@ -51,7 +67,7 @@ public class EmailServiceTest {
     SimpleMailMessage message = make(a(defaultEmailMessage,
       with(receiver, "alert.open.lmis@gmail.com")));
 
-    EmailService service = new EmailService(mailSender, true);
+    EmailService service = new EmailService(mailSender, repository, true);
     boolean status = service.send(message).get();
     assertTrue(status);
     verify(mailSender).send(any(SimpleMailMessage.class));
@@ -61,20 +77,21 @@ public class EmailServiceTest {
   public void shouldNotSendEmailIfMailSendingFlagIsFalse() throws ExecutionException, InterruptedException {
     SimpleMailMessage message = make(a(defaultEmailMessage,
       with(receiver, "alert.open.lmis@gmail.com")));
-    EmailService service = new EmailService(mailSender, false);
+    EmailService service = new EmailService(mailSender, repository, false);
     boolean status = service.send(message).get();
     assertTrue(status);
   }
 
   @Test
   public void shouldSendMailsFromAListOfMailMessages() throws Exception {
-    EmailService emailService = new EmailService(mailSender, true);
+    EmailService service = new EmailService(mailSender, repository, true);
 
-    SimpleMailMessage mockEmailMessage = mock(SimpleMailMessage.class);
-    List<SimpleMailMessage> emailMessages = Arrays.asList(mockEmailMessage);
+    OpenlmisEmailMessage mockEmailMessage = mock(OpenlmisEmailMessage.class);
+    List<OpenlmisEmailMessage> emailMessages = Arrays.asList(mockEmailMessage);
+    when(mockEmailMessage.getIsHtml()).thenReturn(false);
+    service.processEmails(emailMessages);
 
-    emailService.processEmails(emailMessages);
-
-    verify(mailSender).send(new SimpleMailMessage[]{mockEmailMessage});
+    verify(mailSender).send(any(SimpleMailMessage.class));
   }
+
 }

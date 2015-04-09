@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -372,6 +373,23 @@ public class InteractiveReportController extends BaseController {
         UserSummaryReportProvider provider = (UserSummaryReportProvider) report.getReportDataProvider();
         return OpenLmisResponse.response("userAssignment",provider.getUserAssignments());
     }
+
+
+    @RequestMapping(value = "/reportdata/pipelineExport", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_PIPELINE_EXPORT')")
+    public Pages getPipelineExportData(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                         @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                         HttpServletRequest request) {
+
+        Report report = reportManager.getReportByKey("pipeline_export");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        PipelineExportReportProvider provider = (PipelineExportReportProvider) report.getReportDataProvider();
+        List<PipelineExportReport> pipelineExportData = (List<PipelineExportReport>)
+                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(),page, max);
+
+        return new Pages(page, max, pipelineExportData);
+    }
+
 
     @RequestMapping(value = "/reportdata/labEquipmentList", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_LAB_EQUIPMENT_LIST_REPORT')")

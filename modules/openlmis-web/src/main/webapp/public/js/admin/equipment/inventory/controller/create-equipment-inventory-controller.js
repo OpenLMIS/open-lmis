@@ -10,6 +10,7 @@
 
 function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors ,Equipments, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService) {
 
+  $scope.$parent.message = $scope.$parent.error = '';
 
   $scope.max_year = new Date().getFullYear();
   $scope.submitted = false;
@@ -60,19 +61,16 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     $scope.showError = true;
     if(!$scope.equipmentForm.$invalid ){
       SaveEquipmentInventory.save($scope.equipment, function (data) {
-        // success
-        if($routeParams.from !== undefined){
-          $location.path('/' + $routeParams.from + '/' + $routeParams.facilityId + '/' + $routeParams.programId);
-        }else{
-          $location.path('/0/' + $scope.equipment.facilityId + '/' + $scope.equipment.programId);
-        }
+        $scope.$parent.message = messageService.get(data.success);
+        $scope.$parent.selectedProgram = {id: $scope.equipment.programId};
+        console.info($scope.$parent.selectedProgram);
+        $location.path('/' + $routeParams.from + '/' + $scope.equipment.facilityId + '/' + $scope.equipment.programId);
       }, function (data) {
-        // error
-        $scope.error = data.messages;
+        $scope.error = data.error;
       });
     }else{
       $scope.submitted = true;
-      $scope.error = 'Your submissions are not valid. Please correct errors before you Save.';
+      $scope.error = messageService.get('message.equipment.inventory.data.invalid');
     }
   };
 

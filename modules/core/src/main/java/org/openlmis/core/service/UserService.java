@@ -182,7 +182,7 @@ public class UserService {
 
   private void sendEmail(SimpleMailMessage emailMessage) {
     try {
-      emailService.send(emailMessage);
+      emailService.queueMessage(emailMessage);
     } catch (EmailException e) {
       throw new DataException(USER_EMAIL_NOT_FOUND);
     }

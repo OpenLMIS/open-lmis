@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-master-landscape" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.2100000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -49,7 +49,7 @@ JOIN vw_districts gz on gz.district_id = facilities.geographiczoneid]]>
 	<title>
 		<band height="79" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
+				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
@@ -84,57 +84,68 @@ JOIN vw_districts gz on gz.district_id = facilities.geographiczoneid]]>
 	<columnHeader>
 		<band height="29" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="1" width="802" height="28" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+				<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="1" width="802" height="28" forecolor="#FFFFFF" backcolor="#3D9297">
 					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 				</reportElement>
+				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="0" y="1" width="107" height="27" uuid="e73cd188-e289-4086-9518-2127e022fdff"/>
-				<text><![CDATA[Facility Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="107" y="1" width="83" height="27" uuid="1b74103d-a792-475d-8cae-487fa1bfc2f3"/>
-				<text><![CDATA[District]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="190" y="0" width="87" height="29" uuid="735a654a-a8e8-4866-9dac-51d6f5c0fc0e"/>
-				<text><![CDATA[Product Name (Code)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="277" y="1" width="100" height="28" uuid="6143ce86-5d52-4669-9980-3ed2538c9326"/>
-				<text><![CDATA[MOS Adjustment Type]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="377" y="1" width="100" height="28" uuid="8dbafeb1-dd51-4b44-8f93-cb4c3cc3d08b"/>
-				<text><![CDATA[Adjustment Basis]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="477" y="1" width="85" height="28" uuid="398ed95c-18f9-4be5-8a61-832ff833faff"/>
-				<text><![CDATA[From Date]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="562" y="1" width="88" height="28" uuid="8b068166-1d62-4b3d-a934-6f4b8cadb1a8"/>
-				<text><![CDATA[To Date]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="650" y="1" width="39" height="28" uuid="3ce8a769-2e2e-4a3a-871c-a54a8f0ae19f"/>
-				<text><![CDATA[MIN MOS]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="689" y="0" width="39" height="28" uuid="7c81d532-135b-44ae-9214-1593bb340e27"/>
-				<text><![CDATA[MAX MOS]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="728" y="0" width="74" height="29" uuid="adfc8597-47d1-421b-8488-ec4835a7ebae"/>
-				<text><![CDATA[Formula]]></text>
-			</staticText>
+			<textField>
+				<reportElement uuid="ba4549c4-bac2-48ba-ac2a-d756b7af4fdb" x="0" y="0" width="107" height="29"/>
+				<textElement verticalAlignment="Middle" markup="none"/>
+				<textFieldExpression><![CDATA[$R{label.facility.name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d0337af8-b705-45b1-80e4-265416d136c7" x="107" y="0" width="83" height="29"/>
+				<textElement verticalAlignment="Middle" markup="none"/>
+				<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1a199952-05fb-4505-8e8d-335267ebbcbc" x="190" y="0" width="87" height="29"/>
+				<textElement verticalAlignment="Middle" markup="none"/>
+				<textFieldExpression><![CDATA[$R{label.product.name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7480f178-ed98-4791-b0ef-7f2d11dbe823" x="277" y="0" width="100" height="29"/>
+				<textElement verticalAlignment="Middle" markup="none"/>
+				<textFieldExpression><![CDATA[$R{label.mos.adjustment.type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b8c432e3-d1e9-448c-8a91-16bea8c36e44" x="377" y="0" width="100" height="29"/>
+				<textElement verticalAlignment="Middle" markup="none"/>
+				<textFieldExpression><![CDATA[$R{label.adjustmentBasis.header}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a169f8ea-0a3f-469e-8785-eefaef156769" x="477" y="0" width="85" height="29"/>
+				<textElement verticalAlignment="Middle" markup="none"/>
+				<textFieldExpression><![CDATA[$R{label.from.date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="58dbe19d-6cc0-4694-b6c0-d670da7bcb57" x="562" y="0" width="88" height="29"/>
+				<textElement verticalAlignment="Middle" markup="none"/>
+				<textFieldExpression><![CDATA[$R{label.to.date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a69e0e47-b9dc-4a26-8205-170d084b0195" x="650" y="0" width="39" height="29"/>
+				<textElement verticalAlignment="Middle" markup="none"/>
+				<textFieldExpression><![CDATA[$R{label.min.mos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="687422c0-60a8-4c37-9d51-502441c04c59" x="689" y="0" width="39" height="29"/>
+				<textElement verticalAlignment="Middle" markup="none"/>
+				<textFieldExpression><![CDATA[$R{label.max.mos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5857012d-f674-4037-ba95-e14e5b4d8b88" x="728" y="0" width="74" height="29"/>
+				<textElement verticalAlignment="Middle" markup="none"/>
+				<textFieldExpression><![CDATA[$R{label.formula}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="72" y="0" width="759" height="20" forecolor="#006666" uuid="497dba92-6949-4bb2-9beb-1f85a98456e5">
+				<reportElement uuid="497dba92-6949-4bb2-9beb-1f85a98456e5" x="72" y="0" width="759" height="20" forecolor="#006666">
 					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Top">
@@ -143,55 +154,66 @@ JOIN vw_districts gz on gz.district_id = facilities.geographiczoneid]]>
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
+				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 				</reportElement>
+				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="19" width="801" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7"/>
+				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="801" height="1" forecolor="#3D9297"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="0" y="0" width="107" height="20" uuid="d99886b8-b922-4734-8a7e-3faf6421ffae"/>
+				<reportElement uuid="d99886b8-b922-4734-8a7e-3faf6421ffae" x="0" y="0" width="107" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{facilityname}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="107" y="0" width="83" height="20" uuid="c83e4c65-639a-4b6d-a89e-ae590278b5bd"/>
+				<reportElement uuid="c83e4c65-639a-4b6d-a89e-ae590278b5bd" x="107" y="0" width="83" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="190" y="0" width="87" height="20" uuid="53762c11-eee4-445b-8751-0d0a77e4d18b"/>
+				<reportElement uuid="53762c11-eee4-445b-8751-0d0a77e4d18b" x="190" y="0" width="87" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{productname}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="377" y="0" width="100" height="20" uuid="c9790912-d989-428f-a318-f02bc60f1597"/>
+				<reportElement uuid="c9790912-d989-428f-a318-f02bc60f1597" x="377" y="0" width="100" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{adjustmentbasis}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="477" y="0" width="85" height="20" uuid="a6b14350-2e02-457b-9f9d-395ce665f34c"/>
+				<reportElement uuid="a6b14350-2e02-457b-9f9d-395ce665f34c" x="477" y="0" width="85" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{startdate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="650" y="0" width="39" height="20" uuid="3f0ecf6c-09af-461d-93e0-ce2159078708"/>
+				<reportElement uuid="3f0ecf6c-09af-461d-93e0-ce2159078708" x="650" y="0" width="39" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{minmonthsofstock}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="689" y="0" width="39" height="20" uuid="4ae0057d-42b2-40bf-8fe7-b317ea2a0e06"/>
+				<reportElement uuid="4ae0057d-42b2-40bf-8fe7-b317ea2a0e06" x="689" y="0" width="39" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{maxmonthsofstock}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="277" y="0" width="100" height="20" uuid="e679dcd4-018e-45dc-99b5-9f8cee9ca75d"/>
+				<reportElement uuid="e679dcd4-018e-45dc-99b5-9f8cee9ca75d" x="277" y="0" width="100" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{adjustmenttype}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="562" y="0" width="88" height="20" uuid="0853a0c1-fa07-4610-8468-9d760ed93ebd"/>
+				<reportElement uuid="0853a0c1-fa07-4610-8468-9d760ed93ebd" x="562" y="0" width="88" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{enddate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="730" y="0" width="71" height="20" uuid="a681af4f-6124-4567-9d51-1c6457e9f421"/>
+				<reportElement uuid="a681af4f-6124-4567-9d51-1c6457e9f421" x="730" y="0" width="71" height="20"/>
+				<textElement/>
 				<textFieldExpression><![CDATA[$F{formula}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -199,10 +221,10 @@ JOIN vw_districts gz on gz.district_id = facilities.geographiczoneid]]>
 	<pageFooter>
 		<band height="50">
 			<subreport>
-				<reportElement x="1" y="0" width="801" height="50" uuid="6c28a0d6-8846-4753-944f-eefca1041e24">
+				<reportElement uuid="6c28a0d6-8846-4753-944f-eefca1041e24" x="1" y="0" width="801" height="50">
 					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} >= 1]]></printWhenExpression>
 				</reportElement>
-                <subreportParameter name="REPORT_ID">
+				<subreportParameter name="REPORT_ID">
 					<subreportParameterExpression><![CDATA[$P{REPORT_ID}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="REPORT_VERSION">

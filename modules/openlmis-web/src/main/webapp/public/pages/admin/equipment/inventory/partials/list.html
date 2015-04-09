@@ -13,6 +13,9 @@
     <span openlmis-message="label.equipment.inventory.manage"></span>
   </h2>
   <br>
+  <div class="alert alert-success clearfix" ng-show="message">
+    <span ng-bind="message"></span>
+  </div>
   <div class="row-fluid">
     <div class="span12">
       <label openlmis-message="label.requisition.facilityType"></label>
@@ -88,19 +91,19 @@
     </div>
   </div>
 
-  <div class="alert alert-success" ng-show="message">
-    <span ng-bind="message"></span>
-  </div>
+
 
   <div ng-show="selectedFacilityId != undefined && selectedProgram != undefined">
-    <a id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/{{selectedFacilityId}}/{{selectedProgram.id}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
+    <a ng-show="selectedFacilityId && selectedProgram.id" id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/{{selectedFacilityId}}/{{selectedProgram.id}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
+
+
     <div ng-show="inventory.length == 0">
       <span openlmis-message="label.equipment.none.found"></span>
     </div>
     <table ng-show="inventory.length > 0" class="table table-bordered">
       <thead>
         <tr class="gradient-header">
-          <th>#</th>
+          <th class="col-row-number">#</th>
           <th openlmis-message="label.equipment.equipment"></th>
           <th openlmis-message="label.equipment.manufacturer"></th>
           <th openlmis-message="label.equipment.model"></th>
@@ -111,7 +114,7 @@
       <tbody>
         <tr ng-repeat="item in inventory">
           <td>{{$index + 1}}</td>
-          <td><a ng-href="#/edit/{{item.id}}">{{item.equipment.name}}</a></td>
+          <td><a ng-href="#/edit/{{selectedType}}/{{item.facilityId}}/{{item.programId}}/{{item.id}}">{{item.equipment.name}}</a></td>
           <td>{{item.manufacturerName}}</td>
           <td>{{item.model}}</td>
           <td>{{item.sourceOfFund}}</td>

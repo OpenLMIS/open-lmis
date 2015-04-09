@@ -59,16 +59,16 @@
                   <tbody>
                   <tr ng-repeat="row in datarows">
                     <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                      <td data-title="'Facility Type'" style="width:150px" sortable="facilityType" >{{ row.facilityType }}</td>
-                    <td data-title="'Facility Name'" style="width:150px" sortable="facility" >{{ row.facility }}</td>
-                    <td data-title="'District'" style="width:150px" sortable="districtName" >{{ row.districtName }}</td>
-                    <td data-title="'Zone'" style="width:150px" sortable="zoneName" >{{ row.zoneName }}</td>
-                    <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
-                    <td data-title="'AMC'" class="number" style="width:80px" sortable="amc"  >{{ row.amc | number }}</td>
-                    <td data-title="'Closing Balance'" class="number" style="width:80px" sortable="physicalCount"  >{{ row.physicalCount | number }}</td>
-                    <td data-title="'MOS'" class="number" style="width:80px" sortable="months"  >{{ row.months | number }}</td>
-                    <td data-title="'Order Quantity'" class="number" style="width:80px" sortable="orderQuantity"  >{{ row.orderQuantity | number }}</td>
-                    <td data-title="'Status'" ng-class="{ red:'Stocked Out'}"  style="width:120px" sortable="status"> <div class="{{(row.status == 'Stocked Out')?'red':(row.status=='Below Minimum')?'green':(row.status=='Over Stocked')?'blue':'yellow'}}">
+                      <td data-title="getLocalMessage('label.facility.type')" style="width:150px" sortable="facilityType" >{{ row.facilityType }}</td>
+                    <td data-title="getLocalMessage('label.facility.name')" style="width:150px" sortable="facility" >{{ row.facility }}</td>
+                    <td data-title="getLocalMessage('label.district')" style="width:150px" sortable="districtName" >{{ row.districtName }}</td>
+                    <td data-title="getLocalMessage('label.zone')" style="width:150px" sortable="zoneName" >{{ row.zoneName }}</td>
+                    <td data-title="getLocalMessage('label.product')" style="width:30%" sortable="product"  >{{ row.product }}</td>
+                    <td data-title="getLocalMessage('label.amc')" class="number" style="width:80px" sortable="amc"  >{{ row.amc | number }}</td>
+                    <td data-title="getLocalMessage('label.closing.balance')" class="number" style="width:80px" sortable="physicalCount"  >{{ row.physicalCount | number }}</td>
+                    <td data-title="getLocalMessage('label.mos')" class="number" style="width:80px" sortable="months"  >{{ row.months | number }}</td>
+                    <td data-title="getLocalMessage('label.order.quantity')" class="number" style="width:80px" sortable="orderQuantity"  >{{ row.orderQuantity | number }}</td>
+                    <td data-title="getLocalMessage('label.status')" ng-class="{ red:'Stocked Out'}"  style="width:120px" sortable="status"> <div class="{{(row.status == 'Stocked Out')?'red':(row.status=='Below Minimum')?'green':(row.status=='Over Stocked')?'blue':'yellow'}}">
                       <span ng-show="row.amc == 0" class="icon-warning-sign" tooltip="AMC is 0, which indicates that there may not be enough data to interprate this status."></span>
                       {{ row.status }}
                     </div></td>

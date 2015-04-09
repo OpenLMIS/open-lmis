@@ -83,10 +83,10 @@
                                     <tbody>
                                     <tr ng-repeat="row in datarows">
                                         <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                                        <td data-title="'Code'" style="width:50px" sortable="code" >{{ row.code }}</td>
-                                        <td data-title="'Facility Name'" style="width:30%" sortable="name" >{{ row.name }}</td>
-                                        <td data-title="'Facility Type'" style="width:30%" sortable="facilityType" >{{ row.facilityType }}</td>
-                                        <td data-title="'Location'" style="width:30%" sortable="location"  >{{ row.location }}</td>
+                                        <td data-title="getLocalMessage('label.facility.code')" style="width:50px" sortable="code" >{{ row.code }}</td>
+                                        <td data-title="getLocalMessage('label.facility.name')" style="width:30%" sortable="name" >{{ row.name }}</td>
+                                        <td data-title="getLocalMessage('label.facility.type')" style="width:30%" sortable="facilityType" >{{ row.facilityType }}</td>
+                                        <td data-title="getLocalMessage('label.location')" style="width:30%" sortable="location"  >{{ row.location }}</td>
                                     </tr>
                                     </tbody>
                                 </table>

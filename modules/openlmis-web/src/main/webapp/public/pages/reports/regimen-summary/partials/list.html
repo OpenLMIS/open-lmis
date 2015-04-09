@@ -81,28 +81,28 @@
                             <tbody>
                             <tr ng-repeat="row in datarows">
                                 <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
-                                <td data-title="'Facility Name'" sortable="facilityname" style="width:40px">{{ row.facilityname }}</td>
+                                <td data-title="getLocalMessage('label.facility.name')" sortable="facilityname" style="width:40px">{{ row.facilityname }}</td>
 
-                                <td data-title="'Regimen'" style="width:40px" sortable="regimen" >{{ row.regimen }}</td>
+                                <td data-title="getLocalMessage('label.regimen')" style="width:40px" sortable="regimen" >{{ row.regimen }}</td>
                                 <td data-title="'No. of Patients On Treatment'" style="width:20px;text-align:center" class="number" sortable="patientsontreatment">
                                     {{ row.patientsontreatment | number}}
                                 </td>
-                                <td data-title="'% of Total'" class="number" style="width:20px;text-align:center"
+                                <td data-title="getLocalMessage('label.total.percent')" class="number" style="width:20px;text-align:center"
                                     sortable="totalOnTreatmentPercentage ">{{ row.totalOnTreatmentPercentage | number
                                     }}%
                                 </td>
-                                <td data-title="'No. of Patients To Initiate treatment'" class="number" style="width:20px;text-align:center"
+                                <td data-title="getLocalMessage('label.patient.initiate.treatment')" class="number" style="width:20px;text-align:center"
                                     sortable="patientstoinitiatetreatment">{{ row.patientstoinitiatetreatment | number
                                     }}
                                 </td>
-                                <td data-title="'% of Total'" class="number" style="width:20px;text-align:center"
+                                <td data-title="getLocalMessage('label.total.percent')" class="number" style="width:20px;text-align:center"
                                     sortable="totalpatientsToInitiateTreatmentPercentage ">{{
                                     row.totalpatientsToInitiateTreatmentPercentage }}%
                                 </td>
-                                <td data-title="'No. of Patients Stopped Treatment'" style="width:20px;text-align:center" class="number"
+                                <td data-title="getLocalMessage('label.stopped.treatments')" style="width:20px;text-align:center" class="number"
                                     sortable="patientsstoppedtreatment">{{ row.patientsstoppedtreatment | number}}
                                 </td>
-                                <td data-title="'% of Total'" class="number" style="width:20px;text-align:center"
+                                <td data-title="getLocalMessage('label.total.percent')" class="number" style="width:20px;text-align:center"
                                     sortable="stoppedTreatmentPercentage ">{{ row.stoppedTreatmentPercentage | number
                                     }}%
                                 </td>

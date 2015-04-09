@@ -1,5 +1,6 @@
 package org.openlmis.equipment.service;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -16,7 +17,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.email.service.EmailService;
 import org.openlmis.equipment.builder.EquipmentInventoryBuilder;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.domain.MaintenanceLog;
@@ -25,11 +28,23 @@ import org.openlmis.equipment.domain.ServiceContract;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.openlmis.equipment.repository.MaintenanceLogRepository;
 import org.openlmis.equipment.repository.ServiceContractRepository;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
+@PrepareForTest(MaintenanceLogService.class)
 public class MaintenanceLogServiceTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+
+  @Mock
+  EmailService emailService;
+
+  @Mock
+  ConfigurationSettingService settingService;
 
   @Mock
   MaintenanceLogRepository repository;

@@ -19,6 +19,7 @@ function CreateVaccineReportController($scope, $location, $filter, report,discar
   $scope.showTarget = _.findWhere(report.tabVisibilitySettings,{key: 'VACCINE_TAB_TARGET_VISIBLE'}).value;
   $scope.showColdChain = _.findWhere(report.tabVisibilitySettings,{key: 'VACCINE_TAB_COLD_CHAIN_VISIBLE'}).value;
   $scope.showCampaign = _.findWhere(report.tabVisibilitySettings,{key: 'VACCINE_TAB_CAMPAIGN_VISIBLE'}).value;
+  $scope.showVitamin = _.findWhere(report.tabVisibilitySettings,{key: 'VACCINE_TAB_VITAMIN_SUPPLEMENTATION_VISIBLE'}).value;
 
 
 
@@ -86,6 +87,12 @@ function CreateVaccineReportController($scope, $location, $filter, report,discar
 
   $scope.closeCampaign = function(){
     $scope.campaignsModal=false;
+  };
+
+  $scope.toNumber = function(val){
+    if(angular.isDefined(val))
+      return parseInt(val, 10);
+    return 0;
   };
 
   $scope.getColSpan = function(){

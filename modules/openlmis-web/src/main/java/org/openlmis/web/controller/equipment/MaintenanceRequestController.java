@@ -57,8 +57,7 @@ public class MaintenanceRequestController extends BaseController {
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "outstanding-for-user")
-  public ResponseEntity<OpenLmisResponse> getOutstandingByVendorId( HttpServletRequest request){
-
+  public ResponseEntity<OpenLmisResponse> getOutstandingByUserId( HttpServletRequest request){
     return  OpenLmisResponse.response("logs", service.getOutstandingForUser(loggedInUserId(request)));
   }
 
@@ -79,7 +78,9 @@ public class MaintenanceRequestController extends BaseController {
     maintenanceRequest.setModifiedBy(loggedInUserId(request));
     maintenanceRequest.setModifiedDate(new Date());
     service.save(maintenanceRequest);
-    return OpenLmisResponse.response("status","success");
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(messageService.message("message.maintenance.request.saved"));
+    response.getBody().addData("log", maintenanceRequest);
+    return response;
   }
 
 }

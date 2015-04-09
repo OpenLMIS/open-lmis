@@ -11,8 +11,8 @@
 package org.openlmis.vaccine.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.vaccine.domain.Manufacturer;
-import org.openlmis.vaccine.domain.ManufacturerProduct;
+import org.openlmis.vaccine.domain.smt.Manufacturer;
+import org.openlmis.vaccine.domain.smt.ManufacturerProduct;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

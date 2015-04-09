@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by seifu on 10/20/2014.
  */
-@Deprecated
+
 @Repository
 public interface HelpContentMapper {
     @Insert({"INSERT INTO elmis_help",

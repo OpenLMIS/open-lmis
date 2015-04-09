@@ -67,20 +67,20 @@
 
             <tbody>
             <tr ng-repeat="row in datarows">
-              <td ng-show="filter.disaggregated" sortable="facilityCode" data-title="'FacilityCode'">{{ row.facilityCode}} </td>
-              <td ng-show="filter.disaggregated" sortable="facility" data-title="'Facility'">{{ row.facility}} </td>
-              <td ng-show="filter.disaggregated" sortable="facilityType" data-title="'FacilityType'">{{
+              <td ng-show="filter.disaggregated" sortable="facilityCode" data-title="getLocalMessage('label.facility.code')">{{ row.facilityCode}} </td>
+              <td ng-show="filter.disaggregated" sortable="facility" data-title="getLocalMessage('label.facility')">{{ row.facility}} </td>
+              <td ng-show="filter.disaggregated" sortable="facilityType" data-title="getLocalMessage('label.facility.type')">{{
                                                                                                      row.facilityType}} </td>
-              <td data-title="'Code'" sortable="code">{{ row.code }}</td>
-              <td data-title="'Product'" sortable="product">{{ row.product }}</td>
-              <td class="number" sortable="openingBalance" data-title="'O. Balance'">{{ row.openingBalance |
+              <td data-title="getLocalMessage('label.product.code')" sortable="code">{{ row.code }}</td>
+              <td data-title="getLocalMessage('label.product')" sortable="product">{{ row.product }}</td>
+              <td class="number" sortable="openingBalance" data-title="getLocalMessage('label.opening.balance')">{{ row.openingBalance |
                                                                                      number}}</td>
-              <td class="number" sortable="receipts" data-title="'Receipt'">{{ row.receipts | number}}</td>
-              <td class="number" sortable="issues" data-title="'Consumption'">{{ row.issues | number}}</td>
-              <td class="number" sortable="adjustments" data-title="'Adjustments'">{{ row.adjustments | number}}</td>
-              <td class="number" sortable="closingBalance" data-title="'C Balance'">{{ row.closingBalance |
+              <td class="number" sortable="receipts" data-title="getLocalMessage('label.receipts')">{{ row.receipts | number}}</td>
+              <td class="number" sortable="issues" data-title="getLocalMessage('label.consumption')">{{ row.issues | number}}</td>
+              <td class="number" sortable="adjustments" data-title="getLocalMessage('label.adjustments')">{{ row.adjustments | number}}</td>
+              <td class="number" sortable="closingBalance" data-title="getLocalMessage('label.closing.balance')">{{ row.closingBalance |
                                                                                     number}}</td>
-              <td class="number" sortable="reorderAmount" data-title="'Reorder Amount'">{{ row.reorderAmount |
+              <td class="number" sortable="reorderAmount" data-title="getLocalMessage('label.reorder.amount')">{{ row.reorderAmount |
                                                                                         number}}</td>
             </tr>
             </tbody>

@@ -26,30 +26,28 @@ public class VendorService {
   @Autowired
   private VendorRepository repository;
 
-  public List<Vendor> getAll(){
+  public List<Vendor> getAll() {
     return repository.getAll();
   }
 
-  public Vendor getById(Long id){
+  public Vendor getById(Long id) {
     return repository.getById(id);
   }
 
-  public void save(Vendor vendor){
-    if(vendor.getId() == null){
+  public void save(Vendor vendor) {
+    if (vendor.getId() == null) {
       repository.insert(vendor);
-    }else{
+    } else {
       repository.update(vendor);
     }
   }
 
-    public void removeVendor(Long id) {
-
-        try {
-            repository.remove(id);
-        }
-        catch(DataIntegrityViolationException ex){
-            throw(ex);
-        }
-
+  public void removeVendor(Long id) {
+    try {
+      repository.remove(id);
+    } catch (DataIntegrityViolationException ex) {
+      throw (ex);
     }
+
+  }
 }
