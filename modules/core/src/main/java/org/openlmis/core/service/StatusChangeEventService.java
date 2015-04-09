@@ -14,6 +14,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.User;
+import org.openlmis.email.domain.OpenlmisEmailMessage;
 import org.openlmis.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,10 +54,10 @@ public class StatusChangeEventService {
   public void notifyUsers(ArrayList<User> users, Long rnrId, Facility facility, Program program, ProcessingPeriod period, String status) {
     String newLine = System.getProperty("line.separator");
     String paragraphSeparator = newLine.concat(newLine);
-    List<SimpleMailMessage> mailMessages = new ArrayList<>();
+    List<OpenlmisEmailMessage> mailMessages = new ArrayList<>();
     String actionUrl = baseUrl + actionUrlMap.get(status);
     for (User user : users) {
-      SimpleMailMessage mailMessage = new SimpleMailMessage();
+      OpenlmisEmailMessage mailMessage = new OpenlmisEmailMessage();
       mailMessage.setSubject(messageService.message("msg.email.notification.subject"));
       mailMessage.setTo(user.getEmail());
       mailMessage.setText(messageService.message("msg.email.notification.body", user.getUserName(), paragraphSeparator,
