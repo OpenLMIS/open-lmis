@@ -46,7 +46,7 @@ public class BaseController {
   }
 
   protected String homePageUrl() {
-    return "redirect:/public/site/index.html#/home";
+    return "redirect:/public/pages/dashboard/index.html#/dashboard";
   }
 
   @ExceptionHandler(Exception.class)
