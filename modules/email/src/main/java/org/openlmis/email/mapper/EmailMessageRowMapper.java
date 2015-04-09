@@ -30,6 +30,7 @@ public class EmailMessageRowMapper implements RowMapper<OpenlmisEmailMessage> {
     emailMessage.setTo(rs.getString("receiver"));
     emailMessage.setSubject(rs.getString("subject"));
     emailMessage.setText(rs.getString("content"));
+    emailMessage.setIsHtml(rs.getBoolean("isHtml"));
     emailMessage.setId(rs.getLong("id"));
     return emailMessage;
   }

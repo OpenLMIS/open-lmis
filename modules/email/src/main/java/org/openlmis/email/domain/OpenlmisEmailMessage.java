@@ -25,6 +25,8 @@ public class OpenlmisEmailMessage extends SimpleMailMessage {
 
   private Long id;
 
+  private Boolean isHtml;
+
   public OpenlmisEmailMessage() {
     super();
   }

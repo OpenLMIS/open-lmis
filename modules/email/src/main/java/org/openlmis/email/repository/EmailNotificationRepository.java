@@ -11,9 +11,13 @@ public class EmailNotificationRepository {
   @Autowired
   EmailNotificationMapper mapper;
 
+  @Deprecated
   public void queueMessage(SimpleMailMessage message){
-    //TODO: this should check if the to is a list.
-    mapper.insert(message.getTo()[0],message.getText(), message.getSubject());
+    mapper.insert(message.getTo()[0],message.getText(), message.getSubject(), false);
   }
 
+
+  public void queueMessage(String to, String message, String subject, Boolean isHtml){
+    mapper.insert(to, message, subject, isHtml);
+  }
 }

@@ -30,7 +30,7 @@ public class EmailNotificationMapperIT {
     String to = "test@dev.org";
     String content =  "The Test Message";
     String subject = "The subject";
-    Integer count = mapper.insert(to, content, subject);
+    Integer count = mapper.insert(to, content, subject, false);
     assertThat(count, is(1));
   }
 
