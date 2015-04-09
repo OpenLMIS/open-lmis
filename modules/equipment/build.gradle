@@ -4,10 +4,12 @@ dependencies {
   compile "postgresql:postgresql:9.1-901.jdbc4",
       'commons-codec:commons-codec:1.7',
       project(':modules:db'),
+      project(':modules:email'),
       project(':modules:core')
 
 
   testCompile  project(':modules:db'),
+      project(path: ':modules:email', configuration: 'testFixtures'),
       project(path : ':modules:core', configuration: 'testFixtures')
 
   configurations {

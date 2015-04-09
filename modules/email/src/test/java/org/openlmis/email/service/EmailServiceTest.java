@@ -35,6 +35,7 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.openlmis.email.builder.EmailMessageBuilder.defaultEmailMessage;
 import static org.openlmis.email.builder.EmailMessageBuilder.receiver;
 
@@ -46,7 +47,7 @@ public class EmailServiceTest {
 
 
 
-  private JavaMailSender mailSender;
+  private JavaMailSenderImpl mailSender;
 
   @Mock
   MailSender sender;
@@ -66,7 +67,7 @@ public class EmailServiceTest {
     SimpleMailMessage message = make(a(defaultEmailMessage,
       with(receiver, "alert.open.lmis@gmail.com")));
 
-    EmailService service = new EmailService(mailSender,repository, true);
+    EmailService service = new EmailService(mailSender, repository, true);
     boolean status = service.send(message).get();
     assertTrue(status);
     verify(mailSender).send(any(SimpleMailMessage.class));
@@ -76,21 +77,21 @@ public class EmailServiceTest {
   public void shouldNotSendEmailIfMailSendingFlagIsFalse() throws ExecutionException, InterruptedException {
     SimpleMailMessage message = make(a(defaultEmailMessage,
       with(receiver, "alert.open.lmis@gmail.com")));
-    EmailService service = new EmailService(mailSender,repository, false);
+    EmailService service = new EmailService(mailSender, repository, false);
     boolean status = service.send(message).get();
     assertTrue(status);
   }
 
   @Test
   public void shouldSendMailsFromAListOfMailMessages() throws Exception {
-    EmailService service = new EmailService(mailSender,repository, true);
+    EmailService service = new EmailService(mailSender, repository, true);
 
-    SimpleMailMessage mockEmailMessage = mock(SimpleMailMessage.class);
-    List<SimpleMailMessage> emailMessages = Arrays.asList(mockEmailMessage);
-
+    OpenlmisEmailMessage mockEmailMessage = mock(OpenlmisEmailMessage.class);
+    List<OpenlmisEmailMessage> emailMessages = Arrays.asList(mockEmailMessage);
+    when(mockEmailMessage.getIsHtml()).thenReturn(false);
     service.processEmails(emailMessages);
 
-    verify(mailSender).send(new SimpleMailMessage[]{mockEmailMessage});
+    verify(mailSender).send(any(SimpleMailMessage.class));
   }
 
 }

@@ -6,6 +6,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -31,6 +33,6 @@ public class EmailNotificationRepositoryTest {
     message.setSubject("the subject");
     message.setText("The main message.");
     repository.queueMessage(message);
-    verify(mapper).insert(anyString(), anyString(), anyString());
+    verify(mapper).insert(anyString(), anyString(), anyString(), anyBoolean());
   }
 }

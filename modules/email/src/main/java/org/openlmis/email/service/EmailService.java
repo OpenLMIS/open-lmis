@@ -11,18 +11,29 @@
 package org.openlmis.email.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
 import org.openlmis.email.domain.OpenlmisEmailMessage;
 import org.openlmis.email.repository.EmailNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.Payload;
+import org.springframework.mail.MailMessage;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.*;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.StringWriter;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
@@ -33,15 +44,14 @@ import java.util.concurrent.Future;
 @NoArgsConstructor
 public class EmailService {
 
-
   private Boolean mailSendingFlag;
 
-  private MailSender mailSender;
+  private JavaMailSenderImpl mailSender;
 
   private EmailNotificationRepository repository;
 
   @Autowired
-  public EmailService(MailSender mailSender, EmailNotificationRepository repository, @Value("${mail.sending.flag}") Boolean mailSendingFlag) {
+  public EmailService(@Qualifier("mailSender")  JavaMailSenderImpl mailSender, EmailNotificationRepository repository, @Value("${mail.sending.flag}") Boolean mailSendingFlag) {
     this.mailSender = mailSender;
     this.mailSendingFlag = mailSendingFlag;
     this.repository = repository;
@@ -56,22 +66,49 @@ public class EmailService {
     return new AsyncResult<>(true);
   }
 
-  public void processEmails(@Payload List<SimpleMailMessage> simpleMailMessage) {
+  public void processEmails(@Payload List<OpenlmisEmailMessage> mailMessage) {
     if (!mailSendingFlag) {
       return;
     }
-    mailSender.send(simpleMailMessage.toArray(new SimpleMailMessage[simpleMailMessage.size()]));
+    for(final OpenlmisEmailMessage oMessage: mailMessage){
+      if(oMessage.getIsHtml()){
+        mailSender.send(new MimeMessagePreparator() {
+          public void prepare(MimeMessage mimeMessage) throws MessagingException {
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            message.setTo(oMessage.getTo());
+            message.setSubject(oMessage.getSubject());
+            message.setText(oMessage.getText(), true);
+          }
+        });
+      }else{
+        mailSender.send(oMessage);
+      }
+    }
+
   }
 
   @Async
-  public void processEmailsAsync(List<SimpleMailMessage> simpleMailMessage) {
+  public void processEmailsAsync(List<OpenlmisEmailMessage> simpleMailMessage) {
     if (!mailSendingFlag) {
       return;
     }
-    mailSender.send(simpleMailMessage.toArray(new SimpleMailMessage[simpleMailMessage.size()]));
+    processEmails(simpleMailMessage);
   }
 
   public void queueMessage(SimpleMailMessage message){
     repository.queueMessage(message);
+  }
+
+  public void queueHtmlMessage(String to, String subject, String template, Map model){
+    StringWriter writer = new StringWriter();
+    VelocityContext context = new VelocityContext();
+    context.put("model", model);
+    try {
+      Velocity.evaluate(context, writer, "velocity", template);
+    }catch(Exception exp)
+    {
+
+    }
+    repository.queueMessage(to, writer.toString(), subject, true);
   }
 }
