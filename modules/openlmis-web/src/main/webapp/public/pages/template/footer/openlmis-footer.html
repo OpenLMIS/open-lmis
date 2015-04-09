@@ -13,39 +13,39 @@
  <div class="footer">
 
      <div class="link-section">
-         <div class="aboutus-links">
-             <span class="footer-link-header">About</span>
+         <div class="aboutus-links" ng-controller="OpenLmisFooterController">
+             <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.about"></span>
              <ul class="footer-link-list">
                  <li>
 
-                     <a href="/public/site/index.html#/aboutUs">  About Us</a>
+                     <a ng-click="navigateToPage('aboutUs')" openlmis-message="open.static.pages.footer.link.aboutus" />
                  </li>
                  <li>
-                     <a href="/public/site/index.html#/about-elmis">   About eLMIS</a>
+                     <a ng-click="navigateToPage('about-elmis')" openlmis-message="open.static.pages.footer.link.aboutelmis">   </a>
                  </li>
                  <li>
-                     <a href="/public/site/index.html#/about-ehealth">   About eHealth</a>
+                     <a ng-click="navigateToPage('about-ehealth')"  openlmis-message="open.static.pages.footer.link.aboutehealth">  </a>
              </li>
                  <li>
-                     <a href="/public/site/index.html#/about-openlmis">   About OpenLMIS</a>
+                     <a ng-click="navigateToPage('about-openlmis')"  openlmis-message="open.static.pages.footer.link.aboutopenlmis">   </a>
                  </li>
              </ul>
 
          </div>
          <div class="distribution-links">
-             <span class="footer-link-header">Distribution System</span>
+             <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.distributionSystem"></span>
              <ul class="footer-link-list">
                  <li>
-                     <a>  Central Warehouses</a>
+                     <a  openlmis-message="open.static.pages.footer.link.centralwarehouses">  </a>
                  </li>
                  <li>
-                     <a>  Zonal Warehouses</a>
+                     <a  openlmis-message="open.static.pages.footer.link.zonalwareHouses"> </a>
                  </li>
                  <li>
-                     <a href="/public/pages/public/index.html#/regions"> Regions</a>
+                     <a  openlmis-message="open.static.pages.footer.link.regions" href="/public/pages/public/index.html#/regions"> </a>
                  </li>
                  <li>
-                     <a href="/public/pages/public/index.html#/districts"> Districts</a>
+                     <a  openlmis-message="open.static.pages.footer.link.districts" href="/public/pages/public/index.html#/districts"> </a>
                  </li>
 
 
@@ -53,61 +53,64 @@
 
          </div>
          <div class="program-commodities-links">
-             <span class="footer-link-header">Program Commodities</span>
+             <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.programcommodities"></span>
              <ul class="footer-link-list">
                  <li>
-                     <a>  ARV Commodities</a>
+                     <a  openlmis-message="open.static.pages.footer.link.arvcommodities">  </a>
                  </li>
                  <li>
-                     <a>   HIV Commodities</a>
+                     <a  openlmis-message="open.static.pages.footer.link.hivcommodities">   </a>
                  </li>
                  <li>
-                     <a> ILS</a>
+                     <a  openlmis-message="open.static.pages.footer.link.ils"> </a>
                  </li>
                  <li>
-                     <a> TB</a>
+                     <a  openlmis-message="open.static.pages.footer.link.tb"> </a>
                  </li>
 
              </ul>
 
          </div>
          <div class="order-processing">
-             <span class="footer-link-header">Order Processing</span>
+             <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.orderprocessing"></span>
              <ul class="footer-link-list">
                  <li>
-                     <a>   R&R Submissions</a>
+                     <a  openlmis-message="open.static.pages.footer.link.rrsubmissions">   </a>
                  </li>
                  <li>
-                     <a> Order Fulfilment</a>
+                     <a  openlmis-message="open.static.pages.footer.link.orderfulfilment"> </a>
                  </li>
                  <li>
-                     <a> Delivery</a>
+                     <a  openlmis-message="open.static.pages.footer.link.delivery"> </a>
                  </li>
                  <li>
-                     <a> Proof-Of-Delivery</a>
+                     <a  openlmis-message="open.static.pages.footer.link.proofofdelivery"> </a>
                  </li>
 
              </ul>
 
          </div>
          <div class="reports">
-             <span class="footer-link-header">Reports</span>
+             <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.reports"></span>
              <ul class="footer-link-list">
                  <li>
-                  <a>  Stock Status Summary</a>
+                  <a  openlmis-message="open.static.pages.footer.link.stockstatussummary">  </a>
                  </li>
                  <li>
-                     <a>    Consumption Trend</a>
+                     <a  openlmis-message="open.static.pages.footer.link.consumptiontrend">    </a>
                  </li>
                  <li>
-                     <a>  Dashboard</a>
+                     <a  openlmis-message="open.static.pages.footer.link.dashboard">  </a>
                  </li>
                  <li>
-                     <a>   GIS maps</a>
+                     <a  openlmis-message="open.static.pages.footer.link.gismaps"></a>
                  </li>
 
              </ul>
 
+         </div>
+         <div class="logo-link">
+<img src="../images/logo.png ">
          </div>
      </div>
      <div class="logo-section">

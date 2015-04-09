@@ -8,9 +8,10 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StaticPageController($scope, localStorageService, loginConfig, ConfigSettingsByKey, $window) {
+function StaticPageController($scope, localStorageService, loginConfig,$cookies,  ConfigSettingsByKey, $window) {
     $scope.loginConfig = loginConfig;
     $scope.user = localStorageService.get(localStorageKeys.USERNAME);
     $scope.userId = localStorageService.get(localStorageKeys.USER_ID);
+
 
 }
