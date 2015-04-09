@@ -20,6 +20,7 @@ angular.module('public', ['openlmis', 'ngTable', 'angularCombine', 'ui.bootstrap
         when('/product-regional-lab', {controller: RegionalLabProductsController, templateUrl: 'partials/product-regional-lab.html' }).
         when('/product-zonal-lab', {controller: ZonalLabProductsController, templateUrl: 'partials/product-zonal-lab.html' }).
         when('/product-district-lab', {controller: DistrictLabProductsController, templateUrl: 'partials/product-district-lab.html' }).
+        when('/reports', {controller: ReportsListController, templateUrl: 'partials/reports.html' }).
 
         otherwise({redirectTo: '/regions'});
 }]);
