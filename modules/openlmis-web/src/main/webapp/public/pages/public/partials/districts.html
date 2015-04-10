@@ -10,11 +10,11 @@
 
 
         <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-            <h2 style="padding-top: 9px; line-height: 28px;"><span>List of Districts</span></h2>
+            <h2 style="padding-top: 9px; line-height: 28px;" openlmis-message="label.list.of.districts"></h2>
 
             <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
                 <tr>
-                    <td>No data to show.</td>
+                    <td openlmis-message="dynamic.pages.no.data.to.show"></td>
                 </tr>
             </table>
         <div style="overflow: auto;">
@@ -23,10 +23,10 @@
                        ng-table="tableParams">
                     <tbody>
                     <tr ng-repeat="row in datarows">
-                        <td data-title="'Zones'" class="number" style="width:20px;" sortable="zone_name">{{ row.zone_name }}</td>
-                        <td data-title="'Regions'" style="width:100px" sortable="region_name">{{ row.region_name }}</td>
-                        <td data-title="'Districts'" style="width:150px" sortable="district_name">{{ row.district_name }}</td>
-                        <td data-title="'Number of Facilities'" style="width:150px" sortable="facilitycount">{{ row.facilitycount }}</td>
+                        <td data-title="getLocalMessage('label.zones')" class="number" style="width:20px;" sortable="zone_name">{{ row.zone_name }}</td>
+                        <td data-title="getLocalMessage('label.regions')" style="width:100px" sortable="region_name">{{ row.region_name }}</td>
+                        <td data-title="getLocalMessage('label.districts')" style="width:150px" sortable="district_name">{{ row.district_name }}</td>
+                        <td data-title="getLocalMessage('label.number.of.facilities')" style="width:150px" sortable="facilitycount">{{ row.facilitycount }}</td>
                     </tr>
                     </tbody>
                 </table>

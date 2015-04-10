@@ -10,11 +10,11 @@
 
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-    <h2 style="padding-top: 9px; line-height: 28px;"><span>List of ILS Products</span></h2>
+    <h2 style="padding-top: 9px; line-height: 28px;" openlmis-message="label.list.of.reports"></h2>
 
     <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
         <tr>
-            <td>No data to show.</td>
+            <td openlmis-message="dynamic.pages.no.data.to.show"></td>
         </tr>
     </table>
     <div style="overflow: auto;">
@@ -23,14 +23,13 @@
                    ng-table="tableParams">
                 <tbody>
                 <tr ng-repeat="row in datarows">
-                    <td data-title="'Report Category'" class="number" style="width:20px;" sortable="category">{{ row.category }}</td>
-                    <td data-title="'Report Name'" style="width:100px" sortable="name">{{ row.name }}</td>
-                    <td data-title="'Descriptions'" style="width:250px" sortable="description">{{ row.description }}</td>
-                    <td data-title="'Roles'" style="width:100px" sortable="roles">{{ row.roles }}</td>
+                    <td data-title="getLocalMessage('label.report.category')" class="number" style="width:20px;" sortable="category">{{ row.category }}</td>
+                    <td data-title="getLocalMessage('label.report.name')" style="width:100px" sortable="name">{{ row.name }}</td>
+                    <td data-title="getLocalMessage('label.descriptions')" style="width:250px" sortable="description">{{ row.description }}</td>
+                    <td data-title="getLocalMessage('label.roles')" style="width:100px" sortable="roles">{{ row.roles }}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
