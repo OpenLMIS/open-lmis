@@ -87,4 +87,14 @@ public class ReportExportController {
   ) {
     showReport("facility_mailing_list", outputOption, request, response);
   }
+
+
+   @RequestMapping(value = "/download/unscheduled_reporting/list/{outputOption}")
+    public void showUnscheduledReportingReport(
+            @PathVariable(value = "outputOption") String outputOption
+            , HttpServletRequest request
+            , HttpServletResponse response
+    ) {
+        showReport("unscheduled_reporting", outputOption, request, response);
+    }
 }

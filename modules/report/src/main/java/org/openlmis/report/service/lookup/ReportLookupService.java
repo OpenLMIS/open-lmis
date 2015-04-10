@@ -40,6 +40,7 @@ import org.openlmis.report.model.dto.Regimen;
 import org.openlmis.report.model.dto.RegimenCategory;
 import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
+import org.openlmis.report.model.report.TimelinessReport;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,8 @@ import java.util.*;
 @Service
 @NoArgsConstructor
 public class ReportLookupService {
+    @Autowired
+    private TimelinessStatusReportMapper timelinessStatusReportMapper;
     @Autowired
     private OrderFillRateSummaryListMapper orderFillRateSummaryListMapper;
     @Autowired
@@ -606,5 +609,15 @@ public class ReportLookupService {
 
     public List<RegimenConstituentDosage> getAllRegimenConstituentDosages(){
         return regimenRepository.getAllRegimenConstituentsDosages();
+    }
+
+    public List<TimelinessReport>getTimelinessStatusData(Long programId,Long periodId, Long scheduleId, Long zoneId, String status){
+        return timelinessStatusReportMapper.getTimelinessStatusData(programId,periodId,scheduleId,zoneId,status);
+    }
+    public List<TimelinessReport>getFacilityRnRStatusData(Long programId,Long periodId, Long scheduleId, Long zoneId, String status,String facilityIds){
+        return timelinessStatusReportMapper.getFacilityRnRStatusData(programId,periodId,scheduleId,zoneId,status,facilityIds);
+    }
+    public List<TimelinessReport>getTimelinessReportingDates(Long periodId){
+        return timelinessStatusReportMapper.getTimelinessReportingDates(periodId);
     }
 }
