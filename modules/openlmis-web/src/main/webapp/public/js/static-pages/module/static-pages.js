@@ -12,10 +12,23 @@ var staticPages=angular.module('staticPages', ['openlmis','ui.bootstrap.modal','
 staticPages.config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
+//        en
         when('/home', {controller: StaticPageController, templateUrl: 'partials/home.html'}).
         when('/aboutUs', {controller: StaticPageController, templateUrl: 'partials/about-us.html'}).
         when('/about-elmis', {controller: StaticPageController, templateUrl: 'partials/about-elmis.html'}).
         when('/about-ehealth', {controller: StaticPageController, templateUrl: 'partials/about-ehealth.html'}).
         when('/about-openlmis', {controller: StaticPageController, templateUrl: 'partials/about-openlmis.html'}).
+//       es
+        when('/home_es', {controller: StaticPageController, templateUrl: 'partials/home.html'}).
+        when('/aboutUs_es', {controller: StaticPageController, templateUrl: 'partials/about-us_es.html'}).
+        when('/about-elmis_es', {controller: StaticPageController, templateUrl: 'partials/about-elmis_es.html'}).
+        when('/about-ehealth_es', {controller: StaticPageController, templateUrl: 'partials/about-ehealth_es.html'}).
+        when('/about-openlmis_es', {controller: StaticPageController, templateUrl: 'partials/about-openlmis_es.html'}).
+//        pt
+        when('/home_pt', {controller: StaticPageController, templateUrl: 'partials/home_pt.html'}).
+        when('/aboutUs_pt', {controller: StaticPageController, templateUrl: 'partials/about-us_pt.html'}).
+        when('/about-elmis_pt', {controller: StaticPageController, templateUrl: 'partials/about-elmis_pt.html'}).
+        when('/about-ehealth_pt', {controller: StaticPageController, templateUrl: 'partials/about-ehealth_pt.html'}).
+        when('/about-openlmis_pt', {controller: StaticPageController, templateUrl: 'partials/about-openlmis_pt.html'}).
         otherwise({redirectTo: '/home'});
 }]);
