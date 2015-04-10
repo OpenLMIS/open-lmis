@@ -6,20 +6,21 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function OpenLmisFooterController($scope, localStorageService, loginConfig,$cookies,  $location, $window) {
+function OpenLmisFooterController($scope, localStorageService, loginConfig,$cookies,$route,  $location, $window) {
     $scope.loginConfig = loginConfig;
     $scope.user = localStorageService.get(localStorageKeys.USERNAME);
     $scope.userId = localStorageService.get(localStorageKeys.USER_ID);
     $scope.navigateToPage= function(relativePath){
-
-        var locale_string=$cookies.lang;
+       var locale_string=$cookies.lang;
         var fullPath;
         if(!locale_string || locale_string==="en"){
             fullPath='/'+relativePath;
         }else {
             fullPath='/'+relativePath+'_' + locale_string;
         }
-       $location.path(fullPath);
+         $window.location.href= "/public/site/index.html#"+fullPath;
+
+
     };
 
 }
