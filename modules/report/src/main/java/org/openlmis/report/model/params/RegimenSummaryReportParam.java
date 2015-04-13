@@ -29,27 +29,23 @@ import java.text.SimpleDateFormat;
 public class RegimenSummaryReportParam
         extends BaseParam implements ReportParameter {
 
-
-    private ProcessingPeriod periodObject;
-
     private Long programId;
     private String program;
     private String schedule;
-    private int rgroupId;
-    private String rgroup;
-    private Long regimenId;
+
+    private int regimenId;
 
     private String regimen;
     private int scheduleId;
 
-    private Long regimenCategoryId;
+    private Integer regimenCategoryId;
     private String regimenCategory;
 
     private Long periodId;
     private String period;
     private Integer year;
 
-    private Long facilityId;
+    private int facilityId;
     private String facility;
 
     private int facilityTypeId;
@@ -59,21 +55,5 @@ public class RegimenSummaryReportParam
 
     SimpleDateFormat dateFormatter = new SimpleDateFormat();
 
-
-    @Override
-    public String toString() {
-
-
-            StringBuilder filtersValue = new StringBuilder("");
-
-                  //  filtersValue.append("Schedule : ").append(this.getSchedule()).append("\n").
-                   // append("Program : ").append(this.getProgram()).append("\n").
-                   // append("Regimen : ").append(this.getRegimen()).append("\n").
-                   // append("Regimen Category : ").append(this.getRegimenCategory()).append("\n").
-                    //append("Reporting Groups : ").append(this.getRgroup());
-
-            return filtersValue.toString();
-
-    }
 
 }

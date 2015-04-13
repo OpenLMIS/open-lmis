@@ -26,23 +26,27 @@ import java.util.Map;
 @Repository
 public interface RegimenSummaryReportMapper {
 
-    @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getData")
+    @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getRegimenSummaryData")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<RegimenSummaryReport> getReport(@Param("filterCriteria") ReportParameter filterCriteria,
                                                  @Param("SortCriteria") Map<String, String[]> SortCriteria,
-                                                 @Param("RowBounds") RowBounds rowBounds);
+                                                 @Param("RowBounds") RowBounds rowBounds,
+                                                 @Param("userId") Long userId);
 
     @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getAggregateRegimenDistribution")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<RegimenSummaryReport> getAggregateReport(@Param("filterCriteria") ReportParameter filterCriteria,
                                                 @Param("SortCriteria") Map<String, String[]> SortCriteria,
-                                                @Param("RowBounds") RowBounds rowBounds);
+                                                @Param("RowBounds") RowBounds rowBounds,
+                                                @Param("userId") Long userId
+    );
 
     @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getRegimenDistributionData")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<RegimenSummaryReport> getRegimenDistributionReport(@Param("filterCriteria") ReportParameter filterCriteria,
                                                          @Param("SortCriteria") Map<String, String[]> SortCriteria,
-                                                         @Param("RowBounds") RowBounds rowBounds);
+                                                         @Param("RowBounds") RowBounds rowBounds,
+                                                         @Param("userId") Long userId);
 
 
 }

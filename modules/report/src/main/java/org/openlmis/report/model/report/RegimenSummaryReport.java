@@ -17,11 +17,13 @@ public class RegimenSummaryReport implements ReportData {
     @Column(name="patientsontreatment")
     private Integer patientsontreatment;
 
-    @Column( name = "rgroupid")
-    private String rgroupid;
-    private String rgroup;
     private String district;
-    private String facilityname;
+    private String facilityName;
+    private String facilityCode;
+    private String facilityTypeName;
+    private String region;
+    private String zone;
+
 
     @Column(name= "patientstoinitiatetreatment")
     private Integer patientstoinitiatetreatment;
