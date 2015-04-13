@@ -175,7 +175,7 @@
 
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="regimen_summary"/>
-                    <property name="template" value="regimen-summary.jasper"/>
+                    <property name="template" value="regimen-summary-list.jasper"/>
                     <property name="reportDataProvider" ref="regimenSummaryReportDataProvider"/>
                     <property name="id" value="RP-Regimen-Summary-report"/>
                     <property name="name" value="Regimen Distribution by District"/>
@@ -185,7 +185,7 @@
 
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="aggregate_regimen_summary"/>
-                    <property name="template" value="aggregate-regimen-summary.jasper"/>
+                    <property name="template" value="aggregate-regimen.jasper"/>
                     <property name="reportDataProvider" ref="aggregateRegimenSummaryReportDataProvider"/>
                     <property name="id" value="RP-Aggregate-Regimen-Summary-report"/>
                     <property name="name" value="Aggregate Regimen Summary"/>
