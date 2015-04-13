@@ -473,4 +473,44 @@ public class ReportLookupController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/timelinessStatusData/timelinessData", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getTimelinessStatusData(
+            @RequestParam("programId") Long programId,
+            @RequestParam("periodId") Long periodId,
+            @RequestParam("scheduleId") Long scheduleId,
+            @RequestParam("zoneId") Long zoneId,
+            @RequestParam("status") String status,
+
+            HttpServletRequest request
+    ) {
+        return OpenLmisResponse.response("timelinessData", reportLookupService.getTimelinessStatusData(programId,periodId,scheduleId,zoneId,status));
+    }
+
+
+
+    @RequestMapping(value = "/timelinessStatusData/getFacilityRnRStatusData", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilityTimelinessData(
+            @RequestParam("programId") Long programId,
+            @RequestParam("periodId") Long periodId,
+            @RequestParam("scheduleId") Long scheduleId,
+            @RequestParam("zoneId") Long zoneId,
+            @RequestParam("status") String status,
+            @RequestParam("facilityIds") String facilityIds,
+
+            HttpServletRequest request
+    ) {
+        return OpenLmisResponse.response("timelinessStatusData", reportLookupService.getFacilityRnRStatusData(programId,periodId,scheduleId,zoneId,status,facilityIds));
+    }
+
+    @RequestMapping(value = "/reportingDates/getTimelinessReportingDates", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getTimelinessReportingDates(
+            @RequestParam("periodId") Long periodId,
+
+
+            HttpServletRequest request
+    ) {
+        return OpenLmisResponse.response("reportingDates", reportLookupService.getTimelinessReportingDates(periodId));
+    }
+
+
 }

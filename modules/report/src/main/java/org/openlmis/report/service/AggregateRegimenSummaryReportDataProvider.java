@@ -26,6 +26,7 @@ import org.openlmis.report.model.ReportParameter;
 
 import org.openlmis.report.model.params.RegimenSummaryReportParam;
 
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,11 +42,7 @@ public class AggregateRegimenSummaryReportDataProvider extends ReportDataProvide
     @Autowired
     private ConfigurationSettingService configurationService;
     @Autowired
-    private ProcessingPeriodService periodService;
-    @Autowired
-    private ProgramService programService;
-    @Autowired
-    private RegimenService regimenService;
+    private SelectedFilterHelper filterHelper;
 
     @Autowired
     public AggregateRegimenSummaryReportDataProvider(RegimenSummaryReportMapper mapper, ConfigurationSettingService configurationService) {
@@ -56,13 +53,13 @@ public class AggregateRegimenSummaryReportDataProvider extends ReportDataProvide
     @Override
     protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
         RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-        return reportMapper.getAggregateReport(getReportFilterData(filterCriteria), null, rowBounds);
+        return reportMapper.getAggregateReport(getReportFilterData(filterCriteria), null, rowBounds, this.getUserId());
     }
 
     @Override
     public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return reportMapper.getAggregateReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
+        return reportMapper.getAggregateReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds, this.getUserId());
     }
 
     public ReportParameter getReportFilterData(Map<String, String[]> filterCriteria) {
@@ -71,31 +68,15 @@ public class AggregateRegimenSummaryReportDataProvider extends ReportDataProvide
         if (filterCriteria != null) {
 
             regimenSummaryReportParam = new RegimenSummaryReportParam();
-            regimenSummaryReportParam.setRegimenCategoryId(StringHelper.isBlank(filterCriteria, "regimenCategory") ? 0L : Long.parseLong(filterCriteria.get("regimenCategory")[0]));
-            if(filterCriteria.containsKey("regimen") && !StringHelper.isBlank(filterCriteria,"regimen")){
-                regimenSummaryReportParam.setRegimenId(Long.parseLong(filterCriteria.get("regimen")[0])); //defaults to 0
-            }else{
-                regimenSummaryReportParam.setRegimenId(0L);
-            }
-            regimenSummaryReportParam.setScheduleId(StringHelper.isBlank(filterCriteria, "schedule") ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0]));
-            regimenSummaryReportParam.setRgroupId(StringHelper.isBlank(filterCriteria, "requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0]));
-            regimenSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
-            regimenSummaryReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0L : Long.parseLong(filterCriteria.get("period")[0]));
-            regimenSummaryReportParam.setFacilityId(StringHelper.isBlank(filterCriteria,"facility") ? 0L : Long.parseLong(filterCriteria.get("facility")[0]));
-            regimenSummaryReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
-            regimenSummaryReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone")? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));
 
-            ProcessingPeriod pPeriod = periodService.getById( regimenSummaryReportParam.getPeriodId());
-            // summarize the filters now.
-            String summary = "Period: " + pPeriod.getName()
-                    .concat(" - ")
-                    .concat(pPeriod.getStringYear())
-                    .concat("\nProgram: ")
-                    .concat(programService.getById(regimenSummaryReportParam.getProgramId()).getName());
-            if(regimenSummaryReportParam.getRegimenId() != 0){
-                summary.concat("\nRegimen: ")
-                        .concat(regimenService.getById(regimenSummaryReportParam.getRegimenId()).getName());
-            }
+            regimenSummaryReportParam.setRegimenCategoryId(StringHelper.isBlank(filterCriteria, "regimenCategory") ? 0 : Integer.parseInt(filterCriteria.get("regimenCategory")[0]));
+            regimenSummaryReportParam.setRegimenId(StringHelper.isBlank(filterCriteria, "regimen") ? 0 : Integer.parseInt(filterCriteria.get("regimen")[0]));
+            regimenSummaryReportParam.setPeriodId(Long.parseLong(filterCriteria.get("period")[0]));
+            regimenSummaryReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone") ? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));
+            regimenSummaryReportParam.setScheduleId(StringHelper.isBlank(filterCriteria, "schedule") ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0]));
+            regimenSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
+            regimenSummaryReportParam.setFacilityId(StringHelper.isBlank(filterCriteria, "facility") ? 0 : Integer.parseInt(filterCriteria.get("facility")[0]));
+            regimenSummaryReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria, ("facilityType")) ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0]));
 
         }
         return regimenSummaryReportParam;
@@ -103,7 +84,12 @@ public class AggregateRegimenSummaryReportDataProvider extends ReportDataProvide
 
     @Override
     public String getFilterSummary(Map<String, String[]> params) {
-        return getReportFilterData(params).toString();
+        Map<String, String[]> modifiableParams = new HashMap<String, String[]>();
+        modifiableParams.putAll(params);
+        modifiableParams.put("userId", new String[]{String.valueOf(this.getUserId())});
+
+        return filterHelper.getProgramPeriodGeoZone(modifiableParams);
+
     }
 
 }

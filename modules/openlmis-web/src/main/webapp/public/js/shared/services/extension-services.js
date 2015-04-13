@@ -1125,3 +1125,21 @@ services.factory('PublicSiteData', function ($resource) {
     };
 });
 
+
+
+
+services.factory('getTimelinessReport',function($resource){
+    return $resource('/reports/reportdata/timeliness.json',{},{});
+});
+
+services.factory("getTimelinessStatusData",function($resource){
+    return $resource('/reports/timelinessStatusData/timelinessData.json',{},{});
+});
+
+services.factory("getFacilityRnRTimelinessReportData", function($resource){
+    return $resource('/reports/timelinessStatusData/getFacilityRnRStatusData.json',{},{});
+});
+
+services.factory("getTimelinessReportingDates", function($resource){
+    return $resource('/reports/reportingDates/getTimelinessReportingDates.json',{},{});
+});

@@ -89,9 +89,7 @@ public class DistrictConsumptionQueryBuilder {
       predicates = predicates + " and (d.zone_id = " + filter.getZoneId() +" or d.parent = " +filter.getZoneId() + " or d.region_id = " + filter.getZoneId() + " or d.district_id = " + filter.getZoneId() + ") " ;
     }
 
-    String query = "SELECT li.productCode code, li.product || ' (' || p.dispensingunit || ')' as product, sum(li.quantityDispensed) dispensed, sum(li.normalizedConsumption) consumption," +
-            " ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks," +
-            " ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks \n" +
+    String query = "SELECT li.productCode code, li.product, sum(li.quantityDispensed) dispensed, sum(li.normalizedConsumption) consumption, sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode)) consumptionInPacks, sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode)) adjustedConsumptionInPacks \n" +
             " FROM requisition_line_items li \n" +
               " JOIN requisitions r on r.id = li.rnrid " +
 
@@ -107,7 +105,7 @@ public class DistrictConsumptionQueryBuilder {
               " WHERE " +
               "   f.id in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = "  + filter.getProgramId() + ") " +
               "   and r.periodId = " + filter.getPeriod() + " and r.programId =  " + filter.getProgramId() + predicates +
-              " GROUP BY li.productCode, li.product, p.dispensingunit" +
+              " GROUP BY li.productCode, li.product" +
               " ORDER BY li.product ";
 
     return query;
