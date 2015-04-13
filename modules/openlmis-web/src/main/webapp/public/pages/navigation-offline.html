@@ -9,22 +9,27 @@
   -->
 
 <div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav>
-  <ul class="clearfix pull-left" style="display:none">
+  <ul class="clearfix pull-left" style="display:none" ng-controller="OpenLmisFooterController">
     <li><a href="/public/site/index.html#/home" openlmis-message="link.home"></a></li>
 
-    <li>
-      <a href="javascript: void(0)" id="distributions-menu" openlmis-message="link.distributions"></a>
 
-      <div class="submenu">
-        <ul>
-          <li>
-            <a id="manage-distribution" href="/public/pages/logistics/distribution/offline.html#/list"
-               openlmis-message="link.manage"></a>
-          </li>
-          <li class="beak"></li>
-        </ul>
-      </div>
-    </li>
+      <li><a ng-click="navigateToPage('aboutUs')"  openlmis-message="open.static.pages.footer.link.header.about"></a></li>
+
+
+      <li><a href="/public/site/index.html#/home" openlmis-message="open.static.pages.footer.link.header.distributionSystem"></a></li>
+
+
+      <li><a href="/public/site/index.html#/home" openlmis-message="open.static.pages.footer.link.header.programcommodities"></a></li>
+
+
+      <li><a href="/public/site/index.html#/home" openlmis-message="open.static.pages.footer.link.header.orderprocessing"></a></li>
+
+
+      <li><a href="/public/site/index.html#/home" openlmis-message="open.static.pages.footer.link.header.reports"></a></li>
+
+
+
+
   </ul>
 
 </div>

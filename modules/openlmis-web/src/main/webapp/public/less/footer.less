@@ -8,13 +8,14 @@
   * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 .footer {
-  position: relative;
+  position: absolute;
   width: 100%;
   bottom: 0px;
   height: 200px;
   /*background: #0d7178;*/
   background-image: url("../images/help/footer_background.jpg");
   background-repeat: repeat-x;
+  top: 1000px;
 }
 .footer .link-section {
   position: relative;
@@ -76,14 +77,16 @@
   background: linear-gradient(to bottom, #0d8d98 0%, #0d6369 100%);
 }
 .static-content {
-  min-height: 600px;
-  padding: 10px 15px 40px;
+
+  height: 100%;
+  /*padding: 10px 15px 40px;*/
   margin: 12px 12px 0;
   color: #000000;
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
   -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
   background: white;
+  min-height: 1000px;
 }
 .footer .link-section .aboutus-links {
   position: absolute;
@@ -93,7 +96,6 @@
   width: 240px;
   color: #ffffff;
 }
-
 .footer .link-section .distribution-links {
   position: absolute;
   top: 10px;
@@ -137,25 +139,28 @@
 }
 .footer-link-header {
   position: absolute;
-  font-size: 1em;
+  font-size: 1.2em;
   font-weight: bold;
   color: black;
   padding-left: 10px;
   height: 27px;
   width: 200px;
-  font-family: normal bold Arial, Helvetica, sans-serif;
+  font-family: courier, monospace;
   background-color: #a6ddd6;
 }
 .footer-copyright-message {
+  padding-top: 5px;
   position: absolute;
-  font-size: 1.2em;
+  font-size: 1.4em;
   font-weight: bold;
   text-align: center;
+  font-family: courier, monospace;
   left: 500px;
+  color: white;
 }
 .footer a {
   color: #fafff8;
-  font-family: normal  Arial, Helvetica, sans-serif;
+  font-family: courier, monospace;
 }
 .footer a:hover {
   color: black;
@@ -171,4 +176,66 @@
 }
 .footer-link-list {
   padding-top: 27px;
+}
+/* test */
+.static-content .static-content {
+  position: absolute;
+  min-width: 660px;
+  padding: 10px 15px 40px;
+  margin: 12px 12px 0;
+  color: #000000;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+  background: white;
+  left: 300px;
+  top: 320px;
+ min-height: 600px;
+}
+.static-content .header-image {
+  position: absolute;
+  padding-top: 0px;
+  padding-left: 15px;
+  min-width: 1020px;
+  height: 200px;
+  left: 300px;
+  top: 130px;
+  background: #f6f6f6;
+}
+.static-content .left-side{
+  position: absolute;
+  width: 300px;
+  left: 10px;
+  top: 130px;
+  height: 1000px;
+  background: #ffffff;
+
+}
+.static-content .left-side .link-header{
+  position: absolute;
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #ffffff;
+  padding-top: 10px;
+  padding-left: 30px;
+  height: 25px;
+  width: 250px;
+  font-family: courier, monospace;
+  background-color: #107f88;
+  top: 220px;
+
+}
+.static-content .left-side .side-link{
+  position: absolute;
+
+  top: 270px;
+
+}
+.static-content .left-side .side-image{
+  position: absolute;
+  padding-top: 0px;
+  width: 300px;
+  height: 200px;
+  left: 10px;
+
 }
