@@ -79,6 +79,13 @@ Running App on embedded Jetty server
 
 Once run, you can access the home page at http://localhost:9091/
 
+**Note:** You may encounter a ```java.lang.OutOfMemoryError: PermGen space```. This is a result of not enough memory for
+the Jetty JVM. One way to fix this is to export the following (or include in ```$HOME/.bash_profile``` or
+```$HOME/.profile``` or ```$HOME/.bashrc``` or ```$HOME/.zshrc```, depending on your shell.)
+
+ - **export JAVA_OPTS="-XX:MaxPermSize=512m"**
+ - **export JAVA_TOOL_OPTIONS="-Xmx1024m -XX:MaxPermSize=512m -Xms512m"**
+
 Tech Stack
 ---------------------------------
 
