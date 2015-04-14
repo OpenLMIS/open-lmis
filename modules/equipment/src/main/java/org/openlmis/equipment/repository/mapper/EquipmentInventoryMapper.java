@@ -31,6 +31,7 @@ public interface EquipmentInventoryMapper {
 
   @Select("SELECT * from facility_program_equipments where id = #{id}")
   @Results({
+    @Result(property = "equipmentId", column = "equipmentId"),
     @Result(
       property = "equipment", column = "equipmentId", javaType = Equipment.class,
       one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById"))
