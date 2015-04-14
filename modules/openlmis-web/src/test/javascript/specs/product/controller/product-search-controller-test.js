@@ -30,6 +30,7 @@ describe("Product Search Controller", function () {
     var response = {"programProductList": [programProduct], "pagination": pagination};
     scope.query = "pro";
     scope.selectedSearchOption = {"value": 'program'};
+    $httpBackend.when('GET', '/season-rationing/adjustmentProducts.json?').respond({});
     $httpBackend.when('GET', '/programProducts/search.json?column=program&page=1&searchParam=' + scope.query).respond(response);
     scope.loadProducts(1);
     $httpBackend.flush();
@@ -48,6 +49,7 @@ describe("Product Search Controller", function () {
     scope.query = "pro";
     var lastQuery = "essential";
     scope.selectedSearchOption = {"value": 'program'};
+    $httpBackend.when('GET', '/season-rationing/adjustmentProducts.json?').respond({});
     $httpBackend.when('GET', '/programProducts/search.json?column=program&page=1&searchParam=' + lastQuery).respond(response);
     scope.loadProducts(1, lastQuery);
     $httpBackend.flush();
