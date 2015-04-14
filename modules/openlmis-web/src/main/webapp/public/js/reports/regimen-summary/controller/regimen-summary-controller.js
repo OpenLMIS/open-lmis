@@ -30,4 +30,10 @@ function RegimenSummaryControllers($scope, $window, RegimenSummaryReport) {
             }
         });
     };
+
+    $scope.greaterThan = function(prop,val){
+        return function(item){
+            return item[prop] > val;
+        };
+    };
 }

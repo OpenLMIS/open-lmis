@@ -24,7 +24,7 @@
 <div class="container-fluid">
     <div class="box row-fluid">
         <div class="box-header">
-            <h2 openlmis-message="report.title.regimen.distribution.summary"><i class="icon-edit"></i><span class="break"></span></h2>
+            <h2 openlmis-message="report.title.regimen.distribution.by.facility"><i class="icon-edit"></i><span class="break"></span></h2>
 
             <div class="box-icon">
                 <a id="pdf-button" href="#list" ng-click="exportReport('PDF')" class='btn-small btn-info'>PDF</a>
@@ -81,31 +81,26 @@
                             <tbody>
                             <tr ng-repeat="row in datarows">
                                 <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
-                                <td data-title="getLocalMessage('label.facility.name')" sortable="facilityname" style="width:40px">{{ row.facilityname }}</td>
+                                <td data-title="getLocalMessage('label.facility.code')" sortable="facilityCode" style="width:40px">{{ row.facilityCode }}</td>
 
-                                <td data-title="getLocalMessage('label.regimen')" style="width:40px" sortable="regimen" >{{ row.regimen }}</td>
+                                <td data-title="getLocalMessage('label.facility')" sortable="facilityName" style="width:80px">{{ row.facilityName }}</td>
+                                <td data-title="getLocalMessage('label.district')" sortable="district" style="width:40px">{{ row.district }}</td>
+                                <td data-title="getLocalMessage('label.region')" sortable="region" style="width:40px">{{ row.region }}</td>
+                                <td data-title="getLocalMessage('label.zone')" sortable="zone" style="width:100px">{{ row.zone }}</td>
+                                <td data-title="getLocalMessage('label.regimen')" style="width:100px" sortable="regimen" >{{ row.regimen }}</td>
                                 <td data-title="'No. of Patients On Treatment'" style="width:20px;text-align:center" class="number" sortable="patientsontreatment">
                                     {{ row.patientsontreatment | number}}
                                 </td>
-                                <td data-title="getLocalMessage('label.total.percent')" class="number" style="width:20px;text-align:center"
-                                    sortable="totalOnTreatmentPercentage ">{{ row.totalOnTreatmentPercentage | number
-                                    }}%
-                                </td>
+
                                 <td data-title="getLocalMessage('label.patient.initiate.treatment')" class="number" style="width:20px;text-align:center"
                                     sortable="patientstoinitiatetreatment">{{ row.patientstoinitiatetreatment | number
                                     }}
                                 </td>
-                                <td data-title="getLocalMessage('label.total.percent')" class="number" style="width:20px;text-align:center"
-                                    sortable="totalpatientsToInitiateTreatmentPercentage ">{{
-                                    row.totalpatientsToInitiateTreatmentPercentage }}%
-                                </td>
+
                                 <td data-title="getLocalMessage('label.stopped.treatments')" style="width:20px;text-align:center" class="number"
                                     sortable="patientsstoppedtreatment">{{ row.patientsstoppedtreatment | number}}
                                 </td>
-                                <td data-title="getLocalMessage('label.total.percent')" class="number" style="width:20px;text-align:center"
-                                    sortable="stoppedTreatmentPercentage ">{{ row.stoppedTreatmentPercentage | number
-                                    }}%
-                                </td>
+
 
                             </tr>
                             </tbody>

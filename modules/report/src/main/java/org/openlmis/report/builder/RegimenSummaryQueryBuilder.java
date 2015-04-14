@@ -17,129 +17,30 @@ import java.util.Map;
 
 public class RegimenSummaryQueryBuilder {
 
-    public static String getData(Map params) {
+    public static String getRegimenSummaryData(Map params) {
 
         RegimenSummaryReportParam filter = (RegimenSummaryReportParam) params.get("filterCriteria");
         String sql = "";
-        sql = "WITH temp as ( select regimen,district,facilityname,\n" +
-                "SUM(patientsontreatment) patientsontreatment,\n" +
-                "SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,\n" +
-                "SUM(patientsstoppedtreatment) patientsstoppedtreatment\n" +
-                "from vw_regimen_district_distribution\n" +
-                writePredicates(filter) +
-                "group by regimen,district,facilityname\n" +
-                "order by regimen,district ) \n" +
-                "  \n" +
-                "select  t.district,t.regimen,t.facilityname,\n" +
-                "t.patientsontreatment patientsontreatment,\n" +
-                "t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
-                "t.patientsstoppedtreatment patientsstoppedtreatment,\n" +
-                "COALESCE( case when temp2.total > 0 THEN round(((t.patientsontreatment*100)/temp2.total),0) ELSE temp2.total END ) \n" +
-                " totalOnTreatmentPercentage, \n" +
-                " COALESCE( case when temp2.total2 > 0 THEN round(((t.patientstoinitiatetreatment*100)/temp2.total2),0) ELSE temp2.total2 END ) \n" +
-                " totalpatientsToInitiateTreatmentPercentage,\n" +
-                " COALESCE( case when temp2.total3 > 0 THEN round(((t.patientsstoppedtreatment*100)/temp2.total3),0) \n" +
-                " ELSE temp2.total3 END ) stoppedTreatmentPercentage from temp t\n" +
-                "INNER JOIN (select district,SUM(patientsontreatment) total,SUM(patientstoinitiatetreatment) total2,\n" +
-                " SUM(patientsstoppedtreatment) total3 from  temp GROUP BY district ) temp2 ON t.district= temp2.district  ";
 
+        sql = "  SELECT facilitycode,facilityType facilityTypeName,facilityname,district,region,zone, regimen, " +
+                "                SUM(patientsontreatment) patientsontreatment, " +
+                "                SUM(patientstoinitiatetreatment) patientstoinitiatetreatment, " +
+                "                SUM(patientsstoppedtreatment) patientsstoppedtreatment " +
+                "                FROM vw_regimen_district_distribution " +
+                writePredicates(filter) +
+                "                GROUP BY regimen,district,facilityName,facilityType,facilitycode,region,zone  " +
+                "                ORDER BY region,regimen";
         return sql;
     }
 
 
-    private static String writePredicates(RegimenSummaryReportParam filter) {
-        String predicate = "";
-        predicate = " WHERE status in ('APPROVED','RELEASED') ";
-        if (filter != null) {
-            if (filter.getZoneId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " zoneId = #{filterCriteria.zoneId} " +
-                        " or districtid=#{filterCriteria.zoneId} " +
-                        "or regionid = #{filterCriteria.zoneId} " +
-                        "or parentId = #{filterCriteria.zoneId}";
-            }
-
-            if (filter.getScheduleId() != 0 && filter.getScheduleId() != -1) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " scheduleid= #{filterCriteria.scheduleId}";
-            }
-
-            if (filter.getProgramId() != 0 && filter.getProgramId() != -1) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " programid = #{filterCriteria.programId}";
-            }
-            if (filter.getPeriodId() != 0 && filter.getPeriodId() != -1) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " periodid= #{filterCriteria.periodId}";
-            }
-            if (filter.getRegimenId() != 0 && filter.getRegimenId() != -1) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " regimenid = #{filterCriteria.regimenId}";
-            }
-            if (filter.getRegimenCategoryId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " categoryid = #{filterCriteria.regimenCategoryId}";
-            }
-            if (filter.getFacilityId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " facilityid = #{filterCriteria.facilityId}";
-            }
-            if (filter.getFacilityTypeId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " facilitytypeid = #{filterCriteria.facilityTypeId}";
-            }
-
-        }
-
-        return predicate;
-    }
-
-
-    public static String getAggregateRegimenDistribution(Map params) {
-        RegimenSummaryReportParam filter = (RegimenSummaryReportParam) params.get("filterCriteria");
-        String predicates = "";
-
-        if (filter.getRegimenId() > 0) {
-            predicates = predicates + " and regimens.id = " + filter.getRegimenId();
-        }
-
-        if (filter.getRegimenCategoryId() > 0) {
-            predicates = predicates + " and regimens.categoryId = " + filter.getRegimenCategoryId();
-        }
-
-        if (filter.getZoneId() != 0) {
-            predicates = predicates + " and ( f.geographicZoneId = " + filter.getZoneId() + " or gz.parentId = " + filter.getZoneId() + " or zone.parentId = " + filter.getZoneId() + " or c.parentId = " + filter.getZoneId() + ") ";
-        }
-        String query = "";
-        query = "SELECT DISTINCT\n" +
-                " regimens.name regimen,sum(li.patientsontreatment) patientsontreatment, SUM(li.patientstoinitiatetreatment)\n" +
-                "patientstoinitiatetreatment, \n" +
-                "SUM(li.patientsstoppedtreatment) patientsstoppedtreatment" +
-                "   FROM regimen_line_items li\n" +
-                "   JOIN requisitions r ON r.id = li.rnrid\n" +
-                "   JOIN facilities f ON r.facilityid = f.id\n" +
-                "   JOIN geographic_zones gz ON gz.id = f.geographiczoneid\n" +
-                "   JOIN geographic_zones zone ON gz.parentid = zone.id\n" +
-                "   JOIN geographic_zones c ON zone.parentid = c.id\n" +
-                "   JOIN requisition_group_members rgm ON rgm.facilityid = r.facilityid\n" +
-                "   JOIN programs_supported ps ON ps.programid = r.programid AND r.facilityid = ps.facilityid\n" +
-                "   JOIN processing_periods pp ON r.periodid = pp.id\n" +
-                "   JOIN requisition_group_program_schedules rgps ON rgps.requisitiongroupid = rgm.requisitiongroupid AND pp.scheduleid = rgps.scheduleid\n" +
-                "   JOIN regimens ON r.programid = regimens.programid\n" +
-                "   WHERE r.periodid = " + filter.getPeriodId() + " and r.programId =  " + filter.getProgramId() + "and r.status in ('APPROVED','RELEASED') " + predicates +
-                "   GROUP BY regimens.name\n" +
-                "   ORDER BY regimens.name ";
-
-        return query;
-
-    }
 
 
     public static String getRegimenDistributionData(Map params) {
         RegimenSummaryReportParam filter = (RegimenSummaryReportParam) params.get("filterCriteria");
         String sql = "";
 
-        sql = "WITH temp as ( select regimen,district,\n" +
+        sql = "WITH temp as (select regimen,district,\n" +
                 "SUM(patientsontreatment) patientsontreatment,\n" +
                 "SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,\n" +
                 "SUM(patientsstoppedtreatment) patientsstoppedtreatment\n" +
@@ -161,6 +62,99 @@ public class RegimenSummaryQueryBuilder {
                 " SUM(patientsstoppedtreatment) total3 from  temp GROUP BY regimen ) temp2 ON t.regimen= temp2.regimen  ";
 
         return sql;
+    }
+
+
+    private static String writePredicates(RegimenSummaryReportParam filter) {
+        String predicate = "";
+        predicate = " WHERE status in ('APPROVED','RELEASED') and (patientsontreatment > 0 or patientstoinitiatetreatment > 0 or patientsstoppedtreatment > 0)  ";
+        predicate = predicate + " and periodId = " + filter.getPeriodId() + " ";
+        if (filter != null) {
+            if (filter.getZoneId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + " zoneId = #{filterCriteria.zoneId} " +
+                        " or districtid=#{filterCriteria.zoneId} " +
+                        "or regionid = #{filterCriteria.zoneId} " +
+                        "or parent = #{filterCriteria.zoneId}";
+            }
+
+            if (filter.getScheduleId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + " scheduleId= #{filterCriteria.scheduleId}";
+            }
+
+            if (filter.getProgramId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + " programId = #{filterCriteria.programId}";
+            }
+            if (filter.getPeriodId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + " periodId= #{filterCriteria.periodId}";
+            }
+            if (filter.getRegimenId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + " regimenId = #{filterCriteria.regimenId}";
+            }
+            if (filter.getRegimenCategoryId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + " categoryId = #{filterCriteria.regimenCategoryId}";
+            }
+            if (filter.getFacilityId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + " facilityId = #{filterCriteria.facilityId}";
+            }
+            if (filter.getFacilityTypeId() != 0) {
+                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
+                predicate = predicate + " facilityTypeId = #{filterCriteria.facilityTypeId}";
+            }
+            predicate = predicate + " and facilityId in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = " + filter.getProgramId() + ")";
+
+        }
+
+        return predicate;
+    }
+
+
+    public static String getAggregateRegimenDistribution(Map params) {
+        RegimenSummaryReportParam filter = (RegimenSummaryReportParam) params.get("filterCriteria");
+        Long userId = (Long) params.get("userId");
+        String predicates = "";
+
+        if (filter.getRegimenId() > 0) {
+            predicates = predicates + " and regimens.Id = " + filter.getRegimenId();
+        }
+
+        if (filter.getRegimenCategoryId() > 0) {
+            predicates = predicates + " and regimens.categoryId = " + filter.getRegimenCategoryId();
+        }
+
+        if (filter.getZoneId() != 0) {
+            predicates = predicates + " and (d.zone_id = " + filter.getZoneId() + " or d.parent = " + filter.getZoneId() + " or d.region_id = " + filter.getZoneId() + " or d.district_id = " + filter.getZoneId() + ") ";
+        }
+        String query = "";
+
+        query = "SELECT DISTINCT \n" +
+                "                li.name regimen,sum(li.patientsontreatment) patientsontreatment, SUM(li.patientstoinitiatetreatment) \n" +
+                "                patientstoinitiatetreatment,  \n" +
+                "                SUM(li.patientsstoppedtreatment) patientsstoppedtreatment \n" +
+                "                FROM regimen_line_items li  \n" +
+                "                JOIN requisitions r ON r.id = li.rnrid  \n" +
+                "                JOIN facilities f ON r.facilityid = f.id  \n" +
+                "                JOIN vw_districts d on d.district_id = f.geographicZoneId \n" +
+                "                JOIN requisition_group_members rgm ON rgm.facilityid = r.facilityid \n" +
+                "                JOIN programs_supported ps ON ps.programid = r.programid AND r.facilityid = ps.facilityid\n" +
+                "                JOIN REGIMENS ON REGIMENS.code = li.code \n" +
+                "                JOIN processing_periods pp ON r.periodid = pp.id  \n" +
+                "                JOIN requisition_group_program_schedules rgps ON rgps.requisitiongroupid = rgm.requisitiongroupid AND pp.scheduleId = rgps.scheduleId \n" +
+                "                WHERE (li.patientsontreatment != 0 or li.patientstoinitiatetreatment != 0 or li.patientsstoppedtreatment != 0) and r.status in ('APPROVED','RELEASED') and " +
+                "   f.id in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = " + filter.getProgramId() + ") " +
+                "   and  pp.id = " + filter.getPeriodId() + " and r.programId= " + filter.getProgramId() + " and r.status in ('APPROVED','RELEASED') " + predicates +
+                "                GROUP BY li.name\n" +
+                "                ORDER BY li.name ";
+
+
+        return query;
+
     }
 
 }

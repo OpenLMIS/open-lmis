@@ -34,7 +34,7 @@
 
   <beans:bean id="restAuthenticationEntryPoint"
               class="org.openlmis.authentication.web.RestAuthenticationEntryPoint">
-    <beans:constructor-arg value="/public/pages/login.html"/>
+    <beans:constructor-arg value="/public/site/index.html#/home"/>
   </beans:bean>
 
 
@@ -63,11 +63,13 @@
     <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="any"/>
       <intercept-url  pattern="/public/site/**" access="permitAll" requires-channel="any"/>
     <form-login login-page="/public/pages/login.html"
+                always-use-default-target="true"
+                default-target-url="/public/site/index.html#/home"
                 login-processing-url="/j_spring_security_check"
                 authentication-success-handler-ref="authenticationSuccessHandler"
                 authentication-failure-handler-ref="simpleUrlAuthenticationFailureHandler"/>
     <access-denied-handler ref="openLmisAccessDeniedHandler"/>
-    <logout logout-success-url="/" invalidate-session="true" delete-cookies="true"/>
+    <logout logout-success-url="/public/site/index.html#/home" invalidate-session="true" delete-cookies="true"/>
 
     <session-management>
       <concurrency-control expired-url="/user-context.json" max-sessions="10"/>
