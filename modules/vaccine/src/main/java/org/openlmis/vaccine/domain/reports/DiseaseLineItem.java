@@ -17,10 +17,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
-@EqualsAndHashCode
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class DiseaseLineItem extends BaseModel {
 
   private Long reportId;
