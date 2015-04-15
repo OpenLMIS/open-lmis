@@ -20,21 +20,26 @@ import java.util.List;
 public interface VaccineReportCoverageMapper {
 
   @Insert("INSERT into vaccine_report_coverage_line_items " +
-    " (reportId, productId, doseId, isActive, regular, outreach, campaign, createdBy, createdDate, modifiedBy, modifiedDate) " +
+    " (reportId, productId, doseId, displayName, displayOrder , trackMale, trackFemale, regularMale, regularFemale, outreachMale, outreachFemale, campaignMale, campaignFemale, createdBy, createdDate, modifiedBy, modifiedDate) " +
     " values " +
-    " (#{reportId}, #{productId}, #{doseId}, #{isActive}, #{regular}, #{outreach}, #{campaign}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+    " (#{reportId}, #{productId}, #{doseId}, #{displayName}, #{displayOrder}, #{trackMale}, #{trackFemale}, #{regularMale}, #{regularFemale}, #{outreachMale}, #{outreachFemale}, #{campaignMale}, #{campaignFemale}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
-  void insert(VaccineCoverageItem item);
+  Integer insert(VaccineCoverageItem item);
 
   @Update("UPDATE vaccine_report_coverage_line_items " +
     " SET " +
     " reportId = #{reportId} " +
     " , productId = #{productId} " +
     " , doseId  = #{doseId} " +
-    " , isActive = #{isActive}  " +
-    " , regular = #{regular} " +
-    " , outreach = #{outreach} " +
-    " , campaign = #{campaign} " +
+    " , displayName = #{displayName}  " +
+    " , displayOrder = #{displayOrder}  " +
+    " , trackMale = #{trackMale}  " +
+    " , trackFemale = #{trackFemale}  " +
+    " , regularMale = #{regularMale} " +
+    " , outreachMale = #{outreachMale} " +
+    " , outreachFemale = #{outreachFemale} " +
+    " , campaignMale = #{campaignMale} " +
+    " , campaignFemale = #{campaignFemale} " +
     " , modifiedBy = #{modifiedBy} " +
     " , modifiedDate = NOW()" +
     " WHERE id = #{id} ")
@@ -43,10 +48,10 @@ public interface VaccineReportCoverageMapper {
   @Select("SELECT * from vaccine_report_coverage_line_items WHERE id = #{id}")
   VaccineCoverageItem getById(@Param("id") Long id);
 
-  @Select("SELECT * from vaccine_report_coverage_line_items WHERE reportId = #{reportId} and productId = #{productId} and doseId = #{doseId} order by id")
+  @Select("SELECT * from vaccine_report_coverage_line_items WHERE reportId = #{reportId} and productId = #{productId} and doseId = #{doseId} order by displayOrder")
   VaccineCoverageItem getCoverageByReportProductDosage(@Param("reportId") Long reportId, @Param("productId") Long productId, @Param("doseId") Long doseId);
 
-  @Select("SELECT * from vaccine_report_coverage_line_items WHERE reportId = #{reportId} order by id")
+  @Select("SELECT * from vaccine_report_coverage_line_items WHERE reportId = #{reportId} order by displayOrder")
   List<VaccineCoverageItem> getLineItems(@Param("reportId") Long reportId);
 
 }

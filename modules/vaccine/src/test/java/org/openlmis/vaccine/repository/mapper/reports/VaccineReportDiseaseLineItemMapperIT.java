@@ -76,8 +76,6 @@ public class VaccineReportDiseaseLineItemMapperIT {
     report.setPeriodId(processingPeriod.getId());
     report.setFacilityId(facility.getId());
     vaccineReportMapper.insert(report);
-
-
   }
 
   @Test
