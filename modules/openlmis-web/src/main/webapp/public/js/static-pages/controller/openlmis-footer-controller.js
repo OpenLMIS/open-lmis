@@ -13,7 +13,7 @@ function OpenLmisFooterController($scope, localStorageService, loginConfig,$cook
     $scope.navigateToPage= function(relativePath){
        var locale_string=$cookies.lang;
         var fullPath;
-        if(!locale_string || locale_string==="en"){
+        if(!locale_string || locale_string==="en" || locale_string==='en_TZ'){
             fullPath='/'+relativePath;
         }else {
             fullPath='/'+relativePath+'_' + locale_string;
