@@ -63,7 +63,7 @@ CREATE TABLE vaccine_report_coverage_line_items(
   outreachFemale    INTEGER NULL,
 
   campaignMale      INTEGER NULL,
-  campaginFemale    INTEGER NULL,
+  campaignFemale    INTEGER NULL,
 
   createdBy         INTEGER,
   createdDate       TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
