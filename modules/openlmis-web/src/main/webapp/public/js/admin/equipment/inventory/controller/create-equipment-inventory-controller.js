@@ -21,10 +21,10 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
 
   if ($routeParams.id === undefined) {
     $scope.equipment = {};
-    $scope.equipment.programId = $routeParams.programId;
-    $scope.equipment.facilityId = $routeParams.facilityId;
+    $scope.equipment.programId = $routeParams.program;
+    $scope.equipment.facilityId = $routeParams.facility;
 
-    Facility.get({id: $routeParams.facilityId}, function(data){
+    Facility.get({id: $routeParams.facility}, function(data){
       $scope.facility = data.facility;
     });
 
@@ -64,7 +64,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
         $scope.$parent.message = messageService.get(data.success);
         $scope.$parent.selectedProgram = {id: $scope.equipment.programId};
         console.info($scope.$parent.selectedProgram);
-        $location.path('/' + $routeParams.from + '/' + $scope.equipment.facilityId + '/' + $scope.equipment.programId);
+        $location.path('/' + $routeParams.from + '/' + $scope.equipment.facility + '/' + $scope.equipment.program);
       }, function (data) {
         $scope.error = data.error;
       });
