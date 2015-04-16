@@ -28,11 +28,20 @@ public class VaccineCoverageItem extends BaseModel{
   private Long reportId;
   private Long productId;
 
-  private Boolean isActive;
-
+  private Boolean trackMale;
+  private Boolean trackFemale;
   private Long doseId;
-  private Long regular;
-  private Long outreach;
-  private Long campaign;
+
+  private Long displayOrder;
+  private String displayName;
+
+  private Long regularMale;
+  private Long regularFemale;
+
+  private Long outreachMale;
+  private Long outreachFemale;
+
+  private Long campaignMale;
+  private Long campaignFemale;
 
 }

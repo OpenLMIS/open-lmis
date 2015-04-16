@@ -29,7 +29,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper=false)
 public class VaccineReport extends BaseModel {
 
   private Long   periodId;
@@ -102,7 +102,10 @@ public class VaccineReport extends BaseModel {
       VaccineCoverageItem item = new VaccineCoverageItem();
       item.setReportId(id);
       item.setDoseId(dose.getDoseId());
-      item.setIsActive(dose.getIsActive());
+      item.setTrackMale(dose.getTrackMale());
+      item.setTrackFemale(dose.getTrackFemale());
+      item.setDisplayOrder(dose.getDisplayOrder());
+      item.setDisplayName(dose.getDisplayName());
       item.setProductId(dose.getProductId());
       coverageItems.add(item);
     }
