@@ -10,7 +10,7 @@
 package org.openlmis.equipment.repository;
 
 import org.openlmis.equipment.domain.ProgramEquipment;
-import org.openlmis.equipment.repository.mapper.ProgramEquipmentMapper;
+import org.openlmis.equipment.repository.mapper.EquipmentProgramMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,21 +19,21 @@ import java.util.List;
 @Repository
 public class ProgramEquipmentRepository {
   @Autowired
-  ProgramEquipmentMapper programEquipmentMapper;
+  EquipmentProgramMapper equipmentProgramMapper;
 
   public List<ProgramEquipment> getByProgramId(Long programId){
-    return programEquipmentMapper.getByProgramId(programId);
+    return equipmentProgramMapper.getByProgramId(programId);
   }
 
   public void insert(ProgramEquipment programEquipment) {
-    programEquipmentMapper.insert(programEquipment);
+    equipmentProgramMapper.insert(programEquipment);
   }
 
   public void update(ProgramEquipment programEquipment) {
-    programEquipmentMapper.update(programEquipment);
+    equipmentProgramMapper.update(programEquipment);
   }
 
     public void remove(Long programEquipmentId){
-        programEquipmentMapper.remove(programEquipmentId);
+        equipmentProgramMapper.remove(programEquipmentId);
     }
 }

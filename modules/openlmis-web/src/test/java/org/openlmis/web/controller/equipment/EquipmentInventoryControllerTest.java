@@ -82,17 +82,6 @@ public class EquipmentInventoryControllerTest {
   }
 
   @Test
-  public void shouldGetPrograms() throws Exception {
-    List<Program> programs = asList(new Program());
-
-    when(service.getProgramList(1L)).thenReturn(programs);
-
-    ResponseEntity<OpenLmisResponse> response = controller.getPrograms(request);
-
-    assertThat(programs, is(response.getBody().getData().get("programs")));
-  }
-
-  @Test
   public void shouldGetInventory() throws Exception {
     EquipmentInventory inventory = new EquipmentInventory();
     when(service.getInventoryById(1L)).thenReturn(inventory);

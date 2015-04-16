@@ -21,18 +21,19 @@ import java.util.List;
 public interface EquipmentLineItemMapper {
 
   @Insert("INSERT INTO equipment_status_line_items (rnrId, code, equipmentName, equipmentCategory, equipmentModel, equipmentSerial, equipmentInventoryId, operationalStatusId, testCount, totalCount, daysOutOfUse, remarks, createdBy, createdDate, modifiedBy, modifiedDate) values (#{rnrId}, #{code}, #{equipmentName}, #{equipmentCategory}, #{equipmentModel}, #{equipmentSerial}, #{equipmentInventoryId}, #{operationalStatusId}, #{testCount}, #{totalCount}, #{daysOutOfUse}, #{remarks}, #{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate})")
-  public void insert(EquipmentLineItem item);
+  @Options(useGeneratedKeys = true)
+  Integer insert(EquipmentLineItem item);
 
   @Update("UPDATE equipment_status_line_items " +
       " SET " +
       "code = #{code}, equipmentName = #{equipmentName}, equipmentCategory = #{equipmentCategory}, equipmentModel = #{equipmentModel}, equipmentSerial = #{equipmentSerial}, equipmentInventoryId = #{equipmentInventoryId} " +
       " , operationalStatusId = #{operationalStatusId}, testCount = #{testCount}, totalCount = #{totalCount}, daysOutOfUse = #{daysOutOfUse}, remarks = #{remarks}, modifiedBy = #{modifiedBy}, modifiedDate = NOW()" +
       " where id = #{id}")
-  public void update(EquipmentLineItem item);
+  Integer update(EquipmentLineItem item);
 
   @Select("SELECT esli.id, sq.id as programEquipmentId, esli.* from equipment_status_line_items esli " +
-      "JOIN facility_program_equipments inv ON esli.equipmentInventoryId = inv.id " +
-      " LEFT JOIN ( select * from program_equipments e where e.programId in " +
+      "JOIN equipment_inventories inv ON esli.equipmentInventoryId = inv.id " +
+      " LEFT JOIN ( select * from equipment_programs e where e.programId in " +
       " (select max(programId) from requisitions where id = #{rnrId} ) ) sq" +
       " ON sq.equipmentId = inv.equipmentId" +
       " where " +
@@ -42,8 +43,7 @@ public interface EquipmentLineItemMapper {
           @Result(property = "id", column = "id"),
           @Result(property = "relatedProducts", javaType = List.class, column = "id", many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getRelatedRnrLineItems"))
   })
-
-  public List<EquipmentLineItem> getEquipmentLineItemsByRnrId(@Param("rnrId") Long rnrId);
+  List<EquipmentLineItem> getEquipmentLineItemsByRnrId(@Param("rnrId") Long rnrId);
 
 
   @Select("select rli.id, p.primaryName, p.code from " +
@@ -51,10 +51,11 @@ public interface EquipmentLineItemMapper {
       "         JOIN requisition_line_items rli on r.id = rli.rnrId " +
       "         JOIN products p on p.code::text = rli.productCode::text " +
       "         JOIN equipment_status_line_items esli on esli.rnrId = r.id " +
-      "         JOIN program_equipments pe on pe.programId = r.programId " +
-      "         JOIN program_equipment_products ep on pe.id = ep.programEquipmentId " +
+      "         JOIN equipment_programs pe on pe.programId = r.programId " +
+      "         JOIN equipment_inventories ep on pe.id = ep.programEquipmentId " +
       "               and p.id = ep.productId " +
       " WHERE " +
       "       esli.id = #{id}")
-  public List<Product> getRelatedRnrLineItems(@Param("id") Long id);
+
+   List<Product> getRelatedRnrLineItems(@Param("id") Long id);
 }

@@ -166,4 +166,13 @@ services.factory('RemoveProgramEquipmentProduct',function($resource){
     return $resource('/equipment/program-equipment-product/remove/:id.json',{},{});
 });
 
+/** manage inventory - list facilities */
+services.factory('EquipmentInventoryFacilities',function($resource){
+  return $resource('/equipment/inventory/supervised/facilities.json',{},{});
+});
+
+services.factory('ManageEquipmentInventoryFacilityProgramList', function($resource){
+  return $resource('/equipment/inventory/facility/programs.json',{},{});
+});
+
 

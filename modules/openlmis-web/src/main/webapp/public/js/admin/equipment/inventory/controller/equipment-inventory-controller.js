@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, CreateRequisitionProgramList, ManageEquipmentInventoryProgramList, UserSupervisedFacilitiesForProgram, navigateBackService, $routeParams, messageService) {
+function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories,  ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList,EquipmentInventoryFacilities, navigateBackService, $routeParams, messageService) {
 
   if ($routeParams.selectedType !== undefined) {
     $scope.selectedType = $routeParams.selectedType;
@@ -39,31 +39,27 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
         if ($scope.myFacility) {
           $scope.facilityDisplayName = $scope.myFacility.code + '-' + $scope.myFacility.name;
           $scope.selectedFacilityId = $scope.myFacility.id;
-          CreateRequisitionProgramList.get({facilityId: $scope.selectedFacilityId}, function (data) {
-            $scope.programs = data.programList;
-            if ($scope.programs && $routeParams.programId !== undefined) {
-              $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.programId})[0];
-            }
+          $scope.selectedProgram = undefined;
+          ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.selectedFacilityId}, function (data) {
+            $scope.programs = data.programs;
           }, {});
         } else {
           $scope.facilityDisplayName = messageService.get("label.none.assigned");
-          $scope.programs = null;
-          $scope.selectedProgram = null;
+          $scope.programs = undefined;
+          $scope.selectedProgram = undefined;
         }
       }, {});
     } else if (selectedType === "1") { // Supervised facility
       ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
-        if ($scope.programs && $routeParams.programId !== undefined) {
-          $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.programId})[0];
-        }
+        $scope.selectedFacilityId = undefined;
       }, {});
     }
   };
 
   $scope.loadFacilitiesForProgram = function () {
     if ($scope.selectedProgram.id && $scope.selectedType === '1') {
-      UserSupervisedFacilitiesForProgram.get({programId: $scope.selectedProgram.id}, function (data) {
+      EquipmentInventoryFacilities.get({programId: $scope.selectedProgram.id}, function (data) {
         $scope.facilities = data.facilities;
         $scope.selectedFacilityId = null;
         $scope.error = null;

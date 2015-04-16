@@ -20,7 +20,6 @@ import org.mockito.Mock;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,7 +30,7 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Product;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.equipment.domain.ProgramEquipmentProduct;
+import org.openlmis.equipment.domain.EquipmentProduct;
 import org.openlmis.equipment.service.ProgramEquipmentProductService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +62,7 @@ public class ProgramEquipmentProductControllerTest {
 
   @Test
   public void shouldGetByProgramEquipmentId() throws Exception {
-    List<ProgramEquipmentProduct> list = new ArrayList<>();
+    List<EquipmentProduct> list = new ArrayList<>();
     when(service.getByProgramEquipmentId(2L)).thenReturn(list);
 
     ResponseEntity<OpenLmisResponse> response = controller.getByProgramEquipmentId(2L);
@@ -72,7 +71,7 @@ public class ProgramEquipmentProductControllerTest {
 
   @Test
   public void shouldSave() throws Exception {
-    ProgramEquipmentProduct pep = new ProgramEquipmentProduct();
+    EquipmentProduct pep = new EquipmentProduct();
     doNothing().when(service).Save(pep);
 
     ResponseEntity<OpenLmisResponse> response = controller.save(pep, request);

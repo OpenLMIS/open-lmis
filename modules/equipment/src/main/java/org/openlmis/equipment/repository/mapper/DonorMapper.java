@@ -13,7 +13,7 @@ public interface DonorMapper {
   List<Donor> getAll();
 
   @Select("Select * from donors AS d " +
-      "LEFT JOIN (SELECT primaryDonorId AS id, Count(*) donationCount FROM facility_program_equipments fpi " +
+      "LEFT JOIN (SELECT primaryDonorId AS id, Count(*) donationCount FROM equipment_inventories fpi " +
       "          GROUP  BY primaryDonorId) AS x " +
       "          ON d.id = x.id " +
       " Order By d.shortName, d.longName")
