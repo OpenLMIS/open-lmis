@@ -40,7 +40,4 @@ public class EquipmentInventoryService {
     }
   }
 
-  public List<Program> getProgramList(Long userId) {
-    return repository.getProgramListForUser(userId);
-  }
 }

@@ -59,13 +59,4 @@ public interface EquipmentInventoryMapper {
       " WHERE id = #{id}")
   void update(EquipmentInventory inventory);
 
-  @Select({"SELECT DISTINCT p.*",
-    "FROM programs p",
-    "INNER JOIN role_assignments ra ON p.id = ra.programId",
-    "INNER JOIN role_rights rr ON ra.roleId = rr.roleId",
-    "WHERE ra.userId = #{userId}",
-    "AND ra.supervisoryNodeId IS NOT NULL",
-    "AND p.active = TRUE",
-    })
-  List<Program> getListOfProgramsForUser(@Param("userId") Long userId);
 }
