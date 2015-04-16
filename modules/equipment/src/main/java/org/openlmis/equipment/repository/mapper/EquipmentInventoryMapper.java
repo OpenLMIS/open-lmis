@@ -21,7 +21,7 @@ import java.util.List;
 @Repository
 public interface EquipmentInventoryMapper {
 
-  @Select("SELECT * from facility_program_equipments where facilityId = #{facilityId} and programId = #{programId}")
+  @Select("SELECT * from equipment_inventories where facilityId = #{facilityId} and programId = #{programId}")
   @Results({
       @Result(
           property = "equipment", column = "equipmentId", javaType = Equipment.class,
@@ -29,7 +29,7 @@ public interface EquipmentInventoryMapper {
   })
   List<EquipmentInventory> getInventoryByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId")Long programId);
 
-  @Select("SELECT * from facility_program_equipments where id = #{id}")
+  @Select("SELECT * from equipment_inventories where id = #{id}")
   @Results({
     @Result(property = "equipmentId", column = "equipmentId"),
     @Result(
@@ -38,7 +38,7 @@ public interface EquipmentInventoryMapper {
   })
   EquipmentInventory getInventoryById(@Param("id") Long id);
 
-  @Insert("INSERT into facility_program_equipments " +
+  @Insert("INSERT into equipment_inventories " +
       " ( facilityId, equipmentId, programId, operationalStatusId, serialNumber, manufacturerName, model" +
       ", energySource, yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
       ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned, hasServiceContract, serviceContractEndDate" +
@@ -50,7 +50,7 @@ public interface EquipmentInventoryMapper {
       ", #{primaryDonorId}, #{dimension}, #{capacity}, #{minTemperature}, #{maxTemperature}, #{accessories} , #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   void insert(EquipmentInventory inventory);
 
-  @Update("UPDATE facility_program_equipments " +
+  @Update("UPDATE equipment_inventories " +
       "SET " +
       " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, operationalStatusId = #{operationalStatusId}, serialNumber = #{serialNumber}, manufacturerName = #{manufacturerName}, model = #{model}, energySource = #{energySource}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, sourceOfFund = #{sourceOfFund},replacementRecommended = #{replacementRecommended},reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, dateLastAssessed = #{dateLastAssessed} " +
       " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, hasServiceContract = #{hasServiceContract}, serviceContractEndDate = #{serviceContractEndDate} , primaryDonorId = #{primaryDonorId} " +

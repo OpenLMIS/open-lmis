@@ -6,14 +6,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.equipment.domain.ProgramEquipmentProduct;
-import org.openlmis.equipment.repository.ProgramEquipmentProductRepository;
+import org.openlmis.equipment.domain.EquipmentProduct;
+import org.openlmis.equipment.repository.EquipmentProductRepository;
 
 
 @Category(UnitTests.class)
@@ -21,7 +20,7 @@ import org.openlmis.equipment.repository.ProgramEquipmentProductRepository;
 public class ProgramEquipmentProductServiceTest {
 
   @Mock
-  ProgramEquipmentProductRepository repository;
+  EquipmentProductRepository repository;
 
   @InjectMocks
   ProgramEquipmentProductService service;
@@ -34,7 +33,7 @@ public class ProgramEquipmentProductServiceTest {
 
   @Test
   public void shouldSaveNewRecords() throws Exception {
-    ProgramEquipmentProduct pp = new ProgramEquipmentProduct();
+    EquipmentProduct pp = new EquipmentProduct();
     service.Save(pp);
     verify(repository).insert(pp);
     verify(repository, never()).update(pp);
@@ -42,7 +41,7 @@ public class ProgramEquipmentProductServiceTest {
 
   @Test
   public void shouldUpdaetRecords() throws Exception {
-    ProgramEquipmentProduct pp = new ProgramEquipmentProduct();
+    EquipmentProduct pp = new EquipmentProduct();
     pp.setId(3L);
     service.Save(pp);
 

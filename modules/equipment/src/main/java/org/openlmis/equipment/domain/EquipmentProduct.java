@@ -21,7 +21,7 @@ import org.openlmis.core.domain.Product;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ProgramEquipmentProduct extends BaseModel {
+public class EquipmentProduct extends BaseModel {
   ProgramEquipment programEquipment;
   Product product;
 }

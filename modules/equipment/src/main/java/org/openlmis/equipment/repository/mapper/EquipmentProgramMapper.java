@@ -17,10 +17,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProgramEquipmentMapper {
+public interface EquipmentProgramMapper {
 
   @Select("select pe.*, e.name equipmentName, p.name programName " +
-      "from program_equipments pe " +
+      "from equipment_programs pe " +
       "join equipments e on e.id = pe.equipmentId " +
       "join programs p on p.id = pe.programId " +
       "where programId=#{programId} " +
@@ -33,16 +33,16 @@ public interface ProgramEquipmentMapper {
   })
   List<ProgramEquipment> getByProgramId(@Param(value = "programId") Long programId);
 
-  @Insert("INSERT INTO program_equipments(programId, equipmentId, displayOrder, enableTestCount, enableTotalColumn, createdBy, createdDate, modifiedBy, modifiedDate) " +
+  @Insert("INSERT INTO equipment_programs(programId, equipmentId, displayOrder, enableTestCount, enableTotalColumn, createdBy, createdDate, modifiedBy, modifiedDate) " +
       "VALUES (#{program.id},#{equipment.id},#{displayOrder}, #{enableTestCount},#{enableTotalColumn},#{createdBy},#{createdDate},#{modifiedBy},#{modifiedDate})")
   @Options(useGeneratedKeys = true)
   void insert(ProgramEquipment programEquipment);
 
-  @Update("UPDATE program_equipments " +
+  @Update("UPDATE equipment_programs " +
       "SET programId = #{program.id}, equipmentId = #{equipment.id}, displayOrder = #{displayOrder}, enableTestCount = #{enableTestCount}, enableTotalColumn = #{enableTotalColumn},modifiedBy = #{modifiedBy},modifiedDate = #{modifiedDate} " +
       "WHERE id = #{id}")
   void update(ProgramEquipment programEquipment);
 
-  @Delete("DELETE FROM program_equipments WHERE id = #{programEquipmentId}")
+  @Delete("DELETE FROM equipment_programs WHERE id = #{programEquipmentId}")
   void remove(Long programEquipmentId);
 }
