@@ -32,7 +32,7 @@ function NavigationController($scope, localStorageService, Locales, $location, $
 $scope.homeLinkClicked=function(){
     var homePath= $scope.hasPermission('VIEW_DASHBOARD_POC')?"/public/pages/dashboard/index.html#/dashboard":'/';
     $window.location.href= homePath;
-}
+};
   $scope.hasPermission = function (permission) {
     if ($scope.rights !== undefined && $scope.rights !== null) {
       var rights = JSON.parse($scope.rights);
