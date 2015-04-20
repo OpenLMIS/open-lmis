@@ -10,6 +10,7 @@
 
 package org.openlmis.vaccine.repository;
 
+import org.openlmis.vaccine.domain.VaccineDose;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.repository.mapper.ProductDoseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,10 @@ public class ProductDoseRepository {
 
   public List<VaccineProductDose> getDosesForProduct(Long programId, Long productId){
     return mapper.getDoseSettingByProduct(programId, productId);
+  }
+
+  public List<VaccineDose> getAllDoses(){
+    return mapper.getAllDoses();
   }
 
   public List<VaccineProductDose> getProgramProductDoses(Long programId) {

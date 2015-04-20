@@ -10,10 +10,12 @@
 
 package org.openlmis.vaccine.service;
 
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.dto.ProductDoseProtocolDTO;
+import org.openlmis.vaccine.dto.VaccineServiceProtocolDTO;
 import org.openlmis.vaccine.repository.ProductDoseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,21 +32,30 @@ public class VaccineProductDoseService {
   @Autowired
   private ProgramProductRepository programProductRepository;
 
-  public List<ProductDoseProtocolDTO> getProductDoseForProgram( Long programId ){
+  public void getProductDoseForProgram( Long programId, VaccineServiceProtocolDTO dto){
 
     List<ProductDoseProtocolDTO> protocols= new ArrayList<>();
     List<ProgramProduct> pp = programProductRepository.getActiveByProgram(programId);
+    List<Product> products = new ArrayList<>();
     for(ProgramProduct p : pp){
       if(!p.getProduct().getFullSupply()){
         continue;
       }
-      ProductDoseProtocolDTO protocol= new ProductDoseProtocolDTO();
-      protocol.setProductId(p.getProduct().getId());
-      protocol.setProductName(p.getProduct().getName());
-      protocol.setDoses(repository.getDosesForProduct( programId, p.getProduct().getId()));
-      protocols.add(protocol);
+      List<VaccineProductDose> doses = repository.getDosesForProduct( programId, p.getProduct().getId());
+      if(doses.size() > 0) {
+        ProductDoseProtocolDTO protocol = new ProductDoseProtocolDTO();
+        protocol.setProductId(p.getProduct().getId());
+        protocol.setProductName(p.getProduct().getName());
+        protocol.setDoses(doses);
+        protocols.add(protocol);
+      }else{
+        //these are the possible other products.
+        products.add(p.getProduct());
+      }
     }
-    return protocols;
+    dto.setPossibleDoses(repository.getAllDoses());
+    dto.setPossibleProducts(products);
+    dto.setProtocols(protocols);
   }
 
   public List<VaccineProductDose> getForProgram(Long programId){

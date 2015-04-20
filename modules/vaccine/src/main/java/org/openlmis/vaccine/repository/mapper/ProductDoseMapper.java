@@ -11,6 +11,7 @@
 package org.openlmis.vaccine.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.vaccine.domain.VaccineDose;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.springframework.stereotype.Repository;
 
@@ -43,4 +44,7 @@ public interface ProductDoseMapper {
 
   @Select("select d.* from vaccine_product_doses d  where programId = #{programId}")
   List<VaccineProductDose> getProgramProductDoses(@Param("programId") Long programId);
+
+  @Select("select * from vaccine_doses order by displayOrder")
+  List<VaccineDose> getAllDoses();
 }
