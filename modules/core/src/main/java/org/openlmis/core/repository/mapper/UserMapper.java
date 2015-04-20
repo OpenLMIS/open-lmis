@@ -86,10 +86,6 @@ public interface UserMapper {
   int insertEmailNotification(@Param(value = "receiver") String receiver, @Param(value = "subject") String subject,
                               @Param(value = "content") String content);
 
-  @Update("UPDATE users SET password = #{password} WHERE id = #{userId}")
-  void updateUserPassword(@Param(value = "userId") Long userId, @Param(value = "password") String password);
-
-
   @Update("UPDATE users SET active = FALSE, modifiedBy = #{modifiedBy}, modifiedDate = NOW() WHERE id = #{userId}")
   void disable(@Param(value = "userId") Long userId, @Param(value = "modifiedBy") Long modifiedBy);
 
