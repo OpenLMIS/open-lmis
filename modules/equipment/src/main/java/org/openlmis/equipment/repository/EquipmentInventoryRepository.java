@@ -40,7 +40,4 @@ public class EquipmentInventoryRepository {
     mapper.update( inventory );
   }
 
-  public List<Program> getProgramListForUser(Long userId) {
-    return mapper.getListOfProgramsForUser(userId);
-  }
 }

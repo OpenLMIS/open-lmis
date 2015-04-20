@@ -26,6 +26,12 @@ public class VaccineProductDose extends BaseModel {
   Long doseId;
   Long programId;
   Long productId;
-  Boolean isActive;
 
+  String displayName;
+  Long displayOrder;
+
+  Boolean trackMale;
+  Boolean trackFemale;
+
+  Long denominatorEstimateCategoryId;
 }

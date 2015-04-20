@@ -11,7 +11,7 @@
 package org.openlmis.web.controller.equipment;
 
 import org.openlmis.core.exception.DataException;
-import org.openlmis.equipment.domain.ProgramEquipmentProduct;
+import org.openlmis.equipment.domain.EquipmentProduct;
 import org.openlmis.equipment.service.ProgramEquipmentProductService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -40,27 +40,27 @@ public class ProgramEquipmentProductController extends BaseController{
 
   @RequestMapping(value = "save", method = RequestMethod.POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody ProgramEquipmentProduct programEquipmentProduct, HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentProduct equipmentProduct, HttpServletRequest request){
     Date date = new Date();
     Long userId = loggedInUserId(request);
     ResponseEntity<OpenLmisResponse> successResponse;
 
-    if(programEquipmentProduct.getId() == null){
-      programEquipmentProduct.setCreatedDate(date);
-      programEquipmentProduct.setCreatedBy(userId);
+    if(equipmentProduct.getId() == null){
+      equipmentProduct.setCreatedDate(date);
+      equipmentProduct.setCreatedBy(userId);
     }
-    programEquipmentProduct.setModifiedDate(date);
-    programEquipmentProduct.setModifiedBy(userId);
+    equipmentProduct.setModifiedDate(date);
+    equipmentProduct.setModifiedBy(userId);
 
     try{
-      programEquipmentProductService.Save(programEquipmentProduct);
+      programEquipmentProductService.Save(equipmentProduct);
     }
     catch (DataException e){
       return OpenLmisResponse.error(e, HttpStatus.BAD_REQUEST);
     }
 
     successResponse = OpenLmisResponse.success("message.equipment.association.pep.saved");
-    successResponse.getBody().addData("programEquipmentProduct",programEquipmentProduct);
+    successResponse.getBody().addData("programEquipmentProduct", equipmentProduct);
     return successResponse;
   }
 

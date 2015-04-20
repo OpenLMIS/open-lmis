@@ -35,10 +35,6 @@ public class ProductDoseRepository {
     return mapper.getDoseSettingByProduct(programId, productId);
   }
 
-  public List<VaccineProductDose> getEmptyDosesForProduct(Long programId, Long productId){
-    return mapper.getEmptySettingByProduct(programId, productId);
-  }
-
   public List<VaccineProductDose> getProgramProductDoses(Long programId) {
     return mapper.getProgramProductDoses(programId);
   }

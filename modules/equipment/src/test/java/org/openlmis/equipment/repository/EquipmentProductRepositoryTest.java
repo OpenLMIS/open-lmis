@@ -6,25 +6,23 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.equipment.domain.ProgramEquipmentProduct;
-import org.openlmis.equipment.repository.mapper.ProgramEquipmentMapper;
-import org.openlmis.equipment.repository.mapper.ProgramEquipmentProductMapper;
+import org.openlmis.equipment.domain.EquipmentProduct;
+import org.openlmis.equipment.repository.mapper.EquipmentProductMapper;
 
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class ProgramEquipmentProductRepositoryTest {
+public class EquipmentProductRepositoryTest {
 
   @Mock
-  ProgramEquipmentProductMapper mapper;
+  EquipmentProductMapper mapper;
 
   @InjectMocks
-  ProgramEquipmentProductRepository repository;
+  EquipmentProductRepository repository;
 
   @Test
   public void shouldGetByProgramEquipmentId() throws Exception {
@@ -35,7 +33,7 @@ public class ProgramEquipmentProductRepositoryTest {
 
   @Test
   public void shouldInsert() throws Exception {
-    ProgramEquipmentProduct product = new ProgramEquipmentProduct();
+    EquipmentProduct product = new EquipmentProduct();
 
     repository.insert(product);
 
@@ -44,7 +42,7 @@ public class ProgramEquipmentProductRepositoryTest {
 
   @Test
   public void shouldUpdate() throws Exception {
-    ProgramEquipmentProduct product = new ProgramEquipmentProduct();
+    EquipmentProduct product = new EquipmentProduct();
 
     repository.update(product);
 

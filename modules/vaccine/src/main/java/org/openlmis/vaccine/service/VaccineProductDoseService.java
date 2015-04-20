@@ -42,9 +42,6 @@ public class VaccineProductDoseService {
       protocol.setProductId(p.getProduct().getId());
       protocol.setProductName(p.getProduct().getName());
       protocol.setDoses(repository.getDosesForProduct( programId, p.getProduct().getId()));
-      if(protocol.getDoses() == null || protocol.getDoses().size() == 0){
-        protocol.setDoses(repository.getEmptyDosesForProduct(programId, p.getProduct().getId()));
-      }
       protocols.add(protocol);
     }
     return protocols;

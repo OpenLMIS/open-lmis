@@ -10,10 +10,7 @@
 
 package org.openlmis.vaccine.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.springframework.stereotype.Repository;
 
@@ -25,24 +22,24 @@ public interface ProductDoseMapper {
   @Select("select pd.* from vaccine_product_doses pd join vaccine_doses d on d.id = pd.doseId where productId = #{productId} and pd.programId = #{programId} order by d.displayOrder")
   List<VaccineProductDose> getDoseSettingByProduct(@Param("programId") Long programId, @Param("productId") Long productId);
 
-  @Select("select d.id as doseId, #{programId} as programId, false as isActive, #{productId} as productId from vaccine_doses d order by d.displayOrder")
-  List<VaccineProductDose> getEmptySettingByProduct(@Param("programId") Long programId, @Param("productId") Long productId);
-
-  @Insert("insert into vaccine_product_doses (doseId, programId, productId, isActive, createdBy, modifiedBy) " +
+  @Insert("insert into vaccine_product_doses (doseId, programId, productId, displayName, displayOrder, trackMale, trackFemale, denominatorEstimateCategoryId, createdBy, modifiedBy) " +
     " values " +
-    " ( #{doseId}, #{programId} , #{productId}, #{isActive},#{createdBy}, #{modifiedBy} )")
-  void insert(VaccineProductDose dose);
+    " ( #{doseId}, #{programId} , #{productId}, #{displayName}, #{displayOrder}, #{trackMale}, #{trackFemale}, #{denominatorEstimateCategoryId}, #{createdBy}, #{modifiedBy} )")
+  @Options(useGeneratedKeys = true)
+  Integer insert(VaccineProductDose dose);
 
   @Update("update vaccine_product_doses " +
     " set " +
     " doseId = #{doseId}," +
     " programId = #{programId}, " +
     " productId = #{productId}, " +
-    " isActive = #{isActive}," +
+    " displayName = #{displayName}, " +
+    " displayOrder = #{displayOrder}, " +
+    " denominatorEstimateCategoryId = #{denominatorEstimateCategoryId}," +
     " modifiedBy = #{modifiedBy}, " +
     " modifiedDate = CURRENT_TIMESTAMP" +
     " where id = #{id}")
-  void update(VaccineProductDose dose);
+  Integer update(VaccineProductDose dose);
 
   @Select("select d.* from vaccine_product_doses d  where programId = #{programId}")
   List<VaccineProductDose> getProgramProductDoses(@Param("programId") Long programId);

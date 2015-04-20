@@ -6,13 +6,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.ProgramEquipment;
-import org.openlmis.equipment.repository.mapper.ProgramEquipmentMapper;
+import org.openlmis.equipment.repository.mapper.EquipmentProgramMapper;
 
 
 @Category(UnitTests.class)
@@ -20,7 +19,7 @@ import org.openlmis.equipment.repository.mapper.ProgramEquipmentMapper;
 public class ProgramEquipmentRepositoryTest {
 
   @Mock
-  ProgramEquipmentMapper mapper;
+  EquipmentProgramMapper mapper;
 
   @InjectMocks
   ProgramEquipmentRepository repository;
