@@ -18,7 +18,7 @@ function OpenLmisFooterController($scope, localStorageService, loginConfig,$cook
         }else {
             fullPath='/'+relativePath+'_' + locale_string;
         }
-         $window.location.href= "/public/site/index.html#"+fullPath;
+              $window.location.href= "/public/site/index.html#"+fullPath;
 
 
     };

@@ -12,8 +12,8 @@
 
  <div class="footer">
 
-     <div class="link-section">
-         <div class="aboutus-links" ng-controller="OpenLmisFooterController">
+     <div class="link-section"  ng-controller="OpenLmisFooterController">
+         <div class="aboutus-links" >
              <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.about"></span>
              <ul class="footer-link-list">
                  <li>
@@ -75,16 +75,16 @@
              <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.orderprocessing"></span>
              <ul class="footer-link-list">
                  <li>
-                     <a  openlmis-message="open.static.pages.footer.link.rrsubmissions">   </a>
+                     <a ng-click="navigateToPage('randr-submisssions')"  openlmis-message="open.static.pages.footer.link.rrsubmissions">   </a>
                  </li>
                  <li>
-                     <a  openlmis-message="open.static.pages.footer.link.orderfulfilment"> </a>
+                     <a ng-click="navigateToPage('order-fullfilment')"  openlmis-message="open.static.pages.footer.link.orderfulfilment"> </a>
                  </li>
                  <li>
-                     <a  openlmis-message="open.static.pages.footer.link.delivery"> </a>
+                     <a ng-click="navigateToPage('delivery')"  openlmis-message="open.static.pages.footer.link.delivery"> </a>
                  </li>
                  <li>
-                     <a  openlmis-message="open.static.pages.footer.link.proofofdelivery"> </a>
+                     <a ng-click="navigateToPage('proof-of-delivery')"  openlmis-message="open.static.pages.footer.link.proofofdelivery"> </a>
                  </li>
 
              </ul>
@@ -94,16 +94,16 @@
              <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.reports"></span>
              <ul class="footer-link-list">
                  <li>
-                  <a  openlmis-message="open.static.pages.footer.link.stockstatussummary">  </a>
+                  <a ng-click="navigateToPage('stock-status-summary')"  openlmis-message="open.static.pages.footer.link.stockstatussummary">  </a>
                  </li>
                  <li>
-                     <a  openlmis-message="open.static.pages.footer.link.consumptiontrend">    </a>
+                     <a ng-click="navigateToPage('consumption-trend')"  openlmis-message="open.static.pages.footer.link.consumptiontrend">    </a>
                  </li>
                  <li>
-                     <a  openlmis-message="open.static.pages.footer.link.dashboard">  </a>
+                     <a ng-click="navigateToPage('dashboard')"  openlmis-message="open.static.pages.footer.link.dashboard">  </a>
                  </li>
                  <li>
-                     <a  openlmis-message="open.static.pages.footer.link.gismaps"></a>
+                     <a ng-click="navigateToPage('gis-maps')"  openlmis-message="open.static.pages.footer.link.gismaps"></a>
                  </li>
 
              </ul>

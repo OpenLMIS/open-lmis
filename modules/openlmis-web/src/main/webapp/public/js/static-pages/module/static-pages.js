@@ -30,5 +30,17 @@ staticPages.config(['$routeProvider', function ($routeProvider) {
         when('/about-elmis_pt', {controller: StaticPageController, templateUrl: 'partials/about-elmis_pt.html'}).
         when('/about-ehealth_pt', {controller: StaticPageController, templateUrl: 'partials/about-ehealth_pt.html'}).
         when('/about-openlmis_pt', {controller: StaticPageController, templateUrl: 'partials/about-openlmis_pt.html'}).
+        //        Order Processing
+        when('/delivery', {controller: StaticPageController, templateUrl: 'partials/order-processing/delivery.html'}).
+        when('/order-fullfilment', {controller: StaticPageController, templateUrl: 'partials/order-processing/order-fullfilment.html'}).
+        when('/proof-of-delivery', {controller: StaticPageController, templateUrl: 'partials/order-processing/proof-of-delivery.html'}).
+        when('/randr-submisssions', {controller: StaticPageController, templateUrl: 'partials/order-processing/RandR-submissions.html'}).
+
+        //        Reports
+        when('/consumption-trend', {controller: StaticPageController, templateUrl: 'partials/reports/consumption-trend.html'}).
+        when('/dashboard', {controller: StaticPageController, templateUrl: 'partials/reports/dashboard.html'}).
+        when('/gis-maps', {controller: StaticPageController, templateUrl: 'partials/reports/gis-maps.html'}).
+        when('/stock-status-summary', {controller: StaticPageController, templateUrl: 'partials/reports/stock-status-summary.html'}).
+
         otherwise({redirectTo: '/home'});
 }]);
