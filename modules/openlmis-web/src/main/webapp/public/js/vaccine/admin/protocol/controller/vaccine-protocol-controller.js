@@ -25,10 +25,16 @@ function VaccineProtocolController($scope, programs, protocol, SaveVaccineProduc
       $scope.message = 'Protocol Saved Successfully';
     });
   };
+
+  $scope.addProduct = function(product, scope){
+    scope.showAddNewModal = false;
+    var dose = $scope.protocol.possibleDoses[0]
+    $scope.protocol.protocols.push({productName: product.primaryName, doses: [{doseId: dose.id, productId: product.id, programId: $scope.program, displayName: dose.displayName, trackMale: true, trackFemale: true}]});
+  };
 }
 
 VaccineProtocolController.resolve = {
-  protocol : function($q,$timeout, $route, VaccineProductDose){
+  protocol : function($q, $timeout, $route, VaccineProductDose){
     var deferred = $q.defer();
 
     if($route.current.params.program)
