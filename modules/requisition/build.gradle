@@ -19,6 +19,7 @@ dependencies {
             project(':modules:equipment')
 
     testCompile  project(path : ':modules:core', configuration: 'testFixtures')
+    testCompile  project(path : ':modules:equipment', configuration: 'testFixtures')
 
     configurations {
         testFixtures {

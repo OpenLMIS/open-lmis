@@ -12,6 +12,11 @@ public class EquipmentInventoryBuilder {
     @Override
     public EquipmentInventory instantiate(PropertyLookup<EquipmentInventory> lookup) {
       EquipmentInventory item = new EquipmentInventory();
+      item.setOperationalStatusId(1L);
+      item.setIsActive(true);
+
+      item.setHasServiceContract(false);
+      item.setModel("234");
       return item;
     }
   };
