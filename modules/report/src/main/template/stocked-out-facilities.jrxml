@@ -77,7 +77,7 @@ WHERE
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<textFieldExpression><![CDATA[#R{label.line.no}}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{label.line.no}}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement uuid="f8f048d4-4d87-4c65-91e7-121d0ea26dae" mode="Transparent" x="0" y="0" width="130" height="20" forecolor="#000000" backcolor="#333333"/>
