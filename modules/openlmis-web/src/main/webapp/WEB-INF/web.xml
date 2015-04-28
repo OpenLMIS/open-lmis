@@ -74,8 +74,4 @@
         <exception-type>java.lang.Exception</exception-type>
         <location>/public/pages/error-page.html</location>
     </error-page>
-    <welcome-file-list>
-        <welcome-file>public/site/index.html#/home</welcome-file>
-    </welcome-file-list>
-
 </web-app>
