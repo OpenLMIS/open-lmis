@@ -123,7 +123,9 @@ public class OrderFtpTask {
         logger.error("Error in ftp of order file", e);
         updateOrder(order, TRANSFER_FAILED, null);
       } finally {
-        file.delete();
+        if(sendFtp) {
+          file.delete();
+        }
       }
     }
   }
