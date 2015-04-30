@@ -13,16 +13,12 @@
     <div class="pull-right">
       <a class="btn btn-primary" openlmis-message="link.add.new" ng-click="showAddNewModal=true"></a>
     </div>
-
-    <span openlmis-message="label.vaccine.coverage.check.doses"></span>
-
-
-
     <div ng-show="protocol.protocols.length == 0">
       <span openlmis-message="label.vaccine.no.products.added.yet"></span>
     </div>
     <div class="clearfix"></div>
-    <div class="span9">
+    <div class="span9" ng-show="protocol.protocols.length > 0">
+      <span openlmis-message="label.vaccine.coverage.check.doses"></span>
       <table class="table table-bordered">
         <thead>
         <th style="width: 300px;" class="col-product"><span openlmis-message="label.product"></span></th>
@@ -30,19 +26,21 @@
         <th><span openlmis-message="label.vaccine.coverage.display.name"></span></th>
         <th><span openlmis-message="label.vaccine.coverage.track.male"></span></th>
         <th><span openlmis-message="label.vaccine.coverage.track.female"></span></th>
-        <th><span openlmis-message="label.vaccine.coverage.actions"></span></th>
+        <th style="width: 100px;" ><span openlmis-message="label.vaccine.coverage.actions"></span></th>
         </thead>
         <tbody>
           <tr ng-repeat-start="product in protocol.protocols"> </tr>
           <tr ng-repeat-start="dose in product.doses">
             <td  ng-if="$index == 0" rowspan="{{product.doses.length * 2}}">{{ product.productName }}</td>
-            <td class="col-general cell-input"><input type="text" ng-model="dose.displayOrder"></td>
-            <td class="col-general cell-input"><input type="text" ng-model="dose.displayName"></td>
-            <td class="col-general cell-input padding2px" ><input type="checkbox" ng-model="dose.trackMale"></td>
-            <td class="col-general cell-input padding2px"><input type="checkbox" ng-model="dose.trackFemale"></td>
+            <td class="col-general cell-input"><span class="cell-text number padding2px" ng-bind="dose.displayOrder"></td>
+            <td class="col-general cell-input padding2px"><input type="text" ng-model="dose.displayName"></td>
+            <td class="col-general cell-input padding2px" style="text-align: center;"><input type="checkbox" ng-model="dose.trackMale"></td> 
+            <td class="col-general cell-input padding2px" style="text-align: center;"><input type="checkbox" ng-model="dose.trackFemale"></td>
             <td>
               <span ng-show="($index + 1) == product.doses.length">
-                <a> <i class="fa fa-plus-circle"></i><span openlmis-message="button.add"></span></a>
+                <a ng-show="product.doses.length < protocol.possibleDoses.length" href="" ng-click="addDosageForProduct(product)"> <i class="fa fa-plus-circle"></i><span openlmis-message="button.add"></span></a>
+                |
+                <a href="" ng-click="removeDosageFromProduct(product)"> <i class="fa fa-plus-circle"></i><span openlmis-message="button.remove"></span></a>
               </span>
             </td>
           </tr>
@@ -63,12 +61,10 @@
               <select id="product" ng-model="product" ng-options="p.primaryName for p in protocol.possibleProducts">
               </select>
             </div>
-
             <div class="clearfix"></div>
-
             <div class="form-field">
-              <a ng-click="addProduct(product,this);" class="btn btn-primary" openlmis-message="button.add"></a>
-              <a ng-click="showAddNewModal=false" class="btn btn-cancel" openlmis-message="button.cancel"></a>
+              <a href="" ng-click="addProduct(product,this);" class="btn btn-primary" openlmis-message="button.add"></a> 
+              <a href="" ng-click="showAddNewModal=false" class="btn btn-cancel" openlmis-message="button.cancel"></a>
             </div>
         </div>
         </form>
