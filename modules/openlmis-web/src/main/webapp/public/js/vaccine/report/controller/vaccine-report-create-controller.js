@@ -90,8 +90,10 @@ function CreateVaccineReportController($scope, $location, $filter, report,discar
   };
 
   $scope.toNumber = function(val){
-    if(angular.isDefined(val))
+    if(angular.isDefined(val) && val !== null)
+    {
       return parseInt(val, 10);
+    }
     return 0;
   };
 

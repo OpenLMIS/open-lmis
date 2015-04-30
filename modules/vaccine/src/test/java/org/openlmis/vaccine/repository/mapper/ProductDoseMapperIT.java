@@ -35,6 +35,7 @@ import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.vaccine.domain.VaccineDose;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -92,7 +93,7 @@ public class ProductDoseMapperIT {
 
     List<VaccineProductDose> doses = mapper.getDoseSettingByProduct(program.getId(), product.getId());
     assertThat(doses.size(), is(1));
-    assertThat(doses.get(0),is(dose));
+    assertThat(doses.get(0), is(dose));
   }
 
   @Test
@@ -123,6 +124,16 @@ public class ProductDoseMapperIT {
     List<VaccineProductDose> doses = mapper.getProgramProductDoses(program.getId());
     assertThat(doses.size(), is(1));
     assertThat(doses.get(0),is(dose));
+  }
 
+  @Test
+  public void shouldGetAllPossibleDoses() throws Exception{
+    List<VaccineDose> doses = mapper.getAllDoses();
+    assertThat(doses.size(), is(6));
+  }
+
+  @Test
+  public void shouldDeleteProgramById() throws Exception{
+    mapper.deleteByProgram(1L);
   }
 }

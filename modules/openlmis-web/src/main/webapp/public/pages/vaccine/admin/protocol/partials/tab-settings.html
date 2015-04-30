@@ -9,20 +9,15 @@
   -->
 
 <div>
-
-  <div>
-
-    <div class="form-row clearfix row-fluid" ng-repeat="setting in protocol.tabVisibilitySettings">
+    <div class="row-fluid" ng-repeat="setting in protocol.tabVisibilitySettings">
       <div class="span4">
         <div class="form-cell">
-          <label id="productCodeLabel">
-            <input ng-model="setting.value" ng-true-value="true" ng-false-value="false" type="checkbox" />
+          <label>
+            <input id="{{setting.key}}" ng-model="setting.value" ng-true-value="true" ng-false-value="false" type="checkbox" />
             <span ng-bind="setting.name"></span>
-
           </label>
         </div>
       </div>
-
     </div>
   </div>
 </div>

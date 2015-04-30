@@ -34,9 +34,7 @@ public class ProductDoseController extends BaseController{
   @RequestMapping(value = "get/{programId}")
   public ResponseEntity<OpenLmisResponse> getProgramProtocol(@PathVariable Long programId){
     VaccineServiceProtocolDTO dto = new VaccineServiceProtocolDTO();
-    dto.setProtocols(service.getProductDoseForProgram(programId));
-    dto.setTrackCampaign(settingService.getBoolValue("TRACK_VACCINE_CAMPAIGN_COVERAGE"));
-    dto.setTrackOutreach(settingService.getBoolValue("TRACK_VACCINE_OUTREACH_COVERAGE"));
+    service.getProductDoseForProgram(programId, dto);
     dto.setTabVisibilitySettings(settingService.getSearchResults("VACCINE_TAB%"));
     return OpenLmisResponse.response("protocol",dto );
   }
@@ -45,8 +43,6 @@ public class ProductDoseController extends BaseController{
   @RequestMapping(value = "save", headers = ACCEPT_JSON, method = RequestMethod.PUT)
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineServiceProtocolDTO protocol){
     service.save( protocol.getProtocols() );
-    settingService.saveBooleanValue("TRACK_VACCINE_CAMPAIGN_COVERAGE", protocol.getTrackCampaign());
-    settingService.saveBooleanValue("TRACK_VACCINE_OUTREACH_COVERAGE", protocol.getTrackOutreach());
     for(ConfigurationSetting setting: protocol.getTabVisibilitySettings()){
       settingService.saveBooleanValue(setting.getKey(), Boolean.parseBoolean(setting.getValue()));
     }

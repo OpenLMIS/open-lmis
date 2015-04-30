@@ -8,25 +8,37 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.dto;
+package org.openlmis.vaccine.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ConfigurationSetting;
-import org.openlmis.core.domain.Product;
-import org.openlmis.vaccine.domain.VaccineDose;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
-import java.util.List;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class VaccineServiceProtocolDTO {
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 
-  private List<ConfigurationSetting> tabVisibilitySettings;
-  private List<ProductDoseProtocolDTO> protocols;
-  private List<Product> possibleProducts;
-  private List<VaccineDose> possibleDoses;
 
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
+public class VaccineProductDoseServiceTest {
+
+  @Test
+  public void shouldGetProductDoseForProgram() throws Exception {
+
+  }
+
+  @Test
+  public void shouldGetForProgram() throws Exception {
+
+  }
+
+  @Test
+  public void shouldSave() throws Exception {
+
+  }
 }

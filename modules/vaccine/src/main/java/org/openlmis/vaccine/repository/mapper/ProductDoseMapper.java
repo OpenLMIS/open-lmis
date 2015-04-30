@@ -11,6 +11,7 @@
 package org.openlmis.vaccine.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.vaccine.domain.VaccineDose;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +20,11 @@ import java.util.List;
 @Repository
 public interface ProductDoseMapper {
 
-  @Select("select pd.* from vaccine_product_doses pd join vaccine_doses d on d.id = pd.doseId where productId = #{productId} and pd.programId = #{programId} order by d.displayOrder")
+  @Select("select pd.* from vaccine_product_doses pd " +
+      " join vaccine_doses d on d.id = pd.doseId " +
+      " where " +
+      " productId = #{productId} and pd.programId = #{programId} " +
+      " order by pd.displayOrder")
   List<VaccineProductDose> getDoseSettingByProduct(@Param("programId") Long programId, @Param("productId") Long productId);
 
   @Insert("insert into vaccine_product_doses (doseId, programId, productId, displayName, displayOrder, trackMale, trackFemale, denominatorEstimateCategoryId, createdBy, modifiedBy) " +
@@ -43,4 +48,10 @@ public interface ProductDoseMapper {
 
   @Select("select d.* from vaccine_product_doses d  where programId = #{programId}")
   List<VaccineProductDose> getProgramProductDoses(@Param("programId") Long programId);
+
+  @Select("select * from vaccine_doses order by displayOrder")
+  List<VaccineDose> getAllDoses();
+
+  @Delete("delete from vaccine_product_doses where programId = #{programId}")
+  void deleteByProgram(@Param("programId") Long programId);
 }
