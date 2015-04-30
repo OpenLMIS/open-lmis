@@ -13,45 +13,75 @@
 
   <table class="table table-bordered">
     <thead>
-    <tr>
-      <th ng-class="{'span2': report.trackCampaignCoverage, 'span5':!report.trackCampaignCoverage }" rowspan="2"><span openlmis-message="label.vaccine.coverage.product"></span></th>
-      <th class="span1" colspan="{{getColSpan()}}"><span openlmis-message="label.vaccine.coverage.dose1"></span></th>
-      <th class="span1" colspan="{{getColSpan()}}"><span openlmis-message="label.vaccine.coverage.dose2"></span></th>
-      <th class="span1" colspan="{{getColSpan()}}"><span openlmis-message="label.vaccine.coverage.dose3"></span></th>
-      <th class="span1" colspan="{{getColSpan()}}"><span openlmis-message="label.vaccine.coverage.dose4"></span></th>
-      <th class="span1" colspan="{{getColSpan()}}"><span openlmis-message="label.vaccine.coverage.dose5"></span></th>
-    </tr>
-    <tr>
-      <th><span openlmis-message="label.vaccine.coverage.routine"></span></th>
-      <th ng-show="report.trackOutreachCoverage"><span openlmis-message="label.vaccine.coverage.outreach"></span></th>
-      <th ng-show="report.trackCampaignCoverage"><span openlmis-message="label.vaccine.coverage.campaign"></span></th>
-      <th><span openlmis-message="label.vaccine.coverage.routine"></span></th>
-      <th ng-show="report.trackOutreachCoverage"><span openlmis-message="label.vaccine.coverage.outreach"></span></th>
-      <th ng-show="report.trackCampaignCoverage"><span openlmis-message="label.vaccine.coverage.campaign"></span></th>
-      <th ><span openlmis-message="label.vaccine.coverage.routine"></span></th>
-      <th ng-show="report.trackOutreachCoverage"><span openlmis-message="label.vaccine.coverage.outreach"></span></th>
-      <th ng-show="report.trackCampaignCoverage"><span openlmis-message="label.vaccine.coverage.campaign"></span></th>
-      <th><span openlmis-message="label.vaccine.coverage.routine"></span></th>
-      <th ng-show="report.trackOutreachCoverage"><span openlmis-message="label.vaccine.coverage.outreach"></span></th>
-      <th ng-show="report.trackCampaignCoverage"><span openlmis-message="label.vaccine.coverage.campaign"></span></th>
-      <th><span openlmis-message="label.vaccine.coverage.routine"></span></th>
-      <th ng-show="report.trackOutreachCoverage"><span openlmis-message="label.vaccine.coverage.outreach"></span></th>
-      <th ng-show="report.trackCampaignCoverage"><span openlmis-message="label.vaccine.coverage.campaign"></span></th>
-    </tr>
+      <tr>
+        <th></th>      
+        <th></th>   
+        <th colspan="10">Monthly Vaccination</th>  
+        <th colspan="5">Cummulative Coverage</th>  
+      </tr>
+      <tr>
+        <th></th>      
+        <th></th>   
+        <th colspan="4">Within Catchment</th>    
+        <th colspan="4">Outside Catchment</th> 
+        <th colspan="2">Total Vaccination</th>  
+        <th colspan="2">Witin Catchement</th>
+        <th>Outside</th>
+        <th colspan="2">Total</th>
+      </tr>
+      <tr>
+        <th>Product</th>
+        <th>Doses</th>
+        <th>Male</th>
+        <th>Female</th>
+        <th>Total</th>
+        <th>Coverage</th>
+        <th>Male</th>
+        <th>Female</th>
+        <th>Total</th>
+        <th>Coverage</th>
+        <th>Total</th>
+        <th>Coverage</th>
+        <th>Total</th>
+        <th>Coverage</th>
+        <th>Total</th>
+        <th>Total</th>
+        <th>Coverage</th>
+      </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="product in report.coverageLineItems">
-      <td class="col-product cell-input" ng-class="{'span2': report.trackCampaignCoverage, 'span5':!report.trackCampaignCoverage }" ><span class="cell-text">{{product.productName}}</span></td>
-      <td class="cell-input col-beginningBalance" ng-repeat-start="dose in product.items">
-        <input  numeric-validator="positiveInteger"  ng-disabled="!dose.isActive" ng-model="dose.regular" type="text" />
+    <tr ng-repeat-start="product in report.coverageLineItems"></tr>
+    <tr ng-repeat-start="dose in product.items">
+      <td rowspan="{{product.items.length * 2}}" ng-if="$index == 0" class="col-product cell-input" ><span class="cell-text">{{product.productName}}</span></td>
+      <td class="cell-input"><span class="cell-text number">{{dose.displayName}}</span></td>
+      <td class="cell-input col-general" >
+        <input  numeric-validator="positiveInteger"  ng-disabled="!dose.trackMale" ng-model="dose.regularMale" type="text" />
       </td>
-      <td ng-show="report.trackOutreachCoverage" class="cell-input col-beginningBalance">
-        <input numeric-validator="positiveInteger" ng-disabled="!dose.isActive" ng-model="dose.outreach" type="text" />
+      <td  class="cell-input col-general">
+        <input numeric-validator="positiveInteger" ng-disabled="!dose.trackFemale" ng-model="dose.regularFemale" type="text" />
       </td>
-      <td ng-show="report.trackCampaignCoverage" class="cell-input col-beginningBalance" ng-repeat-end>
-        <input numeric-validator="positiveInteger" ng-disabled="!dose.isActive" ng-model="dose.campaign" type="text" />
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{toNumber(dose.regularMale) + toNumber(dose.regularFemale)}}</span></td>
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> - %</span></td>
+      <td class="cell-input col-general" >
+        <input  numeric-validator="positiveInteger"  ng-disabled="!dose.trackMale" ng-model="dose.outreachMale" type="text" />
       </td>
+      <td  class="cell-input col-general">
+        <input numeric-validator="positiveInteger" ng-disabled="!dose.trackFemale" ng-model="dose.outreachFemale" type="text" />
+      </td>
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text">{{toNumber(dose.outreachMale) + toNumber(dose.outreachFemale)}}</span></td>
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text"> - %</span></td>
+
+
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{toNumber(dose.outreachMale) + toNumber(dose.outreachFemale) + toNumber(dose.regularMale) + toNumber(dose.regularFemale)}}</span></td>
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> - %</span></td>
+      <td></td>   
+      <td></td>
+      <td></td>   
+      <td></td>
+      <td></td>
     </tr>
+    <tr ng-repeat-end></tr>
+    <tr ng-repeat-end></tr>
   </table>
   <div>
     <div openlmis-message="label.vaccine.major.immunization.activities"></div>

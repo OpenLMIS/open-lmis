@@ -20,14 +20,14 @@
     <div class="span9" ng-show="protocol.protocols.length > 0">
       <span openlmis-message="label.vaccine.coverage.check.doses"></span>
       <table class="table table-bordered">
-        <thead>
+       <!--  <thead>
         <th style="width: 300px;" class="col-product"><span openlmis-message="label.product"></span></th>
         <th><span openlmis-message="label.vaccine.coverage.display.order"></span></th>
         <th><span openlmis-message="label.vaccine.coverage.display.name"></span></th>
         <th><span openlmis-message="label.vaccine.coverage.track.male"></span></th>
         <th><span openlmis-message="label.vaccine.coverage.track.female"></span></th>
         <th style="width: 100px;" ><span openlmis-message="label.vaccine.coverage.actions"></span></th>
-        </thead>
+        </thead> -->
         <tbody>
           <tr ng-repeat-start="product in protocol.protocols"> </tr>
           <tr ng-repeat-start="dose in product.doses">
