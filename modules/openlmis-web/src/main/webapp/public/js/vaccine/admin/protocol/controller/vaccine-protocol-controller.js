@@ -21,7 +21,7 @@ function VaccineProtocolController($scope, programs, protocol, SaveVaccineProduc
 
   $scope.addDosageForProduct = function(product){
     var dose = $scope.protocol.possibleDoses[product.doses.length];
-    if(dose != undefined){
+    if(dose !== undefined){
       var newEntry = {doseId: dose.id, productId: product.productId, programId: $scope.program, displayName: dose.name, trackMale: true, displayOrder: product.doses.length + 1 , trackFemale: true};
       product.doses.push(newEntry);
     }
@@ -39,7 +39,7 @@ function VaccineProtocolController($scope, programs, protocol, SaveVaccineProduc
 
   $scope.addProduct = function(product, scope){
     scope.showAddNewModal = false;
-    var dose = $scope.protocol.possibleDoses[0]
+    var dose = $scope.protocol.possibleDoses[0];
     $scope.protocol.protocols.push({productName: product.primaryName, productId: product.id , doses: [{doseId: dose.id, productId: product.id, programId: $scope.program, displayOrder: 1, displayName: dose.name, trackMale: true, trackFemale: true}]});
   };
 }
