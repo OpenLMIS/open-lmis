@@ -131,4 +131,9 @@ public class ProductDoseMapperIT {
     List<VaccineDose> doses = mapper.getAllDoses();
     assertThat(doses.size(), is(6));
   }
+
+  @Test
+  public void shouldDeleteProgramById() throws Exception{
+    mapper.deleteByProgram(1L);
+  }
 }

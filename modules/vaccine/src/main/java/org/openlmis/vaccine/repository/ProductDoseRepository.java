@@ -43,4 +43,8 @@ public class ProductDoseRepository {
   public List<VaccineProductDose> getProgramProductDoses(Long programId) {
     return mapper.getProgramProductDoses(programId);
   }
+
+  public void deleteAllByProgram(Long programId){
+    mapper.deleteByProgram(programId);
+  }
 }

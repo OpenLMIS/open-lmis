@@ -63,13 +63,13 @@ public class VaccineProductDoseService {
   }
 
   public void save(List<ProductDoseProtocolDTO> protocols){
+    //remove all the previous protocol configurations
+    //TODO: too risky a statement
+    // find a better way to find the program
+    repository.deleteAllByProgram(protocols.get(0).getDoses().get(0).getProgramId());
     for(ProductDoseProtocolDTO protocol : protocols){
       for(VaccineProductDose dose : protocol.getDoses()){
-        if(dose.getId() == null){
           repository.insert(dose);
-        }else{
-          repository.update(dose);
-        }
       }
     }
   }
