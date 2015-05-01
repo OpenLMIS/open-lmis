@@ -57,7 +57,7 @@ public class RegimenColumnMapperIT {
   @Test
   public void shouldInsertRegimenColumnsForAProgram() throws Exception {
 
-    RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", Boolean.TRUE, 1L);
+    RegimenColumn regimenColumn = new RegimenColumn(1L, "testName", "testLabel", "numeric", Boolean.TRUE,1, 1L);
     regimenColumn.setCreatedBy(1L);
 
     mapper.insert(regimenColumn, 1L);
@@ -72,8 +72,8 @@ public class RegimenColumnMapperIT {
   public void shouldGetAllRegimenColumnsByProgram() throws Exception {
 
     Long programId = 1L;
-    RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", Boolean.TRUE, 1L);
-    RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "text", Boolean.FALSE, 1L);
+    RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", Boolean.TRUE,1 ,1L);
+    RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "text", Boolean.FALSE,2, 1L);
 
     mapper.insert(regimenColumn1, programId);
 
@@ -88,7 +88,8 @@ public class RegimenColumnMapperIT {
   @Test
   public void shouldUpdateAllRegimenColumnsByProgram() throws Exception {
 
-    RegimenColumn regimenColumn = new RegimenColumn(program.getId(), "testName", "testLabel", "numeric", Boolean.TRUE, 1L);
+    RegimenColumn regimenColumn = new RegimenColumn(program.getId(), "testName", "testLabel", "numeric", Boolean.TRUE,1, 1L);
+    regimenColumn.setDisplayOrder(1);
 
     mapper.insert(regimenColumn, program.getId());
 
@@ -115,6 +116,6 @@ public class RegimenColumnMapperIT {
 
     List<RegimenColumn> regimenColumns = mapper.getMasterRegimenColumns();
 
-    assertThat(regimenColumns.size(), is(7));
+    assertThat(regimenColumns.size(), is(13));
   }
 }

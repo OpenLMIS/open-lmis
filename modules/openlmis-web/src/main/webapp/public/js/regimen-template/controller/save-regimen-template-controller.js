@@ -14,7 +14,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   $scope.regimens = programRegimens;
   $scope.regimenTemplate = regimenTemplate;
   var hiddenColumns = _.filter($scope.regimenTemplate.columns, function (column) {
-    return (column.name == 'name' || column.name == 'code');
+    return (column.name == 'name' || column.name == 'code' || column.name == 'skipped');
   });
   $scope.regimenTemplate.columns = _.difference($scope.regimenTemplate.columns,hiddenColumns);
   $scope.regimenCategories = regimenCategories;
@@ -162,6 +162,10 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
       regimenListToSave.push(regimen);
     });
     regimenForm.regimens = regimenListToSave;
+
+    $(_.flatten($scope.regimenTemplate.columns)).each(function (index, column) {
+      column.displayOrder = index + 3;
+    });
     regimenForm.regimenColumnList = _.union(hiddenColumns,$scope.regimenTemplate.columns);
     Regimens.save({programId: $scope.program.id}, regimenForm, function () {
       $scope.$parent.message = messageService.get('regimens.saved.successfully');

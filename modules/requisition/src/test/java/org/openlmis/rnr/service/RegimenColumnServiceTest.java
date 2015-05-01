@@ -74,8 +74,8 @@ public class RegimenColumnServiceTest {
   @Test
   public void shouldGetRegimenColumnsByProgramId() throws Exception {
     Long programId = 1L;
-    RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", Boolean.TRUE, 1L);
-    RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "numeric", Boolean.TRUE, 1L);
+    RegimenColumn regimenColumn1 = new RegimenColumn(programId, "testName1", "testLabel1", "numeric", Boolean.TRUE,1, 1L);
+    RegimenColumn regimenColumn2 = new RegimenColumn(programId, "testName2", "testLabel2", "numeric", Boolean.TRUE,2, 1L);
 
     when(repository.getRegimenColumnsByProgramId(programId)).thenReturn(asList(regimenColumn1, regimenColumn2));
 
