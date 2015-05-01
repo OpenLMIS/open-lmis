@@ -569,7 +569,7 @@ public interface GeographicZoneReportMapper {
                                                                              @Param("userId")Long userId,
                                                                              @Param("equipment")Long equipment);
 
-    @Select("   select productid, productname, periodid, periodname, periodyear, quantityonhand, quantityconsumed, amc from fn_getstockstatusgraphdata(#{programId}::int,#{geographicZoneId}::int,#{periodId}::int,#{productId}); ")
+    @Select("   select productid, productname, periodid, periodname, periodyear, quantityonhand, quantityconsumed, amc from fn_get_elmis_stock_status_data(#{programId}::int,#{geographicZoneId}::int,#{periodId}::int,#{productId}); ")
 
     List<GeoStockStatusProductConsumption> getStockStatusProductConsumption(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("geographicZoneId") Long geographicZoneId, @Param("productId") String ProductIds);
 
