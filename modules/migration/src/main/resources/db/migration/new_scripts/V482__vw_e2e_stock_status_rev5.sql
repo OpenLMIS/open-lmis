@@ -25,7 +25,7 @@ SELECT
 		) / 4 :: DOUBLE PRECISION
 	) :: INTEGER + 1 AS reportQuarter,
 	d.createddate :: DATE reportedDate,
-        d.productId,
+        d.periodId,
 	d.processingperiodname periodName,
 	d.productId,
 	d.productCode,
