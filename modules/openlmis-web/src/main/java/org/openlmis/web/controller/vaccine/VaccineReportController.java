@@ -12,8 +12,10 @@ package org.openlmis.web.controller.vaccine;
 
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RightName;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.service.UserService;
 import org.openlmis.vaccine.RequestStatus;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
@@ -41,6 +43,9 @@ public class VaccineReportController extends BaseController {
   ProgramService programService;
 
   @Autowired
+  UserService userService;
+
+  @Autowired
   FacilityService facilityService;
 
   @RequestMapping(value = "programs")
@@ -50,19 +55,21 @@ public class VaccineReportController extends BaseController {
   }
 
   @RequestMapping(value = "ivd-form/programs")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getProgramForIvdFormHomeFacility(HttpServletRequest request){
-    return OpenLmisResponse.response("programs", programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, loggedInUserId(request), "CREATE_REQUISITION", "SUBMIT_REQUISITION") );
+    Long userId = loggedInUserId(request);
+    User user = userService.getById(userId);
+    return OpenLmisResponse.response("programs", programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(user.getFacilityId(), userId, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION") );
   }
 
   @RequestMapping(value = "ivd-form/supervised-programs")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getProgramForIvdFormSupervisedFacilities(HttpServletRequest request){
-    return OpenLmisResponse.response("programs", programService.getIvdProgramForSupervisedFacilities(loggedInUserId(request), "CREATE_REQUISITION", "SUBMIT_REQUISITION") );
+    return OpenLmisResponse.response("programs", programService.getIvdProgramForSupervisedFacilities(loggedInUserId(request), "CREATE_REQUISITION", "AUTHORIZE_REQUISITION") );
   }
 
   @RequestMapping(value = "ivd-form/facilities/{programId}.json", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getFacilities(@PathVariable Long programId, HttpServletRequest request){
     Long userId = loggedInUserId(request);
     //TODO: make sure this method also supports home facility.
@@ -70,13 +77,13 @@ public class VaccineReportController extends BaseController {
   }
 
   @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request){
     return OpenLmisResponse.response("periods", service.getPeriodsFor(facilityId, programId));
   }
 
   @RequestMapping(value = "initialize/{facilityId}/{programId}/{periodId}")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> initialize(
     @PathVariable Long facilityId,
     @PathVariable Long programId,
@@ -87,20 +94,20 @@ public class VaccineReportController extends BaseController {
   }
 
   @RequestMapping(value = "get/{id}.json", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getReport(@PathVariable Long id, HttpServletRequest request){
     return OpenLmisResponse.response("report", service.getById(id));
   }
 
   @RequestMapping(value = "save")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineReport report, HttpServletRequest request){
     service.save(report);
     return OpenLmisResponse.response("report", report);
   }
 
   @RequestMapping(value = "submit")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'SUBMIT_IVD')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
     report.setStatus(RequestStatus.SUBMITTED.toString());
     service.save(report);

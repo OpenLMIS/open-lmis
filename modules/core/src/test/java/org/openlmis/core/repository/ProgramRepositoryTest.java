@@ -19,7 +19,6 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.db.categories.UnitTests;
-import sun.jvm.hotspot.oops.ExceptionTableElement;
 
 import java.util.ArrayList;
 import java.util.List;
