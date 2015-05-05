@@ -57,7 +57,7 @@ public class ProgramRepository {
   }
 
   public List<Program> getUserSupervisedActiveIvdProgramsWithRights(Long userId, String... rightNames) {
-    return mapper.getUserSupervisedActivePrograms(userId, commaSeparateRightNames(rightNames));
+    return mapper.getUserSupervisedActiveIvdPrograms(userId, commaSeparateRightNames(rightNames));
   }
 
   public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
@@ -65,7 +65,7 @@ public class ProgramRepository {
   }
 
   public List<Program> getIvdProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
-    return mapper.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, commaSeparateRightNames(rightNames));
+    return mapper.getIvdProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, commaSeparateRightNames(rightNames));
   }
 
 

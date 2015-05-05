@@ -46,23 +46,23 @@ public class VaccineReportController extends BaseController {
   @RequestMapping(value = "programs")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_IVD_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getProgramsForConfiguration(){
-    return OpenLmisResponse.response("programs", programService.getAllPushPrograms() );
+    return OpenLmisResponse.response("programs", programService.getAllIvdPrograms() );
   }
 
   @RequestMapping(value = "ivd-form/programs")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION', 'SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getProgramForIvdFormHomeFacility(HttpServletRequest request){
     return OpenLmisResponse.response("programs", programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, loggedInUserId(request), "CREATE_REQUISITION", "SUBMIT_REQUISITION") );
   }
 
   @RequestMapping(value = "ivd-form/supervised-programs")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION', 'SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getProgramForIvdFormSupervisedFacilities(HttpServletRequest request){
     return OpenLmisResponse.response("programs", programService.getIvdProgramForSupervisedFacilities(loggedInUserId(request), "CREATE_REQUISITION", "SUBMIT_REQUISITION") );
   }
 
   @RequestMapping(value = "ivd-form/facilities/{programId}.json", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION', 'SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getFacilities(@PathVariable Long programId, HttpServletRequest request){
     Long userId = loggedInUserId(request);
     //TODO: make sure this method also supports home facility.
@@ -70,13 +70,13 @@ public class VaccineReportController extends BaseController {
   }
 
   @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION', 'SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request){
     return OpenLmisResponse.response("periods", service.getPeriodsFor(facilityId, programId));
   }
 
   @RequestMapping(value = "initialize/{facilityId}/{programId}/{periodId}")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION', 'SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> initialize(
     @PathVariable Long facilityId,
     @PathVariable Long programId,
@@ -87,13 +87,13 @@ public class VaccineReportController extends BaseController {
   }
 
   @RequestMapping(value = "get/{id}.json", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION', 'SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getReport(@PathVariable Long id, HttpServletRequest request){
     return OpenLmisResponse.response("report", service.getById(id));
   }
 
   @RequestMapping(value = "save")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION', 'SUBMIT_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, SUBMIT_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineReport report, HttpServletRequest request){
     service.save(report);
     return OpenLmisResponse.response("report", report);
