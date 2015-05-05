@@ -30,6 +30,18 @@ services.factory('VaccineProductDose', function ($resource) {
   return $resource('/vaccine/product-dose/get/:programId.json', {productId : '@programId'}, {});
 });
 
+services.factory('VaccineReportConfigurablePrograms', function ($resource) {
+  return $resource('/vaccine/report/programs.json', {}, {});
+});
+
+services.factory('VaccineSupervisedIvdPrograms', function ($resource) {
+  return $resource('/vaccine/report/programs.json', {}, {});
+});
+
+services.factory('VaccineHomeFacilityIvdPrograms', function ($resource) {
+  return $resource('/vaccine/report/programs.json', {}, {});
+});
+
 services.factory('VaccineReportPrograms', function ($resource) {
   return $resource('/vaccine/report/programs.json', {}, {});
 });
