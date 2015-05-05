@@ -8,70 +8,69 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories,  ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList,EquipmentInventoryFacilities, navigateBackService, $routeParams, messageService) {
-
-  if ($routeParams.selectedType !== undefined) {
-    $scope.selectedType = $routeParams.selectedType;
-    $scope.selectedFacilityId = $routeParams.facility;
-  }
+function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentInventoryFacilities, EquipmentTypesByProgram, navigateBackService, $routeParams, messageService) {
 
   $scope.$on('$viewContentLoaded', function () {
     $scope.selectedType = $routeParams.selectedType || "0";
 
+/*
     $scope.$watch('programs', function () {
       if ($scope.programs && !isUndefined($routeParams.program)) {
         $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.program})[0];
       }
     });
-
-    $scope.loadFacilityData($scope.selectedType);
-    if ($scope.selectedProgram !== undefined) {
-      $scope.loadFacilitiesForProgram();
-    }
+*/
+    $scope.loadFacilitiesAndPrograms($scope.selectedType);
   });
 
-  $scope.loadFacilityData = function (selectedType) {
+  $scope.loadFacilitiesAndPrograms = function (selectedType) {
 
-    if (selectedType === "0") { //My facility
+    if (selectedType === "0") { // My facility
+      // Get facility first, then programs through facility
       UserFacilityList.get({}, function (data) {
         $scope.facilities = data.facilityList;
         $scope.myFacility = data.facilityList[0];
         if ($scope.myFacility) {
-          $scope.facilityDisplayName = $scope.myFacility.code + '-' + $scope.myFacility.name;
-          $scope.selectedFacilityId = $scope.myFacility.id;
-          $scope.selectedProgram = undefined;
-          ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.selectedFacilityId}, function (data) {
+          $scope.facilityDisplayName = $scope.myFacility.code + ' - ' + $scope.myFacility.name;
+          ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
             $scope.programs = data.programs;
+            $scope.equipmentTypes = undefined;
+            $scope.selectedEquipmentType = undefined;
           }, {});
         } else {
           $scope.facilityDisplayName = messageService.get("label.none.assigned");
           $scope.programs = undefined;
-          $scope.selectedProgram = undefined;
+          $scope.equipmentTypes = undefined;
+          $scope.selectedEquipmentType = undefined;
         }
       }, {});
     } else if (selectedType === "1") { // Supervised facility
+      // Get programs first through supervisory nodes/requisition groups, then get facilities through programs
       ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
-        $scope.selectedFacilityId = undefined;
+        $scope.equipmentTypes = undefined;
+        $scope.selectedEquipmentType = undefined;
       }, {});
     }
   };
 
+  $scope.loadFacilitiesAndEquipmentTypes = function () {
+    $scope.loadFacilitiesForProgram();
+  };
+
   $scope.loadFacilitiesForProgram = function () {
-    if ($scope.selectedProgram.id && $scope.selectedType === '1') {
+    if ($scope.selectedProgram.id && $scope.selectedType === "1") {
       EquipmentInventoryFacilities.get({programId: $scope.selectedProgram.id}, function (data) {
         $scope.facilities = data.facilities;
-        $scope.selectedFacilityId = null;
-        $scope.error = null;
       }, {});
     }
   };
 
   $scope.loadEquipments = function () {
-    if ($scope.selectedProgram !== undefined && $scope.selectedFacilityId !== undefined) {
+    if ($scope.facilities && $scope.selectedProgram && $scope.selectedEquipmentType) {
       EquipmentInventories.get({
         programId: $scope.selectedProgram.id,
-        facilityId: $scope.selectedFacilityId
+        facilityId: $scope.myFacility.id
       }, function (data) {
         $scope.inventory = data.inventory;
       });
