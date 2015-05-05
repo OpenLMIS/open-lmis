@@ -56,6 +56,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
 
   $scope.loadFacilitiesAndEquipmentTypes = function () {
     $scope.loadFacilitiesForProgram();
+    $scope.loadEquipmentTypesForProgram();
   };
 
   $scope.loadFacilitiesForProgram = function () {
@@ -64,6 +65,12 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
         $scope.facilities = data.facilities;
       }, {});
     }
+  };
+
+  $scope.loadEquipmentTypesForProgram = function () {
+    EquipmentTypesByProgram.get({programId: $scope.selectedProgram.id}, function (data) {
+      $scope.equipmentTypes = data.equipment_types;
+    }, {});
   };
 
   $scope.loadEquipments = function () {

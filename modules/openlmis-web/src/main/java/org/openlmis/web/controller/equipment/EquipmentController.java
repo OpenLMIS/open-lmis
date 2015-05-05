@@ -21,10 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(value="/equipment/manage/")
@@ -43,6 +40,12 @@ public class EquipmentController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS') or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
   public ResponseEntity<OpenLmisResponse> getList(){
     return OpenLmisResponse.response("equipments", service.getAll());
+  }
+
+  @RequestMapping(method = RequestMethod.GET, value = "typesByProgram/{programId}", headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
+  public ResponseEntity<OpenLmisResponse> getTypesByProgram(@PathVariable(value="programId") Long programId){
+    return OpenLmisResponse.response("equipment_types", service.getTypesByProgram(programId));
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "save", headers = ACCEPT_JSON)

@@ -39,6 +39,14 @@ public interface EquipmentMapper {
   })
   Equipment getById(@Param("id") Long id);
 
+  @Select("SELECT et.*" +
+      " FROM equipment_types et" +
+      " JOIN equipments e ON et.id = e.equipmenttypeid" +
+      " JOIN equipment_programs ep ON e.id = ep.equipmentid" +
+      " JOIN programs p ON ep.programid = p.id" +
+      " WHERE p.id = #{programId}")
+  List<EquipmentType> getTypesByProgram(@Param("programId") Long programId);
+
   @Insert("INSERT into equipments (code, name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate) " +
       "values " +
       "(#{code}, #{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")

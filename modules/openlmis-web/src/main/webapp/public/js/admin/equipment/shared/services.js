@@ -22,6 +22,10 @@ services.factory('Equipment', function ($resource) {
   return $resource('/equipment/manage/id.json', {}, {});
 });
 
+services.factory('EquipmentTypesByProgram', function ($resource) {
+    return $resource('/equipment/manage/typesByProgram/:programId.json', {}, {});
+});
+
 services.factory('SaveEquipment', function ($resource) {
   return $resource('/equipment/manage/save.json', {}, {});
 });

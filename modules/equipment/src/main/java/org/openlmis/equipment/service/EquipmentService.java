@@ -11,6 +11,7 @@
 package org.openlmis.equipment.service;
 
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,10 @@ public class EquipmentService {
 
   public Equipment getById(Long id){
     return repository.getById(id);
+  }
+
+  public List<EquipmentType> getTypesByProgram(Long programId) {
+    return repository.getTypesByProgram(programId);
   }
 
   public void save(Equipment equipment){
