@@ -10,19 +10,6 @@
 
 function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentInventoryFacilities, EquipmentTypesByProgram, navigateBackService, $routeParams, messageService) {
 
-  $scope.$on('$viewContentLoaded', function () {
-    $scope.selectedType = $routeParams.selectedType || "0";
-
-/*
-    $scope.$watch('programs', function () {
-      if ($scope.programs && !isUndefined($routeParams.program)) {
-        $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.program})[0];
-      }
-    });
-*/
-    $scope.loadFacilitiesAndPrograms($scope.selectedType);
-  });
-
   $scope.loadFacilitiesAndPrograms = function (selectedType) {
 
     if (selectedType === "0") { // My facility
@@ -83,5 +70,18 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
       });
     }
   };
+
+//  $scope.$on('$viewContentLoaded', function () {
+    $scope.selectedType = $routeParams.selectedType || "0";
+
+    /*
+     $scope.$watch('programs', function () {
+     if ($scope.programs && !isUndefined($routeParams.program)) {
+     $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.program})[0];
+     }
+     });
+     */
+    $scope.loadFacilitiesAndPrograms($scope.selectedType);
+//  });
 
 }
