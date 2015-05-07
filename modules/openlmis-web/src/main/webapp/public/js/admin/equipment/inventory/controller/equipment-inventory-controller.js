@@ -100,6 +100,6 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
 
   $scope.getAge = function (yearOfInstallation) {
     return (new Date().getFullYear()) - yearOfInstallation;
-  }
+  };
 
 }
