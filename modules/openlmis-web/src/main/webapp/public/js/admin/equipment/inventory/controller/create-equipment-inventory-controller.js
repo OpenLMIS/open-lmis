@@ -64,7 +64,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
         $scope.$parent.message = messageService.get(data.success);
         $scope.$parent.selectedProgram = {id: $scope.equipment.programId};
         console.info($scope.$parent.selectedProgram);
-        $location.path('/' + $routeParams.from + '/' + $scope.equipment.facility + '/' + $scope.equipment.program);
+        $location.path('/' + $routeParams.from + '/' + $scope.equipment.facilityId + '/' + $scope.equipment.programId + '/' + $routeParams.equipmentType);
       }, function (data) {
         $scope.error = data.error;
       });

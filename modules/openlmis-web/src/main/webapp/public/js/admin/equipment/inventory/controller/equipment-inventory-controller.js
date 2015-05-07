@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentInventoryFacilities, EquipmentTypesByProgram, navigateBackService, $routeParams, messageService) {
+function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentInventoryFacilities, EquipmentTypesByProgram, EquipmentOperationalStatus, navigateBackService, $routeParams, messageService) {
 
   $scope.loadFacilitiesAndPrograms = function (selectedType) {
 
@@ -21,24 +21,21 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
           $scope.facilityDisplayName = $scope.myFacility.code + ' - ' + $scope.myFacility.name;
           ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
             $scope.programs = data.programs;
-            $scope.equipmentTypes = undefined;
-            $scope.selectedEquipmentType = undefined;
           }, {});
         } else {
           $scope.facilityDisplayName = messageService.get("label.none.assigned");
           $scope.programs = undefined;
-          $scope.equipmentTypes = undefined;
-          $scope.selectedEquipmentType = undefined;
         }
       }, {});
     } else if (selectedType === "1") { // Supervised facility
       // Get programs first through supervisory nodes/requisition groups, then get facilities through programs
       ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
-        $scope.equipmentTypes = undefined;
-        $scope.selectedEquipmentType = undefined;
       }, {});
     }
+
+    $scope.equipmentTypes = undefined;
+    $scope.selectedEquipmentType = undefined;
   };
 
   $scope.loadFacilitiesAndEquipmentTypes = function () {
@@ -61,6 +58,11 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
   };
 
   $scope.loadEquipments = function () {
+    for (var i = 0; i < $scope.equipmentTypes.length; i++) {
+      if ($scope.equipmentTypes[i].id.toString() === $scope.selectedEquipmentType.id) {
+        $scope.selectedEquipmentType = $scope.equipmentTypes[i];
+      }
+    }
     if ($scope.facilities && $scope.selectedProgram && $scope.selectedEquipmentType) {
       EquipmentInventories.get({
         programId: $scope.selectedProgram.id,
@@ -83,5 +85,21 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
      */
     $scope.loadFacilitiesAndPrograms($scope.selectedType);
 //  });
+
+  EquipmentOperationalStatus.get(function(data){
+    $scope.operationalStatusList = data.status;
+  });
+
+  $scope.getStatusName = function (statusId) {
+    for (var i = 0; i < $scope.operationalStatusList.length; i++) {
+      if ($scope.operationalStatusList[i].id === statusId) {
+        return $scope.operationalStatusList[i].name;
+      }
+    }
+  };
+
+  $scope.getAge = function (yearOfInstallation) {
+    return (new Date().getFullYear()) - yearOfInstallation;
+  }
 
 }

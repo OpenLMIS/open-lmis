@@ -16,6 +16,7 @@ describe("Equipment Inventory Controller", function () {
   var facility = {"id": 1, "name": "Test Facility", "code": "F1", "description": "Test Facility Description"};
   var program = {"id": 2, "name": "Program 2", "code": "P2", "description": "Program 2 Description"};
   var equipmentType = {"id": 3, "name": "Equipment Type 3", "code": "ET2", "description": "Equipment Type 3 Description"};
+  var status = {"id": 4, "name": "Fully Operational"};
 
   beforeEach(module('openlmis'));
 
@@ -27,8 +28,9 @@ describe("Equipment Inventory Controller", function () {
 
     ctrl = $controller(EquipmentInventoryController, {$scope: scope, $routeParams: routeParams,
       messageService: messageService});
-    $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
-    $httpBackend.expectGET('/equipment/inventory/facility/programs.json?facilityId=1').respond(200, {"programs": [program]});
+    $httpBackend.whenGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
+    $httpBackend.whenGET('/equipment/inventory/facility/programs.json?facilityId=1').respond(200, {"programs": [program]});
+    $httpBackend.whenGET('/equipment/type/operational-status.json').respond(200, {"status": [status]});
     $httpBackend.flush();
   }));
 

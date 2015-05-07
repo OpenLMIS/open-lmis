@@ -80,8 +80,39 @@
     <div ng-show="inventory.length == 0">
       <span openlmis-message="label.equipment.none.found"></span>
     </div>
-    <table ng-show="inventory.length > 0" class="table table-bordered">
-      <thead>
+    <div ng-show="inventory.length > 0">
+      <table ng-show="selectedEquipmentType.code == 'CCE'" class="table table-bordered">
+        <thead>
+        <tr class="gradient-header">
+          <th class="col-row-number">#</th>
+          <th openlmis-message="label.equipment.equipment"></th>
+          <th openlmis-message="label.equipment.manufacturer"></th>
+          <th openlmis-message="label.equipment.model"></th>
+          <th openlmis-message="label.equipment.fridge.freezer.capacity"></th>
+          <th openlmis-message="label.equipment.status"></th>
+          <th openlmis-message="label.equipment.energy.source"></th>
+          <th openlmis-message="label.equipment.year.of.installation"></th>
+          <th openlmis-message="label.equipment.age"></th>
+          <th openlmis-message="label.equipment.replacement.year"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in inventory">
+          <td>{{$index + 1}}</td>
+          <td><a ng-href="#/edit/{{selectedType}}/{{item.facilityId}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}">{{item.equipment.name}}</a></td>
+          <td>{{item.manufacturerName}}</td>
+          <td>{{item.model}}</td>
+          <td>{{item.equipment.fridgeCapacity ? item.equipment.fridgeCapacity : 0}} / {{item.equipment.freezerCapacity ? item.equipment.freezerCapacity : 0}}</td>
+          <td>{{getStatusName(item.operationalStatusId)}}</td>
+          <td>{{item.energySource}}</td>
+          <td>{{item.yearOfInstallation}}</td>
+          <td>{{getAge(item.yearOfInstallation)}}</td>
+          <td>{{item.yearOfInstallation+10}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <table ng-show="selectedEquipmentType.code != 'CCE'" class="table table-bordered">
+        <thead>
         <tr class="gradient-header">
           <th class="col-row-number">#</th>
           <th openlmis-message="label.equipment.equipment"></th>
@@ -90,11 +121,11 @@
           <th openlmis-message="label.equipment.source.of.fund"></th>
           <th openlmis-message="label.equipment.actions"></th>
         </tr>
-      </thead>
-      <tbody>
+        </thead>
+        <tbody>
         <tr ng-repeat="item in inventory">
           <td>{{$index + 1}}</td>
-          <td><a ng-href="#/edit/{{selectedType}}/{{item.facilityId}}/{{item.programId}}/{{item.id}}">{{item.equipment.name}}</a></td>
+          <td><a ng-href="#/edit/{{selectedType}}/{{item.facilityId}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}">{{item.equipment.name}}</a></td>
           <td>{{item.manufacturerName}}</td>
           <td>{{item.model}}</td>
           <td>{{item.sourceOfFund}}</td>
@@ -108,8 +139,9 @@
             </a>
           </td>
         </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 
 </div>
