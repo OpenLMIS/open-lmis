@@ -11,7 +11,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-describe("Equipment Inventory Controller", function () {
+describe("In Equipment Inventory Controller,", function () {
   var scope, $httpBackend, ctrl, routeParams, messageService;
   var facility = {"id": 1, "name": "Test Facility", "code": "F1", "description": "Test Facility Description"};
   var program = {"id": 2, "name": "Program 2", "code": "P2", "description": "Program 2 Description"};
@@ -34,14 +34,13 @@ describe("Equipment Inventory Controller", function () {
     $httpBackend.flush();
   }));
 
-  describe("Facilities and programs", function () {
+  describe("Programs", function () {
     it("should populate my facility and its programs if 'my facility' selected and home facility assigned", function () {
       scope.selectedType = "0";
-      scope.loadFacilitiesAndPrograms(scope.selectedType);
+      scope.loadPrograms(scope.selectedType);
       $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
       $httpBackend.expectGET('/equipment/inventory/facility/programs.json?facilityId=1').respond(200, {"programs": [program]});
       $httpBackend.flush();
-      expect(scope.facilities).toEqual([facility]);
       expect(scope.myFacility).toEqual(facility);
       expect(scope.facilityDisplayName).toEqual(facility.code + " - " + facility.name);
       expect(scope.programs).toEqual([program]);
@@ -49,10 +48,9 @@ describe("Equipment Inventory Controller", function () {
 
     it("should populate none assigned facility and no programs if 'my facility' selected and home facility not assigned", function () {
       scope.selectedType = "0";
-      scope.loadFacilitiesAndPrograms(scope.selectedType);
+      scope.loadPrograms(scope.selectedType);
       $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": []});
       $httpBackend.flush();
-      expect(scope.facilities).toEqual([]);
       expect(scope.myFacility).toEqual(undefined);
       expect(scope.facilityDisplayName).toEqual(messageService.get("label.none.assigned"));
       expect(scope.programs).toEqual(undefined);
@@ -60,27 +58,18 @@ describe("Equipment Inventory Controller", function () {
 
     it("should populate programs if 'supervised facilities' selected", function () {
       scope.selectedType = "1";
-      scope.loadFacilitiesAndPrograms(scope.selectedType);
+      scope.loadPrograms(scope.selectedType);
       $httpBackend.expectGET('/equipment/inventory/programs.json').respond(200, {"programs": [program]});
       $httpBackend.flush();
       expect(scope.programs).toEqual([program]);
     });
   });
 
-  describe("Facilities and equipment types", function () {
-
-    it("should load facilities for a program", function () {
-      scope.selectedProgram = program;
-      scope.selectedType = "1";
-      scope.loadFacilitiesForProgram();
-      $httpBackend.expectGET('/equipment/inventory/supervised/facilities.json?programId='+scope.selectedProgram.id).respond(200, {"facilities": [facility]});
-      $httpBackend.flush();
-      expect(scope.facilities).toEqual([facility]);
-    });
+  describe("Equipment types", function () {
 
     it("should load equipment types for a program", function () {
       scope.selectedProgram = program;
-      scope.loadEquipmentTypesForProgram();
+      scope.loadEquipmentTypes();
       $httpBackend.expectGET('/equipment/manage/typesByProgram/'+scope.selectedProgram.id+'.json').respond(200, {"equipment_types": [equipmentType]});
       $httpBackend.flush();
       expect(scope.equipmentTypes).toEqual([equipmentType]);

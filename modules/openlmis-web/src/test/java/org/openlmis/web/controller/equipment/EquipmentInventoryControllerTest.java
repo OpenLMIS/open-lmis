@@ -74,9 +74,9 @@ public class EquipmentInventoryControllerTest {
   @Test
   public void shouldGetFacilityInventory() throws Exception {
     List<EquipmentInventory> inventories = new ArrayList<>();
-    when(service.getInventoryForFacility(1L, 1L)).thenReturn(inventories);
+    when(service.getInventory(1L, 1L, 1L, 1L)).thenReturn(inventories);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getFacilityInventory(1L, 1L);
+    ResponseEntity<OpenLmisResponse> response = controller.getInventory(1L, 1L, 1L, request);
     assertThat(inventories, is(response.getBody().getData().get("inventory")));
 
   }

@@ -49,8 +49,12 @@ public class EquipmentInventoryController extends BaseController {
   private ProgramService programService;
 
   @RequestMapping(value="list", method = RequestMethod.GET)
-  public ResponseEntity<OpenLmisResponse> getFacilityInventory(@RequestParam("programId") Long programId, @RequestParam("facilityId") Long facilityId ){
-    return OpenLmisResponse.response("inventory",service.getInventoryForFacility(facilityId, programId));
+  public ResponseEntity<OpenLmisResponse> getInventory(@RequestParam("typeId") Long typeId,
+                                                       @RequestParam("programId") Long programId,
+                                                       @RequestParam("equipmentTypeId") Long equipmentTypeId,
+                                                       HttpServletRequest request){
+    Long userId = loggedInUserId(request);
+    return OpenLmisResponse.response("inventory",service.getInventory(userId, typeId, programId, equipmentTypeId));
   }
 
   @RequestMapping(value="programs", method = RequestMethod.GET)

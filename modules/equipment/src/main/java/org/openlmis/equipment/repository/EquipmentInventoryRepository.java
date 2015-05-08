@@ -16,6 +16,7 @@ import org.openlmis.equipment.repository.mapper.EquipmentInventoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -26,6 +27,10 @@ public class EquipmentInventoryRepository {
 
   public List<EquipmentInventory> getFacilityInventory(Long facilityId, Long programId){
     return mapper.getInventoryByFacilityAndProgram(facilityId, programId);
+  }
+
+  public List<EquipmentInventory> getInventory(Long programId, Long equipmentTypeId, long[] facilityIds){
+    return mapper.getInventory(programId, equipmentTypeId, Arrays.toString(facilityIds).replace('[', '{').replace(']', '}'));
   }
 
   public EquipmentInventory getInventoryById(Long id){

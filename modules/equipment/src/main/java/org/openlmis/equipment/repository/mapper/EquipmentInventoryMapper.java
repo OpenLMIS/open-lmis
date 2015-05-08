@@ -29,6 +29,20 @@ public interface EquipmentInventoryMapper {
   })
   List<EquipmentInventory> getInventoryByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId")Long programId);
 
+  @Select("SELECT ei.*" +
+      " FROM equipment_inventories ei" +
+      " JOIN equipments e ON ei.equipmentId = e.id" +
+      " JOIN equipment_types et ON e.equipmentTypeId = et.id" +
+      " WHERE ei.programId = #{programId}" +
+      " AND et.id = #{equipmentTypeId}" +
+      " AND ei.facilityId = ANY (#{facilityIds}::INT[])")
+  @Results({
+      @Result(
+          property = "equipment", column = "equipmentId", javaType = Equipment.class,
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById"))
+  })
+  List<EquipmentInventory> getInventory(@Param("programId")Long programId, @Param("equipmentTypeId")Long equipmentTypeId, @Param("facilityIds")String facilityIds);
+
   @Select("SELECT * from equipment_inventories where id = #{id}")
   @Results({
     @Result(property = "equipmentId", column = "equipmentId"),

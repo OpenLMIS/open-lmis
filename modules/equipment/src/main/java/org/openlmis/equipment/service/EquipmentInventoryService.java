@@ -10,13 +10,20 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.service.FacilityService;
+import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static org.openlmis.core.domain.RightName.*;
 
 @Component
 public class EquipmentInventoryService {
@@ -24,8 +31,30 @@ public class EquipmentInventoryService {
   @Autowired
   EquipmentInventoryRepository repository;
 
+  @Autowired
+  private FacilityService facilityService;
+
   public List<EquipmentInventory> getInventoryForFacility(Long facilityId, Long programId){
     return repository.getFacilityInventory(facilityId, programId );
+  }
+
+  public List<EquipmentInventory> getInventory(Long userId, Long typeId, Long programId, Long equipmentTypeId) {
+    // Get list of facilities
+    List<Facility> facilities;
+    if (typeId == 0) {
+      facilities = Arrays.asList(facilityService.getHomeFacility(userId));
+    } else {
+      facilities = facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY);
+    }
+
+    // From facilities, get facility ids
+    long[] facilityIds = new long[facilities.size()];
+    int index = 0;
+    for (Facility f : facilities) {
+      facilityIds[index++] = f.getId();
+    }
+
+    return repository.getInventory(programId, equipmentTypeId, facilityIds);
   }
 
   public EquipmentInventory getInventoryById(Long id){

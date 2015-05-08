@@ -61,6 +61,16 @@ public class EquipmentServiceTest {
   }
 
   @Test
+  public void shouldGetTypesByProgram() throws Exception {
+    Equipment equipment = new Equipment();
+    equipment.setCode("123");
+    when(repository.getById(1L)).thenReturn(equipment);
+
+    Equipment result = service.getById(1L);
+    assertEquals(result.getCode(), equipment.getCode());
+  }
+
+  @Test
   public void shouldSaveNewEquipment() throws Exception {
     Equipment equipment = new Equipment();
     equipment.setCode("123");
