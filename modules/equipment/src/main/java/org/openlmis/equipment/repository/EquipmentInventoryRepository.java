@@ -30,7 +30,15 @@ public class EquipmentInventoryRepository {
   }
 
   public List<EquipmentInventory> getInventory(Long programId, Long equipmentTypeId, long[] facilityIds){
-    return mapper.getInventory(programId, equipmentTypeId, Arrays.toString(facilityIds).replace('[', '{').replace(']', '}'));
+    // Convert ids into string format for the mapper to use
+    StringBuilder str = new StringBuilder();
+    str.append("{");
+    for (int i = 0; i < facilityIds.length; i++) {
+      str.append(facilityIds[i]);
+    }
+    str.append("}");
+    
+    return mapper.getInventory(programId, equipmentTypeId, str.toString());
   }
 
   public EquipmentInventory getInventoryById(Long id){
