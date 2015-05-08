@@ -6,7 +6,7 @@ CREATE TABLE equipment_cold_chain_equipment_designations
   createdby integer,
   createddate timestamp without time zone DEFAULT now(),
   modifiedby integer,
-  modifieddae timestamp without time zone DEFAULT now(),
+  modifieddate timestamp without time zone DEFAULT now(),
   CONSTRAINT cce_designations_pkey PRIMARY KEY (id)
 )
 WITH (
@@ -65,13 +65,17 @@ CREATE TABLE equipment_cold_chain_equipments
   temperaturezone character varying(200),
   maxtemperature integer,
   mintemperature integer,
-  holderovertime character varying(200),
+  holdovertime character varying(200),
   energyconsumption character varying(200),
   energytypeid integer,
   dimension character varying(200),
   price numeric(18,2),
   pqsstatusid integer NOT NULL,
   donorid integer,
+  createdby integer,
+  createddate timestamp without time zone DEFAULT now(),
+  modifiedby integer,
+  modifieddate timestamp without time zone DEFAULT now(),
   CONSTRAINT equipment_cce_pkey PRIMARY KEY (id),
   CONSTRAINT equipment_cce_designation_fkey FOREIGN KEY (designationid)
       REFERENCES equipment_cold_chain_equipment_designations (id) MATCH SIMPLE

@@ -22,7 +22,9 @@ import lombok.NoArgsConstructor;
 public class ColdChainEquipment extends Equipment{
 
   private Equipment equipment;
+  private Long equipmentId;
   private ColdChainEquipmentDesignation designation;
+  private Long designationId;
   private String brand;
   private String model;
   private String cceCode;
@@ -32,6 +34,7 @@ public class ColdChainEquipment extends Equipment{
   private String refrigerant;
   private String temperatureZone;
   private ColdChainEquipmentEnergyType energyType;
+  private Long energyTypeId;
   private String energyConsumption;
   private Long maxTemperature;
   private Long minTemperature;
@@ -39,6 +42,8 @@ public class ColdChainEquipment extends Equipment{
   private String dimension;
   private Float price;
   private Donor donor;
+  private Long donorId;
   private ColdChainEquipmentPqsStatus pqsStatus;
+  private Long pqsStatusId;
 
 }
