@@ -10,18 +10,43 @@
 
 <div class="rnr-table">
   <h2><span openlmis-message="label.vaccine.coverage"></span></h2>
+ 
 
+<div tab-scroll bottom-offset="180" adjust-height>
+    <div class="float-left left-table parent">
+      <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
+        <thead>
+        <tr>
+          <th colspan="2">&nbsp;</th>
+        </tr>
+        <tr>
+          <th colspan="2">&nbsp;</th>
+        </tr>
+        <tr>
+          <th openlmis-message="label.vaccine.coverage.product"></th>
+          <th openlmis-message="label.vaccine.coverage.dose"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat-start="product in report.coverageLineItems"></tr>
+        <tr ng-repeat-start="dose in product.items">
+          <td rowspan="{{product.items.length * 2}}" ng-if="$index == 0" class="col-product cell-input" ><span class="cell-text">{{product.productName}}</span></td>
+          <td class="cell-input"><span style="min-height: 31px;" class="cell-text number">{{dose.displayName}}</span></td>
+        </tr>
+        <tr ng-repeat-end></tr>
+        <tr ng-repeat-end></tr>
+        </tbody>
+      </table>
+    </div>
+
+  <div class="float-left right-table parent" custom-horizontal-scroll>
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th></th>      
-        <th></th>   
         <th colspan="10" openlmis-message="label.vaccine.coverage.monthly.coverage"></th>
         <th colspan="5" openlmis-message="label.vaccine.coverage.cumulative.coverage"></th>
       </tr>
       <tr>
-        <th></th>      
-        <th></th>   
         <th colspan="4" openlmis-message="label.vaccine.coverage.within.catchment"></th>
         <th colspan="4" openlmis-message="label.vaccine.coverage.outside.catchment"></th>
         <th colspan="2" openlmis-message="label.vaccine.coverage.total.vaccination"></th>
@@ -30,8 +55,6 @@
         <th colspan="2" openlmis-message="label.vaccine.coverage.total"></th>
       </tr>
       <tr>
-        <th openlmis-message="label.vaccine.coverage.product"></th>
-        <th openlmis-message="label.vaccine.coverage.dose"></th>
         <th openlmis-message="label.vaccine.coverage.male"></th>
         <th openlmis-message="label.vaccine.coverage.female"></th>
         <th openlmis-message="label.vaccine.coverage.total"></th>
@@ -52,8 +75,6 @@
     <tbody>
     <tr ng-repeat-start="product in report.coverageLineItems"></tr>
     <tr ng-repeat-start="dose in product.items">
-      <td rowspan="{{product.items.length * 2}}" ng-if="$index == 0" class="col-product cell-input" ><span class="cell-text">{{product.productName}}</span></td>
-      <td class="cell-input"><span class="cell-text number">{{dose.displayName}}</span></td>
       <td class="cell-input col-general" >
         <input  numeric-validator="positiveInteger"  ng-disabled="!dose.trackMale" ng-model="dose.regularMale" type="text" />
       </td>
@@ -83,8 +104,10 @@
     <tr ng-repeat-end></tr>
     <tr ng-repeat-end></tr>
   </table>
-  <div>
-    <div openlmis-message="label.vaccine.major.immunization.activities"></div>
-    <textarea ng-model="report.majorImmunizationActivities" rows="5" class="span12"></textarea>
   </div>
+  </div>
+</div>
+<div>
+  <div openlmis-message="label.vaccine.major.immunization.activities"></div>
+  <textarea ng-model="report.majorImmunizationActivities" rows="5" class="span12"></textarea>
 </div>

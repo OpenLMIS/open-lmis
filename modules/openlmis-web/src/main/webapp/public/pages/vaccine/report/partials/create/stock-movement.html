@@ -41,7 +41,7 @@
         <td ng-if="column.name == 'quantityOtherWasted'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityOtherWasted" type="text" /></td>
         <td ng-if="column.name == 'quantityDiscardedUnopened'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityDiscardedUnopened" type="text" /></td>
         <td ng-if="column.name == 'quantityDiscardedOpened'" class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" ng-model="product.quantityDiscardedOpened" type="text" /></td>
-        <td ng-if="column.name == 'reasonForDiscardingUnopened'" class="cell-input col-general">
+        <td ng-if="column.name == 'reasonForDiscardingUnopened'" class="cell-input col-general padding2px">
           <select ng-show="!rowRequiresExplanation(product);" ng-model="product.discardingReasonId">
             <option value="{{reason.id}}" ng-repeat="reason in discardingReasons">{{reason.name}}</option>
           </select>
