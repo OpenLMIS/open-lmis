@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors ,Equipments, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService) {
+function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors ,Equipments, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService, EquipmentTypesByProgram) {
 
   $scope.$parent.message = $scope.$parent.error = '';
 
@@ -19,7 +19,16 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     $scope.equipments = data.equipments;
   });
 
+  EquipmentTypesByProgram.get({programId: $routeParams.program}, function (data) {
+    for (var i = 0; i < data.equipment_types.length; i++) {
+      if (data.equipment_types[i].id.toString() === $routeParams.equipmentType) {
+        $scope.equipmentType = data.equipment_types[i];
+      }
+    }
+  }, {});
+
   if ($routeParams.id === undefined) {
+    $scope.screenType = 'create';
     $scope.equipment = {};
     $scope.equipment.programId = $routeParams.program;
     $scope.equipment.facilityId = $routeParams.facility;
@@ -35,6 +44,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     $scope.equipment.isActive = true;
 
   } else {
+    $scope.screenType = 'edit';
     EquipmentInventory.get({
       id: $routeParams.id
     }, function (data) {
