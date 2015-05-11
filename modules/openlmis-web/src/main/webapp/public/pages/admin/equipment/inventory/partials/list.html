@@ -82,7 +82,7 @@
       <span openlmis-message="label.equipment.none.found"></span>
     </div>
     <div ng-show="inventory.length > 0">
-      <table ng-show="selectedEquipmentType.code == 'CCE'" class="table table-bordered">
+      <table ng-show="selectedEquipmentType.coldChain == true" class="table table-bordered">
         <thead>
         <tr class="gradient-header">
           <th class="col-row-number">#</th>
@@ -112,7 +112,7 @@
         </tr>
         </tbody>
       </table>
-      <table ng-show="selectedEquipmentType.code != 'CCE'" class="table table-bordered">
+      <table ng-show="selectedEquipmentType.coldChain != true" class="table table-bordered">
         <thead>
         <tr class="gradient-header">
           <th class="col-row-number">#</th>
