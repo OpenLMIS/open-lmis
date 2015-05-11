@@ -259,7 +259,7 @@ public class RnrLineItem extends LineItem {
     if(column != null){
       columnOption = column.getCalculationOption();
     }
-    if(columnOption.equalsIgnoreCase( "CONSUMPTION_X_2")){
+    if(columnOption.equalsIgnoreCase("CONSUMPTION_X_2")){
       maxStockQuantity = this.normalizedConsumption * 2;
     }else if(columnOption.equalsIgnoreCase("DISPENSED_X_2")){
       maxStockQuantity = this.quantityDispensed * 2;
@@ -276,6 +276,8 @@ public class RnrLineItem extends LineItem {
   }
 
   public void calculateNormalizedConsumption(ProgramRnrTemplate template) {
+
+    prepareFieldsForCalculation();
     RnrColumn column = template.getRnrColumnsMap().get("normalizedConsumption");
     String columnOption = "DEFAULT";
     if (column != null) {
@@ -305,6 +307,16 @@ public class RnrLineItem extends LineItem {
           new BigDecimal(quantityDispensed),
           new BigDecimal(newPatientCount),
           new BigDecimal(dosesPerMonth), dosesPerDispensingUnit, reportingDays, template);
+    }
+  }
+
+  private void prepareFieldsForCalculation() {
+    // prepare fields for calculation
+    if(stockOutDays == null){
+      stockOutDays = 0;
+    }
+    if(newPatientCount == null){
+      newPatientCount = 0;
     }
   }
 
