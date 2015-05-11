@@ -73,9 +73,10 @@
   <br/>
 
   <div ng-show="selectedProgram.id && selectedEquipmentType.id">
-    <a ng-show="selectedType == 0" id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/{{myFacility.id}}/{{selectedProgram.id}}/{{selectedEquipmentType.id}}" class="btn btn-primary" openlmis-message="button.add.new"></a>
-    <a ng-show="selectedType == 1" id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/0/{{selectedProgram.id}}/{{selectedEquipmentType.id}}" class="btn btn-primary" openlmis-message="button.add.new"></a>
+    <a ng-show="selectedType == 0" id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/{{myFacility.id}}/{{selectedProgram.id}}/{{selectedEquipmentType.id}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
+    <a ng-show="selectedType == 1" id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/0/{{selectedProgram.id}}/{{selectedEquipmentType.id}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
 
+    <br/>
     <br/>
     <div ng-show="inventory.length == 0">
       <span openlmis-message="label.equipment.none.found"></span>

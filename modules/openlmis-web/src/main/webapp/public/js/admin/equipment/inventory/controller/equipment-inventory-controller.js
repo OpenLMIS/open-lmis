@@ -12,6 +12,11 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
 
   $scope.loadPrograms = function (selectedType) {
 
+    $scope.programs = undefined;
+    $scope.selectedProgram = undefined;
+    $scope.equipmentTypes = undefined;
+    $scope.selectedEquipmentType = undefined;
+
     if (selectedType === "0") { // My facility
       // Get facility first, then programs through facility
       UserFacilityList.get({}, function (data) {
@@ -23,7 +28,6 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
           }, {});
         } else {
           $scope.facilityDisplayName = messageService.get("label.none.assigned");
-          $scope.programs = undefined;
         }
       }, {});
     } else { // Supervised facility
@@ -31,9 +35,6 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
         $scope.programs = data.programs;
       }, {});
     }
-
-    $scope.equipmentTypes = undefined;
-    $scope.selectedEquipmentType = undefined;
   };
 
   $scope.loadEquipmentTypes = function () {
