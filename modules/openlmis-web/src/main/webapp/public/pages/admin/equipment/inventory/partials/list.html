@@ -104,7 +104,16 @@
           <td>{{item.manufacturerName}}</td>
           <td>{{item.model}}</td>
           <td>{{item.equipment.fridgeCapacity ? item.equipment.fridgeCapacity : 0}} / {{item.equipment.freezerCapacity ? item.equipment.freezerCapacity : 0}}</td>
-          <td>{{getStatusName(item.operationalStatusId)}}</td>
+          <td>
+            <select ui-select2 ng-model="item.operationalStatusId" ng-change="updateStatus(item)">
+              <option value="{{status.id}}" ng-repeat="status in operationalStatusList"
+                      ng-selected="status.id == item.operationalStatusId">{{status.name}}
+              </option>
+            </select>
+            <br/>
+            <span class="fadeout" ng-show="item.showSuccess == true"
+                  openlmis-message="label.equipment.inventory.status.saved"></span>
+          </td>
           <td>{{item.energySource}}</td>
           <td>{{item.yearOfInstallation}}</td>
           <td>{{getAge(item.yearOfInstallation)}}</td>

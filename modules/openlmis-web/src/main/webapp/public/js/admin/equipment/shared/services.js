@@ -44,6 +44,10 @@ services.factory('SaveEquipmentInventory', function ($resource) {
   return $resource('/equipment/inventory/save.json', {}, {});
 });
 
+services.factory('UpdateEquipmentInventoryStatus', function ($resource) {
+    return $resource('/equipment/inventory/status/update.json', {}, {});
+});
+
 /* Donors */
 services.factory('Donors', function ($resource) {
   return $resource('/donor/list.json', {}, {});

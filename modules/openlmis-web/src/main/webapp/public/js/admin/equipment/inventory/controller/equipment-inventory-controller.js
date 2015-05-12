@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentInventoryFacilities, EquipmentTypesByProgram, EquipmentOperationalStatus, navigateBackService, $routeParams, messageService) {
+function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout) {
 
   $scope.loadPrograms = function (selectedType) {
 
@@ -78,12 +78,20 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     $scope.operationalStatusList = data.status;
   });
 
-  $scope.getStatusName = function (statusId) {
-    for (var i = 0; i < $scope.operationalStatusList.length; i++) {
-      if ($scope.operationalStatusList[i].id === statusId) {
-        return $scope.operationalStatusList[i].name;
-      }
+  $scope.updateStatus = function (item) {
+    if ($scope.prevStatusId && $scope.prevStatusId !== item.operationalStatusId) {
+      item.showSuccess = true;
+      UpdateEquipmentInventoryStatus.save(item, function (data) {
+        // Success
+        $scope.prevStatusId = item.operationalStatusId;
+        $timeout(function () {
+          item.showSuccess = false;
+        }, 3000);
+      }, function (data) {
+        // Error goes here
+      });
     }
+    $scope.prevStatusId = item.operationalStatusId;
   };
 
   $scope.getAge = function (yearOfInstallation) {

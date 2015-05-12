@@ -74,4 +74,10 @@ public interface EquipmentInventoryMapper {
       " WHERE id = #{id}")
   void update(EquipmentInventory inventory);
 
+  @Update("UPDATE equipment_inventories" +
+      " SET operationalStatusId = #{operationalStatusId}" +
+      " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
+      " WHERE id = #{id}")
+  void updateStatus(EquipmentInventory inventory);
+
 }
