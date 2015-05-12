@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.serializer.DateDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -33,6 +34,7 @@ public class EquipmentInventory extends BaseModel {
   private Long equipmentId;
 
   private Equipment equipment;
+  private Facility facility;
 
   private Long operationalStatusId;
   private String serialNumber;

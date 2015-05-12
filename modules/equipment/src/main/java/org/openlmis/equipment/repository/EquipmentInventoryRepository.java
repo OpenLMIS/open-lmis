@@ -32,12 +32,18 @@ public class EquipmentInventoryRepository {
   public List<EquipmentInventory> getInventory(Long programId, Long equipmentTypeId, long[] facilityIds){
     // Convert ids into string format for the mapper to use
     StringBuilder str = new StringBuilder();
-    str.append("{");
-    for (int i = 0; i < facilityIds.length; i++) {
-      str.append(facilityIds[i]);
+    if (facilityIds.length == 0) {
+      str.append("{}");
+    } else {
+      str.append("{");
+      for (int i = 0; i < facilityIds.length-1; i++) {
+        str.append(facilityIds[i]);
+        str.append(",");
+      }
+      str.append(facilityIds[facilityIds.length-1]);
+      str.append("}");
     }
-    str.append("}");
-    
+
     return mapper.getInventory(programId, equipmentTypeId, str.toString());
   }
 
@@ -50,11 +56,11 @@ public class EquipmentInventoryRepository {
   }
 
   public void update(EquipmentInventory inventory){
-    mapper.update( inventory );
+    mapper.update(inventory);
   }
 
   public void updateStatus(EquipmentInventory inventory){
-    mapper.updateStatus( inventory );
+    mapper.updateStatus(inventory);
   }
 
 }
