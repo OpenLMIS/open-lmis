@@ -13,7 +13,7 @@ function SummaryReportController($scope, $filter, ngTableParams, SummaryReport, 
   $scope.exportReport = function (type) {
     $scope.filter.pdformat = 1;
     var params = jQuery.param($scope.filter);
-    var url = '/reports/download/summary/' + type + '?' + params;
+    var url = '/reports/download/summary' + (($scope.filter.disaggregated === true)?'_disaggregated': '') + '/' + type + '?' + params;
     window.open(url);
   };
     
