@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper=false)
 public class ColdChainEquipment extends Equipment{
 
-  private Equipment equipment;
   private Long equipmentId;
   private ColdChainEquipmentDesignation designation;
   private Long designationId;

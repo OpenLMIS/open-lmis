@@ -19,10 +19,8 @@ import java.util.List;
 @Repository
 public interface ColdChainEquipmentMapper {
 
-  @Select("SELECT * from equipment_cold_chain_equipments")
+  @Select("SELECT * from equipment_cold_chain_equipments JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id")
   @Results({
-          @Result(property = "equipment", column = "equipmentId", javaType = Equipment.class,
-                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
           @Result(property = "designation", column = "designationId", javaType = ColdChainEquipmentDesignation.class,
                   one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentDesignationMapper.getById")),
           @Result(property = "energyType", column = "energyTypeId", javaType = ColdChainEquipmentEnergyType.class,
@@ -34,10 +32,8 @@ public interface ColdChainEquipmentMapper {
   })
   List<ColdChainEquipment> getAll();
 
-    @Select("SELECT * from equipment_cold_chain_equipments where id = #{id}")
+    @Select("SELECT * from equipment_cold_chain_equipments JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id where equipment_cold_chain_equipments.id = #{id}")
     @Results({
-            @Result(property = "equipment", column = "equipmentId", javaType = Equipment.class,
-                    one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
             @Result(property = "designation", column = "designationId", javaType = ColdChainEquipmentDesignation.class,
                     one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentDesignationMapper.getById")),
             @Result(property = "energyType", column = "energyTypeId", javaType = ColdChainEquipmentEnergyType.class,

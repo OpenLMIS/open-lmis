@@ -121,11 +121,12 @@ public class ColdChainEquipmentMapperIT {
 
     List<ColdChainEquipment> coldChainEquipments =  mapper.getAll();
     assertEquals(coldChainEquipments.size(), 1);
+    assertEquals(equipment.getName(), coldChainEquipments.get(0).getName());
 
   }
 
   @Test
-  public void shouldColdChainEquipmentById() throws Exception {
+  public void shouldGetColdChainEquipmentById() throws Exception {
 
     EquipmentType type = new EquipmentType();
     type.setCode("1");
@@ -134,7 +135,7 @@ public class ColdChainEquipmentMapperIT {
 
     Equipment equipment = new Equipment();
     equipment.setCode("123");
-    equipment.setName("Name");
+    equipment.setName("Equipment Name");
     equipment.setEquipmentType(type);
     equipmentMapper.insert(equipment);
 
@@ -184,6 +185,7 @@ public class ColdChainEquipmentMapperIT {
 
     assertEquals(result.getModel(), coldChainEquipment.getModel());
     assertEquals(result.getBrand(), coldChainEquipment.getBrand());
+    assertEquals(result.getName(), equipment.getName());
   }
 
   @Test
