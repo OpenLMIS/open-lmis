@@ -53,4 +53,8 @@ public class EquipmentInventoryRepository {
     mapper.update( inventory );
   }
 
+  public void updateStatus(EquipmentInventory inventory){
+    mapper.updateStatus( inventory );
+  }
+
 }

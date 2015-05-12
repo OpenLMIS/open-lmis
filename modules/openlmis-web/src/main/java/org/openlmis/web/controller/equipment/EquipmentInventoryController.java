@@ -60,7 +60,7 @@ public class EquipmentInventoryController extends BaseController {
   @RequestMapping(value="programs", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getPrograms(HttpServletRequest request){
     Long userId = loggedInUserId(request);
-    return OpenLmisResponse.response("programs",programService.getProgramForSupervisedFacilities(userId,MANAGE_EQUIPMENT_INVENTORY));
+    return OpenLmisResponse.response("programs",programService.getProgramForSupervisedFacilities(userId, MANAGE_EQUIPMENT_INVENTORY));
   }
 
   @RequestMapping(value="facility/programs", method = RequestMethod.GET)
@@ -90,6 +90,16 @@ public class EquipmentInventoryController extends BaseController {
   public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentInventory inventory){
     ResponseEntity<OpenLmisResponse> response;
     service.save(inventory);
+    response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.saved"));
+    response.getBody().addData("inventory", inventory);
+    return response;
+  }
+
+  @RequestMapping(value="status/update", method = RequestMethod.POST)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
+  public ResponseEntity<OpenLmisResponse> updateStatus(@RequestBody EquipmentInventory inventory){
+    ResponseEntity<OpenLmisResponse> response;
+    service.updateStatus(inventory);
     response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.saved"));
     response.getBody().addData("inventory", inventory);
     return response;

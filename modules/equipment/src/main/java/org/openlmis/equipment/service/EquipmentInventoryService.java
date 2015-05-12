@@ -69,4 +69,8 @@ public class EquipmentInventoryService {
     }
   }
 
+  public void updateStatus(EquipmentInventory inventory){
+    repository.updateStatus(inventory);
+  }
+
 }
