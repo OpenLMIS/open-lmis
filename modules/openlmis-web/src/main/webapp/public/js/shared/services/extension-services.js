@@ -1143,3 +1143,7 @@ services.factory("getFacilityRnRTimelinessReportData", function($resource){
 services.factory("getTimelinessReportingDates", function($resource){
     return $resource('/reports/reportingDates/getTimelinessReportingDates.json',{},{});
 });
+
+services.factory("getAllColdChainStatusData", function($resource){
+    return $resource('/equipment/cold-chain/getAllStatusData.json',{},{});
+});
