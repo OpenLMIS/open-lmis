@@ -11,8 +11,8 @@
 DELETE FROM equipment_cold_chain_equipment_designations;
 INSERT INTO equipment_cold_chain_equipment_designations (name) VALUES ('Refrigerator'),('Freezer'),('Refrigerator & Freezer');
 
-DELETE FROM equipment_cold_chain_equipment_energy_types;
-INSERT INTO equipment_cold_chain_equipment_energy_types (name) VALUES ('Electricity'),('Solar'),('Gas'),('Kerosene');
+DELETE FROM equipment_energy_types;
+INSERT INTO equipment_energy_types (name) VALUES ('Electricity'),('Solar'),('Gas'),('Kerosene');
 
 DELETE FROM equipment_cold_chain_equipment_pqs_status;
 INSERT INTO equipment_cold_chain_equipment_pqs_status (name) VALUES ('Approved'),('Not Recommended'),('Suspended');
