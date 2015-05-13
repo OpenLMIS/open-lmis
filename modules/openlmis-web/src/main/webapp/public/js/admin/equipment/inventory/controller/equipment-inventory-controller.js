@@ -89,10 +89,10 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
   });
 
   $scope.updateStatus = function (item) {
-    if ($scope.prevStatusId && $scope.prevStatusId !== item.operationalStatusId) {
-      item.showSuccess = true;
+    if (item.prevStatusId && item.prevStatusId !== item.operationalStatusId) {
       UpdateEquipmentInventoryStatus.save(item, function (data) {
         // Success
+        item.showSuccess = true;
         $scope.prevStatusId = item.operationalStatusId;
         $timeout(function () {
           item.showSuccess = false;
@@ -101,7 +101,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
         // Error goes here
       });
     }
-    $scope.prevStatusId = item.operationalStatusId;
+    item.prevStatusId = item.operationalStatusId;
   };
 
   $scope.getAge = function (yearOfInstallation) {
