@@ -57,9 +57,19 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
         equipmentTypeId: $scope.selectedEquipmentType.id
       }, function (data) {
         $scope.inventory = data.inventory;
+        $scope.groups = _.groupBy($scope.inventory, function (item) {
+          return item.facility.geographicZone.parent.name;
+        });
+        for (var prop in $scope.groups) {
+          $scope.groups[prop] = _.groupBy($scope.groups[prop], getGeographicZone);
+        }
       });
     }
   };
+
+  function getGeographicZone(item) {
+    return item.facility.geographicZone.name;
+  }
 
 //  $scope.$on('$viewContentLoaded', function () {
     $scope.selectedType = $routeParams.selectedType || "0";
