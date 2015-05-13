@@ -85,7 +85,8 @@
       <table ng-show="selectedEquipmentType.coldChain == true" class="table table-bordered">
         <thead>
         <tr class="gradient-header">
-          <th class="col-row-number">#</th>
+          <th openlmis-message="label.equipment.region"></th>
+          <th openlmis-message="label.equipment.district"></th>
           <th openlmis-message="label.equipment.facility"></th>
           <th openlmis-message="label.equipment.equipment"></th>
           <th openlmis-message="label.equipment.manufacturer"></th>
@@ -100,7 +101,8 @@
         </thead>
         <tbody>
         <tr ng-repeat="item in inventory">
-          <td>{{$index + 1}}</td>
+          <td>{{item.facility.geographicZone.parent.name}}</td>
+          <td>{{item.facility.geographicZone.name}}</td>
           <td>{{item.facility.name}}</td>
           <td><a ng-href="#/edit/{{selectedType}}/{{item.facilityId}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}">{{item.equipment.name}}</a></td>
           <td>{{item.manufacturerName}}</td>
