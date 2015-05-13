@@ -11,6 +11,7 @@
 package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
@@ -39,7 +40,10 @@ public interface EquipmentInventoryMapper {
   @Results({
       @Result(
           property = "equipment", column = "equipmentId", javaType = Equipment.class,
-          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById"))
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
+      @Result(
+          property = "facility", column = "facilityId", javaType = Facility.class,
+          one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
   List<EquipmentInventory> getInventory(@Param("programId")Long programId, @Param("equipmentTypeId")Long equipmentTypeId, @Param("facilityIds")String facilityIds);
 

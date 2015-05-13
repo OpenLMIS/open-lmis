@@ -86,6 +86,7 @@
         <thead>
         <tr class="gradient-header">
           <th class="col-row-number">#</th>
+          <th openlmis-message="label.equipment.facility"></th>
           <th openlmis-message="label.equipment.equipment"></th>
           <th openlmis-message="label.equipment.manufacturer"></th>
           <th openlmis-message="label.equipment.model"></th>
@@ -100,6 +101,7 @@
         <tbody>
         <tr ng-repeat="item in inventory">
           <td>{{$index + 1}}</td>
+          <td>{{item.facility.name}}</td>
           <td><a ng-href="#/edit/{{selectedType}}/{{item.facilityId}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}">{{item.equipment.name}}</a></td>
           <td>{{item.manufacturerName}}</td>
           <td>{{item.model}}</td>
