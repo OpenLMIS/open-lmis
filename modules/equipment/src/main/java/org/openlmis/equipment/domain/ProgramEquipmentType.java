@@ -14,27 +14,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Program;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
-public class Equipment extends BaseModel{
-
-  private String name;
-
-  private String code;
-
-  private EquipmentType equipmentType;
-
-  private Long equipmentTypeId;
-
-  private String manufacture;
-
-  private String model;
-
-  private EquipmentEnergyType energyType;
-
-  private Long energyTypeId;
+@EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ProgramEquipmentType extends BaseModel{
+  Program program;
+  EquipmentType equipmentType;
+  Boolean enableTestCount;
+  Boolean enableTotalColumn;
+  Integer displayOrder;
 }

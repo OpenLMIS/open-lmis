@@ -11,7 +11,7 @@
 package org.openlmis.web.controller.equipment;
 
 import org.openlmis.core.exception.DataException;
-import org.openlmis.equipment.domain.ProgramEquipment;
+import org.openlmis.equipment.domain.ProgramEquipmentType;
 import org.openlmis.equipment.service.ProgramEquipmentProductService;
 import org.openlmis.equipment.service.ProgramEquipmentService;
 import org.openlmis.web.controller.BaseController;
@@ -41,32 +41,32 @@ public class ProgramEquipmentController extends BaseController {
 
   @RequestMapping(value = "save", method = RequestMethod.POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody ProgramEquipment programEquipment, HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody ProgramEquipmentType programEquipmentType, HttpServletRequest request){
     ResponseEntity<OpenLmisResponse> successResponse;
 
     Long userId = loggedInUserId(request);
     Date date = new Date();
 
-    if(programEquipment.getId() == null){
-      programEquipment.setCreatedBy(userId);
-      programEquipment.setCreatedDate(date);
-      programEquipment.setEnableTestCount(false);
-      programEquipment.setEnableTotalColumn(false);
-      programEquipment.setDisplayOrder(0);
+    if(programEquipmentType.getId() == null){
+      programEquipmentType.setCreatedBy(userId);
+      programEquipmentType.setCreatedDate(date);
+      programEquipmentType.setEnableTestCount(false);
+      programEquipmentType.setEnableTotalColumn(false);
+      programEquipmentType.setDisplayOrder(0);
     }
 
-    programEquipment.setModifiedBy(userId);
-    programEquipment.setModifiedDate(date);
+    programEquipmentType.setModifiedBy(userId);
+    programEquipmentType.setModifiedDate(date);
 
     try {
-      programEquipmentService.Save(programEquipment);
+      programEquipmentService.Save(programEquipmentType);
     }
     catch (DataException e){
       return OpenLmisResponse.error(e, HttpStatus.BAD_REQUEST);
     }
 
     successResponse = OpenLmisResponse.success("Program Equipment association successfully saved.");
-    successResponse.getBody().addData("programEquipment",programEquipment);
+    successResponse.getBody().addData("programEquipment", programEquipmentType);
     return successResponse;
   }
 

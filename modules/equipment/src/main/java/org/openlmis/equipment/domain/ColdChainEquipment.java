@@ -21,19 +21,14 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper=false)
 public class ColdChainEquipment extends Equipment{
 
-  private Long equipmentId;
   private ColdChainEquipmentDesignation designation;
   private Long designationId;
-  private String brand;
-  private String model;
   private String cceCode;
   private String pqsCode;
   private Float refrigeratorCapacity;
   private Float freezerCapacity;
   private String refrigerant;
   private String temperatureZone;
-  private ColdChainEquipmentEnergyType energyType;
-  private Long energyTypeId;
   private String energyConsumption;
   private Long maxTemperature;
   private Long minTemperature;

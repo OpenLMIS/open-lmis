@@ -8,20 +8,35 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.domain;
+package org.openlmis.equipment.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.openlmis.equipment.domain.EquipmentEnergyType;
+import org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
-public class ColdChainEquipmentEnergyType extends BaseModel{
+import java.util.List;
 
-  private String name;
+@Repository
+public class EquipmentEnergyTypeRepository {
+
+  @Autowired
+  EquipmentEnergyTypeMapper energyTypeMapper;
+
+  public EquipmentEnergyType getById(Long id){
+    return energyTypeMapper.getById(id);
+  }
+
+  public List<EquipmentEnergyType> getAll(){
+    return energyTypeMapper.getAll();
+  }
+
+  public void insert(EquipmentEnergyType energyType){
+    energyTypeMapper.insert(energyType);
+  }
+
+  public void update(EquipmentEnergyType energyType){
+    energyTypeMapper.update(energyType);
+  }
 
 }

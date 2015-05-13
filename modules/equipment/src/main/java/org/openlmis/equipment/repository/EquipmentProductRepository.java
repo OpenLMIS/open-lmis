@@ -11,8 +11,8 @@
 package org.openlmis.equipment.repository;
 
 import org.openlmis.core.domain.Product;
-import org.openlmis.equipment.domain.EquipmentProduct;
-import org.openlmis.equipment.repository.mapper.EquipmentProductMapper;
+import org.openlmis.equipment.domain.EquipmentTypeProduct;
+import org.openlmis.equipment.repository.mapper.EquipmentTypeProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,18 +22,18 @@ import java.util.List;
 public class EquipmentProductRepository {
 
   @Autowired
-  EquipmentProductMapper mapper;
+  EquipmentTypeProductMapper mapper;
 
-  public List<EquipmentProduct> getByProgramEquipmentId(Long programEquipmentId){
+  public List<EquipmentTypeProduct> getByProgramEquipmentId(Long programEquipmentId){
     return mapper.getByProgramEquipmentId(programEquipmentId);
   }
 
-  public void insert(EquipmentProduct equipmentProduct){
-    mapper.insert(equipmentProduct);
+  public void insert(EquipmentTypeProduct equipmentTypeProduct){
+    mapper.insert(equipmentTypeProduct);
   }
 
-  public void update(EquipmentProduct equipmentProduct){
-    mapper.update(equipmentProduct);
+  public void update(EquipmentTypeProduct equipmentTypeProduct){
+    mapper.update(equipmentTypeProduct);
   }
 
   public void remove(Long programEquipmentId) {

@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentEnergyType;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -46,6 +47,9 @@ public class EquipmentMapperIT {
   EquipmentTypeMapper typeMapper;
 
   @Autowired
+  EquipmentEnergyTypeMapper energyTypeMapper;
+
+  @Autowired
   EquipmentMapper mapper;
 
   @Autowired
@@ -58,10 +62,17 @@ public class EquipmentMapperIT {
     type.setCode("Type");
     typeMapper.insert(type);
 
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
+    energyType.setName("TestEnergy");
+    energyTypeMapper.insert(energyType);
+
     Equipment equipment = new Equipment();
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
+    equipment.setManufacture("Manufacture");
+    equipment.setModel("Model");
+    equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
 
     ResultSet rs = queryExecutor.execute("Select * from equipments where id = " + equipment.getId());
@@ -76,15 +87,24 @@ public class EquipmentMapperIT {
     type.setCode("Type");
     typeMapper.insert(type);
 
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
+    energyType.setName("TestEnergy");
+    energyTypeMapper.insert(energyType);
+
     Equipment equipment = new Equipment();
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
+    equipment.setManufacture("Manufacture");
+    equipment.setModel("Model");
+    equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
 
     Equipment result = mapper.getById(equipment.getId());
     assertEquals(result.getCode(), equipment.getCode());
     assertEquals(result.getName(), equipment.getName());
+    assertEquals(result.getModel(), equipment.getModel());
+    assertEquals(result.getEnergyTypeId(), equipment.getEnergyTypeId());
   }
 
   @Test
@@ -94,10 +114,17 @@ public class EquipmentMapperIT {
     type.setCode("Type");
     typeMapper.insert(type);
 
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
+    energyType.setName("TestEnergy");
+    energyTypeMapper.insert(energyType);
+
     Equipment equipment = new Equipment();
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
+    equipment.setManufacture("Manufacture");
+    equipment.setModel("Model");
+    equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
     assertThat(equipment.getId(), CoreMatchers.is(notNullValue()));
 
@@ -105,6 +132,8 @@ public class EquipmentMapperIT {
     assertEquals(rs.next(), true);
     assertEquals(rs.getString("code"), "123");
     assertEquals(rs.getString("name"),"Name");
+    assertEquals(rs.getString("model"),"Model");
+    assertEquals(rs.getString("manufacture"),"Manufacture");
 
   }
 
@@ -115,10 +144,17 @@ public class EquipmentMapperIT {
     type.setCode("Type");
     typeMapper.insert(type);
 
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
+    energyType.setName("TestEnergy");
+    energyTypeMapper.insert(energyType);
+
     Equipment equipment = new Equipment();
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
+    equipment.setManufacture("Manufacture");
+    equipment.setModel("Model");
+    equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
 
     equipment.setName("Updated Name");
@@ -136,10 +172,17 @@ public class EquipmentMapperIT {
 
     typeMapper.insert(type);
 
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
+    energyType.setName("TestEnergy");
+    energyTypeMapper.insert(energyType);
+
     Equipment equipment = new Equipment();
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
+    equipment.setManufacture("Manufacture");
+    equipment.setModel("Model");
+    equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
 
 
@@ -155,10 +198,17 @@ public class EquipmentMapperIT {
 
     typeMapper.insert(type);
 
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
+    energyType.setName("TestEnergy");
+    energyTypeMapper.insert(energyType);
+
     Equipment equipment = new Equipment();
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
+    equipment.setManufacture("Manufacture");
+    equipment.setModel("Model");
+    equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
 
     equipment.setCode("1234");

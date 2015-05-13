@@ -23,8 +23,6 @@ public interface ColdChainEquipmentMapper {
   @Results({
           @Result(property = "designation", column = "designationId", javaType = ColdChainEquipmentDesignation.class,
                   one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentDesignationMapper.getById")),
-          @Result(property = "energyType", column = "energyTypeId", javaType = ColdChainEquipmentEnergyType.class,
-                  one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentEnergyTypeMapper.getById")),
           @Result(property = "pqsStatus", column = "pqsStatusId", javaType = ColdChainEquipmentPqsStatus.class,
                   one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentPqsStatusMapper.getById")),
           @Result(property = "donor", column = "donorId", javaType = Donor.class,
@@ -32,12 +30,10 @@ public interface ColdChainEquipmentMapper {
   })
   List<ColdChainEquipment> getAll();
 
-    @Select("SELECT * from equipment_cold_chain_equipments JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id where equipment_cold_chain_equipments.id = #{id}")
+    @Select("SELECT * from equipment_cold_chain_equipments JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id where equipment_cold_chain_equipments.equipmentid = #{id}")
     @Results({
             @Result(property = "designation", column = "designationId", javaType = ColdChainEquipmentDesignation.class,
                     one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentDesignationMapper.getById")),
-            @Result(property = "energyType", column = "energyTypeId", javaType = ColdChainEquipmentEnergyType.class,
-                    one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentEnergyTypeMapper.getById")),
             @Result(property = "pqsStatus", column = "pqsStatusId", javaType = ColdChainEquipmentPqsStatus.class,
                     one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentPqsStatusMapper.getById")),
             @Result(property = "donor", column = "donorId", javaType = Donor.class,
@@ -46,12 +42,12 @@ public interface ColdChainEquipmentMapper {
   ColdChainEquipment getById(@Param("id") Long id);
 
   @Insert("INSERT into equipment_cold_chain_equipments " +
-      "(equipmentId, designationId, brand, model, cceCode, pqsCode, refrigeratorCapacity,freezerCapacity" +
-      ", refrigerant, temperatureZone, maxTemperature, minTemperature, holdoverTime, energyConsumption, energyTypeId" +
+      "(equipmentId, designationId, cceCode, pqsCode, refrigeratorCapacity,freezerCapacity" +
+      ", refrigerant, temperatureZone, maxTemperature, minTemperature, holdoverTime, energyConsumption" +
       ", dimension, price, pqsStatusId, donorId, createdBy, createdDate, modifiedBy, modifiedDate)" +
       "values " +
-      " ( #{equipmentId}, #{designationId}, #{brand}, #{model}, #{cceCode}, #{pqsCode}, #{refrigeratorCapacity},#{freezerCapacity}" +
-      ", #{refrigerant}, #{temperatureZone}, #{maxTemperature}, #{minTemperature}, #{holdoverTime},#{energyConsumption},#{energyTypeId}" +
+      " ( #{id}, #{designationId}, #{cceCode}, #{pqsCode}, #{refrigeratorCapacity},#{freezerCapacity}" +
+      ", #{refrigerant}, #{temperatureZone}, #{maxTemperature}, #{minTemperature}, #{holdoverTime},#{energyConsumption}" +
       ", #{dimension}, #{price}, #{pqsStatusId}, #{donorId}" +
       ", #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
@@ -59,11 +55,11 @@ public interface ColdChainEquipmentMapper {
 
   @Update("UPDATE equipment_cold_chain_equipments " +
       "SET " +
-      " designationId = #{designationId}, brand = #{brand}, model = #{model}, cceCode = #{cceCode}, pqsCode = #{pqsCode}, refrigeratorCapacity = #{refrigeratorCapacity}, freezerCapacity = #{freezerCapacity}" +
+      " designationId = #{designationId}, cceCode = #{cceCode}, pqsCode = #{pqsCode}, refrigeratorCapacity = #{refrigeratorCapacity}, freezerCapacity = #{freezerCapacity}" +
       " , refrigerant = #{refrigerant}, temperatureZone = #{temperatureZone}, maxTemperature = #{maxTemperature}, minTemperature = #{minTemperature} , holdoverTime = #{holdoverTime} " +
-      " , energyConsumption = #{energyConsumption},energyTypeId = #{energyTypeId}, dimension = #{dimension}, price = #{price}, pqsStatusId = #{pqsStatusId},donorId=#{donorId} " +
+      " , energyConsumption = #{energyConsumption}, dimension = #{dimension}, price = #{price}, pqsStatusId = #{pqsStatusId},donorId=#{donorId} " +
       " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
-      " WHERE id = #{id}")
+      " WHERE equipmentid = #{id}")
   void update(ColdChainEquipment coldChainEquipment);
 
 }

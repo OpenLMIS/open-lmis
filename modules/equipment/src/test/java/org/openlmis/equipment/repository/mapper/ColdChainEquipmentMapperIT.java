@@ -55,7 +55,7 @@ public class ColdChainEquipmentMapperIT {
   ColdChainEquipmentPqsStatusMapper statusMapper;
 
   @Autowired
-  ColdChainEquipmentEnergyTypeMapper energyTypeMapper;
+  EquipmentEnergyTypeMapper energyTypeMapper;
 
   @Autowired
   DonorMapper donorMapper;
@@ -71,17 +71,11 @@ public class ColdChainEquipmentMapperIT {
     type.setCode("Type");
     typeMapper.insert(type);
 
-    Equipment equipment = new Equipment();
-    equipment.setCode("123");
-    equipment.setName("Name");
-    equipment.setEquipmentType(type);
-    equipmentMapper.insert(equipment);
-
     ColdChainEquipmentDesignation designation=new ColdChainEquipmentDesignation();
     designation.setName("TestDesignation");
     designationMapper.insert(designation);
 
-    ColdChainEquipmentEnergyType energyType=new ColdChainEquipmentEnergyType();
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
     energyType.setName("TestEnergy");
     energyTypeMapper.insert(energyType);
 
@@ -97,17 +91,19 @@ public class ColdChainEquipmentMapperIT {
     donorMapper.insert(donor);
 
     ColdChainEquipment coldChainEquipment = new ColdChainEquipment();
-    coldChainEquipment.setEquipmentId(equipment.getId());
+    coldChainEquipment.setCode("123");
+    coldChainEquipment.setName("Equipment Name");
+    coldChainEquipment.setEquipmentType(type);
+    coldChainEquipment.setManufacture("Manufacture");
+    coldChainEquipment.setModel("Model");
+    coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setDesignationId(designation.getId());
-    coldChainEquipment.setBrand("Brand123");
-    coldChainEquipment.setModel("Model123");
     coldChainEquipment.setCceCode("CR");
     coldChainEquipment.setPqsCode("Domestic");
     coldChainEquipment.setRefrigeratorCapacity(10.00F);
     coldChainEquipment.setFreezerCapacity(5.00F);
     coldChainEquipment.setRefrigerant("NH3");
     coldChainEquipment.setTemperatureZone("HT");
-    coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setEnergyConsumption("12kW/h");
     coldChainEquipment.setMaxTemperature(4L);
     coldChainEquipment.setMaxTemperature(-4L);
@@ -117,11 +113,12 @@ public class ColdChainEquipmentMapperIT {
     coldChainEquipment.setDonorId(donor.getId());
     coldChainEquipment.setPqsStatusId(pqsStatus.getId());
 
+    equipmentMapper.insert(coldChainEquipment);
     mapper.insert(coldChainEquipment);
 
-    List<ColdChainEquipment> coldChainEquipments =  mapper.getAll();
-    assertEquals(coldChainEquipments.size(), 1);
-    assertEquals(equipment.getName(), coldChainEquipments.get(0).getName());
+    List<ColdChainEquipment> results =  mapper.getAll();
+    assertEquals(results.size(), 1);
+    assertEquals(coldChainEquipment.getName(), results.get(0).getName());
 
   }
 
@@ -133,17 +130,11 @@ public class ColdChainEquipmentMapperIT {
     type.setCode("Type");
     typeMapper.insert(type);
 
-    Equipment equipment = new Equipment();
-    equipment.setCode("123");
-    equipment.setName("Equipment Name");
-    equipment.setEquipmentType(type);
-    equipmentMapper.insert(equipment);
-
     ColdChainEquipmentDesignation designation=new ColdChainEquipmentDesignation();
     designation.setName("TestDesignation");
     designationMapper.insert(designation);
 
-    ColdChainEquipmentEnergyType energyType=new ColdChainEquipmentEnergyType();
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
     energyType.setName("TestEnergy");
     energyTypeMapper.insert(energyType);
 
@@ -159,17 +150,19 @@ public class ColdChainEquipmentMapperIT {
     donorMapper.insert(donor);
 
     ColdChainEquipment coldChainEquipment = new ColdChainEquipment();
-    coldChainEquipment.setEquipmentId(equipment.getId());
+    coldChainEquipment.setCode("123");
+    coldChainEquipment.setName("Equipment Name");
+    coldChainEquipment.setEquipmentType(type);
+    coldChainEquipment.setManufacture("Manufacture");
+    coldChainEquipment.setModel("Model");
+    coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setDesignationId(designation.getId());
-    coldChainEquipment.setBrand("Brand123");
-    coldChainEquipment.setModel("Model123");
     coldChainEquipment.setCceCode("CR");
     coldChainEquipment.setPqsCode("Domestic");
     coldChainEquipment.setRefrigeratorCapacity(10.00F);
     coldChainEquipment.setFreezerCapacity(5.00F);
     coldChainEquipment.setRefrigerant("NH3");
     coldChainEquipment.setTemperatureZone("HT");
-    coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setEnergyConsumption("12kW/h");
     coldChainEquipment.setMaxTemperature(4L);
     coldChainEquipment.setMaxTemperature(-4L);
@@ -179,13 +172,14 @@ public class ColdChainEquipmentMapperIT {
     coldChainEquipment.setDonorId(donor.getId());
     coldChainEquipment.setPqsStatusId(pqsStatus.getId());
 
+    equipmentMapper.insert(coldChainEquipment);
     mapper.insert(coldChainEquipment);
 
     ColdChainEquipment result = mapper.getById(coldChainEquipment.getId());
 
     assertEquals(result.getModel(), coldChainEquipment.getModel());
-    assertEquals(result.getBrand(), coldChainEquipment.getBrand());
-    assertEquals(result.getName(), equipment.getName());
+    assertEquals(result.getManufacture(), coldChainEquipment.getManufacture());
+    assertEquals(result.getName(), coldChainEquipment.getName());
   }
 
   @Test
@@ -196,17 +190,11 @@ public class ColdChainEquipmentMapperIT {
     type.setCode("Type");
     typeMapper.insert(type);
 
-    Equipment equipment = new Equipment();
-    equipment.setCode("123");
-    equipment.setName("Name");
-    equipment.setEquipmentType(type);
-    equipmentMapper.insert(equipment);
-
     ColdChainEquipmentDesignation designation=new ColdChainEquipmentDesignation();
     designation.setName("TestDesignation");
     designationMapper.insert(designation);
 
-    ColdChainEquipmentEnergyType energyType=new ColdChainEquipmentEnergyType();
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
     energyType.setName("TestEnergy");
     energyTypeMapper.insert(energyType);
 
@@ -222,17 +210,19 @@ public class ColdChainEquipmentMapperIT {
     donorMapper.insert(donor);
 
     ColdChainEquipment coldChainEquipment = new ColdChainEquipment();
-    coldChainEquipment.setEquipmentId(equipment.getId());
+    coldChainEquipment.setCode("123");
+    coldChainEquipment.setName("Equipment Name");
+    coldChainEquipment.setEquipmentType(type);
+    coldChainEquipment.setManufacture("Manufacture");
+    coldChainEquipment.setModel("Model");
+    coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setDesignationId(designation.getId());
-    coldChainEquipment.setBrand("Brand123");
-    coldChainEquipment.setModel("Model123");
     coldChainEquipment.setCceCode("CR");
     coldChainEquipment.setPqsCode("Domestic");
     coldChainEquipment.setRefrigeratorCapacity(10.00F);
     coldChainEquipment.setFreezerCapacity(5.00F);
     coldChainEquipment.setRefrigerant("NH3");
     coldChainEquipment.setTemperatureZone("HT");
-    coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setEnergyConsumption("12kW/h");
     coldChainEquipment.setMaxTemperature(4L);
     coldChainEquipment.setMaxTemperature(-4L);
@@ -242,14 +232,15 @@ public class ColdChainEquipmentMapperIT {
     coldChainEquipment.setDonorId(donor.getId());
     coldChainEquipment.setPqsStatusId(pqsStatus.getId());
 
+    equipmentMapper.insert(coldChainEquipment);
     mapper.insert(coldChainEquipment);
 
     assertThat(coldChainEquipment.getId(), CoreMatchers.is(notNullValue()));
 
-   ResultSet rs = queryExecutor.execute("Select * from equipment_cold_chain_equipments where id = " + coldChainEquipment.getId());
+    ResultSet rs = queryExecutor.execute("Select * from equipment_cold_chain_equipments ce JOIN equipments e ON ce.equipmentid=e.id where equipmentid = " + coldChainEquipment.getId());
     assertEquals(rs.next(), true);
-    assertEquals(rs.getString("model"), "Model123");
-    assertEquals(rs.getString("brand"), "Brand123");
+    assertEquals(rs.getString("model"), "Model");
+    assertEquals(rs.getString("refrigerant"), "NH3");
   }
 
   @Test
@@ -259,17 +250,11 @@ public class ColdChainEquipmentMapperIT {
     type.setCode("Type");
     typeMapper.insert(type);
 
-    Equipment equipment = new Equipment();
-    equipment.setCode("123");
-    equipment.setName("Name");
-    equipment.setEquipmentType(type);
-    equipmentMapper.insert(equipment);
-
     ColdChainEquipmentDesignation designation=new ColdChainEquipmentDesignation();
     designation.setName("TestDesignation");
     designationMapper.insert(designation);
 
-    ColdChainEquipmentEnergyType energyType=new ColdChainEquipmentEnergyType();
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
     energyType.setName("TestEnergy");
     energyTypeMapper.insert(energyType);
 
@@ -285,17 +270,19 @@ public class ColdChainEquipmentMapperIT {
     donorMapper.insert(donor);
 
     ColdChainEquipment coldChainEquipment = new ColdChainEquipment();
-    coldChainEquipment.setEquipmentId(equipment.getId());
+    coldChainEquipment.setCode("123");
+    coldChainEquipment.setName("Equipment Name");
+    coldChainEquipment.setEquipmentType(type);
+    coldChainEquipment.setManufacture("Manufacture");
+    coldChainEquipment.setModel("Model");
+    coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setDesignationId(designation.getId());
-    coldChainEquipment.setBrand("Brand123");
-    coldChainEquipment.setModel("Model123");
     coldChainEquipment.setCceCode("CR");
     coldChainEquipment.setPqsCode("Domestic");
     coldChainEquipment.setRefrigeratorCapacity(10.00F);
     coldChainEquipment.setFreezerCapacity(5.00F);
     coldChainEquipment.setRefrigerant("NH3");
     coldChainEquipment.setTemperatureZone("HT");
-    coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setEnergyConsumption("12kW/h");
     coldChainEquipment.setMaxTemperature(4L);
     coldChainEquipment.setMaxTemperature(-4L);
@@ -305,18 +292,20 @@ public class ColdChainEquipmentMapperIT {
     coldChainEquipment.setDonorId(donor.getId());
     coldChainEquipment.setPqsStatusId(pqsStatus.getId());
 
+    equipmentMapper.insert(coldChainEquipment);
     mapper.insert(coldChainEquipment);
 
-    coldChainEquipment.setBrand("NewBrand");
+    coldChainEquipment.setRefrigerant("NewRefrigerant");
     coldChainEquipment.setModel("NewModel");
 
+    equipmentMapper.update(coldChainEquipment);
     mapper.update(coldChainEquipment);
 
     assertThat(coldChainEquipment.getId(), CoreMatchers.is(notNullValue()));
 
-    ResultSet rs = queryExecutor.execute("Select * from equipment_cold_chain_equipments where id = " + coldChainEquipment.getId());
+    ResultSet rs = queryExecutor.execute("Select * from equipment_cold_chain_equipments ce JOIN equipments e ON ce.equipmentid=e.id  where equipmentid = " + coldChainEquipment.getId());
     assertEquals(rs.next(), true);
+    assertEquals(rs.getString("refrigerant"), "NewRefrigerant");
     assertEquals(rs.getString("model"), "NewModel");
-    assertEquals(rs.getString("brand"), "NewBrand");
   }
 }

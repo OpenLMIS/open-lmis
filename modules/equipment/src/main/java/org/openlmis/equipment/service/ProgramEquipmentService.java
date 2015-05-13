@@ -1,6 +1,6 @@
 package org.openlmis.equipment.service;
 
-import org.openlmis.equipment.domain.ProgramEquipment;
+import org.openlmis.equipment.domain.ProgramEquipmentType;
 import org.openlmis.equipment.repository.ProgramEquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,15 +13,15 @@ public class ProgramEquipmentService {
   @Autowired
   ProgramEquipmentRepository programEquipmentRepository;
 
-  public List<ProgramEquipment> getByProgramId(Long programId) {
+  public List<ProgramEquipmentType> getByProgramId(Long programId) {
     return programEquipmentRepository.getByProgramId(programId);
   }
 
-  public void Save(ProgramEquipment programEquipment) {
-    if (programEquipment.getId() == null) {
-      programEquipmentRepository.insert(programEquipment);
+  public void Save(ProgramEquipmentType programEquipmentType) {
+    if (programEquipmentType.getId() == null) {
+      programEquipmentRepository.insert(programEquipmentType);
     } else {
-      programEquipmentRepository.update(programEquipment);
+      programEquipmentRepository.update(programEquipmentType);
     }
   }
 

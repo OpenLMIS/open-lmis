@@ -15,13 +15,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.Product;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class EquipmentProduct extends BaseModel {
-  ProgramEquipment programEquipment;
-  Product product;
+@EqualsAndHashCode(callSuper=false)
+public class EquipmentEnergyType extends BaseModel{
+
+  private String name;
+
 }

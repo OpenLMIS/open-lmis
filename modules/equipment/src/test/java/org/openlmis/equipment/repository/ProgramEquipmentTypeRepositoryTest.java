@@ -10,16 +10,16 @@ import static org.mockito.Mockito.verify;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.equipment.domain.ProgramEquipment;
-import org.openlmis.equipment.repository.mapper.EquipmentProgramMapper;
+import org.openlmis.equipment.domain.ProgramEquipmentType;
+import org.openlmis.equipment.repository.mapper.EquipmentTypeProgramMapper;
 
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class ProgramEquipmentRepositoryTest {
+public class ProgramEquipmentTypeRepositoryTest {
 
   @Mock
-  EquipmentProgramMapper mapper;
+  EquipmentTypeProgramMapper mapper;
 
   @InjectMocks
   ProgramEquipmentRepository repository;
@@ -32,18 +32,18 @@ public class ProgramEquipmentRepositoryTest {
 
   @Test
   public void shouldInsert() throws Exception {
-    ProgramEquipment programEquipment = new ProgramEquipment();
-    programEquipment.setDisplayOrder(29);
-    repository.insert(programEquipment);
-    verify(mapper).insert(programEquipment);
+    ProgramEquipmentType programEquipmentType = new ProgramEquipmentType();
+    programEquipmentType.setDisplayOrder(29);
+    repository.insert(programEquipmentType);
+    verify(mapper).insert(programEquipmentType);
   }
 
   @Test
   public void shouldUpdate() throws Exception {
-    ProgramEquipment programEquipment = new ProgramEquipment();
-    programEquipment.setDisplayOrder(29);
-    repository.update(programEquipment);
-    verify(mapper).update(programEquipment);
+    ProgramEquipmentType programEquipmentType = new ProgramEquipmentType();
+    programEquipmentType.setDisplayOrder(29);
+    repository.update(programEquipmentType);
+    verify(mapper).update(programEquipmentType);
   }
 
   @Test

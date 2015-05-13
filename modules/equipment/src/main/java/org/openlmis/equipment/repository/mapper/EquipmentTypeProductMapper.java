@@ -12,44 +12,44 @@ package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
-import org.openlmis.equipment.domain.EquipmentProduct;
+import org.openlmis.equipment.domain.EquipmentTypeProduct;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface EquipmentProductMapper {
+public interface EquipmentTypeProductMapper {
 
   @Select("select pep.*, p.fullName productName, p.primaryName " +
-      "      from equipment_products pep " +
+      "      from equipment_type_products pep " +
       "      join products p on p.id = pep.productId " +
-      "      where programEquipmentId = #{programEquipmentId} order by productName")
+      "      where programEquipmentTypeId = #{programEquipmentTypeId} order by productName")
   @Results(value = {
       @Result(property = "product.fullName",column = "productName"),
       @Result(property="product.primaryName",column = "primaryName")
   })
-  List<EquipmentProduct> getByProgramEquipmentId(@Param(value="programEquipmentId") Long programEquipmentId);
+  List<EquipmentTypeProduct> getByProgramEquipmentId(@Param(value="programEquipmentTypeId") Long programEquipmentTypeId);
 
-  @Insert("INSERT INTO equipment_products (programEquipmentId, productId, createdBy, createdDate, modifiedBy, modifiedDate) " +
-      "VALUES (#{programEquipment.id}, #{product.id}, #{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}) ")
+  @Insert("INSERT INTO equipment_type_products (programEquipmentTypeId, productId, createdBy, createdDate, modifiedBy, modifiedDate) " +
+      "VALUES (#{programEquipmentType.id}, #{product.id}, #{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate}) ")
   @Options(useGeneratedKeys = true)
-  void insert(EquipmentProduct equipmentProduct);
+  void insert(EquipmentTypeProduct equipmentTypeProduct);
 
-  @Update("UPDATE equipment_products " +
-      "SET programEquipmentId = #{programEquipment.id}, productId = #{product.id}, createdBy = #{createdBy}, createdDate = #{createdDate}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
+  @Update("UPDATE equipment_type_products " +
+      "SET programEquipmentTypeId = #{programEquipmentType.id}, productId = #{product.id}, createdBy = #{createdBy}, createdDate = #{createdDate}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate} " +
       "WHERE id = #{id}")
-  void update(EquipmentProduct equipmentProduct);
+  void update(EquipmentTypeProduct equipmentTypeProduct);
 
-  @Delete("DELETE FROM equipment_products WHERE id = #{programEquipmentProductId}")
+  @Delete("DELETE FROM equipment_type_products WHERE id = #{programEquipmentProductId}")
   void remove(@Param(value = "programEquipmentProductId") Long programEquipmentProductId);
 
-  @Delete("DELETE FROM equipment_products WHERE programEquipmentId = #{programEquipmentId}")
-  void removeByEquipmentProducts(@Param(value = "programEquipmentId") Long programEquipmentId);
+  @Delete("DELETE FROM equipment_type_products WHERE programEquipmentTypeId = #{programEquipmentTypeId}")
+  void removeByEquipmentProducts(@Param(value = "programEquipmentTypeId") Long programEquipmentTypeId);
 
   @Select("SELECT p.* from products p " +
     "       join program_products pp on pp.productId = p.id " +
     "     where " +
     "           pp.programId = #{programId} " +
     "     order by pp.displayOrder")
-  List<Product> getAvailableProductsToLink(@Param("programId") Long programId, @Param("equipmentId") Long equipmentId);
+  List<Product> getAvailableProductsToLink(@Param("programId") Long programId, @Param("equipmentTypeId") Long equipmentTypeId);
 }

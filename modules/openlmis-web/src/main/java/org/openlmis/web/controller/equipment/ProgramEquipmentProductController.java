@@ -11,7 +11,7 @@
 package org.openlmis.web.controller.equipment;
 
 import org.openlmis.core.exception.DataException;
-import org.openlmis.equipment.domain.EquipmentProduct;
+import org.openlmis.equipment.domain.EquipmentTypeProduct;
 import org.openlmis.equipment.service.ProgramEquipmentProductService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -40,27 +40,27 @@ public class ProgramEquipmentProductController extends BaseController{
 
   @RequestMapping(value = "save", method = RequestMethod.POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentProduct equipmentProduct, HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentTypeProduct equipmentTypeProduct, HttpServletRequest request){
     Date date = new Date();
     Long userId = loggedInUserId(request);
     ResponseEntity<OpenLmisResponse> successResponse;
 
-    if(equipmentProduct.getId() == null){
-      equipmentProduct.setCreatedDate(date);
-      equipmentProduct.setCreatedBy(userId);
+    if(equipmentTypeProduct.getId() == null){
+      equipmentTypeProduct.setCreatedDate(date);
+      equipmentTypeProduct.setCreatedBy(userId);
     }
-    equipmentProduct.setModifiedDate(date);
-    equipmentProduct.setModifiedBy(userId);
+    equipmentTypeProduct.setModifiedDate(date);
+    equipmentTypeProduct.setModifiedBy(userId);
 
     try{
-      programEquipmentProductService.Save(equipmentProduct);
+      programEquipmentProductService.Save(equipmentTypeProduct);
     }
     catch (DataException e){
       return OpenLmisResponse.error(e, HttpStatus.BAD_REQUEST);
     }
 
     successResponse = OpenLmisResponse.success("message.equipment.association.pep.saved");
-    successResponse.getBody().addData("programEquipmentProduct", equipmentProduct);
+    successResponse.getBody().addData("programEquipmentProduct", equipmentTypeProduct);
     return successResponse;
   }
 

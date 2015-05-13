@@ -11,13 +11,13 @@ import static org.mockito.Mockito.verify;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.equipment.domain.EquipmentProduct;
+import org.openlmis.equipment.domain.EquipmentTypeProduct;
 import org.openlmis.equipment.repository.EquipmentProductRepository;
 
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class ProgramEquipmentProductServiceTest {
+public class ProgramEquipmentTypeProductServiceTest {
 
   @Mock
   EquipmentProductRepository repository;
@@ -33,7 +33,7 @@ public class ProgramEquipmentProductServiceTest {
 
   @Test
   public void shouldSaveNewRecords() throws Exception {
-    EquipmentProduct pp = new EquipmentProduct();
+    EquipmentTypeProduct pp = new EquipmentTypeProduct();
     service.Save(pp);
     verify(repository).insert(pp);
     verify(repository, never()).update(pp);
@@ -41,7 +41,7 @@ public class ProgramEquipmentProductServiceTest {
 
   @Test
   public void shouldUpdaetRecords() throws Exception {
-    EquipmentProduct pp = new EquipmentProduct();
+    EquipmentTypeProduct pp = new EquipmentTypeProduct();
     pp.setId(3L);
     service.Save(pp);
 

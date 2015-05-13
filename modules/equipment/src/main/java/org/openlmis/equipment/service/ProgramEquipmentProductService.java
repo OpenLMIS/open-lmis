@@ -10,7 +10,7 @@
 package org.openlmis.equipment.service;
 
 import org.openlmis.core.domain.Product;
-import org.openlmis.equipment.domain.EquipmentProduct;
+import org.openlmis.equipment.domain.EquipmentTypeProduct;
 import org.openlmis.equipment.repository.EquipmentProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,16 +22,16 @@ public class ProgramEquipmentProductService {
   @Autowired
   EquipmentProductRepository repository;
 
-  public List<EquipmentProduct> getByProgramEquipmentId(Long programEquipmentId){
+  public List<EquipmentTypeProduct> getByProgramEquipmentId(Long programEquipmentId){
     return repository.getByProgramEquipmentId(programEquipmentId);
   }
 
-  public void Save(EquipmentProduct equipmentProduct){
-    if(equipmentProduct.getId() == null){
-      repository.insert(equipmentProduct);
+  public void Save(EquipmentTypeProduct equipmentTypeProduct){
+    if(equipmentTypeProduct.getId() == null){
+      repository.insert(equipmentTypeProduct);
     }
     else {
-      repository.update(equipmentProduct);
+      repository.update(equipmentTypeProduct);
     }
   }
 

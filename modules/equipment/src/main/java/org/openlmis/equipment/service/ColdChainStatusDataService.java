@@ -10,14 +10,8 @@
 
 package org.openlmis.equipment.service;
 
-import org.openlmis.equipment.domain.ColdChainEquipmentDesignation;
-import org.openlmis.equipment.domain.ColdChainEquipmentEnergyType;
-import org.openlmis.equipment.domain.ColdChainEquipmentPqsStatus;
-import org.openlmis.equipment.domain.Donor;
-import org.openlmis.equipment.repository.ColdChainEquipmentDesignationRepository;
-import org.openlmis.equipment.repository.ColdChainEquipmentEnergyTypeRepository;
-import org.openlmis.equipment.repository.ColdChainEquipmentPqsStatusRepository;
-import org.openlmis.equipment.repository.DonorRepository;
+import org.openlmis.equipment.domain.*;
+import org.openlmis.equipment.repository.*;
 import org.openlmis.equipment.repository.mapper.ColdChainEquipmentPqsStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,13 +22,13 @@ import java.util.List;
 public class ColdChainStatusDataService {
 
   @Autowired
-  private ColdChainEquipmentDesignationRepository designationRepository;
+  ColdChainEquipmentDesignationRepository designationRepository;
 
   @Autowired
   ColdChainEquipmentPqsStatusRepository pqsStatusRepository;
 
   @Autowired
-  ColdChainEquipmentEnergyTypeRepository energyTypeRepository;
+  EquipmentEnergyTypeRepository energyTypeRepository;
 
   @Autowired
   DonorRepository donorRepository;
@@ -43,7 +37,7 @@ public class ColdChainStatusDataService {
     return designationRepository.getAll();
   }
 
-  public List<ColdChainEquipmentEnergyType> getAllEnergyTypes(){
+  public List<EquipmentEnergyType> getAllEnergyTypes(){
     return energyTypeRepository.getAll();
   }
 

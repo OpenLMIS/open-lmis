@@ -15,7 +15,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.equipment.domain.ColdChainEquipmentEnergyType;
+import org.openlmis.equipment.domain.EquipmentEnergyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,10 +31,10 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(locations = "classpath*:test-applicationContext-equipment.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class ColdChainEquipmentEnergyTypeMapperIT {
+public class EquipmentEnergyTypeMapperIT {
 
   @Autowired
-  ColdChainEquipmentEnergyTypeMapper mapper;
+  EquipmentEnergyTypeMapper mapper;
 
   @Autowired
   QueryExecutor queryExecutor;
@@ -42,17 +42,17 @@ public class ColdChainEquipmentEnergyTypeMapperIT {
 
   @Test
   public void shouldGetCCEEnergyTypesById() throws Exception {
-    ColdChainEquipmentEnergyType energyType = new ColdChainEquipmentEnergyType();
+    EquipmentEnergyType energyType = new EquipmentEnergyType();
     energyType.setName("Test");
     mapper.insert(energyType);
 
-    ColdChainEquipmentEnergyType result = mapper.getById(energyType.getId());
+    EquipmentEnergyType result = mapper.getById(energyType.getId());
     assertEquals(result.getName(), energyType.getName());
   }
 
   @Test
   public void shouldGetAllCCEEnergyTypes() throws Exception {
-    List<ColdChainEquipmentEnergyType> energyTypes=mapper.getAll();
+    List<EquipmentEnergyType> energyTypes=mapper.getAll();
     assertEquals(energyTypes.size(), 4);
   }
 

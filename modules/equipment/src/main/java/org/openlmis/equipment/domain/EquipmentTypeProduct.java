@@ -14,19 +14,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Product;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ProgramEquipment extends BaseModel{
-  Program program;
-  Equipment equipment;
-  Boolean enableTestCount;
-  Boolean enableTotalColumn;
-  Integer displayOrder;
+public class EquipmentTypeProduct extends BaseModel {
+  ProgramEquipmentType programEquipmentType;
+  Product product;
 }

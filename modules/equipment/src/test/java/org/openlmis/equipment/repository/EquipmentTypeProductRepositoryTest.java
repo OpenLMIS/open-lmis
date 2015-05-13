@@ -10,16 +10,16 @@ import static org.mockito.Mockito.verify;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.equipment.domain.EquipmentProduct;
-import org.openlmis.equipment.repository.mapper.EquipmentProductMapper;
+import org.openlmis.equipment.domain.EquipmentTypeProduct;
+import org.openlmis.equipment.repository.mapper.EquipmentTypeProductMapper;
 
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class EquipmentProductRepositoryTest {
+public class EquipmentTypeProductRepositoryTest {
 
   @Mock
-  EquipmentProductMapper mapper;
+  EquipmentTypeProductMapper mapper;
 
   @InjectMocks
   EquipmentProductRepository repository;
@@ -33,7 +33,7 @@ public class EquipmentProductRepositoryTest {
 
   @Test
   public void shouldInsert() throws Exception {
-    EquipmentProduct product = new EquipmentProduct();
+    EquipmentTypeProduct product = new EquipmentTypeProduct();
 
     repository.insert(product);
 
@@ -42,7 +42,7 @@ public class EquipmentProductRepositoryTest {
 
   @Test
   public void shouldUpdate() throws Exception {
-    EquipmentProduct product = new EquipmentProduct();
+    EquipmentTypeProduct product = new EquipmentTypeProduct();
 
     repository.update(product);
 

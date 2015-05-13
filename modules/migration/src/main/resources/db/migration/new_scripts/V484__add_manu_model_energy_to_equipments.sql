@@ -35,6 +35,9 @@ ALTER TABLE equipment_programs
 ALTER TABLE equipment_programs
   RENAME TO equipment_type_programs;
 
+ALTER TABLE equipment_products RENAME programequipmentid  TO programequipmenttypeid;
+ALTER TABLE equipment_products
+  RENAME TO equipment_type_products;
 
 ALTER TABLE equipment_service_contract_equipments
   DROP CONSTRAINT equipment_service_contract_equipments_equipmentid_fkey;

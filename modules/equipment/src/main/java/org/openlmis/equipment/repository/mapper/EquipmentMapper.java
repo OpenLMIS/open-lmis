@@ -25,37 +25,45 @@ public interface EquipmentMapper {
       @Result(
           property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
           one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
-      @Result(property = "equipmentTypeId", column = "equipmentTypeId")
+      @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
+          @Result(
+                  property = "energyType", column = "energyTypeId", javaType = EquipmentType.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
+          @Result(property = "energyTypeId", column = "energyTypeId")
 
   })
   List<Equipment> getAll();
 
   @Select("SELECT * from equipments where id = #{id}")
   @Results({
-      @Result(
-          property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
-          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
-      @Result(property = "equipmentTypeId", column = "equipmentTypeId")
+          @Result(
+                  property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
+          @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
+          @Result(
+                  property = "energyType", column = "energyTypeId", javaType = EquipmentType.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
+          @Result(property = "energyTypeId", column = "energyTypeId")
+
   })
   Equipment getById(@Param("id") Long id);
 
   @Select("SELECT et.*" +
       " FROM equipment_types et" +
-      " JOIN equipments e ON et.id = e.equipmenttypeid" +
-      " JOIN equipment_programs ep ON e.id = ep.equipmentid" +
-      " JOIN programs p ON ep.programid = p.id" +
+      " JOIN equipment_type_programs etp ON et.id = etp.equipmenttypeid" +
+      " JOIN programs p ON etp.programid = p.id" +
       " WHERE p.id = #{programId}")
   List<EquipmentType> getTypesByProgram(@Param("programId") Long programId);
 
-  @Insert("INSERT into equipments (code, name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate) " +
+  @Insert("INSERT into equipments (code, name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacture, model, energyTypeId) " +
       "values " +
-      "(#{code}, #{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+      "(#{code}, #{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacture},#{model},#{energyTypeId})")
   @Options(useGeneratedKeys = true)
   void insert(Equipment equipment);
 
   @Update("UPDATE equipments " +
       "set " +
-      " code = #{code}, name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
+      " code = #{code}, name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacture = #{manufacture}, model = #{model}, energyTypeId = #{energyTypeId} " +
       "WHERE id = #{id}")
   void update(Equipment equipment);
 

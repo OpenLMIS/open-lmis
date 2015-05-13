@@ -12,10 +12,7 @@ package org.openlmis.equipment.repository;
 
 
 import org.openlmis.equipment.domain.ColdChainEquipment;
-import org.openlmis.equipment.domain.Equipment;
-import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.mapper.ColdChainEquipmentMapper;
-import org.openlmis.equipment.repository.mapper.EquipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

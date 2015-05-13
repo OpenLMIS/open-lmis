@@ -30,7 +30,7 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Product;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.equipment.domain.EquipmentProduct;
+import org.openlmis.equipment.domain.EquipmentTypeProduct;
 import org.openlmis.equipment.service.ProgramEquipmentProductService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +42,7 @@ import java.util.List;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class ProgramEquipmentProductControllerTest {
+public class ProgramEquipmentTypeProductControllerTest {
 
   @Mock
   ProgramEquipmentProductService service;
@@ -62,7 +62,7 @@ public class ProgramEquipmentProductControllerTest {
 
   @Test
   public void shouldGetByProgramEquipmentId() throws Exception {
-    List<EquipmentProduct> list = new ArrayList<>();
+    List<EquipmentTypeProduct> list = new ArrayList<>();
     when(service.getByProgramEquipmentId(2L)).thenReturn(list);
 
     ResponseEntity<OpenLmisResponse> response = controller.getByProgramEquipmentId(2L);
@@ -71,7 +71,7 @@ public class ProgramEquipmentProductControllerTest {
 
   @Test
   public void shouldSave() throws Exception {
-    EquipmentProduct pep = new EquipmentProduct();
+    EquipmentTypeProduct pep = new EquipmentTypeProduct();
     doNothing().when(service).Save(pep);
 
     ResponseEntity<OpenLmisResponse> response = controller.save(pep, request);

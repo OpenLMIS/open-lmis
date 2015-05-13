@@ -16,20 +16,18 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.hamcrest.Matchers.any;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.equipment.domain.ProgramEquipment;
+import org.openlmis.equipment.domain.ProgramEquipmentType;
 import org.openlmis.equipment.repository.ProgramEquipmentRepository;
 
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class ProgramEquipmentServiceTest {
+public class ProgramEquipmentTypeServiceTest {
 
   @Mock
   ProgramEquipmentRepository repository;
@@ -45,19 +43,19 @@ public class ProgramEquipmentServiceTest {
 
   @Test
   public void shouldSaveNew() throws Exception {
-    ProgramEquipment programEquipment = new ProgramEquipment();
-    service.Save(programEquipment);
-    verify(repository).insert(programEquipment);
-    verify(repository, never()).update(programEquipment);
+    ProgramEquipmentType programEquipmentType = new ProgramEquipmentType();
+    service.Save(programEquipmentType);
+    verify(repository).insert(programEquipmentType);
+    verify(repository, never()).update(programEquipmentType);
   }
 
   @Test
   public void shouldSaveUpdate() throws Exception {
-    ProgramEquipment programEquipment = new ProgramEquipment();
-    programEquipment.setId(4L);
-    service.Save(programEquipment);
-    verify(repository, never()).insert(programEquipment);
-    verify(repository).update(programEquipment);
+    ProgramEquipmentType programEquipmentType = new ProgramEquipmentType();
+    programEquipmentType.setId(4L);
+    service.Save(programEquipmentType);
+    verify(repository, never()).insert(programEquipmentType);
+    verify(repository).update(programEquipmentType);
   }
 
   @Test

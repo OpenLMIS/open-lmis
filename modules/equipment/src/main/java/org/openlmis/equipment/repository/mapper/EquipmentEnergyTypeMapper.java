@@ -8,36 +8,34 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.equipment.repository;
+package org.openlmis.equipment.repository.mapper;
 
-
-import org.openlmis.equipment.domain.ColdChainEquipmentEnergyType;
-import org.openlmis.equipment.repository.mapper.ColdChainEquipmentEnergyTypeMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.ibatis.annotations.*;
+import org.openlmis.equipment.domain.EquipmentEnergyType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class ColdChainEquipmentEnergyTypeRepository {
+public interface EquipmentEnergyTypeMapper {
 
-  @Autowired
-  ColdChainEquipmentEnergyTypeMapper energyTypeMapper;
+  @Select("SELECT * from equipment_energy_types order by name")
+  List<EquipmentEnergyType> getAll();
 
-  public ColdChainEquipmentEnergyType getById(Long id){
-    return energyTypeMapper.getById(id);
-  }
+  @Select("SELECT * from equipment_energy_types where id = #{id}")
+  EquipmentEnergyType getById(@Param("id") Long id);
 
-  public List<ColdChainEquipmentEnergyType> getAll(){
-    return energyTypeMapper.getAll();
-  }
+  @Insert("INSERT into equipment_energy_types (name,createdby, createddate, modifiedby, modifieddate) " +
+      "values " +
+      "(#{name},#{createdBy}, NOW(), #{modifiedBy}, NOW())")
+  @Options(useGeneratedKeys = true)
+  void insert(EquipmentEnergyType equipmentEnergyType);
 
-  public void insert(ColdChainEquipmentEnergyType energyType){
-    energyTypeMapper.insert(energyType);
-  }
+  @Update("UPDATE equipment_energy_types " +
+      "set " +
+      "name = #{name},modifiedBy = #{modifiedby}, modifieddate = NOW() " +
+      "WHERE id = #{id}")
+  void update(EquipmentEnergyType equipmentEnergyType);
 
-  public void update(ColdChainEquipmentEnergyType energyType){
-    energyTypeMapper.update(energyType);
-  }
 
 }
