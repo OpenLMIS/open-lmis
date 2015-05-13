@@ -76,8 +76,8 @@
                     <property name="template" value="summary-report-disaggregated.jasper"/>
                     <property name="reportDataProvider" ref="summaryReportDataProvider"/>
                     <property name="id" value="RP-Summary"/>
-                    <property name="name" value="Disaggregating Summary Report"/>
-                    <property name="title" value="Disaggregating Summary Report"/>
+                    <property name="name" value="Disaggregated Summary Report"/>
+                    <property name="title" value="Disaggregated Summary Report"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
