@@ -41,6 +41,7 @@ import java.util.List;
 
 import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
 import static org.openlmis.core.domain.RightName.CONVERT_TO_ORDER;
+import static org.openlmis.rnr.dto.RnrDTO.prepareDTOsForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
 import static org.openlmis.rnr.service.RequisitionService.NUMBER_OF_PAGES;
@@ -192,8 +193,8 @@ public class RequisitionController extends BaseController {
   @RequestMapping(value = "/requisitions-for-approval", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'APPROVE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> listForApproval(HttpServletRequest request) {
-    List<Rnr> requisitions = requisitionService.listForApproval(loggedInUserId(request));
-    return response(RNR_LIST, prepareForListApproval(requisitions));
+    List<RnrDTO> requisitions = requisitionService.listForApprovalDto(loggedInUserId(request));
+    return response(RNR_LIST, prepareDTOsForListApproval(requisitions));
   }
 
   @RequestMapping(value = "/requisitions-for-convert-to-order", method = GET, headers = ACCEPT_JSON)
