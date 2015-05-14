@@ -58,12 +58,21 @@ public class RnrDTO {
   private String requisitionStatus;
   private Long modifiedBy;
 
+  @Deprecated
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
     List<RnrDTO> result = new ArrayList<>();
     for (Rnr requisition : requisitions) {
       result.add(prepareDTOWithSupplyingDepot(requisition));
     }
     return result;
+  }
+
+  public static List<RnrDTO> prepareDTOsForListApproval(List<RnrDTO> requisitions) {
+
+    for (RnrDTO requisition : requisitions) {
+      requisition.formatDates();
+    }
+    return requisitions;
   }
 
   public static List<RnrDTO> prepareForView(List<Rnr> requisitions) {
@@ -115,6 +124,13 @@ public class RnrDTO {
 
     rnrDTO.emergency = requisition.isEmergency();
     return rnrDTO;
+  }
+
+  private void formatDates(){
+    stringSubmittedDate   = formatDate(submittedDate);
+    stringModifiedDate    = formatDate(modifiedDate);
+    stringPeriodStartDate = formatDate(periodStartDate);
+    stringPeriodEndDate   = formatDate(periodEndDate);
   }
 
   private static String formatDate(Date date) {

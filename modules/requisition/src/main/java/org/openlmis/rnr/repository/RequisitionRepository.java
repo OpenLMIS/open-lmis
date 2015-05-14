@@ -17,6 +17,7 @@ import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -184,8 +185,13 @@ public class RequisitionRepository {
     return requisition;
   }
 
+  @Deprecated
   public List<Rnr> getAuthorizedRequisitions(RoleAssignment roleAssignment) {
     return requisitionMapper.getAuthorizedRequisitions(roleAssignment);
+  }
+
+  public List<RnrDTO> getAuthorizedRequisitionsDTOs(RoleAssignment roleAssignment){
+    return requisitionMapper.getAuthorizedRequisitionsDTO(roleAssignment);
   }
 
   public Rnr getLastRegularRequisitionToEnterThePostSubmitFlow(Long facilityId, Long programId) {
