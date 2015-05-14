@@ -60,11 +60,11 @@ VaccineProtocolController.resolve = {
     }
     return deferred.promise;
   },
-  programs: function($q, $timeout, Programs){
+  programs: function($q, $timeout, VaccineReportConfigurablePrograms){
     var deferred = $q.defer();
 
     $timeout(function(){
-      Programs.get({type: 'push'}, function(data){
+      VaccineReportConfigurablePrograms.get( function(data){
         deferred.resolve(data.programs);
       });
     },100);

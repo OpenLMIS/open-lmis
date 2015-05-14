@@ -40,15 +40,14 @@ function VaccineReportController($scope, programs, VaccineReportFacilities, Vacc
 }
 
 VaccineReportController.resolve = {
-  programs: function($q, $timeout, VaccineReportPrograms){
+  programs: function($q, $timeout, VaccineSupervisedIvdPrograms){
     var deferred = $q.defer();
 
     $timeout(function(){
-      VaccineReportPrograms.get({},function(data){
+      VaccineSupervisedIvdPrograms.get({},function(data){
         deferred.resolve(data.programs);
       });
     },100);
-
 
     return deferred.promise;
   }
