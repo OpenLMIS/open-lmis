@@ -86,15 +86,12 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
 
   $scope.updateStatus = function (item) {
     if (item.prevStatusId && item.prevStatusId !== item.operationalStatusId) {
-      UpdateEquipmentInventoryStatus.save(item, function (data) {
+      UpdateEquipmentInventoryStatus.save({}, item, function (data) {
         // Success
         item.showSuccess = true;
-        $scope.prevStatusId = item.operationalStatusId;
         $timeout(function () {
           item.showSuccess = false;
         }, 3000);
-      }, function (data) {
-        // Error goes here
       });
     }
     item.prevStatusId = item.operationalStatusId;
