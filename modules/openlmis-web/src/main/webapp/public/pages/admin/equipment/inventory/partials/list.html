@@ -46,10 +46,9 @@
       </div>
     </div>
     <div class="row-fluid">
-      <select ui-select2 placeholder="{{ programOptionMessage() }}" class="span3" id="programList"
-              ng-model="selectedProgram.id" ng-change="loadEquipmentTypes();">
+      <select ui-select2 class="span3" id="programList" ng-model="selectedProgram"
+              ng-options="program.name for program in programs | orderBy:'name'" ng-change="loadEquipmentTypes();">
         <option value=""></option>
-        <option ng-repeat="program in programs | orderBy: 'name'" value="{{ program.id }}">{{ program.name }}
         </option>
       </select>
     </div>
@@ -63,9 +62,9 @@
       </div>
     </div>
     <div class="row-fluid">
-      <select ui-select2 class="span3" id="equipmentTypeList" ng-model="selectedEquipmentType.id" ng-change="loadInventory();">
+      <select ui-select2 class="span3" id="equipmentTypeList" ng-model="selectedEquipmentType"
+              ng-options="equipmentType.name for equipmentType in equipmentTypes | orderBy:'name'" ng-change="loadInventory();">
         <option value=""></option>
-        <option ng-repeat="equipmentType in equipmentTypes" value="{{ equipmentType.id }}">{{ equipmentType.name }}
         </option>
       </select>
     </div>

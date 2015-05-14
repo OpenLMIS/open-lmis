@@ -38,18 +38,14 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
   };
 
   $scope.loadEquipmentTypes = function () {
+    $scope.equipmentTypes = undefined;
+    $scope.selectedEquipmentType = undefined;
     EquipmentTypesByProgram.get({programId: $scope.selectedProgram.id}, function (data) {
       $scope.equipmentTypes = data.equipment_types;
     }, {});
   };
 
   $scope.loadInventory = function () {
-    // Turn selectedEquipmentType from object with just id, to full object
-    for (var i = 0; i < $scope.equipmentTypes.length; i++) {
-      if ($scope.equipmentTypes[i].id.toString() === $scope.selectedEquipmentType.id) {
-        $scope.selectedEquipmentType = $scope.equipmentTypes[i];
-      }
-    }
     if ($scope.selectedProgram && $scope.selectedEquipmentType) {
       EquipmentInventories.get({
         typeId: $scope.selectedType,
