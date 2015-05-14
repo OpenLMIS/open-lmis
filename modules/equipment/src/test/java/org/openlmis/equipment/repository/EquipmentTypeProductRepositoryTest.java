@@ -22,7 +22,7 @@ public class EquipmentTypeProductRepositoryTest {
   EquipmentTypeProductMapper mapper;
 
   @InjectMocks
-  EquipmentProductRepository repository;
+  EquipmentTypeProductRepository repository;
 
   @Test
   public void shouldGetByProgramEquipmentId() throws Exception {

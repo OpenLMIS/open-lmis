@@ -12,7 +12,7 @@ import static org.mockito.Mockito.verify;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.EquipmentTypeProduct;
-import org.openlmis.equipment.repository.EquipmentProductRepository;
+import org.openlmis.equipment.repository.EquipmentTypeProductRepository;
 
 
 @Category(UnitTests.class)
@@ -20,10 +20,10 @@ import org.openlmis.equipment.repository.EquipmentProductRepository;
 public class ProgramEquipmentTypeProductServiceTest {
 
   @Mock
-  EquipmentProductRepository repository;
+  EquipmentTypeProductRepository repository;
 
   @InjectMocks
-  ProgramEquipmentProductService service;
+  ProgramEquipmentTypeProductService service;
 
   @Test
   public void shouldGetByProgramEquipmentId() throws Exception {

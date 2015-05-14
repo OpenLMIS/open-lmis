@@ -31,7 +31,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Product;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.EquipmentTypeProduct;
-import org.openlmis.equipment.service.ProgramEquipmentProductService;
+import org.openlmis.equipment.service.ProgramEquipmentTypeProductService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -45,10 +45,10 @@ import java.util.List;
 public class ProgramEquipmentTypeProductControllerTest {
 
   @Mock
-  ProgramEquipmentProductService service;
+  ProgramEquipmentTypeProductService service;
 
   @InjectMocks
-  ProgramEquipmentProductController controller;
+  ProgramEquipmentTypeProductController controller;
 
   private MockHttpServletRequest request;
 
