@@ -16,6 +16,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.stereotype.Repository;
 
@@ -59,6 +60,7 @@ public interface RequisitionMapper {
   })
   Rnr getById(Long rnrId);
 
+  @Deprecated
   @Select({"SELECT id, emergency, programId, facilityId, periodId, modifiedDate",
       "FROM requisitions ",
       "WHERE programId =  #{programId}",
@@ -67,6 +69,23 @@ public interface RequisitionMapper {
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "period.id", column = "periodId")})
   List<Rnr> getAuthorizedRequisitions(RoleAssignment roleAssignment);
+
+  @Select({"SELECT r.id, r.emergency, r.programId, r.facilityId, r.periodId, r.modifiedDate" +
+    "     , p.id as programId, p.code as programCode, p.name as programName " +
+    "     , f.id as facilityId, f.code as facilityCode, f.name as facilityName " +
+    "     , ft.name as facilityType " +
+    "     , gz.name as districtName " +
+    "     , pr.StartDate as periodStartDate, pr.endDate as periodEndDate, pr.name as periodName " +
+    "     , (select max(createdDate) from requisition_status_changes rsc where rsc.rnrId = r.id and rsc.status = 'SUBMITTED') as submittedDate",
+    " FROM requisitions r " +
+      " join programs p on p.id = r.programId " +
+      " join facilities f on f.id = r.facilityId " +
+      " join processing_periods pr on pr.id = r.periodId " +
+      " join facility_types ft on ft.id = f.typeId " +
+      " join geographic_zones gz on gz.id = f.geographicZoneId ",
+    "WHERE programId =  #{programId}",
+    "AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')"})
+  List<RnrDTO> getAuthorizedRequisitionsDTO(RoleAssignment roleAssignment);
 
   @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id}")
   @Results(value = {

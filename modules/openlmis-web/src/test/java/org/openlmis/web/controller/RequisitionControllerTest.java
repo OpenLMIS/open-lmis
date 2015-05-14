@@ -307,18 +307,15 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldReturnListOfUserSupervisedRnrForApproval() {
-    final Rnr requisition = createRequisition();
-    final List<Rnr> requisitions = new ArrayList<Rnr>() {{
+    final RnrDTO requisition = new RnrDTO();
+    final List<RnrDTO> requisitions = new ArrayList<RnrDTO>() {{
       add(requisition);
     }};
-    when(requisitionService.listForApproval(USER_ID)).thenReturn(requisitions);
+    when(requisitionService.listForApprovalDto(USER_ID)).thenReturn(requisitions);
     final ResponseEntity<OpenLmisResponse> response = controller.listForApproval(request);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     final List<RnrDTO> requisitionsList = (List<RnrDTO>) response.getBody().getData().get(RNR_LIST);
-    assertThat(requisitionsList.get(0).getFacilityName(), is(FACILITY_NAME));
-    assertThat(requisitionsList.get(0).getFacilityCode(), is(FACILITY_CODE));
-    assertThat(requisitionsList.get(0).getProgramName(), is(PROGRAM_NAME));
-    verify(requisitionService).listForApproval(USER_ID);
+    verify(requisitionService).listForApprovalDto(USER_ID);
   }
 
   @Test
