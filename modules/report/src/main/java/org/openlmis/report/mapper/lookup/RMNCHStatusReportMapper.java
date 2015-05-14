@@ -492,6 +492,8 @@ public interface RMNCHStatusReportMapper {
     List<GeoStockStatusProduct> getAdequatelyStockedProducts(@Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId, @Param("productId") Long ProductId);
 
 
+    @Select("select productid, productname, periodid, periodname, periodyear, quantityonhand, quantityconsumed, amc from fn_get_rmnch_stock_status_data(#{geographicZoneId}::int,#{periodId}::int,#{productId}); ")
+    List<GeoStockStatusProductConsumption> getStockStatusProductConsumption(@Param("periodId") Long periodId, @Param("geographicZoneId") Long geographicZoneId, @Param("productId") String ProductIds);
 
     @Select("select * from geographic_zone_geojson")
     List<GeographicZoneJsonDto> getGeoZoneGeometryJson();

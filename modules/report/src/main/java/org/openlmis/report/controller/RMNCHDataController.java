@@ -109,7 +109,7 @@ public class RMNCHDataController extends BaseController {
                                                                     @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
                                                                     @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
     ){
-        return OpenLmisResponse.response("products", this.rmnchStatusReportMapper.getOverStockedProducts(geoZoneId , period, product));
+        return OpenLmisResponse.response("products", this.rmnchStatusReportMapper.getOverStockedProducts(geoZoneId, period, product));
     }
 
     @RequestMapping(value="/adequately-stocked-products", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -117,8 +117,17 @@ public class RMNCHDataController extends BaseController {
                                                                          @RequestParam(value = "product", required = true, defaultValue = "0") Long product,
                                                                          @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
     ){
-        return OpenLmisResponse.response("products", this.rmnchStatusReportMapper.getAdequatelyStockedProducts(geoZoneId , period, product));
+        return OpenLmisResponse.response("products", this.rmnchStatusReportMapper.getAdequatelyStockedProducts(geoZoneId, period, product));
     }
+
+    @RequestMapping(value="/stock-status-product-consumption", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockStatusProductConsumption(@RequestParam(value = "product", required = true, defaultValue = "0")List<Long> productListId,
+                                                                             @RequestParam(value = "period", required = true, defaultValue = "0") Long periodId,
+                                                                             @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId
+    ){
+        return OpenLmisResponse.response("consumption", this.rmnchStatusReportMapper.getStockStatusProductConsumption(periodId, geoZoneId, getCommaSeparatedIds(productListId)));
+    }
+
 
     @RequestMapping(value="/geo-zone-geometry", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getGeoZoneGeometryJson(){

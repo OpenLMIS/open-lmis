@@ -1181,4 +1181,11 @@ services.factory('RmnchUnderStockedFacilityByProductList', function($resource){
 services.factory('RmnchAdequatelyStockedFacilityByProductList', function($resource){
     return $resource('/rmnch/adequately-stocked-products.json',{}, {});
 });
+services.factory('RmnchStockStatusProductConsumptionGraph', function($resource){
+    return $resource('/rmnch/stock-status-product-consumption.json',{}, {});
+});
+
+services.factory('RmnchProducts', function($resource){
+    return $resource('/reports/rmnch-products.json',{},{});
+});
 

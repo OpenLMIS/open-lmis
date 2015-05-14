@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function MNCHStatusController( $scope, leafletData, RmnchStockedOutFacilityByProductList, RmnchUnderStockedFacilityByProductList, RmnchOverStockedFacilityByProductList, RmnchAdequatelyStockedFacilityByProductList, RmnchStockedOutFacilityList, RmnchUnderStockedFacilityList, RmnchOverStockedFacilityList, RmnchAdequatelyStockedFacilityList, SettingsByKey, ContactList, SendMessages, $filter, $dialog, messageService) {
+function MNCHStatusController( $scope, leafletData, RmnchStockedOutFacilityByProductList, RmnchUnderStockedFacilityByProductList, RmnchOverStockedFacilityByProductList, RmnchAdequatelyStockedFacilityByProductList, RmnchStockedOutFacilityList, RmnchUnderStockedFacilityList, RmnchOverStockedFacilityList, RmnchAdequatelyStockedFacilityList, RmnchStockStatusProductConsumptionGraph, SettingsByKey, ContactList, SendMessages, $filter, $dialog, messageService) {
 
     $scope.default_indicator = "stocked_out";
     $scope.district_title = "All Geographic Zones";
@@ -289,7 +289,7 @@ function MNCHStatusController( $scope, leafletData, RmnchStockedOutFacilityByPro
             }
         });
 
-       /* StockStatusProductConsumptionGraph.get({
+        RmnchStockStatusProductConsumptionGraph.get({
             program: $scope.filter.program,
             product: $scope.productsSelected,
             period: $scope.filter.period,
@@ -301,7 +301,7 @@ function MNCHStatusController( $scope, leafletData, RmnchStockedOutFacilityByPro
 
 
         });
-*/    };
+    };
 
     $scope.resetConsumptionChartData = function(){
 

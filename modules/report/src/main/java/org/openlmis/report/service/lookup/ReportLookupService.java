@@ -620,4 +620,9 @@ public class ReportLookupService {
     public List<TimelinessReport>getTimelinessReportingDates(Long periodId){
         return timelinessStatusReportMapper.getTimelinessReportingDates(periodId);
     }
+
+    public List<Product> getRmnchProducts() {
+        return productMapper.getRmnchProducts();
+    }
+
 }
