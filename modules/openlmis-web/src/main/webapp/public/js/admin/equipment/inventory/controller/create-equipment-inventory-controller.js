@@ -39,7 +39,6 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
 
     // set default of checkboxes so the submission does not become null and hence an error.
     $scope.equipment.replacementRecommended = false;
-    $scope.equipment.hasServiceContract = false;
     $scope.equipment.dateLastAssessed = Date.now();
     $scope.equipment.isActive = true;
 
@@ -51,7 +50,6 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
       $scope.equipment = data.inventory;
       $scope.equipment.dateLastAssessed = $scope.equipment.dateLastAssessedString ;
       $scope.equipment.dateDecommissioned = $scope.equipment.dateDecommissionedString;
-      $scope.equipment.serviceContractEndDate = $scope.equipment.serviceContractEndDateString;
       Facility.get({ id: $scope.equipment.facilityId }, function(data){
         $scope.facility = data.facility;
       });

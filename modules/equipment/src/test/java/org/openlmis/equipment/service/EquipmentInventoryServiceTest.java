@@ -54,17 +54,17 @@ public class EquipmentInventoryServiceTest {
   @Test
   public void shouldGetInventoryById() throws Exception {
     EquipmentInventory equipment = new EquipmentInventory();
-    equipment.setModel("123");
+    equipment.setSerialNumber("123");
     when(repository.getInventoryById(1L)).thenReturn(equipment);
 
     EquipmentInventory result = service.getInventoryById(1L);
-    assertEquals(result.getModel(), equipment.getModel());
+    assertEquals(result.getSerialNumber(), equipment.getSerialNumber());
   }
 
   @Test
   public void shouldSaveNewEquipmentInventory() throws Exception {
     EquipmentInventory equipment = new EquipmentInventory();
-    equipment.setModel("123");
+    equipment.setSerialNumber("123");
 
     service.save(equipment);
     verify(repository).insert(equipment);
@@ -75,7 +75,7 @@ public class EquipmentInventoryServiceTest {
   public void shouldSaveChangesInExistingEquipmentInventory() throws Exception {
     EquipmentInventory equipment = new EquipmentInventory();
     equipment.setId(1L);
-    equipment.setModel("123");
+    equipment.setSerialNumber("123");
 
     service.save(equipment);
     verify(repository, never()).insert(equipment);

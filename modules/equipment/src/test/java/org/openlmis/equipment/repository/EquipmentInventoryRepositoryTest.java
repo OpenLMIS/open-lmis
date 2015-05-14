@@ -40,7 +40,6 @@ public class EquipmentInventoryRepositoryTest {
   @Test
   public void shouldGetFacilityInventory() throws Exception {
     EquipmentInventory inventory = new EquipmentInventory();
-    inventory.setModel("123");
     List<EquipmentInventory> inventories = new ArrayList<>();
     inventories.add(inventory);
 
@@ -55,7 +54,6 @@ public class EquipmentInventoryRepositoryTest {
   @Test
   public void shouldGetInventoryById() throws Exception {
     EquipmentInventory inventory = new EquipmentInventory();
-    inventory.setModel("123");
 
     when(mapper.getInventoryById(1L)).thenReturn(inventory);
 
@@ -68,7 +66,6 @@ public class EquipmentInventoryRepositoryTest {
   @Test
   public void shouldInsert() throws Exception {
     EquipmentInventory inventory = new EquipmentInventory();
-    inventory.setModel("123");
 
     repository.insert(inventory);
     verify(mapper).insert(inventory);
@@ -77,7 +74,6 @@ public class EquipmentInventoryRepositoryTest {
   @Test
   public void shouldUpdate() throws Exception {
     EquipmentInventory inventory = new EquipmentInventory();
-    inventory.setModel("123");
 
     repository.update(inventory);
     verify(mapper).update(inventory);

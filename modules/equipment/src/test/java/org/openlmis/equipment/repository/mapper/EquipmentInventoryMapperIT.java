@@ -72,7 +72,6 @@ public class EquipmentInventoryMapperIT {
     inventory.setFacilityId(1L);
     inventory.setOperationalStatusId(1L);
     inventory.setEquipmentId(1L);
-    inventory.setModel("123");
     inventory.setReplacementRecommended(false);
     inventory.setYearOfInstallation(2012);
     inventory.setSerialNumber("2323");
@@ -105,7 +104,6 @@ public class EquipmentInventoryMapperIT {
     inventory.setEquipmentId(equipment.getId());
     inventory.setOperationalStatusId(1L);
     inventory.setProgramId(1L);
-    inventory.setModel("123");
     inventory.setReplacementRecommended(false);
     inventory.setYearOfInstallation(2012);
     inventory.setSerialNumber("2323");
@@ -141,7 +139,6 @@ public class EquipmentInventoryMapperIT {
     inventory.setEquipmentId(equipment.getId());
     inventory.setOperationalStatusId(1L);
     inventory.setProgramId(1L);
-    inventory.setModel("123");
     inventory.setReplacementRecommended(false);
     inventory.setYearOfInstallation(2012);
     inventory.setSerialNumber("2323");

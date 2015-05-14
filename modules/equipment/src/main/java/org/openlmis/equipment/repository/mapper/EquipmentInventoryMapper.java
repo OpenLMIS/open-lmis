@@ -57,23 +57,22 @@ public interface EquipmentInventoryMapper {
   EquipmentInventory getInventoryById(@Param("id") Long id);
 
   @Insert("INSERT into equipment_inventories " +
-      " ( facilityId, equipmentId, programId, operationalStatusId, serialNumber, manufacturerName, model" +
-      ", energySource, yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
-      ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned, hasServiceContract, serviceContractEndDate" +
-      ", primaryDonorId, dimension, capacity, minTemperature, maxTemperature, accessories , createdBy, createdDate, modifiedBy, modifiedDate) " +
+      " ( facilityId, equipmentId, programId, operationalStatusId, serialNumber" +
+      ", yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
+      ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned" +
+      ", primaryDonorId, createdBy, createdDate, modifiedBy, modifiedDate) " +
       "values " +
-      " ( #{facilityId}, #{equipmentId}, #{programId}, #{operationalStatusId}, #{serialNumber}, #{manufacturerName}, #{model}" +
-      ", #{energySource}, #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
-      ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}, #{hasServiceContract}, #{serviceContractEndDate} " +
-      ", #{primaryDonorId}, #{dimension}, #{capacity}, #{minTemperature}, #{maxTemperature}, #{accessories} , #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+      " ( #{facilityId}, #{equipmentId}, #{programId}, #{operationalStatusId}, #{serialNumber}" +
+      ", #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
+      ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}" +
+      ", #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
   void insert(EquipmentInventory inventory);
 
   @Update("UPDATE equipment_inventories " +
       "SET " +
-      " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, operationalStatusId = #{operationalStatusId}, serialNumber = #{serialNumber}, manufacturerName = #{manufacturerName}, model = #{model}, energySource = #{energySource}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, sourceOfFund = #{sourceOfFund},replacementRecommended = #{replacementRecommended},reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, dateLastAssessed = #{dateLastAssessed} " +
-      " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, hasServiceContract = #{hasServiceContract}, serviceContractEndDate = #{serviceContractEndDate} , primaryDonorId = #{primaryDonorId} " +
-      " , dimension = #{dimension},capacity = #{capacity}, minTemperature = #{minTemperature}, maxTemperature = #{maxTemperature}, accessories = #{accessories} " +
+      " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, operationalStatusId = #{operationalStatusId}, serialNumber = #{serialNumber}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, sourceOfFund = #{sourceOfFund},replacementRecommended = #{replacementRecommended},reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, dateLastAssessed = #{dateLastAssessed} " +
+      " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, primaryDonorId = #{primaryDonorId} " +
       " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
       " WHERE id = #{id}")
   void update(EquipmentInventory inventory);
