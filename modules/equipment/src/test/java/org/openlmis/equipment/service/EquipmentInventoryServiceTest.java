@@ -10,12 +10,16 @@
 
 package org.openlmis.equipment.service;
 
+import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
@@ -26,6 +30,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.core.domain.RightName.MANAGE_EQUIPMENT_INVENTORY;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 
@@ -33,11 +38,19 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class EquipmentInventoryServiceTest {
 
+  private static Logger logger = Logger.getLogger(EquipmentInventoryServiceTest.class);
+
   @Mock
   private EquipmentInventoryRepository repository;
 
   @InjectMocks
   private EquipmentInventoryService service;
+//  private FacilityService facilityService;
+
+//  @Before
+//  public void initialize() {
+//    service = new EquipmentInventoryService();
+//  }
 
   @Test
   public void shouldGetInventoryForFacility() throws Exception {
@@ -50,7 +63,62 @@ public class EquipmentInventoryServiceTest {
 
     assertEquals(equipments, expectedEquipments);
   }
+/*
+  @Test
+  public void shouldGetInventoryForUserFacility() throws Exception {
+    // Set up variables
+    long userId = 1L;
+    long typeId = 0L;
+    long programId = 1L;
+    long equipmentTypeId = 1L;
+    long facilityId = 1L;
+    List<EquipmentInventory> expectedEquipments = new ArrayList<EquipmentInventory>();
+    expectedEquipments.add(new EquipmentInventory());
+    Facility facility = new Facility(facilityId);
+    long[] facilityIds = {facilityId};
 
+    // Set up mock calls
+//    when(facilityService.getHomeFacility(userId)).thenReturn(facility);
+    when(repository.getInventory(programId, equipmentTypeId, facilityIds)).thenReturn(expectedEquipments);
+
+    // Do the call
+    logger.info("EquipmentInventoryService = " + service);
+    List<EquipmentInventory> equipments = service.getInventory(userId, typeId, programId, equipmentTypeId);
+
+    // Test the results
+//    verify(facilityService).getHomeFacility(userId);
+    verify(repository).getInventory(programId, equipmentTypeId, facilityIds);
+    assertEquals(equipments, expectedEquipments);
+  }
+
+  @Test
+  public void shouldGetInventoryForSupervisedFacilities() throws Exception {
+    // Set up variables
+    long userId = 1L;
+    long typeId = 1L;
+    long programId = 1L;
+    long equipmentTypeId = 1L;
+    long facilityId = 1L;
+    List<EquipmentInventory> expectedEquipments = new ArrayList<EquipmentInventory>();
+    expectedEquipments.add(new EquipmentInventory());
+    Facility facility = new Facility(facilityId);
+    List<Facility> facilities = new ArrayList<Facility>();
+    facilities.add(facility);
+    long[] facilityIds = {facilityId};
+
+    // Set up mock calls
+//    when(facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY)).thenReturn(facilities);
+    when(repository.getInventory(programId, equipmentTypeId, facilityIds)).thenReturn(expectedEquipments);
+
+    // Do the call
+    List<EquipmentInventory> equipments = service.getInventory(userId, typeId, programId, equipmentTypeId);
+
+    // Test the results
+//    verify(facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY));
+    verify(repository).getInventory(programId, equipmentTypeId, facilityIds);
+    assertEquals(equipments, expectedEquipments);
+  }
+*/
   @Test
   public void shouldGetInventoryById() throws Exception {
     EquipmentInventory equipment = new EquipmentInventory();

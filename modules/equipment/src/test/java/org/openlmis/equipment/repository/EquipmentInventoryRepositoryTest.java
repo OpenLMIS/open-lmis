@@ -52,6 +52,30 @@ public class EquipmentInventoryRepositoryTest {
   }
 
   @Test
+  public void shouldGetInventoryByProgramAndEquipmentType() throws Exception {
+    // Set up variables
+    long programId = 1L;
+    long equipmentTypeId = 1L;
+    long facilityId = 1L;
+    long facilityId2 = 2L;
+    EquipmentInventory inventory = new EquipmentInventory();
+    List<EquipmentInventory> inventories = new ArrayList<>();
+    inventories.add(inventory);
+    long[] facilityIds = {facilityId,facilityId2};
+    String strFacilityIds = "{"+facilityId+","+facilityId2+"}";
+
+    // Set up mock calls
+    when(mapper.getInventory(programId, equipmentTypeId, strFacilityIds)).thenReturn(inventories);
+
+    // Do the call
+    List<EquipmentInventory> results = repository.getInventory(programId, equipmentTypeId, facilityIds);
+
+    // Test the results
+    verify(mapper).getInventory(programId, equipmentTypeId, strFacilityIds);
+    assertEquals(results, inventories);
+  }
+
+  @Test
   public void shouldGetInventoryById() throws Exception {
     EquipmentInventory inventory = new EquipmentInventory();
 
