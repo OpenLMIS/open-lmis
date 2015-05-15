@@ -43,6 +43,9 @@ public class EquipmentInventoryServiceTest {
   @Mock
   private EquipmentInventoryRepository repository;
 
+  @Mock
+  private FacilityService facilityService;
+
   @InjectMocks
   private EquipmentInventoryService service;
 //  private FacilityService facilityService;
@@ -63,7 +66,6 @@ public class EquipmentInventoryServiceTest {
 
     assertEquals(equipments, expectedEquipments);
   }
-/*
   @Test
   public void shouldGetInventoryForUserFacility() throws Exception {
     // Set up variables
@@ -78,7 +80,7 @@ public class EquipmentInventoryServiceTest {
     long[] facilityIds = {facilityId};
 
     // Set up mock calls
-//    when(facilityService.getHomeFacility(userId)).thenReturn(facility);
+    when(facilityService.getHomeFacility(userId)).thenReturn(facility);
     when(repository.getInventory(programId, equipmentTypeId, facilityIds)).thenReturn(expectedEquipments);
 
     // Do the call
@@ -86,11 +88,12 @@ public class EquipmentInventoryServiceTest {
     List<EquipmentInventory> equipments = service.getInventory(userId, typeId, programId, equipmentTypeId);
 
     // Test the results
-//    verify(facilityService).getHomeFacility(userId);
+    verify(facilityService).getHomeFacility(userId);
     verify(repository).getInventory(programId, equipmentTypeId, facilityIds);
     assertEquals(equipments, expectedEquipments);
   }
 
+/*
   @Test
   public void shouldGetInventoryForSupervisedFacilities() throws Exception {
     // Set up variables
@@ -107,18 +110,19 @@ public class EquipmentInventoryServiceTest {
     long[] facilityIds = {facilityId};
 
     // Set up mock calls
-//    when(facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY)).thenReturn(facilities);
+    when(facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY)).thenReturn(facilities);
     when(repository.getInventory(programId, equipmentTypeId, facilityIds)).thenReturn(expectedEquipments);
 
     // Do the call
     List<EquipmentInventory> equipments = service.getInventory(userId, typeId, programId, equipmentTypeId);
 
     // Test the results
-//    verify(facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY));
+    verify(facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY));
     verify(repository).getInventory(programId, equipmentTypeId, facilityIds);
     assertEquals(equipments, expectedEquipments);
   }
-*/
+ */
+
   @Test
   public void shouldGetInventoryById() throws Exception {
     EquipmentInventory equipment = new EquipmentInventory();
