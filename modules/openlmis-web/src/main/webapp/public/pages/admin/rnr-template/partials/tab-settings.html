@@ -8,7 +8,7 @@
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
 
-<div>
+<div ng-controller="ConfigureTabVisibilityController">
     <div class="row-fluid" ng-repeat="setting in protocol.tabVisibilitySettings">
       <div class="span4">
         <div class="form-cell">
@@ -19,5 +19,19 @@
         </div>
       </div>
     </div>
+  </div>
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button" ng-click="saveTabVisibility()"
+             openlmis-message="button.save"/>
+      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+             ng-click="cancel()"/>
+    </div>
+
+    <div class="toolbar-error" id="saveErrorMsgDiv">
+      <span openlmis-message="error" ng-show="error"></span>&nbsp;
+      <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
   </div>
 </div>

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-angular.module('createRnRTemplate', ['openlmis', 'ui.sortable']).config(['$routeProvider', function ($routeProvider) {
+angular.module('createRnRTemplate', ['openlmis', 'ui.sortable', 'ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/select-program', {
       controller:ConfigureRnRTemplateController,

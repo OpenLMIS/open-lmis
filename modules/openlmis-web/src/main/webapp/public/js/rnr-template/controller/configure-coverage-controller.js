@@ -8,16 +8,14 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function VaccineProtocolController($scope, programs, protocol, SaveVaccineProductDose, VaccineProductDose) {
+function ConfigureCoverageController($scope, $routeParams, SaveVaccineProductDose, VaccineProductDose) {
 
-  $scope.programs = programs;
-  $scope.protocol = protocol;
+  $scope.program = $routeParams.programId;
 
-  $scope.onProgramChanged = function(){
-    VaccineProductDose.get({programId: $scope.program}, function (data) {
-      $scope.protocol = data.protocol;
-    });
-  };
+  VaccineProductDose.get({programId: $scope.program}, function (data) {
+    $scope.protocol = data.protocol;
+    $scope.$parent.protocol = $scope.protocol;
+  });
 
   $scope.addDosageForProduct = function(product){
     var dose = $scope.protocol.possibleDoses[product.doses.length];
@@ -31,9 +29,9 @@ function VaccineProtocolController($scope, programs, protocol, SaveVaccineProduc
       product.doses.pop();
   };
 
-  $scope.save = function(){
+  $scope.$parent.saveProtocols = function(){
     SaveVaccineProductDose.update($scope.protocol, function(data){
-      $scope.message = 'Protocol Saved Successfully';
+      $scope.$parent.message = 'label.vaccine.settings.coverage.configuration.saved';
     });
   };
 
@@ -43,32 +41,3 @@ function VaccineProtocolController($scope, programs, protocol, SaveVaccineProduc
     $scope.protocol.protocols.push({productName: product.primaryName, productId: product.id , doses: [{doseId: dose.id, productId: product.id, programId: $scope.program, displayOrder: 1, displayName: dose.name, trackMale: true, trackFemale: true}]});
   };
 }
-
-VaccineProtocolController.resolve = {
-  protocol : function($q, $timeout, $route, VaccineProductDose){
-    var deferred = $q.defer();
-
-    if($route.current.params.program)
-    {
-      $timeout(function() {
-        VaccineProductDose.get({programId: $route.current.params.program}, function (data) {
-          deferred.resolve(data.protocol);
-        });
-      }, 100);
-    }else{
-      return {};
-    }
-    return deferred.promise;
-  },
-  programs: function($q, $timeout, VaccineReportConfigurablePrograms){
-    var deferred = $q.defer();
-
-    $timeout(function(){
-      VaccineReportConfigurablePrograms.get( function(data){
-        deferred.resolve(data.programs);
-      });
-    },100);
-
-    return deferred.promise;
-  }
-};

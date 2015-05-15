@@ -12,8 +12,16 @@
   <h2 openlmis-message="requisition.template.header"></h2>
 
   <div class="info-box">
+    <div class="pull-right">
+      <label for="enableIvd">
+        <span style="vertical-align: middle; font-size: 0.8em;" class="cell-text" openlmis-message="admin.program.enable.ivd"></span> <input ng-model="program.enableIvdForm" id="enableIvd" type="checkbox"/>
+      </label>
+    </div>
+
     <p><strong openlmis-message="template.programName"></strong> {{program.name}} <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
     </p>
+
+
   </div>
 
   <div class="rnr-tabs clearfix">
@@ -22,6 +30,10 @@
         <a href="" ng-click="visibleTab ='template'" ><span openlmis-message="admin.label.template"></span></a></li>
       <li ng-class="{'selected': (visibleTab == 'basic')}">
         <a href="" ng-click="visibleTab ='basic'" ><span openlmis-message="admin.label.other.settings"></span></a></li>
+      <li ng-show="program.enableIvdForm" ng-class="{'selected': (visibleTab == 'coverage')}">
+        <a href="" ng-click="visibleTab ='coverage'" ><span openlmis-message="label.vaccine.tab.coverage"></span></a></li>
+      <li ng-show="program.enableIvdForm" ng-class="{'selected': (visibleTab == 'ivdTabs')}">
+        <a href="" ng-click="visibleTab ='ivdTabs'" ><span openlmis-message="label.vaccine.tab.visibility"></span></a></li>
     </ul>
   </div>
   <span ng-show="visibleTab == 'template' || visibleTab == undefined">
@@ -140,5 +152,11 @@
   </span>
   <span ng-show="visibleTab == 'basic'">
     <div ng-include="'/public/pages/admin/rnr-template/partials/basic-settings.html'"></div>
+  </span>
+  <span ng-show="visibleTab == 'coverage'">
+    <div ng-include="'/public/pages/admin/rnr-template/partials/coverage.html'"></div>
+  </span>
+   <span ng-show="visibleTab == 'ivdTabs'">
+    <div ng-include="'/public/pages/admin/rnr-template/partials/tab-settings.html'"></div>
   </span>
 </div>
