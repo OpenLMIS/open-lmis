@@ -8,6 +8,7 @@ import org.openlmis.db.repository.mapper.DbMapper;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
@@ -435,6 +436,7 @@ public class RequisitionService {
     }
   }
 
+  @Deprecated
   public List<Rnr> listForApproval(Long userId) {
     List<RoleAssignment> assignments = roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId);
     List<Rnr> requisitionsForApproval = new ArrayList<>();
@@ -443,6 +445,16 @@ public class RequisitionService {
       requisitionsForApproval.addAll(requisitions);
     }
     fillFacilityPeriodProgramWithAuditFields(requisitionsForApproval);
+    return requisitionsForApproval;
+  }
+
+  public List<RnrDTO> listForApprovalDto(Long userId) {
+    List<RoleAssignment> assignments = roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId);
+    List<RnrDTO> requisitionsForApproval = new ArrayList<>();
+    for (RoleAssignment assignment : assignments) {
+      final List<RnrDTO> requisitions = requisitionRepository.getAuthorizedRequisitionsDTOs(assignment);
+      requisitionsForApproval.addAll(requisitions);
+    }
     return requisitionsForApproval;
   }
 

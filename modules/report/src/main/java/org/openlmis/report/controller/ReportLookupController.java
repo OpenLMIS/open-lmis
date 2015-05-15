@@ -512,5 +512,10 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("reportingDates", reportLookupService.getTimelinessReportingDates(periodId));
     }
 
+    @RequestMapping(value="/rmnch-products.json", method = GET, headers = BaseController.ACCEPT_JSON)
+    public List<Product> getRmnchProducts(){
+        return this.reportLookupService.getRmnchProducts();
+    }
+
 
 }
