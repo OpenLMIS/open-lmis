@@ -15,6 +15,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
   $scope.max_year = new Date().getFullYear();
   $scope.submitted = false;
   $scope.showError = false;
+
   Equipments.get(function (data) {
     $scope.equipments = data.equipments;
   });
@@ -29,28 +30,28 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
 
   if ($routeParams.id === undefined) {
     $scope.screenType = 'create';
-    $scope.equipment = {};
-    $scope.equipment.programId = $routeParams.program;
-    $scope.equipment.facilityId = $routeParams.facility;
+    $scope.inventory = {};
+    $scope.inventory.programId = $routeParams.program;
+    $scope.inventory.facilityId = $routeParams.facility;
 
     Facility.get({id: $routeParams.facility}, function(data){
       $scope.facility = data.facility;
     });
 
     // set default of checkboxes so the submission does not become null and hence an error.
-    $scope.equipment.replacementRecommended = false;
-    $scope.equipment.dateLastAssessed = Date.now();
-    $scope.equipment.isActive = true;
+    $scope.inventory.replacementRecommended = false;
+    $scope.inventory.dateLastAssessed = Date.now();
+    $scope.inventory.isActive = true;
 
   } else {
     $scope.screenType = 'edit';
     EquipmentInventory.get({
       id: $routeParams.id
     }, function (data) {
-      $scope.equipment = data.inventory;
-      $scope.equipment.dateLastAssessed = $scope.equipment.dateLastAssessedString ;
-      $scope.equipment.dateDecommissioned = $scope.equipment.dateDecommissionedString;
-      Facility.get({ id: $scope.equipment.facilityId }, function(data){
+      $scope.inventory = data.inventory;
+      $scope.inventory.dateLastAssessed = $scope.inventory.dateLastAssessedString ;
+      $scope.inventory.dateDecommissioned = $scope.inventory.dateDecommissionedString;
+      Facility.get({ id: $scope.inventory.facilityId }, function(data){
         $scope.facility = data.facility;
       });
     });
@@ -67,12 +68,12 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
   $scope.saveEquipment = function () {
     $scope.error = '';
     $scope.showError = true;
-    if(!$scope.equipmentForm.$invalid ){
-      SaveEquipmentInventory.save($scope.equipment, function (data) {
+    if(!$scope.inventoryForm.$invalid ){
+      SaveEquipmentInventory.save($scope.inventory, function (data) {
         $scope.$parent.message = messageService.get(data.success);
-        $scope.$parent.selectedProgram = {id: $scope.equipment.programId};
+        $scope.$parent.selectedProgram = {id: $scope.inventory.programId};
         console.info($scope.$parent.selectedProgram);
-        $location.path('/' + $routeParams.from + '/' + $scope.equipment.facilityId + '/' + $scope.equipment.programId + '/' + $routeParams.equipmentType);
+        $location.path('/' + $routeParams.from + '/' + $scope.inventory.facilityId + '/' + $scope.inventory.programId + '/' + $routeParams.equipmentType);
       }, function (data) {
         $scope.error = data.error;
       });
