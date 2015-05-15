@@ -65,7 +65,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     $scope.donors = data.donors;
   });
 
-  $scope.saveEquipment = function () {
+  $scope.saveInventory = function () {
     $scope.error = '';
     $scope.showError = true;
     if(!$scope.inventoryForm.$invalid ){
@@ -83,7 +83,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     }
   };
 
-  $scope.cancelCreateEquipment = function () {
+  $scope.cancelCreateInventory = function () {
     $location.path('');
   };
 }
