@@ -91,9 +91,14 @@ public class ProductCategoryMapperIT {
 
   @Test
   public void shouldGetAll() {
+    ProductCategory productCategory = new ProductCategory("category code", "category name", 1);
+    mapper.insert(productCategory);
 
     List<ProductCategory> allCategories = mapper.getAll();
+
     assertThat(allCategories.size(), is(1));
+    assertThat(allCategories.get(0).getName(), is(productCategory.getName()));
+    assertThat(allCategories.get(0).getDisplayOrder(), is(productCategory.getDisplayOrder()));
   }
 }
 
