@@ -22,7 +22,7 @@ describe("In Equipment Inventory Controller,", function () {
   var status = {"id": 4, "name": "Functional"};
   var status2 = {"id": 5, "name": "Not Functional"};
   var equipment = {"id": 6, name: "Dometic 400", code: "Dometic 400", "equipmentType": equipmentType,
-    "equipmentTypeId": equipmentType.id, "manufacture": "Dometic", "model": "400", "energyType": "gas"};
+    "equipmentTypeId": equipmentType.id, "manufacturer": "Dometic", "model": "400", "energyType": "gas"};
   var inventory = {"id": 7, "programId": program.id, "equipment": equipment, "facility": facility,
     "operationalStatusId": status.id};
   var groups = {};

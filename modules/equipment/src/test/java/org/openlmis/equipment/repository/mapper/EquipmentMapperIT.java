@@ -70,7 +70,7 @@ public class EquipmentMapperIT {
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
+    equipment.setManufacturer("Manufacturer");
     equipment.setModel("Model");
     equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
@@ -95,7 +95,7 @@ public class EquipmentMapperIT {
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
+    equipment.setManufacturer("Manufacturer");
     equipment.setModel("Model");
     equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
@@ -122,7 +122,7 @@ public class EquipmentMapperIT {
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
+    equipment.setManufacturer("Manufacturer");
     equipment.setModel("Model");
     equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
@@ -133,7 +133,7 @@ public class EquipmentMapperIT {
     assertEquals(rs.getString("code"), "123");
     assertEquals(rs.getString("name"),"Name");
     assertEquals(rs.getString("model"),"Model");
-    assertEquals(rs.getString("manufacture"),"Manufacture");
+    assertEquals(rs.getString("manufacturer"),"Manufacturer");
 
   }
 
@@ -152,7 +152,7 @@ public class EquipmentMapperIT {
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
+    equipment.setManufacturer("Manufacturer");
     equipment.setModel("Model");
     equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
@@ -180,7 +180,7 @@ public class EquipmentMapperIT {
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
+    equipment.setManufacturer("Manufacturer");
     equipment.setModel("Model");
     equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
@@ -206,7 +206,7 @@ public class EquipmentMapperIT {
     equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
+    equipment.setManufacturer("Manufacturer");
     equipment.setModel("Model");
     equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
