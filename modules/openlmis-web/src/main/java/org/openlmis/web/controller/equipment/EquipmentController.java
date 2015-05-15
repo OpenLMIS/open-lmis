@@ -42,6 +42,12 @@ public class EquipmentController extends BaseController {
     return OpenLmisResponse.response("equipments", service.getAll());
   }
 
+  @RequestMapping(method = RequestMethod.GET, value = "list-by-type")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS') or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
+  public ResponseEntity<OpenLmisResponse> getListByType(@RequestParam("equipmentTypeId") Long equipmentTypeId){
+    return OpenLmisResponse.response("equipments", service.getAllByType(equipmentTypeId));
+  }
+
   @RequestMapping(method = RequestMethod.GET, value = "typesByProgram/{programId}", headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getTypesByProgram(@PathVariable(value="programId") Long programId){

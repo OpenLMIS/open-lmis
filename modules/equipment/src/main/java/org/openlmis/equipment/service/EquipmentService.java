@@ -28,6 +28,10 @@ public class EquipmentService {
     return repository.getAll();
   }
 
+  public List<Equipment> getAllByType(Long equipmentTypeId) {
+    return repository.getAllByType(equipmentTypeId);
+  }
+
   public Equipment getById(Long id){
     return repository.getById(id);
   }

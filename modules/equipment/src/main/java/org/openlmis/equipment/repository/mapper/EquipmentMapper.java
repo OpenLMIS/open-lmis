@@ -34,6 +34,20 @@ public interface EquipmentMapper {
   })
   List<Equipment> getAll();
 
+  @Select("SELECT * from equipments where equipmentTypeId = #{equipmentTypeId} order by name")
+  @Results({
+      @Result(
+          property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
+      @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
+      @Result(
+          property = "energyType", column = "energyTypeId", javaType = EquipmentType.class,
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
+      @Result(property = "energyTypeId", column = "energyTypeId")
+
+  })
+  List<Equipment> getAllByType(@Param("equipmentTypeId") Long equipmentTypeId);
+
   @Select("SELECT * from equipments where id = #{id}")
   @Results({
           @Result(

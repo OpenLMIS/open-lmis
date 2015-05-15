@@ -33,6 +33,10 @@ public class EquipmentRepository {
     return mapper.getAll();
   }
 
+  public List<Equipment> getAllByType(Long equipmentTypeId) {
+    return mapper.getAllByType(equipmentTypeId);
+  }
+
   public List<EquipmentType> getTypesByProgram(Long programId){
     return mapper.getTypesByProgram(programId);
   }
