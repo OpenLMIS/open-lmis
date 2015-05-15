@@ -39,7 +39,7 @@ public class DiseaseMapperIT {
   @Test
   public void shouldGetAll() throws Exception {
     List<VaccineDisease> result = mapper.getAll();
-    assertThat(result.size(), is(7));
+    assertThat(result.size(), is(3));
   }
 
   @Test
