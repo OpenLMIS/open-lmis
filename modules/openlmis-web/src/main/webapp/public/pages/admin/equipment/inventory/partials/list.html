@@ -103,7 +103,7 @@
           <td>{{item.facility.geographicZone.parent.name}}</td>
           <td>{{item.facility.geographicZone.name}}</td>
           <td>{{item.facility.name}}</td>
-          <td><a ng-href="#/edit/{{selectedType}}/{{item.facilityId}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}">{{item.equipment.name}}</a></td>
+          <td><a ng-href="#/edit/{{selectedType}}/{{item.facility.id}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}">{{item.equipment.name}}</a></td>
           <td>{{item.manufacturerName}}</td>
           <td>{{item.model}}</td>
           <td>{{item.equipment.fridgeCapacity ? item.equipment.fridgeCapacity : 0}} / {{item.equipment.freezerCapacity ? item.equipment.freezerCapacity : 0}}</td>
@@ -138,13 +138,13 @@
         <tbody>
         <tr ng-repeat="item in inventory">
           <td>{{$index + 1}}</td>
-          <td><a ng-href="#/edit/{{selectedType}}/{{item.facilityId}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}">{{item.equipment.name}}</a></td>
+          <td><a ng-href="#/edit/{{selectedType}}/{{item.facility.id}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}">{{item.equipment.name}}</a></td>
           <td>{{item.manufacturerName}}</td>
           <td>{{item.model}}</td>
           <td>{{item.sourceOfFund}}</td>
           <td>
             <span class="btn-mini" ng-show="!item.isActive" openlmis-message="label.equipment.status.decommissioned"></span>
-            <a ng-show="item.isActive" class="btn-mini btn-primary" ng-href="#/request/{{item.id}}?facilityId={{item.facilityId}}">
+            <a ng-show="item.isActive" class="btn-mini btn-primary" ng-href="#/request/{{item.id}}?facilityId={{item.facility.id}}">
               <span openlmis-message="label.equipment.request.service"></span>
             </a>
             <a class="btn-mini btn-cont" ng-href="#/log/{{item.id}}">
