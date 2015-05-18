@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors ,Equipments, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService, EquipmentTypesByProgram) {
+function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors, EquipmentsByType, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService, EquipmentType, EquipmentInventoryFacilities) {
 
   $scope.$parent.message = $scope.$parent.error = '';
 
@@ -16,54 +16,89 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
   $scope.submitted = false;
   $scope.showError = false;
 
-  Equipments.get(function (data) {
+  $scope.from = $routeParams.from;
+  $scope.manufacturers = [];
+  $scope.models = [];
+  $scope.selected = {};
+
+  EquipmentsByType.get({equipmentTypeId: $routeParams.equipmentType}, function (data) {
     $scope.equipments = data.equipments;
+    $scope.manufacturers = _.uniq(_.pluck($scope.equipments, 'manufacturer'));
   });
 
-  EquipmentTypesByProgram.get({programId: $routeParams.program}, function (data) {
-    for (var i = 0; i < data.equipment_types.length; i++) {
-      if (data.equipment_types[i].id.toString() === $routeParams.equipmentType) {
-        $scope.equipmentType = data.equipment_types[i];
-      }
-    }
+  EquipmentType.get({id: $routeParams.equipmentType}, function (data) {
+    $scope.equipmentType = data.equipment_type;
   }, {});
 
   if ($routeParams.id === undefined) {
     $scope.screenType = 'create';
     $scope.inventory = {};
     $scope.inventory.programId = $routeParams.program;
-    $scope.inventory.facilityId = $routeParams.facility;
-
-    Facility.get({id: $routeParams.facility}, function(data){
-      $scope.facility = data.facility;
-    });
 
     // set default of checkboxes so the submission does not become null and hence an error.
     $scope.inventory.replacementRecommended = false;
     $scope.inventory.dateLastAssessed = Date.now();
     $scope.inventory.isActive = true;
 
+    if ($routeParams.from === "0") {
+      // Create new inventory at my facility, show facility as readonly
+      Facility.get({id: $routeParams.facility}, function(data){
+        $scope.inventory.facility = data.facility;
+        $scope.facilityDisplayName = $scope.inventory.facility.code + " - " + $scope.inventory.facility.name;
+      });
+    } else {
+      // Create new inventory at supervised facilities, facility drop down list
+      EquipmentInventoryFacilities.get({programId: $routeParams.program}, function (data) {
+        $scope.facilities = data.facilities;
+      }, {});
+    }
   } else {
     $scope.screenType = 'edit';
+
     EquipmentInventory.get({
       id: $routeParams.id
     }, function (data) {
       $scope.inventory = data.inventory;
-      $scope.inventory.dateLastAssessed = $scope.inventory.dateLastAssessedString ;
+      $scope.inventory.dateLastAssessed = $scope.inventory.dateLastAssessedString;
       $scope.inventory.dateDecommissioned = $scope.inventory.dateDecommissionedString;
-      Facility.get({ id: $scope.inventory.facilityId }, function(data){
-        $scope.facility = data.facility;
-      });
-    });
+
+      if ($routeParams.from === "0") {
+        // Edit inventory at my facility, show facility as readonly
+        // Facility is already set, so just set the display name
+        $scope.facilityDisplayName = $scope.inventory.facility.code + " - " + $scope.inventory.facility.name;
+      } else {
+        // Edit inventory at supervised facilities, facility drop down list with default
+        EquipmentInventoryFacilities.get({programId: $routeParams.program}, function (data) {
+          $scope.facilities = data.facilities;
+        }, {});
+      }
+  });
+
   }
 
   EquipmentOperationalStatus.get(function(data){
-     $scope.operationalStatusList = data.status;
+    $scope.operationalStatusList = data.status;
   });
 
   Donors.get(function(data){
     $scope.donors = data.donors;
   });
+
+  $scope.updateModels = function () {
+    $scope.models = _.pluck(_.where($scope.equipments, {manufacturer: $scope.selected.manufacturer}), 'model');
+
+    // Also reset equipment fields
+    $scope.selected.model = "";
+    $scope.inventory.equipment = undefined;
+    $scope.inventory.equipmentId = undefined;
+  };
+
+  $scope.updateEquipmentInfo = function () {
+    if ($scope.selected.manufacturer && $scope.selected.model) {
+      $scope.inventory.equipment = _.where($scope.equipments, {manufacturer: $scope.selected.manufacturer, model: $scope.selected.model})[0];
+      $scope.inventory.equipmentId = $scope.inventory.equipment.id;
+    }
+  };
 
   $scope.saveInventory = function () {
     $scope.error = '';

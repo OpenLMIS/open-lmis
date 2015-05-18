@@ -49,10 +49,13 @@ public interface EquipmentInventoryMapper {
 
   @Select("SELECT * from equipment_inventories where id = #{id}")
   @Results({
-    @Result(property = "equipmentId", column = "equipmentId"),
-    @Result(
-      property = "equipment", column = "equipmentId", javaType = Equipment.class,
-      one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById"))
+      @Result(property = "equipmentId", column = "equipmentId"),
+      @Result(
+          property = "equipment", column = "equipmentId", javaType = Equipment.class,
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
+      @Result(
+          property = "facility", column = "facilityId", javaType = Facility.class,
+          one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
   EquipmentInventory getInventoryById(@Param("id") Long id);
 
