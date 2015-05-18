@@ -9,17 +9,16 @@
   -->
 
 <div ng-controller="ConfigureCoverageController">
-  <div>
-    <div class="pull-right">
-      <a class="btn btn-primary" openlmis-message="link.add.new" ng-click="showAddNewModal=true"></a>
-    </div>
+  <div class="info-box">
+    <b><span openlmis-message="label.vaccine.logistics.title"></span></b>
+  </div>
+  <div class="row-fluid">
     <div ng-show="protocol.protocols.length == 0">
-      <span openlmis-message="label.vaccine.no.products.added.yet"></span>
+      <span openlmis-message="label.vaccine.tab.coverage"></span>
     </div>
-    <div class="clearfix"></div>
-    <div class="span9" ng-show="protocol.protocols.length > 0">
+    <div ng-show="protocol.protocols.length > 0">
       <span openlmis-message="label.vaccine.coverage.check.doses"></span>
-      <table class="table table-bordered">
+      <table class="table table-bordered" style="width: 50%">
         <thead>
         <th style="width: 300px;" class="col-product"><span openlmis-message="label.product"></span></th>
         <th><span openlmis-message="label.vaccine.coverage.display.order"></span></th>
@@ -50,6 +49,7 @@
         <tr ng-repeat-end></tr>
         </tbody>
       </table>
+      <a class="btn btn-primary" openlmis-message="link.add.new" ng-click="showAddNewModal=true"></a>
     </div>
     <div class="clearfix"></div>
   </div>

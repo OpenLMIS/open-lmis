@@ -9,8 +9,9 @@
   -->
 
 <div ng-controller="IVDLogisticsColumnTemplate">
-  <h3><span openlmis-message="label.vaccine.logistics.title"></span></h3>
-
+  <div class="info-box">
+    <b><span openlmis-message="label.vaccine.logistics.title"></span></b>
+  </div>
   <div ng-show="sortableColumns">
     <form name="configureRnRTemplateForm" ng-submit="onSave()">
     <div class="rnr-template-columns">

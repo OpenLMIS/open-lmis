@@ -26,10 +26,10 @@
 
   <div class="rnr-tabs clearfix">
     <ul class="clearfix">
+      <li ng-class="{'selected': (visibleTab == 'basic')}">
+        <a href="" ng-click="visibleTab ='basic'" ><span openlmis-message="admin.label.program.settings"></span></a></li>
       <li ng-class="{'selected': (visibleTab == 'template' || visibleTab == undefined)}">
         <a href="" ng-click="visibleTab ='template'" ><span openlmis-message="admin.label.template"></span></a></li>
-      <li ng-class="{'selected': (visibleTab == 'basic')}">
-        <a href="" ng-click="visibleTab ='basic'" ><span openlmis-message="admin.label.other.settings"></span></a></li>
       <li ng-show="program.enableIvdForm" ng-class="{'selected': (visibleTab == 'coverage')}">
         <a href="" ng-click="visibleTab ='coverage'" ><span openlmis-message="label.vaccine.tab.coverage"></span></a></li>
       <li ng-show="program.enableIvdForm" ng-class="{'selected': (visibleTab == 'ivdTabs')}">
