@@ -10,13 +10,7 @@
 
 function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout) {
 
-  $scope.loadPrograms = function (selectedType) {
-
-    $scope.programs = undefined;
-    $scope.selectedProgram = undefined;
-    $scope.equipmentTypes = undefined;
-    $scope.selectedEquipmentType = undefined;
-
+  $scope.loadPrograms = function (initialLoad) {
     // Get home facility for user
     UserFacilityList.get({}, function (data) {
       $scope.myFacility = data.facilityList[0];
@@ -25,9 +19,13 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
         $scope.facilityDisplayName = $scope.myFacility.code + ' - ' + $scope.myFacility.name;
 
         // Home facility found and my facility type selected, get home facility programs
-        if (selectedType === "0") {
+        if ($scope.selectedType === "0") {
           ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
             $scope.programs = data.programs;
+            if (initialLoad) {
+              $scope.selectedProgram = _.where($scope.programs, {id: parseInt($routeParams.program,10)})[0];
+              $scope.loadEquipmentTypes(initialLoad);
+            }
           }, {});
         }
       } else {
@@ -37,18 +35,24 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     }, {});
 
     // Supervised facility type selected, get supervised facility programs
-    if (selectedType === "1") {
+    if ($scope.selectedType === "1") {
       ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
+        if (initialLoad) {
+          $scope.selectedProgram = _.where($scope.programs, {id: parseInt($routeParams.program, 10)})[0];
+          $scope.loadEquipmentTypes(initialLoad);
+        }
       }, {});
     }
   };
 
-  $scope.loadEquipmentTypes = function () {
-    $scope.equipmentTypes = undefined;
-    $scope.selectedEquipmentType = undefined;
+  $scope.loadEquipmentTypes = function (initialLoad) {
     EquipmentTypesByProgram.get({programId: $scope.selectedProgram.id}, function (data) {
       $scope.equipmentTypes = data.equipment_types;
+      if (initialLoad) {
+        $scope.selectedEquipmentType = _.where($scope.equipmentTypes, {id: parseInt($routeParams.equipmentType,10)})[0];
+        $scope.loadInventory();
+      }
     }, {});
   };
 
@@ -70,22 +74,28 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     }
   };
 
+  $scope.changeFacilityType = function () {
+    $scope.programs = undefined;
+    $scope.selectedProgram = undefined;
+    $scope.equipmentTypes = undefined;
+    $scope.selectedEquipmentType = undefined;
+
+    $scope.loadPrograms();
+  };
+
+  $scope.changeProgram = function () {
+    $scope.equipmentTypes = undefined;
+    $scope.selectedEquipmentType = undefined;
+
+    $scope.loadEquipmentTypes();
+  };
+
   function getGeographicZone(item) {
     return item.facility.geographicZone.name;
   }
 
-//  $scope.$on('$viewContentLoaded', function () {
-    $scope.selectedType = $routeParams.selectedType || "0";
-
-    /*
-     $scope.$watch('programs', function () {
-     if ($scope.programs && !isUndefined($routeParams.program)) {
-     $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.program})[0];
-     }
-     });
-     */
-    $scope.loadPrograms($scope.selectedType);
-//  });
+  $scope.selectedType = $routeParams.from || "0";
+  $scope.loadPrograms(true);
 
   EquipmentOperationalStatus.get(function(data){
     $scope.operationalStatusList = data.status;

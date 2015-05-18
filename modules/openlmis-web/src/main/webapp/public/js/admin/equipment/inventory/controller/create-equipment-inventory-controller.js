@@ -72,8 +72,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
           $scope.facilities = data.facilities;
         }, {});
       }
-  });
-
+    });
   }
 
   EquipmentOperationalStatus.get(function(data){
@@ -119,6 +118,6 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
   };
 
   $scope.cancelCreateInventory = function () {
-    $location.path('');
+    $location.path('/'+$routeParams.from+'/'+$routeParams.facility+'/'+$routeParams.program+'/'+$routeParams.equipmentType);
   };
 }
