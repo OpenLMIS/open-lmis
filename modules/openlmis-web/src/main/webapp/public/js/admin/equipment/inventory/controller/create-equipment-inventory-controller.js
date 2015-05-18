@@ -44,6 +44,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
       // Create new inventory at my facility, show facility as readonly
       Facility.get({id: $routeParams.facility}, function(data){
         $scope.inventory.facility = data.facility;
+        $scope.inventory.facilityId = data.facility.id;
         $scope.facilityDisplayName = $scope.inventory.facility.code + " - " + $scope.inventory.facility.name;
       });
     } else {

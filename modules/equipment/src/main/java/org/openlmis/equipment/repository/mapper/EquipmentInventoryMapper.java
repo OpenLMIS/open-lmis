@@ -53,6 +53,7 @@ public interface EquipmentInventoryMapper {
       @Result(
           property = "equipment", column = "equipmentId", javaType = Equipment.class,
           one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
+      @Result(property = "facilityId", column = "facilityId"),
       @Result(
           property = "facility", column = "facilityId", javaType = Facility.class,
           one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))

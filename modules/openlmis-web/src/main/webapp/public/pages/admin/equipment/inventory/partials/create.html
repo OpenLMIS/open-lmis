@@ -28,12 +28,12 @@
 
             <div class="form-field" ng-if="from == 0">
               <input type="text" ng-model="facilityDisplayName" readonly="readonly" />
-              <input type="hidden" ng-model="inventory.facility.id" id="facility" name="facility" />
+              <input type="hidden" ng-model="inventory.facilityId" id="facility" name="facility" />
             </div>
             <div class="form-field" ng-if="from == 1">
-              <select style="width: 250px;" ui-select2 ng-model="inventory.facility.id" id="facility"
+              <select style="width: 250px;" ui-select2 ng-model="inventory.facilityId" id="facility"
                       name="facility">
-                <option ng-repeat="facility in facilities" ng-selected="facility.id == inventory.facility.id"
+                <option ng-repeat="facility in facilities" ng-selected="facility.id == inventory.facilityId"
                         value="{{facility.id}}">
                   {{facility.name}}
                 </option>
