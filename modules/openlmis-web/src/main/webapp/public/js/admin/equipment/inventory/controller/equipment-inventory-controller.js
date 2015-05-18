@@ -22,7 +22,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
         if ($scope.selectedType === "0") {
           ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
             $scope.programs = data.programs;
-            if (initialLoad) {
+            if (initialLoad && $routeParams.program) {
               $scope.selectedProgram = _.where($scope.programs, {id: parseInt($routeParams.program,10)})[0];
               $scope.loadEquipmentTypes(initialLoad);
             }
@@ -38,7 +38,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     if ($scope.selectedType === "1") {
       ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
-        if (initialLoad) {
+        if (initialLoad && $routeParams.program) {
           $scope.selectedProgram = _.where($scope.programs, {id: parseInt($routeParams.program, 10)})[0];
           $scope.loadEquipmentTypes(initialLoad);
         }
@@ -49,7 +49,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
   $scope.loadEquipmentTypes = function (initialLoad) {
     EquipmentTypesByProgram.get({programId: $scope.selectedProgram.id}, function (data) {
       $scope.equipmentTypes = data.equipment_types;
-      if (initialLoad) {
+      if (initialLoad && $routeParams.equipmentType) {
         $scope.selectedEquipmentType = _.where($scope.equipmentTypes, {id: parseInt($routeParams.equipmentType,10)})[0];
         $scope.loadInventory();
       }
