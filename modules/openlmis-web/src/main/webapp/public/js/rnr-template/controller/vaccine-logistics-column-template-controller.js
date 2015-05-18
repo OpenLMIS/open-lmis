@@ -8,17 +8,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function LogisticsColumnTemplate($scope, programs, VaccineColumnTemplate, VaccineColumnTemplateSave){
+function IVDLogisticsColumnTemplate($scope,$routeParams, VaccineColumnTemplate, VaccineColumnTemplateSave){
 
-  $scope.programs = programs;
+  VaccineColumnTemplate.get( {id: $routeParams.programId}, function(data){
+    $scope.sortableColumns       = data.columns;
+  });
 
-  $scope.onProgramChanged = function(){
-    VaccineColumnTemplate.get( {id: $scope.programId}, function(data){
-      $scope.sortableColumns       = data.columns;
-    });
-  };
-
-  updateDisplayOrder = function(){
+  var updateDisplayOrder = function(){
     angular.forEach($scope.sortableColumns, function(column, index){
       column.displayOrder = index + 1;
     });
@@ -31,19 +27,4 @@ function LogisticsColumnTemplate($scope, programs, VaccineColumnTemplate, Vaccin
       $scope.message = 'Your changes have been saved!';
     });
   };
-
 }
-
-LogisticsColumnTemplate.resolve = {
-  programs: function($q, $timeout, VaccineReportConfigurablePrograms){
-    var deferred = $q.defer();
-
-    $timeout(function(){
-      VaccineReportConfigurablePrograms.get(function(data){
-        deferred.resolve(data.programs);
-      });
-    },100);
-
-    return deferred.promise;
-  }
-};
