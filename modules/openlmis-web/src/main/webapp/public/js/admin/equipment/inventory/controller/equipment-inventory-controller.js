@@ -17,20 +17,27 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     $scope.equipmentTypes = undefined;
     $scope.selectedEquipmentType = undefined;
 
-    if (selectedType === "0") { // My facility
-      // Get facility first, then programs through facility
-      UserFacilityList.get({}, function (data) {
-        $scope.myFacility = data.facilityList[0];
-        if ($scope.myFacility) {
-          $scope.facilityDisplayName = $scope.myFacility.code + ' - ' + $scope.myFacility.name;
+    // Get home facility for user
+    UserFacilityList.get({}, function (data) {
+      $scope.myFacility = data.facilityList[0];
+      if ($scope.myFacility) {
+        // Home facility found, show home facility
+        $scope.facilityDisplayName = $scope.myFacility.code + ' - ' + $scope.myFacility.name;
+
+        // Home facility found and my facility type selected, get home facility programs
+        if (selectedType === "0") {
           ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
             $scope.programs = data.programs;
           }, {});
-        } else {
-          $scope.facilityDisplayName = messageService.get("label.none.assigned");
         }
-      }, {});
-    } else { // Supervised facility
+      } else {
+        // Home facility not found, show none assigned message
+        $scope.facilityDisplayName = messageService.get("label.none.assigned");
+      }
+    }, {});
+
+    // Supervised facility type selected, get supervised facility programs
+    if (selectedType === "1") {
       ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
       }, {});
