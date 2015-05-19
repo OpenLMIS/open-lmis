@@ -7,7 +7,7 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-function CreateVaccineReportController($scope, $location, $filter, report,discardingReasons, VaccineReportSave, VaccineReportSubmit) {
+function CreateVaccineReportController($scope, $location, $filter, $dialog, report,discardingReasons, VaccineReportSave, VaccineReportSubmit) {
   // initial state of the display
   $scope.report = report;
   $scope.discardingReasons = discardingReasons;
@@ -36,9 +36,19 @@ function CreateVaccineReportController($scope, $location, $filter, report,discar
   };
 
   $scope.submit = function(){
-    VaccineReportSubmit.update($scope.report, function(data){
-      $location.path('/');
-    });
+    var callBack = function (result) {
+      if (result) {
+        VaccineReportSubmit.update($scope.report, function(data){
+          $location.path('/');
+        });
+      }
+    };
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.submit.action",
+      body: "msg.question.submit.ivd.confirmation"
+    };
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
   };
 
   $scope.cancel = function(){
@@ -97,15 +107,7 @@ function CreateVaccineReportController($scope, $location, $filter, report,discar
     return 0;
   };
 
-  $scope.getColSpan = function(){
-   if( $scope.report.trackCampaignCoverage && $scope.report.trackOutreachCoverage){
-     return 3;
-   }
-   if($scope.report.trackCampaignCoverage || $scope.report.trackOutreachCoverage){
-     return 2;
-   }
-    return 1;
-  };
+
 
   $scope.rowRequiresExplanation = function(product){
     if(!isUndefined(product.discardingReasonId) ){
