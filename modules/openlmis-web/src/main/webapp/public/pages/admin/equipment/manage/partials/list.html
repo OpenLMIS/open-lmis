@@ -70,15 +70,15 @@
       <tr ng-repeat="eq in equipments">
         <td>{{$index + 1}}</td>
         <td><a ng-href="#/edit/{{eq.id}}/{{equipmentTypeId}}">{{eq.name}}</a></td>
-        <td>{{eq.designation}}</td>
-        <td>{{eq.brand}}</td>
+        <td>{{eq.designation.name}}</td>
+        <td>{{eq.manufacturer}}</td>
         <td>{{eq.model}}</td>
         <td>{{eq.code}}</td>
         <td>{{eq.pqsCode}}</td>
         <td>{{eq.refrigeratorCapacity}}</td>
         <td>{{eq.freezerCapacity}}</td>
         <td>{{eq.temperatureZone}}</td>
-        <td>{{eq.donor}}</td>
+        <td>{{eq.donor.shortName}}</td>
 
       </tr>
       </tbody>

@@ -21,25 +21,15 @@ function ManageEquipmentController($scope, $routeParams, $location, Equipments,E
    $scope.listEquipments=function()
    {
       var id=$scope.equipmentTypeId;
+      Equipments.get({
+           equipmentTypeId:id
+           },function (data) {
+               $scope.equipments = data.equipments;
+       });
       EquipmentType.get({
             id: id
           }, function (data) {
             $scope.equipment_type = data.equipment_type;
-            if($scope.equipment_type.coldChain)
-            {
-              Equipments.get({
-                type:"cce"
-              },function (data) {
-                  $scope.equipments = data.equipments;
-                });
-            }
-            else{
-              Equipments.get({
-                 type:"noncce"
-              },function (data) {
-                   $scope.equipments = data.equipments;
-                 });
-            }
-          });
+       });
    }
 }

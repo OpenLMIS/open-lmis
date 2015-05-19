@@ -12,9 +12,7 @@ package org.openlmis.web.controller.equipment;
 
 import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
-import org.openlmis.equipment.domain.EquipmentEnergyType;
 import org.openlmis.equipment.domain.EquipmentType;
-import org.openlmis.equipment.service.EquipmentEnergyTypeService;
 import org.openlmis.equipment.service.EquipmentService;
 import org.openlmis.equipment.service.EquipmentTypeService;
 import org.openlmis.web.controller.BaseController;
