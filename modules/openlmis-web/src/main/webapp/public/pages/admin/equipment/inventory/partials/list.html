@@ -46,7 +46,7 @@
       </div>
     </div>
     <div class="row-fluid">
-      <select ui-select2 class="span3" id="programList" ng-model="selectedProgram"
+      <select class="span3" id="programList" ng-model="selectedProgram"
               ng-options="program.name for program in programs | orderBy:'name'" ng-change="changeProgram();">
         <option value=""></option>
         </option>
@@ -62,7 +62,7 @@
       </div>
     </div>
     <div class="row-fluid">
-      <select ui-select2 class="span3" id="equipmentTypeList" ng-model="selectedEquipmentType"
+      <select class="span3" id="equipmentTypeList" ng-model="selectedEquipmentType"
               ng-options="equipmentType.name for equipmentType in equipmentTypes | orderBy:'name'" ng-change="loadInventory();">
         <option value=""></option>
         </option>
