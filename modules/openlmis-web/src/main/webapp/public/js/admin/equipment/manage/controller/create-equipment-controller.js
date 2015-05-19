@@ -65,5 +65,5 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
                 $scope.equipment.equipmentTypeName="equipment";
               }
          });
-     }
+     };
 }

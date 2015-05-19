@@ -31,5 +31,5 @@ function ManageEquipmentController($scope, $routeParams, $location, Equipments,E
           }, function (data) {
             $scope.equipment_type = data.equipment_type;
        });
-   }
+   };
 }
