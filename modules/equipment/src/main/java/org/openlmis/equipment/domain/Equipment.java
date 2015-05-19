@@ -10,6 +10,7 @@
 
 package org.openlmis.equipment.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public class Equipment extends BaseModel{
 
   //Serialization type
+  @JsonIgnore
   private String equipmentTypeName;
 
   private String name;
