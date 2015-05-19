@@ -87,7 +87,7 @@ public class EquipmentController extends BaseController {
     try{
         if(equipment.getId()==null) {
 
-            if(equipment.getEquipmentTypeName().equals("cce")) {
+            if(equipment.getEquipmentTypeName().equals("cold-chain-equipment")) {
                 service.saveEquipment(equipment);
                 coldChainEquipment = (ColdChainEquipment) equipment;
                 service.saveColdChainEquipment(coldChainEquipment);

@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentController($scope, $routeParams, $location, Equipment, EquipmentTypes, SaveEquipment, messageService) {
+function CreateEquipmentController($scope, $routeParams, $location, Equipment,EquipmentType, EquipmentTypes, SaveEquipment, messageService) {
 
   EquipmentTypes.get(function (data) {
     $scope.equipmentTypes = data.equipment_type;
@@ -48,4 +48,22 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment, E
   $scope.cancelCreateEquipment = function () {
     $location.path('');
   };
+
+  $scope.checkEquipmentType=function()
+     {
+        var id=$scope.equipment.equipmentTypeId;
+        EquipmentType.get({
+              id: id
+            }, function (data) {
+              $scope.equipmentType = data.equipment_type;
+              if($scope.equipmentType.coldChain)
+              {
+                $scope.equipment.equipmentTypeName="cold-chain-equipment";
+              }
+              else
+              {
+                $scope.equipment.equipmentTypeName="equipment";
+              }
+         });
+     }
 }
