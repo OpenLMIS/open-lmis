@@ -20,6 +20,9 @@ function VaccineReportController($scope, programs, VaccineReportFacilities, Vacc
 
 
   $scope.onFacilityChanged = function(){
+    if(isUndefined($scope.filter.facility)){
+      return;
+    }
     VaccineReportPeriods.get({facilityId: $scope.filter.facility, programId: $scope.filter.program}, function(data){
       $scope.periodGridData = data.periods;
       if($scope.periodGridData.length > 0){
