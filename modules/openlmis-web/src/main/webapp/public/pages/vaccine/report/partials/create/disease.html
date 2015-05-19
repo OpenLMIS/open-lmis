@@ -25,10 +25,10 @@
     <tbody>
       <tr ng-repeat="disease in report.diseaseLineItems">
         <td class="cell-input"><span class="cell-text">{{disease.diseaseName}}</span></td>
-        <td class="cell-input col-general"><input numeric-validator="positiveInteger" type="text" ng-model="disease.cases" /></td>
+        <td class="cell-input col-general"><input numeric-validator="positiveInteger" maxlength="8" type="text" ng-model="disease.cases" /></td>
         <td class="cell-input col-general number" style="text-align: right"><span class="cell-text" ng-bind="disease.calculatedCumulativeCases"></span></td>
-        <td class="cell-input col-general"><input numeric-validator="positiveInteger" type="text" ng-model="disease.cumulative" /></td>
-        <td class="cell-input col-general"><input numeric-validator="positiveInteger" type="text" ng-model="disease.death" /></td>
+        <td class="cell-input col-general"><input numeric-validator="positiveInteger" maxlength="8" type="text" ng-model="disease.cumulative" /></td>
+        <td class="cell-input col-general"><input numeric-validator="positiveInteger" maxlength="8" type="text" ng-model="disease.death" /></td>
         <td class="cell-input col-general number" style="text-align: right"><span class="cell-text" ng-bind="disease.calculatedCumulativeDeaths"></span></td>
       </tr>
     </tbody>

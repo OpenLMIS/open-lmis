@@ -12,7 +12,9 @@
 
   <h2><span openlmis-message="label.vaccine.adverse.effect"></span></h2>
 
-  <a href="" class="btn btn-primary pull-right" ng-click="showAdverseEffect({}, false)">Register new Incident</a>
+  <a href="" class="btn btn-primary pull-right" ng-click="showAdverseEffect({isInvestigated: false}, false)">
+    <span openlmis-message="label.vaccine.adverse.effect.register.new"></span>
+  </a>
   <div ng-show="report.adverseEffectLineItems.length > 0">
   <table class="table table-bordered">
     <thead>
@@ -34,8 +36,13 @@
       <td class="cell-input cell-text"><span class="cell-text">{{effect.manufacturer}}</span></td>
       <td class="cell-input cell-text"><span class="cell-text">{{effect.batch}}</span></td>
       <td class="cell-input cell-text"><span class="cell-text">{{effect.expiry | date : 'MMM, yyyy'}}</span></td>
-      <td class="number cell-input"><span class="cell-text">{{effect.cases}}</span></td>
-      <td class="cell-input cell-text"><span class="cell-text">{{effect.isInvestigated}}</span></td>
+      <td class="number cell-input" style="text-align: right;"><span class="cell-text">{{effect.cases | number: 0}}</span></td>
+      <td class="cell-input cell-text" style="text-align: center;">
+        <span class="cell-text" ng-show="effect.isInvestigated" openlmis-message="label.vaccine.adverse.effect.investigated.yes">
+        </span>
+        <span class="cell-text" ng-show="!effect.isInvestigated" openlmis-message="label.vaccine.adverse.effect.investigated.no">
+        </span>
+      </td>
       <td class="cell-input cell-text"><span class="cell-text">{{effect.notes}}</span></td>
       <td class="cell-input cell-text">
         <div class="cell-text">
@@ -57,7 +64,7 @@
      options="{ backdrop: 'static', escape: false}">
   <div class="modal-header"><h3><span openlmis-message="label.vaccine.adverse.effect.add.edit"></span></h3></div>
   <div class="modal-body">
-
+    <form name="adverseEffectForm" id="adverseEffectForm">
     <div class="row-fluid">
       <div class="span6">
         <label for="product" openlmis-message="label.product"></label>
@@ -67,21 +74,21 @@
         </select>
       </div>
       <div class="span6">
-        <label ><span openlmis-message="label.vaccine.adverse.effect.date"></span></label>
-        <input type="date" ng-model="currentEffect.date" />
+        <label><span openlmis-message="label.vaccine.adverse.effect.date"></span></label>
+        <input required type="date" ng-model="currentEffect.date" />
       </div>
     </div>
     <div class="row-fluid">
       <div class="span6">
         <label ><span openlmis-message="label.vaccine.adverse.effect.cases"></span></label>
-        <input  numeric-validator="positiveInteger"  type="text" ng-model="currentEffect.cases" />
+        <input  numeric-validator="positiveInteger" maxlength="8" required type="text" ng-model="currentEffect.cases" />
       </div>
     </div>
     <div class="row-fluid">
       <div class="span6">
         <label for="manufacturer"><span openlmis-message="label.vaccine.adverse.effect.manufacturer"></span></label>
 
-        <input type="text" id="manufacturer" ng-model="currentEffect.manufacturer" />
+        <input type="text" id="manufacturer" required ng-model="currentEffect.manufacturer" />
       </div>
       <div class="span6">
         <label ><span openlmis-message="label.vaccine.adverse.effect.batch"></span></label>
@@ -92,31 +99,33 @@
     <div class="row-fluid">
       <div class="span6">
         <label ><span openlmis-message="label.vaccine.adverse.effect.expiry.date"></span></label>
-        <input type="date" ng-model="currentEffect.expiry" />
+        <input type="date" required ng-model="currentEffect.expiry" />
       </div>
       <div class="span6">
         <label ><span openlmis-message="label.vaccine.adverse.effect.investigation"></span></label>
-        <input  type="checkbox" ng-model="currentEffect.isInvestigated" />
+        <input  type="checkbox"  ng-model="currentEffect.isInvestigated" />
       </div>
     </div>
     <div class="row-fluid">
 
       <div class="span6">
         <label ><span openlmis-message="label.vaccine.adverse.effect.notes"></span></label>
-        <textarea type="text" ng-model="currentEffect.notes" ></textarea>
+        <textarea type="text" ng-model="currentEffect.notes"></textarea>
       </div>
     </div>
 
     <div class="clearfix"></div>
       <div class="span2">
-        <label>&nbsp;</label>
+        <input ng-disabled="adverseEffectForm.$invalid"  type="button" href="" id="addNonFullSupply" class="btn btn-primary"
+               ng-click="applyAdverseEffect()"
+               openlmis-message="button.add"/>
+
         <input type="button" href="" class="btn btn-primary"
                ng-click="closeAdverseEffectsModal()"
               openlmis-message="button.cancel"/>
-        <input type="button" href="" id="addNonFullSupply" class="btn btn-primary"
-               ng-click="applyAdverseEffect()"
-               openlmis-message="button.add"/>
+
       </div>
+      </form>
     </div>
     </div>
   </div>

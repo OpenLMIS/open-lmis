@@ -76,11 +76,11 @@
       <div class="row-fluid">
         <div class="span6">
           <label><span openlmis-message="label.vaccine.campaign.children.vaccinated"></span></label>
-          <input type="text"  numeric-validator="positiveInteger"  ng-model="currentCampaign.childrenVaccinated" >
+          <input type="text" numeric-validator="positiveInteger" maxlength="8" ng-model="currentCampaign.childrenVaccinated" >
         </div>
         <div class="span6">
           <label><span openlmis-message="label.vaccine.campaign.women.vaccinated"></span></label>
-          <input type="text"  numeric-validator="positiveInteger"  ng-model="currentCampaign.pregnantWomanVaccinated" >
+          <input type="text" numeric-validator="positiveInteger" maxlength="8"  ng-model="currentCampaign.pregnantWomanVaccinated" >
         </div>
       </div>
 
