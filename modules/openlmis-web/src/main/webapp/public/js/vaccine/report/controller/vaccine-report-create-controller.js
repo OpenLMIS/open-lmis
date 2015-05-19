@@ -22,12 +22,10 @@ function CreateVaccineReportController($scope, $location, $filter, $dialog, repo
   $scope.showVitamin = _.findWhere(report.tabVisibilitySettings,{key: 'VACCINE_TAB_VITAMIN_SUPPLEMENTATION_VISIBLE'}).value;
 
 
-
+  // show the stock movement tab by default.
   if($scope.showLogistics){
     $scope.visibleTab = 'stockMovement';
   }
-
-
 
   $scope.save = function(){
     VaccineReportSave.update($scope.report, function(data){
@@ -86,6 +84,21 @@ function CreateVaccineReportController($scope, $location, $filter, $dialog, repo
     $scope.currentCampaignMode = editMode;
 
     $scope.campaignsModal = true;
+  };
+
+  $scope.deleteAdverseEffectLineItem = function (lineItem){
+
+    var callBack = function (result) {
+      if (result) {
+        $scope.report.adverseEffectLineItems = _.without( $scope.report.adverseEffectLineItems, lineItem);
+      }
+    };
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.delete.adverse.effect.action",
+      body: "msg.question.delete.adverse.effect.confirmation"
+    };
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
   };
 
   $scope.applyCampaign = function(){

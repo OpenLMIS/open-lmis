@@ -15,6 +15,7 @@
   <a href="" class="btn btn-primary pull-right" ng-click="showAdverseEffect({isInvestigated: false}, false)">
     <span openlmis-message="label.vaccine.adverse.effect.register.new"></span>
   </a>
+  <div class="clearfix padding2px"></div>
   <div ng-show="report.adverseEffectLineItems.length > 0">
   <table class="table table-bordered">
     <thead>
@@ -48,7 +49,7 @@
         <div class="cell-text">
           <a href="" ng-click="showAdverseEffect(effect, true)"><span openlmis-message="link.edit"></span></a>
           <span >|</span>
-          <a href="" ng-click="deleteRow(effect, true)"><span openlmis-message="button.delete"></span></a>
+          <a href="" ng-click="deleteAdverseEffectLineItem(effect)"><span openlmis-message="button.delete"></span></a>
         </div>
       </td>
     </tr>
@@ -62,15 +63,20 @@
 
 <div id="adverseEffectModal" modal="adverseEffectModal" close="closeAdverseEffectsModal()"
      options="{ backdrop: 'static', escape: false}">
-  <div class="modal-header"><h3><span openlmis-message="label.vaccine.adverse.effect.add.edit"></span></h3></div>
-  <div class="modal-body">
+  <div class="modal-header">
+    <h3>
+      <span openlmis-message="label.vaccine.adverse.effect.add.edit"></span>
+    </h3>
+  </div>
+  <div class="modal-body app-form">
+    <div>
     <form name="adverseEffectForm" id="adverseEffectForm">
     <div class="row-fluid">
       <div class="span6">
         <label for="product" openlmis-message="label.product"></label>
-        <select ui-select2 class="span11 bottom-spacer" id="product"
-                ng-model="current.product" name="productName"
-                ng-options="product as product.productName for product in report.logisticsLineItems" ng-change="currentEffect.productId = current.product.productId; currentEffect.productName = current.product.productName;" >
+        <select required id="product"
+                ng-model="currentEffect.productId" name="productName" ng-change="currentEffect.productName = _.findWhere(report.logisticsLineItems({productId: currentEffect.productId})).productName" >
+          <option ng-repeat="product in report.logisticsLineItems" value="{{product.productId}}">{{product.productName}}</option>
         </select>
       </div>
       <div class="span6">
@@ -98,8 +104,8 @@
     </div>
     <div class="row-fluid">
       <div class="span6">
-        <label ><span openlmis-message="label.vaccine.adverse.effect.expiry.date"></span></label>
-        <input type="date" required ng-model="currentEffect.expiry" />
+        <label><span openlmis-message="label.vaccine.adverse.effect.expiry.date"></span></label>
+        <input required type="date" ng-model="currentEffect.expiry" />
       </div>
       <div class="span6">
         <label ><span openlmis-message="label.vaccine.adverse.effect.investigation"></span></label>
@@ -113,19 +119,17 @@
         <textarea type="text" ng-model="currentEffect.notes"></textarea>
       </div>
     </div>
-
-    <div class="clearfix"></div>
-      <div class="span2">
-        <input ng-disabled="adverseEffectForm.$invalid"  type="button" href="" id="addNonFullSupply" class="btn btn-primary"
-               ng-click="applyAdverseEffect()"
-               openlmis-message="button.add"/>
-
-        <input type="button" href="" class="btn btn-primary"
-               ng-click="closeAdverseEffectsModal()"
-              openlmis-message="button.cancel"/>
-
-      </div>
-      </form>
+    </form>
     </div>
+    </div>
+    <div class="modal-footer">
+      <input ng-disabled="adverseEffectForm.$invalid"  type="button" href="" id="saveAdverseEffect" class="btn btn-primary"
+             ng-click="applyAdverseEffect()"
+             openlmis-message="button.save"/>
+
+      <input type="button" href="" class="btn btn-primary"
+             ng-click="closeAdverseEffectsModal()"
+             openlmis-message="button.cancel"/>
     </div>
   </div>
+</div>
