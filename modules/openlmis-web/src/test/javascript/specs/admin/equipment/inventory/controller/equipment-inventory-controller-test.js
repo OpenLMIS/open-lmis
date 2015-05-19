@@ -64,7 +64,6 @@ describe("In Equipment Inventory Controller,", function () {
       $httpBackend.flush();
       expect(scope.myFacility).toEqual(undefined);
       expect(scope.facilityDisplayName).toEqual(messageService.get("label.none.assigned"));
-//      expect(scope.programs).toEqual(undefined);
     });
 
     it("should populate programs if 'supervised facilities' selected", function () {
@@ -152,6 +151,35 @@ describe("In Equipment Inventory Controller,", function () {
       expect(item.showSuccess).toBeDefined();
       expect(item.showError).toBeUndefined();
       expect(item.prevStatusId).toEqual(item.operationalStatusId);
+    });
+  });
+
+  describe("Initial load", function () {
+    it("should select program and load equipment types when program is in route for my facility", function () {
+      scope.selectedType = "0";
+      routeParams.program = program.id.toString();
+      routeParams.equipmentType = equipmentType.id.toString();
+      scope.loadPrograms(true);
+      $httpBackend.expectGET('/equipment/manage/typesByProgram/'+program.id+'.json').respond(200, {"equipment_types": [equipmentType]});
+      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory]});
+      $httpBackend.flush();
+      expect(scope.selectedProgram).toEqual(program);
+      expect(scope.selectedEquipmentType).toEqual(equipmentType);
+      expect(scope.inventory).toEqual([inventory]);
+    });
+
+    it("should select program and load equipment types when program is in route for supervised facilities", function () {
+      scope.selectedType = "1";
+      routeParams.program = program.id.toString();
+      routeParams.equipmentType = equipmentType.id.toString();
+      scope.loadPrograms(true);
+      $httpBackend.expectGET('/equipment/inventory/programs.json').respond(200, {"programs": [program]});
+      $httpBackend.expectGET('/equipment/manage/typesByProgram/'+program.id+'.json').respond(200, {"equipment_types": [equipmentType]});
+      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory]});
+      $httpBackend.flush();
+      expect(scope.selectedProgram).toEqual(program);
+      expect(scope.selectedEquipmentType).toEqual(equipmentType);
+      expect(scope.inventory).toEqual([inventory]);
     });
   });
 });
