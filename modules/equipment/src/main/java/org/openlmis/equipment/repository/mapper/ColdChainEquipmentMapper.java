@@ -19,7 +19,8 @@ import java.util.List;
 @Repository
 public interface ColdChainEquipmentMapper {
 
-  @Select("SELECT * from equipment_cold_chain_equipments JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id")
+  @Select("SELECT * from equipment_cold_chain_equipments " +
+          "JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id")
   @Results({
           @Result(property = "designation", column = "designationId", javaType = ColdChainEquipmentDesignation.class,
                   one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentDesignationMapper.getById")),

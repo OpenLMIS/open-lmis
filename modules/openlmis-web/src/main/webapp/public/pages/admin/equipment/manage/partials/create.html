@@ -13,6 +13,7 @@
     <span>{{(equipment.id === undefined)?'New': 'Edit'}} <span openlmis-message="label.equipment.equipment"></span></span>
   </h2>
   <form ng-submit="saveEquipment()" id="equipmentForm" name="equipmentForm">
+    {{equipment}}
     <div>
       <div class="form-row clearfix">
         <div class="form-cell">

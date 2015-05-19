@@ -11,6 +11,7 @@
 package org.openlmis.equipment.repository.mapper;
 
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -18,6 +19,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentEnergyType;
 import org.openlmis.equipment.domain.EquipmentType;
@@ -28,9 +30,11 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTests.class)
@@ -60,6 +64,7 @@ public class EquipmentMapperIT {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
     type.setCode("Type");
+    type.setColdChain(false);
     typeMapper.insert(type);
 
     EquipmentEnergyType energyType=new EquipmentEnergyType();
@@ -75,9 +80,12 @@ public class EquipmentMapperIT {
     equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
 
-    ResultSet rs = queryExecutor.execute("Select * from equipments where id = " + equipment.getId());
-    assertEquals(rs.next(), true);
+//    ResultSet rs = queryExecutor.execute("Select * from equipments " +
+//            "JOIN equipment_types ON equipments.equipmenttypeid=equipment_types.id " +
+//            "WHERE equipment_types.iscoldchain=FALSE and WHERE equipments.id = " + equipment.getId());
 
+    List<Equipment> results =  mapper.getAll();
+    MatcherAssert.assertThat(results.size(), greaterThan(0));
   }
 
   @Test

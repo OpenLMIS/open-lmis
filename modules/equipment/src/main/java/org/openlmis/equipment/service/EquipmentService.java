@@ -10,8 +10,10 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.repository.ColdChainEquipmentRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,23 +26,42 @@ public class EquipmentService {
   @Autowired
   private EquipmentRepository repository;
 
+  @Autowired
+  ColdChainEquipmentRepository coldChainEquipmentRepository;
+
   public List<Equipment> getAll(){
-    return repository.getAll();
+      return repository.getAll();
+  }
+  public List<ColdChainEquipment> getAllCCE(){
+    return coldChainEquipmentRepository.getAll();
   }
 
-  public Equipment getById(Long id){
-    return repository.getById(id);
+  public Equipment getById(Long id,String type){
+
+    if(type.equals("cce")) {
+      return coldChainEquipmentRepository.getById(id);
+    }
+    else{
+      return repository.getById(id);
+    }
   }
 
   public List<EquipmentType> getTypesByProgram(Long programId) {
     return repository.getTypesByProgram(programId);
   }
 
-  public void save(Equipment equipment){
-    if(equipment.getId() == null){
+  public void saveEquipment(Equipment equipment){
       repository.insert(equipment);
-    }else{
-      repository.update(equipment);
-    }
+  }
+  public void saveColdChainEquipment(ColdChainEquipment coldChainEquipment){
+      coldChainEquipmentRepository.insert(coldChainEquipment);
+  }
+
+  public void updateEquipment(Equipment equipment) {
+     repository.update(equipment);
+  }
+
+  public void updateColdChainEquipment(ColdChainEquipment coldChainEquipment) {
+    coldChainEquipmentRepository.update(coldChainEquipment);
   }
 }

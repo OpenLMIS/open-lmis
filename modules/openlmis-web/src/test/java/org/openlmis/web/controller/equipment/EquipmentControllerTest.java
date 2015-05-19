@@ -57,8 +57,8 @@ public class EquipmentControllerTest {
   @Test
   public void shouldGetEquipmentById() throws Exception {
     Equipment equipment = makeAnEquipment();
-    when(service.getById(2L)).thenReturn(equipment);
-    ResponseEntity<OpenLmisResponse> response = controller.getEquipmentById(2L);
+    when(service.getById(2L,"noncce")).thenReturn(equipment);
+    ResponseEntity<OpenLmisResponse> response = controller.getEquipmentById(2L,"noncce");
     assertThat(equipment, is(response.getBody().getData().get("equipment")));
   }
 
@@ -74,7 +74,7 @@ public class EquipmentControllerTest {
     Equipment equipment = makeAnEquipment();
     when(service.getAll()).thenReturn(asList(equipment));
 
-    ResponseEntity<OpenLmisResponse> response = controller.getList();
+    ResponseEntity<OpenLmisResponse> response = controller.getList("noncce");
     assertThat(asList(equipment), is(response.getBody().getData().get("equipments")));
   }
 
@@ -82,7 +82,7 @@ public class EquipmentControllerTest {
 
   @Test
   public void shouldSaveChanges() throws Exception {
-    doNothing().when(service).save(any(Equipment.class));
+    doNothing().when(service).saveEquipment(any(Equipment.class));
     Equipment equipment = makeAnEquipment();
     ResponseEntity<OpenLmisResponse> response = controller.save(equipment);
 

@@ -12,6 +12,7 @@ package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentEnergyType;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.springframework.stereotype.Repository;
 
@@ -20,14 +21,16 @@ import java.util.List;
 @Repository
 public interface EquipmentMapper {
 
-  @Select("SELECT * from equipments order by name")
+  @Select("SELECT * from equipments " +
+          "JOIN equipment_types ON equipments.equipmenttypeid=equipment_types.id " +
+          "WHERE equipment_types.iscoldchain=FALSE order by equipments.name")
   @Results({
       @Result(
           property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
           one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
       @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
           @Result(
-                  property = "energyType", column = "energyTypeId", javaType = EquipmentType.class,
+                  property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
                   one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
           @Result(property = "energyTypeId", column = "energyTypeId")
 
@@ -41,7 +44,7 @@ public interface EquipmentMapper {
                   one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
           @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
           @Result(
-                  property = "energyType", column = "energyTypeId", javaType = EquipmentType.class,
+                  property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
                   one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
           @Result(property = "energyTypeId", column = "energyTypeId")
 

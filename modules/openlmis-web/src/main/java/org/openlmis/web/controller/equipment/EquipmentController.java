@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller.equipment;
 
+import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.service.EquipmentService;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -32,14 +34,22 @@ public class EquipmentController extends BaseController {
 
   @RequestMapping(method = RequestMethod.GET, value = "id")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
-  public ResponseEntity<OpenLmisResponse> getEquipmentById(@RequestParam("id") Long Id){
-    return OpenLmisResponse.response("equipment", service.getById(Id));
+  public ResponseEntity<OpenLmisResponse> getEquipmentById(@RequestParam("id") Long Id, @RequestParam("type") String Type){
+
+    return OpenLmisResponse.response("equipment", service.getById(Id,Type));
+
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "list")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS') or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
-  public ResponseEntity<OpenLmisResponse> getList(){
-    return OpenLmisResponse.response("equipments", service.getAll());
+  public ResponseEntity<OpenLmisResponse> getList(@RequestParam("type") String Type){
+      if(Type.equals("cce"))
+      {
+          return OpenLmisResponse.response("equipments", service.getAllCCE());
+      }
+        else{
+          return OpenLmisResponse.response("equipments", service.getAll());
+      }
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "typesByProgram/{programId}", headers = ACCEPT_JSON)
@@ -50,12 +60,35 @@ public class EquipmentController extends BaseController {
 
   @RequestMapping(method = RequestMethod.POST, value = "save", headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
+  @Transactional
   public ResponseEntity<OpenLmisResponse> save( @RequestBody Equipment equipment){
     equipment.setEquipmentType(new EquipmentType());
     equipment.getEquipmentType().setId(equipment.getEquipmentTypeId());
+    ColdChainEquipment coldChainEquipment;
     try{
-      service.save(equipment);
-    }catch(DuplicateKeyException exp){
+        if(equipment.getId()==null) {
+
+            if(equipment.getEquipmentTypeName().equals("cce")) {
+                service.saveEquipment(equipment);
+                coldChainEquipment = (ColdChainEquipment) equipment;
+                service.saveColdChainEquipment(coldChainEquipment);
+            }
+            else {
+                service.saveEquipment(equipment);
+            }
+        }
+        else{
+
+            if(equipment.getEquipmentTypeName().equals("cce")) {
+                service.updateEquipment(equipment);
+                coldChainEquipment = (ColdChainEquipment) equipment;
+                service.updateColdChainEquipment(coldChainEquipment);
+            }
+            else {
+                service.updateEquipment(equipment);
+            }
+        }
+   }catch(DuplicateKeyException exp){
       return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
     }
     return OpenLmisResponse.response("equipment", equipment);

@@ -56,7 +56,7 @@ public class EquipmentServiceTest {
     equipment.setCode("123");
     when(repository.getById(1L)).thenReturn(equipment);
 
-    Equipment result = service.getById(1L);
+    Equipment result = service.getById(1L,"noncce");
     assertEquals(result.getCode(), equipment.getCode());
   }
 
@@ -66,7 +66,7 @@ public class EquipmentServiceTest {
     equipment.setCode("123");
     when(repository.getById(1L)).thenReturn(equipment);
 
-    Equipment result = service.getById(1L);
+    Equipment result = service.getById(1L,"noncce");
     assertEquals(result.getCode(), equipment.getCode());
   }
 
@@ -75,7 +75,7 @@ public class EquipmentServiceTest {
     Equipment equipment = new Equipment();
     equipment.setCode("123");
 
-    service.save(equipment);
+    service.saveEquipment(equipment);
     verify(repository).insert(equipment);
     verify(repository, never()).update(equipment);
   }
@@ -86,7 +86,7 @@ public class EquipmentServiceTest {
     equipment.setId(1L);
     equipment.setCode("123");
 
-    service.save(equipment);
+    service.updateEquipment(equipment);
     verify(repository, never()).insert(equipment);
     verify(repository).update(equipment);
   }
