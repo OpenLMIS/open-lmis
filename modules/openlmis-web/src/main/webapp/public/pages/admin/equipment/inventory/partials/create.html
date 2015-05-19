@@ -30,7 +30,17 @@
               <input type="text" ng-model="facilityDisplayName" readonly="readonly" />
               <input type="hidden" ng-model="inventory.facilityId" id="facility" name="facility" />
             </div>
-            <div class="form-field" ng-if="from == 1">
+            <div class="form-field" ng-if="from == 1 && screenType == 'edit'">
+              <select style="width: 250px;" ui-select2 ng-model="inventory.facilityId" id="facility"
+                      name="facility" disabled>
+                <option ng-repeat="facility in facilities" ng-selected="facility.id == inventory.facilityId"
+                        value="{{facility.id}}">
+                  {{facility.name}}
+                </option>
+              </select>
+              <input type="hidden" ng-model="inventory.facilityId" id="facility" name="facility" />
+            </div>
+            <div class="form-field" ng-if="from == 1 && screenType != 'edit'">
               <select style="width: 250px;" ui-select2 ng-model="inventory.facilityId" id="facility"
                       name="facility">
                 <option ng-repeat="facility in facilities" ng-selected="facility.id == inventory.facilityId"
