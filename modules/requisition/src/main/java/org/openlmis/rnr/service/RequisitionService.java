@@ -163,7 +163,6 @@ public class RequisitionService {
       lineItem.setEquipmentCategory(inv.getEquipment().getEquipmentType().getName());
       lineItem.setOperationalStatusId(inv.getOperationalStatusId());
       lineItem.setEquipmentName(inv.getEquipment().getName());
-      lineItem.setEquipmentModel(inv.getModel());
       lineItem.setDaysOutOfUse(0L);
 
       requisition.getEquipmentLineItems().add(lineItem);

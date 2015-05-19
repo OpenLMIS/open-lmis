@@ -10,13 +10,11 @@
 
 package org.openlmis.equipment.repository;
 
-import org.openlmis.core.domain.Program;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Repository

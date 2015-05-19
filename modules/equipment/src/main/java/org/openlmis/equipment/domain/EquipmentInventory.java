@@ -38,9 +38,6 @@ public class EquipmentInventory extends BaseModel {
 
   private Long operationalStatusId;
   private String serialNumber;
-  private String manufacturerName;
-  private String model;
-  private String energySource;
   private Integer yearOfInstallation;
   private Float purchasePrice;
   private String sourceOfFund;
@@ -48,16 +45,9 @@ public class EquipmentInventory extends BaseModel {
   private String reasonForReplacement;
   private String nameOfAssessor;
   private Long primaryDonorId;
-  private Boolean hasServiceContract;
-  private Date serviceContractEndDate;
   private Boolean isActive;
   private Date dateDecommissioned;
   private Date dateLastAssessed;
-  private Long capacity;
-  private Long minTemperature;
-  private Long maxTemperature;
-  private String dimension;
-  private String accessories;
 
   private String formatDate(Date date){
     try {
@@ -75,10 +65,6 @@ public class EquipmentInventory extends BaseModel {
 
   public String getDateDecommissionedString(){
     return formatDate(this.dateDecommissioned);
-  }
-
-  public String getServiceContractEndDateString(){
-    return formatDate(this.serviceContractEndDate);
   }
 
 }

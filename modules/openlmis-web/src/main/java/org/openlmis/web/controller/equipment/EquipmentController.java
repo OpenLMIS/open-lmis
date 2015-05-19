@@ -12,8 +12,11 @@ package org.openlmis.web.controller.equipment;
 
 import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentEnergyType;
 import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.service.EquipmentEnergyTypeService;
 import org.openlmis.equipment.service.EquipmentService;
+import org.openlmis.equipment.service.EquipmentTypeService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,24 +35,42 @@ public class EquipmentController extends BaseController {
   @Autowired
   private EquipmentService service;
 
+    @Autowired
+    EquipmentTypeService equipmentTypeService;
+
   @RequestMapping(method = RequestMethod.GET, value = "id")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
-  public ResponseEntity<OpenLmisResponse> getEquipmentById(@RequestParam("id") Long Id, @RequestParam("type") String Type){
+  public ResponseEntity<OpenLmisResponse> getEquipmentById(@RequestParam("id") Long Id){
 
-    return OpenLmisResponse.response("equipment", service.getById(Id,Type));
-
+    return OpenLmisResponse.response("equipment", service.getById(Id));
   }
+
+    @RequestMapping(method = RequestMethod.GET, value = "type-and-id")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
+    public ResponseEntity<OpenLmisResponse> getEquipmentByTypeAndId(@RequestParam("id") Long Id, @RequestParam("equipmentTypeId") Long equipmentTypeId){
+
+        return OpenLmisResponse.response("equipment", service.getByTypeAndId(Id,equipmentTypeId));
+
+    }
 
   @RequestMapping(method = RequestMethod.GET, value = "list")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS') or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
-  public ResponseEntity<OpenLmisResponse> getList(@RequestParam("type") String Type){
-      if(Type.equals("cce"))
+  public ResponseEntity<OpenLmisResponse> getList(@RequestParam("equipmentTypeId") Long equipmentTypeId){
+
+      EquipmentType equipmentType=equipmentTypeService.getTypeById(equipmentTypeId);
+      if(equipmentType.isColdChain())
       {
           return OpenLmisResponse.response("equipments", service.getAllCCE());
       }
         else{
-          return OpenLmisResponse.response("equipments", service.getAll());
+          return OpenLmisResponse.response("equipments", service.getAllByType(equipmentTypeId));
       }
+  }
+
+  @RequestMapping(method = RequestMethod.GET, value = "list-by-type")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS') or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
+  public ResponseEntity<OpenLmisResponse> getListByType(@RequestParam("equipmentTypeId") Long equipmentTypeId){
+    return OpenLmisResponse.response("equipments", service.getAllByType(equipmentTypeId));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "typesByProgram/{programId}", headers = ACCEPT_JSON)

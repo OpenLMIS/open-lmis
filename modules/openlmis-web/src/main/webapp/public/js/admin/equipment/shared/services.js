@@ -18,6 +18,10 @@ services.factory('Equipments', function ($resource) {
   return $resource('/equipment/manage/list.json', {}, {});
 });
 
+services.factory('EquipmentsByType', function ($resource) {
+    return $resource('/equipment/manage/list-by-type.json', {}, {});
+});
+
 services.factory('Equipment', function ($resource) {
   return $resource('/equipment/manage/id.json', {}, {});
 });

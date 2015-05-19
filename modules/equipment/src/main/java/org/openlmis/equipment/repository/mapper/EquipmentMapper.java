@@ -21,9 +21,7 @@ import java.util.List;
 @Repository
 public interface EquipmentMapper {
 
-  @Select("SELECT * from equipments " +
-          "JOIN equipment_types ON equipments.equipmenttypeid=equipment_types.id " +
-          "WHERE equipment_types.iscoldchain=FALSE order by equipments.name")
+  @Select("SELECT * from equipments")
   @Results({
       @Result(
           property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
@@ -36,6 +34,20 @@ public interface EquipmentMapper {
 
   })
   List<Equipment> getAll();
+
+  @Select("SELECT * from equipments where equipmentTypeId = #{equipmentTypeId} order by name")
+  @Results({
+      @Result(
+          property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
+      @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
+      @Result(
+          property = "energyType", column = "energyTypeId", javaType = EquipmentType.class,
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
+      @Result(property = "energyTypeId", column = "energyTypeId")
+
+  })
+  List<Equipment> getAllByType(@Param("equipmentTypeId") Long equipmentTypeId);
 
   @Select("SELECT * from equipments where id = #{id}")
   @Results({
@@ -58,17 +70,16 @@ public interface EquipmentMapper {
       " WHERE p.id = #{programId}")
   List<EquipmentType> getTypesByProgram(@Param("programId") Long programId);
 
-  @Insert("INSERT into equipments (code, name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacture, model, energyTypeId) " +
+  @Insert("INSERT into equipments (code, name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacturer, model, energyTypeId) " +
       "values " +
-      "(#{code}, #{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacture},#{model},#{energyTypeId})")
+      "(#{code}, #{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacturer},#{model},#{energyTypeId})")
   @Options(useGeneratedKeys = true)
   void insert(Equipment equipment);
 
   @Update("UPDATE equipments " +
       "set " +
-      " code = #{code}, name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacture = #{manufacture}, model = #{model}, energyTypeId = #{energyTypeId} " +
+      " code = #{code}, name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacturer = #{manufacturer}, model = #{model}, energyTypeId = #{energyTypeId} " +
       "WHERE id = #{id}")
   void update(Equipment equipment);
-
 
 }

@@ -10,46 +10,53 @@
 
 function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout) {
 
-  $scope.loadPrograms = function (selectedType) {
+  $scope.loadPrograms = function (initialLoad) {
+    // Get home facility for user
+    UserFacilityList.get({}, function (data) {
+      $scope.myFacility = data.facilityList[0];
+      if ($scope.myFacility) {
+        // Home facility found, show home facility
+        $scope.facilityDisplayName = $scope.myFacility.code + ' - ' + $scope.myFacility.name;
 
-    $scope.programs = undefined;
-    $scope.selectedProgram = undefined;
-    $scope.equipmentTypes = undefined;
-    $scope.selectedEquipmentType = undefined;
-
-    if (selectedType === "0") { // My facility
-      // Get facility first, then programs through facility
-      UserFacilityList.get({}, function (data) {
-        $scope.myFacility = data.facilityList[0];
-        if ($scope.myFacility) {
-          $scope.facilityDisplayName = $scope.myFacility.code + ' - ' + $scope.myFacility.name;
+        // Home facility found and my facility type selected, get home facility programs
+        if ($scope.selectedType === "0") {
           ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
             $scope.programs = data.programs;
+            if (initialLoad && $routeParams.program) {
+              $scope.selectedProgram = _.where($scope.programs, {id: parseInt($routeParams.program,10)})[0];
+              $scope.loadEquipmentTypes(initialLoad);
+            }
           }, {});
-        } else {
-          $scope.facilityDisplayName = messageService.get("label.none.assigned");
         }
-      }, {});
-    } else { // Supervised facility
+      } else {
+        // Home facility not found, show none assigned message
+        $scope.facilityDisplayName = messageService.get("label.none.assigned");
+      }
+    }, {});
+
+    // Supervised facility type selected, get supervised facility programs
+    if ($scope.selectedType === "1") {
       ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
+        if (initialLoad && $routeParams.program) {
+          $scope.selectedProgram = _.where($scope.programs, {id: parseInt($routeParams.program, 10)})[0];
+          $scope.loadEquipmentTypes(initialLoad);
+        }
       }, {});
     }
   };
 
-  $scope.loadEquipmentTypes = function () {
+  $scope.loadEquipmentTypes = function (initialLoad) {
     EquipmentTypesByProgram.get({programId: $scope.selectedProgram.id}, function (data) {
       $scope.equipmentTypes = data.equipment_types;
+      if (initialLoad && $routeParams.equipmentType) {
+        $scope.selectedEquipmentType = _.where($scope.equipmentTypes, {id: parseInt($routeParams.equipmentType,10)})[0];
+        $scope.loadInventory();
+      }
     }, {});
   };
 
   $scope.loadInventory = function () {
-    // Turn selectedEquipmentType from object with just id, to full object
-    for (var i = 0; i < $scope.equipmentTypes.length; i++) {
-      if ($scope.equipmentTypes[i].id.toString() === $scope.selectedEquipmentType.id) {
-        $scope.selectedEquipmentType = $scope.equipmentTypes[i];
-      }
-    }
     if ($scope.selectedProgram && $scope.selectedEquipmentType) {
       EquipmentInventories.get({
         typeId: $scope.selectedType,
@@ -67,22 +74,28 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     }
   };
 
+  $scope.changeFacilityType = function () {
+    $scope.programs = undefined;
+    $scope.selectedProgram = undefined;
+    $scope.equipmentTypes = undefined;
+    $scope.selectedEquipmentType = undefined;
+
+    $scope.loadPrograms();
+  };
+
+  $scope.changeProgram = function () {
+    $scope.equipmentTypes = undefined;
+    $scope.selectedEquipmentType = undefined;
+
+    $scope.loadEquipmentTypes();
+  };
+
   function getGeographicZone(item) {
     return item.facility.geographicZone.name;
   }
 
-//  $scope.$on('$viewContentLoaded', function () {
-    $scope.selectedType = $routeParams.selectedType || "0";
-
-    /*
-     $scope.$watch('programs', function () {
-     if ($scope.programs && !isUndefined($routeParams.program)) {
-     $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.program})[0];
-     }
-     });
-     */
-    $scope.loadPrograms($scope.selectedType);
-//  });
+  $scope.selectedType = $routeParams.from || "0";
+  $scope.loadPrograms(true);
 
   EquipmentOperationalStatus.get(function(data){
     $scope.operationalStatusList = data.status;
@@ -90,15 +103,12 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
 
   $scope.updateStatus = function (item) {
     if (item.prevStatusId && item.prevStatusId !== item.operationalStatusId) {
-      UpdateEquipmentInventoryStatus.save(item, function (data) {
+      UpdateEquipmentInventoryStatus.save({}, item, function (data) {
         // Success
         item.showSuccess = true;
-        $scope.prevStatusId = item.operationalStatusId;
         $timeout(function () {
           item.showSuccess = false;
         }, 3000);
-      }, function (data) {
-        // Error goes here
       });
     }
     item.prevStatusId = item.operationalStatusId;

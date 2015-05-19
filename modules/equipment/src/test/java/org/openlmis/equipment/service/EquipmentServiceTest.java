@@ -56,7 +56,7 @@ public class EquipmentServiceTest {
     equipment.setCode("123");
     when(repository.getById(1L)).thenReturn(equipment);
 
-    Equipment result = service.getById(1L,"noncce");
+    Equipment result = service.getById(1L);
     assertEquals(result.getCode(), equipment.getCode());
   }
 
@@ -66,7 +66,7 @@ public class EquipmentServiceTest {
     equipment.setCode("123");
     when(repository.getById(1L)).thenReturn(equipment);
 
-    Equipment result = service.getById(1L,"noncce");
+    Equipment result = service.getById(1L);
     assertEquals(result.getCode(), equipment.getCode());
   }
 

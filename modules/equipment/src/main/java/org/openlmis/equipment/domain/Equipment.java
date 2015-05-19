@@ -37,7 +37,7 @@ public class Equipment extends BaseModel{
 
   private Long equipmentTypeId;
 
-  private String manufacture;
+  private String manufacturer;
 
   private String model;
 

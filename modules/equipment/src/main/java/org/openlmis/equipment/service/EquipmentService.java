@@ -27,25 +27,38 @@ public class EquipmentService {
   private EquipmentRepository repository;
 
   @Autowired
+  EquipmentTypeService equipmentTypeService;
+
+  @Autowired
   ColdChainEquipmentRepository coldChainEquipmentRepository;
 
   public List<Equipment> getAll(){
       return repository.getAll();
   }
+
   public List<ColdChainEquipment> getAllCCE(){
     return coldChainEquipmentRepository.getAll();
   }
 
-  public Equipment getById(Long id,String type){
+  public Equipment getByTypeAndId(Long id,Long equipmentTypeId) {
 
-    if(type.equals("cce")) {
+    EquipmentType equipmentType=equipmentTypeService.getTypeById(equipmentTypeId);
+
+    if (equipmentType.isColdChain()) {
       return coldChainEquipmentRepository.getById(id);
-    }
-    else{
+    } else {
       return repository.getById(id);
     }
   }
 
+  public List<Equipment> getAllByType(Long equipmentTypeId) {
+    return repository.getAllByType(equipmentTypeId);
+  }
+
+  public Equipment getById(Long id){
+    return repository.getById(id);
+
+  }
   public List<EquipmentType> getTypesByProgram(Long programId) {
     return repository.getTypesByProgram(programId);
   }

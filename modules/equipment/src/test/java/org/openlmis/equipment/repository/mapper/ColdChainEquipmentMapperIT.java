@@ -11,7 +11,6 @@
 package org.openlmis.equipment.repository.mapper;
 
 import org.hamcrest.CoreMatchers;
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -95,7 +94,7 @@ public class ColdChainEquipmentMapperIT {
     coldChainEquipment.setCode("123");
     coldChainEquipment.setName("Equipment Name");
     coldChainEquipment.setEquipmentType(type);
-    coldChainEquipment.setManufacture("Manufacture");
+    coldChainEquipment.setManufacturer("Manufacturer");
     coldChainEquipment.setModel("Model");
     coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setDesignationId(designation.getId());
@@ -154,7 +153,7 @@ public class ColdChainEquipmentMapperIT {
     coldChainEquipment.setCode("123");
     coldChainEquipment.setName("Equipment Name");
     coldChainEquipment.setEquipmentType(type);
-    coldChainEquipment.setManufacture("Manufacture");
+    coldChainEquipment.setManufacturer("Manufacturer");
     coldChainEquipment.setModel("Model");
     coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setDesignationId(designation.getId());
@@ -179,7 +178,7 @@ public class ColdChainEquipmentMapperIT {
     ColdChainEquipment result = mapper.getById(coldChainEquipment.getId());
 
     assertEquals(result.getModel(), coldChainEquipment.getModel());
-    assertEquals(result.getManufacture(), coldChainEquipment.getManufacture());
+    assertEquals(result.getManufacturer(), coldChainEquipment.getManufacturer());
     assertEquals(result.getName(), coldChainEquipment.getName());
   }
 
@@ -214,7 +213,7 @@ public class ColdChainEquipmentMapperIT {
     coldChainEquipment.setCode("123");
     coldChainEquipment.setName("Equipment Name");
     coldChainEquipment.setEquipmentType(type);
-    coldChainEquipment.setManufacture("Manufacture");
+    coldChainEquipment.setManufacturer("Manufacturer");
     coldChainEquipment.setModel("Model");
     coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setDesignationId(designation.getId());
@@ -274,7 +273,7 @@ public class ColdChainEquipmentMapperIT {
     coldChainEquipment.setCode("123");
     coldChainEquipment.setName("Equipment Name");
     coldChainEquipment.setEquipmentType(type);
-    coldChainEquipment.setManufacture("Manufacture");
+    coldChainEquipment.setManufacturer("Manufacturer");
     coldChainEquipment.setModel("Model");
     coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setDesignationId(designation.getId());
