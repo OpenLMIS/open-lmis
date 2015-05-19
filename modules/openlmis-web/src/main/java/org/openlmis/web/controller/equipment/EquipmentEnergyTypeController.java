@@ -18,14 +18,14 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-@RequestMapping(value="/equipment/energytype")
+@RequestMapping(value="/equipment/energy-type")
 public class EquipmentEnergyTypeController extends BaseController {
 
   @Autowired
   EquipmentEnergyTypeService service;
 
   @RequestMapping(value="list",method= GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, MANAGE_EQUIPMENT_SETTINGS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getAll(){
     return OpenLmisResponse.response("energyTypes",service.getAll());
   }
@@ -42,7 +42,7 @@ public class EquipmentEnergyTypeController extends BaseController {
   }
 
 
-  @RequestMapping(method = GET, value = "id")
+  @RequestMapping(method = GET, value = "{id}")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getById(@PathVariable(value="id") Long id){
     return OpenLmisResponse.response("energyType",service.getById(id));

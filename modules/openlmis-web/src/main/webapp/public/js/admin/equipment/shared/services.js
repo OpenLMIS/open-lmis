@@ -183,4 +183,16 @@ services.factory('ManageEquipmentInventoryFacilityProgramList', function($resour
   return $resource('/equipment/inventory/facility/programs.json',{},{});
 });
 
+/* Equipment Energy Types */
 
+services.factory('EquipmentEnergyTypes', function ($resource) {
+  return $resource('/equipment/energy-type/list.json', {}, {});
+});
+
+services.factory('EquipmentEnergyType', function ($resource) {
+  return $resource('/equipment/energy-type/id.json', {}, {});
+});
+
+services.factory('SaveEquipmentEnergyType', function ($resource) {
+  return $resource('/equipment/energy-type/save.json', {}, {});
+});
