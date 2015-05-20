@@ -9,12 +9,10 @@
   -->
 
 <div class="rnr-table">
-
   <h2><span openlmis-message="label.vaccine.campaigns"></span></h2>
-
   <input type="button" class="btn btn-primary pull-right" ng-click="showCampaignForm({}, false)"
-         openlmis-message="link.add.new"/>
-
+         openlmis-message="link.add.new.campaign"/>
+  <div class="clearfix padding2px"></div>
   <div ng-show="report.campaignLineItems.length > 0">
     <table class="table table-bordered">
       <thead>
