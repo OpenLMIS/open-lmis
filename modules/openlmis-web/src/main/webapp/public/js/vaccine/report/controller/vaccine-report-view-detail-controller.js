@@ -7,7 +7,7 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-function ViewVaccineReportDetailController($scope, $location, $filter, $dialog, report, discardingReasons, VaccineReportSave, VaccineReportSubmit) {
+function ViewVaccineReportDetailController($scope, $location, $filter, report, discardingReasons) {
 
   // initial state of the display
   $scope.report = report;
@@ -28,27 +28,6 @@ function ViewVaccineReportDetailController($scope, $location, $filter, $dialog, 
     $scope.visibleTab = 'stockMovement';
   }
 
-  $scope.save = function () {
-    VaccineReportSave.update($scope.report, function (data) {
-      $scope.message = "Report Saved Successfully.";
-    });
-  };
-
-  $scope.submit = function () {
-    var callBack = function (result) {
-      if (result) {
-        VaccineReportSubmit.update($scope.report, function (data) {
-          $location.path('/');
-        });
-      }
-    };
-    var options = {
-      id: "confirmDialog",
-      header: "label.confirm.submit.action",
-      body: "msg.question.submit.ivd.confirmation"
-    };
-    OpenLmisDialog.newDialog(options, callBack, $dialog);
-  };
 
   $scope.cancel = function () {
     $location.path('/');
@@ -65,14 +44,6 @@ function ViewVaccineReportDetailController($scope, $location, $filter, $dialog, 
     $scope.adverseEffectModal = true;
   };
 
-  $scope.applyAdverseEffect = function () {
-    var product = _.findWhere($scope.report.logisticsLineItems, {'productId': parseInt($scope.currentEffect.productId, 10)});
-    $scope.currentEffect.productName = product.productName;
-    if (!$scope.currentEffectMode) {
-      $scope.report.adverseEffectLineItems.push($scope.currentEffect);
-    }
-    $scope.adverseEffectModal = false;
-  };
 
   $scope.closeAdverseEffectsModal = function () {
     $scope.adverseEffectModal = false;
@@ -87,28 +58,6 @@ function ViewVaccineReportDetailController($scope, $location, $filter, $dialog, 
     $scope.currentCampaignMode = editMode;
 
     $scope.campaignsModal = true;
-  };
-
-  $scope.deleteAdverseEffectLineItem = function (lineItem) {
-
-    var callBack = function (result) {
-      if (result) {
-        $scope.report.adverseEffectLineItems = _.without($scope.report.adverseEffectLineItems, lineItem);
-      }
-    };
-    var options = {
-      id: "confirmDialog",
-      header: "label.confirm.delete.adverse.effect.action",
-      body: "msg.question.delete.adverse.effect.confirmation"
-    };
-    OpenLmisDialog.newDialog(options, callBack, $dialog);
-  };
-
-  $scope.applyCampaign = function () {
-    if (!$scope.currentCampaignMode) {
-      $scope.report.campaignLineItems.push($scope.currentCampaign);
-    }
-    $scope.campaignsModal = false;
   };
 
   $scope.closeCampaign = function () {

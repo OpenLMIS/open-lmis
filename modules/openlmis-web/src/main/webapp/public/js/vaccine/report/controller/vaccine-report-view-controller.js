@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ViewVaccineReportController($scope, programs, VaccineReportFacilities, VaccineReportPeriods, VaccineReportInitiate, messageService , $location) {
+function ViewVaccineReportController($scope, programs, VaccineReportFacilities, ViewVaccineReportPeriods, messageService , $location) {
 
   $scope.programs = programs;
 
@@ -23,7 +23,7 @@ function ViewVaccineReportController($scope, programs, VaccineReportFacilities, 
     if(isUndefined($scope.filter.facility)){
       return;
     }
-    VaccineReportPeriods.get({facilityId: $scope.filter.facility, programId: $scope.filter.program}, function(data){
+    ViewVaccineReportPeriods.get({facilityId: $scope.filter.facility, programId: $scope.filter.program}, function(data){
       $scope.periodGridData = data.periods;
       if($scope.periodGridData.length > 0){
         $scope.periodGridData[0].showButton = true;
@@ -31,20 +31,15 @@ function ViewVaccineReportController($scope, programs, VaccineReportFacilities, 
     });
   };
 
-  $scope.initiate = function(period){
+  $scope.view = function(period){
     if(!angular.isUndefined(period.id) && (period.id !== null)){
       // redirect already
-      $location.path('/create/'+ period.id);
-    }else{
-      // initiate
-      VaccineReportInitiate.get({ periodId: period.periodId, facilityId: period.facilityId, programId: period.programId}, function(data){
-        $location.path('/create/'+ data.report.id);
-      });
-    }
+      $location.path('/view/'+ period.id);
+    };
   };
 
   function getActionButton(showButton){
-    return '<input type="button" ng-click="initiate(row.entity)" openlmis-message="button.proceed" class="btn btn-primary btn-small grid-btn" ng-show="' + showButton + '"/>';
+    return '<a href="" class="padding2px" ng-click="view(row.entity)" openlmis-message="link.view" />';
   }
 
   $scope.periodGridOptions = { data: 'periodGridData',
