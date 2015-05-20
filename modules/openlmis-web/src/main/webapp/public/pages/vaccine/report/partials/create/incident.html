@@ -73,27 +73,38 @@
     <form name="adverseEffectForm" id="adverseEffectForm">
     <div class="row-fluid">
       <div class="span6">
-        <label for="product" openlmis-message="label.product"></label>
+        <label for="product">
+          <span openlmis-message="label.product"></span>
+          <span class="label-required"> *</span>
+        </label>
         <select required id="product"
-                ng-model="currentEffect.productId" name="productName" ng-change="currentEffect.productName = _.findWhere(report.logisticsLineItems({productId: currentEffect.productId})).productName" >
+                ng-model="currentEffect.productId" >
           <option ng-repeat="product in report.logisticsLineItems" value="{{product.productId}}">{{product.productName}}</option>
         </select>
       </div>
       <div class="span6">
-        <label><span openlmis-message="label.vaccine.adverse.effect.date"></span></label>
-        <input required type="date" ng-model="currentEffect.date" />
+        <label for="date">
+          <span openlmis-message="label.vaccine.adverse.effect.date"></span>
+          <span class="label-required"> *</span>
+        </label>
+        <input id="date" required type="date" ng-model="currentEffect.date" />
       </div>
     </div>
     <div class="row-fluid">
       <div class="span6">
-        <label ><span openlmis-message="label.vaccine.adverse.effect.cases"></span></label>
-        <input  numeric-validator="positiveInteger" maxlength="8" required type="text" ng-model="currentEffect.cases" />
+        <label for="cases">
+          <span openlmis-message="label.vaccine.adverse.effect.cases"></span>
+          <span class="label-required"> *</span>
+        </label>
+        <input id="cases" numeric-validator="positiveInteger" maxlength="8" required type="text" ng-model="currentEffect.cases" />
       </div>
     </div>
     <div class="row-fluid">
       <div class="span6">
-        <label for="manufacturer"><span openlmis-message="label.vaccine.adverse.effect.manufacturer"></span></label>
-
+        <label for="manufacturer">
+          <span openlmis-message="label.vaccine.adverse.effect.manufacturer"></span>
+          <span class="label-required"> *</span>
+        </label>
         <input type="text" id="manufacturer" required ng-model="currentEffect.manufacturer" />
       </div>
       <div class="span6">
@@ -115,7 +126,7 @@
     <div class="row-fluid">
 
       <div class="span6">
-        <label ><span openlmis-message="label.vaccine.adverse.effect.notes"></span></label>
+        <label><span openlmis-message="label.vaccine.adverse.effect.notes"></span></label>
         <textarea type="text" ng-model="currentEffect.notes"></textarea>
       </div>
     </div>
