@@ -11,6 +11,7 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
@@ -19,6 +20,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import static org.openqa.selenium.support.How.ID;
+import static org.openqa.selenium.support.How.XPATH;
 
 public class SupplyLinePage extends FilterSearchPage {
 
@@ -64,7 +66,8 @@ public class SupplyLinePage extends FilterSearchPage {
   @FindBy(how = ID, using = "descriptionHeader")
   private static WebElement descriptionHeader = null;
 
-  @FindBy(how = ID, using = "closeButton")
+//  @FindBy(how = ID, using = "closeButton")
+@FindBy(how = XPATH, using = "//a[@ng-click='clearSearch()']")
   private static WebElement closeSearchResultsButton = null;
 
   @FindBy(how = ID, using = "searchIcon")
@@ -213,7 +216,9 @@ public class SupplyLinePage extends FilterSearchPage {
 
   public void closeSearchResults() {
     testWebDriver.waitForElementToAppear(closeSearchResultsButton);
-    closeSearchResultsButton.click();
+      testWebDriver.click(closeSearchResultsButton);
+      testWebDriver.refresh();
+
   }
 
   public boolean isProgramHeaderPresent() {
