@@ -76,18 +76,18 @@
     <tr ng-repeat-start="product in report.coverageLineItems"></tr>
     <tr ng-repeat-start="dose in product.items">
       <td class="cell-input col-general" >
-        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackMale" ng-model="dose.regularMale" type="text" />
+        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="dose.regularMale" type="text" />
       </td>
       <td  class="cell-input col-general">
-        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackFemale" ng-model="dose.regularFemale" type="text" />
+        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="dose.regularFemale" type="text" />
       </td>
       <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{toNumber(dose.regularMale) + toNumber(dose.regularFemale)}}</span></td>
       <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> - %</span></td>
       <td class="cell-input col-general" >
-        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackMale" ng-model="dose.outreachMale" type="text" />
+        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="dose.outreachMale" type="text" />
       </td>
       <td  class="cell-input col-general">
-        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackFemale" ng-model="dose.outreachFemale" type="text" />
+        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="dose.outreachFemale" type="text" />
       </td>
       <td class="cell-input col-general" style="text-align: right"><span class="cell-text">{{toNumber(dose.outreachMale) + toNumber(dose.outreachFemale)}}</span></td>
       <td class="cell-input col-general" style="text-align: right"><span class="cell-text"> - %</span></td>
@@ -125,13 +125,13 @@
       <tbody>
       <tr>
         <td class="cell-input col-general">
-          <input numeric-validator="positiveInteger" maxlength="8" ng-model="report.fixedImmunizationSessions" type="text">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="report.fixedImmunizationSessions" type="text">
         </td>
         <td class="cell-input col-general">
-          <input numeric-validator="positiveInteger" maxlength="8" ng-model="report.outreachImmunizationSessions" type="text">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="report.outreachImmunizationSessions" type="text">
         </td>
         <td class="cell-input col-general">
-          <input numeric-validator="positiveInteger" maxlength="8" ng-model="report.outreachImmunizationSessionsCanceled"
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="report.outreachImmunizationSessionsCanceled"
                  type="text">
         </td>
       </tr>
@@ -142,5 +142,5 @@
 <div class="clearfix"><br /></div>
 <div>
   <div openlmis-message="label.vaccine.major.immunization.activities"></div>
-  <textarea ng-model="report.majorImmunizationActivities" rows="5" class="span12"></textarea>
+  <textarea disabled ng-model="report.majorImmunizationActivities" rows="5" class="span12"></textarea>
 </div>

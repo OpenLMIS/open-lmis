@@ -29,19 +29,19 @@
       <td ng-repeat-start="column in report.columnTemplate | filter : {visible:true}" ng-if="false"></td>
         <td ng-if="column.name == 'productName'"  class="cell-input"><span class="cell-text">{{product.productName}}</span></td>
         <td ng-if="column.name == 'openingBalance'" class="cell-input col-beginningBalance">
-          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-disabled="!product.product.fullSupply" ng-model="product.openingBalance" type="text" /></td>
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.openingBalance" type="text" /></td>
         <td ng-if="column.name == 'quantityReceived'" class="cell-input col-beginningBalance">
           <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityReceived" type="text" /></td>
         <td ng-if="column.name == 'quantityIssued'" class="cell-input col-beginningBalance">
-          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-disabled="!product.product.fullSupply" ng-model="product.quantityIssued" type="text" /></td>
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.quantityIssued" type="text" /></td>
         <td ng-if="column.name == 'closingBalance'" class="cell-input col-beginningBalance">
           <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.closingBalance" type="text" /></td>
         <td ng-if="column.name == 'quantityVvmAlerted'" class="cell-input col-beginningBalance">
-          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-disabled="!product.product.fullSupply" ng-model="product.quantityVvmAlerted" type="text" /></td>
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.quantityVvmAlerted" type="text" /></td>
         <td ng-if="column.name == 'quantityFreezed'" class="cell-input col-beginningBalance">
-          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-disabled="!product.product.fullSupply" ng-model="product.quantityFreezed" type="text" /></td>
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.quantityFreezed" type="text" /></td>
         <td ng-if="column.name == 'quantityExpired'" class="cell-input col-beginningBalance">
-          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-disabled="!product.product.fullSupply" ng-model="product.quantityExpired" type="text" /></td>
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityExpired" type="text" /></td>
         <td ng-if="column.name == 'quantityOtherWasted'" class="cell-input col-beginningBalance">
           <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityOtherWasted" type="text" /></td>
         <td ng-if="column.name == 'quantityDiscardedUnopened'" class="cell-input col-beginningBalance">
@@ -60,7 +60,7 @@
         </td>
         <td ng-if="column.name == 'daysStockedOut'" class="cell-input col-beginningBalance">
           <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.daysStockedOut" type="text" /></td>
-        <td ng-if="column.name == 'remarks'" class="cell-input col-beginningBalance"><input ng-model="product.remarks" type="text" /></td>
+        <td ng-if="column.name == 'remarks'" class="cell-input col-beginningBalance"><input disabled ng-model="product.remarks" type="text" /></td>
       <td ng-repeat-end="" ng-if="false"></td>
     </tr>
     </tbody>
