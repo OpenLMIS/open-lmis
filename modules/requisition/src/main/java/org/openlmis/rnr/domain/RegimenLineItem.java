@@ -45,6 +45,15 @@ public class RegimenLineItem extends LineItem {
   private Integer patientsOnTreatment;
   private Integer patientsToInitiateTreatment;
   private Integer patientsStoppedTreatment;
+
+  private Integer patientsOnTreatmentAdult;
+  private Integer patientsToInitiateTreatmentAdult;
+  private Integer patientsStoppedTreatmentAdult;
+
+  private Integer patientsOnTreatmentChildren;
+  private Integer patientsToInitiateTreatmentChildren;
+  private Integer patientsStoppedTreatmentChildren;
+
   private String remarks;
   private RegimenCategory category;
   private Integer regimenDisplayOrder;

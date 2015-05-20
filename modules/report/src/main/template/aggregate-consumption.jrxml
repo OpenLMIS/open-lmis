@@ -75,24 +75,14 @@
 					<text><![CDATA[Product Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="441" y="2" width="96" height="39" uuid="9d8a0eac-6bc3-454c-b6f8-53da2ac92c4b"/>
-					<textElement textAlignment="Right"/>
+					<reportElement x="441" y="2" width="193" height="39" uuid="9d8a0eac-6bc3-454c-b6f8-53da2ac92c4b"/>
+					<textElement textAlignment="Center"/>
 					<text><![CDATA[Reported Consumption]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="537" y="2" width="92" height="39" uuid="4cd7e846-0a2e-49f4-814b-9e7b01cd3b99"/>
-					<textElement textAlignment="Right"/>
+					<reportElement x="634" y="2" width="167" height="39" uuid="4cd7e846-0a2e-49f4-814b-9e7b01cd3b99"/>
+					<textElement textAlignment="Center"/>
 					<text><![CDATA[Reported Consumption per pack]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="629" y="2" width="79" height="39" uuid="6e8e358a-3e9c-4222-a39d-3512d70f9c4e"/>
-					<textElement textAlignment="Right"/>
-					<text><![CDATA[Adjusted Consumption]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="708" y="2" width="93" height="39" uuid="54aa0361-ecc6-4c17-a077-1f54471abe2b"/>
-					<textElement textAlignment="Right"/>
-					<text><![CDATA[Adjusted Consumption per pack]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -176,24 +166,14 @@
 				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="629" y="0" width="79" height="20" uuid="db291613-b8b0-4a58-9e9b-16192108ba94"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{dispensed}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="708" y="0" width="93" height="20" uuid="82f97d97-d83d-4ce1-ab8a-c348107350fd"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{adjustedConsumptionInPacks}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="537" y="0" width="92" height="20" uuid="f463c503-d878-4a0f-a32a-711b3bee6a24"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="634" y="0" width="167" height="20" uuid="f463c503-d878-4a0f-a32a-711b3bee6a24"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{consumptionInPacks}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="441" y="0" width="96" height="20" uuid="e87d5541-e8ba-49eb-ac05-35ed11254222"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{consumption}]]></textFieldExpression>
+				<reportElement x="441" y="0" width="193" height="20" uuid="e87d5541-e8ba-49eb-ac05-35ed11254222"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{dispensed}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

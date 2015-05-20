@@ -129,7 +129,7 @@ public interface FacilityMapper {
   @Select("SELECT id FROM facilities WHERE LOWER(code) = LOWER(#{code})")
   Long getIdForCode(String code);
 
-  @Select("SELECT DISTINCT f.* FROM facilities f " +
+  @Select("SELECT DISTINCT f.code, f.name, f.description, f.id FROM facilities f " +
     "INNER JOIN programs_supported ps ON f.id=ps.facilityId " +
     "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId " +
     "INNER JOIN requisition_group_program_schedules rgps ON (rgps.programId = ps.programId AND rgps.requisitionGroupId=rgm.requisitionGroupId)" +
@@ -139,13 +139,6 @@ public interface FacilityMapper {
     "AND f.active = TRUE " +
     "AND ps.active = TRUE " +
     "AND f.virtualFacility = FALSE ")
-  @Results(value = {
-    @Result(property = "geographicZone.id", column = "geographicZoneId"),
-    @Result(property = "facilityType", column = "typeId", javaType = Long.class,
-      one = @One(select = "getFacilityTypeById")),
-    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
-      one = @One(select = "getFacilityOperatorById"))
-  })
   List<Facility> getFacilitiesBy(@Param(value = "programId") Long programId,
                                  @Param(value = "requisitionGroupIds") String requisitionGroupIds);
 

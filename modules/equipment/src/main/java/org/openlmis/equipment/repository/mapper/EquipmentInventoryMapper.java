@@ -48,6 +48,7 @@ public interface EquipmentInventoryMapper {
       ", #{energySource}, #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
       ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}, #{hasServiceContract}, #{serviceContractEndDate} " +
       ", #{primaryDonorId}, #{dimension}, #{capacity}, #{minTemperature}, #{maxTemperature}, #{accessories} , #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+  @Options(useGeneratedKeys = true)
   void insert(EquipmentInventory inventory);
 
   @Update("UPDATE equipment_inventories " +

@@ -184,8 +184,6 @@ public class VaccineReportService {
   public VaccineReport getById(Long id) {
     VaccineReport report =  repository.getByIdWithFullDetails(id);
     report.prepareCoverageDto();
-    report.setTrackCampaignCoverage(settingService.getBoolValue("TRACK_VACCINE_CAMPAIGN_COVERAGE"));
-    report.setTrackOutreachCoverage(settingService.getBoolValue("TRACK_VACCINE_OUTREACH_COVERAGE"));
     report.setTabVisibilitySettings(settingService.getSearchResults("VACCINE_TAB%"));
     return report;
   }

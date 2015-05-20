@@ -61,6 +61,7 @@
   <int:service-activator input-channel="inputChannel" ref="emailService" method="processEmails"/>
 
   <util:properties id="mailProperties">
+    <prop key="mail.smtp.from">${mail.sender.from}</prop>
     <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
     <prop key="mail.smtp.debug">${mail.smtp.debug}</prop>
     <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>

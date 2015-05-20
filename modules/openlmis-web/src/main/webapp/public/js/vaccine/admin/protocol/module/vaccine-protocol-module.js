@@ -11,12 +11,9 @@
 angular.module('vaccine-protocol', ['openlmis','ngTable','ui.sortable' , 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
-        when('/protocol', {controller:VaccineProtocolController, templateUrl:'partials/list.html', resolve: VaccineProtocolController.resolve }).
-        when('/protocol/:program', {controller:VaccineProtocolController, templateUrl:'partials/list.html', resolve: VaccineProtocolController.resolve }).
         when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html', resolve : VaccineDiseaseController.resolve }).
         when('/disease/add', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
         when('/disease/edit/:id', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
-        when('/template', {controller:LogisticsColumnTemplate, templateUrl:'partials/column-template.html', resolve: LogisticsColumnTemplate.resolve }).
         when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html', resolve: StorageTypeController.resolve}).
         when('/storage-type-create', {controller:StorageTypeController, templateUrl:'partials/storage-type-create.html', resolve: StorageTypeController.resolve}).
         when('/storage-type-manage/:id', {controller:StorageTypeEditController, templateUrl:'partials/storage-type-manage.html'}).

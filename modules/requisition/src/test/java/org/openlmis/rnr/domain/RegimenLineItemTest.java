@@ -64,7 +64,7 @@ public class RegimenLineItemTest {
     regimenLineItem.setPatientsOnTreatment(null);
 
     RegimenTemplate regimenTemplate = new RegimenTemplate();
-    RegimenColumn regimenColumn = new RegimenColumn(1l, ON_TREATMENT, ON_TREATMENT, "Number", false, 2l);
+    RegimenColumn regimenColumn = new RegimenColumn(1l, ON_TREATMENT, ON_TREATMENT, "Number", false,1, 2l);
     regimenTemplate.setColumns(asList(regimenColumn));
     regimenLineItem.validate(regimenTemplate);
   }
@@ -78,7 +78,7 @@ public class RegimenLineItemTest {
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
 
     RegimenTemplate regimenTemplate = new RegimenTemplate();
-    RegimenColumn regimenColumn = new RegimenColumn(1l, ON_TREATMENT, ON_TREATMENT, "Number", true, 2l);
+    RegimenColumn regimenColumn = new RegimenColumn(1l, ON_TREATMENT, ON_TREATMENT, "Number", true, 2, 2l);
     regimenTemplate.setColumns(asList(regimenColumn));
     regimenLineItem.validate(regimenTemplate);
   }
@@ -92,7 +92,7 @@ public class RegimenLineItemTest {
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
 
     RegimenTemplate regimenTemplate = new RegimenTemplate();
-    RegimenColumn regimenColumn = new RegimenColumn(1l, INITIATED_TREATMENT, INITIATED_TREATMENT, "Number", true, 2l);
+    RegimenColumn regimenColumn = new RegimenColumn(1l, INITIATED_TREATMENT, INITIATED_TREATMENT, "Number", true,1, 2l);
     regimenTemplate.setColumns(asList(regimenColumn));
     regimenLineItem.validate(regimenTemplate);
   }

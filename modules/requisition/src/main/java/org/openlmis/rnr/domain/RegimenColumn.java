@@ -27,11 +27,14 @@ public class RegimenColumn extends Column {
 
   private String dataType;
 
-  public RegimenColumn(Long programId, String name, String label, String dataType, Boolean visible, Long createdBy) {
+  private Integer displayOrder;
+
+  public RegimenColumn(Long programId, String name, String label, String dataType, Boolean visible, Integer dispOrder, Long createdBy) {
     super(name, label, visible);
     this.programId = programId;
     this.dataType = dataType;
     this.createdBy = createdBy;
+    this.displayOrder = dispOrder;
   }
 
   @Override

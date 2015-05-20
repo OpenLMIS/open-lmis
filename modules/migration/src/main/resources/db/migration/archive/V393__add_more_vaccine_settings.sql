@@ -30,4 +30,4 @@ INSERT INTO configuration_settings (key, name, groupname, description, value, va
   values ('VACCINE_TAB_COLD_CHAIN_VISIBLE', 'Show Cold Chain Tab', 'Vaccine', '','true',  'BOOLEAN', 106, false);
 
 INSERT INTO configuration_settings (key, name, groupname, description, value, valueType,displayOrder, isConfigurable)
-  values ('VACCINE_TAB_CAMPAIGN_VISIBLE', 'Show Cold Chain Tab', 'Vaccine', '','true',  'BOOLEAN', 107, false);
+  values ('VACCINE_TAB_CAMPAIGN_VISIBLE', 'Show Campaign Tab', 'Vaccine', '','true',  'BOOLEAN', 107, false);

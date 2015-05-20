@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.StringWriter;
 import java.util.List;
@@ -47,6 +48,9 @@ public class EmailService {
   private Boolean mailSendingFlag;
 
   private JavaMailSenderImpl mailSender;
+
+  @Value("${mail.sender.from}")
+  private String fromAddress;
 
   private EmailNotificationRepository repository;
 
@@ -75,12 +79,14 @@ public class EmailService {
         mailSender.send(new MimeMessagePreparator() {
           public void prepare(MimeMessage mimeMessage) throws MessagingException {
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            message.setFrom(fromAddress);
             message.setTo(oMessage.getTo());
             message.setSubject(oMessage.getSubject());
             message.setText(oMessage.getText(), true);
           }
         });
       }else{
+        oMessage.setFrom(fromAddress);
         mailSender.send(oMessage);
       }
     }

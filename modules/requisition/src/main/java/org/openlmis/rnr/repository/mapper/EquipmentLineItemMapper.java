@@ -20,7 +20,9 @@ import java.util.List;
 @Repository
 public interface EquipmentLineItemMapper {
 
-  @Insert("INSERT INTO equipment_status_line_items (rnrId, code, equipmentName, equipmentCategory, equipmentModel, equipmentSerial, equipmentInventoryId, operationalStatusId, testCount, totalCount, daysOutOfUse, remarks, createdBy, createdDate, modifiedBy, modifiedDate) values (#{rnrId}, #{code}, #{equipmentName}, #{equipmentCategory}, #{equipmentModel}, #{equipmentSerial}, #{equipmentInventoryId}, #{operationalStatusId}, #{testCount}, #{totalCount}, #{daysOutOfUse}, #{remarks}, #{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate})")
+  @Insert("INSERT INTO equipment_status_line_items (rnrId, code, equipmentName, equipmentCategory, equipmentModel, equipmentSerial, equipmentInventoryId, operationalStatusId, testCount, totalCount, daysOutOfUse, remarks, createdBy, createdDate, modifiedBy, modifiedDate) " +
+                                    "values " +
+                                    "(#{rnrId}, #{code}, #{equipmentName}, #{equipmentCategory}, #{equipmentModel}, #{equipmentSerial}, #{equipmentInventoryId}, #{operationalStatusId}, #{testCount}, #{totalCount}, #{daysOutOfUse}, #{remarks}, #{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(EquipmentLineItem item);
 
@@ -52,10 +54,13 @@ public interface EquipmentLineItemMapper {
       "         JOIN products p on p.code::text = rli.productCode::text " +
       "         JOIN equipment_status_line_items esli on esli.rnrId = r.id " +
       "         JOIN equipment_programs pe on pe.programId = r.programId " +
-      "         JOIN equipment_inventories ep on pe.id = ep.programEquipmentId " +
+      "         JOIN equipment_products ep on pe.id = ep.programEquipmentId " +
       "               and p.id = ep.productId " +
       " WHERE " +
       "       esli.id = #{id}")
 
    List<Product> getRelatedRnrLineItems(@Param("id") Long id);
+
+  @Select("select * from equipment_status_line_items where id = #{id}")
+  EquipmentLineItem getById( @Param("id") Long id);
 }

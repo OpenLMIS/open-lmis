@@ -27,17 +27,17 @@ import java.util.List;
 public interface RegimenColumnMapper {
 
   @Insert({"INSERT INTO program_regimen_columns",
-    "(programId, name, label, visible, dataType, createdBy)",
-    "VALUES (#{programId}, #{regimenColumn.name}, #{regimenColumn.label}, #{regimenColumn.visible}, #{regimenColumn.dataType}, #{regimenColumn.createdBy})"})
-  public void insert(@Param("regimenColumn") RegimenColumn regimenColumn, @Param("programId") Long programId);
+    "(programId, name, label, visible, dataType, displayOrder, createdBy)",
+    "VALUES (#{programId}, #{regimenColumn.name}, #{regimenColumn.label}, #{regimenColumn.visible}, #{regimenColumn.dataType}, #{regimenColumn.displayOrder}, #{regimenColumn.createdBy})"})
+   void insert(@Param("regimenColumn") RegimenColumn regimenColumn, @Param("programId") Long programId);
 
-  @Select("SELECT * FROM program_regimen_columns WHERE programId = #{programId} ORDER BY id")
+  @Select("SELECT * FROM program_regimen_columns WHERE programId = #{programId} ORDER BY displayOrder")
   List<RegimenColumn> getAllRegimenColumnsByProgramId(Long programId);
 
-  @Update("UPDATE program_regimen_columns SET label = #{label}, visible = #{visible}, dataType = #{dataType}, " +
+  @Update("UPDATE program_regimen_columns SET label = #{label}, visible = #{visible}, dataType = #{dataType}, displayOrder = #{displayOrder} , " +
     "modifiedBy = #{modifiedBy}, modifiedDate = CURRENT_TIMESTAMP WHERE id = #{id}")
   void update(RegimenColumn regimenColumn);
 
-  @Select("SELECT * from master_regimen_columns")
+  @Select("SELECT * from master_regimen_columns order by displayOrder")
   List<RegimenColumn> getMasterRegimenColumns();
 }

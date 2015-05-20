@@ -36,6 +36,7 @@ public interface VaccineReportCoverageMapper {
     " , trackMale = #{trackMale}  " +
     " , trackFemale = #{trackFemale}  " +
     " , regularMale = #{regularMale} " +
+    " , regularFemale = #{regularFemale} " +
     " , outreachMale = #{outreachMale} " +
     " , outreachFemale = #{outreachFemale} " +
     " , campaignMale = #{campaignMale} " +
