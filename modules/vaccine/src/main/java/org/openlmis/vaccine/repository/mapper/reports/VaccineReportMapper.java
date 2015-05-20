@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -89,4 +90,12 @@ public interface VaccineReportMapper {
     "   where " +
     "     facilityId = #{facilityId} and programId = #{programId} order by id desc limit 1")
   VaccineReport getLastReport(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+
+  @Select("select r.id, p.name as periodName, r.facilityId, r.status, r.programId " +
+    " from vaccine_reports r " +
+    "   join processing_periods p on p.id = r.periodId " +
+    " where r.facilityId = #{facilityId} and r.programId = #{programId}" +
+    " order by p.startDate desc")
+  List<ReportStatusDTO> getReportedPeriodsForFacility(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 }

@@ -11,9 +11,12 @@
 package org.openlmis.vaccine.repository.reports;
 
 import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class VaccineReportRepository {
@@ -47,5 +50,9 @@ public class VaccineReportRepository {
 
   public Long getScheduleFor(Long facilityId, Long programId) {
     return mapper.getScheduleFor(facilityId, programId);
+  }
+
+  public List<ReportStatusDTO> getReportedPeriodsForFacility(Long facilityId, Long programId) {
+    return mapper.getReportedPeriodsForFacility(facilityId, programId);
   }
 }
