@@ -35,7 +35,7 @@ function ViewVaccineReportController($scope, programs, VaccineReportFacilities, 
     if(!angular.isUndefined(period.id) && (period.id !== null)){
       // redirect already
       $location.path('/view/'+ period.id);
-    };
+    }
   };
 
   function getActionButton(showButton){
