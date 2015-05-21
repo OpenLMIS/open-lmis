@@ -37,6 +37,7 @@ public class EquipmentInventory extends BaseModel {
   private Facility facility;
 
   private Long operationalStatusId;
+  private Long notFunctionalStatusId;
   private String serialNumber;
   private Integer yearOfInstallation;
   private Float purchasePrice;

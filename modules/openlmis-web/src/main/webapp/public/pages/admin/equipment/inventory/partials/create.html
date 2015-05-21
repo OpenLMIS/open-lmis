@@ -140,15 +140,31 @@
                 <span openlmis-message="label.equipment.status"></span>
                 <span class="label-required">*</span>
               </label>
-
               <div class="form-field">
                 <select style="width: 250px;" ui-select2 ng-model="inventory.operationalStatusId" id="operationalStatus"
-                        name="operationalStatus" ng-required="true">
-                  <option value="{{status.id}}" ng-repeat="status in operationalStatusList"
+                        name="operationalStatus" ng-required="true" ng-change="checkForBadStatus()">
+                  <option value="{{status.id}}" ng-repeat="status in cceOperationalStatusList | orderBy: 'displayOrder'"
                           ng-selected="status.id == inventory.operationalStatusId">{{status.name}}
                   </option>
                 </select>
               <span class="field-error" ng-show="inventoryForm.operationalStatus.$error.required && showError"
+                    openlmis-message="missing.value"></span>
+              </div>
+            </div>
+
+            <div class="form-cell" ng-if="badStatusSelected">
+              <label for="notFunctionalStatus">
+                <span openlmis-message="label.equipment.cce.not.functional.status"></span>
+                <span class="label-required">*</span>
+              </label>
+              <div class="form-field">
+                <select style="width: 250px;" ui-select2 ng-model="inventory.notFunctionalStatusId" id="notFunctionalStatus"
+                        name="notFunctionalStatus" ng-required="true">
+                  <option value="{{status.id}}" ng-repeat="status in cceNotFunctionalStatusList | orderBy: 'displayOrder'"
+                          ng-selected="status.id == inventory.notFunctionalStatusId">{{status.name}}
+                  </option>
+                </select>
+              <span class="field-error" ng-show="inventoryForm.notFunctionalStatus.$error.required && showError"
                     openlmis-message="missing.value"></span>
               </div>
             </div>
@@ -267,7 +283,7 @@
             <div class="form-field">
               <select style="width: 250px;" ui-select2 ng-model="inventory.operationalStatusId" id="operationalStatus"
                       name="operationalStatus" ng-required="true">
-                <option value="{{status.id}}" ng-repeat="status in operationalStatusList"
+                <option value="{{status.id}}" ng-repeat="status in labOperationalStatusList | orderBy: 'displayOrder'"
                         ng-selected="status.id == inventory.operationalStatusId">{{status.name}}
                 </option>
               </select>

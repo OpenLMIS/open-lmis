@@ -14,12 +14,15 @@ describe("In Create Equipment Inventory Controller,", function () {
   var program = {"id": 2, "name": "Program 2", "code": "P2", "description": "Program 2 Description"};
   var equipmentType = {"id": 3, "name": "Equipment Type 3", "code": "ET2",
     "description": "Equipment Type 3 Description"};
-  var status = {"id": 4, "name": "Functional"};
+  var labStatus = {"id": 4, "name": "Fully Operational", category: "LAB"};
+  var cceStatus = {"id": 9, "name": "Functional", category: "CCE"};
+  var notFunctionalStatus = {"id": 10, "name": "Obsolete", category: "CCE Not Functional"};
+  var statuses = [labStatus, cceStatus, notFunctionalStatus];
   var equipment = {"id": 6, name: "Dometic 400", code: "Dometic 400", "equipmentType": equipmentType,
     "equipmentTypeId": equipmentType.id, "manufacturer": "Dometic", "model": "400", "energyType": "gas"};
   var inventory = {"id": 7, "programId": program.id, "equipment": equipment, "facility": facility,
     "operationalStatusId": status.id, "facilityId": facility.id};
-  var donor = {"id": 7, "name": "Donor 1"};
+  var donor = {"id": 8, "name": "Donor 1"};
 
   beforeEach(module('openlmis'));
 
@@ -42,13 +45,15 @@ describe("In Create Equipment Inventory Controller,", function () {
       $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId='+routeParams.equipmentType).respond(200, {"equipments": [equipment]});
       $httpBackend.expectGET('/equipment/type/id.json?id='+routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
       $httpBackend.expectGET('/facilities/'+routeParams.facility+'.json').respond(200, {"facility": facility});
-      $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [status]});
+      $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": statuses});
       $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
       $httpBackend.flush();
       expect(scope.equipments).toEqual([equipment]);
       expect(scope.manufacturers).toEqual([equipment.manufacturer]);
       expect(scope.equipmentType).toEqual([equipmentType]);
-      expect(scope.operationalStatusList).toEqual([status]);
+      expect(scope.labOperationalStatusList).toEqual([labStatus]);
+      expect(scope.cceOperationalStatusList).toEqual([cceStatus]);
+      expect(scope.cceNotFunctionalStatusList).toEqual([notFunctionalStatus]);
       expect(scope.donors).toEqual([donor]);
     });
   });
@@ -62,7 +67,7 @@ describe("In Create Equipment Inventory Controller,", function () {
         $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId=' + routeParams.equipmentType).respond(200, {"equipments": [equipment]});
         $httpBackend.expectGET('/equipment/type/id.json?id=' + routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
         $httpBackend.expectGET('/facilities/' + routeParams.facility + '.json').respond(200, {"facility": facility});
-        $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [status]});
+        $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [statuses]});
         $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
         $httpBackend.flush();
         expect(scope.inventory.facility).toEqual(facility);
@@ -76,7 +81,7 @@ describe("In Create Equipment Inventory Controller,", function () {
         $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId=' + routeParams.equipmentType).respond(200, {"equipments": [equipment]});
         $httpBackend.expectGET('/equipment/type/id.json?id=' + routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
         $httpBackend.expectGET('/equipment/inventory/supervised/facilities.json?programId=' + routeParams.program).respond(200, {"facilities": [facility]});
-        $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [status]});
+        $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [statuses]});
         $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
         $httpBackend.flush();
         expect(scope.facilities).toEqual([facility]);
@@ -92,7 +97,7 @@ describe("In Create Equipment Inventory Controller,", function () {
         $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId=' + routeParams.equipmentType).respond(200, {"equipments": [equipment]});
         $httpBackend.expectGET('/equipment/type/id.json?id=' + routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
         $httpBackend.expectGET('/equipment/inventory/by-id.json?id=' + routeParams.id).respond(200, {"inventory": inventory});
-        $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [status]});
+        $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [statuses]});
         $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
         $httpBackend.flush();
         expect(scope.inventory.facility).toEqual(facility);
@@ -107,7 +112,7 @@ describe("In Create Equipment Inventory Controller,", function () {
         $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId=' + routeParams.equipmentType).respond(200, {"equipments": [equipment]});
         $httpBackend.expectGET('/equipment/type/id.json?id=' + routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
         $httpBackend.expectGET('/equipment/inventory/by-id.json?id=' + routeParams.id).respond(200, {"inventory": inventory});
-        $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [status]});
+        $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [statuses]});
         $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
         $httpBackend.expectGET('/equipment/inventory/supervised/facilities.json?programId=' + routeParams.program).respond(200, {"facilities": [facility]});
         $httpBackend.flush();
@@ -124,7 +129,7 @@ describe("In Create Equipment Inventory Controller,", function () {
       $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId='+routeParams.equipmentType).respond(200, {"equipments": [equipment]});
       $httpBackend.expectGET('/equipment/type/id.json?id='+routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
       $httpBackend.expectGET('/facilities/'+routeParams.facility+'.json').respond(200, {"facility": facility});
-      $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [status]});
+      $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [statuses]});
       $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
       $httpBackend.flush();
     });

@@ -109,7 +109,7 @@
           <td>{{item.equipment.fridgeCapacity ? item.equipment.fridgeCapacity : 0}} / {{item.equipment.freezerCapacity ? item.equipment.freezerCapacity : 0}}</td>
           <td>
             <select ui-select2 ng-model="item.operationalStatusId" ng-change="updateStatus(item)">
-              <option value="{{status.id}}" ng-repeat="status in operationalStatusList"
+              <option value="{{status.id}}" ng-repeat="status in operationalStatusList | orderBy: 'displayOrder'"
                       ng-selected="status.id == item.operationalStatusId">{{status.name}}
               </option>
             </select>
