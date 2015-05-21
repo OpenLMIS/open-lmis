@@ -35,7 +35,7 @@ public class VaccineReportAdverseEffectRepositoryTest {
   @Test
   public void shouldUpdate() throws Exception {
     AdverseEffectLineItem lineItem = new AdverseEffectLineItem();
-    repository.insert(lineItem);
-    verify(mapper).insert(lineItem);
+    repository.update(lineItem);
+    verify(mapper).update(lineItem);
   }
 }

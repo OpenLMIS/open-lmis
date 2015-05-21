@@ -11,8 +11,10 @@ import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isNotNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +23,8 @@ import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.VaccineProductDose;
+import org.openlmis.vaccine.dto.ProductDoseProtocolDTO;
+import org.openlmis.vaccine.dto.VaccineServiceProtocolDTO;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +58,11 @@ public class ProductDoseControllerTest {
 
   @Test
   public void shouldSave() throws Exception {
-    //TODO: test this
+    VaccineServiceProtocolDTO dto = new VaccineServiceProtocolDTO();
+    dto.setTabVisibilitySettings(new ArrayList<ConfigurationSetting>());
+    doNothing().when(service).save(anyList());
+    ResponseEntity<OpenLmisResponse> response = controller.save(dto);
+    verify(service).save(anyList());
+    assertThat("success", is(response.getBody().getData().get("status")));
   }
 }
