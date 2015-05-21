@@ -48,6 +48,7 @@ public interface VaccineReportDiseaseLineItemMapper {
                     " extract(year from pp.startDate) = extract(year from pd.startDate) " +
                     " and pp.startDate < pd.startDate " +
                     " and r.facilityId = rp.facilityId    " +
+                    " and l.diseaseId = li.diseaseId " +
                     ") as calculatedCumulativeCases " +
               ", (select sum(death) from vaccine_report_disease_line_items l " +
                     "join vaccine_reports as r on r.id = l.reportId " +
@@ -55,7 +56,8 @@ public interface VaccineReportDiseaseLineItemMapper {
                     " where " +
                     " extract(year from pp.startdate) = extract(year from pd.startDate) " +
                     " and pp.startDate < pd.startDate " +
-                    " and r.facilityId = rp.facilityId    " +
+                    " and r.facilityId = rp.facilityId  " +
+                    " and l.diseaseId = li.diseaseId " +
                     ") as calculatedCumulativeDeaths " +
           " from " +
           " vaccine_report_disease_line_items li " +
