@@ -38,9 +38,11 @@ public interface EquipmentInventoryMapper {
       " AND et.id = #{equipmentTypeId}" +
       " AND ei.facilityId = ANY (#{facilityIds}::INT[])")
   @Results({
+      @Result(property = "equipmentId", column = "equipmentId"),
       @Result(
           property = "equipment", column = "equipmentId", javaType = Equipment.class,
           one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
+      @Result(property = "facilityId", column = "facilityId"),
       @Result(
           property = "facility", column = "facilityId", javaType = Facility.class,
           one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))

@@ -42,7 +42,7 @@ public interface EquipmentMapper {
           one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
       @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
       @Result(
-          property = "energyType", column = "energyTypeId", javaType = EquipmentType.class,
+          property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
           one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
       @Result(property = "energyTypeId", column = "energyTypeId")
 
