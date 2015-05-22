@@ -98,7 +98,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
   $scope.loadPrograms(true);
 
   EquipmentOperationalStatus.get(function(data){
-    $scope.operationalStatusList = data.status;
+    $scope.operationalStatusList = _.where(data.status, {category: 'CCE'});
   });
 
   $scope.updateStatus = function (item) {

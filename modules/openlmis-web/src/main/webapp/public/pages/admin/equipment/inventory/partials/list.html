@@ -46,7 +46,7 @@
       </div>
     </div>
     <div class="row-fluid">
-      <select ui-select2 class="span3" id="programList" ng-model="selectedProgram"
+      <select class="span3" id="programList" ng-model="selectedProgram"
               ng-options="program.name for program in programs | orderBy:'name'" ng-change="changeProgram();">
         <option value=""></option>
         </option>
@@ -62,7 +62,7 @@
       </div>
     </div>
     <div class="row-fluid">
-      <select ui-select2 class="span3" id="equipmentTypeList" ng-model="selectedEquipmentType"
+      <select class="span3" id="equipmentTypeList" ng-model="selectedEquipmentType"
               ng-options="equipmentType.name for equipmentType in equipmentTypes | orderBy:'name'" ng-change="loadInventory();">
         <option value=""></option>
         </option>
@@ -104,12 +104,12 @@
           <td>{{item.facility.geographicZone.name}}</td>
           <td>{{item.facility.name}}</td>
           <td><a ng-href="#/edit/{{selectedType}}/{{item.facility.id}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}">{{item.equipment.name}}</a></td>
-          <td>{{item.manufacturerName}}</td>
-          <td>{{item.model}}</td>
+          <td>{{item.equipment.manufacturer}}</td>
+          <td>{{item.equipment.model}}</td>
           <td>{{item.equipment.fridgeCapacity ? item.equipment.fridgeCapacity : 0}} / {{item.equipment.freezerCapacity ? item.equipment.freezerCapacity : 0}}</td>
           <td>
             <select ui-select2 ng-model="item.operationalStatusId" ng-change="updateStatus(item)">
-              <option value="{{status.id}}" ng-repeat="status in operationalStatusList"
+              <option value="{{status.id}}" ng-repeat="status in operationalStatusList | orderBy: 'displayOrder'"
                       ng-selected="status.id == item.operationalStatusId">{{status.name}}
               </option>
             </select>
@@ -117,7 +117,7 @@
             <span class="fadeout" ng-show="item.showSuccess == true"
                   openlmis-message="label.equipment.inventory.status.saved"></span>
           </td>
-          <td>{{item.energySource}}</td>
+          <td>{{item.equipment.energyType.name}}</td>
           <td>{{item.yearOfInstallation}}</td>
           <td>{{getAge(item.yearOfInstallation)}}</td>
           <td>{{item.yearOfInstallation+10}}</td>

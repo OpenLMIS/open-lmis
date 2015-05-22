@@ -77,7 +77,9 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
   }
 
   EquipmentOperationalStatus.get(function(data){
-    $scope.operationalStatusList = data.status;
+    $scope.labOperationalStatusList = _.where(data.status, {category: 'LAB'});
+    $scope.cceOperationalStatusList = _.where(data.status, {category: 'CCE'});
+    $scope.cceNotFunctionalStatusList = _.where(data.status, {category: 'CCE Not Functional'});
   });
 
   Donors.get(function(data){
@@ -97,6 +99,15 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     if ($scope.selected.manufacturer && $scope.selected.model) {
       $scope.inventory.equipment = _.where($scope.equipments, {manufacturer: $scope.selected.manufacturer, model: $scope.selected.model})[0];
       $scope.inventory.equipmentId = $scope.inventory.equipment.id;
+    }
+  };
+
+  $scope.checkForBadStatus = function () {
+    var operationalStatus = _.where($scope.cceOperationalStatusList, {id: parseInt($scope.inventory.operationalStatusId, 10)})[0];
+    if (operationalStatus.isBad) {
+      $scope.badStatusSelected = true;
+    } else {
+      $scope.badStatusSelected = false;
     }
   };
 

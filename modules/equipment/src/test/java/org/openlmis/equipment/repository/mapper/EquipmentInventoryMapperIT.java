@@ -10,11 +10,17 @@
 
 package org.openlmis.equipment.repository.mapper;
 
+import org.hamcrest.CoreMatchers;
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.query.QueryExecutor;
+import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
@@ -25,6 +31,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.util.Date;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -43,116 +56,92 @@ public class EquipmentInventoryMapperIT {
   EquipmentMapper equipmentMapper;
 
   @Autowired
+  FacilityMapper facilityMapper;
+
+  @Autowired
   QueryExecutor queryExecutor;
 
-  @Test
-  public void shouldGetAllInventoryItemsForFacility() throws Exception{
-    EquipmentInventory inventory = new EquipmentInventory();
+  EquipmentInventory inventory;
+  Facility facility;
 
+  @Before
+  public void initialize() throws Exception {
+    GeographicZone zone = new GeographicZone();
+    zone.setId(1L);
+
+    FacilityType facilityType = new FacilityType();
+    facilityType.setId(1L);
+
+    facility = new Facility();
+    facility.setId(1L);
+    facility.setCode("FAC");
+    facility.setName("Facility");
+    facility.setGeographicZone(zone);
+    facility.setFacilityType(facilityType);
+    facility.setSdp(true);
+    facility.setActive(true);
+    facility.setGoLiveDate(new Date());
+    facility.setEnabled(true);
+    facility.setVirtualFacility(false);
+    facilityMapper.insert(facility);
+
+    EquipmentType type = new EquipmentType();
+    type.setCode("1");
+    type.setCode("Type");
+    typeMapper.insert(type);
+
+    Equipment equipment = new Equipment();
+    equipment.setCode("123");
+    equipment.setName("Name");
+    equipment.setEquipmentType(type);
+    equipmentMapper.insert(equipment);
+
+    inventory = new EquipmentInventory();
     inventory.setProgramId(1L);
-    inventory.setFacilityId(1L);
+    inventory.setFacilityId(facility.getId());
     inventory.setOperationalStatusId(1L);
+    inventory.setNotFunctionalStatusId(2L);
     inventory.setEquipmentId(1L);
     inventory.setReplacementRecommended(false);
     inventory.setYearOfInstallation(2012);
     inventory.setSerialNumber("2323");
     inventory.setPurchasePrice(0F);
     inventory.setDateLastAssessed(DateTime.now().toDate());
+    inventory.setIsActive(true);
+    mapper.insert(inventory);
+  }
 
-//    mapper.insert(inventory);
-//
-//    List<EquipmentInventory> inventories =  mapper.getInventoryByFacilityAndProgram(1L, 1L);
-//    assertEquals(inventories.size(), 1);
+  @Test
+  public void shouldGetAllInventoryItemsForFacility() throws Exception{
+    List<EquipmentInventory> inventories =  mapper.getInventoryByFacilityAndProgram(facility.getId(), 1L);
+    assertEquals(inventories.size(), 1);
   }
 
   @Test
   public void shouldGetInventoryById() throws Exception {
-    EquipmentInventory inventory = new EquipmentInventory();
-    inventory.setProgramId(1L);
-    inventory.setFacilityId(1L);
-    inventory.setOperationalStatusId(1L);
-    inventory.setEquipmentId(1L);
-    inventory.setReplacementRecommended(false);
-    inventory.setYearOfInstallation(2012);
-    inventory.setSerialNumber("2323");
-    inventory.setPurchasePrice(0F);
-    inventory.setDateLastAssessed(DateTime.now().toDate());
+    EquipmentInventory result = mapper.getInventoryById(inventory.getId());
 
-//    mapper.insert(inventory);
-//
-//    EquipmentInventory result = mapper.getInventoryById(inventory.getId());
-//
-//    assertEquals(result.getModel(), inventory.getModel());
-//    assertEquals(result.getOperationalStatusId(), inventory.getOperationalStatusId());
+    assertEquals(result.getSerialNumber(), inventory.getSerialNumber());
+    assertEquals(result.getOperationalStatusId(), inventory.getOperationalStatusId());
   }
 
   @Test
   public void shouldInsert()throws Exception {
-    EquipmentType type = new EquipmentType();
-    type.setCode("1");
-    type.setCode("Type");
-    typeMapper.insert(type);
+    assertThat(inventory.getId(), CoreMatchers.is(notNullValue()));
 
-    Equipment equipment = new Equipment();
-    equipment.setCode("123");
-    equipment.setName("Name");
-    equipment.setEquipmentType(type);
-    equipmentMapper.insert(equipment);
-
-    EquipmentInventory inventory = new EquipmentInventory();
-    inventory.setFacilityId(1L);
-    inventory.setEquipmentId(equipment.getId());
-    inventory.setOperationalStatusId(1L);
-    inventory.setProgramId(1L);
-    inventory.setReplacementRecommended(false);
-    inventory.setYearOfInstallation(2012);
-    inventory.setSerialNumber("2323");
-    inventory.setPurchasePrice(0F);
-    inventory.setDateLastAssessed(DateTime.now().toDate());
-
-//    mapper.insert(inventory);
-//
-//    assertThat(inventory.getId(), CoreMatchers.is(notNullValue()));
-//
-//    ResultSet rs = queryExecutor.execute("Select * from facility_program_equipments where id = " + inventory.getId());
-//    assertEquals(rs.next(), true);
-//    assertEquals(rs.getString("model"), "123");
+    ResultSet rs = queryExecutor.execute("Select * from equipment_inventories where id = " + inventory.getId());
+    assertEquals(rs.next(), true);
+    assertEquals(rs.getString("serialNumber"), "2323");
   }
 
   @Test
   public void shouldUpdate() throws Exception{
-    EquipmentType type = new EquipmentType();
-    type.setCode("1");
-    type.setCode("Type");
-    typeMapper.insert(type);
+    inventory.setSerialNumber("3432");
 
-    Equipment equipment = new Equipment();
-    equipment.setCode("123");
-    equipment.setName("Name");
-    equipment.setEquipmentType(type);
+    mapper.update(inventory);
 
-    equipmentMapper.insert(equipment);
-
-    EquipmentInventory inventory = new EquipmentInventory();
-    inventory.setFacilityId(1L);
-
-    inventory.setEquipmentId(equipment.getId());
-    inventory.setOperationalStatusId(1L);
-    inventory.setProgramId(1L);
-    inventory.setReplacementRecommended(false);
-    inventory.setYearOfInstallation(2012);
-    inventory.setSerialNumber("2323");
-    inventory.setPurchasePrice(0F);
-    inventory.setDateLastAssessed(DateTime.now().toDate());
-
-//    mapper.insert(inventory);
-//
-//    inventory.setModel("3432");
-//
-//    mapper.update(inventory);
-//
-//    ResultSet rs = queryExecutor.execute("Select * from facility_program_equipments where id = " + inventory.getId());
-//    assertEquals(rs.next(), true);
-//    assertEquals(rs.getString("model"), "3432");
+    ResultSet rs = queryExecutor.execute("Select * from equipment_inventories where id = " + inventory.getId());
+    assertEquals(rs.next(), true);
+    assertEquals(rs.getString("serialNumber"), "3432");
   }
 }
