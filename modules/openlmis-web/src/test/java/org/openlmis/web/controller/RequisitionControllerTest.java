@@ -13,18 +13,14 @@ package org.openlmis.web.controller;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RightName;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -38,7 +34,7 @@ import org.openlmis.rnr.service.*;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -66,11 +62,10 @@ import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest({RnrDTO.class, RequisitionController.class})
 public class RequisitionControllerTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   public static final String FACILITY_CODE = "F14";
   public static final String FACILITY_NAME = "Facility";

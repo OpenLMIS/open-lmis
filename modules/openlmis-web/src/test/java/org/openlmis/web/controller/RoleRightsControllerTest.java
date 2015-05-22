@@ -12,10 +12,10 @@ package org.openlmis.web.controller;
 
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.*;
@@ -26,7 +26,7 @@ import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -53,10 +53,9 @@ import static org.openlmis.web.controller.RoleRightsController.*;
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 public class RoleRightsControllerTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   Role role;
   private static final Long LOGGED_IN_USERID = 11L;
