@@ -11,17 +11,28 @@
 package org.openlmis.web.controller.equipment;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.service.MessageService;
+import org.openlmis.db.categories.UnitTests;
+import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.service.EquipmentInventoryService;
+import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 
-import static java.util.Arrays.asList;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -29,27 +40,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 
-import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.service.MessageService;
-import org.openlmis.db.categories.UnitTests;
-import org.openlmis.equipment.domain.EquipmentInventory;
-import org.openlmis.equipment.service.EquipmentInventoryService;
-import org.openlmis.web.response.OpenLmisResponse;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 public class EquipmentInventoryControllerTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   MessageService messageService;

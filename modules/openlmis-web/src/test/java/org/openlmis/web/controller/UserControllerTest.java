@@ -11,10 +11,10 @@
 package org.openlmis.web.controller;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
@@ -29,7 +29,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -58,11 +58,10 @@ import static org.powermock.api.mockito.PowerMockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(UserController.class)
 public class UserControllerTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   private Long userId;
 

@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.Mock;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
@@ -22,7 +23,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,19 +53,19 @@ import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(RnrLineItem.class)
 public class RnrLineItemTest {
 
   @Rule
-  public PowerMockRule rule = new PowerMockRule();
-
-
-  @Rule
   public ExpectedException expectedException = ExpectedException.none();
+
   Integer numberOfMonths;
   private RnrLineItem lineItem;
   private List<RnrColumn> templateColumns;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
+
   @Mock
   ProgramRnrTemplate template;
 

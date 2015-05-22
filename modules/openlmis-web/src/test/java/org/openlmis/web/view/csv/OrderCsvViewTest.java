@@ -11,10 +11,10 @@
 package org.openlmis.web.view.csv;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.OrderConfiguration;
@@ -25,7 +25,7 @@ import org.openlmis.order.helper.OrderCsvHelper;
 import org.openlmis.web.controller.OrderController;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,11 +39,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(OrderCsvView.class)
 public class OrderCsvViewTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   OrderCsvHelper csvHelper;

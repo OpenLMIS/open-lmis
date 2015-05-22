@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
@@ -28,7 +29,7 @@ import org.openlmis.shipment.builder.ShipmentLineItemBuilder;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.List;
 
@@ -45,11 +46,10 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(OrderPOD.class)
 public class OrderPODTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();

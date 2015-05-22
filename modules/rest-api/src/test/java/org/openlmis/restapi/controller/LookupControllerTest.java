@@ -1,11 +1,11 @@
-package org.openlmis.restapi.controller; 
+package org.openlmis.restapi.controller;
 
 import org.apache.ibatis.session.RowBounds;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
@@ -14,7 +14,7 @@ import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.restapi.response.RestResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -26,12 +26,11 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@PrepareForTest(RestResponse.class)
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
+@PrepareForTest(RestResponse.class)
 public class LookupControllerTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   private ReportLookupService lookupService;

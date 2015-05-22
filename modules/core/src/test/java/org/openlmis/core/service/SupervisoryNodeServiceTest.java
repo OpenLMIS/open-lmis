@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
@@ -27,7 +28,7 @@ import org.openlmis.core.repository.UserRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,12 +47,11 @@ import static org.openlmis.core.domain.RightName.CREATE_REQUISITION;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest(SupervisoryNodeService.class)
 public class SupervisoryNodeServiceTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   SupervisoryNodeRepository supervisoryNodeRepository;

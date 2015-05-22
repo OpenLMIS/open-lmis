@@ -11,10 +11,10 @@
 package org.openlmis.shipment.file;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.EDIConfiguration;
@@ -32,10 +32,10 @@ import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.context.ApplicationContext;
-import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.supercsv.io.CsvListReader;
 
 import java.io.File;
@@ -60,11 +60,10 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest({ShipmentFileProcessor.class, MessageBuilder.class})
 public class ShipmentFileProcessorTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
