@@ -31,6 +31,7 @@ import org.openlmis.reporting.model.TemplateParameter;
 import org.openlmis.reporting.repository.TemplateRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
