@@ -1,33 +1,28 @@
 package org.openlmis.web.controller.vaccine;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.DiscardingReason;
 import org.openlmis.vaccine.service.DiscardingReasonsService;
 import org.openlmis.web.response.OpenLmisResponse;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 
 @Category(UnitTests.class)
-@PrepareForTest(DiscardingReasonsController.class)
+@RunWith(MockitoJUnitRunner.class)
 public class DiscardingReasonsControllerTest {
 
   @Mock
@@ -35,9 +30,6 @@ public class DiscardingReasonsControllerTest {
 
   @InjectMocks
   DiscardingReasonsController controller;
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Test
   public void shouldGetAll() throws Exception {
