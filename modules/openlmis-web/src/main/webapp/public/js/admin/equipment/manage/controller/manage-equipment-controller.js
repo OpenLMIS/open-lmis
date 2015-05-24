@@ -8,11 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ManageEquipmentController($scope, $routeParams, $location, Equipments,EquipmentTypes,EquipmentType) {
-
-//  Equipments.get(function (data) {
-//    $scope.equipments = data.equipments;
-//  });
+function ManageEquipmentController($scope, $routeParams, $location, Equipments,EquipmentTypes,EquipmentType,currentEquipmentTypeId) {
 
    EquipmentTypes.get(function (data) {
       $scope.equipmentTypes = data.equipment_type;
@@ -31,5 +27,25 @@ function ManageEquipmentController($scope, $routeParams, $location, Equipments,E
           }, function (data) {
             $scope.equipment_type = data.equipment_type;
        });
+   };
+
+   $scope.currentEquipmentTypeId=currentEquipmentTypeId.get();
+   $scope.equipmentTypeId=$scope.currentEquipmentTypeId;
+   if( $scope.currentEquipmentTypeId !== undefined)
+   {
+    $scope.listEquipments();
+   }
+
+   var ASC=true;
+   $scope.sortBy=function(title){
+        if(ASC){
+          $scope.orderTitle=title;
+          ASC=false;
+        }
+        else{
+          $scope.orderTitle='-'+title;
+          ASC=true;
+        }
+
    };
 }

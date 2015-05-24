@@ -8,11 +8,28 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentController($scope, $routeParams, $location, Equipment,EquipmentType, EquipmentTypes, SaveEquipment, messageService) {
+function CreateEquipmentController($scope, $routeParams, $location, Equipment,EquipmentType, EquipmentTypes, SaveEquipment, messageService, ColdChainDesignations,ColdChainPqsStatus,EquipmentEnergyTypes, Donors,currentEquipmentTypeId) {
 
   EquipmentTypes.get(function (data) {
     $scope.equipmentTypes = data.equipment_type;
   });
+
+  EquipmentEnergyTypes.get(function (data) {
+        $scope.energyTypes = data.energyTypes;
+   });
+
+  ColdChainDesignations.get(function (data) {
+     $scope.designations = data.designations;
+  });
+
+  ColdChainPqsStatus.get(function (data) {
+       $scope.pqsStatus = data.pqs_status;
+    });
+
+  Donors.get(function (data) {
+      $scope.donors = data.donors;
+  });
+
   // clear the message when this page is loaded.
   $scope.$parent.message = '';
 
@@ -27,8 +44,13 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
     });
   }
 
-  $scope.saveEquipment = function () {
+  $scope.updateName=function(isColdChain)
+  {
+    if(isColdChain)
+    $scope.equipment.name=$scope.equipment.manufacturer+'/'+$scope.equipment.model;
+  };
 
+  $scope.saveEquipment = function () {
     var onSuccess = function(data){
       $scope.$parent.message = messageService.get(data.success);
       $location.path('');
@@ -52,6 +74,7 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
   $scope.checkEquipmentType=function()
      {
         var id=$scope.equipment.equipmentTypeId;
+        currentEquipmentTypeId.set(id);
         EquipmentType.get({
               id: id
             }, function (data) {
@@ -59,11 +82,13 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
               if($scope.equipmentType.coldChain)
               {
                 $scope.equipment.equipmentTypeName="cold-chain-equipment";
+
               }
               else
               {
                 $scope.equipment.equipmentTypeName="equipment";
               }
          });
+
      };
 }

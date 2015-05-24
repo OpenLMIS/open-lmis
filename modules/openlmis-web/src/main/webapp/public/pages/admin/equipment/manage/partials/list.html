@@ -19,11 +19,9 @@
 
   <div class="content-body">
     <div>
-      <select class="large-input"
-              ng-change="listEquipments()"
-              ng-model="equipmentTypeId" ng-options="option.id as option.name for option in equipmentTypes">
+      <select class="large-input" ng-change="listEquipments()" ng-model="equipmentTypeId" >
         <option value=""><span openlmis-message="label.equipment.choose.type"></span></option>
-        <option ng-repeat="option in equipmentTypes" value="{{ option.id }}">{{ option.name }}</option>
+        <option ng-repeat="option in equipmentTypes" ng-selected="option.id == currentEquipmentTypeId" value="{{ option.id }}">{{ option.name }}</option>
       </select>
     </div>
     <div ng-show="equipments.length == 0">
@@ -34,13 +32,13 @@
       <thead>
       <tr class="gradient-header">
         <th style="width: 30px;">#</th>
-        <th openlmis-message="label.equipment.code"></th>
-        <th openlmis-message="label.equipment.name"></th>
-        <th openlmis-message="label.equipment.type"></th>
+        <th><a openlmis-message="label.equipment.code" ng-click="sortBy('code')"></a></th>
+        <th><a openlmis-message="label.equipment.name" ng-click="sortBy('name')"></a></th>
+        <th><a openlmis-message="label.equipment.type" ng-click="sortBy('type')"></a></th>
       </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="eq in equipments">
+      <tr ng-repeat="eq in equipments | orderBy:orderTitle">
         <td>{{$index + 1}}</td>
         <td>{{eq.code}}</td>
         <td><a ng-href="#/edit/{{eq.id}}/{{equipmentTypeId}}">{{eq.name}}</a></td>
@@ -53,10 +51,10 @@
       <thead>
       <tr class="gradient-header">
         <th style="width: 15px;">#</th>
-        <th >Name</th>
-        <th >Designation</th>
-        <th >Brand</th>
-        <th >Model</th>
+        <th ><a openlmis-message="label.equipment.name" ng-click="sortBy('name')"></a></th>
+        <th ><a openlmis-message="label.equipment.designation" ng-click="sortBy('designation.name')"></a></th>
+        <th ><a openlmis-message="label.equipment.manufacturer" ng-click="sortBy('manufacturer')"></a></th>
+        <th ><a openlmis-message="label.equipment.model" ng-click="sortBy('model')"></a></th>
         <th >Code</th>
         <th >PSQ Code</th>
         <th >Refrigerator Capacity</th>
@@ -67,7 +65,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="eq in equipments">
+      <tr ng-repeat="eq in equipments | orderBy:orderTitle">
         <td>{{$index + 1}}</td>
         <td><a ng-href="#/edit/{{eq.id}}/{{equipmentTypeId}}">{{eq.name}}</a></td>
         <td>{{eq.designation.name}}</td>
@@ -84,5 +82,6 @@
       </tbody>
     </table>
     </div>
+
   </div>
 </div>

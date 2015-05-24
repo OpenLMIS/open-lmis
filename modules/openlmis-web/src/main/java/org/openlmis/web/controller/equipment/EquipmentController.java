@@ -81,35 +81,37 @@ public class EquipmentController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   @Transactional
   public ResponseEntity<OpenLmisResponse> save( @RequestBody Equipment equipment){
-    equipment.setEquipmentType(new EquipmentType());
-    equipment.getEquipmentType().setId(equipment.getEquipmentTypeId());
-    ColdChainEquipment coldChainEquipment;
-    try{
-        if(equipment.getId()==null) {
+      ResponseEntity<OpenLmisResponse> response;
+      EquipmentType equipmentType=equipmentTypeService.getTypeById(equipment.getEquipmentTypeId());
+      equipment.setEquipmentType(equipmentType);
+      ColdChainEquipment coldChainEquipment;
+        try{
+            if(equipment.getId()==null) {
 
-            if(equipment.getEquipmentTypeName().equals("cold-chain-equipment")) {
-                service.saveEquipment(equipment);
-                coldChainEquipment = (ColdChainEquipment) equipment;
-                service.saveColdChainEquipment(coldChainEquipment);
+                if(equipmentType.isColdChain()) {
+                    service.saveEquipment(equipment);
+                    coldChainEquipment = (ColdChainEquipment) equipment;
+                    service.saveColdChainEquipment(coldChainEquipment);
+                }
+                else {
+                    service.saveEquipment(equipment);
+                }
             }
-            else {
-                service.saveEquipment(equipment);
+            else{
+                if(equipmentType.isColdChain()) {
+                    service.updateEquipment(equipment);
+                    coldChainEquipment = (ColdChainEquipment) equipment;
+                    service.updateColdChainEquipment(coldChainEquipment);
+                }
+                else {
+                    service.updateEquipment(equipment);
+                }
             }
+       }catch(DuplicateKeyException exp){
+          return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
         }
-        else{
-
-            if(equipment.getEquipmentTypeName().equals("cce")) {
-                service.updateEquipment(equipment);
-                coldChainEquipment = (ColdChainEquipment) equipment;
-                service.updateColdChainEquipment(coldChainEquipment);
-            }
-            else {
-                service.updateEquipment(equipment);
-            }
-        }
-   }catch(DuplicateKeyException exp){
-      return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
-    }
-    return OpenLmisResponse.response("equipment", equipment);
-  }
+      response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.save"));
+      response.getBody().addData("equipment", equipment);
+      return response;
+      }
 }

@@ -49,7 +49,7 @@
             </label>
 
             <div class="form-field">
-              <input ng-model="equipment.name" id="name" type="text" maxlength="200" ng-required="true" />
+              <input ng-readonly="equipmentType.coldChain" ng-model="equipment.name" id="name" type="text" maxlength="200" ng-required="true" />
               <span class="field-error" ng-show="equipmentForm.name.$error.required && showError" openlmis-message="missing.value"></span>
             </div>
           </div>
@@ -63,7 +63,7 @@
           </label>
 
           <div class="form-field">
-            <input ng-model="equipment.manufacturer" name="manufacturer" id="manufacturer" type="text" maxlength="50" ng-required="true" />
+            <input ng-model="equipment.manufacturer" ng-change="updateName(equipmentType.coldChain)" name="manufacturer" id="manufacturer" type="text" maxlength="50" ng-required="true" />
             <span class="field-error" ng-show="equipmentForm.manufacturer.$error.required && showError" openlmis-message="missing.value"></span>
           </div>
         </div>
@@ -75,10 +75,24 @@
           </label>
 
           <div class="form-field">
-            <input ng-model="equipment.model" id="model" type="text" maxlength="200" ng-required="true" />
+            <input ng-model="equipment.model" ng-change="updateName(equipmentType.coldChain)" id="model" type="text" maxlength="200" ng-required="true" />
             <span class="field-error" ng-show="equipmentForm.model.$error.required && showError" openlmis-message="missing.value"></span>
           </div>
         </div>
+
+        <div class="form-cell">
+          <label for="model">
+            <span openlmis-message="label.equipment.energyTypeId"></span>
+            <span class="label-required">*</span>
+          </label>
+
+          <div class="form-field">
+            <select ng-model="equipment.designationId" id="energy-type">
+              <option ng-repeat="type in energyTypes" ng-selected="type.id == equipment.energyTypeId" value="{{type.id}}">{{type.name}}</option>
+            </select>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -91,7 +105,9 @@
           </label>
 
           <div class="form-field">
-            <input ng-model="equipment.designationId" name="designation" id="designation" type="text" maxlength="50" ng-required="equipmentType.coldChain" />
+            <select ng-model="equipment.designationId" id="designation">
+              <option ng-repeat="designation in designations" ng-selected="designation.id == equipment.designationId" value="{{designation.id}}">{{designation.name}}</option>
+            </select>
             <span class="field-error" ng-show="equipmentForm.designation.$error.required && showError" openlmis-message="missing.value"></span>
           </div>
         </div>
@@ -108,6 +124,145 @@
           </div>
         </div>
       </div>
+
+      <div class="form-row clearfix">
+        <div class="form-cell">
+          <label for="refrigerator-capacity">
+            <span openlmis-message="label.equipment.refrigerator-capacity"></span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="equipment.refrigeratorCapacity" name="refrigerator-capacity" id="refrigerator-capacity" type="text" maxlength="50" />
+          </div>
+        </div>
+
+        <div class="form-cell">
+          <label for="freezer-capacity">
+            <span openlmis-message="label.equipment.freezer-capacity"></span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="equipment.freezerCapacity" id="freezer-capacity" type="text" maxlength="200"  />
+          </div>
+        </div>
+
+      </div>
+
+      <div class="form-row clearfix">
+        <div class="form-cell">
+          <label for="refrigerant">
+            <span openlmis-message="label.equipment.refrigerant"></span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="equipment.refrigerant" name="refrigerant" id="refrigerant" type="text" maxlength="50" />
+          </div>
+        </div>
+
+        <div class="form-cell">
+          <label for="temperature-zone">
+            <span openlmis-message="label.equipment.temperature-zone"></span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="equipment.temperatureZone" id="temperature-zone" type="text" maxlength="200"  />
+          </div>
+        </div>
+
+      </div>
+
+      <div class="form-row clearfix">
+        <div class="form-cell">
+          <label for="max-temperature">
+            <span openlmis-message="label.equipment.max-temperature"></span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="equipment.maxTemperature" name="max-temperature" id="max-temperature" type="text" maxlength="50" />
+          </div>
+        </div>
+
+        <div class="form-cell">
+          <label for="min-temperature">
+            <span openlmis-message="label.equipment.min-temperature"></span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="equipment.minTemperature" id="min-temperature" type="text" maxlength="200"  />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row clearfix">
+        <div class="form-cell">
+          <label for="holdover-time">
+            <span openlmis-message="label.equipment.holdover-time"></span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="equipment.holdoverTime" name="holdover-time" id="holdover-time" type="text" maxlength="50" />
+          </div>
+        </div>
+
+        <div class="form-cell">
+          <label for="energy-consumption">
+            <span openlmis-message="label.equipment.energy-consumption"></span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="equipment.energyConsumption" id="energy-consumption" type="text" maxlength="200"  />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row clearfix">
+        <div class="form-cell">
+          <label for="dimension">
+            <span openlmis-message="label.equipment.dimension"></span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="equipment.dimension" name="dimension" id="dimension" type="text" maxlength="50" />
+          </div>
+        </div>
+
+        <div class="form-cell">
+          <label for="price">
+            <span openlmis-message="label.equipment.price"></span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="equipment.price" id="price" type="text" maxlength="200"  />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row clearfix">
+        <div class="form-cell">
+          <label for="pqs-status">
+            <span openlmis-message="label.equipment.pqs-status"></span>
+          </label>
+
+          <div class="form-field">
+            <select ng-model="equipment.pqsStatusId" id="pqs-status">
+              <option ng-repeat="status in pqsStatus" ng-selected="status.id == equipment.pqsStatusId" value="{{status.id}}">{{status.name}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-cell">
+          <label for="donor">
+            <span openlmis-message="label.equipment.donor"></span>
+          </label>
+
+          <div class="form-field">
+            <select ng-model="equipment.donorId" id="donor">
+              <option ng-repeat="donor in donors" ng-selected="donor.id == equipment.donorId" value="{{donor.id}}">{{donor.shortName}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
     <div form-toolbar id="action_buttons" class="action-buttons">

@@ -24,11 +24,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="equipmentTypeName",visible = true)
-@JsonSubTypes({@JsonSubTypes.Type(value = ColdChainEquipment.class, name = "cold-chain-equipment"),@JsonSubTypes.Type(value = Equipment.class, name = "equipment")})
+@JsonSubTypes({@JsonSubTypes.Type(value = ColdChainEquipment.class, name = "cold-chain-equipment"),
+               @JsonSubTypes.Type(value = Equipment.class, name = "equipment"),
+                @JsonSubTypes.Type(value = Equipment.class, name = "null")})
 public class Equipment extends BaseModel{
 
   //Serialization type
-  @JsonIgnore
   private String equipmentTypeName;
 
   private String name;

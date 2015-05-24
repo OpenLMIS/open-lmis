@@ -200,3 +200,25 @@ services.factory('EquipmentEnergyType', function ($resource) {
 services.factory('SaveEquipmentEnergyType', function ($resource) {
   return $resource('/equipment/energy-type/save.json', {}, {});
 });
+
+services.factory("ColdChainDesignations", function($resource){
+    return $resource('/equipment/cold-chain/designations.json',{},{});
+});
+
+services.factory("ColdChainPqsStatus", function($resource){
+    return $resource('/equipment/cold-chain/pqsStatus.json',{},{});
+});
+
+services.factory("currentEquipmentTypeId", function() {
+ var typeId;
+ function set(id) {
+   typeId = id;
+ }
+ function get() {
+  return typeId;
+ }
+ return {
+  set: set,
+  get: get
+ };
+});

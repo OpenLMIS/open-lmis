@@ -14,7 +14,6 @@ import org.openlmis.equipment.service.ColdChainStatusDataService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,15 +28,14 @@ public class ColdChainStatusDataController extends BaseController {
   @Autowired
   ColdChainStatusDataService service;
 
-  @RequestMapping(method = GET, value = "getAllStatusData")
-  public ResponseEntity<OpenLmisResponse> getAllStatusData( ){
-    OpenLmisResponse openLmisResponse=new OpenLmisResponse();
-    openLmisResponse.addData("designations",service.getAllDesignations());
-    openLmisResponse.addData("energyTypes", service.getAllEnergyTypes());
-    openLmisResponse.addData("pqsStatus", service.getAllPqsStatus());
-    openLmisResponse.addData("donors", service.getAllDonors());
+  @RequestMapping(method = GET, value = "designations")
+  public ResponseEntity<OpenLmisResponse> getDesignations( ){
+    return OpenLmisResponse.response("designations",service.getAllDesignations());
+  }
 
-    return  new ResponseEntity<>(openLmisResponse,HttpStatus.OK);
+  @RequestMapping(method = GET, value = "pqsStatus")
+  public ResponseEntity<OpenLmisResponse> getPqsStatus( ){
+    return OpenLmisResponse.response("pqs_status",service.getAllPqsStatus());
   }
 
 }
