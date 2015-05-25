@@ -1,0 +1,68 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div class="rnr-table">
+  <h2><span openlmis-message="label.vaccine.stock.status"></span></h2>
+
+
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th ng-repeat-start="column in report.columnTemplate | filter : {visible:true}" ng-if="false"></th>
+      <th class="span5" ng-if="column.name == 'productName'"><span openlmis-message="label.vaccine.stock.status.product"></span></th>
+      <th ng-repeat-end="" class="span1" ng-if="column.name != 'productName' && column.name != 'skipped'">{{column.label}}</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="productCategory" ng-repeat-start="product in report.logisticsLineItems" ng-show="$index == 0 || ( $index > 0 && product.productCategory != report.logisticsLineItems[$index - 1].productCategory)">
+      <td colspan="14">{{product.productCategory}}</td>
+    </tr>
+    <tr ng-repeat-end >
+      <td ng-repeat-start="column in report.columnTemplate | filter : {visible:true}" ng-if="false"></td>
+        <td ng-if="column.name == 'productName'"  class="cell-input"><span class="cell-text">{{product.productName}}</span></td>
+        <td ng-if="column.name == 'openingBalance'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.openingBalance" type="text" /></td>
+        <td ng-if="column.name == 'quantityReceived'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityReceived" type="text" /></td>
+        <td ng-if="column.name == 'quantityIssued'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.quantityIssued" type="text" /></td>
+        <td ng-if="column.name == 'closingBalance'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.closingBalance" type="text" /></td>
+        <td ng-if="column.name == 'quantityVvmAlerted'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.quantityVvmAlerted" type="text" /></td>
+        <td ng-if="column.name == 'quantityFreezed'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8"  ng-model="product.quantityFreezed" type="text" /></td>
+        <td ng-if="column.name == 'quantityExpired'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityExpired" type="text" /></td>
+        <td ng-if="column.name == 'quantityOtherWasted'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityOtherWasted" type="text" /></td>
+        <td ng-if="column.name == 'quantityDiscardedUnopened'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityDiscardedUnopened" type="text" /></td>
+        <td ng-if="column.name == 'quantityDiscardedOpened'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.quantityDiscardedOpened" type="text" /></td>
+        <td ng-if="column.name == 'reasonForDiscardingUnopened'" class="cell-input col-general padding2px">
+          <select disabled ng-show="!rowRequiresExplanation(product);" ng-model="product.discardingReasonId">
+            <option value="{{reason.id}}" ng-repeat="reason in discardingReasons">{{reason.name}}</option>
+          </select>
+          <span ng-show="rowRequiresExplanation(product);">
+              <input disabled style="width: 85%; text-align: left;" ng-model="product.discardingReasonExplanation" type="text" />
+              <a  ng-click="product.discardingReasonId = undefined;"><i class="icon-remove-circle"></i></a>
+          </span>
+
+        </td>
+        <td ng-if="column.name == 'daysStockedOut'" class="cell-input col-beginningBalance">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="product.daysStockedOut" type="text" /></td>
+        <td ng-if="column.name == 'remarks'" class="cell-input col-beginningBalance"><input disabled ng-model="product.remarks" type="text" /></td>
+      <td ng-repeat-end="" ng-if="false"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -122,6 +122,11 @@ public class VaccineReportService {
     return report;
   }
 
+  public List<ReportStatusDTO> getReportedPeriodsFor(Long facilityId, Long programId){
+    return repository.getReportedPeriodsForFacility(facilityId, programId);
+  }
+
+
   public List<ReportStatusDTO> getPeriodsFor(Long facilityId, Long programId) {
     Date startDate = programService.getProgramStartDate(facilityId, programId);
 

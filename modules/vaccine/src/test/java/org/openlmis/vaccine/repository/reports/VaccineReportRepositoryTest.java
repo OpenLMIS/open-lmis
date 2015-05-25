@@ -68,4 +68,11 @@ public class VaccineReportRepositoryTest {
     repository.getScheduleFor(29L, 2L);
     verify(mapper).getScheduleFor(29L, 2L);
   }
+
+  @Test
+  public void shouldGetSubmittedPeriods() throws Exception{
+    repository.getReportedPeriodsForFacility(2L,1L);
+    verify(mapper).getReportedPeriodsForFacility(2L, 1L);
+  }
+
 }

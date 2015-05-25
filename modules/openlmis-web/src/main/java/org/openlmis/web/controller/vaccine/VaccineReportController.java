@@ -82,6 +82,12 @@ public class VaccineReportController extends BaseController {
     return OpenLmisResponse.response("periods", service.getPeriodsFor(facilityId, programId));
   }
 
+  @RequestMapping(value = "view-periods/{facilityId}/{programId}", method = RequestMethod.GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> getViewPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request){
+    return OpenLmisResponse.response("periods", service.getReportedPeriodsFor(facilityId, programId));
+  }
+
   @RequestMapping(value = "initialize/{facilityId}/{programId}/{periodId}")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> initialize(

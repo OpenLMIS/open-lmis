@@ -1,0 +1,48 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div>
+  <h2><span openlmis-message="label.vaccine.cc.title"></span></h2>
+
+  <table class="table table-bordered" ng-show="report.coldChainLineItems.length > 0">
+    <thead>
+    <tr>
+      <th rowspan="2" class="span3"><span openlmis-message="label.vaccine.cc.asset"></span></th>
+      <th rowspan="2" class="span2"><span openlmis-message="label.vaccine.cc.serial"></span></th>
+      <th rowspan="2"  class="span2"><span openlmis-message="label.vaccine.cc.model"></span></th>
+      <th rowspan="2"  class="span2"><span openlmis-message="label.vaccine.cc.energy.source"></span></th>
+      <th colspan="2"><span openlmis-message="label.vaccine.cc.temp"></span></th>
+      <th colspan="2"><span openlmis-message="label.vaccine.cc.temp.episode"></span></th>
+    </tr>
+    <tr>
+      <th class="span1" openlmis-message="label.vaccine.cc.temp.min">Min</th>
+      <th class="span1" openlmis-message="label.vaccine.cc.temp.max">Max</th>
+      <th class="span1" openlmis-message="label.vaccine.cc.temp.low">Low</th>
+      <th class="span1" openlmis-message="label.vaccine.cc.temp.high">High</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="item in report.coldChainLineItems">
+      <td class="col-product cell-input"><span class="cell-text">{{item.equipmentName}}</span></td>
+      <td class="cell-input col-beginningBalance"><span class="cell-text">{{item.serial}}</span></td>
+      <td class="cell-input col-beginningBalance"><span class="cell-text">{{item.model}}</span></td>
+      <td class="cell-input col-beginningBalance"><span class="cell-text">{{item.energySource}}</span></td>
+      <td class="cell-input col-beginningBalance"><input disabled numeric-validator="positiveInteger" maxlength="6" ng-model="item.minTemp" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input disabled numeric-validator="positiveInteger" maxlength="6" ng-model="item.maxTemp" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input disabled numeric-validator="positiveInteger" maxlength="6" ng-model="item.minEpisodeTemp" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input disabled numeric-validator="positiveInteger" maxlength="6" ng-model="item.maxEpisodeTemp" type="text" /></td>
+    </tr>
+    </tbody>
+    </table>
+  <div ng-show="report.coldChainLineItems.length == 0">
+    <span openlmis-message="label.vaccine.cc.none.found"></span>
+  </div>
+</div>
