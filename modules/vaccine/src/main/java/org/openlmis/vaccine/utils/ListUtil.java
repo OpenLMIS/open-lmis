@@ -8,43 +8,18 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.domain.reports;
+package org.openlmis.vaccine.utils;
 
+import java.util.Collections;
+import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.Product;
-import org.openlmis.vaccine.domain.VaccineDose;
+public class ListUtil {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class VaccineCoverageItem extends BaseModel{
-
-
-  private Long reportId;
-  private Long productId;
-
-  private Product product;
-
-  private Boolean trackMale;
-  private Boolean trackFemale;
-  private Long doseId;
-
-  private Long displayOrder;
-  private String displayName;
-
-  private Long regularMale;
-  private Long regularFemale;
-
-  private Long outreachMale;
-  private Long outreachFemale;
-
-  private Long campaignMale;
-  private Long campaignFemale;
+  public static <T> List<T> emptyIfNull(List<T> list) {
+    if (list == null) {
+      return Collections.emptyList();
+    }
+    return list;
+  }
 
 }

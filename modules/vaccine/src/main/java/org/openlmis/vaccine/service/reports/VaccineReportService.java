@@ -152,7 +152,6 @@ public class VaccineReportService {
     }
 
     for(ProcessingPeriod period: periods){
-      // avoid duplicate period
       if(lastRequest == null || lastRequest.getPeriodId() != period.getId()){
         ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
 
@@ -163,20 +162,17 @@ public class VaccineReportService {
 
         results.add(reportStatusDTO);
       }
-
     }
     return results;
   }
 
   public void save(VaccineReport report) {
-    report.flattenCoverageLineItems();
     repository.update(report);
 
   }
 
   public VaccineReport getById(Long id) {
     VaccineReport report =  repository.getByIdWithFullDetails(id);
-    report.prepareCoverageDto();
     report.setTabVisibilitySettings(settingService.getSearchResults("VACCINE_TAB%"));
     return report;
   }

@@ -36,9 +36,9 @@ public class VaccineReportRepository {
 
 
   public void saveDetails(VaccineReport report){
-    lineItemService.saveLogisticsLineItems(report.getLogisticsLineItems());
-    lineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());
-    lineItemService.saveCoverageLineItems(report.getCoverageItems());
+    lineItemService.saveLogisticsLineItems(report.getLogisticsLineItems(), report.getId());
+    lineItemService.saveDiseaseLineItems(report.getDiseaseLineItems(), report.getId());
+    lineItemService.saveCoverageLineItems(report.getCoverageLineItems(),report.getId());
     lineItemService.saveColdChainLIneItems(report.getColdChainLineItems(), report.getId());
     lineItemService.saveVitaminLineItems(report.getVitaminSupplementationLineItems(), report.getId());
     lineItemService.saveAdverseEffectLineItems(report.getAdverseEffectLineItems(), report.getId());

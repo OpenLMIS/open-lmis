@@ -26,6 +26,8 @@ import org.openlmis.vaccine.dto.CoverageLineItemDTO;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -55,10 +57,7 @@ public class VaccineReport extends BaseModel {
 
   private List<LogisticsColumn> columnTemplate;
 
-  @JsonIgnore
-  private List<VaccineCoverageItem> coverageItems;
-
-  private List<CoverageLineItemDTO> coverageLineItems;
+  private List<VaccineCoverageItem> coverageLineItems;
   private List<DiseaseLineItem> diseaseLineItems;
   private List<ColdChainLineItem> coldChainLineItems;
 
@@ -94,7 +93,7 @@ public class VaccineReport extends BaseModel {
   }
 
   public void initializeCoverageLineItems(List<VaccineProductDose> dosesToCover) {
-    coverageItems = new ArrayList<>();
+    coverageLineItems = new ArrayList<>();
     for(VaccineProductDose dose: dosesToCover){
       VaccineCoverageItem item = new VaccineCoverageItem();
       item.setReportId(id);
@@ -104,39 +103,7 @@ public class VaccineReport extends BaseModel {
       item.setDisplayOrder(dose.getDisplayOrder());
       item.setDisplayName(dose.getDisplayName());
       item.setProductId(dose.getProductId());
-      coverageItems.add(item);
-    }
-  }
-
-  public void flattenCoverageLineItems() {
-    coverageItems = new ArrayList<>();
-    for(CoverageLineItemDTO lineItemDTO: coverageLineItems){
-      for(VaccineCoverageItem item: lineItemDTO.getItems()){
-        coverageItems.add( item );
-      }
-    }
-  }
-
-  public void prepareCoverageDto() {
-    if(coverageLineItems == null){
-      coverageLineItems = new ArrayList<>();
-    }
-    for(LogisticsLineItem lineItem: logisticsLineItems){
-      CoverageLineItemDTO dto = new CoverageLineItemDTO();
-      dto.setProductName(lineItem.getProductName());
-      dto.setProductId(lineItem.getProductId());
-
-      List<VaccineCoverageItem> items = new ArrayList<VaccineCoverageItem>();
-      // find the items and insert them appropriately on the dto
-      for(VaccineCoverageItem item: coverageItems){
-        if(item.getProductId().equals( dto.getProductId())){
-          items.add(item);
-        }
-      }
-      dto.setItems(items);
-      if(items.size() > 0) {
-        coverageLineItems.add(dto);
-      }
+      coverageLineItems.add(item);
     }
   }
 
