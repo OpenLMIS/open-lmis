@@ -323,7 +323,12 @@
             </label>
 
             <div class="form-field">
-              <input ng-model="inventory.equipment.energyType" name="source" id="source" type="text" maxlength="50"/>
+              <select style="width: 250px;" ui-select2 ng-model="inventory.equipment.energyTypeId" id="source"
+                      name="source">
+                <option value="{{type.id}}" ng-repeat="type in energyTypes"
+                        ng-selected="type.id == inventory.equipment.energyTypeId">{{type.name}}
+                </option>
+              </select>
               <span class="field-error" ng-show="inventoryForm.source.$error.required && showError"
                     openlmis-message="missing.value"></span>
             </div>
