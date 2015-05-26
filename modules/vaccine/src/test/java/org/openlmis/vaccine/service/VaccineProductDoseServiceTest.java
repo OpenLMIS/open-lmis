@@ -65,7 +65,7 @@ public class VaccineProductDoseServiceTest {
     VaccineProductDose dose = new VaccineProductDose();
     dose.setProgramId(1L);
     dto.getDoses().add(dose);
-    
+
     protocols.add(dto);
 
     doNothing().when(repository).deleteAllByProgram(1L);

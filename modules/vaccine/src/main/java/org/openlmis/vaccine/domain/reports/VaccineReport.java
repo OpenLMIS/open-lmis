@@ -45,9 +45,6 @@ public class VaccineReport extends BaseModel {
   private Long outreachImmunizationSessions;
   private Long outreachImmunizationSessionsCanceled;
 
-  private Boolean trackCampaignCoverage;
-  private Boolean trackOutreachCoverage;
-
   private List<ConfigurationSetting> tabVisibilitySettings;
 
   private List<LogisticsLineItem> logisticsLineItems;
