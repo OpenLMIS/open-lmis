@@ -144,4 +144,15 @@ public class EquipmentInventoryMapperIT {
     assertEquals(rs.next(), true);
     assertEquals(rs.getString("serialNumber"), "3432");
   }
+
+  @Test
+  public void shouldUpdateStatus() throws Exception {
+    inventory.setOperationalStatusId(2L);
+
+    mapper.updateStatus(inventory);
+
+    ResultSet rs = queryExecutor.execute("Select * from equipment_inventories where id = " + inventory.getId());
+    assertEquals(rs.next(), true);
+    assertEquals(rs.getString("operationalStatusId"), "2");
+  }
 }

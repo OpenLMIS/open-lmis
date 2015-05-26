@@ -12,7 +12,6 @@ package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.springframework.stereotype.Repository;
