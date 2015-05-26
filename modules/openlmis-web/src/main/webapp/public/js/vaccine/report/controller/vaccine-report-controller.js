@@ -8,46 +8,50 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function VaccineReportController($scope, programs, VaccineReportFacilities, VaccineReportPeriods, VaccineReportInitiate, messageService , $location) {
+function VaccineReportController($scope, programs, VaccineReportFacilities, VaccineReportPeriods, VaccineReportInitiate, messageService, $location) {
 
   $scope.programs = programs;
 
-  $scope.onProgramChanged = function(){
-    VaccineReportFacilities.get({programId: $scope.filter.program}, function(data){
+  $scope.onProgramChanged = function () {
+    VaccineReportFacilities.get({programId: $scope.filter.program}, function (data) {
       $scope.facilities = data.facilities;
     });
   };
 
-
-  $scope.onFacilityChanged = function(){
-    if(isUndefined($scope.filter.facility)){
+  $scope.onFacilityChanged = function () {
+    if (isUndefined($scope.filter.facility)) {
       return;
     }
-    VaccineReportPeriods.get({facilityId: $scope.filter.facility, programId: $scope.filter.program}, function(data){
+    VaccineReportPeriods.get({facilityId: $scope.filter.facility, programId: $scope.filter.program}, function (data) {
       $scope.periodGridData = data.periods;
-      if($scope.periodGridData.length > 0){
+      if ($scope.periodGridData.length > 0) {
         $scope.periodGridData[0].showButton = true;
       }
     });
   };
 
-  $scope.initiate = function(period){
-    if(!angular.isUndefined(period.id) && (period.id !== null)){
+  $scope.initiate = function (period) {
+    if (!angular.isUndefined(period.id) && (period.id !== null)) {
       // redirect already
-      $location.path('/create/'+ period.id);
-    }else{
+      $location.path('/create/' + period.id);
+    } else {
       // initiate
-      VaccineReportInitiate.get({ periodId: period.periodId, facilityId: period.facilityId, programId: period.programId}, function(data){
-        $location.path('/create/'+ data.report.id);
+      VaccineReportInitiate.get({
+        periodId: period.periodId,
+        facilityId: period.facilityId,
+        programId: period.programId
+      }, function (data) {
+        $location.path('/create/' + data.report.id);
       });
     }
   };
 
-  function getActionButton(showButton){
+  function getActionButton(showButton) {
     return '<input type="button" ng-click="initiate(row.entity)" openlmis-message="button.proceed" class="btn btn-primary btn-small grid-btn" ng-show="' + showButton + '"/>';
   }
 
-  $scope.periodGridOptions = { data: 'periodGridData',
+  $scope.periodGridOptions = {
+    data: 'periodGridData',
     canSelectRows: false,
     displayFooter: false,
     displaySelectionCheckbox: false,
@@ -58,29 +62,26 @@ function VaccineReportController($scope, programs, VaccineReportFacilities, Vacc
     showFilter: false,
     columnDefs: [
       {field: 'periodName', displayName: messageService.get("label.periods")},
-      {field: 'status', displayName: messageService.get("label.rnr.status") },
+      {field: 'status', displayName: messageService.get("label.rnr.status")},
       {field: '', displayName: '', cellTemplate: getActionButton('row.entity.showButton')}
     ]
   };
 
-
-  // load facility list for program.
-  if(programs.length == 1){
+  if (programs.length == 1) {
     $scope.filter = {program: programs[0].id};
     $scope.onProgramChanged();
   }
-
 }
 
 VaccineReportController.resolve = {
-  programs: function($q, $timeout, VaccineSupervisedIvdPrograms){
+  programs: function ($q, $timeout, VaccineSupervisedIvdPrograms) {
     var deferred = $q.defer();
 
-    $timeout(function(){
-      VaccineSupervisedIvdPrograms.get({},function(data){
+    $timeout(function () {
+      VaccineSupervisedIvdPrograms.get({}, function (data) {
         deferred.resolve(data.programs);
       });
-    },100);
+    }, 100);
 
     return deferred.promise;
   }
