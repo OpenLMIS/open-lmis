@@ -31,6 +31,7 @@ import org.openlmis.vaccine.service.DiseaseService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,8 +47,6 @@ public class VaccineReportService {
   @Autowired
   ProgramProductService programProductService;
 
-  @Autowired
-  VaccineLineItemService lLineItemService;
 
   @Autowired
   DiseaseService diseaseService;
@@ -73,30 +72,34 @@ public class VaccineReportService {
   @Autowired
   ProgramService programService;
 
-
+  @Transactional
   public VaccineReport initialize(Long facilityId, Long programId, Long periodId){
-    // check if the report is already initiated,
+
     VaccineReport report = repository.getByProgramPeriod(facilityId, programId, periodId);
-    // if initiated, return it,
     if(report != null){
       return report;
     }
 
-    report = new VaccineReport();
-
-    report.setFacilityId(facilityId);
-    report.setProgramId(programId);
-    report.setPeriodId(periodId);
-    report.setStatus(RequestStatus.DRAFT.toString());
+    report = createNewVaccineReport(facilityId, programId, periodId);
     repository.insert(report);
+    return report;
+  }
 
-    List<ProgramProduct> programProducts = programProductService.getActiveByProgram(programId);
+  public VaccineReport createNewVaccineReport(Long facilityId, Long programId, Long periodId) {
+
+    VaccineReport report;List<ProgramProduct> programProducts = programProductService.getActiveByProgram(programId);
     List<VaccineDisease> diseases = diseaseService.getAll();
     List<VaccineProductDose> dosesToCover = productDoseService.getForProgram(programId);
     List<ColdChainLineItem> coldChainLineItems = coldChainRepository.getNewEquipmentLineItems(programId, facilityId);
     List<Vitamin> vitamins = vitaminRepository.getAll();
     List<VitaminSupplementationAgeGroup> ageGroups = ageGroupRepository.getAll();
 
+
+    report = new VaccineReport();
+    report.setFacilityId(facilityId);
+    report.setProgramId(programId);
+    report.setPeriodId(periodId);
+    report.setStatus(RequestStatus.DRAFT.toString());
 
     // 1. copy the products list and initiate the logistics tab.
     report.initializeLogisticsLineItems(programProducts);
@@ -111,14 +114,6 @@ public class VaccineReportService {
     report.initializeColdChainLineItems(coldChainLineItems);
 
     report.initializeVitaminLineItems(vitamins, ageGroups);
-
-
-    // save all the child records
-    lLineItemService.saveLogisticsLineItems(report.getLogisticsLineItems());
-    lLineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());
-    lLineItemService.saveCoverageLineItems(report.getCoverageItems());
-    lLineItemService.saveColdChainLIneItems(report.getColdChainLineItems(), report.getId());
-    lLineItemService.saveVitaminLineItems(report.getVitaminSupplementationLineItems(), report.getId());
     return report;
   }
 
@@ -174,16 +169,9 @@ public class VaccineReportService {
   }
 
   public void save(VaccineReport report) {
-    repository.update(report);
-    // save the other user inputs too.
-    lLineItemService.saveLogisticsLineItems(report.getLogisticsLineItems());
-    lLineItemService.saveDiseaseLineItems(report.getDiseaseLineItems());
     report.flattenCoverageLineItems();
-    lLineItemService.saveCoverageLineItems(report.getCoverageItems());
-    lLineItemService.saveAdverseEffectLineItems(report.getAdverseEffectLineItems(), report.getId());
-    lLineItemService.saveCampaignLineItems(report.getCampaignLineItems(),report.getId());
-    lLineItemService.saveColdChainLIneItems(report.getColdChainLineItems(), report.getId());
-    lLineItemService.saveVitaminLineItems(report.getVitaminSupplementationLineItems(), report.getId());
+    repository.update(report);
+
   }
 
   public VaccineReport getById(Long id) {
