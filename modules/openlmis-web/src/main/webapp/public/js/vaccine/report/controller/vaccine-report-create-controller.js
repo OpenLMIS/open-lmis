@@ -138,6 +138,7 @@ CreateVaccineReportController.resolve = {
 
     $timeout(function () {
       VaccineReport.get({id: $route.current.params.id}, function (data) {
+        data.report.coverageLineItemViews = _.groupBy(data.report.coverageLineItems, 'productId');
         deferred.resolve(data.report);
       });
     }, 100);
