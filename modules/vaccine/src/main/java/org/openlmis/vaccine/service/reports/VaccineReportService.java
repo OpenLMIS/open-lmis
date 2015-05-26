@@ -176,4 +176,9 @@ public class VaccineReportService {
     report.setTabVisibilitySettings(settingService.getSearchResults("VACCINE_TAB%"));
     return report;
   }
+
+  public void submit(VaccineReport report) {
+    report.setStatus(RequestStatus.SUBMITTED.toString());
+    save(report);
+  }
 }

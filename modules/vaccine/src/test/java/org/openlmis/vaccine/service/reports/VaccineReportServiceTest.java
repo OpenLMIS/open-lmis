@@ -17,6 +17,7 @@ import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.vaccine.RequestStatus;
 import org.openlmis.vaccine.builders.reports.VaccineReportBuilder;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
@@ -152,4 +153,14 @@ public class VaccineReportServiceTest {
     verify(repository).getByIdWithFullDetails(2L);
     assertThat(result.getStatus(), is(report.getStatus()));
   }
+
+  @Test
+  public void shouldSubmit() throws Exception {
+    VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
+    doNothing().when(repository).update(report);
+    service.submit(report);
+    verify(repository).update(report);
+    assertThat(report.getStatus(), is(RequestStatus.SUBMITTED.toString()));
+  }
+
 }

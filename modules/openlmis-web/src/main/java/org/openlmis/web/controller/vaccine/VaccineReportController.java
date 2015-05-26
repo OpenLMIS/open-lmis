@@ -115,8 +115,7 @@ public class VaccineReportController extends BaseController {
   @RequestMapping(value = "submit")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
-    report.setStatus(RequestStatus.SUBMITTED.toString());
-    service.save(report);
+    service.submit(report);
     return OpenLmisResponse.response("report", report);
   }
 
