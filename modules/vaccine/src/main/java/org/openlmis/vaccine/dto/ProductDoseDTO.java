@@ -12,21 +12,22 @@ package org.openlmis.vaccine.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ConfigurationSetting;
-import org.openlmis.core.domain.Product;
-import org.openlmis.vaccine.domain.VaccineDose;
+import org.openlmis.vaccine.domain.VaccineProductDose;
 
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VaccineServiceProtocolDTO {
+@EqualsAndHashCode(callSuper = false)
+public class ProductDoseDTO {
 
-  private List<ConfigurationSetting> tabVisibilitySettings;
-  private List<ProductDoseProtocolDTO> protocols;
-  private List<Product> possibleProducts;
-  private List<VaccineDose> possibleDoses;
+  private Long productId;
+
+  private String productName;
+
+  private List<VaccineProductDose> doses;
 
 }

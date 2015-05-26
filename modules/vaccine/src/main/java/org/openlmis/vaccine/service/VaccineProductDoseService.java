@@ -14,8 +14,8 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.vaccine.domain.VaccineProductDose;
-import org.openlmis.vaccine.dto.ProductDoseProtocolDTO;
-import org.openlmis.vaccine.dto.VaccineServiceProtocolDTO;
+import org.openlmis.vaccine.dto.ProductDoseDTO;
+import org.openlmis.vaccine.dto.VaccineServiceConfigDTO;
 import org.openlmis.vaccine.repository.ProductDoseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,9 +32,8 @@ public class VaccineProductDoseService {
   @Autowired
   private ProgramProductRepository programProductRepository;
 
-  public void getProductDoseForProgram( Long programId, VaccineServiceProtocolDTO dto){
-
-    List<ProductDoseProtocolDTO> protocols= new ArrayList<>();
+  public void getProductDoseForProgram( Long programId, VaccineServiceConfigDTO dto){
+    List<ProductDoseDTO> productDoseDTOs= new ArrayList<>();
     List<ProgramProduct> pp = programProductRepository.getActiveByProgram(programId);
     List<Product> products = new ArrayList<>();
     for(ProgramProduct p : pp){
@@ -43,11 +42,12 @@ public class VaccineProductDoseService {
       }
       List<VaccineProductDose> doses = repository.getDosesForProduct( programId, p.getProduct().getId());
       if(doses.size() > 0) {
-        ProductDoseProtocolDTO protocol = new ProductDoseProtocolDTO();
-        protocol.setProductId(p.getProduct().getId());
-        protocol.setProductName(p.getProduct().getName());
-        protocol.setDoses(doses);
-        protocols.add(protocol);
+        ProductDoseDTO productDose = new ProductDoseDTO();
+        productDose.setProductId(p.getProduct().getId());
+        productDose.setProductName(p.getProduct().getName());
+        productDose.setDoses(doses);
+
+        productDoseDTOs.add(productDose);
       }else{
         //these are the possible other products.
         products.add(p.getProduct());
@@ -55,17 +55,17 @@ public class VaccineProductDoseService {
     }
     dto.setPossibleDoses(repository.getAllDoses());
     dto.setPossibleProducts(products);
-    dto.setProtocols(protocols);
+    dto.setProtocols(productDoseDTOs);
   }
 
   public List<VaccineProductDose> getForProgram(Long programId){
     return repository.getProgramProductDoses(programId);
   }
 
-  public void save(List<ProductDoseProtocolDTO> protocols){
-    repository.deleteAllByProgram(protocols.get(0).getDoses().get(0).getProgramId());
-    for(ProductDoseProtocolDTO protocol : protocols){
-      for(VaccineProductDose dose : protocol.getDoses()){
+  public void save(List<ProductDoseDTO> productDoseDTOs){
+    repository.deleteAllByProgram(productDoseDTOs.get(0).getDoses().get(0).getProgramId());
+    for(ProductDoseDTO productDose : productDoseDTOs){
+      for(VaccineProductDose dose : productDose.getDoses()){
           repository.insert(dose);
       }
     }

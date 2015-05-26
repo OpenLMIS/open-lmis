@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -25,9 +24,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.VaccineProductDose;
-import org.openlmis.vaccine.dto.ProductDoseProtocolDTO;
+import org.openlmis.vaccine.dto.ProductDoseDTO;
 import org.openlmis.vaccine.repository.ProductDoseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +57,8 @@ public class VaccineProductDoseServiceTest {
 
   @Test
   public void shouldSave() throws Exception {
-    List<ProductDoseProtocolDTO> protocols = new ArrayList<>();
-    ProductDoseProtocolDTO dto = new ProductDoseProtocolDTO();
+    List<ProductDoseDTO> protocols = new ArrayList<>();
+    ProductDoseDTO dto = new ProductDoseDTO();
     dto.setDoses(new ArrayList<VaccineProductDose>());
     VaccineProductDose dose = new VaccineProductDose();
     dose.setProgramId(1L);

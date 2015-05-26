@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
@@ -23,8 +22,7 @@ import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.VaccineProductDose;
-import org.openlmis.vaccine.dto.ProductDoseProtocolDTO;
-import org.openlmis.vaccine.dto.VaccineServiceProtocolDTO;
+import org.openlmis.vaccine.dto.VaccineServiceConfigDTO;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +56,7 @@ public class ProductDoseControllerTest {
 
   @Test
   public void shouldSave() throws Exception {
-    VaccineServiceProtocolDTO dto = new VaccineServiceProtocolDTO();
+    VaccineServiceConfigDTO dto = new VaccineServiceConfigDTO();
     dto.setTabVisibilitySettings(new ArrayList<ConfigurationSetting>());
     doNothing().when(service).save(anyList());
     ResponseEntity<OpenLmisResponse> response = controller.save(dto);
