@@ -10,6 +10,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProgramProductBuilder;
+import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.service.ConfigurationSettingService;
@@ -23,6 +24,7 @@ import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.VitaminRepository;
 import org.openlmis.vaccine.repository.VitaminSupplementationAgeGroupRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportColdChainRepository;
@@ -40,6 +42,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -133,11 +136,20 @@ public class VaccineReportServiceTest {
 
   @Test
   public void shouldSave() throws Exception {
-
+    VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
+    doNothing().when(repository).update(report);
+    service.save(report);
+    verify(repository).update(report);
   }
 
   @Test
   public void shouldGetById() throws Exception {
+    VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
+    when(repository.getByIdWithFullDetails(2L)).thenReturn(report);
+    when(settingService.getSearchResults(anyString())).thenReturn(new ArrayList<ConfigurationSetting>());
 
+    VaccineReport result = service.getById(2L);
+    verify(repository).getByIdWithFullDetails(2L);
+    assertThat(result.getStatus(), is(report.getStatus()));
   }
 }
