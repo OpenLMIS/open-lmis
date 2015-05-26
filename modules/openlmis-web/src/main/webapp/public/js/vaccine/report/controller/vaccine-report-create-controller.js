@@ -29,15 +29,16 @@ function CreateVaccineReportController($scope, $location, $filter, $dialog, repo
   }
 
   $scope.save = function () {
-    VaccineReportSave.update($scope.report, function (data) {
-      $scope.message = "Report Saved Successfully.";
+    VaccineReportSave.update($scope.report, function () {
+      $scope.message = "msg.ivd.saved.successfully";
     });
   };
 
   $scope.submit = function () {
     var callBack = function (result) {
       if (result) {
-        VaccineReportSubmit.update($scope.report, function (data) {
+        VaccineReportSubmit.update($scope.report, function () {
+          $scope.message = "msg.ivd.submitted.successfully";
           $location.path('/');
         });
       }
