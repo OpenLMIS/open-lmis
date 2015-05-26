@@ -32,23 +32,23 @@ public class VaccineProductDoseService {
   @Autowired
   private ProgramProductRepository programProductRepository;
 
-  public void getProductDoseForProgram( Long programId, VaccineServiceConfigDTO dto){
-    List<ProductDoseDTO> productDoseDTOs= new ArrayList<>();
+  public VaccineServiceConfigDTO getProductDoseForProgram(Long programId) {
+    VaccineServiceConfigDTO dto = new VaccineServiceConfigDTO();
+    List<ProductDoseDTO> productDoseDTOs = new ArrayList<>();
     List<ProgramProduct> pp = programProductRepository.getActiveByProgram(programId);
     List<Product> products = new ArrayList<>();
-    for(ProgramProduct p : pp){
-      if(!p.getProduct().getFullSupply()){
+    for (ProgramProduct p : pp) {
+      if (!p.getProduct().getFullSupply()) {
         continue;
       }
-      List<VaccineProductDose> doses = repository.getDosesForProduct( programId, p.getProduct().getId());
-      if(doses.size() > 0) {
+      List<VaccineProductDose> doses = repository.getDosesForProduct(programId, p.getProduct().getId());
+      if (doses.size() > 0) {
         ProductDoseDTO productDose = new ProductDoseDTO();
         productDose.setProductId(p.getProduct().getId());
         productDose.setProductName(p.getProduct().getName());
         productDose.setDoses(doses);
-
         productDoseDTOs.add(productDose);
-      }else{
+      } else {
         //these are the possible other products.
         products.add(p.getProduct());
       }
@@ -56,17 +56,18 @@ public class VaccineProductDoseService {
     dto.setPossibleDoses(repository.getAllDoses());
     dto.setPossibleProducts(products);
     dto.setProtocols(productDoseDTOs);
+    return dto;
   }
 
-  public List<VaccineProductDose> getForProgram(Long programId){
+  public List<VaccineProductDose> getForProgram(Long programId) {
     return repository.getProgramProductDoses(programId);
   }
 
-  public void save(List<ProductDoseDTO> productDoseDTOs){
+  public void save(List<ProductDoseDTO> productDoseDTOs) {
     repository.deleteAllByProgram(productDoseDTOs.get(0).getDoses().get(0).getProgramId());
-    for(ProductDoseDTO productDose : productDoseDTOs){
-      for(VaccineProductDose dose : productDose.getDoses()){
-          repository.insert(dose);
+    for (ProductDoseDTO productDose : productDoseDTOs) {
+      for (VaccineProductDose dose : productDose.getDoses()) {
+        repository.insert(dose);
       }
     }
   }
