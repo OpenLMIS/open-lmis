@@ -46,9 +46,6 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 @RunWith(MockitoJUnitRunner.class)
 public class EquipmentControllerTest {
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
-
   @Mock
   EquipmentService service;
 
