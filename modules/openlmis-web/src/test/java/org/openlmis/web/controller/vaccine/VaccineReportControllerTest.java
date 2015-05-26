@@ -16,21 +16,17 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.hamcrest.CoreMatchers.any;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RightName;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -40,6 +36,11 @@ import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
 
 
 @Category(UnitTests.class)
@@ -118,21 +119,47 @@ public class VaccineReportControllerTest {
 
   @Test
   public void shouldInitialize() throws Exception {
+    VaccineReport report = new VaccineReport();
+    when(service.initialize(1L, 1L, 1L)).thenReturn(report);
 
+    ResponseEntity<OpenLmisResponse> response = controller.initialize(1L, 1L, 1L, httpServletRequest);
+
+    verify(service).initialize(1L, 1L, 1L);
+    assertThat(report, is(response.getBody().getData().get("report")));
   }
 
   @Test
   public void shouldGetReport() throws Exception {
+    VaccineReport report = new VaccineReport();
+    when(service.getById(23L)).thenReturn(report);
 
+    ResponseEntity<OpenLmisResponse> response = controller.getReport(23L, httpServletRequest);
+
+    verify(service).getById(23L);
+    assertThat(report, is(response.getBody().getData().get("report")));
   }
 
   @Test
   public void shouldSave() throws Exception {
+    VaccineReport report = new VaccineReport();
+    doNothing().when(service).save(report);
 
+    ResponseEntity<OpenLmisResponse> response = controller.save(report, httpServletRequest);
+
+    verify(service).save(report);
+    assertThat(report, is(response.getBody().getData().get("report")));
   }
 
   @Test
   public void shouldSubmit() throws Exception {
+    VaccineReport report = new VaccineReport();
+    doNothing().when(service).submit(report);
 
+    ResponseEntity<OpenLmisResponse> response = controller.submit(report, httpServletRequest);
+
+    verify(service).submit(report);
+
+    // the status would have changed.
+    assertThat(report, is(response.getBody().getData().get("report")));
   }
 }
