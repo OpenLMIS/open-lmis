@@ -67,7 +67,7 @@ public class VaccineLineItemServiceTest {
   public void shouldInsertLogisticsLineItems() throws Exception {
     LogisticsLineItem lineItem = new LogisticsLineItem();
     lineItem.setReportId(2L);
-    service.saveLogisticsLineItems(asList(lineItem));
+    service.saveLogisticsLineItems(asList(lineItem), 2L);
     verify(logisticsRepository).insert(lineItem);
   }
 
@@ -76,7 +76,7 @@ public class VaccineLineItemServiceTest {
     LogisticsLineItem lineItem = new LogisticsLineItem();
     lineItem.setReportId(2L);
     lineItem.setId(2L);
-    service.saveLogisticsLineItems(asList(lineItem));
+    service.saveLogisticsLineItems(asList(lineItem), 2L);
     verify(logisticsRepository).update(lineItem);
   }
 
@@ -84,7 +84,7 @@ public class VaccineLineItemServiceTest {
   public void shouldInsertDiseaseLineItems() throws Exception {
     DiseaseLineItem lineItem = new DiseaseLineItem();
     lineItem.setReportId(2L);
-    service.saveDiseaseLineItems(asList(lineItem));
+    service.saveDiseaseLineItems(asList(lineItem), 2L);
     verify(diseaseLineItemRepository).insert(lineItem);
   }
 
@@ -93,7 +93,7 @@ public class VaccineLineItemServiceTest {
     DiseaseLineItem lineItem = new DiseaseLineItem();
     lineItem.setId(2L);
     lineItem.setReportId(2L);
-    service.saveDiseaseLineItems(asList(lineItem));
+    service.saveDiseaseLineItems(asList(lineItem), 2L);
     verify(diseaseLineItemRepository).update(lineItem);
   }
 
@@ -101,7 +101,7 @@ public class VaccineLineItemServiceTest {
   public void shouldInsertCoverageLineItems() throws Exception {
     VaccineCoverageItem lineItem = new VaccineCoverageItem();
     lineItem.setReportId(2L);
-    service.saveCoverageLineItems(asList(lineItem));
+    service.saveCoverageLineItems(asList(lineItem), 2L);
     verify(coverageItemRepository).insert(lineItem);
   }
 
@@ -110,7 +110,7 @@ public class VaccineLineItemServiceTest {
     VaccineCoverageItem lineItem = new VaccineCoverageItem();
     lineItem.setReportId(2L);
     lineItem.setId(2L);
-    service.saveCoverageLineItems(asList(lineItem));
+    service.saveCoverageLineItems(asList(lineItem), 2L);
     verify(coverageItemRepository).update(lineItem);
   }
 
