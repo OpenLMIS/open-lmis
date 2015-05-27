@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors, EquipmentsByType, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService, EquipmentType, EquipmentInventoryFacilities) {
+function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors, EquipmentsByType, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService, EquipmentType, EquipmentInventoryFacilities, EquipmentEnergyTypes) {
 
   $scope.$parent.message = $scope.$parent.error = '';
 
@@ -84,6 +84,10 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
 
   Donors.get(function(data){
     $scope.donors = data.donors;
+  });
+
+  EquipmentEnergyTypes.get(function (data) {
+    $scope.energyTypes = data.energyTypes;
   });
 
   $scope.updateModels = function () {

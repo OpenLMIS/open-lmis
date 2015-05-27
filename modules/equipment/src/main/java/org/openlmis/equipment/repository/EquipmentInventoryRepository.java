@@ -10,18 +10,35 @@
 
 package org.openlmis.equipment.repository;
 
+import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.repository.mapper.ColdChainEquipmentMapper;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryMapper;
+import org.openlmis.equipment.repository.mapper.EquipmentMapper;
+import org.openlmis.equipment.repository.mapper.EquipmentTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import org.apache.log4j.Logger;
 
 @Repository
 public class EquipmentInventoryRepository {
 
   @Autowired
   EquipmentInventoryMapper mapper;
+
+  @Autowired
+  EquipmentMapper equipmentMapper;
+
+  @Autowired
+  EquipmentTypeMapper equipmentTypeMapper;
+
+  @Autowired
+  ColdChainEquipmentMapper coldChainEquipmentMapper;
+
+  public static Logger logger = Logger.getLogger(EquipmentInventoryRepository.class);
 
   public List<EquipmentInventory> getFacilityInventory(Long facilityId, Long programId){
     return mapper.getInventoryByFacilityAndProgram(facilityId, programId);
@@ -42,11 +59,27 @@ public class EquipmentInventoryRepository {
       str.append("}");
     }
 
-    return mapper.getInventory(programId, equipmentTypeId, str.toString());
+    List<EquipmentInventory> inventories = mapper.getInventory(programId, equipmentTypeId, str.toString());
+    for (EquipmentInventory inventory : inventories) {
+      setEquipmentToInventory(inventory);
+    }
+    return inventories;
   }
 
   public EquipmentInventory getInventoryById(Long id){
-    return mapper.getInventoryById(id);
+    EquipmentInventory inventory = mapper.getInventoryById(id);
+    setEquipmentToInventory(inventory);
+    return inventory;
+  }
+
+  private void setEquipmentToInventory(EquipmentInventory inventory) {
+    Long equipmentId = inventory.getEquipmentId();
+    Equipment equipment = equipmentMapper.getById(equipmentId);
+    EquipmentType equipmentType = equipmentTypeMapper.getEquipmentTypeById(equipment.getEquipmentTypeId());
+    if (equipmentType.isColdChain()) {
+      equipment = coldChainEquipmentMapper.getById(equipmentId);
+    }
+    inventory.setEquipment(equipment);
   }
 
   public void insert(EquipmentInventory inventory){
