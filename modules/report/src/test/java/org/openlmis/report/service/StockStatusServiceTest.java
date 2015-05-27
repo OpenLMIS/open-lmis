@@ -10,28 +10,37 @@
 
 package org.openlmis.report.service;
 
-import lombok.NoArgsConstructor;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.mapper.StockStatusMapper;
-import org.openlmis.report.model.dto.StockStatusDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import static org.mockito.Mockito.verify;
 
-@Service
-@NoArgsConstructor
-public class StockStatusService {
 
-  @Autowired
-  private StockStatusMapper mapper;
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
+public class StockStatusServiceTest {
 
-  public List<StockStatusDTO> getStockStatusByQuarter(String programCode, Long year, Long quarter, Long userId){
-    return mapper.getStockStatusByQuarter(programCode, year, quarter, userId);
+  @Mock
+  StockStatusMapper mapper;
+
+  @InjectMocks
+  StockStatusService service;
+
+  @Test
+  public void shouldGetStockStatusByQuarter() throws Exception {
+    service.getStockStatusByMonth("123", 2015L, 4L, 3L);
+    verify(mapper).getStockStatusByMonth("123", 2015L, 4L, 3L);
   }
 
-
-  public List<StockStatusDTO> getStockStatusByMonth(String programCode, Long year, Long quarter, Long userId){
-    return mapper.getStockStatusByMonth(programCode, year, quarter, userId);
+  @Test
+  public void shouldGetStockStatusByMonth() throws Exception {
+    service.getStockStatusByQuarter("123", 2015L, 4L, 3L);
+    verify(mapper).getStockStatusByQuarter("123", 2015L, 4L, 3L);
   }
-
 }
