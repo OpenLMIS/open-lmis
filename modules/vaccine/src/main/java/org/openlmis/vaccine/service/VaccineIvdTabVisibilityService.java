@@ -8,31 +8,38 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.repository.mapper;
+package org.openlmis.vaccine.service;
 
-import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
-import org.springframework.stereotype.Repository;
+import org.openlmis.vaccine.repository.VaccineIvdTabVisibilityRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Repository
-public interface VaccineIvdTabVisibilityMapper {
+import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
 
-  @Select("select * from vaccine_ivd_tab_visibilities where programId = #{programId}")
-  List<VaccineIvdTabVisibility> getTabVisibilityForProgram(@Param("programId") Long programId);
+@Service
+public class VaccineIvdTabVisibilityService {
 
-  @Select("select tab, name, true as visible from vaccine_ivd_tabs")
-  List<VaccineIvdTabVisibility> getTabVisibilityForNewProgram();
+  @Autowired
+  VaccineIvdTabVisibilityRepository repository;
 
-  @Insert("INSERT INTO vaccine_ivd_tab_visibilities (tab, programId, name, visible)" +
-    "values (#{tab}, #{programId}, #{name}, #{visible})")
-  @Options(flushCache = true, useGeneratedKeys = true)
-  Integer insert(VaccineIvdTabVisibility visibility);
+  public List<VaccineIvdTabVisibility> getVisibilityForProgram(Long programId){
+    List<VaccineIvdTabVisibility> visibilities = repository.getVisibilityForProgram(programId);
+    if(emptyIfNull(visibilities).size() == 0){
+      return repository.getAllVisibilityConfiguration();
+    }
+    return visibilities;
+  }
 
-  @Update("UPDATE vaccine_ivd_tab_visibilities " +
-      " set name = #{name}, visible = #{visible}" +
-    " WHERE id = #{id} ")
-  Integer update (VaccineIvdTabVisibility visibility);
-
+  public void save(List<VaccineIvdTabVisibility> visibilities){
+    for(VaccineIvdTabVisibility visibility : visibilities){
+      if(visibility.getId() == null){
+        repository.insert(visibility);
+      }else{
+        repository.update(visibility);
+      }
+    }
+  }
 }
