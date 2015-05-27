@@ -35,6 +35,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -111,7 +112,7 @@ public class VaccineReportControllerTest {
   @Test
   public void shouldGetPeriods() throws Exception {
     List<ReportStatusDTO> periods = new ArrayList<>();
-    when(service.getPeriodsFor(1L, 1L)).thenReturn(periods);
+    when(service.getPeriodsFor(1L, 1L, any(Date.class))).thenReturn(periods);
     ResponseEntity<OpenLmisResponse> response = controller.getPeriods(1L, 1L, httpServletRequest);
 
     assertThat(periods, is(response.getBody().getData().get("periods")));

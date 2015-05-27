@@ -9,8 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProgramProductBuilder;
 import org.openlmis.core.domain.ConfigurationSetting;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.service.ConfigurationSettingService;
@@ -38,6 +40,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
@@ -163,4 +166,37 @@ public class VaccineReportServiceTest {
     assertThat(report.getStatus(), is(RequestStatus.SUBMITTED.toString()));
   }
 
+  @Test
+  public void shouldGetReportedPeriodsForFacility() throws Exception{
+    service.getReportedPeriodsFor(2L, 3L);
+    verify(repository).getReportedPeriodsForFacility(2L, 3L);
+  }
+
+  @Test
+  public void shouldGetPeriodsEmptyListOfPeriodsForFacility()throws  Exception {
+    Date startDate = new Date(2015,2,2);
+    Date endDate = new Date();
+
+    when(repository.getLastReport(2L, 2L)).thenReturn(null);
+    when(programService.getProgramStartDate(2L, 2L)).thenReturn(startDate);
+    when(periodService.getAllPeriodsForDateRange(1L, startDate, endDate)).thenReturn(null);
+
+    List<ReportStatusDTO> response = service.getPeriodsFor(2L, 2L, endDate);
+    assertThat(response.size(), is(0));
+  }
+
+  @Test
+  public void shouldGetPeriodsListOfPeriodsForFacility()throws  Exception {
+    Date startDate = new Date(2015,2,2);
+    Date endDate = new Date();
+    when(repository.getLastReport(2L, 2L)).thenReturn(null);
+    when(repository.getScheduleFor(2L, 2L)).thenReturn(1L);
+    when(programService.getProgramStartDate(2L, 2L)).thenReturn(startDate);
+    List<ProcessingPeriod> periods = asList(make(a(ProcessingPeriodBuilder.defaultProcessingPeriod)));
+    when(periodService.getAllPeriodsForDateRange(1L, startDate, endDate)).thenReturn(periods);
+
+    List<ReportStatusDTO> response = service.getPeriodsFor(2L, 2L, endDate);
+
+    assertThat(response.size(), is(1));
+  }
 }

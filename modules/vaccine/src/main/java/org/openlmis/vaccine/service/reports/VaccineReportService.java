@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
+
 @Service
 @NoArgsConstructor
 public class VaccineReportService {
@@ -126,7 +128,7 @@ public class VaccineReportService {
   }
 
 
-  public List<ReportStatusDTO> getPeriodsFor(Long facilityId, Long programId) {
+  public List<ReportStatusDTO> getPeriodsFor(Long facilityId, Long programId, Date endDate) {
     Date startDate = programService.getProgramStartDate(facilityId, programId);
 
     // find out which schedule this facility is in?
@@ -142,7 +144,7 @@ public class VaccineReportService {
     List<ReportStatusDTO> results = new ArrayList<>();
     // find all periods that are after this period, and before today.
 
-    List<ProcessingPeriod> periods = periodService.getAllPeriodsForDateRange(scheduleId, startDate, new Date());
+    List<ProcessingPeriod> periods = periodService.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
     if (lastRequest != null && lastRequest.getStatus().equals(RequestStatus.DRAFT.toString())) {
       ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
       reportStatusDTO.setPeriodName(lastRequest.getPeriod().getName());
@@ -155,7 +157,7 @@ public class VaccineReportService {
       results.add(reportStatusDTO);
     }
 
-    for (ProcessingPeriod period : periods) {
+    for (ProcessingPeriod period : emptyIfNull(periods)) {
       if (lastRequest == null || lastRequest.getPeriodId() != period.getId()) {
         ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
 
