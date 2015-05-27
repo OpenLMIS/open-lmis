@@ -77,4 +77,12 @@ public class EquipmentService {
   public void updateColdChainEquipment(ColdChainEquipment coldChainEquipment) {
     coldChainEquipmentRepository.update(coldChainEquipment);
   }
+
+  public void removeEquipment(Long id) {
+    repository.remove(id);
+  }
+
+  public void removeCCE(Long id) {
+    coldChainEquipmentRepository.remove(id);
+  }
 }

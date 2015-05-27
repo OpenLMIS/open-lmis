@@ -37,11 +37,14 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
     $scope.equipment = {};
   } else {
     Equipment.get({
-      id: $routeParams.id
+      id: $routeParams.id,
+      equipmentTypeId:$routeParams.type
     }, function (data) {
       $scope.equipment = data.equipment;
+      $scope.checkEquipmentType();
       $scope.showError = true;
     });
+
   }
 
   $scope.updateName=function(isColdChain)

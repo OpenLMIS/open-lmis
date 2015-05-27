@@ -82,12 +82,12 @@
 
         <div class="form-cell">
           <label for="model">
-            <span openlmis-message="label.equipment.energyTypeId"></span>
+            <span openlmis-message="label.equipment.energy-type"></span>
             <span class="label-required">*</span>
           </label>
 
           <div class="form-field">
-            <select ng-model="equipment.designationId" id="energy-type">
+            <select ng-model="equipment.energyTypeId" id="energy-type">
               <option ng-repeat="type in energyTypes" ng-selected="type.id == equipment.energyTypeId" value="{{type.id}}">{{type.name}}</option>
             </select>
           </div>
@@ -114,7 +114,7 @@
 
         <div class="form-cell">
           <label for="cce-code">
-            <span openlmis-message="label.equipment.cceCode"></span>
+            <span openlmis-message="label.equipment.cce-code"></span>
             <span class="label-required">*</span>
           </label>
 
@@ -227,14 +227,15 @@
         </div>
 
         <div class="form-cell">
-          <label for="price">
-            <span openlmis-message="label.equipment.price"></span>
+          <label for="pqs-code">
+            <span openlmis-message="label.equipment.pqs-code"></span>
           </label>
 
           <div class="form-field">
-            <input ng-model="equipment.price" id="price" type="text" maxlength="200"  />
+            <input ng-model="equipment.pqsCode" id="pqs-code" type="text" maxlength="200"  />
           </div>
         </div>
+
       </div>
 
       <div class="form-row clearfix">
@@ -261,6 +262,17 @@
             </select>
           </div>
         </div>
+
+        <div class="form-cell">
+          <label for="price">
+            <span openlmis-message="label.equipment.price"></span>
+          </label>
+
+          <div class="form-field">
+            <input ng-model="equipment.price" id="price" type="text" maxlength="200"  />
+          </div>
+        </div>
+
       </div>
 
     </div>

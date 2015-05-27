@@ -25,7 +25,7 @@
       </select>
     </div>
     <div ng-show="equipments.length == 0">
-      <span openlmis-message="label.equipment.none.found"></span>
+      <span openlmis-message="label.equipment.list.none.found"></span>
     </div>
     <div ng-show="equipments.length > 0">
     <table ng-show="equipment_type.coldChain != undefined && !equipment_type.coldChain" class="table table-bordered table-striped">
@@ -34,7 +34,11 @@
         <th style="width: 30px;">#</th>
         <th><a openlmis-message="label.equipment.code" ng-click="sortBy('code')"></a></th>
         <th><a openlmis-message="label.equipment.name" ng-click="sortBy('name')"></a></th>
-        <th><a openlmis-message="label.equipment.type" ng-click="sortBy('type')"></a></th>
+        <th><a openlmis-message="label.equipment.manufacturer" ng-click="sortBy('manufacturer')"></a></th>
+        <th><a openlmis-message="label.equipment.model" ng-click="sortBy('model')"></a></th>
+        <th openlmis-message="label.equipment.energy-type"></th>
+        <th openlmis-message="label.equipment.type"></th>
+        <th openlmis-message="label.equipment.action.remove"></th>
       </tr>
       </thead>
       <tbody>
@@ -42,7 +46,11 @@
         <td>{{$index + 1}}</td>
         <td>{{eq.code}}</td>
         <td><a ng-href="#/edit/{{eq.id}}/{{equipmentTypeId}}">{{eq.name}}</a></td>
+        <td>{{eq.manufacturer}}</td>
+        <td>{{eq.model}}</td>
+        <td>{{eq.energyType.name}}</td>
         <td>{{eq.equipmentType.code}}</td>
+        <td><a openlmis-message="label.equipment.action" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)"></a></td>
       </tr>
       </tbody>
     </table>
@@ -50,17 +58,18 @@
     <table ng-show="equipment_type.coldChain != undefined && equipment_type.coldChain" class="table table-bordered table-striped">
       <thead>
       <tr class="gradient-header">
-        <th style="width: 15px;">#</th>
+        <th style="width:2px;">#</th>
         <th ><a openlmis-message="label.equipment.name" ng-click="sortBy('name')"></a></th>
         <th ><a openlmis-message="label.equipment.designation" ng-click="sortBy('designation.name')"></a></th>
         <th ><a openlmis-message="label.equipment.manufacturer" ng-click="sortBy('manufacturer')"></a></th>
         <th ><a openlmis-message="label.equipment.model" ng-click="sortBy('model')"></a></th>
-        <th >Code</th>
-        <th >PSQ Code</th>
-        <th >Refrigerator Capacity</th>
-        <th>Freezer Capacity</th>
-        <th>Temperature Zone</th>
-        <th>Donor</th>
+        <th openlmis-message="label.equipment.cce-code" ></th>
+        <th openlmis-message="label.equipment.pqs-code"></th>
+        <th openlmis-message="label.equipment.refrigerator-capacity" ></th>
+        <th openlmis-message="label.equipment.freezer-capacity"></th>
+        <th openlmis-message="label.equipment.temperature-zone"></th>
+        <th openlmis-message="label.equipment.donor"></th>
+        <th><a openlmis-message="label.equipment.action"></a></th>
 
       </tr>
       </thead>
@@ -77,7 +86,7 @@
         <td>{{eq.freezerCapacity}}</td>
         <td>{{eq.temperatureZone}}</td>
         <td>{{eq.donor.shortName}}</td>
-
+        <td><a  openlmis-message="label.equipment.action.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)"></a></td>
       </tr>
       </tbody>
     </table>

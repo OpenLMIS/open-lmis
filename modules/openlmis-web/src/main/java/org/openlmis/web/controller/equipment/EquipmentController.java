@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller.equipment;
 
+import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentType;
@@ -110,8 +111,33 @@ public class EquipmentController extends BaseController {
        }catch(DuplicateKeyException exp){
           return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
         }
-      response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.save"));
+      response = OpenLmisResponse.success(messageService.message("message.equipment.list.save"));
       response.getBody().addData("equipment", equipment);
       return response;
       }
+
+    @RequestMapping(value="remove/{equipmentTypeId}/{id}")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
+    @Transactional
+    public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value = "equipmentTypeId") Long equipmentTypeId,@PathVariable(value = "id") Long id){
+        ResponseEntity<OpenLmisResponse> successResponse;
+        EquipmentType equipmentType=equipmentTypeService.getTypeById(equipmentTypeId);
+        try{
+            if(equipmentType.isColdChain()) {
+                //remove Cold Chain first
+                service.removeCCE(id);
+                //then  remove equipment
+                service.removeEquipment(id);
+            }
+            else {
+                service.removeEquipment(id);
+            }
+        }
+        catch(DataException e){
+            return OpenLmisResponse.error(e,HttpStatus.BAD_REQUEST);
+        }
+
+        successResponse = OpenLmisResponse.success(messageService.message("message.equipment.list.removed"));
+        return successResponse;
+    }
 }

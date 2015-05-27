@@ -82,4 +82,6 @@ public interface EquipmentMapper {
       "WHERE id = #{id}")
   void update(Equipment equipment);
 
+    @Delete("DELETE FROM equipments WHERE id = #{Id}")
+    void remove(Long Id);
 }

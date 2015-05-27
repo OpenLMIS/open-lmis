@@ -40,4 +40,8 @@ public class ColdChainEquipmentRepository {
     mapper.update(coldChainEquipment);
   }
 
+  public void remove(Long id){
+    mapper.remove(id);
+  }
+
 }

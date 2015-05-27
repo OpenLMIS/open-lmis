@@ -49,4 +49,8 @@ public class EquipmentRepository {
     mapper.update(equipment);
   }
 
+  public void remove(Long id){
+    mapper.remove(id);
+  }
+
 }

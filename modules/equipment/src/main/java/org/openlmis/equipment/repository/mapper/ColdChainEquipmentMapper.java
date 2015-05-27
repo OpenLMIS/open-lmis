@@ -85,4 +85,6 @@ public interface ColdChainEquipmentMapper {
       " WHERE equipmentid = #{id}")
   void update(ColdChainEquipment coldChainEquipment);
 
+  @Delete("DELETE FROM equipment_cold_chain_equipments WHERE equipmentid = #{Id}")
+  void remove(Long Id);
 }

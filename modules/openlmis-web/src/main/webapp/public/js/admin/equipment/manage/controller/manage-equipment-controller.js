@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ManageEquipmentController($scope, $routeParams, $location, Equipments,EquipmentTypes,EquipmentType,currentEquipmentTypeId) {
+function ManageEquipmentController($scope, $routeParams,$dialog, $location,messageService, Equipments,EquipmentTypes,EquipmentType,RemoveEquipment,currentEquipmentTypeId) {
 
    EquipmentTypes.get(function (data) {
       $scope.equipmentTypes = data.equipment_type;
@@ -17,6 +17,7 @@ function ManageEquipmentController($scope, $routeParams, $location, Equipments,E
    $scope.listEquipments=function()
    {
       var id=$scope.equipmentTypeId;
+      currentEquipmentTypeId.set($scope.equipmentTypeId)
       Equipments.get({
            equipmentTypeId:id
            },function (data) {
@@ -48,4 +49,30 @@ function ManageEquipmentController($scope, $routeParams, $location, Equipments,E
         }
 
    };
+
+   $scope.showRemoveEquipmentConfirmDialog = function (id) {
+       $scope.selectedEquipment=id;
+       var options = {
+         id: "removeEquipmentConfirmDialog",
+         header: "Confirmation",
+         body: "Are you sure you want to remove the Equipment"
+       };
+       OpenLmisDialog.newDialog(options, $scope.removeEquipmentConfirm, $dialog, messageService);
+     };
+
+     $scope.removeEquipmentConfirm = function (result) {
+         if (result) {
+           RemoveEquipment.get({equipmentTypeId:$scope.equipmentTypeId, id: $scope.selectedEquipment}, function (data) {
+             $scope.$parent.message = messageService.get(data.success);
+
+             $scope.listEquipments();
+           }, function () {
+             $scope.error = messageService.get(data.error);
+           });
+
+         }
+         $scope.selectedEquipment=undefined;
+       };
+
+
 }

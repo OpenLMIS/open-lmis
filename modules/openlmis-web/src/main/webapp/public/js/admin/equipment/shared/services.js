@@ -23,7 +23,7 @@ services.factory('EquipmentsByType', function ($resource) {
 });
 
 services.factory('Equipment', function ($resource) {
-  return $resource('/equipment/manage/id.json', {}, {});
+  return $resource('/equipment/manage/type-and-id.json', {}, {});
 });
 
 services.factory('EquipmentTypesByProgram', function ($resource) {
@@ -32,6 +32,10 @@ services.factory('EquipmentTypesByProgram', function ($resource) {
 
 services.factory('SaveEquipment', function ($resource) {
   return $resource('/equipment/manage/save.json', {}, {});
+});
+
+services.factory('RemoveEquipment',function($resource){
+    return $resource('/equipment/manage/remove/:equipmentTypeId/:id.json',{},{});
 });
 
 
