@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller.vaccine;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -30,6 +31,9 @@ import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -39,13 +43,15 @@ import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 
 @Category(UnitTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(MockitoJUnitRunner.class)
+@PrepareForTest({Date.class})
 public class VaccineReportControllerTest {
 
   @Mock
@@ -111,10 +117,13 @@ public class VaccineReportControllerTest {
 
   @Test
   public void shouldGetPeriods() throws Exception {
+    Date currentDate = new Date();
     List<ReportStatusDTO> periods = new ArrayList<>();
-    when(service.getPeriodsFor(1L, 1L, any(Date.class))).thenReturn(periods);
-    ResponseEntity<OpenLmisResponse> response = controller.getPeriods(1L, 1L, httpServletRequest);
+    when(service.getPeriodsFor(1L, 1L, currentDate)).thenReturn(periods);
+    whenNew(Date.class).withNoArguments().thenReturn(currentDate);
 
+    ResponseEntity<OpenLmisResponse> response = controller.getPeriods(1L, 1L, httpServletRequest);
+    
     assertThat(periods, is(response.getBody().getData().get("periods")));
   }
 
