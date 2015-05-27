@@ -82,7 +82,7 @@
 
         <div class="form-cell">
           <label for="model">
-            <span openlmis-message="label.equipment.energy-type"></span>
+            <span openlmis-message="label.equipment.energy-types"></span>
             <span class="label-required">*</span>
           </label>
 
@@ -277,6 +277,7 @@
 
     </div>
   </div>
+    {{equipmentSave}}
     <div form-toolbar id="action_buttons" class="action-buttons">
       <div class="form-cell button-row">
         <input id="saveButton" type="submit" id="save-button" ng-disabled="equipmentForm.$invalid" class="btn btn-primary save-button" openlmis-message="button.save" />

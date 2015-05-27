@@ -27,7 +27,7 @@ public class EquipmentEnergyTypeController extends BaseController {
   @RequestMapping(value="list",method= GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getAll(){
-    return OpenLmisResponse.response("energyTypes",service.getAll());
+    return OpenLmisResponse.response("energy_types",service.getAll());
   }
 
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
