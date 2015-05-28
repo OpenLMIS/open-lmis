@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout) {
+function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout, SaveEquipmentInventory) {
 
   $scope.loadPrograms = function (initialLoad) {
     // Get home facility for user
@@ -90,6 +90,82 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     $scope.loadEquipmentTypes();
   };
 
+  $scope.updateStatus = function (item) {
+    // Create original inventory item to use later if user cancels
+    $scope.origModalItem = angular.copy(item);
+    $scope.origModalItem.operationalStatusId = $scope.origModalItem.prevStatusId;
+
+    // updateStatus is called on dropdown load, so only do something if previous value set and is different
+    if (item.prevStatusId && item.prevStatusId !== item.operationalStatusId) {
+      var operationalStatus = _.where($scope.operationalStatusList, {id: parseInt(item.operationalStatusId, 10)})[0];
+
+      // If status is "bad", open modal, otherwise just save to the server
+      if (operationalStatus.isBad) {
+        $scope.notFunctionalModal = true;
+        $scope.modalItem = item;
+        $scope.prevStatusId = item.prevStatusId; // Need to save previous since item.prevStatusId gets overwritten
+                                                 // at the end of this function
+      } else {
+        UpdateEquipmentInventoryStatus.save({}, item, function () {
+          // Success
+          item.showSuccess = true;
+          $timeout(function () {
+            item.showSuccess = false;
+          }, 3000);
+        });
+      }
+    }
+
+    // Set a previous value to compare with
+    item.prevStatusId = item.operationalStatusId;
+  };
+
+  $scope.checkForBadFunctionalStatus = function (statusId) {
+    var notFunctionalStatus = _.where($scope.notFunctionalStatusList, {id: parseInt(statusId, 10)})[0];
+    $scope.modalItem.badFunctionalStatusSelected = notFunctionalStatus.isBad;
+  };
+
+  $scope.saveModal = function () {
+    $scope.modalError = '';
+    if (!$scope.notFunctionalForm.$invalid) {
+      SaveEquipmentInventory.save($scope.modalItem, function () {
+        // Success
+        $scope.notFunctionalModal = false;
+        $scope.modalItem.badFunctionalStatusSelected = false;
+        $scope.modalItem.showSuccess = true;
+        $timeout(function () {
+          $scope.modalItem.showSuccess = false;
+        }, 3000);
+      }, function (data) {
+        $scope.modalError = data.error;
+      });
+    } else {
+      $scope.modalError = messageService.get('message.equipment.inventory.data.invalid');
+    }
+  };
+
+  $scope.closeModal = function () {
+    $scope.notFunctionalModal = false;
+
+    // Reset inventory with original inventory item
+    // Doing this with map because underscore version doesn't support findIndex
+    $scope.inventory = _.map($scope.inventory, function (obj) {
+      if (obj.id === $scope.modalItem.id) {
+        return $scope.origModalItem;
+      } else {
+        return obj;
+      }
+    });
+
+    // Reset other values
+    $scope.modalItem.badFunctionalStatusSelected = false;
+    $scope.modalError = '';
+  };
+
+  $scope.getAge = function (yearOfInstallation) {
+    return (new Date().getFullYear()) - yearOfInstallation;
+  };
+
   function getGeographicZone(item) {
     return item.facility.geographicZone.name;
   }
@@ -99,23 +175,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
 
   EquipmentOperationalStatus.get(function(data){
     $scope.operationalStatusList = _.where(data.status, {category: 'CCE'});
+    $scope.notFunctionalStatusList = _.where(data.status, {category: 'CCE Not Functional'});
   });
-
-  $scope.updateStatus = function (item) {
-    if (item.prevStatusId && item.prevStatusId !== item.operationalStatusId) {
-      UpdateEquipmentInventoryStatus.save({}, item, function (data) {
-        // Success
-        item.showSuccess = true;
-        $timeout(function () {
-          item.showSuccess = false;
-        }, 3000);
-      });
-    }
-    item.prevStatusId = item.operationalStatusId;
-  };
-
-  $scope.getAge = function (yearOfInstallation) {
-    return (new Date().getFullYear()) - yearOfInstallation;
-  };
 
 }

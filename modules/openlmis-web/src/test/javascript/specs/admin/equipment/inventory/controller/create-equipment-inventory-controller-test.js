@@ -15,7 +15,8 @@ describe("In Create Equipment Inventory Controller,", function () {
   var equipmentType = {"id": 3, "name": "Equipment Type 3", "code": "ET2",
     "description": "Equipment Type 3 Description"};
   var labStatus = {"id": 4, "name": "Fully Operational", category: "LAB"};
-  var cceStatus = {"id": 9, "name": "Functional", category: "CCE"};
+  var cceStatus = {"id": 9, "name": "Functional", category: "CCE", isBad: false};
+  var cceStatus2 = {"id": 12, "name": "Not Functional", category: "CCE", isBad: true};
   var notFunctionalStatus = {"id": 10, "name": "Obsolete", category: "CCE Not Functional"};
   var statuses = [labStatus, cceStatus, notFunctionalStatus];
   var equipment = {"id": 6, name: "Dometic 400", code: "Dometic 400", "equipmentType": equipmentType,
@@ -178,6 +179,17 @@ describe("In Create Equipment Inventory Controller,", function () {
       scope.inventoryForm = {$invalid: true};
       scope.saveInventory();
       expect(scope.error).toEqual(messageService.get('message.equipment.inventory.data.invalid'));
+    });
+
+    it("should check for 'bad' status", function () {
+      scope.cceOperationalStatusList = [cceStatus, cceStatus2];
+      scope.inventory = inventory;
+      scope.inventory.operationalStatusId = cceStatus.id;
+      scope.checkForBadStatus();
+      expect(scope.badStatusSelected).toEqual(cceStatus.isBad);
+      scope.inventory.operationalStatusId = cceStatus2.id;
+      scope.checkForBadStatus();
+      expect(scope.badStatusSelected).toEqual(cceStatus2.isBad);
     });
   });
 });
