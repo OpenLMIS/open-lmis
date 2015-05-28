@@ -59,7 +59,7 @@ public class EquipmentController extends BaseController {
       EquipmentType equipmentType=equipmentTypeService.getTypeById(equipmentTypeId);
       if(equipmentType.isColdChain())
       {
-          return OpenLmisResponse.response("equipments", service.getAllCCE());
+          return OpenLmisResponse.response("equipments", service.getAllCCE(equipmentTypeId));
       }
         else{
           return OpenLmisResponse.response("equipments", service.getAllByType(equipmentTypeId));

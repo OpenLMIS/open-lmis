@@ -108,7 +108,7 @@ public class EquipmentControllerTest {
     ColdChainEquipment coldChainEquipment=makeAnColdChainEquipment();
     EquipmentType equipmentType=new EquipmentType();
     when(service.getAllByType(1L)).thenReturn(asList(equipment));
-    when(service.getAllCCE()).thenReturn(asList(coldChainEquipment));
+    when(service.getAllCCE(1L)).thenReturn(asList(coldChainEquipment));
     when(equipmentTypeService.getTypeById(1L)).thenReturn(equipmentType);
 
     ResponseEntity<OpenLmisResponse> response = controller.getList(1L);

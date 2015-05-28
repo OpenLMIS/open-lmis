@@ -36,8 +36,8 @@ public class EquipmentService {
       return repository.getAll();
   }
 
-  public List<ColdChainEquipment> getAllCCE(){
-    return coldChainEquipmentRepository.getAll();
+  public List<ColdChainEquipment> getAllCCE(Long equipmentTypeId){
+    return coldChainEquipmentRepository.getAll(equipmentTypeId);
   }
 
   public Equipment getByTypeAndId(Long id,Long equipmentTypeId) {

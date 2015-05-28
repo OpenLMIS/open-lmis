@@ -20,7 +20,7 @@ import java.util.List;
 public interface ColdChainEquipmentMapper {
 
   @Select("SELECT * from equipment_cold_chain_equipments " +
-          "JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id")
+          "JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id WHERE equipments.equipmentTypeId = #{equipmentTypeId}")
   @Results({
             @Result(
                     property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
@@ -40,7 +40,7 @@ public interface ColdChainEquipmentMapper {
                     one = @One(select = "org.openlmis.equipment.repository.mapper.DonorMapper.getById")),
             @Result(property = "donorId", column = "donorId")
   })
-  List<ColdChainEquipment> getAll();
+  List<ColdChainEquipment> getAll(Long equipmentTypeId);
 
     @Select("SELECT * from equipment_cold_chain_equipments JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id where equipment_cold_chain_equipments.equipmentid = #{id}")
     @Results({

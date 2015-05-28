@@ -116,7 +116,7 @@ public class ColdChainEquipmentMapperIT {
     equipmentMapper.insert(coldChainEquipment);
     mapper.insert(coldChainEquipment);
 
-    List<ColdChainEquipment> results =  mapper.getAll();
+    List<ColdChainEquipment> results =  mapper.getAll(type.getId());
     assertThat(results.size(), greaterThan(0));
    // assertEquals(coldChainEquipment.getName(), results.get(0).getName());
 

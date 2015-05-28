@@ -28,8 +28,8 @@ public class ColdChainEquipmentRepository {
     return mapper.getById(id);
   }
 
-  public List<ColdChainEquipment> getAll(){
-    return mapper.getAll();
+  public List<ColdChainEquipment> getAll(Long equipmentTypeId){
+    return mapper.getAll(equipmentTypeId);
   }
 
   public void insert(ColdChainEquipment coldChainEquipment){
