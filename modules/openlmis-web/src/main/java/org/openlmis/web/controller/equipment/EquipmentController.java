@@ -111,7 +111,7 @@ public class EquipmentController extends BaseController {
        }catch(DuplicateKeyException exp){
           return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
         }
-      response = OpenLmisResponse.success(messageService.message("message.equipment.list.save"));
+      response = OpenLmisResponse.success(messageService.message("message.equipment.list.saved"));
       response.getBody().addData("equipment", equipment);
       return response;
       }
