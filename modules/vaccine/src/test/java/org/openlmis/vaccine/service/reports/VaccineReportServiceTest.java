@@ -4,18 +4,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
-import org.openlmis.core.builder.ProgramProductBuilder;
-import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
-import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
@@ -25,6 +21,7 @@ import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
+import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
 import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
@@ -33,11 +30,8 @@ import org.openlmis.vaccine.repository.VitaminSupplementationAgeGroupRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportColdChainRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportRepository;
 import org.openlmis.vaccine.service.DiseaseService;
+import org.openlmis.vaccine.service.VaccineIvdTabVisibilityService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,7 +40,6 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -75,7 +68,7 @@ public class VaccineReportServiceTest {
   VaccineProductDoseService productDoseService;
 
   @Mock
-  ConfigurationSettingService settingService;
+  VaccineIvdTabVisibilityService settingService;
 
   @Mock
   VaccineReportColdChainRepository coldChainRepository;
@@ -150,7 +143,7 @@ public class VaccineReportServiceTest {
   public void shouldGetById() throws Exception {
     VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
     when(repository.getByIdWithFullDetails(2L)).thenReturn(report);
-    when(settingService.getSearchResults(anyString())).thenReturn(new ArrayList<ConfigurationSetting>());
+    when(settingService.getVisibilityForProgram(report.getProgramId())).thenReturn(new ArrayList<VaccineIvdTabVisibility>());
 
     VaccineReport result = service.getById(2L);
     verify(repository).getByIdWithFullDetails(2L);

@@ -28,6 +28,7 @@ import org.openlmis.vaccine.repository.VitaminRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportColdChainRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportRepository;
 import org.openlmis.vaccine.service.DiseaseService;
+import org.openlmis.vaccine.service.VaccineIvdTabVisibilityService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,9 +61,6 @@ public class VaccineReportService {
   VaccineProductDoseService productDoseService;
 
   @Autowired
-  ConfigurationSettingService settingService;
-
-  @Autowired
   VaccineReportColdChainRepository coldChainRepository;
 
   @Autowired
@@ -73,6 +71,9 @@ public class VaccineReportService {
 
   @Autowired
   ProgramService programService;
+
+  @Autowired
+  VaccineIvdTabVisibilityService tabVisibilityService;
 
   @Transactional
   public VaccineReport initialize(Long facilityId, Long programId, Long periodId) {
@@ -174,7 +175,7 @@ public class VaccineReportService {
 
   public VaccineReport getById(Long id) {
     VaccineReport report = repository.getByIdWithFullDetails(id);
-    report.setTabVisibilitySettings(settingService.getSearchResults("VACCINE_TAB%"));
+    report.setTabVisibilitySettings(tabVisibilityService.getVisibilityForProgram(report.getProgramId()));
     return report;
   }
 

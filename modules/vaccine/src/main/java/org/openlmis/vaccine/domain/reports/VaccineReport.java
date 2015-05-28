@@ -20,6 +20,7 @@ import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
+import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class VaccineReport extends BaseModel {
   private Long outreachImmunizationSessions;
   private Long outreachImmunizationSessionsCanceled;
 
-  private List<ConfigurationSetting> tabVisibilitySettings;
+  private List<VaccineIvdTabVisibility> tabVisibilitySettings;
 
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;
