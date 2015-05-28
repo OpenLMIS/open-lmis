@@ -13,14 +13,10 @@ function ViewVaccineReportDetailController($scope, $location, $filter, report, d
   $scope.report = report;
   $scope.discardingReasons = discardingReasons;
   // populate scope with tab visibility info
-  $scope.showLogistics = _.findWhere(report.tabVisibilitySettings, {key: 'VACCINE_TAB_LOGISTICS_VISIBLE'}).value;
-  $scope.showCoverage = _.findWhere(report.tabVisibilitySettings, {key: 'VACCINE_TAB_COVERAGE_VISIBLE'}).value;
-  $scope.showDisease = _.findWhere(report.tabVisibilitySettings, {key: 'VACCINE_TAB_DISEASE_VISIBLE'}).value;
-  $scope.showIncident = _.findWhere(report.tabVisibilitySettings, {key: 'VACCINE_TAB_AEFI_VISIBLE'}).value;
-  $scope.showTarget = _.findWhere(report.tabVisibilitySettings, {key: 'VACCINE_TAB_TARGET_VISIBLE'}).value;
-  $scope.showColdChain = _.findWhere(report.tabVisibilitySettings, {key: 'VACCINE_TAB_COLD_CHAIN_VISIBLE'}).value;
-  $scope.showCampaign = _.findWhere(report.tabVisibilitySettings, {key: 'VACCINE_TAB_CAMPAIGN_VISIBLE'}).value;
-  $scope.showVitamin = _.findWhere(report.tabVisibilitySettings, {key: 'VACCINE_TAB_VITAMIN_SUPPLEMENTATION_VISIBLE'}).value;
+  $scope.tabVisibility = {};
+  _.chain(report.tabVisibilitySettings).groupBy('tab').map(function(key, value){
+                                                                $scope.tabVisibility[value] =  key[0].visible;
+                                                              });
 
 
   // show the stock movement tab by default.
