@@ -108,11 +108,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
 
   $scope.checkForBadStatus = function () {
     var operationalStatus = _.where($scope.cceOperationalStatusList, {id: parseInt($scope.inventory.operationalStatusId, 10)})[0];
-    if (operationalStatus.isBad) {
-      $scope.badStatusSelected = true;
-    } else {
-      $scope.badStatusSelected = false;
-    }
+    $scope.badStatusSelected = operationalStatus.isBad;
   };
 
   $scope.saveInventory = function () {
