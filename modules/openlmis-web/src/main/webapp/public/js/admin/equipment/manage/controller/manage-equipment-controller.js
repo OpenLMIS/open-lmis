@@ -17,7 +17,7 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
    $scope.listEquipments=function()
    {
       var id=$scope.equipmentTypeId;
-      currentEquipmentTypeId.set($scope.equipmentTypeId)
+      currentEquipmentTypeId.set($scope.equipmentTypeId);
       Equipments.get({
            equipmentTypeId:id
            },function (data) {

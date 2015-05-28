@@ -67,15 +67,6 @@ public class EquipmentControllerTest {
     request.getSession().setAttribute(USER_ID, 1L);
     when(messageService.message(anyString())).thenReturn("the message");
   }
-
-
-  @Test
-  public void shouldGetEquipmentById() throws Exception {
-    Equipment equipment = makeAnEquipment();
-    when(service.getById(2L)).thenReturn(equipment);
-    ResponseEntity<OpenLmisResponse> response = controller.getEquipmentById(2L);
-    assertThat(equipment, is(response.getBody().getData().get("equipment")));
-  }
   private EquipmentType makeAnEquipmentType() {
     EquipmentType equipmentType=new EquipmentType();
     equipmentType.setColdChain(false);
@@ -95,7 +86,20 @@ public class EquipmentControllerTest {
     ColdChainEquipment coldChainEquipment=new ColdChainEquipment();
     coldChainEquipment.setId(1L);
     coldChainEquipment.setName("Refrigerator");
+    coldChainEquipment.setCode("CODE");
+    coldChainEquipment.setDesignationId(1L);
+    coldChainEquipment.setPqsStatusId(1L);
+    coldChainEquipment.setEquipmentTypeId(1L);
     return coldChainEquipment;
+  }
+
+
+  @Test
+  public void shouldGetEquipmentById() throws Exception {
+    Equipment equipment = makeAnEquipment();
+    when(service.getById(2L)).thenReturn(equipment);
+    ResponseEntity<OpenLmisResponse> response = controller.getEquipmentById(2L);
+    assertThat(equipment, is(response.getBody().getData().get("equipment")));
   }
 
   @Test
@@ -115,7 +119,9 @@ public class EquipmentControllerTest {
   public void shouldSaveChanges() throws Exception {
     EquipmentType equipmentType=makeAnEquipmentType();
     Equipment equipment = makeAnEquipment();
+    ColdChainEquipment coldChainEquipment=makeAnColdChainEquipment();
     equipment.setEquipmentType(equipmentType);
+    coldChainEquipment.setEquipmentType(equipmentType);
 
     when(equipmentTypeService.getTypeById(equipment.getEquipmentTypeId())).thenReturn(equipmentType);
     doNothing().when(service).saveEquipment(any(Equipment.class));
@@ -123,10 +129,13 @@ public class EquipmentControllerTest {
     doNothing().when(service).updateEquipment(any(Equipment.class));
     doNothing().when(service).updateColdChainEquipment(any(ColdChainEquipment.class));
 
-    ResponseEntity<OpenLmisResponse> response = controller.save(equipment);
-    assertThat(equipment, is(response.getBody().getData().get("equipment")));
-    assertThat(response.getBody().getSuccessMsg(), is(notNullValue()));
-  }
+    ResponseEntity<OpenLmisResponse> equipmentResponse = controller.save(equipment);
+    assertThat(equipment, is(equipmentResponse.getBody().getData().get("equipment")));
+    assertThat(equipmentResponse.getBody().getSuccessMsg(), is(notNullValue()));
 
+    ResponseEntity<OpenLmisResponse> coldChainResponse = controller.save(coldChainEquipment);
+    assertThat(coldChainEquipment, is( coldChainResponse.getBody().getData().get("equipment")));
+    assertThat(coldChainResponse.getBody().getSuccessMsg(), is(notNullValue()));
+  }
 
 }
