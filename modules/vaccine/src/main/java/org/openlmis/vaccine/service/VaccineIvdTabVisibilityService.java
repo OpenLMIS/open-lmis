@@ -33,9 +33,10 @@ public class VaccineIvdTabVisibilityService {
     return visibilities;
   }
 
-  public void save(List<VaccineIvdTabVisibility> visibilities){
+  public void save(List<VaccineIvdTabVisibility> visibilities, Long programId){
     for(VaccineIvdTabVisibility visibility : visibilities){
       if(visibility.getId() == null){
+        visibility.setProgramId(programId);
         repository.insert(visibility);
       }else{
         repository.update(visibility);

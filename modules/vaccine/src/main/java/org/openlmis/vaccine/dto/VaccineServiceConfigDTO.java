@@ -13,9 +13,9 @@ package org.openlmis.vaccine.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.domain.Product;
 import org.openlmis.vaccine.domain.VaccineDose;
+import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
 
 import java.util.List;
 
@@ -24,7 +24,8 @@ import java.util.List;
 @AllArgsConstructor
 public class VaccineServiceConfigDTO {
 
-  private List<ConfigurationSetting> tabVisibilitySettings;
+  private Long programId;
+  private List<VaccineIvdTabVisibility> tabVisibilitySettings;
   private List<ProductDoseDTO> protocols;
   private List<Product> possibleProducts;
   private List<VaccineDose> possibleDoses;

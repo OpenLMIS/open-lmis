@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.service;
+package org.openlmis.web.controller.vaccine;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -18,59 +18,50 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
-import org.openlmis.vaccine.repository.VaccineIvdTabVisibilityRepository;
+import org.openlmis.vaccine.dto.VaccineServiceConfigDTO;
+import org.openlmis.vaccine.service.VaccineIvdTabVisibilityService;
+import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
-
+import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class VaccineIvdTabVisibilityServiceTest {
+public class ConfigurationControllerTest {
 
   @Mock
-  VaccineIvdTabVisibilityRepository repository;
-
-  @InjectMocks
   VaccineIvdTabVisibilityService service;
 
-  @Test
-  public void shouldGetAllPossibleVisibilityForProgram() throws Exception {
-    List<VaccineIvdTabVisibility> list = asList(new VaccineIvdTabVisibility());
-
-    when(repository.getVisibilityForProgram(2L)).thenReturn(null);
-    when(repository.getAllVisibilityConfiguration()).thenReturn(list);
-
-    List<VaccineIvdTabVisibility> result = service.getVisibilityForProgram(2L);
-    assertThat(result, is(list));
-  }
+  @InjectMocks
+  ConfigurationController controller;
 
   @Test
-  public void shouldGetSavedVisibilityForProgram() throws Exception {
+  public void shouldGetProgramTabVisibility() throws Exception {
     List<VaccineIvdTabVisibility> list = asList(new VaccineIvdTabVisibility());
+    when(service.getVisibilityForProgram(2L)).thenReturn( list );
 
-    when(repository.getVisibilityForProgram(2L)).thenReturn(list);
-    when(repository.getAllVisibilityConfiguration()).thenReturn(null);
+    ResponseEntity<OpenLmisResponse> response = controller.getProgramTabVisibility(2L);
 
-    List<VaccineIvdTabVisibility> result = service.getVisibilityForProgram(2L);
-    assertThat(result, is(list));
-
-    verify(repository, never()).getAllVisibilityConfiguration();
+    verify(service).getVisibilityForProgram(2L);
+    assertThat(response.getBody().getData().get("visibilities"), is(notNullValue()));
   }
 
   @Test
   public void shouldSave() throws Exception {
-    VaccineIvdTabVisibility visibility = new VaccineIvdTabVisibility();
-    VaccineIvdTabVisibility visibility1 = new VaccineIvdTabVisibility();
-    visibility.setId(23L);
-    List<VaccineIvdTabVisibility> list = asList(visibility, visibility1);
+    List<VaccineIvdTabVisibility> list = asList(new VaccineIvdTabVisibility());
+    VaccineServiceConfigDTO dto = new VaccineServiceConfigDTO();
+    dto.setTabVisibilitySettings(list);
+    dto.setProgramId(2L);
+    ResponseEntity<OpenLmisResponse> response = controller.save( dto);
 
-    service.save(list, 2L);
-    verify(repository).insert(visibility1);
-    verify(repository).update(visibility);
+    verify(service).save(list, dto.getProgramId());
+    assertThat(response.getBody().getData().get("visibilities"), is(notNullValue()));
   }
 }
