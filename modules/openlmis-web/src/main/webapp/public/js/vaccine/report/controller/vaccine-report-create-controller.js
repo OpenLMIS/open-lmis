@@ -19,11 +19,6 @@ function CreateVaccineReportController($scope, $location, $filter, $dialog, repo
                                                                                   $scope.tabVisibility[value] =  key[0].visible;
                                                                                   });
 
-  // show the stock movement tab by default.
-  if ($scope.showLogistics) {
-    $scope.visibleTab = 'stockMovement';
-  }
-
   $scope.save = function () {
     VaccineReportSave.update($scope.report, function () {
       $scope.message = "msg.ivd.saved.successfully";

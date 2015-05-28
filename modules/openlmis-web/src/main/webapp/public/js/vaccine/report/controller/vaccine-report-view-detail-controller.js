@@ -18,13 +18,6 @@ function ViewVaccineReportDetailController($scope, $location, $filter, report, d
                                                                 $scope.tabVisibility[value] =  key[0].visible;
                                                               });
 
-
-  // show the stock movement tab by default.
-  if ($scope.showLogistics) {
-    $scope.visibleTab = 'stockMovement';
-  }
-
-
   $scope.cancel = function () {
     $location.path('/');
   };

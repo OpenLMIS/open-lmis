@@ -84,7 +84,7 @@
     </ul>
 
   </div>
-  <span ng-show="visibleTab == 'stockMovement'">
+  <span ng-show="visibleTab == 'stockMovement' || visibleTab == undefined">
     <ng-include src="'/public/pages/vaccine/report/partials/create/stock-movement.html'"></ng-include>
   </span>
   <span ng-show="visibleTab == 'coverage'">
