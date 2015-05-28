@@ -15,7 +15,7 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
   });
 
   EquipmentEnergyTypes.get(function (data) {
-        $scope.energyTypes = data.energyTypes;
+        $scope.energyTypes = data.energy_types;
    });
 
   ColdChainDesignations.get(function (data) {
@@ -76,7 +76,6 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
       }
       SaveEquipment.save($scope.saveType, onSuccess, onError);
     }
-
   };
 
   $scope.cancelCreateEquipment = function () {

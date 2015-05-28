@@ -18,7 +18,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-@RequestMapping(value="/equipment/energy-type")
+@RequestMapping(value="/equipment/energy-type/")
 public class EquipmentEnergyTypeController extends BaseController {
 
   @Autowired
