@@ -103,6 +103,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
       if (operationalStatus.isBad) {
         $scope.notFunctionalModal = true;
         $scope.modalItem = item;
+        $scope.checkForBadFunctionalStatus($scope.modalItem.notFunctionalStatusId);
         $scope.prevStatusId = item.prevStatusId; // Need to save previous since item.prevStatusId gets overwritten
                                                  // at the end of this function
       } else {
@@ -121,8 +122,10 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
   };
 
   $scope.checkForBadFunctionalStatus = function (statusId) {
-    var notFunctionalStatus = _.where($scope.notFunctionalStatusList, {id: parseInt(statusId, 10)})[0];
-    $scope.modalItem.badFunctionalStatusSelected = notFunctionalStatus.isBad;
+    if (statusId) {
+      var notFunctionalStatus = _.where($scope.notFunctionalStatusList, {id: parseInt(statusId, 10)})[0];
+      $scope.modalItem.badFunctionalStatusSelected = notFunctionalStatus.isBad;
+    }
   };
 
   $scope.saveModal = function () {
