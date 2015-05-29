@@ -39,7 +39,7 @@
   </div>
   <br/>
 
-  <div>
+  <div ng-hide="programs.length == 1">
     <div class="row-fluid">
       <div class="span12">
         <label openlmis-message="label.program"></label>
@@ -49,13 +49,12 @@
       <select class="span3" id="programList" ng-model="selectedProgram"
               ng-options="program.name for program in programs | orderBy:'name'" ng-change="changeProgram();">
         <option value=""></option>
-        </option>
       </select>
     </div>
+    <br/>
   </div>
-  <br/>
 
-  <div>
+  <div ng-hide="programs.length == 1 && equipmentTypes.length == 1">
     <div class="row-fluid">
       <div class="span12">
         <label openlmis-message="label.equipment.type"></label>
@@ -65,11 +64,10 @@
       <select class="span3" id="equipmentTypeList" ng-model="selectedEquipmentType"
               ng-options="equipmentType.name for equipmentType in equipmentTypes | orderBy:'name'" ng-change="loadInventory();">
         <option value=""></option>
-        </option>
       </select>
     </div>
+    <br/>
   </div>
-  <br/>
 
   <div ng-show="selectedProgram.id && selectedEquipmentType.id">
     <a ng-show="selectedType == 0" id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/{{myFacility.id}}/{{selectedProgram.id}}/{{selectedEquipmentType.id}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>

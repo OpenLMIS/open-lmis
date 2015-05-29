@@ -17,8 +17,11 @@ describe("In Equipment Inventory Controller,", function () {
   var facility = {"id": 1, "name": "Test Facility", "code": "F1", "description": "Test Facility Description",
     "geographicZone": geographicZone};
   var program = {"id": 2, "name": "Program 2", "code": "P2", "description": "Program 2 Description"};
+  var program2 = {"id": 8, "name": "Program 8", "code": "P8", "description": "Program 8 Description"};
   var equipmentType = {"id": 3, "name": "Equipment Type 3", "code": "ET2",
     "description": "Equipment Type 3 Description"};
+  var equipmentType2 = {"id": 9, "name": "Equipment Type 9", "code": "ET9",
+    "description": "Equipment Type 9 Description"};
   var status = {"id": 4, "name": "Functional", "isBad": false};
   var status2 = {"id": 5, "name": "Not Functional", "isBad": true};
   var equipment = {"id": 6, name: "Dometic 400", code: "Dometic 400", "equipmentType": equipmentType,
@@ -40,7 +43,7 @@ describe("In Equipment Inventory Controller,", function () {
     ctrl = $controller(EquipmentInventoryController, {$scope: scope, $routeParams: routeParams,
       messageService: messageService});
     $httpBackend.whenGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
-    $httpBackend.whenGET('/equipment/inventory/facility/programs.json?facilityId='+facility.id).respond(200, {"programs": [program]});
+    $httpBackend.whenGET('/equipment/inventory/facility/programs.json?facilityId='+facility.id).respond(200, {"programs": [program, program2]});
     $httpBackend.whenGET('/equipment/type/operational-status.json').respond(200, {"status": [status]});
     $httpBackend.flush();
   }));
@@ -50,11 +53,11 @@ describe("In Equipment Inventory Controller,", function () {
       scope.selectedType = "0";
       scope.loadPrograms();
       $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
-      $httpBackend.expectGET('/equipment/inventory/facility/programs.json?facilityId='+facility.id).respond(200, {"programs": [program]});
+      $httpBackend.expectGET('/equipment/inventory/facility/programs.json?facilityId='+facility.id).respond(200, {"programs": [program, program2]});
       $httpBackend.flush();
       expect(scope.myFacility).toEqual(facility);
       expect(scope.facilityDisplayName).toEqual(facility.code + " - " + facility.name);
-      expect(scope.programs).toEqual([program]);
+      expect(scope.programs).toEqual([program, program2]);
     });
 
     it("should populate none assigned facility and no programs if 'my facility' selected and home facility not assigned", function () {
@@ -69,9 +72,29 @@ describe("In Equipment Inventory Controller,", function () {
     it("should populate programs if 'supervised facilities' selected", function () {
       scope.selectedType = "1";
       scope.loadPrograms();
-      $httpBackend.expectGET('/equipment/inventory/programs.json').respond(200, {"programs": [program]});
+      $httpBackend.expectGET('/equipment/inventory/programs.json').respond(200, {"programs": [program, program2]});
       $httpBackend.flush();
-      expect(scope.programs).toEqual([program]);
+      expect(scope.programs).toEqual([program, program2]);
+    });
+
+    it("should select program and load equipment types when only one program for my facility", function () {
+      scope.selectedType = "0";
+      scope.loadPrograms();
+      $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
+      $httpBackend.expectGET('/equipment/inventory/facility/programs.json?facilityId='+facility.id).respond(200, {"programs": [program]});
+      $httpBackend.expectGET('/equipment/manage/typesByProgram/'+program.id+'.json').respond(200, {"equipment_types": [equipmentType, equipmentType2]});
+      $httpBackend.flush();
+      expect(scope.selectedProgram).toEqual(program);
+    });
+
+    it("should select program and load equipment types when only one program for supervised facilities", function () {
+      scope.selectedType = "1";
+      scope.loadPrograms();
+      $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
+      $httpBackend.expectGET('/equipment/inventory/programs.json').respond(200, {"programs": [program]});
+      $httpBackend.expectGET('/equipment/manage/typesByProgram/'+program.id+'.json').respond(200, {"equipment_types": [equipmentType, equipmentType2]});
+      $httpBackend.flush();
+      expect(scope.selectedProgram).toEqual(program);
     });
   });
 
@@ -80,9 +103,20 @@ describe("In Equipment Inventory Controller,", function () {
     it("should load equipment types for a program", function () {
       scope.selectedProgram = program;
       scope.loadEquipmentTypes();
-      $httpBackend.expectGET('/equipment/manage/typesByProgram/'+scope.selectedProgram.id+'.json').respond(200, {"equipment_types": [equipmentType]});
+      $httpBackend.expectGET('/equipment/manage/typesByProgram/'+scope.selectedProgram.id+'.json').respond(200, {"equipment_types": [equipmentType, equipmentType2]});
       $httpBackend.flush();
-      expect(scope.equipmentTypes).toEqual([equipmentType]);
+      expect(scope.equipmentTypes).toEqual([equipmentType, equipmentType2]);
+    });
+
+    it("should select program and equipment type (and load inventory) when only one option for each", function () {
+      scope.selectedType = "0";
+      scope.selectedProgram = program;
+      scope.loadEquipmentTypes();
+      $httpBackend.expectGET('/equipment/manage/typesByProgram/'+program.id+'.json').respond(200, {"equipment_types": [equipmentType]});
+      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory]});
+      $httpBackend.flush();
+      expect(scope.selectedEquipmentType).toEqual(equipmentType);
+      expect(scope.inventory).toEqual([inventory]);
     });
   });
 

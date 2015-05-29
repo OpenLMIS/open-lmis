@@ -23,8 +23,11 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
           ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
             $scope.programs = data.programs;
             if (initialLoad && $routeParams.program) {
-              $scope.selectedProgram = _.where($scope.programs, {id: parseInt($routeParams.program,10)})[0];
+              $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program,10)});
               $scope.loadEquipmentTypes(initialLoad);
+            } else if ($scope.programs.length === 1) {
+              $scope.selectedProgram = $scope.programs[0];
+              $scope.loadEquipmentTypes();
             }
           }, {});
         }
@@ -39,8 +42,11 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
       ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
         if (initialLoad && $routeParams.program) {
-          $scope.selectedProgram = _.where($scope.programs, {id: parseInt($routeParams.program, 10)})[0];
+          $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program, 10)});
           $scope.loadEquipmentTypes(initialLoad);
+        } else if ($scope.programs.length === 1) {
+          $scope.selectedProgram = $scope.programs[0];
+          $scope.loadEquipmentTypes();
         }
       }, {});
     }
@@ -50,7 +56,10 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     EquipmentTypesByProgram.get({programId: $scope.selectedProgram.id}, function (data) {
       $scope.equipmentTypes = data.equipment_types;
       if (initialLoad && $routeParams.equipmentType) {
-        $scope.selectedEquipmentType = _.where($scope.equipmentTypes, {id: parseInt($routeParams.equipmentType,10)})[0];
+        $scope.selectedEquipmentType = _.findWhere($scope.equipmentTypes, {id: parseInt($routeParams.equipmentType,10)});
+        $scope.loadInventory();
+      } else if ($scope.equipmentTypes.length === 1) {
+        $scope.selectedEquipmentType = $scope.equipmentTypes[0];
         $scope.loadInventory();
       }
     }, {});
@@ -97,7 +106,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
 
     // updateStatus is called on dropdown load, so only do something if previous value set and is different
     if (item.prevStatusId && item.prevStatusId !== item.operationalStatusId) {
-      var operationalStatus = _.where($scope.operationalStatusList, {id: parseInt(item.operationalStatusId, 10)})[0];
+      var operationalStatus = _.findWhere($scope.operationalStatusList, {id: parseInt(item.operationalStatusId, 10)});
 
       // If status is "bad", open modal, otherwise just save to the server
       if (operationalStatus.isBad) {
@@ -123,7 +132,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
 
   $scope.checkForBadFunctionalStatus = function (statusId) {
     if (statusId) {
-      var notFunctionalStatus = _.where($scope.notFunctionalStatusList, {id: parseInt(statusId, 10)})[0];
+      var notFunctionalStatus = _.findWhere($scope.notFunctionalStatusList, {id: parseInt(statusId, 10)});
       $scope.modalItem.badFunctionalStatusSelected = notFunctionalStatus.isBad;
     }
   };
