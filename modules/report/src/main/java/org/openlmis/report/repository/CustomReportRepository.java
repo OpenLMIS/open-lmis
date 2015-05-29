@@ -11,13 +11,13 @@
 package org.openlmis.report.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.report.filter.CustomReportFilter;
 import org.openlmis.report.mapper.CustomReportMapper;
 import org.openlmis.report.model.CustomReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @NoArgsConstructor
@@ -26,23 +26,15 @@ public class CustomReportRepository {
   @Autowired
   private CustomReportMapper mapper;
 
-  public LinkedHashMap getReportList(){
+  public List<Map> getReportList(){
      return mapper.getListOfReports();
   }
 
-  public LinkedHashMap getReportData(CustomReportFilter filter){
-    //TODO: get the current report object from the repository
-
-    //TODO: validate the filter (required vs not required)
-
-    //TODO: construct the query
-    String query = "";
-
-    return mapper.getReportData(query);
-  }
-
-  public CustomReport getCustomReportByKey(String key){
-    return mapper.getCustomReportByKey(key);
+  public List<Map> getReportData(Map filter){
+    String reportKey = filter.get("report_key").toString();
+    Map report = mapper.getCustomReportByKey(reportKey);
+    String query = report.get("query").toString();
+    return mapper.getReportData(query, filter);
   }
 
   public void insert(CustomReport report){

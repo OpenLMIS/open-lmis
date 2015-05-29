@@ -10,26 +10,24 @@
 
 package org.openlmis.report.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.report.model.CustomReport;
 import org.springframework.stereotype.Repository;
 
-import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface CustomReportMapper {
 
-  @Select("select * from custom_reports")
-  public LinkedHashMap getListOfReports();
+  @Select("select id, reportKey, name, description, category from custom_reports")
+  List<Map> getListOfReports();
 
   @SelectProvider(type = PureSqlProvider.class, method = "sql")
-  public LinkedHashMap getReportData(String sql);
+  List<Map> getReportData(@Param("sql") String sql, @Param("param") Map param);
 
   @Select("select * from custom_reports where reportKey = #{key}")
-  public CustomReport getCustomReportByKey(String key);
+  Map getCustomReportByKey(@Param("key") String key);
 
   @Insert("insert into custom_reports " +
       "   (name, reportKey, description, help, filters, query, category, columnOptions, createdBy, createdDate, modifiedBy, modifiedDate ) " +
