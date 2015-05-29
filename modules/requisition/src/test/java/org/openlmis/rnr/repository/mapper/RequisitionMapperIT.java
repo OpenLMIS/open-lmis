@@ -353,7 +353,6 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetLastRegularRequisitionForFacilityAndProgram() throws Exception {
-    insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     Rnr expectedRnr = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
 
     Rnr lastRequisition = mapper.getLastRegularRequisition(facility, program);

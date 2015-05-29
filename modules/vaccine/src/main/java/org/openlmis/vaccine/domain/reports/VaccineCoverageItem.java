@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Product;
 import org.openlmis.vaccine.domain.VaccineDose;
 
 @Data
@@ -27,6 +28,8 @@ public class VaccineCoverageItem extends BaseModel{
 
   private Long reportId;
   private Long productId;
+
+  private Product product;
 
   private Boolean trackMale;
   private Boolean trackFemale;

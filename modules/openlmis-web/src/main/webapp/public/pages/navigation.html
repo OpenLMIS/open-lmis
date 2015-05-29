@@ -96,6 +96,9 @@
             <a href="/public/pages/vaccine/report/index.html"
                 openlmis-message="link.vaccine.create"></a>
           </li>
+          <li>
+            <a href="/public/pages/vaccine/report/index.html#/view" openlmis-message="link.view.ivd"></a>
+          </li>
           <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
             <a id="manage-distribution"
                href="/public/pages/logistics/distribution/index.html#/manage"
@@ -475,16 +478,6 @@
                 <ul>
                   <li>
                     <a
-                        href="/public/pages/vaccine/admin/protocol/index.html"
-                        openlmis-message="link.manage.vaccine.protocol"></a>
-                  </li>
-                  <li>
-                    <a
-                        href="/public/pages/vaccine/admin/protocol/index.html#/template"
-                        openlmis-message="link.manage.vaccine.logistic.template"></a>
-                  </li>
-                  <li>
-                    <a
                         href="/public/pages/vaccine/admin/protocol/index.html#/disease"
                         openlmis-message="link.manage.vaccine.diseases"></a>
                   </li>
@@ -552,9 +545,6 @@
             href="/public/pages/ils-gateway/index.html#/dashboard"
             openlmis-message="link.ils"></a>
     </li>
-    <!--<li ng-show="hasPermission('VIEW_DASHBOARD_POC')">
-        <a href="/public/pages/dashboard/index.html#/dashboard" openlmis-message="link.dashboard"></a>
-    </li>-->
   </ul>
 </div>
 <div class="navigation-locale-bar">

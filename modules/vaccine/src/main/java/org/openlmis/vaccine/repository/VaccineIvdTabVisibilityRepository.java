@@ -8,25 +8,34 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.dto;
+package org.openlmis.vaccine.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ConfigurationSetting;
-import org.openlmis.core.domain.Product;
-import org.openlmis.vaccine.domain.VaccineDose;
+import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
+import org.openlmis.vaccine.repository.mapper.VaccineIvdTabVisibilityMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class VaccineServiceProtocolDTO {
+@Repository
+public class VaccineIvdTabVisibilityRepository {
 
-  private List<ConfigurationSetting> tabVisibilitySettings;
-  private List<ProductDoseProtocolDTO> protocols;
-  private List<Product> possibleProducts;
-  private List<VaccineDose> possibleDoses;
+  @Autowired
+  VaccineIvdTabVisibilityMapper mapper;
 
+  public void insert(VaccineIvdTabVisibility visibility){
+    mapper.insert(visibility);
+  }
+
+  public void update(VaccineIvdTabVisibility visibility){
+    mapper.update(visibility);
+  }
+
+  public List<VaccineIvdTabVisibility> getVisibilityForProgram(Long programId){
+    return mapper.getTabVisibilityForProgram(programId);
+  }
+
+  public List<VaccineIvdTabVisibility> getAllVisibilityConfiguration(){
+    return mapper.getTabVisibilityForNewProgram();
+  }
 }

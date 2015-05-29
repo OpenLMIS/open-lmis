@@ -26,17 +26,23 @@
 
   <div class="rnr-tabs clearfix">
     <ul class="clearfix">
+      <li ng-class="{'selected': (visibleTab == 'basic')}">
+        <a href="" ng-click="visibleTab ='basic'" ><span openlmis-message="admin.label.program.settings"></span></a></li>
       <li ng-class="{'selected': (visibleTab == 'template' || visibleTab == undefined)}">
         <a href="" ng-click="visibleTab ='template'" ><span openlmis-message="admin.label.template"></span></a></li>
-      <li ng-class="{'selected': (visibleTab == 'basic')}">
-        <a href="" ng-click="visibleTab ='basic'" ><span openlmis-message="admin.label.other.settings"></span></a></li>
       <li ng-show="program.enableIvdForm" ng-class="{'selected': (visibleTab == 'coverage')}">
-        <a href="" ng-click="visibleTab ='coverage'" ><span openlmis-message="label.vaccine.tab.coverage"></span></a></li>
+        <a href="" ng-click="visibleTab ='coverage'" ><span openlmis-message="label.vaccine.setting.coverage"></span></a></li>
       <li ng-show="program.enableIvdForm" ng-class="{'selected': (visibleTab == 'ivdTabs')}">
         <a href="" ng-click="visibleTab ='ivdTabs'" ><span openlmis-message="label.vaccine.tab.visibility"></span></a></li>
+      <li ng-show="program.enableIvdForm" ng-class="{'selected': (visibleTab == 'ivdLogisticTemplate')}">
+        <a href="" ng-click="visibleTab ='ivdLogisticTemplate'" ><span openlmis-message="label.vaccine.logistics.template"></span></a></li>
     </ul>
   </div>
   <span ng-show="visibleTab == 'template' || visibleTab == undefined">
+
+    <h4>
+      <span openlmis-message="admin.label.template"></span>
+    </h4>
 
   <div class="rnr-template-head">
     <span class="tpl-visible" openlmis-message="template.header.display"></span>
@@ -158,5 +164,8 @@
   </span>
    <span ng-show="visibleTab == 'ivdTabs'">
     <div ng-include="'/public/pages/admin/rnr-template/partials/tab-settings.html'"></div>
+  </span>
+  <span ng-show="visibleTab == 'ivdLogisticTemplate'">
+    <div ng-include="'/public/pages/admin/rnr-template/partials/ivd-column-template.html'"></div>
   </span>
 </div>

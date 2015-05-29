@@ -8,28 +8,19 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.dto;
+package org.openlmis.vaccine.domain.config;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.vaccine.domain.reports.VaccineCoverageItem;
-
-import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class CoverageLineItemDTO extends BaseModel {
-
-  private Long productId;
-  private String productCode;
-  private String productName;
-
-  private List<VaccineCoverageItem> items;
-
+@NoArgsConstructor
+public class VaccineIvdTabVisibility extends BaseModel{
+  Long programId;
+  String tab;
+  String name;
+  Boolean visible;
 }

@@ -32,12 +32,12 @@ public class AdverseEffectLineItem extends BaseModel {
   
   private Date date;
 
-  private Long manufacturerId;
+  private String manufacturer;
   private String batch;
   private Date expiry;
 
   private Long cases;
-  private String investigation;
+  private Boolean isInvestigated;
   private String notes;
 
 }

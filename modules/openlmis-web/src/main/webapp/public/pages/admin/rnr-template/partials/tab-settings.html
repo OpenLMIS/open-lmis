@@ -9,11 +9,16 @@
   -->
 
 <div ng-controller="ConfigureTabVisibilityController">
+  <h4>
+    <span openlmis-message="label.vaccine.tab.visibility"></span>
+  </h4>
+  <hr />
     <div class="row-fluid" ng-repeat="setting in protocol.tabVisibilitySettings">
       <div class="span4">
         <div class="form-cell">
           <label>
-            <input id="{{setting.key}}" ng-model="setting.value" ng-true-value="true" ng-false-value="false" type="checkbox" />
+            <input id="{{setting.key}}" ng-model="setting.visible" type="checkbox" />
+            <span openlmis-message="label.show"></span>
             <span ng-bind="setting.name"></span>
           </label>
         </div>

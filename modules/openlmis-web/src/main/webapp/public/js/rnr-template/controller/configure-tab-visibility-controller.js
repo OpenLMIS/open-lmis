@@ -8,16 +8,16 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ConfigureTabVisibilityController($scope, $routeParams, SaveVaccineProductDose, VaccineProductDose) {
+function ConfigureTabVisibilityController($scope, $routeParams, SaveVaccineIvdTabConfigs, VaccineIvdTabConfigs) {
 
   $scope.program = $routeParams.programId;
 
-  VaccineProductDose.get({programId: $scope.program}, function (data) {
-    $scope.protocol = data.protocol;
+  VaccineIvdTabConfigs.get({programId: $scope.program}, function (data) {
+    $scope.protocol = data.visibilities;
   });
 
   $scope.$parent.saveTabVisibility = function(){
-    SaveVaccineProductDose.update($scope.protocol, function(data){
+    SaveVaccineIvdTabConfigs.update($scope.protocol, function(data){
       $scope.$parent.message = 'label.vaccine.settings.tab.visibility.saved';
     });
   };

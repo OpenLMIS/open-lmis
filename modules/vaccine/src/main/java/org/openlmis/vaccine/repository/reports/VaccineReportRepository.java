@@ -11,9 +11,13 @@
 package org.openlmis.vaccine.repository.reports;
 
 import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportMapper;
+import org.openlmis.vaccine.service.reports.VaccineLineItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class VaccineReportRepository {
@@ -21,12 +25,29 @@ public class VaccineReportRepository {
   @Autowired
   VaccineReportMapper mapper;
 
+  @Autowired
+  VaccineLineItemService lineItemService;
+
+
   public void insert(VaccineReport report){
     mapper.insert(report);
+    saveDetails(report);
+  }
+
+
+  public void saveDetails(VaccineReport report){
+    lineItemService.saveLogisticsLineItems(report.getLogisticsLineItems(), report.getId());
+    lineItemService.saveDiseaseLineItems(report.getDiseaseLineItems(), report.getId());
+    lineItemService.saveCoverageLineItems(report.getCoverageLineItems(),report.getId());
+    lineItemService.saveColdChainLIneItems(report.getColdChainLineItems(), report.getId());
+    lineItemService.saveVitaminLineItems(report.getVitaminSupplementationLineItems(), report.getId());
+    lineItemService.saveAdverseEffectLineItems(report.getAdverseEffectLineItems(), report.getId());
+    lineItemService.saveCampaignLineItems(report.getCampaignLineItems(), report.getId());
   }
 
   public void update(VaccineReport report){
     mapper.update(report);
+    saveDetails(report);
   }
 
   public VaccineReport getById(Long id){
@@ -47,5 +68,9 @@ public class VaccineReportRepository {
 
   public Long getScheduleFor(Long facilityId, Long programId) {
     return mapper.getScheduleFor(facilityId, programId);
+  }
+
+  public List<ReportStatusDTO> getReportedPeriodsForFacility(Long facilityId, Long programId) {
+    return mapper.getReportedPeriodsForFacility(facilityId, programId);
   }
 }

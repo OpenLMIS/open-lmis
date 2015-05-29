@@ -1,0 +1,146 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div class="rnr-table">
+  <h2><span openlmis-message="label.vaccine.coverage"></span></h2>
+ 
+
+<div tab-scroll bottom-offset="180" adjust-height>
+    <div class="float-left left-table parent">
+      <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
+        <thead>
+        <tr>
+          <th colspan="2">&nbsp;</th>
+        </tr>
+        <tr>
+          <th colspan="2">&nbsp;</th>
+        </tr>
+        <tr>
+          <th openlmis-message="label.vaccine.coverage.product"></th>
+          <th openlmis-message="label.vaccine.coverage.dose"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat-start="(productId,productGroup) in report.coverageLineItemViews"></tr>
+        <tr ng-repeat-start="dose in productGroup">
+          <td rowspan="{{productGroup.length * 2}}" ng-if="$index == 0" class="col-product cell-input" ><span class="cell-text">{{dose.product.primaryName}}</span></td>
+          <td class="cell-input"><span style="min-height: 31px;" class="cell-text number">{{dose.displayName}}</span></td>
+        </tr>
+        <tr ng-repeat-end></tr>
+        <tr ng-repeat-end></tr>
+        </tbody>
+      </table>
+    </div>
+
+  <div class="float-left right-table parent" custom-horizontal-scroll>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th colspan="10" openlmis-message="label.vaccine.coverage.monthly.coverage"></th>
+        <th colspan="5" openlmis-message="label.vaccine.coverage.cumulative.coverage"></th>
+      </tr>
+      <tr>
+        <th colspan="4" openlmis-message="label.vaccine.coverage.within.catchment"></th>
+        <th colspan="4" openlmis-message="label.vaccine.coverage.outside.catchment"></th>
+        <th colspan="2" openlmis-message="label.vaccine.coverage.total.vaccination"></th>
+        <th colspan="2" openlmis-message="label.vaccine.coverage.within.catchment"></th>
+        <th openlmis-message="label.vaccine.coverage.outside"></th>
+        <th colspan="2" openlmis-message="label.vaccine.coverage.total"></th>
+      </tr>
+      <tr>
+        <th openlmis-message="label.vaccine.coverage.male"></th>
+        <th openlmis-message="label.vaccine.coverage.female"></th>
+        <th openlmis-message="label.vaccine.coverage.total"></th>
+        <th openlmis-message="label.vaccine.coverage.coverage"></th>
+        <th openlmis-message="label.vaccine.coverage.male"></th>
+        <th openlmis-message="label.vaccine.coverage.female"></th>
+        <th openlmis-message="label.vaccine.coverage.total"></th>
+        <th openlmis-message="label.vaccine.coverage.coverage"></th>
+        <th openlmis-message="label.vaccine.coverage.total"></th>
+        <th openlmis-message="label.vaccine.coverage.coverage"></th>
+        <th openlmis-message="label.vaccine.coverage.total"></th>
+        <th openlmis-message="label.vaccine.coverage.coverage"></th>
+        <th openlmis-message="label.vaccine.coverage.total"></th>
+        <th openlmis-message="label.vaccine.coverage.total"></th>
+        <th openlmis-message="label.vaccine.coverage.coverage"></th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat-start="(productId, productGroup) in report.coverageLineItemViews"></tr>
+    <tr ng-repeat-start="dose in productGroup">
+      <td class="cell-input col-general" >
+        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="dose.regularMale" type="text" />
+      </td>
+      <td  class="cell-input col-general">
+        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="dose.regularFemale" type="text" />
+      </td>
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{toNumber(dose.regularMale) + toNumber(dose.regularFemale)}}</span></td>
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> - %</span></td>
+      <td class="cell-input col-general" >
+        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="dose.outreachMale" type="text" />
+      </td>
+      <td  class="cell-input col-general">
+        <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="dose.outreachFemale" type="text" />
+      </td>
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text">{{toNumber(dose.outreachMale) + toNumber(dose.outreachFemale)}}</span></td>
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text"> - %</span></td>
+
+
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{toNumber(dose.outreachMale) + toNumber(dose.outreachFemale) + toNumber(dose.regularMale) + toNumber(dose.regularFemale)}}</span></td>
+      <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> - %</span></td>
+      <td></td>   
+      <td></td>
+      <td></td>   
+      <td></td>
+      <td></td>
+    </tr>
+    <tr ng-repeat-end></tr>
+    <tr ng-repeat-end></tr>
+  </table>
+
+  </div>
+  </div>
+</div>
+<div class="clearfix"><br /></div>
+<div class="row-fluid">
+  <div class="span4">
+    <table class="table table-bordered" style="margin-bottom: 0px; padding-bottom: 0px">
+      <thead>
+      <tr>
+        <th colspan="3" openlmis-message="vaccine.immunization.sessions"></th>
+      </tr>
+      <tr>
+        <th class="span2" openlmis-message="vaccine.immunization.sessions.fixed"></th>
+        <th class="span2" openlmis-message="vaccine.immunization.sessions.outreach"> </th>
+        <th class="span2" openlmis-message="vaccine.immunization.sessions.canceled.outreach"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="cell-input col-general">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="report.fixedImmunizationSessions" type="text">
+        </td>
+        <td class="cell-input col-general">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="report.outreachImmunizationSessions" type="text">
+        </td>
+        <td class="cell-input col-general">
+          <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="report.outreachImmunizationSessionsCanceled"
+                 type="text">
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="clearfix"><br /></div>
+<div>
+  <div openlmis-message="label.vaccine.major.immunization.activities"></div>
+  <textarea disabled ng-model="report.majorImmunizationActivities" rows="5" class="span12"></textarea>
+</div>

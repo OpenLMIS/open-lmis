@@ -15,7 +15,10 @@ import org.openlmis.vaccine.repository.reports.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+
+import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
 
 @Service
 public class VaccineLineItemService {
@@ -41,9 +44,10 @@ public class VaccineLineItemService {
   @Autowired
   VitaminSupplementationLineItemRepository vitaminSupplementationLineItemRepository;
 
-  public void saveLogisticsLineItems(List<LogisticsLineItem> lineItems){
-    for(LogisticsLineItem lineItem: lineItems){
+  public void saveLogisticsLineItems(List<LogisticsLineItem> lineItems, Long reportId){
+    for(LogisticsLineItem lineItem: emptyIfNull(lineItems)){
       if(lineItem.getId() == null){
+        lineItem.setReportId(reportId);
         repository.insert(lineItem);
       }else{
         repository.update(lineItem);
@@ -51,9 +55,10 @@ public class VaccineLineItemService {
     }
   }
 
-  public void saveDiseaseLineItems(List<DiseaseLineItem> lineItems){
-    for(DiseaseLineItem lineItem: lineItems){
+  public void saveDiseaseLineItems(List<DiseaseLineItem> lineItems, Long reportId){
+    for(DiseaseLineItem lineItem: emptyIfNull(lineItems)){
       if(lineItem.getId() == null){
+        lineItem.setReportId(reportId);
         diseaseLineItemRepository.insert(lineItem);
       }else{
         diseaseLineItemRepository.update(lineItem);
@@ -61,9 +66,10 @@ public class VaccineLineItemService {
     }
   }
 
-  public void saveCoverageLineItems(List<VaccineCoverageItem> lineItems) {
-    for(VaccineCoverageItem lineItem: lineItems){
+  public void saveCoverageLineItems(List<VaccineCoverageItem> lineItems, Long reportId) {
+    for(VaccineCoverageItem lineItem: emptyIfNull(lineItems)){
       if(lineItem.getId() == null){
+        lineItem.setReportId(reportId);
         coverageItemRepository.insert(lineItem);
       }else{
         coverageItemRepository.update(lineItem);
@@ -72,7 +78,7 @@ public class VaccineLineItemService {
   }
 
   public void saveAdverseEffectLineItems(List<AdverseEffectLineItem> adverseEffectLineItems, Long reportId) {
-    for(AdverseEffectLineItem lineItem: adverseEffectLineItems){
+    for(AdverseEffectLineItem lineItem: emptyIfNull(adverseEffectLineItems)){
       lineItem.setReportId(reportId);
       if(lineItem.getId() == null){
         adverseLineItemRepository.insert(lineItem);
@@ -84,7 +90,7 @@ public class VaccineLineItemService {
   }
 
   public void saveCampaignLineItems(List<CampaignLineItem> campaignLineItems, Long reportId) {
-    for(CampaignLineItem lineItem: campaignLineItems){
+    for(CampaignLineItem lineItem: emptyIfNull(campaignLineItems)){
       lineItem.setReportId(reportId);
       if(lineItem.getId() == null){
         campaignLineItemRepository.insert(lineItem);
@@ -96,7 +102,7 @@ public class VaccineLineItemService {
   }
 
   public void saveColdChainLIneItems(List<ColdChainLineItem> coldChainLineItems, Long reportId) {
-    for(ColdChainLineItem lineItem: coldChainLineItems){
+    for(ColdChainLineItem lineItem: emptyIfNull(coldChainLineItems)){
       lineItem.setReportId(reportId);
       if(lineItem.getId() == null){
         coldChainRepository.insert(lineItem);
@@ -108,7 +114,7 @@ public class VaccineLineItemService {
   }
 
   public void saveVitaminLineItems(List<VitaminSupplementationLineItem> vitaminSupplementationLineItems, Long reportId) {
-    for(VitaminSupplementationLineItem lineItem: vitaminSupplementationLineItems){
+    for(VitaminSupplementationLineItem lineItem: emptyIfNull(vitaminSupplementationLineItems)){
       lineItem.setReportId(reportId);
       if(lineItem.getId() == null){
         vitaminSupplementationLineItemRepository.insert(lineItem);

@@ -8,22 +8,12 @@
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
 
-<div>
-  <h3><span openlmis-message="label.vaccine.logistics.title"></span></h3>
-
-  <div ng-hide="programId">
-    <select ng-model="programId"
-            ng-options="program.id as program.name for program in programs"
-            ng-change="onProgramChanged(  )">
-    </select>
-  </div>
-  <div ng-show="programId">
-    <div>
-      <div class="info-box">
-        <p><strong openlmis-message="template.programName"></strong> Vaccine
-        </p>
-      </div>
-    </div>
+<div ng-controller="IVDLogisticsColumnTemplate">
+  <h4>
+   <span openlmis-message="label.vaccine.logistics.title"></span>
+  </h4>
+  <hr />
+  <div ng-show="sortableColumns">
     <form name="configureRnRTemplateForm" ng-submit="onSave()">
     <div class="rnr-template-columns">
 

@@ -8,7 +8,7 @@
   ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
   -->
 
-<div>
+<div class="rnr-table">
   <h2><span openlmis-message="label.vaccine.cc.title"></span></h2>
 
   <table class="table table-bordered" ng-show="report.coldChainLineItems.length > 0">
@@ -16,8 +16,8 @@
     <tr>
       <th rowspan="2" class="span3"><span openlmis-message="label.vaccine.cc.asset"></span></th>
       <th rowspan="2" class="span2"><span openlmis-message="label.vaccine.cc.serial"></span></th>
-      <th rowspan="2"  class="span2"><span openlmis-message="label.vaccine.cc.model"></span></th>
-      <th rowspan="2"  class="span2"><span openlmis-message="label.vaccine.cc.energy.source"></span></th>
+      <th rowspan="2" class="span2"><span openlmis-message="label.vaccine.cc.model"></span></th>
+      <th rowspan="2" class="span2"><span openlmis-message="label.vaccine.cc.energy.source"></span></th>
       <th colspan="2"><span openlmis-message="label.vaccine.cc.temp"></span></th>
       <th colspan="2"><span openlmis-message="label.vaccine.cc.temp.episode"></span></th>
     </tr>
@@ -35,13 +35,17 @@
       <td class="cell-input col-beginningBalance"><span class="cell-text">{{item.serial}}</span></td>
       <td class="cell-input col-beginningBalance"><span class="cell-text">{{item.model}}</span></td>
       <td class="cell-input col-beginningBalance"><span class="cell-text">{{item.energySource}}</span></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="item.minTemp" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="item.maxTemp" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="item.minEpisodeTemp" type="text" /></td>
-      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger"  ng-model="item.maxEpisodeTemp" type="text" /></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" maxlength="6"
+                                                         ng-model="item.minTemp" type="text"/></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" maxlength="6"
+                                                         ng-model="item.maxTemp" type="text"/></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" maxlength="6"
+                                                         ng-model="item.minEpisodeTemp" type="text"/></td>
+      <td class="cell-input col-beginningBalance"><input numeric-validator="positiveInteger" maxlength="6"
+                                                         ng-model="item.maxEpisodeTemp" type="text"/></td>
     </tr>
     </tbody>
-    </table>
+  </table>
   <div ng-show="report.coldChainLineItems.length == 0">
     <span openlmis-message="label.vaccine.cc.none.found"></span>
   </div>

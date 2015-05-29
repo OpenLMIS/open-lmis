@@ -25,9 +25,9 @@
       <tr ng-repeat="vitamin in report.vitaminSupplementationLineItems">
         <td class="cell-input"><span class="cell-text">{{vitamin.vitaminName}}</span></td>
         <td class="cell-input"><span class="cell-text">{{vitamin.ageGroup}}</span></td>
-        <td class="cell-input col-general"><input numeric-validator="positiveInteger" type="text" ng-model="vitamin.maleValue" /></td>
-        <td class="cell-input col-general"><input numeric-validator="positiveInteger" type="text" ng-model="vitamin.femaleValue" /></td>
-        <td class="cell-input col-general number"><span>{{toNumber(vitamin.maleValue) + toNumber(vitamin.femaleValue)}}</span></td>
+        <td class="cell-input col-general"><input numeric-validator="positiveInteger" maxlength="8" type="text" ng-model="vitamin.maleValue" /></td>
+        <td class="cell-input col-general"><input numeric-validator="positiveInteger" maxlength="8" type="text" ng-model="vitamin.femaleValue" /></td>
+        <td class="cell-input col-general" style="text-align: right"><span class="number cell-text">{{toNumber(vitamin.maleValue) + toNumber(vitamin.femaleValue)}}</span></td>
       </tr>
     </tbody>
     </table>

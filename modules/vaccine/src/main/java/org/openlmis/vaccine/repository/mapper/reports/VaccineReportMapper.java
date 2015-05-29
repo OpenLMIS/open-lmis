@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public interface VaccineReportMapper {
     @Result(property = "programId", column = "programId"),
     @Result(property = "logisticsLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportLogisticsLineItemMapper.getLineItems")),
-    @Result(property = "coverageItems", javaType = List.class, column = "id",
+    @Result(property = "coverageLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportCoverageMapper.getLineItems")),
     @Result(property = "adverseEffectLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportAdverseEffectMapper.getLineItems")),
@@ -89,4 +90,12 @@ public interface VaccineReportMapper {
     "   where " +
     "     facilityId = #{facilityId} and programId = #{programId} order by id desc limit 1")
   VaccineReport getLastReport(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+
+  @Select("select r.id, p.name as periodName, r.facilityId, r.status, r.programId " +
+    " from vaccine_reports r " +
+    "   join processing_periods p on p.id = r.periodId " +
+    " where r.facilityId = #{facilityId} and r.programId = #{programId}" +
+    " order by p.startDate desc")
+  List<ReportStatusDTO> getReportedPeriodsForFacility(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 }
