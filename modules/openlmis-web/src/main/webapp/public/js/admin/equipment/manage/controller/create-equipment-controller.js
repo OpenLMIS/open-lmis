@@ -35,14 +35,12 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
 
   if ($routeParams.id === undefined) {
     $scope.equipment = {};
-    $scope.saveType={};
   } else {
     Equipment.get({
       id: $routeParams.id,
       equipmentTypeId:$routeParams.type
     }, function (data) {
       $scope.equipment = data.equipment;
-      $scope.saveType={};
       $scope.checkEquipmentType();
       $scope.showError = true;
     });
@@ -72,12 +70,12 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
     if(!$scope.equipmentForm.$invalid){
       if($scope.equipmentType.coldChain)
       {
-        $scope.saveType.coldChainEquipment=$scope.equipment;
+        $scope.equipment.equipmentTypeName = "coldChainEquipment";
       }
       else{
-        $scope.saveType.equipment=$scope.equipment;
+        $scope.equipment.equipmentTypeName = "equipment";
       }
-      SaveEquipment.save($scope.saveType, onSuccess, onError);
+      SaveEquipment.save($scope.equipment, onSuccess, onError);
     }
   };
 

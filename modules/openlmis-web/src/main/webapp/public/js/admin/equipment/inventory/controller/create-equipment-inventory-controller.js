@@ -115,6 +115,15 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     $scope.error = '';
     $scope.showError = true;
     if(!$scope.inventoryForm.$invalid ){
+      // Need to set this for deserialization
+      if ($scope.screenType === 'create') {
+        if ($scope.equipmentType.coldChain === true) {
+          $scope.inventory.equipment.equipmentTypeName = "coldChainEquipment";
+        } else {
+          $scope.inventory.equipment.equipmentTypeName = "equipment";
+        }
+      }
+
       SaveEquipmentInventory.save($scope.inventory, function (data) {
         $scope.$parent.message = messageService.get(data.success);
         $scope.$parent.selectedProgram = {id: $scope.inventory.programId};

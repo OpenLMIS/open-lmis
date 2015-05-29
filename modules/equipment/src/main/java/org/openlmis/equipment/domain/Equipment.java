@@ -10,7 +10,6 @@
 
 package org.openlmis.equipment.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.WRAPPER_OBJECT)
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="equipmentTypeName")
 @JsonSubTypes({@JsonSubTypes.Type(value = ColdChainEquipment.class, name = "coldChainEquipment"),
                @JsonSubTypes.Type(value = Equipment.class, name = "equipment")
                 })

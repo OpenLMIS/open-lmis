@@ -13,7 +13,9 @@ describe("In Create Equipment Inventory Controller,", function () {
   var facility = {"id": 1, "name": "Test Facility", "code": "F1", "description": "Test Facility Description"};
   var program = {"id": 2, "name": "Program 2", "code": "P2", "description": "Program 2 Description"};
   var equipmentType = {"id": 3, "name": "Equipment Type 3", "code": "ET2",
-    "description": "Equipment Type 3 Description"};
+    "description": "Equipment Type 3 Description", coldChain: false};
+  var cceEquipmentType = {"id": 3, "name": "Equipment Type 3", "code": "ET2",
+    "description": "Equipment Type 3 Description", coldChain: true};
   var labStatus = {"id": 4, "name": "Fully Operational", category: "LAB"};
   var cceStatus = {"id": 9, "name": "Functional", category: "CCE", isBad: false};
   var cceStatus2 = {"id": 12, "name": "Not Functional", category: "CCE", isBad: true};
@@ -158,8 +160,10 @@ describe("In Create Equipment Inventory Controller,", function () {
       expect(scope.inventory.equipmentId).toEqual(equipment.id);
     });
 
-    it("should save inventory when form is valid and save is successful", function () {
+    it("should save inventory when form is valid and save is successful (for editing)", function () {
       scope.inventoryForm = {$invalid: false};
+      scope.inventory = inventory;
+      scope.screenType = 'edit';
       scope.saveInventory();
       $httpBackend.expectPOST('/equipment/inventory/save.json').respond(200, {"success": "Saved successfully"});
       $httpBackend.flush();
@@ -167,13 +171,31 @@ describe("In Create Equipment Inventory Controller,", function () {
       expect(scope.error).toEqual('');
     });
 
-//    it("should give error when form is valid and save is NOT successful", function () {
-//      scope.inventoryForm = {$invalid: false};
-//      scope.saveInventory();
-//      $httpBackend.expectPOST('/equipment/inventory/save.json').respond(404, {"error": "Save failed!"});
-//      $httpBackend.flush();
-//      expect(scope.error).toEqual("Save failed!");
-//    });
+    it("should save inventory when form is valid and save is successful (for creating equipment)", function () {
+      scope.inventoryForm = {$invalid: false};
+      scope.inventory = inventory;
+      scope.screenType = 'create';
+      scope.equipmentType = equipmentType;
+      scope.saveInventory();
+      $httpBackend.expectPOST('/equipment/inventory/save.json').respond(200, {"success": "Saved successfully"});
+      $httpBackend.flush();
+      expect(scope.$parent.message).toEqual(messageService.get("Saved successfully"));
+      expect(scope.error).toEqual('');
+      expect(scope.inventory.equipment.equipmentTypeName).toEqual('equipment');
+    });
+
+    it("should save inventory when form is valid and save is successful (for creating cold chain equipment)", function () {
+      scope.inventoryForm = {$invalid: false};
+      scope.inventory = inventory;
+      scope.screenType = 'create';
+      scope.equipmentType = cceEquipmentType;
+      scope.saveInventory();
+      $httpBackend.expectPOST('/equipment/inventory/save.json').respond(200, {"success": "Saved successfully"});
+      $httpBackend.flush();
+      expect(scope.$parent.message).toEqual(messageService.get("Saved successfully"));
+      expect(scope.error).toEqual('');
+      expect(scope.inventory.equipment.equipmentTypeName).toEqual('coldChainEquipment');
+    });
 
     it("should give error when form is NOT valid", function () {
       scope.inventoryForm = {$invalid: true};
