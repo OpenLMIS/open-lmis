@@ -8,37 +8,15 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.repository;
+angular.module('custom_report', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+        .config(['$routeProvider', function ($routeProvider) {
+            $routeProvider.
+                when('/list', {controller:CustomReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
+                otherwise({redirectTo:'/list'});
+        }]).run(
+        function ($rootScope, AuthorizationService) {
 
-import lombok.NoArgsConstructor;
-import org.openlmis.report.mapper.CustomReportMapper;
-import org.openlmis.report.model.CustomReport;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
-
-@Component
-@NoArgsConstructor
-public class CustomReportRepository {
-
-  @Autowired
-  private CustomReportMapper mapper;
-
-  public List<Map> getReportList(){
-     return mapper.getListOfReports();
-  }
-
-  public List<Map> getReportData(Map filter){
-    String reportKey = filter.get("report_key").toString();
-    Map report = mapper.getCustomReportByKey(reportKey);
-    String query = report.get("query").toString();
-    filter.put("sql", query);
-    return mapper.getReportData(filter);
-  }
-
-  public void insert(CustomReport report){
-    mapper.insert(report);
-  }
-}
+        }
+    ).config(function(angularCombineConfigProvider) {
+    angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+  });
