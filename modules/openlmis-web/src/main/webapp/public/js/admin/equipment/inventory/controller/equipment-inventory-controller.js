@@ -65,13 +65,13 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     }, {});
   };
 
-  $scope.loadInventory = function (page) {
+  $scope.loadInventory = function () {
     if ($scope.selectedProgram && $scope.selectedEquipmentType) {
       EquipmentInventories.get({
         typeId: $scope.selectedType,
         programId: $scope.selectedProgram.id,
         equipmentTypeId: $scope.selectedEquipmentType.id,
-        page: page
+        page: $scope.page
       }, function (data) {
         $scope.inventory = data.inventory;
         $scope.pagination = data.pagination;
@@ -184,7 +184,8 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
 
   $scope.$watch('currentPage', function () {
     if ($scope.currentPage > 0) {
-      $scope.loadInventory($scope.currentPage);
+      $scope.page = $scope.currentPage;
+      $scope.loadInventory();
     }
   });
 
@@ -193,7 +194,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
   }
 
   $scope.selectedType = $routeParams.from || "0";
-  $scope.currentPage = 1;
+  $scope.page = $routeParams.page || "1";
   $scope.loadPrograms(true);
 
   EquipmentOperationalStatus.get(function(data){
