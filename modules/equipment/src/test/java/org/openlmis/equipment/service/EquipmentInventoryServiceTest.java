@@ -11,7 +11,6 @@
 package org.openlmis.equipment.service;
 
 import org.apache.log4j.Logger;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -19,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.EquipmentInventory;
@@ -51,7 +51,7 @@ public class EquipmentInventoryServiceTest {
 
   @Test
   public void shouldGetInventoryForFacility() throws Exception {
-    List<EquipmentInventory> expectedEquipments = new ArrayList<EquipmentInventory>();
+    List<EquipmentInventory> expectedEquipments = new ArrayList<>();
     expectedEquipments.add(new EquipmentInventory());
     when(repository.getFacilityInventory(1L, 1L)).thenReturn(expectedEquipments);
 
@@ -69,22 +69,22 @@ public class EquipmentInventoryServiceTest {
     long programId = 1L;
     long equipmentTypeId = 1L;
     long facilityId = 1L;
-    List<EquipmentInventory> expectedEquipments = new ArrayList<EquipmentInventory>();
+    List<EquipmentInventory> expectedEquipments = new ArrayList<>();
     expectedEquipments.add(new EquipmentInventory());
     Facility facility = new Facility(facilityId);
     long[] facilityIds = {facilityId};
+    Pagination page = new Pagination(1, 2);
 
     // Set up mock calls
     when(facilityService.getHomeFacility(userId)).thenReturn(facility);
-    when(repository.getInventory(programId, equipmentTypeId, facilityIds)).thenReturn(expectedEquipments);
+    when(repository.getInventory(programId, equipmentTypeId, facilityIds, page)).thenReturn(expectedEquipments);
 
     // Do the call
-    logger.info("EquipmentInventoryService = " + service);
-    List<EquipmentInventory> equipments = service.getInventory(userId, typeId, programId, equipmentTypeId);
+    List<EquipmentInventory> equipments = service.getInventory(userId, typeId, programId, equipmentTypeId, page);
 
     // Test the results
     verify(facilityService).getHomeFacility(userId);
-    verify(repository).getInventory(programId, equipmentTypeId, facilityIds);
+    verify(repository).getInventory(programId, equipmentTypeId, facilityIds, page);
     assertEquals(equipments, expectedEquipments);
   }
 
@@ -96,24 +96,75 @@ public class EquipmentInventoryServiceTest {
     long programId = 1L;
     long equipmentTypeId = 1L;
     long facilityId = 1L;
-    List<EquipmentInventory> expectedEquipments = new ArrayList<EquipmentInventory>();
+    List<EquipmentInventory> expectedEquipments = new ArrayList<>();
     expectedEquipments.add(new EquipmentInventory());
     Facility facility = new Facility(facilityId);
-    List<Facility> facilities = new ArrayList<Facility>();
+    List<Facility> facilities = new ArrayList<>();
+    facilities.add(facility);
+    long[] facilityIds = {facilityId};
+    Pagination page = new Pagination(1, 2);
+
+    // Set up mock calls
+    when(facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY)).thenReturn(facilities);
+    when(repository.getInventory(programId, equipmentTypeId, facilityIds, page)).thenReturn(expectedEquipments);
+
+    // Do the call
+    List<EquipmentInventory> equipments = service.getInventory(userId, typeId, programId, equipmentTypeId, page);
+
+    // Test the results
+    verify(facilityService).getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY);
+    verify(repository).getInventory(programId, equipmentTypeId, facilityIds, page);
+    assertEquals(equipments, expectedEquipments);
+  }
+
+  @Test
+  public void shouldGetInventoryCountForUserFacility() throws Exception {
+    // Set up variables
+    long userId = 1L;
+    long typeId = 0L;
+    long programId = 1L;
+    long equipmentTypeId = 1L;
+    long facilityId = 1L;
+    Facility facility = new Facility(facilityId);
+    long[] facilityIds = {facilityId};
+
+    // Set up mock calls
+    when(facilityService.getHomeFacility(userId)).thenReturn(facility);
+    when(repository.getInventoryCount(programId, equipmentTypeId, facilityIds)).thenReturn(1);
+
+    // Do the call
+    int count = service.getInventoryCount(userId, typeId, programId, equipmentTypeId);
+
+    // Test the results
+    verify(facilityService).getHomeFacility(userId);
+    verify(repository).getInventoryCount(programId, equipmentTypeId, facilityIds);
+    assertEquals(count, 1);
+  }
+
+  @Test
+  public void shouldGetInventoryCountForSupervisedFacilities() throws Exception {
+    // Set up variables
+    long userId = 1L;
+    long typeId = 1L;
+    long programId = 1L;
+    long equipmentTypeId = 1L;
+    long facilityId = 1L;
+    Facility facility = new Facility(facilityId);
+    List<Facility> facilities = new ArrayList<>();
     facilities.add(facility);
     long[] facilityIds = {facilityId};
 
     // Set up mock calls
     when(facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY)).thenReturn(facilities);
-    when(repository.getInventory(programId, equipmentTypeId, facilityIds)).thenReturn(expectedEquipments);
+    when(repository.getInventoryCount(programId, equipmentTypeId, facilityIds)).thenReturn(1);
 
     // Do the call
-    List<EquipmentInventory> equipments = service.getInventory(userId, typeId, programId, equipmentTypeId);
+    int count = service.getInventoryCount(userId, typeId, programId, equipmentTypeId);
 
     // Test the results
     verify(facilityService).getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY);
-    verify(repository).getInventory(programId, equipmentTypeId, facilityIds);
-    assertEquals(equipments, expectedEquipments);
+    verify(repository).getInventoryCount(programId, equipmentTypeId, facilityIds);
+    assertEquals(count, 1);
   }
 
   @Test

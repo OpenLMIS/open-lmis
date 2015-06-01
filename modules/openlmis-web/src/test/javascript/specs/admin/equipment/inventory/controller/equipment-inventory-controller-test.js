@@ -28,6 +28,7 @@ describe("In Equipment Inventory Controller,", function () {
     "equipmentTypeId": equipmentType.id, "manufacturer": "Dometic", "model": "400", "energyType": "gas"};
   var inventory = {"id": 7, "programId": program.id, "equipment": equipment, "facility": facility,
     "operationalStatusId": status.id};
+  var pagination = {"totalRecords": 1, "page": 1};
   var groups = {};
   groups[geographicZone.parent.name] = {};
   groups[geographicZone.parent.name][geographicZone.name] = [inventory];
@@ -113,7 +114,7 @@ describe("In Equipment Inventory Controller,", function () {
       scope.selectedProgram = program;
       scope.loadEquipmentTypes();
       $httpBackend.expectGET('/equipment/manage/typesByProgram/'+program.id+'.json').respond(200, {"equipment_types": [equipmentType]});
-      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory]});
+      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory], "pagination": pagination});
       $httpBackend.flush();
       expect(scope.selectedEquipmentType).toEqual(equipmentType);
       expect(scope.inventory).toEqual([inventory]);
@@ -127,7 +128,7 @@ describe("In Equipment Inventory Controller,", function () {
       scope.selectedProgram = program;
       scope.selectedEquipmentType = equipmentType;
       scope.loadInventory();
-      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory]});
+      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory], "pagination": pagination});
       $httpBackend.flush();
       expect(scope.inventory).toEqual([inventory]);
     });
@@ -153,7 +154,7 @@ describe("In Equipment Inventory Controller,", function () {
       scope.selectedProgram = program;
       scope.selectedEquipmentType = equipmentType;
       scope.loadInventory();
-      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory]});
+      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory], "pagination": pagination});
       $httpBackend.flush();
       expect(scope.groups).toEqual(groups);
     });
@@ -206,7 +207,7 @@ describe("In Equipment Inventory Controller,", function () {
       routeParams.equipmentType = equipmentType.id.toString();
       scope.loadPrograms(true);
       $httpBackend.expectGET('/equipment/manage/typesByProgram/'+program.id+'.json').respond(200, {"equipment_types": [equipmentType]});
-      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory]});
+      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory], "pagination": pagination});
       $httpBackend.flush();
       expect(scope.selectedProgram).toEqual(program);
       expect(scope.selectedEquipmentType).toEqual(equipmentType);
@@ -220,7 +221,7 @@ describe("In Equipment Inventory Controller,", function () {
       scope.loadPrograms(true);
       $httpBackend.expectGET('/equipment/inventory/programs.json').respond(200, {"programs": [program]});
       $httpBackend.expectGET('/equipment/manage/typesByProgram/'+program.id+'.json').respond(200, {"equipment_types": [equipmentType]});
-      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory]});
+      $httpBackend.expectGET('/equipment/inventory/list.json?equipmentTypeId='+equipmentType.id+'&programId='+program.id+'&typeId='+scope.selectedType).respond(200, {"inventory": [inventory], "pagination": pagination});
       $httpBackend.flush();
       expect(scope.selectedProgram).toEqual(program);
       expect(scope.selectedEquipmentType).toEqual(equipmentType);

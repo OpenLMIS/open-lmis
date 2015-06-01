@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('equipment-inventory', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ngAnimate']).config(['$routeProvider', function ($routeProvider) {
+angular.module('equipment-inventory', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ngAnimate', 'ui.bootstrap.pagination']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
       when('/', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html'}).
       when('/:from/:facility/:program/:equipmentType', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html'}).

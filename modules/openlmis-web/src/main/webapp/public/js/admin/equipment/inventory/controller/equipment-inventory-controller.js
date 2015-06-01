@@ -65,14 +65,18 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     }, {});
   };
 
-  $scope.loadInventory = function () {
+  $scope.loadInventory = function (page) {
     if ($scope.selectedProgram && $scope.selectedEquipmentType) {
       EquipmentInventories.get({
         typeId: $scope.selectedType,
         programId: $scope.selectedProgram.id,
-        equipmentTypeId: $scope.selectedEquipmentType.id
+        equipmentTypeId: $scope.selectedEquipmentType.id,
+        page: page
       }, function (data) {
         $scope.inventory = data.inventory;
+        $scope.pagination = data.pagination;
+        $scope.totalItems = $scope.pagination.totalRecords;
+        $scope.currentPage = $scope.pagination.page;
         $scope.groups = _.groupBy($scope.inventory, function (item) {
           return item.facility.geographicZone.parent.name;
         });
@@ -178,11 +182,18 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     return (new Date().getFullYear()) - yearOfInstallation;
   };
 
+  $scope.$watch('currentPage', function () {
+    if ($scope.currentPage > 0) {
+      $scope.loadInventory($scope.currentPage);
+    }
+  });
+
   function getGeographicZone(item) {
     return item.facility.geographicZone.name;
   }
 
   $scope.selectedType = $routeParams.from || "0";
+  $scope.currentPage = 1;
   $scope.loadPrograms(true);
 
   EquipmentOperationalStatus.get(function(data){
