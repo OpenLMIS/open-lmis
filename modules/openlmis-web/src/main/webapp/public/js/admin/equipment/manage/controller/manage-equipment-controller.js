@@ -64,7 +64,6 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
          if (result) {
            RemoveEquipment.get({equipmentTypeId:$scope.equipmentTypeId, id: $scope.selectedEquipment}, function (data) {
              $scope.$parent.message = messageService.get(data.success);
-
              $scope.listEquipments();
            }, function () {
              $scope.error = messageService.get(data.error);

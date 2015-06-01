@@ -68,9 +68,8 @@
         <th openlmis-message="label.equipment.refrigerator-capacity" ></th>
         <th openlmis-message="label.equipment.freezer-capacity"></th>
         <th openlmis-message="label.equipment.temperature-zone"></th>
-        <th openlmis-message="label.equipment.cce-code" ></th>
+        <th openlmis-message="label.equipment.pqs-status" ></th>
         <th openlmis-message="label.equipment.pqs-code"></th>
-        <th openlmis-message="label.equipment.donor"></th>
         <th><a openlmis-message="label.equipment.action"></a></th>
 
       </tr>
@@ -85,9 +84,8 @@
         <td>{{eq.refrigeratorCapacity}}</td>
         <td>{{eq.freezerCapacity}}</td>
         <td>{{eq.temperatureZone}}</td>
-        <td>{{eq.cceCode}}</td>
+        <td>{{eq.pqsStatus.name}}</td>
         <td>{{eq.pqsCode}}</td>
-        <td>{{eq.donor.shortName}}</td>
         <td><a  openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)"></a></td>
       </tr>
       </tbody>

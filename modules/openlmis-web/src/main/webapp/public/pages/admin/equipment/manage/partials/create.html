@@ -254,18 +254,6 @@
 
       <div class="form-row clearfix">
         <div class="form-cell">
-          <label for="donor">
-            <span openlmis-message="label.equipment.donor"></span>
-          </label>
-
-          <div class="form-field">
-            <select ng-model="equipment.donorId" id="donor">
-              <option ng-repeat="donor in donors" ng-selected="donor.id == equipment.donorId" value="{{donor.id}}">{{donor.shortName}}</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-cell">
           <label for="price">
             <span openlmis-message="label.equipment.price"></span>
           </label>

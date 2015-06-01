@@ -26,10 +26,6 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
        $scope.pqsStatus = data.pqs_status;
     });
 
-  Donors.get(function (data) {
-      $scope.donors = data.donors;
-  });
-
   // clear the message when this page is loaded.
   $scope.$parent.message = '';
 
@@ -92,6 +88,5 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
             }, function (data) {
               $scope.equipmentType = data.equipment_type;
          });
-       $scope.equipmentSave=$scope.equipmentTypeName +':{' + $scope.equipment + '}';
      };
 }
