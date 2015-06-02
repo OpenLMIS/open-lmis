@@ -87,7 +87,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
   });
 
   EquipmentEnergyTypes.get(function (data) {
-    $scope.energyTypes = data.energyTypes;
+    $scope.energyTypes = data.energy_types;
   });
 
   $scope.updateModels = function () {
