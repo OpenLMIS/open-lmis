@@ -64,6 +64,7 @@ public class EquipmentInventoryMapperIT {
 
   EquipmentInventory inventory;
   Facility facility;
+  EquipmentType type;
 
   @Before
   public void initialize() throws Exception {
@@ -86,10 +87,9 @@ public class EquipmentInventoryMapperIT {
     facility.setVirtualFacility(false);
     facilityMapper.insert(facility);
 
-    EquipmentType type = new EquipmentType();
-    type.setId(1L);
+    type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     typeMapper.insert(type);
 
     Equipment equipment = new Equipment();
@@ -103,7 +103,7 @@ public class EquipmentInventoryMapperIT {
     inventory.setFacilityId(facility.getId());
     inventory.setOperationalStatusId(1L);
     inventory.setNotFunctionalStatusId(2L);
-    inventory.setEquipmentId(1L);
+    inventory.setEquipmentId(equipment.getId());
     inventory.setReplacementRecommended(false);
     inventory.setYearOfInstallation(2012);
     inventory.setSerialNumber("2323");
@@ -130,10 +130,10 @@ public class EquipmentInventoryMapperIT {
     inventory.setSerialNumber("2325");
     mapper.insert(inventory);
 
-    List<EquipmentInventory> inventories =  mapper.getInventory(1L, 1L, "{"+facility.getId()+"}", page1);
+    List<EquipmentInventory> inventories =  mapper.getInventory(1L, type.getId(), "{"+facility.getId()+"}", page1);
     assertEquals(inventories.size(), 2);
 
-    List<EquipmentInventory> inventories2 =  mapper.getInventory(1L, 1L, "{"+facility.getId()+"}", page2);
+    List<EquipmentInventory> inventories2 =  mapper.getInventory(1L, type.getId(), "{"+facility.getId()+"}", page2);
     assertEquals(inventories2.size(), 1);
   }
 

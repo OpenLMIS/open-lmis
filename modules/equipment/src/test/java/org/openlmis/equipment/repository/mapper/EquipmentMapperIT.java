@@ -19,7 +19,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentEnergyType;
 import org.openlmis.equipment.domain.EquipmentType;
@@ -63,7 +62,7 @@ public class EquipmentMapperIT {
   public void shouldGetAll() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     type.setColdChain(false);
     typeMapper.insert(type);
 
@@ -88,7 +87,7 @@ public class EquipmentMapperIT {
   public void shouldGetById() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     typeMapper.insert(type);
 
     EquipmentEnergyType energyType=new EquipmentEnergyType();
@@ -115,7 +114,7 @@ public class EquipmentMapperIT {
   public void shouldInsert() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     typeMapper.insert(type);
 
     EquipmentEnergyType energyType=new EquipmentEnergyType();
@@ -145,7 +144,7 @@ public class EquipmentMapperIT {
   public void shouldUpdate() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     typeMapper.insert(type);
 
     EquipmentEnergyType energyType=new EquipmentEnergyType();
