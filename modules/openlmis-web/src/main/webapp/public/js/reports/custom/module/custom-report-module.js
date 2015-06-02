@@ -8,13 +8,15 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.mapper;
+angular.module('custom_report', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+        .config(['$routeProvider', function ($routeProvider) {
+            $routeProvider.
+                when('/list', {controller:CustomReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
+                otherwise({redirectTo:'/list'});
+        }]).run(
+        function ($rootScope, AuthorizationService) {
 
-import java.util.Map;
-
-public class PureSqlProvider {
-  public String sql(Map filter) {
-    String theSql = filter.get("sql").toString();
-    return theSql;
-  }
-}
+        }
+    ).config(function(angularCombineConfigProvider) {
+    angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+  });

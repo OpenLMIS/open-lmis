@@ -13,13 +13,15 @@ package org.openlmis.report.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.filter.CustomReportFilter;
 import org.openlmis.report.repository.CustomReportRepository;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,11 +34,11 @@ public class CustomReportController extends BaseController{
 
   @RequestMapping(value = "list")
   public ResponseEntity<OpenLmisResponse> getListOfReports(){
-    return OpenLmisResponse.response("data", reportRepository.getReportList());
+    return OpenLmisResponse.response("reports", reportRepository.getReportList());
   }
 
-  public ResponseEntity<OpenLmisResponse> getReportData( CustomReportFilter filter ){
-
-    return OpenLmisResponse.response("map", reportRepository.getReportData(filter));
+  @RequestMapping(value = "report")
+  public ResponseEntity<OpenLmisResponse> getReportData( @RequestParam Map filter ){
+    return OpenLmisResponse.response("values", reportRepository.getReportData(filter));
   }
 }

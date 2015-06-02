@@ -1189,3 +1189,10 @@ services.factory('RmnchProducts', function($resource){
     return $resource('/reports/rmnch-products.json',{},{});
 });
 
+services.factory('CustomReportList', function ($resource) {
+    return $resource('/report-api/list.json', {}, {});
+});
+
+services.factory('CustomReportValue', function ($resource) {
+    return $resource('/report-api/report.json', {}, {});
+});
