@@ -21,8 +21,11 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
+import org.openlmis.equipment.repository.EquipmentRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +47,13 @@ public class EquipmentInventoryServiceTest {
   private EquipmentInventoryRepository repository;
 
   @Mock
+  private EquipmentRepository equipmentRepository;
+
+  @Mock
   private FacilityService facilityService;
+
+  @Mock
+  private EquipmentService equipmentService;
 
   @InjectMocks
   private EquipmentInventoryService service;
@@ -178,23 +187,103 @@ public class EquipmentInventoryServiceTest {
   }
 
   @Test
-  public void shouldSaveNewEquipmentInventory() throws Exception {
-    EquipmentInventory equipment = new EquipmentInventory();
-    equipment.setSerialNumber("123");
+  public void shouldSaveNewCCEInventory() throws Exception {
+    // Set up variables
+    EquipmentType equipmentType = new EquipmentType();
+    equipmentType.setColdChain(true);
+    Equipment equipment = new Equipment();
+    equipment.setEquipmentType(equipmentType);
+    EquipmentInventory inventory = new EquipmentInventory();
+    inventory.setSerialNumber("123");
+    inventory.setEquipment(equipment);
 
-    service.save(equipment);
-    verify(repository).insert(equipment);
-    verify(repository, never()).update(equipment);
+    // Do the call
+    service.save(inventory);
+
+    // Test the results
+    verify(repository).insert(inventory);
+    verify(repository, never()).update(inventory);
+  }
+
+  @Test
+  public void shouldSaveChangesInExistingCCEInventory() throws Exception {
+    // Set up variables
+    EquipmentType equipmentType = new EquipmentType();
+    equipmentType.setColdChain(true);
+    Equipment equipment = new Equipment();
+    equipment.setEquipmentType(equipmentType);
+    EquipmentInventory inventory = new EquipmentInventory();
+    inventory.setId(1L);
+    inventory.setSerialNumber("123");
+    inventory.setEquipment(equipment);
+
+    // Do the call
+    service.save(inventory);
+
+    // Test the results
+    verify(repository, never()).insert(inventory);
+    verify(repository).update(inventory);
+  }
+
+  @Test
+  public void shouldSaveNewEquipmentInventory() throws Exception {
+    // Set up variables
+    EquipmentType equipmentType = new EquipmentType();
+    equipmentType.setColdChain(false);
+    equipmentType.setId(1L);
+    Equipment equipment = new Equipment();
+    equipment.setEquipmentType(equipmentType);
+    equipment.setEquipmentTypeId(equipmentType.getId());
+    equipment.setManufacturer("Manu");
+    equipment.setModel("123");
+    EquipmentInventory inventory = new EquipmentInventory();
+    inventory.setSerialNumber("123");
+    inventory.setEquipment(equipment);
+
+    // Set up mock calls
+    List<Equipment> equipmentsEmpty = new ArrayList<>();
+    List<Equipment> equipmentsInserted = new ArrayList<>();
+    equipmentsInserted.add(equipment);
+    when(equipmentService.getAllByType(1L)).thenReturn(equipmentsEmpty, equipmentsInserted);
+
+    // Do the call
+    service.save(inventory);
+
+    // Test the results
+    verify(equipmentRepository).insert(equipment);
+    verify(equipmentRepository, never()).update(equipment);
+    verify(repository).insert(inventory);
+    verify(repository, never()).update(inventory);
   }
 
   @Test
   public void shouldSaveChangesInExistingEquipmentInventory() throws Exception {
-    EquipmentInventory equipment = new EquipmentInventory();
-    equipment.setId(1L);
-    equipment.setSerialNumber("123");
+    // Set up variables
+    EquipmentType equipmentType = new EquipmentType();
+    equipmentType.setColdChain(false);
+    equipmentType.setId(1L);
+    Equipment equipment = new Equipment();
+    equipment.setEquipmentType(equipmentType);
+    equipment.setEquipmentTypeId(equipmentType.getId());
+    equipment.setManufacturer("Manu");
+    equipment.setModel("123");
+    EquipmentInventory inventory = new EquipmentInventory();
+    inventory.setId(1L);
+    inventory.setSerialNumber("123");
+    inventory.setEquipment(equipment);
 
-    service.save(equipment);
-    verify(repository, never()).insert(equipment);
-    verify(repository).update(equipment);
+    // Set up mock calls
+    List<Equipment> equipments = new ArrayList<>();
+    equipments.add(equipment);
+    when(equipmentService.getAllByType(1L)).thenReturn(equipments);
+
+    // Do the call
+    service.save(inventory);
+
+    // Test the results
+    verify(equipmentRepository, never()).insert(equipment);
+    verify(equipmentRepository).update(equipment);
+    verify(repository, never()).insert(inventory);
+    verify(repository).update(inventory);
   }
 }

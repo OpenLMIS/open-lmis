@@ -28,11 +28,24 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
 
   EquipmentType.get({id: $routeParams.equipmentType}, function (data) {
     $scope.equipmentType = data.equipment_type;
+    if (!$scope.inventory) {
+      $scope.inventory = {};
+    }
+    if (!$scope.inventory.equipment) {
+      $scope.inventory.equipment = {};
+    }
+    $scope.inventory.equipment.equipmentType = $scope.equipmentType;
+    $scope.inventory.equipment.equipmentTypeId = $scope.equipmentType.id;
   }, {});
 
   if ($routeParams.id === undefined) {
     $scope.screenType = 'create';
-    $scope.inventory = {};
+    if (!$scope.inventory) {
+      $scope.inventory = {};
+    }
+    if (!$scope.inventory.equipment) {
+      $scope.inventory.equipment = {};
+    }
     $scope.inventory.programId = $routeParams.program;
 
     // set default of checkboxes so the submission does not become null and hence an error.
@@ -122,6 +135,10 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
         } else {
           $scope.inventory.equipment.equipmentTypeName = "equipment";
         }
+      }
+
+      if (!$scope.inventory.equipment.name) {
+        $scope.inventory.equipment.name = $scope.inventory.equipment.manufacturer + " / " + $scope.inventory.equipment.model;
       }
 
       SaveEquipmentInventory.save($scope.inventory, function (data) {
