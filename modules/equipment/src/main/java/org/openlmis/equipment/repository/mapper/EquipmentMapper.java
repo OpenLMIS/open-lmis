@@ -70,15 +70,15 @@ public interface EquipmentMapper {
       " WHERE p.id = #{programId}")
   List<EquipmentType> getTypesByProgram(@Param("programId") Long programId);
 
-  @Insert("INSERT into equipments (code, name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacturer, model, energyTypeId) " +
+  @Insert("INSERT into equipments (name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacturer, model, energyTypeId) " +
       "values " +
-      "(#{code}, #{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacturer},#{model},#{energyTypeId})")
+      "(#{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacturer},#{model},#{energyTypeId})")
   @Options(useGeneratedKeys = true)
   void insert(Equipment equipment);
 
   @Update("UPDATE equipments " +
       "set " +
-      " code = #{code}, name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacturer = #{manufacturer}, model = #{model}, energyTypeId = #{energyTypeId} " +
+      " name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacturer = #{manufacturer}, model = #{model}, energyTypeId = #{energyTypeId} " +
       "WHERE id = #{id}")
   void update(Equipment equipment);
 

@@ -71,7 +71,6 @@ public class EquipmentMapperIT {
     energyTypeMapper.insert(energyType);
 
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
     equipment.setManufacturer("Manufacturer");
@@ -95,7 +94,6 @@ public class EquipmentMapperIT {
     energyTypeMapper.insert(energyType);
 
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
     equipment.setManufacturer("Manufacturer");
@@ -122,7 +120,6 @@ public class EquipmentMapperIT {
     energyTypeMapper.insert(energyType);
 
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
     equipment.setManufacturer("Manufacturer");
@@ -133,7 +130,6 @@ public class EquipmentMapperIT {
 
     ResultSet rs = queryExecutor.execute("Select * from equipments where id = " + equipment.getId());
     assertEquals(rs.next(), true);
-    assertEquals(rs.getString("code"), "123");
     assertEquals(rs.getString("name"),"Name");
     assertEquals(rs.getString("model"),"Model");
     assertEquals(rs.getString("manufacturer"),"Manufacturer");
@@ -152,7 +148,6 @@ public class EquipmentMapperIT {
     energyTypeMapper.insert(energyType);
 
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
     equipment.setManufacturer("Manufacturer");
@@ -167,59 +162,57 @@ public class EquipmentMapperIT {
     assertEquals(result.getName(),equipment.getName());
   }
 
-  @Test
-  public void shouldThrowExceptionIfDuplicateCodeIsInserted() throws Exception{
-    EquipmentType type = new EquipmentType();
-    type.setCode("1");
-    type.setCode("Type");
-
-    typeMapper.insert(type);
-
-    EquipmentEnergyType energyType=new EquipmentEnergyType();
-    energyType.setName("TestEnergy");
-    energyTypeMapper.insert(energyType);
-
-    Equipment equipment = new Equipment();
-    equipment.setCode("123");
-    equipment.setName("Name");
-    equipment.setEquipmentType(type);
-    equipment.setManufacturer("Manufacturer");
-    equipment.setModel("Model");
-    equipment.setEnergyTypeId(energyType.getId());
-    mapper.insert(equipment);
-
-
-    expectedEx.expect(Exception.class);
-    mapper.insert(equipment);
-  }
-
-  @Test
-  public void shouldThrowExceptionIfDuplicateCodeHappensBecauseOfAnUpdate() throws Exception{
-    EquipmentType type = new EquipmentType();
-    type.setCode("1");
-    type.setCode("Type");
-
-    typeMapper.insert(type);
-
-    EquipmentEnergyType energyType=new EquipmentEnergyType();
-    energyType.setName("TestEnergy");
-    energyTypeMapper.insert(energyType);
-
-    Equipment equipment = new Equipment();
-    equipment.setCode("123");
-    equipment.setName("Name");
-    equipment.setEquipmentType(type);
-    equipment.setManufacturer("Manufacturer");
-    equipment.setModel("Model");
-    equipment.setEnergyTypeId(energyType.getId());
-    mapper.insert(equipment);
-
-    equipment.setCode("1234");
-    mapper.insert(equipment);
-
-    expectedEx.expect(Exception.class);
-
-    equipment.setCode("123");
-    mapper.update(equipment);
-  }
+// Tests not necessary because name is not unique in db (should it be unique?)
+//  @Test
+//  public void shouldThrowExceptionIfDuplicateNameIsInserted() throws Exception{
+//    EquipmentType type = new EquipmentType();
+//    type.setCode("1");
+//    type.setName("Type");
+//
+//    typeMapper.insert(type);
+//
+//    EquipmentEnergyType energyType=new EquipmentEnergyType();
+//    energyType.setName("TestEnergy");
+//    energyTypeMapper.insert(energyType);
+//
+//    Equipment equipment = new Equipment();
+//    equipment.setName("Name");
+//    equipment.setEquipmentType(type);
+//    equipment.setManufacturer("Manufacturer");
+//    equipment.setModel("Model");
+//    equipment.setEnergyTypeId(energyType.getId());
+//    mapper.insert(equipment);
+//
+//    mapper.insert(equipment);
+//    expectedEx.expect(Exception.class);
+//  }
+//
+//  @Test
+//  public void shouldThrowExceptionIfDuplicateNameHappensBecauseOfAnUpdate() throws Exception{
+//    EquipmentType type = new EquipmentType();
+//    type.setCode("1");
+//    type.setName("Type");
+//
+//    typeMapper.insert(type);
+//
+//    EquipmentEnergyType energyType=new EquipmentEnergyType();
+//    energyType.setName("TestEnergy");
+//    energyTypeMapper.insert(energyType);
+//
+//    Equipment equipment = new Equipment();
+//    equipment.setName("Name");
+//    equipment.setEquipmentType(type);
+//    equipment.setManufacturer("Manufacturer");
+//    equipment.setModel("Model");
+//    equipment.setEnergyTypeId(energyType.getId());
+//    mapper.insert(equipment);
+//
+//    equipment.setName("Name2");
+//    mapper.insert(equipment);
+//
+//    expectedEx.expect(Exception.class);
+//
+//    equipment.setName("Name2");
+//    mapper.update(equipment);
+//  }
 }

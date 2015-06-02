@@ -93,7 +93,6 @@ public class EquipmentInventoryMapperIT {
     typeMapper.insert(type);
 
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
     equipmentMapper.insert(equipment);
