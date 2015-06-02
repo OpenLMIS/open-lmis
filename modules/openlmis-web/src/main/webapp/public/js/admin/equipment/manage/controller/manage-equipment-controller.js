@@ -47,7 +47,6 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
           $scope.orderTitle='-'+title;
           ASC=true;
         }
-
    };
 
    $scope.showRemoveEquipmentConfirmDialog = function (id) {
@@ -72,6 +71,4 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
          }
          $scope.selectedEquipment=undefined;
        };
-
-
 }

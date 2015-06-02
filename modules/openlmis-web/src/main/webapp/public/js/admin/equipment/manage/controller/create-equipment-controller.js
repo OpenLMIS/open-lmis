@@ -10,9 +10,11 @@
 
 function CreateEquipmentController($scope, $routeParams, $location, Equipment,EquipmentType, EquipmentTypes, SaveEquipment, messageService, ColdChainDesignations,ColdChainPqsStatus,EquipmentEnergyTypes, Donors,currentEquipmentTypeId) {
 
-  EquipmentTypes.get(function (data) {
-    $scope.equipmentTypes = data.equipment_type;
-  });
+  $scope.currentEquipmentTypeId=currentEquipmentTypeId.get();
+  if( $scope.currentEquipmentTypeId === undefined)
+  {
+    $location.path('');
+  }
 
   EquipmentEnergyTypes.get(function (data) {
         $scope.energyTypes = data.energy_types;
@@ -31,6 +33,13 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
 
   if ($routeParams.id === undefined) {
     $scope.equipment = {};
+     EquipmentType.get({
+        id:$scope.currentEquipmentTypeId
+      },function (data) {
+        $scope.equipment.equipmentType = data.equipment_type;
+        $scope.equipment.equipmentTypeId=$scope.equipment.equipmentType.id;
+      });
+
   } else {
     Equipment.get({
       id: $routeParams.id,
@@ -64,7 +73,7 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
     };
 
     if(!$scope.equipmentForm.$invalid){
-      if($scope.equipmentType.coldChain)
+      if($scope.equipment.equipmentType.coldChain)
       {
         $scope.equipment.equipmentTypeName = "coldChainEquipment";
       }
@@ -79,14 +88,4 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
     $location.path('');
   };
 
-  $scope.checkEquipmentType=function()
-     {
-        var id=$scope.equipment.equipmentTypeId;
-        currentEquipmentTypeId.set(id);
-        EquipmentType.get({
-              id: id
-            }, function (data) {
-              $scope.equipmentType = data.equipment_type;
-         });
-     };
 }

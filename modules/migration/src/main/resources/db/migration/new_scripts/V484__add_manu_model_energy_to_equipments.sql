@@ -1,4 +1,4 @@
-﻿ALTER TABLE equipments
+﻿﻿ALTER TABLE equipments
   ADD COLUMN manufacturer character varying(200);
 ALTER TABLE equipments
   ADD COLUMN model character varying(200);
