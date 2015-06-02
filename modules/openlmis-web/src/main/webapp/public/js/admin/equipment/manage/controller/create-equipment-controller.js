@@ -56,7 +56,7 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
   {
     if(isColdChain)
     {
-     $scope.equipment.name=$scope.equipment.manufacturer+'/'+$scope.equipment.model;
+     $scope.equipment.name=$scope.equipment.manufacturer+' / '+$scope.equipment.model;
      $scope.equipment.code=$scope.equipment.manufacturer+'-'+$scope.equipment.model;
     }
   };
