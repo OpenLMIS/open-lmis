@@ -30,8 +30,6 @@ public class Equipment extends BaseModel{
 
   private String name;
 
-  private String code;
-
   private EquipmentType equipmentType;
 
   private Long equipmentTypeId;
