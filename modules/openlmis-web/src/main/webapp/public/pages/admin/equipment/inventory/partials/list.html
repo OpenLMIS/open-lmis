@@ -85,9 +85,8 @@
           <th openlmis-message="label.equipment.region"></th>
           <th openlmis-message="label.equipment.district"></th>
           <th openlmis-message="label.equipment.facility"></th>
-          <th openlmis-message="label.equipment.equipment"></th>
-          <th openlmis-message="label.equipment.manufacturer"></th>
-          <th openlmis-message="label.equipment.model"></th>
+          <th><span openlmis-message="label.equipment.manufacturer"></span> /
+            <span openlmis-message="label.equipment.model"></span></th>
           <th openlmis-message="label.equipment.fridge.freezer.capacity"></th>
           <th openlmis-message="label.equipment.status"></th>
           <th openlmis-message="label.equipment.energy.source"></th>
@@ -101,9 +100,7 @@
           <td>{{item.facility.geographicZone.parent.name}}</td>
           <td>{{item.facility.geographicZone.name}}</td>
           <td>{{item.facility.name}}</td>
-          <td><a ng-href="#/edit/{{selectedType}}/{{item.facility.id}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}/{{currentPage}}">{{item.equipment.name}}</a></td>
-          <td>{{item.equipment.manufacturer}}</td>
-          <td>{{item.equipment.model}}</td>
+          <td><a ng-href="#/edit/{{selectedType}}/{{item.facility.id}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}/{{currentPage}}">{{item.equipment.manufacturer}} / {{item.equipment.model}}</a></td>
           <td>{{item.equipment.refrigeratorCapacity ? item.equipment.refrigeratorCapacity : 0}} / {{item.equipment.freezerCapacity ? item.equipment.freezerCapacity : 0}}</td>
           <td>
             <select ui-select2 ng-model="item.operationalStatusId" ng-change="updateStatus(item)">
