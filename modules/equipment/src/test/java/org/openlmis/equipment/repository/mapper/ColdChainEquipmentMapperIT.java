@@ -68,7 +68,7 @@ public class ColdChainEquipmentMapperIT {
 
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     typeMapper.insert(type);
 
     ColdChainEquipmentDesignation designation=new ColdChainEquipmentDesignation();
@@ -91,7 +91,6 @@ public class ColdChainEquipmentMapperIT {
     donorMapper.insert(donor);
 
     ColdChainEquipment coldChainEquipment = new ColdChainEquipment();
-    coldChainEquipment.setCode("123");
     coldChainEquipment.setName("Equipment Name");
     coldChainEquipment.setEquipmentType(type);
     coldChainEquipment.setManufacturer("Manufacturer");
@@ -127,7 +126,7 @@ public class ColdChainEquipmentMapperIT {
 
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     typeMapper.insert(type);
 
     ColdChainEquipmentDesignation designation=new ColdChainEquipmentDesignation();
@@ -150,7 +149,6 @@ public class ColdChainEquipmentMapperIT {
     donorMapper.insert(donor);
 
     ColdChainEquipment coldChainEquipment = new ColdChainEquipment();
-    coldChainEquipment.setCode("123");
     coldChainEquipment.setName("Equipment Name");
     coldChainEquipment.setEquipmentType(type);
     coldChainEquipment.setManufacturer("Manufacturer");
@@ -187,7 +185,7 @@ public class ColdChainEquipmentMapperIT {
 
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     typeMapper.insert(type);
 
     ColdChainEquipmentDesignation designation=new ColdChainEquipmentDesignation();
@@ -210,7 +208,6 @@ public class ColdChainEquipmentMapperIT {
     donorMapper.insert(donor);
 
     ColdChainEquipment coldChainEquipment = new ColdChainEquipment();
-    coldChainEquipment.setCode("123");
     coldChainEquipment.setName("Equipment Name");
     coldChainEquipment.setEquipmentType(type);
     coldChainEquipment.setManufacturer("Manufacturer");
@@ -247,7 +244,7 @@ public class ColdChainEquipmentMapperIT {
   public void shouldUpdateColdChainEquipment() throws Exception{
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     typeMapper.insert(type);
 
     ColdChainEquipmentDesignation designation=new ColdChainEquipmentDesignation();
@@ -270,7 +267,6 @@ public class ColdChainEquipmentMapperIT {
     donorMapper.insert(donor);
 
     ColdChainEquipment coldChainEquipment = new ColdChainEquipment();
-    coldChainEquipment.setCode("123");
     coldChainEquipment.setName("Equipment Name");
     coldChainEquipment.setEquipmentType(type);
     coldChainEquipment.setManufacturer("Manufacturer");

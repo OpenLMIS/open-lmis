@@ -102,7 +102,6 @@ public class EquipmentMapperIT {
     mapper.insert(equipment);
 
     Equipment result = mapper.getById(equipment.getId());
-    assertEquals(result.getCode(), equipment.getCode());
     assertEquals(result.getName(), equipment.getName());
     assertEquals(result.getModel(), equipment.getModel());
     assertEquals(result.getEnergyTypeId(), equipment.getEnergyTypeId());

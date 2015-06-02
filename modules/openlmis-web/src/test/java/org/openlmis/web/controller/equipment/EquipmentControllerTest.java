@@ -86,7 +86,6 @@ public class EquipmentControllerTest {
     ColdChainEquipment coldChainEquipment=new ColdChainEquipment();
     coldChainEquipment.setId(1L);
     coldChainEquipment.setName("Refrigerator");
-    coldChainEquipment.setCode("CODE");
     coldChainEquipment.setDesignationId(1L);
     coldChainEquipment.setPqsStatusId(1L);
     coldChainEquipment.setEquipmentTypeId(1L);
