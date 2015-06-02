@@ -11,6 +11,7 @@
 package org.openlmis.web.controller.equipment;
 
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.equipment.domain.EquipmentInventory;
@@ -18,6 +19,7 @@ import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,8 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static org.openlmis.core.domain.RightName.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.RightName.CREATE_REQUISITION;
+import static java.lang.Integer.parseInt;
 import static org.openlmis.core.domain.RightName.MANAGE_EQUIPMENT_INVENTORY;
 
 @Controller
@@ -52,9 +53,16 @@ public class EquipmentInventoryController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getInventory(@RequestParam("typeId") Long typeId,
                                                        @RequestParam("programId") Long programId,
                                                        @RequestParam("equipmentTypeId") Long equipmentTypeId,
+                                                       @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                       @Value("${search.page.size}") String limit,
                                                        HttpServletRequest request){
     Long userId = loggedInUserId(request);
-    return OpenLmisResponse.response("inventory",service.getInventory(userId, typeId, programId, equipmentTypeId));
+    Pagination pagination = new Pagination(page, parseInt(limit));
+    pagination.setTotalRecords(service.getInventoryCount(userId, typeId, programId, equipmentTypeId));
+    List<EquipmentInventory> inventory = service.getInventory(userId, typeId, programId, equipmentTypeId, pagination);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("inventory", inventory);
+    response.getBody().addData("pagination", pagination);
+    return response;
   }
 
   @RequestMapping(value="programs", method = RequestMethod.GET)

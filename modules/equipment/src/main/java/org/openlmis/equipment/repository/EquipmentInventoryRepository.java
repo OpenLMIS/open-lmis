@@ -10,6 +10,7 @@
 
 package org.openlmis.equipment.repository;
 
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.domain.EquipmentType;
@@ -44,7 +45,23 @@ public class EquipmentInventoryRepository {
     return mapper.getInventoryByFacilityAndProgram(facilityId, programId);
   }
 
-  public List<EquipmentInventory> getInventory(Long programId, Long equipmentTypeId, long[] facilityIds){
+  public List<EquipmentInventory> getInventory(Long programId, Long equipmentTypeId, long[] facilityIds, Pagination pagination) {
+    String strFacilityIds = getFacilityIdString(facilityIds);
+
+    List<EquipmentInventory> inventories = mapper.getInventory(programId, equipmentTypeId, strFacilityIds, pagination);
+    for (EquipmentInventory inventory : inventories) {
+      setEquipmentToInventory(inventory);
+    }
+    return inventories;
+  }
+
+  public Integer getInventoryCount(Long programId, Long equipmentTypeId, long[] facilityIds) {
+    String strFacilityIds = getFacilityIdString(facilityIds);
+
+    return mapper.getInventoryCount(programId, equipmentTypeId, strFacilityIds);
+  }
+
+  private String getFacilityIdString(long[] facilityIds) {
     // Convert ids into string format for the mapper to use
     StringBuilder str = new StringBuilder();
     if (facilityIds.length == 0) {
@@ -59,11 +76,7 @@ public class EquipmentInventoryRepository {
       str.append("}");
     }
 
-    List<EquipmentInventory> inventories = mapper.getInventory(programId, equipmentTypeId, str.toString());
-    for (EquipmentInventory inventory : inventories) {
-      setEquipmentToInventory(inventory);
-    }
-    return inventories;
+    return str.toString();
   }
 
   public EquipmentInventory getInventoryById(Long id){

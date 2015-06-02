@@ -128,7 +128,8 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
         $scope.$parent.message = messageService.get(data.success);
         $scope.$parent.selectedProgram = {id: $scope.inventory.programId};
         console.info($scope.$parent.selectedProgram);
-        $location.path('/' + $routeParams.from + '/' + $scope.inventory.facilityId + '/' + $scope.inventory.programId + '/' + $routeParams.equipmentType);
+        $location.path('/' + $routeParams.from + '/' + $scope.inventory.facilityId + '/' + $scope.inventory.programId + '/' +
+            $routeParams.equipmentType + '/' + $routeParams.page);
       }, function (data) {
         $scope.error = data.error;
       });
@@ -139,6 +140,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
   };
 
   $scope.cancelCreateInventory = function () {
-    $location.path('/'+$routeParams.from+'/'+$routeParams.facility+'/'+$routeParams.program+'/'+$routeParams.equipmentType);
+    $location.path('/' + $routeParams.from + '/' + $routeParams.facility + '/' + $routeParams.program + '/' +
+        $routeParams.equipmentType + '/' + $routeParams.page);
   };
 }

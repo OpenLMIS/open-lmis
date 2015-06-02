@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.EquipmentInventory;
@@ -67,17 +68,17 @@ public class EquipmentInventoryControllerTest {
 
 
   @Test
-  public void shouldGetFacilityInventory() throws Exception {
+  public void shouldGetInventory() throws Exception {
     List<EquipmentInventory> inventories = new ArrayList<>();
-    when(service.getInventory(1L, 1L, 1L, 1L)).thenReturn(inventories);
+    Pagination page = new Pagination(1, 2);
+    when(service.getInventory(1L, 1L, 1L, 1L, page)).thenReturn(inventories);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getInventory(1L, 1L, 1L, request);
+    ResponseEntity<OpenLmisResponse> response = controller.getInventory(1L, 1L, 1L, 1, "2", request);
     assertThat(inventories, is(response.getBody().getData().get("inventory")));
-
   }
 
   @Test
-  public void shouldGetInventory() throws Exception {
+  public void shouldGetInventoryById() throws Exception {
     EquipmentInventory inventory = new EquipmentInventory();
     when(service.getInventoryById(1L)).thenReturn(inventory);
     ResponseEntity<OpenLmisResponse> response = controller.getInventory(1L);

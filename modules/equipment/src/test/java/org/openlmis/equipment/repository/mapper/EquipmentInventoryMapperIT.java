@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.db.categories.IntegrationTests;
@@ -86,6 +87,7 @@ public class EquipmentInventoryMapperIT {
     facilityMapper.insert(facility);
 
     EquipmentType type = new EquipmentType();
+    type.setId(1L);
     type.setCode("1");
     type.setCode("Type");
     typeMapper.insert(type);
@@ -115,6 +117,24 @@ public class EquipmentInventoryMapperIT {
   public void shouldGetAllInventoryItemsForFacility() throws Exception{
     List<EquipmentInventory> inventories =  mapper.getInventoryByFacilityAndProgram(facility.getId(), 1L);
     assertEquals(inventories.size(), 1);
+  }
+
+  @Test
+  public void shouldGetInventory() throws Exception{
+    Pagination page1 = new Pagination(1, 2);
+    Pagination page2 = new Pagination(2, 2);
+
+    inventory.setSerialNumber("2324");
+    mapper.insert(inventory);
+
+    inventory.setSerialNumber("2325");
+    mapper.insert(inventory);
+
+    List<EquipmentInventory> inventories =  mapper.getInventory(1L, 1L, "{"+facility.getId()+"}", page1);
+    assertEquals(inventories.size(), 2);
+
+    List<EquipmentInventory> inventories2 =  mapper.getInventory(1L, 1L, "{"+facility.getId()+"}", page2);
+    assertEquals(inventories2.size(), 1);
   }
 
   @Test

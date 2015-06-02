@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
@@ -107,20 +108,21 @@ public class EquipmentInventoryRepositoryTest {
     inventory.setEquipment(coldChainEquipment);
     List<EquipmentInventory> inventories = new ArrayList<>();
     inventories.add(inventory);
+    Pagination page = new Pagination(1, 2);
     long[] facilityIds = {facilityId,facilityId2};
     String strFacilityIds = "{"+facilityId+","+facilityId2+"}";
 
     // Set up mock calls
-    when(mapper.getInventory(programId, equipmentTypeId, strFacilityIds)).thenReturn(inventories);
+    when(mapper.getInventory(programId, equipmentTypeId, strFacilityIds, page)).thenReturn(inventories);
     when(equipmentMapper.getById(equipmentId)).thenReturn(equipment);
     when(equipmentTypeMapper.getEquipmentTypeById(equipmentTypeId)).thenReturn(equipmentType);
     when(coldChainEquipmentMapper.getById(equipmentId)).thenReturn(coldChainEquipment);
 
     // Do the call
-    List<EquipmentInventory> results = repository.getInventory(programId, equipmentTypeId, facilityIds);
+    List<EquipmentInventory> results = repository.getInventory(programId, equipmentTypeId, facilityIds, page);
 
     // Test the results
-    verify(mapper).getInventory(programId, equipmentTypeId, strFacilityIds);
+    verify(mapper).getInventory(programId, equipmentTypeId, strFacilityIds, page);
     verify(equipmentMapper).getById(equipmentId);
     verify(equipmentTypeMapper).getEquipmentTypeById(equipmentTypeId);
     verify(coldChainEquipmentMapper).getById(equipmentId);
@@ -138,22 +140,44 @@ public class EquipmentInventoryRepositoryTest {
     inventory.setEquipment(equipment);
     List<EquipmentInventory> inventories = new ArrayList<>();
     inventories.add(inventory);
+    Pagination page = new Pagination(1, 2);
     long[] facilityIds = {facilityId,facilityId2};
     String strFacilityIds = "{"+facilityId+","+facilityId2+"}";
 
     // Set up mock calls
-    when(mapper.getInventory(programId, equipmentTypeId, strFacilityIds)).thenReturn(inventories);
+    when(mapper.getInventory(programId, equipmentTypeId, strFacilityIds, page)).thenReturn(inventories);
     when(equipmentMapper.getById(equipmentId)).thenReturn(equipment);
     when(equipmentTypeMapper.getEquipmentTypeById(equipmentTypeId)).thenReturn(equipmentType);
 
     // Do the call
-    List<EquipmentInventory> results = repository.getInventory(programId, equipmentTypeId, facilityIds);
+    List<EquipmentInventory> results = repository.getInventory(programId, equipmentTypeId, facilityIds, page);
 
     // Test the results
-    verify(mapper).getInventory(programId, equipmentTypeId, strFacilityIds);
+    verify(mapper).getInventory(programId, equipmentTypeId, strFacilityIds, page);
     verify(equipmentMapper).getById(equipmentId);
     verify(equipmentTypeMapper).getEquipmentTypeById(equipmentTypeId);
     assertEquals(results, inventories);
+  }
+
+  @Test
+  public void shouldGetInventoryCount() throws Exception {
+    // Set up variables
+    long programId = 1L;
+    long facilityId = 1L;
+    long facilityId2 = 2L;
+
+    long[] facilityIds = {facilityId,facilityId2};
+    String strFacilityIds = "{"+facilityId+","+facilityId2+"}";
+
+    // Set up mock calls
+    when(mapper.getInventoryCount(programId, equipmentTypeId, strFacilityIds)).thenReturn(2);
+
+    // Do the call
+    int count = repository.getInventoryCount(programId, equipmentTypeId, facilityIds);
+
+    // Test the results
+    verify(mapper).getInventoryCount(programId, equipmentTypeId, strFacilityIds);
+    assertEquals(count, 2);
   }
 
   @Test
