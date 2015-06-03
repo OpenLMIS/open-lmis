@@ -89,7 +89,7 @@ public class RestRequisitionCalculator {
     List<String> invalidProductCodes = new ArrayList<>();
     for (final RnrLineItem product : products) {
       RnrLineItem correspondingLineItem = savedRequisition.findCorrespondingLineItem(product);
-      if (correspondingLineItem == null || correspondingLineItem.getSkipped()) {
+      if (correspondingLineItem == null) {
         invalidProductCodes.add(product.getProductCode());
       }
     }
