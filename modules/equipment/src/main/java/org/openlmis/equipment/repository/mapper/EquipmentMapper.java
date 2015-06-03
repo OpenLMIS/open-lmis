@@ -12,6 +12,7 @@ package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentEnergyType;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.springframework.stereotype.Repository;
 
@@ -20,19 +21,33 @@ import java.util.List;
 @Repository
 public interface EquipmentMapper {
 
-  @Select("SELECT * from equipments order by name")
+  @Select("SELECT * from equipments")
   @Results({
       @Result(
           property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
           one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
       @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
           @Result(
-                  property = "energyType", column = "energyTypeId", javaType = EquipmentType.class,
+                  property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
                   one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
           @Result(property = "energyTypeId", column = "energyTypeId")
 
   })
   List<Equipment> getAll();
+
+  @Select("SELECT * from equipments where equipmentTypeId = #{equipmentTypeId} order by name")
+  @Results({
+      @Result(
+          property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
+      @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
+      @Result(
+          property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
+      @Result(property = "energyTypeId", column = "energyTypeId")
+
+  })
+  List<Equipment> getAllByType(@Param("equipmentTypeId") Long equipmentTypeId);
 
   @Select("SELECT * from equipments where id = #{id}")
   @Results({
@@ -41,7 +56,7 @@ public interface EquipmentMapper {
                   one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
           @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
           @Result(
-                  property = "energyType", column = "energyTypeId", javaType = EquipmentType.class,
+                  property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
                   one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
           @Result(property = "energyTypeId", column = "energyTypeId")
 
@@ -55,17 +70,18 @@ public interface EquipmentMapper {
       " WHERE p.id = #{programId}")
   List<EquipmentType> getTypesByProgram(@Param("programId") Long programId);
 
-  @Insert("INSERT into equipments (code, name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacture, model, energyTypeId) " +
+  @Insert("INSERT into equipments (name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacturer, model, energyTypeId) " +
       "values " +
-      "(#{code}, #{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacture},#{model},#{energyTypeId})")
+      "(#{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacturer},#{model},#{energyTypeId})")
   @Options(useGeneratedKeys = true)
   void insert(Equipment equipment);
 
   @Update("UPDATE equipments " +
       "set " +
-      " code = #{code}, name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacture = #{manufacture}, model = #{model}, energyTypeId = #{energyTypeId} " +
+      " name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacturer = #{manufacturer}, model = #{model}, energyTypeId = #{energyTypeId} " +
       "WHERE id = #{id}")
   void update(Equipment equipment);
 
-
+    @Delete("DELETE FROM equipments WHERE id = #{Id}")
+    void remove(Long Id);
 }

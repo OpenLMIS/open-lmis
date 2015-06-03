@@ -13,14 +13,14 @@ package org.openlmis.web.view.pdf.requisition;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfPCell;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.List;
 
@@ -42,11 +42,10 @@ import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest({Image.class, RequisitionCellFactory.class})
 public class RequisitionCellFactoryTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Test
   public void textCellShouldSetGivenValue() throws Exception {

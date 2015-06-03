@@ -8,55 +8,75 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout) {
+function EquipmentInventoryController($scope, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout, SaveEquipmentInventory) {
 
-  $scope.loadPrograms = function (selectedType) {
+  $scope.loadPrograms = function (initialLoad) {
+    // Get home facility for user
+    UserFacilityList.get({}, function (data) {
+      $scope.myFacility = data.facilityList[0];
+      if ($scope.myFacility) {
+        // Home facility found, show home facility
+        $scope.facilityDisplayName = $scope.myFacility.code + ' - ' + $scope.myFacility.name;
 
-    $scope.programs = undefined;
-    $scope.selectedProgram = undefined;
-    $scope.equipmentTypes = undefined;
-    $scope.selectedEquipmentType = undefined;
-
-    if (selectedType === "0") { // My facility
-      // Get facility first, then programs through facility
-      UserFacilityList.get({}, function (data) {
-        $scope.myFacility = data.facilityList[0];
-        if ($scope.myFacility) {
-          $scope.facilityDisplayName = $scope.myFacility.code + ' - ' + $scope.myFacility.name;
+        // Home facility found and my facility type selected, get home facility programs
+        if ($scope.selectedType === "0") {
           ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
             $scope.programs = data.programs;
+            if (initialLoad && $routeParams.program) {
+              $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program,10)});
+              $scope.loadEquipmentTypes(initialLoad);
+            } else if ($scope.programs.length === 1) {
+              $scope.selectedProgram = $scope.programs[0];
+              $scope.loadEquipmentTypes();
+            }
           }, {});
-        } else {
-          $scope.facilityDisplayName = messageService.get("label.none.assigned");
         }
-      }, {});
-    } else { // Supervised facility
+      } else {
+        // Home facility not found, show none assigned message
+        $scope.facilityDisplayName = messageService.get("label.none.assigned");
+      }
+    }, {});
+
+    // Supervised facility type selected, get supervised facility programs
+    if ($scope.selectedType === "1") {
       ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
+        if (initialLoad && $routeParams.program) {
+          $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program, 10)});
+          $scope.loadEquipmentTypes(initialLoad);
+        } else if ($scope.programs.length === 1) {
+          $scope.selectedProgram = $scope.programs[0];
+          $scope.loadEquipmentTypes();
+        }
       }, {});
     }
   };
 
-  $scope.loadEquipmentTypes = function () {
+  $scope.loadEquipmentTypes = function (initialLoad) {
     EquipmentTypesByProgram.get({programId: $scope.selectedProgram.id}, function (data) {
       $scope.equipmentTypes = data.equipment_types;
+      if (initialLoad && $routeParams.equipmentType) {
+        $scope.selectedEquipmentType = _.findWhere($scope.equipmentTypes, {id: parseInt($routeParams.equipmentType,10)});
+        $scope.loadInventory();
+      } else if ($scope.equipmentTypes.length === 1) {
+        $scope.selectedEquipmentType = $scope.equipmentTypes[0];
+        $scope.loadInventory();
+      }
     }, {});
   };
 
   $scope.loadInventory = function () {
-    // Turn selectedEquipmentType from object with just id, to full object
-    for (var i = 0; i < $scope.equipmentTypes.length; i++) {
-      if ($scope.equipmentTypes[i].id.toString() === $scope.selectedEquipmentType.id) {
-        $scope.selectedEquipmentType = $scope.equipmentTypes[i];
-      }
-    }
     if ($scope.selectedProgram && $scope.selectedEquipmentType) {
       EquipmentInventories.get({
         typeId: $scope.selectedType,
         programId: $scope.selectedProgram.id,
-        equipmentTypeId: $scope.selectedEquipmentType.id
+        equipmentTypeId: $scope.selectedEquipmentType.id,
+        page: $scope.page
       }, function (data) {
         $scope.inventory = data.inventory;
+        $scope.pagination = data.pagination;
+        $scope.totalItems = $scope.pagination.totalRecords;
+        $scope.currentPage = $scope.pagination.page;
         $scope.groups = _.groupBy($scope.inventory, function (item) {
           return item.facility.geographicZone.parent.name;
         });
@@ -67,45 +87,119 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
     }
   };
 
-  function getGeographicZone(item) {
-    return item.facility.geographicZone.name;
-  }
+  $scope.changeFacilityType = function () {
+    $scope.programs = undefined;
+    $scope.selectedProgram = undefined;
+    $scope.equipmentTypes = undefined;
+    $scope.selectedEquipmentType = undefined;
 
-//  $scope.$on('$viewContentLoaded', function () {
-    $scope.selectedType = $routeParams.selectedType || "0";
+    $scope.loadPrograms();
+  };
 
-    /*
-     $scope.$watch('programs', function () {
-     if ($scope.programs && !isUndefined($routeParams.program)) {
-     $scope.selectedProgram = _.where($scope.programs, {id: $routeParams.program})[0];
-     }
-     });
-     */
-    $scope.loadPrograms($scope.selectedType);
-//  });
+  $scope.changeProgram = function () {
+    $scope.equipmentTypes = undefined;
+    $scope.selectedEquipmentType = undefined;
 
-  EquipmentOperationalStatus.get(function(data){
-    $scope.operationalStatusList = data.status;
-  });
+    $scope.loadEquipmentTypes();
+  };
 
   $scope.updateStatus = function (item) {
+    // Create original inventory item to use later if user cancels
+    $scope.origModalItem = angular.copy(item);
+    $scope.origModalItem.operationalStatusId = $scope.origModalItem.prevStatusId;
+
+    // updateStatus is called on dropdown load, so only do something if previous value set and is different
     if (item.prevStatusId && item.prevStatusId !== item.operationalStatusId) {
-      UpdateEquipmentInventoryStatus.save(item, function (data) {
+      var operationalStatus = _.findWhere($scope.operationalStatusList, {id: parseInt(item.operationalStatusId, 10)});
+
+      // If status is "bad", open modal, otherwise just save to the server
+      if (operationalStatus.isBad) {
+        $scope.notFunctionalModal = true;
+        $scope.modalItem = item;
+        $scope.checkForBadFunctionalStatus($scope.modalItem.notFunctionalStatusId);
+        $scope.prevStatusId = item.prevStatusId; // Need to save previous since item.prevStatusId gets overwritten
+                                                 // at the end of this function
+      } else {
+        UpdateEquipmentInventoryStatus.save({}, item, function () {
+          // Success
+          item.showSuccess = true;
+          $timeout(function () {
+            item.showSuccess = false;
+          }, 3000);
+        });
+      }
+    }
+
+    // Set a previous value to compare with
+    item.prevStatusId = item.operationalStatusId;
+  };
+
+  $scope.checkForBadFunctionalStatus = function (statusId) {
+    if (statusId) {
+      var notFunctionalStatus = _.findWhere($scope.notFunctionalStatusList, {id: parseInt(statusId, 10)});
+      $scope.modalItem.badFunctionalStatusSelected = notFunctionalStatus.isBad;
+    }
+  };
+
+  $scope.saveModal = function () {
+    $scope.modalError = '';
+    if (!$scope.notFunctionalForm.$invalid) {
+      SaveEquipmentInventory.save($scope.modalItem, function () {
         // Success
-        item.showSuccess = true;
-        $scope.prevStatusId = item.operationalStatusId;
+        $scope.notFunctionalModal = false;
+        $scope.modalItem.badFunctionalStatusSelected = false;
+        $scope.modalItem.showSuccess = true;
         $timeout(function () {
-          item.showSuccess = false;
+          $scope.modalItem.showSuccess = false;
         }, 3000);
       }, function (data) {
-        // Error goes here
+        $scope.modalError = data.error;
       });
+    } else {
+      $scope.modalError = messageService.get('message.equipment.inventory.data.invalid');
     }
-    item.prevStatusId = item.operationalStatusId;
+  };
+
+  $scope.closeModal = function () {
+    $scope.notFunctionalModal = false;
+
+    // Reset inventory with original inventory item
+    // Doing this with map because underscore version doesn't support findIndex
+    $scope.inventory = _.map($scope.inventory, function (obj) {
+      if (obj.id === $scope.modalItem.id) {
+        return $scope.origModalItem;
+      } else {
+        return obj;
+      }
+    });
+
+    // Reset other values
+    $scope.modalItem.badFunctionalStatusSelected = false;
+    $scope.modalError = '';
   };
 
   $scope.getAge = function (yearOfInstallation) {
     return (new Date().getFullYear()) - yearOfInstallation;
   };
+
+  $scope.$watch('currentPage', function () {
+    if ($scope.currentPage > 0) {
+      $scope.page = $scope.currentPage;
+      $scope.loadInventory();
+    }
+  });
+
+  function getGeographicZone(item) {
+    return item.facility.geographicZone.name;
+  }
+
+  $scope.selectedType = $routeParams.from || "0";
+  $scope.page = $routeParams.page || "1";
+  $scope.loadPrograms(true);
+
+  EquipmentOperationalStatus.get(function(data){
+    $scope.operationalStatusList = _.where(data.status, {category: 'CCE'});
+    $scope.notFunctionalStatusList = _.where(data.status, {category: 'CCE Not Functional'});
+  });
 
 }

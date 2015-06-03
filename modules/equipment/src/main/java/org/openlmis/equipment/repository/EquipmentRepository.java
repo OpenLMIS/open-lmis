@@ -33,6 +33,10 @@ public class EquipmentRepository {
     return mapper.getAll();
   }
 
+  public List<Equipment> getAllByType(Long equipmentTypeId) {
+    return mapper.getAllByType(equipmentTypeId);
+  }
+
   public List<EquipmentType> getTypesByProgram(Long programId){
     return mapper.getTypesByProgram(programId);
   }
@@ -43,6 +47,10 @@ public class EquipmentRepository {
 
   public void update(Equipment equipment){
     mapper.update(equipment);
+  }
+
+  public void remove(Long id){
+    mapper.remove(id);
   }
 
 }

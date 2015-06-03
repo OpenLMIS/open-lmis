@@ -10,10 +10,10 @@
 
 package org.openlmis.core.service;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
@@ -25,7 +25,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +41,11 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.core.builder.SupervisoryNodeBuilder.defaultSupervisoryNode;
 
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest(RequisitionGroupService.class)
 public class RequisitionGroupServiceTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @InjectMocks
   private RequisitionGroupService requisitionGroupService;

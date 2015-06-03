@@ -10,10 +10,10 @@
 
 package org.openlmis.shipment.service;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.EDIConfiguration;
@@ -23,7 +23,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.shipment.repository.ShipmentTemplateRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +35,10 @@ import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(ShipmentFileTemplateService.class)
 public class ShipmentFileTemplateServiceTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   ShipmentTemplateRepository repository;

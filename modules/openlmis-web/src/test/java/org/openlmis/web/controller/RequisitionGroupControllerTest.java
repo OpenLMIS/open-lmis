@@ -11,10 +11,10 @@
 package org.openlmis.web.controller;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Pagination;
@@ -30,7 +30,7 @@ import org.openlmis.web.form.RequisitionGroupFormDTO;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -47,11 +47,10 @@ import static org.openlmis.web.controller.RequisitionGroupController.SEARCH_PAGE
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(RequisitionGroupController.class)
 public class RequisitionGroupControllerTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   private static final Long userId = 1L;
 

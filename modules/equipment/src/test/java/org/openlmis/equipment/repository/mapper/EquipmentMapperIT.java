@@ -11,6 +11,7 @@
 package org.openlmis.equipment.repository.mapper;
 
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -28,9 +29,11 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTests.class)
@@ -59,7 +62,8 @@ public class EquipmentMapperIT {
   public void shouldGetAll() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
+    type.setColdChain(false);
     typeMapper.insert(type);
 
     EquipmentEnergyType energyType=new EquipmentEnergyType();
@@ -67,24 +71,22 @@ public class EquipmentMapperIT {
     energyTypeMapper.insert(energyType);
 
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
+    equipment.setManufacturer("Manufacturer");
     equipment.setModel("Model");
     equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
 
-    ResultSet rs = queryExecutor.execute("Select * from equipments where id = " + equipment.getId());
-    assertEquals(rs.next(), true);
-
+    List<Equipment> results =  mapper.getAll();
+    MatcherAssert.assertThat(results.size(), greaterThan(0));
   }
 
   @Test
   public void shouldGetById() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     typeMapper.insert(type);
 
     EquipmentEnergyType energyType=new EquipmentEnergyType();
@@ -92,16 +94,14 @@ public class EquipmentMapperIT {
     energyTypeMapper.insert(energyType);
 
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
+    equipment.setManufacturer("Manufacturer");
     equipment.setModel("Model");
     equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
 
     Equipment result = mapper.getById(equipment.getId());
-    assertEquals(result.getCode(), equipment.getCode());
     assertEquals(result.getName(), equipment.getName());
     assertEquals(result.getModel(), equipment.getModel());
     assertEquals(result.getEnergyTypeId(), equipment.getEnergyTypeId());
@@ -111,7 +111,7 @@ public class EquipmentMapperIT {
   public void shouldInsert() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     typeMapper.insert(type);
 
     EquipmentEnergyType energyType=new EquipmentEnergyType();
@@ -119,10 +119,9 @@ public class EquipmentMapperIT {
     energyTypeMapper.insert(energyType);
 
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
+    equipment.setManufacturer("Manufacturer");
     equipment.setModel("Model");
     equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
@@ -130,10 +129,9 @@ public class EquipmentMapperIT {
 
     ResultSet rs = queryExecutor.execute("Select * from equipments where id = " + equipment.getId());
     assertEquals(rs.next(), true);
-    assertEquals(rs.getString("code"), "123");
     assertEquals(rs.getString("name"),"Name");
     assertEquals(rs.getString("model"),"Model");
-    assertEquals(rs.getString("manufacture"),"Manufacture");
+    assertEquals(rs.getString("manufacturer"),"Manufacturer");
 
   }
 
@@ -141,7 +139,7 @@ public class EquipmentMapperIT {
   public void shouldUpdate() throws Exception {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
-    type.setCode("Type");
+    type.setName("Type");
     typeMapper.insert(type);
 
     EquipmentEnergyType energyType=new EquipmentEnergyType();
@@ -149,10 +147,9 @@ public class EquipmentMapperIT {
     energyTypeMapper.insert(energyType);
 
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
     equipment.setName("Name");
     equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
+    equipment.setManufacturer("Manufacturer");
     equipment.setModel("Model");
     equipment.setEnergyTypeId(energyType.getId());
     mapper.insert(equipment);
@@ -164,59 +161,57 @@ public class EquipmentMapperIT {
     assertEquals(result.getName(),equipment.getName());
   }
 
-  @Test
-  public void shouldThrowExceptionIfDuplicateCodeIsInserted() throws Exception{
-    EquipmentType type = new EquipmentType();
-    type.setCode("1");
-    type.setCode("Type");
-
-    typeMapper.insert(type);
-
-    EquipmentEnergyType energyType=new EquipmentEnergyType();
-    energyType.setName("TestEnergy");
-    energyTypeMapper.insert(energyType);
-
-    Equipment equipment = new Equipment();
-    equipment.setCode("123");
-    equipment.setName("Name");
-    equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
-    equipment.setModel("Model");
-    equipment.setEnergyTypeId(energyType.getId());
-    mapper.insert(equipment);
-
-
-    expectedEx.expect(Exception.class);
-    mapper.insert(equipment);
-  }
-
-  @Test
-  public void shouldThrowExceptionIfDuplicateCodeHappensBecauseOfAnUpdate() throws Exception{
-    EquipmentType type = new EquipmentType();
-    type.setCode("1");
-    type.setCode("Type");
-
-    typeMapper.insert(type);
-
-    EquipmentEnergyType energyType=new EquipmentEnergyType();
-    energyType.setName("TestEnergy");
-    energyTypeMapper.insert(energyType);
-
-    Equipment equipment = new Equipment();
-    equipment.setCode("123");
-    equipment.setName("Name");
-    equipment.setEquipmentType(type);
-    equipment.setManufacture("Manufacture");
-    equipment.setModel("Model");
-    equipment.setEnergyTypeId(energyType.getId());
-    mapper.insert(equipment);
-
-    equipment.setCode("1234");
-    mapper.insert(equipment);
-
-    expectedEx.expect(Exception.class);
-
-    equipment.setCode("123");
-    mapper.update(equipment);
-  }
+// Tests not necessary because name is not unique in db (should it be unique?)
+//  @Test
+//  public void shouldThrowExceptionIfDuplicateNameIsInserted() throws Exception{
+//    EquipmentType type = new EquipmentType();
+//    type.setCode("1");
+//    type.setName("Type");
+//
+//    typeMapper.insert(type);
+//
+//    EquipmentEnergyType energyType=new EquipmentEnergyType();
+//    energyType.setName("TestEnergy");
+//    energyTypeMapper.insert(energyType);
+//
+//    Equipment equipment = new Equipment();
+//    equipment.setName("Name");
+//    equipment.setEquipmentType(type);
+//    equipment.setManufacturer("Manufacturer");
+//    equipment.setModel("Model");
+//    equipment.setEnergyTypeId(energyType.getId());
+//    mapper.insert(equipment);
+//
+//    mapper.insert(equipment);
+//    expectedEx.expect(Exception.class);
+//  }
+//
+//  @Test
+//  public void shouldThrowExceptionIfDuplicateNameHappensBecauseOfAnUpdate() throws Exception{
+//    EquipmentType type = new EquipmentType();
+//    type.setCode("1");
+//    type.setName("Type");
+//
+//    typeMapper.insert(type);
+//
+//    EquipmentEnergyType energyType=new EquipmentEnergyType();
+//    energyType.setName("TestEnergy");
+//    energyTypeMapper.insert(energyType);
+//
+//    Equipment equipment = new Equipment();
+//    equipment.setName("Name");
+//    equipment.setEquipmentType(type);
+//    equipment.setManufacturer("Manufacturer");
+//    equipment.setModel("Model");
+//    equipment.setEnergyTypeId(energyType.getId());
+//    mapper.insert(equipment);
+//
+//    equipment.setName("Name2");
+//    mapper.insert(equipment);
+//
+//    expectedEx.expect(Exception.class);
+//
+//    equipment.setName("Name2");
+//    mapper.update(equipment);
+//  }
 }

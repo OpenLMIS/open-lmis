@@ -1,5 +1,5 @@
 ﻿ALTER TABLE equipments
-  ADD COLUMN manufacture character varying(200);
+  ADD COLUMN manufacturer character varying(200);
 ALTER TABLE equipments
   ADD COLUMN model character varying(200);
 ALTER TABLE equipments
@@ -26,6 +26,13 @@ ALTER TABLE equipment_cold_chain_equipments
 ALTER TABLE equipment_cold_chain_equipments
   ADD CONSTRAINT equipment_cce_pkey PRIMARY KEY (equipmentid);
 
+ALTER TABLE equipments ALTER COLUMN equipmenttypeid DROP NOT NULL;
+UPDATE equipments SET equipmenttypeid=null;
+DELETE FROM equipment_types;
+INSERT INTO equipment_types SELECT id, code, name FROM equipments;
+UPDATE equipments set equipmenttypeid=eqt.id FROM (select id,code from equipment_types) AS eqt
+WHERE equipments.code=eqt.code;
+ALTER TABLE equipments ALTER COLUMN equipmenttypeid SET NOT NULL;
 
 ALTER TABLE equipment_programs
   DROP CONSTRAINT program_equipments_equipmentid_fkey;

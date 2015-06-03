@@ -18,8 +18,12 @@ services.factory('Equipments', function ($resource) {
   return $resource('/equipment/manage/list.json', {}, {});
 });
 
+services.factory('EquipmentsByType', function ($resource) {
+    return $resource('/equipment/manage/list-by-type.json', {}, {});
+});
+
 services.factory('Equipment', function ($resource) {
-  return $resource('/equipment/manage/id.json', {}, {});
+  return $resource('/equipment/manage/type-and-id.json', {}, {});
 });
 
 services.factory('EquipmentTypesByProgram', function ($resource) {
@@ -28,6 +32,10 @@ services.factory('EquipmentTypesByProgram', function ($resource) {
 
 services.factory('SaveEquipment', function ($resource) {
   return $resource('/equipment/manage/save.json', {}, {});
+});
+
+services.factory('RemoveEquipment',function($resource){
+    return $resource('/equipment/manage/remove/:equipmentTypeId/:id.json',{},{});
 });
 
 
@@ -183,4 +191,38 @@ services.factory('ManageEquipmentInventoryFacilityProgramList', function($resour
   return $resource('/equipment/inventory/facility/programs.json',{},{});
 });
 
+/* Equipment Energy Types */
 
+services.factory('EquipmentEnergyTypes', function ($resource) {
+  return $resource('/equipment/energy-type/list.json', {}, {});
+});
+
+services.factory('EquipmentEnergyType', function ($resource) {
+  return $resource('/equipment/energy-type/id.json', {}, {});
+});
+
+services.factory('SaveEquipmentEnergyType', function ($resource) {
+  return $resource('/equipment/energy-type/save.json', {}, {});
+});
+
+services.factory("ColdChainDesignations", function($resource){
+    return $resource('/equipment/cold-chain/designations.json',{},{});
+});
+
+services.factory("ColdChainPqsStatus", function($resource){
+    return $resource('/equipment/cold-chain/pqsStatus.json',{},{});
+});
+
+services.factory("currentEquipmentTypeId", function() {
+ var typeId;
+ function set(id) {
+   typeId = id;
+ }
+ function get() {
+  return typeId;
+ }
+ return {
+  set: set,
+  get: get
+ };
+});

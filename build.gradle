@@ -93,6 +93,7 @@ subprojects {
         'cglib:cglib-nodep:3.1',
         'org.powermock:powermock-module-junit4-rule-agent:1.6.2',
         'org.powermock:powermock-module-junit4-rule:1.6.2',
+            'org.powermock:powermock-classloading-xstream:1.6.2',
         'org.powermock:powermock-module-junit4:1.6.2',
         'org.powermock:powermock-api-mockito:1.6.2',
         'com.natpryce:make-it-easy:3.1.0',
@@ -107,6 +108,10 @@ subprojects {
       includeCategories 'org.openlmis.db.categories.UnitTests'
       includeCategories 'org.openlmis.db.categories.IntegrationTests'
     }
+  }
+
+  task showMeCache << {
+    configurations.compile.each { println it}
   }
 
   task IntegrationTests(type: Test) {

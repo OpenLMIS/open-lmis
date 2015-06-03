@@ -19,25 +19,48 @@ import java.util.List;
 @Repository
 public interface ColdChainEquipmentMapper {
 
-  @Select("SELECT * from equipment_cold_chain_equipments JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id")
+  @Select("SELECT * from equipment_cold_chain_equipments " +
+          "JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id WHERE equipments.equipmentTypeId = #{equipmentTypeId}")
   @Results({
-          @Result(property = "designation", column = "designationId", javaType = ColdChainEquipmentDesignation.class,
-                  one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentDesignationMapper.getById")),
-          @Result(property = "pqsStatus", column = "pqsStatusId", javaType = ColdChainEquipmentPqsStatus.class,
-                  one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentPqsStatusMapper.getById")),
-          @Result(property = "donor", column = "donorId", javaType = Donor.class,
-                  one = @One(select = "org.openlmis.equipment.repository.mapper.DonorMapper.getById"))
+            @Result(
+                    property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
+                    one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
+            @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
+            @Result(
+                    property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
+                    one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
+            @Result(property = "energyTypeId", column = "energyTypeId"),
+            @Result(property = "designation", column = "designationId", javaType = ColdChainEquipmentDesignation.class,
+                    one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentDesignationMapper.getById")),
+            @Result(property = "designationId", column = "designationId"),
+            @Result(property = "pqsStatus", column = "pqsStatusId", javaType = ColdChainEquipmentPqsStatus.class,
+                    one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentPqsStatusMapper.getById")),
+            @Result(property = "pqsStatusId", column = "pqsStatusId"),
+            @Result(property = "donor", column = "donorId", javaType = Donor.class,
+                    one = @One(select = "org.openlmis.equipment.repository.mapper.DonorMapper.getById")),
+            @Result(property = "donorId", column = "donorId")
   })
-  List<ColdChainEquipment> getAll();
+  List<ColdChainEquipment> getAll(Long equipmentTypeId);
 
     @Select("SELECT * from equipment_cold_chain_equipments JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id where equipment_cold_chain_equipments.equipmentid = #{id}")
     @Results({
+            @Result(
+                    property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
+                    one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
+            @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
+            @Result(
+                    property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
+                    one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
+            @Result(property = "energyTypeId", column = "energyTypeId"),
             @Result(property = "designation", column = "designationId", javaType = ColdChainEquipmentDesignation.class,
                     one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentDesignationMapper.getById")),
+            @Result(property = "designationId", column = "designationId"),
             @Result(property = "pqsStatus", column = "pqsStatusId", javaType = ColdChainEquipmentPqsStatus.class,
                     one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentPqsStatusMapper.getById")),
+            @Result(property = "pqsStatusId", column = "pqsStatusId"),
             @Result(property = "donor", column = "donorId", javaType = Donor.class,
-                    one = @One(select = "org.openlmis.equipment.repository.mapper.DonorMapper.getById"))
+                    one = @One(select = "org.openlmis.equipment.repository.mapper.DonorMapper.getById")),
+            @Result(property = "donorId", column = "donorId")
     })
   ColdChainEquipment getById(@Param("id") Long id);
 
@@ -62,4 +85,6 @@ public interface ColdChainEquipmentMapper {
       " WHERE equipmentid = #{id}")
   void update(ColdChainEquipment coldChainEquipment);
 
+  @Delete("DELETE FROM equipment_cold_chain_equipments WHERE equipmentid = #{Id}")
+  void remove(Long Id);
 }

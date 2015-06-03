@@ -8,73 +8,145 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors ,Equipments, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService, EquipmentTypesByProgram) {
+function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors, EquipmentsByType, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService, EquipmentType, EquipmentInventoryFacilities, EquipmentEnergyTypes) {
 
   $scope.$parent.message = $scope.$parent.error = '';
 
   $scope.max_year = new Date().getFullYear();
   $scope.submitted = false;
   $scope.showError = false;
-  Equipments.get(function (data) {
+
+  $scope.from = $routeParams.from;
+  $scope.manufacturers = [];
+  $scope.models = [];
+  $scope.selected = {};
+
+  EquipmentsByType.get({equipmentTypeId: $routeParams.equipmentType}, function (data) {
     $scope.equipments = data.equipments;
+    $scope.manufacturers = _.uniq(_.pluck($scope.equipments, 'manufacturer'));
   });
 
-  EquipmentTypesByProgram.get({programId: $routeParams.program}, function (data) {
-    for (var i = 0; i < data.equipment_types.length; i++) {
-      if (data.equipment_types[i].id.toString() === $routeParams.equipmentType) {
-        $scope.equipmentType = data.equipment_types[i];
-      }
+  EquipmentType.get({id: $routeParams.equipmentType}, function (data) {
+    $scope.equipmentType = data.equipment_type;
+    if (!$scope.inventory) {
+      $scope.inventory = {};
     }
+    if (!$scope.inventory.equipment) {
+      $scope.inventory.equipment = {};
+    }
+    $scope.inventory.equipment.equipmentType = $scope.equipmentType;
+    $scope.inventory.equipment.equipmentTypeId = $scope.equipmentType.id;
   }, {});
 
   if ($routeParams.id === undefined) {
     $scope.screenType = 'create';
-    $scope.equipment = {};
-    $scope.equipment.programId = $routeParams.program;
-    $scope.equipment.facilityId = $routeParams.facility;
-
-    Facility.get({id: $routeParams.facility}, function(data){
-      $scope.facility = data.facility;
-    });
+    if (!$scope.inventory) {
+      $scope.inventory = {};
+    }
+    if (!$scope.inventory.equipment) {
+      $scope.inventory.equipment = {};
+    }
+    $scope.inventory.programId = $routeParams.program;
 
     // set default of checkboxes so the submission does not become null and hence an error.
-    $scope.equipment.replacementRecommended = false;
-    $scope.equipment.hasServiceContract = false;
-    $scope.equipment.dateLastAssessed = Date.now();
-    $scope.equipment.isActive = true;
+    $scope.inventory.replacementRecommended = false;
+    $scope.inventory.dateLastAssessed = Date.now();
+    $scope.inventory.isActive = true;
 
+    if ($routeParams.from === "0") {
+      // Create new inventory at my facility, show facility as readonly
+      Facility.get({id: $routeParams.facility}, function(data){
+        $scope.inventory.facility = data.facility;
+        $scope.inventory.facilityId = data.facility.id;
+        $scope.facilityDisplayName = $scope.inventory.facility.code + " - " + $scope.inventory.facility.name;
+      });
+    } else {
+      // Create new inventory at supervised facilities, facility drop down list
+      EquipmentInventoryFacilities.get({programId: $routeParams.program}, function (data) {
+        $scope.facilities = data.facilities;
+      }, {});
+    }
   } else {
     $scope.screenType = 'edit';
+
     EquipmentInventory.get({
       id: $routeParams.id
     }, function (data) {
-      $scope.equipment = data.inventory;
-      $scope.equipment.dateLastAssessed = $scope.equipment.dateLastAssessedString ;
-      $scope.equipment.dateDecommissioned = $scope.equipment.dateDecommissionedString;
-      $scope.equipment.serviceContractEndDate = $scope.equipment.serviceContractEndDateString;
-      Facility.get({ id: $scope.equipment.facilityId }, function(data){
-        $scope.facility = data.facility;
-      });
+      $scope.inventory = data.inventory;
+      $scope.inventory.dateLastAssessed = $scope.inventory.dateLastAssessedString;
+      $scope.inventory.dateDecommissioned = $scope.inventory.dateDecommissionedString;
+
+      if ($routeParams.from === "0") {
+        // Edit inventory at my facility, show facility as readonly
+        // Facility is already set, so just set the display name
+        $scope.facilityDisplayName = $scope.inventory.facility.code + " - " + $scope.inventory.facility.name;
+      } else {
+        // Edit inventory at supervised facilities, facility drop down list with default
+        EquipmentInventoryFacilities.get({programId: $routeParams.program}, function (data) {
+          $scope.facilities = data.facilities;
+        }, {});
+      }
     });
   }
 
   EquipmentOperationalStatus.get(function(data){
-     $scope.operationalStatusList = data.status;
+    $scope.labOperationalStatusList = _.where(data.status, {category: 'LAB'});
+    $scope.cceOperationalStatusList = _.where(data.status, {category: 'CCE'});
+    $scope.cceNotFunctionalStatusList = _.where(data.status, {category: 'CCE Not Functional'});
   });
 
   Donors.get(function(data){
     $scope.donors = data.donors;
   });
 
-  $scope.saveEquipment = function () {
+  EquipmentEnergyTypes.get(function (data) {
+    $scope.energyTypes = data.energy_types;
+  });
+
+  $scope.updateModels = function () {
+    $scope.models = _.pluck(_.where($scope.equipments, {manufacturer: $scope.selected.manufacturer}), 'model');
+
+    // Also reset equipment fields
+    $scope.selected.model = "";
+    $scope.inventory.equipment = undefined;
+    $scope.inventory.equipmentId = undefined;
+  };
+
+  $scope.updateEquipmentInfo = function () {
+    if ($scope.selected.manufacturer && $scope.selected.model) {
+      $scope.inventory.equipment = _.where($scope.equipments, {manufacturer: $scope.selected.manufacturer, model: $scope.selected.model})[0];
+      $scope.inventory.equipmentId = $scope.inventory.equipment.id;
+    }
+  };
+
+  $scope.checkForBadStatus = function () {
+    var operationalStatus = _.where($scope.cceOperationalStatusList, {id: parseInt($scope.inventory.operationalStatusId, 10)})[0];
+    $scope.badStatusSelected = operationalStatus.isBad;
+  };
+
+  $scope.saveInventory = function () {
     $scope.error = '';
     $scope.showError = true;
-    if(!$scope.equipmentForm.$invalid ){
-      SaveEquipmentInventory.save($scope.equipment, function (data) {
+    if(!$scope.inventoryForm.$invalid ){
+      // Need to set this for deserialization
+      if ($scope.screenType === 'create') {
+        if ($scope.equipmentType.coldChain === true) {
+          $scope.inventory.equipment.equipmentTypeName = "coldChainEquipment";
+        } else {
+          $scope.inventory.equipment.equipmentTypeName = "equipment";
+        }
+      }
+
+      if (!$scope.inventory.equipment.name) {
+        $scope.inventory.equipment.name = $scope.inventory.equipment.manufacturer + " / " + $scope.inventory.equipment.model;
+      }
+
+      SaveEquipmentInventory.save($scope.inventory, function (data) {
         $scope.$parent.message = messageService.get(data.success);
-        $scope.$parent.selectedProgram = {id: $scope.equipment.programId};
+        $scope.$parent.selectedProgram = {id: $scope.inventory.programId};
         console.info($scope.$parent.selectedProgram);
-        $location.path('/' + $routeParams.from + '/' + $scope.equipment.facilityId + '/' + $scope.equipment.programId + '/' + $routeParams.equipmentType);
+        $location.path('/' + $routeParams.from + '/' + $scope.inventory.facilityId + '/' + $scope.inventory.programId + '/' +
+            $routeParams.equipmentType + '/' + $routeParams.page);
       }, function (data) {
         $scope.error = data.error;
       });
@@ -84,7 +156,8 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     }
   };
 
-  $scope.cancelCreateEquipment = function () {
-    $location.path('');
+  $scope.cancelCreateInventory = function () {
+    $location.path('/' + $routeParams.from + '/' + $routeParams.facility + '/' + $routeParams.program + '/' +
+        $routeParams.equipmentType + '/' + $routeParams.page);
   };
 }

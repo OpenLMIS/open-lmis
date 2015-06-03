@@ -128,7 +128,6 @@ public class EquipmentLineItemMapperIT {
     equipmentTypeMapper.insert(equipmentType);
 
     Equipment equipment = new Equipment();
-    equipment.setCode("eq1");
     equipment.setName("cd 4 counter");
     equipment.setEquipmentType(equipmentType);
     equipment.setEquipmentTypeId(equipmentType.getId());

@@ -53,29 +53,29 @@ public class EquipmentServiceTest {
   @Test
   public void shouldGetById() throws Exception {
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
+    equipment.setName("123");
     when(repository.getById(1L)).thenReturn(equipment);
 
     Equipment result = service.getById(1L);
-    assertEquals(result.getCode(), equipment.getCode());
+    assertEquals(result.getName(), equipment.getName());
   }
 
   @Test
   public void shouldGetTypesByProgram() throws Exception {
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
+    equipment.setName("123");
     when(repository.getById(1L)).thenReturn(equipment);
 
     Equipment result = service.getById(1L);
-    assertEquals(result.getCode(), equipment.getCode());
+    assertEquals(result.getName(), equipment.getName());
   }
 
   @Test
   public void shouldSaveNewEquipment() throws Exception {
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
+    equipment.setName("123");
 
-    service.save(equipment);
+    service.saveEquipment(equipment);
     verify(repository).insert(equipment);
     verify(repository, never()).update(equipment);
   }
@@ -84,9 +84,9 @@ public class EquipmentServiceTest {
   public void shouldSaveChangesInExistingEquipment() throws Exception {
     Equipment equipment = new Equipment();
     equipment.setId(1L);
-    equipment.setCode("123");
+    equipment.setName("123");
 
-    service.save(equipment);
+    service.updateEquipment(equipment);
     verify(repository, never()).insert(equipment);
     verify(repository).update(equipment);
   }

@@ -157,13 +157,11 @@ public class RequisitionService {
     for(EquipmentInventory inv : inventories){
       EquipmentLineItem lineItem = new EquipmentLineItem();
       lineItem.setRnrId(requisition.getId());
-      lineItem.setCode(inv.getEquipment().getCode());
       lineItem.setEquipmentSerial(inv.getSerialNumber());
       lineItem.setEquipmentInventoryId(inv.getId());
       lineItem.setEquipmentCategory(inv.getEquipment().getEquipmentType().getName());
       lineItem.setOperationalStatusId(inv.getOperationalStatusId());
       lineItem.setEquipmentName(inv.getEquipment().getName());
-      lineItem.setEquipmentModel(inv.getModel());
       lineItem.setDaysOutOfUse(0L);
 
       requisition.getEquipmentLineItems().add(lineItem);

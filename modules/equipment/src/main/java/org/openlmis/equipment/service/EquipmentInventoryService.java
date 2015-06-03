@@ -11,17 +11,19 @@
 package org.openlmis.equipment.service;
 
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
+import org.openlmis.equipment.repository.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 import static org.openlmis.core.domain.RightName.*;
 
@@ -34,11 +36,31 @@ public class EquipmentInventoryService {
   @Autowired
   private FacilityService facilityService;
 
+  @Autowired
+  private EquipmentService equipmentService;
+
+  @Autowired
+  private EquipmentRepository equipmentRepository;
+
+  Logger logger = Logger.getLogger(EquipmentInventoryService.class);
+
   public List<EquipmentInventory> getInventoryForFacility(Long facilityId, Long programId){
-    return repository.getFacilityInventory(facilityId, programId );
+    return repository.getFacilityInventory(facilityId, programId);
   }
 
-  public List<EquipmentInventory> getInventory(Long userId, Long typeId, Long programId, Long equipmentTypeId) {
+  public List<EquipmentInventory> getInventory(Long userId, Long typeId, Long programId, Long equipmentTypeId, Pagination pagination) {
+    long[] facilityIds = getFacilityIds(userId, typeId, programId);
+
+    return repository.getInventory(programId, equipmentTypeId, facilityIds, pagination);
+  }
+
+  public Integer getInventoryCount(Long userId, Long typeId, Long programId, Long equipmentTypeId) {
+    long[] facilityIds = getFacilityIds(userId, typeId, programId);
+
+    return repository.getInventoryCount(programId, equipmentTypeId, facilityIds);
+  }
+
+  private long[] getFacilityIds(Long userId, Long typeId, Long programId) {
     // Get list of facilities
     List<Facility> facilities;
     if (typeId == 0) {
@@ -54,7 +76,7 @@ public class EquipmentInventoryService {
       facilityIds[index++] = f.getId();
     }
 
-    return repository.getInventory(programId, equipmentTypeId, facilityIds);
+    return facilityIds;
   }
 
   public EquipmentInventory getInventoryById(Long id){
@@ -62,6 +84,34 @@ public class EquipmentInventoryService {
   }
 
   public void save(EquipmentInventory inventory){
+    // First, may need to save equipment into equipment list
+    // Only need to do this for non-CCE
+    Equipment equipment = inventory.getEquipment();
+    if (!equipment.getEquipmentType().isColdChain()) {
+      Boolean equipmentFound = false;
+      Long equipmentTypeId = equipment.getEquipmentTypeId();
+      String manufacturer = equipment.getManufacturer();
+      String model = equipment.getModel();
+
+      // Check to see if equipment already exists in db
+      List<Equipment> equipments = equipmentService.getAllByType(equipmentTypeId);
+      for (Equipment e : equipments) {
+        if (e.getManufacturer().equalsIgnoreCase(manufacturer) && e.getModel().equalsIgnoreCase(model)) {
+          // Equipment already exists in db
+          equipmentFound = true;
+        }
+      }
+
+      if (!equipmentFound) {
+        equipmentRepository.insert(equipment);
+
+        // Make sure equipmentId is set for the inventory save, equipment.id is filled in after insert
+        inventory.setEquipmentId(equipment.getId());
+      } else {
+        equipmentRepository.update(equipment);
+      }
+    }
+
     if(inventory.getId() == null){
       repository.insert(inventory);
     } else{
