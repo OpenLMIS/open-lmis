@@ -1,0 +1,94 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div ng-controller="ConfigureCoverageController">
+  <h4>
+    <span openlmis-message="label.vaccine.logistics.title"></span>
+  </h4>
+  <hr />
+  <div class="row-fluid">
+    <a class="btn btn-primary pull-right" openlmis-message="label.add.products" ng-click="showAddNewModal=true"></a>
+    <div ng-show="protocol.protocols.length == 0">
+      <span openlmis-message="label.vaccine.tab.coverage"></span>
+    </div>
+    <div ng-show="protocol.protocols.length > 0">
+      <span openlmis-message="label.vaccine.coverage.check.doses"></span>
+      <table class="table table-bordered" style="width: 50%">
+        <thead>
+        <th style="width: 300px;" class="col-product"><span openlmis-message="label.product"></span></th>
+        <th><span openlmis-message="label.vaccine.coverage.display.order"></span></th>
+        <th><span openlmis-message="label.vaccine.coverage.display.name"></span></th>
+        <th><span openlmis-message="label.vaccine.coverage.track.male"></span></th>
+        <th><span openlmis-message="label.vaccine.coverage.track.female"></span></th>
+        <th style="width: 100px;" ><span openlmis-message="label.vaccine.coverage.actions"></span></th>
+        </thead>
+        <tbody>
+        <tr ng-repeat-start="product in protocol.protocols"> </tr>
+        <tr ng-repeat-start="dose in product.doses">
+          <td  ng-if="$index == 0" rowspan="{{product.doses.length * 2}}">{{ product.productName }}</td>
+          <td class="col-general cell-input"><span class="cell-text number padding2px" ng-bind="dose.displayOrder"></td>
+          <td class="col-general cell-input padding2px"><input type="text" ng-model="dose.displayName"></td>
+          <td class="col-general cell-input padding2px" style="text-align: center;"><input type="checkbox" ng-model="dose.trackMale"></td>
+          <td class="col-general cell-input padding2px" style="text-align: center;"><input type="checkbox" ng-model="dose.trackFemale"></td>
+          <td>
+              <span ng-show="($index + 1) == product.doses.length">
+                <span ng-show="product.doses.length < protocol.possibleDoses.length">
+                  <a  href="" ng-click="addDosageForProduct(product)"> <i class="fa fa-plus-circle"></i><span openlmis-message="button.add"></span></a>
+                  |
+                </span>
+                <a href="" ng-click="removeDosageFromProduct(product)"> <i class="fa fa-plus-circle"></i><span openlmis-message="button.remove"></span></a>
+              </span>
+          </td>
+        </tr>
+        <tr ng-repeat-end></tr>
+        <tr ng-repeat-end></tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div modal="showAddNewModal">
+    <div class="modal-body">
+      <h2 openlmis-message="header.product.add.new"></h2>
+      <form id="addProductForm" name="addProductForm">
+        <div class="form">
+          <div class="form-field">
+            <label for="product" openlmis-message="label.product"></label>
+            <select id="product" ng-model="product" ng-options="p.primaryName for p in protocol.possibleProducts">
+            </select>
+          </div>
+          <div class="clearfix"></div>
+          <div class="form-field">
+            <a href="" ng-click="addProduct(product,this);" class="btn btn-primary" openlmis-message="button.add"></a>
+            <a href="" ng-click="showAddNewModal=false" class="btn btn-cancel" openlmis-message="button.cancel"></a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div form-toolbar id="action_buttons" class="action-buttons">
+  <div class="form-cell button-row">
+    <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button" ng-click="saveProtocols()"
+           openlmis-message="button.save"/>
+    <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+           ng-click="cancel()"/>
+  </div>
+
+  <div class="toolbar-error" id="saveErrorMsgDiv">
+    <span openlmis-message="error" ng-show="error"></span>&nbsp;
+    <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+  </div>
+  <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+</div>
+
+</div>

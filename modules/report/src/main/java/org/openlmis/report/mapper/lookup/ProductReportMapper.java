@@ -105,4 +105,18 @@ public interface ProductReportMapper {
   )
   List<Product> getSelectedProducts(@Param("productIds") String productIds);
 
+    @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, pp.productcategoryid categoryid, \n" +
+            "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer\n" +
+            "\n" +
+            "FROM \n" +
+            "products as p \n" +
+            "join product_forms as form on form.id = p.formid \n" +
+            "join dosage_units as du on du.id = p.dosageunitid\n" +
+            "join program_products pp on p.id = pp.productId \n" +
+            "join programs pr on pr.id = pp.programId\n" +
+            "where LOWER(pr.code) = 'rmnch' and pp.active = true \n" +
+            "order by name \n"
+    )
+    List<Product> getRmnchProducts();
+
 }

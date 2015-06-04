@@ -1,5 +1,7 @@
 <form id="programForm" name="programForm" ng-submit="saveProgram()" novalidate>
-
+  <h4>
+    <span openlmis-message="admin.label.program.settings"></span>
+  </h4>
   <div class="app-form" id="programFormGroup">
 
     <div class="form-group">
@@ -101,20 +103,6 @@
 
             <div class="form-field">
               <input ng-model="program.isEquipmentConfigured" id="equipmentApplies" type="checkbox"/>
-            </div>
-          </div>
-        </div>
-
-      </div>
-      <div class="form-row clearfix row-fluid">
-        <div class="span4">
-          <div class="form-cell">
-            <label for="enableIvd">
-              <span openlmis-message="admin.program.enable.ivd"></span>
-            </label>
-
-            <div class="form-field">
-              <input ng-model="program.enableIvdForm" id="enableIvd" type="checkbox"/>
             </div>
           </div>
         </div>

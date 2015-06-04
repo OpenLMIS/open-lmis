@@ -21,9 +21,9 @@ public interface VaccineReportAdverseEffectMapper {
 
 
   @Insert("INSERT INTO vaccine_report_adverse_effect_line_items " +
-    "(reportId, productId, date, manufacturerId, batch, expiry, cases, investigation, notes, createdBy, createdDate, modifiedBy, modifiedDate) " +
+    "(reportId, productId, date, manufacturer, batch, expiry, cases, isInvestigated, notes, createdBy, createdDate, modifiedBy, modifiedDate) " +
     " values " +
-    "( #{reportId}, #{productId}, #{date}, #{manufacturerId}, #{batch}, #{expiry}, #{cases}, #{investigation}, #{notes}, #{createdBy}, NOW(), #{modifiedBy}, NOW() )")
+    "( #{reportId}, #{productId}, #{date}, #{manufacturer}, #{batch}, #{expiry}, #{cases}, #{isInvestigated}, #{notes}, #{createdBy}, NOW(), #{modifiedBy}, NOW() )")
   @Options(useGeneratedKeys = true)
   void insert(AdverseEffectLineItem lineItem);
 
@@ -32,11 +32,11 @@ public interface VaccineReportAdverseEffectMapper {
       " reportId = #{reportId}" +
       " , productId = #{productId}" +
       " , date = #{date}" +
-      " , manufacturerId = #{manufacturerId} " +
+      " , manufacturer = #{manufacturer} " +
       " , batch = #{batch}" +
       " , expiry = #{expiry}" +
       " , cases = #{cases}" +
-      " , investigation = #{investigation}" +
+      " , isInvestigated = #{isInvestigated}" +
       " , notes = #{notes}" +
       " , modifiedBy = #{modifiedBy}" +
       " , modifiedDate = NOW() " +

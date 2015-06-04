@@ -11,6 +11,7 @@
 package org.openlmis.vaccine.repository.mapper.reports;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Product;
 import org.openlmis.vaccine.domain.reports.VaccineCoverageItem;
 import org.springframework.stereotype.Repository;
 
@@ -46,13 +47,26 @@ public interface VaccineReportCoverageMapper {
     " WHERE id = #{id} ")
   void update(VaccineCoverageItem item);
 
+  @Select("SELECT id, code, primaryName FROM products where id = #{id}")
+  Product getProductDetails(Long id);
+
   @Select("SELECT * from vaccine_report_coverage_line_items WHERE id = #{id}")
   VaccineCoverageItem getById(@Param("id") Long id);
 
   @Select("SELECT * from vaccine_report_coverage_line_items WHERE reportId = #{reportId} and productId = #{productId} and doseId = #{doseId} order by displayOrder")
+  @Results(value = {
+    @Result(property = "productId", column = "productId"),
+    @Result(property = "product", javaType = Product.class, column = "productId",
+      many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportCoverageMapper.getProductDetails")),
+  })
   VaccineCoverageItem getCoverageByReportProductDosage(@Param("reportId") Long reportId, @Param("productId") Long productId, @Param("doseId") Long doseId);
 
   @Select("SELECT * from vaccine_report_coverage_line_items WHERE reportId = #{reportId} order by displayOrder")
+  @Results(value = {
+    @Result(property = "productId", column = "productId"),
+    @Result(property = "product", javaType = Product.class, column = "productId",
+      many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportCoverageMapper.getProductDetails")),
+  })
   List<VaccineCoverageItem> getLineItems(@Param("reportId") Long reportId);
 
 }

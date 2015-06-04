@@ -1143,3 +1143,56 @@ services.factory("getFacilityRnRTimelinessReportData", function($resource){
 services.factory("getTimelinessReportingDates", function($resource){
     return $resource('/reports/reportingDates/getTimelinessReportingDates.json',{},{});
 });
+
+/* RMNCH report POC*/
+
+services.factory('RmnchStockedOutFacilityList', function($resource){
+    return $resource('/rmnch/stocked-out-facilities.json',{}, {});
+});
+
+services.factory('RmnchOverStockedFacilityList', function($resource){
+    return $resource('/rmnch/over-stocked-facilities.json',{}, {});
+});
+
+services.factory('RmnchUnderStockedFacilityList', function($resource){
+    return $resource('/rmnch/under-stocked-facilities.json',{}, {});
+});
+
+services.factory('RmnchAdequatelyStockedFacilityList', function($resource){
+    return $resource('/rmnch/adequately-stocked-facilities.json',{}, {});
+});
+
+services.factory('RmnchStockStatusProductList', function($resource){
+    return $resource('/rmnch/stock-status-products.json',{}, {});
+});
+
+services.factory('RmnchStockedOutFacilityByProductList', function($resource){
+    return $resource('/rmnch/stocked-out-products.json',{}, {});
+});
+
+services.factory('RmnchOverStockedFacilityByProductList', function($resource){
+    return $resource('/rmnch/over-stocked-products.json',{}, {});
+});
+
+services.factory('RmnchUnderStockedFacilityByProductList', function($resource){
+    return $resource('/rmnch/under-stocked-products.json',{}, {});
+});
+
+services.factory('RmnchAdequatelyStockedFacilityByProductList', function($resource){
+    return $resource('/rmnch/adequately-stocked-products.json',{}, {});
+});
+services.factory('RmnchStockStatusProductConsumptionGraph', function($resource){
+    return $resource('/rmnch/stock-status-product-consumption.json',{}, {});
+});
+
+services.factory('RmnchProducts', function($resource){
+    return $resource('/reports/rmnch-products.json',{},{});
+});
+
+services.factory('CustomReportList', function ($resource) {
+    return $resource('/report-api/list.json', {}, {});
+});
+
+services.factory('CustomReportValue', function ($resource) {
+    return $resource('/report-api/report.json', {}, {});
+});

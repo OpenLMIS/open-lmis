@@ -30,6 +30,15 @@ services.factory('VaccineProductDose', function ($resource) {
   return $resource('/vaccine/product-dose/get/:programId.json', {productId : '@programId'}, {});
 });
 
+services.factory('VaccineIvdTabConfigs', function ($resource) {
+  return $resource('/vaccine/config/tab-visibility/:programId.json', {productId : '@programId'}, {});
+});
+
+services.factory('SaveVaccineIvdTabConfigs', function ($resource) {
+  return $resource('/vaccine/config/save-tab-visibility.json', {}, update);
+});
+
+
 services.factory('VaccineReportConfigurablePrograms', function ($resource) {
   return $resource('/vaccine/report/programs.json', {}, {});
 });
@@ -53,6 +62,11 @@ services.factory('VaccineReportFacilities', function ($resource) {
 services.factory('VaccineReportPeriods', function ($resource) {
   return $resource('/vaccine/report/periods/:facilityId/:programId.json', {facilityId: '@facilityId', programId: '@programId'}, {});
 });
+
+services.factory('ViewVaccineReportPeriods', function ($resource) {
+  return $resource('/vaccine/report/view-periods/:facilityId/:programId.json', {facilityId: '@facilityId', programId: '@programId'}, {});
+});
+
 
 services.factory('VaccineReportInitiate', function ($resource) {
   return $resource('/vaccine/report/initialize/:facilityId/:programId/:periodId.json', {facilityId: '@facilityId', programId: '@programId', periodId: '@periodId'}, {});
