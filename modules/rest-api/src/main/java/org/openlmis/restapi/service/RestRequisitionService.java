@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -125,20 +127,32 @@ public class RestRequisitionService {
       rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period);
     }
 
-    restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
+    List<RnrLineItem> fullSupplyProducts = new ArrayList<>();
+    List<RnrLineItem> nonFullSupplyProducts = new ArrayList<>();
+    Iterator<RnrLineItem> iterator = report.getProducts().iterator();
+
+    // differentiate between full supply and non full supply products
+    while(iterator.hasNext()){
+      RnrLineItem lineItem = iterator.next();
+      if(lineItem.getFullSupply()){
+        fullSupplyProducts.add(lineItem);
+      }else{
+        nonFullSupplyProducts.add(lineItem);
+      }
+    }
+
+    restRequisitionCalculator.validateProducts(fullSupplyProducts, rnr);
+    rnr.setNonFullSupplyLineItems(nonFullSupplyProducts);
 
     markSkippedLineItems(rnr, report);
 
-    // if you have come this far, then do it, it is your day. make the submission.
-    if (reportingFacility.getVirtualFacility())
-      restRequisitionCalculator.setDefaultValues(rnr);
 
     copyRegimens(rnr, report);
-
+    // if you have come this far, then do it, it is your day. make the submission.
+    // i cannot believe we do all of these three at the same time.
+    // but then this is what zambia specifically asked.
     requisitionService.save(rnr);
-
     rnr = requisitionService.submit(rnr);
-
     return requisitionService.authorize(rnr);
   }
 
