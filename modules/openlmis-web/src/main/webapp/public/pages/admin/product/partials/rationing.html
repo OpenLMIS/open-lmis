@@ -34,7 +34,7 @@
         </select>
       </div>
     </div>
-    <div id="approveReqList" class="gridStyle" style="height: 450px;" ng-grid="gridOptions" ng-show="facilities.length"></div>
+    <div id="approveReqList" class="gridStyle" style="height: 450px; width:100%" ng-grid="gridOptions" ng-show="facilities.length > 0"></div>
     <div id="seasonality-adjustment" class="app-form" ng-show="selectedItems.length > 0"  style="margin-top:5px;" >
         <div class="form-group">
           <h3 openlmis-message="header.apply.seasonality.rationing.factor"></h3>
