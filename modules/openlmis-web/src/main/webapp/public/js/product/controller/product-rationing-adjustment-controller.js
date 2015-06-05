@@ -75,8 +75,8 @@ function ProductRationingAdjustmentController($scope, $timeout,productDTO,season
     $timeout(function () {
       $('html, body').animate({
         scrollTop: $("#seasonality-adjustment").offset().top
-      }, 2000);
-    }, 100);
+      }, 0);
+    }, 0);
 
    };
   var myHeaderCellTemplate = '<input type="checkbox" ng-model="selectAll" ng-click="cc()"/>';
