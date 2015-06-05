@@ -19,14 +19,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.equipment.domain.ColdChainEquipment;
-import org.openlmis.equipment.domain.Equipment;
-import org.openlmis.equipment.domain.EquipmentInventory;
-import org.openlmis.equipment.domain.EquipmentType;
-import org.openlmis.equipment.repository.mapper.ColdChainEquipmentMapper;
-import org.openlmis.equipment.repository.mapper.EquipmentInventoryMapper;
-import org.openlmis.equipment.repository.mapper.EquipmentMapper;
-import org.openlmis.equipment.repository.mapper.EquipmentTypeMapper;
+import org.openlmis.equipment.domain.*;
+import org.openlmis.equipment.repository.mapper.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,18 +45,24 @@ public class EquipmentInventoryRepositoryTest {
   @Mock
   private ColdChainEquipmentMapper coldChainEquipmentMapper;
 
+  @Mock
+  private EquipmentInventoryStatusMapper equipmentInventoryStatusMapper;
+
   @InjectMocks
   private EquipmentInventoryRepository repository;
 
   private long equipmentTypeId = 1L;
   private long equipmentId = 1L;
+  private long programId = 1L;
+  private long facilityId = 1L;
+  private long facilityId2 = 2L;
   private long inventoryId = 1L;
-  private String pqsCode = "PQS001";
 
   private EquipmentType equipmentType;
   private Equipment equipment;
   private ColdChainEquipment coldChainEquipment;
   private EquipmentInventory inventory;
+  private EquipmentInventoryStatus status;
 
   @Before
   public void initialize() throws Exception {
@@ -74,36 +74,55 @@ public class EquipmentInventoryRepositoryTest {
     equipment.setEquipmentTypeId(equipmentTypeId);
     equipment.setEquipmentType(equipmentType);
 
+    String pqsCode = "PQS001";
     coldChainEquipment = new ColdChainEquipment();
     coldChainEquipment.setId(equipmentId);
     coldChainEquipment.setEquipmentTypeId(equipmentTypeId);
     coldChainEquipment.setEquipmentType(equipmentType);
     coldChainEquipment.setPqsCode(pqsCode);
 
+    long statusId = 1L;
+    long notFunctionalStatusId = 2L;
+    status = new EquipmentInventoryStatus();
+    status.setInventoryId(inventoryId);
+    status.setStatusId(statusId);
+    status.setNotFunctionalStatusId(notFunctionalStatusId);
+
     inventory = new EquipmentInventory();
     inventory.setId(inventoryId);
     inventory.setEquipmentId(equipmentId);
+    inventory.setOperationalStatusId(statusId);
+    inventory.setNotFunctionalStatusId(notFunctionalStatusId);
   }
 
   @Test
   public void shouldGetFacilityInventory() throws Exception {
+    // Set up variables
+    equipmentType.setColdChain(false);
+    inventory.setEquipment(equipment);
     List<EquipmentInventory> inventories = new ArrayList<>();
     inventories.add(inventory);
 
-    when(mapper.getInventoryByFacilityAndProgram(1L, 1L)).thenReturn(inventories);
+    // Set up mock calls
+    when(mapper.getInventoryByFacilityAndProgram(facilityId, programId)).thenReturn(inventories);
+    when(equipmentMapper.getById(equipmentId)).thenReturn(equipment);
+    when(equipmentTypeMapper.getEquipmentTypeById(equipmentTypeId)).thenReturn(equipmentType);
+    when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
 
-    List<EquipmentInventory> results = repository.getFacilityInventory(1L, 1L);
-    verify(mapper).getInventoryByFacilityAndProgram(1L, 1L);
+    // Do the call
+    List<EquipmentInventory> results = repository.getFacilityInventory(facilityId, programId);
+
+    // Test the results
+    verify(mapper).getInventoryByFacilityAndProgram(facilityId, programId);
+    verify(equipmentMapper).getById(equipmentId);
+    verify(equipmentTypeMapper).getEquipmentTypeById(equipmentTypeId);
+    verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
     assertEquals(results, inventories);
   }
 
   @Test
   public void shouldGetCCEInventory() throws Exception {
     // Set up variables
-    long programId = 1L;
-    long facilityId = 1L;
-    long facilityId2 = 2L;
-
     equipmentType.setColdChain(true);
     inventory.setEquipment(coldChainEquipment);
     List<EquipmentInventory> inventories = new ArrayList<>();
@@ -117,6 +136,7 @@ public class EquipmentInventoryRepositoryTest {
     when(equipmentMapper.getById(equipmentId)).thenReturn(equipment);
     when(equipmentTypeMapper.getEquipmentTypeById(equipmentTypeId)).thenReturn(equipmentType);
     when(coldChainEquipmentMapper.getById(equipmentId)).thenReturn(coldChainEquipment);
+    when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
 
     // Do the call
     List<EquipmentInventory> results = repository.getInventory(programId, equipmentTypeId, facilityIds, page);
@@ -126,16 +146,13 @@ public class EquipmentInventoryRepositoryTest {
     verify(equipmentMapper).getById(equipmentId);
     verify(equipmentTypeMapper).getEquipmentTypeById(equipmentTypeId);
     verify(coldChainEquipmentMapper).getById(equipmentId);
+    verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
     assertEquals(results, inventories);
   }
 
   @Test
   public void shouldGetNonCCEInventory() throws Exception {
     // Set up variables
-    long programId = 1L;
-    long facilityId = 1L;
-    long facilityId2 = 2L;
-
     equipmentType.setColdChain(false);
     inventory.setEquipment(equipment);
     List<EquipmentInventory> inventories = new ArrayList<>();
@@ -148,6 +165,7 @@ public class EquipmentInventoryRepositoryTest {
     when(mapper.getInventory(programId, equipmentTypeId, strFacilityIds, page)).thenReturn(inventories);
     when(equipmentMapper.getById(equipmentId)).thenReturn(equipment);
     when(equipmentTypeMapper.getEquipmentTypeById(equipmentTypeId)).thenReturn(equipmentType);
+    when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
 
     // Do the call
     List<EquipmentInventory> results = repository.getInventory(programId, equipmentTypeId, facilityIds, page);
@@ -156,16 +174,13 @@ public class EquipmentInventoryRepositoryTest {
     verify(mapper).getInventory(programId, equipmentTypeId, strFacilityIds, page);
     verify(equipmentMapper).getById(equipmentId);
     verify(equipmentTypeMapper).getEquipmentTypeById(equipmentTypeId);
+    verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
     assertEquals(results, inventories);
   }
 
   @Test
   public void shouldGetInventoryCount() throws Exception {
     // Set up variables
-    long programId = 1L;
-    long facilityId = 1L;
-    long facilityId2 = 2L;
-
     long[] facilityIds = {facilityId,facilityId2};
     String strFacilityIds = "{"+facilityId+","+facilityId2+"}";
 
@@ -191,6 +206,7 @@ public class EquipmentInventoryRepositoryTest {
     when(equipmentMapper.getById(equipmentId)).thenReturn(equipment);
     when(equipmentTypeMapper.getEquipmentTypeById(equipmentTypeId)).thenReturn(equipmentType);
     when(coldChainEquipmentMapper.getById(equipmentId)).thenReturn(coldChainEquipment);
+    when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
 
     // Do the call
     EquipmentInventory result = repository.getInventoryById(inventoryId);
@@ -200,6 +216,7 @@ public class EquipmentInventoryRepositoryTest {
     verify(equipmentMapper).getById(equipmentId);
     verify(equipmentTypeMapper).getEquipmentTypeById(equipmentTypeId);
     verify(coldChainEquipmentMapper).getById(equipmentId);
+    verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
     assertEquals(result, inventory);
   }
 
@@ -213,6 +230,7 @@ public class EquipmentInventoryRepositoryTest {
     when(mapper.getInventoryById(inventoryId)).thenReturn(inventory);
     when(equipmentMapper.getById(equipmentId)).thenReturn(equipment);
     when(equipmentTypeMapper.getEquipmentTypeById(equipmentTypeId)).thenReturn(equipmentType);
+    when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
 
     // Do the call
     EquipmentInventory result = repository.getInventoryById(inventoryId);
@@ -221,18 +239,61 @@ public class EquipmentInventoryRepositoryTest {
     verify(mapper).getInventoryById(inventoryId);
     verify(equipmentMapper).getById(equipmentId);
     verify(equipmentTypeMapper).getEquipmentTypeById(equipmentTypeId);
+    verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
     assertEquals(result, inventory);
   }
 
   @Test
   public void shouldInsert() throws Exception {
+    // Set up mock calls
+    when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
+
+    // Do the call
     repository.insert(inventory);
+
+    // Test the results
     verify(mapper).insert(inventory);
+    verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
   }
 
   @Test
   public void shouldUpdate() throws Exception {
+    // Set up mock calls
+    when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
+
+    // Do the call
     repository.update(inventory);
+
+    // Test the results
     verify(mapper).update(inventory);
+    verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
+  }
+
+  @Test
+  public void shouldUpdateStatusWhenDifferent() throws Exception {
+    // Set up variables
+    inventory.setOperationalStatusId(3L);
+
+    // Set up mock calls
+    when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
+
+    // Do the call
+    repository.updateStatus(inventory);
+
+    // Test the results
+    verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
+    verify(equipmentInventoryStatusMapper).insert(status);
+  }
+
+  @Test
+  public void shouldNotUpdateStatusWhenSame() throws Exception {
+    // Set up mock calls
+    when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
+
+    // Do the call
+    repository.updateStatus(inventory);
+
+    // Test the results
+    verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
   }
 }

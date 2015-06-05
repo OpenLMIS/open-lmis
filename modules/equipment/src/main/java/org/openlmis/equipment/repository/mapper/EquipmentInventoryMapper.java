@@ -72,12 +72,12 @@ public interface EquipmentInventoryMapper {
   EquipmentInventory getInventoryById(@Param("id") Long id);
 
   @Insert("INSERT into equipment_inventories " +
-      " ( facilityId, equipmentId, programId, operationalStatusId, notFunctionalStatusId, serialNumber" +
+      " ( facilityId, equipmentId, programId, serialNumber" +
       ", yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
       ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned" +
       ", primaryDonorId, createdBy, createdDate, modifiedBy, modifiedDate) " +
       "values " +
-      " ( #{facilityId}, #{equipmentId}, #{programId}, #{operationalStatusId}, #{notFunctionalStatusId}, #{serialNumber}" +
+      " ( #{facilityId}, #{equipmentId}, #{programId}, #{serialNumber}" +
       ", #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
       ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}" +
       ", #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
@@ -87,7 +87,6 @@ public interface EquipmentInventoryMapper {
   @Update("UPDATE equipment_inventories " +
       "SET " +
       " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, " +
-      " operationalStatusId = #{operationalStatusId}, notFunctionalStatusId = #{notFunctionalStatusId}, " +
       " serialNumber = #{serialNumber}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, " +
       " sourceOfFund = #{sourceOfFund}, replacementRecommended = #{replacementRecommended}, " +
       " reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, " +
@@ -96,11 +95,4 @@ public interface EquipmentInventoryMapper {
       " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
       " WHERE id = #{id}")
   void update(EquipmentInventory inventory);
-
-  @Update("UPDATE equipment_inventories" +
-      " SET operationalStatusId = #{operationalStatusId}" +
-      " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
-      " WHERE id = #{id}")
-  void updateStatus(EquipmentInventory inventory);
-
 }
