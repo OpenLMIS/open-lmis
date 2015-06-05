@@ -8,11 +8,41 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ManageEquipmentController($scope, $routeParams,$dialog, $location,messageService, Equipments,EquipmentTypes,EquipmentType,RemoveEquipment,currentEquipmentTypeId) {
+function ManageEquipmentController($scope, $routeParams,$dialog, $location,messageService, Equipments,EquipmentTypes,EquipmentType,RemoveEquipment,currentEquipmentTypeId,ProgramCompleteList,EquipmentTypesByProgram,currentProgramId,ColdChainPqsStatus,SaveEquipment,$timeout) {
 
-   EquipmentTypes.get(function (data) {
-      $scope.equipmentTypes = data.equipment_type;
-    });
+    //Load All Equipment Types if No program filter applied
+    $scope.getAllEquipmentTypes = function () {
+        EquipmentTypes.get(function (data) {
+          $scope.equipmentTypes = data.equipment_type;
+          });
+     };
+
+    //Load Equipment types by program if program filter applied
+    $scope.getAllEquipmentTypesByProgram = function (initLoad) {
+            currentProgramId.set($scope.programId);
+            if(initLoad){
+                    $scope.equipments={};
+                    $scope.equipmentTypeId=undefined;
+                    currentEquipmentTypeId.set($scope.equipmentTypeId);
+             }
+            EquipmentTypesByProgram.get({programId: $scope.programId}, function (data) {
+              //Re load all if no match found
+              if(data.equipment_types.length === 0)
+              {
+                $scope.getAllEquipmentTypes();
+              }
+              else{
+                $scope.equipmentTypes = data.equipment_types;
+              }
+              });
+         };
+
+    $scope.getAllPrograms = function () {
+        ProgramCompleteList.get(function (data) {
+          $scope.programs = data.programs;
+        });
+      };
+
 
    $scope.listEquipments=function()
    {
@@ -28,14 +58,12 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
           }, function (data) {
             $scope.equipment_type = data.equipment_type;
        });
-   };
 
-   $scope.currentEquipmentTypeId=currentEquipmentTypeId.get();
-   $scope.equipmentTypeId=$scope.currentEquipmentTypeId;
-   if( $scope.currentEquipmentTypeId !== undefined)
-   {
-    $scope.listEquipments();
-   }
+      ColdChainPqsStatus.get(function (data) {
+              $scope.pqsStatus = data.pqs_status;
+       });
+
+   };
 
    var ASC=true;
    $scope.sortBy=function(title){
@@ -63,6 +91,9 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
          if (result) {
            RemoveEquipment.get({equipmentTypeId:$scope.equipmentTypeId, id: $scope.selectedEquipment}, function (data) {
              $scope.$parent.message = messageService.get(data.success);
+             $timeout(function () {
+                 $scope.$parent.message = false;
+             }, 3000);
              $scope.listEquipments();
            }, function () {
              $scope.error = messageService.get(data.error);
@@ -71,4 +102,43 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
          }
          $scope.selectedEquipment=undefined;
        };
+
+     $scope.getAllPrograms();
+     $scope.programId=currentProgramId.get();
+
+     if( $scope.programId !== undefined)
+     {
+         $scope.getAllEquipmentTypesByProgram(false);
+     }
+     else{
+         $scope.getAllEquipmentTypes();
+     }
+
+     $scope.equipmentTypeId=currentEquipmentTypeId.get();
+     if( $scope.equipmentTypeId !== undefined)
+     {
+          $scope.listEquipments();
+     }
+
+     $scope.updatePqsStatus=function(eq){
+        $scope.equipment=eq;
+        $scope.equipment.equipmentTypeName = "coldChainEquipment";
+        var onSuccess = function(data){
+             eq.showSuccess = true;
+             $timeout(function () {
+                eq.showSuccess = false;
+              }, 2000);
+          };
+         var onError = function(data){
+
+         };
+        SaveEquipment.save($scope.equipment, onSuccess, onError);
+     };
+     if($scope.$parent.message)
+     {
+        $timeout(function () {
+          $scope.$parent.message = false;
+        }, 3000);
+     }
+
 }

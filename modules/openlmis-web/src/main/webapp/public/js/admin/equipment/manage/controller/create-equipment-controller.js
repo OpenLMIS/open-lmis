@@ -46,7 +46,6 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
       equipmentTypeId:$routeParams.type
     }, function (data) {
       $scope.equipment = data.equipment;
-      $scope.checkEquipmentType();
       $scope.showError = true;
     });
 
@@ -57,7 +56,6 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
     if(isColdChain)
     {
      $scope.equipment.name=$scope.equipment.manufacturer+' / '+$scope.equipment.model;
-     $scope.equipment.code=$scope.equipment.manufacturer+'-'+$scope.equipment.model;
     }
   };
 
