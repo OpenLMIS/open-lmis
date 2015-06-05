@@ -96,7 +96,8 @@ public class EquipmentInventoryService {
       // Check to see if equipment already exists in db
       List<Equipment> equipments = equipmentService.getAllByType(equipmentTypeId);
       for (Equipment e : equipments) {
-        if (e.getManufacturer().equalsIgnoreCase(manufacturer) && e.getModel().equalsIgnoreCase(model)) {
+        if (e.getManufacturer() != null && e.getModel() != null
+            && e.getManufacturer().equalsIgnoreCase(manufacturer) && e.getModel().equalsIgnoreCase(model)) {
           // Equipment already exists in db
           equipmentFound = true;
         }
