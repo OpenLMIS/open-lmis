@@ -89,7 +89,7 @@ function ProductRationingAdjustmentController($scope, $timeout,productDTO,season
     showFooter: false,
     checkboxHeaderTemplate: '<input class="ngSelectionHeader" type="checkbox" ng-model="allSelected" ng-change="toggleSelectAll(allSelected)"/>',
 
-    showSelectionCheckbox: true,
+    showSelectionCheckbox: false,
     enableColumnResize: true,
     showColumnMenu: false,
     //sortInfo: { fields: ['submittedDate'], directions: ['asc'] },
