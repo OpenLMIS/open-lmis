@@ -16,6 +16,8 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
+import org.openlmis.equipment.domain.EquipmentInventoryStatus;
+import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.*;
@@ -58,6 +60,9 @@ public class RequisitionRepository {
   @Autowired
   private EquipmentLineItemMapper equipmentLineItemMapper;
 
+  @Autowired
+  private EquipmentInventoryStatusMapper equipmentInventoryStatusMapper;
+
 
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
@@ -70,10 +75,22 @@ public class RequisitionRepository {
 
   private void insertEquipmentStatus(Rnr requisition, List<EquipmentLineItem> equipmentLineItems) {
     for (EquipmentLineItem equipmentLineItem : equipmentLineItems) {
+      EquipmentInventoryStatus status = getStatusFromEquipmentLineItem(equipmentLineItem);
+      equipmentInventoryStatusMapper.insert(status);
+      equipmentLineItem.setInventoryStatusId(status.getId());
+
       equipmentLineItem.setRnrId(requisition.getId());
       equipmentLineItem.setModifiedBy(requisition.getModifiedBy());
       equipmentLineItemMapper.insert(equipmentLineItem);
     }
+  }
+
+  private EquipmentInventoryStatus getStatusFromEquipmentLineItem(EquipmentLineItem equipmentLineItem) {
+    EquipmentInventoryStatus status = new EquipmentInventoryStatus();
+    status.setId(equipmentLineItem.getInventoryStatusId());
+    status.setInventoryId(equipmentLineItem.getEquipmentInventoryId());
+    status.setStatusId(equipmentLineItem.getOperationalStatusId());
+    return status;
   }
 
   private void insertRegimenLineItems(Rnr requisition, List<RegimenLineItem> regimenLineItems) {
@@ -105,6 +122,9 @@ public class RequisitionRepository {
   private void updateEquipmentLineItems(Rnr rnr) {
     for(EquipmentLineItem item : rnr.getEquipmentLineItems()){
       equipmentLineItemMapper.update(item);
+
+      EquipmentInventoryStatus status = getStatusFromEquipmentLineItem(item);
+      equipmentInventoryStatusMapper.update(status);
     }
   }
 

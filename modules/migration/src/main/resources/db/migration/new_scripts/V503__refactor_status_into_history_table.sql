@@ -125,7 +125,7 @@ BEGIN
   DROP COLUMN notfunctionalstatusid;
 
   ALTER TABLE equipment_status_line_items
-  ADD COLUMN inventorystatusid integer;
+  ADD COLUMN inventorystatusid integer NOT NULL;
 
   ALTER TABLE equipment_status_line_items
   ADD CONSTRAINT equipment_status_line_items_inventorystatusid_fkey FOREIGN KEY (inventorystatusid)
