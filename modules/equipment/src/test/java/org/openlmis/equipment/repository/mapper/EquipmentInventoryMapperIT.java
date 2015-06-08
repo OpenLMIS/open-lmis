@@ -100,8 +100,6 @@ public class EquipmentInventoryMapperIT {
     inventory = new EquipmentInventory();
     inventory.setProgramId(1L);
     inventory.setFacilityId(facility.getId());
-    inventory.setOperationalStatusId(1L);
-    inventory.setNotFunctionalStatusId(2L);
     inventory.setEquipmentId(equipment.getId());
     inventory.setReplacementRecommended(false);
     inventory.setYearOfInstallation(2012);
@@ -141,7 +139,6 @@ public class EquipmentInventoryMapperIT {
     EquipmentInventory result = mapper.getInventoryById(inventory.getId());
 
     assertEquals(result.getSerialNumber(), inventory.getSerialNumber());
-    assertEquals(result.getOperationalStatusId(), inventory.getOperationalStatusId());
   }
 
   @Test
@@ -162,16 +159,5 @@ public class EquipmentInventoryMapperIT {
     ResultSet rs = queryExecutor.execute("Select * from equipment_inventories where id = " + inventory.getId());
     assertEquals(rs.next(), true);
     assertEquals(rs.getString("serialNumber"), "3432");
-  }
-
-  @Test
-  public void shouldUpdateStatus() throws Exception {
-    inventory.setOperationalStatusId(2L);
-
-    mapper.updateStatus(inventory);
-
-    ResultSet rs = queryExecutor.execute("Select * from equipment_inventories where id = " + inventory.getId());
-    assertEquals(rs.next(), true);
-    assertEquals(rs.getString("operationalStatusId"), "2");
   }
 }
