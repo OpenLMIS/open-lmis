@@ -13,10 +13,9 @@ package org.openlmis.restapi.service;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.apache.log4j.Logger;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.FacilityApprovedProductService;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.core.service.ProgramService;
@@ -32,6 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -68,6 +69,11 @@ public class RestRequisitionService {
 
   @Autowired
   private ProcessingPeriodService processingPeriodService;
+
+  @Autowired
+  private FacilityApprovedProductService facilityApprovedProductService;
+
+  private List<FacilityTypeApprovedProduct> nonFullSupplyFacilityApprovedProductByFacilityAndProgram;
 
   private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
 
@@ -106,17 +112,22 @@ public class RestRequisitionService {
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
     ProcessingPeriod period = processingPeriodService.getById(report.getPeriodId());
 
-    //check if the requisition has already been initiated / submitted / authorized.
-    restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, period, userId);
 
     Rnr rnr;
+    List<Rnr> rnrs = null;
 
     RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
     searchCriteria.setProgramId(reportingProgram.getId());
     searchCriteria.setFacilityId(reportingFacility.getId());
     searchCriteria.setWithoutLineItems(true);
     searchCriteria.setUserId(userId);
-    List<Rnr> rnrs = requisitionService.getRequisitionsFor(searchCriteria, asList(period));
+
+    if(report.getPeriodId() != null) {
+      //check if the requisition has already been initiated / submitted / authorized.
+      restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, period, userId);
+      rnrs = requisitionService.getRequisitionsFor(searchCriteria, asList(period));
+    }
+
 
     if(rnrs != null && rnrs.size() > 0){
       rnr = requisitionService.getFullRequisitionById( rnrs.get(0).getId() );
@@ -125,21 +136,57 @@ public class RestRequisitionService {
       rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period);
     }
 
+    List<RnrLineItem> fullSupplyProducts = new ArrayList<>();
+    List<RnrLineItem> nonFullSupplyProducts = new ArrayList<>();
+    Iterator<RnrLineItem> iterator = report.getProducts().iterator();
+    nonFullSupplyFacilityApprovedProductByFacilityAndProgram = facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram( reportingFacility.getId(), reportingProgram.getId() );
+
+    // differentiate between full supply and non full supply products
+    while(iterator.hasNext()){
+      final RnrLineItem lineItem = iterator.next();
+      if(lineItem.getFullSupply()){
+        fullSupplyProducts.add(lineItem);
+      }else{
+
+        setNonFullSupplyCreatorFields(lineItem);
+        nonFullSupplyProducts.add(lineItem);
+      }
+    }
+    report.setProducts(fullSupplyProducts);
+    report.setNonFullSupplyProducts(nonFullSupplyProducts);
     restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
 
     markSkippedLineItems(rnr, report);
 
-    // if you have come this far, then do it, it is your day. make the submission.
-    if (reportingFacility.getVirtualFacility())
-      restRequisitionCalculator.setDefaultValues(rnr);
 
     copyRegimens(rnr, report);
-
+    // if you have come this far, then do it, it is your day. make the submission.
+    // i cannot believe we do all of these three at the same time.
+    // but then this is what zambia specifically asked.
     requisitionService.save(rnr);
-
     rnr = requisitionService.submit(rnr);
-
     return requisitionService.authorize(rnr);
+  }
+
+  private void setNonFullSupplyCreatorFields(final RnrLineItem lineItem) {
+
+    FacilityTypeApprovedProduct p = (FacilityTypeApprovedProduct) find(nonFullSupplyFacilityApprovedProductByFacilityAndProgram, new Predicate() {
+      @Override
+      public boolean evaluate(Object product) {
+        return ((FacilityTypeApprovedProduct) product).getProgramProduct().getProduct().getCode().equals(lineItem.getProductCode());
+      }
+    });
+    if(p == null){
+      return;
+    }
+    lineItem.setDispensingUnit(p.getProgramProduct().getProduct().getDispensingUnit());
+    lineItem.setMaxMonthsOfStock(p.getMaxMonthsOfStock());
+    lineItem.setDosesPerMonth(p.getProgramProduct().getDosesPerMonth());
+    lineItem.setDosesPerDispensingUnit(p.getProgramProduct().getProduct().getDosesPerDispensingUnit());
+    lineItem.setPackSize(p.getProgramProduct().getProduct().getPackSize());
+    lineItem.setRoundToZero(p.getProgramProduct().getProduct().getRoundToZero());
+    lineItem.setPackRoundingThreshold(p.getProgramProduct().getProduct().getPackRoundingThreshold());
+    lineItem.setPrice(p.getProgramProduct().getCurrentPrice());
   }
 
 
@@ -198,6 +245,26 @@ public class RestRequisitionService {
 
       copyInto(savedLineItem, reportedLineItem, rnrTemplate);
     }
+
+
+    savedLineItems = rnr.getNonFullSupplyLineItems();
+    reportedProducts = report.getNonFullSupplyProducts();
+    if(reportedProducts != null) {
+      for (final RnrLineItem reportedLineItem : reportedProducts) {
+        RnrLineItem savedLineItem = (RnrLineItem) find(savedLineItems, new Predicate() {
+          @Override
+          public boolean evaluate(Object product) {
+            return ((RnrLineItem) product).getProductCode().equals(reportedLineItem.getProductCode());
+          }
+        });
+        if (savedLineItem == null && reportedLineItem != null) {
+          rnr.getNonFullSupplyLineItems().add(reportedLineItem);
+        } else {
+          copyInto(savedLineItem, reportedLineItem, rnrTemplate);
+        }
+      }
+    }
+
   }
 
   private void copyInto(RnrLineItem savedLineItem, RnrLineItem reportedLineItem, ProgramRnrTemplate rnrTemplate) {

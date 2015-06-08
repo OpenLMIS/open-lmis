@@ -90,6 +90,9 @@ public class RestRequisitionServiceTest {
   @Mock
   private ProcessingPeriodService periodService;
 
+  @Mock
+  FacilityApprovedProductService facilityApprovedProductService;
+
   @InjectMocks
   RestRequisitionService service;
   Rnr requisition;
@@ -130,6 +133,8 @@ public class RestRequisitionServiceTest {
     List<RnrLineItem> products = asList(rnrLineItem);
     requisition.setFullSupplyLineItems(products);
     requisition.setProgram(new Program());
+
+    when(facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(any(Long.class), any(Long.class))).thenReturn(new ArrayList<FacilityTypeApprovedProduct>());
 
     RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
     requisition.setRegimenLineItems(asList(regimenLineItem));
@@ -262,7 +267,9 @@ public class RestRequisitionServiceTest {
   public void sdpShouldThrowErrorIfPeriodValidationFails() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
-
+    report.setPeriodId(2L);
+    when(programService.getValidatedProgramByCode(anyString())).thenReturn(new Program());
+    when(facilityService.getOperativeFacilityByCode(anyString())).thenReturn(new Facility());
     doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class), any(Long.class));
 
     service.submitSdpReport(report, 1l);
