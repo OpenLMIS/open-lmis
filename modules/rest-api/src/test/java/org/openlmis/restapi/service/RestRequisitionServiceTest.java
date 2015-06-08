@@ -16,7 +16,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.builder.FacilityBuilder;
@@ -35,7 +34,6 @@ import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.util.ArrayList;
@@ -90,6 +88,9 @@ public class RestRequisitionServiceTest {
   @Mock
   private ProcessingPeriodService periodService;
 
+  @Mock
+  FacilityApprovedProductService facilityApprovedProductService;
+
   @InjectMocks
   RestRequisitionService service;
   Rnr requisition;
@@ -130,6 +131,8 @@ public class RestRequisitionServiceTest {
     List<RnrLineItem> products = asList(rnrLineItem);
     requisition.setFullSupplyLineItems(products);
     requisition.setProgram(new Program());
+
+    when(facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(any(Long.class), any(Long.class))).thenReturn(new ArrayList<FacilityTypeApprovedProduct>());
 
     RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
     requisition.setRegimenLineItems(asList(regimenLineItem));
@@ -262,7 +265,9 @@ public class RestRequisitionServiceTest {
   public void sdpShouldThrowErrorIfPeriodValidationFails() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
-
+    report.setPeriodId(2L);
+    when(programService.getValidatedProgramByCode(anyString())).thenReturn(new Program());
+    when(facilityService.getOperativeFacilityByCode(anyString())).thenReturn(new Facility());
     doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class), any(Long.class));
 
     service.submitSdpReport(report, 1l);
