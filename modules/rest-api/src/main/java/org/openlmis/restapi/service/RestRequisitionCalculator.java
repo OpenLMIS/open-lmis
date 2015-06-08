@@ -63,6 +63,10 @@ public class RestRequisitionCalculator {
 
   public void validateCustomPeriod(Facility reportingFacility, Program reportingProgram, ProcessingPeriod period, Long userId){
 
+    if(period == null){
+      throw new DataException("error.rnr.period.provided.is.invalid");
+    }
+
     RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
     searchCriteria.setProgramId(reportingProgram.getId());
     searchCriteria.setFacilityId(reportingFacility.getId());

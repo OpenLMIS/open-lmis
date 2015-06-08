@@ -264,6 +264,7 @@ public class Rnr extends BaseModel {
   }
 
   private void copyCreatorEditableFieldsForNonFullSupply(Rnr rnr, ProgramRnrTemplate template, List<ProgramProduct> programProducts) {
+    this.allLineItems.clear();
     for (final RnrLineItem lineItem : rnr.nonFullSupplyLineItems) {
       RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
       if (savedLineItem == null) {

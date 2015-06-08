@@ -33,6 +33,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class Report {
 
   private List<RnrLineItem> products;
+  private List<RnrLineItem> nonFullSupplyProducts;
   private List<RegimenLineItem> regimens;
   private String agentCode;
   private String programCode;
