@@ -19,7 +19,6 @@ public class VaccineReportBuilder {
       item.setPeriodId(1L);
       item.setSupervisoryNodeId(1L);
       item.setStatus("DRAFT");
-      item.setTrackOutreachCoverage(true);
       return item;
     }
   };

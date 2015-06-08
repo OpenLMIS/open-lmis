@@ -12,6 +12,7 @@ package org.openlmis.equipment.repository;
 
 
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.mapper.EquipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -32,12 +33,24 @@ public class EquipmentRepository {
     return mapper.getAll();
   }
 
+  public List<Equipment> getAllByType(Long equipmentTypeId) {
+    return mapper.getAllByType(equipmentTypeId);
+  }
+
+  public List<EquipmentType> getTypesByProgram(Long programId){
+    return mapper.getTypesByProgram(programId);
+  }
+
   public void insert(Equipment equipment){
     mapper.insert(equipment);
   }
 
   public void update(Equipment equipment){
     mapper.update(equipment);
+  }
+
+  public void remove(Long id){
+    mapper.remove(id);
   }
 
 }

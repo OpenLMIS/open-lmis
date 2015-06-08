@@ -19,7 +19,7 @@ angular.module('equipment-setting', ['openlmis', 'ui.bootstrap.modal', 'ui.boots
         controller: CreateEquipmentController,
         templateUrl: 'partials/create.html'
       }).
-      when('/edit/:id', {
+      when('/edit/:id/:type', {
         controller: CreateEquipmentController,
         templateUrl: 'partials/create.html'
       }).

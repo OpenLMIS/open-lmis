@@ -28,9 +28,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat-start="product in report.coverageLineItems"></tr>
-        <tr ng-repeat-start="dose in product.items">
-          <td rowspan="{{product.items.length * 2}}" ng-if="$index == 0" class="col-product cell-input" ><span class="cell-text">{{product.productName}}</span></td>
+        <tr ng-repeat-start="(productId,productGroup) in report.coverageLineItemViews"></tr>
+        <tr ng-repeat-start="dose in productGroup">
+          <td rowspan="{{productGroup.length * 2}}" ng-if="$index == 0" class="col-product cell-input" ><span class="cell-text">{{dose.product.primaryName}}</span></td>
           <td class="cell-input"><span style="min-height: 31px;" class="cell-text number">{{dose.displayName}}</span></td>
         </tr>
         <tr ng-repeat-end></tr>
@@ -73,8 +73,8 @@
       </tr>
     </thead>
     <tbody>
-    <tr ng-repeat-start="product in report.coverageLineItems"></tr>
-    <tr ng-repeat-start="dose in product.items">
+    <tr ng-repeat-start="(productId, productGroup) in report.coverageLineItemViews"></tr>
+    <tr ng-repeat-start="dose in productGroup">
       <td class="cell-input col-general" >
         <input disabled numeric-validator="positiveInteger" maxlength="8" ng-model="dose.regularMale" type="text" />
       </td>

@@ -37,7 +37,6 @@ public class EquipmentRepositoryTest {
   @Test
   public void shouldGetById() throws Exception {
     Equipment equipment = new Equipment();
-    equipment.setCode("Test");
     equipment.setName("Name");
 
     when(mapper.getById(1L)).thenReturn(equipment);
@@ -57,7 +56,6 @@ public class EquipmentRepositoryTest {
   @Test
   public void shouldInsert() throws Exception {
     Equipment equipment = new Equipment();
-    equipment.setCode("Test");
     equipment.setName("Name");
 
     repository.insert(equipment);
@@ -67,7 +65,6 @@ public class EquipmentRepositoryTest {
   @Test
   public void shouldUpdate() throws Exception {
     Equipment equipment = new Equipment();
-    equipment.setCode("Test");
     equipment.setName("Name");
 
     repository.update(equipment);

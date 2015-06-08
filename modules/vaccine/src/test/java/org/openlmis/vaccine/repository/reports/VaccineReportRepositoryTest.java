@@ -13,11 +13,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportMapper;
+import org.openlmis.vaccine.service.reports.VaccineLineItemService;
 
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class VaccineReportRepositoryTest {
+
+  @Mock
+  VaccineLineItemService lineItemService;
 
   @Mock
   VaccineReportMapper mapper;

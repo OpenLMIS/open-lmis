@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @Controller
 @RequestMapping(value = "/vaccine/report/")
@@ -79,7 +80,7 @@ public class VaccineReportController extends BaseController {
   @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request){
-    return OpenLmisResponse.response("periods", service.getPeriodsFor(facilityId, programId));
+    return OpenLmisResponse.response("periods", service.getPeriodsFor(facilityId, programId, new Date()));
   }
 
   @RequestMapping(value = "view-periods/{facilityId}/{programId}", method = RequestMethod.GET)
@@ -115,8 +116,7 @@ public class VaccineReportController extends BaseController {
   @RequestMapping(value = "submit")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
-    report.setStatus(RequestStatus.SUBMITTED.toString());
-    service.save(report);
+    service.submit(report);
     return OpenLmisResponse.response("report", report);
   }
 

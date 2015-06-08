@@ -24,84 +24,103 @@
 
   <div class="row-fluid">
     <div class="span2 form-inline">
-      <input id="myFacilityRnr" type="radio" ng-model="selectedType" value="0" ng-checked="selectedType==0" ng-change="loadFacilityData(selectedType);" />&nbsp;
+      <input id="myFacilityRnr" type="radio" ng-model="selectedType" value="0" ng-checked="selectedType==0" ng-change="changeFacilityType();" />&nbsp;
       <label for="myFacilityRnr">
         <strong openlmis-message="label.myFacility"></strong>
+        <br/>({{facilityDisplayName}})
       </label>
     </div>
     <div class="span4 form-inline">
-      <input id="supervisedFacilityRnr" type="radio" ng-model="selectedType" value="1" ng-checked="selectedType==1" ng-change="loadFacilityData(selectedType);" />&nbsp;
+      <input id="supervisedFacilityRnr" type="radio" ng-model="selectedType" value="1" ng-checked="selectedType==1" ng-change="changeFacilityType();" />&nbsp;
       <label for="supervisedFacilityRnr">
         <strong openlmis-message="label.supervised.Facility"></strong>
       </label>
     </div>
   </div>
-  <br>
-  <div ng-show="selectedType == 0">
-    <div class="row-fluid">
-      <div class="span12">
-        <label openlmis-message="label.requisition.facilityName"></label>
-      </div>
-    </div>
-    <div class="row-fluid">
-      <input type="text" class="span3" ng-model="facilityDisplayName" readonly="readonly" />
-    </div>
-    <br/>
+  <br/>
 
+  <div ng-hide="programs.length == 1">
     <div class="row-fluid">
       <div class="span12">
         <label openlmis-message="label.program"></label>
       </div>
     </div>
     <div class="row-fluid">
-      <select ui-select2 placeholder="{{ programOptionMessage() }}" id="programListMyFacility" class="span3" ng-model="selectedProgram.id" ng-change="loadEquipments()">
+      <select class="span3" id="programList" ng-model="selectedProgram"
+              ng-options="program.name for program in programs | orderBy:'name'" ng-change="changeProgram();">
         <option value=""></option>
-        <option ng-repeat="program in programs | orderBy: 'name'" value="{{ program.id }}">{{ program.name }}
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <div ng-show="selectedType == 1">
-    <div class="row-fluid">
-      <div class="span12">
-        <label openlmis-message="label.program"></label>
-      </div>
-    </div>
-    <div class="row-fluid">
-      <select ui-select2 placeholder="{{ programOptionMessage() }}" class="span3" id="programListSupervisedFacility" ng-change="loadFacilitiesForProgram();" ng-model="selectedProgram.id">
-        <option value=""></option>
-        <option ng-repeat="program in programs | orderBy: 'name'" value="{{ program.id }}">{{ program.name }}
-        </option>
       </select>
     </div>
     <br/>
+  </div>
 
+  <div ng-hide="programs.length == 1 && equipmentTypes.length == 1">
     <div class="row-fluid">
       <div class="span12">
-        <label openlmis-message="label.requisition.facilityName"></label>
+        <label openlmis-message="label.equipment.type"></label>
       </div>
     </div>
     <div class="row-fluid">
-      <select ui-select2 placeholder="{{ facilityOptionMessage() }}" class="span3" id="facilityList" ng-change="loadEquipments()" ng-model="selectedFacilityId">
+      <select class="span3" id="equipmentTypeList" ng-model="selectedEquipmentType"
+              ng-options="equipmentType.name for equipmentType in equipmentTypes | orderBy:'name'" ng-change="loadInventory();">
         <option value=""></option>
-        <option ng-repeat="facility in facilities | orderBy : 'name'" value="{{ facility.id }}">{{ facility.code }} - {{ facility.name }}
-        </option>
       </select>
     </div>
+    <br/>
   </div>
 
+  <div ng-show="selectedProgram.id && selectedEquipmentType.id">
+    <a ng-show="selectedType == 0" id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/{{myFacility.id}}/{{selectedProgram.id}}/{{selectedEquipmentType.id}}/{{currentPage}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
+    <a ng-show="selectedType == 1" id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/0/{{selectedProgram.id}}/{{selectedEquipmentType.id}}/{{currentPage}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
 
-
-  <div ng-show="selectedFacilityId != undefined && selectedProgram != undefined">
-    <a ng-show="selectedFacilityId && selectedProgram.id" id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/{{selectedFacilityId}}/{{selectedProgram.id}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
-
-
+    <br/>
+    <br/>
     <div ng-show="inventory.length == 0">
       <span openlmis-message="label.equipment.none.found"></span>
     </div>
-    <table ng-show="inventory.length > 0" class="table table-bordered">
-      <thead>
+    <div ng-show="inventory.length > 0">
+      <table ng-show="selectedEquipmentType.coldChain == true" class="table table-bordered">
+        <thead>
+        <tr class="gradient-header">
+          <th openlmis-message="label.equipment.region"></th>
+          <th openlmis-message="label.equipment.district"></th>
+          <th openlmis-message="label.equipment.facility"></th>
+          <th><span openlmis-message="label.equipment.manufacturer"></span> /
+            <span openlmis-message="label.equipment.model"></span></th>
+          <th openlmis-message="label.equipment.fridge.freezer.capacity"></th>
+          <th openlmis-message="label.equipment.status"></th>
+          <th openlmis-message="label.equipment.energy.source"></th>
+          <th openlmis-message="label.equipment.year.of.installation"></th>
+          <th openlmis-message="label.equipment.age"></th>
+          <th openlmis-message="label.equipment.replacement.year"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in inventory">
+          <td>{{item.facility.geographicZone.parent.name}}</td>
+          <td>{{item.facility.geographicZone.name}}</td>
+          <td>{{item.facility.name}}</td>
+          <td><a ng-href="#/edit/{{selectedType}}/{{item.facility.id}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}/{{currentPage}}">{{item.equipment.manufacturer}} / {{item.equipment.model}}</a></td>
+          <td>{{item.equipment.refrigeratorCapacity ? item.equipment.refrigeratorCapacity : 0}} / {{item.equipment.freezerCapacity ? item.equipment.freezerCapacity : 0}}</td>
+          <td>
+            <select ui-select2 ng-model="item.operationalStatusId" ng-change="updateStatus(item)">
+              <option value="{{status.id}}" ng-repeat="status in operationalStatusList | orderBy: 'displayOrder'"
+                      ng-selected="status.id == item.operationalStatusId">{{status.name}}
+              </option>
+            </select>
+            <br/>
+            <span class="fadeout" ng-show="item.showSuccess == true"
+                  openlmis-message="label.equipment.inventory.status.saved"></span>
+          </td>
+          <td>{{item.equipment.energyType.name}}</td>
+          <td>{{item.yearOfInstallation}}</td>
+          <td>{{getAge(item.yearOfInstallation)}}</td>
+          <td>{{item.yearOfInstallation+10}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <table ng-show="selectedEquipmentType.coldChain != true" class="table table-bordered">
+        <thead>
         <tr class="gradient-header">
           <th class="col-row-number">#</th>
           <th openlmis-message="label.equipment.equipment"></th>
@@ -110,17 +129,17 @@
           <th openlmis-message="label.equipment.source.of.fund"></th>
           <th openlmis-message="label.equipment.actions"></th>
         </tr>
-      </thead>
-      <tbody>
+        </thead>
+        <tbody>
         <tr ng-repeat="item in inventory">
           <td>{{$index + 1}}</td>
-          <td><a ng-href="#/edit/{{selectedType}}/{{item.facilityId}}/{{item.programId}}/{{item.id}}">{{item.equipment.name}}</a></td>
-          <td>{{item.manufacturerName}}</td>
-          <td>{{item.model}}</td>
+          <td><a ng-href="#/edit/{{selectedType}}/{{item.facility.id}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}/{{currentPage}}">{{item.equipment.name}}</a></td>
+          <td>{{item.equipment.manufacturer}}</td>
+          <td>{{item.equipment.model}}</td>
           <td>{{item.sourceOfFund}}</td>
           <td>
             <span class="btn-mini" ng-show="!item.isActive" openlmis-message="label.equipment.status.decommissioned"></span>
-            <a ng-show="item.isActive" class="btn-mini btn-primary" ng-href="#/request/{{item.id}}?facilityId={{item.facilityId}}">
+            <a ng-show="item.isActive" class="btn-mini btn-primary" ng-href="#/request/{{item.id}}?facilityId={{item.facility.id}}">
               <span openlmis-message="label.equipment.request.service"></span>
             </a>
             <a class="btn-mini btn-cont" ng-href="#/log/{{item.id}}">
@@ -128,8 +147,80 @@
             </a>
           </td>
         </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
+
+    <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
+                direction-links="false" ng-show="inventory.length" class="pagination-sm"></pagination>
   </div>
 
+</div>
+
+<div id="notFunctionalDiv" modal="notFunctionalModal"
+     options="{'backdrop':'static', 'escape':false}">
+  <div class="modal-header">
+    <h3>
+      <span openlmis-message="label.equipment.choose.reason.for.not.function"></span>
+    </h3>
+  </div>
+
+  <div class="modal-body">
+    <form name="notFunctionalForm">
+      <input type="hidden" ng-model="modalItem.operationalStatusId" id="operationalStatus" name="operationalStatus"
+             ng-required="true" />
+      <div class="form-row clearfix">
+        <div class="form-cell">
+          <label for="notFunctionalStatus">
+            <span openlmis-message="label.equipment.cce.not.functional.status"></span>
+            <span class="label-required">*</span>
+          </label>
+          <div class="form-field">
+            <select style="width: 250px;" ui-select2 ng-model="modalItem.notFunctionalStatusId" id="notFunctionalStatus"
+                    name="notFunctionalStatus" ng-required="true" ng-change="checkForBadFunctionalStatus(modalItem.notFunctionalStatusId)">
+              <option value="{{status.id}}" ng-repeat="status in notFunctionalStatusList | orderBy: 'displayOrder'"
+                      ng-selected="status.id == modalItem.notFunctionalStatusId">{{status.name}}
+              </option>
+            </select>
+            <span class="field-error" ng-show="notFunctionalForm.notFunctionalStatus.$error.required && modalError"
+                  openlmis-message="missing.value"></span>
+          </div>
+        </div>
+      </div>
+
+      <div ng-show="modalItem.badFunctionalStatusSelected">
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label for="isActive">
+              <input ng-model="modalItem.isActive" name="isActive" id="isActive" type="checkbox" />
+              <span openlmis-message="label.equipment.is.active"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-row clearfix">
+          <div class="form-cell">
+            <label for="dateDecommissioned">
+              <span openlmis-message="label.equipment.date.decommissioned"></span>
+            </label>
+            <div class="form-field">
+              <input ng-model="modalItem.dateDecommissioned" ng-disabled="modalItem.isActive"
+                     name="dateDecommissioned" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
+                     ui-date-format="yy-dd-mm" id="dateDecommissioned">
+                <span class="field-error" ng-show="notFunctionalForm.dateDecommissioned.$error.required && modalError"
+                      openlmis-message="missing.value"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <input type="button" class="btn btn-primary save-button" openlmis-message="button.save"
+           ng-click="saveModal()" value="Save"/>
+    <input type="button" class="btn btn-cancel" openlmis-message="button.cancel"
+           ng-click="closeModal()" value="Cancel"/>
+    <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="modalError" ng-show="modalError"/>
+  </div>
 </div>

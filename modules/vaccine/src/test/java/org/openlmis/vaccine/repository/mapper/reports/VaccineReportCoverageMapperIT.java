@@ -158,7 +158,7 @@ public class VaccineReportCoverageMapperIT {
     mapper.insert(item);
 
     VaccineCoverageItem returned = mapper.getCoverageByReportProductDosage(report.getId(), product.getId(), 1L);
-    assertThat(returned, is(item));
+    assertThat(returned.getDisplayName(), is(item.getDisplayName()));
   }
 
   @Test

@@ -1,31 +1,27 @@
 package org.openlmis.equipment.service;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.MaintenanceRequest;
 import org.openlmis.equipment.repository.MaintenanceRequestRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(MaintenanceRequestService.class)
 public class MaintenanceRequestServiceTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   MaintenanceRequestRepository repository;

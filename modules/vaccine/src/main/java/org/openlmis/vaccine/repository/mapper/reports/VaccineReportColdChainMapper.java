@@ -52,7 +52,7 @@ public interface VaccineReportColdChainMapper {
     " WHERE id = #{id}")
   void update(ColdChainLineItem lineItem);
 
-  @Select("SELECT  i.id, eq.name as equipmentName, e.model as model, e.serialNumber as serial, e.energySource, i.* " +
+  @Select("SELECT  i.id, eq.name as equipmentName, eq.model as model, e.serialNumber as serial, eq.energyTypeId, i.* " +
     " from " +
     " vaccine_report_cold_chain_line_items i " +
     "   join equipment_inventories e on e.id = i.equipmentInventoryId " +
@@ -61,7 +61,7 @@ public interface VaccineReportColdChainMapper {
     " i.reportId = #{reportId} order by i.id")
   List<ColdChainLineItem> getLineItems(@Param("reportId") Long reportId);
 
-  @Select("select e.id as equipmentInventoryId, eq.name as equipmentName, e.model as model, e.serialNumber as serial, e.energySource " +
+  @Select("select e.id as equipmentInventoryId, eq.name as equipmentName, eq.model as model, e.serialNumber as serial, eq.energyTypeId " +
     " from " +
     "     equipment_inventories e " +
     "     join equipments eq on eq.id = e.equipmentId " +

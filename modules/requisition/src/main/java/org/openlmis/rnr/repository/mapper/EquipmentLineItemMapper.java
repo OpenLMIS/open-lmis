@@ -20,26 +20,30 @@ import java.util.List;
 @Repository
 public interface EquipmentLineItemMapper {
 
-  @Insert("INSERT INTO equipment_status_line_items (rnrId, code, equipmentName, equipmentCategory, equipmentModel, equipmentSerial, equipmentInventoryId, operationalStatusId, testCount, totalCount, daysOutOfUse, remarks, createdBy, createdDate, modifiedBy, modifiedDate) " +
+  @Insert("INSERT INTO equipment_status_line_items (rnrId, code, equipmentName, equipmentCategory, equipmentSerial, equipmentInventoryId, operationalStatusId, testCount, totalCount, daysOutOfUse, remarks, createdBy, createdDate, modifiedBy, modifiedDate) " +
                                     "values " +
-                                    "(#{rnrId}, #{code}, #{equipmentName}, #{equipmentCategory}, #{equipmentModel}, #{equipmentSerial}, #{equipmentInventoryId}, #{operationalStatusId}, #{testCount}, #{totalCount}, #{daysOutOfUse}, #{remarks}, #{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate})")
+                                    "(#{rnrId}, #{code}, #{equipmentName}, #{equipmentCategory}, #{equipmentSerial}, #{equipmentInventoryId}, #{operationalStatusId}, #{testCount}, #{totalCount}, #{daysOutOfUse}, #{remarks}, #{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(EquipmentLineItem item);
 
   @Update("UPDATE equipment_status_line_items " +
       " SET " +
-      "code = #{code}, equipmentName = #{equipmentName}, equipmentCategory = #{equipmentCategory}, equipmentModel = #{equipmentModel}, equipmentSerial = #{equipmentSerial}, equipmentInventoryId = #{equipmentInventoryId} " +
+      "code = #{code}, equipmentName = #{equipmentName}, equipmentCategory = #{equipmentCategory}, equipmentSerial = #{equipmentSerial}, equipmentInventoryId = #{equipmentInventoryId} " +
       " , operationalStatusId = #{operationalStatusId}, testCount = #{testCount}, totalCount = #{totalCount}, daysOutOfUse = #{daysOutOfUse}, remarks = #{remarks}, modifiedBy = #{modifiedBy}, modifiedDate = NOW()" +
       " where id = #{id}")
   Integer update(EquipmentLineItem item);
 
-  @Select("SELECT esli.id, sq.id as programEquipmentId, esli.* from equipment_status_line_items esli " +
-      "JOIN equipment_inventories inv ON esli.equipmentInventoryId = inv.id " +
-      " LEFT JOIN ( select * from equipment_programs e where e.programId in " +
-      " (select max(programId) from requisitions where id = #{rnrId} ) ) sq" +
-      " ON sq.equipmentId = inv.equipmentId" +
-      " where " +
-      " rnrId = #{rnrId} ")
+  @Select("SELECT esli.id " +
+      "  , sq.id as programEquipmentId " +
+      "  , esli.* " +
+      "FROM equipment_status_line_items esli " +
+      "  JOIN equipment_inventories inv ON esli.equipmentInventoryId = inv.id " +
+      "  LEFT JOIN (SELECT etp.* " +
+      "    , e.id AS equipmentId " +
+      "  FROM equipment_type_programs etp " +
+      "    JOIN equipments e ON etp.equipmentTypeId = e.equipmentTypeId " +
+      "  WHERE etp.programId IN (SELECT max(programId) from requisitions WHERE id = #{rnrId})) sq ON sq.equipmentId = inv.equipmentId " +
+      "WHERE rnrId = #{rnrId} ")
   @Results(
       value = {
           @Result(property = "id", column = "id"),
@@ -53,8 +57,8 @@ public interface EquipmentLineItemMapper {
       "         JOIN requisition_line_items rli on r.id = rli.rnrId " +
       "         JOIN products p on p.code::text = rli.productCode::text " +
       "         JOIN equipment_status_line_items esli on esli.rnrId = r.id " +
-      "         JOIN equipment_programs pe on pe.programId = r.programId " +
-      "         JOIN equipment_products ep on pe.id = ep.programEquipmentId " +
+      "         JOIN equipment_type_programs pe on pe.programId = r.programId " +
+      "         JOIN equipment_type_products ep on pe.id = ep.programEquipmentTypeId " +
       "               and p.id = ep.productId " +
       " WHERE " +
       "       esli.id = #{id}")

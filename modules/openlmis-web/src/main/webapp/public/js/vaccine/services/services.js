@@ -30,6 +30,15 @@ services.factory('VaccineProductDose', function ($resource) {
   return $resource('/vaccine/product-dose/get/:programId.json', {productId : '@programId'}, {});
 });
 
+services.factory('VaccineIvdTabConfigs', function ($resource) {
+  return $resource('/vaccine/config/tab-visibility/:programId.json', {productId : '@programId'}, {});
+});
+
+services.factory('SaveVaccineIvdTabConfigs', function ($resource) {
+  return $resource('/vaccine/config/save-tab-visibility.json', {}, update);
+});
+
+
 services.factory('VaccineReportConfigurablePrograms', function ($resource) {
   return $resource('/vaccine/report/programs.json', {}, {});
 });

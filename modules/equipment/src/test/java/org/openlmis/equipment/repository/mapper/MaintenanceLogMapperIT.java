@@ -19,6 +19,8 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.equipment.builder.MaintenanceLogBuilder;
+import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.domain.MaintenanceLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -45,9 +47,24 @@ public class MaintenanceLogMapperIT {
   @Autowired
   private FacilityMapper facilityMapper;
 
-  @Before
-  public void setup(){
+  @Autowired
+  private EquipmentTypeMapper equipmentTypeMapper;
 
+  @Autowired
+  private EquipmentMapper equipmentMapper;
+
+  private Equipment equipment;
+
+  @Before
+  public void setup() {
+    EquipmentType equipmentType = new EquipmentType();
+    equipmentType.setCode("1");
+    equipmentTypeMapper.insert(equipmentType);
+
+    equipment = new Equipment();
+    equipment.setName("Name");
+    equipment.setEquipmentType(equipmentType);
+    equipmentMapper.insert(equipment);
   }
 
   @Test
@@ -57,6 +74,7 @@ public class MaintenanceLogMapperIT {
 
     MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
     log.setFacilityId(facility.getId());
+    log.setEquipmentId(equipment.getId());
     mapper.insert(log);
 
     MaintenanceLog log2 = mapper.getById(log.getId());
@@ -73,6 +91,7 @@ public class MaintenanceLogMapperIT {
 
     MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
     log.setFacilityId(facility.getId());
+    log.setEquipmentId(equipment.getId());
     mapper.insert(log);
 
     logs = mapper.getAll();
@@ -88,6 +107,7 @@ public class MaintenanceLogMapperIT {
 
     MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
     log.setFacilityId(facility.getId());
+    log.setEquipmentId(equipment.getId());
     mapper.insert(log);
 
     List<MaintenanceLog> logs = mapper.getAllForFacility(facility.getId());
@@ -104,6 +124,7 @@ public class MaintenanceLogMapperIT {
     MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
     log.setFacilityId(facility.getId());
     log.setVendorId(1L);
+    log.setEquipmentId(equipment.getId());
     mapper.insert(log);
 
     List<MaintenanceLog> logs = mapper.getAllForVendor(1L);
@@ -119,6 +140,7 @@ public class MaintenanceLogMapperIT {
     MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
     log.setFacilityId(facility.getId());
     log.setVendorId(1L);
+    log.setEquipmentId(equipment.getId());
     mapper.insert(log);
 
     List<MaintenanceLog> logs = mapper.getAll();
@@ -134,6 +156,7 @@ public class MaintenanceLogMapperIT {
     MaintenanceLog log = make(a(MaintenanceLogBuilder.defaultMaintenanceLog));
     log.setFacilityId(facility.getId());
     log.setVendorId(1L);
+    log.setEquipmentId(equipment.getId());
     mapper.insert(log);
 
     log.setFinding("New Finding");
