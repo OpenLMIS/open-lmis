@@ -15,15 +15,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramProductBuilder;
@@ -38,6 +29,14 @@ import org.openlmis.vaccine.repository.ProductDoseRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 
 @Category(UnitTests.class)
@@ -81,7 +80,7 @@ public class VaccineProductDoseServiceTest {
     verify(repository, atLeastOnce()).getDosesForProduct(2L, product.getId());
     verify(repository).getAllDoses();
 
-    assertThat(dto.getProtocols().get(0).getProductName(), is(product.getName()));
+    assertThat(dto.getProtocols().get(0).getProductName(), is(product.getPrimaryName()));
   }
 
   @Test
