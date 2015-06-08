@@ -85,11 +85,20 @@
                       openlmis-message="missing.value">
                 </span>
             </div>
-          </div>
 
+          </div>
+            <div style="margin-top:5px;" class="row-fluid">
+            <div class="span4">
+                <label for="minMOS" openlmis-message="label.min.mos"></label>
+                <input type="number" min="0" id="minMOS" name="minMOS" ng-model="seasonalityAdjustment.minMOS">
+            </div>
+                <div style="left:405px; height: 500px; position: absolute" class="span4">
+                    <label for="discription" openlmis-message="label.description"></label>
+                    <input type="text" style="height:150px; width: 300px "  id="discription" name="discription" ng-model="seasonalityAdjustment.description">
+                </div>
+            </div>
           <div>
-            <label for="minMOS" openlmis-message="label.min.mos"></label>
-            <input type="number" min="0" id="minMOS" name="minMOS" ng-model="seasonalityAdjustment.minMOS">
+
           </div>
           <div>
             <label for="maxMOS" openlmis-message="label.max.mos"></label>
