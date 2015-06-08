@@ -57,6 +57,8 @@ public class EquipmentInventoryRepositoryTest {
   private long facilityId = 1L;
   private long facilityId2 = 2L;
   private long inventoryId = 1L;
+  private long statusId = 1L;
+  private long notFunctionalStatusId = 2L;
 
   private EquipmentType equipmentType;
   private Equipment equipment;
@@ -81,8 +83,6 @@ public class EquipmentInventoryRepositoryTest {
     coldChainEquipment.setEquipmentType(equipmentType);
     coldChainEquipment.setPqsCode(pqsCode);
 
-    long statusId = 1L;
-    long notFunctionalStatusId = 2L;
     status = new EquipmentInventoryStatus();
     status.setInventoryId(inventoryId);
     status.setStatusId(statusId);
@@ -272,7 +272,12 @@ public class EquipmentInventoryRepositoryTest {
   @Test
   public void shouldUpdateStatusWhenDifferent() throws Exception {
     // Set up variables
-    inventory.setOperationalStatusId(3L);
+    long newStatusId = 3L;
+    inventory.setOperationalStatusId(newStatusId);
+    EquipmentInventoryStatus newStatus = new EquipmentInventoryStatus();
+    newStatus.setInventoryId(inventoryId);
+    newStatus.setStatusId(newStatusId);
+    newStatus.setNotFunctionalStatusId(notFunctionalStatusId);
 
     // Set up mock calls
     when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
@@ -282,7 +287,7 @@ public class EquipmentInventoryRepositoryTest {
 
     // Test the results
     verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
-    verify(equipmentInventoryStatusMapper).insert(status);
+    verify(equipmentInventoryStatusMapper).insert(newStatus);
   }
 
   @Test

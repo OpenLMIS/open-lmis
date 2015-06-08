@@ -24,18 +24,24 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EquipmentInventoryStatus extends BaseModel {
 
-  Long inventoryId;
-  Date effectiveDateTime;
-  Long statusId;
-  Long notFunctionalStatusId;
+  private Long inventoryId;
+  private Date effectiveDateTime;
+  private Long statusId;
+  private Long notFunctionalStatusId;
 
-  public Boolean equals(EquipmentInventoryStatus other) {
+  @Override
+  public boolean equals(Object other) {
     // When comparing, should be equivalent when statuses are the same and not functional statuses are both null, or
     // both not null and equal to each other.
-    return other != null
-        && statusId.equals(other.getStatusId())
-        && ((notFunctionalStatusId == null && other.notFunctionalStatusId == null)
-          || (notFunctionalStatusId != null && other.notFunctionalStatusId != null
-            && notFunctionalStatusId.equals(other.notFunctionalStatusId)));
+    try {
+      EquipmentInventoryStatus otherStatus = (EquipmentInventoryStatus)other;
+      return otherStatus != null
+          && statusId.equals(otherStatus.getStatusId())
+          && ((notFunctionalStatusId == null && otherStatus.notFunctionalStatusId == null)
+          || (notFunctionalStatusId != null && otherStatus.notFunctionalStatusId != null
+          && notFunctionalStatusId.equals(otherStatus.notFunctionalStatusId)));
+    } catch (ClassCastException cce) {
+      throw new IllegalArgumentException();
+    }
   }
 }

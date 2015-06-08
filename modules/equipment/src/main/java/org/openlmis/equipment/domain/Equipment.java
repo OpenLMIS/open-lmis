@@ -42,5 +42,9 @@ public class Equipment extends BaseModel{
 
   private Long energyTypeId;
 
+  public boolean equalsByMakeAndModel(Equipment other) {
+    return other.manufacturer != null && other.model != null
+        && other.manufacturer.equalsIgnoreCase(manufacturer) && other.model.equalsIgnoreCase(model);
+  }
 
 }
