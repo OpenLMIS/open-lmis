@@ -13,7 +13,7 @@
     <a ng-hide="equipmentTypeId === undefined || equipmentTypeId ==='' " id="add-new-equipment" href="#/create" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
   </h2>
 
-  <div class="alert alert-success" ng-show="message">
+  <div class="alert alert-success clearfix" ng-show="message">
     <span ng-bind="message"></span>
   </div>
   <div class="content-body">
@@ -22,10 +22,9 @@
         <div class="span6">
           <label for="programList">
             <span openlmis-message="label.equipment.program"></span>
-            <i openlmis-message="label.equipment.filter-by-program"></i>
           </label>
           <div>
-            <select id="programList" class="span3" ng-change="getAllEquipmentTypesByProgram(true)" ng-model="programId" >
+            <select ui-select2 id="programList" class="span3" ng-change="getAllEquipmentTypesByProgram(true)" ng-model="programId" >
               <option value="0"><span openlmis-message="label.equipment.choose.all-programs"></span></option>
               <option ng-repeat="program in programs" ng-selected="program.id == programId" value="{{ program.id }}">{{ program.name }}</option>
             </select>
@@ -36,7 +35,7 @@
             <span openlmis-message="label.equipment.type"></span>
           </label>
           <div>
-            <select class="span3" id="equipmentTypeList" ng-change="listEquipments()" ng-model="equipmentTypeId" >
+            <select ui-select2 class="span3" id="equipmentTypeList" ng-change="listEquipments(true)" ng-model="equipmentTypeId" >
               <option value=""><span openlmis-message="label.equipment.choose.type"></span></option>
               <option ng-repeat="type in equipmentTypes" ng-selected="type.id == equipmentTypeId" value="{{ type.id }}">{{ type.name }}</option>
             </select>
@@ -101,17 +100,18 @@
         <td>{{eq.freezerCapacity}}</td>
         <td>{{eq.temperatureZone}}</td>
         <td>
-          <select style="width:120px" ng-model="eq.pqsStatusId" id="pqs-status" name="pqs-status" ng-change="updatePqsStatus(eq)">
+          <select style="width:120px;height:28px; margin:0px" ng-model="eq.pqsStatusId"  ng-change="updatePqsStatus(eq)">
             <option ng-repeat="status in pqsStatus" ng-selected="status.id == eq.pqsStatus.id" value="{{status.id}}">{{status.name}}</option>
-          </select><br />
-          <span class="fadeout" ng-show="eq.showSuccess == true">Status Saved</span>
+          </select>
+          <span class="fadeout clearfix" ng-show="eq.showSuccess == true">Status Saved</span>
         </td>
         <td>{{eq.pqsCode}}</td>
         <td><a  openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)"></a></td>
       </tr>
       </tbody>
     </table>
-      {{x}}
+      <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
+                  direction-links="false" ng-show="true" class="pagination-sm"></pagination>
     </div>
   </div>
 </div>

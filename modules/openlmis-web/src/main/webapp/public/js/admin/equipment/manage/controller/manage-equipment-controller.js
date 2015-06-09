@@ -44,14 +44,23 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
       };
 
 
-   $scope.listEquipments=function()
+   $scope.listEquipments=function(initLoad)
    {
+
+      if(initLoad)
+      {
+            $scope.page=1;
+      }
       var id=$scope.equipmentTypeId;
       currentEquipmentTypeId.set($scope.equipmentTypeId);
       Equipments.get({
-           equipmentTypeId:id
+           equipmentTypeId:id,
+           page: $scope.page
            },function (data) {
                $scope.equipments = data.equipments;
+               $scope.pagination = data.pagination;
+               $scope.totalItems = $scope.pagination.totalRecords;
+               $scope.currentPage = $scope.pagination.page;
        });
       EquipmentType.get({
             id: id
@@ -117,7 +126,7 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
      $scope.equipmentTypeId=currentEquipmentTypeId.get();
      if( $scope.equipmentTypeId !== undefined)
      {
-          $scope.listEquipments();
+          $scope.listEquipments(true);
      }
 
      $scope.updatePqsStatus=function(eq){
@@ -140,5 +149,12 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
           $scope.$parent.message = false;
         }, 3000);
      }
+
+     $scope.$watch('currentPage', function () {
+         if ($scope.currentPage > 0) {
+           $scope.page = $scope.currentPage;
+           $scope.listEquipments(false);
+         }
+       });
 
 }

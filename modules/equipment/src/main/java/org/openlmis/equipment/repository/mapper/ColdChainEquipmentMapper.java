@@ -11,6 +11,7 @@
 package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.equipment.domain.*;
 import org.springframework.stereotype.Repository;
 
@@ -19,9 +20,9 @@ import java.util.List;
 @Repository
 public interface ColdChainEquipmentMapper {
 
-  @Select("SELECT * from equipment_cold_chain_equipments " +
+    @Select("SELECT * from equipment_cold_chain_equipments " +
           "JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id WHERE equipments.equipmentTypeId = #{equipmentTypeId}")
-  @Results({
+     @Results({
             @Result(
                     property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
                     one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
@@ -39,8 +40,12 @@ public interface ColdChainEquipmentMapper {
             @Result(property = "donor", column = "donorId", javaType = Donor.class,
                     one = @One(select = "org.openlmis.equipment.repository.mapper.DonorMapper.getById")),
             @Result(property = "donorId", column = "donorId")
-  })
-  List<ColdChainEquipment> getAll(Long equipmentTypeId);
+    })
+    List<ColdChainEquipment> getAll(Long equipmentTypeId, RowBounds rowBounds);
+
+    @Select("SELECT COUNT(id) from equipment_cold_chain_equipments " +
+            "JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id WHERE equipments.equipmentTypeId = #{equipmentTypeId}")
+    Integer getCountByType(@Param("equipmentTypeId") Long equipmentTypeId);
 
     @Select("SELECT * from equipment_cold_chain_equipments JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id where equipment_cold_chain_equipments.equipmentid = #{id}")
     @Results({

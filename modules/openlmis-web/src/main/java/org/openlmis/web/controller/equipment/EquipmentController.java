@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller.equipment;
 
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
@@ -19,6 +20,7 @@ import org.openlmis.equipment.service.EquipmentTypeService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static java.lang.Integer.parseInt;
 
 @Controller
 @RequestMapping(value="/equipment/manage/")
@@ -54,15 +60,27 @@ public class EquipmentController extends BaseController {
 
   @RequestMapping(method = RequestMethod.GET, value = "list")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS') or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
-  public ResponseEntity<OpenLmisResponse> getList(@RequestParam("equipmentTypeId") Long equipmentTypeId){
+  public ResponseEntity<OpenLmisResponse> getList(@RequestParam("equipmentTypeId") Long equipmentTypeId,
+                                                  @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                  @Value("${search.page.size}") String limit
+                                                  ){
 
+      Pagination pagination = new Pagination(page, parseInt(limit));
       EquipmentType equipmentType=equipmentTypeService.getTypeById(equipmentTypeId);
       if(equipmentType.isColdChain())
       {
-          return OpenLmisResponse.response("equipments", service.getAllCCE(equipmentTypeId));
+          pagination.setTotalRecords(service.getCCECountByType(equipmentTypeId));
+          List<ColdChainEquipment> equipments=service.getAllCCE(equipmentTypeId,pagination);
+          ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("equipments",equipments);
+          response.getBody().addData("pagination", pagination);
+          return response;
       }
         else{
-          return OpenLmisResponse.response("equipments", service.getAllByType(equipmentTypeId));
+          pagination.setTotalRecords(service.getEquipmentsCountByType(equipmentTypeId));
+          List<Equipment> equipments=service.getByType(equipmentTypeId, pagination);
+          ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("equipments",equipments);
+          response.getBody().addData("pagination", pagination);
+          return response;
       }
   }
 
