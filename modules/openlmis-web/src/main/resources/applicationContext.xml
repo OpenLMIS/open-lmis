@@ -226,6 +226,15 @@
                         <property name="recordHandler" ref="productCategoryPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="priceSchedule">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.price.schedule"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.PriceSchedule</value>
+                        </property>
+                        <property name="recordHandler" ref="priceSchedulePersistenceHandler"/>
+                    </bean>
+                </entry>
                 <entry key="geographicZone">
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="label.geographic.zones"/>
