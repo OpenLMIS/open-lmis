@@ -60,8 +60,6 @@ public class EquipmentControllerTest {
   @InjectMocks
   EquipmentController controller;
 
-  @Mock
-  Pagination pagination;
 
   private MockHttpServletRequest request;
 
@@ -108,13 +106,13 @@ public class EquipmentControllerTest {
 
   @Test
   public void shouldGetEquipmentList() throws Exception {
-    pagination=new Pagination(1,2);
+    Pagination page=new Pagination(1,2);
     Equipment equipment = makeAnEquipment();
     EquipmentType equipmentType=new EquipmentType();
     equipmentType.setColdChain(false);
-    when(service.getByType(1L,pagination)).thenReturn(asList(equipment));
-    when(equipmentTypeService.getTypeById(1L)).thenReturn(equipmentType);
     when(service.getEquipmentsCountByType(1L)).thenReturn(2);
+    when(service.getByType(1L,page)).thenReturn(asList(equipment));
+    when(equipmentTypeService.getTypeById(1L)).thenReturn(equipmentType);
 
     ResponseEntity<OpenLmisResponse> response = controller.getList(1L,1,"2");
     assertThat(asList(equipment), is(response.getBody().getData().get("equipments")));
@@ -122,12 +120,12 @@ public class EquipmentControllerTest {
 
   @Test
   public void shouldGetCCEList() throws Exception {
-    Pagination pagination=new Pagination(1,2);
+    Pagination page=new Pagination(1,2);
     ColdChainEquipment coldChainEquipment=makeAnColdChainEquipment();
     EquipmentType equipmentType=new EquipmentType();
     equipmentType.setColdChain(true);
     when(service.getCCECountByType(1L)).thenReturn(2);
-    when(service.getAllCCE(1L,pagination)).thenReturn(asList(coldChainEquipment));
+    when(service.getAllCCE(1L,page)).thenReturn(asList(coldChainEquipment));
     when(equipmentTypeService.getTypeById(1L)).thenReturn(equipmentType);
     ResponseEntity<OpenLmisResponse> response = controller.getList(1L,1,"2");
     assertThat(asList(coldChainEquipment), is(response.getBody().getData().get("equipments")));

@@ -112,9 +112,6 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
      {
          $scope.getAllEquipmentTypesByProgram(false);
      }
-     else{
-         $scope.getAllEquipmentTypes();
-     }
 
      $scope.equipmentTypeId=currentEquipmentTypeId.get();
      if( $scope.equipmentTypeId !== undefined)
@@ -149,5 +146,4 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
            $scope.listEquipments(false);
          }
        });
-
 }

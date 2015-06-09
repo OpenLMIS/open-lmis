@@ -36,7 +36,7 @@ public interface EquipmentMapper {
   })
   List<Equipment> getAll();
 
-    @Select("SELECT * from equipments where equipmentTypeId = #{equipmentTypeId} order by name")
+    @Select("SELECT * from equipments where equipmentTypeId = #{equipmentTypeId} order by id DESC")
     @Results({
             @Result(
                     property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,

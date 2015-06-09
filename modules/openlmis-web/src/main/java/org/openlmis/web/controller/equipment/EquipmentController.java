@@ -69,15 +69,15 @@ public class EquipmentController extends BaseController {
       EquipmentType equipmentType=equipmentTypeService.getTypeById(equipmentTypeId);
       if(equipmentType.isColdChain())
       {
-          pagination.setTotalRecords(service.getCCECountByType(equipmentTypeId));
           List<ColdChainEquipment> equipments=service.getAllCCE(equipmentTypeId,pagination);
+          pagination.setTotalRecords(service.getCCECountByType(equipmentTypeId));
           ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("equipments",equipments);
           response.getBody().addData("pagination", pagination);
           return response;
       }
         else{
-          pagination.setTotalRecords(service.getEquipmentsCountByType(equipmentTypeId));
           List<Equipment> equipments=service.getByType(equipmentTypeId, pagination);
+          pagination.setTotalRecords(service.getEquipmentsCountByType(equipmentTypeId));
           ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("equipments",equipments);
           response.getBody().addData("pagination", pagination);
           return response;

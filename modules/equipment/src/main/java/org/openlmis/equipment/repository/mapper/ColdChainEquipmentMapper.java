@@ -21,7 +21,7 @@ import java.util.List;
 public interface ColdChainEquipmentMapper {
 
     @Select("SELECT * from equipment_cold_chain_equipments " +
-          "JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id WHERE equipments.equipmentTypeId = #{equipmentTypeId}")
+          "JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id WHERE equipments.equipmentTypeId = #{equipmentTypeId} ORDER BY id DESC")
      @Results({
             @Result(
                     property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
