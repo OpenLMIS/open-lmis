@@ -16,26 +16,26 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.Mock;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.upload.UserPersistenceHandler.RESET_PASSWORD_PATH;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+
+
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest(UserPersistenceHandler.class)
 public class UserPersistenceHandlerTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   private UserPersistenceHandler userPersistenceHandler;
 

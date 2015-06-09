@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ProgramEquipmentProductController($scope, $dialog, messageService, navigateBackService, Equipments, ProgramCompleteList, PossibleProductsForProgram, GetProgramEquipmentByProgramId, SaveProgramEquipment, GetProgramEquipmentProductByProgramEquipment, SaveProgramEquipmentProduct, RemoveProgramEquipmentProduct, RemoveProgramEquipment) {
+function ProgramEquipmentProductController($scope, $dialog, messageService, navigateBackService, EquipmentTypes, ProgramCompleteList, PossibleProductsForProgram, GetProgramEquipmentByProgramId, SaveProgramEquipment, GetProgramEquipmentProductByProgramEquipment, SaveProgramEquipmentProduct, RemoveProgramEquipmentProduct, RemoveProgramEquipment) {
   $scope.$on('$viewContentLoaded', function () {
     $scope.getAllEquipments();
     $scope.getAllPrograms();
@@ -20,16 +20,16 @@ function ProgramEquipmentProductController($scope, $dialog, messageService, navi
   $scope.currentProgramEquipmentProduct = {};
 
   $scope.getAllEquipments = function () {
-    Equipments.get(function (data) {
-      $scope.allEquipments = data.equipments;
-      $scope.equipmentsLoaded = true;
-    });
+    EquipmentTypes.get(function (data) {
+       $scope.allEquipments = data.equipment_type;
+       $scope.equipmentsLoaded = true;
+      });
   };
 
   $scope.getAllProductsForAProgram = function () {
     PossibleProductsForProgram.get({
       program: $scope.currentProgramEquipment.program.id,
-      equipment: $scope.currentProgramEquipment.equipmentId
+      equipmentType: $scope.currentProgramEquipment.equipmentId
     }, function (data) {
       $scope.allProducts = data.products;
       $scope.productsLoaded = true;
@@ -44,12 +44,16 @@ function ProgramEquipmentProductController($scope, $dialog, messageService, navi
 
 
   $scope.listEquipmentsForProgram = function () {
+
     if ($scope.currentProgramEquipment.program) {
       GetProgramEquipmentByProgramId.get({programId: $scope.currentProgramEquipment.program.id}, function (data) {
         $scope.programEquipments = data.programEquipments;
       });
       $scope.getAllProductsForAProgram();
       $scope.programEquipmentProducts = null;
+      $scope.currentProgramEquipment.id = null;
+      $scope.currentProgramEquipment.equipmentId = null;
+      $scope.currentProgramEquipmentProduct.product=null;
     }
     else {
       $scope.programEquipments = null;
@@ -81,8 +85,8 @@ function ProgramEquipmentProductController($scope, $dialog, messageService, navi
   $scope.setSelectedProgramEquipment = function (programEquipment) {
     if (programEquipment) {
       $scope.currentProgramEquipment.id = programEquipment.id;
-      $scope.currentProgramEquipment.equipmentId = programEquipment.equipmentId;
-      $scope.currentProgramEquipmentProduct.programEquipment = programEquipment;
+      $scope.currentProgramEquipment.equipmentId = programEquipment.equipmentType.id;
+      $scope.currentProgramEquipmentProduct.programEquipmentType = programEquipment;
     }
     else {
       $scope.currentProgramEquipment = null;
@@ -188,7 +192,7 @@ function ProgramEquipmentProductController($scope, $dialog, messageService, navi
     var options = {
       id: "removeProgramEquipmentConfirmDialog",
       header: "Confirmation",
-      body: "Please confirm that you want to remove the equipment: " + programEquipment.equipment.name
+      body: "Please confirm that you want to remove the equipment: " + programEquipment.equipmentType.name
     };
 
     OpenLmisDialog.newDialog(options, $scope.removeProgramEquipmentConfirm, $dialog, messageService);
@@ -219,7 +223,7 @@ function ProgramEquipmentProductController($scope, $dialog, messageService, navi
     var options = {
       id: "removeProgramEquipmentProductConfirmDialog",
       header: "Confirmation",
-      body: "Please confirm that you want to remove the product: " + $scope.selectedProgramEquipmentProduct.product.fullName.concat('(').concat($scope.selectedProgramEquipmentProduct.product.primaryName).concat(')')
+      body: "Please confirm that you want to remove the product: " + $scope.selectedProgramEquipmentProduct.product.fullName + '('+ $scope.selectedProgramEquipmentProduct.product.primaryName + ')'
     };
     OpenLmisDialog.newDialog(options, $scope.removeProgramEquipmentProductConfirm, $dialog, messageService);
   };

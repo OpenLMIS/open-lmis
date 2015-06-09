@@ -49,7 +49,7 @@
                   ng-click="setSelectedProgramEquipment(programEquipment)"
                   style="{{getProgramEquipmentColor(programEquipment)}}">
                 <td>
-                  <div>{{programEquipment.equipment.name}}</div>
+                  <div>{{programEquipment.equipmentType.name}}</div>
                 </td>
                 <td>
                   <div>
@@ -131,14 +131,13 @@
             </div>
             <div class="span4">
               <select style="width:200px;" ng-required="true" size="7" name="equipmentValue"
-                      id="equipmentValue" ng-model="currentProgramEquipment.equipment.id"
+                      id="equipmentValue" ng-model="currentProgramEquipment.equipmentType.id"
                       ng-options="option.id as option.name for option in allEquipments">
               </select>
             </div>
           </div>
 
         </div>
-
       </form>
       <div class="alert alert-error" id="equipmentSaveFailMessage" openlmis-message="equipmentErrorMessage"
            ng-show="equipmentError">
@@ -148,6 +147,7 @@
 
     <div class="modal-footer">
       <input type="button" class="btn btn-primary save-button" value="Add"
+             ng-disabled="currentProgramEquipment.equipmentType.id == null || currentProgramEquipment.equipmentType.id == undefined"
              ng-click="saveEquipment()"/>
       <input type="button"
              ng-click="closeModal();equipmentError=''"
@@ -177,9 +177,7 @@
               </select>
             </div>
           </div>
-
         </div>
-
       </form>
       <div class="alert alert-error" id="productSaveFailMessage" openlmis-message="productErrorMessage"
            ng-show="productError">
@@ -189,6 +187,7 @@
 
     <div class="modal-footer">
       <input type="button" class="btn btn-primary save-button" value="Add"
+             ng-disabled="currentProgramEquipmentProduct.product.id == null || currentProgramEquipmentProduct.product.id == undefined"
              ng-click="saveProgramEquipmentProduct()"/>
       <input type="button"
              ng-click="closeModal();productError=''"

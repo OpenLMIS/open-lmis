@@ -27,4 +27,6 @@ public class EquipmentType extends BaseModel{
 
   private String code;
 
+  private boolean isColdChain;
+
 }

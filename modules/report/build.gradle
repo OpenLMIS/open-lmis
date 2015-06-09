@@ -20,6 +20,7 @@ dependencies {
           'org.apache.poi:poi:3.7',
       project(':modules:authentication'),
       project(':modules:requisition'),
+      project(':modules:shipment'),
       project(':modules:core')
 
 

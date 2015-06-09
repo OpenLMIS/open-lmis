@@ -24,43 +24,36 @@
 geographic_zones.name AS district,
 facilities.name AS facilityname,
 Donors.longname AS donor,
-facility_program_equipments.sourceoffund,
+equipment_inventories.sourceoffund,
 equipments.name AS equipment_name,
-facility_program_equipments.model,
-facility_program_equipments.yearofinstallation,
+equipments.model,
+equipment_inventories.yearofinstallation,
 CASE
-    WHEN facility_program_equipments.hasservicecontract = false THEN 'No'::text
-    ELSE 'yes'::text
-END AS hasservicecontract,
-CASE
-   WHEN  facility_program_equipments.servicecontractenddate is null then '-'::text
-   ELSE facility_program_equipments.servicecontractenddate::text END servicecontractenddate,
-CASE
-    WHEN facility_program_equipments.isactive = true THEN 'Yes'::text
+    WHEN equipment_inventories.isactive = true THEN 'Yes'::text
     ELSE 'No'::text
 END AS isactive,
 CASE
-    WHEN facility_program_equipments.datedecommissioned is null THEN '-'::text
-    ELSE facility_program_equipments.datedecommissioned::text END datedecommissioned,
+    WHEN equipment_inventories.datedecommissioned is null THEN '-'::text
+    ELSE equipment_inventories.datedecommissioned::text END datedecommissioned,
 CASE
-    WHEN facility_program_equipments.replacementrecommended = false THEN 'No'::text
+    WHEN equipment_inventories.replacementrecommended = false THEN 'No'::text
     ELSE 'Yes'::text
 END AS replacementrecommended
 FROM equipments
-JOIN facility_program_equipments ON facility_program_equipments.equipmentid = equipments.id
-JOIN programs ON facility_program_equipments.programid = programs.id
-JOIN facilities ON facilities.id = facility_program_equipments.facilityid
+JOIN equipment_inventories ON equipment_inventories.equipmentid = equipments.id
+JOIN programs ON equipment_inventories.programid = programs.id
+JOIN facilities ON facilities.id = equipment_inventories.facilityid
 JOIN facility_types ON facilities.typeid = facility_types.id
-JOIN equipment_status_line_items ON equipments.code::text = equipment_status_line_items.code::text
-JOIN equipment_operational_status ON equipment_operational_status.id = equipment_status_line_items.operationalstatusid
+JOIN equipment_types ON equipment_types.id = equipments.equipmenttypeid
+JOIN equipment_status_line_items ON equipment_types.code::text = equipment_status_line_items.code::text
+JOIN equipment_inventory_statuses ON equipment_inventory_statuses.id = equipment_status_line_items.inventorystatusid
 JOIN requisitions ON requisitions.programid = programs.id AND equipment_status_line_items.rnrid = requisitions.id
 JOIN processing_periods ON requisitions.periodid = processing_periods.id
 JOIN processing_schedules ON processing_periods.scheduleid = processing_schedules.id
 JOIN geographic_zones ON geographic_zones.id = facilities.geographiczoneid
-JOIN equipment_types ON equipment_types.id = equipments.equipmenttypeid
 JOIN requisition_group_members ON requisition_group_members.facilityid = facilities.id
-JOIN Donors ON Donors.id = facility_program_equipments.primarydonorid
-ORDER BY geographic_zones.name, facilities.name, equipment_status_line_items.operationalstatusid;]]>
+JOIN Donors ON Donors.id = equipment_inventories.primarydonorid
+ORDER BY geographic_zones.name, facilities.name, equipment_inventory_statuses.statusid;]]>
 	</queryString>
 	<field name="district" class="java.lang.String"/>
 	<field name="facilityname" class="java.lang.String"/>

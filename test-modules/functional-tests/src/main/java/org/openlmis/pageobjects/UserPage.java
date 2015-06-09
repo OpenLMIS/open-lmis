@@ -598,6 +598,7 @@ public class UserPage extends FilterSearchPage {
     testWebDriver.waitForElementToAppear(homeFacilityRolesAccordion);
     homeFacilityRolesAccordion.click();
     testWebDriver.sleep(500);
+//      testWebDriver.refresh();
   }
 
   public void clickSupervisoryRolesAccordion() {
@@ -708,6 +709,7 @@ public class UserPage extends FilterSearchPage {
   public void clickCrossIcon() {
     testWebDriver.waitForElementToAppear(closeButton);
     closeButton.click();
+      testWebDriver.refresh();
   }
 
   public void clickHomeFacilityField() {

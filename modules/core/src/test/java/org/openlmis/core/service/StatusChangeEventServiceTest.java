@@ -10,10 +10,10 @@
 
 package org.openlmis.core.service;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Facility;
@@ -25,8 +25,7 @@ import org.openlmis.email.domain.OpenlmisEmailMessage;
 import org.openlmis.email.service.EmailService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.springframework.mail.SimpleMailMessage;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 
@@ -39,12 +38,11 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest(StatusChangeEventService.class)
 public class StatusChangeEventServiceTest {
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
-  
   @Mock
   String baseUrl = "http://localhost:9091";
 

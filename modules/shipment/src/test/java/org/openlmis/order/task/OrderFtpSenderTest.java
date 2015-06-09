@@ -10,20 +10,18 @@
 
 package org.openlmis.order.task;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.openlmis.core.domain.FacilityFtpDetails;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.io.File;
 
@@ -31,11 +29,10 @@ import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(OrderFtpSender.class)
 public class OrderFtpSenderTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Test
   public void shouldSendFileToFtpLocation() throws Exception {

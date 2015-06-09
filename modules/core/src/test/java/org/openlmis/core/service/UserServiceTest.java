@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,7 +30,7 @@ import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.mail.SimpleMailMessage;
 
 import java.util.ArrayList;
@@ -50,12 +51,11 @@ import static org.openlmis.email.builder.EmailMessageBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.*;
 
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest({Encoder.class, UserService.class})
 public class UserServiceTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   public static final String FORGET_PASSWORD_LINK = "http://openLMIS.org";
   @Rule

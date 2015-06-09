@@ -10,10 +10,10 @@
 
 package org.openlmis.rnr.search.factory;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.service.ProcessingScheduleService;
@@ -25,7 +25,7 @@ import org.openlmis.rnr.search.strategy.*;
 import org.openlmis.rnr.service.RequisitionPermissionService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,11 +36,10 @@ import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest({RequisitionSearchStrategyFactory.class})
 public class RequisitionSearchStrategyFactoryTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   ProcessingScheduleService processingScheduleService;

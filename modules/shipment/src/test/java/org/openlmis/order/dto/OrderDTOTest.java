@@ -10,10 +10,10 @@
 
 package org.openlmis.order.dto;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.db.categories.UnitTests;
@@ -23,7 +23,7 @@ import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,11 +38,10 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(RnrDTO.class)
 public class OrderDTOTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Test
   public void shouldGetOrdersForView() throws Exception {

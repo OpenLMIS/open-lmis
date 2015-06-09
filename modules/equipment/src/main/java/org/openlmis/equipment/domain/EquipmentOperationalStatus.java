@@ -26,5 +26,7 @@ public class EquipmentOperationalStatus extends BaseModel {
 
   private String name;
   private Integer displayOrder;
+  private String category;
+  private Boolean isBad;
 
 }

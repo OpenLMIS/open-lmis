@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Product;
@@ -29,7 +30,7 @@ import org.openlmis.pod.service.PODService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
@@ -38,6 +39,8 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 public class RestPODServiceTest {
 
   @InjectMocks
@@ -54,9 +57,6 @@ public class RestPODServiceTest {
 
   @Mock
   private RequisitionService requisitionService;
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();

@@ -63,6 +63,10 @@ public class RestRequisitionCalculator {
 
   public void validateCustomPeriod(Facility reportingFacility, Program reportingProgram, ProcessingPeriod period, Long userId){
 
+    if(period == null){
+      throw new DataException("error.rnr.period.provided.is.invalid");
+    }
+
     RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
     searchCriteria.setProgramId(reportingProgram.getId());
     searchCriteria.setFacilityId(reportingFacility.getId());
@@ -89,7 +93,7 @@ public class RestRequisitionCalculator {
     List<String> invalidProductCodes = new ArrayList<>();
     for (final RnrLineItem product : products) {
       RnrLineItem correspondingLineItem = savedRequisition.findCorrespondingLineItem(product);
-      if (correspondingLineItem == null || correspondingLineItem.getSkipped()) {
+      if (correspondingLineItem == null) {
         invalidProductCodes.add(product.getProductCode());
       }
     }

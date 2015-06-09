@@ -11,7 +11,8 @@
 package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.Program;
+import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.springframework.stereotype.Repository;
@@ -29,35 +30,69 @@ public interface EquipmentInventoryMapper {
   })
   List<EquipmentInventory> getInventoryByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId")Long programId);
 
+  @Select("SELECT ei.*" +
+      " FROM equipment_inventories ei" +
+      " JOIN equipments e ON ei.equipmentId = e.id" +
+      " JOIN equipment_types et ON e.equipmentTypeId = et.id" +
+      " WHERE ei.programId = #{programId}" +
+      " AND et.id = #{equipmentTypeId}" +
+      " AND ei.facilityId = ANY (#{facilityIds}::INT[])")
+  @Results({
+      @Result(property = "equipmentId", column = "equipmentId"),
+      @Result(
+          property = "equipment", column = "equipmentId", javaType = Equipment.class,
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
+      @Result(property = "facilityId", column = "facilityId"),
+      @Result(
+          property = "facility", column = "facilityId", javaType = Facility.class,
+          one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
+  })
+  List<EquipmentInventory> getInventory(@Param("programId")Long programId, @Param("equipmentTypeId")Long equipmentTypeId, @Param("facilityIds")String facilityIds, RowBounds rowBounds);
+
+  @Select("SELECT COUNT(ei.id)" +
+      " FROM equipment_inventories ei" +
+      " JOIN equipments e ON ei.equipmentId = e.id" +
+      " JOIN equipment_types et ON e.equipmentTypeId = et.id" +
+      " WHERE ei.programId = #{programId}" +
+      " AND et.id = #{equipmentTypeId}" +
+      " AND ei.facilityId = ANY (#{facilityIds}::INT[])")
+  Integer getInventoryCount(@Param("programId")Long programId, @Param("equipmentTypeId")Long equipmentTypeId, @Param("facilityIds")String facilityIds);
+
   @Select("SELECT * from equipment_inventories where id = #{id}")
   @Results({
-    @Result(property = "equipmentId", column = "equipmentId"),
-    @Result(
-      property = "equipment", column = "equipmentId", javaType = Equipment.class,
-      one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById"))
+      @Result(property = "equipmentId", column = "equipmentId"),
+      @Result(
+          property = "equipment", column = "equipmentId", javaType = Equipment.class,
+          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
+      @Result(property = "facilityId", column = "facilityId"),
+      @Result(
+          property = "facility", column = "facilityId", javaType = Facility.class,
+          one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
   })
   EquipmentInventory getInventoryById(@Param("id") Long id);
 
   @Insert("INSERT into equipment_inventories " +
-      " ( facilityId, equipmentId, programId, operationalStatusId, serialNumber, manufacturerName, model" +
-      ", energySource, yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
-      ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned, hasServiceContract, serviceContractEndDate" +
-      ", primaryDonorId, dimension, capacity, minTemperature, maxTemperature, accessories , createdBy, createdDate, modifiedBy, modifiedDate) " +
+      " ( facilityId, equipmentId, programId, serialNumber" +
+      ", yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
+      ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned" +
+      ", primaryDonorId, createdBy, createdDate, modifiedBy, modifiedDate) " +
       "values " +
-      " ( #{facilityId}, #{equipmentId}, #{programId}, #{operationalStatusId}, #{serialNumber}, #{manufacturerName}, #{model}" +
-      ", #{energySource}, #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
-      ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}, #{hasServiceContract}, #{serviceContractEndDate} " +
-      ", #{primaryDonorId}, #{dimension}, #{capacity}, #{minTemperature}, #{maxTemperature}, #{accessories} , #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+      " ( #{facilityId}, #{equipmentId}, #{programId}, #{serialNumber}" +
+      ", #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
+      ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}" +
+      ", #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
   void insert(EquipmentInventory inventory);
 
   @Update("UPDATE equipment_inventories " +
       "SET " +
-      " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, operationalStatusId = #{operationalStatusId}, serialNumber = #{serialNumber}, manufacturerName = #{manufacturerName}, model = #{model}, energySource = #{energySource}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, sourceOfFund = #{sourceOfFund},replacementRecommended = #{replacementRecommended},reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, dateLastAssessed = #{dateLastAssessed} " +
-      " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, hasServiceContract = #{hasServiceContract}, serviceContractEndDate = #{serviceContractEndDate} , primaryDonorId = #{primaryDonorId} " +
-      " , dimension = #{dimension},capacity = #{capacity}, minTemperature = #{minTemperature}, maxTemperature = #{maxTemperature}, accessories = #{accessories} " +
+      " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, " +
+      " serialNumber = #{serialNumber}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, " +
+      " sourceOfFund = #{sourceOfFund}, replacementRecommended = #{replacementRecommended}, " +
+      " reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, " +
+      " dateLastAssessed = #{dateLastAssessed} " +
+      " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, primaryDonorId = #{primaryDonorId} " +
       " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
       " WHERE id = #{id}")
   void update(EquipmentInventory inventory);
-
 }

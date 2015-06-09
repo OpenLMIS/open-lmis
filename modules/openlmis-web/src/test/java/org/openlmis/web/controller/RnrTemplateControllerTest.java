@@ -10,10 +10,10 @@
 
 package org.openlmis.web.controller;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -26,7 +26,7 @@ import org.openlmis.web.form.RnrColumnList;
 import org.openlmis.web.form.RnrTemplateForm;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -39,10 +39,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 public class RnrTemplateControllerTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   private RnrTemplateService rnrTemplateService;

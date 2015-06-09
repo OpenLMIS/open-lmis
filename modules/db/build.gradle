@@ -109,6 +109,11 @@ task testSeed(type: Exec) {
     commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
+task vimsSeed(type: Exec) {
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/vims/seed.sql', '-h', databaseHostName, '-w', dbName
+}
+
 task seed(type: Exec) {
     environment("PGPASSWORD", dbPassword)
     commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName

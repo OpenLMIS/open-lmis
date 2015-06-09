@@ -31,6 +31,7 @@ public class OrderQuantityAdjustmentProduct extends BaseModel {
     private Long minMOS;
     private Long maxMOS;
     private String formula;
+    private String description;
 
 
     @SuppressWarnings("unused")
