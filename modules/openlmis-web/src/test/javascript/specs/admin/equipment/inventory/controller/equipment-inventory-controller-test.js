@@ -267,4 +267,30 @@ describe("In Equipment Inventory Controller,", function () {
       expect(scope.modalItem.badFunctionalStatusSelected).toEqual(status2.isBad);
     });
   });
+
+  describe("Helper functions", function () {
+    it("getAge should return age if installation year exists", function () {
+      var testYear = 2015;
+      var result = scope.getAge(testYear);
+      expect(result).toBe(new Date().getFullYear() - testYear);
+    });
+
+    it("getAge should return null if installation year does NOT exist", function () {
+      var testYear = undefined;
+      var result = scope.getAge(testYear);
+      expect(result).toBeNull();
+    });
+
+    it("getReplacementYear should return replacement year if installation year exists", function () {
+      var testYear = 2015;
+      var result = scope.getReplacementYear(testYear);
+      expect(result).toBe(testYear + 10);
+    });
+
+    it("getReplacementYear should return null if installation year does NOT exist", function () {
+      var testYear = undefined;
+      var result = scope.getReplacementYear(testYear);
+      expect(result).toBeNull();
+    });
+  });
 });
