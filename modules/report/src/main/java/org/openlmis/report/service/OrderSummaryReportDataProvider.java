@@ -16,12 +16,15 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.ProcessingPeriodService;
+import org.openlmis.core.service.ProgramService;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.report.mapper.OrderSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.OrderReportParam;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.util.Constants;
 import org.openlmis.rnr.domain.RequisitionStatusChange;
+import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,9 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
   private OrderSummaryReportMapper reportMapper;
 
   @Autowired
+  private OrderService orderService;
+
+  @Autowired
   private ConfigurationSettingService configurationService;
 
   @Autowired
@@ -50,6 +56,9 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
 
   @Autowired
   private ProcessingPeriodService periodService;
+
+  @Autowired
+  private ProgramService programService;
 
   private OrderReportParam orderReportParam;
 
@@ -119,8 +128,11 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
     result.put("CUSTOM_REPORT_TITLE", configurationService.getConfigurationStringValue("ORDER_REPORT_TITLE"));
     result.put("ORDER_SUMMARY_SHOW_SIGNATURE_SPACE_FOR_CUSTOMER", configurationService.getConfigurationStringValue("ORDER_SUMMARY_SHOW_SIGNATURE_SPACE_FOR_CUSTOMER"));
     result.put("ORDER_SUMMARY_SHOW_DISCREPANCY_SECTION", configurationService.getConfigurationStringValue("ORDER_SUMMARY_SHOW_DISCREPANCY_SECTION"));
-    result.put("ORDER_NO",String.format("%06d", orderReportParam.getOrderId() ));
-    // get actors
+
+    Rnr rnr = requistionService.getLWById(orderReportParam.getOrderId());
+    String orderNo = (orderService.getOrderNumberConfiguration().getOrderNumberFor(rnr.getId(), programService.getById(rnr.getProgram().getId()), rnr.isEmergency()));
+    result.put("ORDER_NO", orderNo);
+
     List<RequisitionStatusChange> changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.AUTHORIZED.name());
     if(changes.size() > 0){
 

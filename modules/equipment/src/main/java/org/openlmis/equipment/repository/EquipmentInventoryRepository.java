@@ -13,11 +13,9 @@ package org.openlmis.equipment.repository;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.domain.EquipmentType;
-import org.openlmis.equipment.repository.mapper.ColdChainEquipmentMapper;
-import org.openlmis.equipment.repository.mapper.EquipmentInventoryMapper;
-import org.openlmis.equipment.repository.mapper.EquipmentMapper;
-import org.openlmis.equipment.repository.mapper.EquipmentTypeMapper;
+import org.openlmis.equipment.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -39,10 +37,18 @@ public class EquipmentInventoryRepository {
   @Autowired
   ColdChainEquipmentMapper coldChainEquipmentMapper;
 
+  @Autowired
+  EquipmentInventoryStatusMapper equipmentInventoryStatusMapper;
+
   public static Logger logger = Logger.getLogger(EquipmentInventoryRepository.class);
 
   public List<EquipmentInventory> getFacilityInventory(Long facilityId, Long programId){
-    return mapper.getInventoryByFacilityAndProgram(facilityId, programId);
+    List<EquipmentInventory> inventories = mapper.getInventoryByFacilityAndProgram(facilityId, programId);
+    for (EquipmentInventory inventory : inventories) {
+      setEquipmentToInventory(inventory);
+      setStatusToInventory(inventory);
+    }
+    return inventories;
   }
 
   public List<EquipmentInventory> getInventory(Long programId, Long equipmentTypeId, long[] facilityIds, Pagination pagination) {
@@ -51,6 +57,7 @@ public class EquipmentInventoryRepository {
     List<EquipmentInventory> inventories = mapper.getInventory(programId, equipmentTypeId, strFacilityIds, pagination);
     for (EquipmentInventory inventory : inventories) {
       setEquipmentToInventory(inventory);
+      setStatusToInventory(inventory);
     }
     return inventories;
   }
@@ -82,6 +89,7 @@ public class EquipmentInventoryRepository {
   public EquipmentInventory getInventoryById(Long id){
     EquipmentInventory inventory = mapper.getInventoryById(id);
     setEquipmentToInventory(inventory);
+    setStatusToInventory(inventory);
     return inventory;
   }
 
@@ -95,16 +103,35 @@ public class EquipmentInventoryRepository {
     inventory.setEquipment(equipment);
   }
 
+  private void setStatusToInventory(EquipmentInventory inventory) {
+    EquipmentInventoryStatus status = equipmentInventoryStatusMapper.getCurrentStatus(inventory.getId());
+    inventory.setOperationalStatusId(status.getStatusId());
+    inventory.setNotFunctionalStatusId(status.getNotFunctionalStatusId());
+  }
+
   public void insert(EquipmentInventory inventory){
     mapper.insert(inventory);
+    updateStatus(inventory);
   }
 
   public void update(EquipmentInventory inventory){
     mapper.update(inventory);
+    updateStatus(inventory);
   }
 
   public void updateStatus(EquipmentInventory inventory){
-    mapper.updateStatus(inventory);
+    EquipmentInventoryStatus existingStatus = equipmentInventoryStatusMapper.getCurrentStatus(inventory.getId());
+    EquipmentInventoryStatus status = getStatusFromInventory(inventory);
+    if (!status.equals(existingStatus)) {
+      equipmentInventoryStatusMapper.insert(status);
+    }
   }
 
+  private EquipmentInventoryStatus getStatusFromInventory(EquipmentInventory inventory) {
+    EquipmentInventoryStatus inventoryStatus = new EquipmentInventoryStatus();
+    inventoryStatus.setInventoryId(inventory.getId());
+    inventoryStatus.setStatusId(inventory.getOperationalStatusId());
+    inventoryStatus.setNotFunctionalStatusId(inventory.getNotFunctionalStatusId());
+    return inventoryStatus;
+  }
 }

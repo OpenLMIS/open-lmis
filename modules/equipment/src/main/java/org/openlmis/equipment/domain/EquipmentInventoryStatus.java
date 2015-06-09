@@ -10,41 +10,38 @@
 
 package org.openlmis.equipment.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="equipmentTypeName")
-@JsonSubTypes({@JsonSubTypes.Type(value = ColdChainEquipment.class, name = "coldChainEquipment"),
-               @JsonSubTypes.Type(value = Equipment.class, name = "equipment")
-                })
-public class Equipment extends BaseModel{
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class EquipmentInventoryStatus extends BaseModel {
 
-  private String name;
+  private Long inventoryId;
+  private Date effectiveDateTime;
+  private Long statusId;
+  private Long notFunctionalStatusId;
 
-  private EquipmentType equipmentType;
-
-  private Long equipmentTypeId;
-
-  private String manufacturer;
-
-  private String model;
-
-  private EquipmentEnergyType energyType;
-
-  private Long energyTypeId;
-
-  public boolean equalsByMakeAndModel(Equipment other) {
-    return other.manufacturer != null && other.model != null
-        && other.manufacturer.equalsIgnoreCase(manufacturer) && other.model.equalsIgnoreCase(model);
+  @Override
+  public boolean equals(Object other) {
+    // When comparing, should be equivalent when statuses are the same and not functional statuses are both null, or
+    // both not null and equal to each other.
+    try {
+      EquipmentInventoryStatus otherStatus = (EquipmentInventoryStatus)other;
+      return otherStatus != null
+          && statusId.equals(otherStatus.getStatusId())
+          && ((notFunctionalStatusId == null && otherStatus.notFunctionalStatusId == null)
+          || (notFunctionalStatusId != null && otherStatus.notFunctionalStatusId != null
+          && notFunctionalStatusId.equals(otherStatus.notFunctionalStatusId)));
+    } catch (ClassCastException cce) {
+      throw new IllegalArgumentException();
+    }
   }
-
 }

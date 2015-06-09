@@ -137,6 +137,10 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
         }
       }
 
+      if (!$scope.badStatusSelected) {
+        $scope.inventory.notFunctionalStatusId = null;
+      }
+
       if (!$scope.inventory.equipment.name) {
         $scope.inventory.equipment.name = $scope.inventory.equipment.manufacturer + " / " + $scope.inventory.equipment.model;
       }

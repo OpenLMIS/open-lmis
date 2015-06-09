@@ -15,7 +15,6 @@ import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
-import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,13 +89,11 @@ public class EquipmentInventoryService {
     if (!equipment.getEquipmentType().isColdChain()) {
       Boolean equipmentFound = false;
       Long equipmentTypeId = equipment.getEquipmentTypeId();
-      String manufacturer = equipment.getManufacturer();
-      String model = equipment.getModel();
 
       // Check to see if equipment already exists in db
       List<Equipment> equipments = equipmentService.getAllByType(equipmentTypeId);
       for (Equipment e : equipments) {
-        if (e.getManufacturer().equalsIgnoreCase(manufacturer) && e.getModel().equalsIgnoreCase(model)) {
+        if (e.equalsByMakeAndModel(equipment)) {
           // Equipment already exists in db
           equipmentFound = true;
         }

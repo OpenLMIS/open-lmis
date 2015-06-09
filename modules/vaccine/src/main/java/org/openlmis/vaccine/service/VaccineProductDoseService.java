@@ -45,7 +45,7 @@ public class VaccineProductDoseService {
       if (doses.size() > 0) {
         ProductDoseDTO productDose = new ProductDoseDTO();
         productDose.setProductId(p.getProduct().getId());
-        productDose.setProductName(p.getProduct().getName());
+        productDose.setProductName(p.getProduct().getPrimaryName());
         productDose.setDoses(doses);
         productDoseDTOs.add(productDose);
       } else {
