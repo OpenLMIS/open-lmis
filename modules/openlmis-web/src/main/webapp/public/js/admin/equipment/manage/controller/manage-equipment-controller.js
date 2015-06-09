@@ -26,14 +26,7 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
                     currentEquipmentTypeId.set($scope.equipmentTypeId);
              }
             EquipmentTypesByProgram.get({programId: $scope.programId}, function (data) {
-              //Re load all if no match found
-              if(data.equipment_types.length === 0)
-              {
-                $scope.getAllEquipmentTypes();
-              }
-              else{
                 $scope.equipmentTypes = data.equipment_types;
-              }
               });
          };
 
