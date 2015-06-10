@@ -17,5 +17,5 @@ services.factory('DemographicEstimateCategory', function ($resource) {
 });
 
 services.factory('SaveDemographicEstimateCategory', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/category/save.json', {}, {});
+  return $resource('/vaccine/demographic/estimate/category/save.json', {}, update);
 });
