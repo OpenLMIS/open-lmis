@@ -74,12 +74,12 @@ public interface EquipmentInventoryMapper {
   @Insert("INSERT into equipment_inventories " +
       " ( facilityId, equipmentId, programId, serialNumber" +
       ", yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
-      ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned" +
+      ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned, hasStabilizer" +
       ", primaryDonorId, createdBy, createdDate, modifiedBy, modifiedDate) " +
       "values " +
       " ( #{facilityId}, #{equipmentId}, #{programId}, #{serialNumber}" +
       ", #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
-      ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}" +
+      ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}, #{hasStabilizer}" +
       ", #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
   void insert(EquipmentInventory inventory);
@@ -90,7 +90,7 @@ public interface EquipmentInventoryMapper {
       " serialNumber = #{serialNumber}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, " +
       " sourceOfFund = #{sourceOfFund}, replacementRecommended = #{replacementRecommended}, " +
       " reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, " +
-      " dateLastAssessed = #{dateLastAssessed} " +
+      " dateLastAssessed = #{dateLastAssessed}, hasStabilizer = #{hasStabilizer} " +
       " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, primaryDonorId = #{primaryDonorId} " +
       " , modifiedBy = #{modifiedBy}, modifiedDate = NOW() " +
       " WHERE id = #{id}")

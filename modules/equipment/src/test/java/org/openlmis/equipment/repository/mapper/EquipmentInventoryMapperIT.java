@@ -107,6 +107,7 @@ public class EquipmentInventoryMapperIT {
     inventory.setPurchasePrice(0F);
     inventory.setDateLastAssessed(DateTime.now().toDate());
     inventory.setIsActive(true);
+    inventory.setHasStabilizer(true);
     mapper.insert(inventory);
   }
 

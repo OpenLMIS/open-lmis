@@ -49,6 +49,7 @@ public class EquipmentInventory extends BaseModel {
   private Boolean isActive;
   private Date dateDecommissioned;
   private Date dateLastAssessed;
+  private Boolean hasStabilizer;
 
   private String formatDate(Date date){
     try {
