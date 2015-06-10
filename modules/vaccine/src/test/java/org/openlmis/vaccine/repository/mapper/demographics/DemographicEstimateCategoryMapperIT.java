@@ -1,4 +1,4 @@
-package org.openlmis.vaccine.repository.mapper.demographics
+package org.openlmis.vaccine.repository.mapper.demographics;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

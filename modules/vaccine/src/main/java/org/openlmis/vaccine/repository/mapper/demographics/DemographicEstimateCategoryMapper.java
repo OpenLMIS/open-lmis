@@ -23,12 +23,13 @@ public interface DemographicEstimateCategoryMapper {
   Integer insert(DemographicEstimateCategory category);
 
   @Update("update demographic_estimate_categories " +
-    " name = #{name}" +
-    ", description = #{description}" +
-    ", isPrimaryEstimate = #{isPrimaryEstimate}" +
-    ", defaultConversionFactor = #{defaultConversionFactor}" +
-    ", modifiedBy = #{modifiedBy}" +
+    " set " +
+    " name = #{name} " +
+    ", description = #{description} " +
+    ", isPrimaryEstimate = #{isPrimaryEstimate} " +
+    ", defaultConversionFactor = #{defaultConversionFactor} " +
+    ", modifiedBy = #{modifiedBy} " +
     ", modifiedDate = NOW() " +
-    " where id = #{id}")
+    " where id = #{id} ")
   Integer update(DemographicEstimateCategory category);
 }
