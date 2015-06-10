@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.equipment.domain.Equipment;
@@ -80,6 +81,58 @@ public class EquipmentMapperIT {
 
     List<Equipment> results =  mapper.getAll();
     MatcherAssert.assertThat(results.size(), greaterThan(0));
+  }
+
+  @Test
+  public void shouldGetByType() throws Exception {
+
+    Pagination page=new Pagination(1,1);
+
+    EquipmentType type = new EquipmentType();
+    type.setCode("1");
+    type.setName("Type");
+    type.setColdChain(false);
+    typeMapper.insert(type);
+
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
+    energyType.setName("TestEnergy");
+    energyTypeMapper.insert(energyType);
+
+    Equipment equipment = new Equipment();
+    equipment.setName("Name");
+    equipment.setEquipmentType(type);
+    equipment.setManufacturer("Manufacturer");
+    equipment.setModel("Model");
+    equipment.setEnergyTypeId(energyType.getId());
+    mapper.insert(equipment);
+
+    List<Equipment> results =  mapper.getByType(type.getId(), page);
+    MatcherAssert.assertThat(results.size(), greaterThan(0));
+  }
+
+  @Test
+  public void shouldGetCountByType() throws Exception {
+
+    EquipmentType type = new EquipmentType();
+    type.setCode("1");
+    type.setName("Type");
+    type.setColdChain(false);
+    typeMapper.insert(type);
+
+    EquipmentEnergyType energyType=new EquipmentEnergyType();
+    energyType.setName("TestEnergy");
+    energyTypeMapper.insert(energyType);
+
+    Equipment equipment = new Equipment();
+    equipment.setName("Name");
+    equipment.setEquipmentType(type);
+    equipment.setManufacturer("Manufacturer");
+    equipment.setModel("Model");
+    equipment.setEnergyTypeId(energyType.getId());
+    mapper.insert(equipment);
+
+    Integer count =  mapper.getCountByType(type.getId());
+    assertEquals(count,Integer.valueOf(1));
   }
 
   @Test

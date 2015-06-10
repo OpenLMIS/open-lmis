@@ -16,8 +16,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.repository.ColdChainEquipmentRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
 
 import java.util.ArrayList;
@@ -35,6 +38,9 @@ public class EquipmentServiceTest {
   @Mock
   private EquipmentRepository repository;
 
+  @Mock
+  private ColdChainEquipmentRepository coldChainEquipmentRepository;
+
   @InjectMocks
   private EquipmentService service;
 
@@ -46,6 +52,19 @@ public class EquipmentServiceTest {
 
     List<Equipment> equipments = service.getAll();
     verify(repository).getAll();
+
+    assertEquals(equipments, expectedEquipments);
+  }
+
+  @Test
+  public void shouldGetAllCCE() throws Exception {
+    Pagination page=new Pagination();
+    List<ColdChainEquipment> expectedEquipments = new ArrayList<ColdChainEquipment>();
+    expectedEquipments.add(new ColdChainEquipment());
+    when(coldChainEquipmentRepository.getAll(1L,page)).thenReturn(expectedEquipments);
+
+    List<ColdChainEquipment> equipments = service.getAllCCE(1L, page);
+    verify(coldChainEquipmentRepository).getAll(1L, page);
 
     assertEquals(equipments, expectedEquipments);
   }

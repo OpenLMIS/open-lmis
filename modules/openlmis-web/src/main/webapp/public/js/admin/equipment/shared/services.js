@@ -226,3 +226,17 @@ services.factory("currentEquipmentTypeId", function() {
   get: get
  };
 });
+
+services.factory("currentProgramId", function() {
+ var programId;
+ function set(id) {
+   programId = id;
+ }
+ function get() {
+  return programId;
+ }
+ return {
+  set: set,
+  get: get
+ };
+});
