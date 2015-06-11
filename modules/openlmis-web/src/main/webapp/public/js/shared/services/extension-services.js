@@ -1196,3 +1196,7 @@ services.factory('CustomReportList', function ($resource) {
 services.factory('CustomReportValue', function ($resource) {
     return $resource('/report-api/report.json', {}, {});
 });
+
+services.factory('PriceScheduleCategories', function ($resource) {
+    return $resource('/priceScheduleCategories.json', {}, {});
+});

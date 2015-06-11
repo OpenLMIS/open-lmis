@@ -12,9 +12,12 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.PriceSchedule;
+import org.openlmis.core.domain.PriceScheduleCategory;
 import org.openlmis.core.repository.mapper.PriceScheduleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @NoArgsConstructor
@@ -43,5 +46,14 @@ public class PriceScheduleRepository {
         priceSchedule.getProduct().setId(productId);
 
         return mapper.getByProductCodePriceScheduleCategory(priceSchedule.getProduct().getId(), priceCategoryId);
+    }
+
+    public List<PriceSchedule> getByProductId(Long id) {
+        return mapper.getByProductId(id);
+    }
+
+
+    public List<PriceScheduleCategory> getPriceScheduleCategories() {
+        return mapper.getPriceScheduleCategories();
     }
 }

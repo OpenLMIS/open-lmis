@@ -9,24 +9,23 @@
  */
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.PriceSchedule;
+import org.openlmis.core.domain.PriceScheduleCategory;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface PriceScheduleMapper {
 
-
     @Insert("INSERT INTO price_schedule( productid, pricecatid, sale_price, createdBy,createdDate,modifiedDate,modifiedBy)\n " +
-            "    VALUES ( #{product.id}, #{priceScheduleCategory.id}, #{salePrice}, #{createdBy},COALESCE(#{createdDate},NOW()),COALESCE(#{modifiedDate},NOW()),#{modifiedBy})")
+            "    VALUES ( #{product.id}, #{priceScheduleCategory.id}, #{salePrice}, #{createdBy}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, #{modifiedBy})")
     void insert(PriceSchedule priceSchedule);
 
     @Update("UPDATE price_schedule\n" +
-            "   SET pricecatid=#{priceScheduleCategory.id}, productid=#{product.id}, sale_price=#{salePrice}, modifiedDate = #{modifiedDate}, modifiedBy = #{modifiedBy} WHERE id = #{id}")
+            "   SET pricecatid=#{priceScheduleCategory.id}, productid=#{product.id}, sale_price=#{salePrice}, modifiedDate = CURRENT_TIMESTAMP, modifiedBy = #{modifiedBy} WHERE id = #{id}")
     void update(PriceSchedule priceSchedule);
 
     @Select("SELECT * FROM price_schedule WHERE productid = #{productId} and priceCatid = #{priceScheduleCategoryId}")
@@ -34,4 +33,20 @@ public interface PriceScheduleMapper {
 
     @Select("SELECT id FROM price_schedule_category WHERE LOWER(price_category) = LOWER(#{priceScheduleCategory})")
     Long getPriceCategoryIdByName(String priceScheduleCategory);
+
+    @Select("select * from price_schedule_category where id = #{id}")
+    PriceScheduleCategory getPriceScheduleCategoryById(Long id);
+
+    @Select("select * from price_schedule where productid = #{id}")
+    @Results(value = {
+            @Result(property = "product.id", column = "productid"),
+            @Result(
+                    property = "priceScheduleCategory", column = "pricecatid", javaType = PriceScheduleCategory.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.PriceScheduleMapper.getPriceScheduleCategoryById")),
+            @Result(property = "salePrice", column = "sale_price")
+    })
+    List<PriceSchedule> getByProductId(Long id);
+
+    @Select("select * from price_schedule_category")
+    List<PriceScheduleCategory> getPriceScheduleCategories();
 }
