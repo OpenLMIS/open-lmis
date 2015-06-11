@@ -15,16 +15,17 @@
                 <span id="equipmentTypes" openlmis-message="label.equipment.types"></span>
             </a>
         </li>
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageProgramEquipmentProductSelected">
+            <a href="/public/pages/admin/equipment/program-equipment-products/index.html">
+                <span id="programEquipmentProduct-list" openlmis-message="label.program.equipments" ></span>
+            </a>
+        </li>
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageEquipmentSelected">
             <a href="/public/pages/admin/equipment/manage/index.html">
                 <span id="equipment-list" openlmis-message="label.equipment.list" ></span>
             </a>
         </li>
-        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageProgramEquipmentProductSelected">
-          <a href="/public/pages/admin/equipment/program-equipment-products/index.html">
-            <span id="programEquipmentProduct-list" openlmis-message="label.equipment.products" ></span>
-          </a>
-        </li>
+
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageServiceTypeSelected">
           <a href="/public/pages/admin/equipment/service-type/index.html">
             <span id="equipment-service-type" openlmis-message="label.equipment.service.types" ></span>

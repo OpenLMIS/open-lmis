@@ -10,6 +10,7 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentType;
@@ -36,8 +37,20 @@ public class EquipmentService {
       return repository.getAll();
   }
 
-  public List<ColdChainEquipment> getAllCCE(Long equipmentTypeId){
-    return coldChainEquipmentRepository.getAll(equipmentTypeId);
+  public List<ColdChainEquipment> getAllCCE(Long equipmentTypeId, Pagination page){
+    return coldChainEquipmentRepository.getAll(equipmentTypeId,page);
+  }
+
+  public List<Equipment> getAllByType(Long equipmentTypeId) {
+    return repository.getAllByType(equipmentTypeId);
+  }
+  public List<Equipment> getByType(Long equipmentTypeId, Pagination page) {
+    return repository.getByType(equipmentTypeId, page);
+  }
+
+  public Equipment getById(Long id){
+    return repository.getById(id);
+
   }
 
   public Equipment getByTypeAndId(Long id,Long equipmentTypeId) {
@@ -50,19 +63,19 @@ public class EquipmentService {
       return repository.getById(id);
     }
   }
-
-  public List<Equipment> getAllByType(Long equipmentTypeId) {
-    return repository.getAllByType(equipmentTypeId);
-  }
-
-  public Equipment getById(Long id){
-    return repository.getById(id);
-
-  }
   public List<EquipmentType> getTypesByProgram(Long programId) {
     return repository.getTypesByProgram(programId);
   }
 
+  public Integer getEquipmentsCountByType(Long equipmentTypeId)
+  {
+    return repository.getCountByType(equipmentTypeId);
+  }
+
+  public Integer getCCECountByType(Long equipmentTypeId)
+  {
+    return coldChainEquipmentRepository.getCountByType(equipmentTypeId);
+  }
   public void saveEquipment(Equipment equipment){
       repository.insert(equipment);
   }
@@ -77,6 +90,7 @@ public class EquipmentService {
   public void updateColdChainEquipment(ColdChainEquipment coldChainEquipment) {
     coldChainEquipmentRepository.update(coldChainEquipment);
   }
+
 
   public void removeEquipment(Long id) {
     repository.remove(id);

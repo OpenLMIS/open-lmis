@@ -52,6 +52,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
     $scope.inventory.replacementRecommended = false;
     $scope.inventory.dateLastAssessed = Date.now();
     $scope.inventory.isActive = true;
+    $scope.inventory.yearOfInstallation = new Date().getFullYear();
 
     if ($routeParams.from === "0") {
       // Create new inventory at my facility, show facility as readonly

@@ -11,6 +11,7 @@
 package org.openlmis.equipment.repository;
 
 
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.mapper.EquipmentMapper;
@@ -35,6 +36,14 @@ public class EquipmentRepository {
 
   public List<Equipment> getAllByType(Long equipmentTypeId) {
     return mapper.getAllByType(equipmentTypeId);
+  }
+  public List<Equipment> getByType(Long equipmentTypeId, Pagination page) {
+    return mapper.getByType(equipmentTypeId, page);
+  }
+
+  public Integer getCountByType(Long equipmentTypeId)
+  {
+    return mapper.getCountByType(equipmentTypeId);
   }
 
   public List<EquipmentType> getTypesByProgram(Long programId){

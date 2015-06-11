@@ -11,6 +11,7 @@
 package org.openlmis.equipment.repository;
 
 
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.repository.mapper.ColdChainEquipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,14 @@ public class ColdChainEquipmentRepository {
     return mapper.getById(id);
   }
 
-  public List<ColdChainEquipment> getAll(Long equipmentTypeId){
-    return mapper.getAll(equipmentTypeId);
+  public List<ColdChainEquipment> getAll(Long equipmentTypeId, Pagination page){
+    return mapper.getAll(equipmentTypeId, page);
   }
 
+  public Integer getCountByType(Long equipmentTypeId)
+  {
+    return mapper.getCountByType(equipmentTypeId);
+  }
   public void insert(ColdChainEquipment coldChainEquipment){
     mapper.insert(coldChainEquipment);
   }
