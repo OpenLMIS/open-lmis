@@ -22,7 +22,7 @@
 
         <select style="width: 400px;;" ng-change="OnFilterChanged()" ng-model="filter.report_key">
           <option>--Select a Report -- </option>
-          <option value="{{r.reportkey}}" ng-repeat="r in reports">{{r.category}} - {{r.name}}</option>
+          <option value="{{r.reportkey}}" ng-selected="r.reportkey == filter.report_key" ng-repeat="r in reports">{{r.category}} - {{r.name}}</option>
         </select>
 
         <div class="clearfix"></div>

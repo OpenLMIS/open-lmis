@@ -12,6 +12,9 @@ function CustomReportController($scope, CustomReportList, CustomReportValue) {
   CustomReportList.get(function (data) {
     $scope.reports = data.reports;
     $scope.isReady = true;
+    if($scope.filter.report_key != undefined){
+      $scope.OnFilterChanged();
+    }
   });
 
   function updateFilterSection() {
@@ -33,6 +36,8 @@ function CustomReportController($scope, CustomReportList, CustomReportValue) {
       return;
     }
     updateFilterSection();
+
+    $scope.applyUrl();
 
     $scope.data = [];
     CustomReportValue.get($scope.filter, function (data) {
