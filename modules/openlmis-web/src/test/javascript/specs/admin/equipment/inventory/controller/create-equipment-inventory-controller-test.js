@@ -44,7 +44,6 @@ describe("In Create Equipment Inventory Controller,", function () {
   describe("Initial load", function () {
     it("should load data from the server", function () {
       routeParams.from = "0";
-      routeParams.facility = facility.id;
       ctrl = $controller(CreateEquipmentInventoryController, {$scope: scope, $routeParams: routeParams});
       $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId='+routeParams.equipmentType).respond(200, {"equipments": [equipment]});
       $httpBackend.expectGET('/equipment/type/id.json?id='+routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
@@ -67,7 +66,6 @@ describe("In Create Equipment Inventory Controller,", function () {
     describe("Add inventory", function () {
       it("should get my facility if my facility was selected in previous screen", function () {
         routeParams.from = "0";
-        routeParams.facility = facility.id;
         ctrl = $controller(CreateEquipmentInventoryController, {$scope: scope, $routeParams: routeParams});
         $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId=' + routeParams.equipmentType).respond(200, {"equipments": [equipment]});
         $httpBackend.expectGET('/equipment/type/id.json?id=' + routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
@@ -98,7 +96,6 @@ describe("In Create Equipment Inventory Controller,", function () {
     describe("Edit inventory", function () {
       it("should get my facility if my facility was selected in previous screen", function () {
         routeParams.from = "0";
-        routeParams.facility = facility.id;
         routeParams.id = inventory.id;
         ctrl = $controller(CreateEquipmentInventoryController, {$scope: scope, $routeParams: routeParams});
         $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId=' + routeParams.equipmentType).respond(200, {"equipments": [equipment]});
@@ -133,7 +130,6 @@ describe("In Create Equipment Inventory Controller,", function () {
   describe("Test functions", function () {
     beforeEach(function () {
       routeParams.from = "0";
-      routeParams.facility = facility.id;
       ctrl = $controller(CreateEquipmentInventoryController, {$scope: scope, $routeParams: routeParams});
       $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId='+routeParams.equipmentType).respond(200, {"equipments": [equipment]});
       $httpBackend.expectGET('/equipment/type/id.json?id='+routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
