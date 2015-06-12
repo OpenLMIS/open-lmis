@@ -35,6 +35,10 @@ public class PriceScheduleService {
         return repository.getByProductId(id);
     }
 
+    public PriceScheduleCategory getPriceScheduleCategoryByCode(String code){
+        return repository.getPriceScheduleCategoryByCode(code);
+    }
+
     @Transactional
     public void saveAll(List<PriceSchedule> priceSchedules, Product product) {
 

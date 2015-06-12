@@ -56,4 +56,8 @@ public class PriceScheduleRepository {
     public List<PriceScheduleCategory> getPriceScheduleCategories() {
         return mapper.getPriceScheduleCategories();
     }
+
+    public PriceScheduleCategory getPriceScheduleCategoryByCode(String code) {
+        return mapper.getPriceScheduleCategoryByCode(code);
+    }
 }
