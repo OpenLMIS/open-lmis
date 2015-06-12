@@ -48,7 +48,7 @@ describe("In Create Equipment Inventory Controller,", function () {
       ctrl = $controller(CreateEquipmentInventoryController, {$scope: scope, $routeParams: routeParams});
       $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId='+routeParams.equipmentType).respond(200, {"equipments": [equipment]});
       $httpBackend.expectGET('/equipment/type/id.json?id='+routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
-      $httpBackend.expectGET('/facilities/'+routeParams.facility+'.json').respond(200, {"facility": facility});
+      $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
       $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": statuses});
       $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
       $httpBackend.expectGET('/equipment/energy-type/list.json').respond(200, {"energyType": [energyType]});
@@ -71,7 +71,7 @@ describe("In Create Equipment Inventory Controller,", function () {
         ctrl = $controller(CreateEquipmentInventoryController, {$scope: scope, $routeParams: routeParams});
         $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId=' + routeParams.equipmentType).respond(200, {"equipments": [equipment]});
         $httpBackend.expectGET('/equipment/type/id.json?id=' + routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
-        $httpBackend.expectGET('/facilities/' + routeParams.facility + '.json').respond(200, {"facility": facility});
+        $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
         $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [statuses]});
         $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
         $httpBackend.expectGET('/equipment/energy-type/list.json').respond(200, {"energyType": [energyType]});
@@ -137,7 +137,7 @@ describe("In Create Equipment Inventory Controller,", function () {
       ctrl = $controller(CreateEquipmentInventoryController, {$scope: scope, $routeParams: routeParams});
       $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId='+routeParams.equipmentType).respond(200, {"equipments": [equipment]});
       $httpBackend.expectGET('/equipment/type/id.json?id='+routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
-      $httpBackend.expectGET('/facilities/'+routeParams.facility+'.json').respond(200, {"facility": facility});
+      $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
       $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [statuses]});
       $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
       $httpBackend.expectGET('/equipment/energy-type/list.json').respond(200, {"energyType": [energyType]});

@@ -91,7 +91,7 @@ public class EquipmentInventoryControllerTest {
     inventory.setId(32L);
     doNothing().when(service).save(inventory);
 
-    ResponseEntity<OpenLmisResponse> response = controller.save(inventory);
+    ResponseEntity<OpenLmisResponse> response = controller.save(inventory, request);
     assertThat(inventory, is(response.getBody().getData().get("inventory")));
     assertThat(response.getBody().getSuccessMsg(), is(notNullValue()));
   }
