@@ -37,7 +37,7 @@ public interface FacilityMapper {
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
     "satellite, parentFacilityId, hasElectricity, hasElectronicSCC, hasElectronicDAR, active," +
-    "goLiveDate, goDownDate, comment, virtualFacility, enabled, createdDate,createdBy, modifiedBy, modifiedDate) " +
+    "goLiveDate, goDownDate, comment, virtualFacility, enabled, pricecatid, createdDate,createdBy, modifiedBy, modifiedDate) " +
     "VALUES(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
     "#{facilityType.id}," +
@@ -45,7 +45,7 @@ public interface FacilityMapper {
     "#{operatedBy.id}," +
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
     "#{satellite}, #{parentFacilityId}, #{hasElectricity}, #{hasElectronicSCC}, #{hasElectronicDAR}, #{active}," +
-    "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{enabled},COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
+    "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{enabled}, #{priceScheduleCategory.id} , COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
     "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);
@@ -115,7 +115,7 @@ public interface FacilityMapper {
     "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, parentFacilityId = #{parentFacilityId}," +
     "hasElectricity = #{hasElectricity}, hasElectronicSCC = #{hasElectronicSCC}, " +
     "hasElectronicDAR = #{hasElectronicDAR}, active = #{active}, virtualFacility = #{virtualFacility}, " +
-    "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}," +
+    "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}, pricecatid = #{priceScheduleCategory.id}, " +
     "comment = #{comment}, enabled = #{enabled}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);
 

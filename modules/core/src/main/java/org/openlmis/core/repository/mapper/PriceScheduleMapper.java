@@ -49,4 +49,7 @@ public interface PriceScheduleMapper {
 
     @Select("select * from price_schedule_category")
     List<PriceScheduleCategory> getPriceScheduleCategories();
+
+    @Select("select * from price_schedule_category where price_category = #{code}")
+    PriceScheduleCategory getPriceScheduleCategoryByCode(String code);
 }
