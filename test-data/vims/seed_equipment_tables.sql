@@ -21,30 +21,30 @@ VALUES ('Electricity')
     ,('Kerosene')
 ;
 
-INSERT INTO equipment_types (id, code, name, iscoldchain)
-VALUES (36, 'CCE1', 'Cold Chain Equipment', TRUE)
+INSERT INTO equipment_types (code, name, iscoldchain)
+VALUES ('CCE1', 'Cold Chain Equipment', TRUE)
 ;
 
 INSERT INTO equipments (name, equipmenttypeid, manufacturer, model, energytypeid)
-VALUES ('Dometic / TCW 2000 SDD',36,'Dometic','TCW 2000 SDD',3)
-    ,('Dometic / TCW 3000 SDD',36,'Dometic','TCW 3000 SDD',3)
-    ,('Haier / HBD-286',36,'Haier','HBD-286',1)
-    ,('Sibir / V170 EK',36,'Sibir','V170 EK',4)
-    ,('Vestfrost / VLS 400',36,'Vestfrost','VLS 400',1)
-    ,('Vestfrost / VLS 350',36,'Vestfrost','VLS 350',1)
+VALUES ('Dometic / TCW 2000 SDD',(SELECT id FROM equipment_types WHERE code = 'CCE1'),'Dometic','TCW 2000 SDD',(SELECT id FROM equipment_energy_types WHERE name = 'Solar'))
+    ,('Dometic / TCW 3000 SDD',(SELECT id FROM equipment_types WHERE code = 'CCE1'),'Dometic','TCW 3000 SDD',(SELECT id FROM equipment_energy_types WHERE name = 'Solar'))
+    ,('Haier / HBD-286',(SELECT id FROM equipment_types WHERE code = 'CCE1'),'Haier','HBD-286',(SELECT id FROM equipment_energy_types WHERE name = 'Electricity'))
+    ,('Sibir / V170 EK',(SELECT id FROM equipment_types WHERE code = 'CCE1'),'Sibir','V170 EK',(SELECT id FROM equipment_energy_types WHERE name = 'Kerosene'))
+    ,('Vestfrost / VLS 400',(SELECT id FROM equipment_types WHERE code = 'CCE1'),'Vestfrost','VLS 400',(SELECT id FROM equipment_energy_types WHERE name = 'Electricity'))
+    ,('Vestfrost / VLS 350',(SELECT id FROM equipment_types WHERE code = 'CCE1'),'Vestfrost','VLS 350',(SELECT id FROM equipment_energy_types WHERE name = 'Electricity'))
 ;
 
 INSERT INTO equipment_cold_chain_equipments (equipmentid, designationid, refrigeratorcapacity, freezercapacity, pqsstatusid)
-VALUES (41,2,99.00,NULL,1)
-    ,(42,2,156.00,NULL,1)
-    ,(43,3,NULL,224.00,1)
-    ,(44,1,55.00,36.00,2)
-    ,(45,2,216.00,NULL,1)
-    ,(46,2,196.00,NULL,1)
+VALUES ((SELECT id FROM equipments WHERE name = 'Dometic / TCW 2000 SDD'),(SELECT id FROM equipment_cold_chain_equipment_designations WHERE name = 'Refrigerator'),99.00,NULL,(SELECT id FROM equipment_cold_chain_equipment_pqs_status WHERE name = 'Approved'))
+    ,((SELECT id FROM equipments WHERE name = 'Dometic / TCW 3000 SDD'),(SELECT id FROM equipment_cold_chain_equipment_designations WHERE name = 'Refrigerator'),156.00,NULL,(SELECT id FROM equipment_cold_chain_equipment_pqs_status WHERE name = 'Approved'))
+    ,((SELECT id FROM equipments WHERE name = 'Haier / HBD-286'),(SELECT id FROM equipment_cold_chain_equipment_designations WHERE name = 'Freezer'),NULL,224.00,(SELECT id FROM equipment_cold_chain_equipment_pqs_status WHERE name = 'Approved'))
+    ,((SELECT id FROM equipments WHERE name = 'Sibir / V170 EK'),(SELECT id FROM equipment_cold_chain_equipment_designations WHERE name = 'Refrigerator & Freezer'),55.00,36.00,(SELECT id FROM equipment_cold_chain_equipment_pqs_status WHERE name = 'Not Recommended'))
+    ,((SELECT id FROM equipments WHERE name = 'Vestfrost / VLS 400'),(SELECT id FROM equipment_cold_chain_equipment_designations WHERE name = 'Refrigerator'),216.00,NULL,(SELECT id FROM equipment_cold_chain_equipment_pqs_status WHERE name = 'Approved'))
+    ,((SELECT id FROM equipments WHERE name = 'Vestfrost / VLS 350'),(SELECT id FROM equipment_cold_chain_equipment_designations WHERE name = 'Refrigerator'),196.00,NULL,(SELECT id FROM equipment_cold_chain_equipment_pqs_status WHERE name = 'Approved'))
 ;
 
 INSERT INTO equipment_type_programs (programid, equipmenttypeid, displayorder)
-VALUES (82,36,0)
+VALUES ((SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM equipment_types WHERE code = 'CCE1'),0)
 ;
 
 UPDATE equipment_operational_status
@@ -62,39 +62,39 @@ VALUES ('Functional',1,'CCE',FALSE)
 
 UPDATE programs
 SET push = FALSE
-WHERE id = 82
+WHERE code = 'Vaccine'
 ;
 
 INSERT INTO programs_supported (facilityid,programid,startdate,active)
-VALUES (16403,82,'2015-05-01 00:00:00',TRUE)
-    ,(16399,82,'2015-05-01 00:00:00',TRUE)
-    ,(14054,82,'2015-05-01 00:00:00',TRUE)
-    ,(14058,82,'2015-05-01 00:00:00',TRUE)
-    ,(16409,82,'2015-05-01 00:00:00',TRUE)
-    ,(16416,82,'2015-05-01 00:00:00',TRUE)
-    ,(16440,82,'2015-05-01 00:00:00',TRUE)
-    ,(16887,82,'2015-05-01 00:00:00',TRUE)
-    ,(16889,82,'2015-05-01 00:00:00',TRUE)
+VALUES ((SELECT id FROM facilities WHERE name = 'Aya-Labe'),(SELECT id FROM programs WHERE code = 'Vaccine'),'2015-05-01 00:00:00',TRUE)
+    ,((SELECT id FROM facilities WHERE name = 'Arash'),(SELECT id FROM programs WHERE code = 'Vaccine'),'2015-05-01 00:00:00',TRUE)
+    ,((SELECT id FROM facilities WHERE code = 'MT'),(SELECT id FROM programs WHERE code = 'Vaccine'),'2015-05-01 00:00:00',TRUE)
+    ,((SELECT id FROM facilities WHERE code = 'MS'),(SELECT id FROM programs WHERE code = 'Vaccine'),'2015-05-01 00:00:00',TRUE)
+    ,((SELECT id FROM facilities WHERE name = 'Basodowishi'),(SELECT id FROM programs WHERE code = 'Vaccine'),'2015-05-01 00:00:00',TRUE)
+    ,((SELECT id FROM facilities WHERE name = 'Buger'),(SELECT id FROM programs WHERE code = 'Vaccine'),'2015-05-01 00:00:00',TRUE)
+    ,((SELECT id FROM facilities WHERE name = 'Eluwai'),(SELECT id FROM programs WHERE code = 'Vaccine'),'2015-05-01 00:00:00',TRUE)
+    ,((SELECT id FROM facilities WHERE name = 'Chumo'),(SELECT id FROM programs WHERE code = 'Vaccine'),'2015-05-01 00:00:00',TRUE)
+    ,((SELECT id FROM facilities WHERE name = 'Darajani'),(SELECT id FROM programs WHERE code = 'Vaccine'),'2015-05-01 00:00:00',TRUE)
 ;
 
 INSERT INTO requisition_groups (code,name,supervisorynodeid)
-VALUES ('CSA-MOSH-KAR-V','Moshi Karatu Vaccine',391)
-    ,('CSA-MOSH-LON-V','Moshi Longido Vaccine',390)
-    ,('CSA-LIND-KIL-V','Lindi Kilwa Vaccine',333)
+VALUES ('CSA-MOSH-KAR-V','Moshi Karatu Vaccine',(SELECT id FROM supervisory_nodes WHERE code = 'MSH-SND3'))
+    ,('CSA-MOSH-LON-V','Moshi Longido Vaccine',(SELECT id FROM supervisory_nodes WHERE code = 'MSH-SND4'))
+    ,('CSA-LIND-KIL-V','Lindi Kilwa Vaccine',(SELECT id FROM supervisory_nodes WHERE code = 'MTWA-SND1'))
 ;
 
 INSERT INTO requisition_group_members (requisitiongroupid,facilityid)
-VALUES (2779,16409)
-    ,(2779,16416)
-    ,(2780,16440)
-    ,(2781,16887)
-    ,(2781,16889)
+VALUES ((SELECT id FROM requisition_groups WHERE code = 'CSA-MOSH-KAR-V'),(SELECT id FROM facilities WHERE name = 'Basodowishi'))
+    ,((SELECT id FROM requisition_groups WHERE code = 'CSA-MOSH-KAR-V'),(SELECT id FROM facilities WHERE name = 'Buger'))
+    ,((SELECT id FROM requisition_groups WHERE code = 'CSA-MOSH-LON-V'),(SELECT id FROM facilities WHERE name = 'Eluwai'))
+    ,((SELECT id FROM requisition_groups WHERE code = 'CSA-LIND-KIL-V'),(SELECT id FROM facilities WHERE name = 'Chumo'))
+    ,((SELECT id FROM requisition_groups WHERE code = 'CSA-LIND-KIL-V'),(SELECT id FROM facilities WHERE name = 'Darajani'))
 ;
 
 INSERT INTO requisition_group_program_schedules (requisitiongroupid,programid,scheduleid,directdelivery)
-VALUES (2779,82,45,TRUE)
-    ,(2780,82,45,TRUE)
-    ,(2781,82,45,TRUE)
+VALUES ((SELECT id FROM requisition_groups WHERE code = 'CSA-MOSH-KAR-V'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM processing_schedules WHERE code = 'Monthly'),TRUE)
+    ,((SELECT id FROM requisition_groups WHERE code = 'CSA-MOSH-LON-V'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM processing_schedules WHERE code = 'Monthly'),TRUE)
+    ,((SELECT id FROM requisition_groups WHERE code = 'CSA-LIND-KIL-V'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM processing_schedules WHERE code = 'Monthly'),TRUE)
 ;
 
 INSERT INTO roles (name)
@@ -102,18 +102,18 @@ VALUES ('Inventory Manager')
 ;
 
 INSERT INTO role_rights (roleid, rightname)
-VALUES (66,'MANAGE_EQUIPMENT_INVENTORY')
+VALUES ((SELECT id FROM roles WHERE name = 'Inventory Manager'),'MANAGE_EQUIPMENT_INVENTORY')
 ;
 
 INSERT INTO role_assignments (userid,roleid,programid,supervisorynodeid)
-VALUES (307,66,82,NULL)
-    ,(307,66,1,NULL)
-    ,(307,66,82,227)
-    ,(307,66,82,226)
+VALUES ((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),NULL)
+    ,((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'ils'),NULL)
+    ,((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM supervisory_nodes WHERE code = 'MSH-SNZ'))
+    ,((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM supervisory_nodes WHERE code = 'MTWA-SNZ'))
 ;
 
 UPDATE users
-SET facilityid = 16403
+SET facilityid = (SELECT id FROM facilities WHERE name = 'Aya-Labe')
 WHERE username = 'vims-admin'
 ;
 
