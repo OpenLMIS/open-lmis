@@ -117,7 +117,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
 
           $scope.error = "Duplicate Price schedule category";
       }
-  }
+  };
 
     function validateDuplicatePriceScheduleCategory(priceSchedule){
         for(i=0; i<$scope.priceSchedules.length; i++){

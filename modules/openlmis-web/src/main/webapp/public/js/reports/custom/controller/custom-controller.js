@@ -12,7 +12,7 @@ function CustomReportController($scope, CustomReportList, CustomReportValue) {
   CustomReportList.get(function (data) {
     $scope.reports = data.reports;
     $scope.isReady = true;
-    if($scope.filter.report_key != undefined){
+    if($scope.filter.report_key !== undefined){
       $scope.OnFilterChanged();
     }
   });
