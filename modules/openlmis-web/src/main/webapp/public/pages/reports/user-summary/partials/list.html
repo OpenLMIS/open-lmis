@@ -43,7 +43,7 @@
                                         <label class="labels" openlmis-message="label.role"><span class="label-required">*</span></label>
 
                                         <div class="form-fields">
-                                            <select ui-select2 style="width:200px;" class="large-input" name="role"  ng-model="filterObject.roleId">
+                                            <select ui-select2 style="width:200px;" class="large-input" name="role" ng-change ="processSupervisoryNodeChange()"  ng-model="filterObject.roleId">
                                                 <option ng-repeat="option in roles" value="{{option.id}}">{{option.name}}</option>
                                             </select>
                                         </div>
@@ -55,7 +55,7 @@
                                         <label class="labels" openlmis-message="label.program"><span class="label-required">*</span></label>
 
                                         <div class="form-fields">
-                                            <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="filterObject.programId" >
+                                            <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-change ="processSupervisoryNodeChange()" ng-model="filterObject.programId" >
                                                 <option ng-repeat="option in programs" value="{{option.id}}">{{option.name}}</option>
                                             </select>
                                         </div>

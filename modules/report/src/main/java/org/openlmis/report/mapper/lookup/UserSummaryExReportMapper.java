@@ -9,8 +9,14 @@
  */
 package org.openlmis.report.mapper.lookup;
 
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.mapping.ResultSetType;
+import org.openlmis.report.builder.UserSummaryExQueryBuilder;
+import org.openlmis.report.builder.UserSummaryQueryBuilder;
+import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.dto.*;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +29,7 @@ public interface UserSummaryExReportMapper {
            "where roleid=#{roleId} and programid=#{programId} and supervisorynodeid=#{supervisoryNodeId}" )
     List<UserRoleAssignmentsReport>getUserRoleAssignments(@Param("roleId") Long roleId,@Param("programId") Long programId,@Param("supervisoryNodeId") Long supervisoryNodeId);
 
-@Select("select rolename,roleid, count(*) totalRoles from vw_user_role_assignments\n" +
-        " group by rolename,roleid\n")
-    List<UserRoleAssignmentsReport>getUserRoleAssignment();
+    @SelectProvider(type=UserSummaryExQueryBuilder.class, method="getQuery")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    List<UserRoleAssignmentsReport>getUserRoleAssignment(@Param("filterCriteria") ReportParameter filterCriteria);
     }

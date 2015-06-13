@@ -31,7 +31,7 @@ import java.util.Map;
 
 @Component
 @NoArgsConstructor
-public class UserSummaryReportProvider extends ReportDataProvider{
+public class UserSummaryReportProvider extends ReportDataProvider {
     private UserSummaryReportMapper reportMapper;
 
     private UserSummaryParams userSummaryParam = null;
@@ -45,11 +45,11 @@ public class UserSummaryReportProvider extends ReportDataProvider{
     private RoleRightsService roleRightsService;
 
 
-
     @Autowired
     public UserSummaryReportProvider(UserSummaryReportMapper mapper) {
         this.reportMapper = mapper;
     }
+
     @Override
     protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
         RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
@@ -66,10 +66,10 @@ public class UserSummaryReportProvider extends ReportDataProvider{
     public UserSummaryParams getReportFilterData(Map<String, String[]> filterCriteria) {
 
         if (filterCriteria != null) {
-            //  userSummaryParam = new UserSummaryParams();
-            //userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("role")[0]) ? 0 : Long.parseLong(filterCriteria.get("role")[0])); //defaults to 0
-            //userSummaryParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0 : Long.parseLong(filterCriteria.get("program")[0]));
-            // userSummaryParam.setSupervisoryNodeId(StringUtils.isBlank(filterCriteria.get("supervisoryNode")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNode")[0]));
+            userSummaryParam = new UserSummaryParams();
+            userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("role")[0]) ? 0 : Long.parseLong(filterCriteria.get("role")[0])); //defaults to 0
+            userSummaryParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0 : Long.parseLong(filterCriteria.get("program")[0]));
+            userSummaryParam.setSupervisoryNodeId(StringUtils.isBlank(filterCriteria.get("supervisoryNode")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNode")[0]));
 
             // summarize the filters now.
            /* String summary = "Program: "
@@ -95,7 +95,7 @@ public class UserSummaryReportProvider extends ReportDataProvider{
 
     }
 
-    public List<HashMap> getUserAssignments(){
+    public List<HashMap> getUserAssignments() {
         return reportMapper.getUserRoleAssignments();
     }
 

@@ -409,7 +409,7 @@ public class ReportLookupController extends BaseController {
 
   @RequestMapping(value = "UserRoleAssignments/getUserRoleAssignments", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getUserRoleAssignments(HttpServletRequest request){
-      List<UserRoleAssignmentsReport> userSummaryList = reportLookupService.getUserRoleAssignments();
+      List<UserRoleAssignmentsReport> userSummaryList = reportLookupService.getUserRoleAssignments(request.getParameterMap());
       return OpenLmisResponse.response("userRoleAssignmentSummary",userSummaryList);
   }
 
