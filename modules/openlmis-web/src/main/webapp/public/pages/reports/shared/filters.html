@@ -23,7 +23,7 @@
     <div>
         <label class="labels" openlmis-message="label.year"><span ng-show="requiredFilters.year" class="label-required">*</span></label>
         <div>
-            <select class="input-medium" ng-model="filter.year">
+            <select class="input-medium" ng-model="filter.year" ng-change="filterChanged()">
                 <option ng-repeat="year in years" ng-selected="filter.year == year" value="{{ year }}">{{year}}</option>
             </select>
         </div>

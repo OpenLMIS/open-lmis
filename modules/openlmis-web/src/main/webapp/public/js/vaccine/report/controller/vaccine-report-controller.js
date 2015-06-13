@@ -62,7 +62,7 @@ function VaccineReportController($scope, programs, VaccineReportFacilities, Vacc
     showFilter: false,
     columnDefs: [
       {field: 'periodName', displayName: messageService.get("label.periods")},
-      {field: 'status', displayName: messageService.get("label.rnr.status")},
+      {field: 'status', displayName: messageService.get("label.ivd.status")},
       {field: '', displayName: '', cellTemplate: getActionButton('row.entity.showButton')}
     ]
   };

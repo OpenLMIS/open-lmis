@@ -10,10 +10,12 @@
 
 package org.openlmis.equipment.repository.mapper;
 
+import junit.framework.Assert;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.equipment.domain.*;
@@ -65,10 +67,13 @@ public class ColdChainEquipmentMapperIT {
 
   @Test
   public void shouldGetAllColdChainEquipments() throws Exception{
+    Pagination page1=new Pagination(0,2);
+    Pagination page2=new Pagination(2,1);
 
     EquipmentType type = new EquipmentType();
     type.setCode("1");
     type.setName("Type");
+    type.setColdChain(true);
     typeMapper.insert(type);
 
     ColdChainEquipmentDesignation designation=new ColdChainEquipmentDesignation();
@@ -83,13 +88,6 @@ public class ColdChainEquipmentMapperIT {
     pqsStatus.setName("TestStatus");
     statusMapper.insert(pqsStatus);
 
-    Donor donor=new Donor();
-    donor.setCode("DONOR");
-    donor.setCountOfDonations(1);
-    donor.setLongName("TEST DONOR");
-    donor.setShortName("DONOR");
-    donorMapper.insert(donor);
-
     ColdChainEquipment coldChainEquipment = new ColdChainEquipment();
     coldChainEquipment.setName("Equipment Name");
     coldChainEquipment.setEquipmentType(type);
@@ -97,27 +95,28 @@ public class ColdChainEquipmentMapperIT {
     coldChainEquipment.setModel("Model");
     coldChainEquipment.setEnergyTypeId(energyType.getId());
     coldChainEquipment.setDesignationId(designation.getId());
-    coldChainEquipment.setCceCode("CR");
-    coldChainEquipment.setPqsCode("Domestic");
-    coldChainEquipment.setRefrigeratorCapacity(10.00F);
-    coldChainEquipment.setFreezerCapacity(5.00F);
-    coldChainEquipment.setRefrigerant("NH3");
-    coldChainEquipment.setTemperatureZone("HT");
-    coldChainEquipment.setEnergyConsumption("12kW/h");
-    coldChainEquipment.setMaxTemperature(4L);
-    coldChainEquipment.setMaxTemperature(-4L);
-    coldChainEquipment.setHoldoverTime(12.30F);
-    coldChainEquipment.setDimension("2M X 1M X 1.5M");
-    coldChainEquipment.setPrice(2000.00F);
-    coldChainEquipment.setDonorId(donor.getId());
     coldChainEquipment.setPqsStatusId(pqsStatus.getId());
+
+    ColdChainEquipment coldChainEquipment2 = new ColdChainEquipment();
+    coldChainEquipment2.setName("Equipment Name2");
+    coldChainEquipment2.setEquipmentType(type);
+    coldChainEquipment2.setManufacturer("Manufacturer2");
+    coldChainEquipment2.setModel("Model2");
+    coldChainEquipment2.setEnergyTypeId(energyType.getId());
+    coldChainEquipment2.setDesignationId(designation.getId());
+    coldChainEquipment2.setPqsStatusId(pqsStatus.getId());
 
     equipmentMapper.insert(coldChainEquipment);
     mapper.insert(coldChainEquipment);
+    equipmentMapper.insert(coldChainEquipment2);
+    mapper.insert(coldChainEquipment2);
 
-    List<ColdChainEquipment> results =  mapper.getAll(type.getId());
-    assertThat(results.size(), greaterThan(0));
-   // assertEquals(coldChainEquipment.getName(), results.get(0).getName());
+
+    List<ColdChainEquipment> results =  mapper.getAll(type.getId(),page1);
+    assertEquals(results.size(), 2);
+
+    List<ColdChainEquipment> results2 = mapper.getAll(type.getId(),page2);
+    assertEquals(results2.size(), 1);
 
   }
 

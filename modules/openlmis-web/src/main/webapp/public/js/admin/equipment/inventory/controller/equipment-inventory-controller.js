@@ -179,7 +179,19 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
   };
 
   $scope.getAge = function (yearOfInstallation) {
-    return (new Date().getFullYear()) - yearOfInstallation;
+    if (yearOfInstallation) {
+      return (new Date().getFullYear()) - yearOfInstallation;
+    } else {
+      return null;
+    }
+  };
+
+  $scope.getReplacementYear = function (yearOfInstallation) {
+    if (yearOfInstallation) {
+      return yearOfInstallation + 10;
+    } else {
+      return null;
+    }
   };
 
   $scope.$watch('currentPage', function () {

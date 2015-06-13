@@ -5,6 +5,16 @@ app.directive('filterContainer', ['$routeParams', '$location', function ($routeP
     controller: function ($scope, $routeParams, $location) {
       $scope.filter = angular.copy($routeParams);
 
+      $scope.$parent.applyUrl = function(){
+        // update the url so users could take it, book mark it etc...
+        if (JSON.stringify($scope.filter) !== JSON.stringify($routeParams)) {
+          var url = $location.url();
+          url = url.substring(0, url.indexOf('?'));
+          url = url + '?' + jQuery.param($scope.filter);
+          $location.url(url);
+        }
+      };
+
       $scope.filterChanged = function () {
         var all_required_fields_set = true;
         // check if all of the required parameters have been specified
@@ -17,13 +27,8 @@ app.directive('filterContainer', ['$routeParams', '$location', function ($routeP
         if (!all_required_fields_set) {
           return;
         }
-        // update the url so users could take it, book mark it etc...
-        if (JSON.stringify($scope.filter) !== JSON.stringify($routeParams)) {
-          var url = $location.url();
-          url = url.substring(0, url.indexOf('?'));
-          url = url + '?' + jQuery.param($scope.filter);
-          $location.url(url);
-        }
+
+        $scope.$parent.applyUrl();
         $scope.$parent.filter = $scope.filter;
         $scope.$parent.OnFilterChanged();
       };
