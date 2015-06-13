@@ -28,4 +28,5 @@ public class StockedOutReport implements ReportData {
     private String location;
     private String supplyingFacility;
     private String processing_period_name;
+    private int stockoutdays;
 }
