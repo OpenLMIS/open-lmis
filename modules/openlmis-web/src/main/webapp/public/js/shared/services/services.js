@@ -149,7 +149,7 @@ services.factory('ForgotPassword', function ($resource) {
   return $resource('/forgot-password.json', {}, {});
 });
 
-services.factory('FacilityApprovedProducts', function ($resource) {
+services.factory('FacilityApprovedNonFullSupplyProducts', function ($resource) {
   return $resource('/facilityApprovedProducts/facility/:facilityId/program/:programId/nonFullSupply.json', {}, {});
 });
 

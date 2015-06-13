@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 
-import static java.lang.Math.ceil;
+import static java.lang.Math.round;
 
 /**
  * CoverageLineItem is a base class holding facilityVisitId and targetGroup. TargetGroup is calculated on basis of
@@ -44,7 +44,7 @@ public class CoverageLineItem extends BaseModel {
   protected Integer calculateTargetGroup(Double whoRatio, Long catchmentPopulation, Integer processingPeriodMonths) {
     Integer targetGroup = null;
     if (whoRatio != null && catchmentPopulation != null) {
-      targetGroup = (int) ceil((catchmentPopulation * whoRatio * processingPeriodMonths) / (100 * 12));
+      targetGroup = (int) round((catchmentPopulation * whoRatio * processingPeriodMonths) / (100 * 12));
     }
     return targetGroup;
   }

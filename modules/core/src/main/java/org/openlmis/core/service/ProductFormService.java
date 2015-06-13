@@ -20,19 +20,22 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Exposes the services for handling ProductForm entity.
+ * Service responsible for managing {@link org.openlmis.core.domain.ProductForm} entities.
  */
-
 @Service
 @NoArgsConstructor
 public class ProductFormService {
 
-  @Autowired
   private ProductFormRepository repository;
 
+  @Autowired
+  public ProductFormService(ProductFormRepository productFormRepository) {repository = productFormRepository;}
+  
   public List<ProductForm> getAll() {
     return repository.getAll();
   }
+  
+  public ProductForm getExisting(ProductForm pf) {return repository.getByCode(pf.getCode());}
 
   public ProductForm validateAndReturn(ProductForm form) {
     if (form == null) return null;
@@ -44,5 +47,10 @@ public class ProductFormService {
     if (form == null) throw new DataException("error.reference.data.invalid.product.form");
 
     return form;
+  }
+  
+  public void save(ProductForm pf) {
+    if(pf.hasId()) repository.update(pf);
+    else repository.insert(pf);
   }
 }

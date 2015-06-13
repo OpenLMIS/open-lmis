@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.FacilityOperatorRepository;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProgramService;
@@ -65,6 +66,9 @@ public class FacilityControllerTest {
   private FacilityService facilityService;
 
   @Mock
+  private FacilityOperatorRepository facilityOperatorRepository;
+
+  @Mock
   private MessageService messageService;
 
   @InjectMocks
@@ -84,7 +88,7 @@ public class FacilityControllerTest {
   public void shouldFetchRequiredReferenceDataForFacility() {
 
     List<FacilityOperator> facilityOperators = new ArrayList<>();
-    when(facilityService.getAllOperators()).thenReturn(facilityOperators);
+    when(facilityOperatorRepository.getAll()).thenReturn(facilityOperators);
     List<FacilityType> facilityTypes = new ArrayList<>();
     when(facilityService.getAllTypes()).thenReturn(facilityTypes);
     List<GeographicZone> allZones = new ArrayList<>();
@@ -95,7 +99,7 @@ public class FacilityControllerTest {
 
     Map referenceData = facilityController.getReferenceData();
 
-    verify(facilityService).getAllOperators();
+    verify(facilityOperatorRepository).getAll();
     assertThat((List<FacilityOperator>) referenceData.get(FACILITY_OPERATORS), is(equalTo(facilityOperators)));
     verify(facilityService).getAllTypes();
     assertThat((List<FacilityType>) referenceData.get(FACILITY_TYPES), is(equalTo(facilityTypes)));

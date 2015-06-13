@@ -33,6 +33,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramBuilder.*;
@@ -70,6 +71,37 @@ public class ProgramMapperIT {
 
   @Autowired
   QueryExecutor queryExecutor;
+
+  @Test
+  public void shouldInsertProgram() {
+    Program p = make(a(defaultProgram));
+    programMapper.insert(p);
+
+    Program pRet = programMapper.getById(p.getId());
+    assertThat(pRet, notNullValue());
+    assertThat(pRet, is(p));
+  }
+
+  @Test
+  public void shouldUpdateProgram() {
+    Program p = make(a(defaultProgram));
+    programMapper.insert(p);
+
+    p = programMapper.getById(p.getId());
+    p.setCode("abc");
+    p.setActive(false);
+    p.setBudgetingApplies(false);
+    p.setDescription("something to update");
+    p.setName("something to update");
+    p.setPush(false);
+    p.setRegimenTemplateConfigured(false);
+    p.setTemplateConfigured(false);
+    programMapper.update(p);
+
+    Program pRet = programMapper.getById(p.getId());
+    assertThat(pRet, notNullValue());
+    assertThat(pRet, is(p));
+  }
 
   @Test
   public void shouldGetProgramsWhichAreActiveByFacilityCode() {
@@ -285,15 +317,6 @@ public class ProgramMapperIT {
     List<Program> programs = programMapper.getProgramsForUserByFacilityAndRights(facility.getId(), user.getId(), rights);
     assertThat(programs.size(), is(1));
     assertTrue(programs.contains(activeProgram));
-  }
-
-
-  @Test
-  public void shouldGetAllProgramsInOrderByRegimentTemplateConfiguredAndName() {
-    insertProgram(make(a(defaultProgram, with(regimenTemplateConfigured, true))));
-    List<Program> programs = programMapper.getAllByRegimenTemplate();
-    assertThat(programs.size(), is(6));
-    assertThat(programs.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
   }
 
   @Test

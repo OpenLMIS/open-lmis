@@ -14,11 +14,11 @@ import com.google.common.base.Predicate;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.repository.FacilityRepository;
+import org.openlmis.core.repository.FacilityTypeRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
 import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,7 +33,7 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
  * Exposes the services for handling ProgramProduct entity.
  */
 
-@Component
+@Service
 @NoArgsConstructor
 public class ProgramProductService {
 
@@ -50,7 +50,7 @@ public class ProgramProductService {
   private ProgramRepository programRepository;
 
   @Autowired
-  private FacilityRepository facilityRepository;
+  private FacilityTypeRepository facilityTypeRepository;
 
   @Autowired
   private ProductCategoryService categoryService;
@@ -119,7 +119,7 @@ public class ProgramProductService {
   public List<ProgramProduct> getProgramProductsBy(String programCode, String facilityTypeCode) {
     FacilityType facilityType = new FacilityType();
     if ((facilityTypeCode = trimToNull(facilityTypeCode)) != null) {
-      facilityType = facilityRepository.getFacilityTypeByCode(new FacilityType(facilityTypeCode));
+      facilityType = facilityTypeRepository.getByCodeOrThrowException(facilityTypeCode);
     }
     return programProductRepository.getProgramProductsBy(programRepository.getIdByCode(trimToEmpty(programCode)),
       facilityType.getCode());

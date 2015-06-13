@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.repository.GeographicLevelRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -45,6 +46,9 @@ public class GeographicZoneServiceTest {
   @Mock
   GeographicZoneRepository repository;
 
+  @Mock
+  GeographicLevelRepository geoLevelRepo;
+
   @InjectMocks
   GeographicZoneService service;
 
@@ -60,12 +64,12 @@ public class GeographicZoneServiceTest {
     GeographicLevel childLevel = new GeographicLevel(2345L, "child level", "child level", 2);
     GeographicZone childZone = new GeographicZone(null, "child zone", "child zone", childLevel, rootZone);
 
-    when(repository.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
+    when(geoLevelRepo.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
     when(repository.getByCode(childZone.getParent().getCode())).thenReturn(rootZone);
 
     service.save(childZone);
 
-    verify(repository).getGeographicLevelByCode("child level");
+    verify(geoLevelRepo).getGeographicLevelByCode("child level");
     verify(repository).getByCode("root zone");
     assertThat(childZone.getLevel().getId(), is(2345L));
     assertThat(childZone.getParent().getId(), is(1234L));
@@ -79,7 +83,7 @@ public class GeographicZoneServiceTest {
     GeographicLevel childLevel = new GeographicLevel(2345L, "child level", "child level", 2);
     GeographicZone childZone = new GeographicZone(null, "child zone", "child zone", childLevel, invalidZone);
 
-    when(repository.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
+    when(geoLevelRepo.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
     when(repository.getByCode(childZone.getParent().getCode())).thenReturn(null);
 
     expectedEx.expect(dataExceptionMatcher("error.geo.zone.parent.invalid"));
@@ -119,7 +123,7 @@ public class GeographicZoneServiceTest {
     GeographicLevel level = new GeographicLevel(1L, "abc", "abc", 2);
     GeographicZone zone = new GeographicZone(1L, "xyz", "xyz", level, null);
 
-    when(repository.getGeographicLevelByCode(zone.getLevel().getCode())).thenReturn(level);
+    when(geoLevelRepo.getGeographicLevelByCode(zone.getLevel().getCode())).thenReturn(level);
 
     expectedEx.expect(dataExceptionMatcher("error.invalid.hierarchy"));
 
@@ -133,7 +137,7 @@ public class GeographicZoneServiceTest {
     GeographicLevel childLevel = new GeographicLevel(2345L, "child level", "child level", 2);
     GeographicZone childZone = new GeographicZone(2345L, "child zone", "child zone", childLevel, rootZone);
 
-    when(repository.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
+    when(geoLevelRepo.getGeographicLevelByCode(childZone.getLevel().getCode())).thenReturn(childLevel);
     when(repository.getByCode(childZone.getParent().getCode())).thenReturn(rootZone);
 
     childZone.setName("new name");
@@ -161,7 +165,7 @@ public class GeographicZoneServiceTest {
     GeographicZone parent = new GeographicZone(1L, "xyz", "xyz", null, null);
     GeographicZone country = new GeographicZone(1L, "xyz", "xyz", level, parent);
 
-    when(repository.getGeographicLevelByCode(country.getLevel().getCode())).thenReturn(level);
+    when(geoLevelRepo.getGeographicLevelByCode(country.getLevel().getCode())).thenReturn(level);
     when(repository.getByCode(country.getParent().getCode())).thenReturn(parent);
 
     expectedEx.expect(dataExceptionMatcher("error.invalid.hierarchy"));
@@ -174,7 +178,7 @@ public class GeographicZoneServiceTest {
     GeographicZone country1 = new GeographicZone(1L, "xyz", "xyz", level, null);
     GeographicZone country2 = new GeographicZone(1L, "xyz", "xyz", level, country1);
 
-    when(repository.getGeographicLevelByCode(country2.getLevel().getCode())).thenReturn(level);
+    when(geoLevelRepo.getGeographicLevelByCode(country2.getLevel().getCode())).thenReturn(level);
     when(repository.getByCode(country2.getParent().getCode())).thenReturn(country1);
 
     expectedEx.expect(dataExceptionMatcher("error.invalid.hierarchy"));
@@ -188,7 +192,7 @@ public class GeographicZoneServiceTest {
     GeographicZone country1 = new GeographicZone(1L, "xyz", "xyz", lowerLevel, null);
     GeographicZone country2 = new GeographicZone(1L, "xyz", "xyz", higherLevel, country1);
 
-    when(repository.getGeographicLevelByCode(country2.getLevel().getCode())).thenReturn(higherLevel);
+    when(geoLevelRepo.getGeographicLevelByCode(country2.getLevel().getCode())).thenReturn(higherLevel);
     when(repository.getByCode(country2.getParent().getCode())).thenReturn(country1);
 
     expectedEx.expect(dataExceptionMatcher("error.invalid.hierarchy"));

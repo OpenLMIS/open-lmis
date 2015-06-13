@@ -14,7 +14,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -26,15 +29,28 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
-public class Program extends BaseModel {
+public class Program extends BaseModel implements Importable {
 
+  @ImportField(name="Program Code", mandatory=true)
   private String code;
+
+  @ImportField(name="Name", mandatory=true)
   private String name;
+
+  @ImportField(name="Description")
   private String description;
-  private Boolean active;
-  private Boolean budgetingApplies;
+
+  @ImportField(name="Active", mandatory=true, type="boolean")
+  private Boolean active = true;
+
+  @ImportField(name="Budgeting Applies", type="boolean")
+  private Boolean budgetingApplies = false;
+
   private boolean templateConfigured;
+
   private boolean regimenTemplateConfigured;
+
+  @ImportField(name="Push", mandatory=true, type="boolean")
   private boolean push;
 
   public Program(Long id) {
