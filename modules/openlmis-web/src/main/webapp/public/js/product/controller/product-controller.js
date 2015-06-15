@@ -10,19 +10,15 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.newPriceSchedule = {};
   $scope.product = {};
   $scope.$parent.message = "";
+  $scope.priceScheduleCategories = PriceSchCategories;
   setProgramMessage();
 
   if (!isUndefined(productDTO)) {
     if (!isUndefined(productDTO.product)) {
       $scope.product = productDTO.product;
       $scope.programProducts = productDTO.programProducts;
-
-
       $scope.priceSchedules = productDTO.priceSchedules;
-      $scope.priceScheduleCategories = PriceSchCategories.priceScheduleCategories;
-
-        console.log($scope.priceScheduleCategories);
-
+      //$scope.priceScheduleCategories = PriceSchCategories.priceScheduleCategories;
       $scope.selectedProductGroupCode = isUndefined($scope.product.productGroup) ? undefined : $scope.product.productGroup.code;
       $scope.selectedProductFormCode = isUndefined($scope.product.form) ? undefined : $scope.product.form.code;
       $scope.selectedProductDosageUnitCode = isUndefined($scope.product.dosageUnit) ? undefined : $scope.product.dosageUnit.code;
@@ -77,7 +73,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
       Products.update({id: $scope.product.id}, {product: $scope.product, programProducts: $scope.programProducts, priceSchedules : $scope.priceSchedules}, success, error);
     }
     else {
-      Products.save({}, {product: $scope.product, programProducts: $scope.programProducts}, success, error);
+      Products.save({}, {product: $scope.product, programProducts: $scope.programProducts,  priceSchedules : $scope.priceSchedules}, success, error);
     }
   };
 
