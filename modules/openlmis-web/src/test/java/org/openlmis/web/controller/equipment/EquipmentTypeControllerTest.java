@@ -72,7 +72,7 @@ public class EquipmentTypeControllerTest {
     EquipmentType type = new EquipmentType();
     type.setName("Test");
 
-    controller.save(type);
+    controller.save(type, httpServletRequest);
     verify(service).save(type);
   }
 }

@@ -29,6 +29,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -102,8 +103,11 @@ public class EquipmentController extends BaseController {
   @RequestMapping(method = RequestMethod.POST, value = "save", headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   @Transactional
-  public ResponseEntity<OpenLmisResponse> save( @RequestBody Equipment equipment){
+  public ResponseEntity<OpenLmisResponse> save( @RequestBody Equipment equipment, HttpServletRequest request){
       ResponseEntity<OpenLmisResponse> response;
+      Long userId = loggedInUserId(request);
+      equipment.setCreatedBy(userId);
+      equipment.setModifiedBy(userId);
       EquipmentType equipmentType=equipmentTypeService.getTypeById(equipment.getEquipmentTypeId());
       equipment.setEquipmentType(equipmentType);
       ColdChainEquipment coldChainEquipment;
