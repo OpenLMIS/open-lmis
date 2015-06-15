@@ -96,17 +96,19 @@ public class EquipmentInventoryService {
         if (e.equalsByMakeAndModel(equipment)) {
           // Equipment already exists in db
           equipmentFound = true;
+          equipment = e;
+          break;
         }
       }
 
       if (!equipmentFound) {
         equipmentRepository.insert(equipment);
-
-        // Make sure equipmentId is set for the inventory save, equipment.id is filled in after insert
-        inventory.setEquipmentId(equipment.getId());
       } else {
         equipmentRepository.update(equipment);
       }
+
+      // Make sure equipmentId is set for the inventory save, equipment.id is filled in after insert
+      inventory.setEquipmentId(equipment.getId());
     }
 
     if(inventory.getId() == null){

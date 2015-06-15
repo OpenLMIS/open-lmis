@@ -23,7 +23,8 @@
         <div class="form-row clearfix">
           <div class="form-cell">
             <label for="facility">
-              <span>Facility</span>
+              <span openlmis-message="label.equipment.facility"></span>
+              <span class="label-required">*</span>
             </label>
 
             <div class="form-field" ng-if="from == 0">
@@ -42,7 +43,7 @@
             </div>
             <div class="form-field" ng-if="from == 1 && screenType != 'edit'">
               <select style="width: 250px;" ui-select2 ng-model="inventory.facilityId" id="facility"
-                      name="facility">
+                      name="facility" ng-required="true">
                 <option ng-repeat="facility in facilities" ng-selected="facility.id == inventory.facilityId"
                         value="{{facility.id}}">
                   {{facility.name}}
