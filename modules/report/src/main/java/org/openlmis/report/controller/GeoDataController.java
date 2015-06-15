@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +51,7 @@ public class GeoDataController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getReportingRateReport(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
                                                                    @RequestParam(value = "period", required = true, defaultValue = "0") Long period, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
-        return OpenLmisResponse.response("map", this.geographicReportProvider.getReportingRateReport(userId, program, period));
+        return OpenLmisResponse.response("map", this.geographicZoneReportMapper.getGeoReportingRate(userId, program, period));
     }
 
 
