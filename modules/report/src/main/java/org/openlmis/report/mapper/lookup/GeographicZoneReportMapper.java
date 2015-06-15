@@ -79,7 +79,7 @@ public interface GeographicZoneReportMapper {
             " where gz.levelId = (select max(id) from geographic_levels) and ps.programId = #{programId} " +
 
             " and ra.userid=#{userId}" +
-
+            " and ra.programid=#{programId}" +
             " group by geographicZoneId" +
             " ) expected " +
             " on gzz.id = expected.geographicZoneId " +
@@ -95,7 +95,7 @@ public interface GeographicZoneReportMapper {
             " where gz.levelId = (select max(id) from geographic_levels) " +
 
             "   and ra.userid=#{userId} " +
-
+            " and ra.programid=#{programId}" +
             " group by geographicZoneId" +
             " ) total " +
             " on gzz.id = total.geographicZoneId " +
@@ -112,6 +112,7 @@ public interface GeographicZoneReportMapper {
             " where ps.programId = #{programId} and fa.id in  " +
             "(select facilityId from requisitions where programId = #{programId} ) " +
             "  and ra.userid=#{userId} " +
+            " and ra.programid=#{programId}" +
             "group by geographicZoneId" +
             " ) ever " +
             " on gzz.id = ever.geographicZoneId " +
@@ -130,6 +131,7 @@ public interface GeographicZoneReportMapper {
             "  status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and emergency = false ) " +
             "" +
             "    and ra.userid=#{userId} " +
+            " and ra.programid=#{programId}" +
             "" +
             " group by geographicZoneId" +
             " ) period" +
