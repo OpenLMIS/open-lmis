@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors, EquipmentsByType, SaveEquipmentInventory, Facility, EquipmentOperationalStatus, messageService, EquipmentType, EquipmentInventoryFacilities, EquipmentEnergyTypes) {
+function CreateEquipmentInventoryController($scope, $location, $routeParams, EquipmentInventory, Donors, EquipmentsByType, SaveEquipmentInventory, UserFacilityList, EquipmentOperationalStatus, messageService, EquipmentType, EquipmentInventoryFacilities, EquipmentEnergyTypes) {
 
   $scope.$parent.message = $scope.$parent.error = '';
 
@@ -56,10 +56,12 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
 
     if ($routeParams.from === "0") {
       // Create new inventory at my facility, show facility as readonly
-      Facility.get({id: $routeParams.facility}, function(data){
-        $scope.inventory.facility = data.facility;
-        $scope.inventory.facilityId = data.facility.id;
-        $scope.facilityDisplayName = $scope.inventory.facility.code + " - " + $scope.inventory.facility.name;
+      UserFacilityList.get({}, function(data){
+        $scope.inventory.facility = data.facilityList[0];
+        if ($scope.inventory.facility) {
+          $scope.inventory.facilityId = data.facilityList[0].id;
+          $scope.facilityDisplayName = $scope.inventory.facility.code + " - " + $scope.inventory.facility.name;
+        }
       });
     } else {
       // Create new inventory at supervised facilities, facility drop down list
@@ -150,8 +152,8 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
         $scope.$parent.message = messageService.get(data.success);
         $scope.$parent.selectedProgram = {id: $scope.inventory.programId};
         console.info($scope.$parent.selectedProgram);
-        $location.path('/' + $routeParams.from + '/' + $scope.inventory.facilityId + '/' + $scope.inventory.programId + '/' +
-            $routeParams.equipmentType + '/' + $routeParams.page);
+        $location.path('/' + $routeParams.from + '/' + $scope.inventory.programId + '/' + $routeParams.equipmentType + '/' +
+            $routeParams.page);
       }, function (data) {
         $scope.error = data.error;
       });
@@ -162,7 +164,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams, Equ
   };
 
   $scope.cancelCreateInventory = function () {
-    $location.path('/' + $routeParams.from + '/' + $routeParams.facility + '/' + $routeParams.program + '/' +
-        $routeParams.equipmentType + '/' + $routeParams.page);
+    $location.path('/' + $routeParams.from + '/' + $routeParams.program + '/' + $routeParams.equipmentType + '/' +
+        $routeParams.page);
   };
 }

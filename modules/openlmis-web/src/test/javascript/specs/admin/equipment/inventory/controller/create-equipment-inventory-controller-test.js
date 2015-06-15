@@ -44,11 +44,10 @@ describe("In Create Equipment Inventory Controller,", function () {
   describe("Initial load", function () {
     it("should load data from the server", function () {
       routeParams.from = "0";
-      routeParams.facility = facility.id;
       ctrl = $controller(CreateEquipmentInventoryController, {$scope: scope, $routeParams: routeParams});
       $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId='+routeParams.equipmentType).respond(200, {"equipments": [equipment]});
       $httpBackend.expectGET('/equipment/type/id.json?id='+routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
-      $httpBackend.expectGET('/facilities/'+routeParams.facility+'.json').respond(200, {"facility": facility});
+      $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
       $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": statuses});
       $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
       $httpBackend.expectGET('/equipment/energy-type/list.json').respond(200, {"energyType": [energyType]});
@@ -67,11 +66,10 @@ describe("In Create Equipment Inventory Controller,", function () {
     describe("Add inventory", function () {
       it("should get my facility if my facility was selected in previous screen", function () {
         routeParams.from = "0";
-        routeParams.facility = facility.id;
         ctrl = $controller(CreateEquipmentInventoryController, {$scope: scope, $routeParams: routeParams});
         $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId=' + routeParams.equipmentType).respond(200, {"equipments": [equipment]});
         $httpBackend.expectGET('/equipment/type/id.json?id=' + routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
-        $httpBackend.expectGET('/facilities/' + routeParams.facility + '.json').respond(200, {"facility": facility});
+        $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
         $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [statuses]});
         $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
         $httpBackend.expectGET('/equipment/energy-type/list.json').respond(200, {"energyType": [energyType]});
@@ -98,7 +96,6 @@ describe("In Create Equipment Inventory Controller,", function () {
     describe("Edit inventory", function () {
       it("should get my facility if my facility was selected in previous screen", function () {
         routeParams.from = "0";
-        routeParams.facility = facility.id;
         routeParams.id = inventory.id;
         ctrl = $controller(CreateEquipmentInventoryController, {$scope: scope, $routeParams: routeParams});
         $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId=' + routeParams.equipmentType).respond(200, {"equipments": [equipment]});
@@ -133,11 +130,10 @@ describe("In Create Equipment Inventory Controller,", function () {
   describe("Test functions", function () {
     beforeEach(function () {
       routeParams.from = "0";
-      routeParams.facility = facility.id;
       ctrl = $controller(CreateEquipmentInventoryController, {$scope: scope, $routeParams: routeParams});
       $httpBackend.expectGET('/equipment/manage/list-by-type.json?equipmentTypeId='+routeParams.equipmentType).respond(200, {"equipments": [equipment]});
       $httpBackend.expectGET('/equipment/type/id.json?id='+routeParams.equipmentType).respond(200, {"equipment_type": [equipmentType]});
-      $httpBackend.expectGET('/facilities/'+routeParams.facility+'.json').respond(200, {"facility": facility});
+      $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
       $httpBackend.expectGET('/equipment/type/operational-status.json').respond(200, {"status": [statuses]});
       $httpBackend.expectGET('/donor/list.json').respond(200, {"donors": [donor]});
       $httpBackend.expectGET('/equipment/energy-type/list.json').respond(200, {"energyType": [energyType]});
