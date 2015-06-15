@@ -39,6 +39,7 @@ import org.openlmis.report.model.dto.Program;
 import org.openlmis.report.model.dto.Regimen;
 import org.openlmis.report.model.dto.RegimenCategory;
 import org.openlmis.report.model.dto.RequisitionGroup;
+import org.openlmis.report.model.params.UserSummaryParams;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.model.report.TimelinessReport;
 import org.openlmis.report.util.Constants;
@@ -134,6 +135,7 @@ public class ReportLookupService {
 
     @Autowired
     private RegimenRepository regimenRepository;
+    private UserSummaryParams userSummaryParam = null;
 
     public List<Product> getAllProducts() {
         return productMapper.getAll();
@@ -436,10 +438,23 @@ public class ReportLookupService {
         return userSummaryExReportMapper.getUserRoleAssignments(roleId, programId, supervisoryNodeId);
     }
 
-    public List<UserRoleAssignmentsReport> getUserRoleAssignments() {
-        return userSummaryExReportMapper.getUserRoleAssignment();
+    public List<UserRoleAssignmentsReport> getUserRoleAssignments(Map<String, String[]> filterCriteria) {
+        return userSummaryExReportMapper.getUserRoleAssignment(getReportFilterData(filterCriteria));
     }
 
+    public UserSummaryParams getReportFilterData(Map<String, String[]> filterCriteria) {
+        if (filterCriteria != null) {
+            userSummaryParam = new UserSummaryParams();
+            System.out.println(" role id id " + filterCriteria.get("roleId")[0]);
+            System.out.println(" program Id " + filterCriteria.get("programId")[0]);
+            System.out.println(" supervisoryNodeId " + filterCriteria.get("supervisoryNodeId")[0]);
+            userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("roleId")[0]) ? 0 : Long.parseLong(filterCriteria.get("roleID")[0])); //defaults to 0
+            userSummaryParam.setProgramId(StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0]));
+            userSummaryParam.setSupervisoryNodeId(StringUtils.isBlank(filterCriteria.get("supervisoryNodeId")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNodeId")[0]));
+        }
+
+        return userSummaryParam;
+    }
 
     public List<EquipmentType> getEquipmentTypes() {
         return equipmentTypeReportMapper.getEquipmentTypeList();
@@ -595,29 +610,31 @@ public class ReportLookupService {
         return facilitiesList;
     }
 
-    public List<DosageFrequency> getAllDosageFrequencies(){
+    public List<DosageFrequency> getAllDosageFrequencies() {
         return regimenRepository.getAllDosageFrequencies();
     }
 
-    public List<RegimenProductCombination> getAllRegimenProductCombinations(){
+    public List<RegimenProductCombination> getAllRegimenProductCombinations() {
         return regimenRepository.getAllRegimenProductCombinations();
     }
 
-    public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents(){
+    public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents() {
         return regimenRepository.getAllRegimenCombinationConstituents();
     }
 
-    public List<RegimenConstituentDosage> getAllRegimenConstituentDosages(){
+    public List<RegimenConstituentDosage> getAllRegimenConstituentDosages() {
         return regimenRepository.getAllRegimenConstituentsDosages();
     }
 
-    public List<TimelinessReport>getTimelinessStatusData(Long programId,Long periodId, Long scheduleId, Long zoneId, String status){
-        return timelinessStatusReportMapper.getTimelinessStatusData(programId,periodId,scheduleId,zoneId,status);
+    public List<TimelinessReport> getTimelinessStatusData(Long programId, Long periodId, Long scheduleId, Long zoneId, String status) {
+        return timelinessStatusReportMapper.getTimelinessStatusData(programId, periodId, scheduleId, zoneId, status);
     }
-    public List<TimelinessReport>getFacilityRnRStatusData(Long programId,Long periodId, Long scheduleId, Long zoneId, String status,String facilityIds){
-        return timelinessStatusReportMapper.getFacilityRnRStatusData(programId,periodId,scheduleId,zoneId,status,facilityIds);
+
+    public List<TimelinessReport> getFacilityRnRStatusData(Long programId, Long periodId, Long scheduleId, Long zoneId, String status, String facilityIds) {
+        return timelinessStatusReportMapper.getFacilityRnRStatusData(programId, periodId, scheduleId, zoneId, status, facilityIds);
     }
-    public List<TimelinessReport>getTimelinessReportingDates(Long periodId){
+
+    public List<TimelinessReport> getTimelinessReportingDates(Long periodId) {
         return timelinessStatusReportMapper.getTimelinessReportingDates(periodId);
     }
 

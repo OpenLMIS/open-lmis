@@ -16,6 +16,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
@@ -24,6 +25,8 @@ import org.openlmis.report.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,22 +34,28 @@ import java.util.List;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest(OpenLmisResponse.class)
 public class GeoDataControllerTest {
 
-
+    public static final Long userId = 1L;
 
   @Mock
   private GeographicZoneReportMapper mapper;
 
   @InjectMocks
   private GeoDataController controller;
-
+    private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
   @Before
   public void setup(){
+      MockHttpSession mockHttpSession = new MockHttpSession();
+      httpServletRequest.setSession(mockHttpSession);
+      mockHttpSession.setAttribute(USER, USER);
+      mockHttpSession.setAttribute(USER_ID, userId);
     initMocks(this);
   }
 
@@ -54,14 +63,14 @@ public class GeoDataControllerTest {
   public void shouldGetReportingRateReport() throws Exception {
     List<GeoZoneReportingRate> reportData = new ArrayList<GeoZoneReportingRate>();
     reportData.add(new GeoZoneReportingRate());
-    when(mapper.getGeoReportingRate(1L, 1L)).thenReturn(reportData);
+    when(mapper.getGeoReportingRate(1l,1L, 1L)).thenReturn(reportData);
 
     OpenLmisResponse response = new OpenLmisResponse();
     response.addData("map", reportData);
     ResponseEntity<OpenLmisResponse> expectResponse = new ResponseEntity<>(response, HttpStatus.OK);
 
-    ResponseEntity<OpenLmisResponse> actual = controller.getReportingRateReport(1L, 1L);
+    ResponseEntity<OpenLmisResponse> actual = controller.getReportingRateReport(1L, 1L,httpServletRequest);
 
-    verify(mapper).getGeoReportingRate(1L, 1L);
+    verify(mapper).getGeoReportingRate(1l,1L, 1L);
   }
 }

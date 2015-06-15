@@ -8,12 +8,16 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function UserSummaryReportController($scope,$window,ReportProgramsBySupervisoryNode,UserRoleAssignmentsSummary,UserSupervisoryNodes,GetAllRoles) {
+function UserSummaryReportController($scope, $window, ReportProgramsBySupervisoryNode, UserRoleAssignmentsSummary, UserSupervisoryNodes, GetAllRoles) {
     $scope.filterObject = {};
-    $scope.$on('$viewContentLoaded', function(){
+    $scope.$on('$viewContentLoaded', function () {
+        $scope.loadUserSummary();
+    });
+    $scope.loadUserSummary = function () {
+
 
         $scope.filter.max = 10000;
-        UserRoleAssignmentsSummary.get({}, function (data) {
+        UserRoleAssignmentsSummary.get($scope.filterObject, function (data) {
             $scope.total = 0;
             $scope.UserRolePieChartData = [];
             if (!isUndefined(data.userRoleAssignmentSummary)) {
@@ -28,34 +32,26 @@ function UserSummaryReportController($scope,$window,ReportProgramsBySupervisoryN
 
                     };
                 }
-                bindChartEvent("#stocked-out-reporting","plothover",flotChartHoverCursorHandler);
+                bindChartEvent("#stocked-out-reporting", "plothover", flotChartHoverCursorHandler);
 
             }
 
         });
 
-        function flotChartHoverCursorHandler(event,pos,item){
+        function flotChartHoverCursorHandler(event, pos, item) {
 
             if (item && !isUndefined(item.dataIndex)) {
-                $(event.target).css('cursor','pointer');
+                $(event.target).css('cursor', 'pointer');
             } else {
-                $(event.target).css('cursor','auto');
+                $(event.target).css('cursor', 'auto');
             }
         }
 
-        function bindChartEvent(elementSelector, eventType, callback){
+        function bindChartEvent(elementSelector, eventType, callback) {
             $(elementSelector).bind(eventType, callback);
         }
-
-
-
-
-
-
-    });
-
+    };
     $scope.processSupervisoryNodeChange = function () {
-
 
         ReportProgramsBySupervisoryNode.get({supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function (data) {
             $scope.programs = data.programs;
@@ -63,12 +59,11 @@ function UserSummaryReportController($scope,$window,ReportProgramsBySupervisoryN
         });
 
 
+        $scope.loadUserSummary();
     };
 
 
-
-
-    $scope.OnFilterChanged = function() {
+    $scope.OnFilterChanged = function () {
 
     };
 
@@ -88,14 +83,14 @@ function UserSummaryReportController($scope,$window,ReportProgramsBySupervisoryN
             }
         },
         legend: {
-            container:$("#userSummaryReportLegend"),
+            container: $("#userSummaryReportLegend"),
             noColumns: 1,
             labelBoxBorderColor: "none",
-            sorted:"descending",
-            position:"w",
-            backgroundOpacity:1
+            sorted: "descending",
+            position: "w",
+            backgroundOpacity: 1
         },
-        grid:{
+        grid: {
             hoverable: true,
             clickable: true,
             borderWidth: 1,
@@ -115,7 +110,7 @@ function UserSummaryReportController($scope,$window,ReportProgramsBySupervisoryN
         }
     };
 
-    $scope.resetUserSummaryReportData = function(){
+    $scope.resetUserSummaryReportData = function () {
         $scope.UserRolePieChartData = null;
         $scope.datarows = null;
     };
@@ -131,7 +126,7 @@ function UserSummaryReportController($scope,$window,ReportProgramsBySupervisoryN
         $scope.roles.unshift({'name': '-- Select role --'});
     });
 
-    $scope.exportReport = function(type) {
+    $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
         var params = jQuery.param($scope.filter);
         var url = '/reports/download/user_summary/' + type + '?' + params;
