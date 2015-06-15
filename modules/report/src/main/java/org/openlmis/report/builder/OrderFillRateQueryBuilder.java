@@ -47,11 +47,11 @@ public class OrderFillRateQueryBuilder {
             WHERE(" (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone + " or gz.parent = " + zone + " )");
         }
 
-        if (facility != "" && !facility.endsWith("undefined")) {
+        if (!facility.equals("0") &&facility != "" && !facility.endsWith("undefined")) {
             WHERE("facilityid = cast(" + facility + " as int4)");
         }
 
-        if (!product.equals("0") && !product.equals("-1") && product != null && !product.isEmpty() && !product.equals("{}") && !product.equals("{0}") && !product.endsWith("undefined") && !product.isEmpty()) {
+        if (!product.equals("0") && !product.equals("-1") && product != null && !product.isEmpty() && !product.equals("{}") && !product.equals("{0}")&& !product.equals("[-1]") && !product.endsWith("undefined") && !product.isEmpty()) {
             WHERE("productId =  ANY(array" + product + "::INT[]) ");
         }
 
@@ -80,6 +80,7 @@ public class OrderFillRateQueryBuilder {
                 "  facilityname ");
         ORDER_BY(QueryHelpers.getSortOrder(params, "facilityname"));
         String sql = SQL();
+
         return sql;
     }
 
