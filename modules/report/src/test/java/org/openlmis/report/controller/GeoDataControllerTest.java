@@ -52,12 +52,11 @@ public class GeoDataControllerTest {
     private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
   @Before
   public void setup(){
-    initMocks(this);
       MockHttpSession mockHttpSession = new MockHttpSession();
       httpServletRequest.setSession(mockHttpSession);
       mockHttpSession.setAttribute(USER, USER);
       mockHttpSession.setAttribute(USER_ID, userId);
-      MockitoAnnotations.initMocks(this);
+    initMocks(this);
   }
 
   @Test
@@ -70,7 +69,7 @@ public class GeoDataControllerTest {
     response.addData("map", reportData);
     ResponseEntity<OpenLmisResponse> expectResponse = new ResponseEntity<>(response, HttpStatus.OK);
 
-    ResponseEntity<OpenLmisResponse> actual = controller.getReportingRateReport(1L, 1L,null);
+    ResponseEntity<OpenLmisResponse> actual = controller.getReportingRateReport(1L, 1L,httpServletRequest);
 
     verify(mapper).getGeoReportingRate(1l,1L, 1L);
   }
