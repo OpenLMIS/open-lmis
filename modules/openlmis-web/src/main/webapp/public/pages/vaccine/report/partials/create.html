@@ -55,11 +55,7 @@
   <hr/>
   <div class="rnr-tabs clearfix">
     <ul class="clearfix">
-      <li ng-show="tabVisibility.STOCK_STATUS_TAB" ng-class="{'selected': (visibleTab == 'stockMovement' || visibleTab == undefined)}">
-        <a href="" ng-click="visibleTab ='stockMovement'"><span
-          openlmis-message="label.vaccine.tab.stock.status"></span></a>
-      </li>
-      <li ng-show="tabVisibility.COVERAGE_TAB" ng-class="{'selected': visibleTab == 'coverage'}">
+      <li ng-show="tabVisibility.COVERAGE_TAB" ng-class="{'selected': (visibleTab == 'coverage' || visibleTab == undefined)}">
         <a href="" ng-click="visibleTab = 'coverage'"><span openlmis-message="label.vaccine.tab.coverage"></span></a>
       </li>
       <li ng-show="tabVisibility.VITAMIN_SUPPLEMENTATION_TAB" ng-class="{'selected': visibleTab == 'vitamin'}">
@@ -71,6 +67,10 @@
       <li ng-show="tabVisibility.AEFI_REPORTING_TAB" ng-class="{'selected': visibleTab == 'incident'}">
         <a href="" ng-click="visibleTab = 'incident'"><span
           openlmis-message="label.vaccine.tab.adverse.effect.tracking"></span></a>
+      </li>
+      <li ng-show="tabVisibility.STOCK_STATUS_TAB" ng-class="{'selected': (visibleTab == 'stockMovement')}">
+        <a href="" ng-click="visibleTab ='stockMovement'"><span
+          openlmis-message="label.vaccine.tab.stock.status"></span></a>
       </li>
       <li ng-show="tabVisibility.COLD_CHAIN_TAB" ng-class="{'selected': visibleTab == 'coldChain'}">
         <a href="" ng-click="visibleTab = 'coldChain'"><span openlmis-message="label.vaccine.tab.cold.chain"></span></a>

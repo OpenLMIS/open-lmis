@@ -22,7 +22,7 @@ describe("Product", function () {
       location = $location;
       controller = $controller;
       var productDTO = {product: undefined, productLastUpdated: "23/12/2014"};
-      ctrl = $controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], categories: [], productDTO: productDTO});
+      ctrl = $controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], categories: [], PriceSchCategories: [], productDTO: productDTO});
     }));
 
     it('should set product last updated date in scope', function () {
@@ -42,7 +42,7 @@ describe("Product", function () {
     it('should not set selected product form, group and dosage unit in scope if product values are undefined', function () {
       var productDTO = {product: {form: undefined, productGroup: undefined, dosageUnit: undefined}};
 
-      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], categories: [], productDTO: productDTO});
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], categories: [], PriceSchCategories: [], productDTO: productDTO});
 
       expect(scope.selectedProductFormCode).toBeUndefined();
       expect(scope.selectedProductGroupCode).toBeUndefined();
@@ -57,7 +57,7 @@ describe("Product", function () {
         {program: hivProgram}
       ]};
 
-      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [vaccineProgram, hivProgram, TBProgram], categories: [], productDTO: productDTO});
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [vaccineProgram, hivProgram, TBProgram], categories: [], PriceSchCategories: [], productDTO: productDTO});
 
       expect(scope.programs).toEqual([vaccineProgram, TBProgram]);
     });
@@ -65,7 +65,7 @@ describe("Product", function () {
     it('should set selected product form, group and dosage unit in scope if product values are defined', function () {
       var productDTO = {product: {form: {code: "Form"}, productGroup: {code: "Group"}, dosageUnit: {code: "Unit"}}};
 
-      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], categories: [], productDTO: productDTO});
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], categories: [], PriceSchCategories: [], productDTO: productDTO});
 
       expect(scope.selectedProductFormCode).toEqual("Form");
       expect(scope.selectedProductGroupCode).toEqual("Group");
@@ -74,7 +74,7 @@ describe("Product", function () {
 
     it('should not set productLastUpdated and initialize product, programProducts in scope if productDTO is undefined', function () {
       scope = rootScope.$new();
-      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], categories: [], productDTO: undefined});
+      ctrl = controller('ProductController', {$scope: scope, productGroups: [], productForms: [], dosageUnits: [], programs: [], categories: [], PriceSchCategories: [], productDTO: undefined});
 
       expect(scope.productLastUpdated).toBeUndefined();
       expect(scope.programProducts).toEqual([]);
@@ -92,16 +92,19 @@ describe("Product", function () {
       var programProduct1 = {program: vaccineProgram, productCategory: productCategory1, active: true,
         displayOrder: 23, dosesPerMonth: 1234, currentPrice: "67.67"};
 
+       var productScheduleCategory1 = {id:1, price_category: "A"};
+
       var productDTO = {product: {code: 'p10'}, productLastUpdated: "23/12/2014", programProducts: [programProduct1]};
 
       ctrl = controller('ProductController', {$scope: scope, productGroups: [productGroup1], productForms: [ productForm1],
-        dosageUnits: [dosageUnit1], programs: [hivProgram, vaccineProgram ], categories: [ productCategory1], productDTO: productDTO});
+        dosageUnits: [dosageUnit1], programs: [hivProgram, vaccineProgram ], categories: [ productCategory1], PriceSchCategories: [ productScheduleCategory1 ], productDTO: productDTO});
 
       expect(scope.productGroups).toEqual([productGroup1]);
       expect(scope.productForms).toEqual([productForm1]);
       expect(scope.dosageUnits).toEqual([dosageUnit1]);
       expect(scope.programs).toEqual([hivProgram]);
       expect(scope.categories).toEqual([productCategory1]);
+      expect(scope.priceScheduleCategories).toEqual([productScheduleCategory1]);
     });
 
     describe("Save", function () {
@@ -152,7 +155,7 @@ describe("Product", function () {
         scope.selectedProductDosageUnitCode = "unit2";
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPOST('/products.json', {product: scope.product, programProducts: scope.programProducts}).respond(200, {"success": "Saved successfully", "productId": 5});
+        $httpBackend.expectPOST('/products.json', {product: scope.product, programProducts: scope.programProducts, priceSchedules: scope.priceSchedules}).respond(200, {"success": "Saved successfully", "productId": 5});
         scope.save();
         $httpBackend.flush();
 
@@ -169,7 +172,7 @@ describe("Product", function () {
         scope.product = {"code": 'P10'};
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPOST('/products.json', {product: scope.product, programProducts: scope.programProducts}).respond(400, {"error": "Some error occurred"});
+        $httpBackend.expectPOST('/products.json', {product: scope.product, programProducts: scope.programProducts, priceSchedules: scope.priceSchedules}).respond(400, {"error": "Some error occurred"});
         scope.save();
         $httpBackend.flush();
 
@@ -185,7 +188,7 @@ describe("Product", function () {
         scope.selectedProductDosageUnitCode = "unit3";
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPUT('/products/1.json', {product: scope.product, programProducts: scope.programProducts}).respond(200, {"success": "Updated successfully", "productId": 5});
+        $httpBackend.expectPUT('/products/1.json', {product: scope.product, programProducts: scope.programProducts, priceSchedules: scope.priceSchedules}).respond(200, {"success": "Updated successfully", "productId": 5});
         scope.save();
         $httpBackend.flush();
 
@@ -202,7 +205,7 @@ describe("Product", function () {
         scope.product = {"id": 1, "code": 'P10'};
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPUT('/products/1.json', {product: scope.product, programProducts: scope.programProducts}).respond(400, {"error": "Some error occurred"});
+        $httpBackend.expectPUT('/products/1.json', {product: scope.product, programProducts: scope.programProducts, priceSchedules: scope.priceSchedules}).respond(400, {"error": "Some error occurred"});
         scope.save();
         $httpBackend.flush();
 

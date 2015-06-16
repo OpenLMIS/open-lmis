@@ -44,7 +44,8 @@ public class EquipmentTypeController extends BaseController {
   }
 
   @RequestMapping(method = GET, value = "id")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')" +
+      " or @permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
     return  OpenLmisResponse.response("equipment_type", service.getTypeById(id));
   }
