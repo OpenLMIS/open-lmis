@@ -44,6 +44,7 @@ public class RightName {
   public static final String MANAGE_PRODUCT = "MANAGE_PRODUCT";
   public static final String MANAGE_EQUIPMENT_INVENTORY = "MANAGE_EQUIPMENT_INVENTORY";
   public static final String MANAGE_EQUIPMENT_SETTINGS = "MANAGE_EQUIPMENT_SETTINGS";
+  public static final String MANAGE_DEMOGRAPHIC_ESTIMATES = "MANAGE_DEMOGRAPHIC_ESTIMATES";
 
   public static String commaSeparateRightNames(String... rightNames) {
     return Arrays.toString(rightNames).replace("[", "{").replace("]", "}");
