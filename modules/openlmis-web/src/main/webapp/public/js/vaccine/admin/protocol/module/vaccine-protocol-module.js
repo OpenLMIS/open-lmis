@@ -14,16 +14,7 @@ angular.module('vaccine-protocol', ['openlmis','ngTable','ui.sortable' , 'ui.boo
         when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html', resolve : VaccineDiseaseController.resolve }).
         when('/disease/add', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
         when('/disease/edit/:id', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
-        when('/storage-type', {controller:StorageTypeController, templateUrl:'partials/storage-type.html', resolve: StorageTypeController.resolve}).
-        when('/storage-type-create', {controller:StorageTypeController, templateUrl:'partials/storage-type-create.html', resolve: StorageTypeController.resolve}).
-        when('/storage-type-manage/:id', {controller:StorageTypeEditController, templateUrl:'partials/storage-type-manage.html'}).
-        when('/temperature', {controller:TempratureLookupController, templateUrl:'partials/temperature.html', resolve: TempratureLookupController.resolve}).
-        when('/temperature-create', {controller:TempratureLookupController, templateUrl:'partials/temprature-create.html', resolve: TempratureLookupController.resolve}).
-        when('/temperature-update/:id', {controller:TempratureUpdateController, templateUrl:'partials/temprature-update.html'}).
-        when('/countries', {controller:CountriesLookupController, templateUrl:'partials/countries.html', resolve: CountriesLookupController.resolve}).
-        when('/countries-create', {controller:CountriesLookupController, templateUrl:'partials/countries-create.html', resolve: CountriesLookupController.resolve}).
-        when('/countries-update/:id', {controller:CountriesUpdateController, templateUrl:'partials/countries-update.html',  resolve: CountriesUpdateController.resolve}).
-        otherwise({redirectTo:'/protocol'});
+        otherwise({redirectTo:'/disease'});
   }]).run(function ($rootScope, AuthorizationService) {
     //AuthorizationService.preAuthorize('VIEW_REPORT');
   });
