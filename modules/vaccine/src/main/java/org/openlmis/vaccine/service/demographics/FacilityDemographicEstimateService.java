@@ -57,6 +57,7 @@ public class FacilityDemographicEstimateService {
     for(Facility facility : facilities){
       FacilityDemographicEstimateDTO dto = new FacilityDemographicEstimateDTO();
       dto.setFacilityId(facility.getId());
+      dto.setFacilityCode(facility.getCode());
       dto.setFacilityName(facility.getName());
       dto.setEstimates(repository.getFacilityEstimate(year, facility.getId()));
 

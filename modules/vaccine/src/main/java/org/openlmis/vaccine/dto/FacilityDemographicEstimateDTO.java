@@ -26,6 +26,8 @@ public class FacilityDemographicEstimateDTO {
 
   private String facilityName;
 
+  private String facilityCode;
+
   private List<FacilityDemographicEstimate> estimates;
 
 }

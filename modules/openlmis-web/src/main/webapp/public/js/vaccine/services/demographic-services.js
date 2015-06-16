@@ -19,3 +19,11 @@ services.factory('DemographicEstimateCategory', function ($resource) {
 services.factory('SaveDemographicEstimateCategory', function ($resource) {
   return $resource('/vaccine/demographic/estimate/category/save.json', {}, update);
 });
+
+services.factory('FacilityDemographicEstimates', function ($resource) {
+  return $resource('/vaccine/demographic/estimate/facility/get.json', {}, {});
+});
+
+services.factory('SaveFacilityDemographicEstimates', function ($resource) {
+  return $resource('/vaccine/demographic/estimate/facility/save.json', {}, {});
+});
