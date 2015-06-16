@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface DemographicEstimateCategoryMapper {
 
-  @Select("select * from demographic_estimate_categories")
+  @Select("select * from demographic_estimate_categories order by id")
   List<DemographicEstimateCategory> getAll();
 
   @Select("select * from demographic_estimate_categories where id = #{id}")
