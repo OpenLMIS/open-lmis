@@ -29,7 +29,11 @@ function FacilityDemographicEstimateController($scope, categories, programs, yea
   };
 
   $scope.round = function(val){
-    return parseInt(val);
+    return Math.ceil(val);
+  };
+
+  $scope.save = function(){
+    $scope.message = "this feature has not been implemented";
   };
 
   $scope.onParamChanged();
