@@ -591,6 +591,21 @@
 </div>
 <!-- /form-group -->
 <div class="form-group">
+    <h3><span openlmis-message="label.price.schedule"></span></h3>
+    <div class="form-row clearfix">
+        <div class="form-cell">
+            <label for="address-1" openlmis-message="label.price.schedule"></label>
+            <div class="form-field">
+                <select class="input-medium span3" ng-model="facility.priceScheduleCategory.id">
+                    <option openlmis-message="select.price.schedule.category"></option>
+                    <option ng-repeat="categories in priceScheduleCategories" ng-selected="categories.id == facility.priceScheduleCategory.id" value="{{ categories.id }}">{{categories.price_category}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
   <h3><span openlmis-message="label.facility.pictures"></span></h3>
 
   <div class="form-row clearfix" ng-show="images.length > 0">
