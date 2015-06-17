@@ -95,6 +95,8 @@
           </div>
         </div>
 
+
+
         <div class="span4">
           <div class="form-cell">
             <label for="equipmentApplies">
@@ -107,10 +109,25 @@
           </div>
         </div>
       </div>
+
+        <div class="form-row clearfix row-fluid">
+            <div class="span4">
+                <div class="form-cell">
+                    <label for="userPriceSchedule">
+                        <span openlmis-message="admin.program.use.price.schedule"></span>
+                    </label>
+
+                    <div class="form-field">
+                        <input ng-model="program.usePriceSchedule" id="userPriceSchedule" type="checkbox" ng-disabled="!program.budgetingApplies"/>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
   </div>
 
-  <div form-toolbar id="action_buttons" class="action-buttons">
+
+        <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
       <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save"/>
       <a ng-href="{{selectProgramUrl}}" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"></a>
