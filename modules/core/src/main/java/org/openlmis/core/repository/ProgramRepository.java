@@ -116,6 +116,10 @@ public class ProgramRepository {
   }
 
   public Program update(Program program) {
+
+      if(program.getBudgetingApplies() == false)
+          program.setUsePriceSchedule(false);
+
     mapper.update(program);
     return mapper.getById(program.getId());
   }
