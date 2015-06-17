@@ -18,7 +18,6 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
       $scope.product = productDTO.product;
       $scope.programProducts = productDTO.programProducts;
       $scope.priceSchedules = productDTO.priceSchedules;
-      //$scope.priceScheduleCategories = PriceSchCategories.priceScheduleCategories;
       $scope.selectedProductGroupCode = isUndefined($scope.product.productGroup) ? undefined : $scope.product.productGroup.code;
       $scope.selectedProductFormCode = isUndefined($scope.product.form) ? undefined : $scope.product.form.code;
       $scope.selectedProductDosageUnitCode = isUndefined($scope.product.dosageUnit) ? undefined : $scope.product.dosageUnit.code;
@@ -224,7 +223,7 @@ ProductController.resolve = {
 
         $timeout(function () {
             PriceScheduleCategories.get({}, function (data) {
-                deferred.resolve(data);
+                deferred.resolve(data.priceScheduleCategories);
             }, {});
         }, 100);
         return deferred.promise;
