@@ -28,71 +28,80 @@
 
         <div class="clearfix"></div>
 
-        <div class="box row">
-          <div class="sidebar box-content" ng-if="report.currentFilters.length > 0">
-            <div ng-repeat="fltr in report.currentFilters">
-              <div class="row-fluid">
-                <program-filter ng-if="fltr.name == 'program'"
-                                required="true"
-                                class="span3 form-cell horizontalFilters">
-                </program-filter>
-                <year-filter    ng-if="fltr.name == 'year'"
-                                required="true"
-                                class="span3 form-cell horizontalFilters">
-                </year-filter>
-                <schedule-filter ng-if="fltr.name == 'schedule'"
-                                 required="true"
-                                 class="span3 form-cell horizontalFilters">
-                </schedule-filter>
+        <div class="row-fluid">
+          <div class="sidebar" ng-if="report.currentFilters.length > 0">
+            <div class="app-form">
+              <div ng-repeat="fltr in report.currentFilters">
+                <div class="row-fluid">
+                  <program-filter ng-if="fltr.name == 'program'"
+                                  required="true"
+                                  class="form-cell horizontalFilters">
+                  </program-filter>
+                  <year-filter    ng-if="fltr.name == 'year'"
+                                  required="true"
+                                  class="form-cell horizontalFilters">
+                  </year-filter>
+                  <schedule-filter ng-if="fltr.name == 'schedule'"
+                                   required="true"
+                                   class="form-cell horizontalFilters">
+                  </schedule-filter>
 
-                <period-filter  ng-if="fltr.name == 'period'"
-                                required="true"
-                                class="span3 form-cell horizontalFilters">
-                </period-filter>
-                <zone-filter    ng-if="fltr.name == 'zone'"
-                                required="true"
-                                class="form-cell horizontalFilters">
-                </zone-filter>
-                <facility-type-filter ng-if="fltr.name == 'facility-type'"
-                                      class="form-cell horizontalFilters"
-                                      required="true">
-                </facility-type-filter>
-                <facility-filter ng-if="fltr.name == 'facility'"
-                                 class="form-cell horizontalFilters"
-                                 required="true">
-                </facility-filter>
+                  <period-filter  ng-if="fltr.name == 'period'"
+                                  required="true"
+                                  class="form-cell horizontalFilters">
+                  </period-filter>
+                  <zone-filter    ng-if="fltr.name == 'zone'"
+                                  required="true"
+                                  class="form-cell horizontalFilters">
+                  </zone-filter>
+                  <facility-type-filter ng-if="fltr.name == 'facility-type'"
+                                        class="form-cell horizontalFilters"
+                                        required="true">
+                  </facility-type-filter>
+                  <facility-filter ng-if="fltr.name == 'facility'"
+                                   class="form-cell horizontalFilters"
+                                   required="true">
+                  </facility-filter>
 
-                <product-filter  ng-if="fltr.name == 'product'"
-                                 required="true"
-                                 class="span3 form-cell horizontalFilters">
-                </product-filter>
+                  <product-filter  ng-if="fltr.name == 'product'"
+                                   required="true"
+                                   class="form-cell horizontalFilters">
+                  </product-filter>
+                </div>
+                <div class="clearfix"></div>
               </div>
-              <div class="clearfix"></div>
             </div>
+
+
           </div>
-          <div ng-class="{'content-body': report.currentFilters.length > 0}">
-            <table ng-show="data.length == 0">
-              <tr>
-                <td>No data to show under selected filters</td>
-              </tr>
-            </table>
-            <div ng-show="data.length > 0">
-              <table class="table table-bordered">
-                <thead>
-                <tr>
-                  <th ng-repeat="col in report.columns" class="{{col.formatting}}">{{col.displayName}}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="row in data">
-                  <td class="span{{col.width}} {{col.formatting}}" ng-repeat="col in report.columns">
-                    <span ng-show="col.formatting != 'number'">{{row[col.name]}}</span>
-                    <span ng-show="col.formatting == 'number'">{{row[col.name] | number}}</span>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+          <div class="float-right" ng-class="{'content-body': report.currentFilters.length > 0}">
+            <div class="box" style="padding-top: 0px;margin-top:0px;">
+              <div class="box-content" >
+                <table ng-show="data.length == 0">
+                  <tr>
+                    <td>No data to show under selected filters</td>
+                  </tr>
+                </table>
+                <div ng-show="data.length > 0">
+                  <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                      <th ng-repeat="col in report.columns" class="{{col.formatting}}">{{col.displayName}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="row in data">
+                      <td class="span{{col.width}} {{col.formatting}}" ng-repeat="col in report.columns">
+                        <span ng-show="col.formatting != 'number'">{{row[col.name]}}</span>
+                        <span ng-show="col.formatting == 'number'">{{row[col.name] | number}}</span>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
         <div class="clearfix"></div>
