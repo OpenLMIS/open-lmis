@@ -20,18 +20,18 @@ public interface EquipmentInventoryStatusMapper {
   @Select("SELECT eis.*" +
       " FROM equipment_inventory_statuses eis" +
       " WHERE eis.inventoryId = #{inventoryId}" +
-      " ORDER BY eis.effectivedatetime DESC LIMIT 1")
+      " ORDER BY eis.createddate DESC LIMIT 1")
   EquipmentInventoryStatus getCurrentStatus(@Param("inventoryId")Long inventoryId);
 
   @Insert("INSERT INTO equipment_inventory_statuses" +
-      " (inventoryId, statusId, notFunctionalStatusId, effectiveDateTime)" +
-      " VALUES (#{inventoryId}, #{statusId}, #{notFunctionalStatusId}, NOW())")
+      " (inventoryId, statusId, notFunctionalStatusId, createdBy, createdDate, modifiedBy, modifiedDate)" +
+      " VALUES (#{inventoryId}, #{statusId}, #{notFunctionalStatusId}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
   void insert(EquipmentInventoryStatus status);
 
   @Update("UPDATE equipment_inventory_statuses" +
       " SET inventoryId = #{inventoryId}, statusId = #{statusId}, notFunctionalStatusId = #{notFunctionalStatusId}," +
-      " effectiveDateTime = NOW()" +
+      " modifiedBy = #{modifiedBy}, modifiedDate = NOW()" +
       " WHERE id = #{id}")
   void update(EquipmentInventoryStatus status);
 }

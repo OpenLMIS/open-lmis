@@ -123,6 +123,8 @@ public class EquipmentInventoryRepository {
     EquipmentInventoryStatus existingStatus = equipmentInventoryStatusMapper.getCurrentStatus(inventory.getId());
     EquipmentInventoryStatus status = getStatusFromInventory(inventory);
     if (!status.equals(existingStatus)) {
+      status.setCreatedBy(inventory.getCreatedBy());
+      status.setModifiedBy(inventory.getModifiedBy());
       equipmentInventoryStatusMapper.insert(status);
     }
   }

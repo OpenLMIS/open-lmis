@@ -101,7 +101,9 @@ public class EquipmentInventoryService {
         }
       }
 
+      equipment.setModifiedBy(inventory.getModifiedBy());
       if (!equipmentFound) {
+        equipment.setCreatedBy(inventory.getCreatedBy());
         equipmentRepository.insert(equipment);
       } else {
         equipmentRepository.update(equipment);
