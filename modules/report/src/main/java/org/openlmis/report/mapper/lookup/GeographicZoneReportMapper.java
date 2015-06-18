@@ -62,7 +62,6 @@ public interface GeographicZoneReportMapper {
             "              JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid " +
 
 
-
             " left join " +
             " (select geographicZoneId, count(*) from facilities  " +
             " join programs_supported ps on ps.facilityId = facilities.id " +
@@ -130,50 +129,69 @@ public interface GeographicZoneReportMapper {
             " (select facilityId from requisitions where periodId = #{processingPeriodId} and programId = #{programId} and " +
             "  status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and emergency = false ) " +
             "" +
-            "    and ra.userid=#{userId} " +
-            " and ra.programid=#{programId}" +
+            "    and ra.userid = #{userId} " +
+            " and ra.programid = #{programId}" +
             "" +
             " group by geographicZoneId" +
             " ) period" +
             " on gzz.id = period.geographicZoneId " +
 
-            " where ra.userid=#{userId}" +
-            " and ra.programid=#{programId}" +
+            " where ra.userid =#{userId}" +
+            " and ra.programid = #{programId}" +
 
             "order by gzz.name")
     List<GeoZoneReportingRate> getGeoReportingRate(@Param("userId") Long userId, @Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId);
 
 
-    @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, false reported , (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts," +
-            " ( SELECT count(*) >0 \n" +
-            "  FROM role_assignments\n" +
-            "  JOIN supervisory_nodes on supervisory_nodes.id = role_assignments.supervisorynodeid\n" +
-            "  JOIN users on users.id = role_assignments.userid AND users.active = true\n" +
-            "  WHERE supervisory_nodes.facilityid = f.id" +
-            " ) as hasSupervisors" +
-            " from facilities f\n" +
-            "  join requisition_group_members m on f.id = m.facilityId\n" +
-            "  join requisition_group_program_schedules s on s.requisitionGroupId = m.requisitionGroupId and s.programId = #{programId}\n" +
-            "  join processing_periods pp on pp.scheduleId = s.scheduleId and pp.id = #{periodId}\n" +
-            " where f.id not in (select facilityId from requisitions r where r.programId = #{programId} and r.periodId = #{periodId}) \n" +
-            "  and f.enabled = true\n" +
-            "  and f.geographicZoneId = #{geographicZoneId}" +
-            " order by f.name ")
-    List<GeoFacilityIndicator> getNonReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
 
-    @Select("select rq.id rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, true reported, (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
-            " ( SELECT count(*) >0 \n" +
-            "  FROM role_assignments\n" +
-            "  JOIN supervisory_nodes on supervisory_nodes.id = role_assignments.supervisorynodeid\n" +
-            "  JOIN users on users.id = role_assignments.userid AND users.active = true\n" +
+    @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, false reported , " +
+            " (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
+            "             ( SELECT count(*) >0  " +
+            "              FROM role_assignments " +
+            "              JOIN supervisory_nodes on supervisory_nodes.id = role_assignments.supervisorynodeid " +
+            "              JOIN users on users.id = role_assignments.userid AND users.active = true " +
+            "              WHERE supervisory_nodes.facilityid = f.id " +
+            "             ) as hasSupervisors " +
+            "             from facilities f" +
+            " JOIN requisition_group_members rgm on rgm.facilityid = f.id" +
+            " JOIN vw_districts gz on gz.district_id = f.geographiczoneid" +
+            " JOIN facility_types ft on ft.id = f.typeid" +
+            " JOIN programs_supported ps on ps.facilityid = f.id" +
+            " JOIN requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid " +
+            " and ps.programid = rgps.programid" +
+            " WHERE f.id in (select facility_id from vw_user_facilities where user_id =  #{userId} and" +
+            " program_id = #{programId}) AND f.id not in" +
+            " (select r.facilityid from requisitions r where r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')" +
+            "  and r.periodid = #{periodId} and r.programid = #{programId} ) " +
+            " AND ps.programId = #{programId} " +
+            "  and f.geographicZoneId = #{geographicZoneId}" +
+            " ORDER BY gz.district_name,name")
+    List<GeoFacilityIndicator> getNonReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId,
+                                                         @Param("periodId") Long processingPeriodId,
+                                                         @Param("userId") Long userId);
+
+    @Select("select distinct rq.id rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, true reported, (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
+            " ( SELECT count(*) >0 " +
+            "  FROM role_assignments" +
+            "  JOIN supervisory_nodes on supervisory_nodes.id = role_assignments.supervisorynodeid" +
+            "  JOIN users on users.id = role_assignments.userid AND users.active = true" +
             "  WHERE supervisory_nodes.facilityid = f.id" +
             "  ) as hasSupervisors" +
             " from facilities f " +
             " join (select facilityId, r.id from requisitions r where r.programId = #{programId} and r.periodId = #{periodId} and emergency = false and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')) rq on rq.facilityId = f.id " +
-            " where  f.enabled = true\n" +
+            " join programs_supported ps on ps.facilityId = f.id " +
+            " join geographic_zones gz on gz.id = f.geographicZoneId " +
+            " join requisition_group_members rgm on rgm.facilityId = f.id " +
+            " JOIN requisition_groups rg ON rg.id = rgm.requisitiongroupid" +
+            " JOIN supervisory_nodes sn ON sn.id = rg.supervisorynodeid" +
+            " JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid" +
+            " where  f.enabled = true" +
             " and f.geographicZoneId = #{geographicZoneId}" +
+            " and ra.userid = #{userId}" +
+            " and ra.programid = #{programId}" +
             " order by f.name")
-    List<GeoFacilityIndicator> getReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId);
+    List<GeoFacilityIndicator> getReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId, @Param("periodId") Long processingPeriodId,
+                                                      @Param("userId") Long userId);
 
 
     @Select("select * from geographic_zones where parentId is null")
