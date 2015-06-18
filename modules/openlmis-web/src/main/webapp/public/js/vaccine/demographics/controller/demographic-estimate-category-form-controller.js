@@ -26,7 +26,7 @@ function DemographicEstimateCategoryFormController($scope, estimate_category, Sa
 DemographicEstimateCategoryFormController.resolve = {
   estimate_category : function($q, $timeout, DemographicEstimateCategory, $route){
     if(!$route.current.params.id){
-      return {};
+      return {isPrimaryEstimate: false};
     }
     var deferred = $q.defer();
     $timeout(function(){

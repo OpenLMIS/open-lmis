@@ -11,29 +11,8 @@
 var vaccine = angular.module('vaccine', ['openlmis', 'ngTable','ui.bootstrap','nsPopover']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
-        when('/distribute', {controller: VaccineDistributeController, templateUrl: 'partials/vaccine-distribute-edit.html'}).
-        when('/receive', {controller: VaccineReceiveSearchController, templateUrl: 'partials/vaccine-receive-search.html'}).
-        when('/edit-receive-vaccine/:transactionId', {controller: VaccineReceiveController, templateUrl: 'partials/vaccine-receive-edit.html'}).
-        when('/create-receive-vaccine/:facilityId', {controller: VaccineReceiveController, templateUrl: 'partials/vaccine-receive-edit.html'}).
         when('/vaccine-report', {controller: VaccineReportPOCReportController, templateUrl: 'partials/vaccine-report.html'}).
-        when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
-        when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
-        when('/vaccine-storage', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage.html'}).
-        when('/vaccine-storage-edit/:id', {controller: VaccineStorageUpdateController, templateUrl: 'partials/vaccine-storage-update.html'}).
-        when('/vaccine-storage-create', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage-create.html'}).
-        when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
-        when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
-        when('/quantification', {controller: VaccineQuantificationController, templateUrl: 'partials/vaccine-quantification.html'}).
-        when('/quantificationEdit/:id', {controller: VaccineQuantificationController, templateUrl: 'partials/vaccine-quantification-edit.html'}).
-        when('/manufacturer', {controller: VaccineManufacturerController, templateUrl: 'partials/vaccine-manufacturer.html'}).
-        when('/manufacturerEdit/:id', {controller: VaccineManufacturerController, templateUrl: 'partials/vaccine-manufacturer-edit.html'}).
-        when('/productMappingEdit/:manufacturerId/:productId', {controller: VaccineProductMappingController, templateUrl: 'partials/vaccine-product-mapping.html'}).
-        when('/productMappingCreate/:manufacturerId', {controller: VaccineProductMappingController, templateUrl: 'partials/vaccine-product-mapping.html'}).
-        when('/transaction-type', {controller: VaccineTransactionTypeController, templateUrl: 'partials/vaccine-transaction-type.html'}).
-        when('/transaction-type-edit/:id', {controller: VaccineTransactionTypeController, templateUrl: 'partials/vaccine-transaction-type-edit.html'}).
-        when('/received-status', {controller: VaccineReceivedStatusController, templateUrl: 'partials/vaccine-received-status.html'}).
-        when('/received-status-edit/:id', {controller: VaccineReceivedStatusController, templateUrl: 'partials/vaccine-received-status-edit.html'}).
-        otherwise({redirectTo: '/receive'});
+        otherwise({redirectTo: '/vaccine-report'});
 }]).directive('onKeyup', function () {
         return function (scope, elm, attrs) {
             elm.bind("keyup", function () {

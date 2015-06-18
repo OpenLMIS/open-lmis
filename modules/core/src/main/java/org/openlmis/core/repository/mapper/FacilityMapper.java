@@ -15,6 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.PriceScheduleCategory;
 import org.openlmis.core.dto.FacilityContact;
 import org.openlmis.core.dto.FacilityImages;
 import org.openlmis.core.dto.FacilitySupervisor;
@@ -84,7 +85,9 @@ public interface FacilityMapper {
     @Result(property = "facilityType", column = "typeId", javaType = Long.class,
       one = @One(select = "getFacilityTypeById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
-      one = @One(select = "getFacilityOperatorById"))
+      one = @One(select = "getFacilityOperatorById")),
+    @Result(property = "priceScheduleCategory", column = "pricecatid", javaType = PriceScheduleCategory.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.PriceScheduleMapper.getPriceScheduleCategoryById")),
   })
   Facility getById(Long id);
 

@@ -2,10 +2,7 @@ package org.openlmis.vaccine.builders.reports;
 
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.vaccine.domain.Status;
-import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
-import org.openlmis.vaccine.dto.ReportStatusDTO;
 
 public class VaccineReportBuilder {
 

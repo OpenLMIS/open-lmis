@@ -8,22 +8,30 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-services.factory('DemographicEstimateCategories', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/categories.json', {}, {});
-});
+package org.openlmis.vaccine.repository.demographics;
 
-services.factory('DemographicEstimateCategory', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/category/:id.json', {}, {});
-});
+import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
+import org.openlmis.vaccine.repository.mapper.demographics.FacilityDemographicEstimateMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-services.factory('SaveDemographicEstimateCategory', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/category/save.json', {}, update);
-});
+import java.util.List;
 
-services.factory('FacilityDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/facility/get.json', {}, {});
-});
+@Repository
+public class FacilityDemographicEstimateRepository {
 
-services.factory('SaveFacilityDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/facility/save.json', {}, {});
-});
+  @Autowired
+  FacilityDemographicEstimateMapper mapper;
+
+  public List<FacilityDemographicEstimate> getFacilityEstimate(Integer year, Long facilityId){
+    return mapper.getEstimatesForFacility(year,facilityId);
+  }
+
+  public Integer insert(FacilityDemographicEstimate estimate){
+    return mapper.insert(estimate);
+  }
+
+  public Integer update(FacilityDemographicEstimate estimate){
+    return mapper.update(estimate);
+  }
+}

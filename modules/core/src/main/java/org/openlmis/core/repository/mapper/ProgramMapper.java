@@ -172,7 +172,8 @@ public interface ProgramMapper {
     "hideSkippedProducts = #{hideSkippedProducts}, " +
     "enableSkipPeriod = #{enableSkipPeriod}," +
     "enableIvdForm = #{enableIvdForm},  " +
-    "budgetingApplies = #{budgetingApplies} " +
+    "budgetingApplies = #{budgetingApplies}, " +
+    "usepriceschedule = #{usePriceSchedule}" +
     "WHERE id = #{id}")
   void update(Program program);
 

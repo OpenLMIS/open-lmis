@@ -41,6 +41,7 @@ public class Program extends BaseModel {
   private Boolean hideSkippedProducts;
   private Boolean enableIvdForm;
   private Boolean push;
+  private Boolean usePriceSchedule;
 
   public Program(Long id) {
     this.id = id;

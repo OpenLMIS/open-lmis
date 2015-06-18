@@ -8,22 +8,15 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-services.factory('DemographicEstimateCategories', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/categories.json', {}, {});
-});
+package org.openlmis.vaccine.dto;
 
-services.factory('DemographicEstimateCategory', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/category/:id.json', {}, {});
-});
+import lombok.Data;
 
-services.factory('SaveDemographicEstimateCategory', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/category/save.json', {}, update);
-});
+import java.util.List;
 
-services.factory('FacilityDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/facility/get.json', {}, {});
-});
+@Data
+public class FacilityDemographicEstimateForm {
 
-services.factory('SaveFacilityDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/facility/save.json', {}, {});
-});
+  private List<FacilityDemographicEstimateDTO> facilityEstimates;
+
+}
