@@ -32,7 +32,7 @@
 
                                         <div class="form-fields">
                                             <select   ng-selected="filterObject.supervisoryNodeId==option.id" ui-select2 style="width:200px;" class="large-input" name="supervisoryNode"  ng-model="filterObject.supervisoryNodeId" ng-change ="processSupervisoryNodeChange()">
-                                               <!--<option value=""> --All Supervisory Nodes--</option>-->
+
                                                 <option  ng-repeat="option in supervisoryNodes" value="{{option.id}}">{{option.name}}</option>
                                             </select>
                                         </div>
@@ -45,7 +45,7 @@
 
                                         <div class="form-fields">
                                             <select ng-selected="filterObject.roleId==option.id"  ui-select2  style="width:200px;" class="large-input" name="role" ng-change ="processSupervisoryNodeChange()"  ng-model="filterObject.roleId">
-                                                <!--<option value=""> --All Supervisory Nodes--</option>-->
+
                                                 <option  ng-repeat="option in roles" value="{{option.id}}">{{option.name}}</option>
                                             </select>
                                         </div>
@@ -58,7 +58,7 @@
 
                                         <div class="form-fields">
                                             <select ng-selected="filterObject.programId==option.id"  ui-select2 style="width:200px;" class="large-input" name="program"  ng-change ="processSupervisoryNodeChange()" ng-model="filterObject.programId" >
-                                                <!--<option value=""> --All Supervisory Nodes--</option>-->
+
                                                 <option ng-repeat="option in programs" value="{{option.id}}">{{option.name}}</option>
                                             </select>
                                         </div>
