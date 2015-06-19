@@ -10,6 +10,7 @@
 
 function UserSummaryReportController($scope, $window, ReportProgramsBySupervisoryNode, UserRoleAssignmentsSummary, UserSupervisoryNodes, GetAllRoles) {
     $scope.filterObject = {};
+
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadUserSummary();
     });
@@ -34,6 +35,8 @@ function UserSummaryReportController($scope, $window, ReportProgramsBySupervisor
                 }
                 bindChartEvent("#stocked-out-reporting", "plothover", flotChartHoverCursorHandler);
 
+            }else{
+                $scope.UserRolePieChartData=[];
             }
 
         });
@@ -52,12 +55,14 @@ function UserSummaryReportController($scope, $window, ReportProgramsBySupervisor
         }
     };
     $scope.processSupervisoryNodeChange = function () {
-
-        ReportProgramsBySupervisoryNode.get({supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function (data) {
+        var par=$scope.filterObject.supervisoryNodeId;
+        if(!$scope.filterObject.supervisoryNodeId ||$scope.filterObject.supervisoryNodeId==='undefined'||$scope.filterObject.supervisoryNodeId===''){
+            par=0;
+        }
+        ReportProgramsBySupervisoryNode.get({supervisoryNodeId: par}, function (data) {
             $scope.programs = data.programs;
-            $scope.programs.unshift({'name': '--select a program--'});
+            $scope.programs.unshift({'name': '--All Programs--'});
         });
-
 
         $scope.loadUserSummary();
     };
@@ -118,12 +123,19 @@ function UserSummaryReportController($scope, $window, ReportProgramsBySupervisor
 
     UserSupervisoryNodes.get(function (data) {
         $scope.supervisoryNodes = data.supervisoryNodes;
-        $scope.supervisoryNodes.unshift({'name': '-- Select SupervisoryNodes --'});
+        $scope.supervisoryNodes.unshift({'name': '-- All Supervisory Nodes --'});
+
+        ReportProgramsBySupervisoryNode.get({supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function (data) {
+            $scope.programs = data.programs;
+            $scope.programs.unshift({'name': '--All Programs--'});
+        });
+
     });
 
     GetAllRoles.get(function (data) {
         $scope.roles = data.roles;
-        $scope.roles.unshift({'name': '-- Select role --'});
+        $scope.roles.unshift({'name': '-- All Roles --'});
+
     });
 
     $scope.exportReport = function (type) {
@@ -132,5 +144,9 @@ function UserSummaryReportController($scope, $window, ReportProgramsBySupervisor
         var url = '/reports/download/user_summary/' + type + '?' + params;
         $window.open(url);
     };
+
+
+
+
 
 }

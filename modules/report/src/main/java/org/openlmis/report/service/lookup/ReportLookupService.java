@@ -445,10 +445,7 @@ public class ReportLookupService {
     public UserSummaryParams getReportFilterData(Map<String, String[]> filterCriteria) {
         if (filterCriteria != null) {
             userSummaryParam = new UserSummaryParams();
-            System.out.println(" role id id " + filterCriteria.get("roleId")[0]);
-            System.out.println(" program Id " + filterCriteria.get("programId")[0]);
-            System.out.println(" supervisoryNodeId " + filterCriteria.get("supervisoryNodeId")[0]);
-            userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("roleId")[0]) ? 0 : Long.parseLong(filterCriteria.get("roleID")[0])); //defaults to 0
+            userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("roleId")[0]) ? 0 : Long.parseLong(filterCriteria.get("roleId")[0])); //defaults to 0
             userSummaryParam.setProgramId(StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0]));
             userSummaryParam.setSupervisoryNodeId(StringUtils.isBlank(filterCriteria.get("supervisoryNodeId")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNodeId")[0]));
         }

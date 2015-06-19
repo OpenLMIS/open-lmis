@@ -27,6 +27,8 @@ public class UserSummaryQueryBuilder {
      ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, UserSummaryReport.class,"firstname asc,lastname asc,email asc"));
         // copy the sql over to a variable, this makes the debugging much more possible.
       String sql = SQL();
+        System.out.println(" query is "+ sql
+        );
         return sql;
 
     }

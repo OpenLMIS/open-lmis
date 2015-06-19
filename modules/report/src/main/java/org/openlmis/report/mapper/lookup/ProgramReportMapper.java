@@ -67,7 +67,7 @@ public interface ProgramReportMapper {
             "            INNER JOIN role_assignments ra ON p.id = ra.programId \n" +
             "            INNER JOIN role_rights rr ON ra.roleId = rr.roleId \n" +
             "            WHERE ra.userId = #{userId}\n" +
-            "            AND ra.supervisoryNodeId = #{nodeId}\n" +
+            "            AND (ra.supervisoryNodeId = #{nodeId} or #{nodeId}=0 ) \n" +
             "            AND p.active = TRUE \n" +
             "            AND p.push = FALSE")
     List<Program> getUserSupervisedActiveProgramsBySupervisoryNode(@Param("userId") Long userId, @Param("nodeId") Long supervisoryNodeId);
