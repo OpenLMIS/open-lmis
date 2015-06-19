@@ -97,6 +97,9 @@ public class EquipmentInventoryController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentInventory inventory, HttpServletRequest request){
     ResponseEntity<OpenLmisResponse> response;
+    Long userId = loggedInUserId(request);
+    inventory.setCreatedBy(userId);
+    inventory.setModifiedBy(userId);
     service.save(inventory);
     response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.saved"));
     response.getBody().addData("inventory", inventory);
@@ -107,6 +110,8 @@ public class EquipmentInventoryController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> updateStatus(@RequestBody EquipmentInventory inventory, HttpServletRequest request){
     ResponseEntity<OpenLmisResponse> response;
+    Long userId = loggedInUserId(request);
+    inventory.setModifiedBy(userId);
     service.updateStatus(inventory);
     response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.saved"));
     response.getBody().addData("inventory", inventory);

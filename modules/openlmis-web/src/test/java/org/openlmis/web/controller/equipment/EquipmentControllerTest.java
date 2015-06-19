@@ -11,7 +11,6 @@
 package org.openlmis.web.controller.equipment;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -27,7 +26,6 @@ import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.service.EquipmentService;
 import org.openlmis.equipment.service.EquipmentTypeService;
 import org.openlmis.web.response.OpenLmisResponse;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -142,7 +140,7 @@ public class EquipmentControllerTest {
     doNothing().when(service).saveEquipment(any(Equipment.class));
     doNothing().when(service).updateEquipment(any(Equipment.class));
 
-    ResponseEntity<OpenLmisResponse> equipmentResponse = controller.save(equipment);
+    ResponseEntity<OpenLmisResponse> equipmentResponse = controller.save(equipment, request);
     assertThat(equipment, is(equipmentResponse.getBody().getData().get("equipment")));
     assertThat(equipmentResponse.getBody().getSuccessMsg(), is(notNullValue()));
 
@@ -158,7 +156,7 @@ public class EquipmentControllerTest {
     doNothing().when(service).saveColdChainEquipment(any(ColdChainEquipment.class));
     doNothing().when(service).updateColdChainEquipment(any(ColdChainEquipment.class));
 
-    ResponseEntity<OpenLmisResponse> coldChainResponse = controller.save(coldChainEquipment);
+    ResponseEntity<OpenLmisResponse> coldChainResponse = controller.save(coldChainEquipment, request);
     assertThat(coldChainEquipment, is( coldChainResponse.getBody().getData().get("equipment")));
     assertThat(coldChainResponse.getBody().getSuccessMsg(), is(notNullValue()));
   }

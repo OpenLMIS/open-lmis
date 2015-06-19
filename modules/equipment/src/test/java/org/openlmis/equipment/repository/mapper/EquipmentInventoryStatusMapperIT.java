@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
@@ -34,8 +33,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -73,7 +70,6 @@ public class EquipmentInventoryStatusMapperIT {
   public void initialize() throws Exception {
     long statusId = 1L;
     long notFunctionalStatusId = 2L;
-    Date effectiveDateTime = new Date();
 
     Program program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
@@ -101,7 +97,6 @@ public class EquipmentInventoryStatusMapperIT {
     status.setInventoryId(inventory.getId());
     status.setStatusId(statusId);
     status.setNotFunctionalStatusId(notFunctionalStatusId);
-    status.setEffectiveDateTime(effectiveDateTime);
   }
 
   @Test

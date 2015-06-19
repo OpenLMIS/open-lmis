@@ -16,8 +16,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +23,6 @@ import java.util.Date;
 public class EquipmentInventoryStatus extends BaseModel {
 
   private Long inventoryId;
-  private Date effectiveDateTime;
   private Long statusId;
   private Long notFunctionalStatusId;
 

@@ -11,6 +11,10 @@ function CustomReportController($scope, CustomReportList, CustomReportValue) {
 
   CustomReportList.get(function (data) {
     $scope.reports = data.reports;
+
+    $scope.displayReports = _.groupBy(data.reports, 'category');
+    $scope.categories = _.uniq( _.pluck(data.reports, 'category') );
+
     $scope.isReady = true;
     if($scope.filter.report_key !== undefined){
       $scope.OnFilterChanged();
@@ -18,9 +22,11 @@ function CustomReportController($scope, CustomReportList, CustomReportValue) {
   });
 
   function updateFilterSection() {
+
     // avoid having the blinking effect if the report has not been changed.
     if ($scope.previous_report_key != $scope.filter.report_key) {
       $scope.previous_report_key = $scope.filter.report_key;
+
       $scope.report = _.findWhere($scope.reports, {reportkey: $scope.filter.report_key});
       $scope.report.columns = angular.fromJson($scope.report.columnoptions);
       if ($scope.report.filters !== null && $scope.report.filters !== '') {
