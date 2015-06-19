@@ -134,6 +134,9 @@ INSERT INTO requisition_groups (code,name,supervisorynodeid)
 VALUES ('ARS-KAR-V','Arusha Karatu Vaccine',(SELECT id FROM supervisory_nodes WHERE name = 'Karatu DVS'))
     ,('ARS-LON-V','Arusha Longido Vaccine',(SELECT id FROM supervisory_nodes WHERE name = 'Longido DVS'))
     ,('LIN-KIL-V','Lindi Kilwa Vaccine',(SELECT id FROM supervisory_nodes WHERE name = 'Kilwa DVS'))
+    ,('ARS-V','Arusha Vaccine',(SELECT id FROM supervisory_nodes WHERE name = 'Arusha RVS'))
+    ,('LIN-V','Lindi Vaccine',(SELECT id FROM supervisory_nodes WHERE name = 'Lindi RVS'))
+    ,('TANZ-V','Tanzania Vaccine',(SELECT id FROM supervisory_nodes WHERE name = 'Tanzania CVS'))
 ;
 
 INSERT INTO requisition_group_members (requisitiongroupid,facilityid)
@@ -142,12 +145,20 @@ VALUES ((SELECT id FROM requisition_groups WHERE code = 'ARS-KAR-V'),(SELECT id 
     ,((SELECT id FROM requisition_groups WHERE code = 'ARS-LON-V'),(SELECT id FROM facilities WHERE name = 'Eluwai'))
     ,((SELECT id FROM requisition_groups WHERE code = 'LIN-KIL-V'),(SELECT id FROM facilities WHERE name = 'Chumo'))
     ,((SELECT id FROM requisition_groups WHERE code = 'LIN-KIL-V'),(SELECT id FROM facilities WHERE name = 'Darajani'))
+    ,((SELECT id FROM requisition_groups WHERE code = 'ARS-V'),(SELECT id FROM facilities WHERE name = 'Karatu DVS'))
+    ,((SELECT id FROM requisition_groups WHERE code = 'ARS-V'),(SELECT id FROM facilities WHERE name = 'Longido DVS'))
+    ,((SELECT id FROM requisition_groups WHERE code = 'LIN-V'),(SELECT id FROM facilities WHERE name = 'Kilwa DVS'))
+    ,((SELECT id FROM requisition_groups WHERE code = 'TANZ-V'),(SELECT id FROM facilities WHERE name = 'Arusha RVS'))
+    ,((SELECT id FROM requisition_groups WHERE code = 'TANZ-V'),(SELECT id FROM facilities WHERE name = 'Lindi RVS'))
 ;
 
 INSERT INTO requisition_group_program_schedules (requisitiongroupid,programid,scheduleid,directdelivery)
 VALUES ((SELECT id FROM requisition_groups WHERE code = 'ARS-KAR-V'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM processing_schedules WHERE code = 'Monthly'),TRUE)
     ,((SELECT id FROM requisition_groups WHERE code = 'ARS-LON-V'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM processing_schedules WHERE code = 'Monthly'),TRUE)
     ,((SELECT id FROM requisition_groups WHERE code = 'LIN-KIL-V'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM processing_schedules WHERE code = 'Monthly'),TRUE)
+    ,((SELECT id FROM requisition_groups WHERE code = 'ARS-V'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM processing_schedules WHERE code = 'Monthly'),TRUE)
+    ,((SELECT id FROM requisition_groups WHERE code = 'LIN-V'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM processing_schedules WHERE code = 'Monthly'),TRUE)
+    ,((SELECT id FROM requisition_groups WHERE code = 'TANZ-V'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM processing_schedules WHERE code = 'Monthly'),TRUE)
 ;
 
 INSERT INTO roles (name)
@@ -176,6 +187,8 @@ VALUES ((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM rol
     ,((SELECT id FROM users where username = 'vims-rivo'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM supervisory_nodes WHERE name = 'Arusha RVS'))
     ,((SELECT id FROM users where username = 'vims-divo'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),NULL)
     ,((SELECT id FROM users where username = 'vims-divo'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM supervisory_nodes WHERE name = 'Karatu DVS'))
+    ,((SELECT id FROM users where username = 'vims-rivo'),(SELECT id FROM roles WHERE name = 'Equipment Reports'),NULL,NULL)
+    ,((SELECT id FROM users where username = 'vims-divo'),(SELECT id FROM roles WHERE name = 'Equipment Reports'),NULL,NULL)
 ;
 
 END;
