@@ -158,16 +158,24 @@ INSERT INTO role_rights (roleid, rightname)
 VALUES ((SELECT id FROM roles WHERE name = 'Inventory Manager'),'MANAGE_EQUIPMENT_INVENTORY')
 ;
 
-INSERT INTO role_assignments (userid,roleid,programid,supervisorynodeid)
-VALUES ((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),NULL)
-    ,((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'ils'),NULL)
-    ,((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM supervisory_nodes WHERE code = 'MSH-SNZ'))
-    ,((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM supervisory_nodes WHERE code = 'MTWA-SNZ'))
+UPDATE users
+SET facilityid = (SELECT id FROM facilities WHERE name = 'Tanzania CVS')
+WHERE username = 'vims-admin'
 ;
 
-UPDATE users
-SET facilityid = (SELECT id FROM facilities WHERE name = 'Aya-Labe')
-WHERE username = 'vims-admin'
+INSERT INTO users (username, password, firstname, lastname, email, facilityid, verified, active, restrictlogin)
+VALUES ('vims-rivo','gFwKyz3YODUIQPm13T1dTGytmiigV6QiiUoeZHbbcisIe3kKVipLdGW1JwTF3YisyisWipp5dCm2t66Y1Y0hSOiip9V1aAieie','Vims','RIVO','test@test5.com',(SELECT id FROM facilities WHERE name = 'Arusha RVS'),TRUE,TRUE,FALSE)
+    ,('vims-divo','gFwKyz3YODUIQPm13T1dTGytmiigV6QiiUoeZHbbcisIe3kKVipLdGW1JwTF3YisyisWipp5dCm2t66Y1Y0hSOiip9V1aAieie','Vims','DIVO','test@test6.com',(SELECT id FROM facilities WHERE name = 'Karatu DVS'),TRUE,TRUE,FALSE)
+;
+
+INSERT INTO role_assignments (userid,roleid,programid,supervisorynodeid)
+VALUES ((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'ils'),NULL)
+    ,((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),NULL)
+    ,((SELECT id FROM users where username = 'vims-admin'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM supervisory_nodes WHERE name = 'Tanzania CVS'))
+    ,((SELECT id FROM users where username = 'vims-rivo'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),NULL)
+    ,((SELECT id FROM users where username = 'vims-rivo'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM supervisory_nodes WHERE name = 'Arusha RVS'))
+    ,((SELECT id FROM users where username = 'vims-divo'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),NULL)
+    ,((SELECT id FROM users where username = 'vims-divo'),(SELECT id FROM roles WHERE name = 'Inventory Manager'),(SELECT id FROM programs WHERE code = 'Vaccine'),(SELECT id FROM supervisory_nodes WHERE name = 'Karatu DVS'))
 ;
 
 END;
