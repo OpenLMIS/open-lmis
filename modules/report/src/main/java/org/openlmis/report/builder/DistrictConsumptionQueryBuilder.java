@@ -57,9 +57,13 @@ public class DistrictConsumptionQueryBuilder {
                 predicate = predicate + " product_category_id = #{filterCriteria.productCategoryId}";
             }
 
-            if(!filter.getProductId().equals("-1") && !filter.getProductId().equals("")){
+            if(!filter.getProductId().equals("-1") && !filter.getProductId().equals("")&!filter.getProductId().equals("0")){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " product_id= "+filter.getProductId();
+            }
+            if(filter.getProductId().equals("0") ){
+                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
+                predicate = predicate + " tracer= true";
             }
 
             if(filter.getProgramId() != 0){

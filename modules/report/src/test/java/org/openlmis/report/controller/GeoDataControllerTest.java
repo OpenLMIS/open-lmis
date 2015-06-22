@@ -63,14 +63,14 @@ public class GeoDataControllerTest {
   public void shouldGetReportingRateReport() throws Exception {
     List<GeoZoneReportingRate> reportData = new ArrayList<GeoZoneReportingRate>();
     reportData.add(new GeoZoneReportingRate());
-    when(mapper.getGeoReportingRate(1l,1L, 1L)).thenReturn(reportData);
+    when(mapper.getGeoReportingRate(1l,1L,1L, 1L)).thenReturn(reportData);
 
     OpenLmisResponse response = new OpenLmisResponse();
     response.addData("map", reportData);
     ResponseEntity<OpenLmisResponse> expectResponse = new ResponseEntity<>(response, HttpStatus.OK);
 
-    ResponseEntity<OpenLmisResponse> actual = controller.getReportingRateReport(1L, 1L,httpServletRequest);
+    ResponseEntity<OpenLmisResponse> actual = controller.getReportingRateReport(1L, 1L,1L,httpServletRequest);
 
-    verify(mapper).getGeoReportingRate(1l,1L, 1L);
+    verify(mapper).getGeoReportingRate(1l,1L,1L, 1L);
   }
 }

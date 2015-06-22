@@ -22,6 +22,7 @@ import org.openlmis.report.model.geo.GeoStockStatusFacility;
 import org.openlmis.report.model.geo.GeoStockStatusProduct;
 import org.openlmis.report.model.geo.GeoStockStatusProductConsumption;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -63,38 +64,33 @@ public interface GeographicZoneReportMapper {
 
 
             " left join " +
-            " (select geographicZoneId, count(*) from facilities  " +
-            " join programs_supported ps on ps.facilityId = facilities.id " +
-            " join geographic_zones gz on gz.id = facilities.geographicZoneId " +
-            " join requisition_group_members rgm on rgm.facilityId = facilities.id " +
-///
-            " JOIN requisition_groups rg ON rg.id = rgm.requisitiongroupid" +
-            " JOIN supervisory_nodes sn ON sn.id = rg.supervisorynodeid" +
-            " JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid" +
-
-
-            " join requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and rgps.programId = ps.programId  " +
-            " join processing_periods pp on pp.scheduleId = rgps.scheduleId and pp.id = #{processingPeriodId}  " +
-            " where gz.levelId = (select max(id) from geographic_levels) and ps.programId = #{programId} " +
-
-            " and ra.userid=#{userId}" +
-            " and ra.programid=#{programId}" +
-            " group by geographicZoneId" +
-            " ) expected " +
+            " ( SELECT  geographicZoneId, count(*)" +
+            " FROM facilities" +
+            "  JOIN requisition_group_members rgm on rgm.facilityid = facilities.id" +
+            "  JOIN vw_districts gz on gz.district_id = facilities.geographiczoneid" +
+            "  JOIN facility_types ft on ft.id = facilities.typeid" +
+            " JOIN programs_supported ps on ps.facilityid = facilities.id" +
+            " JOIN requisition_group_program_schedules rgps on rgps.requisitiongroupid =" +
+            " rgm.requisitiongroupid and ps.programid = rgps.programid" +
+            " WHERE (facilities.id in (select facility_id from vw_user_facilities where user_id = #{userId}" +
+            " and program_id = #{programId})  " +
+            " AND ps.programId =  #{programId} AND rgps.scheduleId = #{schedule})" +
+            " group by facilities.geographicZoneId ) expected " +
             " on gzz.id = expected.geographicZoneId " +
             " left join " +
             " (select geographicZoneId, count(*) from facilities fa " +
             " join geographic_zones gz on gz.id = fa.geographicZoneId " +
-
+            " join programs_supported ps on ps.facilityId = fa.id " +
             " join requisition_group_members rgm on rgm.facilityId = fa.id " +
             " JOIN requisition_groups rg ON rg.id = rgm.requisitiongroupid" +
             " JOIN supervisory_nodes sn ON sn.id = rg.supervisorynodeid" +
             " JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid" +
-
+            " join requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and rgps.programId = ps.programId  " +
             " where gz.levelId = (select max(id) from geographic_levels) " +
 
             "   and ra.userid=#{userId} " +
             " and ra.programid=#{programId}" +
+            " and rgps.scheduleId=#{schedule}" +
             " group by geographicZoneId" +
             " ) total " +
             " on gzz.id = total.geographicZoneId " +
@@ -107,9 +103,11 @@ public interface GeographicZoneReportMapper {
             " JOIN requisition_groups rg ON rg.id = rgm.requisitiongroupid" +
             " JOIN supervisory_nodes sn ON sn.id = rg.supervisorynodeid" +
             " JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid" +
-
-            " where ps.programId = #{programId} and fa.id in  " +
-            "(select facilityId from requisitions where programId = #{programId} ) " +
+            " join requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and rgps.programId = ps.programId  " +
+            " where ps.programId = #{programId} " +
+            " and rgps.scheduleId=#{schedule} and" +
+            " fa.id in  " +
+                        "(select facilityId from requisitions where programId = #{programId} ) " +
             "  and ra.userid=#{userId} " +
             " and ra.programid=#{programId}" +
             "group by geographicZoneId" +
@@ -124,8 +122,11 @@ public interface GeographicZoneReportMapper {
             " JOIN requisition_groups rg ON rg.id = rgm.requisitiongroupid" +
             " JOIN supervisory_nodes sn ON sn.id = rg.supervisorynodeid" +
             " JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid" +
+            " join requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and rgps.programId = ps.programId  " +
+            " where  ps.programId = #{programId} " +
+            "  and rgps.scheduleId=#{schedule} and " +
+            "fa.id in  " +
 
-            " where  ps.programId = #{programId} and fa.id in  " +
             " (select facilityId from requisitions where periodId = #{processingPeriodId} and programId = #{programId} and " +
             "  status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and emergency = false ) " +
             "" +
@@ -139,12 +140,13 @@ public interface GeographicZoneReportMapper {
             " where ra.userid =#{userId}" +
             " and ra.programid = #{programId}" +
 
+
             "order by gzz.name")
-    List<GeoZoneReportingRate> getGeoReportingRate(@Param("userId") Long userId, @Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId);
+    List<GeoZoneReportingRate> getGeoReportingRate(@Param("userId") Long userId, @Param("programId") Long programId,@Param("schedule") Long schedule, @Param("processingPeriodId") Long processingPeriodId);
 
 
 
-    @Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, false reported , " +
+    /*@Select("select f.id, f.name, f.mainPhone, f.longitude, f.latitude, false reported , " +
             " (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +
             "             ( SELECT count(*) >0  " +
             "              FROM role_assignments " +
@@ -165,9 +167,31 @@ public interface GeographicZoneReportMapper {
             "  and r.periodid = #{periodId} and r.programid = #{programId} ) " +
             " AND ps.programId = #{programId} " +
             "  and f.geographicZoneId = #{geographicZoneId}" +
-            " ORDER BY gz.district_name,name")
+            " ORDER BY gz.district_name,name")*/
+    @Select("select   f.id, f.name, f.mainPhone, f.longitude, f.latitude,false reported ,\n" +
+            "   (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts,  \n" +
+            "                         ( SELECT count(*) >0   \n" +
+            "                          FROM role_assignments  \n" +
+            "                          JOIN supervisory_nodes on supervisory_nodes.id = role_assignments.supervisorynodeid  \n" +
+            "                          JOIN users on users.id = role_assignments.userid AND users.active = true  \n" +
+            "                          WHERE supervisory_nodes.facilityid = f.id  \n" +
+            "                         ) as hasSupervisors  \n" +
+            "                         from facilities f \n" +
+            " INNER JOIN requisition_group_members rgm on rgm.facilityid = f.id\n" +
+            " INNER JOIN vw_districts gz on gz.district_id = f.geographiczoneid\n" +
+            " INNER JOIN facility_types ft on ft.id = f.typeid\n" +
+            " INNER JOIN programs_supported ps on ps.facilityid = f.id\n" +
+            " INNER JOIN requisition_group_program_schedules rgps on rgps.requisitiongroupid =\n" +
+            " rgm.requisitiongroupid and ps.programid = rgps.programid\n" +
+             " WHERE (f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{programId}) \n" +
+            " AND f.id not in (\n" +
+            " select r.facilityid from requisitions r where r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')  and r.periodid =  #{periodId} and r.programid =#{programId} )" +
+            " AND  (gz.district_id =  #{geographicZoneId} or gz.zone_id = #{geographicZoneId} or gz.region_id = #{geographicZoneId}\n" +
+            " or gz.parent = #{geographicZoneId} ) AND ps.programId = #{programId} AND rgps.scheduleId = #{schedule})\n" +
+            " ORDER BY name")
     List<GeoFacilityIndicator> getNonReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId,
                                                          @Param("periodId") Long processingPeriodId,
+                                                         @Param("schedule") Long schedule,
                                                          @Param("userId") Long userId);
 
     @Select("select distinct rq.id rnrid, f.id, f.name, f.mainPhone, f.longitude, f.latitude, true reported, (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts, " +

@@ -156,6 +156,7 @@ function ReportMessageController($scope, SendMessagesReportAttachment, GetFacili
     ReportingFacilityList.get({
       program: $scope.$parent.filter.program,
       period: $scope.$parent.filter.period,
+        schedule:$scope.$parent.filter.schedule,
       geo_zone: feature.id
     }, function (data) {
       $scope.facilities = data.facilities;
@@ -163,6 +164,7 @@ function ReportMessageController($scope, SendMessagesReportAttachment, GetFacili
       NonReportingFacilityList.get({
         program: $scope.$parent.filter.program,
         period: $scope.$parent.filter.period,
+          schedule:$scope.$parent.filter.schedule,
         geo_zone: feature.id
       }, function (data) {
         angular.forEach(data.facilities, function (item) {

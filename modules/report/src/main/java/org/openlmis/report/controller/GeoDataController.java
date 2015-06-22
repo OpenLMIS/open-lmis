@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,9 +49,12 @@ public class GeoDataController extends BaseController {
 
     @RequestMapping(value = "/reporting-rate", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getReportingRateReport(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
-                                                                   @RequestParam(value = "period", required = true, defaultValue = "0") Long period, HttpServletRequest request) {
+                                                                   @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
+                                                                   @RequestParam(value = "schedule", required = true, defaultValue = "0") Long schedule,
+                                                                   HttpServletRequest request) {
         Long userId = loggedInUserId(request);
-        return OpenLmisResponse.response("map", this.geographicZoneReportMapper.getGeoReportingRate(userId, program, period));
+
+        return OpenLmisResponse.response("map", this.geographicZoneReportMapper.getGeoReportingRate(userId, program,schedule, period));
     }
 
 
@@ -60,6 +62,7 @@ public class GeoDataController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getReportingFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
                                                                    @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
                                                                    @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId,
+                                                                   @RequestParam(value = "schedule", required = true, defaultValue = "0") Long schedule,
              HttpServletRequest request
     ) {
         Long userId = loggedInUserId(request);
@@ -72,10 +75,12 @@ public class GeoDataController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getNonReportingFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
                                                                       @RequestParam(value = "period", required = true, defaultValue = "0") Long period,
                                                                       @RequestParam(value = "geo_zone", required = true, defaultValue = "0") Long geoZoneId,
+                                                                      @RequestParam(value = "schedule", required = true, defaultValue = "0") Long schedule,
                                                                       HttpServletRequest request
     ) {
         Long userId = loggedInUserId(request);
-        return OpenLmisResponse.response("facilities", this.geographicZoneReportMapper.getNonReportingFacilities(program, geoZoneId, period, userId));
+
+        return OpenLmisResponse.response("facilities", this.geographicZoneReportMapper.getNonReportingFacilities(program, geoZoneId, period,schedule, userId));
     }
 
 

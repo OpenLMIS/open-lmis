@@ -12,7 +12,12 @@ function DistrictFinancialSummaryControllers( $scope, $window, DistrictFinancial
             }
         });
     };
-
+    $scope.$watch('filter.program', function (value){
+        $scope.OnFilterChanged();
+    });
+    $scope.$watch('filter.requisitionGroup', function (value){
+        $scope.OnFilterChanged();
+    });
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
         var params = jQuery.param($scope.filter);

@@ -661,7 +661,7 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
         exists = true;
 
 
-      } else if (categoryArray.length === 1 && (categoryArray[0] === 0 || categoryArray[0] == -1)) {
+      } else if (categoryArray.length === 1 && (categoryArray[0] === 0 || categoryArray[0] === -1)) {
         exists = true;
       }
       return exists;
@@ -672,10 +672,7 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
       link: function (scope, elm, attr) {
 
         scope.products = [];
-        scope.products.push({
-          'name': '-- All Products --',
-          id: -1
-        });
+
 
         scope.filter.product = (isUndefined($routeParams.product) || $routeParams.product === '') ? -1 : $routeParams.product;
 
