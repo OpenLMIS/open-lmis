@@ -67,22 +67,13 @@ public class UserSummaryReportProvider extends ReportDataProvider {
 
         if (filterCriteria != null) {
             userSummaryParam = new UserSummaryParams();
-            userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("role")[0]) ? 0 : Long.parseLong(filterCriteria.get("role")[0])); //defaults to 0
-            userSummaryParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0 : Long.parseLong(filterCriteria.get("program")[0]));
-            userSummaryParam.setSupervisoryNodeId(StringUtils.isBlank(filterCriteria.get("supervisoryNode")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNode")[0]));
-
-            // summarize the filters now.
-           /* String summary = "Program: "
-                    .concat(programService.getById(userSummaryParam.getProgramId()).getName())
-                    .concat("\nRole:")
-                    .concat(roleRightsService.getRole(userSummaryParam.getRoleId()).getName());
-
-            if(userSummaryParam.getSupervisoryNodeId() != 0){
-                summary.concat("\nSupervisoryNodes: ")
-                        .concat(supervisoryNodeService.getParent(userSummaryParam.getSupervisoryNodeId()).getName());
+            Long userId = StringUtils.isBlank(filterCriteria.get("roleId")[0]) ? 0 : Long.parseLong(filterCriteria.get("roleId")[0]);
+            if (filterCriteria != null) {
+                userSummaryParam = new UserSummaryParams();
+                userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("roleId")[0]) ? 0 : Long.parseLong(filterCriteria.get("roleId")[0])); //defaults to 0
+                userSummaryParam.setProgramId(StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0]));
+                userSummaryParam.setSupervisoryNodeId(StringUtils.isBlank(filterCriteria.get("supervisoryNodeId")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNodeId")[0]));
             }
-             */
-
 
         }
 

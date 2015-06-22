@@ -19,7 +19,7 @@ public class UserSummaryQueryBuilder {
 
     public static String getQuery(Map params){
      UserSummaryParams filter = (UserSummaryParams)params.get("filterCriteria");
-     Map sortCriteria = (Map)params.get("filterCriteria");
+     Map sortCriteria = (Map)params.get("SortCriteria");
      BEGIN();
      SELECT("firstname,lastname,email,cellphone,officephone,supervisorynodename,programname,rolename");
      FROM("vw_user_role_assignments");

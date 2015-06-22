@@ -81,8 +81,8 @@ public class DistrictConsumptionQueryBuilder {
 
     String predicates = "";
 
-   if(!filter.getProductId().equals("0")){ // && !filter.getProductId().equals("{}")){
-        predicates = predicates + " and p.id = ANY(array" + filter.getProductId()+"::INT[])";
+   if(!filter.getProductId().equals("0")&&!filter.getProductId().equals("[-1]")){ // && !filter.getProductId().equals("{}")){
+      predicates = predicates + " and p.id = ANY(array" + filter.getProductId()+"::INT[])";
     }
 
     if(filter.getProductCategoryId() > 0){

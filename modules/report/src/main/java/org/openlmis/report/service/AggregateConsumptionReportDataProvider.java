@@ -49,7 +49,6 @@ public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
   }
 
   public DistrictConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-
     if (filterCriteria != null) {
       districtConsumptionReportParam = new DistrictConsumptionReportParam();
       districtConsumptionReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0

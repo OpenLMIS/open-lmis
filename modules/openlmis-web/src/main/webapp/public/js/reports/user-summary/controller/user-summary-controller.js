@@ -35,8 +35,8 @@ function UserSummaryReportController($scope, $window, ReportProgramsBySupervisor
                 }
                 bindChartEvent("#stocked-out-reporting", "plothover", flotChartHoverCursorHandler);
 
-            }else{
-                $scope.UserRolePieChartData=[];
+            } else {
+                $scope.UserRolePieChartData = [];
             }
 
         });
@@ -55,9 +55,9 @@ function UserSummaryReportController($scope, $window, ReportProgramsBySupervisor
         }
     };
     $scope.processSupervisoryNodeChange = function () {
-        var par=$scope.filterObject.supervisoryNodeId;
-        if(!$scope.filterObject.supervisoryNodeId ||$scope.filterObject.supervisoryNodeId==='undefined'||$scope.filterObject.supervisoryNodeId===''){
-            par=0;
+        var par = $scope.filterObject.supervisoryNodeId;
+        if (!$scope.filterObject.supervisoryNodeId || $scope.filterObject.supervisoryNodeId === 'undefined' || $scope.filterObject.supervisoryNodeId === '') {
+            par = 0;
         }
         ReportProgramsBySupervisoryNode.get({supervisoryNodeId: par}, function (data) {
             $scope.programs = data.programs;
@@ -139,14 +139,11 @@ function UserSummaryReportController($scope, $window, ReportProgramsBySupervisor
     });
 
     $scope.exportReport = function (type) {
-        $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
+        $scope.filterObject.pdformat = 1;
+        var params = jQuery.param($scope.filterObject);
         var url = '/reports/download/user_summary/' + type + '?' + params;
         $window.open(url);
     };
-
-
-
 
 
 }
