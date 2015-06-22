@@ -114,27 +114,32 @@ public interface GeographicZoneReportMapper {
             " ) ever " +
             " on gzz.id = ever.geographicZoneId " +
             " left join " +
-            " (select geographicZoneId, count(*) from facilities  fa " +
-            " join programs_supported ps on ps.facilityId = fa.id " +
-            " join geographic_zones gz on gz.id = fa.geographicZoneId " +
-
-            " join requisition_group_members rgm on rgm.facilityId = fa.id " +
-            " JOIN requisition_groups rg ON rg.id = rgm.requisitiongroupid" +
-            " JOIN supervisory_nodes sn ON sn.id = rg.supervisorynodeid" +
-            " JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid" +
-            " join requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and rgps.programId = ps.programId  " +
-            " where  ps.programId = #{programId} " +
-            "  and rgps.scheduleId=#{schedule} and " +
-            "fa.id in  " +
-
-            " (select facilityId from requisitions where periodId = #{processingPeriodId} and programId = #{programId} and " +
-            "  status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and emergency = false ) " +
-            "" +
-            "    and ra.userid = #{userId} " +
-            " and ra.programid = #{programId}" +
-            "" +
-            " group by geographicZoneId" +
-            " ) period" +
+            " (" +
+            "select geographiczoneid, count(*) from" +
+            "(select distinct rq.id rnrid, f.id, f.name, f.mainPhone, f.longitude, f.geographiczoneid, true reported, " +
+            "(SELECT count(*) >0  " +
+            "              FROM role_assignments " +
+            "              JOIN supervisory_nodes on supervisory_nodes.id = role_assignments.supervisorynodeid " +
+            "              JOIN users on users.id = role_assignments.userid AND users.active = true " +
+            "              WHERE supervisory_nodes.facilityid = f.id " +
+            "              ) as hasSupervisors " +
+            "             from facilities f  " +
+            "             join (select facilityId, r.id from requisitions r where r.programId = #{programId} and r.periodId = #{processingPeriodId} and emergency = false and" +
+            "              status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')) rq on rq.facilityId = f.id  " +
+            "             join programs_supported ps on ps.facilityId = f.id  " +
+            "             join geographic_zones gz on gz.id = f.geographicZoneId  " +
+            "             join requisition_group_members rgm on rgm.facilityId = f.id  " +
+            "             JOIN requisition_groups rg ON rg.id = rgm.requisitiongroupid " +
+            "             JOIN supervisory_nodes sn ON sn.id = rg.supervisorynodeid " +
+            "             JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid " +
+            "              join requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and rgps.programId = ps.programId  " +
+            "             where  f.enabled = true " +
+            "              and rgps.scheduleId=#{schedule}" +
+            "             and ra.userid = #{userId} " +
+            "             and ra.programid =#{programId}" +
+            "            ) as temp group by geographiczoneid" +
+            " " +
+            ") period" +
             " on gzz.id = period.geographicZoneId " +
 
             " where ra.userid =#{userId}" +
