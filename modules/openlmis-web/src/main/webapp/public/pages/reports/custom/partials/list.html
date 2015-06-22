@@ -19,8 +19,7 @@
     </div>
     <form filter-container ng-submit="filterGrid()" name="filterForm" novalidate>
       <div class="app-form">
-
-        <select ui-select2 style="width: 450px;;" ng-change="OnFilterChanged()" ng-model="filter.report_key">
+        <select ui-select2 style="width: 450px;" ng-change="OnFilterChanged()" ng-model="filter.report_key">
           <optgroup label="{{cat}}" ng-repeat="cat in categories">
             <option value="{{r.reportkey}}" ng-selected="r.reportkey == filter.report_key"
                     ng-repeat="r in  displayReports[cat]">
@@ -89,6 +88,8 @@
           <div class="float-right" ng-class="{'content-body': report.currentFilters.length > 0}">
             <div class="box" style="padding-top: 0px;margin-top:0px; ">
               <div class="box-content" style="min-height: 400px;">
+                <h4>{{report.name}}</h4>
+                <hr />
                 <table ng-show="data.length == 0">
                   <tr>
                     <td>No data to show under selected filters</td>

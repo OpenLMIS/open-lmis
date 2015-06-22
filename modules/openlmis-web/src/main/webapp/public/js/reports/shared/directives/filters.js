@@ -575,6 +575,7 @@ app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
             scope.filter.productCategory === '0' ||
             option.categoryId == scope.filter.productCategory ||
             option.id === -1  ||
+            option.id === scope.filter.product ||
             option.id === 0 );
         };
 
