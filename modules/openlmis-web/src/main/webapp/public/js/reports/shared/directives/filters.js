@@ -683,7 +683,9 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
 
         scope.productCFilter = function (option) {
 
-          return (!angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) || scope.filter.productCategory === '' || scope.filter.productCategory === '0' || option.categoryId == scope.filter.productCategory || (angular.isArray(scope.filter.productCategory) && valueExistInArray(scope.filter.productCategory, option.categoryId)));
+          return (!angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) || scope.filter.productCategory === '' ||
+              scope.filter.productCategory === '0' || option.categoryId == scope.filter.productCategory || option.id=='0' || option.id=='-1'||
+              (angular.isArray(scope.filter.productCategory) && valueExistInArray(scope.filter.productCategory, option.categoryId)));
         };
 
         scope.$watch('filter.program', function (value) {
