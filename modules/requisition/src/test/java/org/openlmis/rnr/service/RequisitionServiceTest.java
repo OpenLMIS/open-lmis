@@ -163,6 +163,7 @@ public class RequisitionServiceTest {
     PROGRAM.setBudgetingApplies(true);
     PROGRAM.setPush(false);
     PROGRAM.setIsEquipmentConfigured(false);
+    PROGRAM.setUsePriceSchedule(false);
     Rnr requisition = createRequisition(PERIOD.getId(), null);
     requisition.setProgram(PROGRAM);
     setupForInitRnr();
@@ -233,6 +234,8 @@ public class RequisitionServiceTest {
     requisitionProgram.setBudgetingApplies(true);
     requisitionProgram.setPush(false);
     requisitionProgram.setIsEquipmentConfigured(false);
+    requisitionProgram.setUsePriceSchedule(false);
+
     when(
       requisitionPermissionService.hasPermission(USER_ID, FACILITY, requisitionProgram, CREATE_REQUISITION)).thenReturn(
       true);
@@ -240,6 +243,7 @@ public class RequisitionServiceTest {
     when(regimenService.getByProgram(requisitionProgram.getId())).thenReturn(regimens);
     when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(),
       requisitionProgram.getId())).thenReturn(facilityApprovedProducts);
+
     when(regimenColumnService.getRegimenTemplateByProgramId(requisitionProgram.getId())).thenReturn(regimenTemplate);
     ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(getRnrColumns());
     when(rnrTemplateService.fetchProgramTemplateForRequisition(requisitionProgram.getId())).thenReturn(rnrTemplate);
@@ -945,6 +949,8 @@ public class RequisitionServiceTest {
     PROGRAM.setBudgetingApplies(true);
     PROGRAM.setPush(false);
     PROGRAM.setIsEquipmentConfigured(false);
+    PROGRAM.setUsePriceSchedule(false);
+
     Rnr requisition = spy(createRequisition(PERIOD.getId(), INITIATED));
     setupForInitRnr();
     requisition.setProgram(PROGRAM);
@@ -1449,6 +1455,8 @@ public class RequisitionServiceTest {
     requisitionProgram.setBudgetingApplies(true);
     requisitionProgram.setPush(false);
     requisitionProgram.setIsEquipmentConfigured(false);
+      requisitionProgram.setUsePriceSchedule(false);
+
     RequisitionService spyRequisitionService = spy(requisitionService);
 
     when(

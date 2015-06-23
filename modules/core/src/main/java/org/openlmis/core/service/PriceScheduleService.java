@@ -57,4 +57,8 @@ public class PriceScheduleService {
 
         return repository.getPriceScheduleCategories();
     }
+
+   public List<PriceSchedule> getPriceScheduleFullSupplyFacilityApprovedProduct(Long programId, Long facilityId){
+       return repository.getPriceScheduleFullSupplyFacilityApprovedProduct(programId, facilityId);
+   }
 }

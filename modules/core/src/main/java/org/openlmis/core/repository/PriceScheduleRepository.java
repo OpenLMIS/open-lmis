@@ -60,4 +60,8 @@ public class PriceScheduleRepository {
     public PriceScheduleCategory getPriceScheduleCategoryByCode(String code) {
         return mapper.getPriceScheduleCategoryByCode(code);
     }
+
+    public List<PriceSchedule> getPriceScheduleFullSupplyFacilityApprovedProduct(Long programId, Long facilityId) {
+        return mapper.getPriceScheduleFullSupplyFacilityApprovedProduct(programId, facilityId);
+    }
 }

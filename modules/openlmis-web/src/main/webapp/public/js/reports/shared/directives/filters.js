@@ -86,7 +86,9 @@ app.directive('yearFilter', ['OperationYears',
         scope.$evalAsync(function () {
           OperationYears.get(function (data) {
             scope.years = data.years;
-            scope.filter.year = data.years[0];
+            if($scope.filter.year === undefined){
+              scope.filter.year = data.years[0];
+            }
           });
         });
       },

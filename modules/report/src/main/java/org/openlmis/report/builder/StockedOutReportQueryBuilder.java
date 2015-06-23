@@ -11,7 +11,6 @@
 package org.openlmis.report.builder;
 
 import org.openlmis.report.model.params.StockedOutReportParam;
-import org.openlmis.report.model.report.StockedOutReport;
 
 import java.util.Map;
 
@@ -26,10 +25,10 @@ public class StockedOutReportQueryBuilder {
         BEGIN();
         SELECT("DISTINCT supplyingfacility, facilitycode, productCode, facility, product, facilitytypename, location, processing_period_name,stockoutdays");
         FROM("vw_stock_status join vw_districts d on gz_id = d.district_id");
+        writePredicates(filter);
         WHERE("status = 'SO'");
         WHERE("reported_figures > 0");
         WHERE("facility_id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.programId})");
-        writePredicates(filter);
         ORDER_BY("supplyingfacility asc, facility asc, product asc");
         // copy the sql over to a variable, this makes the debugging much more possible.
         String sql = SQL();
@@ -70,30 +69,6 @@ public class StockedOutReportQueryBuilder {
                 WHERE("facility_id = #{filterCriteria.facilityId}");
             }
         }
-    }
-
-    public static String getTotalFacilities(Map params) {
-
-        StockedOutReportParam filter = (StockedOutReportParam) params.get("filterCriteria");
-
-        BEGIN();
-        SELECT("COUNT(*) facilityCount");
-        FROM("vw_stock_status");
-        writePredicates(filter);
-        return SQL();
-    }
-
-    public static String getTotalStockedoutFacilities(Map params) {
-
-        StockedOutReportParam filter = (StockedOutReportParam) params.get("filterCriteria");
-
-        BEGIN();
-        SELECT("COUNT(*) facilityCount");
-        FROM("vw_stock_status");
-        WHERE("status = 'SO'");
-        WHERE("reported_figures > 0");
-        writePredicates(filter);
-        return SQL();
     }
 
 
