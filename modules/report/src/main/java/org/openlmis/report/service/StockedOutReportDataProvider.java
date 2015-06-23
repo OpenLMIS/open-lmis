@@ -11,9 +11,7 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.report.mapper.StockedOutReportMapper;
@@ -25,7 +23,6 @@ import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +30,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class StockedOutReportDataProvider extends ReportDataProvider {
 
+  @Autowired
   private StockedOutReportMapper reportMapper;
 
   private StockedOutReportParam stockedOutReportParam = null;
@@ -48,12 +46,6 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
 
   @Autowired
   private FacilityTypeReportMapper facilityType;
-  
-  
-  @Autowired
-  public StockedOutReportDataProvider(StockedOutReportMapper mapper) {
-    this.reportMapper = mapper;
-  }
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
@@ -81,7 +73,6 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
       stockedOutReportParam.setRgroupId(StringHelper.isBlank(filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0]));
       stockedOutReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,"productCategory") ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0]));
       stockedOutReportParam.setProductId(!filterCriteria.containsKey("product") ? "0" : java.util.Arrays.toString(filterCriteria.get("product")));
-      //stockedOutReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0]));
       stockedOutReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
       stockedOutReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0L : Long.parseLong(filterCriteria.get("period")[0]));
 
@@ -94,25 +85,6 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
     return selectedFilterHelper.getProgramPeriodGeoZone(params);
   }
 
-  @Override
-  public HashMap<String, String> getAdditionalReportData(Map params) {
-    HashMap<String, String> result = new HashMap<String, String>();
-
-    // spit out the summary section on the report.
-    String totalFacilities = reportMapper.getTotalFacilities(params).get(0).toString();
-    String stockedOut = reportMapper.getStockedoutTotalFacilities(params).get(0).toString();
-    result.put("TOTAL_FACILITIES", totalFacilities);
-    result.put("TOTAL_STOCKEDOUT", stockedOut);
-
-    // Assume by default that the 100% of facilities didn't report
-    Long percent = Long.parseLong("100");
-    if (totalFacilities != "0") {
-      percent = Math.round((Double.parseDouble(stockedOut) / Double.parseDouble(totalFacilities)) * 100);
-
-    }
-    result.put("PERCENTAGE_STOCKEDOUT", percent.toString());
-    return result;
-  }
 
 
 }
