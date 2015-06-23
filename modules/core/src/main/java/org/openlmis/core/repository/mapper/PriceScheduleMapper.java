@@ -52,4 +52,22 @@ public interface PriceScheduleMapper {
 
     @Select("select * from price_schedule_category where price_category = #{code}")
     PriceScheduleCategory getPriceScheduleCategoryByCode(String code);
+
+    @Select("SELECT ps.* from facility_approved_products fap " +
+            "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId " +
+            "INNER JOIN program_products pp ON pp.id = fap.programProductId " +
+            "INNER JOIN products p ON p.id = pp.productId " +
+            "INNER JOIN programs pgm ON pp.programId = pgm.id " +
+            "INNER JOIN price_schedule ps ON ps.productid = p.id AND f.pricecatid = ps.pricecatid " +
+            "WHERE " +
+            " pp.programId = #{programId} And " +
+            " f.id = #{facilityId}  AND " +
+            " pp.fullSupply = TRUE AND " +
+            " p.active = TRUE AND " +
+            " pp.active = TRUE")
+    @Results(value = {
+            @Result(property = "product.id", column = "productid"),
+            @Result(property = "salePrice", column = "sale_price")
+    })
+    List<PriceSchedule> getPriceScheduleFullSupplyFacilityApprovedProduct(@Param("programId") Long programId, @Param("facilityId") Long facilityId);
 }
