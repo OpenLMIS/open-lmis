@@ -41,8 +41,4 @@ public class PriceSchedule extends BaseModel implements Importable {
 
     @ImportField(mandatory = false, name = "Sale price")
     private Double salePrice;
-
-    public PriceSchedule(Long id) {
-        this.id = id;
-    }
 }
