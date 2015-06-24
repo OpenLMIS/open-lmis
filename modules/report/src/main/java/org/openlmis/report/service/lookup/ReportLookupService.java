@@ -27,6 +27,7 @@ import org.openlmis.equipment.repository.EquipmentRepository;
 import org.openlmis.equipment.repository.mapper.EquipmentMapper;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.*;
+import org.openlmis.report.mapper.lookup.vaccine.ReplacementPlanSummaryReportMapper;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.dto.DosageUnit;
 import org.openlmis.report.model.dto.Facility;
@@ -42,6 +43,7 @@ import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.model.params.UserSummaryParams;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.model.report.TimelinessReport;
+import org.openlmis.report.model.report.vaccine.ReplacementPlanSummary;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -136,6 +138,9 @@ public class ReportLookupService {
     @Autowired
     private RegimenRepository regimenRepository;
     private UserSummaryParams userSummaryParam = null;
+
+    @Autowired
+    private ReplacementPlanSummaryReportMapper planSummaryReportMapper;
 
     public List<Product> getAllProducts() {
         return productMapper.getAll();
@@ -639,4 +644,8 @@ public class ReportLookupService {
         return productMapper.getRmnchProducts();
     }
 
+
+    public List<ReplacementPlanSummary>getEquipmentInNeedOfReplacement(Long program,Long regionId, Long plannedYear ){
+        return  planSummaryReportMapper.getEquipmentInNeedOfReplacement(program,regionId,plannedYear);
+    }
 }

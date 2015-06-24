@@ -517,5 +517,14 @@ public class ReportLookupController extends BaseController {
         return this.reportLookupService.getRmnchProducts();
     }
 
+    @RequestMapping(value="/equipmentsInNeedOfReplacement/getData" ,method = GET,headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse>getEquipmentInNeedOfReplacement(
+            @RequestParam("program") Long program,
+            @RequestParam("regionId") Long regionId,
+            @RequestParam("plannedYear") Long plannedYear,
+            HttpServletRequest request
+    ){
+        return  OpenLmisResponse.response("equipmentsInNeedOfReplacement", reportLookupService.getEquipmentInNeedOfReplacement(program,regionId,plannedYear));
+    }
 
 }

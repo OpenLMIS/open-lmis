@@ -15,6 +15,7 @@ import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.report.*;
+import org.openlmis.report.model.report.vaccine.ReplacementPlanSummary;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -512,4 +513,20 @@ public class InteractiveReportController extends BaseController {
                 (List<TimelinessReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, timelinessReportList);
     }
+
+
+    @RequestMapping(value = "/reportdata/replacementPlanSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_VACCINE_REPLACEMENT_PLAN_SUMMARY')")
+    public Pages getReplacementPlanSummaryReport(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                 @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                 HttpServletRequest request) {
+
+        Report report = reportManager.getReportByKey("replacement_plan_summary");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+
+        List<ReplacementPlanSummary> planSummaryList = (List<ReplacementPlanSummary>)report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, planSummaryList);
+    }
+
 }

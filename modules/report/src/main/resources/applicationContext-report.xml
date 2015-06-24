@@ -323,6 +323,33 @@
                     <property name="version" value="1.0"/>
                 </bean>
 
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="equipment_replacement_list"/>
+                    <property name="template" value="replacement-equipment-list.jasper"/>
+                    <property name="reportDataProvider" ref="replacementPlanSummaryReportDataProvider"/>
+                    <property name="id" value="RP-replacement-plan"/>
+                    <property name="name" value="Equipment To Be Replaced"/>
+                    <property name="title" value="report.title.replacement.plan.summary"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="replacement_plan_summary"/>
+                    <property name="template" value="replacement-test.jasper"/>
+                    <property name="reportDataProvider" ref="replacementPlanSummaryReportDataProvider"/>
+                    <property name="id" value="RP-replacement-plan"/>
+                    <property name="name" value="Replacement Plan Summary"/>
+                    <property name="title" value="report.title.replacement.plan.summary"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+
+
+
+
+
+
             </list>
         </constructor-arg>
     </bean>
