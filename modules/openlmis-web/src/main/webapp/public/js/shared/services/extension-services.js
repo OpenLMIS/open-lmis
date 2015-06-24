@@ -573,6 +573,9 @@ services.factory('LabEquipmentListReport', function ($resource) {
     return $resource('/reports/reportdata/labEquipmentList.json', {}, {});
 });
 
+services.factory('CCEStorageCapacityReport', function ($resource) {
+    return $resource('/reports/reportdata/cceStorageCapacity.json', {}, {});
+});
 
 services.factory("PipelineExportReport", function($resource){
     return $resource('/reports/reportdata/pipelineExport.json', {}, {});
