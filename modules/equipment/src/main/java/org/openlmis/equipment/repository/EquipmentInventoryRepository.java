@@ -10,6 +10,7 @@
 
 package org.openlmis.equipment.repository;
 
+import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
@@ -20,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import org.apache.log4j.Logger;
 
 @Repository
 public class EquipmentInventoryRepository {
@@ -105,8 +105,10 @@ public class EquipmentInventoryRepository {
 
   private void setStatusToInventory(EquipmentInventory inventory) {
     EquipmentInventoryStatus status = equipmentInventoryStatusMapper.getCurrentStatus(inventory.getId());
-    inventory.setOperationalStatusId(status.getStatusId());
-    inventory.setNotFunctionalStatusId(status.getNotFunctionalStatusId());
+    if(status != null) {
+      inventory.setOperationalStatusId(status.getStatusId());
+      inventory.setNotFunctionalStatusId(status.getNotFunctionalStatusId());
+    }
   }
 
   public void insert(EquipmentInventory inventory){

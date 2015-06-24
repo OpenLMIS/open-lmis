@@ -13,52 +13,32 @@
     <span openlmis-message="label.equipment.history"></span>
   </h2>
 
-  <div>
-    <table class="table table-full-width">
+  <ng-include src="'/public/pages/admin/equipment/shared/log-header.html'"></ng-include>
+
+  <div class="content-body">
+    <table class="table table-bordered table-scrollable">
+      <thead class="gradient-header">
       <tr>
-        <td width="80%">
-          <div>
-            <div class="form-row clearfix">
-              <label><span openlmis-message="label.equipment.equipment"></span>: <b>{{equipment.name}}</b>
-              </label>
-            </div>
-
-            <div class="form-row clearfix">
-              <label><span openlmis-message="label.equipment.model"></span> : <b>{{equipment.model}}</b>
-              </label>
-            </div>
-
-            <div class="form-row clearfix">
-              <label><span openlmis-message="label.equipment.serial"></span>: <b>{{equipment.serialNumber}}</b>
-              </label>
-            </div>
-          </div>
-        </td>
+        <th><span openlmis-message="label.date"></span></th>
+        <th><span openlmis-message="label.equipment.status"></span></th>
+        <th><span openlmis-message="label.remarks"></span>
+        </th>
+      </tr>
+      </thead>
+      <tr ng-repeat="row in logs">
+        <td>{{row.dateString}}</td>
+        <td><b>{{row.type}}</b> - {{row.reason}}</td>
+        <td>{{row.comment}}</td>
+      </tr>
+      <tr ng-show="logs.length == 0">
+        <td colspan="3" openlmis-message="msg.no.records.found"></td>
       </tr>
     </table>
-    <div>
-      <table class="table table-bordered table-scrollable">
-        <thead>
-          <tr>
-            <th><span openlmis-message="label.date"></span>
-            </th>
-            <th><span openlmis-message="label.equipment.status"></span>
-            </th>
-            <th><span openlmis-message="label.remarks"></span>
-            </th>
-          </tr>
-        </thead>
-        <tr ng-repeat="row in logs">
-          <td>{{row.dateString}}</td>
-          <td><b>{{row.type}}</b> - {{row.reason}}</td>
-          <td>{{row.comment}}</td>
-        </tr>
-      </table>
-    </div>
   </div>
   <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
-      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel" ng-click="cancel()" />
+      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+             ng-click="cancel()"/>
     </div>
     <div class="toolbar-error" id="saveErrorMsgDiv">
       <span openlmis-message="error" ng-show="error"></span>&nbsp;
