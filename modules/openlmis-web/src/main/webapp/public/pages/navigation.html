@@ -313,6 +313,20 @@
             </div>
           </li>
 
+            <li class="has-children">
+                <a href="javascript: void(0);" openlmis-message="menu.report.vaccine"></a>
+
+                <div class="submenu">
+                    <ul>
+                        <li ng-show="hasPermission('VIEW_VACCINE_REPLACEMENT_PLAN_SUMMARY')">
+                            <a href="/public/pages/reports/replacement-plan-summary/index.html" openlmis-message="menu.report.vaccine.replacement.plan.summary"></a>
+                        </li>
+
+                    </ul>
+                </div>
+            </li>
+
+
           <li class="has-children">
             <a href="/public/pages/reports/custom/index.html" openlmis-message="menu.report.custom.reports"></a>
           </li>
