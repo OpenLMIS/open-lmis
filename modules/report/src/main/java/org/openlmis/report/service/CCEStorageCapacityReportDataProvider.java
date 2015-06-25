@@ -23,6 +23,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+import static org.openlmis.core.domain.RightName.MANAGE_EQUIPMENT_INVENTORY;
+
 @Component
 @NoArgsConstructor
 public class CCEStorageCapacityReportDataProvider extends ReportDataProvider {
@@ -48,6 +50,28 @@ public class CCEStorageCapacityReportDataProvider extends ReportDataProvider {
 
     CCEStorageCapacityReportParam param = new CCEStorageCapacityReportParam();
 
+    Long programId = StringHelper.isBlank(filterCriteria, "program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]); // TODO: fix program id
+    param.setProgramId(programId);
+    param.setFacilityLevel(filterCriteria.get("facilityLevel")[0]);
+
+    // List of facilities includes supervised and home facility
+    List<Facility> facilities = facilityService.getUserSupervisedFacilities(this.getUserId(), programId, MANAGE_EQUIPMENT_INVENTORY);
+    facilities.add(facilityService.getHomeFacility(this.getUserId()));
+
+    StringBuilder str = new StringBuilder();
+    str.append("{");
+    for (Facility f : facilities) {
+      str.append(f.getId());
+      str.append(",");
+    }
+    if (str.length() > 1) {
+      str.deleteCharAt(str.length()-1);
+    }
+    str.append("}");
+    param.setFacilityIds(str.toString());
+
     return param;
   }
+
+
 }

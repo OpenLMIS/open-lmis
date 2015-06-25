@@ -151,6 +151,47 @@ app.directive('facilityTypeFilter', ['ReportFacilityTypes', 'ReportFacilityTypes
     };
   }]);
 
+app.directive('facilityLevelFilter', [function () {
+
+    //var onCascadedPVarsChanged = function ($scope) {
+    //
+    //  if ($scope.filter.program !== undefined) {
+    //    ReportFacilityLevelsByProgram.get({program: $scope.filter.program}, function (data) {
+    //      $scope.facilityLevels = data.facilityTypes;
+    //    });
+    //  } else {
+    //    ReportFacilityLevels.get(function (data) {
+    //      $scope.facilityLevels = data.facilityTypes;
+    //    });
+    //  }
+    //};
+
+    return {
+      restrict: 'E',
+      link: function (scope, elm, attr) {
+
+        scope.facilityLevels = [
+          {'id': '', 'name': '-- Select Facility Level --'},
+          {'id': 'cvs','name': 'Central Vaccine Store (CVS)'},
+          {'id': 'rvs','name': 'Regional Vaccine Stores (RVS)'},
+          {'id': 'dvs','name': 'District Vaccine Stores (DVS)'},
+          {'id': 'hf','name': 'Health Facilities (HF)'}
+        ];
+
+        if (attr.required) {
+          scope.requiredFilters.facilityLevel = 'facilityLevel';
+        }
+
+        //scope.filter.facilityLevel = (isUndefined($routeParams.facilityLevel) || $routeParams.facilityLevel === '') ? '' : $routeParams.facilityLevel;
+        //
+        //scope.$watch('filter.program', function (value) {
+        //  onCascadedPVarsChanged(scope, value);
+        //});
+      },
+      templateUrl: 'filter-facility-level-template'
+    };
+  }]);
+
 app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$routeParams',
   function (ReportSchedules, ReportProgramSchedules, $routeParams) {
 

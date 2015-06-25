@@ -21,5 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CCEStorageCapacityReportParam {
 
-    private String programId;
+    private Long programId;
+    private String facilityLevel;
+    private String facilityIds;
 }

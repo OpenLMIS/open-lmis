@@ -35,45 +35,40 @@
         </div>
 
         <div class=row-fluid>
-            <div class="sidebar">
-                <div class="app-form" style="padding: 5px;">
-
-                    <form ng-submit="filterGrid()"  name="filterForm" novalidate>
-                        <div filter-container class="clearfix">
-
-                            <zone-filter class="form-cell horizontalFilters"></zone-filter>
-
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="content-body">
-                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
-                    <tr>
-                        <td>No data to show under selected filters</td>
-                    </tr>
-                </table>
-                <div ng-show="data.length > 0">
-                    <div client-side-sort-pagination class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) *
-                        tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
+            <div class="app-form" style="padding: 5px;">
+                <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+                    <div filter-container class="clearfix">
+                        <program-filter class="form-cell horizontalFilters"></program-filter>
+                        <facility-level-filter class="form-cell horizontalFilters"></facility-level-filter>
                     </div>
-                       <table  ng-show="data.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
-                                <tbody>
-                                <tr ng-repeat="row in data">
-                                    <td data-title="'#'" class="number" style="width:10px">{{row.no}}</td>
-                                    <td data-title="getLocalMessage('label.site.name')" style="width:100px" sortable="siteName">{{row.siteName}}</td>
-                                    <td data-title="getLocalMessage('label.refrigerator.capacity.current')" style="width:80px" sortable="refrigeratorCapacityCurrent">{{row.refrigeratorCapacityCurrent}}</td>
-                                    <td data-title="getLocalMessage('label.refrigerator.capacity.required')" style="width:80px" sortable="refrigeratorCapacityRequired">{{row.refrigeratorCapacityRequired}}</td>
-                                    <td data-title="getLocalMessage('label.refrigerator.capacity.gap')" style="width:80px" sortable="refrigeratorCapacityGap">{{row.refrigeratorCapacityGap}}</td>
-                                    <td data-title="getLocalMessage('label.freezer.capacity.current')"  style="width:80px" sortable="freezerCapacityCurrent">{{row.freezerCapacityCurrent}}</td>
-                                    <td data-title="getLocalMessage('label.freezer.capacity.required')" style="width:80px" sortable="freezerCapacityRequired">{{row.freezerCapacityRequired}}</td>
-                                    <td data-title="getLocalMessage('label.freezer.capacity.gap')" style="width:80px" sortable="freezerCapacityGap">{{row.freezerCapacityGap}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                </form>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                <tr>
+                    <td>No data to show under selected filters</td>
+                </tr>
+            </table>
+            <div ng-show="data.length > 0">
+                <div client-side-sort-pagination class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) *
+                    tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
                 </div>
+                <table  ng-show="data.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                    <tbody>
+                    <tr ng-repeat="row in data">
+                        <td data-title="'#'" class="number" style="width:10px">{{row.no}}</td>
+                        <td data-title="getLocalMessage('label.site.name')" style="width:100px" sortable="siteName">{{row.siteName}}</td>
+                        <td data-title="getLocalMessage('label.refrigerator.capacity.current')" style="width:80px" sortable="refrigeratorCapacityCurrent">{{row.refrigeratorCapacityCurrent}}</td>
+                        <td data-title="getLocalMessage('label.refrigerator.capacity.required')" style="width:80px" sortable="refrigeratorCapacityRequired">{{row.refrigeratorCapacityRequired}}</td>
+                        <td data-title="getLocalMessage('label.refrigerator.capacity.gap')" style="width:80px" sortable="refrigeratorCapacityGap">{{row.refrigeratorCapacityGap}}</td>
+                        <td data-title="getLocalMessage('label.freezer.capacity.current')"  style="width:80px" sortable="freezerCapacityCurrent">{{row.freezerCapacityCurrent}}</td>
+                        <td data-title="getLocalMessage('label.freezer.capacity.required')" style="width:80px" sortable="freezerCapacityRequired">{{row.freezerCapacityRequired}}</td>
+                        <td data-title="getLocalMessage('label.freezer.capacity.gap')" style="width:80px" sortable="freezerCapacityGap">{{row.freezerCapacityGap}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-
 </div>
