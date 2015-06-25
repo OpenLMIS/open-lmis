@@ -31,7 +31,7 @@ public class ReplacementPlanSummaryQueryBuilder {
                         "LEFT JOIN  " +
                         "(  select facilityid,replacementYearOne,sum(purchaseprice) this_year_cost,  " +
                         "  count(equipment_id) total " +
-                        "  FROM vw_replacement_plan " +
+                        "  FROM vw_replacement_plan_summary " +
                         "  WHERE coalesce(yearofinstallation,0) <= coalesce(this_year,0)    "
         ).append(getPredicates(params)).append(
                 "  GROUP BY facilityid,replacementyearone " +
@@ -39,7 +39,7 @@ public class ReplacementPlanSummaryQueryBuilder {
                         "LEFT JOIN   " +
                         "(select facilityid, replacementYearTwo, " +
                         "  count(equipment_id) total  " +
-                        "  FROM vw_replacement_plan  " +
+                        "  FROM vw_replacement_plan_summary  " +
                         "  WHERE coalesce(yearofinstallation,0) = coalesce(second_year,0)  "
         ).append(getPredicates(params)).append(
 
@@ -47,7 +47,7 @@ public class ReplacementPlanSummaryQueryBuilder {
                         "LEFT JOIN  " +
                         "  (select facilityid, replacementYearThree,  " +
                         "  count(equipment_id) total  " +
-                        "  FROM vw_replacement_plan " +
+                        "  FROM vw_replacement_plan_summary " +
                         "  WHERE coalesce(yearofinstallation,0) = coalesce(third_year,0) "
         ).append(getPredicates(params)).append(
 
@@ -55,7 +55,7 @@ public class ReplacementPlanSummaryQueryBuilder {
                         "LEFT JOIN  " +
                         "   (select facilityid, replacementYearFour, " +
                         "  count(equipment_id) total  " +
-                        "  FROM vw_replacement_plan  " +
+                        "  FROM vw_replacement_plan_summary  " +
                         "  WHERE coalesce(yearofinstallation,0) = coalesce(foUrth_year,0) "
         ).append(getPredicates(params)).append(
 
@@ -63,11 +63,11 @@ public class ReplacementPlanSummaryQueryBuilder {
                         "  LEFT JOIN  " +
                         "   (select facilityid, replacementYearFive,  " +
                         "  count(equipment_id) total " +
-                        "  FROM vw_replacement_plan " +
+                        "  FROM vw_replacement_plan_summary " +
                         "  WHERE coalesce(yearofinstallation,0) = coalesce(fifth_year,0)  "
         ).append(getPredicates(params)).append(
 
-                "  GROUP BY facilityid,replacementYearFive)M ON FACILITIES.ID =M.facilityid  " +
+                "  GROUP BY facilityid,replacementYearFive)M ON FACILITIES.ID = M.facilityid  " +
                         "  where (x.total>0 or y.total>0 or z.total>0 or  l.total>0 or  m.total>0) "
         );
 
