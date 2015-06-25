@@ -14,8 +14,7 @@ function AverageConsumptionReportController($scope, $filter, ReportProductsByPro
     $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
 
     $scope.productFilter = function (option) {
-        return (option.categoryId == $scope.productCategory
-            ||option.id=='0');
+        return (option.categoryId == $scope.productCategory||option.id=='0');
     };
     // end of product filter customizations
 
