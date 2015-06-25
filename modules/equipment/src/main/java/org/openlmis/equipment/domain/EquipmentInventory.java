@@ -53,7 +53,7 @@ public class EquipmentInventory extends BaseModel {
 
   private String formatDate(Date date){
     try {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
       return date == null ? null : simpleDateFormat.format(date);
     }catch(Exception exp){
 

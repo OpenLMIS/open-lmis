@@ -10,27 +10,24 @@
 
 <div>
   <h2>Equipment History</h2>
-
   <div>
-    <table class="table table-full-width">
-      <tr>
-        <td width="80%">
-          <div>
-            <div class="form-row clearfix">
-              <label><span openlmis-message="label.equipment.equipment"></span>: <b>{{equipment.name}}</b></label>
-            </div>
+    <div>
+      <div class="form-row clearfix">
+        <label><span openlmis-message="label.equipment.facility"></span>: <b>{{inventory.facility.name}}</b></label>
+      </div>
 
-            <div class="form-row clearfix">
-              <label><span openlmis-message="label.equipment.model"></span> : <b>{{equipment.model}}</b></label>
-            </div>
+      <div class="form-row clearfix">
+        <label><span openlmis-message="label.equipment.equipment"></span>:
+          <b>{{inventory.equipment.equipmentType.name}}</b></label>
+      </div>
 
-            <div class="form-row clearfix">
-              <label><span openlmis-message="label.equipment.serial"></span>: <b>{{equipment.serialNumber}}</b></label>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </table>
+      <div class="form-row clearfix">
+        <label><span openlmis-message="label.equipment.model"></span> : <b>{{inventory.equipment.model}}</b></label>
+      </div>
+      <div class="form-row clearfix">
+        <label><span openlmis-message="label.equipment.serial"></span>: <b>{{inventory.serialNumber}}</b></label>
+      </div>
+    </div>
     <div>
       <table class="table table-bordered table-scrollable">
         <thead>
@@ -44,6 +41,9 @@
           <td>{{row.dateString}}</td>
           <td><b>{{row.type}}</b> - {{row.reason}}</td>
           <td>{{row.comment}}</td>
+        </tr>
+        <tr ng-show="logs.length == 0">
+          <td colspan="3" openlmis-message="msg.no.records.found"></td>
         </tr>
       </table>
     </div>

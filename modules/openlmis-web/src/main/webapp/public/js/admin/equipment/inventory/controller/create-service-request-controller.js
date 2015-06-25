@@ -8,10 +8,9 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateServiceRequestController($scope, $location, $routeParams, EquipmentInventory, Equipment, SaveMaintenanceRequest, Vendors, messageService) {
+function CreateServiceRequestController($scope, $location, $routeParams, EquipmentInventory, SaveMaintenanceRequest, Vendors, messageService) {
 
   $scope.current = {};
-
   $scope.current.inventoryId = $routeParams.id;
   $scope.current.facilityId = $routeParams.facilityId;
 
@@ -24,10 +23,7 @@ function CreateServiceRequestController($scope, $location, $routeParams, Equipme
   EquipmentInventory.get({
     id: $routeParams.id
   }, function (data) {
-    $scope.equipment = data.inventory;
-    Equipment.get({id: data.inventory.equipmentId}, function (d) {
-      $scope.equipment.name = d.equipment.name;
-    });
+    $scope.inventory = data.inventory;
   });
 
   $scope.cancel = function () {

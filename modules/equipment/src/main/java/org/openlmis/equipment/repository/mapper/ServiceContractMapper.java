@@ -12,7 +12,6 @@ package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.equipment.domain.ServiceContract;
-import org.openlmis.equipment.domain.ServiceType;
 import org.openlmis.equipment.dto.ContractDetail;
 import org.springframework.stereotype.Repository;
 
@@ -48,9 +47,9 @@ public interface ServiceContractMapper {
       " ORDER BY name")
   List<ContractDetail> getServiceTypes(Long id);
 
-  @Select("select id, name, true as isActive from equipments where id in (select equipmentId from equipment_service_contract_equipments where contractId = #{id}) " +
+  @Select("select id, name, true as isActive from equipments where id in (select equipmentTypeId from equipment_service_contract_equipment_types where contractId = #{id}) " +
       " UNION " +
-      " select id, name, false as isActive from equipments where id not in (select equipmentId from equipment_service_contract_equipments where contractId = #{id}) " +
+      " select id, name, false as isActive from equipments where id not in (select equipmentTypeId from equipment_service_contract_equipment_types where contractId = #{id}) " +
       " order by name")
   List<ContractDetail> getEquipments(@Param("id") Long id);
 
@@ -63,7 +62,7 @@ public interface ServiceContractMapper {
   @Select("select * from equipment_service_contracts where vendorId = #{vendorId}")
   List<ServiceContract> getAllForVendor(@Param("vendorId") Long vendorId);
 
-  @Select("SELECT * FROM equipment_service_contracts WHERE id IN (SELECT contractId FROM equipment_service_contract_equipments WHERE equipmentId = #{equipmentId})")
+  @Select("SELECT * FROM equipment_service_contracts WHERE id IN (SELECT contractId FROM equipment_service_contract_equipment_types WHERE equipmentTypeId = #{equipmentId})")
   List<ServiceContract> getAllForEquipment(@Param("equipmentId") Long equipmentId);
 
   @Insert("insert into equipment_service_contracts (vendorId, identifier, startDate, endDate,description, terms, coverage, contractDate, createdBy, createdDate, modifiedBy, modifiedDate) " +
@@ -77,7 +76,7 @@ public interface ServiceContractMapper {
       " WHERE id = #{id}")
   void update(ServiceContract value);
 
-  @Delete("DELETE from equipment_service_contract_equipments where contractId = #{contractId}")
+  @Delete("DELETE from equipment_service_contract_equipment_types where contractId = #{contractId}")
   void deleteEquipments(Long contractId);
 
   @Delete("DELETE from equipment_contract_service_types where contractId = #{contractId}")
@@ -86,7 +85,7 @@ public interface ServiceContractMapper {
   @Delete("DELETE from equipment_service_contract_facilities where contractId = #{contractId}")
   void deleteFacilities(Long contractId);
 
-  @Insert("INSERT INTO equipment_service_contract_equipments ( contractId, equipmentId ) values (#{contractId}, #{equipmentId}) ")
+  @Insert("INSERT INTO equipment_service_contract_equipment_types ( contractId, equipmentTypeId ) values (#{contractId}, #{equipmentId}) ")
   void insertEquipment(@Param("contractId") Long contractId, @Param("equipmentId") Long equipmentId);
 
   @Insert("INSERT INTO equipment_contract_service_types ( contractId, serviceTypeId ) values (#{contractId}, #{serviceTypeId}) ")

@@ -8,14 +8,11 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function LogController($scope, $location, $routeParams, EquipmentInventory, Equipment, EquipmentLogs) {
+function LogController($scope, $location, $routeParams, EquipmentInventory, EquipmentLogs) {
   EquipmentInventory.get({
     id: $routeParams.id
   }, function (data) {
-    $scope.equipment = data.inventory;
-    Equipment.get({id: data.inventory.equipmentId}, function (d) {
-      $scope.equipment.name = d.equipment.name;
-    });
+    $scope.inventory = data.inventory;
   });
 
   EquipmentLogs.get({id: $routeParams.id}, function (data) {
