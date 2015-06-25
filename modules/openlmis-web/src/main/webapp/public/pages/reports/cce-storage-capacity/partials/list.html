@@ -51,20 +51,42 @@
                 </tr>
             </table>
             <div ng-show="data.length > 0">
-                <div client-side-sort-pagination class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) *
-                    tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
+                <div client-side-sort-pagination class="pull-right legend">Page: {{tableParams.page}},
+                    Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }}
+                    to {{ tableParams.page*tableParams.count > tableParams.total ? tableParams.total : tableParams.page*tableParams.count }}
+                    of {{tableParams.total}}
                 </div>
-                <table  ng-show="data.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                <table ng-show="data.length > 0" class="table table-bordered">
+                </table>
+                <table ng-show="data.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th openlmis-message="label.demography"></th>
+                        <th openlmis-message="label.refrigerator.capacity" colspan="3"></th>
+                        <th openlmis-message="label.freezer.capacity" colspan="3"></th>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th openlmis-message="label.site"></th>
+                        <th openlmis-message="label.refrigerator.capacity.current"></th>
+                        <th openlmis-message="label.refrigerator.capacity.required"></th>
+                        <th openlmis-message="label.refrigerator.capacity.gap"></th>
+                        <th openlmis-message="label.freezer.capacity.current"></th>
+                        <th openlmis-message="label.freezer.capacity.required"></th>
+                        <th openlmis-message="label.freezer.capacity.gap"></th>
+                    </tr>
+                    </thead>
                     <tbody>
                     <tr ng-repeat="row in data">
-                        <td data-title="'#'" class="number" style="width:10px">{{row.no}}</td>
-                        <td data-title="getLocalMessage('label.site.name')" style="width:100px" sortable="siteName">{{row.siteName}}</td>
-                        <td data-title="getLocalMessage('label.refrigerator.capacity.current')" style="width:80px" sortable="refrigeratorCapacityCurrent">{{row.refrigeratorCapacityCurrent}}</td>
-                        <td data-title="getLocalMessage('label.refrigerator.capacity.required')" style="width:80px" sortable="refrigeratorCapacityRequired">{{row.refrigeratorCapacityRequired}}</td>
-                        <td data-title="getLocalMessage('label.refrigerator.capacity.gap')" style="width:80px" sortable="refrigeratorCapacityGap">{{row.refrigeratorCapacityGap}}</td>
-                        <td data-title="getLocalMessage('label.freezer.capacity.current')"  style="width:80px" sortable="freezerCapacityCurrent">{{row.freezerCapacityCurrent}}</td>
-                        <td data-title="getLocalMessage('label.freezer.capacity.required')" style="width:80px" sortable="freezerCapacityRequired">{{row.freezerCapacityRequired}}</td>
-                        <td data-title="getLocalMessage('label.freezer.capacity.gap')" style="width:80px" sortable="freezerCapacityGap">{{row.freezerCapacityGap}}</td>
+                        <td class="number">{{row.no}}</td>
+                        <td>{{row.siteName}}</td>
+                        <td class="number">{{row.refrigeratorCapacityCurrent}}</td>
+                        <td class="number">{{row.refrigeratorCapacityRequired}}</td>
+                        <td class="number">{{row.refrigeratorCapacityGap}}</td>
+                        <td class="number">{{row.freezerCapacityCurrent}}</td>
+                        <td class="number">{{row.freezerCapacityRequired}}</td>
+                        <td class="number">{{row.freezerCapacityGap}}</td>
                     </tr>
                     </tbody>
                 </table>
