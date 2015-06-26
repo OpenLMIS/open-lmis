@@ -678,7 +678,14 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
 
 
         scope.filter.product = (isUndefined($routeParams.product) || $routeParams.product === '') ? -1 : $routeParams.product;
-
+          scope.products.push({
+              'name': '-- All Products --',
+              id: -1
+          });
+          scope.products.push({
+              'name': '-- Indicator Products --',
+              id: 0
+          });
         if (attr.required) {
           scope.requiredFilters.product = 'product';
         }
