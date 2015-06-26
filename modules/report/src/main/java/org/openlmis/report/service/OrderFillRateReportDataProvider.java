@@ -60,7 +60,7 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         List<RequisitionGroup> facilityList = this.reportMapper.getFacility(Integer.parseInt(facility));
 
         //to be safe from a repetitive exception when ever facility id not selected
-        if(facilityList!=null && facilityList.size() > 0) {
+        if (facilityList != null && facilityList.size() > 0) {
             percentage.setNameLabel("Facility Name: ");
             percentage.setFacility(this.reportMapper.getFacility(Integer.parseInt(facility)).get(0).getName());
         }
@@ -68,7 +68,7 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         List<Integer> totalProductsReceivedList = reportMapper.getTotalProductsReceived(filterCriteria, this.getUserId());
         List<Integer> totalProductsOrderedList = reportMapper.getTotalProductsOrdered(filterCriteria, this.getUserId());
 
-        if(totalProductsReceivedList.size() > 0 && totalProductsOrderedList.size() > 0) {
+        if (totalProductsReceivedList.size() > 0 && totalProductsOrderedList.size() > 0) {
             String totalProductsReceived = totalProductsReceivedList.get(0).toString();
             String totalProductsOrdered = totalProductsOrderedList.get(0).toString();
 
@@ -97,8 +97,16 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         HashMap<String, String> result = new HashMap<String, String>();
 
         // spit out the summary section on the report.
-        String totalProductsReceived = reportMapper.getTotalProductsReceived(params, this.getUserId()).get(0).toString();
-        String totalProductsOrdered = reportMapper.getTotalProductsOrdered(params, this.getUserId()).get(0).toString();
+        List<Integer> valueProductRecievedIntegerList = null;
+        List<Integer> valueProductOrderedIntegerList = null;
+        valueProductRecievedIntegerList = reportMapper.getTotalProductsReceived(params, this.getUserId());
+        valueProductOrderedIntegerList = reportMapper.getTotalProductsOrdered(params, this.getUserId());
+        String totalProductsReceived = (valueProductRecievedIntegerList == null ||
+                valueProductRecievedIntegerList.size() <= 0 || valueProductRecievedIntegerList.get(0) == null) ? "0" :
+                valueProductRecievedIntegerList.get(0).toString();
+        String totalProductsOrdered = (valueProductOrderedIntegerList == null || valueProductOrderedIntegerList.size() <= 0 || valueProductOrderedIntegerList.get(0) == null
+        ) ? "0" :
+                valueProductOrderedIntegerList.get(0).toString();
         result.put("TOTAL_PRODUCTS_RECEIVED", totalProductsReceived);
         result.put("TOTAL_PRODUCTS_APPROVED", totalProductsOrdered);
 
@@ -123,8 +131,8 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         if (!program.equals("0") && !program.isEmpty() && !program.endsWith("undefined")) {
             header += "Program: " + this.reportMapper.getProgram(Integer.parseInt(program)).get(0).getName();
         }
-        if(!schedule.equals("0") && !schedule.isEmpty() && !schedule.endsWith("undefined")){
-          header += "\nSchedule:" + this.reportMapper.getSchedule(Integer.parseInt(schedule)).get(0).getName();
+        if (!schedule.equals("0") && !schedule.isEmpty() && !schedule.endsWith("undefined")) {
+            header += "\nSchedule:" + this.reportMapper.getSchedule(Integer.parseInt(schedule)).get(0).getName();
         }
         ProcessingPeriod periodObject = this.reportMapper.getPeriodId(Integer.parseInt(period));
 
@@ -140,8 +148,11 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
             header += "\nFacility Type : All Facility Types";
         }
 
-        if (facility != "" && !facility.endsWith("undefined")) {
-            header += "\nFacility Name: " + this.reportMapper.getFacility(Integer.parseInt(facility)).get(0).getName();
+        if (!facility.isEmpty() && !facility.endsWith("undefined")) {
+            List<RequisitionGroup> requisitionGroupList = null;
+            requisitionGroupList = this.reportMapper.getFacility(Integer.parseInt(facility));
+            if (requisitionGroupList != null && requisitionGroupList.size() > 0)
+                header += "\nFacility Name: " + this.reportMapper.getFacility(Integer.parseInt(facility)).get(0).getName();
         }
 
         result.put("REPORT_FILTER_PARAM_VALUES", header.toString());
