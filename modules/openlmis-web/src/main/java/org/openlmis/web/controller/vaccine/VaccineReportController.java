@@ -120,14 +120,19 @@ public class VaccineReportController extends BaseController {
     return OpenLmisResponse.response("report", report);
   }
 
-  @RequestMapping(value = "diseaseSurveillance")
+  @RequestMapping(value = "disease-surveillance")
   public ResponseEntity<OpenLmisResponse> diseaseSurveillance(){
     return OpenLmisResponse.response("diseaseSurveillance", service.getDiseaseSurveillance());
   }
 
-  @RequestMapping(value = "coldChain")
+  @RequestMapping(value = "cold-chain")
   public ResponseEntity<OpenLmisResponse> coldChain(){
     return OpenLmisResponse.response("coldChain", service.getColdChain());
+  }
+
+  @RequestMapping(value = "adverse-effect")
+  public ResponseEntity<OpenLmisResponse> getAdverseEffectReport(){
+    return OpenLmisResponse.response("adverseEffect", service.getAdverseEffectReport());
   }
 
 }

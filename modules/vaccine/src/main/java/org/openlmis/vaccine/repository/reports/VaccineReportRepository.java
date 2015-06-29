@@ -10,6 +10,7 @@
 
 package org.openlmis.vaccine.repository.reports;
 
+import org.openlmis.vaccine.domain.reports.AdverseEffectLineItem;
 import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
 import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
@@ -77,10 +78,14 @@ public class VaccineReportRepository {
   }
 
   public List<DiseaseLineItem> getDiseaseSurveillance(){
-    return mapper.getDiseaseSurveillane();
+    return mapper.getDiseaseSurveillance();
   }
 
   public List<ColdChainLineItem> getColdChain(){
     return mapper.getColdChain();
+  }
+
+  public List<AdverseEffectLineItem> getAdverseEffectReport(){
+    return mapper.getAdverseEffectReport();
   }
 }

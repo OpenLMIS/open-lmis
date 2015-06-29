@@ -1201,11 +1201,14 @@ services.factory('PriceScheduleCategories', function ($resource) {
     return $resource('/priceScheduleCategories.json', {}, {});
 });
 
-services.factory('DiseaseSurveillance', function ($resource){
-    return $resource('/vaccine/report/diseaseSurveillance.json', {}, {});
+services.factory('DiseaseSurveillanceReport', function ($resource){
+    return $resource('/vaccine/report/disease-surveillance.json', {}, {});
 });
 
+services.factory('ColdChainReport', function ($resource){
+    return $resource('/vaccine/report/cold-chain.json', {}, {});
+});
 
-services.factory('ColdChain', function ($resource){
-    return $resource('/vaccine/report/coldChain.json', {}, {});
+services.factory('AdverseEffectReport', function ($resource){
+    return $resource('/vaccine/report/adverse-effect.json', {}, {});
 });

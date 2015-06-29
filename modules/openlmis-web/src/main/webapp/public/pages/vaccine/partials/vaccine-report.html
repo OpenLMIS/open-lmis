@@ -1089,13 +1089,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                    <tr ng-repeat="ae in adverseEffect">
+                                        <td>{{ae.productName}}</td>
+                                        <td>{{ae.cases}}</td>
+                                        <td>{{ae.batch}}</td>
+                                        <td>{{ae.manufacturer}}</td>
+                                        <td>{{ae.expiry}}</td>
+                                        <td>{{ae.isInvestigated}}</td>
                                     </tr>
 
                                     </tbody>

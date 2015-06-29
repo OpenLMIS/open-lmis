@@ -20,6 +20,7 @@ import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
+import org.openlmis.vaccine.domain.reports.AdverseEffectLineItem;
 import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
 import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
@@ -191,5 +192,9 @@ public class VaccineReportService {
 
   public List<ColdChainLineItem> getColdChain(){
     return repository.getColdChain();
+  }
+
+  public List<AdverseEffectLineItem> getAdverseEffectReport(){
+    return repository.getAdverseEffectReport();
   }
 }

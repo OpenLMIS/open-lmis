@@ -13,6 +13,7 @@ package org.openlmis.vaccine.repository.mapper.reports;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.vaccine.domain.reports.AdverseEffectLineItem;
 import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
 import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
@@ -103,9 +104,14 @@ public interface VaccineReportMapper {
 
 
   @Select("select cases, death, cum_cases as cumulative from vw_vaccine_disease_surveillance where cases >= 0")
-  List<DiseaseLineItem> getDiseaseSurveillane();
+  List<DiseaseLineItem> getDiseaseSurveillance();
 
-  @Select("\n" +
-          "select equipment_type_name as equipmentName, model, minTemp, maxTemp, minEpisodeTemp, maxEpisodeTemp from vw_vaccine_cold_chain")
+  @Select("select equipment_type_name as equipmentName, model, minTemp, maxTemp, minEpisodeTemp, maxEpisodeTemp from vw_vaccine_cold_chain")
   List<ColdChainLineItem> getColdChain();
+
+  @Select("select product_name as productName, aefi_expiry_date as expiry, aefi_case as cases, aefi_batch as batch, 'missing'::text as manufacturer, false as isInvestigated from vw_vaccine_iefi\n")
+  List<AdverseEffectLineItem> getAdverseEffectReport();
+
+
+
 }
