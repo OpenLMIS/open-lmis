@@ -107,6 +107,10 @@ services.factory('ReportFacilityTypesByProgram', function ($resource) {
   return $resource('/reports/facilityTypesForProgram.json', {}, {});
 });
 
+services.factory('ReportFacilityLevels', function ($resource) {
+    return $resource('/reports/facility-levels.json', {}, {});
+});
+
 services.factory('ReportRegimenCategories', function ($resource) {
     return $resource('/reports/regimenCategories.json', {}, {});
 });

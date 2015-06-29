@@ -20,11 +20,10 @@ import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.repository.DonorRepository;
-import org.openlmis.equipment.repository.EquipmentRepository;
-import org.openlmis.equipment.repository.mapper.EquipmentMapper;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.*;
 import org.openlmis.report.model.dto.*;
@@ -43,10 +42,13 @@ import org.openlmis.report.model.params.UserSummaryParams;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.model.report.TimelinessReport;
 import org.openlmis.report.util.Constants;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static org.openlmis.core.domain.RightName.MANAGE_EQUIPMENT_INVENTORY;
 
 @Service
 @NoArgsConstructor
@@ -137,6 +139,9 @@ public class ReportLookupService {
     private RegimenRepository regimenRepository;
     private UserSummaryParams userSummaryParam = null;
 
+    @Autowired
+    private FacilityService facilityService;
+
     public List<Product> getAllProducts() {
         return productMapper.getAll();
     }
@@ -211,6 +216,15 @@ public class ReportLookupService {
 
     public List<FacilityType> getFacilityTypesForProgram(Long programId) {
         return facilityTypeMapper.getForProgram(programId);
+    }
+
+    public List<FacilityType> getFacilityLevels(Long programId, Long userId) {
+        List<org.openlmis.core.domain.Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY);
+        facilities.add(facilityService.getHomeFacility(userId));
+
+        String facilityIdString = StringHelper.getStringFromListIds(facilities);
+
+        return facilityTypeMapper.getLevels(programId, facilityIdString);
     }
 
 

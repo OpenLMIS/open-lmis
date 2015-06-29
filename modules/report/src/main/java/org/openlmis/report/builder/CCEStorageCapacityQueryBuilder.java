@@ -23,6 +23,7 @@ public class CCEStorageCapacityQueryBuilder {
         JOIN("facility_types ON facility_types.id = facilities.typeid");
         JOIN("equipment_inventories ON equipment_inventories.facilityid = facilities.id");
         JOIN("equipments ON equipments.id = equipment_inventories.equipmentid");
+        JOIN("equipment_types ON equipment_types.id = equipments.equipmenttypeid AND equipment_types.iscoldchain = TRUE");
         JOIN("equipment_cold_chain_equipments ON equipment_cold_chain_equipments.equipmentid = equipments.id");
         writePredicates(filter);
         GROUP_BY("facilities.id");
@@ -31,17 +32,19 @@ public class CCEStorageCapacityQueryBuilder {
 
     private static void writePredicates(CCEStorageCapacityReportParam filter) {
         String facilityLevel = filter.getFacilityLevel();
-        if (!facilityLevel.isEmpty()) {
-            if (facilityLevel.equalsIgnoreCase("cvs")
-                || facilityLevel.equalsIgnoreCase("rvs")
-                || facilityLevel.equalsIgnoreCase("dvs")) {
-                WHERE("facility_types.code = #{filterCriteria.facilityLevel}");
-            } else {
-                WHERE("facility_types.code NOT IN ('cvs','rvs','dvs')");
-            }
+        if (facilityLevel.isEmpty()
+            || facilityLevel.equalsIgnoreCase("cvs")
+            || facilityLevel.equalsIgnoreCase("rvs")
+            || facilityLevel.equalsIgnoreCase("dvs")) {
+            WHERE("facility_types.code = #{filterCriteria.facilityLevel}");
+        } else {
+            WHERE("facility_types.code NOT IN ('cvs','rvs','dvs')");
         }
+
         if (!filter.getFacilityIds().isEmpty()) {
             WHERE("equipment_inventories.facilityid = ANY (#{filterCriteria.facilityIds}::INT[])");
         }
+
+        WHERE("equipment_inventories.programid = #{filterCriteria.programId}");
     }
 }

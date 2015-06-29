@@ -151,42 +151,43 @@ app.directive('facilityTypeFilter', ['ReportFacilityTypes', 'ReportFacilityTypes
     };
   }]);
 
-app.directive('facilityLevelFilter', [function () {
+app.directive('facilityLevelFilter', ['ReportFacilityLevels', '$routeParams',
+  function (ReportFacilityLevels, $routeParams) {
 
-    //var onCascadedPVarsChanged = function ($scope) {
-    //
-    //  if ($scope.filter.program !== undefined) {
-    //    ReportFacilityLevelsByProgram.get({program: $scope.filter.program}, function (data) {
-    //      $scope.facilityLevels = data.facilityTypes;
-    //    });
-    //  } else {
-    //    ReportFacilityLevels.get(function (data) {
-    //      $scope.facilityLevels = data.facilityTypes;
-    //    });
-    //  }
-    //};
+    var onCascadedPVarsChanged = function ($scope) {
+      if ($scope.filter.program !== undefined || $scope.filter.program !== '') {
+        ReportFacilityLevels.get({program: $scope.filter.program}, function (data) {
+          $scope.facilityLevels = [];
+          if (data.facilityLevels.length > 0) {
+            $scope.facilityLevels.unshift({'id': 'hf','name': 'Health Facilities (HF)'});
+            _.each(data.facilityLevels, function (item) {
+              if (item.code === 'cvs'
+                  || item.code === 'rvs'
+                  || item.code === 'dvs') {
+                $scope.facilityLevels.unshift({'id': item.code, 'name': item.name + ' (' + item.code.toUpperCase() + ')'});
+              }
+            });
+            $scope.facilityLevels.unshift({'id': '', 'name': '-- Select Facility Level --'});
+          }
+        });
+      }
+    };
 
     return {
       restrict: 'E',
       link: function (scope, elm, attr) {
 
-        scope.facilityLevels = [
-          {'id': '', 'name': '-- Select Facility Level --'},
-          {'id': 'cvs','name': 'Central Vaccine Store (CVS)'},
-          {'id': 'rvs','name': 'Regional Vaccine Stores (RVS)'},
-          {'id': 'dvs','name': 'District Vaccine Stores (DVS)'},
-          {'id': 'hf','name': 'Health Facilities (HF)'}
-        ];
+        scope.facilityLevels = [];
 
         if (attr.required) {
           scope.requiredFilters.facilityLevel = 'facilityLevel';
         }
 
-        //scope.filter.facilityLevel = (isUndefined($routeParams.facilityLevel) || $routeParams.facilityLevel === '') ? '' : $routeParams.facilityLevel;
-        //
-        //scope.$watch('filter.program', function (value) {
-        //  onCascadedPVarsChanged(scope, value);
-        //});
+        scope.filter.facilityLevel = (isUndefined($routeParams.facilityLevel) || $routeParams.facilityLevel === '') ? '' : $routeParams.facilityLevel;
+
+        scope.$watch('filter.program', function () {
+          onCascadedPVarsChanged(scope);
+        });
       },
       templateUrl: 'filter-facility-level-template'
     };
