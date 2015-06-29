@@ -161,9 +161,9 @@ app.directive('facilityLevelFilter', ['ReportFacilityLevels', '$routeParams',
           if (data.facilityLevels.length > 0) {
             $scope.facilityLevels.unshift({'id': 'hf','name': 'Health Facilities (HF)'});
             _.each(data.facilityLevels, function (item) {
-              if (item.code === 'cvs'
-                  || item.code === 'rvs'
-                  || item.code === 'dvs') {
+              if (item.code === 'cvs' ||
+                  item.code === 'rvs' ||
+                  item.code === 'dvs') {
                 $scope.facilityLevels.unshift({'id': item.code,
                   'name': item.name + ' (' + item.code.toUpperCase() + ')',
                   'display_order': item.displayOrder});
