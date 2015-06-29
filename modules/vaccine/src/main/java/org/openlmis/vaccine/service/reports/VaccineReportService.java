@@ -21,6 +21,7 @@ import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
+import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.VitaminSupplementationAgeGroupRepository;
@@ -182,5 +183,13 @@ public class VaccineReportService {
   public void submit(VaccineReport report) {
     report.setStatus(RequestStatus.SUBMITTED.toString());
     save(report);
+  }
+
+  public List<DiseaseLineItem> getDiseaseSurveillance(){
+    return repository.getDiseaseSurveillance();
+  }
+
+  public List<ColdChainLineItem> getColdChain(){
+    return repository.getColdChain();
   }
 }

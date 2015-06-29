@@ -10,6 +10,8 @@
 
 package org.openlmis.vaccine.repository.reports;
 
+import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
+import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportMapper;
@@ -72,5 +74,13 @@ public class VaccineReportRepository {
 
   public List<ReportStatusDTO> getReportedPeriodsForFacility(Long facilityId, Long programId) {
     return mapper.getReportedPeriodsForFacility(facilityId, programId);
+  }
+
+  public List<DiseaseLineItem> getDiseaseSurveillance(){
+    return mapper.getDiseaseSurveillane();
+  }
+
+  public List<ColdChainLineItem> getColdChain(){
+    return mapper.getColdChain();
   }
 }

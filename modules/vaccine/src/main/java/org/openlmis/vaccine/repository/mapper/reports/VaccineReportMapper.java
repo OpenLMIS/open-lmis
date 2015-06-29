@@ -13,6 +13,8 @@ package org.openlmis.vaccine.repository.mapper.reports;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
+import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.springframework.stereotype.Repository;
@@ -98,4 +100,12 @@ public interface VaccineReportMapper {
     " where r.facilityId = #{facilityId} and r.programId = #{programId}" +
     " order by p.startDate desc")
   List<ReportStatusDTO> getReportedPeriodsForFacility(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+
+  @Select("select cases, death, cum_cases as cumulative from vw_vaccine_disease_surveillance where cases >= 0")
+  List<DiseaseLineItem> getDiseaseSurveillane();
+
+  @Select("\n" +
+          "select equipment_type_name as equipmentName, model, minTemp, maxTemp, minEpisodeTemp, maxEpisodeTemp from vw_vaccine_cold_chain")
+  List<ColdChainLineItem> getColdChain();
 }

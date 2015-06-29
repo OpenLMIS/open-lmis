@@ -163,30 +163,17 @@
                                     <tr>
                                         <th></th>
                                         <th>Cases this month</th>
-                                        <th>Cases commmulative</th>
+                                        <th>Cases cumulative</th>
                                         <th>Death this month</th>
                                     </tr>
                                     </thead>
 
                                     <tbody>
-                                    <tr>
-                                        <td>Fever and rash illness</td>
-                                        <td></td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>AFP Cases</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Neonatal Tetanus</td>
-                                        <td></td>
-                                        <td>-</td>
-                                        <td>-</td>
-
+                                    <tr ng-repeat="ds in diseaseSurveillance">
+                                        <td>disease 1</td>
+                                        <td class="number">{{ds == null ? 'nul' : ds.cases}}</td>
+                                        <td class="number">{{ds == null ? 'nul' :ds.cumulative}}</td>
+                                        <td class="number">{{ds == null ? 'nul' :ds.death}}</td>
                                     </tr>
 
                                     </tbody>
@@ -1064,14 +1051,14 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                    <tr ng-repeat="cc in coldChain">
+                                        <td>{{cc.equipmentName}}</td>
+                                        <td>{{cc.model}}</td>
+                                        <td>{{cc.model}}</td>
+                                        <td>{{cc.minTemp}}</td>
+                                        <td>{{cc.maxTemp}}</td>
+                                        <td>{{cc.minEmpisodeTemp}}</td>
+                                        <td>{{cc.maxEmpisodeTemp}}</td>
                                     </tr>
 
                                     </tbody>

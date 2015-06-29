@@ -1200,3 +1200,12 @@ services.factory('CustomReportValue', function ($resource) {
 services.factory('PriceScheduleCategories', function ($resource) {
     return $resource('/priceScheduleCategories.json', {}, {});
 });
+
+services.factory('DiseaseSurveillance', function ($resource){
+    return $resource('/vaccine/report/diseaseSurveillance.json', {}, {});
+});
+
+
+services.factory('ColdChain', function ($resource){
+    return $resource('/vaccine/report/coldChain.json', {}, {});
+});
