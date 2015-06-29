@@ -68,7 +68,7 @@
         <td>{{eq.model}}</td>
         <td>{{eq.energyType.name}}</td>
         <td>{{eq.equipmentType.code}}</td>
-        <td><a openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)"></a></td>
+        <td><a openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)" ng-hide="eq.inventoryCount > 0"></a></td>
       </tr>
       </tbody>
     </table>
@@ -106,7 +106,7 @@
           <span class="fadeout clearfix" ng-show="eq.showSuccess == true">Status Saved</span>
         </td>
         <td>{{eq.pqsCode}}</td>
-        <td><a  openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)"></a></td>
+        <td><a openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)" ng-hide="eq.inventoryCount > 0"></a></td>
       </tr>
       </tbody>
     </table>

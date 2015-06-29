@@ -36,7 +36,13 @@ public interface EquipmentMapper {
   })
   List<Equipment> getAll();
 
-    @Select("SELECT * from equipments where equipmentTypeId = #{equipmentTypeId} order by id DESC")
+    @Select("SELECT equipments.*" +
+        "   , COUNT(equipment_inventories.id) AS inventorycount" +
+        " FROM equipments" +
+        "   LEFT JOIN equipment_inventories ON equipment_inventories.equipmentid = equipments.id" +
+        " WHERE equipmentTypeId = #{equipmentTypeId}" +
+        " GROUP BY equipments.id" +
+        " ORDER BY id DESC")
     @Results({
             @Result(
                     property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
