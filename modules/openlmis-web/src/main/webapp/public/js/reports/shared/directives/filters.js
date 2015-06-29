@@ -164,10 +164,12 @@ app.directive('facilityLevelFilter', ['ReportFacilityLevels', '$routeParams',
               if (item.code === 'cvs'
                   || item.code === 'rvs'
                   || item.code === 'dvs') {
-                $scope.facilityLevels.unshift({'id': item.code, 'name': item.name + ' (' + item.code.toUpperCase() + ')'});
+                $scope.facilityLevels.unshift({'id': item.code,
+                  'name': item.name + ' (' + item.code.toUpperCase() + ')',
+                  'display_order': item.displayOrder});
               }
             });
-            $scope.facilityLevels.unshift({'id': '', 'name': '-- Select Facility Level --'});
+            $scope.facilityLevels.unshift({'id': '', 'name': '-- Select Facility Level --', 'display_order': 0});
           }
         });
       }

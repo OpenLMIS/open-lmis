@@ -47,6 +47,7 @@ public interface FacilityTypeReportMapper {
 
   @Select("SELECT DISTINCT facility_types.code" +
           ", facility_types.name" +
+          ", facility_types.displayorder" +
           " FROM programs_supported" +
           "   JOIN facilities ON facilities.id = programs_supported.facilityid" +
           "   JOIN facility_types ON facility_types.id = facilities.typeid" +

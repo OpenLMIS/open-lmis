@@ -57,7 +57,7 @@
         <label class="labels" openlmis-message="label.facility.level"><span ng-show="requiredFilters.facilityLevel" class="label-required">*</span></label>
         <div>
             <select ui-select2 class="input-large" ng-model="filter.facilityLevel" ng-change="filterChanged()">
-                <option ng-repeat="level in facilityLevels" ng-selected="filter.facilityLevel == level.id" value="{{ level.id }}">{{level.name}}</option>
+                <option ng-repeat="level in facilityLevels | orderBy: 'display_order'" ng-selected="filter.facilityLevel == level.id" value="{{ level.id }}">{{level.name}}</option>
             </select>
         </div>
     </div>
