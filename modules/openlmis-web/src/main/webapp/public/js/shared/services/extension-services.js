@@ -148,6 +148,11 @@ services.factory('GetFacilityCompleteList',function($resource){
   return $resource('/reports/allFacilities.json',{},{});
 });
 
+
+services.factory('ColdChainEquipmentService',function($resource){
+    return $resource('/reports/reportdata/coldChainEquipment.json',{},{});
+});
+
 services.factory('FacilityList', function ($resource) {
     return $resource('/reports/reportdata/facilitylist.json', {}, {});
 });
