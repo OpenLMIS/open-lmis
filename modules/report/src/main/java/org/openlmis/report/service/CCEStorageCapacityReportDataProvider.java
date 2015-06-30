@@ -50,7 +50,7 @@ public class CCEStorageCapacityReportDataProvider extends ReportDataProvider {
 
     CCEStorageCapacityReportParam param = new CCEStorageCapacityReportParam();
 
-    Long programId = StringHelper.isBlank(filterCriteria, "program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]); // TODO: fix program id
+    Long programId = StringHelper.isBlank(filterCriteria, "program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]);
     param.setProgramId(programId);
     param.setFacilityLevel(filterCriteria.get("facilityLevel")[0]);
 
