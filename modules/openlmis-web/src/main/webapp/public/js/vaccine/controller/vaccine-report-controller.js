@@ -39,22 +39,3 @@ function VaccineReportPOCReportController($scope, GeoZoneFacilityTrees, DiseaseS
     });
 
 }
-
-function expandCollapseToggle(element) {
-    $(element).parents('.accordion-section').siblings('.accordion-section').each(function () {
-        $(this).find('.accordion-body').slideUp();
-        $(this).find('.accordion-heading b').text('+');
-    });
-    $(element).siblings('.accordion-body').stop().slideToggle(function () {
-        if ($(element).siblings('.accordion-body').is(':visible')) {
-            $(element).find('b').text('-');
-        } else {
-            $(element).find('b').text('+');
-        }
-    });
-    var offset = $(element).offset();
-    var offsetTop = offset ? offset.top : undefined;
-    $('body, html').animate({
-        scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
-    });
-}

@@ -10,13 +10,11 @@
 
 package org.openlmis.web.controller.vaccine;
 
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RightName;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
-import org.openlmis.vaccine.RequestStatus;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
 import org.openlmis.web.controller.BaseController;
