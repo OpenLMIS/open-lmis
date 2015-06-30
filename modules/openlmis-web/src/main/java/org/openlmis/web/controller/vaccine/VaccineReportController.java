@@ -10,13 +10,11 @@
 
 package org.openlmis.web.controller.vaccine;
 
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RightName;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
-import org.openlmis.vaccine.RequestStatus;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
 import org.openlmis.web.controller.BaseController;
@@ -118,6 +116,21 @@ public class VaccineReportController extends BaseController {
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
     service.submit(report);
     return OpenLmisResponse.response("report", report);
+  }
+
+  @RequestMapping(value = "disease-surveillance")
+  public ResponseEntity<OpenLmisResponse> diseaseSurveillance(){
+    return OpenLmisResponse.response("diseaseSurveillance", service.getDiseaseSurveillance());
+  }
+
+  @RequestMapping(value = "cold-chain")
+  public ResponseEntity<OpenLmisResponse> coldChain(){
+    return OpenLmisResponse.response("coldChain", service.getColdChain());
+  }
+
+  @RequestMapping(value = "adverse-effect")
+  public ResponseEntity<OpenLmisResponse> getAdverseEffectReport(){
+    return OpenLmisResponse.response("adverseEffect", service.getAdverseEffectReport());
   }
 
 }

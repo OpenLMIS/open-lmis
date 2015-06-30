@@ -90,6 +90,13 @@
 </script>
 <h2><span>Monthly Vaccination Report </span><span style="margin-left: 15px;">Month : mm &nbsp; &nbsp; Year: YYYY</span></h2>
 <div id="vaccine-report" class="vaccine-report app-form">
+
+    <div class="container-fluid">
+        <div class="pull-right control-accordion">
+            <a id="expandAll" href="javascript:void(0);" onclick="accordion.expandCollapse('expand')" openlmis-message="label.expand.all">Expand all</a> /
+            <a id="collapseAll" href="javascript:void(0);" onclick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all">Collapse all</a>
+        </div>
+    </div>
     <label for="facility">Facility</label>
     <select id="facility" class="input-large"  ng-change="getDemographicData();" ng-model="facilityId">
         <option selected="selected" value="{{facilities.id}}" ng-model="facilityId">-- National --</option>
@@ -112,7 +119,7 @@
                     <div class="span6">
 
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);">Target Population </a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
@@ -154,7 +161,7 @@
                     </div>
                     <div class="span6">
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);">Disease surveillance </a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
@@ -163,30 +170,17 @@
                                     <tr>
                                         <th></th>
                                         <th>Cases this month</th>
-                                        <th>Cases commmulative</th>
+                                        <th>Cases cumulative</th>
                                         <th>Death this month</th>
                                     </tr>
                                     </thead>
 
                                     <tbody>
-                                    <tr>
-                                        <td>Fever and rash illness</td>
-                                        <td></td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>AFP Cases</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Neonatal Tetanus</td>
-                                        <td></td>
-                                        <td>-</td>
-                                        <td>-</td>
-
+                                    <tr ng-repeat="ds in diseaseSurveillance">
+                                        <td>disease 1</td>
+                                        <td class="number">{{ds == null ? 'nul' : ds.cases}}</td>
+                                        <td class="number">{{ds == null ? 'nul' :ds.cumulative}}</td>
+                                        <td class="number">{{ds == null ? 'nul' :ds.death}}</td>
                                     </tr>
 
                                     </tbody>
@@ -201,7 +195,7 @@
                     <div class="span12">
 
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);">Vaccination</a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
@@ -668,7 +662,7 @@
                 <div class="row-fluid">
                     <div class="span6">
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);">Immunization Session </a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
@@ -694,7 +688,7 @@
                     </div>
                     <div class="span6">
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);">Other Immunization Activities </a></span>
                             </div>
                             <div class="accordion-body" >
@@ -708,7 +702,7 @@
                     <div class="span6">
 
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);">Vitamin A Supplementation</a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
@@ -750,7 +744,7 @@
                     <div class="span12">
 
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);">Vaccines, Vaccination, VitA</a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
@@ -920,7 +914,7 @@
                     <div class="span6">
 
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);"> Syringes and safety boxes</a></span>
                             </div>
                             <div style="background-color: #ffffff" class="accordion-body prog-role-grid">
@@ -988,7 +982,7 @@
                     <div class="span6">
 
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);">Health Facility Vitamin A stock</a></span>
                             </div>
                             <div style="background-color: #ffffff" class="accordion-body prog-role-grid">
@@ -1038,7 +1032,7 @@
                     <div class="span6">
 
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);">Refrigerator temperature monitoring</a></span>
                             </div>
                             <div style="background-color: #ffffff" class="accordion-body prog-role-grid">
@@ -1064,14 +1058,14 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                    <tr ng-repeat="cc in coldChain">
+                                        <td>{{cc.equipmentName}}</td>
+                                        <td>{{cc.model}}</td>
+                                        <td>{{cc.model}}</td>
+                                        <td>{{cc.minTemp}}</td>
+                                        <td>{{cc.maxTemp}}</td>
+                                        <td>{{cc.minEmpisodeTemp}}</td>
+                                        <td>{{cc.maxEmpisodeTemp}}</td>
                                     </tr>
 
                                     </tbody>
@@ -1082,7 +1076,7 @@
                     <div class="span6">
 
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);">AEFI reporting</a></span>
                             </div>
                             <div style="background-color: #ffffff" class="accordion-body prog-role-grid">
@@ -1102,13 +1096,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                    <tr ng-repeat="ae in adverseEffect">
+                                        <td>{{ae.productName}}</td>
+                                        <td>{{ae.cases}}</td>
+                                        <td>{{ae.batch}}</td>
+                                        <td>{{ae.manufacturer}}</td>
+                                        <td>{{ae.expiry}}</td>
+                                        <td>{{ae.isInvestigated}}</td>
                                     </tr>
 
                                     </tbody>
@@ -1123,7 +1117,7 @@
                     <div class="span12">
 
                         <div class="accordion-section">
-                            <div class="accordion-heading" onClick="expandCollapseToggle(this)">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);">Submission</a></span>
                             </div>
                             <div  class="accordion-body prog-role-grid">
@@ -1154,3 +1148,8 @@
     </div>
 
 </div>
+<script type="text/javascript">
+
+    accordion.expandCollapse('expand');
+
+</script>
