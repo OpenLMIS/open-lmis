@@ -112,6 +112,13 @@ public class ReportLookupController extends BaseController {
     return OpenLmisResponse.response( "facilityTypes", this.reportLookupService.getFacilityTypesForProgram(programId)) ;
   }
 
+  @RequestMapping(value="/facility-levels", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getFacilityLevels(@RequestParam("program") Long programId,
+                                                            HttpServletRequest request){
+    return OpenLmisResponse.response( "facilityLevels", this.reportLookupService.getFacilityLevels(programId,
+        loggedInUserId(request))) ;
+  }
+
   @RequestMapping(value="/regimenCategories", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getAllRegimenCategory(){
       return OpenLmisResponse.response( "regimenCategories", this.reportLookupService.getAllRegimenCategory() ) ;

@@ -107,6 +107,10 @@ services.factory('ReportFacilityTypesByProgram', function ($resource) {
   return $resource('/reports/facilityTypesForProgram.json', {}, {});
 });
 
+services.factory('ReportFacilityLevels', function ($resource) {
+    return $resource('/reports/facility-levels.json', {}, {});
+});
+
 services.factory('ReportRegimenCategories', function ($resource) {
     return $resource('/reports/regimenCategories.json', {}, {});
 });
@@ -573,6 +577,9 @@ services.factory('LabEquipmentListReport', function ($resource) {
     return $resource('/reports/reportdata/labEquipmentList.json', {}, {});
 });
 
+services.factory('CCEStorageCapacityReport', function ($resource) {
+    return $resource('/reports/reportdata/cceStorageCapacity.json', {}, {});
+});
 
 services.factory("PipelineExportReport", function($resource){
     return $resource('/reports/reportdata/pipelineExport.json', {}, {});
