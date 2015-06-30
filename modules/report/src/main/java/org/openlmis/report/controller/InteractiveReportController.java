@@ -526,4 +526,19 @@ public class InteractiveReportController extends BaseController {
                 (List<TimelinessReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, timelinessReportList);
     }
+
+
+    @RequestMapping(value = "/reportdata/coldChainEquipment", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_COLD_CHAIN_EQUIPMENT_LIST_REPORT')")
+    public Pages getColdChainEquipment(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                   @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                   HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("cold_chain_equipment");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<CCEInventoryReportDatum> reportData =
+                (List<CCEInventoryReportDatum>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        return new Pages(page, max, reportData);
+    }
 }
