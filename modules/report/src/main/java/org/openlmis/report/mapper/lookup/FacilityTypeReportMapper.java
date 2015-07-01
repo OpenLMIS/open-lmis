@@ -45,6 +45,17 @@ public interface FacilityTypeReportMapper {
           " order by name")
   List<FacilityType> getForProgram(@Param("programId") Long programId);
 
+  @Select("SELECT DISTINCT facility_types.code" +
+          ", facility_types.name" +
+          ", facility_types.displayorder" +
+          " FROM programs_supported" +
+          "   JOIN facilities ON facilities.id = programs_supported.facilityid" +
+          "   JOIN facility_types ON facility_types.id = facilities.typeid" +
+          " WHERE programs_supported.programid = #{programId}" +
+          "   AND programs_supported.active = TRUE" +
+          "   AND facilities.id = ANY (#{facilityIds}::INT[])")
+  List<FacilityType> getLevels(@Param("programId") Long programId, @Param("facilityIds")String facilityIds);
+
   @Select("SELECT id, name " +
       "   FROM " +
       "       facility_types where id = #{id}")

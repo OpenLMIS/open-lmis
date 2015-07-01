@@ -107,6 +107,10 @@ services.factory('ReportFacilityTypesByProgram', function ($resource) {
   return $resource('/reports/facilityTypesForProgram.json', {}, {});
 });
 
+services.factory('ReportFacilityLevels', function ($resource) {
+    return $resource('/reports/facility-levels.json', {}, {});
+});
+
 services.factory('ReportRegimenCategories', function ($resource) {
     return $resource('/reports/regimenCategories.json', {}, {});
 });
@@ -142,6 +146,11 @@ services.factory('ReportGeographicLevels',function ($resource){
 //deprecated: use "AllFacilities" service instead
 services.factory('GetFacilityCompleteList',function($resource){
   return $resource('/reports/allFacilities.json',{},{});
+});
+
+
+services.factory('ColdChainEquipmentService',function($resource){
+    return $resource('/reports/reportdata/coldChainEquipment.json',{},{});
 });
 
 services.factory('FacilityList', function ($resource) {
@@ -573,6 +582,9 @@ services.factory('LabEquipmentListReport', function ($resource) {
     return $resource('/reports/reportdata/labEquipmentList.json', {}, {});
 });
 
+services.factory('CCEStorageCapacityReport', function ($resource) {
+    return $resource('/reports/reportdata/cceStorageCapacity.json', {}, {});
+});
 
 services.factory("PipelineExportReport", function($resource){
     return $resource('/reports/reportdata/pipelineExport.json', {}, {});
