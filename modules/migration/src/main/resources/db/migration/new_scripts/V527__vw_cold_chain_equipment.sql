@@ -2,11 +2,13 @@
 /* 
    This view is intended to return all information required by a Cold Chain Equipment Inventory Report.
 
-   Depeendency: fn_get_geozonetree_names.
+   Dependency: fn_get_geozonetree_names.
 */
 
 
+--TODO: Reimplement this, sans LATERAL in order to support version 9.2 of postgres.
 
+/*
 CREATE OR REPLACE VIEW vw_cold_chain_equipment AS 
 
 SELECT
@@ -54,7 +56,7 @@ LEFT OUTER JOIN LATERAL
 ON true;
 
 
-
 ALTER TABLE vw_cold_chain_equipment
   OWNER TO postgres;
- 
+
+*/ 
