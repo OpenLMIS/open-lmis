@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var vaccine = angular.module('vaccine', ['openlmis', 'ngTable','ui.bootstrap','nsPopover']).config(['$routeProvider', function ($routeProvider) {
+angular.module('vaccine', ['openlmis', 'ngTable','angularCombine','ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
         when('/vaccine-report', {controller: VaccineReportPOCReportController, templateUrl: 'partials/vaccine-report.html'}).
@@ -19,4 +19,6 @@ var vaccine = angular.module('vaccine', ['openlmis', 'ngTable','ui.bootstrap','n
                 scope.$apply(attrs.onKeyup);
             });
         };
+}).config(function(angularCombineConfigProvider) {
+    angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
 });
