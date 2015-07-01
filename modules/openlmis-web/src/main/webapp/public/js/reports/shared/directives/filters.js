@@ -624,6 +624,31 @@ app.directive('rmnchProductPeriodFilter', ['RmnchProducts', 'GetYearSchedulePeri
     };
   }]);
 
+app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams',
+  function (GetYearSchedulePeriodTree, $routeParams) {
+    return {
+      restrict: 'E',
+      require: '^filterContainer',
+      link: function (scope, elm, attr) {
+
+        if (attr.required) {
+          scope.requiredFilters.period = 'period';
+        }
+
+        scope.filter.period = (isUndefined($routeParams.period) || $routeParams.period === '') ? 0 : $routeParams.period;
+
+        scope.$evalAsync(function () {
+          //Load period tree
+          GetYearSchedulePeriodTree.get({}, function (data) {
+            scope.periods = data.yearSchedulePeriod;
+          });
+        });
+
+      },
+      templateUrl: 'filter-period-tree-template'
+    };
+  }]);
+
 //This is a hacky way needs to be needs to be incorporated in the Product filter
 app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
   function (ReportProductsByProgram, $routeParams) {

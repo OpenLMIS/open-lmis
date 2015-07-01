@@ -291,6 +291,20 @@
     </div>
 </script>
 
+<script type="text/ng-template" id="filter-period-tree-template">
+    <label class="labels" openlmis-message="label.period"> <span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
+        <div>
+            <select class="input-large" ng-change="filterChanged();" ng-model="filter.period">
+                <option ng-selected="filter.period === 0" ng-value="0">--Select Period --</option>
+                <optgroup ng-repeat="year in periods"  label="{{year.year}}">
+
+                    <option ng-repeat-start="v in year.children" value="-1">{{v.groupname}}</option>
+                    <option ng-repeat-end ng-repeat="d in v.children" value="{{d.periodid}}" ng-selected="filter.period == d.periodid"> &nbsp; &nbsp; {{d.periodname}}</option>
+
+                </optgroup>
+            </select>
+        </div>
+</script>
 
 <script type="text/ng-template" id="filter-rmnch-product-period">
     <div class="row">
