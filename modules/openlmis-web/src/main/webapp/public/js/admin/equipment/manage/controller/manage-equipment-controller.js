@@ -97,8 +97,11 @@ function ManageEquipmentController($scope, $routeParams,$dialog, $location,messa
                  $scope.$parent.message = false;
              }, 3000);
              $scope.listEquipments();
-           }, function () {
-             $scope.error = messageService.get(data.error);
+           }, function (result) {
+             $scope.$parent.error = messageService.get(result.data.error);
+             $timeout(function () {
+               $scope.$parent.error = false;
+             }, 3000);
            });
 
          }

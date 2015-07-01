@@ -22,7 +22,11 @@ import java.util.List;
 @Repository
 public interface EquipmentMapper {
 
-  @Select("SELECT * from equipments")
+  @Select("SELECT equipments.*" +
+      "   , COUNT(equipment_inventories.id) AS inventorycount" +
+      " FROM equipments" +
+      "   LEFT JOIN equipment_inventories ON equipment_inventories.equipmentid = equipments.id" +
+      " GROUP BY equipments.id")
   @Results({
       @Result(
           property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
@@ -55,7 +59,13 @@ public interface EquipmentMapper {
     })
     List<Equipment> getByType(@Param("equipmentTypeId") Long equipmentTypeId, RowBounds rowBounds);
 
-  @Select("SELECT * from equipments where equipmentTypeId = #{equipmentTypeId} order by name")
+  @Select("SELECT equipments.*" +
+      "   , COUNT(equipment_inventories.id) AS inventorycount" +
+      " FROM equipments" +
+      "   LEFT JOIN equipment_inventories ON equipment_inventories.equipmentid = equipments.id" +
+      " WHERE equipmentTypeId = #{equipmentTypeId}" +
+      " GROUP BY equipments.id" +
+      " ORDER BY name")
   @Results({
       @Result(
           property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
@@ -72,7 +82,12 @@ public interface EquipmentMapper {
   @Select("SELECT COUNT(id) FROM equipments WHERE equipmentTypeId = #{equipmentTypeId} ")
   Integer getCountByType(@Param("equipmentTypeId") Long equipmentTypeId);
 
-  @Select("SELECT * from equipments where id = #{id}")
+  @Select("SELECT equipments.*" +
+      "   , COUNT(equipment_inventories.id) AS inventorycount" +
+      " FROM equipments" +
+      "   LEFT JOIN equipment_inventories ON equipment_inventories.equipmentid = equipments.id" +
+      " WHERE equipments.id = #{id}" +
+      " GROUP BY equipments.id")
   @Results({
           @Result(
                   property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,

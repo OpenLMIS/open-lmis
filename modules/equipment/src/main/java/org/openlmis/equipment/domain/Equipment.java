@@ -49,4 +49,8 @@ public class Equipment extends BaseModel{
         && other.manufacturer.equalsIgnoreCase(manufacturer) && other.model.equalsIgnoreCase(model);
   }
 
+  public boolean isRemovable() {
+    return inventoryCount != null && inventoryCount == 0;
+  }
+
 }
