@@ -8,7 +8,7 @@
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function VaccineReportPOCReportController($scope, GeoZoneFacilityTrees, DiseaseSurveillanceReport, ColdChainReport, AdverseEffectReport){
+function VaccineReportPOCReportController($scope, DiseaseSurveillanceReport, ColdChainReport, AdverseEffectReport){
     $scope.vaccineData = [
         {name:'Vaccine A'},{name:'Vaccine B'},{name: 'Vaccine C'}
     ];
@@ -22,10 +22,6 @@ function VaccineReportPOCReportController($scope, GeoZoneFacilityTrees, DiseaseS
 
     };
 
-    GeoZoneFacilityTrees.get({}, function(data){
-        $scope.facilities = data.geoZoneFacilities;
-    });
-
     DiseaseSurveillanceReport.get({}, function(data){
         $scope.diseaseSurveillance = data.diseaseSurveillance;
     });
@@ -37,5 +33,13 @@ function VaccineReportPOCReportController($scope, GeoZoneFacilityTrees, DiseaseS
     AdverseEffectReport.get({}, function(data){
         $scope.adverseEffect = data.adverseEffect;
     });
+
+    $scope.OnFilterChanged = function() {
+        // clear old data if there was any
+        $scope.data = $scope.datarows = [];
+       // $scope.filter.max = 10000;
+        
+    };
+
 
 }

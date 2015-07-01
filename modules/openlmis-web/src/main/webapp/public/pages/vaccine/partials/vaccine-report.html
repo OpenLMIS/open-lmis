@@ -91,24 +91,18 @@
 <h2><span>Monthly Vaccination Report </span><span style="margin-left: 15px;">Month : mm &nbsp; &nbsp; Year: YYYY</span></h2>
 <div id="vaccine-report" class="vaccine-report app-form">
 
+    <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+        <div filter-container class="clearfix">
+            <period-tree-filter required="true" class="form-cell horizontalFilters"></period-tree-filter>
+            <zone-filter class="form-cell horizontalFilters"></zone-filter>
+        </div>
+    </form>
     <div class="container-fluid">
         <div class="pull-right control-accordion">
             <a id="expandAll" href="javascript:void(0);" onclick="accordion.expandCollapse('expand')" openlmis-message="label.expand.all">Expand all</a> /
             <a id="collapseAll" href="javascript:void(0);" onclick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all">Collapse all</a>
         </div>
     </div>
-    <label for="facility">Facility</label>
-    <select id="facility" class="input-large"  ng-change="getDemographicData();" ng-model="facilityId">
-        <option selected="selected" value="{{facilities.id}}" ng-model="facilityId">-- National --</option>
-        <optgroup ng-repeat="value in facilities.children"  label="{{value.name}}">
-            <!--<option value="{{value.id}}"><b class="green">All of {{value.name}}</b></option>-->
-            <option ng-repeat-start="v in value.children" value="{{v.id}}">{{v.name}}</option>
-            <option ng-repeat="f in v.facilityList" value="f">&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;{{f.facilityName}}</option>
-            <option ng-repeat-start="d in v.children" value="{{d.id}}">&nbsp; &nbsp; {{d.name}}</option>
-            <option ng-repeat-end ng-repeat="ff in d.facilityList" value="{{ff}}"> &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; {{ff.facilityName}}</option>
-            <option ng-repeat-end></option>
-        </optgroup>
-    </select>
 
     <div class="container-fluid">
         <div class="row-fluid">
