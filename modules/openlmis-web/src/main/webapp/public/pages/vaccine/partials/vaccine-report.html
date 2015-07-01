@@ -171,7 +171,7 @@
 
                                     <tbody>
                                     <tr ng-repeat="ds in diseaseSurveillance">
-                                        <td>disease 1</td>
+                                        <td>{{ds.diseaseName}}</td>
                                         <td class="number">{{ds == null ? 'nul' : ds.cases}}</td>
                                         <td class="number">{{ds == null ? 'nul' :ds.cumulative}}</td>
                                         <td class="number">{{ds == null ? 'nul' :ds.death}}</td>
@@ -1055,7 +1055,7 @@
                                     <tr ng-repeat="cc in coldChain">
                                         <td>{{cc.equipmentName}}</td>
                                         <td>{{cc.model}}</td>
-                                        <td>{{cc.model}}</td>
+                                        <td>{{cc.energySource}}</td>
                                         <td>{{cc.minTemp}}</td>
                                         <td>{{cc.maxTemp}}</td>
                                         <td>{{cc.minEmpisodeTemp}}</td>

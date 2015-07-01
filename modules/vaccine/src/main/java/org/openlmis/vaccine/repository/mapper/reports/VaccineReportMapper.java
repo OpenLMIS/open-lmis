@@ -103,10 +103,10 @@ public interface VaccineReportMapper {
   List<ReportStatusDTO> getReportedPeriodsForFacility(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
 
-  @Select("select cases, death, cum_cases as cumulative from vw_vaccine_disease_surveillance where cases >= 0")
+  @Select("select cases, death, cum_cases as cumulative, disease_name as diseaseName from vw_vaccine_disease_surveillance where cases >= 0")
   List<DiseaseLineItem> getDiseaseSurveillance();
 
-  @Select("select equipment_type_name as equipmentName, model, minTemp, maxTemp, minEpisodeTemp, maxEpisodeTemp from vw_vaccine_cold_chain")
+  @Select("select equipment_type_name as equipmentName, model, minTemp, maxTemp, minEpisodeTemp, maxEpisodeTemp, energy_source as energySource from vw_vaccine_cold_chain")
   List<ColdChainLineItem> getColdChain();
 
   @Select("select product_name as productName, aefi_expiry_date as expiry, aefi_case as cases, aefi_batch as batch, 'missing'::text as manufacturer, false as isInvestigated from vw_vaccine_iefi\n")
