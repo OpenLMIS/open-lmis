@@ -17,8 +17,8 @@ function VaccineReportPOCReportController($scope, DiseaseSurveillanceReport, Col
         $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;
 
-        if($scope.filter.period != null && $scope.filter.period != 0 &&
-            $scope.filter.facility != null && $scope.filter.facility != 0
+        if($scope.filter.period !== null && $scope.filter.period !== 0 &&
+            $scope.filter.facility !== null && $scope.filter.facility !== 0
         ){
             DiseaseSurveillanceReport.get($scope.filter, function(data){
                 $scope.diseaseSurveillance = data.diseaseSurveillance;
