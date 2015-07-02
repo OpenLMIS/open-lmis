@@ -67,7 +67,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{OPERATOR_NAME}]]></textFieldExpression>
 			</textField>
-			<image onErrorType="Icon" evaluationTime="Now" isUsingCache="true">
+			<image isUsingCache="true" onErrorType="Icon">
 				<reportElement x="17" y="13" width="54" height="42" isPrintInFirstWholeBand="true" uuid="4d69dbd2-2db0-46be-bed6-13a8e366d8ee"/>
 				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
 			</image>
