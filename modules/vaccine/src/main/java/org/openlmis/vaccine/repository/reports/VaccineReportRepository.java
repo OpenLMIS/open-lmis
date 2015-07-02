@@ -20,6 +20,7 @@ import org.openlmis.vaccine.service.reports.VaccineLineItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -77,15 +78,23 @@ public class VaccineReportRepository {
     return mapper.getReportedPeriodsForFacility(facilityId, programId);
   }
 
-  public List<DiseaseLineItem> getDiseaseSurveillance(){
-    return mapper.getDiseaseSurveillance();
+  public List<DiseaseLineItem> getDiseaseSurveillance(Long facilityId, Long periodId){
+    return mapper.getDiseaseSurveillance(facilityId, periodId);
   }
 
-  public List<ColdChainLineItem> getColdChain(){
-    return mapper.getColdChain();
+  public List<ColdChainLineItem> getColdChain(Long facilityId, Long periodId){
+    return mapper.getColdChain(facilityId, periodId);
   }
 
-  public List<AdverseEffectLineItem> getAdverseEffectReport(){
-    return mapper.getAdverseEffectReport();
+  public List<AdverseEffectLineItem> getAdverseEffectReport(Long facilityId, Long periodId){
+    return mapper.getAdverseEffectReport(facilityId, periodId );
+  }
+
+  public List<HashMap<String, Object>> getVaccineCoverageReport(Long facilityId, Long periodId){
+    return mapper.getVaccineCoverageReport(facilityId, periodId);
+  }
+
+  public List<VaccineReport> getImmunizationSession(){
+    return mapper.getImmunizationSession();
   }
 }

@@ -151,6 +151,50 @@ app.directive('facilityTypeFilter', ['ReportFacilityTypes', 'ReportFacilityTypes
     };
   }]);
 
+app.directive('facilityLevelFilter', ['ReportFacilityLevels', '$routeParams',
+  function (ReportFacilityLevels, $routeParams) {
+
+    var onCascadedPVarsChanged = function ($scope) {
+      if ($scope.filter.program !== undefined || $scope.filter.program !== '') {
+        ReportFacilityLevels.get({program: $scope.filter.program}, function (data) {
+          $scope.facilityLevels = [];
+          if (data.facilityLevels.length > 0) {
+            $scope.facilityLevels.unshift({'id': 'hf','name': 'Health Facilities (HF)'});
+            _.each(data.facilityLevels, function (item) {
+              if (item.code === 'cvs' ||
+                  item.code === 'rvs' ||
+                  item.code === 'dvs') {
+                $scope.facilityLevels.unshift({'id': item.code,
+                  'name': item.name + ' (' + item.code.toUpperCase() + ')',
+                  'display_order': item.displayOrder});
+              }
+            });
+            $scope.facilityLevels.unshift({'id': '', 'name': '-- Select Facility Level --', 'display_order': 0});
+          }
+        });
+      }
+    };
+
+    return {
+      restrict: 'E',
+      link: function (scope, elm, attr) {
+
+        scope.facilityLevels = [];
+
+        if (attr.required) {
+          scope.requiredFilters.facilityLevel = 'facilityLevel';
+        }
+
+        scope.filter.facilityLevel = (isUndefined($routeParams.facilityLevel) || $routeParams.facilityLevel === '') ? '' : $routeParams.facilityLevel;
+
+        scope.$watch('filter.program', function () {
+          onCascadedPVarsChanged(scope);
+        });
+      },
+      templateUrl: 'filter-facility-level-template'
+    };
+  }]);
+
 app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$routeParams',
   function (ReportSchedules, ReportProgramSchedules, $routeParams) {
 
@@ -508,6 +552,61 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
     };
   }]);
 
+
+app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams',
+  function (FacilitiesByGeographicZone, $routeParams) {
+
+    var onPgCascadedVarsChanged = function ($scope, newValue) {
+
+      $scope.facilities = [];
+      $scope.facilities.unshift({
+        name: '-- select facility --', id: 0
+      });
+
+      if (isUndefined($scope.filter) ) {
+
+        return;
+      }
+
+      var zone = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.zone)) ? $scope.filter.zone : 0;
+      // load facilities
+      FacilitiesByGeographicZone.get({
+        geoId: zone
+      }, function (data) {
+        $scope.facilities = data.facilities;
+        if (isUndefined($scope.facilities)) {
+          $scope.facilities = [];
+        }
+        $scope.facilities.unshift({
+          name: '-- select facility --', id: 0
+        });
+      });
+    };
+
+    return {
+      restrict: 'E',
+      require: '^filterContainer',
+      link: function (scope, elm, attr) {
+
+        scope.facilities = [];
+        scope.facilities.push({
+          name: '-- select facility --', id: 0
+        });
+
+        scope.filter.facility = (isUndefined($routeParams.facility) || $routeParams.facility === '') ? 0 : $routeParams.facility;
+
+        if (attr.required) {
+          scope.requiredFilters.facility = 'facility';
+        }
+
+        scope.$watch('filter.zone', function (value) {
+          onPgCascadedVarsChanged(scope, value);
+        });
+      },
+      templateUrl: 'filter-facility-template'
+    };
+  }]);
+
 app.directive('programBudgetFilter', ['GetProgramWithBudgetingApplies', function (GetProgramWithBudgetingApplies) {
 
   return {
@@ -621,6 +720,31 @@ app.directive('rmnchProductPeriodFilter', ['RmnchProducts', 'GetYearSchedulePeri
 
       },
       templateUrl: 'filter-rmnch-product-period'
+    };
+  }]);
+
+app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams',
+  function (GetYearSchedulePeriodTree, $routeParams) {
+    return {
+      restrict: 'E',
+      require: '^filterContainer',
+      link: function (scope, elm, attr) {
+
+        if (attr.required) {
+          scope.requiredFilters.period = 'period';
+        }
+
+        scope.filter.period = (isUndefined($routeParams.period) || $routeParams.period === '') ? 0 : $routeParams.period;
+
+        scope.$evalAsync(function () {
+          //Load period tree
+          GetYearSchedulePeriodTree.get({}, function (data) {
+            scope.periods = data.yearSchedulePeriod;
+          });
+        });
+
+      },
+      templateUrl: 'filter-period-tree-template'
     };
   }]);
 

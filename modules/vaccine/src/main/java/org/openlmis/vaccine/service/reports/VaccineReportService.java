@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
@@ -186,15 +187,23 @@ public class VaccineReportService {
     save(report);
   }
 
-  public List<DiseaseLineItem> getDiseaseSurveillance(){
-    return repository.getDiseaseSurveillance();
+  public List<DiseaseLineItem> getDiseaseSurveillance(Long facilityId, Long periodId){
+    return repository.getDiseaseSurveillance(facilityId, periodId);
   }
 
-  public List<ColdChainLineItem> getColdChain(){
-    return repository.getColdChain();
+  public List<ColdChainLineItem> getColdChain(Long facilityId, Long periodId){
+    return repository.getColdChain(facilityId, periodId);
   }
 
-  public List<AdverseEffectLineItem> getAdverseEffectReport(){
-    return repository.getAdverseEffectReport();
+  public List<AdverseEffectLineItem> getAdverseEffectReport(Long facilityId, Long periodId){
+    return repository.getAdverseEffectReport(facilityId, periodId);
+  }
+
+  public List<HashMap<String, Object>> getVaccineCoverageReport(Long facilityId, Long periodId){
+    return repository.getVaccineCoverageReport(facilityId, periodId);
+  }
+
+  public List<VaccineReport> getImmunizationSession(){
+    return repository.getImmunizationSession();
   }
 }
