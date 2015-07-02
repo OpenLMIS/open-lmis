@@ -7,18 +7,11 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-
-angular.module('vaccine', ['openlmis', 'ngTable','angularCombine','ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
-
-    $routeProvider.
-        when('/vaccine-report', {controller: VaccineReportPOCReportController, templateUrl: 'partials/vaccine-report.html'}).
-        otherwise({redirectTo: '/vaccine-report'});
-}]).directive('onKeyup', function () {
-        return function (scope, elm, attrs) {
-            elm.bind("keyup", function () {
-                scope.$apply(attrs.onKeyup);
-            });
-        };
-}).config(function(angularCombineConfigProvider) {
-    angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-});
+angular.module('vaccine', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+    .config(['$routeProvider', function ($routeProvider) {
+        $routeProvider.
+            when('/vaccine-report', {controller:VaccineReportPOCReportController, templateUrl:'partials/vaccine-report.html',reloadOnSearch:false}).
+            otherwise({redirectTo:'/vaccine-report'});
+    }]).config(function(angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+    });

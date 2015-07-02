@@ -433,6 +433,10 @@ services.factory("FacilitiesByGeographicZoneTree",function($resource)  {
     return   $resource('/reports/geographic-zone/facilities.json', {}, {});
 });
 
+services.factory("FacilitiesByGeographicZone",function($resource)  {
+    return   $resource('/reports/geographic-zone/:geoId/facilities.json', {}, {});
+});
+
 services.factory("FacilitiesForNotifications",function($resource)  {
     return   $resource('/reports/notification/facilities.json', {}, {});
 });
@@ -1223,4 +1227,12 @@ services.factory('ColdChainReport', function ($resource){
 
 services.factory('AdverseEffectReport', function ($resource){
     return $resource('/vaccine/report/adverse-effect.json', {}, {});
+});
+
+services.factory('VaccineCoverageReport', function ($resource){
+    return $resource('/vaccine/report/vaccine-coverage.json', {}, {});
+});
+
+services.factory('ImmunizationSessionReport', function ($resource){
+   return $resource('/vaccine/report/immunization-session.json', {}, {});
 });
