@@ -1234,5 +1234,5 @@ services.factory('VaccineCoverageReport', function ($resource){
 });
 
 services.factory('ImmunizationSessionReport', function ($resource){
-   return $resource('/vaccine/report/immunization-session.json')
+   return $resource('/vaccine/report/immunization-session.json', {}, {});
 });
