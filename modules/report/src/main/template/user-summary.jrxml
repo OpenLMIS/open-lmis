@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="district-consumption" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="user-summary" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -62,7 +62,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="0" y="2" width="45" height="18" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b"/>
+					<reportElement mode="Transparent" x="0" y="0" width="45" height="20" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="2"/>
@@ -70,7 +70,7 @@
 					<text><![CDATA[Line#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="246" y="2" width="133" height="18" uuid="7bc79045-4835-4168-b56f-5f9a521d80cc"/>
+					<reportElement x="246" y="0" width="133" height="20" uuid="7bc79045-4835-4168-b56f-5f9a521d80cc"/>
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
@@ -87,19 +87,23 @@
 					<text><![CDATA[Last Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="381" y="0" width="100" height="20" uuid="9f17e0f2-fe7f-4a40-9a78-cd5f34d78a76"/>
+					<reportElement x="380" y="0" width="100" height="20" uuid="9f17e0f2-fe7f-4a40-9a78-cd5f34d78a76"/>
+					<textElement verticalAlignment="Middle"/>
 					<text><![CDATA[CellPhone]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="479" y="0" width="100" height="20" uuid="ecc6b09f-7400-4e33-a3e4-a0feadbb6f16"/>
+					<textElement verticalAlignment="Middle"/>
 					<text><![CDATA[Office Phone]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="579" y="0" width="100" height="20" uuid="27908509-983a-4a7b-b004-76f71e1f9e6f"/>
+					<textElement verticalAlignment="Middle"/>
 					<text><![CDATA[Email]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="679" y="0" width="122" height="20" uuid="8b8ef7f1-0f73-454b-902f-a5831aef1d1b"/>
+					<textElement verticalAlignment="Middle"/>
 					<text><![CDATA[Supervisory Node Name]]></text>
 				</staticText>
 			</band>
@@ -138,25 +142,21 @@
 					<subreportParameterExpression><![CDATA[$P{OPERATOR_LOGO}]]></subreportParameterExpression>
 				</subreportParameter>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
-				<subreportExpression><![CDATA[ "openlmis-report-header-landscape.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</pageHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="43" y="0" width="759" height="20" forecolor="#006666" uuid="a9fda8ef-b699-4b67-991c-cfabff61e5da">
-					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
-				</reportElement>
+				<reportElement x="43" y="0" width="759" height="20" forecolor="#006666" uuid="a9fda8ef-b699-4b67-991c-cfabff61e5da"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
-					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
-				</reportElement>
+				<reportElement mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b"/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
@@ -167,41 +167,39 @@
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="19" width="801" height="1" forecolor="#C1C1C1" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
-				</reportElement>
+				<reportElement x="0" y="19" width="801" height="1" forecolor="#C1C1C1" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="247" y="0" width="133" height="20" uuid="688b5077-b50e-47ad-bb86-0295aa5876a7"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{rolename}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="45" y="0" width="100" height="20" uuid="749e2c8d-d155-4890-8c63-944b6c178f83"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{firstname}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="146" y="0" width="100" height="20" uuid="1657d52c-16c1-4a28-9dba-a3105f1bff7f"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{lastname}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="379" y="0" width="100" height="20" uuid="52772605-aacd-4635-8242-99647d516095"/>
 				<textFieldExpression><![CDATA[$F{cellPhone}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="479" y="0" width="100" height="20" uuid="81240072-dda7-4f78-941f-6953f26a16a8"/>
 				<textFieldExpression><![CDATA[$F{officephone}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="579" y="0" width="100" height="20" uuid="d5059e19-f35d-4e1d-b752-52d6361bde54"/>
 				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="679" y="0" width="122" height="20" uuid="e11537e2-8801-47eb-b711-e1c7b0f01c73"/>
 				<textFieldExpression><![CDATA[$F{supervisorynodename}]]></textFieldExpression>
 			</textField>
