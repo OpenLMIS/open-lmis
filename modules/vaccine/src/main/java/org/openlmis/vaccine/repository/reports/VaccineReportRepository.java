@@ -97,4 +97,8 @@ public class VaccineReportRepository {
   public List<VaccineReport> getImmunizationSession(){
     return mapper.getImmunizationSession();
   }
+
+  public List<HashMap<String, Object>> getVaccinationReport(String productCategoryCode){
+    return mapper.getVaccinationReport(productCategoryCode);
+  }
 }

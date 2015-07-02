@@ -9,7 +9,7 @@
  */
 
 
-function VaccineReportPOCReportController($scope, DiseaseSurveillanceReport, ColdChainReport, AdverseEffectReport, VaccineCoverageReport, ImmunizationSessionReport) {
+function VaccineReportPOCReportController($scope, VaccineMonthlyReport) {
 
 
     $scope.OnFilterChanged = function() {
@@ -20,11 +20,22 @@ function VaccineReportPOCReportController($scope, DiseaseSurveillanceReport, Col
         if($scope.filter.period !== null && $scope.filter.period !== 0 &&
             $scope.filter.facility !== null && $scope.filter.facility !== 0
         ){
-            DiseaseSurveillanceReport.get($scope.filter, function(data){
-                $scope.diseaseSurveillance = data.diseaseSurveillance;
+            VaccineMonthlyReport.get($scope.filter, function(data){
+                $scope.data = data.vaccineData;
+
+                if($scope.data !== null){
+                    $scope.diseaseSurveillance = $scope.data.diseaseSurveillance;
+                    $scope.coldChain = $scope.data.coldChain;
+                    $scope.adverseEffect = $scope.data.adverseEffect;
+                    $scope.vaccineCoverage = $scope.data.vaccineCoverage;
+                    $scope.immunizationSession = $scope.data.immunizationSession;
+                    $scope.vaccination = $scope.data.vaccination;
+                    $scope.syringes = $scope.data.syringes;
+                    $scope.vitamins = $scope.data.vitamins;
+                }
             });
 
-            ColdChainReport.get($scope.filter, function(data){
+          /*  ColdChainReport.get($scope.filter, function(data){
                 $scope.coldChain = data.coldChain;
             });
 
@@ -38,7 +49,7 @@ function VaccineReportPOCReportController($scope, DiseaseSurveillanceReport, Col
             $scope.immunizationSession = null;
             ImmunizationSessionReport.get({}, function(data){
                $scope.immunizationSession = data.immunizationSession;
-            });
+            });*/
         }
 
     };

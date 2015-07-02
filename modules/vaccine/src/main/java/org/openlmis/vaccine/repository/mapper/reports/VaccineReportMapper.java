@@ -130,7 +130,7 @@ public interface VaccineReportMapper {
   @Select("SELECT COALESCE(fixedimmunizationsessions, 0) fixedimmunizationsessions, COALESCE(outreachimmunizationsessions, 0) outreachimmunizationsessions, COALESCE(outreachimmunizationsessionscanceled, 0) outreachimmunizationsessionscanceled FROM vaccine_reports WHERE ID = 42 ")
   List<VaccineReport> getImmunizationSession();
 
-
-
+  @Select("select * from vw_vaccine_stock_status where product_category_code = (select value from configuration_settings where key = #{productCategoryCode})")
+  List<HashMap<String, Object>> getVaccinationReport(@Param("productCategoryCode") String categoryCode);
 
 }

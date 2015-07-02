@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/vaccine/report/")
@@ -115,30 +117,19 @@ public class VaccineReportController extends BaseController {
     return OpenLmisResponse.response("report", report);
   }
 
-  @RequestMapping(value = "disease-surveillance")
+  @RequestMapping(value = "vaccine-monthly-report")
   public ResponseEntity<OpenLmisResponse> diseaseSurveillance(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId){
-    return OpenLmisResponse.response("diseaseSurveillance", service.getDiseaseSurveillance(facilityId, periodId));
-  }
+    Map<String, Object> data = new HashMap();
+    data.put("diseaseSurveillance", service.getDiseaseSurveillance(facilityId, periodId));
+    data.put("coldChain", service.getColdChain(facilityId, periodId));
+    data.put("adverseEffect", service.getAdverseEffectReport(facilityId, periodId));
+    data.put("vaccineCoverage", service.getVaccineCoverageReport(facilityId, periodId));
+    data.put("immunizationSession", service.getImmunizationSession());
+    data.put("vaccination", service.getVaccineReport());
+    data.put("syringes", service.getSyringeAndSafetyBoxReport());
+    data.put("vitamins", service.getVitaminsReport());
 
-  @RequestMapping(value = "cold-chain")
-  public ResponseEntity<OpenLmisResponse> coldChain(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId){
-    return OpenLmisResponse.response("coldChain", service.getColdChain(facilityId, periodId));
+    return OpenLmisResponse.response("vaccineData", data);
   }
-
-  @RequestMapping(value = "adverse-effect")
-  public ResponseEntity<OpenLmisResponse> getAdverseEffectReport(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId){
-    return OpenLmisResponse.response("adverseEffect", service.getAdverseEffectReport(facilityId, periodId));
-  }
-
-  @RequestMapping(value = "vaccine-coverage")
-  public ResponseEntity<OpenLmisResponse> getVaccineCoverageReport(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId){
-    return OpenLmisResponse.response("vaccineCoverage", service.getVaccineCoverageReport(facilityId, periodId));
-  }
-
-  @RequestMapping(value = "immunization-session")
-  public ResponseEntity<OpenLmisResponse> getImmunizationSession(){
-    return OpenLmisResponse.response("immunizationSession", service.getImmunizationSession());
-  }
-
 
 }

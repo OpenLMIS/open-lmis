@@ -47,6 +47,12 @@ import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
 @NoArgsConstructor
 public class VaccineReportService {
 
+  public static final String VACCINE_REPORT_VACCINE_CATEGORY_CODE = "VACCINE_REPORT_VACCINE_CATEGORY_CODE";
+  public static final String VACCINE_REPORT_VITAMINS_CATEGORY_CODE = "VACCINE_REPORT_VITAMINS_CATEGORY_CODE";
+  public static final String VACCINE_REPORT_SYRINGES_CATEGORY_CODE = "VACCINE_REPORT_SYRINGES_CATEGORY_CODE";
+
+
+
   @Autowired
   VaccineReportRepository repository;
 
@@ -206,4 +212,17 @@ public class VaccineReportService {
   public List<VaccineReport> getImmunizationSession(){
     return repository.getImmunizationSession();
   }
+
+  public List<HashMap<String, Object>> getVaccineReport(){
+    return repository.getVaccinationReport(VACCINE_REPORT_VACCINE_CATEGORY_CODE);
+  }
+
+  public List<HashMap<String, Object>> getSyringeAndSafetyBoxReport(){
+    return repository.getVaccinationReport(VACCINE_REPORT_SYRINGES_CATEGORY_CODE);
+  }
+
+  public List<HashMap<String, Object>> getVitaminsReport(){
+    return repository.getVaccinationReport(VACCINE_REPORT_VITAMINS_CATEGORY_CODE);
+  }
+
 }
