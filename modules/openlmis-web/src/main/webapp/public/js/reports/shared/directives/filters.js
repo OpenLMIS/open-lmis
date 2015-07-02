@@ -552,6 +552,61 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
     };
   }]);
 
+
+app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams',
+  function (FacilitiesByGeographicZone, $routeParams) {
+
+    var onPgCascadedVarsChanged = function ($scope, newValue) {
+
+      $scope.facilities = [];
+      $scope.facilities.unshift({
+        name: '-- select facility --', id: 0
+      });
+
+      if (isUndefined($scope.filter) ) {
+
+        return;
+      }
+
+      var zone = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.zone)) ? $scope.filter.zone : 0;
+      // load facilities
+      FacilitiesByGeographicZone.get({
+        geoId: zone
+      }, function (data) {
+        $scope.facilities = data.facilities;
+        if (isUndefined($scope.facilities)) {
+          $scope.facilities = [];
+        }
+        $scope.facilities.unshift({
+          name: '-- select facility --', id: 0
+        });
+      });
+    };
+
+    return {
+      restrict: 'E',
+      require: '^filterContainer',
+      link: function (scope, elm, attr) {
+
+        scope.facilities = [];
+        scope.facilities.push({
+          name: '-- select facility --', id: 0
+        });
+
+        scope.filter.facility = (isUndefined($routeParams.facility) || $routeParams.facility === '') ? 0 : $routeParams.facility;
+
+        if (attr.required) {
+          scope.requiredFilters.facility = 'facility';
+        }
+
+        scope.$watch('filter.zone', function (value) {
+          onPgCascadedVarsChanged(scope, value);
+        });
+      },
+      templateUrl: 'filter-facility-template'
+    };
+  }]);
+
 app.directive('programBudgetFilter', ['GetProgramWithBudgetingApplies', function (GetProgramWithBudgetingApplies) {
 
   return {

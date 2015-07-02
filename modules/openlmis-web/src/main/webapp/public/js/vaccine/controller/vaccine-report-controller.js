@@ -8,38 +8,39 @@
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function VaccineReportPOCReportController($scope, DiseaseSurveillanceReport, ColdChainReport, AdverseEffectReport){
-    $scope.vaccineData = [
-        {name:'Vaccine A'},{name:'Vaccine B'},{name: 'Vaccine C'}
-    ];
 
-    $scope.colorify = function(value){
-        if(!isUndefined(value)){
-            if(value >= 95) return 'green';
-            if(value < 0) return 'blue';
-            if(value <= 50) return 'red';
-        }
+function VaccineReportPOCReportController($scope, DiseaseSurveillanceReport, ColdChainReport, AdverseEffectReport, VaccineCoverageReport, ImmunizationSessionReport) {
 
-    };
-
-    DiseaseSurveillanceReport.get({}, function(data){
-        $scope.diseaseSurveillance = data.diseaseSurveillance;
-    });
-
-    ColdChainReport.get({}, function(data){
-       $scope.coldChain = data.coldChain;
-    });
-
-    AdverseEffectReport.get({}, function(data){
-        $scope.adverseEffect = data.adverseEffect;
-    });
 
     $scope.OnFilterChanged = function() {
         // clear old data if there was any
         $scope.data = $scope.datarows = [];
-       // $scope.filter.max = 10000;
-        
-    };
+        $scope.filter.max = 10000;
 
+        if($scope.filter.period != null && $scope.filter.period != 0 &&
+            $scope.filter.facility != null && $scope.filter.facility != 0
+        ){
+            DiseaseSurveillanceReport.get($scope.filter, function(data){
+                $scope.diseaseSurveillance = data.diseaseSurveillance;
+            });
+
+            ColdChainReport.get($scope.filter, function(data){
+                $scope.coldChain = data.coldChain;
+            });
+
+            AdverseEffectReport.get($scope.filter, function(data){
+                $scope.adverseEffect = data.adverseEffect;
+            });
+
+            VaccineCoverageReport.get($scope.filter, function(data){
+                $scope.vaccineCoverage = data.vaccineCoverage;
+            });
+            $scope.immunizationSession = null;
+            ImmunizationSessionReport.get({}, function(data){
+               $scope.immunizationSession = data.immunizationSession;
+            });
+        }
+
+    };
 
 }

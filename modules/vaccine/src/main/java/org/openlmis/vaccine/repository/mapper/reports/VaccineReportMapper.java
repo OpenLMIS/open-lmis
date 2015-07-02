@@ -20,6 +20,7 @@ import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -103,14 +104,32 @@ public interface VaccineReportMapper {
   List<ReportStatusDTO> getReportedPeriodsForFacility(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
 
-  @Select("select cases, death, cum_cases as cumulative, disease_name as diseaseName from vw_vaccine_disease_surveillance where cases >= 0")
-  List<DiseaseLineItem> getDiseaseSurveillance();
+  @Select("select COALESCE(cases, 0) as cases, COALESCE(death, 0) as death, COALESCE(cum_cases, 0) as cumulative, disease_name as diseaseName \n" +
+          "from vw_vaccine_disease_surveillance \n" +
+          "where period_id = #{periodId} and facility_id = #{facilityId}")
+  List<DiseaseLineItem> getDiseaseSurveillance(@Param("facilityId")Long facilityId, @Param("periodId")Long periodId);
 
-  @Select("select equipment_type_name as equipmentName, model, minTemp, maxTemp, minEpisodeTemp, maxEpisodeTemp, energy_source as energySource from vw_vaccine_cold_chain")
-  List<ColdChainLineItem> getColdChain();
+  @Select("select equipment_type_name as equipmentName, model, minTemp, maxTemp, minEpisodeTemp, maxEpisodeTemp, energy_source as energySource from vw_vaccine_cold_chain \n" +
+          "where period_id = #{periodId} and facility_id = #{facilityId}")
+  List<ColdChainLineItem> getColdChain(@Param("facilityId")Long facilityId, @Param("periodId")Long periodId);
 
-  @Select("select product_name as productName, aefi_expiry_date as expiry, aefi_case as cases, aefi_batch as batch, 'missing'::text as manufacturer, false as isInvestigated from vw_vaccine_iefi\n")
-  List<AdverseEffectLineItem> getAdverseEffectReport();
+  @Select("select product_name as productName, aefi_expiry_date as expiry, aefi_case as cases, aefi_batch as batch, 'missing'::text as manufacturer, false as isInvestigated from vw_vaccine_iefi \n" +
+          "where period_id = #{periodId} and facility_id = #{facilityId}")
+  List<AdverseEffectLineItem> getAdverseEffectReport(@Param("facilityId")Long facilityId, @Param("periodId")Long periodId);
+
+  @Select("select product_name,display_name, COALESCE(within_male, 0) within_male, COALESCE(within_female,0) within_female, COALESCE(within_total,0) within_total, COALESCE(within_coverage, 0) within_coverage, \n" +
+          "COALESCE(outside_male, 0) outside_male, COALESCE(outside_female,0) outside_female, COALESCE(outside_total, 0) outside_total,\n" +
+          "COALESCE(within_outside_total, 0) within_outside_total, COALESCE(within_outside_coverage,0) within_outside_coverage,\n" +
+          " COALESCE(cum_within_total,0) cum_within_total, COALESCE(cum_within_coverage,0) cum_within_coverage,\n" +
+          "  COALESCE(cum_outside_total,0) cum_outside_total, COALESCE(cum_within_outside_total,0) cum_within_outside_total,\n" +
+          "   COALESCE(cum_within_outside_coverage ,0) cum_within_outside_coverage\n" +
+          "from vw_vaccine_coverage \n" +
+          "where period_id = #{periodId} and facility_id = #{facilityId}")
+  List<HashMap<String, Object>> getVaccineCoverageReport(@Param("facilityId")Long facilityId, @Param("periodId")Long periodId);
+
+  @Select("SELECT COALESCE(fixedimmunizationsessions, 0) fixedimmunizationsessions, COALESCE(outreachimmunizationsessions, 0) outreachimmunizationsessions, COALESCE(outreachimmunizationsessionscanceled, 0) outreachimmunizationsessionscanceled FROM vaccine_reports WHERE ID = 42 ")
+  List<VaccineReport> getImmunizationSession();
+
 
 
 

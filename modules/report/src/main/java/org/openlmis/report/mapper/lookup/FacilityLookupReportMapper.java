@@ -169,6 +169,12 @@ public interface FacilityLookupReportMapper {
             "and programid =#{programId}")
     List<Facility> getFacilitiesByGeographicZoneTree(@Param("userId") Long userId, @Param("zoneId") Long zoneId, @Param("programId") Long programId);
 
+        @Select("SELECT DISTINCT facilities.id, facilities.code, facilities.name\n" +
+                "FROM facilities\n" +
+                "join programs_supported ps on ps.facilityid = facilities.id\n" +
+                "WHERE geographiczoneid in (select geographiczoneid from fn_get_user_geographiczone_children(#{userId}::int,#{zoneId}::int))")
+        List<Facility> getFacilitiesByGeographicZone(@Param("userId") Long userId, @Param("zoneId") Long zoneId);
+
     @Select("SELECT f.id, f.code, f.name \n" +
             "FROM  \n" +
             "facilities f  \n" +

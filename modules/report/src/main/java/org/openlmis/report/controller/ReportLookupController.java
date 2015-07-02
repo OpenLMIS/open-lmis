@@ -116,7 +116,7 @@ public class ReportLookupController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getFacilityLevels(@RequestParam("program") Long programId,
                                                             HttpServletRequest request){
     return OpenLmisResponse.response( "facilityLevels", this.reportLookupService.getFacilityLevels(programId,
-        loggedInUserId(request))) ;
+            loggedInUserId(request))) ;
   }
 
   @RequestMapping(value="/regimenCategories", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -333,6 +333,14 @@ public class ReportLookupController extends BaseController {
             HttpServletRequest request
     ) {
         return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZoneTree(loggedInUserId(request),zoneId, programId));
+    }
+
+    @RequestMapping(value = "/geographic-zone/{geoId}/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilities(
+            @PathVariable("geoId") Long zoneId,
+            HttpServletRequest request
+    ) {
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZone(loggedInUserId(request),zoneId));
     }
 
     @RequestMapping(value = "notification/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
