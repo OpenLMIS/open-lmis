@@ -36,10 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
 
@@ -223,6 +220,10 @@ public class VaccineReportService {
 
   public List<HashMap<String, Object>> getVitaminsReport(){
     return repository.getVaccinationReport(VACCINE_REPORT_VITAMINS_CATEGORY_CODE);
+  }
+
+  public List<HashMap<String, Object>> getTargetPopulation(Long facilityId){
+    return repository.getTargetPopulation(facilityId);
   }
 
 }

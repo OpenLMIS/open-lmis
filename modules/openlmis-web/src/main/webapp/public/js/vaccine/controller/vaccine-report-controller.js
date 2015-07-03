@@ -32,6 +32,7 @@ function VaccineReportPOCReportController($scope, VaccineMonthlyReport) {
                     $scope.vaccination = $scope.data.vaccination;
                     $scope.syringes = $scope.data.syringes;
                     $scope.vitamins = $scope.data.vitamins;
+                    $scope.targetPopulation = $scope.data.targetPopulation;
                 }
             });
 

@@ -128,6 +128,7 @@ public class VaccineReportController extends BaseController {
     data.put("vaccination", service.getVaccineReport());
     data.put("syringes", service.getSyringeAndSafetyBoxReport());
     data.put("vitamins", service.getVitaminsReport());
+    data.put("targetPopulation", service.getTargetPopulation(facilityId));
 
     return OpenLmisResponse.response("vaccineData", data);
   }

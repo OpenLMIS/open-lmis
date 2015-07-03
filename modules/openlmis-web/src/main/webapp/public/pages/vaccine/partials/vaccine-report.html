@@ -40,7 +40,14 @@
                                 <span><b>+</b><a href="javascript:void(0);">Target Population </a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
-                                <table class="table-bordered table table-striped ">
+                                <table client-side-sort-pagination class="table table-bordered"
+                                       ng-show="targetPopulation == undefined || targetPopulation.length == 0">
+                                    <tr>
+                                        <td openlmis-message="label.report.no.data.to.show"></td>
+                                    </tr>
+                                </table>
+
+                                <table ng-show="targetPopulation.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
                                         <th>Population</th>
@@ -53,21 +60,13 @@
                                     </thead>
 
                                     <tbody>
-                                    <tr>
-                                        <td>Annual Target</td>
-                                        <td class="number">2400</td>
-                                        <td class="number">2200</td>
-                                        <td class="number">3000</td>
-                                        <td class="number">4000</td>
-                                        <td class="number">3000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Monthly Target</td>
-                                        <td class="number">200</td>
-                                        <td class="number">184</td>
-                                        <td class="number">250</td>
-                                        <td class="number">334</td>
-                                        <td class="number">250</td>
+                                    <tr ng-repeat="tp in targetPopulation">
+                                        <td>{{tp.population}}</td>
+                                        <td class="number">{{tp.live_birth}}</td>
+                                        <td class="number">{{tp.children_0_1}}</td>
+                                        <td class="number">{{tp.children_1_2}}</td>
+                                        <td class="number">{{tp.girls_9_12}}</td>
+                                        <td class="number">{{tp.pregnant_woman}}</td>
                                     </tr>
 
                                     </tbody>
@@ -287,7 +286,14 @@
                                 <span><b>+</b><a href="javascript:void(0);">Vaccines, Vaccination, VitA</a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
-                                <table class="table-bordered table table-striped ">
+                                <table client-side-sort-pagination class="table table-bordered"
+                                       ng-show="vaccination == undefined || vaccination.length == 0">
+                                    <tr>
+                                        <td openlmis-message="label.report.no.data.to.show"></td>
+                                    </tr>
+                                </table>
+
+                                <table ng-show="vaccination.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
                                         <th colspan="11" style="text-align: center; vertical-align: middle">Vaccine Stock (doses)</th>
@@ -307,137 +313,19 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td>A</td>
-                                        <td>B</td>
-                                        <td>C</td>
-                                        <td>D</td>
-                                        <td></td>
+                                    <tr ng-repeat="vc in vaccination">
+                                        <td>{{vc.product_name}}</td>
+                                        <td class="number">{{vc.opening_balance}}</td>
+                                        <td class="number">{{vc.quantity_received}}</td>
+                                        <td class="number">{{vc.quantity_issued}}</td>
+                                        <td class="number">{{vc.quantity_discarded_unopened}}</td>
+                                        <td>{{vc.reasonf_for_discarding}}</td>
                                         <td>E</td>
-                                        <td></td>
-                                        <td>F</td>
-                                        <td>G</td>
-                                        <td>H</td>
+                                        <td class="number">{{vc.days_stocked_out}}</td>
+                                        <td class="number">{{vc.children_immunized}}</td>
+                                        <td class="number">{{vc.usage_rate}}%</td>
+                                        <td class="number">{{vc.wastage_rate}}%</td>
                                     </tr>
-                                    <tr>
-                                        <td>BCG</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>100</td>
-                                        <td>5</td>
-                                        <td></td>
-                                        <td>E</td>
-                                        <td></td>
-                                        <td>50</td>
-                                        <td>48%</td>
-                                        <td>52%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>OPV</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>IPV</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>DTP-HepB-Hib</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>PCV13</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>RotaVirus</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>MR</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>HPV</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>TT</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-
                                     </tbody>
                                     <tfoot>
                                     <tr><td colspan="11">***Reasons for discarding unopened vials: 1= expired vaccines   2= broken vial   3= cold chain failure 4= other  (specify)</td></tr>
@@ -457,7 +345,14 @@
                                 <span><b>+</b><a href="javascript:void(0);"> Syringes and safety boxes</a></span>
                             </div>
                             <div style="background-color: #ffffff" class="accordion-body prog-role-grid">
-                                <table class="table-bordered table table-striped ">
+                                <table client-side-sort-pagination class="table table-bordered"
+                                       ng-show="syringes == undefined || syringes.length == 0">
+                                    <tr>
+                                        <td openlmis-message="label.report.no.data.to.show"></td>
+                                    </tr>
+                                </table>
+
+                                <table ng-show="syringes.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
                                         <th colspan="7" style="text-align: center; vertical-align: middle">Safe Injection Equipment</th>
@@ -476,42 +371,16 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>ADS_0.05ml</td>
-                                        <td class="number">200</td>
-                                        <td class="number">300</td>
-                                        <td class="number">250</td>
+                                    <tr ng-repeat="sy in syringes">
+                                        <td>{{sy.product_name}}</td>
+                                        <td class="number">{{sy.opening_balance}}</td>
+                                        <td class="number">{{sy.quantity_received}}</td>
+                                        <td class="number">{{sy.quantity_issued}}</td>
                                         <td class="number">10</td>
                                         <td class="number">240</td>
-                                        <td></td>
+                                        <td class="number">{{sy.days_stocked_out}}</td>
                                     </tr>
-                                    <tr>
-                                        <td>ADS_0.5ml</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sdilution_5ml</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Safety boxes</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -525,7 +394,14 @@
                                 <span><b>+</b><a href="javascript:void(0);">Health Facility Vitamin A stock</a></span>
                             </div>
                             <div style="background-color: #ffffff" class="accordion-body prog-role-grid">
-                                <table class="table-bordered table table-striped ">
+                                <table client-side-sort-pagination class="table table-bordered"
+                                       ng-show="vitamins == undefined || vitamins.length == 0">
+                                    <tr>
+                                        <td openlmis-message="label.report.no.data.to.show"></td>
+                                    </tr>
+                                </table>
+
+                                <table ng-show="vitamins.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
                                         <th colspan="6" style="text-align: center; vertical-align: middle">Vitamin A Stock</th>
@@ -543,21 +419,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>Vit.A 100,000 IU</td>
-                                        <td class="number">100</td>
-                                        <td class="number">50</td>
-                                        <td class="number">40</td>
+                                    <tr ng-repeat="vit in vitamins">
+                                        <td>{{vit.product_name}}</td>
+                                        <td class="number">{{vit.opening_balance}}</td>
+                                        <td class="number">{{vit.quantity_received}}</td>
+                                        <td class="number">{{vit.quantity_issued}}</td>
                                         <td class="number">5</td>
                                         <td class="number">105</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Vit.A 200,000 IU</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
                                     </tr>
 
                                     </tbody>

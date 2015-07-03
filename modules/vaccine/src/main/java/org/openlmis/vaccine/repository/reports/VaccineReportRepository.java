@@ -101,4 +101,8 @@ public class VaccineReportRepository {
   public List<HashMap<String, Object>> getVaccinationReport(String productCategoryCode){
     return mapper.getVaccinationReport(productCategoryCode);
   }
+
+  public List<HashMap<String, Object>> getTargetPopulation(Long facilityId){
+    return mapper.getTargetPopulation(facilityId);
+  }
 }

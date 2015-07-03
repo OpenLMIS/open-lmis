@@ -133,4 +133,7 @@ public interface VaccineReportMapper {
   @Select("select * from vw_vaccine_stock_status where product_category_code = (select value from configuration_settings where key = #{productCategoryCode})")
   List<HashMap<String, Object>> getVaccinationReport(@Param("productCategoryCode") String categoryCode);
 
+  @Select("select * from vw_vaccine_target_population")
+  List<HashMap<String, Object>> getTargetPopulation(@Param("facilityId") Long facilityId);
+
 }
