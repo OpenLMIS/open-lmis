@@ -15,7 +15,7 @@
 </div>
 <div>
   <div>
-    <label>Year</label>
+    <label><span openlmis-message="label.demographic.parameter.year"></span></label>
     <select ng-model="year" ng-change="onParamChanged();">
       <option ng-selected="year == y" ng-repeat="y in years" value="{{y}}">{{y}}</option>
     </select>
