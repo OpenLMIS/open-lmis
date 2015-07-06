@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.web.controller.vaccine;
+package org.openlmis.web.controller.vaccine.demographic;
 
 import org.openlmis.vaccine.dto.DemographicEstimateForm;
 import org.openlmis.vaccine.service.demographics.FacilityDemographicEstimateService;

@@ -1,4 +1,4 @@
-package org.openlmis.web.controller.vaccine;
+package org.openlmis.web.controller.vaccine.demographic;
 
 import org.openlmis.vaccine.domain.demographics.DemographicEstimateCategory;
 import org.openlmis.vaccine.service.demographics.DemographicEstimateCategoryService;
