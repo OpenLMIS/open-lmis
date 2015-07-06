@@ -258,7 +258,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   };
 
   $scope.getProgramName = function (programId) {
-    return _.findWhere(_.flatten($scope.programsMap), {id: programId}).name;
+    return _.findWhere(_.flatten(_.values($scope.programsMap)), {id: programId}).name;
   };
 
   $scope.getDeliveryZoneName = function (zoneId) {

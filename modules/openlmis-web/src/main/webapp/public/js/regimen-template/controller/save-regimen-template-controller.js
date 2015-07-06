@@ -62,7 +62,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
   };
 
   function valid(regimen) {
-    var regimens = _.reject(_.flatten($scope.regimensByCategory), function (regimen1) {
+    var regimens = _.reject(_.flatten(_.values($scope.regimensByCategory)), function (regimen1) {
       return regimen1.$$hashKey == regimen.$$hashKey;
     });
     if (_.findWhere(regimens, {code: regimen.code})) {

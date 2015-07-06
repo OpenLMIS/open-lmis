@@ -50,7 +50,7 @@ function FacilityDemographicEstimateController($scope, categories, programs, yea
     SaveFacilityDemographicEstimates.update($scope.form, function(data){
       // show the saved message
       //TODO: move this string to the messages property file.
-      $scope.message = "Facility demographic estimates successfully saved."
+      $scope.message = "Facility demographic estimates successfully saved.";
     });
   };
 
