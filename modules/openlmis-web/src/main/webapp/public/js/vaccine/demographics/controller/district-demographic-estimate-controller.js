@@ -49,7 +49,7 @@ function DistrictDemographicEstimateController($scope, categories, years, Distri
     SaveDistrictDemographicEstimates.update($scope.form, function(data){
       // show the saved message
       //TODO: move this string to the messages property file.
-      $scope.message = "District demographic estimates successfully saved."
+      $scope.message = "District demographic estimates successfully saved.";
     });
   };
 
