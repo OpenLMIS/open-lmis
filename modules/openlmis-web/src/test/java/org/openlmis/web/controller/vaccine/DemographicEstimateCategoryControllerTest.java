@@ -9,6 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.demographics.DemographicEstimateCategory;
 import org.openlmis.vaccine.service.demographics.DemographicEstimateCategoryService;
+import org.openlmis.web.controller.vaccine.demographic.DemographicEstimateCategoryController;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 

@@ -13,6 +13,7 @@ package org.openlmis.vaccine.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.vaccine.domain.demographics.DistrictDemographicEstimate;
 import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
 
 import java.util.List;
@@ -20,14 +21,18 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FacilityDemographicEstimateDTO {
+public class DemographicEstimateLineItem {
+
+  private Long districtId;
 
   private Long facilityId;
 
-  private String facilityName;
+  private String name;
 
-  private String facilityCode;
+  private String code;
 
-  private List<FacilityDemographicEstimate> estimates;
+  private List<FacilityDemographicEstimate> facilityEstimates;
+
+  private List<DistrictDemographicEstimate> districtEstimates;
 
 }

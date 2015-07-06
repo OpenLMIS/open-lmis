@@ -8,15 +8,24 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.dto;
+package org.openlmis.vaccine.builders.demographics;
 
-import lombok.Data;
+import com.natpryce.makeiteasy.Instantiator;
+import com.natpryce.makeiteasy.PropertyLookup;
+import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
 
-import java.util.List;
+public class FacilityDemographicEstimateBuilder {
 
-@Data
-public class FacilityDemographicEstimateForm {
+  public static final Instantiator<FacilityDemographicEstimate> defaultFacilityDemographicEstimate = new Instantiator<FacilityDemographicEstimate>() {
 
-  private List<FacilityDemographicEstimateDTO> facilityEstimates;
-
+    @Override
+    public FacilityDemographicEstimate instantiate(PropertyLookup<FacilityDemographicEstimate> lookup) {
+      FacilityDemographicEstimate item = new FacilityDemographicEstimate();
+      item.setFacilityId(1L);
+      item.setConversionFactor(1.0);
+      item.setDemographicEstimateId(1L);
+      item.setValue(20L);
+      return item;
+    }
+  };
 }
