@@ -33,13 +33,13 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="facility in form.facilityEstimates">
+    <tr ng-repeat="facility in form.estimateLineItems">
       <td class="cell-input">
-        <span class="cell-text">{{facility.facilityCode}}</span>
+        <span class="cell-text">{{facility.code}}</span>
       </td>
       <td class="cell-input">
         <span class="cell-text">
-          {{facility.facilityName}}
+          {{facility.name}}
         </span>
       </td>
       <td class="cell-input number" style="text-align: right" ng-repeat="category in categories">

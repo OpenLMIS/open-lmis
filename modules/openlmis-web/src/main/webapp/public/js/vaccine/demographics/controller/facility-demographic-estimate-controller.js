@@ -29,8 +29,8 @@ function FacilityDemographicEstimateController($scope, categories, programs, yea
   $scope.onParamChanged = function(){
     FacilityDemographicEstimates.get({programId : programs[0].id, year: $scope.year}, function(data){
       $scope.form = data.estimates;
-      angular.forEach($scope.form.facilityEstimates, function(fe){
-        fe.indexedEstimates = _.indexBy( fe.estimates , 'demographicEstimateId' );
+      angular.forEach($scope.form.estimateLineItems, function(fe){
+        fe.indexedEstimates = _.indexBy( fe.facilityEstimates , 'demographicEstimateId' );
       });
     });
   };
