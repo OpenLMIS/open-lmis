@@ -15,8 +15,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class FacilityDemographicEstimateForm {
+public class DemographicEstimateForm {
 
-  private List<FacilityDemographicEstimateDTO> facilityEstimates;
+  private List<DemographicEstimateLineItem> estimateLineItems;
 
 }
