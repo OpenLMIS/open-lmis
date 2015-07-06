@@ -129,6 +129,7 @@
                    id="{{getId(column.name, $parent)}}" type="text"
                    name="quantityReceived{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
+                   align="right"
                    numeric-validator="positiveInteger" maxlength="8"
                    ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                    ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"/>

@@ -25,5 +25,5 @@ services.factory('FacilityDemographicEstimates', function ($resource) {
 });
 
 services.factory('SaveFacilityDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/facility/save.json', {}, {});
+  return $resource('/vaccine/demographic/estimate/facility/save.json', {}, update);
 });

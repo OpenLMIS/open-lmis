@@ -13,6 +13,7 @@ package org.openlmis.vaccine.service.demographics;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RightName;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.vaccine.domain.demographics.DemographicEstimateCategory;
 import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
 import org.openlmis.vaccine.dto.FacilityDemographicEstimateDTO;
 import org.openlmis.vaccine.dto.FacilityDemographicEstimateForm;
@@ -27,6 +28,9 @@ import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
 
 @Service
 public class FacilityDemographicEstimateService {
+
+  @Autowired
+  DemographicEstimateCategoryService estimateCategoryService;
 
   @Autowired
   private FacilityDemographicEstimateRepository repository;
@@ -47,9 +51,23 @@ public class FacilityDemographicEstimateService {
     }
   }
 
+  private List<FacilityDemographicEstimate> getEmptyEstimateObjects(List<DemographicEstimateCategory> categories, Long facilityId , Integer year){
+    List<FacilityDemographicEstimate> result = new ArrayList<>();
+    for(DemographicEstimateCategory category: categories){
+      FacilityDemographicEstimate estimate = new FacilityDemographicEstimate();
+      estimate.setYear(year);
+      estimate.setFacilityId(facilityId);
+      estimate.setConversionFactor(category.getDefaultConversionFactor());
+      estimate.setDemographicEstimateId(category.getId());
+      estimate.setValue(0L);
+      result.add(estimate);
+    }
+    return result;
+  }
+
   public FacilityDemographicEstimateForm getEstimateFor(Long userId, Long programId, Integer year){
     FacilityDemographicEstimateForm form = new FacilityDemographicEstimateForm();
-
+    List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
     form.setFacilityEstimates(new ArrayList<FacilityDemographicEstimateDTO>());
     List<Facility> facilities =  facilityService.getUserSupervisedFacilities(userId, programId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES);
     // Not scalable - please refactor this.
@@ -60,6 +78,10 @@ public class FacilityDemographicEstimateService {
       dto.setFacilityCode(facility.getCode());
       dto.setFacilityName(facility.getName());
       dto.setEstimates(repository.getFacilityEstimate(year, facility.getId()));
+
+      if( dto.getEstimates().size() == 0 ){
+        dto.setEstimates(getEmptyEstimateObjects(categories, facility.getId(), year));
+      }
 
       form.getFacilityEstimates().add(dto);
     }
