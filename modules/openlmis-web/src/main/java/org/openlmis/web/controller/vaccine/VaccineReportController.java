@@ -120,15 +120,17 @@ public class VaccineReportController extends BaseController {
   @RequestMapping(value = "vaccine-monthly-report")
   public ResponseEntity<OpenLmisResponse> diseaseSurveillance(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId){
     Map<String, Object> data = new HashMap();
-    data.put("diseaseSurveillance", service.getDiseaseSurveillance(facilityId, periodId));
-    data.put("coldChain", service.getColdChain(facilityId, periodId));
-    data.put("adverseEffect", service.getAdverseEffectReport(facilityId, periodId));
-    data.put("vaccineCoverage", service.getVaccineCoverageReport(facilityId, periodId));
-    data.put("immunizationSession", service.getImmunizationSession());
-    data.put("vaccination", service.getVaccineReport());
-    data.put("syringes", service.getSyringeAndSafetyBoxReport());
-    data.put("vitamins", service.getVitaminsReport());
-    data.put("targetPopulation", service.getTargetPopulation(facilityId));
+    Long reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
+    data.put("diseaseSurveillance", service.getDiseaseSurveillance(reportId));
+    data.put("coldChain", service.getColdChain(reportId));
+    data.put("adverseEffect", service.getAdverseEffectReport(reportId));
+    data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId));
+    data.put("immunizationSession", service.getImmunizationSession(reportId));
+    data.put("vaccination", service.getVaccineReport(reportId));
+    data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId));
+    data.put("vitamins", service.getVitaminsReport(reportId));
+    data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId));
+    data.put("vitaminSupplementation", service.getVitaminSupplementationReport(reportId));
 
     return OpenLmisResponse.response("vaccineData", data);
   }

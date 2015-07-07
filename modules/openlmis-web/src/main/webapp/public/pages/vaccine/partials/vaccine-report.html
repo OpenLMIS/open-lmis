@@ -244,7 +244,14 @@
                                 <span><b>+</b><a href="javascript:void(0);">Vitamin A Supplementation</a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
-                                <table class="table-bordered table table-striped ">
+                                <table client-side-sort-pagination class="table table-bordered"
+                                                                                                  ng-show="vitaminSupplementation == undefined || vitaminSupplementation.length == 0">
+                                <tr>
+                                    <td openlmis-message="label.report.no.data.to.show"></td>
+                                </tr>
+                            </table>
+
+                                <table ng-show="vitaminSupplementation.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
                                         <th rowspan="2" colspan="2">Age group</th>
@@ -257,19 +264,14 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td rowspan="2" style="vertical-align: middle; text-align: center">Vitamin A</td>
-                                        <td>9 months</td>
-                                        <td class="number">4</td>
-                                        <td class="number">5</td>
-                                        <td class="number">9</td>
+                                    <tr ng-repeat="vs in vitaminSupplementation">
+                                        <td style="vertical-align: middle; text-align: center">{{vs.vitaminName}}</td>
+                                        <td>{{vs.ageGroup}}</td>
+                                        <td class="number">{{vs.maleValue}}</td>
+                                        <td class="number">{{vs.femaleValue}}</td>
+                                        <td class="number">{{vs.maleValue + vs.femaleValue}}</td>
                                     </tr>
-                                    <tr>
-                                        <td>18 months</td>
-                                        <td class="number">4</td>
-                                        <td class="number">5</td>
-                                        <td class="number">9</td>
-                                    </tr>
+
                                     </tbody>
                                 </table>
 

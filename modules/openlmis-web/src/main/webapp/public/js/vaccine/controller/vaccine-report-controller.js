@@ -33,24 +33,10 @@ function VaccineReportPOCReportController($scope, VaccineMonthlyReport) {
                     $scope.syringes = $scope.data.syringes;
                     $scope.vitamins = $scope.data.vitamins;
                     $scope.targetPopulation = $scope.data.targetPopulation;
+                    $scope.vitaminSupplementation = $scope.data.vitaminSupplementation;
                 }
             });
 
-          /*  ColdChainReport.get($scope.filter, function(data){
-                $scope.coldChain = data.coldChain;
-            });
-
-            AdverseEffectReport.get($scope.filter, function(data){
-                $scope.adverseEffect = data.adverseEffect;
-            });
-
-            VaccineCoverageReport.get($scope.filter, function(data){
-                $scope.vaccineCoverage = data.vaccineCoverage;
-            });
-            $scope.immunizationSession = null;
-            ImmunizationSessionReport.get({}, function(data){
-               $scope.immunizationSession = data.immunizationSession;
-            });*/
         }
 
     };

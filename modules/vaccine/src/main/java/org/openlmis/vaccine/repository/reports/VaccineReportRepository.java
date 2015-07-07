@@ -10,10 +10,7 @@
 
 package org.openlmis.vaccine.repository.reports;
 
-import org.openlmis.vaccine.domain.reports.AdverseEffectLineItem;
-import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
-import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
-import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.domain.reports.*;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportMapper;
 import org.openlmis.vaccine.service.reports.VaccineLineItemService;
@@ -77,32 +74,37 @@ public class VaccineReportRepository {
   public List<ReportStatusDTO> getReportedPeriodsForFacility(Long facilityId, Long programId) {
     return mapper.getReportedPeriodsForFacility(facilityId, programId);
   }
-
-  public List<DiseaseLineItem> getDiseaseSurveillance(Long facilityId, Long periodId){
-    return mapper.getDiseaseSurveillance(facilityId, periodId);
+  public Long getReportIdForFacilityAndPeriod(Long facilityId, Long periodId){
+    return mapper.getReportIdForFacilityAndPeriod(facilityId, periodId);
+  }
+  public List<DiseaseLineItem> getDiseaseSurveillance(Long reportId){
+    return mapper.getDiseaseSurveillance(reportId);
   }
 
-  public List<ColdChainLineItem> getColdChain(Long facilityId, Long periodId){
-    return mapper.getColdChain(facilityId, periodId);
+  public List<ColdChainLineItem> getColdChain(Long reportId){
+    return mapper.getColdChain(reportId);
   }
 
-  public List<AdverseEffectLineItem> getAdverseEffectReport(Long facilityId, Long periodId){
-    return mapper.getAdverseEffectReport(facilityId, periodId );
+  public List<AdverseEffectLineItem> getAdverseEffectReport(Long reportId){
+    return mapper.getAdverseEffectReport(reportId);
   }
 
-  public List<HashMap<String, Object>> getVaccineCoverageReport(Long facilityId, Long periodId){
-    return mapper.getVaccineCoverageReport(facilityId, periodId);
+  public List<HashMap<String, Object>> getVaccineCoverageReport(Long reportId){
+    return mapper.getVaccineCoverageReport(reportId);
   }
 
-  public List<VaccineReport> getImmunizationSession(){
-    return mapper.getImmunizationSession();
+  public List<VaccineReport> getImmunizationSession(Long reportId){
+    return mapper.getImmunizationSession(reportId);
   }
 
-  public List<HashMap<String, Object>> getVaccinationReport(String productCategoryCode){
-    return mapper.getVaccinationReport(productCategoryCode);
+  public List<HashMap<String, Object>> getVaccinationReport(String productCategoryCode, Long reportId){
+    return mapper.getVaccinationReport(productCategoryCode, reportId);
   }
 
-  public List<HashMap<String, Object>> getTargetPopulation(Long facilityId){
-    return mapper.getTargetPopulation(facilityId);
+  public List<HashMap<String, Object>> getTargetPopulation(Long facilityId, Long periodId){
+    return mapper.getTargetPopulation(facilityId, periodId);
+  }
+  public List<VitaminSupplementationLineItem> getVitaminSupplementationReport(Long reportId){
+    return mapper.getVitaminSupplementationReport(reportId);
   }
 }
