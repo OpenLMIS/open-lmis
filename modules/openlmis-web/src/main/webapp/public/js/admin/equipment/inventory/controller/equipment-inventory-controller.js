@@ -120,6 +120,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
         $scope.prevStatusId = item.prevStatusId; // Need to save previous since item.prevStatusId gets overwritten
                                                  // at the end of this function
       } else {
+        item.notFunctionalStatusId = null; // Reset for the UI
         UpdateEquipmentInventoryStatus.save({}, item, function () {
           // Success
           item.showSuccess = true;
