@@ -10,6 +10,7 @@
 
 package org.openlmis.equipment.repository.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.equipment.domain.EquipmentOperationalStatus;
 import org.springframework.stereotype.Repository;
@@ -21,4 +22,10 @@ public interface EquipmentOperationalStatusMapper {
 
   @Select("select * from equipment_operational_status order by displayOrder, name")
   List<EquipmentOperationalStatus> getAll();
+
+  @Select("SELECT *" +
+      " FROM equipment_operational_status" +
+      " WHERE id = #{id}" +
+      " ORDER BY displayOrder, name")
+  EquipmentOperationalStatus getById(@Param("id")Long id);
 }
