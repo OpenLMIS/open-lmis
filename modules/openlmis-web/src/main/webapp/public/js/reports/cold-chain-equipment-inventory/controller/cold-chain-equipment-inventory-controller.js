@@ -8,7 +8,9 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ColdChainEquipmentReportController($scope, ColdChainEquipmentService, ngTableParams, $filter, $http, $routeParams, $location) {
+function ColdChainEquipmentReportController($scope, $log, ColdChainEquipmentService, ngTableParams, $filter, $http, $routeParams, $location) {
+
+    $scope.log = $log;
 
     //Add this temporarily. It should really be set by filters on the page
     $scope.filter = {};
@@ -31,7 +33,6 @@ function ColdChainEquipmentReportController($scope, ColdChainEquipmentService, n
     // the grid options
     $scope.tableParams = new ngTableParams({
         page: 1,            // show first page
-        total: 0,           // length of data
         count: 10           // count per page
     });
 
@@ -58,6 +59,17 @@ function ColdChainEquipmentReportController($scope, ColdChainEquipmentService, n
         function (data)
         {
             $scope.data = $scope.datarows = data.pages.rows;
+            $scope.pages = data.pages;
+            $scope.tableParams.total = $scope.pages.total;
         }
     );
+
+    $scope.getLargestRecordShown = function()
+    {
+        var max = $scope.tableParams.page * $scope.tableParams.count;
+        if($scope.pages)
+            return ($scope.pages.total > max) ? max : $scope.pages.total;
+        else
+            return max;
+    }
 }

@@ -49,14 +49,17 @@
                 </tr>
             </table>
 
-
-            <div ng-show="datarows.length > 0" client-side-sort-pagination class="pull-right legend">
-                Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) *
-                tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{datarows.length}}
+            <div client-side-sort-pagination class="pull-right legend" ng-show="datarows.length > 0">
+                Page: {{tableParams.page}},
+                Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }}
+                to
+                {{ getLargestRecordShown(); }}
+                of
+                {{pages.total}}
             </div>
 
-            <div style="overflow:scroll; clear:right;">
-                <table style="width:inherit; " ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+            <div style="overflow:scroll; clear:right;" ng-show="datarows.length > 0">
+                <table style="width:inherit;"  class="table-bordered table table-striped" ng-table="tableParams">
                     <tbody>
                     <tr ng-repeat="row in datarows">
 

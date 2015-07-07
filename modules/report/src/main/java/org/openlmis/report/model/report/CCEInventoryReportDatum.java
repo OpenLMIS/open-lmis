@@ -16,6 +16,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -37,7 +39,11 @@ public class CCEInventoryReportDatum implements ReportData {
     private String refrigerant;
     private Integer refrigeratorCapacity;
     private Integer freezerCapacity;
+
     private String equipmentOperationalStatusName;
+    private String functional_status;
+    private String non_functional_status;
+
     private Integer yearOfInstallation;
     private Double equipmentAge; //TODO: Use an Integer instead
     private Integer yearOfReplacement;
@@ -55,6 +61,11 @@ public class CCEInventoryReportDatum implements ReportData {
     private String geozoneName;
     private String geozoneHierarchy;
 
+
+    public String getEquipmentOperationalStatusName()
+    {
+        return !isEmpty(non_functional_status) ? non_functional_status : functional_status;
+    }
 
     //The private geozoneHierarchy member is given a value of the form {zone1, zone2, zone4}
     //This method strips off the leading and trailing curly-braces and return the tokenized result.
