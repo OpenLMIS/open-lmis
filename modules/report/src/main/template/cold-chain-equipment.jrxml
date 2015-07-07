@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-06-29T21:08:01 -->
+<!-- 2015-07-02T17:59:09 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-master-landscape" language="groovy" pageWidth="1645" pageHeight="595" orientation="Landscape" columnWidth="1605" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0000000000000007"/>
 	<property name="ireport.x" value="0"/>
@@ -150,7 +150,7 @@
 			</textField>
 			<textField>
 				<reportElement x="223" y="1" width="100" height="19" uuid="1128e9de-b581-417e-aea3-8a75213da5de"/>
-				<textFieldExpression><![CDATA[$R{label.address}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{label.location}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="327" y="1" width="100" height="19" uuid="c8f2c7d6-977d-4be2-9b3a-81e55fd8c6d7"/>

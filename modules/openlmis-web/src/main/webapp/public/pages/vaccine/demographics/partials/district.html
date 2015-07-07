@@ -10,7 +10,7 @@
 
 <div class="content-body">
   <h2>
-    <span openlmis-message="header.demographic.facility"></span>
+    <span openlmis-message="header.demographic.district"></span>
   </h2>
 </div>
 <div>
@@ -25,21 +25,21 @@
     <table  class="table table-bordered scrollable">
     <thead>
     <tr>
-      <th class="span1"><span openlmis-message="label.demographic.facility.code"></span></th>
-      <th class="span3"><span openlmis-message="label.demographic.facility.name"></span></th>
+      <th class="span1"><span openlmis-message="label.demographic.district.code"></span></th>
+      <th class="span3"><span openlmis-message="label.demographic.district.name"></span></th>
       <th ng-repeat="category in categories">
         {{category.name}}
       </th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="facility in form.estimateLineItems">
+    <tr ng-repeat="district in form.estimateLineItems">
       <td class="cell-input">
-        <span class="cell-text">{{facility.code}}</span>
+        <span class="cell-text">{{district.code}}</span>
       </td>
       <td class="cell-input">
         <span class="cell-text">
-          {{facility.name}}
+          {{district.name}}
         </span>
       </td>
       <td class="cell-input number" style="text-align: right" ng-repeat="category in categories">
@@ -50,8 +50,8 @@
                     style="width:90%"
                     numeric-validator="positiveInteger"
                     maxlength="8"
-                    ng-change="OnPopulationChanged(facility.indexedEstimates[category.id], facility, category)"
-                    ng-model="facility.indexedEstimates[category.id].value"
+                    ng-change="OnPopulationChanged(district.indexedEstimates[category.id], district, category)"
+                    ng-model="district.indexedEstimates[category.id].value"
                     type="text"/>
           </span>
         </span>

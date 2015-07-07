@@ -11,31 +11,37 @@
 package org.openlmis.vaccine.repository.mapper.demographics;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
+import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.vaccine.domain.demographics.DistrictDemographicEstimate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface FacilityDemographicEstimateMapper {
+public interface DistrictDemographicEstimateMapper {
 
-  @Insert("insert into facility_demographic_estimates " +
-    " (year, facilityId, demographicEstimateId, conversionFactor, value)" +
+  @Insert("insert into district_demographic_estimates " +
+    " (year, districtId, demographicEstimateId, conversionFactor, value)" +
     " values " +
-    " (#{year}, #{facilityId}, #{demographicEstimateId}, #{conversionFactor}, #{value}) ")
+    " (#{year}, #{districtId}, #{demographicEstimateId}, #{conversionFactor}, #{value}) ")
   @Options(flushCache = true, useGeneratedKeys = true)
-  Integer insert(FacilityDemographicEstimate estimate);
+  Integer insert(DistrictDemographicEstimate estimate);
 
-  @Update("update facility_demographic_estimates " +
+  @Update("update district_demographic_estimates " +
     " set " +
     " year = #{year}, " +
-    " facilityId = #{facilityId}," +
+    " districtId = #{districtId}," +
     " demographicEstimateId = #{demographicEstimateId}," +
     " conversionFactor = #{conversionFactor}," +
     " value = #{value}" +
     "where id = #{id} ")
-  Integer update(FacilityDemographicEstimate estimate);
+  Integer update(DistrictDemographicEstimate estimate);
 
-  @Select("select * from facility_demographic_estimates where year = #{year} and facilityId = #{facilityId}")
-  List<FacilityDemographicEstimate> getEstimatesForFacility(@Param("year") Integer year, @Param("facilityId") Long facilityId);
+  @Select("select * from district_demographic_estimates where year = #{year} and districtId = #{districtId}")
+  List<DistrictDemographicEstimate> getEstimatesForDistrict(@Param("year") Integer year, @Param("districtId") Long districtId);
+
+  @Select("select * from geographic_zones " +
+    "     where levelId = (select max(levelNumber) from geographic_levels)" +
+    "     order by name")
+  List<GeographicZone> getDistricts();
 }

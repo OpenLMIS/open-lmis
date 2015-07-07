@@ -8,17 +8,16 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function FacilityDemographicEstimateController($scope, categories, programs, years, FacilityDemographicEstimates, SaveFacilityDemographicEstimates) {
+function DistrictDemographicEstimateController($scope, categories, years, DistrictDemographicEstimates, SaveDistrictDemographicEstimates) {
 
   $scope.categories = categories;
-  $scope.programs = programs;
   $scope.years = years;
   $scope.year = years[0];
 
-  $scope.OnPopulationChanged = function(population, facility, category){
+  $scope.OnPopulationChanged = function(population, district, category){
     var pop = $scope.toNumber(population.value);
     if(category.isPrimaryEstimate){
-      angular.forEach(facility.estimates, function(estimate){
+      angular.forEach(district.districtEstimates, function(estimate){
         if(population.demographicEstimateId !== estimate.demographicEstimateId){
           estimate.value = $scope.round(estimate.conversionFactor * pop / 100) ;
         }
@@ -27,10 +26,10 @@ function FacilityDemographicEstimateController($scope, categories, programs, yea
   };
 
   $scope.onParamChanged = function(){
-    FacilityDemographicEstimates.get({programId : programs[0].id, year: $scope.year}, function(data){
+    DistrictDemographicEstimates.get({year: $scope.year}, function(data){
       $scope.form = data.estimates;
       angular.forEach($scope.form.estimateLineItems, function(fe){
-        fe.indexedEstimates = _.indexBy( fe.facilityEstimates , 'demographicEstimateId' );
+        fe.indexedEstimates = _.indexBy( fe.districtEstimates , 'demographicEstimateId' );
       });
     });
   };
@@ -47,10 +46,10 @@ function FacilityDemographicEstimateController($scope, categories, programs, yea
   };
 
   $scope.save = function(){
-    SaveFacilityDemographicEstimates.update($scope.form, function(data){
+    SaveDistrictDemographicEstimates.update($scope.form, function(data){
       // show the saved message
       //TODO: move this string to the messages property file.
-      $scope.message = "Facility demographic estimates successfully saved.";
+      $scope.message = "District demographic estimates successfully saved.";
     });
   };
 
@@ -58,7 +57,7 @@ function FacilityDemographicEstimateController($scope, categories, programs, yea
 
 }
 
-FacilityDemographicEstimateController.resolve = {
+DistrictDemographicEstimateController.resolve = {
 
   categories: function ($q, $timeout, DemographicEstimateCategories) {
     var deferred = $q.defer();
@@ -67,16 +66,6 @@ FacilityDemographicEstimateController.resolve = {
         deferred.resolve(data.estimate_categories);
       }, {});
     }, 100);
-    return deferred.promise;
-  }, programs: function ($q, $timeout, VaccineSupervisedIvdPrograms) {
-    var deferred = $q.defer();
-
-    $timeout(function () {
-      VaccineSupervisedIvdPrograms.get({}, function (data) {
-        deferred.resolve(data.programs);
-      });
-    }, 100);
-
     return deferred.promise;
   }, years: function ($q, $timeout, OperationYears) {
     var deferred = $q.defer();
