@@ -4,14 +4,15 @@
    Dependency: fn_get_geozonetree_names.
 */
 
-CREATE OR REPLACE VIEW vw_cold_chain_equipment AS 
+DROP VIEW IF EXISTS vw_cold_chain_equipment;
+CREATE VIEW vw_cold_chain_equipment AS 
 
 SELECT
 nested.id AS "equipmentId",
 nested.manufacturer AS manufacturer, nested.model,
 eet.name AS "energyTypeName", 
 ecce.ccecode AS "equipmentColdChainEquipmentsCode", ecce.refrigerant, ecce.refrigeratorcapacity, ecce.freezercapacity,
-eos.name AS "equipmentOperationalStatusName",
+eos1.functional_status, eos2.non_functional_status,
 ei.yearofinstallation, (extract(year from current_date) - ei.yearofinstallation) AS "equipmentAge", (ei.yearofinstallation + 11) AS "yearOfReplacement",
 facilities.id AS "facilityId", facilities.name AS "facilityName",
 ft.name AS "facilityTypeName", 
@@ -35,10 +36,30 @@ LEFT JOIN facilities
 ON ei.facilityid = facilities.id
 LEFT JOIN facility_types AS ft
 ON facilities.typeid = ft.id
-LEFT JOIN equipment_inventory_statuses AS eis
+
+LEFT JOIN equipment_inventory_statuses eis
 ON ei.id = eis.inventoryid
-LEFT JOIN equipment_operational_status AS eos
-ON eis.statusid = eos.id OR eis.notfunctionalstatusid = eos.id
+AND eis.createddate = 
+(
+   SELECT max(createddate) 
+   FROM equipment_inventory_statuses
+   WHERE inventoryid = ei.id
+)
+
+LEFT JOIN 
+(
+   SELECT id, name AS functional_status
+   FROM equipment_operational_status
+) eos1
+ON eos1.id = eis.statusid 
+
+LEFT JOIN 
+(
+   SELECT id, name AS non_functional_status
+   FROM equipment_operational_status
+) eos2
+ON eos2.id = eis.notfunctionalstatusid 
+
 LEFT JOIN facility_operators as fo
 ON facilities.operatedbyid = fo.id
 LEFT JOIN geographic_zones gz
