@@ -30,7 +30,7 @@ function CCEStorageCapacityReportController($scope, CCEStorageCapacityReport, ng
         $scope.filter.max = 10000;
         CCEStorageCapacityReport.get($scope.filter, function(data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.data = data.pages.rows;
+                $scope.data = $scope.datarows = data.pages.rows;
                 $scope.paramsChanged($scope.tableParams);
 
             }
