@@ -71,5 +71,5 @@ function ColdChainEquipmentReportController($scope, $log, ColdChainEquipmentServ
             return ($scope.pages.total > max) ? max : $scope.pages.total;
         else
             return max;
-    }
+    };
 }
