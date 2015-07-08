@@ -48,6 +48,9 @@ public class EquipmentInventoryRepositoryTest {
   @Mock
   private EquipmentInventoryStatusMapper equipmentInventoryStatusMapper;
 
+  @Mock
+  private EquipmentOperationalStatusMapper equipmentOperationalStatusMapper;
+
   @InjectMocks
   private EquipmentInventoryRepository repository;
 
@@ -278,15 +281,19 @@ public class EquipmentInventoryRepositoryTest {
     newStatus.setInventoryId(inventoryId);
     newStatus.setStatusId(newStatusId);
     newStatus.setNotFunctionalStatusId(notFunctionalStatusId);
+    EquipmentOperationalStatus statusDef = new EquipmentOperationalStatus();
+    statusDef.setIsBad(true);
 
     // Set up mock calls
     when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
+    when(equipmentOperationalStatusMapper.getById(newStatus.getStatusId())).thenReturn(statusDef);
 
     // Do the call
     repository.updateStatus(inventory);
 
     // Test the results
     verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
+    verify(equipmentOperationalStatusMapper).getById(newStatusId);
     verify(equipmentInventoryStatusMapper).insert(newStatus);
   }
 
@@ -300,5 +307,30 @@ public class EquipmentInventoryRepositoryTest {
 
     // Test the results
     verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
+  }
+
+  @Test
+  public void shouldSetNotFunctionalStatusToNull() throws Exception {
+    // Set up variables
+    long newStatusId = 3L;
+    inventory.setOperationalStatusId(newStatusId);
+    EquipmentInventoryStatus newStatus = new EquipmentInventoryStatus();
+    newStatus.setInventoryId(inventoryId);
+    newStatus.setStatusId(newStatusId);
+    newStatus.setNotFunctionalStatusId(null);
+    EquipmentOperationalStatus statusDef = new EquipmentOperationalStatus();
+    statusDef.setIsBad(false);
+
+    // Set up mock calls
+    when(equipmentInventoryStatusMapper.getCurrentStatus(inventoryId)).thenReturn(status);
+    when(equipmentOperationalStatusMapper.getById(newStatus.getStatusId())).thenReturn(statusDef);
+
+    // Do the call
+    repository.updateStatus(inventory);
+
+    // Test the results
+    verify(equipmentInventoryStatusMapper).getCurrentStatus(inventoryId);
+    verify(equipmentOperationalStatusMapper).getById(newStatusId);
+    verify(equipmentInventoryStatusMapper).insert(newStatus);
   }
 }
