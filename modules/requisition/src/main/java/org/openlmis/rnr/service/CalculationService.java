@@ -115,7 +115,13 @@ public class CalculationService {
         RnrLineItem previous = (RnrLineItem) map.get(lineItem.getProductCode());
         if (previous != null) {
           lineItem.setSkipped(previous.getSkipped());
+        }else if(requisition.getProgram().getHideSkippedProducts()){
+          lineItem.setSkipped(true);
         }
+      }
+    }else if(requisition.getProgram().getHideSkippedProducts()){
+      for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+        lineItem.setSkipped(true);
       }
     }
   }
