@@ -82,6 +82,10 @@ function CreateFullSupplyController($scope, messageService) {
     $scope.saveRnrForm.$dirty = true;
     $scope.$parent.saveRnr();
 
+    if(rnr.fullSupplyLineItems.length == 0){
+      rnr.fullSupplyLineItems = $scope.$parent.page[$scope.$parent.visibleTab];
+    }
+
     angular.forEach(rnr.skippedLineItems, function(li){
       if(!li.unskip){
         li.unskip = false;
