@@ -404,24 +404,43 @@
 
         <div class="row-fluid">
           <div class="span12">
-            <span openlmis-message="rnr.search.product"> </span><input type="text" class="large" ng-model="filterText"/>
+            <label for="filterSkipped">
+              <span openlmis-message="rnr.search.product"> </span>
+            </label>
+            <input id="filterSkipped" type="text" class="large" ng-model="filterText"/>
           </div>
           <div class="span12" style="max-height: 240px ; overflow:scroll">
             <table class="table table-bordered">
               <thead>
-              <tr>
+              <tr class="gradient-header">
                 <th openlmis-message="rnr.header.add"></th>
                 <th openlmis-message="rnr.header.code"></th>
                 <th openlmis-message="rnr.header.product.name"></th>
               </tr>
               </thead>
               <tbody>
-              <tr
-                ng-repeat="row in $parent.$parent.rnr.skippedLineItems | filter: {product: filterText, unskip: undefined}">
-                <td><input type="checkbox" ng-model="row.unskip"/></td>
-                <td>{{row.productCode}}</td>
-                <td>{{row.product}}</td>
+              <tr ng-repeat-start="row in filtered = ($parent.$parent.rnr.skippedLineItems | filter: {product: filterText})"></tr>
+              <tr ng-show="($index == 0 || ($index > 0 && filtered[$index - 1].productCategory != row.productCategory))">
+                <td colspan="3" class="productCategory">
+                  {{row.productCategory}}
+                </td>
               </tr>
+              <tr>
+                <td class="cell-input" style="text-align: center;">
+                  <input type="checkbox" id="skipped-row-{{row.id}}" ng-model="row.unskip"/>
+                </td>
+                <td class="cell-input">
+                  <label for="skipped-row-{{row.id}}">
+                  <span class="cell-text">{{row.productCode}}</span>
+                  </label>
+                </td>
+                <td class="cell-input">
+                  <label for="skipped-row-{{row.id}}">
+                    <span class="cell-text">{{row.product}}</span>
+                  </label>
+                </td>
+              </tr>
+              <tr ng-repeat-end></tr>
               </tbody>
             </table>
           </div>
