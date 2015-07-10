@@ -17,13 +17,18 @@ app.directive('filterContainer', ['$routeParams', '$location', function ($routeP
 
       function isFilterValid(){
         var all_required_fields_set = true;
-
+        
         // check if all of the required parameters have been specified
-        angular.forEach($scope.requiredFilters, function (value) {
-          if (isUndefined($scope.filter[value])) {
-            all_required_fields_set = false;
+        if(!angular.isUndefined($scope.requiredFilters)){
+          var requiredFilters = _.values($scope.requiredFilters);
+          for(var i = 0; i < requiredFilters.length; i++){
+            var field = requiredFilters[i];
+            if (isUndefined($scope.filter[field]) || _.isEmpty($scope.filter[field]) || $scope.filter[field] === 0 || $scope.filter[field] === -1) {
+              all_required_fields_set = false;
+              break;
+            }
           }
-        });
+        }
         return all_required_fields_set;
       }
 
@@ -36,7 +41,7 @@ app.directive('filterContainer', ['$routeParams', '$location', function ($routeP
         $scope.$parent.OnFilterChanged();
       };
 
-      $scope.filterChanged();
+      //$scope.filterChanged();
     },
     link: function (scope) {
       angular.extend(scope, {
@@ -86,7 +91,7 @@ app.directive('yearFilter', ['OperationYears',
         scope.$evalAsync(function () {
           OperationYears.get(function (data) {
             scope.years = data.years;
-            if($scope.filter.year === undefined){
+            if(scope.filter.year === undefined){
               scope.filter.year = data.years[0];
             }
           });
@@ -317,7 +322,7 @@ app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear'
           if (data.periods !== undefined && data.periods.length > 0)
             $scope.periods.unshift({
               'name': '-- Select a Period --',
-              'id': '0'
+              'id': 0
             });
           $scope.filter.period = $routeParams.period;
         });
@@ -330,7 +335,7 @@ app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear'
             }, function (data) {
               $scope.periods = data.periods;
               if (data.periods !== undefined && data.periods.length > 0)
-                $scope.periods.unshift({'name': '-- Select a Period --', 'id': '0'});
+                $scope.periods.unshift({'name': '-- Select a Period --', 'id': 0});
             });
           });
         }
@@ -346,7 +351,8 @@ app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear'
 
         scope.periods = [];
         scope.periods.push({
-          name: '-- Select Period --'
+          name: '-- Select Period --',
+          id : 0
         });
 
         if (attr.required) {
@@ -419,7 +425,7 @@ app.directive('adjustmentTypeFilter', ['AdjustmentTypes', '$routeParams', functi
 
       AdjustmentTypes.get(function (data) {
         scope.adjustmentTypes = data.adjustmentTypeList;
-        scope.adjustmentTypes.unshift({'description': '--All Adjustment Types --', id: 0});
+        scope.adjustmentTypes.unshift({'description': '--All Adjustment Types --', name: 0});
       });
 
       scope.filter.adjustmentType = (isUndefined($routeParams.adjustmentType) || $routeParams.adjustmentType === '') ? 0 : $routeParams.adjustmentType;
@@ -673,7 +679,7 @@ app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
           return (!angular.isDefined(scope.filter) ||
             !angular.isDefined(scope.filter.productCategory) ||
             scope.filter.productCategory === '' ||
-            scope.filter.productCategory === '0' ||
+            scope.filter.productCategory === 0 ||
             option.categoryId == scope.filter.productCategory ||
             option.id === -1  ||
             option.id === scope.filter.product ||
@@ -817,7 +823,7 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
         scope.productCFilter = function (option) {
 
           return (!angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) || scope.filter.productCategory === '' ||
-              scope.filter.productCategory === '0' || option.categoryId == scope.filter.productCategory || option.id=='0' || option.id=='-1'||
+              scope.filter.productCategory === 0 || option.categoryId == scope.filter.productCategory || option.id === 0 || option.id === -1 ||
               (angular.isArray(scope.filter.productCategory) && valueExistInArray(scope.filter.productCategory, option.categoryId)));
         };
 
