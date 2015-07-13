@@ -20,17 +20,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-
 import java.util.NoSuchElementException;
-
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
 
 public class HomePage extends Page {
-
-  private static String homePageUrl = "/public/pages/index.html";
 
   @FindBy(how = ID, using = "logout")
   private static WebElement logoutLink = null;
@@ -220,7 +216,7 @@ public class HomePage extends Page {
 
   public HomePage(TestWebDriver driver) {
     super(driver);
-    driver.getUrl(  LoginPage.baseUrl + homePageUrl );
+    driver.getUrl(  LoginPage.baseUrl );
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
   }
@@ -230,6 +226,7 @@ public class HomePage extends Page {
   }
 
   public LoginPage logout(String baseUrl) {
+      testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(logoutLink);
     logoutLink.click();
     return PageObjectFactory.getLoginPage(testWebDriver, baseUrl);

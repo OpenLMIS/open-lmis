@@ -1,0 +1,57 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+<div>
+  <h2>Targets</h2>
+
+  <div class="span11 rnr-table">
+    <div><strong>Target Population</strong>: {{report.facility.catchmentPopulation}}</div>
+    <hr />
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <td></td>
+        <th colspan="5"  style="text-align: center">Targets</th>
+      </tr>
+      <tr>
+        <th></th>
+
+        <th class="span2">0 - 11 months</th>
+        <th class="span2">12 - 23 months</th>
+        <th class="span2">Pregnant Women</th>
+        <th class="span2">Outreach</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="cell-input"><span class="cell-text">Yearly Target</span></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="yt.col_0_11" /></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="yt.col_12_23" /></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="yt.pregnantWomen" /></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="yt.outreach"/></td>
+      </tr>
+      <tr>
+        <td class="cell-input"><span class="cell-text">This Period</span></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="mt.col_0_11" /></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="mt.col_12_23"  /></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="mt.pregnantWomen" /></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="mt.outreach" /></td>
+      </tr>
+      <tr>
+        <td class="cell-input"><span class="cell-text">Cumulative</span></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="ytd.col_0_11" /></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="ytd.col_12_23" /></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="ytd.pregnantWomen" /></td>
+        <td class="cell-input col-beginningBalance"><input type="text" numeric-validator="positiveInteger" ng-model="ytd.outreach" /></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="clearfix"></div>
+</div>

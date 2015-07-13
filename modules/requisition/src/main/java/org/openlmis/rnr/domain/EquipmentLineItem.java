@@ -33,6 +33,7 @@ public class EquipmentLineItem extends LineItem  {
   private String equipmentModel;
   private String equipmentSerial;
   private Long equipmentInventoryId;
+  private Long inventoryStatusId;
   private Long operationalStatusId;
   private Long testCount;
   private Long totalCount;

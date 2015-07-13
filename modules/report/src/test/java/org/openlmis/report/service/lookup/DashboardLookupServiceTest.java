@@ -1,9 +1,9 @@
 package org.openlmis.report.service.lookup;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
@@ -15,7 +15,7 @@ import org.openlmis.report.model.dto.ShipmentLeadTime;
 import org.openlmis.report.model.dto.StockingInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,11 +29,10 @@ import static org.openlmis.report.service.lookup.DashboardLookupService.getComma
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 @PrepareForTest(DashboardLookupService.class)
 public class DashboardLookupServiceTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   DashboardMapper mapper;

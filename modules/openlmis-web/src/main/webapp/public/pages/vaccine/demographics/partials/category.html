@@ -1,0 +1,43 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div class="content-body">
+  <h2>
+    <span openlmis-message="header.demographic.categories"></span>
+  </h2>
+  <a href="#/category/add" class="pull-right btn btn-primary"><span openlmis-message="link.add.new"></span></a>
+  <p>
+    <span openlmis-message="label.demographic.category.intro"></span>
+  </p>
+</div>
+<div>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+      <th class="span1">#</th>
+      <th class="span5"><span openlmis-message="label.demographic.name"></span></th>
+      <th><span openlmis-message="label.demographic.description"></span></th>
+      <th><span openlmis-message="label.demographic.default.conversion.factor"></span></th>
+      <th><span openlmis-message="label.demographic.is.primary.estimate"></span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="category in categories">
+      <th>{{$index + 1}}</th>
+      <td><a ng-href="#/category/edit/{{category.id}}">{{category.name}}</a></td>
+      <td>{{category.description}}</td>
+      <td>{{category.defaultConversionFactor}}</td>
+      <td><input type="checkbox" ng-model="category.isPrimaryEstimate" ng-disabled="true" /></td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>

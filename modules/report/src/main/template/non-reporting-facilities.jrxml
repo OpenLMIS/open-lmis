@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2015-06-22T15:13:09 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="mailing-labels" language="groovy" pageWidth="812" pageHeight="595" orientation="Landscape" columnWidth="712" leftMargin="40" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="4.594972986357225"/>
 	<property name="ireport.x" value="2442"/>
@@ -44,7 +46,7 @@
 	<pageHeader>
 		<band height="80">
 			<subreport>
-				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="751" height="80" isRemoveLineWhenBlank="true">
+				<reportElement x="0" y="0" width="751" height="80" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
@@ -76,36 +78,32 @@
 	<columnHeader>
 		<band height="26" splitType="Prevent">
 			<staticText>
-				<reportElement uuid="a3f58159-3cb5-4422-8858-64f0b4f9c841" mode="Opaque" x="0" y="0" width="751" height="26" forecolor="#FFFFFF" backcolor="#3D9297">
+				<reportElement mode="Opaque" x="0" y="0" width="751" height="26" forecolor="#FFFFFF" backcolor="#3D9297" uuid="a3f58159-3cb5-4422-8858-64f0b4f9c841">
 					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 				</reportElement>
-				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="bd93dec5-6d79-489a-a417-b20d9ad9fe08" x="0" y="0" width="40" height="26"/>
-				<textElement/>
+				<reportElement x="0" y="0" width="40" height="26" uuid="bd93dec5-6d79-489a-a417-b20d9ad9fe08"/>
 				<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="dd539b8b-94c9-44ad-82a1-744516ede0fb" x="40" y="0" width="72" height="26"/>
-				<textElement/>
+				<reportElement x="40" y="0" width="72" height="26" uuid="dd539b8b-94c9-44ad-82a1-744516ede0fb"/>
 				<textFieldExpression><![CDATA[$R{label.facility.code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="7d10ecb6-9860-405d-a20b-7195a66e5a35" x="112" y="0" width="143" height="26"/>
-				<textElement/>
+				<reportElement x="112" y="0" width="143" height="26" uuid="7d10ecb6-9860-405d-a20b-7195a66e5a35"/>
 				<textFieldExpression><![CDATA[$R{label.facility}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="1b42e11f-198a-4537-a2e7-6a23e560352c" x="255" y="0" width="160" height="26"/>
+				<reportElement x="255" y="0" width="160" height="26" uuid="1b42e11f-198a-4537-a2e7-6a23e560352c"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.facility.type}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="e268b6f3-c02e-43cb-823b-bbef5370279b" mode="Transparent" x="415" y="0" width="160" height="26" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="415" y="0" width="160" height="26" forecolor="#000000" backcolor="#FFFFFF" uuid="e268b6f3-c02e-43cb-823b-bbef5370279b"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -119,14 +117,13 @@
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement uuid="bbf6a8fa-7df0-4d74-a1c1-767deb62e0e0" mode="Opaque" x="0" y="0" width="751" height="20" backcolor="#F4F4F4">
+				<reportElement mode="Opaque" x="0" y="0" width="751" height="20" backcolor="#F4F4F4" uuid="bbf6a8fa-7df0-4d74-a1c1-767deb62e0e0">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 				</reportElement>
-				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="737ff77e-08a6-46fa-87c6-90dde8a147f4" mode="Transparent" x="40" y="0" width="72" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="40" y="0" width="72" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="737ff77e-08a6-46fa-87c6-90dde8a147f4"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -134,7 +131,7 @@
 				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a" mode="Transparent" x="112" y="0" width="143" height="20" forecolor="#000000" backcolor="#FFFFFF">
+				<reportElement mode="Transparent" x="112" y="0" width="143" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -145,7 +142,7 @@
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="99773021-35ed-4897-bb47-a7a2e95ee643" mode="Transparent" x="255" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF">
+				<reportElement mode="Transparent" x="255" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="99773021-35ed-4897-bb47-a7a2e95ee643">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -158,7 +155,7 @@
 				<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="56fa579b-f8be-4f08-bcb3-14f443e36267" mode="Transparent" x="415" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF">
+				<reportElement mode="Transparent" x="415" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="56fa579b-f8be-4f08-bcb3-14f443e36267">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -169,7 +166,7 @@
 				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="8acf28da-0482-4ce0-b195-ddb1d5d99a5d" x="0" y="19" width="751" height="1" forecolor="#3D9297">
+				<reportElement x="0" y="19" width="751" height="1" forecolor="#3D9297" uuid="8acf28da-0482-4ce0-b195-ddb1d5d99a5d">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
@@ -179,7 +176,7 @@
 				</graphicElement>
 			</line>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="b3bdd5ec-3469-4195-ad41-352e168b0ce2" mode="Transparent" x="0" y="0" width="40" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="0" y="0" width="40" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="b3bdd5ec-3469-4195-ad41-352e168b0ce2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="5"/>
@@ -191,38 +188,38 @@
 	<summary>
 		<band height="109">
 			<textField>
-				<reportElement uuid="f25da274-6a65-48c7-a355-b9b15fa28588" x="650" y="10" width="70" height="21">
+				<reportElement x="650" y="10" width="70" height="21" uuid="f25da274-6a65-48c7-a355-b9b15fa28588">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{TOTAL_NON_REPORTING}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="992853e5-7ddb-4d79-96fa-0f23ccc3f9eb" x="650" y="31" width="70" height="20">
+				<reportElement x="650" y="31" width="70" height="20" uuid="992853e5-7ddb-4d79-96fa-0f23ccc3f9eb">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{TOTAL_FACILITIES}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="992853e5-7ddb-4d79-96fa-0f23ccc3f9eb" x="650" y="51" width="70" height="20">
+				<reportElement x="650" y="51" width="70" height="20" uuid="992853e5-7ddb-4d79-96fa-0f23ccc3f9eb">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{PERCENTAGE_NON_REPORTING} + " %"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="d53f087b-a1bc-4c97-aef0-38e24aa75a85" x="520" y="10" width="130" height="21"/>
+				<reportElement x="520" y="10" width="130" height="21" uuid="d53f087b-a1bc-4c97-aef0-38e24aa75a85"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$R{label.non.reporting.facility}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="b6bbad2e-904a-4de7-8333-6de0817dcc81" x="520" y="31" width="130" height="20"/>
+				<reportElement x="520" y="31" width="130" height="20" uuid="b6bbad2e-904a-4de7-8333-6de0817dcc81"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$R{label.total.facilities}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="929bddf2-aecb-4343-bfa2-ad54d84cfb67" x="520" y="51" width="130" height="20"/>
+				<reportElement x="520" y="51" width="130" height="20" uuid="929bddf2-aecb-4343-bfa2-ad54d84cfb67"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$R{label.percent.not.reporting}]]></textFieldExpression>
 			</textField>

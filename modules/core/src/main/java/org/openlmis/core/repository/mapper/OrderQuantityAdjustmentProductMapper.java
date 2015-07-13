@@ -18,9 +18,9 @@ public interface OrderQuantityAdjustmentProductMapper {
     public List<OrderQuantityAdjustmentProduct> getAll();
 
     @Insert("INSERT INTO order_quantity_adjustment_products(facilityid, productid, typeid, factorid, startdate, enddate, \n" +
-            "            minmonthsofstock, maxmonthsofstock, formula, createdby, createddate, modifiedby, modifieddate)\n" +
+            "            minmonthsofstock, maxmonthsofstock, formula, createdby, createddate, modifiedby, modifieddate, description)\n" +
             "    VALUES (#{facility.id}, #{product.id}, #{adjustmentType.id}, #{adjustmentFactor.id}, #{startDate}, #{endDate},\n" +
-            "     #{minMOS}, #{maxMOS}, #{formula}, #{createdBy}, COALESCE(#{createdDate}, CURRENT_TIMESTAMP), #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP));\n")
+            "     #{minMOS}, #{maxMOS}, #{formula}, #{createdBy}, COALESCE(#{createdDate}, CURRENT_TIMESTAMP), #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP),#{description});\n")
     @Options(useGeneratedKeys = true)
     public void insert(OrderQuantityAdjustmentProduct adjustmentProduct);
 

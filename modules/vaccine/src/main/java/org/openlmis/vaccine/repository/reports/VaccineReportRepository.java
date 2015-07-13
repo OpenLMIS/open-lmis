@@ -10,10 +10,15 @@
 
 package org.openlmis.vaccine.repository.reports;
 
-import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.domain.reports.*;
+import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportMapper;
+import org.openlmis.vaccine.service.reports.VaccineLineItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
 
 @Component
 public class VaccineReportRepository {
@@ -21,12 +26,29 @@ public class VaccineReportRepository {
   @Autowired
   VaccineReportMapper mapper;
 
+  @Autowired
+  VaccineLineItemService lineItemService;
+
+
   public void insert(VaccineReport report){
     mapper.insert(report);
+    saveDetails(report);
+  }
+
+
+  public void saveDetails(VaccineReport report){
+    lineItemService.saveLogisticsLineItems(report.getLogisticsLineItems(), report.getId());
+    lineItemService.saveDiseaseLineItems(report.getDiseaseLineItems(), report.getId());
+    lineItemService.saveCoverageLineItems(report.getCoverageLineItems(),report.getId());
+    lineItemService.saveColdChainLIneItems(report.getColdChainLineItems(), report.getId());
+    lineItemService.saveVitaminLineItems(report.getVitaminSupplementationLineItems(), report.getId());
+    lineItemService.saveAdverseEffectLineItems(report.getAdverseEffectLineItems(), report.getId());
+    lineItemService.saveCampaignLineItems(report.getCampaignLineItems(), report.getId());
   }
 
   public void update(VaccineReport report){
     mapper.update(report);
+    saveDetails(report);
   }
 
   public VaccineReport getById(Long id){
@@ -47,5 +69,42 @@ public class VaccineReportRepository {
 
   public Long getScheduleFor(Long facilityId, Long programId) {
     return mapper.getScheduleFor(facilityId, programId);
+  }
+
+  public List<ReportStatusDTO> getReportedPeriodsForFacility(Long facilityId, Long programId) {
+    return mapper.getReportedPeriodsForFacility(facilityId, programId);
+  }
+  public Long getReportIdForFacilityAndPeriod(Long facilityId, Long periodId){
+    return mapper.getReportIdForFacilityAndPeriod(facilityId, periodId);
+  }
+  public List<DiseaseLineItem> getDiseaseSurveillance(Long reportId){
+    return mapper.getDiseaseSurveillance(reportId);
+  }
+
+  public List<ColdChainLineItem> getColdChain(Long reportId){
+    return mapper.getColdChain(reportId);
+  }
+
+  public List<AdverseEffectLineItem> getAdverseEffectReport(Long reportId){
+    return mapper.getAdverseEffectReport(reportId);
+  }
+
+  public List<HashMap<String, Object>> getVaccineCoverageReport(Long reportId){
+    return mapper.getVaccineCoverageReport(reportId);
+  }
+
+  public List<VaccineReport> getImmunizationSession(Long reportId){
+    return mapper.getImmunizationSession(reportId);
+  }
+
+  public List<HashMap<String, Object>> getVaccinationReport(String productCategoryCode, Long reportId){
+    return mapper.getVaccinationReport(productCategoryCode, reportId);
+  }
+
+  public List<HashMap<String, Object>> getTargetPopulation(Long facilityId, Long periodId){
+    return mapper.getTargetPopulation(facilityId, periodId);
+  }
+  public List<VitaminSupplementationLineItem> getVitaminSupplementationReport(Long reportId){
+    return mapper.getVitaminSupplementationReport(reportId);
   }
 }

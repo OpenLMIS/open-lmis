@@ -8,12 +8,12 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('equipment-inventory', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
+angular.module('equipment-inventory', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ngAnimate', 'ui.bootstrap.pagination']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
       when('/', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html'}).
-      when('/:from/:facility/:program', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html'}).
-      when('/create/:from/:facility/:program', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
-      when('/edit/:from/:facility/:program/:id', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
+      when('/:from/:program/:equipmentType/:page', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html'}).
+      when('/create/:from/:program/:equipmentType/:page', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
+      when('/edit/:from/:program/:equipmentType/:id/:page', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html'}).
       when('/log/:id', {controller: LogController, templateUrl: 'partials/log.html'}).
       when('/request/:id', {controller: CreateServiceRequestController, templateUrl: 'partials/request.html'}).
       otherwise({redirectTo: '/'});

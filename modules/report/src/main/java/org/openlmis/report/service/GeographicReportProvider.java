@@ -27,8 +27,8 @@ public class GeographicReportProvider  {
   @Autowired
   GeographicZoneReportMapper geoMapper;
 
-  public List<GeoZoneReportingRate> getReportingRateReport(Long programId, Long processingPeriodId){
-    return geoMapper.getGeoReportingRate(programId, processingPeriodId);
+  public List<GeoZoneReportingRate> getReportingRateReport(Long userId,Long programId,Long schedule, Long processingPeriodId){
+    return geoMapper.getGeoReportingRate(userId,programId,schedule, processingPeriodId);
   }
 
     public List<GeoStockStatusFacilitySummary> getStockStatusFacilitySummaryReport(Long programId, Long processingPeriodId, Long productId){

@@ -11,18 +11,17 @@
 package org.openlmis.web.controller.equipment;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.service.EquipmentTypeService;
-import org.openlmis.web.controller.equipment.EquipmentTypeController;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
@@ -32,10 +31,9 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 public class EquipmentTypeControllerTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   EquipmentTypeService service;
@@ -74,7 +72,7 @@ public class EquipmentTypeControllerTest {
     EquipmentType type = new EquipmentType();
     type.setName("Test");
 
-    controller.save(type);
+    controller.save(type, httpServletRequest);
     verify(service).save(type);
   }
 }

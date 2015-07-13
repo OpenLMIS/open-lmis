@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-angular.module('equipment-setting', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider',
+angular.module('equipment-setting', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.pagination','ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider',
   function ($routeProvider) {
     $routeProvider.
       when('/', {
@@ -19,7 +19,7 @@ angular.module('equipment-setting', ['openlmis', 'ui.bootstrap.modal', 'ui.boots
         controller: CreateEquipmentController,
         templateUrl: 'partials/create.html'
       }).
-      when('/edit/:id', {
+      when('/edit/:id/:type', {
         controller: CreateEquipmentController,
         templateUrl: 'partials/create.html'
       }).

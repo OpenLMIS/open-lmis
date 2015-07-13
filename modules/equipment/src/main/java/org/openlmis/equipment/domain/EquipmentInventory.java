@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.serializer.DateDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -33,12 +34,11 @@ public class EquipmentInventory extends BaseModel {
   private Long equipmentId;
 
   private Equipment equipment;
+  private Facility facility;
 
   private Long operationalStatusId;
+  private Long notFunctionalStatusId;
   private String serialNumber;
-  private String manufacturerName;
-  private String model;
-  private String energySource;
   private Integer yearOfInstallation;
   private Float purchasePrice;
   private String sourceOfFund;
@@ -46,20 +46,14 @@ public class EquipmentInventory extends BaseModel {
   private String reasonForReplacement;
   private String nameOfAssessor;
   private Long primaryDonorId;
-  private Boolean hasServiceContract;
-  private Date serviceContractEndDate;
   private Boolean isActive;
   private Date dateDecommissioned;
   private Date dateLastAssessed;
-  private Long capacity;
-  private Long minTemperature;
-  private Long maxTemperature;
-  private String dimension;
-  private String accessories;
+  private Boolean hasStabilizer;
 
   private String formatDate(Date date){
     try {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
       return date == null ? null : simpleDateFormat.format(date);
     }catch(Exception exp){
 
@@ -73,10 +67,6 @@ public class EquipmentInventory extends BaseModel {
 
   public String getDateDecommissionedString(){
     return formatDate(this.dateDecommissioned);
-  }
-
-  public String getServiceContractEndDateString(){
-    return formatDate(this.serviceContractEndDate);
   }
 
 }

@@ -15,16 +15,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.openlmis.core.domain.*;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
-import org.openlmis.vaccine.dto.CoverageLineItemDTO;
+import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -45,10 +45,7 @@ public class VaccineReport extends BaseModel {
   private Long outreachImmunizationSessions;
   private Long outreachImmunizationSessionsCanceled;
 
-  private Boolean trackCampaignCoverage;
-  private Boolean trackOutreachCoverage;
-
-  private List<ConfigurationSetting> tabVisibilitySettings;
+  private List<VaccineIvdTabVisibility> tabVisibilitySettings;
 
   private List<LogisticsLineItem> logisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;
@@ -58,10 +55,7 @@ public class VaccineReport extends BaseModel {
 
   private List<LogisticsColumn> columnTemplate;
 
-  @JsonIgnore
-  private List<VaccineCoverageItem> coverageItems;
-
-  private List<CoverageLineItemDTO> coverageLineItems;
+  private List<VaccineCoverageItem> coverageLineItems;
   private List<DiseaseLineItem> diseaseLineItems;
   private List<ColdChainLineItem> coldChainLineItems;
 
@@ -97,7 +91,7 @@ public class VaccineReport extends BaseModel {
   }
 
   public void initializeCoverageLineItems(List<VaccineProductDose> dosesToCover) {
-    coverageItems = new ArrayList<>();
+    coverageLineItems = new ArrayList<>();
     for(VaccineProductDose dose: dosesToCover){
       VaccineCoverageItem item = new VaccineCoverageItem();
       item.setReportId(id);
@@ -107,39 +101,7 @@ public class VaccineReport extends BaseModel {
       item.setDisplayOrder(dose.getDisplayOrder());
       item.setDisplayName(dose.getDisplayName());
       item.setProductId(dose.getProductId());
-      coverageItems.add(item);
-    }
-  }
-
-  public void flattenCoverageLineItems() {
-    coverageItems = new ArrayList<>();
-    for(CoverageLineItemDTO lineItemDTO: coverageLineItems){
-      for(VaccineCoverageItem item: lineItemDTO.getItems()){
-        coverageItems.add( item );
-      }
-    }
-  }
-
-  public void prepareCoverageDto() {
-    if(coverageLineItems == null){
-      coverageLineItems = new ArrayList<>();
-    }
-    for(LogisticsLineItem lineItem: logisticsLineItems){
-      CoverageLineItemDTO dto = new CoverageLineItemDTO();
-      dto.setProductName(lineItem.getProductName());
-      dto.setProductId(lineItem.getProductId());
-
-      List<VaccineCoverageItem> items = new ArrayList<VaccineCoverageItem>();
-      // find the items and insert them appropriately on the dto
-      for(VaccineCoverageItem item: coverageItems){
-        if(item.getProductId().equals( dto.getProductId())){
-          items.add(item);
-        }
-      }
-      dto.setItems(items);
-      if(items.size() > 0) {
-        coverageLineItems.add(dto);
-      }
+      coverageLineItems.add(item);
     }
   }
 

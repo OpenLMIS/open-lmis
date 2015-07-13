@@ -16,8 +16,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.repository.ColdChainEquipmentRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
 
 import java.util.ArrayList;
@@ -35,6 +38,9 @@ public class EquipmentServiceTest {
   @Mock
   private EquipmentRepository repository;
 
+  @Mock
+  private ColdChainEquipmentRepository coldChainEquipmentRepository;
+
   @InjectMocks
   private EquipmentService service;
 
@@ -51,21 +57,44 @@ public class EquipmentServiceTest {
   }
 
   @Test
+  public void shouldGetAllCCE() throws Exception {
+    Pagination page=new Pagination();
+    List<ColdChainEquipment> expectedEquipments = new ArrayList<ColdChainEquipment>();
+    expectedEquipments.add(new ColdChainEquipment());
+    when(coldChainEquipmentRepository.getAll(1L,page)).thenReturn(expectedEquipments);
+
+    List<ColdChainEquipment> equipments = service.getAllCCE(1L, page);
+    verify(coldChainEquipmentRepository).getAll(1L, page);
+
+    assertEquals(equipments, expectedEquipments);
+  }
+
+  @Test
   public void shouldGetById() throws Exception {
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
+    equipment.setName("123");
     when(repository.getById(1L)).thenReturn(equipment);
 
     Equipment result = service.getById(1L);
-    assertEquals(result.getCode(), equipment.getCode());
+    assertEquals(result.getName(), equipment.getName());
+  }
+
+  @Test
+  public void shouldGetTypesByProgram() throws Exception {
+    Equipment equipment = new Equipment();
+    equipment.setName("123");
+    when(repository.getById(1L)).thenReturn(equipment);
+
+    Equipment result = service.getById(1L);
+    assertEquals(result.getName(), equipment.getName());
   }
 
   @Test
   public void shouldSaveNewEquipment() throws Exception {
     Equipment equipment = new Equipment();
-    equipment.setCode("123");
+    equipment.setName("123");
 
-    service.save(equipment);
+    service.saveEquipment(equipment);
     verify(repository).insert(equipment);
     verify(repository, never()).update(equipment);
   }
@@ -74,9 +103,9 @@ public class EquipmentServiceTest {
   public void shouldSaveChangesInExistingEquipment() throws Exception {
     Equipment equipment = new Equipment();
     equipment.setId(1L);
-    equipment.setCode("123");
+    equipment.setName("123");
 
-    service.save(equipment);
+    service.updateEquipment(equipment);
     verify(repository, never()).insert(equipment);
     verify(repository).update(equipment);
   }

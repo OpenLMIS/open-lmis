@@ -352,7 +352,22 @@
                 <ng-include src="'/public/pages/admin/product/partials/programs-associated.html'"></ng-include>
               </div>
             </div>
-          </div>
+
+
+            <div class="accordion-section">
+                <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                <span>
+                  <b>+</b>
+                  <a id="programAssociation" href="" openlmis-message="link.product.price.schedule"></a>
+                </span>
+                </div>
+                <div class="accordion-body">
+                    <ng-include src="'/public/pages/admin/product/partials/price_schedule.html'"></ng-include>
+                </div>
+            </div>
+        </div>
+
+        </div>
         </div>
       </div>
 

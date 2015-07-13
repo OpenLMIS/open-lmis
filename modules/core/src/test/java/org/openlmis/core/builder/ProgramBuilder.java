@@ -33,7 +33,9 @@ public class ProgramBuilder {
   public static final Property<Program, Boolean> enableSkipPeriod = newProperty();
   public static final Property<Program, Boolean> showNonFullSupplyTab = newProperty();
   public static final Property<Program, Boolean> hideSkippedProducts = newProperty();
+  public static final Property<Program, Boolean> enableIvdForm = newProperty();
   public static final Property<Program, Boolean> push = newProperty();
+  public static final Property<Program, Boolean> usePriceSchedule = newProperty();
 
   public static Property<Program, Long> programId = newProperty();
 
@@ -54,7 +56,8 @@ public class ProgramBuilder {
       program.setEnableSkipPeriod(lookup.valueOf(enableSkipPeriod, Boolean.FALSE));
       program.setShowNonFullSupplyTab(lookup.valueOf(showNonFullSupplyTab, Boolean.TRUE));
       program.setHideSkippedProducts(lookup.valueOf(hideSkippedProducts, Boolean.FALSE));
-
+      program.setEnableIvdForm(lookup.valueOf(enableIvdForm, Boolean.FALSE));
+      program.setUsePriceSchedule(lookup.valueOf(enableIvdForm, Boolean.FALSE));
       return program;
     }
   };

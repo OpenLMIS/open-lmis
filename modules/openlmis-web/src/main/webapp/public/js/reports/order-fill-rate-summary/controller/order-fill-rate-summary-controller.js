@@ -9,7 +9,12 @@
  */
 
 function OrderFillRateReportSummaryController($scope, OrderFillRateSummaryReport, messageService, GetOrderFillRateSummary) {
-
+    $scope.$watch('filter.program', function (value){
+        $scope.OnFilterChanged();
+    });
+    $scope.$watch('filter.schedule', function (value){
+        $scope.OnFilterChanged();
+    });
     $scope.OnFilterChanged = function () {
 
         $scope.data = $scope.datarows = [];
@@ -20,6 +25,7 @@ function OrderFillRateReportSummaryController($scope, OrderFillRateSummaryReport
                 $scope.OrderFillRateSummaryPieChartData = [];
 
                 if (data.pages !== undefined && data.pages.rows !== undefined) {
+
                     $scope.dataRows = data.pages.rows;
 
                     var totalData = _.pluck($scope.dataRows, 'totalOrderFillRate');

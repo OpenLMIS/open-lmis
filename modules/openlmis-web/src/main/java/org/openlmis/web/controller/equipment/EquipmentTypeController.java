@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -44,7 +46,8 @@ public class EquipmentTypeController extends BaseController {
   }
 
   @RequestMapping(method = GET, value = "id")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')" +
+      " or @permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
     return  OpenLmisResponse.response("equipment_type", service.getTypeById(id));
   }
@@ -56,8 +59,11 @@ public class EquipmentTypeController extends BaseController {
 
   @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentType type){
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody EquipmentType type, HttpServletRequest request){
     try {
+      Long userId = loggedInUserId(request);
+      type.setCreatedBy(userId);
+      type.setModifiedBy(userId);
       service.save(type);
     }catch(DuplicateKeyException exp){
       return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);

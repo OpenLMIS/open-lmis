@@ -10,9 +10,7 @@
 
 package org.openlmis.web.controller.vaccine;
 
-import org.openlmis.core.domain.ConfigurationSetting;
-import org.openlmis.core.service.ConfigurationSettingService;
-import org.openlmis.vaccine.dto.VaccineServiceProtocolDTO;
+import org.openlmis.vaccine.dto.VaccineServiceConfigDTO;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -23,36 +21,21 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(value = "/vaccine/product-dose/")
-public class ProductDoseController extends BaseController{
+public class ProductDoseController extends BaseController {
 
   @Autowired
   private VaccineProductDoseService service;
 
-  @Autowired
-  private ConfigurationSettingService settingService;
-
   @RequestMapping(value = "get/{programId}")
-  public ResponseEntity<OpenLmisResponse> getProgramProtocol(@PathVariable Long programId){
-    VaccineServiceProtocolDTO dto = new VaccineServiceProtocolDTO();
-    dto.setProtocols(service.getProductDoseForProgram(programId));
-    dto.setTrackCampaign(settingService.getBoolValue("TRACK_VACCINE_CAMPAIGN_COVERAGE"));
-    dto.setTrackOutreach(settingService.getBoolValue("TRACK_VACCINE_OUTREACH_COVERAGE"));
-    dto.setTabVisibilitySettings(settingService.getSearchResults("VACCINE_TAB%"));
-    return OpenLmisResponse.response("protocol",dto );
+  public ResponseEntity<OpenLmisResponse> getProgramProtocol(@PathVariable Long programId) {
+    VaccineServiceConfigDTO dto = service.getProductDoseForProgram(programId);
+    return OpenLmisResponse.response("protocol", dto);
   }
-
 
   @RequestMapping(value = "save", headers = ACCEPT_JSON, method = RequestMethod.PUT)
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineServiceProtocolDTO protocol){
-    service.save( protocol.getProtocols() );
-    settingService.saveBooleanValue("TRACK_VACCINE_CAMPAIGN_COVERAGE", protocol.getTrackCampaign());
-    settingService.saveBooleanValue("TRACK_VACCINE_OUTREACH_COVERAGE", protocol.getTrackOutreach());
-    for(ConfigurationSetting setting: protocol.getTabVisibilitySettings()){
-      settingService.saveBooleanValue(setting.getKey(), Boolean.parseBoolean(setting.getValue()));
-    }
-    return OpenLmisResponse.response("status","success");
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineServiceConfigDTO config) {
+    service.save(config.getProtocols());
+    return OpenLmisResponse.response("protocol", config);
   }
-
-
 
 }

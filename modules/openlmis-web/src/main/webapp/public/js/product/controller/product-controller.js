@@ -1,4 +1,4 @@
-function ProductController($scope, productGroups, productForms, dosageUnits, programs, categories, productDTO, Products, $location) {
+function ProductController($scope, productGroups, productForms, dosageUnits, programs, categories, productDTO, Products, PriceSchCategories, $location, $filter) {
   $scope.productGroups = productGroups;
   $scope.productForms = productForms;
   $scope.dosageUnits = dosageUnits;
@@ -6,14 +6,18 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
   $scope.newProgramProduct = {active: false};
   $scope.programs = programs;
   $scope.programProducts = [];
+  $scope.priceSchedules = [];
+  $scope.newPriceSchedule = {};
   $scope.product = {};
   $scope.$parent.message = "";
+  $scope.priceScheduleCategories = PriceSchCategories;
   setProgramMessage();
 
   if (!isUndefined(productDTO)) {
     if (!isUndefined(productDTO.product)) {
       $scope.product = productDTO.product;
       $scope.programProducts = productDTO.programProducts;
+      $scope.priceSchedules = productDTO.priceSchedules;
       $scope.selectedProductGroupCode = isUndefined($scope.product.productGroup) ? undefined : $scope.product.productGroup.code;
       $scope.selectedProductFormCode = isUndefined($scope.product.form) ? undefined : $scope.product.form.code;
       $scope.selectedProductDosageUnitCode = isUndefined($scope.product.dosageUnit) ? undefined : $scope.product.dosageUnit.code;
@@ -65,10 +69,10 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     setProductReferenceData();
 
     if ($scope.product.id) {
-      Products.update({id: $scope.product.id}, {product: $scope.product, programProducts: $scope.programProducts}, success, error);
+      Products.update({id: $scope.product.id}, {product: $scope.product, programProducts: $scope.programProducts, priceSchedules : $scope.priceSchedules}, success, error);
     }
     else {
-      Products.save({}, {product: $scope.product, programProducts: $scope.programProducts}, success, error);
+      Products.save({}, {product: $scope.product, programProducts: $scope.programProducts,  priceSchedules : $scope.priceSchedules}, success, error);
     }
   };
 
@@ -94,6 +98,29 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
       return category.id === $scope.programProducts[index].productCategory.id;
     });
   };
+
+    $scope.addPriceSchedule = function(){
+
+      if(validateDuplicatePriceScheduleCategory($scope.newPriceSchedule)) {
+          $scope.error  = "";
+          $scope.newPriceSchedule.priceScheduleCategory = $filter('filter')($scope.priceScheduleCategories, {id: $scope.newPriceSchedule.priceScheduleCategory.id})[0];
+          $scope.priceSchedules.push($scope.newPriceSchedule);
+          $scope.newPriceSchedule = {};
+     }
+      else
+      {
+
+          $scope.error = "Duplicate Price schedule category";
+      }
+  };
+
+    function validateDuplicatePriceScheduleCategory(priceSchedule){
+        for(i=0; i<$scope.priceSchedules.length; i++){
+            if($scope.priceSchedules[i].priceScheduleCategory.id == priceSchedule.priceScheduleCategory.id)
+                return false;
+        }
+        return true;
+    }
 
   function setProgramMessage() {
     $scope.programMessage = $scope.programs.length ? "label.select.program" : "label.noProgramLeft";
@@ -187,5 +214,19 @@ ProductController.resolve = {
       }, {});
     }, 100);
     return deferred.promise;
-  }
+  },
+
+   PriceSchCategories: function ($q, $route, $timeout, PriceScheduleCategories) {
+        if ($route.current.params.id === undefined) return undefined;
+
+        var deferred = $q.defer();
+
+        $timeout(function () {
+            PriceScheduleCategories.get({}, function (data) {
+                deferred.resolve(data.priceScheduleCategories);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    }
+
 };

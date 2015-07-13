@@ -26,14 +26,18 @@
 				<textFieldExpression><![CDATA[$P{REPORT_SUB_TITLE}.toUpperCase()=="NULL"?"":$P{REPORT_SUB_TITLE}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="741" y="66" width="36" height="20" uuid="71e84ef8-ce3f-4e0a-813d-c62b5574cb0d"/>
+				<reportElement x="741" y="66" width="36" height="20" uuid="71e84ef8-ce3f-4e0a-813d-c62b5574cb0d">
+					<printWhenExpression><![CDATA[!$P{PAGE_NO}.equals("-1")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
 				<text><![CDATA[Page:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="777" y="66" width="31" height="20" forecolor="#000000" uuid="ef77094f-f5e9-4fde-8847-aaa889c3a8a2"/>
+				<reportElement x="777" y="66" width="31" height="20" forecolor="#000000" uuid="ef77094f-f5e9-4fde-8847-aaa889c3a8a2">
+					<printWhenExpression><![CDATA[!$P{PAGE_NO}.equals("-1")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9" isBold="false"/>
 				</textElement>
@@ -45,7 +49,7 @@
 					<font size="9"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{REPORT_FILTER_PARAM_VALUES} != 0)?$P{REPORT_FILTER_PARAM_VALUES}:""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="207" y="45" width="348" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="8e7e49a1-6c5e-4a50-ba77-935008c82741"/>
@@ -63,7 +67,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{OPERATOR_NAME}]]></textFieldExpression>
 			</textField>
-			<image onErrorType="Icon" evaluationTime="Page">
+			<image isUsingCache="true" onErrorType="Icon">
 				<reportElement x="17" y="13" width="54" height="42" isPrintInFirstWholeBand="true" uuid="4d69dbd2-2db0-46be-bed6-13a8e366d8ee"/>
 				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
 			</image>

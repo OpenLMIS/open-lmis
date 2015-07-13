@@ -1,0 +1,78 @@
+<!--
+  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~
+  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  -->
+
+<div class="content-body">
+  <h2>
+    <span openlmis-message="header.demographic.facility"></span>
+  </h2>
+</div>
+<div>
+  <div>
+    <label><span openlmis-message="label.demographic.parameter.year"></span></label>
+    <select ng-model="year" ng-change="onParamChanged();">
+      <option ng-selected="year == y" ng-repeat="y in years" value="{{y}}">{{y}}</option>
+    </select>
+  </div>
+  <div class="rnr-table">
+  <div class="parent">
+    <table  class="table table-bordered scrollable">
+    <thead>
+    <tr>
+      <th class="span1"><span openlmis-message="label.demographic.facility.code"></span></th>
+      <th class="span3"><span openlmis-message="label.demographic.facility.name"></span></th>
+      <th ng-repeat="category in categories">
+        {{category.name}}
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="facility in form.estimateLineItems">
+      <td class="cell-input">
+        <span class="cell-text">{{facility.code}}</span>
+      </td>
+      <td class="cell-input">
+        <span class="cell-text">
+          {{facility.name}}
+        </span>
+      </td>
+      <td class="cell-input number" style="text-align: right" ng-repeat="category in categories">
+        <!-- <span class="cell-text number"  ng-show="!category.isPrimaryEstimate">{{ facility.indexedEstimates[category.id].value | number }}</span> -->
+        <span class="ng-scope">
+          <span class="position-relative ng-scope">
+            <input class="number numeric-input"
+                    style="width:90%"
+                    numeric-validator="positiveInteger"
+                    maxlength="8"
+                    ng-change="OnPopulationChanged(facility.indexedEstimates[category.id], facility, category)"
+                    ng-model="facility.indexedEstimates[category.id].value"
+                    type="text"/>
+          </span>
+        </span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+  <div form-toolbar id="action_buttons" class="action-buttons">
+    <div class="form-cell button-row">
+      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+             openlmis-message="button.save" ng-click="save()"/>
+      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+             ng-click="cancel()"/>
+    </div>
+
+    <div class="toolbar-error" id="saveErrorMsgDiv">
+      <span openlmis-message="error" ng-show="error"></span>&nbsp;
+      <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+    </div>
+    <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+  </div>
+</div>

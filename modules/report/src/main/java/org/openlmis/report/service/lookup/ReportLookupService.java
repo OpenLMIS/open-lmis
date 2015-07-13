@@ -20,11 +20,10 @@ import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.service.ConfigurationSettingService;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.repository.DonorRepository;
-import org.openlmis.equipment.repository.EquipmentRepository;
-import org.openlmis.equipment.repository.mapper.EquipmentMapper;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.*;
 import org.openlmis.report.model.dto.*;
@@ -39,13 +38,17 @@ import org.openlmis.report.model.dto.Program;
 import org.openlmis.report.model.dto.Regimen;
 import org.openlmis.report.model.dto.RegimenCategory;
 import org.openlmis.report.model.dto.RequisitionGroup;
+import org.openlmis.report.model.params.UserSummaryParams;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.model.report.TimelinessReport;
 import org.openlmis.report.util.Constants;
+import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static org.openlmis.core.domain.RightName.MANAGE_EQUIPMENT_INVENTORY;
 
 @Service
 @NoArgsConstructor
@@ -134,6 +137,10 @@ public class ReportLookupService {
 
     @Autowired
     private RegimenRepository regimenRepository;
+    private UserSummaryParams userSummaryParam = null;
+
+    @Autowired
+    private FacilityService facilityService;
 
     public List<Product> getAllProducts() {
         return productMapper.getAll();
@@ -209,6 +216,15 @@ public class ReportLookupService {
 
     public List<FacilityType> getFacilityTypesForProgram(Long programId) {
         return facilityTypeMapper.getForProgram(programId);
+    }
+
+    public List<FacilityType> getFacilityLevels(Long programId, Long userId) {
+        List<org.openlmis.core.domain.Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY);
+        facilities.add(facilityService.getHomeFacility(userId));
+
+        String facilityIdString = StringHelper.getStringFromListIds(facilities);
+
+        return facilityTypeMapper.getLevels(programId, facilityIdString);
     }
 
 
@@ -353,6 +369,9 @@ public class ReportLookupService {
     public List<Facility> getFacilityByGeographicZoneTree(Long userId, Long zoneId, Long programId) {
         return facilityReportMapper.getFacilitiesByGeographicZoneTree(userId, zoneId, programId);
     }
+    public List<Facility> getFacilityByGeographicZone(Long userId, Long zoneId) {
+        return facilityReportMapper.getFacilitiesByGeographicZone(userId, zoneId);
+    }
 
     public List<HashMap> getFacilitiesForNotifications(Long userId, Long zoneId) {
 
@@ -436,10 +455,20 @@ public class ReportLookupService {
         return userSummaryExReportMapper.getUserRoleAssignments(roleId, programId, supervisoryNodeId);
     }
 
-    public List<UserRoleAssignmentsReport> getUserRoleAssignments() {
-        return userSummaryExReportMapper.getUserRoleAssignment();
+    public List<UserRoleAssignmentsReport> getUserRoleAssignments(Map<String, String[]> filterCriteria) {
+        return userSummaryExReportMapper.getUserRoleAssignment(getReportFilterData(filterCriteria));
     }
 
+    public UserSummaryParams getReportFilterData(Map<String, String[]> filterCriteria) {
+        if (filterCriteria != null) {
+            userSummaryParam = new UserSummaryParams();
+            userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("roleId")[0]) ? 0 : Long.parseLong(filterCriteria.get("roleId")[0])); //defaults to 0
+            userSummaryParam.setProgramId(StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0]));
+            userSummaryParam.setSupervisoryNodeId(StringUtils.isBlank(filterCriteria.get("supervisoryNodeId")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNodeId")[0]));
+        }
+
+        return userSummaryParam;
+    }
 
     public List<EquipmentType> getEquipmentTypes() {
         return equipmentTypeReportMapper.getEquipmentTypeList();
@@ -595,29 +624,36 @@ public class ReportLookupService {
         return facilitiesList;
     }
 
-    public List<DosageFrequency> getAllDosageFrequencies(){
+    public List<DosageFrequency> getAllDosageFrequencies() {
         return regimenRepository.getAllDosageFrequencies();
     }
 
-    public List<RegimenProductCombination> getAllRegimenProductCombinations(){
+    public List<RegimenProductCombination> getAllRegimenProductCombinations() {
         return regimenRepository.getAllRegimenProductCombinations();
     }
 
-    public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents(){
+    public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents() {
         return regimenRepository.getAllRegimenCombinationConstituents();
     }
 
-    public List<RegimenConstituentDosage> getAllRegimenConstituentDosages(){
+    public List<RegimenConstituentDosage> getAllRegimenConstituentDosages() {
         return regimenRepository.getAllRegimenConstituentsDosages();
     }
 
-    public List<TimelinessReport>getTimelinessStatusData(Long programId,Long periodId, Long scheduleId, Long zoneId, String status){
-        return timelinessStatusReportMapper.getTimelinessStatusData(programId,periodId,scheduleId,zoneId,status);
+    public List<TimelinessReport> getTimelinessStatusData(Long programId, Long periodId, Long scheduleId, Long zoneId, String status) {
+        return timelinessStatusReportMapper.getTimelinessStatusData(programId, periodId, scheduleId, zoneId, status);
     }
-    public List<TimelinessReport>getFacilityRnRStatusData(Long programId,Long periodId, Long scheduleId, Long zoneId, String status,String facilityIds){
-        return timelinessStatusReportMapper.getFacilityRnRStatusData(programId,periodId,scheduleId,zoneId,status,facilityIds);
+
+    public List<TimelinessReport> getFacilityRnRStatusData(Long programId, Long periodId, Long scheduleId, Long zoneId, String status, String facilityIds) {
+        return timelinessStatusReportMapper.getFacilityRnRStatusData(programId, periodId, scheduleId, zoneId, status, facilityIds);
     }
-    public List<TimelinessReport>getTimelinessReportingDates(Long periodId){
+
+    public List<TimelinessReport> getTimelinessReportingDates(Long periodId) {
         return timelinessStatusReportMapper.getTimelinessReportingDates(periodId);
     }
+
+    public List<Product> getRmnchProducts() {
+        return productMapper.getRmnchProducts();
+    }
+
 }

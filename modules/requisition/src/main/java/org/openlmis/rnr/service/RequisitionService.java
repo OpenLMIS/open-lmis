@@ -100,6 +100,9 @@ public class RequisitionService {
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
   @Autowired
+  private PriceScheduleService priceScheduleService;
+
+  @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
     this.requisitionSearchStrategyFactory = requisitionSearchStrategyFactory;
   }
@@ -129,6 +132,10 @@ public class RequisitionService {
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
       facility.getId(), program.getId());
 
+     //N:B If usePriceSchedule is selected for the selected program, use the product price from price_schedule table
+    if(program.getUsePriceSchedule())
+        populateProductsPriceBasedOnPriceSchedule(facility.getId(), program.getId(), facilityTypeApprovedProducts); //non intrusive on the legacy setup
+
     List<Regimen> regimens = regimenService.getByProgram(program.getId());
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
 
@@ -152,19 +159,29 @@ public class RequisitionService {
     return fillSupportingInfo(requisition);
   }
 
-  private void populateEquipments(Rnr requisition) {
+    public void populateProductsPriceBasedOnPriceSchedule(Long facilityId, Long programId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts) {
+        List<PriceSchedule> priceSchedules = priceScheduleService.getPriceScheduleFullSupplyFacilityApprovedProduct(programId, facilityId);
+
+        for(PriceSchedule priceSchedule : priceSchedules){
+            for(FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
+                if (priceSchedule.getProduct().getId().equals(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId()))
+                    facilityTypeApprovedProduct.getProgramProduct().setCurrentPrice(new Money(BigDecimal.valueOf(priceSchedule.getSalePrice())));
+            }
+        }
+    }
+
+
+    private void populateEquipments(Rnr requisition) {
     List<EquipmentInventory> inventories = equipmentInventoryService.getInventoryForFacility(requisition.getFacility().getId(), requisition.getProgram().getId());
     requisition.setEquipmentLineItems(new ArrayList<EquipmentLineItem>());
     for(EquipmentInventory inv : inventories){
       EquipmentLineItem lineItem = new EquipmentLineItem();
       lineItem.setRnrId(requisition.getId());
-      lineItem.setCode(inv.getEquipment().getCode());
       lineItem.setEquipmentSerial(inv.getSerialNumber());
       lineItem.setEquipmentInventoryId(inv.getId());
       lineItem.setEquipmentCategory(inv.getEquipment().getEquipmentType().getName());
       lineItem.setOperationalStatusId(inv.getOperationalStatusId());
       lineItem.setEquipmentName(inv.getEquipment().getName());
-      lineItem.setEquipmentModel(inv.getModel());
       lineItem.setDaysOutOfUse(0L);
 
       requisition.getEquipmentLineItems().add(lineItem);

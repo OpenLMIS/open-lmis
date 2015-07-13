@@ -9,13 +9,12 @@
  */
 
 
-function ViewRequestController($scope, $location, $routeParams, EquipmentInventory, Equipment, SaveMaintenanceRequest, Vendors) {
+function ViewRequestController($scope, $location, $routeParams, EquipmentInventory, SaveMaintenanceRequest, Vendors) {
 
   $scope.current = {};
 
   $scope.current.inventoryId = $routeParams.id;
   $scope.current.facilityId = $routeParams.facilityId;
-  $scope.current.vendorId = 1;
 
   Vendors.get(function (data) {
     $scope.vendors = data.vendors;
@@ -26,9 +25,6 @@ function ViewRequestController($scope, $location, $routeParams, EquipmentInvento
     id: $routeParams.id
   }, function (data) {
     $scope.equipment = data.inventory;
-    Equipment.get({id: data.inventory.equipmentId}, function (d) {
-      $scope.equipment.name = d.equipment.name;
-    });
   });
 
   $scope.cancel = function () {

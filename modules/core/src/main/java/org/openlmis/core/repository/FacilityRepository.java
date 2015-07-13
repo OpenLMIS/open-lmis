@@ -18,6 +18,7 @@ import org.openlmis.core.dto.FacilitySupervisor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.service.PriceScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -44,6 +45,9 @@ public class FacilityRepository {
 
   @Autowired
   private GeographicZoneRepository geographicZoneRepository;
+
+  @Autowired
+  private PriceScheduleService priceScheduleService;
   
   public List<Facility> getMailingLabels(){
     return mapper.getMailingLabels();
@@ -55,6 +59,7 @@ public class FacilityRepository {
       validateAndSetFacilityType(facility);
       validateGeographicZone(facility);
       validateEnabledAndActive(facility);
+      validateAndSetPriceScheduleCategory(facility);
       if (facility.getId() == null) {
         mapper.insert(facility);
       } else {
@@ -71,7 +76,17 @@ public class FacilityRepository {
     }
   }
 
-  private void validateEnabledAndActive(Facility facility) {
+    private void validateAndSetPriceScheduleCategory(Facility facility) {
+
+        PriceScheduleCategory priceScheduleCategory = facility.getPriceScheduleCategory();
+        if (priceScheduleCategory == null || priceScheduleCategory.getId() != null) return;
+
+        priceScheduleCategory = priceScheduleService.getPriceScheduleCategoryByCode(facility.getPriceScheduleCategory().getPrice_category());
+        facility.setPriceScheduleCategory(priceScheduleCategory);
+
+    }
+
+    private void validateEnabledAndActive(Facility facility) {
     if (facility.getEnabled() == Boolean.FALSE && facility.getActive() == Boolean.TRUE)
       throw new DataException("error.enabled.false");
   }

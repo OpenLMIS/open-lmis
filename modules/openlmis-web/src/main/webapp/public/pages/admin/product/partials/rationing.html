@@ -11,7 +11,7 @@
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
 
   <div ng-show="product.id">
-    <h2 id="adjustMOSHeader" openlmis-message="header.product.adjust.rationing | {{product.primaryName}}"></h2>
+    <h2 id="adjustMOSHeader" openlmis-message="header.product.adjust.rationing|product.primaryName"></h2>
   </div>
 
   <form id="seasonalityAdjustmentForm" name="seasonalityAdjustmentForm" novalidate>
@@ -34,7 +34,7 @@
         </select>
       </div>
     </div>
-    <div id="approveReqList" class="gridStyle" style="height: 450px;" ng-grid="gridOptions" ng-show="facilities.length"></div>
+    <div id="approveReqList" class="gridStyle" style="height: 450px; width:100%" ng-grid="gridOptions" ng-show="facilities.length > 0"></div>
     <div id="seasonality-adjustment" class="app-form" ng-show="selectedItems.length > 0"  style="margin-top:5px;" >
         <div class="form-group">
           <h3 openlmis-message="header.apply.seasonality.rationing.factor"></h3>
@@ -85,11 +85,17 @@
                       openlmis-message="missing.value">
                 </span>
             </div>
-          </div>
 
+          </div>
+            <div style="margin-top:5px;" class="row-fluid">
+
+                <div style="left:430px; height: 450px; position: absolute" class="span4">
+                    <label for="discription" openlmis-message="label.description"></label>
+                    <textarea style="height:120px; width: 300px;overflow: scroll "  id="discription" name="discription" ng-model="seasonalityAdjustment.description"/>
+                </div>
+            </div>
           <div>
-            <label for="minMOS" openlmis-message="label.min.MOS"></label>
-            <input type="number" min="0" id="minMOS" name="minMOS" ng-model="seasonalityAdjustment.minMOS">
+
           </div>
           <div>
             <label for="maxMOS" openlmis-message="label.max.mos"></label>

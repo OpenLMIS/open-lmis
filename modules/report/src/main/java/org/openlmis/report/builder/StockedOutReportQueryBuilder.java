@@ -11,7 +11,6 @@
 package org.openlmis.report.builder;
 
 import org.openlmis.report.model.params.StockedOutReportParam;
-import org.openlmis.report.model.report.StockedOutReport;
 
 import java.util.Map;
 
@@ -20,17 +19,16 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 public class StockedOutReportQueryBuilder {
 
-    public static String getQuery(Map params){
-
-        StockedOutReportParam filter  = (StockedOutReportParam)params.get("filterCriteria");
+    public static String getQuery(Map params) {
+        StockedOutReportParam filter = (StockedOutReportParam) params.get("filterCriteria");
         Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
-        SELECT("DISTINCT supplyingfacility, facilitycode, productCode, facility, product, facilitytypename, location, processing_period_name");
+        SELECT("DISTINCT supplyingfacility, facilitycode, productCode, facility, product, facilitytypename, location, processing_period_name,stockoutdays");
         FROM("vw_stock_status join vw_districts d on gz_id = d.district_id");
-        WHERE("status = 'SO'" );
+        writePredicates(filter);
+        WHERE("status = 'SO'");
         WHERE("reported_figures > 0");
         WHERE("facility_id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.programId})");
-        writePredicates(filter);
         ORDER_BY("supplyingfacility asc, facility asc, product asc");
         // copy the sql over to a variable, this makes the debugging much more possible.
         String sql = SQL();
@@ -38,66 +36,40 @@ public class StockedOutReportQueryBuilder {
 
 
     }
-    private static void writePredicates(StockedOutReportParam filter){
+
+    private static void writePredicates(StockedOutReportParam filter) {
         WHERE("req_status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')");
-        if(filter != null){
+        if (filter != null) {
             if (filter.getFacilityTypeId() != 0 && filter.getFacilityTypeId() != -1) {
                 WHERE("facilitytypeid = #{filterCriteria.facilityTypeId}");
             }
             if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
-              WHERE("(d.district_id = #{filterCriteria.zoneId} or d.zone_id = #{filterCriteria.zoneId} or d.region_id = #{filterCriteria.zoneId} or d.parent = #{filterCriteria.zoneId})");
+                WHERE("(d.district_id = #{filterCriteria.zoneId} or d.zone_id = #{filterCriteria.zoneId} or d.region_id = #{filterCriteria.zoneId} or d.parent = #{filterCriteria.zoneId})");
             }
 
             WHERE("periodId = #{filterCriteria.periodId}");
 
-            if(filter.getProductCategoryId() != 0 && filter.getProductCategoryId() != -1 ){
+            if (filter.getProductCategoryId() != 0 && filter.getProductCategoryId() != -1) {
                 WHERE("categoryid = #{filterCriteria.productCategoryId}");
             }
-            if(filter.getRgroupId() != 0 && filter.getRgroupId() != -1){
+            if (filter.getRgroupId() != 0 && filter.getRgroupId() != -1) {
                 WHERE("rgid = #{filterCriteria.rgroupId}");
             }
 
-            if(!filter.getProductId().equals("0")){
-                WHERE("productid = ANY(array" + filter.getProductId()+"::INT[])");
-            }
-            else if(filter.getProductId().equals("-1")) {
+            if (!filter.getProductId().equals("0")) {
+                WHERE("productid = ANY(array" + filter.getProductId() + "::INT[])");
+            } else if (filter.getProductId().equals("-1")) {
                 WHERE("indicator_product = true");
             }
 
-            if(filter.getProgramId() != 0 && filter.getProgramId() != -1){
-                 WHERE("programid = #{filterCriteria.programId}");
+            if (filter.getProgramId() != 0 && filter.getProgramId() != -1) {
+                WHERE("programid = #{filterCriteria.programId}");
             }
-            if(filter.getFacilityId() != 0 && filter.getFacilityId() != -1){
+            if (filter.getFacilityId() != 0 && filter.getFacilityId() != -1) {
                 WHERE("facility_id = #{filterCriteria.facilityId}");
             }
         }
     }
-
-    public static String getTotalFacilities(Map params){
-
-        StockedOutReportParam filter  = (StockedOutReportParam)params.get("filterCriteria");
-
-        BEGIN();
-        SELECT("COUNT(*) facilityCount");
-        FROM("vw_stock_status");
-        writePredicates(filter);
-        return SQL();
-    }
-
-    public static String getTotalStockedoutFacilities(Map params){
-
-        StockedOutReportParam filter  = (StockedOutReportParam)params.get("filterCriteria");
-
-        BEGIN();
-        SELECT("COUNT(*) facilityCount");
-        FROM("vw_stock_status");
-        WHERE("status = 'SO'");
-        WHERE("reported_figures > 0");
-        writePredicates(filter);
-        return SQL();
-    }
-
-
 
 
 }

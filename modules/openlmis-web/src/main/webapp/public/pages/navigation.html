@@ -11,7 +11,7 @@
 <div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav>
   <ul class="clearfix" style="display:none">
     <li >
-      <a   id='homeMenu' ng-click="homeLinkClicked()" openlmis-message="link.home"></a></li>
+      <a  href="" id='homeMenu' ng-click="homeLinkClicked()" openlmis-message="link.home"></a></li>
     <li>
     <!--<li ng-hide="hasPermission('VIEW_DASHBOARD_POC')">-->
       <!--<a id='homeMenu' href="/" openlmis-message="link.home"></a></li>-->
@@ -95,6 +95,9 @@
           <li>
             <a href="/public/pages/vaccine/report/index.html"
                 openlmis-message="link.vaccine.create"></a>
+          </li>
+          <li>
+            <a href="/public/pages/vaccine/report/index.html#/view" openlmis-message="link.view.ivd"></a>
           </li>
           <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
             <a id="manage-distribution"
@@ -205,6 +208,12 @@
                 <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT')">
                   <a href="/public/pages/reports/lab-equipments-by-location/index.html" openlmis-message="menu.report.lab.equipment.by.location"></a>
                 </li>
+                <li ng-show="hasPermission('VIEW_COLD_CHAIN_EQUIPMENT_LIST_REPORT')">
+                  <a href="/public/pages/reports/cold-chain-equipment-inventory/index.html" openlmis-message="menu.report.lab.equipment.coldchain.inventory"></a>
+                </li>
+                <li ng-show="hasPermission('VIEW_CCE_STORAGE_CAPACITY_REPORT')">
+                  <a href="/public/pages/reports/cce-storage-capacity/index.html" openlmis-message="menu.report.cce.storage.capacity"></a>
+                </li>
                 <li class="beak"></li>
               </ul>
             </div>
@@ -303,8 +312,15 @@
                 <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
                   <a href="/public/pages/reports/stock-status/index.html" openlmis-message="menu.report.stock.status.by.location"></a>
                 </li>
+                <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+                  <a href="/public/pages/reports/mnch-status/index.html" openlmis-message="menu.report.mnch.staus"></a>
+                </li>
               </ul>
             </div>
+          </li>
+
+          <li>
+            <a href="/public/pages/reports/custom/index.html" openlmis-message="menu.report.custom.reports"></a>
           </li>
 
           <li ng-show="hasPermission('VIEW_REPORT')">
@@ -466,60 +482,36 @@
                     </ul>
                 </div>
             </li>
-            <li class="has-children" ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')" >
+            <li class="has-children"  >
               <a  id="vaccine-admin" openlmis-message="link.manage.vaccine"></a>
               <div class="submenu">
                 <ul>
-                  <li>
-                    <a
-                        href="/public/pages/vaccine/admin/protocol/index.html"
-                        openlmis-message="link.manage.vaccine.protocol"></a>
-                  </li>
-                  <li>
-                    <a
-                        href="/public/pages/vaccine/admin/protocol/index.html#/template"
-                        openlmis-message="link.manage.vaccine.logistic.template"></a>
-                  </li>
-                  <li>
+                  <li ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')">
                     <a
                         href="/public/pages/vaccine/admin/protocol/index.html#/disease"
                         openlmis-message="link.manage.vaccine.diseases"></a>
                   </li>
-                  <li>
+                  <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')" >
                     <a
-                        href="/public/pages/vaccine/index.html#/manufacturer"
-                        openlmis-message="link.manage.vaccine.manufacturer"></a>
+                      href="/public/pages/vaccine/demographics/index.html#/list"
+                      openlmis-message="link.manage.demographic.categories"></a>
                   </li>
-                  <li>
+                  <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_ESTIMATES')">
                     <a
-                        href="/public/pages/vaccine/index.html#/transaction-type"
-                        openlmis-message="link.manage.vaccine.transaction.types"></a>
+                      href="/public/pages/vaccine/demographics/index.html#/facility"
+                      openlmis-message="link.manage.facility.demographic"></a>
                   </li>
-                  <li>
+                  <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')">
                     <a
-                        href="/public/pages/vaccine/index.html#/received-status"
-                        openlmis-message="link.manage.vaccine.receive.status"></a>
+                      href="/public/pages/vaccine/demographics/index.html#/district"
+                      openlmis-message="link.manage.district.demographic"></a>
                   </li>
-                  <li>
+                  <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')">
                     <a
-                        href="/public/pages/vaccine/index.html#/vaccine-storage"
-                        openlmis-message="link.manage.vaccine.storage"></a>
+                      href="/public/pages/vaccine/demographics/index.html#/parameters"
+                      openlmis-message="link.manage.quantification.parameters"></a>
                   </li>
-                  <li>
-                    <a
-                        href="/public/pages/vaccine/admin/protocol/index.html#/storage-type"
-                        openlmis-message="link.manage.vaccine.storage.type"></a>
-                  </li>
-                  <li>
-                    <a
-                        href="/public/pages/vaccine/admin/protocol/index.html#/temperature"
-                        openlmis-message="link.manage.vaccine.temperature"></a>
-                  </li>
-                  <li>
-                    <a
-                       href="/public/pages/vaccine/admin/protocol/index.html#/countries"
-                       openlmis-message="link.manage.vaccine.country"></a>
-                  </li>
+
                 </ul>
               </div>
             </li>
@@ -549,9 +541,6 @@
             href="/public/pages/ils-gateway/index.html#/dashboard"
             openlmis-message="link.ils"></a>
     </li>
-    <!--<li ng-show="hasPermission('VIEW_DASHBOARD_POC')">
-        <a href="/public/pages/dashboard/index.html#/dashboard" openlmis-message="link.dashboard"></a>
-    </li>-->
   </ul>
 </div>
 <div class="navigation-locale-bar">

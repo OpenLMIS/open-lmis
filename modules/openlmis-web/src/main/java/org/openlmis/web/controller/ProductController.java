@@ -16,11 +16,13 @@ import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.PriceSchedule;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductCategoryService;
 import org.openlmis.core.service.ProductFormService;
 import org.openlmis.core.service.ProductGroupService;
 import org.openlmis.core.service.ProductService;
+import org.openlmis.core.service.PriceScheduleService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.web.form.ProductDTO;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -60,6 +62,9 @@ public class ProductController extends BaseController {
   private ProgramProductService programProductService;
 
   @Autowired
+  private PriceScheduleService priceScheduleService;
+
+  @Autowired
   private ProductService service;
 
   @RequestMapping(value = "/groups", method = RequestMethod.GET, headers = ACCEPT_JSON)
@@ -88,7 +93,10 @@ public class ProductController extends BaseController {
     if(product == null) return null;
 
     List<ProgramProduct> programProducts = programProductService.getByProductCode(product.getCode());
-    return new ProductDTO(product, product.getModifiedDate(), programProducts);
+
+    List<PriceSchedule> priceSchedules = priceScheduleService.getByProductId(product.getId());
+
+    return new ProductDTO(product, product.getModifiedDate(), programProducts, priceSchedules);
   }
 
   @RequestMapping(method = POST, headers = ACCEPT_JSON)
@@ -119,6 +127,7 @@ public class ProductController extends BaseController {
                                                  HttpServletRequest request) {
     Product product = productDTO.getProduct();
     List<ProgramProduct> programProducts = productDTO.getProgramProducts();
+    List<PriceSchedule> priceSchedules = productDTO.getPriceSchedules();
 
     try {
       Long userId = loggedInUserId(request);
@@ -126,6 +135,7 @@ public class ProductController extends BaseController {
       product.setModifiedBy(userId);
       service.save(product);
       programProductService.saveAll(programProducts, product);
+      priceScheduleService.saveAll(priceSchedules, product);
     } catch (DataException e) {
       return OpenLmisResponse.error(e, BAD_REQUEST);
     }

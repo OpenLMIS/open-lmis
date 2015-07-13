@@ -39,7 +39,9 @@ public class Program extends BaseModel {
   private Boolean enableSkipPeriod;
   private Boolean showNonFullSupplyTab;
   private Boolean hideSkippedProducts;
+  private Boolean enableIvdForm;
   private Boolean push;
+  private Boolean usePriceSchedule;
 
   public Program(Long id) {
     this.id = id;

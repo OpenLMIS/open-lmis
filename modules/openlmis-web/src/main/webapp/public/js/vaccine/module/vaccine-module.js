@@ -7,37 +7,11 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-
-var vaccine = angular.module('vaccine', ['openlmis', 'ngTable','ui.bootstrap','nsPopover']).config(['$routeProvider', function ($routeProvider) {
-
-    $routeProvider.
-        when('/distribute', {controller: VaccineDistributeController, templateUrl: 'partials/vaccine-distribute-edit.html'}).
-        when('/receive', {controller: VaccineReceiveSearchController, templateUrl: 'partials/vaccine-receive-search.html'}).
-        when('/edit-receive-vaccine/:transactionId', {controller: VaccineReceiveController, templateUrl: 'partials/vaccine-receive-edit.html'}).
-        when('/create-receive-vaccine/:facilityId', {controller: VaccineReceiveController, templateUrl: 'partials/vaccine-receive-edit.html'}).
-        when('/vaccine-report', {controller: VaccineReportPOCReportController, templateUrl: 'partials/vaccine-report.html'}).
-        when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
-        when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
-        when('/vaccine-storage', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage.html'}).
-        when('/vaccine-storage-edit/:id', {controller: VaccineStorageUpdateController, templateUrl: 'partials/vaccine-storage-update.html'}).
-        when('/vaccine-storage-create', {controller: VaccineStorageController, templateUrl: 'partials/vaccine-storage-create.html'}).
-        when('/targets', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets.html'}).
-        when('/targetEdit/:id', {controller: VaccineTargetController, templateUrl: 'partials/vaccine-targets-edit.html'}).
-        when('/quantification', {controller: VaccineQuantificationController, templateUrl: 'partials/vaccine-quantification.html'}).
-        when('/quantificationEdit/:id', {controller: VaccineQuantificationController, templateUrl: 'partials/vaccine-quantification-edit.html'}).
-        when('/manufacturer', {controller: VaccineManufacturerController, templateUrl: 'partials/vaccine-manufacturer.html'}).
-        when('/manufacturerEdit/:id', {controller: VaccineManufacturerController, templateUrl: 'partials/vaccine-manufacturer-edit.html'}).
-        when('/productMappingEdit/:manufacturerId/:productId', {controller: VaccineProductMappingController, templateUrl: 'partials/vaccine-product-mapping.html'}).
-        when('/productMappingCreate/:manufacturerId', {controller: VaccineProductMappingController, templateUrl: 'partials/vaccine-product-mapping.html'}).
-        when('/transaction-type', {controller: VaccineTransactionTypeController, templateUrl: 'partials/vaccine-transaction-type.html'}).
-        when('/transaction-type-edit/:id', {controller: VaccineTransactionTypeController, templateUrl: 'partials/vaccine-transaction-type-edit.html'}).
-        when('/received-status', {controller: VaccineReceivedStatusController, templateUrl: 'partials/vaccine-received-status.html'}).
-        when('/received-status-edit/:id', {controller: VaccineReceivedStatusController, templateUrl: 'partials/vaccine-received-status-edit.html'}).
-        otherwise({redirectTo: '/receive'});
-}]).directive('onKeyup', function () {
-        return function (scope, elm, attrs) {
-            elm.bind("keyup", function () {
-                scope.$apply(attrs.onKeyup);
-            });
-        };
-});
+angular.module('vaccine', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+    .config(['$routeProvider', function ($routeProvider) {
+        $routeProvider.
+            when('/vaccine-report', {controller:VaccineReportPOCReportController, templateUrl:'partials/vaccine-report.html',reloadOnSearch:false}).
+            otherwise({redirectTo:'/vaccine-report'});
+    }]).config(function(angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+    });

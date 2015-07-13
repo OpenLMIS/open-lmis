@@ -75,8 +75,8 @@ function ProductRationingAdjustmentController($scope, $timeout,productDTO,season
     $timeout(function () {
       $('html, body').animate({
         scrollTop: $("#seasonality-adjustment").offset().top
-      }, 2000);
-    }, 100);
+      }, 0);
+    }, 0);
 
    };
   var myHeaderCellTemplate = '<input type="checkbox" ng-model="selectAll" ng-click="cc()"/>';
@@ -89,7 +89,7 @@ function ProductRationingAdjustmentController($scope, $timeout,productDTO,season
     showFooter: false,
     checkboxHeaderTemplate: '<input class="ngSelectionHeader" type="checkbox" ng-model="allSelected" ng-change="toggleSelectAll(allSelected)"/>',
 
-    showSelectionCheckbox: true,
+    showSelectionCheckbox: false,
     enableColumnResize: true,
     showColumnMenu: false,
     //sortInfo: { fields: ['submittedDate'], directions: ['asc'] },

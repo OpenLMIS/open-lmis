@@ -19,7 +19,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class OrderQuantityAdjustmentProduct extends BaseModel {
 
     private Facility facility;
@@ -31,6 +31,7 @@ public class OrderQuantityAdjustmentProduct extends BaseModel {
     private Long minMOS;
     private Long maxMOS;
     private String formula;
+    private String description;
 
 
     @SuppressWarnings("unused")

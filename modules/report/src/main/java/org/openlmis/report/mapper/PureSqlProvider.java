@@ -10,8 +10,11 @@
 
 package org.openlmis.report.mapper;
 
+import java.util.Map;
+
 public class PureSqlProvider {
-  public String sql(String sql) {
-    return sql;
+  public String sql(Map filter) {
+    String theSql = filter.get("sql").toString();
+    return theSql;
   }
 }

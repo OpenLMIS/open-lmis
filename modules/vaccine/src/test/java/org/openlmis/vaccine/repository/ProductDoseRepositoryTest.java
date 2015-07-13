@@ -47,10 +47,21 @@ public class ProductDoseRepositoryTest {
     verify(mapper).getDoseSettingByProduct(1L, 2L);
   }
 
+  @Test
+  public void shouldGetAllDoses() throws Exception{
+    repository.getAllDoses();
+    verify(mapper).getAllDoses();
+  }
 
   @Test
   public void shouldGetProgramProductDoses() throws Exception {
     repository.getProgramProductDoses(2L);
     verify(mapper).getProgramProductDoses(2L);
+  }
+
+  @Test
+  public void shouldDeleteByProgram() throws Exception{
+    repository.deleteAllByProgram(2L);
+    verify(mapper).deleteByProgram(2L);
   }
 }

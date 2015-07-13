@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 
+import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.ProgramService;
 
 import org.openlmis.core.service.RoleRightsService;
@@ -21,6 +23,7 @@ import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.report.mapper.UserSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 
+import org.openlmis.report.model.dto.Program;
 import org.openlmis.report.model.params.UserSummaryParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +34,7 @@ import java.util.Map;
 
 @Component
 @NoArgsConstructor
-public class UserSummaryReportProvider extends ReportDataProvider{
+public class UserSummaryReportProvider extends ReportDataProvider {
     private UserSummaryReportMapper reportMapper;
 
     private UserSummaryParams userSummaryParam = null;
@@ -45,11 +48,11 @@ public class UserSummaryReportProvider extends ReportDataProvider{
     private RoleRightsService roleRightsService;
 
 
-
     @Autowired
     public UserSummaryReportProvider(UserSummaryReportMapper mapper) {
         this.reportMapper = mapper;
     }
+
     @Override
     protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
         RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
@@ -66,23 +69,14 @@ public class UserSummaryReportProvider extends ReportDataProvider{
     public UserSummaryParams getReportFilterData(Map<String, String[]> filterCriteria) {
 
         if (filterCriteria != null) {
-            //  userSummaryParam = new UserSummaryParams();
-            //userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("role")[0]) ? 0 : Long.parseLong(filterCriteria.get("role")[0])); //defaults to 0
-            //userSummaryParam.setProgramId(StringUtils.isBlank(filterCriteria.get("program")[0]) ? 0 : Long.parseLong(filterCriteria.get("program")[0]));
-            // userSummaryParam.setSupervisoryNodeId(StringUtils.isBlank(filterCriteria.get("supervisoryNode")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNode")[0]));
-
-            // summarize the filters now.
-           /* String summary = "Program: "
-                    .concat(programService.getById(userSummaryParam.getProgramId()).getName())
-                    .concat("\nRole:")
-                    .concat(roleRightsService.getRole(userSummaryParam.getRoleId()).getName());
-
-            if(userSummaryParam.getSupervisoryNodeId() != 0){
-                summary.concat("\nSupervisoryNodes: ")
-                        .concat(supervisoryNodeService.getParent(userSummaryParam.getSupervisoryNodeId()).getName());
+            userSummaryParam = new UserSummaryParams();
+            Long userId = StringUtils.isBlank(filterCriteria.get("roleId")[0]) ? 0 : Long.parseLong(filterCriteria.get("roleId")[0]);
+            if (filterCriteria != null) {
+                userSummaryParam = new UserSummaryParams();
+                userSummaryParam.setRoleId(StringUtils.isBlank(filterCriteria.get("roleId")[0]) ? 0 : Long.parseLong(filterCriteria.get("roleId")[0])); //defaults to 0
+                userSummaryParam.setProgramId(StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0]));
+                userSummaryParam.setSupervisoryNodeId(StringUtils.isBlank(filterCriteria.get("supervisoryNodeId")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNodeId")[0]));
             }
-             */
-
 
         }
 
@@ -91,11 +85,41 @@ public class UserSummaryReportProvider extends ReportDataProvider{
 
     @Override
     public String getFilterSummary(Map<String, String[]> params) {
-        return getReportFilterData(params).toString();
+        UserSummaryParams userSummaryParams = this.getReportFilterData(params);
+        StringBuilder filterString = new StringBuilder();
+        Program program = null;
+        Role role = null;
+        String programName="";
+        String roleName="";
+        String superVisoryName="";
+        SupervisoryNode supervisoryNode = null;
+        if (userSummaryParams.getProgramId()==0) {
+            filterString.append("Program : All");
+        }else {
+            program= this.reportMapper.getProgram(userSummaryParams.getProgramId());
+            programName=program==null?"": program.getName();
+            filterString.append("Program : ").append(programName);
+        }
+        if (userSummaryParams.getRoleId()==0) {
+            filterString.append(", Role : All");
+
+        }else {
+            role= this.reportMapper.getRole(userSummaryParams.getRoleId());
+            roleName=role==null?"": role.getName();
+            filterString.append(", Role : ").append(roleName);
+        }
+        if (userSummaryParams.getSupervisoryNodeId()==0) {
+            filterString.append(", Supervisory Node : All");
+        }else {
+            supervisoryNode= this.reportMapper.getSuperVisoryNode(userSummaryParams.getSupervisoryNodeId());
+            superVisoryName=supervisoryNode==null?"": supervisoryNode.getName();
+            filterString.append(", Supervisory Node : ").append(superVisoryName);
+        }
+        return filterString.toString();
 
     }
 
-    public List<HashMap> getUserAssignments(){
+    public List<HashMap> getUserAssignments() {
         return reportMapper.getUserRoleAssignments();
     }
 

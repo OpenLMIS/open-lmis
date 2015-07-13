@@ -47,32 +47,7 @@
 
         </div>
         <div class="span4">
-          <table class="table table-bordered" style="margin-bottom: 0px; padding-bottom: 0px">
-            <thead>
-            <tr>
-              <th colspan="3" openlmis-message="vaccine.immunization.sessions"></th>
-            </tr>
-            <tr>
-              <th class="span2" openlmis-message="vaccine.immunization.sessions.fixed"></th>
-              <th class="span2" openlmis-message="vaccine.immunization.sessions.outreach"> </th>
-              <th class="span2" openlmis-message="vaccine.immunization.sessions.canceled.outreach"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td class="cell-input col-general">
-                <input numeric-validator="positiveInteger" ng-model="report.fixedImmunizationSessions" type="text">
-              </td>
-              <td class="cell-input col-general">
-                <input numeric-validator="positiveInteger" ng-model="report.outreachImmunizationSessions" type="text">
-              </td>
-              <td class="cell-input col-general">
-                <input numeric-validator="positiveInteger" ng-model="report.outreachImmunizationSessionsCanceled"
-                       type="text">
-              </td>
-            </tr>
-            </tbody>
-          </table>
+
         </div>
       </div>
     </div>
@@ -80,36 +55,36 @@
   <hr/>
   <div class="rnr-tabs clearfix">
     <ul class="clearfix">
-      <li ng-show="showLogistics" ng-class="{'selected': (visibleTab == 'stockMovement' || visibleTab == undefined)}">
-        <a href="" ng-click="visibleTab ='stockMovement'"><span
-          openlmis-message="label.vaccine.tab.stock.status"></span></a>
-      </li>
-      <li ng-show="showCoverage" ng-class="{'selected': visibleTab == 'coverage'}">
+      <li ng-show="tabVisibility.COVERAGE_TAB" ng-class="{'selected': (visibleTab == 'coverage' || visibleTab == undefined)}">
         <a href="" ng-click="visibleTab = 'coverage'"><span openlmis-message="label.vaccine.tab.coverage"></span></a>
       </li>
-      <li ng-show="showVitamin" ng-class="{'selected': visibleTab == 'vitamin'}">
+      <li ng-show="tabVisibility.VITAMIN_SUPPLEMENTATION_TAB" ng-class="{'selected': visibleTab == 'vitamin'}">
         <a href="" ng-click="visibleTab = 'vitamin'"><span openlmis-message="label.vaccine.tab.vitamin.supplementation"></span></a>
       </li>
-      <li ng-show="showDisease" ng-class="{'selected': visibleTab == 'disease'}">
+      <li ng-show="tabVisibility.DISEASE_TRACKING_TAB" ng-class="{'selected': visibleTab == 'disease'}">
         <a href="" ng-click="visibleTab = 'disease'"><span openlmis-message="label.vaccine.tab.disease"></span></a>
       </li>
-      <li ng-show="showIncident" ng-class="{'selected': visibleTab == 'incident'}">
+      <li ng-show="tabVisibility.AEFI_REPORTING_TAB" ng-class="{'selected': visibleTab == 'incident'}">
         <a href="" ng-click="visibleTab = 'incident'"><span
           openlmis-message="label.vaccine.tab.adverse.effect.tracking"></span></a>
       </li>
-      <li ng-show="showColdChain" ng-class="{'selected': visibleTab == 'coldChain'}">
+      <li ng-show="tabVisibility.STOCK_STATUS_TAB" ng-class="{'selected': (visibleTab == 'stockMovement')}">
+        <a href="" ng-click="visibleTab ='stockMovement'"><span
+          openlmis-message="label.vaccine.tab.stock.status"></span></a>
+      </li>
+      <li ng-show="tabVisibility.COLD_CHAIN_TAB" ng-class="{'selected': visibleTab == 'coldChain'}">
         <a href="" ng-click="visibleTab = 'coldChain'"><span openlmis-message="label.vaccine.tab.cold.chain"></span></a>
       </li>
-      <li ng-show="showCampaign" ng-class="{'selected': visibleTab == 'campaign'}">
+      <li ng-show="tabVisibility.CAMPAIGN_TAB" ng-class="{'selected': visibleTab == 'campaign'}">
         <a href="" ng-click="visibleTab = 'campaign'"><span openlmis-message="label.vaccine.tab.campaign"></span></a>
       </li>
-      <li ng-show="showTarget" ng-class="{'selected': visibleTab == 'target'}">
+      <li ng-show="tabVisibility.TARGET_TAB" ng-class="{'selected': visibleTab == 'target'}">
         <a href="" ng-click="visibleTab = 'target'"><span openlmis-message="label.vaccine.tab.target"></span></a>
       </li>
     </ul>
 
   </div>
-  <span ng-show="visibleTab == 'stockMovement'">
+  <span ng-show="visibleTab == 'stockMovement' || visibleTab == undefined">
     <ng-include src="'/public/pages/vaccine/report/partials/create/stock-movement.html'"></ng-include>
   </span>
   <span ng-show="visibleTab == 'coverage'">

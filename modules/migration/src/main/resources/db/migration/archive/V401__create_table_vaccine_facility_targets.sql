@@ -38,14 +38,6 @@ CREATE UNIQUE INDEX uc_vaccine_facility_targets_year
 COMMENT ON INDEX uc_vaccine_targets_year
   IS 'One target per facility per year allowed';
 
--- seed 
-/*
-INSERT INTO vaccine_facility_targets (targetyear, facilityid, targetpopulation, expectedbirths, expectedpregnancies, pregnantwomen, survinginfants, children01, children12, adolocentgirls) VALUES (2014, 14821, 1000, 1000, 2000, 4000, 1000, 400, 600, 300);
-INSERT INTO vaccine_facility_targets (targetyear, facilityid, targetpopulation, expectedbirths, expectedpregnancies, pregnantwomen, survinginfants, children01, children12, adolocentgirls) VALUES (2014, 14822, 1000, 1000, 2000, 4000, 1000, 400, 600, 300);
-INSERT INTO vaccine_facility_targets (targetyear, facilityid, targetpopulation, expectedbirths, expectedpregnancies, pregnantwomen, survinginfants, children01, children12, adolocentgirls) VALUES (2014, 14823, 1000, 1000, 2000, 4000, 1000, 400, 600, 300);
-INSERT INTO vaccine_facility_targets (targetyear, facilityid, targetpopulation, expectedbirths, expectedpregnancies, pregnantwomen, survinginfants, children01, children12, adolocentgirls) VALUES (2014, 14824, 1000, 1000, 2000, 4000, 1000, 400, 600, 300);
-INSERT INTO vaccine_facility_targets (targetyear, facilityid, targetpopulation, expectedbirths, expectedpregnancies, pregnantwomen, survinginfants, children01, children12, adolocentgirls) VALUES (2014, 14825, 1000, 1000, 2000, 4000, 1000, 400, 600, 300);
-*/
 
 
 

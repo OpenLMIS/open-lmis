@@ -1,0 +1,1 @@
+\i ../../test-data/vims/seed_equipment_tables.sql

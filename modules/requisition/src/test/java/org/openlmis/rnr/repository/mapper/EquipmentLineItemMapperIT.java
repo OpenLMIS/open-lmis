@@ -14,8 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -23,31 +21,27 @@ import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
-import org.openlmis.core.repository.mapper.RegimenMapper;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.builder.EquipmentInventoryBuilder;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryMapper;
+import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.equipment.repository.mapper.EquipmentMapper;
 import org.openlmis.equipment.repository.mapper.EquipmentTypeMapper;
 import org.openlmis.rnr.domain.EquipmentLineItem;
-import org.openlmis.rnr.domain.RegimenLineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,9 +73,6 @@ public class EquipmentLineItemMapperIT {
   private EquipmentTypeMapper equipmentTypeMapper;
 
   @Autowired
-  private RegimenMapper regimenMapper;
-
-  @Autowired
   private FacilityMapper facilityMapper;
 
   @Autowired
@@ -94,10 +85,9 @@ public class EquipmentLineItemMapperIT {
   private EquipmentInventoryMapper equipmentInventoryMapper;
 
   @Autowired
-  private QueryExecutor queryExecutor;
+  private EquipmentInventoryStatusMapper equipmentInventoryStatusMapper;
 
   EquipmentLineItem equipmentLineItem;
-  Equipment equipment;
 
   Rnr rnr;
 
@@ -128,7 +118,6 @@ public class EquipmentLineItemMapperIT {
     equipmentTypeMapper.insert(equipmentType);
 
     Equipment equipment = new Equipment();
-    equipment.setCode("eq1");
     equipment.setName("cd 4 counter");
     equipment.setEquipmentType(equipmentType);
     equipment.setEquipmentTypeId(equipmentType.getId());
@@ -141,6 +130,12 @@ public class EquipmentLineItemMapperIT {
     inventory.setEquipmentId(equipment.getId());
     equipmentInventoryMapper.insert(inventory);
 
+    long statusId = 1L;
+    EquipmentInventoryStatus status = new EquipmentInventoryStatus();
+    status.setInventoryId(inventory.getId());
+    status.setStatusId(statusId);
+    equipmentInventoryStatusMapper.insert(status);
+
     equipmentLineItem = new EquipmentLineItem();
 
     equipmentLineItem.setRnrId(rnr.getId());
@@ -148,8 +143,8 @@ public class EquipmentLineItemMapperIT {
     equipmentLineItem.setEquipmentName("CD4 Counter");
     equipmentLineItem.setEquipmentCategory("The Category");
     equipmentLineItem.setEquipmentInventoryId(inventory.getId());
+    equipmentLineItem.setInventoryStatusId(status.getId());
     equipmentLineItem.setDaysOutOfUse(2L);
-    equipmentLineItem.setOperationalStatusId(1L);
   }
 
   @Test

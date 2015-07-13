@@ -6,10 +6,10 @@ VALUES
 
 
 INSERT INTO equipments
-(code, name, equipmentTypeId, createdBy)
+(name, equipmentTypeId, createdBy)
 VALUES
-('e123', 'Refrigerator', 1, 1),
-('e124', 'Anesthesia Units', 2, 1);
+('Refrigerator', 1, 1),
+('Anesthesia Units', 2, 1);
 
 INSERT INTO donors
 (code, shortName, longName, createdBy)

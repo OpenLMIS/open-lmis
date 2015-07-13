@@ -112,6 +112,13 @@ public class ReportLookupController extends BaseController {
     return OpenLmisResponse.response( "facilityTypes", this.reportLookupService.getFacilityTypesForProgram(programId)) ;
   }
 
+  @RequestMapping(value="/facility-levels", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getFacilityLevels(@RequestParam("program") Long programId,
+                                                            HttpServletRequest request){
+    return OpenLmisResponse.response( "facilityLevels", this.reportLookupService.getFacilityLevels(programId,
+            loggedInUserId(request))) ;
+  }
+
   @RequestMapping(value="/regimenCategories", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getAllRegimenCategory(){
       return OpenLmisResponse.response( "regimenCategories", this.reportLookupService.getAllRegimenCategory() ) ;
@@ -328,6 +335,14 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZoneTree(loggedInUserId(request),zoneId, programId));
     }
 
+    @RequestMapping(value = "/geographic-zone/{geoId}/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilities(
+            @PathVariable("geoId") Long zoneId,
+            HttpServletRequest request
+    ) {
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZone(loggedInUserId(request),zoneId));
+    }
+
     @RequestMapping(value = "notification/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilitiesForNotifications(
             @RequestParam("zoneId") Long zoneId,
@@ -409,7 +424,7 @@ public class ReportLookupController extends BaseController {
 
   @RequestMapping(value = "UserRoleAssignments/getUserRoleAssignments", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getUserRoleAssignments(HttpServletRequest request){
-      List<UserRoleAssignmentsReport> userSummaryList = reportLookupService.getUserRoleAssignments();
+      List<UserRoleAssignmentsReport> userSummaryList = reportLookupService.getUserRoleAssignments(request.getParameterMap());
       return OpenLmisResponse.response("userRoleAssignmentSummary",userSummaryList);
   }
 
@@ -510,6 +525,11 @@ public class ReportLookupController extends BaseController {
             HttpServletRequest request
     ) {
         return OpenLmisResponse.response("reportingDates", reportLookupService.getTimelinessReportingDates(periodId));
+    }
+
+    @RequestMapping(value="/rmnch-products.json", method = GET, headers = BaseController.ACCEPT_JSON)
+    public List<Product> getRmnchProducts(){
+        return this.reportLookupService.getRmnchProducts();
     }
 
 

@@ -11,14 +11,21 @@
 package org.openlmis.web.controller.equipment;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.service.MessageService;
+import org.openlmis.db.categories.UnitTests;
+import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.service.EquipmentService;
+import org.openlmis.equipment.service.EquipmentTypeService;
 import org.openlmis.web.response.OpenLmisResponse;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -27,22 +34,30 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class EquipmentControllerTest {
-
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
   @Mock
   EquipmentService service;
 
+  @Mock
+  MessageService messageService;
+
+  @Mock
+  EquipmentTypeService equipmentTypeService;
+
+
   @InjectMocks
   EquipmentController controller;
+
 
   private MockHttpServletRequest request;
 
@@ -51,6 +66,31 @@ public class EquipmentControllerTest {
     initMocks(this);
     request = new MockHttpServletRequest(USER, USER);
     request.getSession().setAttribute(USER_ID, 1L);
+    when(messageService.message(anyString())).thenReturn("the message");
+  }
+  private EquipmentType makeAnEquipmentType() {
+    EquipmentType equipmentType=new EquipmentType();
+    equipmentType.setColdChain(false);
+    equipmentType.setId(1L);
+    equipmentType.setName("LAB");
+    return equipmentType;
+  }
+  private Equipment makeAnEquipment() {
+    Equipment equipment = new Equipment();
+    equipment.setId(1L);
+    equipment.setName("Ice Maker");
+    equipment.setEquipmentTypeId(1L);
+    return equipment;
+  }
+
+  private ColdChainEquipment makeAnColdChainEquipment(){
+    ColdChainEquipment coldChainEquipment=new ColdChainEquipment();
+    coldChainEquipment.setId(1L);
+    coldChainEquipment.setName("Refrigerator");
+    coldChainEquipment.setDesignationId(1L);
+    coldChainEquipment.setPqsStatusId(1L);
+    coldChainEquipment.setEquipmentTypeId(1L);
+    return coldChainEquipment;
   }
 
 
@@ -62,31 +102,63 @@ public class EquipmentControllerTest {
     assertThat(equipment, is(response.getBody().getData().get("equipment")));
   }
 
-  private Equipment makeAnEquipment() {
-    Equipment equipment = new Equipment();
-    equipment.setId(2L);
-    equipment.setName("Ice Maker");
-    return equipment;
-  }
-
   @Test
-  public void shouldGetList() throws Exception {
+  public void shouldGetEquipmentList() throws Exception {
+    Pagination page=new Pagination(1,2);
     Equipment equipment = makeAnEquipment();
-    when(service.getAll()).thenReturn(asList(equipment));
+    EquipmentType equipmentType=new EquipmentType();
+    equipmentType.setColdChain(false);
+    when(service.getEquipmentsCountByType(1L)).thenReturn(2);
+    when(service.getByType(1L,page)).thenReturn(asList(equipment));
+    when(equipmentTypeService.getTypeById(1L)).thenReturn(equipmentType);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getList();
+    ResponseEntity<OpenLmisResponse> response = controller.getList(1L,1,"2");
     assertThat(asList(equipment), is(response.getBody().getData().get("equipments")));
   }
 
+  @Test
+  public void shouldGetCCEList() throws Exception {
+    Pagination page=new Pagination(1,2);
+    ColdChainEquipment coldChainEquipment=makeAnColdChainEquipment();
+    EquipmentType equipmentType=new EquipmentType();
+    equipmentType.setColdChain(true);
+    when(service.getCCECountByType(1L)).thenReturn(2);
+    when(service.getAllCCE(1L,page)).thenReturn(asList(coldChainEquipment));
+    when(equipmentTypeService.getTypeById(1L)).thenReturn(equipmentType);
+    ResponseEntity<OpenLmisResponse> response = controller.getList(1L,1,"2");
+    assertThat(asList(coldChainEquipment), is(response.getBody().getData().get("equipments")));
+  }
 
 
   @Test
-  public void shouldSaveChanges() throws Exception {
-    doNothing().when(service).save(any(Equipment.class));
+  public void shouldSaveEquipmentChanges() throws Exception {
+    EquipmentType equipmentType=makeAnEquipmentType();
     Equipment equipment = makeAnEquipment();
-    ResponseEntity<OpenLmisResponse> response = controller.save(equipment);
+    equipment.setEquipmentType(equipmentType);
 
-    assertThat(equipment, is(response.getBody().getData().get("equipment")));
-    assertThat(response.getBody().getSuccessMsg(), is(notNullValue()));
+    when(equipmentTypeService.getTypeById(equipment.getEquipmentTypeId())).thenReturn(equipmentType);
+    doNothing().when(service).saveEquipment(any(Equipment.class));
+    doNothing().when(service).updateEquipment(any(Equipment.class));
+
+    ResponseEntity<OpenLmisResponse> equipmentResponse = controller.save(equipment, request);
+    assertThat(equipment, is(equipmentResponse.getBody().getData().get("equipment")));
+    assertThat(equipmentResponse.getBody().getSuccessMsg(), is(notNullValue()));
+
   }
+
+  @Test
+  public void shouldSaveCCEChanges() throws Exception {
+    EquipmentType equipmentType=makeAnEquipmentType();
+    ColdChainEquipment coldChainEquipment=makeAnColdChainEquipment();
+    coldChainEquipment.setEquipmentType(equipmentType);
+
+    when(equipmentTypeService.getTypeById(coldChainEquipment.getEquipmentTypeId())).thenReturn(equipmentType);
+    doNothing().when(service).saveColdChainEquipment(any(ColdChainEquipment.class));
+    doNothing().when(service).updateColdChainEquipment(any(ColdChainEquipment.class));
+
+    ResponseEntity<OpenLmisResponse> coldChainResponse = controller.save(coldChainEquipment, request);
+    assertThat(coldChainEquipment, is( coldChainResponse.getBody().getData().get("equipment")));
+    assertThat(coldChainResponse.getBody().getSuccessMsg(), is(notNullValue()));
+  }
+
 }

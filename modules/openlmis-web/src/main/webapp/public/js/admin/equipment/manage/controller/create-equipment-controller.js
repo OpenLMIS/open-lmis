@@ -8,27 +8,58 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function CreateEquipmentController($scope, $routeParams, $location, Equipment, EquipmentTypes, SaveEquipment, messageService) {
+function CreateEquipmentController($scope, $routeParams, $location, Equipment,EquipmentType, EquipmentTypes, SaveEquipment, messageService, ColdChainDesignations,ColdChainPqsStatus,EquipmentEnergyTypes, Donors,currentEquipmentTypeId) {
 
-  EquipmentTypes.get(function (data) {
-    $scope.equipmentTypes = data.equipment_type;
+  $scope.currentEquipmentTypeId=currentEquipmentTypeId.get();
+  if( $scope.currentEquipmentTypeId === undefined)
+  {
+    $location.path('');
+  }
+
+  EquipmentEnergyTypes.get(function (data) {
+        $scope.energyTypes = data.energy_types;
+   });
+
+  ColdChainDesignations.get(function (data) {
+     $scope.designations = data.designations;
   });
+
+  ColdChainPqsStatus.get(function (data) {
+       $scope.pqsStatus = data.pqs_status;
+    });
+
   // clear the message when this page is loaded.
   $scope.$parent.message = '';
 
   if ($routeParams.id === undefined) {
     $scope.equipment = {};
+     EquipmentType.get({
+        id:$scope.currentEquipmentTypeId
+      },function (data) {
+        $scope.equipment.equipmentType = data.equipment_type;
+        $scope.equipment.equipmentTypeId=$scope.equipment.equipmentType.id;
+      });
+
   } else {
     Equipment.get({
-      id: $routeParams.id
+      id: $routeParams.id,
+      equipmentTypeId:$routeParams.type
     }, function (data) {
       $scope.equipment = data.equipment;
       $scope.showError = true;
     });
+
   }
 
-  $scope.saveEquipment = function () {
+  $scope.updateName=function(isColdChain)
+  {
+    if(isColdChain)
+    {
+     $scope.equipment.name=$scope.equipment.manufacturer+' / '+$scope.equipment.model;
+    }
+  };
 
+  $scope.saveEquipment = function () {
     var onSuccess = function(data){
       $scope.$parent.message = messageService.get(data.success);
       $location.path('');
@@ -40,12 +71,19 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment, E
     };
 
     if(!$scope.equipmentForm.$invalid){
+      if($scope.equipment.equipmentType.coldChain)
+      {
+        $scope.equipment.equipmentTypeName = "coldChainEquipment";
+      }
+      else{
+        $scope.equipment.equipmentTypeName = "equipment";
+      }
       SaveEquipment.save($scope.equipment, onSuccess, onError);
     }
-
   };
 
   $scope.cancelCreateEquipment = function () {
     $location.path('');
   };
+
 }

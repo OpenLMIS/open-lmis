@@ -54,7 +54,11 @@ function DistrictConsumptionReportController($scope,  AggregateConsumptionReport
    $scope.exportReport   = function (type){
 
         $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
+
+       //for a proper serialization of complex objects in the URL. This
+       // is a way to go for reports with multi-select input fields
+        var params = jQuery.param($scope.filter, true);
+
         var url = '/reports/download/aggregate_consumption/' + type +'?' + params;
         window.open(url);
     };

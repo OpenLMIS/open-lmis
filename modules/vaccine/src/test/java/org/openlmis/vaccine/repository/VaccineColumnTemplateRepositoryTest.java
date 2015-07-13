@@ -51,7 +51,7 @@ public class VaccineColumnTemplateRepositoryTest {
   public void shouldInsertProgramColumn() throws Exception {
     LogisticsColumn column = new LogisticsColumn();
     column.setId(2L);
-    repository.updateProgramColumn(column);
-    verify(mapper).updateProgramColumn(column);
+    repository.insertProgramColumn(column);
+    verify(mapper).insertProgramColumn(column);
   }
 }

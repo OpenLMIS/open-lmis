@@ -10,7 +10,11 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.repository.ColdChainEquipmentRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,19 +27,76 @@ public class EquipmentService {
   @Autowired
   private EquipmentRepository repository;
 
+  @Autowired
+  EquipmentTypeService equipmentTypeService;
+
+  @Autowired
+  ColdChainEquipmentRepository coldChainEquipmentRepository;
+
   public List<Equipment> getAll(){
-    return repository.getAll();
+      return repository.getAll();
+  }
+
+  public List<ColdChainEquipment> getAllCCE(Long equipmentTypeId, Pagination page){
+    return coldChainEquipmentRepository.getAll(equipmentTypeId,page);
+  }
+
+  public List<Equipment> getAllByType(Long equipmentTypeId) {
+    return repository.getAllByType(equipmentTypeId);
+  }
+  public List<Equipment> getByType(Long equipmentTypeId, Pagination page) {
+    return repository.getByType(equipmentTypeId, page);
   }
 
   public Equipment getById(Long id){
     return repository.getById(id);
+
   }
 
-  public void save(Equipment equipment){
-    if(equipment.getId() == null){
-      repository.insert(equipment);
-    }else{
-      repository.update(equipment);
+  public Equipment getByTypeAndId(Long id,Long equipmentTypeId) {
+
+    EquipmentType equipmentType=equipmentTypeService.getTypeById(equipmentTypeId);
+
+    if (equipmentType.isColdChain()) {
+      return coldChainEquipmentRepository.getById(id);
+    } else {
+      return repository.getById(id);
     }
+  }
+  public List<EquipmentType> getTypesByProgram(Long programId) {
+    return repository.getTypesByProgram(programId);
+  }
+
+  public Integer getEquipmentsCountByType(Long equipmentTypeId)
+  {
+    return repository.getCountByType(equipmentTypeId);
+  }
+
+  public Integer getCCECountByType(Long equipmentTypeId)
+  {
+    return coldChainEquipmentRepository.getCountByType(equipmentTypeId);
+  }
+  public void saveEquipment(Equipment equipment){
+      repository.insert(equipment);
+  }
+  public void saveColdChainEquipment(ColdChainEquipment coldChainEquipment){
+      coldChainEquipmentRepository.insert(coldChainEquipment);
+  }
+
+  public void updateEquipment(Equipment equipment) {
+     repository.update(equipment);
+  }
+
+  public void updateColdChainEquipment(ColdChainEquipment coldChainEquipment) {
+    coldChainEquipmentRepository.update(coldChainEquipment);
+  }
+
+
+  public void removeEquipment(Long id) {
+    repository.remove(id);
+  }
+
+  public void removeCCE(Long id) {
+    coldChainEquipmentRepository.remove(id);
   }
 }

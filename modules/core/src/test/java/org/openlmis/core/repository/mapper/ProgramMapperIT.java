@@ -107,6 +107,17 @@ public class ProgramMapperIT {
   }
 
   @Test
+  public void shouldGetAllIvdPrograms() throws Exception {
+    Program p = programMapper.getByCode("HIV");
+    p.setEnableIvdForm(true);
+    programMapper.update(p);
+
+    List<Program> programs = programMapper.getAllIvdPrograms();
+    assertThat(1, is( programs.size()));
+    assertThat(programs.get(0).getCode(), is("HIV"));
+  }
+
+  @Test
   public void shouldGetAllPrograms() throws Exception {
     List<Program> programs = programMapper.getAll();
     assertThat(5, is(programs.size()));
