@@ -16,7 +16,7 @@ function CustomReportController($scope, CustomReportList, CustomReportValue) {
     $scope.categories = _.uniq( _.pluck(data.reports, 'category') );
 
     $scope.isReady = true;
-    if($scope.filter.report_key !== undefined){
+    if(!angular.isUndefined($scope.filter) && angular.isUndefined($scope.filter.report_key)){
       $scope.OnFilterChanged();
     }
   });
@@ -38,7 +38,8 @@ function CustomReportController($scope, CustomReportList, CustomReportValue) {
   }
 
   $scope.OnFilterChanged = function () {
-    if ($scope.filter.report_key === undefined || !$scope.isReady) {
+
+    if ( angular.isUndefined($scope.filter) || angular.isUndefined($scope.filter.report_key) || !$scope.isReady) {
       return;
     }
     updateFilterSection();

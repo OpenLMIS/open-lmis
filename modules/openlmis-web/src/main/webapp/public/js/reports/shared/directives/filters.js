@@ -17,7 +17,7 @@ app.directive('filterContainer', ['$routeParams', '$location', function ($routeP
 
       function isFilterValid(){
         var all_required_fields_set = true;
-        
+
         // check if all of the required parameters have been specified
         if(!angular.isUndefined($scope.requiredFilters)){
           var requiredFilters = _.values($scope.requiredFilters);
@@ -674,16 +674,18 @@ app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
         if (attr.required) {
           scope.requiredFilters.product = 'product';
         }
-
+        // this is what filters products based on product categories selected.
         scope.productCFilter = function (option) {
-          return (!angular.isDefined(scope.filter) ||
-            !angular.isDefined(scope.filter.productCategory) ||
-            scope.filter.productCategory === '' ||
-            scope.filter.productCategory === 0 ||
-            option.categoryId == scope.filter.productCategory ||
-            option.id === -1  ||
-            option.id === scope.filter.product ||
-            option.id === 0 );
+          var show = (
+                        _.isEmpty(scope.filter.productCategory) ||
+                        _.isUndefined(scope.filter.productCategory) ||
+                        parseInt(scope.filter.productCategory, 10) === 0 ||
+                        option.categoryId == scope.filter.productCategory ||
+                        option.id === -1  ||
+                        option.id === scope.filter.product ||
+                        option.id === 0
+                      );
+          return show;
         };
 
         scope.$watch('filter.program', function (value) {
@@ -763,7 +765,7 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
       if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
         return;
 
-      var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
+      var program = (angular.isDefined( $scope.filter ) && angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
       ReportProductsByProgram.get({
         programId: program
       }, function (data) {
@@ -823,7 +825,7 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
         scope.productCFilter = function (option) {
 
           return (!angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) || scope.filter.productCategory === '' ||
-              scope.filter.productCategory === 0 || option.categoryId == scope.filter.productCategory || option.id === 0 || option.id === -1 ||
+              parseInt( scope.filter.productCategory, 0) === 0 || option.categoryId == scope.filter.productCategory || option.id === 0 || option.id === -1 ||
               (angular.isArray(scope.filter.productCategory) && valueExistInArray(scope.filter.productCategory, option.categoryId)));
         };
 
