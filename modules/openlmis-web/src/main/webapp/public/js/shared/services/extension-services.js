@@ -1200,3 +1200,11 @@ services.factory('CustomReportValue', function ($resource) {
 services.factory('PriceScheduleCategories', function ($resource) {
     return $resource('/priceScheduleCategories.json', {}, {});
 });
+
+services.factory('RepairManagement', function ($resource) {
+    return $resource('/reports/reportdata/repairManagement.json', {}, {});
+});
+
+services.factory('RepairManagementEquipmentList', function ($resource) {
+    return $resource('/reports/reportdata/repairManagementEquipmentList.json', {}, {});
+});
