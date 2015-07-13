@@ -1,0 +1,45 @@
+/*
+ * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ *
+ * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ */
+
+package org.openlmis.report.mapper;
+
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.ResultSetType;
+import org.openlmis.report.builder.FacilityReportQueryBuilder;
+import org.openlmis.report.builder.RepairManagementReportQueryBuilder;
+import org.openlmis.report.model.params.FacilityReportParam;
+import org.openlmis.report.model.params.RepairManagementEquipmentListParam;
+import org.openlmis.report.model.params.RepairManagementReportParam;
+import org.openlmis.report.model.report.FacilityReport;
+import org.openlmis.report.model.report.RepairManagementEquipmentList;
+import org.openlmis.report.model.report.RepairManagementReport;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface RepairManagementReportMapper {
+
+
+    @SelectProvider(type=RepairManagementReportQueryBuilder.class, method="SelectEquipmentCountByStatusEnergySql")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    List<RepairManagementReport> SelectEquipmentCountByStatusEnergy(
+            @Param("filterCriteria") RepairManagementReportParam filterCriteria,
+            @Param("userId") Long userId
+    );
+
+    @SelectProvider(type=RepairManagementReportQueryBuilder.class, method="RepairManagementEquipmentListSql")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    List<RepairManagementEquipmentList> RepairManagementEquipmentList(
+            @Param("filterCriteria") RepairManagementEquipmentListParam filterCriteria,
+            @Param("userId") Long userId
+    );
+
+}
