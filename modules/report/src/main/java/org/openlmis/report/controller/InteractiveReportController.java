@@ -512,4 +512,32 @@ public class InteractiveReportController extends BaseController {
                 (List<TimelinessReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, timelinessReportList);
     }
+
+    @RequestMapping(value = "/reportdata/repairManagement", method = GET, headers = BaseController.ACCEPT_JSON)
+    public Pages getRepairManagementSummary(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+            HttpServletRequest request
+    ) {
+
+        Report report = reportManager.getReportByKey("repair_management");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<RepairManagementReport> repairManagementReportList = (List<RepairManagementReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, repairManagementReportList);
+    }
+
+    @RequestMapping(value = "/reportdata/repairManagementEquipmentList", method = GET, headers = BaseController.ACCEPT_JSON)
+    public Pages getRepairManagementEquipmentList(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+            HttpServletRequest request
+    ) {
+
+        Report report = reportManager.getReportByKey("repair_management_equipment_list");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<RepairManagementEquipmentList> repairManagementEquipmentList = (List<RepairManagementEquipmentList>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, repairManagementEquipmentList);
+    }
 }
