@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.4.final using JasperReports Library version 6.0.4  -->
-<!-- 2015-05-12T13:37:01 -->
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2015-06-23T11:10:43 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stocked-out" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="772" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.366026910730141"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -33,7 +33,7 @@ FROM
  vw_stock_status
 WHERE
  status = 'SO'
- ORDER BY supplyingfacility,facility, product, processing_period_name]]>
+ ORDER BY supplyingfacility,facility, product, processing_period_name limit 100]]>
 	</queryString>
 	<field name="supplyingFacility" class="java.lang.String"/>
 	<field name="product" class="java.lang.String"/>
@@ -338,51 +338,4 @@ WHERE
 			</textField>
 		</band>
 	</detail>
-	<summary>
-		<band height="78">
-			<printWhenExpression><![CDATA[$P{SHOW_SUMMARY} == "Y"]]></printWhenExpression>
-			<textField>
-				<reportElement x="500" y="4" width="120" height="21" uuid="0807c9a4-f1e5-4452-81df-7e319b9eb7d8">
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement markup="none"/>
-				<textFieldExpression><![CDATA[$R{label.stocked.out}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="500" y="27" width="120" height="20" uuid="ab705f99-4f6e-4858-a6a4-400a27cbc7dd">
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement markup="none"/>
-				<textFieldExpression><![CDATA[$R{label.total.facilities}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="500" y="49" width="120" height="20" uuid="5c473a5a-46ee-4314-96df-f0907e42dd6b">
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement markup="none"/>
-				<textFieldExpression><![CDATA[$R{label.percent.stocked.out}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="624" y="4" width="60" height="21" uuid="26765415-03e2-43bb-b1f3-45ba4252a7eb">
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$P{TOTAL_STOCKEDOUT}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="624" y="27" width="60" height="20" uuid="a948b9dd-fa3c-40c1-a6cd-f509ef1cfc68">
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$P{TOTAL_FACILITIES}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="624" y="49" width="60" height="20" uuid="92cb6edc-592f-429b-bd78-762dd299eb78">
-					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$P{PERCENTAGE_STOCKEDOUT} + " %"]]></textFieldExpression>
-			</textField>
-		</band>
-	</summary>
 </jasperReport>

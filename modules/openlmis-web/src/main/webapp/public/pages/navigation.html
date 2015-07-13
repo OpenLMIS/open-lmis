@@ -11,7 +11,7 @@
 <div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav>
   <ul class="clearfix" style="display:none">
     <li >
-      <a   id='homeMenu' ng-click="homeLinkClicked()" openlmis-message="link.home"></a></li>
+      <a  href="" id='homeMenu' ng-click="homeLinkClicked()" openlmis-message="link.home"></a></li>
     <li>
     <!--<li ng-hide="hasPermission('VIEW_DASHBOARD_POC')">-->
       <!--<a id='homeMenu' href="/" openlmis-message="link.home"></a></li>-->
@@ -208,8 +208,15 @@
                 <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT')">
                   <a href="/public/pages/reports/lab-equipments-by-location/index.html" openlmis-message="menu.report.lab.equipment.by.location"></a>
                 </li>
+
                 <li ng-show="hasPermission('VIEW_REPAIR_MANAGEMENT_REPORT')">
                       <a href="/public/pages/reports/repair-management/index.html" openlmis-message="menu.report.repair.management"></a>
+
+                <li ng-show="hasPermission('VIEW_COLD_CHAIN_EQUIPMENT_LIST_REPORT')">
+                  <a href="/public/pages/reports/cold-chain-equipment-inventory/index.html" openlmis-message="menu.report.lab.equipment.coldchain.inventory"></a>
+                </li>
+                <li ng-show="hasPermission('VIEW_CCE_STORAGE_CAPACITY_REPORT')">
+                  <a href="/public/pages/reports/cce-storage-capacity/index.html" openlmis-message="menu.report.cce.storage.capacity"></a>
                 </li>
                 <li class="beak"></li>
               </ul>
@@ -316,7 +323,7 @@
             </div>
           </li>
 
-          <li class="has-children">
+          <li>
             <a href="/public/pages/reports/custom/index.html" openlmis-message="menu.report.custom.reports"></a>
           </li>
 
@@ -497,6 +504,11 @@
                     <a
                       href="/public/pages/vaccine/demographics/index.html#/facility"
                       openlmis-message="link.manage.facility.demographic"></a>
+                  </li>
+                  <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')">
+                    <a
+                      href="/public/pages/vaccine/demographics/index.html#/district"
+                      openlmis-message="link.manage.district.demographic"></a>
                   </li>
                   <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')">
                     <a

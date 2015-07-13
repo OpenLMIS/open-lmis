@@ -15,35 +15,52 @@
 </div>
 <div>
   <div>
-    <label>Year</label>
+    <label><span openlmis-message="label.demographic.parameter.year"></span></label>
     <select ng-model="year" ng-change="onParamChanged();">
       <option ng-selected="year == y" ng-repeat="y in years" value="{{y}}">{{y}}</option>
     </select>
   </div>
-  <table class="table table-bordered table-striped">
+  <div class="rnr-table">
+  <div class="parent">
+    <table  class="table table-bordered scrollable">
     <thead>
     <tr>
-      <th class="span1">#</th>
-      <th class="span5"><span openlmis-message="label.demographic.facility.code"></span></th>
-      <th><span openlmis-message="label.demographic.facility.name"></span></th>
+      <th class="span1"><span openlmis-message="label.demographic.facility.code"></span></th>
+      <th class="span3"><span openlmis-message="label.demographic.facility.name"></span></th>
       <th ng-repeat="category in categories">
         {{category.name}}
       </th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="estimate in estimates.facilityEstimates">
-      <th>{{$index + 1}}</th>
-      <td>{{estimate.facilityCode}}</td>
-      <td>{{estimate.facilityName}}</td>
-      <td class="span2 cell-input number" style="text-align: right" ng-repeat="category in categories">
-        <span class="cell-text number"  ng-show="!category.isPrimaryEstimate">{{round( ( toNumber(estimate.population ) * category.defaultConversionFactor) / 100) | number : 0 }}</span>
-        <input ng-show="category.isPrimaryEstimate" ng-model="estimate.population" type="text"/>
+    <tr ng-repeat="facility in form.estimateLineItems">
+      <td class="cell-input">
+        <span class="cell-text">{{facility.code}}</span>
+      </td>
+      <td class="cell-input">
+        <span class="cell-text">
+          {{facility.name}}
+        </span>
+      </td>
+      <td class="cell-input number" style="text-align: right" ng-repeat="category in categories">
+        <!-- <span class="cell-text number"  ng-show="!category.isPrimaryEstimate">{{ facility.indexedEstimates[category.id].value | number }}</span> -->
+        <span class="ng-scope">
+          <span class="position-relative ng-scope">
+            <input class="number numeric-input"
+                    style="width:90%"
+                    numeric-validator="positiveInteger"
+                    maxlength="8"
+                    ng-change="OnPopulationChanged(facility.indexedEstimates[category.id], facility, category)"
+                    ng-model="facility.indexedEstimates[category.id].value"
+                    type="text"/>
+          </span>
+        </span>
       </td>
     </tr>
     </tbody>
   </table>
-
+  </div>
+</div>
   <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
       <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"

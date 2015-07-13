@@ -250,6 +250,15 @@
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cce_storage_capacity"/>
+                    <property name="template" value="cce-storage-capacity.jasper"/>
+                    <property name="reportDataProvider" ref="CCEStorageCapacityReportDataProvider"/>
+                    <property name="id" value="RP-CCE-Storage-Capacity-Report"/>
+                    <property name="name" value="CCE Equipment Storage Capacity"/>
+                    <property name="title" value="report.title.cce.storage.capacity"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="lab_equipments_by_donor"/>
                     <property name="template" value="lab-equipments-by-donor.jasper"/>
                     <property name="reportDataProvider" ref="labEquipmentsByDonorReportDataProvider"/>
@@ -339,6 +348,15 @@
                     <property name="id" value="REPAIR"/>
                     <property name="name" value="Equipment List"/>
                     <property name="title" value="report.title.repair.management.equipment.list"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cold_chain_equipment"/>
+                    <property name="template" value="cold-chain-equipment.jasper"/>
+                    <property name="reportDataProvider" ref="coldChainEquipmentReportDataProvider"/>
+                    <property name="id" value="RP-Cold-Chain-Equipment-Report"/>
+                    <property name="name" value="Cold Chain Equipment Inventory"/>
+                    <property name="title" value="report.title.cold.chain.equipment.inventory"/>
                     <property name="version" value="1.0"/>
                 </bean>
 

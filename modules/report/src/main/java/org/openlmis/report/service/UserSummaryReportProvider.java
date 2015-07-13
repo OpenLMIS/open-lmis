@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 
+import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.ProgramService;
 
 import org.openlmis.core.service.RoleRightsService;
@@ -21,6 +23,7 @@ import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.report.mapper.UserSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 
+import org.openlmis.report.model.dto.Program;
 import org.openlmis.report.model.params.UserSummaryParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -82,7 +85,37 @@ public class UserSummaryReportProvider extends ReportDataProvider {
 
     @Override
     public String getFilterSummary(Map<String, String[]> params) {
-        return getReportFilterData(params).toString();
+        UserSummaryParams userSummaryParams = this.getReportFilterData(params);
+        StringBuilder filterString = new StringBuilder();
+        Program program = null;
+        Role role = null;
+        String programName="";
+        String roleName="";
+        String superVisoryName="";
+        SupervisoryNode supervisoryNode = null;
+        if (userSummaryParams.getProgramId()==0) {
+            filterString.append("Program : All");
+        }else {
+            program= this.reportMapper.getProgram(userSummaryParams.getProgramId());
+            programName=program==null?"": program.getName();
+            filterString.append("Program : ").append(programName);
+        }
+        if (userSummaryParams.getRoleId()==0) {
+            filterString.append(", Role : All");
+
+        }else {
+            role= this.reportMapper.getRole(userSummaryParams.getRoleId());
+            roleName=role==null?"": role.getName();
+            filterString.append(", Role : ").append(roleName);
+        }
+        if (userSummaryParams.getSupervisoryNodeId()==0) {
+            filterString.append(", Supervisory Node : All");
+        }else {
+            supervisoryNode= this.reportMapper.getSuperVisoryNode(userSummaryParams.getSupervisoryNodeId());
+            superVisoryName=supervisoryNode==null?"": supervisoryNode.getName();
+            filterString.append(", Supervisory Node : ").append(superVisoryName);
+        }
+        return filterString.toString();
 
     }
 

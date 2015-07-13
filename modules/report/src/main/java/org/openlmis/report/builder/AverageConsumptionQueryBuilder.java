@@ -31,7 +31,7 @@ public class AverageConsumptionQueryBuilder {
         Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
         BEGIN();
 
-        SELECT("distinct  coalesce( avg(quantitydispensed),0) average, product, productcode, productcategory category, ft.name facilityType, f.name facilityName,MAX(ps.name) schedulename, MAX(pp.name) periodname,  MAX(s.name) supplyingFacility, MAX(ft.nominalmaxmonth) MaxMOS, MAX(ft.nominaleop) minMOS");
+        SELECT("coalesce( avg(quantitydispensed),0) average, product, productcode, productcategory category, ft.name facilityType, f.name facilityName,MAX(ps.name) schedulename, MAX(pp.name) periodname,  MAX(s.name) supplyingFacility, MAX(ft.nominalmaxmonth) MaxMOS, MAX(ft.nominaleop) minMOS");
         FROM("requisition_line_items li");
         JOIN("requisitions r on r.id = li.rnrid");
         JOIN("facilities f on r.facilityid = f.id");

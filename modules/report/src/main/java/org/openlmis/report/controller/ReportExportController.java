@@ -38,16 +38,17 @@ public class ReportExportController {
 
     switch (outputOption.toUpperCase()) {
       case "PDF":
-        reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.CSV.PDF, response);
+        reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.PDF, response);
         break;
       case "XLS":
         reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.XLS, response);
         break;
       case "HTML":
         reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.HTML, response);
+        break;
       case "CSV":
-            reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.CSV, response);
-
+        reportManager.showReport(userId, reportKey, request.getParameterMap(), ReportOutputOption.CSV, response);
+        break;
     }
   }
 

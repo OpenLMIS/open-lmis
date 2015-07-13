@@ -10,13 +10,14 @@
 
 package org.openlmis.vaccine.repository.reports;
 
-import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.domain.reports.*;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportMapper;
 import org.openlmis.vaccine.service.reports.VaccineLineItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -72,5 +73,38 @@ public class VaccineReportRepository {
 
   public List<ReportStatusDTO> getReportedPeriodsForFacility(Long facilityId, Long programId) {
     return mapper.getReportedPeriodsForFacility(facilityId, programId);
+  }
+  public Long getReportIdForFacilityAndPeriod(Long facilityId, Long periodId){
+    return mapper.getReportIdForFacilityAndPeriod(facilityId, periodId);
+  }
+  public List<DiseaseLineItem> getDiseaseSurveillance(Long reportId){
+    return mapper.getDiseaseSurveillance(reportId);
+  }
+
+  public List<ColdChainLineItem> getColdChain(Long reportId){
+    return mapper.getColdChain(reportId);
+  }
+
+  public List<AdverseEffectLineItem> getAdverseEffectReport(Long reportId){
+    return mapper.getAdverseEffectReport(reportId);
+  }
+
+  public List<HashMap<String, Object>> getVaccineCoverageReport(Long reportId){
+    return mapper.getVaccineCoverageReport(reportId);
+  }
+
+  public List<VaccineReport> getImmunizationSession(Long reportId){
+    return mapper.getImmunizationSession(reportId);
+  }
+
+  public List<HashMap<String, Object>> getVaccinationReport(String productCategoryCode, Long reportId){
+    return mapper.getVaccinationReport(productCategoryCode, reportId);
+  }
+
+  public List<HashMap<String, Object>> getTargetPopulation(Long facilityId, Long periodId){
+    return mapper.getTargetPopulation(facilityId, periodId);
+  }
+  public List<VitaminSupplementationLineItem> getVitaminSupplementationReport(Long reportId){
+    return mapper.getVitaminSupplementationReport(reportId);
   }
 }

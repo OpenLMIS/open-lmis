@@ -15,9 +15,23 @@ function FacilityDemographicEstimateController($scope, categories, programs, yea
   $scope.years = years;
   $scope.year = years[0];
 
+  $scope.OnPopulationChanged = function(population, facility, category){
+    var pop = $scope.toNumber(population.value);
+    if(category.isPrimaryEstimate){
+      angular.forEach(facility.estimates, function(estimate){
+        if(population.demographicEstimateId !== estimate.demographicEstimateId){
+          estimate.value = $scope.round(estimate.conversionFactor * pop / 100) ;
+        }
+      });
+    }
+  };
+
   $scope.onParamChanged = function(){
     FacilityDemographicEstimates.get({programId : programs[0].id, year: $scope.year}, function(data){
-      $scope.estimates = data.estimates;
+      $scope.form = data.estimates;
+      angular.forEach($scope.form.estimateLineItems, function(fe){
+        fe.indexedEstimates = _.indexBy( fe.facilityEstimates , 'demographicEstimateId' );
+      });
     });
   };
 
@@ -33,7 +47,11 @@ function FacilityDemographicEstimateController($scope, categories, programs, yea
   };
 
   $scope.save = function(){
-    $scope.message = "this feature has not been implemented";
+    SaveFacilityDemographicEstimates.update($scope.form, function(data){
+      // show the saved message
+      //TODO: move this string to the messages property file.
+      $scope.message = "Facility demographic estimates successfully saved.";
+    });
   };
 
   $scope.onParamChanged();

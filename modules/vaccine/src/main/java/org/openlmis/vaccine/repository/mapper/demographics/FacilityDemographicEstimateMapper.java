@@ -22,7 +22,7 @@ public interface FacilityDemographicEstimateMapper {
   @Insert("insert into facility_demographic_estimates " +
     " (year, facilityId, demographicEstimateId, conversionFactor, value)" +
     " values " +
-    " (#{year}, #{facilityId}, #{demographicEstimateId}, #{converstionFactor}, #{value}) ")
+    " (#{year}, #{facilityId}, #{demographicEstimateId}, #{conversionFactor}, #{value}) ")
   @Options(flushCache = true, useGeneratedKeys = true)
   Integer insert(FacilityDemographicEstimate estimate);
 
