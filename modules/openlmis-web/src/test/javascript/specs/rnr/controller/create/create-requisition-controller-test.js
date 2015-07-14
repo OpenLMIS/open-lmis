@@ -11,7 +11,7 @@
 describe('CreateRequisitionController', function () {
 
   var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList, pageSize,
-    lossesAndAdjustmentTypes, facilityApprovedNFSProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate, requisitionService, categoryList, requisitions;
+    lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate, requisitionService, categoryList, requisitions;
   beforeEach(module('openlmis'));
 
   beforeEach(module('ui.bootstrap.dialog'));
@@ -56,9 +56,7 @@ describe('CreateRequisitionController', function () {
     };
 
     rnrColumns = [
-      {"testField": "test"},
-      {name: "requestedQuantity"},
-      {name: "reasonForRequestedQuantity"}
+      {"testField": "test"}
     ];
 
     regimenColumnList = [
@@ -87,13 +85,13 @@ describe('CreateRequisitionController', function () {
     var facilityApprovedProduct4 = {"programProduct": {"product": product4}};
     var facilityApprovedProduct5 = {"programProduct": {"product": product5}};
 
-    facilityApprovedNFSProducts = [facilityApprovedProduct1, facilityApprovedProduct2, facilityApprovedProduct3, facilityApprovedProduct4, facilityApprovedProduct5];
+    facilityApprovedProducts = [facilityApprovedProduct1, facilityApprovedProduct2, facilityApprovedProduct3, facilityApprovedProduct4, facilityApprovedProduct5];
 
     httpBackend.when('GET', '/rnr/1/columns.json').respond(rnrColumns);
     httpBackend.when('GET', '/programId/1/regimenColumns.json').respond(regimenColumnList);
     httpBackend.when('GET', '/reference-data/currency.json').respond({"currency": "$"});
     httpBackend.when('GET', '/requisitions/lossAndAdjustments/reference-data.json').respond(200, lossesAndAdjustmentTypes);
-    httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200, {"nonFullSupplyProducts": facilityApprovedNFSProducts});
+    httpBackend.when('GET', '/facilityApprovedProducts/facility/1/program/1/nonFullSupply.json').respond(200, {"nonFullSupplyProducts": facilityApprovedProducts});
 
     $rootScope.fixToolBar = function () {
     };
@@ -144,7 +142,9 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should get list of Rnr Columns for program', function () {
-    expect(rnrColumns).toEqual(scope.programRnrColumnList);
+    expect([
+      {"testField": "test"}
+    ]).toEqual(scope.programRnrColumnList);
   });
 
   it('should get lossesAndAdjustments types', function () {
@@ -152,7 +152,7 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should get facility approved products', function () {
-    expect(facilityApprovedNFSProducts).toEqual(scope.facilityApprovedNFSProducts);
+    expect(facilityApprovedProducts).toEqual(scope.facilityApprovedProducts);
   });
 
   it('should set visible columns for regimen', function () {

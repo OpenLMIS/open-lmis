@@ -62,16 +62,9 @@
                     openlmis-message="error.number.only"></span>
             </div>
 
-            <div ng-if="parameter.dataType === 'java.lang.String' && parameter.selectValues.length === 0">
+            <div ng-if="parameter.dataType === 'java.lang.String'">
               <input type="text" id="string_{{parameter.name}}" ng-trim="false"
                      ng-model="parameterMap[parameter.name]" ng-change="refreshParams()"/>
-            </div>
-
-            <div ng-if="parameter.dataType === 'java.lang.String' && parameter.selectValues.length > 0">
-                <select id="string_{{parameter.name}}" ng-trim="false"
-                       ng-model="parameterMap[parameter.name]"
-                       ng-options="i for i in parameter.selectValues"
-                       ng-change="refreshParams()"/>
             </div>
 
             <div ng-if="isInvalid(parameter.dataType)">

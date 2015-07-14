@@ -26,48 +26,20 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
-@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-@Transactional
 @Category(IntegrationTests.class)
+@ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
+@TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class DosageUnitMapperIT {
 
   @Autowired
-  private DosageUnitMapper duMapper;
+  DosageUnitMapper mapper;
 
   @Test
   public void shouldGetAllDosageUnits() throws Exception {
-    List<DosageUnit> result = duMapper.getAll();
+    List<DosageUnit> result = mapper.getAll();
+
     assertThat(result.size(), is(7));
-  }
-
-  @Test
-  public void shouldInsertDosageUnitByCode() {
-    DosageUnit du = new DosageUnit();
-    du.setCode("du code");
-    du.setDisplayOrder(1);
-    duMapper.insert(du);
-
-    DosageUnit returnedDu = duMapper.getByCode("DU CODE");
-
-    assertThat(returnedDu.getCode(), is(du.getCode()));
-    assertThat(returnedDu.getDisplayOrder(), is(du.getDisplayOrder()));
-  }
-
-  @Test
-  public void shouldUpdateDosageUnit() {
-    DosageUnit du = new DosageUnit();
-    du.setCode("someCode");
-    du.setDisplayOrder(1);
-    duMapper.insert(du);
-
-    DosageUnit returnedDu = duMapper.getByCode("someCode");
-    returnedDu.setCode("someOtherCode");
-    duMapper.update(returnedDu);
-
-    DosageUnit updatedDu = duMapper.getByCode("someOtherCode");
-    assertThat(updatedDu.getCode(), is(returnedDu.getCode()));
-    assertThat(updatedDu.getDisplayOrder(), is(returnedDu.getDisplayOrder()));
   }
 }

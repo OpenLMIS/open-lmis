@@ -56,7 +56,7 @@ describe('CreateNonFullSupplyController', function () {
     $rootScope.fixToolBar = function () {
     };
 
-    scope.facilityApprovedNFSProducts = facilityApprovedProducts;
+    scope.facilityApprovedProducts = facilityApprovedProducts;
     ctrl = controller(CreateNonFullSupplyController, {$scope: scope, $location: location, $routeParams: routeParams,
       localStorageService: localStorageService});
 
@@ -67,7 +67,7 @@ describe('CreateNonFullSupplyController', function () {
   });
 
   it('should display non full supply addition modal window', function () {
-    scope.facilityApprovedNFSProducts = [];
+    scope.facilityApprovedProducts = [];
     spyOn(scope, 'resetNonFullSupplyModal');
 
     scope.showAddNonFullSupplyModal();

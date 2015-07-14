@@ -16,7 +16,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class Template extends BaseModel {
 
   private byte[] data;
 
-  private List<TemplateParameter> parameters = new ArrayList<>(0);
+  private List<TemplateParameter> parameters;
 
   private String type;
 

@@ -178,7 +178,7 @@ services.factory('ForgotPassword', function ($resource) {
   return $resource('/forgot-password.json', {}, {});
 });
 
-services.factory('FacilityApprovedNonFullSupplyProducts', function ($resource) {
+services.factory('FacilityApprovedProducts', function ($resource) {
   return $resource('/facilityApprovedProducts/facility/:facilityId/program/:programId/nonFullSupply.json', {}, {});
 });
 

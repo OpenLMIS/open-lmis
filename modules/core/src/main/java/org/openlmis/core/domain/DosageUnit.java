@@ -14,9 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.exception.DataException;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.annotation.ImportField;
 
 /**
  * DosageUnit represents the Dosage Unit for any product.
@@ -25,20 +22,7 @@ import org.openlmis.upload.annotation.ImportField;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class DosageUnit extends BaseModel implements Importable {
-  @ImportField(mandatory = true, name="Dosage Unit Code")
+public class DosageUnit extends BaseModel {
   private String code;
-
-  @ImportField(mandatory = true, name="Display Order")
   private int displayOrder;
-
-  /**
-   * Validation method for an instantiated DosageUnit.  A valid dosage unit has a code and a display order.
-   * @throws DataException if this dosage unit is not defined well.
-   */
-  public void isValid() {
-    if (code == null
-      || code.length() == 0
-      || displayOrder <= 0 ) throw new DataException("error.reference.data.missing");
-  }
 }

@@ -28,17 +28,10 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
-public class GeographicLevel extends BaseModel implements Importable {
-
-  @ImportField(name="Geographic Level Code", mandatory = true)
+public class GeographicLevel extends BaseModel {
   String code;
-
-  @ImportField(name="Name", mandatory = true)
   String name;
-
-  @ImportField(name="Level Number", mandatory = true)
   Integer levelNumber;
-
   private static Integer ROOT_LEVEL_NUMBER = 1;
 
   public GeographicLevel(Long id, String code, String name, Integer levelNumber) {

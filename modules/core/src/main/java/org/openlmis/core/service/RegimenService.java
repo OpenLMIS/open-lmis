@@ -28,9 +28,6 @@ public class RegimenService {
   RegimenRepository repository;
 
   @Autowired
-  private RegimenCategoryRepository regimenCategoryRepository;
-
-  @Autowired
   ProgramService programService;
 
   public void save(List<Regimen> regimens, Long userId) {
@@ -42,7 +39,7 @@ public class RegimenService {
   }
 
   public List<RegimenCategory> getAllRegimenCategories() {
-    return regimenCategoryRepository.getAll();
+    return repository.getAllRegimenCategories();
   }
 
   public Regimen getById(Long id){return repository.getById(id);}

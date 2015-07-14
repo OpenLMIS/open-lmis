@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
-import org.openlmis.core.repository.RegimenCategoryRepository;
 import org.openlmis.core.repository.RegimenRepository;
 
 import java.util.ArrayList;
@@ -37,9 +36,6 @@ public class RegimenServiceTest {
 
   @Mock
   ProgramService programService;
-
-  @Mock
-  private RegimenCategoryRepository regimenCategoryRepository;
 
   @InjectMocks
   RegimenService service;
@@ -76,12 +72,12 @@ public class RegimenServiceTest {
   @Test
   public void shouldGetAllRegimenCategories() {
     List<RegimenCategory> expectedRegimenCategories = new ArrayList<>();
-    when(regimenCategoryRepository.getAll()).thenReturn(expectedRegimenCategories);
+    when(repository.getAllRegimenCategories()).thenReturn(expectedRegimenCategories);
 
     List<RegimenCategory> regimenCategories = service.getAllRegimenCategories();
 
     assertThat(regimenCategories, is(expectedRegimenCategories));
-    verify(regimenCategoryRepository).getAll();
+    verify(repository).getAllRegimenCategories();
   }
 
 }

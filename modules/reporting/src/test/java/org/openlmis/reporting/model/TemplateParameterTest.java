@@ -19,6 +19,7 @@ import org.openlmis.db.categories.UnitTests;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -90,10 +91,5 @@ public class TemplateParameterTest {
   public void shouldGetParsedValueForStringDataType() throws Exception {
     parameter.setDataType("java.lang.String");
     assertThat(parameter.getParsedValueOf("text"), is((Object) "text"));
-  }
-
-  @Test
-  public void shouldHaveEmptySelectValueList() {
-    assertThat(parameter.getSelectValues().size(), is(0));
   }
 }

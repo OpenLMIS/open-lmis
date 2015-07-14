@@ -29,17 +29,6 @@ public interface ProgramMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(Program program);
 
-  @Update({"UPDATE programs SET name = #{name}"
-    , ", code = #{code}"
-    , ", description = #{description}"
-    , ", active = #{active}"
-    , ", budgetingApplies = #{budgetingApplies}"
-    , ", templateConfigured = #{templateConfigured}"
-    , ", regimenTemplateConfigured = #{regimenTemplateConfigured}"
-    , ", push = #{push}"
-    , " WHERE id = #{id}"})
-  void update(Program p);
-
   @Select({"SELECT P.*",
     "FROM programs P, programs_supported PS",
     "WHERE P.id = PS.programId AND",
@@ -160,8 +149,12 @@ public interface ProgramMapper {
   @Select("SELECT * FROM programs ORDER BY templateConfigured DESC, name")
   List<Program> getAll();
 
+
   @Select("SELECT * FROM programs WHERE LOWER(code) = LOWER(#{code})")
   Program getByCode(String code);
+
+  @Select("SELECT * FROM programs ORDER BY regimenTemplateConfigured DESC, name")
+  List<Program> getAllByRegimenTemplate();
 
   @Update("UPDATE programs SET regimenTemplateConfigured = true WHERE id = #{id}")
   void setRegimenTemplateConfigured(Long id);

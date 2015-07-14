@@ -50,7 +50,7 @@ public class CsvBeanReader {
     CsvPreference csvPreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
       .surroundingSpacesNeedQuotes(true).build();
 
-    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
     dozerBeanReader = new CsvDozerBeanReader(bufferedReader, csvPreference);
     headers = readHeaders();
     String[] mappings = modelClass.getFieldNameMappings(headers);

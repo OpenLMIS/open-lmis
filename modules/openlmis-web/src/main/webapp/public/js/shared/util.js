@@ -53,10 +53,6 @@ var utils = {
       }
     });
     return sum;
-  },
-
-  getFormattedPercent: function(number) {
-    return (number === null) ? '' : number + '%';
   }
 
 };

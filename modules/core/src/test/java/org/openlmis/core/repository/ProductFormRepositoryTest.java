@@ -10,78 +10,42 @@
 
 package org.openlmis.core.repository;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.ProductForm;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProductFormMapper;
 import org.openlmis.db.categories.UnitTests;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ProductFormRepositoryTest {
 
-  @Mock
-  private ProductFormMapper pfMapper;
-
-  private ProductFormRepository pfRep;
-
   @Rule
-  public ExpectedException expectedException = ExpectedException.none();
+  public ExpectedException expectedEx = ExpectedException.none();
 
-  @Before
-  public void setup() {
-    pfRep = new ProductFormRepository(pfMapper);
-  }
+  @InjectMocks
+  ProductFormRepository repository;
 
-  @Test
-  public void shouldThrowExceptionIfInsertingInValid() {
-    ProductForm pf = new ProductForm();
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.reference.data.missing");
-    pfRep.insert(pf);
-  }
-
+  @Mock
+  ProductFormMapper mapper;
 
   @Test
   public void shouldGetAll() {
-    pfRep.getAll();
-    verify(pfMapper).getAll();
+    repository.getAll();
+    verify(mapper).getAll();
   }
 
   @Test
-  public void shouldThrowExceptionIfInsertingDuplicate() {
-    ProductForm pf = new ProductForm();
-    pf.setCode("somecode");
-    pf.setDisplayOrder(2);
-
-    when(pfMapper.getByCode(pf.getCode())).thenReturn(pf);
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.duplicate.dosage.unit.code");
-
-    pfRep.insert(pf);
-  }
-
-  @Test
-  public void ShouldGetByCode() {
-    pfRep.getByCode("code");
-    verify(pfMapper).getByCode("code");
-  }
-
-  @Test
-  public void shouldThrowExceptionIfUpdatingInvalid() {
-    ProductForm pf = new ProductForm();
-    expectedException.expect(DataException.class);
-    pfRep.update(pf);
+  public void ShouldGetByCode()
+  {
+    repository.getByCode("code");
+    verify(mapper).getByCode("code");
   }
 }

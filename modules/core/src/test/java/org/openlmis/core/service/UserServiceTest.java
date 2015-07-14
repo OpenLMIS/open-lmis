@@ -325,7 +325,7 @@ public class UserServiceTest {
 
     userService.updateUserPassword(userId, newPassword);
 
-    verify(userRepository).updateUserPasswordAndActivate(userId, hashedPassword);
+    verify(userRepository).updateUserPassword(userId, hashedPassword);
   }
 
   @Test

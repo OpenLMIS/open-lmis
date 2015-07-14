@@ -354,7 +354,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   validateRequiredFieldsForNonFullSupply: function () {
-    if (_.findWhere(this.programRnrColumnList, {name: 'quantityRequested'})) {
+    if (_.findWhere(this.programRnrColumnList, {name: 'quantityRequested'}).visible) {
       return !(isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity));
     }
     return false;

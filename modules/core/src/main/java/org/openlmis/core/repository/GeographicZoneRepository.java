@@ -15,6 +15,7 @@ import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,12 +33,12 @@ import java.util.List;
 public class GeographicZoneRepository {
 
   private GeographicZoneMapper mapper;
-  private GeographicLevelRepository geographicLevelRepository;
+  private GeographicLevelMapper geographicLevelMapper;
 
   @Autowired
-  public GeographicZoneRepository(GeographicZoneMapper mapper, GeographicLevelRepository geographicLevelRepository) {
+  public GeographicZoneRepository(GeographicZoneMapper mapper, GeographicLevelMapper geographicLevelMapper) {
     this.mapper = mapper;
-    this.geographicLevelRepository = geographicLevelRepository;
+    this.geographicLevelMapper = geographicLevelMapper;
   }
 
   public GeographicZone getByCode(String code) {
@@ -45,7 +46,7 @@ public class GeographicZoneRepository {
   }
 
   public Integer getLowestGeographicLevel() {
-    return geographicLevelRepository.getLowestGeographicLevel();
+    return geographicLevelMapper.getLowestGeographicLevel();
   }
 
   public List<GeographicZone> getAllGeographicZones() {
@@ -66,6 +67,10 @@ public class GeographicZoneRepository {
     }
   }
 
+  public GeographicLevel getGeographicLevelByCode(String code) {
+    return mapper.getGeographicLevelByCode(code);
+  }
+
   public GeographicZone getById(Long id) {
     return mapper.getWithParentById(id);
   }
@@ -79,7 +84,7 @@ public class GeographicZoneRepository {
   }
 
   public List<GeographicLevel> getAllGeographicLevels() {
-    return geographicLevelRepository.getAll();
+    return geographicLevelMapper.getAll();
   }
 
   public List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel geographicLevel) {

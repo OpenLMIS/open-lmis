@@ -55,21 +55,16 @@ module.exports = function (config) {
     plugins: [
       'karma-jasmine',
       'karma-coverage',
-      'karma-htmlfile-reporter',
       'karma-firefox-launcher'
     ],
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress', 'coverage', 'html'],
+    reporters: ['progress', 'coverage'],
 
     coverageReporter: {
       type: 'html',
       dir: '../../../test/coverage/'
-    },
-
-    htmlReporter: {
-	outputFile: '../../../test/karma/units.html'
     },
 
     preprocessors: {

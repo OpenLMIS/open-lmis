@@ -75,37 +75,6 @@ public class ProgramMapperIT {
   QueryExecutor queryExecutor;
 
   @Test
-  public void shouldInsertProgram() {
-    Program p = make(a(defaultProgram));
-    programMapper.insert(p);
-
-    Program pRet = programMapper.getById(p.getId());
-    assertThat(pRet, notNullValue());
-    assertThat(pRet, is(p));
-  }
-
-  @Test
-  public void shouldUpdateProgram() {
-    Program p = make(a(defaultProgram));
-    programMapper.insert(p);
-
-    p = programMapper.getById(p.getId());
-    p.setCode("abc");
-    p.setActive(false);
-    p.setBudgetingApplies(false);
-    p.setDescription("something to update");
-    p.setName("something to update");
-    p.setPush(false);
-    p.setRegimenTemplateConfigured(false);
-    p.setTemplateConfigured(false);
-    programMapper.update(p);
-
-    Program pRet = programMapper.getById(p.getId());
-    assertThat(pRet, notNullValue());
-    assertThat(pRet, is(p));
-  }
-
-  @Test
   public void shouldGetProgramsWhichAreActiveByFacilityCode() {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
@@ -331,6 +300,7 @@ public class ProgramMapperIT {
     assertThat(programs.size(), is(1));
     assertThat(programs, hasItem(activeProgram));
   }
+
 
   @Test
   public void shouldGetAllProgramsInOrderByRegimentTemplateConfiguredAndName() {

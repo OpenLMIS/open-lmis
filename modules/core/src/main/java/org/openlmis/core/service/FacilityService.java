@@ -24,7 +24,6 @@ import org.openlmis.core.dto.FacilityImages;
 import org.openlmis.core.dto.FacilitySupervisor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
-import org.openlmis.core.repository.FacilityTypeRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,9 +51,6 @@ public class FacilityService {
   private FacilityRepository facilityRepository;
 
   @Autowired
-  private FacilityTypeRepository facilityTypeRepository;
-
-  @Autowired
   private ProgramSupportedService programSupportedService;
 
   @Autowired
@@ -78,7 +74,11 @@ public class FacilityService {
   }
 
   public List<FacilityType> getAllTypes() {
-    return facilityTypeRepository.getAll();
+    return facilityRepository.getAllTypes();
+  }
+
+  public List<FacilityOperator> getAllOperators() {
+    return facilityRepository.getAllOperators();
   }
 
   public List<GeographicZone> getAllZones() {
@@ -161,7 +161,7 @@ public class FacilityService {
   }
 
   public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
-    return facilityTypeRepository.getByCodeOrThrowException(facilityType.getCode());
+    return facilityRepository.getFacilityTypeByCode(facilityType);
   }
 
   public Facility getByCode(Facility facility) {

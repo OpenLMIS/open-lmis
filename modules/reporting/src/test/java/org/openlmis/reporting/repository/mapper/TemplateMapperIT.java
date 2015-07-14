@@ -37,9 +37,7 @@ import java.util.List;
 import static com.google.common.collect.Iterables.any;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -80,23 +78,9 @@ public class TemplateMapperIT {
   }
 
   @Test
-  public void shouldHaveEmptyParameterListOnGetLWById() {
-    Template t = createReportTemplate("test", "test");
-    Template tRet = mapper.getLWById(t.getId());
-
-    assertThat(tRet.getParameters(), is(notNullValue()));
-  }
-
-  @Test
   public void shouldGetLWById() {
     Template template = createReportTemplate("Sample Report", "Consistency Report");
-    TemplateParameter parameter = new TemplateParameter(template.getId()
-      , "Parameter"
-      , "Parameter"
-      , "value"
-      , "String"
-      , "String"
-      , "desc");
+    TemplateParameter parameter = new TemplateParameter(template.getId(), "Parameter", "Parameter", "value", "String", "desc");
     parameter.setCreatedBy(CREATED_BY);
 
     mapper.insertParameter(parameter);
@@ -117,13 +101,7 @@ public class TemplateMapperIT {
 
     Template expectedTemplate = createReportTemplate(name, type);
 
-    TemplateParameter parameter = new TemplateParameter(expectedTemplate.getId()
-      , "Parameter"
-      , "Parameter"
-      , "value"
-      , "String"
-      , "String"
-      , "desc");
+    TemplateParameter parameter = new TemplateParameter(expectedTemplate.getId(), "Parameter", "Parameter", "value", "String", "desc");
     mapper.insertParameter(parameter);
 
     Template templateDB = mapper.getById(expectedTemplate.getId());
@@ -166,13 +144,7 @@ public class TemplateMapperIT {
     String name = "Requisition Report Template";
     Template template = createReportTemplate(name, type);
 
-    TemplateParameter templateParameter = new TemplateParameter(template.getId()
-      , "Parameter"
-      , "Parameter"
-      , "value"
-      , "String"
-      , "String"
-      , "desc");
+    TemplateParameter templateParameter = new TemplateParameter(template.getId(), "Parameter", "Parameter", "value", "String", "desc");
     templateParameter.setCreatedBy(CREATED_BY);
 
     mapper.insertParameter(templateParameter);
@@ -185,7 +157,6 @@ public class TemplateMapperIT {
     assertThat(resultSet.getString("description"), is("desc"));
     assertThat(resultSet.getString("defaultValue"), is("value"));
     assertThat(resultSet.getString("dataType"), is("String"));
-    assertThat(resultSet.getString("selectSql"), is("String"));
     assertThat(resultSet.getLong("createdBy"), is(1L));
   }
 
@@ -249,20 +220,8 @@ public class TemplateMapperIT {
     String name = "Requisition Report Template";
     Template template = createReportTemplate(name, type);
 
-    TemplateParameter parameter1 = new TemplateParameter(template.getId()
-      , "Parameter1"
-      , "Parameter1"
-      , "value"
-      , "String"
-      , "String"
-      , "desc");
-    TemplateParameter parameter2 = new TemplateParameter(template.getId()
-      , "Parameter2"
-      , "Parameter2"
-      , "value"
-      , "String"
-      , "String"
-      , "desc");
+    TemplateParameter parameter1 = new TemplateParameter(template.getId(), "Parameter1", "Parameter1", "value", "String", "desc");
+    TemplateParameter parameter2 = new TemplateParameter(template.getId(), "Parameter2", "Parameter2", "value", "String", "desc");
     mapper.insertParameter(parameter1);
     mapper.insertParameter(parameter2);
 
@@ -271,16 +230,6 @@ public class TemplateMapperIT {
     assertThat(parametersByTemplateId.size(), is(2));
     assertTrue(parametersByTemplateId.contains(parameter1));
     assertTrue(parametersByTemplateId.contains(parameter2));
-  }
-
-  @Test
-  public void shouldRunArbitrarySql() throws Exception {
-    Template t1 = createReportTemplate("template1", "type");
-    Template t2 = createReportTemplate("template2", "type");
-
-    String sql = "SELECT name FROM templates";
-    List<String> result = mapper.runSelectSql(sql);
-    assertThat(result, hasItems("template1", "template2"));
   }
 
   private Template createReportTemplate(String name, String type) {

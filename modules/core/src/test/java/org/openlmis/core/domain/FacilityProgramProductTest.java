@@ -97,8 +97,7 @@ public class FacilityProgramProductTest {
     when(programProductIsa.calculate(420L)).thenReturn(108);
     FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, null);
 
-    assertThat(facilityProgramProduct.calculateIsa(420L, 3), is(324));
-    assertThat(facilityProgramProduct.calculateIsaByPackSize(420L, 3), is(47));
+    assertThat(facilityProgramProduct.calculateIsa(420L, 3), is(46));
   }
 
   @Test
@@ -109,8 +108,7 @@ public class FacilityProgramProductTest {
 
     FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, 98);
 
-    assertThat(facilityProgramProduct.calculateIsa(420L, 5), is(490));
-    assertThat(facilityProgramProduct.calculateIsaByPackSize(420L, 5), is(70));
+    assertThat(facilityProgramProduct.calculateIsa(420L, 5), is(70));
   }
 
   @Test
@@ -120,7 +118,6 @@ public class FacilityProgramProductTest {
     FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, null);
 
     assertThat(facilityProgramProduct.calculateIsa(420L, 5), is(nullValue()));
-    assertThat(facilityProgramProduct.calculateIsaByPackSize(420L, 5), is(nullValue()));
 
   }
 
@@ -131,7 +128,6 @@ public class FacilityProgramProductTest {
     FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, null);
 
     assertThat(facilityProgramProduct.calculateIsa(null, 5), is(nullValue()));
-    assertThat(facilityProgramProduct.calculateIsaByPackSize(null, 5), is(nullValue()));
 
   }
 
