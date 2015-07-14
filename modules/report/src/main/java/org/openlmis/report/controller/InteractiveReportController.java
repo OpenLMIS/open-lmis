@@ -524,9 +524,25 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("replacement_plan_summary");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
 
-        List<ReplacementPlanSummary> planSummaryList = (List<ReplacementPlanSummary>)report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        List<ReplacementPlanSummary> reportList =
+                (List<ReplacementPlanSummary>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
-        return new Pages(page, max, planSummaryList);
+        return new Pages(page, max, reportList);
+    }
+
+
+    @RequestMapping(value = "/reportdata/equipmentsInNeedForReplacement", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_VACCINE_REPLACEMENT_PLAN_SUMMARY')")
+    public Pages getReplacementToBeReplaced(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                 @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                 HttpServletRequest request) {
+
+        Report report = reportManager.getReportByKey("equipment_replacement_list");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+
+        List<ReplacementPlanSummary> SummaryList = (List<ReplacementPlanSummary>)report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, SummaryList);
     }
 
 }

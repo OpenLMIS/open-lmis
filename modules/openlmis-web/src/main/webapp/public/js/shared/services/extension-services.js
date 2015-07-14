@@ -1201,10 +1201,10 @@ services.factory('PriceScheduleCategories', function ($resource) {
     return $resource('/priceScheduleCategories.json', {}, {});
 });
 
-services.factory('getEquipmentsInNeedForReplacement', function($resource){
-    return $resource('/reports/equipmentsInNeedOfReplacement/getData.json',{},{});
-});
-
 services.factory('getReplacementPlanSummaryReport', function($resource){
     return $resource('/reports/reportdata/replacementPlanSummary.json',{},{});
+});
+
+services.factory('EquipmentsInNeedForReplacement', function($resource){
+    return $resource('/reports/reportdata/equipmentsInNeedForReplacement.json',{},{});
 });
