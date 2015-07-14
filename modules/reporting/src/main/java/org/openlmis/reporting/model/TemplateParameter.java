@@ -10,16 +10,18 @@
 
 package org.openlmis.reporting.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * TemplateParameter represents an entity that keeps track of parameter name, name to be displayed on UI, default value,
@@ -28,7 +30,6 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class TemplateParameter extends BaseModel {
 
@@ -51,7 +52,39 @@ public class TemplateParameter extends BaseModel {
 
   private String dataType;
 
+  private String selectSql;
+
+  @Transient
+  private List<String> selectValues = new ArrayList<>(0);
+
   private String description;
+
+
+  /**
+   * Dumb constructor used for testing.  No validation done.
+   * @param templateId
+   * @param name
+   * @param displayName
+   * @param defaultValue
+   * @param dataType
+   * @param selectSql
+   * @param description
+   */
+  public TemplateParameter(Long templateId
+                           , String name
+                           , String displayName
+                           , String defaultValue
+                           , String dataType
+                           , String selectSql
+                           , String description ) {
+    this.templateId = templateId;
+    this.name = name;
+    this.displayName = displayName;
+    this.defaultValue = defaultValue;
+    this.dataType = dataType;
+    this.selectSql = selectSql;
+    this.description = description;
+  }
 
   public Object getParsedValueOf(String value) throws ParseException {
     Object objectValue = value;

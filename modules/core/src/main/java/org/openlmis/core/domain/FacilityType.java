@@ -30,12 +30,25 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityType extends BaseModel {
   private String code;
+
+  @ImportField(name="Name", mandatory=true)
   private String name;
+
+  @ImportField(name="Description")
   private String description;
+
   private Integer levelId;
+
+  @ImportField(name="Nominal Max Month", mandatory=true)
   private Integer nominalMaxMonth;
+
+  @ImportField(name="Nominal EOP", mandatory=true)
   private Double nominalEop;
+
+  @ImportField(name="Display Order", mandatory=true)
   private Integer displayOrder;
+
+  @ImportField(name="Active", mandatory=true, type="boolean")
   private boolean active;
 
   public FacilityType(String code) {

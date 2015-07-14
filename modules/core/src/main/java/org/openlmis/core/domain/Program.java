@@ -26,10 +26,15 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
-public class Program extends BaseModel {
+public class Program extends BaseModel implements Importable {
 
+  @ImportField(name="Program Code", mandatory=true)
   private String code;
+
+  @ImportField(name="Name", mandatory=true)
   private String name;
+
+  @ImportField(name="Description")
   private String description;
   private Boolean active;
   private Boolean budgetingApplies;

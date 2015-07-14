@@ -58,14 +58,6 @@ public class GeographicZoneMapperIT {
   }
 
   @Test
-  public void shouldGetGeographicLevelByCode() throws Exception {
-    String code = "state";
-    GeographicLevel geographicLevel = mapper.getGeographicLevelByCode(code);
-    assertThat(geographicLevel.getName(), is("State"));
-    assertThat(geographicLevel.getId(), is(2L));
-  }
-
-  @Test
   public void shouldGetNullIfZoneNotPresent() throws Exception {
     GeographicZone nullZone = mapper.getGeographicZoneByCode("some random code");
 

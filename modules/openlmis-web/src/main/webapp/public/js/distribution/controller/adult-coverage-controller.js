@@ -41,4 +41,8 @@ function AdultCoverageController($scope, $routeParams, distributionService) {
       $scope.adultCoverage.setNotRecorded();
     });
   };
+
+  $scope.getFormattedPercent = function (number) {
+    return utils.getFormattedPercent(number);
+  };
 }

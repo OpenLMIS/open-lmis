@@ -42,13 +42,16 @@ public class GeographicZoneService {
   GeographicZoneRepository repository;
 
   @Autowired
+  GeographicLevelRepository geoLevelRepo;
+
+  @Autowired
   public void setPageSize(@Value("${search.page.size}") String pageSize) {
     this.pageSize = Integer.parseInt(pageSize);
   }
 
   public void save(GeographicZone geographicZone) {
     geographicZone.validateMandatoryFields();
-    geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
+    geographicZone.setLevel(geoLevelRepo.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
     geographicZone.validateLevel();
 
     if (!geographicZone.isRootLevel()) {

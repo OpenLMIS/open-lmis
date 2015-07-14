@@ -39,6 +39,14 @@ public class ProgramRepository {
     this.mapper = programMapper;
   }
 
+  public void insert(Program p) {
+    mapper.insert(p);
+  }
+
+  public void update(Program p) {
+    mapper.update(p);
+  }
+
   public List<Program> getByFacility(Long facilityId) {
     return mapper.getByFacilityId(facilityId);
   }

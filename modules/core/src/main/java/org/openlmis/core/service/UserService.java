@@ -147,7 +147,7 @@ public class UserService {
   }
 
   public void updateUserPassword(Long userId, String password) {
-    userRepository.updateUserPassword(userId, Encoder.hash(password));
+    userRepository.updateUserPasswordAndActivate(userId, Encoder.hash(password));
   }
 
   @Transactional
