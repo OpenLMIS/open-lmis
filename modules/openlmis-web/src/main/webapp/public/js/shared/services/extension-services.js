@@ -1216,6 +1216,17 @@ services.factory('CustomReportValue', function ($resource) {
 services.factory('PriceScheduleCategories', function ($resource) {
     return $resource('/priceScheduleCategories.json', {}, {});
 });
+
+
+services.factory('getReplacementPlanSummaryReport', function($resource){
+    return $resource('/reports/reportdata/replacementPlanSummary.json',{},{});
+});
+
+services.factory('EquipmentsInNeedForReplacement', function($resource){
+    return $resource('/reports/reportdata/equipmentsInNeedForReplacement.json',{},{});
+});
+
 services.factory('VaccineMonthlyReport', function ($resource){
     return $resource('/vaccine/report/vaccine-monthly-report.json', {}, {});
 });
+

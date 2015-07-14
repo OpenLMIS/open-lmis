@@ -532,5 +532,4 @@ public class ReportLookupController extends BaseController {
         return this.reportLookupService.getRmnchProducts();
     }
 
-
 }
