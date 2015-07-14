@@ -13,9 +13,10 @@ package org.openlmis.vaccine.service.demographics;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RightName;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.vaccine.domain.demographics.DemographicEstimateCategory;
 import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
-import org.openlmis.vaccine.dto.FacilityDemographicEstimateDTO;
-import org.openlmis.vaccine.dto.FacilityDemographicEstimateForm;
+import org.openlmis.vaccine.dto.DemographicEstimateLineItem;
+import org.openlmis.vaccine.dto.DemographicEstimateForm;
 import org.openlmis.vaccine.repository.demographics.FacilityDemographicEstimateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,14 +30,17 @@ import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
 public class FacilityDemographicEstimateService {
 
   @Autowired
+  DemographicEstimateCategoryService estimateCategoryService;
+
+  @Autowired
   private FacilityDemographicEstimateRepository repository;
 
   @Autowired
   private FacilityService facilityService;
 
-  public void save(FacilityDemographicEstimateForm estimate){
-    for(FacilityDemographicEstimateDTO dto: emptyIfNull(estimate.getFacilityEstimates())){
-      for(FacilityDemographicEstimate est: emptyIfNull(dto.getEstimates())){
+  public void save(DemographicEstimateForm estimate){
+    for(DemographicEstimateLineItem dto: emptyIfNull(estimate.getEstimateLineItems())){
+      for(FacilityDemographicEstimate est: emptyIfNull(dto.getFacilityEstimates())){
         est.setFacilityId(dto.getFacilityId());
         if(est.getId() == null){
           repository.insert(est);
@@ -47,21 +51,39 @@ public class FacilityDemographicEstimateService {
     }
   }
 
-  public FacilityDemographicEstimateForm getEstimateFor(Long userId, Long programId, Integer year){
-    FacilityDemographicEstimateForm form = new FacilityDemographicEstimateForm();
+  private List<FacilityDemographicEstimate> getEmptyEstimateObjects(List<DemographicEstimateCategory> categories, Long facilityId , Integer year){
+    List<FacilityDemographicEstimate> result = new ArrayList<>();
+    for(DemographicEstimateCategory category: categories){
+      FacilityDemographicEstimate estimate = new FacilityDemographicEstimate();
+      estimate.setYear(year);
+      estimate.setFacilityId(facilityId);
+      estimate.setConversionFactor(category.getDefaultConversionFactor());
+      estimate.setDemographicEstimateId(category.getId());
+      estimate.setValue(0L);
+      result.add(estimate);
+    }
+    return result;
+  }
 
-    form.setFacilityEstimates(new ArrayList<FacilityDemographicEstimateDTO>());
+  public DemographicEstimateForm getEstimateFor(Long userId, Long programId, Integer year){
+    DemographicEstimateForm form = new DemographicEstimateForm();
+    List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
+    form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
     List<Facility> facilities =  facilityService.getUserSupervisedFacilities(userId, programId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES);
     // Not scalable - please refactor this.
 
     for(Facility facility : facilities){
-      FacilityDemographicEstimateDTO dto = new FacilityDemographicEstimateDTO();
+      DemographicEstimateLineItem dto = new DemographicEstimateLineItem();
       dto.setFacilityId(facility.getId());
-      dto.setFacilityCode(facility.getCode());
-      dto.setFacilityName(facility.getName());
-      dto.setEstimates(repository.getFacilityEstimate(year, facility.getId()));
+      dto.setCode(facility.getCode());
+      dto.setName(facility.getName());
+      dto.setFacilityEstimates(repository.getFacilityEstimate(year, facility.getId()));
 
-      form.getFacilityEstimates().add(dto);
+      if( dto.getFacilityEstimates().size() == 0 ){
+        dto.setFacilityEstimates(getEmptyEstimateObjects(categories, facility.getId(), year));
+      }
+
+      form.getEstimateLineItems().add(dto);
     }
 
     return form;

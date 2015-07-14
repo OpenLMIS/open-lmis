@@ -8,15 +8,11 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.vaccine.dto;
-
-import lombok.Data;
-
-import java.util.List;
-
-@Data
-public class FacilityDemographicEstimateForm {
-
-  private List<FacilityDemographicEstimateDTO> facilityEstimates;
-
-}
+angular.module('cce_storage_capacity_app', ['openlmis','angularCombine', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+    .config(['$routeProvider', function ($routeProvider) {
+      $routeProvider.
+        when('/list', {controller:CCEStorageCapacityReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
+        otherwise({redirectTo:'/list'});
+    }]).config(function(angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+    });

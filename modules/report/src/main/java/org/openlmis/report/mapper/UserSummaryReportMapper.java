@@ -16,8 +16,11 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.report.builder.UserSummaryQueryBuilder;
 import org.openlmis.report.model.ReportParameter;
+import org.openlmis.report.model.dto.Program;
 import org.openlmis.report.model.report.UserSummaryReport;
 import org.springframework.stereotype.Repository;
 
@@ -35,4 +38,10 @@ public interface UserSummaryReportMapper {
 
     @Select("select rolename, count(*) count from vw_user_role_assignments group by rolename")
     public List<HashMap> getUserRoleAssignments();
+    @Select("select * from programs where id = #{programId}" )
+    Program getProgram(@Param(value = "programId") Long programId);
+    @Select("select * from roles where id = #{roleId}" )
+    Role getRole(@Param(value = "roleId") Long roleId);
+    @Select("select * from supervisory_nodes where id = #{superviosryNodeId}" )
+    SupervisoryNode getSuperVisoryNode(@Param(value = "superviosryNodeId") Long superviosryNodeId);
 }

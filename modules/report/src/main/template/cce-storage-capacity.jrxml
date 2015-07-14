@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2015-07-08T11:14:27 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-master-landscape" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_NAME" class="java.lang.String"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="COUNTRY_NAME" class="java.lang.String"/>
+	<parameter name="GENERATED_BY" class="java.lang.String"/>
+	<parameter name="REPORT_VERSION" class="java.lang.String"/>
+	<parameter name="REPORT_ID" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
+	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
+	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="siteName" class="java.lang.String"/>
+	<field name="refrigeratorCapacityCurrent" class="java.lang.String"/>
+	<field name="refrigeratorCapacityRequired" class="java.lang.String"/>
+	<field name="refrigeratorCapacityGap" class="java.lang.String"/>
+	<field name="freezerCapacityCurrent" class="java.lang.String"/>
+	<field name="freezerCapacityRequired" class="java.lang.String"/>
+	<field name="freezerCapacityGap" class="java.lang.String"/>
+	<variable name="TOTAL_PAGES" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="120" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="800" height="80" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="PAGE_NO">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="LOGO">
+					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_NAME">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_SUB_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_NAME">
+					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_FILTER_PARAM_VALUES">
+					<subreportParameterExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_LOGO">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="100" width="800" height="20" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="100" width="200" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="76e8e9a7-a5ae-4373-a06b-8de540cabe25">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$R{label.demography}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="200" y="100" width="300" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f7147938-00f5-46e3-b209-9058c83b0c0c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$R{label.refrigerator.capacity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="500" y="100" width="300" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="9c3a6e71-cbb4-4079-86b1-6509f7d0810a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.1" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$R{label.freezer.capacity}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="800" height="40" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+				</reportElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="0" width="200" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="76e8e9a7-a5ae-4373-a06b-8de540cabe25">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.1" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$R{label.site}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="f7147938-00f5-46e3-b209-9058c83b0c0c"/>
+				<box>
+					<topPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.1" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$R{label.refrigerator.capacity.current}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="100" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="e7b1e9aa-b73d-417a-81d7-2516651eda16"/>
+				<box>
+					<topPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.1" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$R{label.refrigerator.capacity.required}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="100" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="027cb536-e369-4db5-9c40-3bbd48b2a7b5"/>
+				<box>
+					<topPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.1" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$R{label.refrigerator.capacity.gap}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="0" width="100" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="9c3a6e71-cbb4-4079-86b1-6509f7d0810a"/>
+				<box>
+					<topPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.1" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$R{label.freezer.capacity.current}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="0" width="100" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="f9095325-b5de-4d64-8390-c4f989d15d15"/>
+				<box>
+					<topPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.1" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$R{label.freezer.capacity.required}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="700" y="0" width="100" height="40" forecolor="#000000" backcolor="#FFFFFF" uuid="16210f50-4477-4666-be64-e4cb41a4c6ef"/>
+				<box>
+					<topPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.1" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.1" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$R{label.freezer.capacity.gap}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="100" y="0" width="700" height="20" forecolor="#006666" uuid="497dba92-6949-4bb2-9beb-1f85a98456e5">
+					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="800" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="20" width="800" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="0" y="0" width="200" height="20" uuid="1efbb955-a0ae-48a5-a50b-b1cf4d027ddf"/>
+				<textFieldExpression><![CDATA[$F{siteName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="20" uuid="a68ddd15-ccef-4996-8e7e-e9ac24fc06fe"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{refrigeratorCapacityCurrent}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="100" height="20" uuid="971f3175-6e07-49b6-aa38-51833490cd2c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{freezerCapacityCurrent}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="100" height="20" uuid="21e1f76c-e874-49d5-b0fc-dfaa439a93da"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{freezerCapacityRequired}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="0" width="100" height="20" uuid="5a26bf4c-2c91-418d-b422-80ec533acdc9"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{freezerCapacityGap}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="600" y="0" width="100" height="20" uuid="6c35c1c8-5fa5-4a7d-9270-fdb3cd821a3b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{refrigeratorCapacityRequired}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="700" y="0" width="100" height="20" uuid="82e867e0-0b58-4fc6-ad9e-987a540b105e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{refrigeratorCapacityGap}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

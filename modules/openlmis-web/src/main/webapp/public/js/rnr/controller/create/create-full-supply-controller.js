@@ -80,13 +80,19 @@ function CreateFullSupplyController($scope, messageService) {
     });
 
     $scope.saveRnrForm.$dirty = true;
-    var save = $scope.$parent.saveRnr();
+    $scope.$parent.saveRnr();
 
-    save.then(function(){
-      $scope.$parent.goToPage($scope.$parent.currentPage);
+    if(rnr.fullSupplyLineItems.length === 0){
+      rnr.fullSupplyLineItems = $scope.$parent.page[$scope.$parent.visibleTab];
+    }
+
+    angular.forEach(rnr.skippedLineItems, function(li){
+      if(!li.unskip){
+        li.unskip = false;
+      }
     });
 
-    rnr.skippedLineItems = _.where(rnr.skippedLineItems, {unskip: undefined});
+    rnr.skippedLineItems = _.where(rnr.skippedLineItems, {unskip: false});
     window.window.adjustHeight();
     // all is said and done, close the dialog box
     $scope.addSkippedProductsModal = false;

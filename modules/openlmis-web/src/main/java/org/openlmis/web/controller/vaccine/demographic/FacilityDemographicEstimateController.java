@@ -8,9 +8,9 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.web.controller.vaccine;
+package org.openlmis.web.controller.vaccine.demographic;
 
-import org.openlmis.vaccine.dto.FacilityDemographicEstimateForm;
+import org.openlmis.vaccine.dto.DemographicEstimateForm;
 import org.openlmis.vaccine.service.demographics.FacilityDemographicEstimateService;
 import org.openlmis.web.controller.BaseController;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -36,7 +36,7 @@ public class FacilityDemographicEstimateController extends BaseController {
   }
 
   @RequestMapping("save")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody FacilityDemographicEstimateForm form,  HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody DemographicEstimateForm form,  HttpServletRequest request){
     service.save(form);
     return OpenLmisResponse.response("estimates", form);
   }

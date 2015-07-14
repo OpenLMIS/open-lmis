@@ -13,10 +13,11 @@ package org.openlmis.vaccine.repository.mapper.reports;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.domain.reports.*;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -98,4 +99,44 @@ public interface VaccineReportMapper {
     " where r.facilityId = #{facilityId} and r.programId = #{programId}" +
     " order by p.startDate desc")
   List<ReportStatusDTO> getReportedPeriodsForFacility(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+  @Select("Select id from vaccine_reports where facilityid = #{facilityId} and periodid = #{periodId}")
+  Long getReportIdForFacilityAndPeriod(@Param("facilityId")Long facilityId, @Param("periodId")Long periodId);
+
+  @Select("select COALESCE(cases, 0) as cases, COALESCE(death, 0) as death, COALESCE(cum_cases, 0) as cumulative, disease_name as diseaseName \n" +
+          "from vw_vaccine_disease_surveillance \n" +
+          "where report_id = #{reportId}")
+  List<DiseaseLineItem> getDiseaseSurveillance(@Param("reportId")Long reportId);
+
+  @Select("select equipment_type_name as equipmentName, model, minTemp, maxTemp, minEpisodeTemp, maxEpisodeTemp, energy_source as energySource from vw_vaccine_cold_chain \n" +
+          "where report_id = #{reportId}")
+  List<ColdChainLineItem> getColdChain(@Param("reportId")Long reportId);
+
+  @Select("select product_name as productName, aefi_expiry_date as expiry, aefi_case as cases, aefi_batch as batch, 'missing'::text as manufacturer, false as isInvestigated from vw_vaccine_iefi \n" +
+          "where report_id = #{reportId}")
+  List<AdverseEffectLineItem> getAdverseEffectReport(@Param("reportId")Long reportId);
+
+  @Select("select product_name,display_name, COALESCE(within_male, 0) within_male, COALESCE(within_female,0) within_female, COALESCE(within_total,0) within_total, COALESCE(within_coverage, 0) within_coverage, \n" +
+          "COALESCE(outside_male, 0) outside_male, COALESCE(outside_female,0) outside_female, COALESCE(outside_total, 0) outside_total,\n" +
+          "COALESCE(within_outside_total, 0) within_outside_total, COALESCE(within_outside_coverage,0) within_outside_coverage,\n" +
+          " COALESCE(cum_within_total,0) cum_within_total, COALESCE(cum_within_coverage,0) cum_within_coverage,\n" +
+          "  COALESCE(cum_outside_total,0) cum_outside_total, COALESCE(cum_within_outside_total,0) cum_within_outside_total,\n" +
+          "   COALESCE(cum_within_outside_coverage ,0) cum_within_outside_coverage\n" +
+          "from vw_vaccine_coverage \n" +
+          "where report_id = #{reportId}")
+  List<HashMap<String, Object>> getVaccineCoverageReport(@Param("reportId")Long reportId);
+
+  @Select("SELECT COALESCE(fixedimmunizationsessions, 0) fixedimmunizationsessions, COALESCE(outreachimmunizationsessions, 0) outreachimmunizationsessions, COALESCE(outreachimmunizationsessionscanceled, 0) outreachimmunizationsessionscanceled FROM vaccine_reports WHERE id = #{reportId} ")
+  List<VaccineReport> getImmunizationSession(@Param("reportId")Long reportId);
+
+  @Select("select * from vw_vaccine_stock_status where product_category_code = (select value from configuration_settings where key = #{productCategoryCode}) and report_id = #{reportId}")
+  List<HashMap<String, Object>> getVaccinationReport(@Param("productCategoryCode") String categoryCode, @Param("reportId")Long reportId);
+
+  @Select("select * from vw_vaccine_target_population\n" +
+          "where facility_id = #{facilityId} and year =  (select date_part('year'::text, processing_periods.startdate) from processing_periods where id = #{periodId})\n")
+  List<HashMap<String, Object>> getTargetPopulation(@Param("facilityId") Long facilityId, @Param("periodId") Long periodId);
+
+  @Select("Select age_group AS ageGroup, vitamin_name AS vitaminName, male_value AS maleValue, female_value AS femaleValue from vw_vaccine_vitamin_supplementation where report_id = #{reportId}")
+  List<VitaminSupplementationLineItem> getVitaminSupplementationReport(@Param("reportId") Long reportId);
+
 }

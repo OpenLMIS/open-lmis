@@ -14,13 +14,13 @@ function AverageConsumptionReportController($scope, $filter, ReportProductsByPro
     $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
 
     $scope.productFilter = function (option) {
-        return (option.categoryId == $scope.productCategory || $scope.productCategory === '');
+        return (option.categoryId == $scope.productCategory||option.id=='0');
     };
     // end of product filter customizations
 
     // initialize the selections that will be loaded later
     $scope.products = [];
-    $scope.products.push({name: '-- All Products --'});
+    $scope.products.unshift({name: '-- All Products --',id:'0'});
 
     $scope.requisitionGroups = [];
     $scope.requisitionGroups.push({name: '-- All Requisition Groups --'});
@@ -427,6 +427,7 @@ function AverageConsumptionReportController($scope, $filter, ReportProductsByPro
 
             ReportProductsByProgram.get({programId: selection}, function (data) {
                 $scope.products = data.productList;
+                $scope.products.unshift({name: '-- All Products --',id:'0'});
             });
 
             RequisitionGroupsByProgram.get({program: selection }, function (data) {

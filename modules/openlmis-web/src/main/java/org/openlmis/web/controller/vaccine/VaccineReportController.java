@@ -10,13 +10,11 @@
 
 package org.openlmis.web.controller.vaccine;
 
-import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RightName;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
-import org.openlmis.vaccine.RequestStatus;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
 import org.openlmis.web.controller.BaseController;
@@ -25,13 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/vaccine/report/")
@@ -118,6 +115,24 @@ public class VaccineReportController extends BaseController {
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
     service.submit(report);
     return OpenLmisResponse.response("report", report);
+  }
+
+  @RequestMapping(value = "vaccine-monthly-report")
+  public ResponseEntity<OpenLmisResponse> diseaseSurveillance(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId){
+    Map<String, Object> data = new HashMap();
+    Long reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
+    data.put("diseaseSurveillance", service.getDiseaseSurveillance(reportId));
+    data.put("coldChain", service.getColdChain(reportId));
+    data.put("adverseEffect", service.getAdverseEffectReport(reportId));
+    data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId));
+    data.put("immunizationSession", service.getImmunizationSession(reportId));
+    data.put("vaccination", service.getVaccineReport(reportId));
+    data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId));
+    data.put("vitamins", service.getVitaminsReport(reportId));
+    data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId));
+    data.put("vitaminSupplementation", service.getVitaminSupplementationReport(reportId));
+
+    return OpenLmisResponse.response("vaccineData", data);
   }
 
 }

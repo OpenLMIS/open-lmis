@@ -107,6 +107,10 @@ services.factory('ReportFacilityTypesByProgram', function ($resource) {
   return $resource('/reports/facilityTypesForProgram.json', {}, {});
 });
 
+services.factory('ReportFacilityLevels', function ($resource) {
+    return $resource('/reports/facility-levels.json', {}, {});
+});
+
 services.factory('ReportRegimenCategories', function ($resource) {
     return $resource('/reports/regimenCategories.json', {}, {});
 });
@@ -142,6 +146,11 @@ services.factory('ReportGeographicLevels',function ($resource){
 //deprecated: use "AllFacilities" service instead
 services.factory('GetFacilityCompleteList',function($resource){
   return $resource('/reports/allFacilities.json',{},{});
+});
+
+
+services.factory('ColdChainEquipmentService',function($resource){
+    return $resource('/reports/reportdata/coldChainEquipment.json',{},{});
 });
 
 services.factory('FacilityList', function ($resource) {
@@ -424,6 +433,10 @@ services.factory("FacilitiesByGeographicZoneTree",function($resource)  {
     return   $resource('/reports/geographic-zone/facilities.json', {}, {});
 });
 
+services.factory("FacilitiesByGeographicZone",function($resource)  {
+    return   $resource('/reports/geographic-zone/:geoId/facilities.json', {}, {});
+});
+
 services.factory("FacilitiesForNotifications",function($resource)  {
     return   $resource('/reports/notification/facilities.json', {}, {});
 });
@@ -573,6 +586,9 @@ services.factory('LabEquipmentListReport', function ($resource) {
     return $resource('/reports/reportdata/labEquipmentList.json', {}, {});
 });
 
+services.factory('CCEStorageCapacityReport', function ($resource) {
+    return $resource('/reports/reportdata/cceStorageCapacity.json', {}, {});
+});
 
 services.factory("PipelineExportReport", function($resource){
     return $resource('/reports/reportdata/pipelineExport.json', {}, {});
@@ -1201,6 +1217,7 @@ services.factory('PriceScheduleCategories', function ($resource) {
     return $resource('/priceScheduleCategories.json', {}, {});
 });
 
+
 services.factory('getReplacementPlanSummaryReport', function($resource){
     return $resource('/reports/reportdata/replacementPlanSummary.json',{},{});
 });
@@ -1208,3 +1225,8 @@ services.factory('getReplacementPlanSummaryReport', function($resource){
 services.factory('EquipmentsInNeedForReplacement', function($resource){
     return $resource('/reports/reportdata/equipmentsInNeedForReplacement.json',{},{});
 });
+
+services.factory('VaccineMonthlyReport', function ($resource){
+    return $resource('/vaccine/report/vaccine-monthly-report.json', {}, {});
+});
+

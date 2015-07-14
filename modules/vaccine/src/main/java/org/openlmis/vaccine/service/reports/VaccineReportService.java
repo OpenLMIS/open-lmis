@@ -20,8 +20,7 @@ import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
-import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
-import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.domain.reports.*;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.VitaminSupplementationAgeGroupRepository;
 import org.openlmis.vaccine.repository.VitaminRepository;
@@ -34,15 +33,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
 
 @Service
 @NoArgsConstructor
 public class VaccineReportService {
+
+  public static final String VACCINE_REPORT_VACCINE_CATEGORY_CODE = "VACCINE_REPORT_VACCINE_CATEGORY_CODE";
+  public static final String VACCINE_REPORT_VITAMINS_CATEGORY_CODE = "VACCINE_REPORT_VITAMINS_CATEGORY_CODE";
+  public static final String VACCINE_REPORT_SYRINGES_CATEGORY_CODE = "VACCINE_REPORT_SYRINGES_CATEGORY_CODE";
+
+
 
   @Autowired
   VaccineReportRepository repository;
@@ -183,4 +186,48 @@ public class VaccineReportService {
     report.setStatus(RequestStatus.SUBMITTED.toString());
     save(report);
   }
+
+  public Long getReportIdForFacilityAndPeriod(Long facilityId, Long periodId){
+    return repository.getReportIdForFacilityAndPeriod(facilityId, periodId);
+  }
+  public List<DiseaseLineItem> getDiseaseSurveillance(Long reportId){
+    return repository.getDiseaseSurveillance(reportId);
+  }
+
+  public List<ColdChainLineItem> getColdChain(Long reportId){
+    return repository.getColdChain(reportId);
+  }
+
+  public List<AdverseEffectLineItem> getAdverseEffectReport(Long reportId){
+    return repository.getAdverseEffectReport(reportId);
+  }
+
+  public List<HashMap<String, Object>> getVaccineCoverageReport(Long reportId){
+    return repository.getVaccineCoverageReport(reportId);
+  }
+
+  public List<VaccineReport> getImmunizationSession(Long reportId){
+    return repository.getImmunizationSession(reportId);
+  }
+
+  public List<HashMap<String, Object>> getVaccineReport(Long reportId){
+    return repository.getVaccinationReport(VACCINE_REPORT_VACCINE_CATEGORY_CODE, reportId);
+  }
+
+  public List<HashMap<String, Object>> getSyringeAndSafetyBoxReport(Long reportId){
+    return repository.getVaccinationReport(VACCINE_REPORT_SYRINGES_CATEGORY_CODE, reportId);
+  }
+
+  public List<HashMap<String, Object>> getVitaminsReport(Long reportId){
+    return repository.getVaccinationReport(VACCINE_REPORT_VITAMINS_CATEGORY_CODE,  reportId);
+  }
+
+  public List<HashMap<String, Object>> getTargetPopulation(Long facilityId, Long periodId){
+    return repository.getTargetPopulation(facilityId, periodId);
+  }
+
+  public List<VitaminSupplementationLineItem> getVitaminSupplementationReport(Long reportId){
+    return repository.getVitaminSupplementationReport(reportId);
+  }
+
 }
