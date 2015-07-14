@@ -327,16 +327,16 @@
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="equipment_replacement_list"/>
                     <property name="template" value="replacement-equipment-list.jasper"/>
-                    <property name="reportDataProvider" ref="replacementPlanSummaryReportDataProvider"/>
+                    <property name="reportDataProvider" ref="equipmentReplacementListDataProvider"/>
                     <property name="id" value="RP-replacement-plan"/>
                     <property name="name" value="Equipment To Be Replaced"/>
-                    <property name="title" value="report.title.replacement.plan.summary"/>
+                    <property name="title" value="report.title.equipment.in.need.of.replacement"/>
                     <property name="version" value="1.0"/>
                 </bean>
 
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="replacement_plan_summary"/>
-                    <property name="template" value="replacement-test.jasper"/>
+                    <property name="template" value="replacement-plan-summary.jasper"/>
                     <property name="reportDataProvider" ref="replacementPlanSummaryReportDataProvider"/>
                     <property name="id" value="RP-replacement-plan"/>
                     <property name="name" value="Replacement Plan Summary"/>
@@ -344,11 +344,15 @@
                     <property name="version" value="1.0"/>
                 </bean>
 
-
-
-
-
-
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="replacement_plan_summary_annual"/>
+                    <property name="template" value="annual-replacement.jasper"/>
+                    <property name="reportDataProvider" ref="replacementPlanSummaryReportDataProvider"/>
+                    <property name="id" value="RP-replacement-plan"/>
+                    <property name="name" value="Annual Replacement Plan Summary"/>
+                    <property name="title" value="report.title.annual.replacement.plan.summary"/>
+                    <property name="version" value="1.0"/>
+                </bean>
 
             </list>
         </constructor-arg>

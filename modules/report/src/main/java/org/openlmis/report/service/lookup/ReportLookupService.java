@@ -23,11 +23,10 @@ import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.repository.DonorRepository;
-import org.openlmis.equipment.repository.EquipmentRepository;
-import org.openlmis.equipment.repository.mapper.EquipmentMapper;
+
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.*;
-import org.openlmis.report.mapper.lookup.vaccine.ReplacementPlanSummaryReportMapper;
+
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.dto.DosageUnit;
 import org.openlmis.report.model.dto.Facility;
@@ -139,8 +138,6 @@ public class ReportLookupService {
     private RegimenRepository regimenRepository;
     private UserSummaryParams userSummaryParam = null;
 
-    @Autowired
-    private ReplacementPlanSummaryReportMapper planSummaryReportMapper;
 
     public List<Product> getAllProducts() {
         return productMapper.getAll();
@@ -645,7 +642,4 @@ public class ReportLookupService {
     }
 
 
-    public List<ReplacementPlanSummary>getEquipmentInNeedOfReplacement(Long program,Long regionId, Long plannedYear ){
-        return  planSummaryReportMapper.getEquipmentInNeedOfReplacement(program,regionId,plannedYear);
-    }
 }

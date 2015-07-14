@@ -14,32 +14,27 @@ public class ReplacementPlanSummary implements ReportData {
 
     private String serialNumber;
     private String sourceOfEnergy;
-    private String Region;
     private String equipment;
     private Integer ReplacementYear;
     private Integer referenceYear;
     private Integer replacementCost;
     private Integer totalEquipment;
-    private Integer equipmentId;
+
     private Integer total;
+    private Integer breakDown;
+    private String workingStatus;
+    private String status;
     private float purchasePrice;
-    private String facilityCode;
 
     private String district;
     private String region;
-    private String Manufacturer;
+    private String brand;
     private Integer regionId;
-    private String Model;
-
-    private Integer levelId;
-    private String geoLevel;
-
-    private Integer totalNonFunctionalStatus;
-    private String nonfunctionalStatus;
-    private Integer workingStatus;
-    private Integer totalWorkingStatus;
+    private String model;
+    private Integer Capacity;
 
     private String facilityName;
+    private String facilityTypeName;
     private Integer facilityId;
     private Integer total_year1;
     private Integer total_year2;
