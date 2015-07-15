@@ -37,7 +37,9 @@ System Requirements
   * Install Grunt command-line runner by running (after installing Node.js)  
     `> npm install -g grunt-cli`
   * Install karma test runner with karma coverage by running  
-    `> npm install -g karma karma-cli karma-coverage`
+    `> npm install -g karma karma-coverage`
+  * Install karma command line with:  
+    `> npm install -g karma-cli`
   * Install project-specific grunt dependencies by navigating to `modules/openlmis-web` from project root directory and run  
     `> npm install` (one-time activity)
   * Grunt tasks available can be found in `modules/openlmis-web/Gruntfile.js`
@@ -46,7 +48,7 @@ Source code
 ------------------
 1. Get the source code using `git clone https://github.com/openlmis/open-lmis.git`.
 2. For now, all work should be pushed to the 2.0 branch, not master. After cloning, you can do `git checkout 2.0` to get into the 2.0 branch.
-3. Also resolve dependencies on submodule using  
+3. Set up dependencies on submodules using  
 
     ```bash
     > git submodule init  
@@ -62,7 +64,7 @@ IntelliJ IDEA Setup
 Running App on embedded Jetty server
 --------------------------------------------------
 1. Clone the project repository using git.
-2. Setup _postgres_ user with password as configured in _gradle.properties_ file.
+2. Setup _postgres_ user with password as configured in `gradle.properties` file.
 3. You can use `gradle clean setupdb setupExtensions seed build testseed run` to start the app.
 4. You can use `gradle clean setupdb setupExtensions seed build` to just run all of the tests.
 5. There are bunch of gradle tasks that you can see by running `gradle tasks`:
@@ -73,7 +75,7 @@ Running App on embedded Jetty server
   - `testseed` puts in some test data which can be used to browse through basic functionality in the system.
   - `run` is to start the embedded jetty server.
 
-Once the system is running, you can access the home page at http://localhost:9091/. You can log into the default instance with: user: `Admin123`, pass: `Admin123`
+Once the system is running, you can access the home page at `http://localhost:9091/`. You can log into the default instance with: user: `Admin123`, pass: `Admin123`
 
 ## Issues
 1. You may encounter a `java.lang.OutOfMemoryError: PermGen space`. This is a result of not enough memory for the Jetty JVM. One way to fix this is to export the following (or include in `$HOME/.bash_profile` or `$HOME/.profile` or `$HOME/.bashrc` or `$HOME/.zshrc`, depending on your shell).
@@ -83,7 +85,7 @@ Once the system is running, you can access the home page at http://localhost:909
     export JAVA_TOOL_OPTIONS="-Xmx1024m -XX:MaxPermSize=512m -Xms512m"
     ```
 2. If a few integration tests fail, like this:
-`org.openlmis.core.repository.mapper.FacilityMapperIT > shouldUpdateFacilityWithSuppliedModifiedTime FAILED java.lang.AssertionError at FacilityMapperIT.java:292`
+`org.openlmis.core.repository.mapper.FacilityMapperIT > shouldUpdateFacilityWithSuppliedModifiedTime FAILED java.lang.AssertionError at FacilityMapperIT.java:292`  
 This can be caused by the timezone in `postgresql.conf` being different than your operating system timezone. To fix, stop the postgresql server, and edit the following line: `timezone = 'US/Pacific'` to match your current operating system timezone, then restart the postgresql server.
 
 Tech Stack
