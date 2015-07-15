@@ -46,8 +46,11 @@ function CustomReportController($scope, CustomReportList, CustomReportValue) {
 
     $scope.applyUrl();
 
+    //clear existing data
     $scope.data = [];
+    $scope.meta = undefined;
     CustomReportValue.get($scope.filter, function (data) {
+      $scope.meta = data;
       $scope.data = data.values;
     });
 
