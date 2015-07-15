@@ -827,17 +827,20 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
         scope.productCFilter = function (option) {
 
           return (
-                    !angular.isDefined(scope.filter)
-                    || !angular.isDefined(scope.filter.productCategory)
-                    || scope.filter.productCategory === ''
-                    || parseInt( scope.filter.productCategory, 10) === 0
-                    || option.categoryId == scope.filter.productCategory
-                    || ( option.id === 0 )
-                    || ( option.id === -1 )
-                    || (
-                          angular.isArray(scope.filter.productCategory)
-                          && valueExistInArray(scope.filter.productCategory, option.categoryId)
-                        )
+                    // show all products if the product category filter is not on screen at all
+                    !angular.isDefined(scope.filter.productCategory) ||
+                    // show all products if product category is on screen but no selection is made
+                    scope.filter.productCategory === '' ||
+                    parseInt( scope.filter.productCategory, 10) === 0 ||
+                    // show products that are in product category selected
+                    option.categoryId == scope.filter.productCategory ||
+                    // always show "all products and indicator products filters"
+                    ( option.id === 0 ) ||
+                    ( option.id === -1 ) ||
+                    (
+                          angular.isArray(scope.filter.productCategory) &&
+                          valueExistInArray(scope.filter.productCategory, option.categoryId)
+                    )
                   );
         };
 

@@ -24,31 +24,6 @@ function DistrictConsumptionReportController($scope,  AggregateConsumptionReport
           $scope.paramsChanged($scope.tableParams);
         }
       });
-
-        ReportUserPrograms.get(function (data) {
-            $scope.programs = data.programs;
-            $scope.isProgramFieldILS = false;
-            $scope.isILSARV = false;
-
-            $scope.programs.forEach( function(program) {
-
-                if(program.id == $scope.filter.program) {
-
-                    if (program.name == 'ILS') {
-                        $scope.reportFooterNote = 'Note: Estimated consumption is the sum of dispensed quantity. Adjusted Consumption is adjusted for days out of stock.';
-                        $scope.isProgramFieldILS = true;
-                        $scope.isILSARV = true;
-                    }
-                    else if (program.name == 'ARV') {
-                        $scope.reportFooterNote = 'Note: Estimated consumption is the sum of dispensed quantity, adjusted consumption includes the estimates for new patients';
-                        $scope.isILSARV = true;
-                    }
-                }
-
-            });
-        });
-
-
     };
 
    $scope.exportReport   = function (type){
