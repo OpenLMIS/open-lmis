@@ -10,7 +10,11 @@ app.directive('filterContainer', ['$routeParams', '$location', function ($routeP
         if (JSON.stringify($scope.filter) !== JSON.stringify($routeParams)) {
           var url = $location.url();
           url = url.substring(0, url.indexOf('?'));
-          url = url + '?' + jQuery.param($scope.filter);
+          var params = angular.copy($scope.filter);
+          if(params.products){
+            params.products = JSON.stringify(params.products);
+          }
+          url = url + '?' + jQuery.param(params);
           $location.url(url);
         }
       };
@@ -760,7 +764,7 @@ app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams',
 app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
   function (ReportProductsByProgram, $routeParams) {
 
-    var onPgCascadedVarsChanged = function ($scope, newValue) {
+    var onPgCascadedVarsChanged = function ($scope) {
 
       if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
         return;
@@ -772,11 +776,11 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
         $scope.products = data.productList;
         $scope.products.unshift({
           'name': '-- Indicator Products --',
-          id: 0
+          id: -1
         });
         $scope.products.unshift({
           'name': '-- All Products --',
-          id: -1
+          id: 0
         });
 
       });
@@ -807,26 +811,34 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
       link: function (scope, elm, attr) {
 
         scope.products = [];
-
-
-        scope.filter.product = (isUndefined($routeParams.product) || $routeParams.product === '') ? -1 : $routeParams.product;
+        scope.filter.products = (isUndefined($routeParams.products) || $routeParams.products === '') ? '[0]' : JSON.parse($routeParams.products);
           scope.products.push({
               'name': '-- All Products --',
-              id: -1
+              id: 0
           });
           scope.products.push({
               'name': '-- Indicator Products --',
-              id: 0
+              id: -1
           });
         if (attr.required) {
-          scope.requiredFilters.product = 'product';
+          scope.requiredFilters.products = 'products';
         }
 
         scope.productCFilter = function (option) {
 
-          return (!angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) || scope.filter.productCategory === '' ||
-              parseInt( scope.filter.productCategory, 0) === 0 || option.categoryId == scope.filter.productCategory || option.id === 0 || option.id === -1 ||
-              (angular.isArray(scope.filter.productCategory) && valueExistInArray(scope.filter.productCategory, option.categoryId)));
+          return (
+                    !angular.isDefined(scope.filter)
+                    || !angular.isDefined(scope.filter.productCategory)
+                    || scope.filter.productCategory === ''
+                    || parseInt( scope.filter.productCategory, 10) === 0
+                    || option.categoryId == scope.filter.productCategory
+                    || ( option.id === 0 )
+                    || ( option.id === -1 )
+                    || (
+                          angular.isArray(scope.filter.productCategory)
+                          && valueExistInArray(scope.filter.productCategory, option.categoryId)
+                        )
+                  );
         };
 
         scope.$watch('filter.program', function (value) {
