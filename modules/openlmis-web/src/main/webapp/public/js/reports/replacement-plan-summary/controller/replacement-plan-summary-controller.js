@@ -1,4 +1,4 @@
-function ReplacementPlanSummary($scope, ngTableParams, messageService, SettingsByKey, EquipmentsInNeedForReplacement, getReplacementPlanSummaryReport) {
+function ReplacementPlanSummary($scope, ngTableParams, messageService, SettingsByKey, EquipmentsInNeedForReplacement, ReplacementPlanSummaryReport) {
     $scope.equipmentsForReplacementModal = false;
 
 
@@ -41,7 +41,6 @@ function ReplacementPlanSummary($scope, ngTableParams, messageService, SettingsB
             ];
           $scope.statuses.unshift({'name':'-- Select Indicator --','value':-1});
 
-
     }
 
     $scope.exportReport = function (type) {
@@ -61,23 +60,13 @@ function ReplacementPlanSummary($scope, ngTableParams, messageService, SettingsB
 
     $scope.data = $scope.datarows = $scope.years = [];
 
-    getReplacementPlanSummaryReport.get($scope.filter, function (data) {
-
-        if (data.pages !== undefined && data.pages.rows !== undefined) {
-            //$scope.data = data.pages.rows;
-            $scope.data = data.pages.rows;
-
-            $scope.paramsChanged($scope.tableParams);
-        }
-    });
-
     $scope.OnFilterChanged = function () {
 
         $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;
 
 
-        getReplacementPlanSummaryReport.get($scope.filter, function (data) {
+        ReplacementPlanSummaryReport.get($scope.filter, function (data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
                 $scope.data = data.pages.rows;
 
@@ -119,14 +108,13 @@ function ReplacementPlanSummary($scope, ngTableParams, messageService, SettingsB
     };
 
 
-        SettingsByKey.get({key: messageService.get('YEAR_OF_EQUIPMENT_REPLACEMENT')}, function (data) {
+    SettingsByKey.get({key: messageService.get('YEAR_OF_EQUIPMENT_REPLACEMENT')}, function (data) {
             var value = data.settings.value;
             for (var i = 0; i < value; i++)
 
                 $scope.years.push(i + new Date().getFullYear());
             return  $scope.years;
-
-        });
+    });
 
     $scope.first_year = [];
     $scope.first_year = (new Date().getFullYear());
