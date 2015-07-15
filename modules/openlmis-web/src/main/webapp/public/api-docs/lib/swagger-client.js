@@ -324,6 +324,7 @@ PrimitiveModel.prototype.getMockSignature = function(modelsToIgnore) {
     this.build();
 }
 
+SwaggerClient.prototype.displayedLoginErr = false;
 SwaggerClient.prototype.build = function() {
   var self = this;
   this.progress('fetching resource list: ' + this.url);
@@ -346,6 +347,16 @@ SwaggerClient.prototype.build = function() {
           return self.fail(response.status + ' : ' + response.statusText + ' ' + self.url);
       },
       response: function(resp) {
+        if(resp && resp.data && resp.data.indexOf("<") == 0)
+        {
+          if(!SwaggerClient.prototype.displayedLoginErr)
+          {
+              SwaggerClient.prototype.displayedLoginErr = true;
+              $('#message-bar').text('Please login to openLMIS in order to interact with it through this page.').css('marginTop' , '75px');
+          }
+          return;
+        }
+
         var responseObj = resp.obj || JSON.parse(resp.data);
         self.swaggerVersion = responseObj.swaggerVersion;
 

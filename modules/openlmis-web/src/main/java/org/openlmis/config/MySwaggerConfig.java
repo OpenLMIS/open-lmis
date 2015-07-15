@@ -45,7 +45,7 @@ public class MySwaggerConfig {
       "TOS",
       "info@elmis-dev.org",
       "API License",
-      "API License URL"
+      "https://github.com/OpenLMIS/open-lmis/blob/master/LICENSE"
     );
     return apiInfo;
   }
