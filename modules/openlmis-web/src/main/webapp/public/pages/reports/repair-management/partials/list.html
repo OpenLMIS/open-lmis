@@ -118,13 +118,13 @@
     </div>
 <div id="equipmentDialogDiv" style="width:auto" modal="equipmentDialogModal" options="{'backdrop':'static', 'escape':false}">
     <div class="modal-header" style="clear:both">
-        <span style="width:300px;float:left">
-         <h3 openlmis-message="label.equipment.list"></h3>
-        </span>
-        <span class="box-icon span2"  style="float:right;clear:both">
-            <a id="pdf-button2" href="#list" ng-click="exportReport('pdf')" class='btn-small btn-info'>PDF</a>
-            <a id="xls-button2" href="#list" ng-click="exportReport('xls')" class='btn-small btn-info'>Excel</a>
-        </span>
+        <div class="box-header">
+             <h2 openlmis-message="label.equipment.list"></h2>
+            <div class="box-icon" >
+                <a id="pdf-button2" href="#list" ng-click="exportList('pdf')" class='btn-small btn-info'>PDF</a>
+                <a id="xls-button2" href="#list" ng-click="exportList('xls')" class='btn-small btn-info'>Excel</a>
+            </div>
+        </div>
     </div>
     <div class="modal-body">
         <form name="addEquipmentForm">

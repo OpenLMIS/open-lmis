@@ -231,7 +231,14 @@ function RepairManagementController($scope,ngTableParams,messageService,RepairMa
     $scope.exportReport   = function (type){
         $scope.filter.pdformat = 1;
                   var params = jQuery.param($scope.filter);
-                  var url = '/reports/download/repair_management_equipment_list/' + type +'?' + params;
+                  var url = '/reports/download/repair_management/' + type +'?' + params;
                   window.open(url);
      };
+
+     $scope.exportList   = function (type){
+             $scope.filter.pdformat = 1;
+                       var params = jQuery.param($scope.filter);
+                       var url = '/reports/download/repair_management_equipment_list/' + type +'?' + params;
+                       window.open(url);
+          };
 }

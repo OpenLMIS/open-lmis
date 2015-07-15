@@ -333,7 +333,7 @@
                 </bean>
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="repair_management"/>
-                    <property name="template" value="repair-management.jasper"/>
+                    <property name="template" value="cce-repair-management.jasper"/>
                     <property name="reportDataProvider" ref="repairManagementReportDataProvider"/>
                     <property name="id" value="REPAIR"/>
                     <property name="name" value="Repair Management"/>
@@ -343,7 +343,7 @@
 
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="repair_management_equipment_list"/>
-                    <property name="template" value="repair-management-equipment-list.jasper"/>
+                    <property name="template" value="cce-repair-management-equipment-list.jasper"/>
                     <property name="reportDataProvider" ref="repairManagementEquipmentListDataProvider"/>
                     <property name="id" value="REPAIR"/>
                     <property name="name" value="Equipment List"/>
