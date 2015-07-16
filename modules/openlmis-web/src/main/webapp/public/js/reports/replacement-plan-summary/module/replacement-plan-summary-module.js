@@ -8,36 +8,15 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.filter;
-
-import lombok.Data;
-
-@Data
-public class CustomReportFilter {
-
-  private String reportKey;
-
-  private Long userId;
-
-  private Long programId;
-
-  private Long productId;
-
-  private Long periodId;
-
-  private Long groupId;
-
-  private Long facilityType;
-
-  private Long facility;
-
-  private Long productGroup;
-
-  private Long geographicZoneId;
-
-  private Long requisitionGroupId;
-
-  private Long regimenId;
-
-  private Long regimenCategoryId;
-}
+angular.module('replacement_plan_summary', ['openlmis','angularCombine', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+    .config(['$routeProvider', function ($routeProvider) {
+        $routeProvider.
+            when('/list', {controller:ReplacementPlanSummary, templateUrl:'partials/list.html',reloadOnSearch:false}).
+            otherwise({redirectTo:'/list'});
+    }]).run(
+    function ($rootScope, AuthorizationService) {
+        AuthorizationService.preAuthorize('VIEW_VACCINE_REPLACEMENT_PLAN_SUMMARY');
+    }
+).config(function(angularCombineConfigProvider) {
+        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+    });

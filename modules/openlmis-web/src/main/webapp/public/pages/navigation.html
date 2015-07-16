@@ -214,7 +214,11 @@
                 <li ng-show="hasPermission('VIEW_CCE_STORAGE_CAPACITY_REPORT')">
                   <a href="/public/pages/reports/cce-storage-capacity/index.html" openlmis-message="menu.report.cce.storage.capacity"></a>
                 </li>
-                <li class="beak"></li>
+                  <li ng-show="hasPermission('VIEW_VACCINE_REPLACEMENT_PLAN_SUMMARY')">
+                      <a href="/public/pages/reports/replacement-plan-summary/index.html" openlmis-message="menu.report.vaccine.replacement.plan.summary"></a>
+                  </li>
+
+                  <li class="beak"></li>
               </ul>
             </div>
           </li>
@@ -318,6 +322,9 @@
               </ul>
             </div>
           </li>
+
+
+          <li class="has-children">
 
           <li>
             <a href="/public/pages/reports/custom/index.html" openlmis-message="menu.report.custom.reports"></a>

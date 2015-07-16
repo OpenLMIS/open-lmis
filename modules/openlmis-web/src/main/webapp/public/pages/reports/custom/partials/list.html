@@ -19,7 +19,7 @@
     </div>
     <form filter-container ng-submit="filterGrid()" name="filterForm" novalidate>
       <div class="app-form">
-        <select ui-select2 style="width: 450px;" ng-change="OnFilterChanged()" ng-model="filter.report_key">
+        <select ui-select2 style="width: 450px;" ng-change="filterChanged()" ng-model="filter.report_key">
           <optgroup label="{{cat}}" ng-repeat="cat in categories">
             <option value="{{r.reportkey}}" ng-selected="r.reportkey == filter.report_key"
                     ng-repeat="r in  displayReports[cat]">
@@ -87,6 +87,7 @@
           </div>
           <div class="float-right" ng-class="{'content-body': report.currentFilters.length > 0}">
             <div class="box" style="padding-top: 0px;margin-top:0px; ">
+              <span ng-show="meta" style="padding-top: 20px; padding-right: 5px; font-size: 9px" class="pull-right">As of <b>{{meta.date | date : 'hh:mm a dd-MMM-yyyy'}}</b></span>
               <div class="box-content" style="min-height: 400px;">
                 <h4>{{report.name}}</h4>
                 <hr />

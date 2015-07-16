@@ -13,8 +13,8 @@ import org.openlmis.report.model.params.AdjustmentSummaryReportParam;
 
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
-import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
 
 
 public class AdjustmentSummaryQueryBuilder {
@@ -22,23 +22,22 @@ public class AdjustmentSummaryQueryBuilder {
   public static String getData(Map params) {
 
     AdjustmentSummaryReportParam filter = (AdjustmentSummaryReportParam) params.get("filterCriteria");
-    Map<String, String[]> sorter = (Map<String, String[]>) params.get("SortCriteria");
     BEGIN();
     SELECT("processing_periods_name as period, product productDescription, product_category_name category, facility_type_name facilityType,facility_name facilityName, adjustment_type, t.description as adjustmentType, adjutment_qty adjustment, adjutment_qty * case when adjustment_additive  = 't' then 1 else -1 end AS signedadjustment, supplying_facility_name supplyingFacility");
     FROM("vw_requisition_adjustment " +
-        "join facilities f on f.id = vw_requisition_adjustment.facility_id " +
-        "join vw_districts d on f.geographicZoneId = d.district_id " +
-        "join losses_adjustments_types t on t.name = vw_requisition_adjustment.adjustment_type ");
+      "join facilities f on f.id = vw_requisition_adjustment.facility_id " +
+      "join vw_districts d on f.geographicZoneId = d.district_id " +
+      "join losses_adjustments_types t on t.name = vw_requisition_adjustment.adjustment_type ");
     writePredicates(filter);
     ORDER_BY(QueryHelpers.getSortOrder(params, " product, adjustment_type, facility_type_name,facility_name, supplying_facility_name, product_category_name "));
-      // cache the string query for debugging purposes
-      String strQuery = SQL();
-      return strQuery;
+    // cache the string query for debugging purposes
+    String strQuery = SQL();
+    return strQuery;
   }
 
   private static void writePredicates(AdjustmentSummaryReportParam filter) {
     WHERE("req_status not in ('INITIATED','SUBMITTED','SKIPPED')");
-    //WHERE("program_id = #{filterCriteria.programId}");
+    WHERE("program_id = #{filterCriteria.programId}");
     WHERE("f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.programId})");
     if (filter != null) {
 
@@ -60,13 +59,9 @@ public class AdjustmentSummaryQueryBuilder {
         WHERE("product_category_id = #{filterCriteria.productCategoryId}");
       }
 
-      /*if (filter.getProductId() != -1 && filter.getProductId() != 0) {
-        WHERE("product_id= #{filterCriteria.productId}");
+      if ( !asList("0", "-1", "[-1]", "[0]", "[-1, 0]").contains(filter.getProductId()) ) {
+        WHERE("product_id = ANY(array" + filter.getProductId() + "::INT[])");
       }
-*/
-        if(!filter.getProductId().equals("0")){ // && !filter.getProductId().equals("{}")){
-            WHERE("product_id = ANY(array" + filter.getProductId()+"::INT[])");
-        }
 
       if (!filter.getAdjustmentTypeId().equals("-1") && !filter.getAdjustmentTypeId().equals("0") && !filter.getAdjustmentTypeId().equals("")) {
         WHERE("adjustment_type = #{filterCriteria.adjustmentTypeId}");

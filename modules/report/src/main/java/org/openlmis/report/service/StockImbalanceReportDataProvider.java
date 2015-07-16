@@ -16,7 +16,6 @@ import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.StockImbalanceReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.StockImbalanceReportParam;
-import org.openlmis.report.util.Constants;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +59,8 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
 
       stockImbalanceReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType")? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
 
-//      stockImbalanceReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,"productCategory") ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
-        stockImbalanceReportParam.setProductCategoryId(!filterCriteria.containsKey("productCategory") ? "0" : java.util.Arrays.toString(filterCriteria.get("productCategory")).replace("]", "}").replace("[", "{").replaceAll("\"", ""));
-//      stockImbalanceReportParam.setProductId(StringHelper.isBlank(filterCriteria,"productId") ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-        stockImbalanceReportParam.setProductId(!filterCriteria.containsKey("product") ? "0" : java.util.Arrays.toString(filterCriteria.get("product")).replace("]", "}").replace("[", "{").replaceAll("\"", "")); //defaults to 0
-      //stockImbalanceReportParam.setRgroupId(StringHelper.isBlank( filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
+      stockImbalanceReportParam.setProductCategoryId(!filterCriteria.containsKey("productCategory") ? "0" : java.util.Arrays.toString(filterCriteria.get("productCategory")).replace("]", "}").replace("[", "{").replaceAll("\"", ""));
+      stockImbalanceReportParam.setProductId(!filterCriteria.containsKey("products") ? "0" : java.util.Arrays.toString(filterCriteria.get("products")).replace("]", "}").replace("[", "{").replaceAll("\"", "")); //defaults to 0
       stockImbalanceReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program")  ? 0 : Integer.parseInt(filterCriteria.get("program")[0]));
       stockImbalanceReportParam.setScheduleId(StringHelper.isBlank(filterCriteria, "schedule") ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0]));
       stockImbalanceReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0 : Integer.parseInt(filterCriteria.get("period")[0]));
@@ -73,18 +69,9 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
       stockImbalanceReportParam.setPeriod(StringHelper.isBlank(filterCriteria,"period") ? "" : filterCriteria.get("period")[0]);
       stockImbalanceReportParam.setZoneId(StringHelper.isBlank(filterCriteria,"zone") ? 0 : Long.parseLong(filterCriteria.get("zone")[0]));
 
-//      if (stockImbalanceReportParam.getProductId() == 0) {
-//        if (stockImbalanceReportParam.getProductId() == null) {
-//        stockImbalanceReportParam.setProduct("All Products");
-//      }else if (stockImbalanceReportParam.getProductId() == -1) {//Indicator Products
-//        stockImbalanceReportParam.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
-//      }else {
-//        stockImbalanceReportParam.setProduct(filterCriteria.get("product")[0]);
-//      }
       stockImbalanceReportParam.setProductCategory((StringHelper.isBlank(filterCriteria, "productCategory") ) ? "All Product Categories" : filterCriteria.get("productCategory")[0]);
       stockImbalanceReportParam.setFacilityType((StringHelper.isBlank(filterCriteria,"facilityType") ) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
       stockImbalanceReportParam.setFacility(StringHelper.isBlank(filterCriteria,"facility")? "" : filterCriteria.get("facility")[0]);
-      //stockImbalanceReportParam.setRgroup(StringHelper.isBlank(filterCriteria, "requisitionGroup") ? "All Reporting Groups" : filterCriteria.get("requisitionGroup")[0]);
       if (stockImbalanceReportParam.getProgramId() == 0 || stockImbalanceReportParam.getProgramId() == -1) {
         stockImbalanceReportParam.setProgram("All Programs");
       }else {

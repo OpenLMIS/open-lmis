@@ -14,11 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.report.filter.CustomReportFilter;
 import org.openlmis.report.model.ReportParameter;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 

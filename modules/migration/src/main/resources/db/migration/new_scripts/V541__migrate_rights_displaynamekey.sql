@@ -1,0 +1,1 @@
+update rights set displayNameKey = 'right.report.vaccine.replacement.plan.summary' where name = 'VIEW_VACCINE_REPLACEMENT_PLAN_SUMMARY';

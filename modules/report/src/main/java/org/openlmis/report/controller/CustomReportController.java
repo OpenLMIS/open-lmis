@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -39,6 +40,14 @@ public class CustomReportController extends BaseController{
 
   @RequestMapping(value = "report")
   public ResponseEntity<OpenLmisResponse> getReportData( @RequestParam Map filter ){
-    return OpenLmisResponse.response("values", reportRepository.getReportData(filter));
+    long requestTime = new Date().getTime();
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("values", reportRepository.getReportData(filter));
+    response.getBody().addData("date", new Date());
+    long responseTime = new Date().getTime();
+    //return the milliseconds it took to run this query.
+    //TODO: log this time.
+    long duration = responseTime - requestTime;
+    response.getBody().addData("duration", duration);
+    return response;
   }
 }
