@@ -16,6 +16,8 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.ReplacementPlanSummaryQueryBuilder;
+import org.openlmis.report.model.ReportParameter;
+import org.openlmis.report.model.params.ReplacementPlanReportParam;
 import org.openlmis.report.model.report.vaccine.ReplacementPlanSummary;
 import org.springframework.stereotype.Repository;
 
@@ -27,15 +29,17 @@ public interface ReplacementPlanSummaryMapper {
 
     @SelectProvider(type = ReplacementPlanSummaryQueryBuilder.class, method = "getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
-    public List<ReplacementPlanSummary> getReport(@Param("filterCriteria")Map params
-                                              , @Param("RowBounds") RowBounds rowBounds
-                                                      , @Param("userId") Long userId   );
+    public List<ReplacementPlanSummary> getReport(
+            @Param("filterCriteria")ReplacementPlanReportParam param,
+            @Param("RowBounds") RowBounds rowBounds,
+            @Param("userId") Long userId);
 
 
 
     @SelectProvider(type = ReplacementPlanSummaryQueryBuilder.class, method = "getEquipmentListData")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
-    public List<ReplacementPlanSummary> getEquipmentListData(@Param("filterCriteria")Map params
+    public List<ReplacementPlanSummary> getEquipmentListData(
+              @Param("filterCriteria")ReplacementPlanReportParam param
             , @Param("RowBounds") RowBounds rowBounds
             , @Param("userId") Long userId   );
 
