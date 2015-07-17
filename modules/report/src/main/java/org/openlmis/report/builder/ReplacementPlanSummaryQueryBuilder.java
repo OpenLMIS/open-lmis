@@ -11,19 +11,14 @@
 
 package org.openlmis.report.builder;
 
-import org.openlmis.report.util.StringHelper;
+import org.openlmis.report.model.params.ReplacementPlanReportParam;
 
 import java.util.Map;
 
 public class ReplacementPlanSummaryQueryBuilder {
 
     public static String getQuery(Map params) {
-
-        Long userId = (Long) params.get("userId");
-
-        if (params.containsKey("param1")) {
-            params = (Map) params.get("param1");
-        }
+        ReplacementPlanReportParam filter = (ReplacementPlanReportParam) params.get("filterCriteria");
 
         return (" SELECT FACILITIES.id facilityId, FACILITIES.name facilityName,facility_Types.name facilityTypeName,vw_districts.region_name Region, vw_districts.district_name district, " +
                 "COALESCE(x.total,0) TOTAL_YEAR1,replacementYearOne,  " +
@@ -37,94 +32,91 @@ public class ReplacementPlanSummaryQueryBuilder {
                 "  (select facilityId,replacementYearOne,sum(purchaseprice) this_year_cost,  " +
                 "  count(*) total " +
                 "  FROM vw_replacement_plan_summary " +
-                "  WHERE coalesce(yearofinstallation,0) <= coalesce(this_year,0)    ") + getPredicates(params, userId) + "  GROUP BY facilityId,replacementYearOne " +
+                "  WHERE coalesce(yearofinstallation,0) <= coalesce(this_year,0)    ") + getPredicates(filter) + "  GROUP BY facilityId,replacementYearOne " +
                 "  )X ON FACILITIES.ID = X.FACILITYID  " +
                 "LEFT JOIN   " +
                 "  (select facilityId, replacementYearTwo, " +
                 "  count(*) total  " +
                 "  FROM vw_replacement_plan_summary  " +
-                "  WHERE coalesce(yearofinstallation,0) = coalesce(second_year,0)  " + getPredicates(params, userId) + "  GROUP BY facilityId,replacementYearTwo)Y ON FACILITIES.ID =Y.facilityId " +
+                "  WHERE coalesce(yearofinstallation,0) = coalesce(second_year,0)  " + getPredicates(filter) + "  GROUP BY facilityId,replacementYearTwo)Y ON FACILITIES.ID =Y.facilityId " +
                 "LEFT JOIN  " +
                 "  (select facilityId, replacementYearThree,  " +
                 "  count(*) total  " +
                 "  FROM vw_replacement_plan_summary " +
-                "  WHERE coalesce(yearofinstallation,0) = coalesce(third_year,0) " + getPredicates(params, userId) + "  GROUP BY facilityId,replacementYearThree)Z ON FACILITIES.ID =z.facilityId " +
+                "  WHERE coalesce(yearofinstallation,0) = coalesce(third_year,0) " + getPredicates(filter) + "  GROUP BY facilityId,replacementYearThree)Z ON FACILITIES.ID =z.facilityId " +
                 "LEFT JOIN  " +
                 "  (select facilityId, replacementYearFour, " +
                 "  count(*) total  " +
                 "  FROM vw_replacement_plan_summary  " +
-                "  WHERE coalesce(yearofinstallation,0) = coalesce(fourth_year,0) " + getPredicates(params, userId) + "  GROUP BY facilityId,replacementYearFour)L ON FACILITIES.ID = L.facilityId " +
+                "  WHERE coalesce(yearofinstallation,0) = coalesce(fourth_year,0) " + getPredicates(filter) + "  GROUP BY facilityId,replacementYearFour)L ON FACILITIES.ID = L.facilityId " +
                 "LEFT JOIN  " +
                 "  (select facilityId, replacementYearFive,  " +
                 "  count(*) total " +
                 "  FROM vw_replacement_plan_summary " +
-                "  WHERE coalesce(yearofinstallation,0) = coalesce(fifth_year,0)  " + getPredicates(params, userId) + "  GROUP BY facilityId,replacementYearFive)M ON FACILITIES.ID = M.facilityId  " +
+                "  WHERE coalesce(yearofinstallation,0) = coalesce(fifth_year,0)  " + getPredicates(filter) + "  GROUP BY facilityId,replacementYearFive)M ON FACILITIES.ID = M.facilityId  " +
                 "  where (x.total>0 or y.total>0 or z.total>0 or  l.total>0 or  m.total>0) " +
                 "  ORDER BY facility_Types.levelId";
     }
 
 
-    private static String getPredicates(Map params, Long userId) {
+    private static String getPredicates(ReplacementPlanReportParam params) {
 
-                String predicate = " ";
-                String program = StringHelper.isBlank(params, "program") ? null : ((String[]) params.get("program"))[0];
-                String facilityType = StringHelper.isBlank(params, "facilityType") ? null : ((String[]) params.get("facilityType"))[0];
-                String status = StringHelper.isBlank(params, "status") ? null : ((String[]) params.get("status"))[0];
-                Boolean disaggregated = StringHelper.isBlank(params, "disaggregated") ? false : Boolean.parseBoolean(StringHelper.getValue(params, "disaggregated"));
+        String predicate = " ";
+
+        predicate += "  and programId = " + params.getProgramId();
+
+        String facilityLevel = params.getFacilityLevel();
+        if (facilityLevel.isEmpty()
+                || facilityLevel.equalsIgnoreCase("cvs")
+                || facilityLevel.equalsIgnoreCase("rvs")
+                || facilityLevel.equalsIgnoreCase("dvs")) {
+            predicate += " and facilityTypeCode =  #{filterCriteria.facilityLevel}";
+        } else {
+            predicate += "  and facilityTypeCode NOT IN ('cvs','rvs','dvs') ";
+        }
+
+        if (!params.getFacilityIds().isEmpty()) {
+
+            predicate += " and facilityId = ANY (#{filterCriteria.facilityIds}::INT[]) ";
+
+        }
+
+        if (params.getDisaggregated() && params.getStatus() != null && !params.getStatus().equals("undefined") && !params.getStatus().isEmpty() && !params.getStatus().equals("0") && !params.getStatus().equals("-1")) {
+            predicate += " and status =  #{filterCriteria.status}";
+        }
 
 
-                predicate += "  and programId = " + program;
-
-                predicate += "  and facilityId  IN(select facility_id from vw_user_facilities where user_id =  " + userId + "  and program_Id = " + program + ")";
-
-
-                if (facilityType != null && !facilityType.equals("undefined") && !facilityType.isEmpty() && !facilityType.equals("0") && !facilityType.equals("-1")) {
-                    predicate += "  and facilityTypeId =  " + facilityType;
-                }
-
-                if (disaggregated && status != null && !status.equals("undefined") && !status.isEmpty() && !status.equals("0") && !status.equals("-1")) {
-                    predicate += " and status =  '" + status + "'";
-                }
-
-
-                return predicate;
+        return predicate;
 
     }
 
 
+
     public static String getEquipmentListData(Map params) {
 
-                Long userId = (Long) params.get("userId");
+        ReplacementPlanReportParam filter = (ReplacementPlanReportParam) params.get("filterCriteria");
 
-                if (params.containsKey("param1")) {
-                    params = (Map) params.get("param1");
-                }
+        return "   SELECT region,District,facilityName,facilityTypeName,model,brand,capacity,sourceofEnergy sourceOfEnergy,serialNumber,age total,sum(break_down) breakDown,working_status workingStatus,status,sum(purchaseprice) purchasePrice   " +
+                "  FROM vw_replacement_plan_summary  " +
 
-                String facility = StringHelper.isBlank(params, "facility") ? null : ((String[]) params.get("facility"))[0];
-                String plannedYear = StringHelper.isBlank(params, "plannedYear") ? null : ((String[]) params.get("plannedYear"))[0];
+                "  WHERE facilityId =  " + filter.getFacility() +
+                "  AND ( (COALESCE(yearofinstallation,0) <= COALESCE(this_year,0) AND replacementYearOne =  " + filter.getPlannedYear() + ")   " +
+                "  OR  (COALESCE(yearofinstallation,0) = COALESCE(second_year,0) AND replacementYearTwo = " + filter.getPlannedYear() + ")  " +
 
+                "  OR (COALESCE(yearofinstallation,0) = COALESCE(third_year,0) AND replacementYearThree = " + filter.getPlannedYear() + ")   " +
+                "  OR (COALESCE(yearofinstallation,0) = COALESCE(fourth_year,0) AND replacementYearFour= " + filter.getPlannedYear() + ")   " +
 
-                return "   SELECT region,District,facilityName,facilityTypeName,model,brand,capacity,sourceofEnergy sourceOfEnergy,serialNumber,age total,sum(break_down) breakDown,working_status workingStatus,status,sum(purchaseprice) purchasePrice   " +
-                        "  FROM vw_replacement_plan_summary  " +
+                "  OR (COALESCE(yearofinstallation,0) = COALESCE(fifth_year,0) AND replacementYearFive= " + filter.getPlannedYear() + "))  " +
 
-                        "  WHERE facilityId =  " + facility +
-                        "  AND ( (COALESCE(yearofinstallation,0) <= COALESCE(this_year,0) AND replacementYearOne =  " + plannedYear + ")   " +
-                        "  OR  (COALESCE(yearofinstallation,0) = COALESCE(second_year,0) AND replacementYearTwo = " + plannedYear + ")  " +
-
-                        "  OR (COALESCE(yearofinstallation,0) = COALESCE(third_year,0) AND replacementYearThree = " + plannedYear + ")   " +
-                        "  OR (COALESCE(yearofinstallation,0) = COALESCE(fourth_year,0) AND replacementYearFour= " + plannedYear + ")   " +
-
-                        "  OR (COALESCE(yearofinstallation,0) = COALESCE(fifth_year,0) AND replacementYearFive= " + plannedYear + "))  " +
-
-                            getPredicates(params, userId) +
+                getPredicates(filter) +
 
 
-                        "  GROUP BY   " +
-                        "  region,District,capacity,facilityName,model,brand,sourceofEnergy ,serialNumber,age,facilityTypeName,working_status,status    " +
-                        "  ORDER BY facilityName  ";
+                "  GROUP BY   " +
+                "  region,District,capacity,facilityName,model,brand,sourceofEnergy ,serialNumber,age,facilityTypeName,working_status,status    " +
+                "  ORDER BY facilityName  ";
 
 
-            }
+    }
 
 
 }

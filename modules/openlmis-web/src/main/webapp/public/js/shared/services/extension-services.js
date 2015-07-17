@@ -1218,7 +1218,7 @@ services.factory('PriceScheduleCategories', function ($resource) {
 });
 
 
-services.factory('getReplacementPlanSummaryReport', function($resource){
+services.factory('ReplacementPlanSummaryReport', function($resource){
     return $resource('/reports/reportdata/replacementPlanSummary.json',{},{});
 });
 
