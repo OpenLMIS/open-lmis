@@ -72,11 +72,11 @@ VM setup (To improve...)
 7. You can run gradle from there
 8. Your openlmis 2.0 directory is set up as as shared folder in VM and local machine in projects/open-lmis
 
-Functional Tests
+Jasmine Tests
 -------------------
 1. Install xvfb: apt-get install xvfb firefox
-2. To run functional tests headlessly: gradle karmaRun (default task in build, for VM and CI)
-3. To run functional tests with firefox browser: gradle karmaRunWithBrowser
+2. To run jasmine tests headlessly: gradle karmaRun (default task in build, for VM and CI)
+3. To run jasmine tests with browser: gradle karmaRunWithBrowser
 
 Running App on embedded Jetty server
 --------------------------------------------------
