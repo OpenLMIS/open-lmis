@@ -23,12 +23,12 @@ import java.util.Date;
 @AllArgsConstructor
 public class BaseParam  {
 
-    private int userId;
+    private Long userId;
 
-    private int page;
+    private Long page;
 
-    private int pageSize;
+    private Long pageSize;
 
-    private int max;
+    private Long max;
 
 }
