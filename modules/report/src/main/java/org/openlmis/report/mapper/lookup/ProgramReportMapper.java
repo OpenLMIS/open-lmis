@@ -27,7 +27,7 @@ public interface ProgramReportMapper {
 
   @Select("SELECT id, name, description, code " +
       "   FROM " +
-      "       programs where id in (select program_id from vw_user_facilities where user_id = #{userId}) or (( select count(*) from fulfillment_role_assignments where userId = #{userId}) > 0 ) " +
+      "       programs where id in (select program_id from vw_user_facilities where user_id = #{userId}) " +
       " order by name")
   List<Program> getAllForUser(@Param("userId") Long userId);
 
