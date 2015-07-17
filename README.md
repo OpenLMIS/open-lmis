@@ -17,7 +17,7 @@ System Requirements
   * **For Linux users**
     * Download the source binary directly from the gradle website.
     * Copy the downloaded folder to `/usr/bin`
-    * Add the path to gradle bin folder to your `/etc/profile` file  
+    * Add the path to gradle bin folder to your `/etc/profile` file
     `export PATH="$PATH:/usr/bin/gradle-2.3/bin"`
   * **For Mac users**
     * Install HomeBrew
@@ -34,25 +34,24 @@ System Requirements
         export PATH="/usr/local/share/npm/bin:$PATH"
         ```
 - NPM dependencies (used for linting JS, LESS files, minifying JS files & running jasmine specs etc.)
-  * Install Grunt command-line runner by running (after installing Node.js)  
+  * Install Grunt command-line runner by running (after installing Node.js)
     `> npm install -g grunt-cli`
-  * Install karma test runner with karma coverage by running  
+  * Install karma test runner with karma coverage by running
     `> npm install -g karma karma-coverage`
-  * Install karma command line with:  
+  * Install karma command line with:
     `> npm install -g karma-cli`
-  * Install project-specific grunt dependencies by navigating to `modules/openlmis-web` from project root directory and run  
+  * Install project-specific grunt dependencies by navigating to `modules/openlmis-web` from project root directory and run
     `> npm install` (one-time activity)
   * Grunt tasks available can be found in `modules/openlmis-web/Gruntfile.js`
 
-Source code 
+Source code
 ------------------
 1. Get the source code using `git clone https://github.com/openlmis/open-lmis.git`.
 2. For now, all work should be pushed to the 2.0 branch, not master. After cloning, you can do `git checkout 2.0` to get into the 2.0 branch.
-3. Set up dependencies on submodules using  
-
+3. Set up dependencies on submodules using
     ```bash
-    > git submodule init  
-    > git submodule update  
+    > git submodule init
+    > git submodule update
     ```
 
 IntelliJ IDEA Setup
@@ -60,7 +59,25 @@ IntelliJ IDEA Setup
 1. Run `gradle idea` to create the IntelliJ project files (may take some time downloading dependencies).
 2. Open the open-lmis.ipr file (may take some time indexing files, first time only).
 3. Install Lombok plugin according to the IntelliJ version.
- 
+4. To run individual tests in IntelliJ, configure your IntelliJ preferences to enable "annotation processing"
+
+VM setup (To improve...)
+-------------------
+1. Make sure you have vagrant and VirtualBox installed (TODO: add install steps for these)
+2. Please obtain the vagrant box LMIS-2.0.box and related project setup from Danni or Ming (TODO: check this in somewhere)
+3. In the project directory, run "vagrant box add openlmis-box LMIS-2.0.box"
+4. Run "vagrant up" to start the vm
+5. Run "vagrant ssh" to log onto the box
+6. Run "cd projects/open-lmis" to go to your home directory
+7. You can run gradle from there
+8. Your openlmis 2.0 directory is set up as as shared folder in VM and local machine in projects/open-lmis
+
+Functional Tests
+-------------------
+1. Install xvfb: apt-get install xvfb firefox
+2. To run functional tests headlessly: gradle karmaRun (default task in build, for VM and CI)
+3. To run functional tests with firefox browser: gradle karmaRunWithBrowser
+
 Running App on embedded Jetty server
 --------------------------------------------------
 1. Clone the project repository using git.
@@ -85,7 +102,7 @@ Once the system is running, you can access the home page at `http://localhost:90
     export JAVA_TOOL_OPTIONS="-Xmx1024m -XX:MaxPermSize=512m -Xms512m"
     ```
 2. If a few integration tests fail, like this:
-`org.openlmis.core.repository.mapper.FacilityMapperIT > shouldUpdateFacilityWithSuppliedModifiedTime FAILED java.lang.AssertionError at FacilityMapperIT.java:292`  
+`org.openlmis.core.repository.mapper.FacilityMapperIT > shouldUpdateFacilityWithSuppliedModifiedTime FAILED java.lang.AssertionError at FacilityMapperIT.java:292`
 This can be caused by the timezone in `postgresql.conf` being different than your operating system timezone. To fix, stop the postgresql server, and edit the following line: `timezone = 'US/Pacific'` to match your current operating system timezone, then restart the postgresql server.
 
 Tech Stack
