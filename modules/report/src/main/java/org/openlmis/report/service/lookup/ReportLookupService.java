@@ -26,6 +26,7 @@ import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.repository.DonorRepository;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.*;
+
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.dto.DosageUnit;
 import org.openlmis.report.model.dto.Facility;
@@ -41,6 +42,7 @@ import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.model.params.UserSummaryParams;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.model.report.TimelinessReport;
+import org.openlmis.report.model.report.vaccine.ReplacementPlanSummary;
 import org.openlmis.report.util.Constants;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -655,5 +657,6 @@ public class ReportLookupService {
     public List<Product> getRmnchProducts() {
         return productMapper.getRmnchProducts();
     }
+
 
 }

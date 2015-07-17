@@ -1218,14 +1218,23 @@ services.factory('PriceScheduleCategories', function ($resource) {
 });
 
 
+
 services.factory('RepairManagement', function ($resource) {
     return $resource('/reports/reportdata/repairManagement.json', {}, {});
 });
 
 services.factory('RepairManagementEquipmentList', function ($resource) {
     return $resource('/reports/reportdata/repairManagementEquipmentList.json', {}, {});
+
+services.factory('ReplacementPlanSummaryReport', function($resource){
+    return $resource('/reports/reportdata/replacementPlanSummary.json',{},{});
+});
+
+services.factory('EquipmentsInNeedForReplacement', function($resource){
+    return $resource('/reports/reportdata/equipmentsInNeedForReplacement.json',{},{});
 });
 
 services.factory('VaccineMonthlyReport', function ($resource){
     return $resource('/vaccine/report/vaccine-monthly-report.json', {}, {});
 });
+
