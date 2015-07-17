@@ -24,7 +24,7 @@ FROM equipment_inventories ei JOIN
 (
 SELECT DISTINCT e.* FROM equipments e JOIN equipment_types et
 ON(e.equipmenttypeid = et.id)
-WHERE UPPER(et.code) = 'CCE1'  
+WHERE et.iscoldchain = true
 ) AS nested
 
 ON nested.id = ei.equipmentid
