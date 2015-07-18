@@ -10,6 +10,7 @@
 
 package org.openlmis.report.model.report;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
@@ -18,33 +19,47 @@ import javax.persistence.Column;
 
 @Data
 @NoArgsConstructor
-public class RepairManagementEquipmentList implements ReportData {
+public class CCERepairManagementReport implements ReportData {
 
-    @Column(name = "region")
-    private  String region;
+    @Column(name = "facility_id")
+    private  int facility_id;
 
-    @Column(name = "district")
-    private String district;
+    @Column(name = "facility_type_id")
+    private int facility_type_id;
 
-    @Column(name = "facility_name")
+    @Column(name = "Facility_name")
     private String facility_name;
 
-    @Column(name = "facility_type")
+    @Column(name = "Facility_type")
     private String facility_type;
 
-    @Column(name = "manufacturer")
-    private String manufacturer;
+    @Column(name = "Functional")
+    private int functional;
 
-    @Column(name = "model")
-    private String model;
+    @Column(name = "Not_Functional")
+    private int not_functional;
 
-    @Column(name = "capacity")
-    private Double capacity;
+    @Column(name = "Functional_Not_Installed")
+    private int functional_not_installed;
 
-    @Column(name = "working_status")
-    private String working_status;
+    @Column(name = "Obsolete")
+    private  int Obsolete;
 
-    @Column(name = "break_down")
-    private int break_down;
+    @Column(name = "Waiting_For_Repair")
+    private  int Waiting_For_Repair;
 
+    @Column(name = "Waiting_For_Spare_Parts")
+    private int Waiting_For_Spare_Parts;
+
+    @Column(name = "Electricity")
+    private int electricity;
+
+    @Column(name = "Solar")
+    private int solar;
+
+    @Column(name = "Gas")
+    private int gas;
+
+    @Column(name = "Kerosene")
+    private int kerosene;
 }

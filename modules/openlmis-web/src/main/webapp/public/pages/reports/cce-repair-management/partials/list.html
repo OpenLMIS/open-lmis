@@ -22,8 +22,8 @@
   tbody  tr:hover {
     background-color: #EEE;
     }
-    .modal {
 
+    #equipmentDialogDiv {
     margin: -250px 0 0 -620px;
     overflow: auto;
 
@@ -51,9 +51,8 @@
             <div class="app-form"  style="padding: 1px;">
                 <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                     <div filter-container class="clearfix">
-                       <program-filter class="form-cell horizontalFilters"></program-filter>
-                       <!--<zone-filter class="form-cell horizontalFilters"></zone-filter>-->
-                        <facility-type-filter id="facility_type" class="form-cell horizontalFilters"></facility-type-filter>
+                        <program-filter class="form-cell horizontalFilters"></program-filter>
+                        <facility-level-filter class="form-cell horizontalFilters"></facility-level-filter>
                         <div class="form-cell horizontalFilters">
                             <label class="labels"><span openlmis-message="label.repair.management.type"></span></label>
                             <div class="form-field">
@@ -75,7 +74,7 @@
       </div>
         <div ng-show="datarows.length > 0">
             <div class="row-fluid">
-                <div class="span8">
+                <div ng-class="{true:'span8',false:'span12'}[pieChart]">
                 <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
                 <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
                     <tbody>
@@ -95,7 +94,7 @@
                     </tbody>
                 </table>
                 </div>
-                <div class="span4" ng-show="pieChart">
+                <div ng-class="{true:'span4',false:''}[pieChart]" ng-show="pieChart">
                  <div ng-show="RepairManagementPieChartData.length > 0">
 
                      <label class="labels" style="text-align: center;font-family: bold" >{{facilityName}}</span></label>

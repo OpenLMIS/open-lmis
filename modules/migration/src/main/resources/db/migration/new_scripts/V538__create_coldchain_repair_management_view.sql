@@ -1,9 +1,9 @@
-﻿CREATE OR REPLACE VIEW vw_repair_management AS 
+﻿CREATE OR REPLACE VIEW vw_cce_repair_management AS
  SELECT ei.id,
     ei.programid AS pid,
     ei.facilityid AS fid,
     f.geographiczoneid AS geoid,
-    f.typeid,
+    ft.code AS facility_code,
     f.name AS facility_name,
     e.model,
     et.name AS type_name,
@@ -21,5 +21,6 @@
      JOIN equipments e ON ei.equipmentid = e.id
      JOIN equipment_types et ON e.equipmenttypeid = et.id
      JOIN facilities f ON f.id = ei.facilityid
+     JOIN facility_types ft ON ft.id = f.typeid
      LEFT JOIN equipment_energy_types eet ON e.energytypeid = eet.id
   WHERE et.iscoldchain IS TRUE;

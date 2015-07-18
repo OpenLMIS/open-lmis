@@ -20,15 +20,16 @@ import org.openlmis.report.model.ReportParameter;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
-public class RepairManagementReportParam
+public class CCERepairManagementEquipmentListParam
   extends BaseParam implements ReportParameter {
 
   //top filters
-  private String facilityCodeId;
-  private String facilityNameId;
-  private int facilityTypeId;
-  private int zoneId;
+
+  private String workingStatus;
   private Boolean aggregate;
-  private int programId;
+  private Long programId;
+  private String facilityLevel;
+  private String facilityIds;
+  private  Long facilityId;
 
 }

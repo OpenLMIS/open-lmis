@@ -527,31 +527,31 @@ public class InteractiveReportController extends BaseController {
                 (List<TimelinessReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, timelinessReportList);
     }
-    @RequestMapping(value = "/reportdata/repairManagement", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value = "/reportdata/cceRepairManagement", method = GET, headers = BaseController.ACCEPT_JSON)
     public Pages getRepairManagementSummary(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
             HttpServletRequest request
     ) {
 
-        Report report = reportManager.getReportByKey("repair_management");
+        Report report = reportManager.getReportByKey("cce_repair_management");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<RepairManagementReport> repairManagementReportList = (List<RepairManagementReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        List<CCERepairManagementReport> CCERepairManagementReportList = (List<CCERepairManagementReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
-        return new Pages(page, max, repairManagementReportList);
+        return new Pages(page, max, CCERepairManagementReportList);
     }
 
 
-    @RequestMapping(value = "/reportdata/repairManagementEquipmentList", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value = "/reportdata/cceRepairManagementEquipmentList", method = GET, headers = BaseController.ACCEPT_JSON)
     public Pages getRepairManagementEquipmentList(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
             HttpServletRequest request
     ) {
 
-        Report report = reportManager.getReportByKey("repair_management_equipment_list");
+        Report report = reportManager.getReportByKey("cce_repair_management_equipment_list");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<RepairManagementEquipmentList> repairManagementEquipmentList = (List<RepairManagementEquipmentList>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        List<CCERepairManagementEquipmentList> repairManagementEquipmentList = (List<CCERepairManagementEquipmentList>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, repairManagementEquipmentList);
     }

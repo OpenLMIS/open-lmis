@@ -1,11 +1,11 @@
-function RepairManagementController($scope,ngTableParams,messageService,RepairManagement,$location,RepairManagementEquipmentList){
+function RepairManagementController($scope,ngTableParams,messageService,CCERepairManagement,$location,CCERepairManagementEquipmentList){
 
     $scope.pieChart=false;
     $scope.equipmentDialogModal=false;
 
     $scope.OnFilterChanged = function(){
           $scope.resetRepairManagementData();
-          RepairManagement.get($scope.filter, function(data) {
+          CCERepairManagement.get($scope.filter, function(data) {
           if (data.pages !== undefined && data.pages.rows !== undefined && data.pages.rows[0]!==null) {
                      $scope.data = data.pages.rows;
             }
@@ -18,7 +18,8 @@ function RepairManagementController($scope,ngTableParams,messageService,RepairMa
 
           if($scope.filter.aggregate ==='TRUE'){ $scope.aggregate=true;}
           else{ $scope.aggregate=false;}
-          $scope.aggregateType = $("#facility_type option:selected").html();
+          $scope.aggregateType = $("facility-level-filter select option:selected").html();
+
                 });
      };
 
@@ -42,8 +43,7 @@ function RepairManagementController($scope,ngTableParams,messageService,RepairMa
          var functional = row.functional;
          var notFunctional = row.not_functional;
          var functionalNotInstalled = row.functional_not_installed;
-        //  var labelKey = 'label.orderFillRateSummary.status.' + $scope.dataRows[i].orderFillRateStatus;
-        //  var label = messageService.get(labelKey);
+
          var colors=['#00e500','#e50000','#e5e500'];
          pieChartData = [{label:'functional',total:functional},{label:'not_functional',total:notFunctional},{label:'functional_not_installed',total:functionalNotInstalled}];
 
@@ -87,7 +87,7 @@ function RepairManagementController($scope,ngTableParams,messageService,RepairMa
         $scope.dataRows = null;
         $scope.RepairManagementRenderedData = null;
         $scope.selectedData=null;
-
+        $scope.pieChart=false;
     };
    $scope.repairManagementChartClickHandler = function (event, pos, item) {
       $scope.equipmentDialogModal = true;
@@ -99,7 +99,7 @@ function RepairManagementController($scope,ngTableParams,messageService,RepairMa
       $scope.filter.workingStatus=workingStatus;
       $scope.filter.facilityId=facilityId;
       $scope.$apply();
-      RepairManagementEquipmentList.get($scope.filter, function(data) {
+      CCERepairManagementEquipmentList.get($scope.filter, function(data) {
             if (data.pages !== undefined && data.pages.rows !== undefined && data.pages.rows[0]!==null) {
                  $scope.equipments = data.pages;
                  // Capacity by functionality
@@ -231,14 +231,14 @@ function RepairManagementController($scope,ngTableParams,messageService,RepairMa
     $scope.exportReport   = function (type){
         $scope.filter.pdformat = 1;
                   var params = jQuery.param($scope.filter);
-                  var url = '/reports/download/repair_management/' + type +'?' + params;
+                  var url = '/reports/download/cce_repair_management/' + type +'?' + params;
                   window.open(url);
      };
 
      $scope.exportList   = function (type){
              $scope.filter.pdformat = 1;
                        var params = jQuery.param($scope.filter);
-                       var url = '/reports/download/repair_management_equipment_list/' + type +'?' + params;
+                       var url = '/reports/download/cce_repair_management_equipment_list/' + type +'?' + params;
                        window.open(url);
           };
 }

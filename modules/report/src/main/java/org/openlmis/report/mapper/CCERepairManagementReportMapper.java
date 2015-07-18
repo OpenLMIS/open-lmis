@@ -12,33 +12,30 @@ package org.openlmis.report.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.ResultSetType;
-import org.openlmis.report.builder.FacilityReportQueryBuilder;
-import org.openlmis.report.builder.RepairManagementReportQueryBuilder;
-import org.openlmis.report.model.params.FacilityReportParam;
-import org.openlmis.report.model.params.RepairManagementEquipmentListParam;
-import org.openlmis.report.model.params.RepairManagementReportParam;
-import org.openlmis.report.model.report.FacilityReport;
-import org.openlmis.report.model.report.RepairManagementEquipmentList;
-import org.openlmis.report.model.report.RepairManagementReport;
+import org.openlmis.report.builder.CCERepairManagementReportQueryBuilder;
+import org.openlmis.report.model.params.CCERepairManagementEquipmentListParam;
+import org.openlmis.report.model.params.CCERepairManagementReportParam;
+import org.openlmis.report.model.report.CCERepairManagementEquipmentList;
+import org.openlmis.report.model.report.CCERepairManagementReport;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface RepairManagementReportMapper {
+public interface CCERepairManagementReportMapper {
 
 
-    @SelectProvider(type=RepairManagementReportQueryBuilder.class, method="SelectEquipmentCountByStatusEnergySql")
+    @SelectProvider(type=CCERepairManagementReportQueryBuilder.class, method="SelectEquipmentCountByStatusEnergySql")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    List<RepairManagementReport> SelectEquipmentCountByStatusEnergy(
-            @Param("filterCriteria") RepairManagementReportParam filterCriteria,
+    List<CCERepairManagementReport> SelectEquipmentCountByStatusEnergy(
+            @Param("filterCriteria") CCERepairManagementReportParam filterCriteria,
             @Param("userId") Long userId
     );
 
-    @SelectProvider(type=RepairManagementReportQueryBuilder.class, method="RepairManagementEquipmentListSql")
+    @SelectProvider(type=CCERepairManagementReportQueryBuilder.class, method="EquipmentListSql")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    List<RepairManagementEquipmentList> RepairManagementEquipmentList(
-            @Param("filterCriteria") RepairManagementEquipmentListParam filterCriteria,
+    List<CCERepairManagementEquipmentList> getEquipmentList(
+            @Param("filterCriteria") CCERepairManagementEquipmentListParam filterCriteria,
             @Param("userId") Long userId
     );
 

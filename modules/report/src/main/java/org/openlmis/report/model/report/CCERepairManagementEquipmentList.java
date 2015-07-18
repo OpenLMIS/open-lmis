@@ -8,28 +8,43 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.model.params;
+package org.openlmis.report.model.report;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportParameter;
+import org.openlmis.report.model.ReportData;
+
+import javax.persistence.Column;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
-@AllArgsConstructor
-public class RepairManagementEquipmentListParam
-  extends BaseParam implements ReportParameter {
+public class CCERepairManagementEquipmentList implements ReportData {
 
-  //top filters
+    @Column(name = "region")
+    private  String region;
 
-  private int facilityTypeId;
-  private int facilityId;
-  private String workingStatus;
-  private int zoneId;
-  private Boolean aggregate;
-  private int programId;
+    @Column(name = "district")
+    private String district;
+
+    @Column(name = "facility_name")
+    private String facility_name;
+
+    @Column(name = "facility_type")
+    private String facility_type;
+
+    @Column(name = "manufacturer")
+    private String manufacturer;
+
+    @Column(name = "model")
+    private String model;
+
+    @Column(name = "capacity")
+    private Double capacity;
+
+    @Column(name = "working_status")
+    private String working_status;
+
+    @Column(name = "break_down")
+    private int break_down;
 
 }
