@@ -14,10 +14,11 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.AggregateConsumptionReportMapper;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.params.DistrictConsumptionReportParam;
+import org.openlmis.report.model.params.AggregateConsumptionReportParam;
 import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -27,6 +28,10 @@ import java.util.Map;
 @Component
 @NoArgsConstructor
 public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
+
+
+  @Value("${report.status.considered.accepted}")
+  private String configuredAcceptedRnrStatuses;
 
   @Autowired
   private SelectedFilterHelper filterHelper;
@@ -45,8 +50,10 @@ public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
     return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds, this.getUserId());
   }
 
-  public DistrictConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-    return ParameterAdaptor.parse(filterCriteria, DistrictConsumptionReportParam.class);
+  public AggregateConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
+    AggregateConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, AggregateConsumptionReportParam.class);
+    param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
+    return param;
   }
 
   @Override

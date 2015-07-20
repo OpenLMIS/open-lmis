@@ -26,7 +26,7 @@ public class RequisitionPredicateHelper {
   }
 
   public static String geoZoneIsFilteredBy( String viewAlias){
-      return String.format( "(%s.zone_id = #{filterCriteria.zone} or %s.parent = #{filterCriteria.zone} or %s.region_id = #{filterCriteria.zone} or %s.district_id = #{filterCriteria.zone})" , viewAlias) ;
+      return String.format( "(%1$s.zone_id = #{filterCriteria.zone} or %1$s.parent = #{filterCriteria.zone} or %1$s.region_id = #{filterCriteria.zone} or %1$s.district_id = #{filterCriteria.zone})" , viewAlias) ;
   }
 
   public static String programIsFilteredBy(String field){

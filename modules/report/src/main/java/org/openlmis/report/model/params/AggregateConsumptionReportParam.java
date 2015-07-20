@@ -12,25 +12,32 @@ package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.report.annotations.RequiredParam;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
 
 import java.text.DateFormat;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
-public class BaseParam  {
+public class AggregateConsumptionReportParam
+  extends BaseParam implements ReportParameter {
 
-    private Long userId;
+  @RequiredParam
+  private Long program;
 
-    private Long page;
+  @RequiredParam
+  private Long period;
 
-    private Long pageSize;
+  private Long zone;
 
-    private Long max;
+  private String products;
+  private Long productCategory;
 
-    private String acceptedRnrStatuses;
 
 }
