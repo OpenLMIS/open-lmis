@@ -37,8 +37,8 @@
                     <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()" name="filterForm" novalidate>
                             <div filter-container class="clearfix">
-                                <program-by-regimen-filter class="form-cell horizontalFilters"
-                                                           required="true"></program-by-regimen-filter>
+                              <program-filter class="form-cell horizontalFilters" regimen="true"
+                                                         required="true"></program-filter>
                                 <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                                 <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
                                 <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
@@ -115,9 +115,3 @@
     </div>
 
 </div>
-
-
-
-
-
-

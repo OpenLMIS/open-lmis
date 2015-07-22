@@ -175,16 +175,6 @@
     </div>
 </script>
 
-<script type="text/ng-template" id="filter-program-by-regimen-template">
-    <div>
-        <label for="programByRegimen" class="labels" openlmis-message="label.program"><span ng-show="requiredFilters.program" class="label-required">*</span></label><div>
-        <select id="programByRegimen" ui-select2 class="input-large" ng-model="filter.program" ng-change="$broadcast('regimen-program-changed');$broadcast('filter-changed');">
-            <option ng-repeat="programByRegimen in programs" value="{{ programByRegimen.id }}" ng-selected="filter.program == programByRegimen.id">{{programByRegimen.name}}</option>
-        </select>
-    </div>
-    </div>
-</script>
-
 <script type="text/ng-template" id="filter-regimen-category-template">
     <div>
         <label for="regimenCategory" class="labels" openlmis-message="label.regimen.category"><span ng-show="requiredFilters.regimenCategory" class="label-required">*</span></label><div>
@@ -213,17 +203,6 @@
         <select id="equipmentType" ui-select2 class="input-large" ng-model="filter.equipmentType" ng-change="$broadcast('equipemnt-type-changed');$broadcast('filter-changed');">
             <option ng-repeat="equipment in equipmentTypes" value="{{ equipment.id }}" ng-selected="filter.equipmentType == equipment.id">{{equipment.name}}</option>
         </select>
-    </div>
-    </div>
-</script>
-
-<script type="text/ng-template" id="filter-program-with-budget-template">
-    <div>
-        <label for="programWithBudget" class="labels" openlmis-message="label.program"><span ng-show="requiredFilters.program" class="label-required">*</span></label><div>
-        <select id="programWithBudget" ui-select2 class="input-large" ng-model="filter.program" ng-change="$broadcast('budgeted-program-changed');$broadcast('filter-changed');">
-            <option ng-repeat="programWithBudget in programs" value="{{ programWithBudget.id }}" ng-selected="filter.program == programWithBudget.id">{{programWithBudget.name}}</option>
-        </select>
-
     </div>
     </div>
 </script>

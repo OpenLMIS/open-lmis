@@ -80,8 +80,8 @@ app.directive('filterContainer', ['$routeParams', '$location', function($routePa
   };
 }]);
 
-app.directive('programFilter', ['ReportUserPrograms' ,'$routeParams',
-  function(ReportUserPrograms, $routeParams) {
+app.directive('programFilter', ['ReportUserPrograms' , 'ReportRegimenPrograms' ,'$routeParams',
+  function(ReportUserPrograms, ReportRegimenPrograms, $routeParams) {
     return {
       restrict: 'E',
       require: '^filterContainer',
@@ -90,9 +90,8 @@ app.directive('programFilter', ['ReportUserPrograms' ,'$routeParams',
           scope.requiredFilters.program = 'program';
         }
 
-        ReportUserPrograms.get(function(data) {
-
-          scope.programs = data.programs;
+        function bindPrograms (list){
+          scope.programs = list;
           if (attr.required) {
             scope.programs.unshift({
               'name': '-- Select Programs --'
@@ -102,11 +101,25 @@ app.directive('programFilter', ['ReportUserPrograms' ,'$routeParams',
               'name': '-- All Programs --'
             });
           }
+        }
 
-          if($routeParams.program){
-            scope.$broadcast('program-changed');
-          }
-        });
+        if(attr.regimen){
+          ReportRegimenPrograms.get(function(data) {
+            bindPrograms(data.regimenPrograms);
+          });
+        }else if(attr.budget){
+          GetProgramWithBudgetingApplies.get(function(data) {
+            bindPrograms(data.programWithBudgetingApplies);
+          });
+        }else{
+          ReportUserPrograms.get(function(data) {
+            bindPrograms(data.programs);
+          });
+        }
+
+        if($routeParams.program){
+          scope.$broadcast('program-changed');
+        }
 
       },
       templateUrl: 'filter-program-template'
@@ -266,7 +279,7 @@ app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$
           scope.requiredFilters.schedule = 'schedule';
         }
 
-        scope.$on('program-changed', function() {
+        var loadSchedules = function() {
           ReportProgramSchedules.get({
             program: scope.filter.program
           }, function(data) {
@@ -275,7 +288,12 @@ app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$
               'name': '-- Select Group --'
             });
           });
-        });
+        };
+
+        scope.$on('program-changed', loadSchedules);
+        if($routeParams.schedule){
+          loadSchedules();
+        }
 
       },
       templateUrl: 'filter-schedule-template'
@@ -408,6 +426,9 @@ app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear'
         scope.$on('program-changed', onChange);
         scope.$on('schedule-changed', onChange);
         scope.$on('year-changed', onChange);
+        if($routeParams.period){
+          onChange();
+        }
 
       },
       templateUrl: 'filter-period-template'
@@ -648,31 +669,6 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
   }
 ]);
 
-// why do we need this? this one was supposed to be an attribute on the programs filter.
-app.directive('programBudgetFilter', ['GetProgramWithBudgetingApplies', function(GetProgramWithBudgetingApplies) {
-
-  return {
-    restrict: 'E',
-    require: '^filterContainer',
-    link: function(scope, elm, attr) {
-
-      GetProgramWithBudgetingApplies.get(function(data) {
-        scope.programs = data.programWithBudgetingApplies;
-        scope.programs.unshift({
-          'name': '--Select a Program --'
-        });
-      });
-
-      if (attr.required) {
-        scope.requiredFilters.program = 'program';
-      }
-    },
-    templateUrl: 'filter-program-with-budget-template'
-  };
-}]);
-
-
-
 app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
   function(ReportProductsByProgram, $routeParams) {
     var onPgCascadedVarsChanged = function($scope) {
@@ -888,28 +884,6 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
   }
 ]);
 
-app.directive('programByRegimenFilter', ['ReportRegimenPrograms', function(ReportRegimenPrograms) {
-
-  return {
-    restrict: 'E',
-    require: '^filterContainer',
-    link: function(scope, elm, attr) {
-
-      ReportRegimenPrograms.get(function(data) {
-        scope.programs = data.regimenPrograms;
-        scope.programs.unshift({
-          'name': '--Select a Program --'
-        });
-      });
-
-      if (attr.required) {
-        scope.requiredFilters.program = 'program';
-      }
-    },
-    templateUrl: 'filter-program-by-regimen-template'
-  };
-
-}]);
 
 app.directive('regimenCategoryFilter', ['ReportRegimenCategories', function(ReportRegimenCategories) {
 
