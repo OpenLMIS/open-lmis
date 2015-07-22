@@ -107,4 +107,8 @@ public class VaccineReportRepository {
   public List<VitaminSupplementationLineItem> getVitaminSupplementationReport(Long reportId){
     return mapper.getVitaminSupplementationReport(reportId);
   }
+
+  public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode){
+    return mapper.vaccineUsageTrend(facilityCode, productCode);
+  }
 }
