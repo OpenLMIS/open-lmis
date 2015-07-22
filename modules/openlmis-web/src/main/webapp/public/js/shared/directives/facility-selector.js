@@ -36,7 +36,7 @@ app.directive('treeView', ['$compile', 'TreeViewService', function($compile, Tre
             var itemIncludeHtml = '';
 
             if (itemInclude && itemInclude.length > 0) {
-                itemIncludeHtml = '<div ng-include="\'' + attrs.itemNgInclude + '\'"></div>'
+                itemIncludeHtml = '<div ng-include="\'' + attrs.itemNgInclude + '\'"></div>';
             }
 
 
@@ -70,10 +70,10 @@ app.directive('treeView', ['$compile', 'TreeViewService', function($compile, Tre
                 '</div>' +
                 '</div>' +
                 '</li>' +
-                '</ul>'
+                '</ul>'+
             '</div>' +
             '</li>' +
-            '</ul>'
+            '</ul>'+
             '</div>' +
             '</li>' +
             '</ul>';
@@ -123,7 +123,7 @@ function TreeViewController($scope, $log, TreeViewService, $filter, FacilityGeoT
                 loadTabContent(TreeViewService.data.districtFacility);
             else if (selection == "facility")
                 loadTabContent(TreeViewService.data.flatFacility);
-        }
+        };
 
         $scope.$watch('currentPage', function() {
             var sliceStartPoint = ($scope.currentPage - 1) * $scope.itemsPerPage;
@@ -145,7 +145,7 @@ function TreeViewController($scope, $log, TreeViewService, $filter, FacilityGeoT
 
             $scope.currentPageColOneItems = item.slice(sliceStartPoint, sliceStartPoint + ($scope.itemsPerPage / 2));
             $scope.currentPageColTwoItems = item.slice(sliceStartPoint + ($scope.itemsPerPage / 2), sliceEndPoint);
-        }
+        };
 
         loadTabContent(TreeViewService.data.regionFacilityTree);
 
