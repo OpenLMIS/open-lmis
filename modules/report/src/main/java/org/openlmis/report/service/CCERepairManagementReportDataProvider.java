@@ -35,8 +35,6 @@ public class CCERepairManagementReportDataProvider extends ReportDataProvider {
   @Autowired
   private FacilityService facilityService;
 
-  @Autowired
-  public ReportManager reportManager;
 
   @Autowired
   private CCERepairManagementReportMapper cceRepairManagementReportMapper;
@@ -78,15 +76,6 @@ public class CCERepairManagementReportDataProvider extends ReportDataProvider {
         str.deleteCharAt(str.length()-1);
       }
       cceRepairManagementReportParam.setFacilityIds(str.toString());
-      //Set template if aggregated
-      Report report = reportManager.getReportByKey("cce_repair_management");
-      if(cceRepairManagementReportParam.getAggregate()) {
-        report.setTemplate("cce-aggregated-repair-management.jasper");
-      }
-      else{
-        report.setTemplate("cce-repair-management.jasper");
-      }
-
 
     }
     return cceRepairManagementReportParam;
