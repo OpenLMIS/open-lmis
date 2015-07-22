@@ -1230,3 +1230,8 @@ services.factory('VaccineMonthlyReport', function ($resource){
     return $resource('/vaccine/report/vaccine-monthly-report.json', {}, {});
 });
 
+services.factory('VaccineUsageTrend', function ($resource){
+    return $resource('/vaccine/report/vaccine-usage-trend.json', {}, {});
+});
+
+

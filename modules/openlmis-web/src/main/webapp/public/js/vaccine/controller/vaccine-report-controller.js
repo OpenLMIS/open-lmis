@@ -9,7 +9,7 @@
  */
 
 
-function VaccineReportPOCReportController($scope, VaccineMonthlyReport) {
+function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineUsageTrend) {
 
 
     $scope.OnFilterChanged = function() {
@@ -40,5 +40,116 @@ function VaccineReportPOCReportController($scope, VaccineMonthlyReport) {
         }
 
     };
+
+    $scope.renderGraph = function(facilityCode, productCode){
+        VaccineUsageTrend.get({facilityCode: facilityCode, productCode: productCode}, function(data){
+            $scope.trendingData = data.vaccineUsageTrend;
+
+            $scope.periodTicks = _.pairs(_.object(_.range($scope.trendingData.length), _.pluck($scope.trendingData,'period_name')));
+            $scope.amcChartData = _.pairs(_.object(_.range($scope.trendingData.length), _.pluck($scope.trendingData,'quantity_issued')));
+            $scope.sohChartData = _.pairs(_.object(_.range($scope.trendingData.length), _.pluck($scope.trendingData,'closing_balance')));
+
+            $scope.amcChartOption = generateBarsOption($scope.periodTicks,'AMC');
+            $scope.sohChartOption = generateBarsOption($scope.periodTicks,'SOH');
+            $scope.amcChart = [{
+                label:"AMC",
+                data:  $scope.amcChartData,
+                color: "#faa732",
+                bars: {
+                    show: true,
+                    showNumbers: true,
+                    numbers : {
+                        yAlign: function(y) { if(y!==0){ return y ; }else{return null;}}
+                        //show: true
+                    },
+
+                    align: "center",
+                    barWidth: 0.5,
+                    fill: 0.9,
+                    lineWidth:1
+                }
+            }];
+
+            $scope.sohChart = [
+                {
+                    label: "SOH",
+                    data:  $scope.sohChartData,
+                    color: "#5eb95e",
+                    bars: {
+                        show: true,
+                        showNumbers: true,
+                        numbers : {
+                            yAlign: function(y) { if(y!==0){ return y ; }else{return null;}}
+                            //show: true
+                        },
+
+                         align: "center",
+                         barWidth: 0.5,
+                         fill: 0.9,
+                         lineWidth:1
+                    }
+                }];
+
+            $scope.renderIt = true;
+        });
+    };
+    $scope.renderIt = false;
+
+    $scope.colorify = function(value){
+        if(!isUndefined(value)){
+            if(value >= 95) return 'green';
+            if(value < 0) return 'blue';
+            if(value <= 50) return 'red';
+        }
+
+    };
+
+
+    function generateBarsOption(tickLabel, yaxizLabel){
+        return {
+            legend: {
+                position:"nw",
+                noColumns: 1,
+                labelBoxBorderColor: "none"
+            },
+            xaxis: {
+                tickLength: 0, // hide gridlines
+                // axisLabel: xaxisLabel,
+                axisLabelUseCanvas: false,
+                ticks: tickLabel,
+                labelWidth: 10,
+                reserveSpace: true
+
+            } ,
+            yaxes: [
+                {
+                    position: "left",
+                    //max: 1070,
+                    color: "#5eb95e",
+                    axisLabel: yaxizLabel,
+                    axisLabelUseCanvas: true,
+                    axisLabelFontSizePixels: 12,
+                    axisLabelFontFamily: 'Verdana, Arial',
+                    axisLabelPadding: 23
+                }
+            ],
+
+            grid: {
+                hoverable: true,
+                borderWidth: 1,
+                backgroundColor: { colors: ["#ffffff", "#EDF5FF"] }
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "%s is %y",
+                shifts: {
+                    x: 20,
+                    y: 0
+                },
+                defaultTheme: false
+            }
+        };
+
+    }
 
 }
