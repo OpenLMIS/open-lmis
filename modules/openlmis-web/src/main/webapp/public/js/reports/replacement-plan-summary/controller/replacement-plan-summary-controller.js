@@ -1,46 +1,40 @@
-function ReplacementPlanSummary($scope, ngTableParams, messageService, SettingsByKey, EquipmentsInNeedForReplacement, getReplacementPlanSummaryReport) {
+function ReplacementPlanSummary($scope, ngTableParams, messageService, SettingsByKey, EquipmentsInNeedForReplacement, ReplacementPlanSummaryReport) {
     $scope.equipmentsForReplacementModal = false;
 
 
-     $scope.statuses= [];
+    $scope.statuses = [];
     Initialize();
 
-      function Initialize(){
+    function Initialize() {
 
 
         $scope.statuses =
             [
-               {
-                id:0, name:"Highest Priority Replacement","children":
-
-               [
-                {id: 0, name: 'O', value: 'All Obsolete'},
-                {id: 1, name: 'W', value: 'Capacity Gap'}
-               ]
-
-                },
                 {
-                id: 1,name:"Priority Replacement", "children":
-                [
-                {id: 0, name: 'temp', value: '> 20 Temp  Excursion'},
-                {id: 2, name: 'breakDown', value: ' >5 Breakdowns'},
-                {id: 3, name: 'g', value: 'Source is Gas'}
+                    id: 0, name: "Highest Priority Replacement", "children": [
+                    {id: 0, name: 'O', value: 'All Obsolete'},
+                    {id: 1, name: 'W', value: 'Capacity Gap'}
                 ]
 
                 },
                 {
-                id:0, name:"Eventual Replacement","children":
+                    id: 1, name: "Priority Replacement", "children": [
+                    {id: 0, name: 'temp', value: '> 20 Temp  Excursion'},
+                    {id: 2, name: 'breakDown', value: ' >5 Breakdowns'},
+                    {id: 3, name: 'g', value: 'Source is Gas'}
+                ]
 
-                    [
-                        {id: 0, name: 'a', value: 'All Under Ten Years'},
-                        {id: 1, name: 'n', value: 'Non PQS Model'}
-                    ]
+                },
+                {
+                    id: 0, name: "Eventual Replacement", "children": [
+                    {id: 0, name: 'a', value: 'All Under Ten Years'},
+                    {id: 1, name: 'n', value: 'Non PQS Model'}
+                ]
 
-               }
+                }
 
             ];
-          $scope.statuses.unshift({'name':'-- Select Indicator --','value':-1});
-
+        $scope.statuses.unshift({'name': '-- Select Indicator --', 'value': -1});
 
     }
 
@@ -59,30 +53,16 @@ function ReplacementPlanSummary($scope, ngTableParams, messageService, SettingsB
     });
 
 
-    $scope.data = $scope.datarows = $scope.years = [];
-
-    getReplacementPlanSummaryReport.get($scope.filter, function (data) {
-
-        if (data.pages !== undefined && data.pages.rows !== undefined) {
-            //$scope.data = data.pages.rows;
-            $scope.data = data.pages.rows;
-
-            $scope.paramsChanged($scope.tableParams);
-        }
-    });
-
     $scope.OnFilterChanged = function () {
 
         $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;
 
-
-        getReplacementPlanSummaryReport.get($scope.filter, function (data) {
+        ReplacementPlanSummaryReport.get($scope.filter, function (data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.data = data.pages.rows;
 
+                $scope.data = $scope.datarows = data.pages.rows;
                 $scope.paramsChanged($scope.tableParams);
-
 
             }
         });
@@ -94,7 +74,10 @@ function ReplacementPlanSummary($scope, ngTableParams, messageService, SettingsB
         $scope.facility = [];
         $scope.facilityParam = feature;
         $scope.plannedYear = years;
-        var fullReportFilter = angular.extend($scope.filter, {facility: $scope.facilityParam, plannedYear: $scope.plannedYear});
+        var fullReportFilter = angular.extend($scope.filter, {
+            facility: $scope.facilityParam,
+            plannedYear: $scope.plannedYear
+        });
 
         EquipmentsInNeedForReplacement.get(fullReportFilter,
 
@@ -118,15 +101,15 @@ function ReplacementPlanSummary($scope, ngTableParams, messageService, SettingsB
 
     };
 
+    $scope.years = [];
 
-        SettingsByKey.get({key: messageService.get('YEAR_OF_EQUIPMENT_REPLACEMENT')}, function (data) {
-            var value = data.settings.value;
-            for (var i = 0; i < value; i++)
+    SettingsByKey.get({key: messageService.get('YEAR_OF_EQUIPMENT_REPLACEMENT')}, function (data) {
+        var value = data.settings.value;
+        for (var i = 0; i < value; i++)
 
-                $scope.years.push(i + new Date().getFullYear());
-            return  $scope.years;
-
-        });
+            $scope.years.push(i + new Date().getFullYear());
+        return $scope.years;
+    });
 
     $scope.first_year = [];
     $scope.first_year = (new Date().getFullYear());
