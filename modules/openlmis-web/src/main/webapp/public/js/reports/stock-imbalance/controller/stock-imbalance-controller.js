@@ -8,16 +8,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockImbalanceController($scope,StockImbalanceReport) {
-
-
+function StockImbalanceController($scope, $window, StockImbalanceReport) {
 
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
+        var params = jQuery.param($scope.getSanitizedParameter());
         var url = '/reports/download/stock_imbalance/' + type + '?' + params;
-        window.open(url);
-
+        $window.open(url, '_blank');
     };
 
     $scope.OnFilterChanged = function () {
@@ -25,7 +22,7 @@ function StockImbalanceController($scope,StockImbalanceReport) {
       $scope.filter.max = 10000;
       $scope.filter.page = 1;
 
-      StockImbalanceReport.get($scope.filter, function (data) {
+      StockImbalanceReport.get($scope.getSanitizedParameter(), function (data) {
           $scope.data = data.pages.rows;
           $scope.paramsChanged($scope.tableParams);
       });

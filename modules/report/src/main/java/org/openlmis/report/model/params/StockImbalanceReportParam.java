@@ -14,44 +14,35 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportData;
+import org.openlmis.report.annotations.RequiredParam;
 import org.openlmis.report.model.ReportParameter;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 public class StockImbalanceReportParam
   extends BaseParam implements ReportParameter {
-  private int facilityTypeId;
-  private String facilityType;
-//  private int productId;
-private String productId;
-  private String product;
-//  private int productCategoryId;
-    private String productCategoryId;
-  private String productCategory;
-  private String facility;
-  private int programId;
-  private String program;
-  private int scheduleId;
-  private String schedule;
-  private int periodId;
-  private Long zoneId;
-  private String period;
-  private Integer year;
 
-  @Override
-  public String toString() {
+  @RequiredParam
+  private Long program;
 
-    StringBuilder filtersValue = new StringBuilder("");
-    filtersValue.append("Period : ").append(this.period).append("\n").
-      append("Schedule : ").append(this.schedule).append("\n").
-      append("Program : ").append(this.program).append("\n").
-      append("Product Category : ").append(this.productCategory).append("\n").
-      append("Product : ").append(this.product).append("\n").
-      append("Facility Types : ").append(this.getFacilityType()).append("\n");
+  @RequiredParam
+  private Long schedule;
 
-    return filtersValue.toString();
-  }
+  @RequiredParam
+  private Long period;
+
+  private Long facilityType;
+
+  private String products;
+
+  private Long productCategory;
+
+  private Long facility;
+
+  private Long zone;
+
+  private Long year;
+
 }
