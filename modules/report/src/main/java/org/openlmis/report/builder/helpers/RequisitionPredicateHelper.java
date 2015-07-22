@@ -41,4 +41,12 @@ public class RequisitionPredicateHelper {
     return  field +" in ( " + acceptedRnrStatuses +" )";
   }
 
+  public static String productFilteredBy(String field){
+    return String.format("%s = #{filterCriteria.product}::INT", field);
+  }
+
+  public static String facilityFilteredBy(String field){
+    return String.format("%s = #{filterCriteria.facility}::INT", field);
+  }
+
 }

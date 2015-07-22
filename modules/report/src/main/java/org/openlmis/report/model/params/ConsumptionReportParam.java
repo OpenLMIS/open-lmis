@@ -27,11 +27,6 @@ import java.util.Date;
 public class ConsumptionReportParam
   extends BaseParam implements ReportParameter {
 
-  //top filters
-  private int userId;
-
-  // period selections
-  //private String periodType;
   private int yearFrom;
   private int yearTo;
   private int monthFrom;

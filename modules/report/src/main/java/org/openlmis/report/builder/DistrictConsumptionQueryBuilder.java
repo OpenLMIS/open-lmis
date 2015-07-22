@@ -10,110 +10,62 @@
 
 package org.openlmis.report.builder;
 
+
+import org.openlmis.report.model.params.AggregateConsumptionReportParam;
 import org.openlmis.report.model.params.DistrictConsumptionReportParam;
 
 import java.util.Map;
 
+import static org.apache.ibatis.jdbc.SqlBuilder.*;
+import static org.apache.ibatis.jdbc.SqlBuilder.ORDER_BY;
+import static org.apache.ibatis.jdbc.SqlBuilder.SQL;
+import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
+
 public class DistrictConsumptionQueryBuilder {
 
-  public static String SelectFilteredSortedPagedRecords(Map params){
+  public static String getQuery(Map params) {
 
-     DistrictConsumptionReportParam filter  = (DistrictConsumptionReportParam)params.get("filterCriteria");
-
-     String query = "WITH temp AS (select product,zone_name, SUM(normalizedconsumption) normalizedconsumption "+
-
-    "from vw_district_consumption_summary "+
-     writePredicates(filter)+
-    "group by product,zone_name "+
-    "order by product) "+
-
-    "select t.product, t.zone_name district, t.normalizedconsumption consumption, case when temp2.total > 0 THEN round(((t.normalizedconsumption*100)/temp2.total),1) ELSE temp2.total END totalPercentage  "+
-    "from temp t "+
-    "INNER JOIN ( select product,SUM(normalizedconsumption) total "+
-    "from temp "+
-    "group by product "+
-    "order by product) temp2 ON t.product = temp2.product ";
+    DistrictConsumptionReportParam filter = (DistrictConsumptionReportParam) params.get("filterCriteria");
 
 
-    return query;
-}
+    BEGIN();
+    SELECT("p.code");
+    SELECT("p.primaryName || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
+    SELECT("d.district_name as district");
+    SELECT("sum(li.quantityDispensed) dispensed");
+    SELECT("sum(li.normalizedConsumption) consumption");
+    SELECT("ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks");
+    SELECT("ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks ");
+    FROM("requisition_line_items li");
+    INNER_JOIN("requisitions r on r.id = li.rnrid");
+    INNER_JOIN("facilities f on r.facilityId = f.id ");
+    INNER_JOIN("vw_districts d on d.district_id = f.geographicZoneId ");
+    INNER_JOIN("requisition_group_members rgm on rgm.facilityId = r.facilityId");
+    INNER_JOIN("processing_periods pp on pp.id = r.periodId");
+    INNER_JOIN("products p on p.code::text = li.productCode::text");
+    INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
 
-  private static String writePredicates(DistrictConsumptionReportParam filter ){
-        String predicate = "";
-        if(filter != null){
 
-          predicate = "where processing_periods_id = " + filter.getPeriod() + " ";
-          predicate = predicate + " and normalizedconsumption > 0 "; // To filter out rows with zero normalized consumption
-          predicate = predicate + " and facility_id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = "  + filter.getProgramId() + ")";
+    WHERE(programIsFilteredBy("r.programId"));
+    WHERE(periodIsFilteredBy("r.periodId"));
+    WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
+    WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
 
-            if (filter.getZoneId() != 0) {
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " ( district_zone_id = " + filter.getZoneId() +" or parent = " +filter.getZoneId() + " or region_id = " + filter.getZoneId() + " or district_id = " + filter.getZoneId() + ") " ;
-                //" zone_id = #{filterCriteria.zoneId}";
-            }
-
-            if(filter.getProductCategoryId() != 0 ){
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " product_category_id = #{filterCriteria.productCategoryId}";
-            }
-
-            if(!filter.getProductId().equals("-1") && !filter.getProductId().equals("")&!filter.getProductId().equals("0")){
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " product_id= "+filter.getProductId();
-            }
-            if(filter.getProductId().equals("0") ){
-                predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " tracer= true";
-            }
-
-            if(filter.getProgramId() != 0){
-                predicate = predicate.isEmpty() ?" where " : predicate +  " and ";
-                predicate = predicate + " program_id = #{filterCriteria.programId}";
-            }
-        }
-
-        return predicate;
+    if(filter.getProductCategory() != null){
+      WHERE( productCategoryIsFilteredBy("ppg.productCategoryId"));
     }
 
-  public static String GetAggregateConsumptionReport(Map params){
-    DistrictConsumptionReportParam filter   = (DistrictConsumptionReportParam)params.get("filterCriteria");
-    Long userId                             = (Long) params.get("userId");
+    WHERE(productFilteredBy("p.id"));
 
-    String predicates = "";
-
-   if(!filter.getProductId().equals("0")&&!filter.getProductId().equals("[-1]")){ // && !filter.getProductId().equals("{}")){
-      predicates = predicates + " and p.id = ANY(array" + filter.getProductId()+"::INT[])";
+    if (filter.getZone() != 0) {
+      WHERE( geoZoneIsFilteredBy("d") );
     }
 
-    if(filter.getProductCategoryId() > 0){
-      predicates = predicates + " and ppc.productCategoryId = " + filter.getProductCategoryId();
-    }
-
-    if(filter.getZoneId() != 0){
-      predicates = predicates + " and (d.zone_id = " + filter.getZoneId() +" or d.parent = " +filter.getZoneId() + " or d.region_id = " + filter.getZoneId() + " or d.district_id = " + filter.getZoneId() + ") " ;
-    }
-
-    String query = "SELECT li.productCode code, li.product || ' (' || p.dispensingunit || ')' as product, sum(li.quantityDispensed) dispensed, sum(li.normalizedConsumption) consumption," +
-            " ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks," +
-            " ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks \n" +
-            " FROM requisition_line_items li \n" +
-              " JOIN requisitions r on r.id = li.rnrid " +
-
-              " JOIN facilities f on r.facilityId = f.id " +
-              " JOIN vw_districts d on d.district_id = f.geographicZoneId " +
-
-              " JOIN requisition_group_members rgm on rgm.facilityId = r.facilityId\n" +
-              " JOIN programs_supported ps  on ps.programId = r.programId and r.facilityId = ps.facilityId\n" +
-              " JOIN processing_periods pp on pp.id = r.periodId " +
-              " JOIN products p on p.code::text = li.productCode::text " +
-              " JOIN program_products ppc on ppc.programId = r.programId and ppc.productId = p.id " +
-              " JOIN requisition_group_program_schedules rgps on rgps.requisitionGroupID = rgm.requisitionGroupId and rgps.programId = r.programId and pp.scheduleId = rgps.scheduleId\n" +
-              " WHERE " +
-              "   f.id in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = "  + filter.getProgramId() + ") " +
-              "   and r.periodId = " + filter.getPeriod() + " and r.programId =  " + filter.getProgramId() + predicates +
-              " GROUP BY li.productCode, li.product, p.dispensingunit" +
-              " ORDER BY li.product ";
-
-    return query;
+    GROUP_BY("p.code, p.primaryName, p.dispensingunit, d.district_name");
+    return String.format( "select sq.*, " +
+        " (sq.consumption / sum(sq.consumption) over ()) * 100 as totalPercentage " +
+        "from ( %s ) as sq " +
+        "order by sq.consumption desc", SQL());
   }
+
 }
