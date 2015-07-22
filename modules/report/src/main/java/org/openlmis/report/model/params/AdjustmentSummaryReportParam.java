@@ -14,63 +14,29 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 public class AdjustmentSummaryReportParam
-        extends BaseParam implements ReportParameter {
+  extends BaseParam implements ReportParameter {
 
-    private Long period;
-    private ProcessingPeriod periodObject;
+  private Long period;
 
-    private Long programId;
-    private Program programObject;
+  private Long program;
 
-    private Long facilityId;
-    private int facilityTypeId;
-    private String facilityType;
-    private Long zoneId;
-    private String productId;
-    private int productCategoryId;
+  private Long facility;
 
-    private String  adjustmentTypeId;
-    private String adjustmentType;
+  private Long facilityType;
 
-    SimpleDateFormat dateFormatter = new SimpleDateFormat();
+  private Long zone;
 
-    @Override
-    public String toString(){
-         if(periodObject != null){
+  private Long productCategory;
 
-            StringBuilder filtersValue = new StringBuilder("");
+  private String products;
 
-            filtersValue.append("Program: ")
-                .append(programObject.getName())
-                .append("\nPeriod: ")
-                .append(periodObject.getName())
-                .append(", ").append(periodObject
-                .getStringYear())
-                .append("\n")
-                //.append("Facility Types : ").append(this.getFacilityType()).append("\n").
-                .append("Adjustment Types: ")
-                .append(this.getAdjustmentType());
-//                .append("\n")
-//                .append("Reporting Groups : ")
-//                .append(this.getRgroup());
+  private String adjustmentType;
 
-            return filtersValue.toString();
-         }   else{
-           return "No filters selected";
-         }
-    }
 }
