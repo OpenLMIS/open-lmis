@@ -11,14 +11,14 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.mapper.ConsumptionReportMapper;
+import org.openlmis.report.mapper.DistrictConsumptionReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.DistrictConsumptionReportParam;
+import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
-import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,13 +28,14 @@ import java.util.Map;
 @NoArgsConstructor
 public class DistrictConsumptionReportDataProvider extends ReportDataProvider {
 
+  @Value("${report.status.considered.accepted}")
+  private String configuredAcceptedRnrStatuses;
+
   @Autowired
   private SelectedFilterHelper filterHelper;
 
   @Autowired
-  private ConsumptionReportMapper reportMapper;
-
-  private DistrictConsumptionReportParam districtConsumptionReportParam = null;
+  private DistrictConsumptionReportMapper reportMapper;
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
@@ -48,19 +49,9 @@ public class DistrictConsumptionReportDataProvider extends ReportDataProvider {
   }
 
   public DistrictConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-
-    if (filterCriteria != null) {
-      districtConsumptionReportParam = new DistrictConsumptionReportParam();
-      districtConsumptionReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
-      districtConsumptionReportParam.setProductId(StringUtils.isBlank(filterCriteria.get("product")[0]) ? "0" : (filterCriteria.get("product")[0]).toString().replace("]", "}").replace("[", "{").replaceAll("\"", ""));
-      districtConsumptionReportParam.setProgramId(StringHelper.isBlank(filterCriteria,("program")) ? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
-      districtConsumptionReportParam.setZoneId(StringHelper.isBlank(filterCriteria,("zone")) ? 0 : Integer.parseInt(filterCriteria.get("zone")[0])); //defaults to 0
-      // a required field
-      districtConsumptionReportParam.setPeriod(Long.parseLong(filterCriteria.get("period")[0]));
-    }
-
-    return districtConsumptionReportParam;
-
+    DistrictConsumptionReportParam param =  ParameterAdaptor.parse(filterCriteria, DistrictConsumptionReportParam.class);
+    param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
+    return param;
   }
 
   @Override

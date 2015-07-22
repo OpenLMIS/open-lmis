@@ -51,7 +51,8 @@
                             <td data-title="getLocalMessage('label.district')" style="width:100px" sortable="district" >{{ row.district }}</td>
                             <td data-title="getLocalMessage('label.product.name')" style="width:40%" sortable="product" >{{ row.product }}</td>
                             <td data-title="getLocalMessage('label.consumption')" class="number" style="width:80px" sortable="consumption"  >{{ row.consumption | number }}</td>
-                            <td data-title="getLocalMessage('label.percentage')" class="number" style="width:80px" sortable="totalPercentage"  >{{ row.totalPercentage | number }}</td>
+                          <td data-title="getLocalMessage('label.reported.consumption.per.packs')" class="number" style="width:80px" sortable="consumptionInPacks"  >{{ row.consumptionInPacks | number }}</td>
+                            <td data-title="getLocalMessage('label.percentage')" class="number" style="width:80px" sortable="totalPercentage"  >{{ row.totalPercentage | number : 2 }} %</td>
                         </tr>
                         </tbody>
                     </table>

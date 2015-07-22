@@ -10,28 +10,22 @@
 
 package org.openlmis.report.builder;
 
-
 import org.openlmis.report.model.params.AggregateConsumptionReportParam;
-import org.openlmis.report.model.params.DistrictConsumptionReportParam;
 
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
-import static org.apache.ibatis.jdbc.SqlBuilder.ORDER_BY;
-import static org.apache.ibatis.jdbc.SqlBuilder.SQL;
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
-public class DistrictConsumptionQueryBuilder {
+public class AggregateConsumptionQueryBuilder {
+
 
   public static String getQuery(Map params) {
-
-    DistrictConsumptionReportParam filter = (DistrictConsumptionReportParam) params.get("filterCriteria");
-
+    AggregateConsumptionReportParam filter = (AggregateConsumptionReportParam) params.get("filterCriteria");
 
     BEGIN();
     SELECT("p.code");
     SELECT("p.primaryName || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
-    SELECT("d.district_name as district");
     SELECT("sum(li.quantityDispensed) dispensed");
     SELECT("sum(li.normalizedConsumption) consumption");
     SELECT("ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks");
@@ -55,17 +49,16 @@ public class DistrictConsumptionQueryBuilder {
       WHERE( productCategoryIsFilteredBy("ppg.productCategoryId"));
     }
 
-    WHERE(productFilteredBy("p.id"));
+    if (multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer") != null) {
+      WHERE(multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer"));
+    }
 
     if (filter.getZone() != 0) {
       WHERE( geoZoneIsFilteredBy("d") );
     }
 
-    GROUP_BY("p.code, p.primaryName, p.dispensingunit, d.district_name");
-    return String.format( "select sq.*, " +
-        " (sq.consumption / sum(sq.consumption) over ()) * 100 as totalPercentage " +
-        "from ( %s ) as sq " +
-        "order by sq.consumption desc", SQL());
+    GROUP_BY("p.code, p.primaryName, p.dispensingunit");
+    ORDER_BY("p.primaryName");
+    return SQL();
   }
-
 }

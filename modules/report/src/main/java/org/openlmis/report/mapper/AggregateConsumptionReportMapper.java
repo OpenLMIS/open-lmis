@@ -15,8 +15,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.report.builder.AggregateConsumptionQueryBuilder;
 import org.openlmis.report.builder.DistrictConsumptionQueryBuilder;
-import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.report.DistrictConsumptionReport;
 import org.springframework.stereotype.Repository;
@@ -25,18 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface ConsumptionReportMapper {
+public interface AggregateConsumptionReportMapper {
 
-  @SelectProvider(type = DistrictConsumptionQueryBuilder.class, method = "SelectFilteredSortedPagedRecords")
-  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
-  public List<DistrictConsumptionReport> getFilteredSortedPagedAdjustmentSummaryReport(
-    @Param("filterCriteria") ReportParameter filterCriteria,
-    @Param("SortCriteria") Map<String, String[]> SortCriteria,
-    @Param("RowBounds") RowBounds rowBounds,
-    @Param("userId") Long userId
-  );
-
-  @SelectProvider(type = DistrictConsumptionQueryBuilder.class, method = "GetAggregateConsumptionReport")
+  @SelectProvider(type = AggregateConsumptionQueryBuilder.class, method = "getQuery")
   @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
   public List<DistrictConsumptionReport> getAggregateConsumptionReport(
       @Param("filterCriteria") ReportParameter filterCriteria,

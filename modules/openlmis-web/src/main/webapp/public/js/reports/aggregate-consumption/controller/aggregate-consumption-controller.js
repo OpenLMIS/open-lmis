@@ -8,17 +8,13 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function DistrictConsumptionReportController($scope,  AggregateConsumptionReport, ReportUserPrograms) {
-
-    //filter form data section
-
-    $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
+function AggregateConsumptionReportController($scope, $window,  AggregateConsumptionReport) {
 
     $scope.OnFilterChanged = function(){
       $scope.data = $scope.datarows = [];
 
       $scope.filter.max = 10000;
-      AggregateConsumptionReport.get($scope.filter, function(data) {
+      AggregateConsumptionReport.get($scope.getSanitizedParameter(), function(data) {
         if(data.pages !== undefined){
           $scope.data = data.pages.rows;
           $scope.paramsChanged($scope.tableParams);
@@ -27,15 +23,9 @@ function DistrictConsumptionReportController($scope,  AggregateConsumptionReport
     };
 
    $scope.exportReport   = function (type){
-
         $scope.filter.pdformat = 1;
-
-       //for a proper serialization of complex objects in the URL. This
-       // is a way to go for reports with multi-select input fields
-        var params = jQuery.param($scope.filter, true);
-
-        var url = '/reports/download/aggregate_consumption/' + type +'?' + params;
-        window.open(url);
+        var url = '/reports/download/aggregate_consumption/' + type +'?' + jQuery.param($scope.getSanitizedParameter());
+        $window.open(url, '_blank');
     };
 
 
