@@ -1217,7 +1217,6 @@ services.factory('PriceScheduleCategories', function ($resource) {
     return $resource('/priceScheduleCategories.json', {}, {});
 });
 
-
 services.factory('ReplacementPlanSummaryReport', function($resource){
     return $resource('/reports/reportdata/replacementPlanSummary.json',{},{});
 });
@@ -1230,8 +1229,12 @@ services.factory('VaccineMonthlyReport', function ($resource){
     return $resource('/vaccine/report/vaccine-monthly-report.json', {}, {});
 });
 
+
 services.factory('VaccineUsageTrend', function ($resource){
     return $resource('/vaccine/report/vaccine-usage-trend.json', {}, {});
 });
 
 
+services.factory("FacilityGeoTree",function($resource)  {
+    return   $resource('/geoFacilityTree.json', {}, {});
+});
