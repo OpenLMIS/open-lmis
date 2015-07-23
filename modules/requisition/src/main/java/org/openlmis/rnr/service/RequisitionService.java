@@ -109,6 +109,7 @@ public class RequisitionService {
 
   @Transactional
   public Rnr initiate(Facility facility, Program program, Long modifiedBy, Boolean emergency, ProcessingPeriod proposedPeriod) {
+
     if (!requisitionPermissionService.hasPermission(modifiedBy, facility, program, CREATE_REQUISITION)) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     }

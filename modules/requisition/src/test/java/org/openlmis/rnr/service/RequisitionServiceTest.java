@@ -1438,6 +1438,21 @@ public class RequisitionServiceTest {
   }
 
   @Test
+  public void shouldThrowErrorIfLastRegularRequisitionExistsAndIsPreAuthorized() {
+    Date programStartDate = new Date();
+    Rnr requisition = new Rnr();
+    requisition.setStatus(INITIATED);
+    when(requisitionRepository.getLastRegularRequisition(FACILITY, PROGRAM)).thenReturn(requisition);
+    when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.rnr.previous.not.filled");
+
+    requisitionService.getPeriodForInitiating(FACILITY, PROGRAM);
+
+  }
+
+  @Test
   public void shouldGetFacilityIdFromRnrId() throws Exception {
     Mockito.when(requisitionRepository.getFacilityId(1L)).thenReturn(1L);
     assertThat(requisitionService.getFacilityId(1L), is(1L));
