@@ -11,21 +11,17 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.report.mapper.AdjustmentSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.dto.AdjustmentType;
 import org.openlmis.report.model.params.AdjustmentSummaryReportParam;
-import org.openlmis.report.util.Constants;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -70,8 +66,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
       adjustmentSummaryReportParam.setFacilityId(StringHelper.isBlank( filterCriteria, "facility")? 0L : Long.parseLong(filterCriteria.get("facility")[0]));
       adjustmentSummaryReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
       adjustmentSummaryReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
-        adjustmentSummaryReportParam.setProductId(!filterCriteria.containsKey("product") ? "0" : java.util.Arrays.toString(filterCriteria.get("product")));
-      //adjustmentSummaryReportParam.setProductId(StringHelper.isBlank(filterCriteria,"product") ? 0 : Integer.parseInt(filterCriteria.get("product")[0])); //defaults to 0
+        adjustmentSummaryReportParam.setProductId(!filterCriteria.containsKey("products") ? "0" : java.util.Arrays.toString(filterCriteria.get("products")));
       adjustmentSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0])); //defaults to 0
       adjustmentSummaryReportParam.setAdjustmentTypeId(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "" : filterCriteria.get("adjustmentType")[0]);
       adjustmentSummaryReportParam.setAdjustmentType(StringHelper.isBlank(filterCriteria,"adjustmentType") ? "All Adjustment Types" : filterCriteria.get("adjustmentType")[0]);

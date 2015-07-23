@@ -11,14 +11,14 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.mapper.ConsumptionReportMapper;
+import org.openlmis.report.mapper.AggregateConsumptionReportMapper;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.params.DistrictConsumptionReportParam;
+import org.openlmis.report.model.params.AggregateConsumptionReportParam;
+import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
-import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -29,13 +29,15 @@ import java.util.Map;
 @NoArgsConstructor
 public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
 
+
+  @Value("${report.status.considered.accepted}")
+  private String configuredAcceptedRnrStatuses;
+
   @Autowired
   private SelectedFilterHelper filterHelper;
 
   @Autowired
-  private ConsumptionReportMapper reportMapper;
-
-  private DistrictConsumptionReportParam districtConsumptionReportParam = null;
+  private AggregateConsumptionReportMapper reportMapper;
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
@@ -48,29 +50,18 @@ public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
     return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds, this.getUserId());
   }
 
-  public DistrictConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-    if (filterCriteria != null) {
-      districtConsumptionReportParam = new DistrictConsumptionReportParam();
-      districtConsumptionReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,("productCategory")) ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
-      districtConsumptionReportParam.setProductId(!filterCriteria.containsKey("product") ? "0" : java.util.Arrays.toString(filterCriteria.get("product")));//.replace("]", "}").replace("[", "{").replaceAll("\"", ""));
-      districtConsumptionReportParam.setProgramId(StringHelper.isBlank(filterCriteria,("program")) ? 0 : Integer.parseInt(filterCriteria.get("program")[0])); //defaults to 0
-      districtConsumptionReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone")? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));
-      // a required field
-      districtConsumptionReportParam.setPeriod(Long.parseLong(filterCriteria.get("period")[0]));
-    }
-
-    return districtConsumptionReportParam;
-
+  public AggregateConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
+    AggregateConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, AggregateConsumptionReportParam.class);
+    param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
+    return param;
   }
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
 
-      // Instead of overiding filterHelper.getProgramPeriodGeoZone method, we can pass additional params
       Map<String, String[]> modifiableParams = new HashMap<String, String[]>();
       modifiableParams.putAll(params);
       modifiableParams.put("userId", new String[]{String.valueOf(this.getUserId())});
-
       return filterHelper.getProgramPeriodGeoZone(modifiableParams);
   }
 

@@ -8,36 +8,36 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-package org.openlmis.report.filter;
+package org.openlmis.report.model.params;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.report.annotations.RequiredParam;
+import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ReportParameter;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 @Data
-public class CustomReportFilter {
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
+@AllArgsConstructor
+public class AggregateConsumptionReportParam
+  extends BaseParam implements ReportParameter {
 
-  private String reportKey;
+  @RequiredParam
+  private Long program;
 
-  private Long userId;
+  @RequiredParam
+  private Long period;
 
-  private Long programId;
+  private Long zone;
 
-  private Long productId;
+  private String products;
+  private Long productCategory;
 
-  private Long periodId;
 
-  private Long groupId;
-
-  private Long facilityType;
-
-  private Long facility;
-
-  private Long productGroup;
-
-  private Long geographicZoneId;
-
-  private Long requisitionGroupId;
-
-  private Long regimenId;
-
-  private Long regimenCategoryId;
 }

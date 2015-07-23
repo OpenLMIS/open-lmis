@@ -98,4 +98,14 @@ public class ReportExportController {
     ) {
         showReport("unscheduled_reporting", outputOption, request, response);
     }
+
+    @RequestMapping(value = "/download/equipment_replacement_list/list/{outputOption}")
+    public void showReplacementEquipmentList(
+            @PathVariable(value = "outputOption") String outputOption
+            , HttpServletRequest request
+            , HttpServletResponse response
+    ) {
+        showReport("equipment_replacement_list", outputOption, request, response);
+    }
+
 }

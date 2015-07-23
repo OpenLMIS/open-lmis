@@ -14,11 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportData;
+import org.openlmis.report.annotations.RequiredParam;
 import org.openlmis.report.model.ReportParameter;
-
-import java.text.DateFormat;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -27,12 +24,17 @@ import java.util.Date;
 public class DistrictConsumptionReportParam
   extends BaseParam implements ReportParameter {
 
+  @RequiredParam
+  private Long program;
 
+  @RequiredParam
   private Long period;
-  private int zoneId;
-  //private int productId;
-  private String productId;
-  private int productCategoryId;
-  private int programId;
+
+  private Long zone;
+
+  private String product;
+
+  private Long productCategory;
+
 
 }

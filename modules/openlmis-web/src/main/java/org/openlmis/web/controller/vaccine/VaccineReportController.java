@@ -135,4 +135,9 @@ public class VaccineReportController extends BaseController {
     return OpenLmisResponse.response("vaccineData", data);
   }
 
+  @RequestMapping(value = "vaccine-usage-trend")
+  public ResponseEntity<OpenLmisResponse> vaccineUsageTrend(@RequestParam("facilityCode") String facilityCode, @RequestParam("productCode") String productCode){
+    return OpenLmisResponse.response("vaccineUsageTrend", service.vaccineUsageTrend(facilityCode, productCode));
+  }
+
 }

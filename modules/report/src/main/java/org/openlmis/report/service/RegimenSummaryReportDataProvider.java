@@ -13,7 +13,6 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 
-import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.ConfigurationSettingService;
 
 import org.openlmis.core.service.ProcessingPeriodService;
@@ -24,7 +23,6 @@ import org.openlmis.report.model.ReportData;
 
 import org.openlmis.report.model.ReportParameter;
 
-import org.openlmis.report.model.params.DistrictConsumptionReportParam;
 import org.openlmis.report.model.params.RegimenSummaryReportParam;
 
 import org.openlmis.report.util.SelectedFilterHelper;

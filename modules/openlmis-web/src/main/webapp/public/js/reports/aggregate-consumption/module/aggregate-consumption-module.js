@@ -11,7 +11,7 @@
 angular.module('aggregate_consumption', ['openlmis', 'ngTable', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
-        when('/list', {controller:DistrictConsumptionReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
+        when('/list', {controller:AggregateConsumptionReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
         otherwise({redirectTo:'/list'});
     }]).run(function ($rootScope, AuthorizationService) {
         AuthorizationService.preAuthorize('VIEW_DISTRICT_CONSUMPTION_REPORT');

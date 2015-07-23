@@ -1,48 +1,78 @@
-app.directive('filterContainer', ['$routeParams', '$location', function ($routeParams, $location) {
+app.directive('filterContainer', ['$routeParams', '$location', function($routeParams, $location) {
   return {
     restrict: 'EA',
     scope: true,
-    controller: function ($scope, $routeParams, $location) {
+    controller: function($scope, $routeParams, $location) {
       $scope.filter = angular.copy($routeParams);
 
-      $scope.$parent.applyUrl = function () {
+      $scope.$parent.getSanitizedParameter = function() {
+        var params = angular.copy($scope.filter);
+
+        //properly serialize the multi product filter
+        if (params.products && params.products.length > 0) {
+          var numericArray = [];
+          for (var i = 0; i < params.products.length; i++) {
+            numericArray.push(parseInt(params.products[i], 10));
+          }
+          params.products = JSON.stringify(numericArray).replace('[', '').replace(']', '');
+        } else if (params.products && params.products.length === 0) {
+          params.products = 0;
+        }
+        return params;
+        //end of multi product stuff
+      };
+
+      $scope.$parent.getUrlParams = function() {
+        var params = $scope.$parent.getSanitizedParameter();
+        return jQuery.param(params, true);
+      };
+
+      $scope.$parent.applyUrl = function() {
         // update the url so users could take it, book mark it etc...
-        if (JSON.stringify($scope.filter) !== JSON.stringify($routeParams)) {
+        var params = $scope.$parent.getUrlParams();
+        if (params !== $scope.currentUrlParams) {
           var url = $location.url();
           url = url.substring(0, url.indexOf('?'));
-          url = url + '?' + jQuery.param($scope.filter);
+          url = url + '?' + params;
+          $scope.currentUrlParams = params;
           $location.url(url);
         }
       };
 
-      function isFilterValid(){
+      function isValid() {
         var all_required_fields_set = true;
 
         // check if all of the required parameters have been specified
-        angular.forEach($scope.requiredFilters, function (value) {
-          if (isUndefined($scope.filter[value])) {
-            all_required_fields_set = false;
+        if (!angular.isUndefined($scope.requiredFilters)) {
+          var requiredFilters = _.values($scope.requiredFilters);
+          for (var i = 0; i < requiredFilters.length; i++) {
+            var field = requiredFilters[i];
+            if (isUndefined($scope.filter[field]) || _.isEmpty($scope.filter[field]) || $scope.filter[field] === 0 || $scope.filter[field] === -1) {
+              all_required_fields_set = false;
+              break;
+            }
           }
-        });
+        }
         return all_required_fields_set;
       }
 
-      $scope.filterChanged = function () {
+      $scope.filterChanged = function() {
         $scope.$parent.applyUrl();
-        if (!isFilterValid()) {
+        if (!isValid()) {
           return;
         }
         $scope.$parent.filter = $scope.filter;
+        // call on Filter Changed
         $scope.$parent.OnFilterChanged();
       };
 
-      $scope.filterChanged();
+      $scope.$on('filter-changed', $scope.filterChanged);
     },
-    link: function (scope) {
+    link: function(scope) {
       angular.extend(scope, {
         requiredFilters: {},
         showMoreFilters: false,
-        toggleMoreFilters: function () {
+        toggleMoreFilters: function() {
           scope.showMoreFilters = !scope.showMoreFilters;
         }
       });
@@ -50,92 +80,108 @@ app.directive('filterContainer', ['$routeParams', '$location', function ($routeP
   };
 }]);
 
-app.directive('programFilter', ['ReportUserPrograms',
-  function (ReportUserPrograms) {
+app.directive('programFilter', ['ReportUserPrograms' ,'$routeParams',
+  function(ReportUserPrograms, $routeParams) {
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
         if (attr.required) {
           scope.requiredFilters.program = 'program';
         }
 
-        scope.$evalAsync(function () {
-          ReportUserPrograms.get(function (data) {
-            scope.programs = data.programs;
+        ReportUserPrograms.get(function(data) {
+
+          scope.programs = data.programs;
+          if (attr.required) {
             scope.programs.unshift({
               'name': '-- Select Programs --'
             });
-          });
+          } else {
+            scope.programs.unshift({
+              'name': '-- All Programs --'
+            });
+          }
+
+          if($routeParams.program){
+            scope.$broadcast('program-changed');
+          }
         });
+
       },
       templateUrl: 'filter-program-template'
     };
-  }]);
+  }
+]);
 
 app.directive('yearFilter', ['OperationYears',
-  function (OperationYears) {
+  function(OperationYears) {
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
         if (attr.required) {
           scope.requiredFilters.year = 'year';
         }
-        scope.$evalAsync(function () {
-          OperationYears.get(function (data) {
-            scope.years = data.years;
-            if($scope.filter.year === undefined){
-              scope.filter.year = data.years[0];
-            }
-          });
+
+        OperationYears.get(function(data) {
+          scope.years = data.years;
+          if (scope.filter.year === undefined) {
+            scope.filter.year = data.years[data.years.length - 1];
+          }
         });
       },
       templateUrl: 'filter-year-template'
     };
-  }]);
+  }
+]);
 
-app.directive('quarterFilter', [ function () {
-    return {
-      restrict: 'E',
-      require: '^filterContainer',
-      link: function (scope, elm, attr) {
+app.directive('quarterFilter', [function() {
+  return {
+    restrict: 'E',
+    require: '^filterContainer',
+    link: function(scope, elm, attr) {
 
-        if (attr.required) {
-          scope.requiredFilters.quarter = 'quarter';
-        }
-        scope.quarters = [1,2,3,4];
-        scope.filter.quarter = 1;
-      },
-      templateUrl: 'filter-quarter-template'
-    };
-  }]);
+      if (attr.required) {
+        scope.requiredFilters.quarter = 'quarter';
+      }
+      scope.quarters = [1, 2, 3, 4];
+      scope.filter.quarter = 1;
+    },
+    templateUrl: 'filter-quarter-template'
+  };
+}]);
 
 app.directive('facilityTypeFilter', ['ReportFacilityTypes', 'ReportFacilityTypesByProgram', '$routeParams',
-  function (ReportFacilityTypes, ReportFacilityTypesByProgram, $routeParams) {
+  function(ReportFacilityTypes, ReportFacilityTypesByProgram, $routeParams) {
 
-    var onCascadedPVarsChanged = function ($scope, newValue) {
+    var onCascadedPVarsChanged = function($scope, newValue) {
 
       if ($scope.filter.program !== undefined) {
-        ReportFacilityTypesByProgram.get({program: $scope.filter.program}, function (data) {
+        ReportFacilityTypesByProgram.get({
+          program: $scope.filter.program
+        }, function(data) {
           $scope.facilityTypes = data.facilityTypes;
-          $scope.facilityTypes.unshift({'name': '-- All Facility Types --', id: 0});
+          $scope.facilityTypes.unshift({
+            'name': '-- All Facility Types --',
+            id: 0
+          });
         });
       } else {
-        ReportFacilityTypes.get(function (data) {
+        ReportFacilityTypes.get(function(data) {
           $scope.facilityTypes = data.facilityTypes;
-          $scope.facilityTypes.unshift({'name': '-- All Facility Types --', id: 0});
+          $scope.facilityTypes.unshift({
+            'name': '-- All Facility Types --',
+            id: 0
+          });
         });
       }
     };
 
     return {
       restrict: 'E',
-      link: function (scope, elm, attr) {
-
-        scope.facilityTypes = [];
-        scope.facilityTypes.unshift({'name': '-- All Facility Types --', id: 0});
+      link: function(scope, elm, attr) {
 
         if (attr.required) {
           scope.requiredFilters.facilityType = 'facilityType';
@@ -143,33 +189,45 @@ app.directive('facilityTypeFilter', ['ReportFacilityTypes', 'ReportFacilityTypes
 
         scope.filter.facilityType = (isUndefined($routeParams.facilityType) || $routeParams.facilityType === '') ? 0 : $routeParams.facilityType;
 
-        scope.$watch('filter.program', function (value) {
-          onCascadedPVarsChanged(scope, value);
+        scope.$on('program-changed', function() {
+          onCascadedPVarsChanged(scope);
         });
       },
       templateUrl: 'filter-facility-type-template'
     };
-  }]);
+  }
+]);
 
 app.directive('facilityLevelFilter', ['ReportFacilityLevels', '$routeParams',
-  function (ReportFacilityLevels, $routeParams) {
+  function(ReportFacilityLevels, $routeParams) {
 
-    var onCascadedPVarsChanged = function ($scope) {
+    var onCascadedPVarsChanged = function($scope) {
       if ($scope.filter.program !== undefined || $scope.filter.program !== '') {
-        ReportFacilityLevels.get({program: $scope.filter.program}, function (data) {
+        ReportFacilityLevels.get({
+          program: $scope.filter.program
+        }, function(data) {
           $scope.facilityLevels = [];
           if (data.facilityLevels.length > 0) {
-            $scope.facilityLevels.unshift({'id': 'hf','name': 'Health Facilities (HF)'});
-            _.each(data.facilityLevels, function (item) {
+            $scope.facilityLevels.unshift({
+              'id': 'hf',
+              'name': 'Health Facilities (HF)'
+            });
+            _.each(data.facilityLevels, function(item) {
               if (item.code === 'cvs' ||
-                  item.code === 'rvs' ||
-                  item.code === 'dvs') {
-                $scope.facilityLevels.unshift({'id': item.code,
+                item.code === 'rvs' ||
+                item.code === 'dvs') {
+                $scope.facilityLevels.unshift({
+                  'id': item.code,
                   'name': item.name + ' (' + item.code.toUpperCase() + ')',
-                  'display_order': item.displayOrder});
+                  'display_order': item.displayOrder
+                });
               }
             });
-            $scope.facilityLevels.unshift({'id': '', 'name': '-- Select Facility Level --', 'display_order': 0});
+            $scope.facilityLevels.unshift({
+              'id': '',
+              'name': '-- Select Facility Level --',
+              'display_order': 0
+            });
           }
         });
       }
@@ -177,7 +235,7 @@ app.directive('facilityLevelFilter', ['ReportFacilityLevels', '$routeParams',
 
     return {
       restrict: 'E',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
         scope.facilityLevels = [];
 
@@ -187,75 +245,63 @@ app.directive('facilityLevelFilter', ['ReportFacilityLevels', '$routeParams',
 
         scope.filter.facilityLevel = (isUndefined($routeParams.facilityLevel) || $routeParams.facilityLevel === '') ? '' : $routeParams.facilityLevel;
 
-        scope.$watch('filter.program', function () {
+        scope.$on('program-changed', function() {
           onCascadedPVarsChanged(scope);
         });
       },
       templateUrl: 'filter-facility-level-template'
     };
-  }]);
+  }
+]);
 
 app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$routeParams',
-  function (ReportSchedules, ReportProgramSchedules, $routeParams) {
-
-    function onCascadedVarsChanged(scope, value) {
-      if (value !== undefined) {
-        ReportProgramSchedules.get({program: value}, function (data) {
-          scope.schedules = data.schedules;
-          scope.schedules.unshift({
-            'id': 0,
-            'name': '-- Select Group --'
-          });
-        });
-      }
-    }
+  function(ReportSchedules, ReportProgramSchedules, $routeParams) {
 
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
-
-        scope.schedules = [];
-
-        scope.filter.schedule = (isUndefined($routeParams.schedule) || $routeParams.schedule === '') ? 0 : $routeParams.schedule;//$routeParams.schedule;
+      link: function(scope, elm, attr) {
 
         if (attr.required) {
           scope.requiredFilters.schedule = 'schedule';
         }
-        scope.$evalAsync(function () {
-          ReportSchedules.get(function (data) {
+
+        scope.$on('program-changed', function() {
+          ReportProgramSchedules.get({
+            program: scope.filter.program
+          }, function(data) {
             scope.schedules = data.schedules;
             scope.schedules.unshift({
-              'id': 0,
               'name': '-- Select Group --'
             });
           });
         });
 
-        scope.$watch('filter.program', function (value) {
-          onCascadedVarsChanged(scope, value);
-        });
       },
       templateUrl: 'filter-schedule-template'
     };
-  }]);
-
+  }
+]);
 
 app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'GetUserUnassignedSupervisoryNode', '$routeParams',
-  function (TreeGeographicZoneList, TreeGeographicZoneListByProgram, GetUserUnassignedSupervisoryNode, $routeParams) {
+  function(TreeGeographicZoneList, TreeGeographicZoneListByProgram, GetUserUnassignedSupervisoryNode, $routeParams) {
 
-    var onCascadedVarsChanged = function ($scope, newValue) {
+    var onCascadedVarsChanged = function($scope) {
       if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {
-        TreeGeographicZoneListByProgram.get({program: $scope.filter.program}, function (data) {
+        TreeGeographicZoneListByProgram.get({
+          program: $scope.filter.program
+        }, function(data) {
           $scope.zones = data.zone;
         });
         $scope.filter.zone = (isUndefined($routeParams.zone) || $routeParams.zone === '') ? 0 : $routeParams.zone;
       }
     };
 
-    var categoriseZoneBySupervisoryNode = function ($scope) {
+    var categoriseZoneBySupervisoryNode = function($scope) {
 
-      GetUserUnassignedSupervisoryNode.get({program: $scope.filter.program}, function (data) {
+      GetUserUnassignedSupervisoryNode.get({
+        program: $scope.filter.program
+      }, function(data) {
 
         $scope.user_geo_level = '--All Geographic Zones--';
 
@@ -269,7 +315,7 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
         //scope.filter.zone = $routeParams.zone;
 
         scope.filter.zone = (isUndefined($routeParams.zone) || $routeParams.zone === '') ? 0 : $routeParams.zone;
@@ -283,27 +329,27 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
         else
           categoriseZoneBySupervisoryNode(scope);
 
-        TreeGeographicZoneList.get(function (data) {
+        TreeGeographicZoneList.get(function(data) {
           // now recreate the zone data to a tree structure in java script objects.
           scope.zones = data.zone;
         });
 
-        scope.$watch('filter.program', function (value) {
+        scope.$on('program-changed', function(value) {
           if (!scope.showDistrictOnly)
             categoriseZoneBySupervisoryNode(scope);
 
-          onCascadedVarsChanged(scope, value);
+          onCascadedVarsChanged(scope);
         });
       },
       templateUrl: 'filter-zone-template'
     };
-  }]);
-
+  }
+]);
 
 app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear', '$routeParams',
-  function (ReportPeriods, ReportPeriodsByScheduleAndYear, $routeParams) {
+  function(ReportPeriods, ReportPeriodsByScheduleAndYear, $routeParams) {
 
-    var onCascadedVarsChanged = function ($scope, newValue) {
+    var onCascadedVarsChanged = function($scope, newValue) {
       // don't call the server if you don't have all that it takes.
       if (isUndefined($scope.filter) || isUndefined($scope.filter.year) || isUndefined($scope.filter.schedule))
         return;
@@ -312,25 +358,28 @@ app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear'
         ReportPeriodsByScheduleAndYear.get({
           scheduleId: $scope.filter.schedule,
           year: $scope.filter.year
-        }, function (data) {
+        }, function(data) {
           $scope.periods = data.periods;
           if (data.periods !== undefined && data.periods.length > 0)
             $scope.periods.unshift({
               'name': '-- Select a Period --',
-              'id': '0'
+              'id': 0
             });
           $scope.filter.period = $routeParams.period;
         });
 
       } else {
         if (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.schedule)) {
-          scope.$evalAsync(function () {
+          scope.$evalAsync(function() {
             ReportPeriods.get({
               scheduleId: $scope.filter.schedule
-            }, function (data) {
+            }, function(data) {
               $scope.periods = data.periods;
               if (data.periods !== undefined && data.periods.length > 0)
-                $scope.periods.unshift({'name': '-- Select a Period --', 'id': '0'});
+                $scope.periods.unshift({
+                  'name': '-- Select a Period --',
+                  'id': 0
+                });
             });
           });
         }
@@ -342,47 +391,53 @@ app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear'
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
-        scope.periods = [];
-        scope.periods.push({
-          name: '-- Select Period --'
-        });
+        if(!scope.filter.period){
+          scope.periods = [{ name: '-- Select Period --' }];
+        }
 
         if (attr.required) {
           scope.requiredFilters.period = 'period';
         }
 
-        scope.$watch('filter.year', function (value) {
-          onCascadedVarsChanged(scope, value);
-        });
-        scope.$watch('filter.schedule', function (value) {
-          onCascadedVarsChanged(scope, value);
-        });
+        function onChange() {
+          onCascadedVarsChanged(scope);
+        }
+
+        scope.$on('program-changed', onChange);
+        scope.$on('schedule-changed', onChange);
+        scope.$on('year-changed', onChange);
 
       },
       templateUrl: 'filter-period-template'
     };
-  }]);
-
+  }
+]);
 
 app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram', '$routeParams',
-  function (RequisitionGroupsByProgram, $routeParams) {
+  function(RequisitionGroupsByProgram, $routeParams) {
 
-    var onRgCascadedVarsChanged = function ($scope) {
+    var onRgCascadedVarsChanged = function($scope) {
 
       if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
         return;
 
       RequisitionGroupsByProgram.get({
         program: $scope.filter.program
-      }, function (data) {
+      }, function(data) {
         $scope.requisitionGroups = data.requisitionGroupList;
         if ($scope.requisitionGroups === undefined || $scope.requisitionGroups.length === 0) {
           $scope.requisitionGroups = [];
-          $scope.requisitionGroups.push({'name': '-- All Requisition Groups --', id: 0});
+          $scope.requisitionGroups.push({
+            'name': '-- All Requisition Groups --',
+            id: 0
+          });
         } else {
-          $scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --', id: 0});
+          $scope.requisitionGroups.unshift({
+            'name': '-- All Requisition Groups --',
+            id: 0
+          });
         }
       });
     };
@@ -390,10 +445,13 @@ app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram', '$routePa
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
         scope.requisitionGroups = [];
-        scope.requisitionGroups.unshift({'name': '-- All Requisition Groups --', id: 0});
+        scope.requisitionGroups.unshift({
+          'name': '-- All Requisition Groups --',
+          id: 0
+        });
 
         scope.filter.requisitionGroup = (isUndefined($routeParams.requisitionGroup) || $routeParams.requisitionGroup === '') ? 0 : $routeParams.requisitionGroup;
 
@@ -401,25 +459,28 @@ app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram', '$routePa
           scope.requiredFilters.requisitionGroup = 'requisitionGroup';
         }
 
-        scope.$watch('filter.program', function (value) {
-          onRgCascadedVarsChanged(scope, value);
+        scope.$on('program-changed', function() {
+          onRgCascadedVarsChanged(scope);
         });
       },
       templateUrl: 'filter-requisition-group-template'
     };
-  }]);
+  }
+]);
 
-
-app.directive('adjustmentTypeFilter', ['AdjustmentTypes', '$routeParams', function (AdjustmentTypes, $routeParams) {
+app.directive('adjustmentTypeFilter', ['AdjustmentTypes', '$routeParams', function(AdjustmentTypes, $routeParams) {
 
   return {
     restrict: 'E',
     require: '^filterContainer',
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
 
-      AdjustmentTypes.get(function (data) {
+      AdjustmentTypes.get(function(data) {
         scope.adjustmentTypes = data.adjustmentTypeList;
-        scope.adjustmentTypes.unshift({'description': '--All Adjustment Types --', id: 0});
+        scope.adjustmentTypes.unshift({
+          'description': '--All Adjustment Types --',
+          name: 0
+        });
       });
 
       scope.filter.adjustmentType = (isUndefined($routeParams.adjustmentType) || $routeParams.adjustmentType === '') ? 0 : $routeParams.adjustmentType;
@@ -433,55 +494,50 @@ app.directive('adjustmentTypeFilter', ['AdjustmentTypes', '$routeParams', functi
 
 }]);
 
-
 app.directive('productCategoryFilter', ['ProductCategoriesByProgram', '$routeParams',
-  function (ProductCategoriesByProgram, $routeParams) {
-
-    var onPgCascadedVarsChanged = function ($scope, newValue) {
-
-      if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
-        return;
-
-      // load the program-product categories
-      ProductCategoriesByProgram.get({
-        programId: $scope.filter.program
-      }, function (data) {
-        $scope.productCategories = data.productCategoryList;
-        $scope.productCategories.unshift({'name': '-- All Product Categories --', id: 0});
-        $scope.filter.productCategory = (isUndefined($routeParams.productCategory) || $routeParams.productCategory === '') ? 0 : $routeParams.productCategory;
-      });
-    };
+  function(ProductCategoriesByProgram, $routeParams) {
 
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
-        scope.productCategories = [];
-        scope.productCategories.unshift({'name': '-- All Product Categories --', id: 0});
+        if(!$routeParams.productCategory){
+          scope.productCategories =[{ 'name': '-- All Product Categories --'}];
+        }
 
         if (attr.required) {
           scope.requiredFilters.productCategory = 'productCategory';
         }
 
-        scope.filter.productCategory = (isUndefined($routeParams.productCategory) || $routeParams.productCategory === '') ? 0 : $routeParams.productCategory;
+        scope.$on('program-changed', function(){
 
-        scope.$watch('filter.program', function (value) {
-          onPgCascadedVarsChanged(scope, value);
+            ProductCategoriesByProgram.get({
+              programId: scope.filter.program
+            }, function(data) {
+              scope.productCategories = data.productCategoryList;
+              scope.productCategories.unshift({
+                'name': '-- All Product Categories --'
+              });
+
+            });
         });
+
       },
       templateUrl: 'filter-product-category-template'
     };
-  }]);
+  }
+]);
 
 app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
-  function (FacilitiesByProgramParams, $routeParams) {
+  function(FacilitiesByProgramParams, $routeParams) {
 
-    var onPgCascadedVarsChanged = function ($scope, newValue) {
+    var onPgCascadedVarsChanged = function($scope) {
 
       $scope.facilities = [];
       $scope.facilities.unshift({
-        name: '-- All Facilities --', id: 0
+        name: '-- All Facilities --',
+        id: 0
       });
 
       if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0) {
@@ -489,11 +545,11 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
         return;
       }
 
-      var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
-      var schedule = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.schedule)) ? $scope.filter.schedule : 0;
-      var facilityType = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.facilityType)) ? $scope.filter.facilityType : 0;
-      var requisitionGroup = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.requisitionGroup)) ? $scope.filter.requisitionGroup : 0;
-      var zone = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.zone)) ? $scope.filter.zone : 0;
+      var program = ( angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
+      var schedule = (angular.isDefined($scope.filter.schedule)) ? $scope.filter.schedule : 0;
+      var facilityType = ( angular.isDefined($scope.filter.facilityType)) ? $scope.filter.facilityType : 0;
+      var requisitionGroup = ( angular.isDefined($scope.filter.requisitionGroup)) ? $scope.filter.requisitionGroup : 0;
+      var zone = ( angular.isDefined($scope.filter.zone)) ? $scope.filter.zone : 0;
       // load facilities
       FacilitiesByProgramParams.get({
         program: program,
@@ -501,13 +557,14 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
         type: facilityType,
         requisitionGroup: requisitionGroup,
         zone: zone
-      }, function (data) {
+      }, function(data) {
         $scope.facilities = data.facilities;
         if (isUndefined($scope.facilities)) {
           $scope.facilities = [];
         }
         $scope.facilities.unshift({
-          name: '-- All Facilities --', id: 0
+          name: '-- All Facilities --',
+          id: 0
         });
       });
     };
@@ -515,70 +572,52 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
-        scope.facilities = [];
-        scope.facilities.push({
-          name: '-- All Facilities --', id: 0
-        });
-
-        scope.filter.facility = (isUndefined($routeParams.facility) || $routeParams.facility === '') ? 0 : $routeParams.facility;
+        if(!$routeParams.facility){
+          scope.facilities = [{  name: '-- All Facilities --',  id: 0 }];
+        }
 
         if (attr.required) {
           scope.requiredFilters.facility = 'facility';
         }
 
-        scope.$watch('filter.requisitionGroup', function (value) {
-          onPgCascadedVarsChanged(scope, value);
-        });
+        var onChange = function(){
+          onPgCascadedVarsChanged(scope);
+        };
 
-        scope.$watch('filter.program', function (value) {
-          onPgCascadedVarsChanged(scope, value);
-        });
-
-        scope.$watch('filter.zone', function (value) {
-          onPgCascadedVarsChanged(scope, value);
-        });
-
-        scope.$watch('filter.schedule', function (value) {
-          onPgCascadedVarsChanged(scope, value);
-        });
-
-        scope.$watch('filter.facilityType', function (value) {
-          onPgCascadedVarsChanged(scope, value);
-        });
+        scope.$on('requisition-group-changed', onChange);
+        scope.$on('program-changed', onChange);
+        scope.$on('zone-changed', onChange);
+        scope.$on('schedule-changed', onChange);
+        scope.$on('facility-type-changed', onChange);
       },
       templateUrl: 'filter-facility-template'
     };
-  }]);
-
+  }
+]);
 
 app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams',
-  function (FacilitiesByGeographicZone, $routeParams) {
+  function(FacilitiesByGeographicZone, $routeParams) {
 
-    var onPgCascadedVarsChanged = function ($scope, newValue) {
+    var onPgCascadedVarsChanged = function($scope) {
 
-      $scope.facilities = [];
-      $scope.facilities.unshift({
-        name: '-- select facility --', id: 0
-      });
-
-      if (isUndefined($scope.filter) ) {
-
-        return;
+      if(!$routeParams.facility){
+        $scope.facilities = [{ name: '-- select facility --',  id: 0 }];
       }
 
       var zone = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.zone)) ? $scope.filter.zone : 0;
       // load facilities
       FacilitiesByGeographicZone.get({
         geoId: zone
-      }, function (data) {
+      }, function(data) {
         $scope.facilities = data.facilities;
         if (isUndefined($scope.facilities)) {
           $scope.facilities = [];
         }
         $scope.facilities.unshift({
-          name: '-- select facility --', id: 0
+          name: '-- select facility --',
+          id: 0
         });
       });
     };
@@ -586,11 +625,12 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
         scope.facilities = [];
         scope.facilities.push({
-          name: '-- select facility --', id: 0
+          name: '-- select facility --',
+          id: 0
         });
 
         scope.filter.facility = (isUndefined($routeParams.facility) || $routeParams.facility === '') ? 0 : $routeParams.facility;
@@ -599,24 +639,28 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
           scope.requiredFilters.facility = 'facility';
         }
 
-        scope.$watch('filter.zone', function (value) {
-          onPgCascadedVarsChanged(scope, value);
+        scope.$on('zone-changed', function() {
+          onPgCascadedVarsChanged(scope);
         });
       },
       templateUrl: 'filter-facility-template'
     };
-  }]);
+  }
+]);
 
-app.directive('programBudgetFilter', ['GetProgramWithBudgetingApplies', function (GetProgramWithBudgetingApplies) {
+// why do we need this? this one was supposed to be an attribute on the programs filter.
+app.directive('programBudgetFilter', ['GetProgramWithBudgetingApplies', function(GetProgramWithBudgetingApplies) {
 
   return {
     restrict: 'E',
     require: '^filterContainer',
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
 
-      GetProgramWithBudgetingApplies.get(function (data) {
+      GetProgramWithBudgetingApplies.get(function(data) {
         scope.programs = data.programWithBudgetingApplies;
-        scope.programs.unshift({'name': '--Select a Program --'});
+        scope.programs.unshift({
+          'name': '--Select a Program --'
+        });
       });
 
       if (attr.required) {
@@ -628,9 +672,10 @@ app.directive('programBudgetFilter', ['GetProgramWithBudgetingApplies', function
 }]);
 
 
+
 app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
-  function (ReportProductsByProgram, $routeParams) {
-    var onPgCascadedVarsChanged = function ($scope, newValue) {
+  function(ReportProductsByProgram, $routeParams) {
+    var onPgCascadedVarsChanged = function($scope) {
 
       if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
         return;
@@ -639,7 +684,7 @@ app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
 
       ReportProductsByProgram.get({
         programId: program
-      }, function (data) {
+      }, function(data) {
         $scope.products = data.productList;
         $scope.products.unshift({
           'name': '-- Indicator Products --',
@@ -656,49 +701,49 @@ app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
 
     return {
       restrict: 'E',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
-        scope.products = [];
+        if(!$routeParams.product){
+          scope.products = [{ 'name': '-- All Products --', id: -1 }];
+        }
 
-        scope.filter.product = (isUndefined($routeParams.product) || $routeParams.product === '') ? -1 : $routeParams.product;
-        scope.products.push({
-          'name': '-- All Products --',
-          id: -1
-        });
         if (attr.required) {
           scope.requiredFilters.product = 'product';
         }
 
-        scope.productCFilter = function (option) {
-          return (!angular.isDefined(scope.filter) ||
-            !angular.isDefined(scope.filter.productCategory) ||
-            scope.filter.productCategory === '' ||
-            scope.filter.productCategory === '0' ||
+        // this is what filters products based on product categories selected.
+        scope.productCFilter = function(option) {
+          var show = (
+            _.isEmpty(scope.filter.productCategory) ||
+            _.isUndefined(scope.filter.productCategory) ||
+            parseInt(scope.filter.productCategory, 10) === 0 ||
             option.categoryId == scope.filter.productCategory ||
-            option.id === -1  ||
+            option.id === -1 ||
             option.id === scope.filter.product ||
-            option.id === 0 );
+            option.id === 0
+          );
+          return show;
         };
 
-        scope.$watch('filter.program', function (value) {
-          onPgCascadedVarsChanged(scope, value);
-        });
-        scope.$watch('filter.productCategory', function (value) {
-          onPgCascadedVarsChanged(scope, value);
-        });
+        var onFiltersChanged = function(){
+          onPgCascadedVarsChanged(scope);
+        };
+
+        scope.$on('program-changed', onFiltersChanged);
+        scope.$on('program-category-changed', onFiltersChanged);
       },
       templateUrl: 'filter-product-template'
     };
 
-  }]);
-
+  }
+]);
 
 app.directive('rmnchProductPeriodFilter', ['RmnchProducts', 'GetYearSchedulePeriodTree', '$routeParams',
-  function (RmnchProducts, GetYearSchedulePeriodTree, $routeParams) {
+  function(RmnchProducts, GetYearSchedulePeriodTree, $routeParams) {
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
         if (attr.required) {
           scope.requiredFilters.program = 'program';
@@ -707,13 +752,13 @@ app.directive('rmnchProductPeriodFilter', ['RmnchProducts', 'GetYearSchedulePeri
         scope.filter.product = (isUndefined($routeParams.product) || $routeParams.product === '') ? 0 : $routeParams.product;
         scope.filter.period = (isUndefined($routeParams.period) || $routeParams.period === '') ? 0 : $routeParams.period;
 
-        scope.$evalAsync(function () {
-          RmnchProducts.get({}, function (data) {
+        scope.$evalAsync(function() {
+          RmnchProducts.get({}, function(data) {
             scope.products = data.productList;
           });
 
           //Load period tree
-          GetYearSchedulePeriodTree.get({}, function (data) {
+          GetYearSchedulePeriodTree.get({}, function(data) {
             scope.periods = data.yearSchedulePeriod;
           });
         });
@@ -721,14 +766,15 @@ app.directive('rmnchProductPeriodFilter', ['RmnchProducts', 'GetYearSchedulePeri
       },
       templateUrl: 'filter-rmnch-product-period'
     };
-  }]);
+  }
+]);
 
 app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams',
-  function (GetYearSchedulePeriodTree, $routeParams) {
+  function(GetYearSchedulePeriodTree, $routeParams) {
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
         if (attr.required) {
           scope.requiredFilters.period = 'period';
@@ -736,9 +782,9 @@ app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams',
 
         scope.filter.period = (isUndefined($routeParams.period) || $routeParams.period === '') ? 0 : $routeParams.period;
 
-        scope.$evalAsync(function () {
+        scope.$evalAsync(function() {
           //Load period tree
-          GetYearSchedulePeriodTree.get({}, function (data) {
+          GetYearSchedulePeriodTree.get({}, function(data) {
             scope.periods = data.yearSchedulePeriod;
           });
         });
@@ -746,13 +792,13 @@ app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams',
       },
       templateUrl: 'filter-period-tree-template'
     };
-  }]);
+  }
+]);
 
-//This is a hacky way needs to be needs to be incorporated in the Product filter
 app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
-  function (ReportProductsByProgram, $routeParams) {
+  function(ReportProductsByProgram, $routeParams) {
 
-    var onPgCascadedVarsChanged = function ($scope, newValue) {
+    var onPgCascadedVarsChanged = function($scope) {
 
       if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
         return;
@@ -760,25 +806,25 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
       var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
       ReportProductsByProgram.get({
         programId: program
-      }, function (data) {
+      }, function(data) {
         $scope.products = data.productList;
         $scope.products.unshift({
           'name': '-- Indicator Products --',
-          id: 0
+          id: -1
         });
         $scope.products.unshift({
           'name': '-- All Products --',
-          id: -1
+          id: 0
         });
 
       });
 
     };
-    var valueExistInArray = function (categoryArray, optionCategory) {
+    var valueExistInArray = function(categoryArray, optionCategory) {
 
 
       var exists = false;
-      angular.forEach(categoryArray, function (pC, index) {
+      angular.forEach(categoryArray, function(pC, index) {
         if (pC == optionCategory) {
           exists = true;
         }
@@ -796,51 +842,64 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
 
     return {
       restrict: 'E',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
         scope.products = [];
-
-
-        scope.filter.product = (isUndefined($routeParams.product) || $routeParams.product === '') ? -1 : $routeParams.product;
-          scope.products.push({
-              'name': '-- All Products --',
-              id: -1
-          });
-          scope.products.push({
-              'name': '-- Indicator Products --',
-              id: 0
-          });
+        scope.filter.products = (isUndefined($routeParams.products) || $routeParams.products === '') ? '[0]' : JSON.parse($routeParams.products);
+        scope.products.push({
+          'name': '-- All Products --',
+          id: 0
+        });
+        scope.products.push({
+          'name': '-- Indicator Products --',
+          id: -1
+        });
         if (attr.required) {
-          scope.requiredFilters.product = 'product';
+          scope.requiredFilters.products = 'products';
         }
 
-        scope.productCFilter = function (option) {
+        scope.productCFilter = function(option) {
 
-          return (!angular.isDefined(scope.filter) || !angular.isDefined(scope.filter.productCategory) || scope.filter.productCategory === '' ||
-              scope.filter.productCategory === '0' || option.categoryId == scope.filter.productCategory || option.id=='0' || option.id=='-1'||
-              (angular.isArray(scope.filter.productCategory) && valueExistInArray(scope.filter.productCategory, option.categoryId)));
+          return (
+            // show all products if the product category filter is not on screen at all
+            !angular.isDefined(scope.filter.productCategory) ||
+            // show all products if product category is on screen but no selection is made
+            scope.filter.productCategory === '' ||
+            parseInt(scope.filter.productCategory, 10) === 0 ||
+            // show products that are in product category selected
+            option.categoryId == scope.filter.productCategory ||
+            // always show "all products and indicator products filters"
+            (option.id === 0) ||
+            (option.id === -1) ||
+            (
+              angular.isArray(scope.filter.productCategory) &&
+              valueExistInArray(scope.filter.productCategory, option.categoryId)
+            )
+          );
         };
 
-        scope.$watch('filter.program', function (value) {
-          onPgCascadedVarsChanged(scope, value);
+        scope.$on('program-changed', function() {
+          onPgCascadedVarsChanged(scope);
         });
       },
       templateUrl: 'filter-product-multi-template'
     };
 
-  }]);
+  }
+]);
 
-
-app.directive('programByRegimenFilter', ['ReportRegimenPrograms', function (ReportRegimenPrograms) {
+app.directive('programByRegimenFilter', ['ReportRegimenPrograms', function(ReportRegimenPrograms) {
 
   return {
     restrict: 'E',
     require: '^filterContainer',
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
 
-      ReportRegimenPrograms.get(function (data) {
+      ReportRegimenPrograms.get(function(data) {
         scope.programs = data.regimenPrograms;
-        scope.programs.unshift({'name': '--Select a Program --'});
+        scope.programs.unshift({
+          'name': '--Select a Program --'
+        });
       });
 
       if (attr.required) {
@@ -852,16 +911,18 @@ app.directive('programByRegimenFilter', ['ReportRegimenPrograms', function (Repo
 
 }]);
 
-app.directive('regimenCategoryFilter', ['ReportRegimenCategories', function (ReportRegimenCategories) {
+app.directive('regimenCategoryFilter', ['ReportRegimenCategories', function(ReportRegimenCategories) {
 
   return {
     restrict: 'E',
     require: '^filterContainer',
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
 
-      ReportRegimenCategories.get(function (data) {
+      ReportRegimenCategories.get(function(data) {
         scope.regimenCategories = data.regimenCategories;
-        scope.regimenCategories.unshift({'name': '--All Regimen Categories --'});
+        scope.regimenCategories.unshift({
+          'name': '--All Regimen Categories --'
+        });
       });
 
       if (attr.required) {
@@ -873,9 +934,9 @@ app.directive('regimenCategoryFilter', ['ReportRegimenCategories', function (Rep
 }]);
 
 app.directive('regimenFilter', ['ReportRegimensByCategory', '$routeParams',
-  function (ReportRegimensByCategory, $routeParams) {
+  function(ReportRegimensByCategory, $routeParams) {
 
-    var onPgCascadedVarsChanged = function ($scope, newValue) {
+    var onPgCascadedVarsChanged = function($scope) {
 
       if (isUndefined($scope.filter) || isUndefined($scope.filter.regimenCategory) || $scope.filter.regimenCategory === 0)
         return;
@@ -883,10 +944,11 @@ app.directive('regimenFilter', ['ReportRegimensByCategory', '$routeParams',
       var regimenCategory = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.regimenCategory)) ? $scope.filter.regimenCategory : 0;
       ReportRegimensByCategory.get({
         regimenCategoryId: regimenCategory
-      }, function (data) {
+      }, function(data) {
         $scope.regimens = data.regimens;
         $scope.regimens.unshift({
-          'name': '-- All Regimens --', id: 0
+          'name': '-- All Regimens --',
+          id: 0
 
         });
       });
@@ -896,33 +958,34 @@ app.directive('regimenFilter', ['ReportRegimensByCategory', '$routeParams',
 
     return {
       restrict: 'E',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
         scope.regimens = [];
         scope.regimens.push({
-          name: '-- All Regimens --', id: 0
+          name: '-- All Regimens --',
+          id: 0
         });
         scope.filter.regimen = (isUndefined($routeParams.regimen) || $routeParams.regimen === '') ? 0 : $routeParams.regimen;
 
         if (attr.required) {
           scope.requiredFilters.regimen = 'regimen';
         }
-        scope.$watch('filter.regimenCategory', function (value) {
-          onPgCascadedVarsChanged(scope, value);
+        scope.$on('regimen-category-changed', function() {
+          onPgCascadedVarsChanged(scope);
         });
       },
       templateUrl: 'filter-regimen-template'
     };
 
-  }]);
-
+  }
+]);
 
 app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
-  function ($filter, ngTableParams) {
+  function($filter, ngTableParams) {
 
     return {
       restrict: 'A',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
         // the grid options
         scope.tableParams = new ngTableParams({
@@ -931,7 +994,7 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
           count: 25 // count per page
         });
 
-        scope.paramsChanged = function (params) {
+        scope.paramsChanged = function(params) {
 
           // slice array data on pages
           if (scope.data === undefined) {
@@ -959,22 +1022,25 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
       }
     };
 
-  }]);
+  }
+]);
 
-
-app.directive('equipmentTypeFilter', ['ReportEquipmentTypes', '$routeParams', function (ReportEquipmentTypes, $routeParams) {
+app.directive('equipmentTypeFilter', ['ReportEquipmentTypes', '$routeParams', function(ReportEquipmentTypes, $routeParams) {
 
   return {
     restrict: 'E',
     require: '^filterContainer',
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
 
       scope.filter.equipmentType = (isUndefined($routeParams.equipmentType) || $routeParams.equipmentType === '') ? 0 : $routeParams.equipmentType;
 
-      scope.$evalAsync(function () {
-        ReportEquipmentTypes.get(function (data) {
+      scope.$evalAsync(function() {
+        ReportEquipmentTypes.get(function(data) {
           scope.equipmentTypes = data.equipmentTypes;
-          scope.equipmentTypes.unshift({'id': 0, 'name': '--All Equipment types --'});
+          scope.equipmentTypes.unshift({
+            'id': 0,
+            'name': '--All Equipment types --'
+          });
         });
 
       });
@@ -985,12 +1051,11 @@ app.directive('equipmentTypeFilter', ['ReportEquipmentTypes', '$routeParams', fu
   };
 }]);
 
-
 app.directive('programProductPeriodFilter', ['ReportUserPrograms', 'GetProductCategoryProductByProgramTree', 'GetYearSchedulePeriodTree', '$routeParams',
-  function (ReportUserPrograms, GetProductCategoryProductByProgramTree, GetYearSchedulePeriodTree, $routeParams) {
+  function(ReportUserPrograms, GetProductCategoryProductByProgramTree, GetYearSchedulePeriodTree, $routeParams) {
 
     // When a program filter changes
-    var onProgramChanged = function ($scope, newValue) {
+    var onProgramChanged = function($scope, newValue) {
 
       if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0) {
         $scope.products = {};
@@ -999,7 +1064,9 @@ app.directive('programProductPeriodFilter', ['ReportUserPrograms', 'GetProductCa
 
       var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
 
-      GetProductCategoryProductByProgramTree.get({programId: program}, function (data) {
+      GetProductCategoryProductByProgramTree.get({
+        programId: program
+      }, function(data) {
         $scope.products = data.productCategoryTree;
       });
     };
@@ -1007,7 +1074,7 @@ app.directive('programProductPeriodFilter', ['ReportUserPrograms', 'GetProductCa
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
         if (attr.required) {
           scope.requiredFilters.program = 'program';
@@ -1017,33 +1084,34 @@ app.directive('programProductPeriodFilter', ['ReportUserPrograms', 'GetProductCa
         scope.filter.period = (isUndefined($routeParams.period) || $routeParams.period === '') ? 0 : $routeParams.period;
         scope.filter.program = (isUndefined($routeParams.program) || $routeParams.program === '') ? 0 : $routeParams.program;
 
-        scope.$evalAsync(function () {
+        scope.$evalAsync(function() {
 
           //Load Program
-          ReportUserPrograms.get(function (data) {
+          ReportUserPrograms.get(function(data) {
             scope.programs = data.programs;
             scope.programs.unshift({
               'name': '-- Select Programs --'
             });
           });
           //Load period tree
-          GetYearSchedulePeriodTree.get({}, function (data) {
+          GetYearSchedulePeriodTree.get({}, function(data) {
             scope.periods = data.yearSchedulePeriod;
           });
         });
 
-        scope.$watch('filter.program', function (value) {
+        scope.$watch('filter.program', function(value) {
           onProgramChanged(scope, value);
         });
 
       },
       templateUrl: 'filter-program-product-period'
     };
-  }]);
+  }
+]);
 
-app.directive('equipmentFilter', ['ReportEquipments', '$routeParams', function (ReportEquipments, $routeParams) {
+app.directive('equipmentFilter', ['ReportEquipments', '$routeParams', function(ReportEquipments, $routeParams) {
   // When a program filter changes
-  var onEquipmentTypeChanged = function ($scope, newValue) {
+  var onEquipmentTypeChanged = function($scope, newValue) {
 
     if (isUndefined($scope.filter) || isUndefined($scope.filter.equipmentType) || $scope.filter.equipmentType === 0) {
       $scope.equipments = {};
@@ -1052,30 +1120,38 @@ app.directive('equipmentFilter', ['ReportEquipments', '$routeParams', function (
 
     var equipmentType = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.equipmentType)) ? $scope.filter.equipmentType : 0;
 
-    ReportEquipments.get({equipmentType: $scope.filter.equipmentType}, function (data) {
+    ReportEquipments.get({
+      equipmentType: $scope.filter.equipmentType
+    }, function(data) {
       $scope.equipments = data.equipments;
-      $scope.equipments.unshift({'id': 0, 'name': '--All Equipments --'});
+      $scope.equipments.unshift({
+        'id': 0,
+        'name': '--All Equipments --'
+      });
     });
   };
 
   return {
     restrict: 'E',
     require: '^filterContainer',
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
 
-      scope.$evalAsync(function () {
+      scope.$evalAsync(function() {
         ReportEquipments.get({
           equipmentType: scope.filter.equipmentType
-        }, function (data) {
+        }, function(data) {
           scope.equipments = data.equipments;
-          scope.equipments.unshift({'id': 0, 'name': '--All Equipments --'});
+          scope.equipments.unshift({
+            'id': 0,
+            'name': '--All Equipments --'
+          });
         });
 
       });
 
       scope.filter.equipment = (isUndefined($routeParams.equipment) || $routeParams.equipment === '') ? 0 : $routeParams.equipment;
 
-      scope.$watch('filter.equipmentType', function (value) {
+      scope.$watch('filter.equipmentType', function(value) {
         onEquipmentTypeChanged(scope, value);
       });
     },
@@ -1083,21 +1159,25 @@ app.directive('equipmentFilter', ['ReportEquipments', '$routeParams', function (
   };
 }]);
 
-
-app.directive('serviceContractFilter', ['$routeParams', function ($routeParams) {
+app.directive('serviceContractFilter', ['$routeParams', function($routeParams) {
 
   return {
     restrict: 'E',
     require: '^filterContainer',
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
 
       scope.filter.serviceContract = (isUndefined($routeParams.serviceContract) || $routeParams.serviceContract === '') ? 0 : $routeParams.serviceContract;
 
-      scope.serviceContract = [
-        {'key': 0, 'value': '--All service status--'},
-        {'key': 1, 'value': 'Yes'},
-        {'key': 2, 'value': 'No'}
-      ];
+      scope.serviceContract = [{
+        'key': 0,
+        'value': '--All service status--'
+      }, {
+        'key': 1,
+        'value': 'Yes'
+      }, {
+        'key': 2,
+        'value': 'No'
+      }];
 
 
     },
@@ -1105,39 +1185,42 @@ app.directive('serviceContractFilter', ['$routeParams', function ($routeParams) 
   };
 }]);
 
-
-app.directive('donorFilter', ['$routeParams', 'GetDonors', function ($routeParams, GetDonors) {
+app.directive('donorFilter', ['$routeParams', 'GetDonors', function($routeParams, GetDonors) {
 
   return {
     restrict: 'E',
     require: '^filterContainer',
-    link: function (scope, elm, attr) {
+    link: function(scope, elm, attr) {
 
       scope.filter.donor = (isUndefined($routeParams.donor) || $routeParams.donor === '') ? 0 : $routeParams.donor;
 
-      GetDonors.get({}, function (data) {
+      GetDonors.get({}, function(data) {
         scope.donors = data.donors;
-        scope.donors.unshift({'id': 0, 'shortName': '--All Donors --'});
+        scope.donors.unshift({
+          'id': 0,
+          'shortName': '--All Donors --'
+        });
       });
     },
     templateUrl: 'filter-donors'
   };
 }]);
-//multi product category
+
 app.directive('productCategoryMultiFilter', ['ProductCategoriesByProgram', '$routeParams',
-  function (ProductCategoriesByProgram, $routeParams) {
+  function(ProductCategoriesByProgram, $routeParams) {
 
-    var onPgCascadedVarsChanged = function ($scope, newValue) {
+    var onPgCascadedVarsChanged = function($scope) {
 
-      if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
-        return;
 
-      var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
+      var program = (angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
       ProductCategoriesByProgram.get({
         programId: $scope.filter.program
-      }, function (data) {
+      }, function(data) {
         $scope.productCategories = data.productCategoryList;
-        $scope.productCategories.unshift({'name': '-- All Product Categories --', id: -1});
+        $scope.productCategories.unshift({
+          'name': '-- All Product Categories --',
+          id: -1
+        });
         $scope.filter.productCategory = (isUndefined($routeParams.productCategory) || $routeParams.productCategory === '') ? 0 : $routeParams.productCategory;
       });
 
@@ -1147,23 +1230,24 @@ app.directive('productCategoryMultiFilter', ['ProductCategoriesByProgram', '$rou
     return {
       restrict: 'E',
       require: '^filterContainer',
-      link: function (scope, elm, attr) {
+      link: function(scope, elm, attr) {
 
-        scope.productCategories = [];
-        scope.productCategories.push({'name': '-- All Product Categories --', id: -1});
+        if(!$routeParams.productCategory){
+          scope.productCategories = [{
+            'name': '-- All Product Categories --'
+          }];
+        }
 
         if (attr.required) {
           scope.requiredFilters.productCategory = 'productCategory';
         }
 
-        scope.filter.productCategory = (isUndefined($routeParams.productCategory) || $routeParams.productCategory === '') ? -1 : $routeParams.productCategory;
-
-        scope.$watch('filter.program', function (value) {
-          onPgCascadedVarsChanged(scope, value);
+        scope.$on('program-changed', function() {
+          onPgCascadedVarsChanged(scope);
         });
       },
       templateUrl: 'filter-product-category-multi-template'
     };
 
-  }]);
-
+  }
+]);

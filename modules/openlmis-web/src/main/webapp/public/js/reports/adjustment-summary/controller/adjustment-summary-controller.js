@@ -8,12 +8,12 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdjustmentSummaryReportController($scope, $filter, ngTableParams, AdjustmentSummaryReport, ReportProductsByProgram, ReportPrograms, ProductCategoriesByProgram, RequisitionGroupsByProgram, ReportFacilityTypes, GeographicZones, AdjustmentTypes, OperationYears, Months, $http, $routeParams, $location) {
+function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport) {
 
   $scope.exportReport = function (type) {
 
     $scope.filter.pdformat = 1;
-    var params = jQuery.param($scope.filter);
+    var params = jQuery.param($scope.getSanitizedParameter());
     var url = '/reports/download/adjustment_summary/' + type + '?' + params;
     window.location.href = url;
   };
@@ -22,7 +22,7 @@ function AdjustmentSummaryReportController($scope, $filter, ngTableParams, Adjus
     // clear old data if there was any
     $scope.data = $scope.datarows = [];
     $scope.filter.max = 10000;
-    AdjustmentSummaryReport.get($scope.filter, function(data) {
+    AdjustmentSummaryReport.get($scope.getSanitizedParameter(), function(data) {
       if (data.pages !== undefined && data.pages.rows !== undefined) {
         $scope.data = data.pages.rows;
         $scope.paramsChanged($scope.tableParams);

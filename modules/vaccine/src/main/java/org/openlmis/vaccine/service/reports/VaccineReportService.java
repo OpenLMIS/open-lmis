@@ -230,4 +230,8 @@ public class VaccineReportService {
     return repository.getVitaminSupplementationReport(reportId);
   }
 
+  public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode){
+    return repository.vaccineUsageTrend(facilityCode, productCode);
+  }
+
 }
