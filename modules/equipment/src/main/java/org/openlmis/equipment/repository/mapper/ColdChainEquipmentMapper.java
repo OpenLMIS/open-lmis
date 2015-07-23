@@ -54,7 +54,8 @@ public interface ColdChainEquipmentMapper {
             "JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id WHERE equipments.equipmentTypeId = #{equipmentTypeId}")
     Integer getCountByType(@Param("equipmentTypeId") Long equipmentTypeId);
 
-    @Select("SELECT equipment_cold_chain_equipments.*" +
+    @Select("SELECT equipments.*" +
+        "   , equipment_cold_chain_equipments.*" +
         "   , COUNT(equipment_inventories.id) AS inventorycount" +
         " FROM equipment_cold_chain_equipments" +
         "   JOIN equipments ON equipment_cold_chain_equipments.equipmentid = equipments.id" +
