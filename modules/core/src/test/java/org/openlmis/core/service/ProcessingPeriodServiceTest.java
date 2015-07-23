@@ -38,7 +38,7 @@ public class ProcessingPeriodServiceTest {
   public void shouldGetById() throws Exception {
     when(repository.getById(1L)).thenReturn(new ProcessingPeriod());
 
-    ProcessingPeriod period = service.getById(1L);
+    service.getById(1L);
 
     verify(repository).getById(1L);
   }
