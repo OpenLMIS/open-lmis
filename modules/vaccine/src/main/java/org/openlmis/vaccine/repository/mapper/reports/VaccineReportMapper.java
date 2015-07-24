@@ -145,38 +145,34 @@ public interface VaccineReportMapper {
           "order by pp.id asc;")
   List<HashMap<String, Object>> vaccineUsageTrend(@Param("facilityCode")String facilityCode, @Param("productCode")String productCode);
 
-  @Select("SELECT\n" +
-          "vaccine_report_logistics_line_items.productcode,\n" +
-          "MAX(p.primaryname) AS product_name,\n" +
-          "sum(openingbalance) opening_balance,\n" +
-          "sum(quantityreceived) quantity_received,\n" +
-          "sum(quantityissued) quantity_issued,\n" +
-          "sum(quantityvvmalerted) quantity_vvm_alerted,\n" +
-          "sum(quantityfreezed) quantity_freezed,\n" +
-          "sum(quantityexpired) quantity_expired,\n" +
-          "sum(quantitydiscardedunopened) quantity_discarded_unopened,\n" +
-          "sum(quantitydiscardedopened) quantity_discarded_opened,\n" +
-          "sum(quantitywastedother) quantity_wasted_other,\n" +
-          "sum(endingbalance) ending_balance,\n" +
-          "sum(closingbalance) closing_balance,\n" +
-          "sum(daysstockedout) days_stocked_out,\n" +
+  @Select("SELECT product_code,\n" +
+          "MAX(product_name) product_name,\n" +
+          "sum(opening_balanace) opening_balance,\n" +
+          "sum(quantity_received) quantity_received,\n" +
+          "sum(quantity_issued) quantity_issued,\n" +
+          "sum(quantity_vvm_alerted) quantity_vvm_alerted,\n" +
+          "sum(quantity_freezed) quantity_freezed,\n" +
+          "sum(quantity_expired) quantity_expired,\n" +
+          "sum(quantity_discarded_unopened) quantity_discarded_unopened,\n" +
+          "sum(quantity_discarded_opened) quantity_discarded_opened,\n" +
+          "sum(quantity_wasted_other) quantity_wasted_other,\n" +
+          "sum(closing_balance) closing_balance,\n" +
+          "sum(days_stocked_out) days_stocked_out,\n" +
           "'' AS reason_for_discarding,\n" +
-          "sum(vaccine_report_campaign_line_items.childrenvaccinated) as children_immunized,\n" +
-          "sum(vaccine_report_campaign_line_items.pregnantwomanvaccinated) AS pregnant_women_immunized,\n" +
-          "sum(vaccine_report_campaign_line_items.childrenvaccinated) / (sum(vaccine_report_logistics_line_items.quantityissued) + sum(vaccine_report_logistics_line_items.quantitydiscardedunopened)) * 100 AS usage_rate,\n" +
-          "    100 - 0 / (sum(vaccine_report_logistics_line_items.quantityissued) + sum(vaccine_report_logistics_line_items.quantitydiscardedunopened)) * 100 AS wastage_rate\n" +
-          "FROM\n" +
-          "vaccine_report_logistics_line_items\n" +
-          "INNER JOIN vaccine_reports ON vaccine_report_logistics_line_items.reportid = vaccine_reports.id\n" +
-          "INNER JOIN products p ON p.id = vaccine_report_logistics_line_items.productid\n" +
-          "INNER JOIN processing_periods ON processing_periods.id = vaccine_reports.id\n" +
-          "INNER JOIN facilities ON facilities.id = vaccine_reports.facilityid\n" +
-          "JOIN vaccine_report_campaign_line_items ON vaccine_report_campaign_line_items.reportid = vaccine_reports.id\n" +
-          "INNER JOIN vw_districts ON vw_districts.district_id = facilities.geographiczoneid\n" +
-          "where periodid = #{periodId} and (parent = #{zoneId} or district_id = #{zoneId} or region_id = #{zoneId} or zone_id = #{zoneId} )\n" +
-          "group by productcode\n" +
-          "order by productcode")
+          "sum(children_immunized) children_immunized,\n" +
+          "sum(pregnant_women_immunized) pregnant_women_immunized,\n" +
+          "sum(usage_rate) usage_rate,\n" +
+          "sum(wastage_rate) wastage_rate \n" +
+          "from vw_vaccine_stock_status \n" +
+          "INNER JOIN vw_districts vd ON vd.district_id = geographic_zone_id\n" +
+          "where period_id = #{periodId} and (vd.parent = #{zoneId} or vd.district_id = #{zoneId} or vd.region_id = #{zoneId} or vd.zone_id = #{zoneId} )\n" +
+          "group by product_code")
   List<HashMap<String, Object>> getVaccinationAggregateByGeoZoneReport(@Param("periodId")Long periodId, @Param("zoneId") Long zoneId);
+  @Select("select COALESCE(fr.quantity_issued, 0) quantity_issued, COALESCE(fr.closing_balance, 0) closing_balance, pp.name period_name \n" +
+          "from fn_vaccine_geozone_n_rnrs('Vaccine', #{periodId}::integer ,#{zoneId}::integer, #{productCode},4) fr\n" +
+          "JOIN processing_periods pp ON pp.id = fr.period_id\n" +
+          "order by pp.id asc")
+  List<HashMap<String, Object>>vaccineUsageTrendByGeographicZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId, @Param("productCode") String productCode);
 
 
 }

@@ -126,7 +126,7 @@ public class VaccineReportController extends BaseController {
 
     if (facilityId == null || facilityId == 0 ){ // Return aggregated data for the selected geozone
 
-      data.put("vaccination", service.getVaccineReport(null, periodId, zoneId));
+      data.put("vaccination", service.getVaccineReport(null, facilityId, periodId, zoneId));
 
     } else {
       Long reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
@@ -135,7 +135,7 @@ public class VaccineReportController extends BaseController {
       data.put("adverseEffect", service.getAdverseEffectReport(reportId));
       data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId));
       data.put("immunizationSession", service.getImmunizationSession(reportId));
-      data.put("vaccination", service.getVaccineReport(reportId, periodId, zoneId));
+      data.put("vaccination", service.getVaccineReport(reportId, facilityId, periodId, zoneId));
       data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId));
       data.put("vitamins", service.getVitaminsReport(reportId));
       data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId));
@@ -146,7 +146,7 @@ public class VaccineReportController extends BaseController {
   }
 
   @RequestMapping(value = "vaccine-usage-trend")
-  public ResponseEntity<OpenLmisResponse> vaccineUsageTrend(@RequestParam("facilityCode") String facilityCode, @RequestParam("productCode") String productCode, @RequestParam("period") Long periodId, @RequestParam("Zone") Long zoneId){
+  public ResponseEntity<OpenLmisResponse> vaccineUsageTrend(@RequestParam("facilityCode") String facilityCode, @RequestParam("productCode") String productCode, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId){
     return OpenLmisResponse.response("vaccineUsageTrend", service.vaccineUsageTrend(facilityCode, productCode, periodId, zoneId));
   }
 

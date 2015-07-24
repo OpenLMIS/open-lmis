@@ -115,6 +115,6 @@ public class VaccineReportRepository {
     return mapper.vaccineUsageTrend(facilityCode, productCode);
   }
   public List<HashMap<String, Object>> vaccineUsageTrendByGeographicZone(Long periodId, Long zoneId, String productCode){
-    return null;
+    return mapper.vaccineUsageTrendByGeographicZone(periodId, zoneId, productCode);
   }
 }

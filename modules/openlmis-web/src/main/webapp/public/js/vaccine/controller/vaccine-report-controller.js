@@ -42,7 +42,10 @@ function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineU
     };
 
     $scope.renderGraph = function(facilityCode, productCode){
-        VaccineUsageTrend.get({facilityCode: facilityCode, productCode: productCode}, function(data){
+        $scope.filter.facilityCode = isUndefined(facilityCode)? '' : facilityCode;
+        $scope.filter.productCode =  isUndefined(productCode)? '': productCode;
+
+        VaccineUsageTrend.get($scope.filter, function(data){
             $scope.trendingData = data.vaccineUsageTrend;
 
             $scope.periodTicks = _.pairs(_.object(_.range($scope.trendingData.length), _.pluck($scope.trendingData,'period_name')));
