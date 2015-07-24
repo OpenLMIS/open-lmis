@@ -1217,6 +1217,14 @@ services.factory('PriceScheduleCategories', function ($resource) {
     return $resource('/priceScheduleCategories.json', {}, {});
 });
 
+services.factory('CCERepairManagement', function ($resource) {
+    return $resource('/reports/reportdata/cceRepairManagement.json', {}, {});
+});
+
+services.factory('CCERepairManagementEquipmentList', function ($resource) {
+    return $resource('/reports/reportdata/cceRepairManagementEquipmentList.json', {}, {});
+});
+
 services.factory('ReplacementPlanSummaryReport', function($resource){
     return $resource('/reports/reportdata/replacementPlanSummary.json',{},{});
 });

@@ -332,6 +332,25 @@
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cce_repair_management"/>
+                    <property name="template" value="cce-repair-management.jasper"/>
+                    <property name="reportDataProvider" ref="CCERepairManagementReportDataProvider"/>
+                    <property name="id" value="REPAIR"/>
+                    <property name="name" value="Cold Chain Repair Management"/>
+                    <property name="title" value="report.title.repair.management"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cce_repair_management_equipment_list"/>
+                    <property name="template" value="cce-repair-management-equipment-list.jasper"/>
+                    <property name="reportDataProvider" ref="CCERepairManagementEquipmentListDataProvider"/>
+                    <property name="id" value="REPAIR"/>
+                    <property name="name" value="Cold Chain Equipment List"/>
+                    <property name="title" value="report.title.repair.management.equipment.list"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="cold_chain_equipment"/>
                     <property name="template" value="cold-chain-equipment.jasper"/>
                     <property name="reportDataProvider" ref="coldChainEquipmentReportDataProvider"/>
