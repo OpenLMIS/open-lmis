@@ -17,6 +17,7 @@ import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.PriceScheduleCategory;
 import org.openlmis.core.dto.FacilityContact;
+import org.openlmis.core.dto.FacilityGeoTreeDto;
 import org.openlmis.core.dto.FacilityImages;
 import org.openlmis.core.dto.FacilitySupervisor;
 import org.springframework.stereotype.Repository;
@@ -279,7 +280,9 @@ public interface FacilityMapper {
                                     @Param(value = "virtualFacility") Boolean virtualFacility,
                                     @Param(value = "enabled") Boolean enabled);
 
-  public class SelectFacilities {
+
+
+    public class SelectFacilities {
     @SuppressWarnings(value = "unused")
     public static String getFacilitiesCountBy(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
@@ -412,5 +415,46 @@ public interface FacilityMapper {
   })
   List<Facility> getFacilitiesByTypeAndRequisitionGroupId(@Param(value = "facilityTypeId") Long facilityTypeId,
                                  @Param(value = "requisitionGroupId") Long requisitionGroupId);
-  
+
+
+    //-===============================
+
+    @Select("select distinct region.id, region.name, 0 as facility, vw_user_districts.user_id as userId \n" +
+            "from geographic_zones region \n" +
+            "inner join geographic_levels ON region.levelid = geographic_levels.id AND geographic_levels.code = 'reg'\n" +
+            "inner join geographic_zones district ON district.parentid = region.id\n" +
+            "inner join vw_user_districts ON vw_user_districts.district_id = district.id where vw_user_districts.user_id = #{userId} order by region.name")
+    @Results(value = {
+            @Result(property = "children", column = "{id=id, userId=userId}", javaType = List.class,  many = @Many(select = "getGeoTreeDistrictsByRegion"))
+        })
+    List<FacilityGeoTreeDto> getGeoRegionFacilityTree(@Param(value = "userId") Long userId);
+
+    @Select("select distinct district.id, district.name, 0 as facility, vw_user_districts.user_id as userId \n" +
+            "from geographic_zones district \n" +
+            "inner join vw_user_districts ON vw_user_districts.district_id = district.id AND district.parentid = #{id}\n" +
+            "where vw_user_districts.user_id = #{userId} order by district.name")
+    @Results(value = {
+            @Result(property = "children",  column = "{id=id, userId=userId}", javaType = List.class,  many = @Many(select = "getGeoTreeFacilities"))
+    })
+    List<FacilityGeoTreeDto> getGeoTreeDistrictsByRegion(Map params);
+
+    @Select("select facilities.id, facilities.name, 1 as facility from facilities inner join \n" +
+            "vw_user_facilities ON facilities.id = vw_user_facilities.facility_id AND vw_user_facilities.user_id = #{userId} " +
+            "AND vw_user_facilities.district_id = #{id}")
+    List<FacilityGeoTreeDto> getGeoTreeFacilities(Map params);
+
+
+    @Select("select distinct district.id, district.name, 0 as facility, vw_user_districts.user_id as userId \n" +
+            "from geographic_zones district \n" +
+            "inner join vw_user_districts ON vw_user_districts.district_id = district.id\n" +
+            "where vw_user_districts.user_id = #{userId} order by district.name")
+    @Results(value = {
+            @Result(property = "children",  column = "{id=id, userId=userId}", javaType = List.class,  many = @Many(select = "getGeoTreeFacilities"))
+    })
+    List<FacilityGeoTreeDto> getGeoTreeDistricts(@Param(value = "userId") Long userId);
+
+
+    @Select("select facilities.id, facilities.name, 1 as facility from facilities inner join \n" +
+            "vw_user_facilities ON facilities.id = vw_user_facilities.facility_id AND vw_user_facilities.user_id = #{userId}")
+    List<FacilityGeoTreeDto> getGeoTreeFlatFacilities(@Param(value = "userId") Long userId);
 }

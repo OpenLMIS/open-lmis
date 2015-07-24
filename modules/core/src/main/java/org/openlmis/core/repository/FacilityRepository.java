@@ -13,6 +13,7 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.FacilityContact;
+import org.openlmis.core.dto.FacilityGeoTreeDto;
 import org.openlmis.core.dto.FacilityImages;
 import org.openlmis.core.dto.FacilitySupervisor;
 import org.openlmis.core.exception.DataException;
@@ -255,4 +256,14 @@ public class FacilityRepository {
   public List<Facility> getFacilityByTypeAndRequisitionGroupId(Long facilityTypeId, Long rgroupId){
       return mapper.getFacilitiesByTypeAndRequisitionGroupId(facilityTypeId, rgroupId);
   }
+
+    public List<FacilityGeoTreeDto> getGeoRegionFacilityTree(Long userId) {
+        return mapper.getGeoRegionFacilityTree(userId);
+    }
+
+    public List<FacilityGeoTreeDto> getGeoDistrictFacility(Long userId)  {
+        return mapper.getGeoTreeDistricts(userId);
+    }
+
+    public List<FacilityGeoTreeDto> getGeoFlatFacilityTree(Long userId) {   return mapper.getGeoTreeFlatFacilities(userId);  }
 }

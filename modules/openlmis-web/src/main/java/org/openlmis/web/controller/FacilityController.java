@@ -256,4 +256,15 @@ public class FacilityController extends BaseController {
     return OpenLmisResponse.response("facilities",facilityService.getFacilityByTypeAndRequisitionGroupId(facilityTypeId, requisitionGroupId));
   }
 
+    @RequestMapping(value = "/geoFacilityTree", method = GET)
+    public ResponseEntity<OpenLmisResponse> getGeoTreeFacility(HttpServletRequest httpServletRequest) {
+
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.success("");
+        response.getBody().addData("regionFacilityTree", facilityService.getGeoRegionFacilityTree(loggedInUserId(httpServletRequest)));
+        response.getBody().addData("districtFacility", facilityService.getGeoDistrictFacility(loggedInUserId(httpServletRequest)));
+        response.getBody().addData("flatFacility", facilityService.getGeoFlatFacilityTree(loggedInUserId(httpServletRequest)));
+        return response;
+    }
+
 }

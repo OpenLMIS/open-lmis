@@ -12,6 +12,7 @@ package org.openlmis.equipment.repository;
 
 
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.mapper.EquipmentMapper;
@@ -59,7 +60,12 @@ public class EquipmentRepository {
   }
 
   public void remove(Long id){
-    mapper.remove(id);
+    Equipment equipment = getById(id);
+    if (equipment != null && equipment.isRemovable()) {
+      mapper.remove(id);
+    } else {
+      throw new DataException("message.equipment.cannot.remove.inventory.exists");
+    }
   }
 
 }

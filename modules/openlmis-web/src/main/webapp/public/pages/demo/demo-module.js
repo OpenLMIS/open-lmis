@@ -1,0 +1,1 @@
+angular.module('demoModule', ['openlmis',   'angularCombine', 'ui.bootstrap.modal', 'ui.bootstrap.pagination', 'ui.bootstrap']);
