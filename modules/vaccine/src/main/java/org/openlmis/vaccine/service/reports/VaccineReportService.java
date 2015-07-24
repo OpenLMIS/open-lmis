@@ -190,6 +190,7 @@ public class VaccineReportService {
   public Long getReportIdForFacilityAndPeriod(Long facilityId, Long periodId){
     return repository.getReportIdForFacilityAndPeriod(facilityId, periodId);
   }
+
   public List<DiseaseLineItem> getDiseaseSurveillance(Long reportId){
     return repository.getDiseaseSurveillance(reportId);
   }
@@ -210,8 +211,12 @@ public class VaccineReportService {
     return repository.getImmunizationSession(reportId);
   }
 
-  public List<HashMap<String, Object>> getVaccineReport(Long reportId){
-    return repository.getVaccinationReport(VACCINE_REPORT_VACCINE_CATEGORY_CODE, reportId);
+  public List<HashMap<String, Object>> getVaccineReport(Long reportId, Long periodId, Long zoneId){
+    if (reportId != null){
+      return repository.getVaccinationReport(VACCINE_REPORT_VACCINE_CATEGORY_CODE, reportId);
+    }else{
+      return repository.getVaccinationAggregateByGeoZoneReport(periodId, zoneId);
+    }
   }
 
   public List<HashMap<String, Object>> getSyringeAndSafetyBoxReport(Long reportId){
@@ -230,8 +235,14 @@ public class VaccineReportService {
     return repository.getVitaminSupplementationReport(reportId);
   }
 
-  public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode){
-    return repository.vaccineUsageTrend(facilityCode, productCode);
+  public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode, Long periodId, Long zoneId){
+    if (facilityCode == null && periodId !=0 && zoneId !=0 ){ // Return aggregated data for selected geographic zone
+
+    }else{ // return vaccine usage trend for facility
+
+      return repository.vaccineUsageTrend(facilityCode, productCode);
+    }
+    return null;
   }
 
 }

@@ -100,6 +100,9 @@ public class VaccineReportRepository {
   public List<HashMap<String, Object>> getVaccinationReport(String productCategoryCode, Long reportId){
     return mapper.getVaccinationReport(productCategoryCode, reportId);
   }
+  public List<HashMap<String, Object>> getVaccinationAggregateByGeoZoneReport(Long periodId, Long zoneId){
+    return mapper.getVaccinationAggregateByGeoZoneReport(periodId, zoneId);
+  }
 
   public List<HashMap<String, Object>> getTargetPopulation(Long facilityId, Long periodId){
     return mapper.getTargetPopulation(facilityId, periodId);
@@ -110,5 +113,8 @@ public class VaccineReportRepository {
 
   public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode){
     return mapper.vaccineUsageTrend(facilityCode, productCode);
+  }
+  public List<HashMap<String, Object>> vaccineUsageTrendByGeographicZone(Long periodId, Long zoneId, String productCode){
+    return null;
   }
 }

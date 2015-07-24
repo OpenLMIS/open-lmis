@@ -118,26 +118,36 @@ public class VaccineReportController extends BaseController {
   }
 
   @RequestMapping(value = "vaccine-monthly-report")
-  public ResponseEntity<OpenLmisResponse> diseaseSurveillance(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId){
+  public ResponseEntity<OpenLmisResponse> getVaccineMonthlyReport(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId){
+
+    if (periodId == null || periodId == 0) return null;
+
     Map<String, Object> data = new HashMap();
-    Long reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
-    data.put("diseaseSurveillance", service.getDiseaseSurveillance(reportId));
-    data.put("coldChain", service.getColdChain(reportId));
-    data.put("adverseEffect", service.getAdverseEffectReport(reportId));
-    data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId));
-    data.put("immunizationSession", service.getImmunizationSession(reportId));
-    data.put("vaccination", service.getVaccineReport(reportId));
-    data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId));
-    data.put("vitamins", service.getVitaminsReport(reportId));
-    data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId));
-    data.put("vitaminSupplementation", service.getVitaminSupplementationReport(reportId));
+
+    if (facilityId == null || facilityId == 0 ){ // Return aggregated data for the selected geozone
+
+      data.put("vaccination", service.getVaccineReport(null, periodId, zoneId));
+
+    } else {
+      Long reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
+      data.put("diseaseSurveillance", service.getDiseaseSurveillance(reportId));
+      data.put("coldChain", service.getColdChain(reportId));
+      data.put("adverseEffect", service.getAdverseEffectReport(reportId));
+      data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId));
+      data.put("immunizationSession", service.getImmunizationSession(reportId));
+      data.put("vaccination", service.getVaccineReport(reportId, periodId, zoneId));
+      data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId));
+      data.put("vitamins", service.getVitaminsReport(reportId));
+      data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId));
+      data.put("vitaminSupplementation", service.getVitaminSupplementationReport(reportId));
+    }
 
     return OpenLmisResponse.response("vaccineData", data);
   }
 
   @RequestMapping(value = "vaccine-usage-trend")
-  public ResponseEntity<OpenLmisResponse> vaccineUsageTrend(@RequestParam("facilityCode") String facilityCode, @RequestParam("productCode") String productCode){
-    return OpenLmisResponse.response("vaccineUsageTrend", service.vaccineUsageTrend(facilityCode, productCode));
+  public ResponseEntity<OpenLmisResponse> vaccineUsageTrend(@RequestParam("facilityCode") String facilityCode, @RequestParam("productCode") String productCode, @RequestParam("period") Long periodId, @RequestParam("Zone") Long zoneId){
+    return OpenLmisResponse.response("vaccineUsageTrend", service.vaccineUsageTrend(facilityCode, productCode, periodId, zoneId));
   }
 
 }
