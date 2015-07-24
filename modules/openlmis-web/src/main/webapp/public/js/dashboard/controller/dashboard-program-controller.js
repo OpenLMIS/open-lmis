@@ -9,26 +9,15 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function DashboardMenuController($scope, $location, dashboardMenuService, UserSupervisedActivePrograms) {
+function DashboardProgramController($scope,$routeParams, dashboardMenuService, UserSupervisedActivePrograms) {
 
-    $scope.dashboardTabs = dashboardMenuService.tabs;
-    $scope.dashboardTabs = [];
-    UserSupervisedActivePrograms.get(function(data){
-        $scope.programsList = data.programs;
-        angular.forEach(data.programs, function(prog){
+    initialize();
 
-            dashboardMenuService.addTab("'"+prog.name+"'",'/public/pages/dashboard/index.html#/dashboard-programs?prog='+prog.name,prog.name,false, prog.id);
-           // alert(prog.name);
-        });
+    function initialize() {
+        $scope.$parent.currentTab = $routeParams.prog;
+        $scope.selectedProg = $routeParams.prog;
+    }
 
-    });
 
-    $scope.$on('dashboardTabUpdated', function(){
-        $scope.dashboardTabs = dashboardMenuService.tabs;
-    });
-    $scope.closeTab = function(tabName){
-        dashboardMenuService.closeTab(tabName);
-    };
 
 }
-
