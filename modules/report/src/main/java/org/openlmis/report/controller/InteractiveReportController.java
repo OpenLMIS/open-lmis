@@ -536,9 +536,9 @@ public class InteractiveReportController extends BaseController {
 
         Report report = reportManager.getReportByKey("cce_repair_management");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<CCERepairManagementReport> CCERepairManagementReportList = (List<CCERepairManagementReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+        List<CCERepairManagementReport> CCERepairManagementReport = (List<CCERepairManagementReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
 
-        return new Pages(page, max, CCERepairManagementReportList);
+        return new Pages(page, max, CCERepairManagementReport);
     }
 
 

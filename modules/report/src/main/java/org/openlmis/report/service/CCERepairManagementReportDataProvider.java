@@ -44,14 +44,14 @@ public class CCERepairManagementReportDataProvider extends ReportDataProvider {
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
 
-    return cceRepairManagementReportMapper.SelectEquipmentCountByStatusEnergy(getReportFilterData(params),this.getUserId());
+    return getMainReportData(params, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
   }
 
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
 
-    return cceRepairManagementReportMapper.SelectEquipmentCountByStatusEnergy(getReportFilterData(filterCriteria),this.getUserId());
+    return cceRepairManagementReportMapper.SelectEquipmentCountByStatusEnergy(getReportFilterData(filterCriteria),rowBounds,this.getUserId());
   }
 
 

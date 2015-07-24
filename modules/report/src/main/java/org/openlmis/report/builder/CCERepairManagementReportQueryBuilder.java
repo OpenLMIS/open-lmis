@@ -23,7 +23,7 @@ public class CCERepairManagementReportQueryBuilder {
         CCERepairManagementReportParam filter = (CCERepairManagementReportParam) params.get("filterCriteria");
         Long userId = (Long) params.get("userId");
         String sql = "";
-
+        String facilityFilter=null;
         BEGIN();
         String aggregateOpen = "SELECT  SUM(agg.Functional) AS Functional " +
                 ",SUM(agg.Not_functional) AS Not_Functional " +
@@ -96,14 +96,21 @@ public class CCERepairManagementReportQueryBuilder {
 
         if (filter.getProgramId() != 0) {
             if (!filter.getFacilityLevel().isEmpty()) {
-                String facilityFilter = " WHERE ws.fid IN("+filter.getFacilityIds()+") AND ft.code ='"+filter.getFacilityLevel()+"' ";
+                String facilityLevel = filter.getFacilityLevel();
+                if(facilityLevel.equalsIgnoreCase("cvs") || facilityLevel.equalsIgnoreCase("rvs") || facilityLevel.equalsIgnoreCase("dvs")) {
+                    facilityFilter = " WHERE ws.fid IN(" + filter.getFacilityIds() + ") AND ft.code ='" + facilityLevel + "' ";
+                }
+                else{
+                    facilityFilter = " WHERE ws.fid IN("+filter.getFacilityIds()+") AND ft.code NOT IN ('cvs','rvs','dvs')";
+                }
+
                 if (filter.getAggregate()) {
                     sql = aggregateOpen + allFacilities + facilityFilter + aggregateClose;
                 } else {
                     sql = allFacilities + facilityFilter;
                 }
             } else {
-                String facilityFilter = " WHERE ws.fid IN("+filter.getFacilityIds()+")";
+                 facilityFilter = " WHERE ws.fid IN("+filter.getFacilityIds()+")";
                 if (filter.getAggregate()) {
                     sql = aggregateOpen + allFacilities + facilityFilter + aggregateClose;
                 } else {
@@ -170,9 +177,10 @@ public class CCERepairManagementReportQueryBuilder {
 
         String program=" AND ei.programid="+filter.getProgramId();
         String status=" AND LOWER(eos.name) IN('"+workingStatus+"') ";
-        String facilityLevel=" AND ft.code='"+filter.getFacilityLevel()+"' ";
+        String level=null;
         String facilityId=" AND f.id="+filter.getFacilityId();
 
+        String facilityLevel = filter.getFacilityLevel();
         sql=equipmentSql;
         if (filter.getProgramId() != 0L) {
             sql=sql+program;
@@ -180,9 +188,15 @@ public class CCERepairManagementReportQueryBuilder {
         if (filter.getFacilityId() != 0L) {
             sql=sql+facilityId;
         }
-        if(!filter.getFacilityLevel().isEmpty())
+        if(!facilityLevel.isEmpty())
         {
-            sql=sql+facilityLevel;
+            if(facilityLevel.equalsIgnoreCase("cvs") || facilityLevel.equalsIgnoreCase("rvs") || facilityLevel.equalsIgnoreCase("dvs")) {
+                level=" AND ft.code='"+facilityLevel+"' ";
+            }
+            else{
+                level = " AND ft.code NOT IN ('cvs','rvs','dvs') ";
+            }
+            sql=sql+level;
         }
         if(!workingStatus.isEmpty())
         {

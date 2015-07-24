@@ -3,18 +3,22 @@ function RepairManagementController($scope,ngTableParams,messageService,CCERepai
     $scope.pieChart=false;
     $scope.equipmentDialogModal=false;
 
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+            page: 1,            // show first page
+            total: 0,           // length of data
+            count: 15           // count per page
+     });
+
     $scope.OnFilterChanged = function(){
           $scope.resetRepairManagementData();
+          $scope.filter.max = 10000;
+          $scope.data = $scope.datarows = [];
           CCERepairManagement.get($scope.filter, function(data) {
           if (data.pages !== undefined && data.pages.rows !== undefined && data.pages.rows[0]!==null) {
-                     $scope.data = data.pages.rows;
+                     $scope.data =$scope.datarows= data.pages.rows;
+                     $scope.paramsChanged($scope.tableParams);
             }
-          else{
-            $scope.data=[];
-            }
-          $scope.paramsChanged($scope.tableParams);
-          // alert($scope.filter.aggregate);
-
 
           if($scope.filter.aggregate ==='TRUE'){ $scope.aggregate=true;}
           else{ $scope.aggregate=false;}

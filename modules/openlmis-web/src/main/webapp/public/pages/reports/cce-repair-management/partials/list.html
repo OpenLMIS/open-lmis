@@ -75,7 +75,11 @@
         <div ng-show="datarows.length > 0">
             <div class="row-fluid">
                 <div ng-class="{true:'span8',false:'span12'}[pieChart]">
-                <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
+                    <div client-side-sort-pagination class="pull-right legend">Page: {{tableParams.page}},
+                        Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }}
+                        to {{ tableParams.page*tableParams.count > tableParams.total ? tableParams.total : tableParams.page*tableParams.count }}
+                        of {{tableParams.total}}
+                    </div>
                 <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
                     <tbody>
                     <tr  ng-repeat="row in datarows" ng-click="loadPieChart(row)" style="cursor:pointer">
