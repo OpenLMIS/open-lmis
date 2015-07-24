@@ -173,8 +173,8 @@ VALUES ((SELECT id FROM roles WHERE name = 'Inventory Manager'),'MANAGE_EQUIPMEN
     ,((SELECT id FROM roles WHERE name = 'Equipment Reports'),'VIEW_CCE_STORAGE_CAPACITY_REPORT')
     ,((SELECT id FROM roles WHERE name = 'All Reports'),'VIEW_VACCINE_REPLACEMENT_PLAN_SUMMARY')
     ,((SELECT id FROM roles WHERE name = 'Equipment Reports'),'VIEW_VACCINE_REPLACEMENT_PLAN_SUMMARY')
---    ,((SELECT id FROM roles WHERE name = 'All Reports'),'VIEW_REPAIR_MANAGEMENT_REPORT')
---    ,((SELECT id FROM roles WHERE name = 'Equipment Reports'),'VIEW_REPAIR_MANAGEMENT_REPORT')
+    ,((SELECT id FROM roles WHERE name = 'All Reports'),'VIEW_REPAIR_MANAGEMENT_REPORT')
+    ,((SELECT id FROM roles WHERE name = 'Equipment Reports'),'VIEW_REPAIR_MANAGEMENT_REPORT')
 ;
 
 UPDATE users
