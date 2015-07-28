@@ -21,7 +21,7 @@ import org.openlmis.report.model.ReportParameter;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
-public class StockedOutReportParam
+public class SupplyStatusReportParam
   extends BaseParam implements ReportParameter {
 
   @RequiredParam
@@ -30,14 +30,13 @@ public class StockedOutReportParam
   @RequiredParam
   private Long period;
 
-  private Long requisitionGroup;
-
   private Long productCategory;
 
-  private String products;
+  private Long product;
 
   private Long facilityType;
 
+  @RequiredParam
   private Long facility;
 
   private Long zone;

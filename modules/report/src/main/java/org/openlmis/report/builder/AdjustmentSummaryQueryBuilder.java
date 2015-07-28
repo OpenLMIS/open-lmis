@@ -19,7 +19,7 @@ import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class AdjustmentSummaryQueryBuilder {
 
-  public static String getData(Map params) {
+  public static String getQuery(Map params) {
 
     AdjustmentSummaryReportParam filter = (AdjustmentSummaryReportParam) params.get("filterCriteria");
     BEGIN();
@@ -57,7 +57,7 @@ public class AdjustmentSummaryQueryBuilder {
       WHERE(multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer"));
     }
 
-    if (!filter.getAdjustmentType().equals("0") && !filter.getAdjustmentType().equals("")) {
+    if (filter.getAdjustmentType() != null && !filter.getAdjustmentType().equals("0") && !filter.getAdjustmentType().equals("")) {
       WHERE("adjustment_type = #{filterCriteria.adjustmentType}");
     }
     ORDER_BY(QueryHelpers.getSortOrder(params, " product, adjustment_type, facility_type_name,facility_name, supplying_facility_name, product_category_name "));

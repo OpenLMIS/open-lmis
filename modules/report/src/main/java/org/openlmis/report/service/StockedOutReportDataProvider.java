@@ -18,9 +18,10 @@ import org.openlmis.report.mapper.StockedOutReportMapper;
 import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.StockedOutReportParam;
+import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
-import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -29,6 +30,10 @@ import java.util.Map;
 @Component
 @NoArgsConstructor
 public class StockedOutReportDataProvider extends ReportDataProvider {
+
+
+  @Value("${report.status.considered.accepted}")
+  private String configuredAcceptedRnrStatuses;
 
   @Autowired
   private StockedOutReportMapper reportMapper;
@@ -60,24 +65,9 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
   }
 
   public StockedOutReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-    if (filterCriteria != null) {
-      stockedOutReportParam = new StockedOutReportParam();
-
-      stockedOutReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0L : Long.parseLong(filterCriteria.get("facilityType")[0]));
-      if(filterCriteria.containsKey("facility") && !StringHelper.isBlank(filterCriteria,"facility")){
-        stockedOutReportParam.setFacilityId(Integer.parseInt(filterCriteria.get("facility")[0])); //defaults to 0
-      }else{
-        stockedOutReportParam.setFacilityId(0);
-      }
-      stockedOutReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone")? 0:Integer.parseInt(filterCriteria.get("zone")[0]));
-      stockedOutReportParam.setRgroupId(StringHelper.isBlank(filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0]));
-      stockedOutReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,"productCategory") ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0]));
-      stockedOutReportParam.setProductId(!filterCriteria.containsKey("products") ? "0" : java.util.Arrays.toString(filterCriteria.get("products")));
-      stockedOutReportParam.setProgramId(StringHelper.isBlank(filterCriteria,"program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
-      stockedOutReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0L : Long.parseLong(filterCriteria.get("period")[0]));
-
-    }
-    return stockedOutReportParam;
+    StockedOutReportParam param = ParameterAdaptor.parse(filterCriteria, StockedOutReportParam.class);
+    param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
+    return param;
   }
 
   @Override

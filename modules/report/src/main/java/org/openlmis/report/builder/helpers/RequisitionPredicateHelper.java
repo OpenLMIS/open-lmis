@@ -44,7 +44,7 @@ public class RequisitionPredicateHelper {
   }
 
   public static String facilityTypeIsFilteredBy(String field){
-    return String.format("%s= #{filterCriteria.facilityTypeId}", field);
+    return String.format("%s= #{filterCriteria.facilityType}", field);
   }
 
 }

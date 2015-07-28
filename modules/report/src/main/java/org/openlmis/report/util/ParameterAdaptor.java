@@ -22,6 +22,8 @@ public class ParameterAdaptor {
             f.set(result, Long.parseLong(value));
           } else if (f.getType() == Integer.class) {
             f.set(result, Integer.parseInt(value));
+          } else if(f.getType() == Boolean.class){
+            f.set(result, Boolean.parseBoolean(value));
           }
         }else{
           if(f.getType() == Long.class){

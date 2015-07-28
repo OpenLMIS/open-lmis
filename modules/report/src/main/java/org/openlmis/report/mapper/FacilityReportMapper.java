@@ -12,11 +12,9 @@ package org.openlmis.report.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.FacilityReportQueryBuilder;
 import org.openlmis.report.model.params.FacilityReportParam;
 import org.openlmis.report.model.report.FacilityReport;
-import org.openlmis.report.model.ReportData;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,10 +23,8 @@ import java.util.List;
 public interface FacilityReportMapper {
 
 
-    @SelectProvider(type=FacilityReportQueryBuilder.class, method="SelectFilteredSortedPagedFacilitiesSql")
+    @SelectProvider(type=FacilityReportQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    //@Select("SELECT id, code, name FROM facilities")
-    //@RowBounds(getLimit = 10,getOffset = 10)
     @Results(value = {
             @Result(column="code", property="code"),
             @Result(column="name", property="facilityName"),
@@ -40,7 +36,7 @@ public interface FacilityReportMapper {
             @Result(column="phoneNumber", property="phoneNumber"),
             @Result(column="fax", property="fax")
     })
-    public  List<FacilityReport> SelectFilteredSortedPagedFacilities(
+    List<FacilityReport> SelectFilteredSortedPagedFacilities(
             @Param("filterCriteria") FacilityReportParam filterCriteria,
             @Param("userId") Long userId
     );
