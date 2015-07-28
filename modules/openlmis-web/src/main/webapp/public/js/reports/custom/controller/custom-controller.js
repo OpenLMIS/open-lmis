@@ -49,7 +49,7 @@ function CustomReportController($scope, CustomReportList, CustomReportValue) {
     //clear existing data
     $scope.data = [];
     $scope.meta = undefined;
-    CustomReportValue.get($scope.filter, function (data) {
+    CustomReportValue.get($scope.getSanitizedParameter(), function (data) {
       $scope.meta = data;
       $scope.data = data.values;
     });

@@ -29,7 +29,7 @@ function ListFacilitiesController($scope, FacilityList, ngTableParams) {
     $scope.exportReport   = function (type){
 
 
-      var params = jQuery.param($scope.filter);
+      var params = jQuery.param($scope.getSanitizedParameter());
 
     var sortOrderParams = jQuery.param($scope.tableParams.sorting);
     sortOrderParams = sortOrderParams.split('=');

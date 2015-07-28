@@ -8,39 +8,34 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function LabEquipmentListByDonorReportController($scope, $filter, LabEquipmentListByDonorReport, ngTableParams, ReportProductsByProgram, ReportPrograms, ProductCategoriesByProgram, RequisitionGroupsByProgram , ReportFacilityTypes, GeographicZones, OperationYears, Months, $http, $routeParams, $location) {
+function LabEquipmentListByDonorReportController($scope, $filter, LabEquipmentListByDonorReport, ngTableParams, ReportProductsByProgram, ReportPrograms, ProductCategoriesByProgram, RequisitionGroupsByProgram, ReportFacilityTypes, GeographicZones, OperationYears, Months, $http, $routeParams, $location) {
+
+  $scope.exportReport = function(type) {
+    $scope.filter.pdformat = 1;
+    var params = jQuery.param($scope.getSanitizedParameter());
+    var url = '/reports/download/lab_equipments_by_donor/' + type + '?' + params;
+    window.open(url);
+  };
+
+  // the grid options
+  $scope.tableParams = new ngTableParams({
+    page: 1, // show first page
+    total: 0, // length of data
+    count: 10 // count per page
+  });
 
 
+  $scope.OnFilterChanged = function() {
+    // clear old data if there was any
+    $scope.data = $scope.datarows = [];
+    $scope.filter.max = 10000;
+    LabEquipmentListByDonorReport.get($scope.getSanitizedParameter(), function(data) {
+      if (data.pages !== undefined && data.pages.rows !== undefined) {
+        $scope.data = data.pages.rows;
+        $scope.paramsChanged($scope.tableParams);
 
-    $scope.exportReport   = function (type){
-        $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
-        var url = '/reports/download/lab_equipments_by_donor/' + type +'?' + params;
-        window.open(url);
-    };
-
-    // the grid options
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        total: 0,           // length of data
-        count: 10           // count per page
+      }
     });
 
-
-    $scope.OnFilterChanged = function() {
-        // clear old data if there was any
-        $scope.data = $scope.datarows = [];
-        $scope.filter.max = 10000;
-        LabEquipmentListByDonorReport.get($scope.filter, function(data) {
-            if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.data = data.pages.rows;
-                $scope.paramsChanged($scope.tableParams);
-
-            }
-        });
-
-
-
-
-};
+  };
 }

@@ -36,9 +36,9 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
 
     $scope.exportReport   = function (type){
         $scope.filter.pdformat =1;
-        var params = jQuery.param($scope.filter);
+        var params = jQuery.param($scope.getSanitizedParameter());
         var url = '/reports/download/rnr_feedback/' + type +'?' + params;
-        window.open(url);
+        window.open(url, "_BLANK");
 
     };
 
@@ -50,7 +50,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
       $scope.filter.max = 10000;
       $scope.filter.page = 1;
 
-      RnRFeedbackReport.get($scope.filter, function(data) {
+      RnRFeedbackReport.get($scope.getSanitizedParameter(), function(data) {
           $scope.data         = data.pages.rows ;
           $scope.paramsChanged( $scope.tableParams );
       });

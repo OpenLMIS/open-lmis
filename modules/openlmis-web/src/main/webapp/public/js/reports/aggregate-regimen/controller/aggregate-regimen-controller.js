@@ -10,24 +10,24 @@
 
 function RegimenSummaryControllers($scope, $window, AggregateRegimenSummaryReport) {
 
-    $scope.exportReport = function (type) {
-        $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
-        var url = '/reports/download/aggregate_regimen_summary/' + type + '?' + params;
-        $window.open(url);
-    };
+  $scope.exportReport = function(type) {
+    $scope.filter.pdformat = 1;
+    var params = jQuery.param($scope.filter);
+    var url = '/reports/download/aggregate_regimen_summary/' + type + '?' + params;
+    $window.open(url);
+  };
 
-    $scope.OnFilterChanged = function () {
+  $scope.OnFilterChanged = function() {
 
-        $scope.data = $scope.datarows = [];
-        $scope.filter.max = 10000;
-        $scope.filter.page = 1;
+    $scope.data = $scope.datarows = [];
+    $scope.filter.max = 10000;
+    $scope.filter.page = 1;
 
-        AggregateRegimenSummaryReport.get($scope.filter, function (data) {
-            if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.data = data.pages.rows;
-                $scope.paramsChanged($scope.tableParams);
-            }
-        });
-    };
+    AggregateRegimenSummaryReport.get($scope.filter, function(data) {
+      if (data.pages !== undefined && data.pages.rows !== undefined) {
+        $scope.data = data.pages.rows;
+        $scope.paramsChanged($scope.tableParams);
+      }
+    });
+  };
 }

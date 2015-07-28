@@ -12,16 +12,16 @@ function SummaryReportController($scope, $filter, ngTableParams, SummaryReport, 
 
   $scope.exportReport = function (type) {
     $scope.filter.pdformat = 1;
-    var params = jQuery.param($scope.filter);
+    var params = jQuery.param($scope.getSanitizedParameter());
     var url = '/reports/download/summary' + (($scope.filter.disaggregated === true)?'_disaggregated': '') + '/' + type + '?' + params;
-    window.open(url);
+    window.open(url,"_BLANK");
   };
-    
+
   $scope.OnFilterChanged = function() {
         // clear old data if there was any
         $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;
-        SummaryReport.get($scope.filter, function(data) {
+        SummaryReport.get($scope.getSanitizedParameter(), function(data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
                 $scope.data = data.pages.rows;
                 $scope.paramsChanged($scope.tableParams);

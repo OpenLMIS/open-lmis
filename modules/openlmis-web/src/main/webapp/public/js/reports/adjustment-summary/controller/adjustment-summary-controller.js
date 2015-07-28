@@ -8,14 +8,14 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport) {
+function AdjustmentSummaryReportController($scope, $window , AdjustmentSummaryReport) {
 
-  $scope.exportReport = function (type) {
+  $scope.exportReport = function(type) {
 
     $scope.filter.pdformat = 1;
     var params = jQuery.param($scope.getSanitizedParameter());
     var url = '/reports/download/adjustment_summary/' + type + '?' + params;
-    window.location.href = url;
+    $window.open(url, '_blank');
   };
 
   $scope.OnFilterChanged = function() {

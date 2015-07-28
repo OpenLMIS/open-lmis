@@ -389,7 +389,7 @@ services.factory('AggregateRegimenSummaryReport', function($resource){
 
 //It populate all programs with regimens
 services.factory('ReportRegimenPrograms', function ($resource) {
-    return $resource('/reports/regimenPrograms.json', {}, {});
+    return $resource('/reports/programs-supporting-regimen.json', {}, {});
 });
 
 services.factory('DistrictFinancialSummaryReport', function ($resource) {
@@ -595,8 +595,8 @@ services.factory("PipelineExportReport", function($resource){
 
 });
 
-services.factory('GetProgramWithBudgetingApplies',function($resource){
-    return $resource('/reports/programsWithBudgetApplies.json',{},{});
+services.factory('ReportProgramsWithBudgeting',function($resource){
+    return $resource('/reports/programs-supporting-budget.json',{},{});
 
 });
 services.factory('RegimenDistributionReport',function($resource){

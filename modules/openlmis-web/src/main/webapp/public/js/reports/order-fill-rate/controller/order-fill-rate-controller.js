@@ -25,7 +25,7 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
         });
 
 
-        GetPushedProductList.get($scope.filter,function (data) {
+        GetPushedProductList.get($scope.getSanitizedParameter(),function (data) {
                 if (data.pages !== undefined && data.pages.rows !== undefined) {
                     $scope.pusheditems = data.pages.rows;
                 }
@@ -34,7 +34,7 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
 
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
+        var params = jQuery.param($scope.getSanitizedParameter());
         var url;
         if (type == "pushed-product-list") {
             url = '/reports/download/pushed_product_list/' + "pdf" + '?' + params;
