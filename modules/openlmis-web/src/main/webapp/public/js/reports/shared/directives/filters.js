@@ -361,7 +361,7 @@ app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear'
         if(!$routeParams.schedule){
           scope.periods = scope.unshift([], 'report.filter.select.period');
         }
-        
+
         function onParentChanged() {
           onCascadedVarsChanged(scope);
         }
@@ -403,14 +403,15 @@ app.directive('requisitionGroupFilter', ['RequisitionGroupsByProgram', '$routePa
   }
 ]);
 
-app.directive('adjustmentTypeFilter', ['AdjustmentTypes', '$routeParams', function(AdjustmentTypes, $routeParams) {
+app.directive('adjustmentTypeFilter', ['AdjustmentTypes', '$routeParams', 'messageService', function(AdjustmentTypes, $routeParams, messageService) {
   return {
     restrict: 'E',
     require: '^filterContainer',
     link: function(scope, elm, attr) {
       scope.registerRequired('adjustmentType', attr);
       AdjustmentTypes.get( function(data) {
-        scope.adjustmentTypes = scope.unshift(data.adjustmentTypeList, 'report.filter.all.adjustment.types');
+        scope.adjustmentTypes = data.adjustmentTypeList;
+        scope.adjustmentTypes.unshift({ name:'', description: messageService.get('report.filter.all.adjustment.types')});
       });
     },
     templateUrl: 'filter-adjustment-type-template'
@@ -568,7 +569,7 @@ app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
             id: 0
           });
         }
-        
+
 
       });
 
@@ -721,7 +722,7 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', '$routeParams',
         scope.subscribeOnChanged('product', 'product-category',onFiltersChanged, false);
         scope.subscribeOnChanged('product','program', onFiltersChanged, true);
 
-       
+
       },
       templateUrl: 'filter-product-multi-template'
     };

@@ -107,7 +107,7 @@
   <div>
     <label for="adjustmentType" class="labels" openlmis-message="label.adjustment.type"><span ng-show="requiredFilters.adjustmentType" class="label-required">*</span></label><div>
     <select id="adjustmentType" ui-select2 class="input-large" ng-model="filter.adjustmentType" ng-change="notifyFilterChanged('adjustment-type-changed');">
-      <option ng-repeat="adjustmentType in adjustmentTypes" value="{{ adjustmentType.name }}" ng-selected="adjustmentType.id == filter.adjustmentType">{{adjustmentType.description}}</option>
+      <option ng-repeat="adjustmentType in adjustmentTypes" value="{{ adjustmentType.name }}" ng-selected="adjustmentType.name == filter.adjustmentType">{{adjustmentType.description}}</option>
     </select>
   </div>
   </div>
