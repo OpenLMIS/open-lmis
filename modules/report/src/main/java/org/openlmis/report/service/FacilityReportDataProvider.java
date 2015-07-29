@@ -11,11 +11,11 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.mapper.FacilityReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.FacilityReportParam;
 import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +27,11 @@ import java.util.Map;
 public class FacilityReportDataProvider extends ReportDataProvider {
 
   @Autowired
-  private FacilityService facilityService;
+  SelectedFilterHelper filterHelper;
 
   @Autowired
   private FacilityReportMapper facilityReportMapper;
 
-  private FacilityReportParam facilityReportParam = null;
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
@@ -52,6 +51,6 @@ public class FacilityReportDataProvider extends ReportDataProvider {
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    return getReportFilterData(params).toString();
+    return filterHelper.getProgramPeriodGeoZone(params);
   }
 }

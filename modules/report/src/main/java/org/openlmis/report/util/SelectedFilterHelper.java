@@ -22,12 +22,13 @@ import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.SupervisoryNodeService;
-import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+
+//TODO:  Oh Lord - please re-write this class
 @Component
 @NoArgsConstructor
 @Data
@@ -63,7 +64,11 @@ public class SelectedFilterHelper {
         ProcessingPeriod periodObject = periodService.getById(Long.parseLong(period));
         GeographicZone zoneObject = geoZoneRepsotory.getById(Long.parseLong(zone));
         if (program != null) {
-            filterSummary = "Program: " + programService.getById(Long.parseLong(program)).getName();
+            if(program.equals("0")){
+                filterSummary = "Program: All Programs";
+            }else {
+                filterSummary = "Program: " + programService.getById(Long.parseLong(program)).getName();
+            }
         }
         if (periodObject != null) {
             filterSummary += "\nPeriod: " + periodObject.getName() + ", " + periodObject.getStringYear();
@@ -86,13 +91,11 @@ public class SelectedFilterHelper {
 
     public String getProgramGeoZoneFacility(Map<String, String[]> params) {
 
-        String filterSummary = "";
-
         String program = StringHelper.isBlank(params, "program") ? "0" : params.get("program")[0];
         String zone = StringHelper.isBlank(params, "zone") ? "0" : params.get("zone")[0];
         String facility = StringHelper.isBlank(params, "facility") ? "0" : params.get("facility")[0];
 
-        filterSummary = "Program: " + programService.getById(Long.parseLong(program)).getName();
+        String filterSummary = "Program: " + ((program.equals("0"))?"":programService.getById(Long.parseLong(program)).getName());
         GeographicZone zoneObject = geoZoneRepsotory.getById(Long.parseLong(zone));
         Facility facilityObject = facilityRepository.getById(Long.parseLong(facility));
 
