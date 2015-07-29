@@ -20,7 +20,7 @@ function ListFacilitiesController($scope, FacilityList, ngTableParams) {
     };
 
     $scope.statuses = [
-        {'name': 'All', value: ''},
+        {'name': 'All'},
         {'name': 'Active', 'value': "TRUE"},
         {'name': 'Inactive', 'value': "FALSE"}
     ];
