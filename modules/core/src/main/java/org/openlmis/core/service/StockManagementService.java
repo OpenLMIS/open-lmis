@@ -29,7 +29,7 @@ import static java.util.Collections.emptyList;
 
 
 /**
- * Exposes the services for handling GeographicZone entity.
+ * Exposes the services for handling stock management.
  */
 
 @Service
