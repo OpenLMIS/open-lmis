@@ -55,7 +55,7 @@
             <tr ng-repeat="row in datarows">
               <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
               <td data-title="getLocalMessage('label.product.code')" style="width:80px" sortable="code">{{ row.code }}</td>
-              <td data-title="'getLocalMessage('label.product')" style="width:30%" sortable="product">{{ row.product }}</td>
+              <td data-title="getLocalMessage('label.product')" style="width:30%" sortable="product">{{ row.product }}</td>
               <td data-title="getLocalMessage('label.beginning.balance')" class="number" style="width:80px" sortable="openingBalance">{{
                 row.openingBalance | number }}
               </td>

@@ -548,7 +548,7 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
 app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
   function(ReportProductsByProgram, $routeParams) {
 
-    var onPgCascadedVarsChanged = function($scope) {
+    var onPgCascadedVarsChanged = function($scope, attr) {
       if (isUndefined($scope.filter.program) || $scope.filter.program === 0)
         return;
 
@@ -558,14 +558,17 @@ app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
         programId: program
       }, function(data) {
         $scope.products = data.productList;
-        $scope.products.unshift({
-          'name': '-- Indicator Products --',
-          id: -1
-        });
-        $scope.products.unshift({
-          'name': '-- All Products --',
-          id: 0
-        });
+        if(!attr.required){
+          $scope.products.unshift({
+            'name': '-- Indicator Products --',
+            id: -1
+          });
+          $scope.products.unshift({
+            'name': '-- All Products --',
+            id: 0
+          });
+        }
+        
 
       });
 
@@ -575,7 +578,7 @@ app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
       restrict: 'E',
       link: function(scope, elm, attr) {
         scope.registerRequired('product', attr);
-        if (!$routeParams.product) {
+        if (!$routeParams.product && !attr.required) {
           scope.products = [{
             'name': '-- All Products --',
             id: 0
@@ -596,7 +599,7 @@ app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
         };
 
         var onFiltersChanged = function() {
-          onPgCascadedVarsChanged(scope);
+          onPgCascadedVarsChanged(scope, attr);
         };
         scope.subscribeOnChanged('product', 'product-category',onFiltersChanged, false);
         scope.subscribeOnChanged('product','program', onFiltersChanged, true);
@@ -816,7 +819,7 @@ app.directive('equipmentTypeFilter', ['ReportEquipmentTypes', '$routeParams', fu
     link: function(scope, elm, attr) {
       scope.registerRequired('equipmentType', attr);
       ReportEquipmentTypes.get(function(data) {
-        scope.equipmentTypes = scope.unshift(data.equipmentTypes, 'report.all.equipment.types');
+        scope.equipmentTypes = scope.unshift(data.equipmentTypes, 'report.filter.all.equipment.types');
       });
     },
     templateUrl: 'filter-equipment-type'

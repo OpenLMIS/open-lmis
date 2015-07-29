@@ -68,7 +68,7 @@
         <label for="facility" class="labels" openlmis-message="label.facility"><span ng-show="requiredFilters.facility" class="label-required">*</span></label>
         <div>
         <select id="facility" ui-select2 class="input-large" ng-model="filter.facility" ng-change="notifyFilterChanged('facility-changed');">
-               <option  ng-repeat="option in facilities" ng-selected="filter.facility == option.id" value="{{ option.id }}">{{ option.name }}</option>
+               <option  ng-repeat="option in facilities" ng-selected="filter.facility == option.id" value="{{ option.id }}" openlmis-message="option.name"></option>
             </select>
         </div>
     </div>

@@ -32,7 +32,6 @@ ORDER BY F.code asc, F.typeid asc]]>
 	<field name="facilityName" class="java.lang.String"/>
 	<field name="active" class="java.lang.Boolean"/>
 	<field name="address1" class="java.lang.String"/>
-	<field name="address2" class="java.lang.String"/>
 	<field name="facilityType" class="java.lang.String"/>
 	<field name="region" class="java.lang.String"/>
 	<field name="owner" class="java.lang.String"/>
@@ -40,7 +39,6 @@ ORDER BY F.code asc, F.typeid asc]]>
 	<field name="phoneNumber" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
 	<field name="fax" class="java.lang.String"/>
-	<field name="contact" class="java.lang.String"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
