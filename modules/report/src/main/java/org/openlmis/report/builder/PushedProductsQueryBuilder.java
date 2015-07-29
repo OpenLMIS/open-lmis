@@ -28,7 +28,7 @@ public class PushedProductsQueryBuilder {
         String facilityType = params.containsKey("facilityType") ? ((String[]) params.get("facilityType"))[0] : "";
         String program = params.containsKey("program") ? ((String[]) params.get("program"))[0] : "";
         String schedule = params.containsKey("schedule") ? ((String[]) params.get("schedule"))[0] : "";
-        String product = params.containsKey("product") ? java.util.Arrays.toString((String[]) params.get("product")) : "0";//.replace("]", "}").replace("]", "{").replaceAll("\"","") : "";
+        String product = params.containsKey("products") ? java.util.Arrays.toString((String[]) params.get("products")) : "0";
         String productCategory = params.containsKey("productCategory") ? ((String[]) params.get("productCategory"))[0] : "";
         return getProductsPushedQuery(params, zone, program, period, schedule, facility, product, facilityType, productCategory, userId);
 
@@ -60,7 +60,7 @@ public class PushedProductsQueryBuilder {
             WHERE("facilityid = cast(" + facility + " as int4)");
         }
 
-        if (!product.equals("0") && !product.equals("-1") && product != null && !product.isEmpty() && !product.equals("{}") && !product.equals("{0}") && !product.endsWith("undefined")) {
+        if (!product.equals("0") && !product.equals("-1") && product != null && !product.isEmpty() && !product.equals("{}") && !product.equals("[0]") && !product.endsWith("undefined")) {
             WHERE("productId =  ANY(array" + product + "::INT[]) ");
         }
 

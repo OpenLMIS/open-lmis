@@ -15,7 +15,7 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
         // clear old data if there was any
         $scope.pusheditems = $scope.data = $scope.datarows = $scope.summaries = [];
         $scope.filter.max = 10000;
-        OrderFillRateReport.get($scope.filter, function (data) {
+        OrderFillRateReport.get($scope.getSanitizedParameter(), function (data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
                 $scope.summaries = data.pages.rows[0].summary;
                 $scope.data = data.pages.rows[0].details;

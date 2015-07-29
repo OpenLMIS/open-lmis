@@ -51,7 +51,7 @@ public class OrderFillRateQueryBuilder {
             WHERE("facilityid = cast(" + facility + " as int4)");
         }
 
-        if (!product.equals("0") && !product.equals("-1") && product != null && !product.isEmpty() && !product.equals("{}") && !product.equals("{0}")&& !product.equals("[-1]") && !product.endsWith("undefined") && !product.isEmpty()) {
+        if (!product.equals("0") && !product.equals("-1") && product != null && !product.isEmpty() && !product.equals("[0]") && !product.equals("{0}")&& !product.equals("[-1]") && !product.endsWith("undefined") && !product.isEmpty()) {
             WHERE("productId =  ANY(array" + product + "::INT[]) ");
         }
 
