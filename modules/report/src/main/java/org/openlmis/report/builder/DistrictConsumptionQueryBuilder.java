@@ -11,14 +11,11 @@
 package org.openlmis.report.builder;
 
 
-import org.openlmis.report.model.params.AggregateConsumptionReportParam;
 import org.openlmis.report.model.params.DistrictConsumptionReportParam;
 
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
-import static org.apache.ibatis.jdbc.SqlBuilder.ORDER_BY;
-import static org.apache.ibatis.jdbc.SqlBuilder.SQL;
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class DistrictConsumptionQueryBuilder {
@@ -51,7 +48,7 @@ public class DistrictConsumptionQueryBuilder {
     WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
     WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
 
-    if(filter.getProductCategory() != null){
+    if(filter.getProductCategory() != 0){
       WHERE( productCategoryIsFilteredBy("ppg.productCategoryId"));
     }
 
@@ -65,7 +62,7 @@ public class DistrictConsumptionQueryBuilder {
     return String.format( "select sq.*, " +
         " (sq.consumption / sum(sq.consumption) over ()) * 100 as totalPercentage " +
         "from ( %s ) as sq " +
-        "order by sq.consumption desc", SQL());
+        "order by coalesce(sq.consumption,0) desc", SQL());
   }
 
 }
