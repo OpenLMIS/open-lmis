@@ -37,7 +37,7 @@
             <list><!-- list of open-lmis reports -->
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="facilities"/>
-                    <property name="template" value="facility-report.jasper"/>
+                    <property name="template" value="facilities-listings.jasper"/>
                     <property name="reportDataProvider" ref="facilityReportDataProvider"/>
                     <property name="id" value="RP-FAL-ALL"/>
                     <property name="name" value="Facility list report"/>
@@ -45,11 +45,11 @@
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
-                    <property name="reportKey" value="mailinglabels"/>
-                    <property name="template" value="mailing-labels.jasper"/>
-                    <property name="reportDataProvider" ref="mailingLabelReportDataProvider"/>
+                    <property name="reportKey" value="facility-list"/>
+                    <property name="template" value="facilities-listings.jasper"/>
+                    <property name="reportDataProvider" ref="facilityReportDataProvider"/>
                     <property name="id" value="RP-MAL-LAB"/>
-                    <property name="name" value="Facility List: Lists facilities with contact addresses"/>
+                    <property name="name" value="List of facilities with contact addresses"/>
                     <property name="title" value="report.title.facility.list"/>
                     <property name="version" value="1.0"/>
                 </bean>
@@ -329,6 +329,25 @@
                     <property name="id" value="RP-Unscheduled-reporting"/>
                     <property name="name" value="Unscheduled Reporting Facilities"/>
                     <property name="title" value="report.title.unscheduled.reporting"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cce_repair_management"/>
+                    <property name="template" value="cce-repair-management.jasper"/>
+                    <property name="reportDataProvider" ref="CCERepairManagementReportDataProvider"/>
+                    <property name="id" value="REPAIR"/>
+                    <property name="name" value="Cold Chain Repair Management"/>
+                    <property name="title" value="report.title.repair.management"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cce_repair_management_equipment_list"/>
+                    <property name="template" value="cce-repair-management-equipment-list.jasper"/>
+                    <property name="reportDataProvider" ref="CCERepairManagementEquipmentListDataProvider"/>
+                    <property name="id" value="REPAIR"/>
+                    <property name="name" value="Cold Chain Equipment List"/>
+                    <property name="title" value="report.title.repair.management.equipment.list"/>
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">

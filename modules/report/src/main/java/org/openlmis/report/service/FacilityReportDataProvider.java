@@ -11,19 +11,14 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.mapper.FacilityReportMapper;
-import org.openlmis.report.model.params.FacilityReportParam;
-import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.sorter.FacilityReportSorter;
-import org.openlmis.report.util.StringHelper;
+import org.openlmis.report.model.params.FacilityReportParam;
+import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,40 +27,30 @@ import java.util.Map;
 public class FacilityReportDataProvider extends ReportDataProvider {
 
   @Autowired
-  private FacilityService facilityService;
+  SelectedFilterHelper filterHelper;
 
   @Autowired
   private FacilityReportMapper facilityReportMapper;
 
-  private FacilityReportParam facilityReportParam = null;
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
-
     return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(params), this.getUserId());
   }
 
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
     return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria), this.getUserId());
   }
 
 
   public FacilityReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-    if (filterCriteria != null) {
-      facilityReportParam = new FacilityReportParam();
-      facilityReportParam.setZoneId(StringHelper.isBlank(filterCriteria,"zone") ? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));  //defaults to 0
-      facilityReportParam.setFacilityTypeId(filterCriteria.get("facilityType") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
-      facilityReportParam.setStatusId(StringHelper.isBlank(filterCriteria, "status") ? null : Boolean.valueOf(filterCriteria.get("status")[0]));
-      facilityReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program") ? 0 :Integer.parseInt(filterCriteria.get("program")[0]));
-
-    }
-    return facilityReportParam;
+    FacilityReportParam param = ParameterAdaptor.parse(filterCriteria, FacilityReportParam.class);
+    return param;
   }
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    return getReportFilterData(params).toString();
+    return filterHelper.getProgramPeriodGeoZone(params);
   }
 }

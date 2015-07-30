@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 
 @Data
@@ -24,14 +23,12 @@ import org.openlmis.report.model.ReportParameter;
 public class FacilityReportParam
   extends BaseParam implements ReportParameter {
 
-  //top filters
-  private String facilityCodeId;
-  private String facilityNameId;
-  private int facilityTypeId;
-  private int zoneId;
-  private Boolean statusId;
-  private int rgId;
-  private String rgroup;
-  private int programId;
+  private Long facilityType;
+
+  private Long zone;
+
+  private Boolean status;
+  
+  private Long program;
 
 }

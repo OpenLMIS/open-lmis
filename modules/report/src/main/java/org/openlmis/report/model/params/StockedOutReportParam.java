@@ -14,9 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.report.annotations.RequiredParam;
 import org.openlmis.report.model.ReportParameter;
-
-import java.text.DateFormat;
 
 @Data
 @NoArgsConstructor
@@ -25,17 +24,24 @@ import java.text.DateFormat;
 public class StockedOutReportParam
   extends BaseParam implements ReportParameter {
 
+  @RequiredParam
+  private Long program;
 
+  @RequiredParam
+  private Long period;
 
+  private Long requisitionGroup;
 
-  private Long programId;
-  private int rgroupId;
-  private int productCategoryId;
-  private String productId;
-  private Long facilityTypeId;
-  private int facilityId;
-  private int zoneId;
-  private Long periodId;
+  private Long productCategory;
+
+  private String products;
+
+  private Long facilityType;
+
+  private Long facility;
+
+  private Long zone;
+
 
 
 }

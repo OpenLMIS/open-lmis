@@ -7,15 +7,15 @@
  */
 services.factory('dashboardMenuService',function($rootScope,$location){
     var dashboardMenuService = {};
-
-    dashboardMenuService.tabs = [{header: 'menu.header.dashboard.summary', content:'/public/pages/dashboard/index.html', name:'SUMMARY', closable:false, displayOrder: 0},
+    dashboardMenuService.tabs = [];
+  /*  dashboardMenuService.tabs = [{header: 'menu.header.dashboard.summary', content:'/public/pages/dashboard/index.html', name:'SUMMARY', closable:false, displayOrder: 0},
         {header: 'menu.header.dashboard.stock.efficiency', content:'/public/pages/dashboard/index.html#/stock', name:'STOCK', closable:false, displayOrder: 1},
         {header: 'menu.header.dashboard.order.turn.around', content:'/public/pages/dashboard/index.html#/leadTime', name:'ORDER', closable: false, displayOrder: 2},
         {header: 'menu.header.dashboard.stocked.out', content:'/public/pages/dashboard/index.html#/stock-out', name:'STOCK-OUT', closable: false, displayOrder: 3},
         {header: 'menu.header.dashboard.notification', content:'/public/pages/dashboard/index.html#/notifications', name:'NOTIFICATION', closable: false, displayOrder: 4},
         {header: 'menu.header.dashboard.rnr.status.summary', content: '/public/pages/dashboard/index.html#/rnr-status-summary',name: 'RNR-STATUS-SUMMARY',closeable:false,displayOrder:5}];
 
-
+*/
     dashboardMenuService.addTab = function(header, content, name, closable, displayOrder){
         var tab = isTabExists(name);
         var newTab = {header:header, content: content, name:name, closable:closable, displayOrder: displayOrder};

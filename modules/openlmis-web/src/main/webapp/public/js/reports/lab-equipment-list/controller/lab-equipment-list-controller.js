@@ -10,11 +10,9 @@
 
 function LabEquipmentListReportController($scope, $filter, LabEquipmentListReport, GetLabEquipmentList, ngTableParams, ReportProductsByProgram, ReportPrograms, ProductCategoriesByProgram, RequisitionGroupsByProgram , ReportFacilityTypes, GeographicZones, OperationYears, Months, $http, $routeParams, $location) {
 
-
-
     $scope.exportReport   = function (type){
         $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
+        var params = jQuery.param($scope.getSanitizedParameter());
         var url = '/reports/download/lab_equipment_list/' + type +'?' + params;
         window.open(url);
     };
@@ -31,16 +29,13 @@ function LabEquipmentListReportController($scope, $filter, LabEquipmentListRepor
         // clear old data if there was any
         $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;
-        LabEquipmentListReport.get($scope.filter, function(data) {
+        LabEquipmentListReport.get($scope.getSanitizedParameter(), function(data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
                 $scope.data = data.pages.rows;
                 $scope.paramsChanged($scope.tableParams);
 
             }
         });
-
-
-
 
     };
 }

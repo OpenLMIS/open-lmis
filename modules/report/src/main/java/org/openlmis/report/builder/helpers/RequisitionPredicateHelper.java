@@ -1,11 +1,5 @@
 package org.openlmis.report.builder.helpers;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
-import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
-
 public class RequisitionPredicateHelper {
 
   public static String multiProductFilterBy(String products, String productIdField, String tracerField){
@@ -45,8 +39,12 @@ public class RequisitionPredicateHelper {
     return String.format("%s = #{filterCriteria.product}::INT", field);
   }
 
-  public static String facilityFilteredBy(String field){
+  public static String facilityIsFilteredBy(String field){
     return String.format("%s = #{filterCriteria.facility}::INT", field);
+  }
+
+  public static String facilityTypeIsFilteredBy(String field){
+    return String.format("%s= #{filterCriteria.facilityType}", field);
   }
 
 }

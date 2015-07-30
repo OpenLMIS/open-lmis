@@ -13,9 +13,9 @@ function SupplyStatusController($scope, $window , SupplyStatusReport) {
 
   $scope.exportReport   = function (type){
       $scope.filter.pdformat = 1;
-      var params = jQuery.param($scope.filter);
+      var params = jQuery.param($scope.getSanitizedParameter());
       var url = '/reports/download/supply_status/' + type +'?' + params;
-      $window.open(url);
+      $window.open(url, "_BLANK");
   };
 
 
@@ -24,7 +24,7 @@ function SupplyStatusController($scope, $window , SupplyStatusReport) {
     $scope.data = $scope.datarows = [];
     $scope.filter.max = 10000;
 
-    SupplyStatusReport.get($scope.filter , function(data) {
+    SupplyStatusReport.get($scope.getSanitizedParameter() , function(data) {
       if (data.pages !== undefined && data.pages.rows !== undefined) {
         $scope.data = data.pages.rows;
         $scope.paramsChanged($scope.tableParams);

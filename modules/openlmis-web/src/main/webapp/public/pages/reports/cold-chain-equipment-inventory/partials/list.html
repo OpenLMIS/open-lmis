@@ -25,10 +25,8 @@
             <h2 openlmis-message="report.title.cold.chain.equipment.inventory"><i class="icon-edit"></i><span class="break"></span></h2>
 
             <div class="box-icon">
-                <a id="pdf-button" ng-show="filterForm.$valid" href="#list" ng-click="exportReport('PDF');"
-                   class='btn-small btn-info'>PDF</a>
-                <a id="xls-button" ng-show="filterForm.$valid" href="#list" ng-click="exportReport('xls')"
-                   class='btn-small btn-info'>Excel</a>
+              <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+              <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')" class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
             </div>
         </div>
 

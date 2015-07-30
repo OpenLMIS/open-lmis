@@ -12,6 +12,7 @@ package org.openlmis.equipment.repository;
 
 
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.repository.mapper.ColdChainEquipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,12 @@ public class ColdChainEquipmentRepository {
   }
 
   public void remove(Long id){
-    mapper.remove(id);
+    ColdChainEquipment cce = getById(id);
+    if (cce != null && cce.isRemovable()) {
+      mapper.remove(id);
+    } else {
+      throw new DataException("message.equipment.cannot.remove.inventory.exists");
+    }
   }
 
 }

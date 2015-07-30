@@ -16,7 +16,7 @@ function DistrictConsumptionReportController($scope,  DistrictConsumptionReport)
       $scope.data = $scope.datarows = [];
       $scope.filter.page = 1;
       $scope.filter.max = 10000;
-      DistrictConsumptionReport.get($scope.filter, function(data) {
+      DistrictConsumptionReport.get($scope.getSanitizedParameter(), function(data) {
 
         if(data.pages !== undefined){
           $scope.data = data.pages.rows;//removeRowsWithNoPercentage(data.pages.rows); //data.pages.rows
@@ -35,9 +35,9 @@ function DistrictConsumptionReportController($scope,  DistrictConsumptionReport)
    $scope.exportReport   = function (type){
 
         $scope.filter.pdformat =1;
-        var params = jQuery.param($scope.filter);
+        var params = jQuery.param($scope.getSanitizedParameter());
         var url = '/reports/download/district_consumption/' + type +'?' + params;
-        window.open(url);
+        window.open(url, '_BLANK');
     };
 
 

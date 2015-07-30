@@ -84,13 +84,13 @@ public class ReportLookupController extends BaseController {
   }
 
   //It Get only programs with regimens
-  @RequestMapping(value="/regimenPrograms", method = GET, headers = BaseController.ACCEPT_JSON)
+  @RequestMapping(value="/programs-supporting-regimen", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getRegimenPrograms(){
-      return OpenLmisResponse.response( "regimenPrograms", this.reportLookupService.getAllRegimenPrograms());
+      return OpenLmisResponse.response( "programs", this.reportLookupService.getAllRegimenPrograms());
   }
-  @RequestMapping(value = "/programsWithBudgetApplies", method = GET,headers = BaseController.ACCEPT_JSON)
+  @RequestMapping(value = "/programs-supporting-budget", method = GET,headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse>getProgramsWithBudgetingApplies(){
-      return OpenLmisResponse.response("programWithBudgetingApplies",this.reportLookupService.getAllProgramsWithBudgeting());
+      return OpenLmisResponse.response("programs",this.reportLookupService.getAllProgramsWithBudgeting());
   }
   @RequestMapping(value="/schedules", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getSchedules(){

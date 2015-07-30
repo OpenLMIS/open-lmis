@@ -15,7 +15,7 @@ function NonReportingController($scope, NonReportingFacilities) {
     $scope.data = $scope.datarows = [];
     $scope.filter.max = 10000;
 
-    NonReportingFacilities.get($scope.filter, function(data) {
+    NonReportingFacilities.get($scope.getSanitizedParameter(), function(data) {
       if (data.pages !== undefined && data.pages.rows !== undefined) {
         $scope.summaries    =  data.pages.rows[0].summary;
 
@@ -43,7 +43,7 @@ function NonReportingController($scope, NonReportingFacilities) {
   $scope.exportReport   = function (type){
     var paramString = jQuery.param($scope.filter);
     var url = '/reports/download/non_reporting/' + type + '?' + paramString;
-    window.open(url);
+    window.open(url, "_BLANK");
   };
 
   // Summary pie chart options

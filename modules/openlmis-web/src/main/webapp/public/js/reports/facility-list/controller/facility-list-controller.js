@@ -20,7 +20,7 @@ function ListFacilitiesController($scope, FacilityList, ngTableParams) {
     };
 
     $scope.statuses = [
-        {'name': 'All', value: ''},
+        {'name': 'All'},
         {'name': 'Active', 'value': "TRUE"},
         {'name': 'Inactive', 'value': "FALSE"}
     ];
@@ -29,7 +29,7 @@ function ListFacilitiesController($scope, FacilityList, ngTableParams) {
     $scope.exportReport   = function (type){
 
 
-      var params = jQuery.param($scope.filter);
+      var params = jQuery.param($scope.getSanitizedParameter());
 
     var sortOrderParams = jQuery.param($scope.tableParams.sorting);
     sortOrderParams = sortOrderParams.split('=');
@@ -37,12 +37,12 @@ function ListFacilitiesController($scope, FacilityList, ngTableParams) {
     sortOrderParams = jQuery.param(sortOrderParams);
 
 
-      var url = '/reports/download/mailinglabels/' + type +'?' + sortOrderParams +'&'+ params ;
+      var url = '/reports/download/facility-list/' + type +'?' + sortOrderParams +'&'+ params ;
       if(type == "mailing-list"){
         url = '/reports/download/mailinglabels/list/' + "pdf" +'?' + sortOrderParams +'&'+ params ;
       }
 
-      window.open(url);
+      window.open(url, '_BLANK');
     };
 
 

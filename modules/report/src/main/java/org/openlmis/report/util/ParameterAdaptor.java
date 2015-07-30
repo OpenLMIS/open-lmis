@@ -22,6 +22,14 @@ public class ParameterAdaptor {
             f.set(result, Long.parseLong(value));
           } else if (f.getType() == Integer.class) {
             f.set(result, Integer.parseInt(value));
+          } else if(f.getType() == Boolean.class){
+            f.set(result, Boolean.parseBoolean(value));
+          }
+        }else{
+          if(f.getType() == Long.class){
+            f.set(result, 0L);
+          }else if(f.getType() == Integer.class){
+            f.set(result, 0);
           }
         }
       }
@@ -35,8 +43,9 @@ public class ParameterAdaptor {
 
   public static <T> T validate(Object o) throws Exception{
     for(Field f: o.getClass().getDeclaredFields()){
-      if(f.isAnnotationPresent(RequiredParam.class) && f.get(o) == null){
-        throw new Exception("Required Parameter Missing");
+      f.setAccessible(true);
+      if(f.isAnnotationPresent(RequiredParam.class) && (f.get(o) == null || (f.getType() == Long.class && f.get(o).equals(0L)))){
+        throw new Exception(String.format("Required Parameter Missing - %s", f.getName()));
       }
     }
     return (T)o;

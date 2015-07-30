@@ -45,7 +45,7 @@ public class AggregateConsumptionQueryBuilder {
     WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
     WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
 
-    if(filter.getProductCategory() != null){
+    if(filter.getProductCategory() != 0){
       WHERE( productCategoryIsFilteredBy("ppg.productCategoryId"));
     }
 
@@ -57,7 +57,7 @@ public class AggregateConsumptionQueryBuilder {
       WHERE( geoZoneIsFilteredBy("d") );
     }
 
-    GROUP_BY("p.code, p.primaryName, p.dispensingunit");
+    GROUP_BY("p.code, p.primaryName, p.dispensingUnit");
     ORDER_BY("p.primaryName");
     return SQL();
   }

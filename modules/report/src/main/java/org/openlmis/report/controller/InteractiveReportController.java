@@ -527,7 +527,34 @@ public class InteractiveReportController extends BaseController {
                 (List<TimelinessReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, timelinessReportList);
     }
+    @RequestMapping(value = "/reportdata/cceRepairManagement", method = GET, headers = BaseController.ACCEPT_JSON)
+    public Pages getRepairManagementSummary(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+            HttpServletRequest request
+    ) {
 
+        Report report = reportManager.getReportByKey("cce_repair_management");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<CCERepairManagementReport> CCERepairManagementReport = (List<CCERepairManagementReport>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, CCERepairManagementReport);
+    }
+
+
+    @RequestMapping(value = "/reportdata/cceRepairManagementEquipmentList", method = GET, headers = BaseController.ACCEPT_JSON)
+    public Pages getRepairManagementEquipmentList(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+            HttpServletRequest request
+    ) {
+
+        Report report = reportManager.getReportByKey("cce_repair_management_equipment_list");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<CCERepairManagementEquipmentList> repairManagementEquipmentList = (List<CCERepairManagementEquipmentList>) report.getReportDataProvider().getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, repairManagementEquipmentList);
+    }
 
 
     @RequestMapping(value = "/reportdata/replacementPlanSummary", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -559,7 +586,6 @@ public class InteractiveReportController extends BaseController {
 
         return new Pages(page, max, SummaryList);
     }
-
 
     @RequestMapping(value = "/reportdata/coldChainEquipment", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_COLD_CHAIN_EQUIPMENT_LIST_REPORT')")

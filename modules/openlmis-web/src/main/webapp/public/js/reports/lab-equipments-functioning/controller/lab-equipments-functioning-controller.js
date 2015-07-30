@@ -11,36 +11,31 @@
 function LabEquipmentFunctioningReportController($scope, $filter, FunctioningLabEquipment, ngTableParams, $http, $routeParams, $location) {
 
 
+  $scope.exportReport = function(type) {
+    $scope.filter.pdformat = 1;
+    var params = jQuery.param($scope.getSanitizedParameter());
+    var url = '/reports/download/lab_equipments_functioning/' + type + '?' + params;
+    window.open(url, '_BLANK');
+  };
 
-    $scope.exportReport   = function (type){
-        $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
-        var url = '/reports/download/lab_equipments_functioning/' + type +'?' + params;
-        window.open(url);
-    };
+  // the grid options
+  $scope.tableParams = new ngTableParams({
+    page: 1, // show first page
+    total: 0, // length of data
+    count: 10 // count per page
+  });
 
-    // the grid options
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        total: 0,           // length of data
-        count: 10           // count per page
+  $scope.OnFilterChanged = function() {
+    // clear old data if there was any
+    $scope.data = $scope.datarows = [];
+    $scope.filter.max = 10000;
+    FunctioningLabEquipment.get($scope.getSanitizedParameter(), function(data) {
+      if (data.pages !== undefined && data.pages.rows !== undefined) {
+        $scope.data = data.pages.rows;
+        $scope.paramsChanged($scope.tableParams);
+
+      }
     });
 
-
-    $scope.OnFilterChanged = function() {
-        // clear old data if there was any
-        $scope.data = $scope.datarows = [];
-        $scope.filter.max = 10000;
-        FunctioningLabEquipment.get($scope.filter, function(data) {
-            if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.data = data.pages.rows;
-                $scope.paramsChanged($scope.tableParams);
-
-            }
-        });
-
-
-
-
-    };
+  };
 }

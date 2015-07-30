@@ -208,6 +208,10 @@
                 <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT')">
                   <a href="/public/pages/reports/lab-equipments-by-location/index.html" openlmis-message="menu.report.lab.equipment.by.location"></a>
                 </li>
+
+                <li ng-show="hasPermission('VIEW_REPAIR_MANAGEMENT_REPORT')">
+                      <a href="/public/pages/reports/cce-repair-management/index.html" openlmis-message="menu.report.repair.management"></a>
+
                 <li ng-show="hasPermission('VIEW_COLD_CHAIN_EQUIPMENT_LIST_REPORT')">
                   <a href="/public/pages/reports/cold-chain-equipment-inventory/index.html" openlmis-message="menu.report.lab.equipment.coldchain.inventory"></a>
                 </li>

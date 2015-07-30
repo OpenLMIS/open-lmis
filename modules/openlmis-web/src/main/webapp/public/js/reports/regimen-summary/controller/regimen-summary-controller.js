@@ -12,9 +12,9 @@ function RegimenSummaryControllers($scope, $window, RegimenSummaryReport) {
 
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
+        var params = jQuery.param($scope.getSanitizedParameter());
         var url = '/reports/download/regimen_summary/' + type + '?' + params;
-        $window.open(url);
+        $window.open(url, "_BLANK");
     };
 
     $scope.OnFilterChanged = function () {
@@ -23,7 +23,7 @@ function RegimenSummaryControllers($scope, $window, RegimenSummaryReport) {
         $scope.filter.max = 10000;
         $scope.filter.page = 1;
 
-        RegimenSummaryReport.get($scope.filter, function (data) {
+        RegimenSummaryReport.get($scope.getSanitizedParameter(), function (data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
                 $scope.data = data.pages.rows;
                 $scope.paramsChanged($scope.tableParams);

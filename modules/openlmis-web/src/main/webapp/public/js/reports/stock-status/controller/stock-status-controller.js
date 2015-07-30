@@ -16,22 +16,6 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
     $scope.showAMC = true;
     $scope.showSOH = true;
 
-
-    // get configurations
-
-    /*
-     SettingsByKey.get({key: 'STOCKED_OUT_SMS_TEMPLATE'}, function (data){
-     $scope.sms_template           = data.settings.value;
-     });
-
-     SettingsByKey.get({key: 'UNDER_STOCKED_SMS_TEMPLATE'}, function (data){
-     $scope.sms_template           = data.settings.value;
-     });
-
-     SettingsByKey.get({key: 'OVER_STOCKED_SMS_TEMPLATE'}, function (data){
-     $scope.sms_template           = data.settings.value;
-     });
-     */
     // get configurations
     SettingsByKey.get({key: 'LATE_RNR_NOTIFICATION_SMS_TEMPLATE'}, function (data){
         $scope.sms_template           = data.settings.value;
@@ -160,20 +144,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
         $scope.zoomToSelectedFeature(feature);
     };
 
-    /*
-     $scope.StockStatusProducts = function(feature, element) {
-     StockStatusProductList.get({
-     program: $scope.filter.program,
-     period: $scope.filter.period
-     }, function(data) {
-     $scope.products = data.products;
-     $scope.successModal = true;
-     alert("fail:" +  JSON.stringify($scope.products));
 
-     });
-     };
-
-     */
     $scope.UnderStockedFacilities = function(feature, element) {
         UnderStockedFacilityList.get({
             program: $scope.filter.program,

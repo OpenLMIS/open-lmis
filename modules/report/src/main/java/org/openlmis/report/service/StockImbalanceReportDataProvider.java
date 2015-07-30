@@ -16,9 +16,10 @@ import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.StockImbalanceReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.StockImbalanceReportParam;
+import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
-import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,8 +30,8 @@ import java.util.Map;
 public class StockImbalanceReportDataProvider extends ReportDataProvider {
 
 
-    @Autowired
-    private SelectedFilterHelper filterHelper;
+  @Autowired
+  private SelectedFilterHelper filterHelper;
 
   @Autowired
   private StockImbalanceReportMapper reportMapper;
@@ -38,7 +39,8 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
   @Autowired
   private ConfigurationSettingService configurationService;
 
-  private StockImbalanceReportParam stockImbalanceReportParam = null;
+  @Value("${report.status.considered.accepted}")
+  private String configuredAcceptedRnrStatuses;
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
@@ -53,39 +55,13 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
   }
 
   public StockImbalanceReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-
-    if (filterCriteria != null) {
-      stockImbalanceReportParam = new StockImbalanceReportParam();
-
-      stockImbalanceReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType")? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
-
-      stockImbalanceReportParam.setProductCategoryId(!filterCriteria.containsKey("productCategory") ? "0" : java.util.Arrays.toString(filterCriteria.get("productCategory")).replace("]", "}").replace("[", "{").replaceAll("\"", ""));
-      stockImbalanceReportParam.setProductId(!filterCriteria.containsKey("products") ? "0" : java.util.Arrays.toString(filterCriteria.get("products")).replace("]", "}").replace("[", "{").replaceAll("\"", "")); //defaults to 0
-      stockImbalanceReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program")  ? 0 : Integer.parseInt(filterCriteria.get("program")[0]));
-      stockImbalanceReportParam.setScheduleId(StringHelper.isBlank(filterCriteria, "schedule") ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0]));
-      stockImbalanceReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0 : Integer.parseInt(filterCriteria.get("period")[0]));
-      stockImbalanceReportParam.setYear(StringHelper.isBlank(filterCriteria, "year") ? 0 : Integer.parseInt(filterCriteria.get("year")[0]));
-      stockImbalanceReportParam.setSchedule(StringHelper.isBlank(filterCriteria, "schedule") ? "" : filterCriteria.get("schedule")[0]);
-      stockImbalanceReportParam.setPeriod(StringHelper.isBlank(filterCriteria,"period") ? "" : filterCriteria.get("period")[0]);
-      stockImbalanceReportParam.setZoneId(StringHelper.isBlank(filterCriteria,"zone") ? 0 : Long.parseLong(filterCriteria.get("zone")[0]));
-
-      stockImbalanceReportParam.setProductCategory((StringHelper.isBlank(filterCriteria, "productCategory") ) ? "All Product Categories" : filterCriteria.get("productCategory")[0]);
-      stockImbalanceReportParam.setFacilityType((StringHelper.isBlank(filterCriteria,"facilityType") ) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
-      stockImbalanceReportParam.setFacility(StringHelper.isBlank(filterCriteria,"facility")? "" : filterCriteria.get("facility")[0]);
-      if (stockImbalanceReportParam.getProgramId() == 0 || stockImbalanceReportParam.getProgramId() == -1) {
-        stockImbalanceReportParam.setProgram("All Programs");
-      }else {
-        stockImbalanceReportParam.setProgram(filterCriteria.get("program")[0]);
-      }
-
-    }
-
-    return stockImbalanceReportParam;
+    StockImbalanceReportParam param = ParameterAdaptor.parse(filterCriteria, StockImbalanceReportParam.class);
+    param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
+    return param;
   }
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-   // return getReportFilterData(params).toString();
-      return filterHelper.getProgramPeriodGeoZone(params);
+    return filterHelper.getProgramPeriodGeoZone(params);
   }
 }

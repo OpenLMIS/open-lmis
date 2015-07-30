@@ -14,7 +14,7 @@ function StockedOutController($scope, $window, StockedOutReport) {
         // clear old data if there was any
         $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;
-        StockedOutReport.get($scope.filter, function(data) {
+        StockedOutReport.get($scope.getSanitizedParameter(), function(data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
                 $scope.data = data.pages.rows;
                 $scope.paramsChanged($scope.tableParams);
@@ -24,9 +24,9 @@ function StockedOutController($scope, $window, StockedOutReport) {
 
     $scope.exportReport = function(type) {
         $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
+        var params = jQuery.param($scope.getSanitizedParameter());
         var url = '/reports/download/stocked_out/' + type + '?' + params;
-        $window.open(url);
+        $window.open(url,'_BLANK');
     };
 
 
