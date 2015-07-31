@@ -7,44 +7,51 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
-function CustomReportController($scope, CustomReportList, CustomReportValue) {
+function CustomReportController($scope, reports, CustomReportValue) {
 
-  CustomReportList.get(function (data) {
-    $scope.reports = data.reports;
+  $scope.reports = reports;
+  $scope.displayReports = _.groupBy(reports, 'category');
+  $scope.categories = _.uniq(_.pluck(reports, 'category'));
 
-    $scope.displayReports = _.groupBy(data.reports, 'category');
-    $scope.categories = _.uniq( _.pluck(data.reports, 'category') );
+  $scope.isReady = true;
+  if (!angular.isUndefined($scope.filter) && angular.isUndefined($scope.filter.report_key)) {
+    $scope.OnFilterChanged();
+  }
 
-    $scope.isReady = true;
-    if(!angular.isUndefined($scope.filter) && angular.isUndefined($scope.filter.report_key)){
-      $scope.OnFilterChanged();
-    }
-  });
+  $scope.OnReportTypeChanged = function(){
+    $scope.OnFilterChanged();
+  }
 
-  function updateFilterSection() {
+  function updateFilterSection($scope) {
 
     // avoid having the blinking effect if the report has not been changed.
     if ($scope.previous_report_key != $scope.filter.report_key) {
       $scope.previous_report_key = $scope.filter.report_key;
 
       $scope.report = _.findWhere($scope.reports, {reportkey: $scope.filter.report_key});
+
       $scope.report.columns = angular.fromJson($scope.report.columnoptions);
       if ($scope.report.filters !== null && $scope.report.filters !== '') {
         $scope.report.currentFilters = angular.fromJson($scope.report.filters);
+        var required = _.pluck($scope.report.currentFilters,'name');
+        $scope.requiredFilters = [];
+        angular.forEach(required, function(r){
+          $scope.requiredFilters[r] = r;
+        });
       } else {
         $scope.report.currentFilters = [];
+          $scope.requiredFilters = [];
       }
     }
   }
 
   $scope.OnFilterChanged = function () {
-
-    if ( angular.isUndefined($scope.filter) || angular.isUndefined($scope.filter.report_key) || !$scope.isReady) {
+    if (angular.isUndefined($scope.filter) || angular.isUndefined($scope.filter.report_key) || !$scope.isReady) {
       return;
     }
-    updateFilterSection();
-
     $scope.applyUrl();
+    updateFilterSection($scope);
+
 
     //clear existing data
     $scope.data = [];
@@ -57,3 +64,17 @@ function CustomReportController($scope, CustomReportList, CustomReportValue) {
   };
 
 }
+
+
+CustomReportController.resolve = {
+  reports: function ($q, $timeout, CustomReportList) {
+    var deferred = $q.defer();
+    $timeout(function () {
+
+      CustomReportList.get(function (data) {
+        deferred.resolve(data.reports);
+      });
+    }, 100);
+    return deferred.promise;
+  }
+};

@@ -26,11 +26,16 @@ public class CustomReportRepository {
   @Autowired
   private CustomReportMapper mapper;
 
-  public List<Map> getReportList(){
-     return mapper.getListOfReports();
+  public List<Map> getReportList() {
+    return mapper.getListOfReports();
   }
 
-  public List<Map> getReportData(Map filter){
+  public List<CustomReport> getReportListWithFullAttributes() {
+    return mapper.getListWithFullAttributes();
+  }
+
+
+  public List<Map> getReportData(Map filter) {
     String reportKey = filter.get("report_key").toString();
     Map report = mapper.getCustomReportByKey(reportKey);
     String query = report.get("query").toString();
@@ -38,7 +43,11 @@ public class CustomReportRepository {
     return mapper.getReportData(filter);
   }
 
-  public void insert(CustomReport report){
+  public void insert(CustomReport report) {
     mapper.insert(report);
+  }
+
+  public void update(CustomReport report) {
+    mapper.update(report);
   }
 }

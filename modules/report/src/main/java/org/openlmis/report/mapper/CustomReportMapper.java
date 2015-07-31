@@ -23,6 +23,9 @@ public interface CustomReportMapper {
   @Select("select id, reportKey, name, description, category, columnoptions, filters from custom_reports order by category, name")
   List<Map> getListOfReports();
 
+  @Select("select * from custom_reports order by category, name")
+  List<CustomReport> getListWithFullAttributes();
+
   @SelectProvider(type = PureSqlProvider.class, method = "sql")
   List<Map> getReportData(Map param);
 
@@ -30,13 +33,13 @@ public interface CustomReportMapper {
   Map getCustomReportByKey(@Param("key") String key);
 
   @Insert("insert into custom_reports " +
-      "   (name, reportKey, description, help, filters, query, category, columnOptions, createdBy, createdDate, modifiedBy, modifiedDate ) " +
+      "   (name, reportkey, description, help, filters, query, category, columnoptions ) " +
       " values " +
-      " (#{name}, #{reportKey}, #{description}, #{help}, #{filters}, #{query}, #{category}, #{columnOptions}, #{createdBy}, #{createdDate}, #{modifiedBy}, #{modifiedDate})")
+      " (#{name}, #{reportkey}, #{description}, #{help}, #{filters}, #{query}, #{category}, #{columnoptions})")
   void insert(CustomReport report);
 
   @Update("update custom_reports " +
-      " set name = #{name}, reportKey = #{reportKey}, description = #{description}, help = #{help}, filters = #{filters}, query = #{query}, category = #{query} , columnOptions = #{columnOptions}, modifiedBy = #{modifiedBy}, modifiedDate = #{modifiedDate}" +
+      " set name = #{name}, reportKey = #{reportkey}, description = #{description}, help = #{help}, filters = #{filters}, query = #{query}, category = #{category} , columnOptions = #{columnoptions}" +
       " where id = #{id}")
   void update(CustomReport report);
 
