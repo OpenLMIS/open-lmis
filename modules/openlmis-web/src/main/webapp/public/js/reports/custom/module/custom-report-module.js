@@ -12,6 +12,7 @@ angular.module('custom_report', ['openlmis', 'ngTable',  'ui.chart', 'angularCom
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.
                 when('/list', {controller:CustomReportController, templateUrl:'partials/list.html',reloadOnSearch:false, resolve: CustomReportController.resolve}).
+                when('/designer', {controller:CustomReportDesignerController, templateUrl:'partials/designer.html',reloadOnSearch:false, resolve: CustomReportDesignerController.resolve}).
                 otherwise({redirectTo:'/list'});
         }]).run(
         function ($rootScope, AuthorizationService) {

@@ -20,7 +20,7 @@ function CustomReportController($scope, reports, CustomReportValue) {
 
   $scope.OnReportTypeChanged = function(){
     $scope.OnFilterChanged();
-  }
+  };
 
   function updateFilterSection($scope) {
 
@@ -51,8 +51,7 @@ function CustomReportController($scope, reports, CustomReportValue) {
     }
     $scope.applyUrl();
     updateFilterSection($scope);
-
-
+    
     //clear existing data
     $scope.data = [];
     $scope.meta = undefined;
@@ -65,12 +64,10 @@ function CustomReportController($scope, reports, CustomReportValue) {
 
 }
 
-
 CustomReportController.resolve = {
   reports: function ($q, $timeout, CustomReportList) {
     var deferred = $q.defer();
     $timeout(function () {
-
       CustomReportList.get(function (data) {
         deferred.resolve(data.reports);
       });

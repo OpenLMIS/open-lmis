@@ -1209,6 +1209,14 @@ services.factory('CustomReportList', function ($resource) {
     return $resource('/report-api/list.json', {}, {});
 });
 
+services.factory('CustomReportFullList', function ($resource) {
+    return $resource('/report-api/full-list.json', {}, {});
+});
+
+services.factory('SaveCustomReport', function ($resource) {
+    return $resource('/report-api/save.json', {}, {method: 'POST'});
+});
+
 services.factory('CustomReportValue', function ($resource) {
     return $resource('/report-api/report.json', {}, {});
 });
