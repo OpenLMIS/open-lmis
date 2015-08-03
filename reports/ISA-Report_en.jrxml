@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2015-04-01T14:04:07 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ISA Report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="faa6981e-fdda-40f1-b1b0-e3839f192e7c">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Open-LMIS - Localhost"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT p.primaryname as productname
+  , ppi.whoratio
+  , ppi.dosesperyear
+  , ppi.wastagefactor
+  , ppi.bufferpercentage
+  , ppi.minimumvalue
+  , ppi.maximumvalue
+  , ppi.adjustmentvalue
+FROM program_product_isa ppi
+JOIN program_products pp ON (ppi.programproductid=pp.id)
+JOIN products p ON (pp.productid=p.id)]]>
+	</queryString>
+	<field name="productname" class="java.lang.String"/>
+	<field name="whoratio" class="java.math.BigDecimal"/>
+	<field name="dosesperyear" class="java.lang.Integer"/>
+	<field name="wastagefactor" class="java.math.BigDecimal"/>
+	<field name="bufferpercentage" class="java.math.BigDecimal"/>
+	<field name="minimumvalue" class="java.lang.Integer"/>
+	<field name="maximumvalue" class="java.lang.Integer"/>
+	<field name="adjustmentvalue" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="550" height="79" uuid="1894fceb-e0ce-462e-a709-9a634498afe1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Program Product ISA]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="70" height="40" uuid="317b3137-d28e-428d-b394-a5c6812959a8">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[Product]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="104" y="0" width="62" height="40" uuid="924296e1-dfdf-4fa4-8e77-62282d1e397b"/>
+				<text><![CDATA[Target Pop * coverage rate %]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="187" y="0" width="62" height="40" uuid="37668be2-fee2-4e31-b54b-29d9fc823bed">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<text><![CDATA[Doses per Patient per Year]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="272" y="0" width="62" height="40" uuid="05eb0c35-76e6-4e73-bd7a-a5dd4fc33a2b">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[Wastage Factor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="0" width="62" height="40" uuid="2443f024-cbcb-44da-a5f1-4b3210cfccaf">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[Buffer Stock Level]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="39" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="70" height="30" uuid="94b2e36b-0846-411e-9748-cb4167d3ae16"/>
+				<textFieldExpression><![CDATA[$F{productname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="104" y="0" width="62" height="30" uuid="bd716e52-d0e4-4b7d-a450-2444093fa843"/>
+				<textFieldExpression><![CDATA[$F{whoratio} + " %"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="187" y="0" width="62" height="30" uuid="63d12ba2-9ba7-44ab-b80e-e357b7f02a99"/>
+				<textFieldExpression><![CDATA[$F{dosesperyear}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.00">
+				<reportElement x="273" y="0" width="62" height="30" uuid="d7868b17-037a-4240-b930-4d8b28b6ad8d"/>
+				<textFieldExpression><![CDATA[$F{wastagefactor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="361" y="0" width="62" height="30" uuid="7eaa79da-f803-4316-acff-896307ea20d5"/>
+				<textFieldExpression><![CDATA[$F{bufferpercentage} + " %"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

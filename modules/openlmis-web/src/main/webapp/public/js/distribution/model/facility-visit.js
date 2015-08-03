@@ -10,7 +10,7 @@
 
 function FacilityVisit(facilityVisitJson) {
   $.extend(true, this, facilityVisitJson);
-  var mandatoryList = ['verifiedBy', 'confirmedBy', 'visitDate'];
+  var mandatoryList = ['visitDate'];
 
   FacilityVisit.prototype.computeStatus = function () {
     if (isUndefined(this.visited)) {

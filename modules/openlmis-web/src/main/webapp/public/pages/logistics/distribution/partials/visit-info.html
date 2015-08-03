@@ -62,13 +62,11 @@
                 <label openlmis-message="label.name" for="verifiedByName"></label>
                 <input type="text" maxlength="50"
                        ng-model="facilityData.facilityVisit.verifiedBy.name"
-                       id="verifiedByName"
-                       ng-class="{'required-error': !facilityData.facilityVisit.verifiedBy.name}"/>
+                       id="verifiedByName"/>
                 <label openlmis-message="label.title" for="verifiedByTitle"></label>
                 <input type="text" maxlength="50"
                        ng-model="facilityData.facilityVisit.verifiedBy.title"
-                       id="verifiedByTitle"
-                       ng-class="{'required-error': !facilityData.facilityVisit.verifiedBy.title}"/>
+                       id="verifiedByTitle"/>
               </div>
             </div>
 
@@ -80,13 +78,11 @@
                 <label openlmis-message="label.name" for="confirmedByName"></label>
                 <input type="text" maxlength="50"
                        ng-model="facilityData.facilityVisit.confirmedBy.name"
-                       id="confirmedByName"
-                       ng-class="{'required-error': !facilityData.facilityVisit.confirmedBy.name}"/>
+                       id="confirmedByName"/>
                 <label openlmis-message="label.title" for="confirmedByTitle"></label>
                 <input type="text" maxlength="50"
                        ng-model="facilityData.facilityVisit.confirmedBy.title"
-                       id="confirmedByTitle"
-                       ng-class="{'required-error': !facilityData.facilityVisit.confirmedBy.title}"/>
+                       id="confirmedByTitle"/>
               </div>
             </div>
           </div>
@@ -147,7 +143,7 @@
              <label class="radio-label" for="unavailablePerDiemFunds{{ $index }}"
                      openlmis-message="label.unavailable.funds.perdiem"></label>
             </div>
-            <div class="form-row clearfix">
+            <div class="form-row clearfix dontdisplay">
               <input id="notPartOfProgram{{ $index }}" type="radio"
                      ng-model="facilityData.facilityVisit.reasonForNotVisiting"
                      value="{{reasons.notPartOfProgram}}"/>
