@@ -91,7 +91,7 @@ public class RestLoginServiceTest {
 
   @Test
   public void shouldThrowExceptionIfUsernameAndPasswordAreIncorrect() {
-    when(userAuthenticationService.authenticateUser(any(User.class))).thenReturn(new UserToken(null, null, false));
+    when(userAuthenticationService.authenticateUser(any(User.class))).thenReturn(new UserToken("username", null, false));
     exception.expect(BadCredentialsException.class);
     restLoginService.login("username", "password");
   }
