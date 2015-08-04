@@ -13,12 +13,15 @@ package org.openlmis.report.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.openlmis.report.model.CustomReport;
 import org.openlmis.report.repository.CustomReportRepository;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
@@ -38,6 +41,11 @@ public class CustomReportController extends BaseController{
     return OpenLmisResponse.response("reports", reportRepository.getReportList());
   }
 
+  @RequestMapping(value = "full-list")
+  public ResponseEntity<OpenLmisResponse> getFullListOfReports(){
+    return OpenLmisResponse.response("reports", reportRepository.getReportListWithFullAttributes());
+  }
+
   @RequestMapping(value = "report")
   public ResponseEntity<OpenLmisResponse> getReportData( @RequestParam Map filter ){
     long requestTime = new Date().getTime();
@@ -50,4 +58,16 @@ public class CustomReportController extends BaseController{
     response.getBody().addData("duration", duration);
     return response;
   }
+
+  @RequestMapping(value = "save", method = RequestMethod.POST)
+  public ResponseEntity<OpenLmisResponse> saveCustomReport( @RequestBody CustomReport report){
+    if(report.getId() != null){
+      reportRepository.update(report);
+    }else{
+      reportRepository.insert(report);
+    }
+
+    return OpenLmisResponse.response("report", report);
+  }
+
 }

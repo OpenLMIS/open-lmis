@@ -24,7 +24,7 @@ public class CustomReport extends BaseModel{
 
   private String name;
 
-  private String reportKey;
+  private String reportkey;
 
   private String description;
 
@@ -36,7 +36,7 @@ public class CustomReport extends BaseModel{
 
   private String category;
 
-  private String columnOptions;
+  private String columnoptions;
 
 
 }
