@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.User;
 
+import java.util.List;
+
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -13,30 +15,32 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @JsonSerialize(include = NON_EMPTY)
 public class LoginInformation {
 
-    private String userName;
+  private String userName;
 
-    private String userFirstName;
+  private String userFirstName;
 
-    private String userLastName;
+  private String userLastName;
 
-    private String facilityCode;
+  private String facilityCode;
 
-    private String facilityName;
+  private String facilityName;
 
-    public static LoginInformation prepareForREST(final User user, final Facility facility) {
-        LoginInformation loginInformation = new LoginInformation();
-        loginInformation.setUserFirstName(user.getFirstName());
-        loginInformation.setUserLastName(user.getLastName());
-        loginInformation.setUserName(user.getUserName());
+  private List<Program> programs;
 
-        if (facility != null) {
-            loginInformation.setFacilityCode(facility.getCode());
-            loginInformation.setFacilityName(facility.getName());
-        } else {
-            loginInformation.setFacilityCode(null);
-            loginInformation.setFacilityName(null);
-        }
+  public static LoginInformation prepareForREST(final User user, final Facility facility, final List<Program> programs) {
+    LoginInformation loginInformation = new LoginInformation();
+    loginInformation.setUserFirstName(user.getFirstName());
+    loginInformation.setUserLastName(user.getLastName());
+    loginInformation.setUserName(user.getUserName());
 
-        return loginInformation;
+    if (facility != null) {
+      loginInformation.setFacilityCode(facility.getCode());
+      loginInformation.setFacilityName(facility.getName());
     }
+
+    if (programs != null && !programs.isEmpty()) {
+      loginInformation.setPrograms(programs);
+    }
+    return loginInformation;
+  }
 }

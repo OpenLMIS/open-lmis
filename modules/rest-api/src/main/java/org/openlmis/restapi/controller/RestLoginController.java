@@ -18,11 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @NoArgsConstructor
 public class RestLoginController extends BaseController {
 
-  public static final String ACCEPT_JSON = "Accept=application/json";
-
   @Autowired
   private RestLoginService restLoginService;
 
+  //This endpoint is used for mobile one-time login. Authenticates mobile user, and returns json with all user-related information
   @RequestMapping(value = "/rest-api/login", method = RequestMethod.POST, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> login(@RequestBody RestLoginRequest restLogin) {
     try {
