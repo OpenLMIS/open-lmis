@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $location, distributionService) {
+function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $location, distributionService, DeliveryZoneFacilities) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
@@ -16,6 +16,7 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
   var DEFAULT_PERIOD_MESSAGE = messageService.get('label.select.period');
 
   $scope.zonePlaceholder = !!$scope.deliveryZones.length ? DELIVERY_ZONE_LABEL : NONE_ASSIGNED_LABEL;
+  $scope.provincesForColdChainStatus = ['Gaza', 'Tete', 'Niassa'];
 
   $scope.reload = function() {
     window.location.reload();
@@ -59,6 +60,15 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
 
   $scope.periodOptionMessage = function () {
     return optionMessage($scope.periods, DEFAULT_PERIOD_MESSAGE);
+  };
+
+  $scope.checkViewColdChainStatus = function () {
+    DeliveryZoneFacilities.get({deliveryZoneId: $scope.selectedZone.id, programId: $scope.selectedProgram.id}, function (data) {
+      $scope.parentZoneName = data.facilities[0].geographicZone.parent.name;
+      $scope.viewColdChainStatusAvailable = _.contains($scope.provincesForColdChainStatus, $scope.parentZoneName);
+    }, function (data) {
+      $scope.error = data.data.error;
+    });
   };
 
   function confirmCaching(data, message) {
