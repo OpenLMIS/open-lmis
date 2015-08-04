@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @NoArgsConstructor
 public class RestLoginController extends BaseController {
 
-  public static final String ACCEPT_JSON = "Accept=application/json";
-
   @Autowired
   private RestLoginService restLoginService;
 
