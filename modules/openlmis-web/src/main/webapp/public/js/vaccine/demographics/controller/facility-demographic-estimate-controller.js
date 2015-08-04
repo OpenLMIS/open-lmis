@@ -18,7 +18,7 @@ function FacilityDemographicEstimateController($scope, categories, programs, yea
   $scope.OnPopulationChanged = function(population, facility, category){
     var pop = $scope.toNumber(population.value);
     if(category.isPrimaryEstimate){
-      angular.forEach(facility.estimates, function(estimate){
+      angular.forEach(facility.facilityEstimates, function(estimate){
         if(population.demographicEstimateId !== estimate.demographicEstimateId){
           estimate.value = $scope.round(estimate.conversionFactor * pop / 100) ;
         }
@@ -30,7 +30,7 @@ function FacilityDemographicEstimateController($scope, categories, programs, yea
     FacilityDemographicEstimates.get({programId : programs[0].id, year: $scope.year}, function(data){
       $scope.form = data.estimates;
       angular.forEach($scope.form.estimateLineItems, function(fe){
-        fe.indexedEstimates = _.indexBy( fe.facilityEstimates , 'demographicEstimateId' );
+        fe.indexedEstimates = _.indexBy( fe.facilityEstimates , 'demographicEstimateId');
       });
     });
   };
@@ -48,12 +48,9 @@ function FacilityDemographicEstimateController($scope, categories, programs, yea
 
   $scope.save = function(){
     SaveFacilityDemographicEstimates.update($scope.form, function(data){
-      // show the saved message
-      //TODO: move this string to the messages property file.
-      $scope.message = "Facility demographic estimates successfully saved.";
+      // show the saved message      $scope.message = "Facility demographic estimates successfully saved.";
     });
   };
-
   $scope.onParamChanged();
 
 }
@@ -76,7 +73,6 @@ FacilityDemographicEstimateController.resolve = {
         deferred.resolve(data.programs);
       });
     }, 100);
-
     return deferred.promise;
   }, years: function ($q, $timeout, OperationYears) {
     var deferred = $q.defer();
