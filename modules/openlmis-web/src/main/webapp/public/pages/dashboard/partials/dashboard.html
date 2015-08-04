@@ -17,6 +17,19 @@
 
 <div xmlns="http://www.w3.org/1999/html">
 
+    <div class="clearfix"></div>
+    <div class="dashboard-nav">
+        <ul id="dashboard-period-tabs" class="clearfix">
+            <li ng-repeat="tab in dashboardPeriodTabs" ng-class="{'selected': currentTab == tab.name}">
+                <a ng-href="{{tab.content}}" style="display: inline-block;">
+                    <span openlmis-message="{{tab.header}}"></span>
+                </a>
+                <i ng-if="tab.closable" class="icon-remove-sign" ng-click="closeTab(tab.name)"></i>
+
+            </li>
+        </ul>
+    </div>
+    <div class="clearfix"></div>
 
 </div>
 <div id="flotTip"></div>

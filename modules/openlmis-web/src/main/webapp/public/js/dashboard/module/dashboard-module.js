@@ -11,8 +11,9 @@
 var dashboard = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart','ui.chart','ngTable']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
-        when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html', resolve : ResolveDashboardFormData}).
-        when('/dashboard-programs', {controller: DashboardProgramController, templateUrl: 'partials/dashboard-program.html', resolve : ResolveDashboardFormData}).
+       // when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html', resolve : ResolveDashboardFormData}).
+       // when('/dashboard', {controller: DashboardProgramController, templateUrl: 'partials/dashboard-program.html', resolve : ResolveDashboardFormData}).
+        when('/dashboard', {controller: DashboardProgramController, templateUrl: 'partials/dashboard-program.html', resolve : ResolveDashboardFormData}).
         when('/view-stock-detail/:programId/:periodId/:productId', {controller: StockController, templateUrl: 'partials/stock.html', resolve : ResolveDashboardFormData}).
         when('/stock', {controller: StockController, templateUrl: 'partials/stock.html', resolve : ResolveDashboardFormData }).
         when('/leadTime', {controller: ShipmentLeadTimeController, templateUrl: 'partials/shipment-lead-time.html', resolve : ResolveDashboardFormData }).
@@ -26,7 +27,7 @@ var dashboard = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.boots
         when('/rnr-status-summary', {controller: RequisitionStatusSummaryController, templateUrl: 'partials/rnr-status-summary.html', resolve : ResolveDashboardFormData }).
         when('/reporting-performance/program/:programId/period/:periodId', {controller: ReportingPerformanceDetailController, templateUrl: 'partials/reporting-performance-detail.html', resolve : ResolveDashboardFormData }).
         when('/rnr-status-report/program/:programId/period/:periodId', {controller: RnRStatusDetailsController, templateUrl: 'partials/rnr-status-details.html', resolve : ResolveDashboardFormData }).
-        otherwise({redirectTo: '/dashboard'});
+        otherwise({redirectTo: '/dashboard-programs'});
 }]);
 
 dashboard.directive('notificationDetail', function ($compile, $http, $templateCache) {

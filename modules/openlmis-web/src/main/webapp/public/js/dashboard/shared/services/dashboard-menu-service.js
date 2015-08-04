@@ -18,7 +18,7 @@ services.factory('dashboardMenuService',function($rootScope,$location){
 */
     dashboardMenuService.addTab = function(header, content, name, closable, displayOrder){
         var tab = isTabExists(name);
-        var newTab = {header:header, content: content, name:name, closable:closable, displayOrder: displayOrder};
+        var newTab = {header:header, content: content, name:name, closable:closable, displayOrder: displayOrder, id: displayOrder};
 
         if(_.isEqual(tab, newTab)){
             return;
@@ -30,6 +30,10 @@ services.factory('dashboardMenuService',function($rootScope,$location){
         }
 
         broadcastUpdate();
+    };
+
+    dashboardMenuService.getTab = function(position){
+      return dashboardMenuService.tabs[position];
     };
 
     dashboardMenuService.closeTab = function(tabName){

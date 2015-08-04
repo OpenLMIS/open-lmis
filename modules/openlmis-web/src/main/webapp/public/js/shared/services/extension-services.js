@@ -1254,3 +1254,7 @@ services.factory('VaccineUsageTrend', function ($resource){
 services.factory("FacilityGeoTree",function($resource)  {
     return   $resource('/geoFacilityTree.json', {}, {});
 });
+
+services.factory('GetLastPeriods', function($resource) {
+   return $resource('/reports/last-periods.json', {}, {});
+});

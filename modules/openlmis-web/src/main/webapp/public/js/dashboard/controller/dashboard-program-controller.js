@@ -9,15 +9,52 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function DashboardProgramController($scope,$routeParams, dashboardMenuService, UserSupervisedActivePrograms) {
+function DashboardProgramController($scope,$routeParams,$timeout, dashboardMenuService, UserSupervisedActivePrograms, GetLastPeriods) {
 
-    initialize();
+    $scope.dashboardTabs = dashboardMenuService.tabs;
+    $scope.dashboardTabs = [];
+    UserSupervisedActivePrograms.get(function(data){
+        $scope.programsList = data.programs;
+        angular.forEach(data.programs, function(program){
 
-    function initialize() {
-        $scope.$parent.currentTab = $routeParams.prog;
-        $scope.selectedProg = $routeParams.prog;
+            dashboardMenuService.addTab("'"+program.name+"'",'/public/pages/dashboard/index.html#/dashboard?programId='+program.id,program.name,false, program.id);
+        });
+        $scope.dashboardTabs = dashboardMenuService.tabs;
+
+            if(!isUndefined($routeParams.programId)){
+                $scope.currentTab = $scope.programId = $routeParams.programId;
+            }else{
+                $scope.currentTab = $scope.programId =  dashboardMenuService.getTab(0).id;
+            }
+
+    });
+
+
+$timeout(function(){
+
+    GetLastPeriods.get({}, function(data){
+        $scope.lastPeriods = data.lastPeriods;
+        dashboardMenuService.tabs = [];
+        angular.forEach( $scope.lastPeriods, function(period){
+
+            dashboardMenuService.addTab("'"+period.name+"'",'/public/pages/dashboard/index.html#/dashboard?programId='+$scope.currentTab +'&periodId='+period.id,period.name,false, period.id);
+        });
+        $scope.dashboardPeriodTabs = dashboardMenuService.tabs;
+            if(!isUndefined($routeParams.periodId)){
+                $scope.currentSubTab = $scope.periodId = $routeParams.periodId;
+            }else{
+                $scope.currentSubTab = $scope.periodId =  $scope.dashboardPeriodTabs[0].id;
+            }
+
+        dashboardMenuService.tabs = [];
+    });
+
+},10);
+
+
+    if(!isUndefined($scope.programId) && !isUndefined($scope.periodId)){
+
     }
-
 
 
 }

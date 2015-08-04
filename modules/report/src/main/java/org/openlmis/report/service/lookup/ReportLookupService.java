@@ -658,5 +658,8 @@ public class ReportLookupService {
         return productMapper.getRmnchProducts();
     }
 
+    public List<ProcessingPeriod> getLastPeriods(){
+        return processingPeriodMapper.getLastPeriods();
+    }
 
 }
