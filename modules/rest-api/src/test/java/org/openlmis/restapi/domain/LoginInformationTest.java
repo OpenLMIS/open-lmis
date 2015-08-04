@@ -12,10 +12,6 @@ import org.openlmis.core.domain.User;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -38,33 +34,12 @@ public class LoginInformationTest {
     when(facility.getCode()).thenReturn("code");
     when(facility.getName()).thenReturn("name");
 
-    List<Program> programs = new ArrayList();
-    programs.add(new Program("1A", "program 1"));
-
-    LoginInformation loginInformation = LoginInformation.prepareForREST(user, facility, programs);
+    LoginInformation loginInformation = LoginInformation.prepareForREST(user, facility);
     assertEquals("username", loginInformation.getUserName());
     assertEquals("first", loginInformation.getUserFirstName());
     assertEquals("last", loginInformation.getUserLastName());
     assertEquals("code", loginInformation.getFacilityCode());
     assertEquals("name", loginInformation.getFacilityName());
-    assertEquals(programs, loginInformation.getPrograms());
-  }
-
-  @Test
-  public void shouldNotSetProgramsIfProgramListIsNullOrEmpty() {
-    when(user.getUserName()).thenReturn("username");
-    when(user.getFirstName()).thenReturn("first");
-    when(user.getLastName()).thenReturn("last");
-    when(facility.getCode()).thenReturn("code");
-    when(facility.getName()).thenReturn("name");
-
-    LoginInformation loginInformation = LoginInformation.prepareForREST(user, facility, new ArrayList<Program>());
-    assertEquals("username", loginInformation.getUserName());
-    assertEquals("first", loginInformation.getUserFirstName());
-    assertEquals("last", loginInformation.getUserLastName());
-    assertEquals("code", loginInformation.getFacilityCode());
-    assertEquals("name", loginInformation.getFacilityName());
-    assertNull(loginInformation.getPrograms());
   }
 
   @Test
@@ -73,7 +48,7 @@ public class LoginInformationTest {
     when(user.getFirstName()).thenReturn("first");
     when(user.getLastName()).thenReturn("last");
 
-    LoginInformation loginInformation = LoginInformation.prepareForREST(user, null, null);
+    LoginInformation loginInformation = LoginInformation.prepareForREST(user, null);
     assertEquals("username", loginInformation.getUserName());
     assertEquals("first", loginInformation.getUserFirstName());
     assertEquals("last", loginInformation.getUserLastName());
