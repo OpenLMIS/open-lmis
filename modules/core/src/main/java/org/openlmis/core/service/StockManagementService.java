@@ -12,20 +12,16 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.dto.GeographicZoneGeometry;
-import org.openlmis.core.repository.GeographicZoneRepository;
-import org.openlmis.core.repository.mapper.GeographicZoneGeoJSONMapper;
+import org.openlmis.core.dto.StockCard;
+import org.openlmis.core.dto.StockCardLineItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-
-import static java.util.Collections.emptyList;
 
 
 /**
@@ -36,8 +32,13 @@ import static java.util.Collections.emptyList;
 @NoArgsConstructor
 public class StockManagementService {
 
+  @Autowired
+  FacilityService facilityService;
 
-  public Lot getTestLot(long lotId, boolean expandProduct)
+  @Autowired
+  ProductService productService;
+
+  public Lot getLot(long lotId, boolean expandProduct)
   {
     if(lotId != 100)
       return null;
@@ -66,5 +67,57 @@ public class StockManagementService {
         lot.setProduct(product.getId());
 
     return lot;
+  }
+
+  public StockCard getStockCard(Long facilityId, Long productId) {
+    return getTestStockCardData(1L, facilityId, productId);
+  }
+
+  public List<StockCard> getStockCards(Long facilityId) {
+    Long[] productIdData = {2412L,2420L,2417L,2414L,2416L};
+
+    List<StockCard> stockCards = new ArrayList<>();
+    for (int i = 0; i < productIdData.length; i++) {
+      stockCards.add(getTestStockCardData((long)i, facilityId, productIdData[i]));
+    }
+
+    return stockCards;
+  }
+
+  private StockCard getTestStockCardData(Long id, Long facilityId, Long productId) {
+    StockCard stockCard = new StockCard();
+
+    stockCard.setId(id);
+    stockCard.setFacility(facilityService.getById(facilityId));
+    Product product = productService.getById(productId);
+    stockCard.setProduct(product);
+    stockCard.setTotalQuantityOnHand(105L);
+    stockCard.setEffectiveDate(new Date());
+    stockCard.setNotes("Test stock card for " + product.getPrimaryName());
+
+    String[][] lineItemData = {
+        {"1","RECEIPT","200"},
+        {"2","ISSUE","10"},
+        {"3","ISSUE","5"},
+        {"4","ISSUE","15"},
+        {"5","ISSUE","10"},
+        {"6","ISSUE","5"},
+        {"7","ISSUE","5"},
+        {"8","ISSUE","10"},
+        {"9","ISSUE","15"},
+        {"10","ISSUE","10"},
+        {"11","ISSUE","10"}
+    };
+    List<StockCardLineItem> lineItems = new ArrayList<>();
+    for (String[] item : lineItemData) {
+      StockCardLineItem lineItem = new StockCardLineItem();
+      lineItem.setId(Long.parseLong(item[0]));
+      lineItem.setType(StockCardLineItemType.valueOf(item[1]));
+      lineItem.setQuantity(Long.parseLong(item[2]));
+      lineItems.add(lineItem);
+    }
+    stockCard.setLineItems(lineItems);
+
+    return stockCard;
   }
 }
