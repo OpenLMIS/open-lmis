@@ -40,7 +40,7 @@
       <div class="row-fluid">
         <select id="selectProgram" class="span3" ng-model="selectedProgram"
                 ng-options="i as i.name for i in programs"
-                ng-change="loadPeriods()">
+                ng-change="loadPeriods(); checkViewColdChainStatus()">
           <option ng-bind="programOptionMessage()"></option>
         </select>
       </div>
@@ -69,6 +69,10 @@
     <input id="initiateDistribution" ng-disabled="!(selectedPeriod && selectedProgram && selectedZone)"
            type="button" ng-click="initiateDistribution()" class="btn btn-primary"
            openlmis-message="button.initiate.distribution"/>
+
+    <input id="viewColdChainStatus" ng-disabled="!(selectedPeriod && selectedProgram && selectedZone && viewColdChainStatusAvailable)"
+           type="button" ng-click="" class="btn btn-primary"
+           openlmis-message="button.view.cold.chain.status"/>
   </div>
   <div ng-include="'partials/list.html'"></div>
 
