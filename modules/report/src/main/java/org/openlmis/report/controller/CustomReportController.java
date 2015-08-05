@@ -18,6 +18,7 @@ import org.openlmis.report.repository.CustomReportRepository;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,7 @@ public class CustomReportController extends BaseController{
   }
 
   @RequestMapping(value = "full-list")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_CUSTOM_REPORTS')")
   public ResponseEntity<OpenLmisResponse> getFullListOfReports(){
     return OpenLmisResponse.response("reports", reportRepository.getReportListWithFullAttributes());
   }
@@ -60,6 +62,7 @@ public class CustomReportController extends BaseController{
   }
 
   @RequestMapping(value = "save", method = RequestMethod.POST)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_CUSTOM_REPORTS')")
   public ResponseEntity<OpenLmisResponse> saveCustomReport( @RequestBody CustomReport report){
     if(report.getId() != null){
       reportRepository.update(report);
