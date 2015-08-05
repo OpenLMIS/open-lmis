@@ -80,7 +80,7 @@
     <label for="zone" class="labels" openlmis-message="label.geographic.zone"><span ng-show="requiredFilters.zone" class="label-required">*</span></label>
     <div>
       <select id="zone" ui-select2 class="input-large" data-placeholder="-- All Zones --"  ng-change="notifyFilterChanged('zone-changed');" ng-model="filter.zone">
-        <option value="">{{user_geo_level}}</option>
+        <option ng-selected="filter.zone == undefined || filter.zone == ''">{{user_geo_level}}</option>
         <optgroup ng-repeat="value in zones.children" value="{{ value.id }}" ng-selected="filter.zone == value.id" label="{{value.name}}">
           <option ng-selected="filter.zone == value.id" value="{{value.id}}"><b class="green"> -- All of {{value.name}}</b></option>
           <option ng-repeat-start="v in value.children" ng-selected="filter.zone == v.id" value="{{v.id}}">{{v.name}}</option>
@@ -91,13 +91,12 @@
   </div>
 </script>
 
-
 <script type="text/ng-template" id="filter-schedule-template">
     <div>
         <label for="schedule" class="labels" openlmis-message="label.schedule"><span ng-show="requiredFilters.schedule" class="label-required">*</span></label>
         <div>
         <select id="schedule" ui-select2 class="input-medium" ng-change="notifyFilterChanged('schedule-changed');" ng-model="filter.schedule">
-            <option ng-repeat="schedule in schedules" value="{{ schedule.id }}" ng-selected="filter.schedule == schedule.id">{{schedule.name}}</option>
+            <option ng-repeat="schedule in schedules" value="{{ schedule.id }}" ng-selected="filter.schedule == schedule.id" openlmis-message="schedule.name"></option>
             </select>
         </div>
     </div>
@@ -318,7 +317,6 @@
 
                         <option ng-repeat-start="v in year.children" value="-1">{{v.groupname}}</option>
                         <option ng-repeat-end ng-repeat="d in v.children" value="{{d.periodid}}" ng-selected="filter.period == d.periodid"> &nbsp; &nbsp; {{d.periodname}}</option>
-
                     </optgroup>
                 </select>
             </div>
