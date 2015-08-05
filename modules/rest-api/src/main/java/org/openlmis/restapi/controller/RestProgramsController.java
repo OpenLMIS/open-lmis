@@ -29,7 +29,7 @@ public class RestProgramsController extends BaseController {
   public ResponseEntity<RestResponse> getProgramWithProductsByFacility(@RequestParam String facilityCode) {
     try {
       List<ProgramWithProducts> programsWithProducts = programService.getAllProgramsWithProductsByFacilityCode(facilityCode);
-      return response("programs-with-products", programsWithProducts);
+      return response("programsWithProducts", programsWithProducts);
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
