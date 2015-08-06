@@ -14,31 +14,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.annotation.ImportField;
 
-import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
-
+/**
+ * PriceScheduleCategory represents a category type for price schedule
+ */
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonSerialize(include = NON_EMPTY)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class PriceSchedule extends BaseModel implements Importable {
+public class PriceSchedule extends BaseModel {
 
-    @ImportField(mandatory = true, name = "Product code", nested = "code")
-    private Product product;
+    private String code;
 
-    @ImportField(mandatory = true, name = "Facility price Category", nested="price_category")
-    private PriceScheduleCategory priceScheduleCategory;
+    private String description;
 
-    @ImportField(mandatory = false, name = "Product name")
-    private String productName;
-
-    @ImportField(mandatory = false, name = "Sale price")
-    private Double salePrice;
 }
