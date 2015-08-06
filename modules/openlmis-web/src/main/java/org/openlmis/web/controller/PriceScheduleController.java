@@ -1,6 +1,6 @@
 package org.openlmis.web.controller;
 
-import org.openlmis.core.domain.PriceScheduleCategory;
+import org.openlmis.core.domain.PriceSchedule;
 import org.openlmis.core.service.PriceScheduleService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class PriceScheduleController {
     @RequestMapping(value = "/priceScheduleCategories", method = GET)
     public ResponseEntity<OpenLmisResponse> getPriceScheduleCategory(HttpServletRequest request) {
 
-        List<PriceScheduleCategory> categories =  priceScheduleService.getPriceScheduleCategories();
+        List<PriceSchedule> categories =  priceScheduleService.getAllPriceSchedules();
         return OpenLmisResponse.response(PRICE_SCHEDULE_CATEGORIES, categories);
     }
 }
