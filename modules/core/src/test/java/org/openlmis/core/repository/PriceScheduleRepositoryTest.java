@@ -7,29 +7,40 @@
  *
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
+
 package org.openlmis.core.repository;
 
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.PriceSchedule;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.repository.mapper.PriceScheduleMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.openlmis.db.categories.UnitTests;
 
-import java.util.List;
+import static org.mockito.Mockito.verify;
 
-@Repository
-@NoArgsConstructor
-public class PriceScheduleRepository {
 
-  @Autowired
-  private PriceScheduleMapper mapper;
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
+public class PriceScheduleRepositoryTest {
 
-  public List<PriceSchedule> getAllPriceSchedules() {
-    return mapper.getAll();
+  @Mock
+  PriceScheduleMapper mapper;
+
+  @InjectMocks
+  PriceScheduleRepository repository;
+
+  @Test
+  public void shouldGetAllPriceSchedules() throws Exception {
+    repository.getAllPriceSchedules();
+    verify(mapper).getAll();
   }
 
-  public PriceSchedule getByCode(String code) {
-    return mapper.getByCode(code);
+  @Test
+  public void shouldGetByCode() throws Exception {
+    repository.getByCode("AB");
+    verify(mapper).getByCode("AB");
   }
-
 }
