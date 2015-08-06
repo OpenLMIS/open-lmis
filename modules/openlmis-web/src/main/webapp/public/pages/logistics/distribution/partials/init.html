@@ -70,8 +70,8 @@
            type="button" ng-click="initiateDistribution()" class="btn btn-primary"
            openlmis-message="button.initiate.distribution"/>
 
-    <input id="viewColdChainStatus" ng-disabled="!(selectedPeriod && selectedProgram && selectedZone && viewColdChainStatusAvailable)"
-           type="button" ng-click="" class="btn btn-primary"
+    <input id="viewColdChainStatus" ng-show="selectedPeriod && selectedProgram && selectedZone && viewColdChainStatusAvailable"
+           type="button" ng-click="viewColdChainStatus()" class="btn btn-primary"
            openlmis-message="button.view.cold.chain.status"/>
   </div>
   <div ng-include="'partials/list.html'"></div>

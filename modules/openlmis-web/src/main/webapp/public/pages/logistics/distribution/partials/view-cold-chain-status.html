@@ -1,0 +1,34 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div>
+  <h2 id="coldChainStatusSummaryLabel" openlmis-message="label.cold.chain.status.summary"></h2>
+
+
+  <div class="alert alert-info" ng-show="message"><span openlmis-message="message"></span></div>
+  <div ng-show="!message">
+    <div class="info-box">
+      <div class="row-fluid">
+        <div class="span3">
+          <strong id="deliveryZoneLabel" openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span id="deliveryZoneName" ng-bind="deliveryZone.name"></span>
+        </div>
+        <div class="span3">
+          <strong id="programLabel" openlmis-message="label.program"> </strong> :&nbsp;<span id="programName" ng-bind="program.name"></span>
+        </div>
+        <div class="span3">
+          <strong id="periodLabel" openlmis-message="label.period"> </strong> :&nbsp;<span id="periodName" ng-bind="period.name"></span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h1 id="noColdChainStatusInformationLabel" openlmis-message="label.no.cold.chain.status.information"></h1>
+    </div>
+  </div>
+</div>

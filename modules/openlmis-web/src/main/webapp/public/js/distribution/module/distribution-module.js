@@ -30,6 +30,8 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       when('/list', {controller: DistributionListController, templateUrl: 'partials/list.html'}).
       when('/view-load-amounts/:deliveryZoneId/:programId/:periodId',
       {controller: ViewLoadAmountController, templateUrl: 'partials/view-load-amount.html', resolve: ViewLoadAmountController.resolve}).
+      when('/view-cold-chain-status/:deliveryZoneId/:programId/:periodId',
+      {controller: ViewColdChainStatusController, templateUrl: 'partials/view-cold-chain-status.html', resolve: ViewColdChainStatusController.resolve}).
       when('/record-facility-data/:distribution',
       {templateUrl: 'partials/record-facility-data.html', resolve: ResolveDistribution}).
       when('/record-facility-data/:distribution/:facility/refrigerator-data',

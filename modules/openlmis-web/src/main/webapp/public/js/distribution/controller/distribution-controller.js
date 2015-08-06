@@ -136,6 +136,18 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
         .concat($scope.selectedProgram.id).concat("/").concat($scope.selectedPeriod.id);
     $location.path(path);
   };
+
+  $scope.viewColdChainStatus = function () {
+    var data = {
+      deliveryZone: $scope.selectedZone,
+      program: $scope.selectedProgram,
+      period: $scope.selectedPeriod
+    };
+    navigateBackService.setData(data);
+    var path = "/view-cold-chain-status/".concat($scope.selectedZone.id).concat("/")
+        .concat($scope.selectedProgram.id).concat("/").concat($scope.selectedPeriod.id);
+    $location.path(path);
+  };
 }
 
 DistributionController.resolve = {
