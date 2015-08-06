@@ -9,7 +9,8 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function DashboardProgramController($scope,$routeParams,$timeout, dashboardMenuService, UserSupervisedActivePrograms, GetLastPeriods) {
+function DashboardProgramController($scope,$routeParams,$timeout, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods) {
+    var dashboardMenuService = dashboardMenuServiceNew
 
     $scope.dashboardTabs = dashboardMenuService.tabs;
     $scope.dashboardTabs = [];
@@ -17,13 +18,22 @@ function DashboardProgramController($scope,$routeParams,$timeout, dashboardMenuS
         $scope.programsList = data.programs;
         angular.forEach(data.programs, function(program){
 
-            dashboardMenuService.addTab("'"+program.name+"'",'/public/pages/dashboard/index.html#/dashboard?programId='+program.id,program.name,false, program.id);
+            dashboardMenuService.addTab("'"+program.name+"'",'/public/pages/dashboard/index_new.html#/dashboard-new?programId='+program.id,program.name,false, program.id);
         });
+        dashboardMenuService.addTab('Facility','/public/pages/dashboard/index_new.html#/dashboard-new?facilityId=0','Facility',false, 'Facility');
+        dashboardMenuService.addTab('Notification','/public/pages/dashboard/index_new.html#/dashboard-new?notificationId=0','Notification',false, 'Notification');
         $scope.dashboardTabs = dashboardMenuService.tabs;
 
             if(!isUndefined($routeParams.programId)){
                 $scope.currentTab = $scope.programId = $routeParams.programId;
+            }else if(!isUndefined($routeParams.facilityId)){
+
+                $scope.currentTab = 'Facility';
+            }else if(!isUndefined($routeParams.notificationId)){
+
+                $scope.currentTab = 'Notification';
             }else{
+
                 $scope.currentTab = $scope.programId =  dashboardMenuService.getTab(0).id;
             }
 
@@ -37,7 +47,7 @@ $timeout(function(){
         dashboardMenuService.tabs = [];
         angular.forEach( $scope.lastPeriods, function(period){
 
-            dashboardMenuService.addTab("'"+period.name+"'",'/public/pages/dashboard/index.html#/dashboard?programId='+$scope.currentTab +'&periodId='+period.id,period.name,false, period.id);
+            dashboardMenuService.addTab("'"+period.name+"'",'/public/pages/dashboard/index_new.html#/dashboard-new?programId='+$scope.currentTab +'&periodId='+period.id,period.name,false, period.id);
         });
         $scope.dashboardPeriodTabs = dashboardMenuService.tabs;
             if(!isUndefined($routeParams.periodId)){
@@ -49,7 +59,7 @@ $timeout(function(){
         dashboardMenuService.tabs = [];
     });
 
-},10);
+},100);
 
 
     if(!isUndefined($scope.programId) && !isUndefined($scope.periodId)){

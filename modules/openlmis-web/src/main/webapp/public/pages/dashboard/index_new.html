@@ -74,9 +74,8 @@
     <script src="/public/js/shared/controller/navigation-controller.js"></script>
     <script src="/public/js/dashboard/shared/resolve/dashboard-form-data-resolve.js"></script>
     <script src="/public/js/dashboard/shared/controller/alerts-controller.js"></script>
-    <script src="/public/js/dashboard/shared/services/dashboard-menu-service.js"></script>
+    <script src="/public/js/dashboard/shared/services/dashboard-menu-service_new.js"></script>
     <script src="/public/js/dashboard/shared/services/dashboard-filters-history-service.js"></script>
-    <script src="/public/js/dashboard/shared/controller/dashboard-menu-controller.js"></script>
 
     <!-- Page specific files -->
     <!-- charts tool (Bar, pie) -->
@@ -110,6 +109,7 @@
     <script src="/public/js/dashboard/controller/reporting-performance-detail-controller.js"></script>
     <script src="/public/js/dashboard/controller/rnr-status-details-controller.js"></script>
 
+
     <script src="/public/lib/angular-ui/ui-jqplot/ui-jqplot-chart.js"></script>
     <script src="/public/js/static-pages/controller/header-offline-controller.js"></script>
     <script src="/public/js/shared/controller/header-controller.js"></script>
@@ -128,7 +128,6 @@
     <ng-include src="'/public/pages/header.html'"></ng-include>
     <ng-include src="'/public/pages/navigation.html'"></ng-include>
     <div class="content">
-        <ng-include src="'/public/pages/dashboard/shared/dashboard-header.html'"></ng-include>
         <div ng-view></div>
     </div>
     <ng-include src="'/public/pages/template/footer/openlmis-footer.html'"></ng-include>
