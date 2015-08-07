@@ -160,6 +160,23 @@ public class UserControllerTest {
   }
 
   @Test
+  public void shouldSaveUserIsMobileType() throws Exception {
+    User user = new User();
+    request.getSession().setAttribute(USER_ID, userId);
+    request.getSession().setAttribute(USER, USER);
+    ResponseEntity<OpenLmisResponse> response = userController.create(user, request);
+
+    verify(userService).create(eq(user), eq("http://localhost:9091/public/pages/reset-password.html#/token/"));
+
+    User responseUser = (User) response.getBody().getData().get("user");
+
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(responseUser, is(user));
+    assertThat(responseUser.getIsMobileUser(),is(false));
+    assertThat(responseUser.getVerified(),is(true));
+  }
+
+  @Test
   public void shouldUpdateUser() throws Exception {
     User user = make(a(defaultUser));
     user.setId(userId);

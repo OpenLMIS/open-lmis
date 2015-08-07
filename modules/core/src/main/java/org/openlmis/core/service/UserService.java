@@ -60,12 +60,12 @@ public class UserService {
   @Transactional
   public void create(User user, String resetPasswordLink) {
     save(user);
-    sendUserCreationEmail(user, resetPasswordLink);
+    //sendUserCreationEmail(user, resetPasswordLink);
   }
 
   public void createUser(User user, String passwordResetLink) {
     save(user);
-    prepareForEmailNotification(user, passwordResetLink);
+    //prepareForEmailNotification(user, passwordResetLink);
   }
 
   @Transactional
