@@ -52,12 +52,12 @@ public class ProductPriceScheduleRepositoryTest {
   @Test
   public void shouldGetByProductId() throws Exception {
     repository.getByProductId(1L);
-    verify(mapper.getByProductId(1L));
+    verify(mapper).getByProductId(1L);
   }
 
   @Test
   public void shouldGetPriceScheduleFullSupplyFacilityApprovedProduct() throws Exception {
     repository.getPriceScheduleFullSupplyFacilityApprovedProduct(1L, 2L);
-    verify(mapper.getPriceScheduleFullSupplyFacilityApprovedProduct(1L, 2L));
+    verify(mapper).getPriceScheduleFullSupplyFacilityApprovedProduct(1L, 2L);
   }
 }
