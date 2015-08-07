@@ -17,7 +17,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     if (!isUndefined(productDTO.product)) {
       $scope.product = productDTO.product;
       $scope.programProducts = productDTO.programProducts;
-      $scope.priceSchedules = productDTO.priceSchedules;
+      $scope.priceSchedules = productDTO.productPriceSchedules;
       $scope.selectedProductGroupCode = isUndefined($scope.product.productGroup) ? undefined : $scope.product.productGroup.code;
       $scope.selectedProductFormCode = isUndefined($scope.product.form) ? undefined : $scope.product.form.code;
       $scope.selectedProductDosageUnitCode = isUndefined($scope.product.dosageUnit) ? undefined : $scope.product.dosageUnit.code;
@@ -69,10 +69,10 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     setProductReferenceData();
 
     if ($scope.product.id) {
-      Products.update({id: $scope.product.id}, {product: $scope.product, programProducts: $scope.programProducts, priceSchedules : $scope.priceSchedules}, success, error);
+      Products.update({id: $scope.product.id}, {product: $scope.product, programProducts: $scope.programProducts, productPriceSchedules : $scope.priceSchedules}, success, error);
     }
     else {
-      Products.save({}, {product: $scope.product, programProducts: $scope.programProducts,  priceSchedules : $scope.priceSchedules}, success, error);
+      Products.save({}, {product: $scope.product, programProducts: $scope.programProducts,  productPriceSchedules : $scope.priceSchedules}, success, error);
     }
   };
 
@@ -103,7 +103,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
 
       if(validateDuplicatePriceScheduleCategory($scope.newPriceSchedule)) {
           $scope.error  = "";
-          $scope.newPriceSchedule.priceScheduleCategory = $filter('filter')($scope.priceScheduleCategories, {id: $scope.newPriceSchedule.priceScheduleCategory.id})[0];
+          $scope.newPriceSchedule.priceSchedule = $filter('filter')($scope.priceScheduleCategories, {id: $scope.newPriceSchedule.priceSchedule.id})[0];
           $scope.priceSchedules.push($scope.newPriceSchedule);
           $scope.newPriceSchedule = {};
      }
@@ -116,7 +116,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
 
     function validateDuplicatePriceScheduleCategory(priceSchedule){
         for(i=0; i<$scope.priceSchedules.length; i++){
-            if($scope.priceSchedules[i].priceScheduleCategory.id == priceSchedule.priceScheduleCategory.id)
+            if($scope.priceSchedules[i].priceSchedule.id == priceSchedule.priceSchedule.id)
                 return false;
         }
         return true;
