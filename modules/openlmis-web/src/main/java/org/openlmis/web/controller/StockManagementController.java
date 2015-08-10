@@ -12,8 +12,9 @@ package org.openlmis.web.controller;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.Lot;
 import org.openlmis.core.dto.StockCard;
+import org.openlmis.core.dto.StockCardLineItem;
 import org.openlmis.core.service.StockManagementService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,21 +44,20 @@ public class StockManagementController extends BaseController
 
   //TODO: Determine what the permissions associated with @PreAuthorize should be. (MANAGE_PROGRAM_PRODUCT, below, is just a placeholder).
 
-  @RequestMapping(value = "lots/{lotId}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  @ApiOperation(value = "Get information about the specified product lot (batch).",
-          notes = "(This endpoint is not yet ready for use.) <p /> Note that the products property will always be an object with an ID value. Optionally, it may be expanded to include all of the product's other properties (and associated values) as well. To specify that such an expansion should occur, add \"?expand=product\" to the query parameter. For example: <p> /api/2/lots/{lotId}?expand=product",
-          response = Lot.class)
-  public ResponseEntity getLot(@PathVariable Long lotId,
+  @RequestMapping(value = "products/{productId}/lots", method = GET, headers = ACCEPT_JSON)
+  @ApiOperation(value = "Get information about all lots (batches) for a specified product.",
+          notes = "(This endpoint is not yet ready for use.) <p /> Note that the products property will always be an object with an ID value. Optionally, it may be expanded to include all of the product's other properties (and associated values) as well. To specify that such an expansion should occur, add \"?expand=product\" to the query parameter. For example: <p> /api/2/lots/{lotId}?expand=product")
+  public ResponseEntity getLots(@PathVariable Long productId,
                                @RequestParam(value = "expand", required = false) String expand)
   {
     boolean expandProduct = (expand != null && expand.contains("product"));
-    Lot lot = service.getLot(lotId, expandProduct);
+    List<Lot> lots = service.getLots(productId);
 
-    if(lot != null)
-      return OpenLmisResponse.response(lot);
-    else
-      return OpenLmisResponse.error("The specified lot does not exist." , HttpStatus.NOT_FOUND);
+    if (lots != null) {
+      return OpenLmisResponse.response(lots);
+    } else {
+      return OpenLmisResponse.error("The specified lots do not exist." , HttpStatus.NOT_FOUND);
+    }
   }
 
   @RequestMapping(value = "facilities/{facilityId}/products/{productId}/stockcard", method = GET, headers = ACCEPT_JSON)
@@ -69,11 +69,7 @@ public class StockManagementController extends BaseController
     StockCard stockCard = service.getStockCard(facilityId, productId);
 
     if (stockCard != null) {
-      if (lineItems >= 0) {
-        stockCard.setLineItems(stockCard.getLineItems().subList(0, lineItems));
-      } else {
-        stockCard.setLineItems(stockCard.getLineItems().subList(0, 1));
-      }
+      filterLineItems(stockCard, lineItems);
       return OpenLmisResponse.response(stockCard);
     }
     else {
@@ -96,16 +92,21 @@ public class StockManagementController extends BaseController
 
     if (stockCards != null) {
       for (StockCard stockCard : stockCards) {
-        if (lineItems >= 0) {
-          stockCard.setLineItems(stockCard.getLineItems().subList(0, lineItems));
-        } else {
-          stockCard.setLineItems(stockCard.getLineItems().subList(0, 1));
-        }
+        filterLineItems(stockCard, lineItems);
       }
       return OpenLmisResponse.response("stockCards", stockCards);
     }
     else {
       return OpenLmisResponse.error("The specified stock cards do not exist." , HttpStatus.NOT_FOUND);
+    }
+  }
+
+  private void filterLineItems(StockCard stockCard, Integer lineItemCount) {
+    List<StockCardLineItem> lineItems = stockCard.getLineItems();
+    if (lineItemCount < 0) {
+      stockCard.setLineItems(lineItems.subList(0, 1));
+    } else if (lineItemCount < lineItems.size()) {
+      stockCard.setLineItems(lineItems.subList(0, lineItemCount));
     }
   }
 }
