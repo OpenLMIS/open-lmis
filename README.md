@@ -4,9 +4,7 @@ This site contains free software: you can redistribute it and/or modify it under
 
 The programs and documents on this site are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the applicable License for more details.
 
-You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
-
-You should also have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.
+You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.
 
 For additional information contact AskDeliver@jsi.com
 
