@@ -45,8 +45,12 @@ public class StockManagementService {
     return getTestLots(productId);
   }
 
-  public StockCard getStockCard(Long facilityId, Long productId) {
+  public StockCard getStockCardByProduct(Long facilityId, Long productId) {
     return getTestStockCard(1L, facilityId, productId);
+  }
+
+  public StockCard getStockCard(Long facilityId, Long stockCardId) {
+    return getTestStockCard(stockCardId, facilityId, 2412L);
   }
 
   public List<StockCard> getStockCards(Long facilityId) {

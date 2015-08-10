@@ -63,10 +63,27 @@ public class StockManagementController extends BaseController
   @RequestMapping(value = "facilities/{facilityId}/products/{productId}/stockcard", method = GET, headers = ACCEPT_JSON)
   @ApiOperation(value = "Get information about the stock card for the specified facility and product.",
       notes = "(This endpoint is not yet ready for use.)")
-  public ResponseEntity getStockCard(@PathVariable Long facilityId, @PathVariable Long productId,
+  public ResponseEntity getStockCardByProduct(@PathVariable Long facilityId, @PathVariable Long productId,
+                                              @RequestParam(value = "lineItems", defaultValue = "1")Integer lineItems)
+  {
+    StockCard stockCard = service.getStockCardByProduct(facilityId, productId);
+
+    if (stockCard != null) {
+      filterLineItems(stockCard, lineItems);
+      return OpenLmisResponse.response(stockCard);
+    }
+    else {
+      return OpenLmisResponse.error("The specified stock card does not exist." , HttpStatus.NOT_FOUND);
+    }
+  }
+
+  @RequestMapping(value = "facilities/{facilityId}/stockcards/{stockCardId}", method = GET, headers = ACCEPT_JSON)
+  @ApiOperation(value = "Get information about the stock card for the specified facility.",
+      notes = "(This endpoint is not yet ready for use.)")
+  public ResponseEntity getStockCard(@PathVariable Long facilityId, @PathVariable Long stockCardId,
                                      @RequestParam(value = "lineItems", defaultValue = "1")Integer lineItems)
   {
-    StockCard stockCard = service.getStockCard(facilityId, productId);
+    StockCard stockCard = service.getStockCard(facilityId, stockCardId);
 
     if (stockCard != null) {
       filterLineItems(stockCard, lineItems);
