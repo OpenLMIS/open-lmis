@@ -1,4 +1,4 @@
-package org.openlmis.restapi.controller;
+package org.openlmis.restapi.service;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
