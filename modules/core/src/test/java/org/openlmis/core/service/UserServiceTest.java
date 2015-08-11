@@ -225,6 +225,15 @@ public class UserServiceTest {
 
 
   @Test
+  public void shouldSendPasswordEmailWhenUserCreated() throws Exception {
+    User user = new User();
+
+    userService.create(user, FORGET_PASSWORD_LINK);
+
+    verify(emailService).queueMessage(any(SimpleMailMessage.class));
+  }
+
+  @Test
   public void shouldReturnSearchResults() {
     String searchParam = "abc";
     Pagination pagination = new Pagination(1,2);
@@ -291,8 +300,26 @@ public class UserServiceTest {
     userService.createUser(user, "resetPasswordLink");
 
     verify(userRepository).create(user);
+    verify(userRepository).insertEmailNotification(emailMessage);
+    verify(emailService, never()).send(emailMessage);
+    verify(roleAssignmentService).saveRolesForUser(user);
+  }
+
+  @Test
+  public void shouldCreateMobileUserWithoutSendEmail() throws Exception {
+    User user = new User();
+    user.setIsMobileUser(true);
+
+    SimpleMailMessage emailMessage = new SimpleMailMessage();
+    whenNew(SimpleMailMessage.class).withNoArguments().thenReturn(emailMessage);
+
+    when(messageService.message("account.created.email.subject")).thenReturn("Account created message");
+
+    userService.createUser(user, "resetPasswordLink");
+
+    verify(userRepository).create(user);
     //verify(userRepository).insertEmailNotification(emailMessage);
-   // verify(emailService, never()).send(emailMessage);
+    verify(emailService, never()).send(emailMessage);
     verify(roleAssignmentService).saveRolesForUser(user);
   }
 

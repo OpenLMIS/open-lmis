@@ -90,7 +90,7 @@ public class User extends BaseModel implements Importable {
 
   private Boolean active;
 
-  private Boolean isMobileUser;
+  private Boolean isMobileUser = false;
 
   public User(Long id, String userName) {
     this.id = id;

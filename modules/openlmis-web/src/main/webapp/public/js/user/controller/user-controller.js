@@ -121,16 +121,16 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
       }
     };
 
-      if (!requiredFieldsPresent($scope.user))  return false;
-
-      var userRequest = angular.copy($scope.user);
-      userRequest.email = userRequest.isMobileUser ? null : userRequest.email;
-      if (userRequest.id) {
-          Users.update({id: userRequest.id}, userRequest, updateSuccessHandler, errorHandler);
-      } else {
-          Users.save({}, userRequest, saveSuccessHandler, errorHandler);
-      }
-      return true;
+    if (!requiredFieldsPresent($scope.user))  return false;
+    if($scope.user.email == "" ){
+      $scope.user.email = null;
+    }
+    if ($scope.user.id) {
+      Users.update({id: $scope.user.id}, $scope.user, updateSuccessHandler, errorHandler);
+    } else {
+      Users.save({}, $scope.user, saveSuccessHandler, errorHandler);
+    }
+    return true;
   };
 
   $scope.validateUserName = function () {

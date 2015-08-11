@@ -111,8 +111,9 @@ public class UserController extends BaseController {
   public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
     user.setCreatedBy(loggedInUserId(request));
     user.setModifiedBy(loggedInUserId(request));
-    user.setVerified(true);
-    if(user.isMobileUser() == null){
+    if (user.isMobileUser()) {
+      user.setVerified(true);
+    } else {
       user.setIsMobileUser(false);
     }
     try {

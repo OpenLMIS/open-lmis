@@ -51,15 +51,15 @@
       </div>
     </div>
 
-    <div class="form-cell" ng-if = "!user.isMobileUser">
+    <div class="form-cell" >
       <label for="email">
         <span openlmis-message="create.user.email"></span>
-        <span class="label-required"> *</span>
+        <span class="label-required" ng-hide="user.isMobileUser"> *</span>
       </label>
 
       <div class="form-field">
         <input ng-model="user.email" name="email" id="email" type="text" maxlength="50"
-               ng-required="{{!user.isMobileUser}}"/>
+               ng-required="!user.isMobileUser"/>
         <span class="field-error" ng-show="userForm.email.$error.required && showError"
               openlmis-message="missing.value">
         </span>
@@ -102,42 +102,23 @@
 
   <div class="form-row clearfix">
     <div class="form-cell">
-      <label id="associatedFacilityLabel">
-        <span openlmis-message="create.user.homeFacility"></span>
-        <span class="label-required"> *</span>
-      </label>
-
-      <div class="form-field input-div associate-facility suggest-field">
-        <input ng-model="user.facilityId" name="facilityId" id="facilityId" type="hidden" ng-required="true"/>
-        <div id="associatedFacilityField" ng-click="toggleSlider()" class="clearfix">
-          <div class="facility-associated">
-            <span class="placeholder" ng-show="!facilitySelected" openlmis-message="label.no.facility.selected"></span>
-            <span ng-show="facilitySelected">{{facilitySelected.code}} - {{facilitySelected.name}}</span>
-          </div>
-          <a href="" class="btn" ng-show="!facilitySelected">
-            <i class="icon icon-ellipsis-horizontal"></i>
-          </a>
-        </div>
-        <a id="clearFacility" ng-show="facilitySelected"
-           href="" class="clear-search" ng-click="confirmFacilityDelete()"></a>
-        <span class="field-error" ng-show="userForm.facilityId.$error.required && showError"
-            openlmis-message="missing.value"></span>
-      </div>
-    </div>
-
-    <div class="form-cell">
       <label for="employeeId" openlmis-message="create.user.employeeId"></label>
 
       <div class="form-field">
         <input ng-model="user.employeeId" id="employeeId" type="text" maxlength="50"/>
       </div>
     </div>
+
+
+    <div class="form-cell">
+      <label for="jobTitle" openlmis-message="create.user.jobTitle"> </label>
+
+      <div class="form-field">
+        <input ng-model="user.jobTitle" id="jobTitle" type="text" maxlength="50"/>
+      </div>
+    </div>
   </div>
 
-  <div class="position-relative">
-    <div class="slider" slider="showSlider" ng-include
-         src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
-  </div>
 
   <div class="form-row clearfix">
     <div class="form-cell">
@@ -192,15 +173,30 @@
 
   <div class="form-row clearfix">
     <div class="form-cell">
-      <label for="jobTitle" openlmis-message="create.user.jobTitle"> </label>
+      <label id="associatedFacilityLabel">
+        <span openlmis-message="create.user.homeFacility"></span>
+      </label>
 
-      <div class="form-field">
-        <input ng-model="user.jobTitle" id="jobTitle" type="text" maxlength="50"/>
+      <div class="form-field input-div associate-facility suggest-field">
+        <div id="associatedFacilityField" ng-click="toggleSlider()" class="clearfix">
+          <div class="facility-associated">
+            <span class="placeholder" ng-show="!facilitySelected" openlmis-message="label.no.facility.selected"></span>
+            <span ng-show="facilitySelected">{{facilitySelected.code}} - {{facilitySelected.name}}</span>
+          </div>
+          <a href="" class="btn" ng-show="!facilitySelected">
+            <i class="icon icon-ellipsis-horizontal"></i>
+          </a>
+        </div>
+        <a id="clearFacility" ng-show="facilitySelected"
+           href="" class="clear-search" ng-click="confirmFacilityDelete()"></a>
       </div>
     </div>
   </div>
 
-
+  <div class="position-relative">
+    <div class="slider" slider="showSlider" ng-include
+         src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
+  </div>
 
   <div class="form-row clearfix">
     <div class="form-cell">
