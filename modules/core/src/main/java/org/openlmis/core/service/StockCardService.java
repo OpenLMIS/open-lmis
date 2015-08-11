@@ -15,12 +15,9 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.Lot;
 import org.openlmis.core.dto.StockCard;
 import org.openlmis.core.dto.StockCardLineItem;
-import org.openlmis.core.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,12 +25,12 @@ import java.util.List;
 
 
 /**
- * Exposes the services for handling stock management.
+ * Exposes the services for handling stock cards.
  */
 
 @Service
 @NoArgsConstructor
-public class StockManagementService {
+public class StockCardService {
 
   @Autowired
   FacilityService facilityService;

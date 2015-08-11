@@ -15,12 +15,11 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import org.openlmis.core.dto.Lot;
 import org.openlmis.core.dto.StockCard;
 import org.openlmis.core.dto.StockCardLineItem;
-import org.openlmis.core.service.StockManagementService;
+import org.openlmis.core.service.StockCardService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,16 +30,16 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * This controller provides GET, POST, and DELETE endpoints related to stock management.
+ * This controller provides GET, POST, and DELETE endpoints related to stock cards.
  */
 
 @Controller
-@Api(value = "Stock Management", description = "Track the stock on hand at various facilities.")
+@Api(value = "Stock Cards", description = "Track the stock cards (stock on hand) at various facilities.")
 @RequestMapping(value = "/api/v2/")
-public class StockManagementController extends BaseController
+public class StockCardController extends BaseController
 {
   @Autowired
-  private StockManagementService service;
+  private StockCardService service;
 
   //TODO: Determine what the permissions associated with @PreAuthorize should be. (MANAGE_PROGRAM_PRODUCT, below, is just a placeholder).
 
