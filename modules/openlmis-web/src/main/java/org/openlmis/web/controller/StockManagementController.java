@@ -60,7 +60,7 @@ public class StockManagementController extends BaseController
     }
   }
 
-  @RequestMapping(value = "facilities/{facilityId}/products/{productId}/stockcard", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "facilities/{facilityId}/products/{productId}/stockCard", method = GET, headers = ACCEPT_JSON)
   @ApiOperation(value = "Get information about the stock card for the specified facility and product.",
       notes = "(This endpoint is not yet ready for use.)")
   public ResponseEntity getStockCardByProduct(@PathVariable Long facilityId, @PathVariable Long productId,
@@ -77,7 +77,7 @@ public class StockManagementController extends BaseController
     }
   }
 
-  @RequestMapping(value = "facilities/{facilityId}/stockcards/{stockCardId}", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "facilities/{facilityId}/stockCards/{stockCardId}", method = GET, headers = ACCEPT_JSON)
   @ApiOperation(value = "Get information about the stock card for the specified facility.",
       notes = "(This endpoint is not yet ready for use.)")
   public ResponseEntity getStockCard(@PathVariable Long facilityId, @PathVariable Long stockCardId,
@@ -94,7 +94,7 @@ public class StockManagementController extends BaseController
     }
   }
 
-  @RequestMapping(value = "facilities/{facilityId}/stockcards", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "facilities/{facilityId}/stockCards", method = GET, headers = ACCEPT_JSON)
   @ApiOperation(value = "Get information about all stock cards for the specified facility.",
       notes = "(This endpoint is not yet ready for use.)")
   public ResponseEntity getStockCards(@PathVariable Long facilityId,
