@@ -131,7 +131,7 @@ INSERT INTO users
     FROM facilities
     WHERE code = 'F10'), 'Frank', 'Doe', 'Bhann_Doe@openlmis.com', FALSE, TRUE, FALSE),
 
-  ('superuser', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
+  ('superuser', 'vFR3ULknlislVs2ESzJvdXN330IYhUdA6FnraiiZWqJKmtJGELNqaLwC2iiQUHuUWcK6hPtZGkJmkRT8zXLI5212gieie',
    (SELECT
       id
     FROM facilities
