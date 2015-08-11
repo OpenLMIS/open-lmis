@@ -11,7 +11,7 @@
  */
 
 function DashboardProgramController($scope,$routeParams,$timeout, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods) {
-    var dashboardMenuService = dashboardMenuServiceNew
+    var dashboardMenuService = dashboardMenuServiceNew;
 
     $scope.dashboardTabs = dashboardMenuService.tabs;
     $scope.dashboardTabs = [];
