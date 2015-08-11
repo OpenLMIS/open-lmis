@@ -230,7 +230,7 @@
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="label.price.schedule"/>
                         <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.PriceSchedule</value>
+                            <value type="java.lang.Class">org.openlmis.core.domain.ProductPriceSchedule</value>
                         </property>
                         <property name="recordHandler" ref="priceSchedulePersistenceHandler"/>
                     </bean>

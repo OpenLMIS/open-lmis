@@ -15,7 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.PriceScheduleCategory;
+import org.openlmis.core.domain.PriceSchedule;
 import org.openlmis.core.dto.FacilityContact;
 import org.openlmis.core.dto.FacilityGeoTreeDto;
 import org.openlmis.core.dto.FacilityImages;
@@ -39,7 +39,7 @@ public interface FacilityMapper {
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
     "satellite, parentFacilityId, hasElectricity, hasElectronicSCC, hasElectronicDAR, active," +
-    "goLiveDate, goDownDate, comment, virtualFacility, enabled, pricecatid, createdDate,createdBy, modifiedBy, modifiedDate) " +
+    "goLiveDate, goDownDate, comment, virtualFacility, enabled, priceScheduleId, createdDate,createdBy, modifiedBy, modifiedDate) " +
     "VALUES(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
     "#{facilityType.id}," +
@@ -47,7 +47,7 @@ public interface FacilityMapper {
     "#{operatedBy.id}," +
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
     "#{satellite}, #{parentFacilityId}, #{hasElectricity}, #{hasElectronicSCC}, #{hasElectronicDAR}, #{active}," +
-    "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{enabled}, #{priceScheduleCategory.id} , COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
+    "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{enabled}, #{priceSchedule.id} , COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
     "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);
@@ -87,8 +87,8 @@ public interface FacilityMapper {
       one = @One(select = "getFacilityTypeById")),
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
       one = @One(select = "getFacilityOperatorById")),
-    @Result(property = "priceScheduleCategory", column = "pricecatid", javaType = PriceScheduleCategory.class,
-      one = @One(select = "org.openlmis.core.repository.mapper.PriceScheduleMapper.getPriceScheduleCategoryById")),
+    @Result(property = "priceSchedule", column = "priceScheduleId", javaType = PriceSchedule.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.PriceScheduleMapper.getById")),
   })
   Facility getById(Long id);
 
@@ -119,7 +119,7 @@ public interface FacilityMapper {
     "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, parentFacilityId = #{parentFacilityId}," +
     "hasElectricity = #{hasElectricity}, hasElectronicSCC = #{hasElectronicSCC}, " +
     "hasElectronicDAR = #{hasElectronicDAR}, active = #{active}, virtualFacility = #{virtualFacility}, " +
-    "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}, pricecatid = #{priceScheduleCategory.id}, " +
+    "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}, priceScheduleId = #{priceSchedule.id}, " +
     "comment = #{comment}, enabled = #{enabled}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);
 

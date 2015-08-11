@@ -1,3 +1,14 @@
+/*
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+ *
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 app.directive('filterContainer', ['$routeParams', '$location', 'messageService', function($routeParams, $location, messageService) {
   return {
     restrict: 'EA',
@@ -67,7 +78,6 @@ app.directive('filterContainer', ['$routeParams', '$location', 'messageService',
           for (var i = 0; i < requiredFilters.length; i++) {
             var field = requiredFilters[i];
             if (isUndefined($scope.filter[field]) || _.isEmpty($scope.filter[field]) || $scope.filter[field] === 0 || $scope.filter[field] === -1) {
-              console.log('failed - ' + field);
               all_required_fields_set = false;
               break;
             }
@@ -100,7 +110,7 @@ app.directive('filterContainer', ['$routeParams', '$location', 'messageService',
             array.unshift({
               name: messageService.get(displayKey)
             });
-          }else if(angular.isArray(array) && array.length ===0 ){
+          }else if(angular.isArray(array) && array.length === 0 ){
             array.push({name: messageService.get(displayKey)});
           }
           return array;
@@ -282,14 +292,20 @@ app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$
   }
 ]);
 
-app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'GetUserUnassignedSupervisoryNode', '$routeParams',
-  function(TreeGeographicZoneList, TreeGeographicZoneListByProgram, GetUserUnassignedSupervisoryNode, $routeParams) {
+app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'GetUserUnassignedSupervisoryNode', 'messageService' , '$routeParams',
+  function(TreeGeographicZoneList, TreeGeographicZoneListByProgram, GetUserUnassignedSupervisoryNode, messageService, $routeParams) {
 
-    var onCascadedVarsChanged = function($scope) {
+    var onCascadedVarsChanged = function($scope, attr) {
+      var label = (attr.required)?'report.filter.select.zone': 'report.filter.all.zones';
       if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {
         TreeGeographicZoneListByProgram.get({
           program: $scope.filter.program
         }, function(data) {
+          $scope.zones = data.zone;
+
+        });
+      }else{
+        TreeGeographicZoneList.get(function(data) {
           $scope.zones = data.zone;
         });
       }
@@ -299,11 +315,10 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
       GetUserUnassignedSupervisoryNode.get({
         program: $scope.filter.program
       }, function(data) {
-        $scope.user_geo_level = '--All Geographic Zones--';
-
+        $scope.user_geo_level = messageService.get('report.filter.all.geographic.zones');
         if (!angular.isUndefined(data.supervisory_nodes)) {
           if (data.supervisory_nodes === 0)
-            $scope.user_geo_level = '--National---';
+            $scope.user_geo_level = messageService.get('report.filter.national');
         }
       });
     };
@@ -313,20 +328,17 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
       require: '^filterContainer',
       link: function(scope, elm, attr) {
         scope.registerRequired('zone', attr);
+
         if (attr.districtOnly) {
           scope.showDistrictOnly = true;
-        } else {
-          categoriseZoneBySupervisoryNode(scope);
         }
-        TreeGeographicZoneList.get(function(data) {
-          scope.zones = data.zone;
-        });
+        categoriseZoneBySupervisoryNode(scope);
 
         var onParamsChanged = function(value) {
           if (!scope.showDistrictOnly) {
-            categoriseZoneBySupervisoryNode(scope);
+            categoriseZoneBySupervisoryNode(scope, attr);
           }
-          onCascadedVarsChanged(scope);
+          onCascadedVarsChanged(scope, attr);
         };
         scope.subscribeOnChanged('zone', 'program', onParamsChanged, true);
       },
@@ -495,14 +507,14 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
   }
 ]);
 
-app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams',
-  function(FacilitiesByGeographicZone, $routeParams) {
+app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams', 'messageService',
+  function(FacilitiesByGeographicZone, $routeParams, messageService) {
 
     var onPgCascadedVarsChanged = function($scope) {
 
       if (!$routeParams.facility) {
         $scope.facilities = [{
-          name: '-- select facility --'
+          name: messageService.get('report.filter.select.facility')
         }];
       }
 
@@ -516,7 +528,7 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
           $scope.facilities = [];
         }
         $scope.facilities.unshift({
-          name: '-- select facility --'
+          name: messageService.get('report.filter.select.facility')
         });
       });
     };
@@ -528,7 +540,7 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
 
         scope.facilities = [];
         scope.facilities.push({
-          name: '-- select facility --'
+          name: messageService.get('report.filter.select.facility')
         });
 
         scope.filter.facility = (isUndefined($routeParams.facility) || $routeParams.facility === '') ? 0 : $routeParams.facility;
@@ -546,8 +558,8 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
   }
 ]);
 
-app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
-  function(ReportProductsByProgram, $routeParams) {
+app.directive('productFilter', ['ReportProductsByProgram', 'messageService' ,'$routeParams',
+  function(ReportProductsByProgram, messageService ,$routeParams) {
 
     var onPgCascadedVarsChanged = function($scope, attr) {
       if (isUndefined($scope.filter.program) || $scope.filter.program === 0)
@@ -561,11 +573,11 @@ app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
         $scope.products = data.productList;
         if(!attr.required){
           $scope.products.unshift({
-            'name': '-- Indicator Products --',
+            'name': messageService.get('report.filter.select.indicator.product'),
             id: -1
           });
           $scope.products.unshift({
-            'name': '-- All Products --',
+            'name': messageService.get('report.filter.all.products'),
             id: 0
           });
         }
@@ -581,7 +593,7 @@ app.directive('productFilter', ['ReportProductsByProgram', '$routeParams',
         scope.registerRequired('product', attr);
         if (!$routeParams.product && !attr.required) {
           scope.products = [{
-            'name': '-- All Products --',
+            'name': messageService.get('report.filter.all.products'),
             id: 0
           }];
         }

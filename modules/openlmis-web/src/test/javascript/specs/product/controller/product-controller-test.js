@@ -155,7 +155,7 @@ describe("Product", function () {
         scope.selectedProductDosageUnitCode = "unit2";
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPOST('/products.json', {product: scope.product, programProducts: scope.programProducts, priceSchedules: scope.priceSchedules}).respond(200, {"success": "Saved successfully", "productId": 5});
+        $httpBackend.expectPOST('/products.json', {product: scope.product, programProducts: scope.programProducts, productPriceSchedules: scope.priceSchedules}).respond(200, {"success": "Saved successfully", "productId": 5});
         scope.save();
         $httpBackend.flush();
 
@@ -172,7 +172,7 @@ describe("Product", function () {
         scope.product = {"code": 'P10'};
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPOST('/products.json', {product: scope.product, programProducts: scope.programProducts, priceSchedules: scope.priceSchedules}).respond(400, {"error": "Some error occurred"});
+        $httpBackend.expectPOST('/products.json', {product: scope.product, programProducts: scope.programProducts, productPriceSchedules: scope.priceSchedules}).respond(400, {"error": "Some error occurred"});
         scope.save();
         $httpBackend.flush();
 
@@ -188,7 +188,7 @@ describe("Product", function () {
         scope.selectedProductDosageUnitCode = "unit3";
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPUT('/products/1.json', {product: scope.product, programProducts: scope.programProducts, priceSchedules: scope.priceSchedules}).respond(200, {"success": "Updated successfully", "productId": 5});
+        $httpBackend.expectPUT('/products/1.json', {product: scope.product, programProducts: scope.programProducts, productPriceSchedules: scope.priceSchedules}).respond(200, {"success": "Updated successfully", "productId": 5});
         scope.save();
         $httpBackend.flush();
 
@@ -205,7 +205,7 @@ describe("Product", function () {
         scope.product = {"id": 1, "code": 'P10'};
         scope.productForm = {"$error": {"required": false}};
 
-        $httpBackend.expectPUT('/products/1.json', {product: scope.product, programProducts: scope.programProducts, priceSchedules: scope.priceSchedules}).respond(400, {"error": "Some error occurred"});
+        $httpBackend.expectPUT('/products/1.json', {product: scope.product, programProducts: scope.programProducts, productPriceSchedules: scope.priceSchedules}).respond(400, {"error": "Some error occurred"});
         scope.save();
         $httpBackend.flush();
 
