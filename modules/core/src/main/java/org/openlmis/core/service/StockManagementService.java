@@ -46,19 +46,21 @@ public class StockManagementService {
   }
 
   public StockCard getStockCardByProduct(Long facilityId, Long productId) {
-    return getTestStockCard(1L, facilityId, productId);
+    return getTestStockCard(1L, facilityId, productId, 2400L, 2400L);
   }
 
   public StockCard getStockCard(Long facilityId, Long stockCardId) {
-    return getTestStockCard(stockCardId, facilityId, 2412L);
+    return getTestStockCard(stockCardId, facilityId, 2412L, 2400L, 2400L);
   }
 
   public List<StockCard> getStockCards(Long facilityId) {
-    Long[] productIdData = {2412L,2420L,2417L,2414L,2416L};
+    Long[] productIdData = {2412L,2418L,2421L,2413L,2416L,2415L,2422L,2423L,2425L,2426L};
+    Long[] quantityData = {2400L,1000L,500L,1000L,400L,1000L,300L,500L,1000L,200L};
+    Long[] quantityData2 = {200L,2400L,1000L,500L,2400L,1300L,200L,600L,200L,10L};
 
     List<StockCard> stockCards = new ArrayList<>();
     for (int i = 0; i < productIdData.length; i++) {
-      StockCard stockCard = getTestStockCard((long)i, facilityId, productIdData[i]);
+      StockCard stockCard = getTestStockCard((long)i, facilityId, productIdData[i], quantityData[i], quantityData2[i]);
       if (stockCard != null) {
         stockCards.add(stockCard);
       }
@@ -93,7 +95,7 @@ public class StockManagementService {
     return lots;
   }
 
-  private StockCard getTestStockCard(Long id, Long facilityId, Long productId) {
+  private StockCard getTestStockCard(Long id, Long facilityId, Long productId, Long quantity1, Long quantity2) {
     Facility facility = facilityService.getById(facilityId);
     Product product = productService.getById(productId);
 
@@ -106,7 +108,11 @@ public class StockManagementService {
     stockCard.setId(id);
     stockCard.setFacility(facility);
     stockCard.setProduct(product);
-    stockCard.setTotalQuantityOnHand(105L);
+    if (facility.getFacilityType().getCode().equalsIgnoreCase("dvs")) {
+      stockCard.setTotalQuantityOnHand(quantity1);
+    } else {
+      stockCard.setTotalQuantityOnHand(quantity2);
+    }
     stockCard.setEffectiveDate(new Date());
     stockCard.setNotes("Test stock card for " + product.getPrimaryName());
 
