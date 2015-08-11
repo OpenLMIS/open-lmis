@@ -32,6 +32,3 @@ ConfigureRnRTemplateController.resolve = {
     return deferred.promise;
   }
 };
-
-
-

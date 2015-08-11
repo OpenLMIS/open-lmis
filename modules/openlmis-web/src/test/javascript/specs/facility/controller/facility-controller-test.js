@@ -32,7 +32,7 @@ describe("Facility Controller", function () {
       ]};
       $rootScope.fixToolBar = function () {
       };
-      ctrl = $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, priceSchCategories: undefined, facility: undefined,
+      ctrl = $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, priceSchedules: undefined, facility: undefined,
         messageService: messageService, facilityImages: []});
       scope.facilityForm = {$error: { pattern: "" }};
     }));
@@ -228,7 +228,7 @@ describe("Facility Controller", function () {
           {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "program": {"id": 1}, "startDate": 1352572200000, "stringStartDate": "2012-11-21"},
           {"code": "HIV", "name": "HIV", "description": "HIV", "active": true, "program": {"id": 1}, "startDate": 1352572200000, "stringStartDate": "2014-11-21"}
         ], "modifiedBy": null, "modifiedDate": null};
-      $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, priceSchCategories: undefined, facility: facility, facilityImages:[]});
+      $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, priceSchedules: undefined, facility: facility, facilityImages:[]});
       scope.facilityForm = {$error: { pattern: "" }};
     }));
 

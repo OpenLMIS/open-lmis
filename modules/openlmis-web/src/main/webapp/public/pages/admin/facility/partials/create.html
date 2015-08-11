@@ -596,9 +596,9 @@
         <div class="form-cell">
             <label for="address-1" openlmis-message="label.price.schedule"></label>
             <div class="form-field">
-                <select class="input-medium span3" ng-model="facility.priceScheduleCategory.id">
+                <select class="input-medium span3" ng-model="facility.priceSchedule.id">
                     <option openlmis-message="select.price.schedule.category"></option>
-                    <option ng-repeat="categories in priceScheduleCategories" ng-selected="categories.id == facility.priceScheduleCategory.id" value="{{ categories.id }}">{{categories.price_category}}</option>
+                    <option ng-repeat="s in priceSchedules" ng-selected="s.id == facility.priceSchedule.id" value="{{ s.id }}">{{s.code}} {{s.description}}</option>
                 </select>
             </div>
         </div>
@@ -649,5 +649,3 @@
 
 </form>
 </div>
-
-

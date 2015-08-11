@@ -64,7 +64,7 @@ public class ProductControllerTest {
   private ProductCategoryService productCategoryService;
 
   @Mock
-  private PriceScheduleService priceScheduleService;
+  private ProductPriceScheduleService priceScheduleService;
 
   @Mock
   private MessageService messageService;
@@ -198,7 +198,7 @@ public class ProductControllerTest {
 
     doNothing().when(service).save(product);
     doNothing().when(programProductService).saveAll(programProducts, product);
-    doNothing().when(priceScheduleService).saveAll(productDTO.getPriceSchedules(), product);
+    doNothing().when(priceScheduleService).saveAll(productDTO.getProductPriceSchedules(), product);
 
     when(messageService.message("message.product.updated.success", productDTO.getProduct().getName())).thenReturn("updated");
 

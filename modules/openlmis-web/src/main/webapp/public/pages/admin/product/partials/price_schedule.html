@@ -24,12 +24,12 @@
 <div class="row-fluid" ng-repeat="priceSchedule in priceSchedules" tab-scroll>
 
     <div class="span3">
-        <div class="fluid-grid-cell">{{priceSchedule.priceScheduleCategory.price_category}}</div>
+        <div class="fluid-grid-cell">{{priceSchedule.priceSchedule.code}}</div>
     </div>
     <div class="span2">
         <div class="span8 fluid-grid-cell">
             <div class="position-relative">
-                <input type="text" id="price_shcedule" ng-model="priceSchedule.salePrice"
+                <input type="text" id="price_shcedule" ng-model="priceSchedule.price"
                        class="right-justified"
                        name="price" numeric-validator="positiveInteger" maxlength="10"/>
               <span class="rnr-form-error" style="display:none;" id="addPrice"
@@ -43,9 +43,9 @@
         <div class="span3">
             <div class="span12 fluid-grid-cell">
                 <div class="position-relative">
-                    <select class="input-medium span12" ng-model="newPriceSchedule.priceScheduleCategory.id">
+                    <select class="input-medium span12" ng-model="newPriceSchedule.priceSchedule.id">
                         <option openlmis-message="select.price.schedule.category"></option>
-                        <option ng-repeat="categories in priceScheduleCategories"  value="{{ categories.id }}">{{categories.price_category}}</option>
+                        <option ng-repeat="categories in priceScheduleCategories"  value="{{ categories.id }}">{{categories.code}}</option>
                     </select>
               <span class="rnr-form-error" style="display:none;" id="addPrice"
                     openlmis-message="error.number.only"></span>
@@ -55,7 +55,7 @@
         <div class="span2">
             <div class="span8 fluid-grid-cell">
                 <div class="position-relative">
-                    <input type="text" id="price_shcedule" ng-model="newPriceSchedule.salePrice"
+                    <input type="text" id="price_shcedule" ng-model="newPriceSchedule.price"
                            class="right-justified"
                            name="price" numeric-validator="positiveInteger" maxlength="10"/>
               <span class="rnr-form-error" style="display:none;" id="addPrice"

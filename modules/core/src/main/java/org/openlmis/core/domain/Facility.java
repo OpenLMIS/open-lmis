@@ -138,8 +138,8 @@ public class Facility extends BaseModel implements Importable {
 
   private Boolean virtualFacility = false;
 
-  @ImportField(name = "price_schedule", nested = "price_category")
-  private PriceScheduleCategory priceScheduleCategory;
+  @ImportField(name = "Price Schedule", nested = "code")
+  private PriceSchedule priceSchedule;
 
   //TODO : change supportedPrograms to programsSupported
   List<ProgramSupported> supportedPrograms = new ArrayList<>();
