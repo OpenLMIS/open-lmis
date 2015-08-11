@@ -122,7 +122,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     };
 
     if (!requiredFieldsPresent($scope.user))  return false;
-    if($scope.user.email == "" ){
+    if ($scope.user.email === "") {
       $scope.user.email = null;
     }
     if ($scope.user.id) {
