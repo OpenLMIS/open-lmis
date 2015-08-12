@@ -59,4 +59,12 @@ public class RequisitionPredicateHelper {
     return String.format("%s= #{filterCriteria.facilityType}", field);
   }
 
+  public static String regimenCategoryIsFilteredBy(String field){
+    return String.format("%s= #{filterCriteria.regimenCategory}", field);
+  }
+
+  public static String regimenIsFilteredBy(String field){
+    return String.format("%s= #{filterCriteria.regimen}", field);
+  }
+
 }
