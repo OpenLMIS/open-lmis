@@ -195,6 +195,22 @@ public class UserControllerTest {
   }
 
   @Test
+  public void shouldUpdateMobileUser() throws Exception {
+    User user = make(a(defaultUser));
+    user.setId(userId);
+    user.setIsMobileUser(true);
+    request.getSession().setAttribute(USER_ID, userId);
+    request.getSession().setAttribute(USER, USER);
+
+    ResponseEntity<OpenLmisResponse> response = userController.update(user, userId, request);
+
+    verify(userService).update(user);
+
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(user.getModifiedBy(), is(userId));
+  }
+
+  @Test
   public void shouldReturnErrorIfSaveUserFails() throws Exception {
     User user = new User();
     doThrow(new DataException("Save user failed")).when(userService).create(eq(user), anyString());
