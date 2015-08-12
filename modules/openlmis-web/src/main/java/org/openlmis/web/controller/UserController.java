@@ -134,6 +134,11 @@ public class UserController extends BaseController {
                                                  HttpServletRequest request) {
     user.setModifiedBy(loggedInUserId(request));
     user.setId(id);
+    if (user.isMobileUser()) {
+      user.setVerified(true);
+    } else {
+      user.setIsMobileUser(false);
+    }
     try {
       userService.update(user);
     } catch (DataException e) {
