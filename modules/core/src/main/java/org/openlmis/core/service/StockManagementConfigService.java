@@ -16,8 +16,8 @@ public class StockManagementConfigService {
   @Autowired
   StockManagementConfigRepository repository;
 
-  public List<StockAdjustmentReason> getAdjustmentReasons(Boolean additive) {
-    return repository.getAdjustmentReasons(additive);
+  public List<StockAdjustmentReason> getAdjustmentReasons(Boolean additive, Long programId) {
+    return repository.getAdjustmentReasons(additive, programId);
   }
 
   public StockAdjustmentReason getAdjustmentReasonByName(String name) {

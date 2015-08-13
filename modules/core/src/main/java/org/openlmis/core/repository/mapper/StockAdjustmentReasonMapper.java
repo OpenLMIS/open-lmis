@@ -14,10 +14,12 @@ public interface StockAdjustmentReasonMapper {
       " FROM losses_adjustments_types")
   List<StockAdjustmentReason> getAll();
 
-  @Select("SELECT *" +
-      " FROM losses_adjustments_types" +
-      " WHERE additive = #{additive}")
-  List<StockAdjustmentReason> getAllByAdditive(@Param("additive") Boolean additive);
+  @Select("SELECT lat.*" +
+      " FROM losses_adjustments_types lat" +
+      "   JOIN stock_adjustment_reasons_programs sarp ON sarp.reasonName = lat.name" +
+      "   JOIN programs p ON p.code = sarp.programCode" +
+      " WHERE p.id = #{programId}")
+  List<StockAdjustmentReason> getAllByProgram(@Param("programId") Long programId);
 
   @Select("SELECT *" +
       " FROM losses_adjustments_types" +

@@ -7,6 +7,7 @@ import org.openlmis.core.repository.mapper.StockAdjustmentReasonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -16,12 +17,25 @@ public class StockManagementConfigRepository {
   @Autowired
   StockAdjustmentReasonMapper adjustmentReasonMapper;
 
-  public List<StockAdjustmentReason> getAdjustmentReasons(Boolean additive) {
-    if (additive != null) {
-      return adjustmentReasonMapper.getAllByAdditive(additive);
+  public List<StockAdjustmentReason> getAdjustmentReasons(Boolean additive, Long programId) {
+    List<StockAdjustmentReason> reasons;
+    if (programId != null) {
+      reasons = adjustmentReasonMapper.getAllByProgram(programId);
     } else {
-      return adjustmentReasonMapper.getAll();
+      reasons = adjustmentReasonMapper.getAll();
     }
+
+    if (additive != null) {
+      List<StockAdjustmentReason> filteredReasons = new ArrayList<>();
+      for (StockAdjustmentReason reason : reasons) {
+        if (additive == reason.getAdditive()) {
+          filteredReasons.add(reason);
+        }
+      }
+      reasons = filteredReasons;
+    }
+
+    return reasons;
   }
 
   public StockAdjustmentReason getAdjustmentReasonByName(String name) {

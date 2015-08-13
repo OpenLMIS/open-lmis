@@ -28,9 +28,10 @@ public class StockManagementConfigController extends BaseController {
   @RequestMapping(value = "adjustmentReasons", method = GET, headers = ACCEPT_JSON)
   @ApiOperation(value = "Get information about all stock management adjustment reasons from the system.",
       notes = "(This endpoint is not yet ready for use.)")
-  public ResponseEntity getAdjustmentReasons(@RequestParam(value = "additive", required = false) Boolean additive)
+  public ResponseEntity getAdjustmentReasons(@RequestParam(value = "additive", required = false) Boolean additive,
+                                             @RequestParam(value = "programId", required = false) Long programId)
   {
-    List<StockAdjustmentReason> reasons = service.getAdjustmentReasons(additive);
+    List<StockAdjustmentReason> reasons = service.getAdjustmentReasons(additive, programId);
 
     if (reasons != null) {
       return OpenLmisResponse.response("adjustmentReasons", reasons);
