@@ -91,16 +91,12 @@
             </div>
             <div class="float-right" ng-class="{'content-body': report.currentFilters.length > 0}">
               <div class="box" style="padding-top: 0px;margin-top:0px; ">
-                <span ng-show="meta" style="padding-top: 20px; padding-right: 5px; font-size: 9px" class="pull-right">As of <b>{{meta.date
-                                                                                                                               |
-                                                                                                                               date
-                                                                                                                               :
-                                                                                                                               'hh:mm
-                                                                                                                               a
-                                                                                                                               dd-MMM-yyyy'}}</b></span>
 
                 <div class="box-content" style="min-height: 400px;">
-                  <h4>{{report.name}}</h4>
+                  <h4>
+                    {{report.name}}
+                    <a class="pull-right btn btn-small btn-primary" ng-show="data.length > 0" href="" ng-click="exportCSV();">Export CSV</a>
+                  </h4>
                   <hr/>
                   <table ng-show="data.length == 0">
                     <tr>
@@ -108,6 +104,10 @@
                     </tr>
                   </table>
                   <div client-side-sort-pagination ng-show="data.length > 0">
+                    <span ng-show="meta" style="padding-right: 5px; font-size: 9px" class="pull-right">
+                      As of <b>{{ meta.date |  date   : 'hh:mm a dd-MMM-yyyy' }}</b>
+                    </span>
+
                     <table ng-table="tableParams" class="table-bordered table table-striped ng-table">
                       <thead>
                       <tr>

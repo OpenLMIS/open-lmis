@@ -28,6 +28,10 @@ public class CustomReportRepository {
   @Autowired
   private CustomReportMapper mapper;
 
+  public Map getQueryModelByKey(String key){
+    return mapper.getCustomReportByKey(key);
+  }
+
   public List<Map> getReportList() {
     return mapper.getListOfReports();
   }
@@ -35,7 +39,6 @@ public class CustomReportRepository {
   public List<CustomReport> getReportListWithFullAttributes() {
     return mapper.getListWithFullAttributes();
   }
-
 
   public List<Map> getReportData(Map filter) {
     String reportKey = filter.get("report_key").toString();
