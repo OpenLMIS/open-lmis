@@ -57,6 +57,8 @@ public class Rnr extends BaseModel {
   private List<RegimenLineItem> regimenLineItems = new ArrayList<>();
   private List<EquipmentLineItem> equipmentLineItems = new ArrayList<>();
 
+  private List<PatientQuantificationLineItem> patientQuantifications;
+
   private BigDecimal allocatedBudget;
 
   public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
