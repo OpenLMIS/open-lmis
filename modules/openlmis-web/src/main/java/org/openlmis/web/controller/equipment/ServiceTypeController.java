@@ -11,13 +11,10 @@
  */
 package org.openlmis.web.controller.equipment;
 
-import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.domain.ServiceType;
-import org.openlmis.equipment.repository.EquipmentOperationalStatusRepository;
-import org.openlmis.equipment.service.EquipmentTypeService;
 import org.openlmis.equipment.service.ServiceTypeService;
-import org.openlmis.web.controller.BaseController;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
