@@ -3,4 +3,4 @@
 	url = https://github.com/OpenLMIS/indexed-db-angular-service.git
 [submodule "modules/stock-management"]
 	path = modules/stock-management
-	url = https://github.com/OpenLMIS/stock-management
+	url = https://github.com/OpenLMIS/stock-management.git
