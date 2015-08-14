@@ -13,6 +13,7 @@ package org.openlmis.rnr.repository;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
+import org.openlmis.core.repository.mapper.BudgetFileColumnMapper;
 import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.rnr.domain.*;
@@ -60,6 +61,9 @@ public class RequisitionRepository {
   @Autowired
   private EquipmentInventoryStatusMapper equipmentInventoryStatusMapper;
 
+  @Autowired
+  private PatientQuantificationLineItemMapper patientQuantificationLineItemMapper;
+
 
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
@@ -68,6 +72,14 @@ public class RequisitionRepository {
     insertLineItems(requisition, requisition.getNonFullSupplyLineItems());
     insertRegimenLineItems(requisition, requisition.getRegimenLineItems());
     insertEquipmentStatus(requisition, requisition.getEquipmentLineItems());
+  }
+
+  private void insertPatientQuantificationLineItems(Rnr requisition, List<PatientQuantificationLineItem> patientQuantifications) {
+    for (PatientQuantificationLineItem patientQuantificationLineItem : patientQuantifications) {
+      patientQuantificationLineItem.setRnrId(requisition.getId());
+      patientQuantificationLineItem.setModifiedBy(requisition.getModifiedBy());
+      patientQuantificationLineItemMapper.insert(patientQuantificationLineItem);
+    }
   }
 
   private void insertEquipmentStatus(Rnr requisition, List<EquipmentLineItem> equipmentLineItems) {
@@ -113,6 +125,8 @@ public class RequisitionRepository {
     if (!(rnr.getStatus() == AUTHORIZED || rnr.getStatus() == IN_APPROVAL)) {
       updateRegimenLineItems(rnr);
       updateEquipmentLineItems(rnr);
+      insertPatientQuantificationLineItems(rnr, rnr.getPatientQuantifications());
+
     }
   }
 

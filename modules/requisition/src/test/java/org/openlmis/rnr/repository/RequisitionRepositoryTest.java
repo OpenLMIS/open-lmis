@@ -27,6 +27,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.builder.PatientQuantificationsBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.mapper.*;
@@ -39,6 +40,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -80,6 +82,9 @@ public class RequisitionRepositoryTest {
   private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
   @Mock
   private RegimenLineItemMapper regimenLineItemMapper;
+  @Mock
+  private PatientQuantificationLineItemMapper patientQuantificationLineItemMapper;
+
 
   @InjectMocks
   private RequisitionRepository requisitionRepository;
@@ -89,6 +94,7 @@ public class RequisitionRepositoryTest {
   private RnrLineItem rnrLineItem2;
   private Rnr rnr;
   private RegimenLineItem regimenLineItem;
+  private PatientQuantificationLineItem patientQuantificationLineItem;
 
   @Before
   public void setUp() throws Exception {
@@ -128,6 +134,26 @@ public class RequisitionRepositoryTest {
     RnrLineItem rnrLineItem = rnr.getFullSupplyLineItems().get(0);
     assertThat(rnrLineItem.getRnrId(), is(1L));
     assertThat(regimenLineItem.getRnrId(), is(1L));
+  }
+
+  @Test
+  public void shouldInsertPatientQuantificationLineItems() {
+    PatientQuantificationLineItem lineItem1 = new PatientQuantificationLineItem("newborn", new Integer(10));
+    PatientQuantificationLineItem lineItem2 = new PatientQuantificationLineItem("adults", new Integer(5));
+    PatientQuantificationsBuilder patientQuantificationsBuilder = new PatientQuantificationsBuilder();
+    List<PatientQuantificationLineItem> patientQuantifications = patientQuantificationsBuilder
+            .addLineItem(lineItem1).addLineItem(lineItem2).build();
+    rnr.setPatientQuantifications(patientQuantifications);
+    rnr.setId(123L);
+
+    requisitionRepository.update(rnr);
+
+    assertEquals(rnr.getId(), patientQuantifications.get(0).getRnrId());
+    assertEquals(rnr.getId(), patientQuantifications.get(1).getRnrId());
+    assertThat(rnr.getStatus(), is(INITIATED));
+
+    verify(patientQuantificationLineItemMapper).insert(lineItem1);
+    verify(patientQuantificationLineItemMapper).insert(lineItem2);
   }
 
   @Test

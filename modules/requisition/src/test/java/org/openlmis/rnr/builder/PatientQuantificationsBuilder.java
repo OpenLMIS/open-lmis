@@ -1,4 +1,4 @@
-package org.openlmis.restapi.builder;
+package org.openlmis.rnr.builder;
 
 import org.openlmis.rnr.domain.PatientQuantificationLineItem;
 
