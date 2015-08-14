@@ -14,32 +14,37 @@
   <h2>
     <span openlmis-message="header.demographic.categories"></span>
   </h2>
-  <a href="#/category/add" class="pull-right btn btn-primary"><span openlmis-message="link.add.new"></span></a>
-  <p>
-    <span openlmis-message="label.demographic.category.intro"></span>
-  </p>
+
 </div>
-<div>
+<div class="row">
+  <div class="span10">
 
-  <table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-      <th class="span1">#</th>
-      <th class="span5"><span openlmis-message="label.demographic.name"></span></th>
-      <th><span openlmis-message="label.demographic.description"></span></th>
-      <th><span openlmis-message="label.demographic.default.conversion.factor"></span></th>
-      <th><span openlmis-message="label.demographic.is.primary.estimate"></span></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="category in categories">
-      <th>{{$index + 1}}</th>
-      <td><a ng-href="#/category/edit/{{category.id}}">{{category.name}}</a></td>
-      <td>{{category.description}}</td>
-      <td>{{category.defaultConversionFactor}}</td>
-      <td><input type="checkbox" ng-model="category.isPrimaryEstimate" ng-disabled="true" /></td>
-    </tr>
-    </tbody>
-  </table>
-
+    <a href="#/category/add" class="pull-right btn btn-primary"><span openlmis-message="link.add.new"></span></a>
+    <span openlmis-message="label.demographic.category.intro"></span>
+    <div class="clearfix"></div>
+    <br />
+    <table class="table table-bordered table-striped">
+      <thead>
+      <tr class="gradient-header">
+        <th class="span1">#</th>
+        <th class="span5 number"><span openlmis-message="label.demographic.name"></span></th>
+        <th><span openlmis-message="label.demographic.default.conversion.factor"></span></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="category in categories">
+        <th>{{$index + 1}}</th>
+        <td>
+          <a ng-href="#/category/edit/{{category.id}}">{{category.name}}</a>
+        </td>
+        <td class="number" ng-class="{'text-info': category.isPrimaryEstimate}"><span>{{category.defaultConversionFactor}} %</span>
+        </td>
+        <td>
+          <span ng-show="category.isPrimaryEstimate" openlmis-message="label.demographic.is.primary.estimate"></span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
