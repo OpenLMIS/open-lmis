@@ -8,8 +8,6 @@
 # You should have received a copy of the GNU Affero General Public License along with this program.\u00A0 If not, see http://www.gnu.org/licenses. \u00A0For additional information contact info@OpenLMIS.org.\u00A0
 #
 
-#Cold Chain Repair Management Report
-
 label.currency.symbol = TZS
 button.add = Add
 button.add.new = Add New
@@ -44,7 +42,6 @@ msg.loading = Loading...
 label.active = Active
 label.inactive = Inactive
 label.products = Products
-label.product.stockoutdays=Days stocked out
 label.product = Product
 label.calculated.isa = Calculated ISA
 label.overridden.isa = Overridden ISA
@@ -247,9 +244,9 @@ form.error = There are some errors in the form. Please resolve them.
 #emails
 account.created.email.subject = Account Created: Reset Password
 forgot.password.email.subject = Forgot Password
-password.reset.email.body = Hi {0} {1},\n \n\
-  Your username is : {2} \n \n\
-  Please use the link to reset password. {3} \n \n\
+password.reset.email.body = Hi {0} {1},\n \n
+  Your username is : {2} \n \n
+  Please use the link to reset password. {3} \n \n
   Thank You
 
 
@@ -824,7 +821,6 @@ right.report.user.summary = Report - User Summary
 right.report.stock.imbalance = Report - Stock imbalance report
 right.report.lab.equipment = Report - Lab Equipments
 right.report.equipment.funding = Report - Equipment by Funding Sources
-right.report.cce.storage.capacity = Report - Cold Chain Equipment Storage Capacity
 right.report.fill.rate = Report - Fill Rate Report
 right.report.timeliness = Report - Timeliness Report
 right.report.seasonality.rationing = Report - Seasonality/Rationing Report
@@ -1471,7 +1467,6 @@ report.title.facility.list = Facility List
 report.title.lab.equipment.by.status = List of Lab Equipment by Operational Status
 report.title.lab.equipment.by.funding = List of Equipment by Funding Source
 report.title.lab.equipment.by.location = Equipment Status By Location Report
-report.title.cce.storage.capacity = Cold Chain Equipment Storage Capacity Report
 report.title.functioning.equipment = Functioning equipment with service contract status
 report.title.non.functioning.equipment = Non Functioning equipment with service contract status
 report.title.non.reporting.facility = Non Reporting Facility Report
@@ -1685,10 +1680,10 @@ label.disease.display.order = Display Order
 label.disease.add.new = Add New Disease
 label.disease.edit = Edit Disease
 
-label.vaccine.tab.visibility = IVD Tab Visibility Settings
+label.vaccine.tab.visibility = IVD Tab Settings
 label.vaccine.monthly.reporting = Vaccine Monthly Reporting
 label.vaccine.tab.stock.status = Stock Status
-label.vaccine.tab.coverage = IVD Coverage
+label.vaccine.tab.coverage = Coverage
 label.vaccine.tab.disease = Disease
 label.vaccine.tab.adverse.effect.tracking = AEFI Reporting
 label.vaccine.tab.cold.chain = Cold Chain
@@ -1754,9 +1749,6 @@ label.vaccine.adverse.effect.manufacturer = Manufacturer
 label.vaccine.adverse.effect.date = Date
 label.vaccine.adverse.effect.cases = Cases
 label.vaccine.adverse.effect.investigation = Investigated (Y/N)
-label.vaccine.adverse.effect.investigated.yes = Y
-label.vaccine.adverse.effect.investigated.no = N
-label.vaccine.adverse.effect.register.new = Register New Adverse Effect
 label.vaccine.adverse.effect.notes = Notes
 label.vaccine.adverse.effect.none.found = No Adverse Effects registered for this Period.
 label.vaccine.adverse.effect.add.edit = Add / Edit Adverse Effect
@@ -2002,7 +1994,6 @@ menu.report.equipment = Equipment Reports
 menu.report.lab.equipment.list = Lab Equipment list
 menu.report.lab.equipment.by.funding.source = Lab Equipments by Funding Source
 menu.report.lab.equipment.by.location = Lab Equipments by location
-menu.report.cce.storage.capacity = Cold Chain Equipment Storage Capacity
 
 menu.report.order.fulfillment = Order Fulfillment
 menu.report.order.district.financial.compilation = District Order Compilation
@@ -2051,7 +2042,7 @@ label.equipment.list.saved= Equipment Successfully Saved!
 label.equipment.cce-code = Cold Chain Code
 label.equipment.is-cold-chain = Is Cold Chain Equipment?
 label.equipment.cold-chain-yes = YES
-label.equipment.cold-chain-no = NO
+lable.equipment.cold-chain-no = NO
 label.equipment.pqs-code = PQS Code
 label.equipment.energy-type = Energy Type
 label.equipment.action = Action
@@ -2071,9 +2062,7 @@ label.equipment.holdover-time = Holdover Time
 label.equipment.energy-consumption = Energy Consumption
 label.equipment.price = Price
 label.equipment.pqs-status = PQS Status
-label.equipment.choose.all-programs=All Programs
-label.equipment.filter-by-program=(filter equipment types by program)
-label.equipment.program=Program
+
 
 label.equipment.reason.for.requesting.maintenance = Reason for requesting maintenance
 label.equipment.recommended.maintenance.visit.date =  Recommended Maintenance Visit Date
@@ -2130,7 +2119,6 @@ label.equipments.maintenance.service.vendor = Maintenance Service Vendor
 label.equipment.types = Equipment Types
 label.equipment.list = Equipment List
 label.equipment.products = Products for Equipments
-label.program.equipments = Program Equipments & Products
 label.equipment.service.types = Service Types
 label.equipment.service.vendors = Service Vendors
 label.equipment.service.contracts = Service Contracts
@@ -2151,7 +2139,7 @@ message.equipment.maintenance.request.description = This form can be used to req
 link.admin.configure.settings = Other Configurations
 
 label.report.no.data.to.show = No data to show under selected filters
-label.report.aggregate.summary = Logistics Summary Report
+label.report.aggregate.summary = Aggregate Summary Report
 label.report.view.disaggregated = View Disaggregated
 
 link.report.show.more.filters = Show More Filters
@@ -2166,7 +2154,7 @@ label.average.monthly.consumption=Average Monthly Consumption
 label.min.mos=Min MOS
 label.max.mos=Max MOS
 label.approved.total.cost=Approved Total Cost
-label.supplimental.funds.used=Supplemental Funds Used
+label.supplimental.funds.used=Supplimental Funds Used
 label.cheque.enclosed.with.order=Cheque enclosed with order to cover supplimental Funds used
 label.dated=Dated
 label.submitted.to.msd=Submitted to MSD On
@@ -2178,8 +2166,16 @@ label.ownership=Ownership
 label.gps=GPS
 label.fax=Fax
 
+<<<<<<< HEAD
+=======
+message.equipment.inventory.saved = Your Equipment Inventory has been saved
 message.equipment.list.saved = Your Equipment has been saved
 message.equipment.list.removed = Equipment successfully removed
+label.equipment.view.service.contract = View Service Contract
+label.no.maintenance.request.pending = No pending Maintenance requests were found.
+message.maintenance.request.saved = Maintenance Request is saved.
+right.admin.help.content= Configure Help Content
+>>>>>>> feature/cold-chain-equipment
 
 label.equipment.service.vendor = Service Vendor
 label.operational.status = Operational Status
@@ -2373,154 +2369,3 @@ label.vaccine.cc.temp.min = Min
 label.vaccine.cc.temp.max = Max
 label.vaccine.cc.temp.low = Low
 label.vaccine.cc.temp.high = High
-report.title.mnch.status=RMNCH product stock status
-menu.report.mnch.staus=RMNCH product stock status
-
-label.adjustment.factor = Adjustment Factor
-select.adjustment.factor = --Select Adjustment Factor--
-select.adjustment.type = --Select Adjustment Type--
-label.requisitionGroup = Requisition group
-header.apply.seasonality.rationing.factor = Apply Seasonality/Rationing Factor
-
-
-label.repair.management.facilityname = Facility
-label.repair.management.facilitytype = Facility Type
-label.repair.management.functional = Functional
-label.repair.management.notfunctional = Not Functional
-label.repair.management.functionalnotinstalled = Not Installed
-label.repair.management.electricity = E
-label.repair.management.solar = S
-label.repair.management.gas = G
-label.repair.management.kerosene = K
-
-right.report.repair.management = Report-Repair-Management
-menu.report.vaccine = Vaccine
-menu.report.repair.management = Repair Management Report
-report.title.repair.management = Repair Management
-
-right.report.vaccine.replacement.plan.summary = Report - Replacement Plan Summary
-menu.report.vaccine.replacement.plan.summary = Replacement Plan Summary
-menu.report.vaccine.annual.replacement.summary = Annual Vaccine Replacement Plan
-
-label.number = #
-label.source.of.Energy = Source Of Energy
-label.age = Age
-label.replacement.cost = Replacement Cost
-
-report.title.replacement.plan.summary = Replacement Plan Summary
-report.title.annual.replacement.plan.summary = Annual Replacement Plan Summary
-report.title.equipment.in.need.of.replacement = Equipment Need Replacement
-number.of.years.to.replace.equipment = YEAR_OF_EQUIPMENT_REPLACEMENT
-label.this.year.replacement.cost = This Year Replacement Cost(Tsh)
-label.equipment.number.of.break.down = # Of BreakDowns
-label.annual.replacement.plan.O = Obsolete
-label.equipment.total.capacity = Total Capacity (L):
-
-label.facility.level = Facility Level
-label.demography = Demography
-label.site = Site
-label.refrigerator.capacity = Refrigerator Capacity (Litres)
-label.refrigerator.capacity.current = Current Refrigerator Capacity
-label.refrigerator.capacity.required = Required Refrigerator Capacity
-label.refrigerator.capacity.gap = Refrigerator Capacity Gap
-label.freezer.capacity = Freezer Capacity (Litres)
-label.freezer.capacity.current = Current Freezer Capacity
-label.freezer.capacity.required = Required Freezer Capacity
-label.freezer.capacity.gap = Freezer Capacity Gap
-
-label.equipment.view.annual.replacement.plan = Check To View Annual Replacement Plan
-
-label.vaccine.settings.coverage.configuration.saved = IVD form coverage configuration settings saved.
-label.vaccine.settings.tab.visibility.saved = IVD form tab visibility saved.
-label.vaccine.logistics.template = IVD Logistics Template
-label.vaccine.setting.coverage = IVD Coverage
-admin.label.program.settings = Program Settings
-msg.question.submit.ivd.confirmation = Are you sure you would like to submit this IVD form?
-label.confirm.submit.action = Confirm IVD form submission
-msg.ivd.form.submitted = Your IVD form has been successfully submitted.
-msg.question.delete.adverse.effect.confirmation = Are you sure you would like to delete this Adverse Effect Entry?
-msg.ivd.saved.successfully = IVD Report saved successfully.
-msg.ivd.submitted.successfully = This IVD report is submitted successfully.
-label.confirm.delete.adverse.effect.action = Confirm Delete
-label.vaccine.adverse.effect.investigation.yes.no = Was this Event Investigated? (Check if Yes)
-
-right.report.coldchain.equipment = Report - Cold Chain Equipment Inventory
-report.title.cold.chain.equipment.inventory = Cold Chain Equipment Inventory Report
-menu.report.lab.equipment.coldchain.inventory = Cold Chain Equipment Inventory
-
-label.electricity = Electricity
-
-link.add.new.campaign = Add new campaign
-link.view = View
-link.view.ivd = View IVDs
-
-label.show = Show
-
-label.ivd.status = IVD Status
-label.vaccine.report.view.title = View IVD Form Submissions
-
-header.demographic.category = Demographic Estimate Category
-link.manage.demographic.categories = Demographic Categories
-header.demographic.categories = Demographic Estimate Categories
-label.demographic.category.intro=  Demographic Estimate Categories
-label.demographic.parameter.year = Year
-link.manage.facility.demographic = Annual Facility Demography
-link.manage.district.demographic = Annual District Demography
-link.manage.quantification.parameters = Quantification Parameters
-label.demographic.facility.code = Code
-label.demographic.facility.name = Facility Name
-label.demographic.district.name = District Name
-label.demographic.district.code = Code
-header.demographic.facility = Annual Facility Demography
-label.demographic.name = Name
-label.demographic.description = Description
-label.demographic.default.conversion.factor = Conversion Factor (Percentage)
-label.demographic.is.primary.estimate = Primary Estimate
-
-right.manage.demographic.estimates = Manage Demographic Estimates
-right.manage.demographic.parameters = Manage Demographic Parameters
-
-label.quarter = Quarter
-menu.report.custom.reports = Custom Reports
-
-report.message.aggregate.consumption = Note: Estimated consumption and adjusted consumption applies for the program(s) which considers calculated (Estimated) consumption and where applicable adjusts this consumption for days out of stock.
-
-label.pdf = PDF
-label.excel = Excel
-
-report.filter.select.program = -- Select Program --
-report.filter.all.programs = -- All Programs --
-
-report.filter.select.facility.types = -- Select Facility Types --
-report.filter.all.facility.types = -- All Facility Types --
-
-report.filter.all.facilities = -- All Facilities --
-report.filter.select.facility = -- Select Facility --
-
-report.filter.select.group = -- Select Group --
-
-report.filter.select.period = -- Select Period --
-
-report.filter.select.requisition.group = -- Select Requisition Group --
-report.filter.all.requisition.group = -- All Requisition Groups --
-
-report.filter.all.adjustment.types = -- All Adjustment Types --
-report.filter.select.adjustment.types = -- Select Adjustment Type --
-
-report.filter.all.equipments = -- All Equipments --
-report.filter.all.donors = -- All Donors --
-
-report.filter.all.product.categories = -- All Product Categories --
-report.filter.select.product.categories = -- Select Product Category --
-
-report.filter.all.products = -- All Products --
-report.filter.select.a.product = -- Select a Product --
-report.filter.select.indicator.product = -- Indicator Products --
-report.filter.select.products = -- Select Products --
-
-
-report.filter.all.regimens = -- All Regimens --
-report.filter.all.regimen.category = -- All Regimen Categories --
-
-report.filter.all.geographic.zones = -- All Geographic Zones --
-report.filter.national = -- National --

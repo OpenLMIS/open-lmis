@@ -155,14 +155,50 @@ public class UserControllerTest {
     verify(userService).create(eq(user), eq("http://localhost:9091/public/pages/reset-password.html#/token/"));
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat((User) response.getBody().getData().get("user"), is(user));
+    User returnUser = (User) response.getBody().getData().get("user");
+    assertThat(returnUser, is(user));
     assertThat(response.getBody().getSuccessMsg(), is(UserController.USER_CREATED_SUCCESS_MSG));
+
+  }
+
+  @Test
+  public void shouldSaveUserIsMobileType() throws Exception {
+    User user = new User();
+    user.setIsMobileUser(true);
+    request.getSession().setAttribute(USER_ID, userId);
+    request.getSession().setAttribute(USER, USER);
+    ResponseEntity<OpenLmisResponse> response = userController.create(user, request);
+
+    verify(userService).create(eq(user), eq("http://localhost:9091/public/pages/reset-password.html#/token/"));
+
+    User responseUser = (User) response.getBody().getData().get("user");
+
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(responseUser, is(user));
+    assertThat(responseUser.getIsMobileUser(),is(true));
+    assertThat(responseUser.getVerified(),is(true));
   }
 
   @Test
   public void shouldUpdateUser() throws Exception {
     User user = make(a(defaultUser));
     user.setId(userId);
+    request.getSession().setAttribute(USER_ID, userId);
+    request.getSession().setAttribute(USER, USER);
+
+    ResponseEntity<OpenLmisResponse> response = userController.update(user, userId, request);
+
+    verify(userService).update(user);
+
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(user.getModifiedBy(), is(userId));
+  }
+
+  @Test
+  public void shouldUpdateMobileUser() throws Exception {
+    User user = make(a(defaultUser));
+    user.setId(userId);
+    user.setIsMobileUser(true);
     request.getSession().setAttribute(USER_ID, userId);
     request.getSession().setAttribute(USER, USER);
 

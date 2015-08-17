@@ -13,6 +13,7 @@ package org.openlmis.restapi.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.openlmis.rnr.domain.PatientQuantificationLineItem;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.RegimenLineItem;
 import org.openlmis.rnr.domain.Rnr;
@@ -42,6 +43,8 @@ public class Report {
   // added for the sdp version
   private Long periodId;
   private Boolean emergency;
+
+  private List<PatientQuantificationLineItem> patientQuantifications;
 
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
