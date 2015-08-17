@@ -9,9 +9,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function ConfigureCoverageController($scope, $routeParams, SaveVaccineProductDose, VaccineProductDose) {
+function ConfigureCoverageController($scope, $routeParams, DemographicEstimateCategories, SaveVaccineProductDose, VaccineProductDose) {
 
   $scope.program = $routeParams.programId;
+
+  DemographicEstimateCategories.get({}, function (data) {
+    $scope.demographicCategories = data.estimate_categories;
+  });
+
 
   VaccineProductDose.get({programId: $scope.program}, function (data) {
     $scope.protocol = data.protocol;
