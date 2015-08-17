@@ -15,6 +15,12 @@
   <hr />
   <div ng-show="sortableColumns">
     <form name="configureRnRTemplateForm" ng-submit="onSave()">
+      <div class="rnr-template-head">
+        <span class="tpl-visible" openlmis-message="template.header.display"></span>
+        <span class="tpl-indicator">&nbsp;</span>
+        <span class="tpl-label" openlmis-message="template.header.label"></span>
+        <span class="tpl-source" openlmis-message="template.header.source"></span>
+      </div>
     <div class="rnr-template-columns">
 
       <ul ui-sortable="sortableColumns" ng-model="sortableColumns" id="sortable">

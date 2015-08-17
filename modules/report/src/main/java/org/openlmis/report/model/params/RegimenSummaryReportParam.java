@@ -16,9 +16,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.report.annotations.RequiredParam;
 import org.openlmis.report.model.ReportParameter;
-
-import java.text.SimpleDateFormat;
 
 
 @Data
@@ -28,31 +27,25 @@ import java.text.SimpleDateFormat;
 public class RegimenSummaryReportParam
         extends BaseParam implements ReportParameter {
 
-    private Long programId;
-    private String program;
-    private String schedule;
+    @RequiredParam
+    private Long program;
 
-    private int regimenId;
+    @RequiredParam
+    private Long schedule;
 
-    private String regimen;
-    private int scheduleId;
+    @RequiredParam
+    private Long period;
 
-    private Integer regimenCategoryId;
-    private String regimenCategory;
+    private Long regimen;
 
-    private Long periodId;
-    private String period;
-    private Integer year;
+    private Long regimenCategory;
 
-    private int facilityId;
-    private String facility;
+    private Long year;
 
-    private int facilityTypeId;
-    private String facilityType;
-    private int zoneId;
-    private String zone;
+    private Long facility;
 
-    SimpleDateFormat dateFormatter = new SimpleDateFormat();
+    private Long facilityType;
 
+    private Long zone;
 
 }

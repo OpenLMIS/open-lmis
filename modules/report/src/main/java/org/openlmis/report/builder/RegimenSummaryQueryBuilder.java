@@ -17,146 +17,122 @@ import org.openlmis.report.model.params.RegimenSummaryReportParam;
 
 import java.util.Map;
 
+import static org.apache.ibatis.jdbc.SqlBuilder.*;
+import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
+
 public class RegimenSummaryQueryBuilder {
 
-    public static String getRegimenSummaryData(Map params) {
+  public static String getRegimenSummaryData(Map params) {
 
-        RegimenSummaryReportParam filter = (RegimenSummaryReportParam) params.get("filterCriteria");
-        String sql = "";
+    RegimenSummaryReportParam filter = (RegimenSummaryReportParam) params.get("filterCriteria");
 
-        sql = "  SELECT facilitycode,facilityType facilityTypeName,facilityname,district,region,zone, regimen, " +
-                "                SUM(patientsontreatment) patientsontreatment, " +
-                "                SUM(patientstoinitiatetreatment) patientstoinitiatetreatment, " +
-                "                SUM(patientsstoppedtreatment) patientsstoppedtreatment " +
-                "                FROM vw_regimen_district_distribution " +
-                writePredicates(filter) +
-                "                GROUP BY regimen,district,facilityName,facilityType,facilitycode,region,zone  " +
-                "                ORDER BY region,regimen";
-        return sql;
+    BEGIN();
+
+    SELECT("facilitycode,facilityType facilityTypeName,facilityName,district,region,zone, regimen ");
+    SELECT(" SUM(patientsontreatment) patientsontreatment ");
+    SELECT(" SUM(patientstoinitiatetreatment) patientstoinitiatetreatment ");
+    SELECT(" SUM(patientsstoppedtreatment) patientsstoppedtreatment ");
+    FROM(" vw_regimen_district_distribution join vw_districts d on d.district_id = districtId ");
+    WHERE(programIsFilteredBy("programId"));
+    WHERE(periodIsFilteredBy("periodId"));
+    WHERE(userHasPermissionOnFacilityBy("facilityId"));
+    WHERE(rnrStatusFilteredBy("status", filter.getAcceptedRnrStatuses()));
+
+    if (filter.getZone() != 0) {
+      WHERE(geoZoneIsFilteredBy("d"));
     }
-
-
-
-
-    public static String getRegimenDistributionData(Map params) {
-        RegimenSummaryReportParam filter = (RegimenSummaryReportParam) params.get("filterCriteria");
-        String sql = "";
-
-        sql = "WITH temp as (select regimen,district,\n" +
-                "SUM(patientsontreatment) patientsontreatment,\n" +
-                "SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,\n" +
-                "SUM(patientsstoppedtreatment) patientsstoppedtreatment\n" +
-                "from vw_regimen_district_distribution\n" +
-                writePredicates(filter) +
-                "group by regimen,district\n" +
-                "order by regimen,district ) \n" +
-                "select  t.district,t.regimen,\n" +
-                "t.patientsontreatment patientsontreatment,\n" +
-                "t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
-                "t.patientsstoppedtreatment patientsstoppedtreatment,\n" +
-                "COALESCE( case when temp2.total > 0 THEN round(((t.patientsontreatment*100)/temp2.total),0) ELSE temp2.total END ) \n" +
-                " totalOnTreatmentPercentage, \n" +
-                " COALESCE( case when temp2.total2 > 0 THEN round(((t.patientstoinitiatetreatment*100)/temp2.total2),0) ELSE temp2.total2 END ) \n" +
-                " totalpatientsToInitiateTreatmentPercentage,\n" +
-                " COALESCE( case when temp2.total3 > 0 THEN round(((t.patientsstoppedtreatment*100)/temp2.total3),0) \n" +
-                " ELSE temp2.total3 END ) stoppedTreatmentPercentage from temp t\n" +
-                "INNER JOIN (select regimen ,SUM(patientsontreatment) total,SUM(patientstoinitiatetreatment) total2,\n" +
-                " SUM(patientsstoppedtreatment) total3 from  temp GROUP BY regimen ) temp2 ON t.regimen= temp2.regimen  ";
-
-        return sql;
+    if (filter.getRegimenCategory() != 0) {
+      WHERE(regimenIsFilteredBy("categoryId"));
     }
-
-
-    private static String writePredicates(RegimenSummaryReportParam filter) {
-        String predicate = "";
-        predicate = " WHERE status in ('APPROVED','RELEASED') and (patientsontreatment > 0 or patientstoinitiatetreatment > 0 or patientsstoppedtreatment > 0)  ";
-        predicate = predicate + " and periodId = " + filter.getPeriodId() + " ";
-        if (filter != null) {
-            if (filter.getZoneId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " zoneId = #{filterCriteria.zoneId} " +
-                        " or districtid=#{filterCriteria.zoneId} " +
-                        "or regionid = #{filterCriteria.zoneId} " +
-                        "or parent = #{filterCriteria.zoneId}";
-            }
-
-            if (filter.getScheduleId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " scheduleId= #{filterCriteria.scheduleId}";
-            }
-
-            if (filter.getProgramId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " programId = #{filterCriteria.programId}";
-            }
-            if (filter.getPeriodId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " periodId= #{filterCriteria.periodId}";
-            }
-            if (filter.getRegimenId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " regimenId = #{filterCriteria.regimenId}";
-            }
-            if (filter.getRegimenCategoryId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " categoryId = #{filterCriteria.regimenCategoryId}";
-            }
-            if (filter.getFacilityId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " facilityId = #{filterCriteria.facilityId}";
-            }
-            if (filter.getFacilityTypeId() != 0) {
-                predicate = predicate.isEmpty() ? " where " : predicate + " and ";
-                predicate = predicate + " facilityTypeId = #{filterCriteria.facilityTypeId}";
-            }
-            predicate = predicate + " and facilityId in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = " + filter.getProgramId() + ")";
-
-        }
-
-        return predicate;
+    if (filter.getRegimen() != 0) {
+      WHERE(regimenIsFilteredBy("regimenId"));
     }
-
-
-    public static String getAggregateRegimenDistribution(Map params) {
-        RegimenSummaryReportParam filter = (RegimenSummaryReportParam) params.get("filterCriteria");
-        Long userId = (Long) params.get("userId");
-        String predicates = "";
-
-        if (filter.getRegimenId() > 0) {
-            predicates = predicates + " and regimens.Id = " + filter.getRegimenId();
-        }
-
-        if (filter.getRegimenCategoryId() > 0) {
-            predicates = predicates + " and regimens.categoryId = " + filter.getRegimenCategoryId();
-        }
-
-        if (filter.getZoneId() != 0) {
-            predicates = predicates + " and (d.zone_id = " + filter.getZoneId() + " or d.parent = " + filter.getZoneId() + " or d.region_id = " + filter.getZoneId() + " or d.district_id = " + filter.getZoneId() + ") ";
-        }
-        String query = "";
-
-        query = "SELECT DISTINCT \n" +
-                "                li.name regimen,sum(li.patientsontreatment) patientsontreatment, SUM(li.patientstoinitiatetreatment) \n" +
-                "                patientstoinitiatetreatment,  \n" +
-                "                SUM(li.patientsstoppedtreatment) patientsstoppedtreatment \n" +
-                "                FROM regimen_line_items li  \n" +
-                "                JOIN requisitions r ON r.id = li.rnrid  \n" +
-                "                JOIN facilities f ON r.facilityid = f.id  \n" +
-                "                JOIN vw_districts d on d.district_id = f.geographicZoneId \n" +
-                "                JOIN requisition_group_members rgm ON rgm.facilityid = r.facilityid \n" +
-                "                JOIN programs_supported ps ON ps.programid = r.programid AND r.facilityid = ps.facilityid\n" +
-                "                JOIN REGIMENS ON REGIMENS.code = li.code \n" +
-                "                JOIN processing_periods pp ON r.periodid = pp.id  \n" +
-                "                JOIN requisition_group_program_schedules rgps ON rgps.requisitiongroupid = rgm.requisitiongroupid AND pp.scheduleId = rgps.scheduleId \n" +
-                "                WHERE (li.patientsontreatment != 0 or li.patientstoinitiatetreatment != 0 or li.patientsstoppedtreatment != 0) and r.status in ('APPROVED','RELEASED') and " +
-                "   f.id in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = " + filter.getProgramId() + ") " +
-                "   and  pp.id = " + filter.getPeriodId() + " and r.programId= " + filter.getProgramId() + " and r.status in ('APPROVED','RELEASED') " + predicates +
-                "                GROUP BY li.name\n" +
-                "                ORDER BY li.name ";
-
-
-        return query;
-
+    if (filter.getFacilityType() != 0) {
+      WHERE(facilityTypeIsFilteredBy("facilityTypeId"));
     }
+    if (filter.getFacility() != 0) {
+      WHERE(facilityIsFilteredBy("facilityId"));
+    }
+    GROUP_BY("regimen, district, facilityName, facilityType, facilityCode, region, zone ");
+    ORDER_BY("region, regimen");
+    return SQL();
+  }
+
+
+  public static String getRegimenDistributionData(Map params) {
+    RegimenSummaryReportParam filter = (RegimenSummaryReportParam) params.get("filterCriteria");
+
+    BEGIN();
+    SELECT("regimen, district, " +
+      " SUM(patientsontreatment) patientsontreatment, " +
+      " SUM(patientstoinitiatetreatment) patientstoinitiatetreatment, " +
+      " SUM(patientsstoppedtreatment) patientsstoppedtreatment ");
+
+    FROM("vw_regimen_district_distribution join vw_districts d on d.district_id = districtId ");
+    WHERE(programIsFilteredBy("programId"));
+    WHERE(periodIsFilteredBy("periodId"));
+    WHERE(userHasPermissionOnFacilityBy("facilityId"));
+    WHERE(rnrStatusFilteredBy("status", filter.getAcceptedRnrStatuses()));
+
+    if (filter.getZone() != 0) {
+      WHERE(geoZoneIsFilteredBy("d"));
+    }
+    if (filter.getRegimenCategory() != 0) {
+      WHERE(regimenCategoryIsFilteredBy("categoryId"));
+    }
+    if (filter.getRegimen() != 0) {
+      WHERE(regimenIsFilteredBy("regimenId"));
+    }
+    if (filter.getFacilityType() != 0) {
+      WHERE(facilityTypeIsFilteredBy("facilityTypeId"));
+    }
+    if (filter.getFacility() != 0) {
+      WHERE(facilityIsFilteredBy("facilityId"));
+    }
+    GROUP_BY("regimen,district");
+    ORDER_BY("regimen,district");
+    return SQL();
+  }
+
+
+  public static String getAggregateRegimenDistribution(Map params) {
+    RegimenSummaryReportParam filter = (RegimenSummaryReportParam) params.get("filterCriteria");
+    BEGIN();
+    SELECT(
+      " DISTINCT " +
+        "li.name regimen,sum(li.patientsontreatment) patientsontreatment, SUM(li.patientstoinitiatetreatment) " +
+        "patientstoinitiatetreatment,  " +
+        "SUM(li.patientsstoppedtreatment) patientsstoppedtreatment ");
+    FROM(
+      "regimen_line_items li  " +
+        "JOIN requisitions r ON r.id = li.rnrid  " +
+        "JOIN facilities f ON r.facilityid = f.id  " +
+        "JOIN vw_districts d on d.district_id = f.geographicZoneId " +
+        "JOIN regimens rg ON rg.code = li.code ");
+    WHERE(programIsFilteredBy("r.programId"));
+    WHERE(periodIsFilteredBy("r.periodId"));
+    WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
+    WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
+
+    if (filter.getZone() != 0) {
+      WHERE(geoZoneIsFilteredBy("d"));
+    }
+    if (filter.getRegimenCategory() != 0) {
+      WHERE(regimenIsFilteredBy("rg.categoryId"));
+    }
+    if (filter.getRegimen() != 0) {
+      WHERE(regimenIsFilteredBy("li.regimenId"));
+    }
+    if (filter.getFacilityType() != 0) {
+      WHERE(facilityTypeIsFilteredBy("f.typeId"));
+    }
+    if (filter.getFacility() != 0) {
+      WHERE(facilityIsFilteredBy("r.facilityId"));
+    }
+    GROUP_BY("li.name");
+    ORDER_BY("li.name ");
+    return SQL();
+
+  }
 
 }

@@ -14,89 +14,81 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
-
 import org.openlmis.core.service.ConfigurationSettingService;
-
 import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RegimenService;
 import org.openlmis.report.mapper.RegimenSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
-
 import org.openlmis.report.model.ReportParameter;
-
 import org.openlmis.report.model.params.RegimenSummaryReportParam;
-
+import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
-import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
 @NoArgsConstructor
 public class RegimenSummaryReportDataProvider extends ReportDataProvider {
-    @Autowired
-    private RegimenSummaryReportMapper reportMapper;
-    @Autowired
-    private ConfigurationSettingService configurationService;
-    @Autowired
-    private ProcessingPeriodService periodService;
-    @Autowired
-    private ProgramService programService;
-    @Autowired
-    private RegimenService regimenService;
 
-    @Autowired
-    private SelectedFilterHelper filterHelper;
+  @Autowired
+  private RegimenSummaryReportMapper reportMapper;
 
-    @Autowired
-    public RegimenSummaryReportDataProvider(RegimenSummaryReportMapper mapper, ConfigurationSettingService configurationService) {
-        this.reportMapper = mapper;
-        this.configurationService = configurationService;
-    }
+  @Autowired
+  private ConfigurationSettingService configurationService;
 
-    @Override
-    protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-        RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-        return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds, this.getUserId());
-    }
+  @Autowired
+  private ProcessingPeriodService periodService;
 
-    @Override
-    public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
-        RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds, this.getUserId());
-    }
+  @Autowired
+  private ProgramService programService;
 
-    public ReportParameter getReportFilterData(Map<String, String[]> filterCriteria) {
-        RegimenSummaryReportParam regimenSummaryReportParam = null;
+  @Autowired
+  private RegimenService regimenService;
 
-        if (filterCriteria != null) {
+  @Autowired
+  private SelectedFilterHelper filterHelper;
 
-            regimenSummaryReportParam = new RegimenSummaryReportParam();
+  @Value("${report.status.considered.accepted}")
+  private String configuredAcceptedRnrStatuses;
 
-            regimenSummaryReportParam.setRegimenCategoryId(StringHelper.isBlank(filterCriteria, "regimenCategory") ? 0 : Integer.parseInt(filterCriteria.get("regimenCategory")[0]));
-            regimenSummaryReportParam.setRegimenId(StringHelper.isBlank(filterCriteria, "regimen") ? 0 : Integer.parseInt(filterCriteria.get("regimen")[0]));
-            regimenSummaryReportParam.setPeriodId(Long.parseLong(filterCriteria.get("period")[0]));
-            regimenSummaryReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone") ? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));
-            regimenSummaryReportParam.setScheduleId(StringHelper.isBlank(filterCriteria, "schedule") ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0]));
-            regimenSummaryReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
-            regimenSummaryReportParam.setFacilityId(StringHelper.isBlank(filterCriteria, "facility") ? 0 : Integer.parseInt(filterCriteria.get("facility")[0]));
-            regimenSummaryReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria, ("facilityType")) ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0]));
+  @Autowired
+  public RegimenSummaryReportDataProvider(RegimenSummaryReportMapper mapper, ConfigurationSettingService configurationService) {
+    this.reportMapper = mapper;
+    this.configurationService = configurationService;
+  }
 
-        }
-        return regimenSummaryReportParam;
-    }
+  @Override
+  protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
+    RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    return reportMapper.getReport(getReportFilterData(filterCriteria), null, rowBounds, this.getUserId());
+  }
 
-    @Override
-    public String getFilterSummary(Map<String, String[]> params) {
-        Map<String, String[]> modifiableParams = new HashMap<String, String[]>();
-        modifiableParams.putAll(params);
-        modifiableParams.put("userId", new String[]{String.valueOf(this.getUserId())});
+  @Override
+  public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
+    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+    return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds, this.getUserId());
+  }
 
-        return filterHelper.getProgramPeriodGeoZone(modifiableParams);
+  public ReportParameter getReportFilterData(Map<String, String[]> filterCriteria) {
+    RegimenSummaryReportParam regimenSummaryReportParam = ParameterAdaptor.parse(filterCriteria, RegimenSummaryReportParam.class);
+    regimenSummaryReportParam.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
+    return regimenSummaryReportParam;
+  }
 
-    }
+  @Override
+  public String getFilterSummary(Map<String, String[]> params) {
+    Map<String, String[]> modifiableParams = new HashMap<String, String[]>();
+    modifiableParams.putAll(params);
+    modifiableParams.put("userId", new String[]{String.valueOf(this.getUserId())});
+
+    return filterHelper.getProgramPeriodGeoZone(modifiableParams);
+
+  }
 }
