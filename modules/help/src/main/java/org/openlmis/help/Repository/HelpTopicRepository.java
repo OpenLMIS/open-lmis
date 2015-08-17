@@ -16,7 +16,7 @@ package org.openlmis.help.Repository;
 import org.openlmis.help.Repository.mapper.HelpTopicMapper;
 import org.openlmis.help.domain.HelpDocument;
 import org.openlmis.help.domain.HelpTopic;
-import org.openlmis.help.domain.StaticSiteConstant;
+import org.openlmis.help.domain.SiteConstantEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -75,7 +75,7 @@ public List<HelpTopic> loadChildrenOfHelpTopic(Long loggedUserId, HelpTopic pare
     }
   public HelpTopic  getSiteContent(String contentName){
       HelpTopic siteContent=null;
-      siteContent=this.mapper.getSiteContent( StaticSiteConstant.SITE_CONTENT,contentName);
+      siteContent=this.mapper.getSiteContent(SiteConstantEnum.SITE_CONTENT.getValue(),contentName);
       return siteContent;
     }
 }
