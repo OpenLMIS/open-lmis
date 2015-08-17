@@ -53,6 +53,7 @@ public class HelpCateoryController extends BaseController {
     public static final String HELPDOCUMENTLIST = "helpDocumentList";
     public static final String HELPTOPIC = "helpTopic";
     public static final String HELPTOPICDETAIL = "helpTopic";
+    public static final String SITECONTENT = "siteContent";
     public static final String UPLOAD_FILE_SUCCESS = "upload.file.successful";
     public static final String SUCCESS = "success";
     public static final String ERROR = "error";
@@ -238,5 +239,12 @@ public class HelpCateoryController extends BaseController {
             helpDocument.setFileUrl(imageUrl);
         }
         return OpenLmisResponse.response(HELPDOCUMENTLIST, helpDocumentList);
+    }
+    @RequestMapping(value = "/site_content/{content_name}", method = RequestMethod.GET, headers = "Accept=application/json")
+
+    public ResponseEntity<OpenLmisResponse> getSiteContent(@PathVariable("content_name") String content_name) {
+
+        HelpTopic siteContent = this.helpTopicService.getSiteContent(content_name);
+        return OpenLmisResponse.response(SITECONTENT, siteContent);
     }
 }

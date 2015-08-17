@@ -160,4 +160,17 @@ public interface HelpTopicMapper {
             @Result(column = "url", property = "fileUrl")
     })
     List<HelpDocument> loadHelpDocumentList();
+    @Select("SELECT * FROM elmis_help_topic hc where hc.name=#{contentName} " +
+            "and hc.parent_help_topic_id= " +
+            "( SELECT hp.id FROM elmis_help_topic hp " +
+            "where hp.name= #{topicName}) ")
+    @Results({
+            @Result(column = "parent_help_topic_id", property = "parentHelpTopic"),
+            @Result(column = "html_content", property = "htmlContent"),
+            @Result(column = "is_category", property = "category")
+
+    })
+    HelpTopic getSiteContent(@Param(value = "topicName")String topicName, @Param(value = "contentName") String  contentName);
+
+
 }

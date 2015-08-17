@@ -787,7 +787,10 @@ services.factory('HelpContentDetail', function ($resource) {
 services.factory('HelpUsertopicList', function ($resource) {
     return $resource('/userHelpTopicList.json', {}, {});
 });
-
+//load helptopic detail
+services.factory('SiteContent', function ($resource) {
+    return $resource('/site_content/:content_name.json', {}, {post:{method:'GET'}});
+});
 services.factory('VaccineTargetUpdate', function ($resource) {
     return $resource('/vaccine/target/create.json', {}, {post:{method:'POST'}});
 });

@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var staticPages=angular.module('staticPages', ['openlmis','ui.bootstrap.modal','ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle']);
+var staticPages=angular.module('staticPages', ['openlmis','ui.bootstrap.modal','ui.bootstrap.dialog', 'textAngular','ui.bootstrap.dropdownToggle']);
 staticPages.config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
