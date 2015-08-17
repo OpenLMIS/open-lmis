@@ -13,7 +13,8 @@ var dashboard = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.boots
 
     $routeProvider.
         when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html', resolve : ResolveDashboardFormData}).
-        when('/dashboard-programs', {controller: DashboardProgramController, templateUrl: 'partials/dashboard-program.html', resolve : ResolveDashboardFormData}).
+       // when('/dashboard', {controller: DashboardProgramController, templateUrl: 'partials/dashboard-program.html', resolve : ResolveDashboardFormData}).
+        when('/dashboard-new', {controller: DashboardProgramController, templateUrl: 'partials/dashboard-program.html', resolve : ResolveDashboardFormData}).
         when('/view-stock-detail/:programId/:periodId/:productId', {controller: StockController, templateUrl: 'partials/stock.html', resolve : ResolveDashboardFormData}).
         when('/stock', {controller: StockController, templateUrl: 'partials/stock.html', resolve : ResolveDashboardFormData }).
         when('/leadTime', {controller: ShipmentLeadTimeController, templateUrl: 'partials/shipment-lead-time.html', resolve : ResolveDashboardFormData }).

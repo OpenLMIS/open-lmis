@@ -10,19 +10,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function DashboardMenuController($scope, $location, dashboardMenuService, UserSupervisedActivePrograms) {
+function DashboardMenuController($scope, $location, dashboardMenuService) {
 
     $scope.dashboardTabs = dashboardMenuService.tabs;
-    $scope.dashboardTabs = [];
-    UserSupervisedActivePrograms.get(function(data){
-        $scope.programsList = data.programs;
-        angular.forEach(data.programs, function(prog){
-
-            dashboardMenuService.addTab("'"+prog.name+"'",'/public/pages/dashboard/index.html#/dashboard-programs?prog='+prog.name,prog.name,false, prog.id);
-           // alert(prog.name);
-        });
-
-    });
 
     $scope.$on('dashboardTabUpdated', function(){
         $scope.dashboardTabs = dashboardMenuService.tabs;

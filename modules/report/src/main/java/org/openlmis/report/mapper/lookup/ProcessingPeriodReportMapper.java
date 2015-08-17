@@ -19,6 +19,7 @@ import org.openlmis.report.model.dto.YearSchedulePeriodTree;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -40,6 +41,29 @@ public interface ProcessingPeriodReportMapper {
             " join processing_schedules ps on pp.scheduleid = ps.id " +
             " order by year,groupname,pp.startdate  asc")
     List<YearSchedulePeriodTree> getYearSchedulePeriodTree();
+
+
+
+    @Select("SELECT\n" +
+            "  * \n" +
+            "FROM (\n" +
+            "  SELECT\n" +
+            "    ROW_NUMBER() OVER (PARTITION BY t.scheduleid ORDER BY t.startdate desc) AS r,\n" +
+            "    t.*\n" +
+            "  FROM\n" +
+            "    (\n" +
+            "--------\n" +
+            "select processing_periods.id, scheduleId, startdate, to_char(startdate, 'Month') || '-'|| extract(year from processing_periods.startdate) || '(' || processing_schedules.name || ')'  as Name \n" +
+            "from processing_periods\n" +
+            "join processing_schedules on scheduleid = processing_schedules.id\n" +
+            " order by startdate desc\n" +
+            "--------\n" +
+            ") t) x\n" +
+            "\n" +
+            "WHERE\n" +
+            "  x.r <= 2\n" +
+            "order by r, startdate desc;")
+    List<ProcessingPeriod> getLastPeriods();
 
 }
 
