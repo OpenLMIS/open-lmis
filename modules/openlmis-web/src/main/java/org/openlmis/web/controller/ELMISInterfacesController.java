@@ -18,7 +18,8 @@ import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ELMISInterfaceService;
 import org.openlmis.web.form.ProductDTO;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
-import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.openlmis.core.web.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
