@@ -70,7 +70,7 @@
                                                 <div class="fluid-grid-cell"  ng-show="!dataset.underEdit">{{dataset.dataSetname}}</div>
                                                 <div class="span12 fluid-grid-cell"  ng-show="dataset.underEdit">
                                                     <div class="position-relative">
-                                                        <input type="text" id="interfaceDataSetName{{$index}}" ng-model="dataset.dataSetname" name="interfaceDataSetName{{$index}}"  ng-required="true"/>
+                                                        <input type="text" id="interfaceDataSetName{{$index}}" class="input-adjusted" ng-model="dataset.dataSetname" name="interfaceDataSetName{{$index}}"  ng-required="true"/>
                                                     </div>
                                                     <span id="datasetnameerror{{$index}}" class="rnr-form-error" ng-show="!dataset.dataSetname && showError"
                                                           openlmis-message="missing.value"></span>
@@ -80,7 +80,7 @@
                                                 <div class="fluid-grid-cell" ng-show="!dataset.underEdit">{{dataset.dataSetId}}</div>
                                                 <div class="span8 fluid-grid-cell"  ng-show="dataset.underEdit">
                                                     <div class="position-relative">
-                                                        <input type="text" id="interfaceDataSetId{{$index}}" ng-model="dataset.dataSetId"  name="interfaceDataSetId{{$index}}"  ng-required="true"/>
+                                                        <input type="text" id="interfaceDataSetId{{$index}}" ng-model="dataset.dataSetId" class="input-adjusted"  name="interfaceDataSetId{{$index}}"  ng-required="true"/>
                                                     </div>
                                                     <span id="datasetiderror{{$index}}" class="rnr-form-error" ng-show="!dataset.dataSetId && showError"
                                                           openlmis-message="missing.value"></span>
@@ -107,11 +107,11 @@
                                                        openlmis-message="button.cancel"/>
                                             </div>
                                         </div>
-                                        <div class="row-fluid add-program-schedule" tab-scroll>
+                                        <div class="row-fluid grid-input-row-grey" tab-scroll>
                                             <div class="span3">
                                                 <div class="span12 fluid-grid-cell">
                                                     <div class="position-relative">
-                                                        <input type="text" id="interfaceDataSetNameEdit{{$index}}" ng-model="newDataSet.dataSetname" name="interfaceDataSetNameEdit{{$index}}"  ng-required="true"/>
+                                                        <input type="text" class="input-adjusted" id="interfaceDataSetNameEdit{{$index}}" ng-model="newDataSet.dataSetname" name="interfaceDataSetNameEdit{{$index}}"  ng-required="true"/>
                                                     </div>
                                                     <span id="datasetnameEdit{{$index}}" class="rnr-form-error" ng-show="!newDataSet.dataSetname && showError"
                                                           openlmis-message="missing.value"></span>
@@ -120,7 +120,7 @@
                                             <div class="span3">
                                                 <div class="span8 fluid-grid-cell">
                                                     <div class="position-relative">
-                                                        <input type="text" id="interfaceDataSetIdEdit{{$index}}" ng-model="newDataSet.dataSetId"  name="interfaceDataSetIdEdit{{$index}}"  ng-required="true"/>
+                                                        <input class="input-adjusted" type="text" id="interfaceDataSetIdEdit{{$index}}" ng-model="newDataSet.dataSetId"  name="interfaceDataSetIdEdit{{$index}}"  ng-required="true"/>
                                                     </div>
                                                     <span id="datasetidedit{{$index}}" class="rnr-form-error" ng-show="!newDataSet.dataSetId && showError"
                                                           openlmis-message="missing.value"></span>

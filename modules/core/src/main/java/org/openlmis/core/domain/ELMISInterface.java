@@ -30,8 +30,4 @@ public class ELMISInterface extends BaseModel {
     private Boolean active;
     private List<ELMISInterfaceDataSet> dataSets;
 
-   public ELMISInterface(Long id){
-       this.id = id;
-   }
-
 }
