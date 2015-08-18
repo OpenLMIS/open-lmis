@@ -9,10 +9,10 @@
 <!--* You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/-->
 <!--*/-->
 
+<div ng-controller="OpenLmisFooterController">
+ <div ng-show="footerSetting.value==='true'" class="footer">
 
- <div class="footer">
-
-     <div class="link-section"  ng-controller="OpenLmisFooterController">
+     <div class="link-section"  >
          <div class="aboutus-links" >
              <span class="footer-link-header" openlmis-message="open.static.pages.footer.link.header.about"></span>
              <ul class="footer-link-list">
@@ -131,3 +131,4 @@
        <span class="footer-copyright-message">CopyRight &copy 2015</span>
      </div>
  </div>
+</div>

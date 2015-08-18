@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function OpenLmisFooterController($scope, localStorageService, loginConfig,$cookies,$route,SiteContent,  $location, $window) {
+function OpenLmisFooterController($scope,SettingsByKey, localStorageService, loginConfig,$cookies,$route,SiteContent,  $location, $window) {
     $scope.loginConfig = loginConfig;
     $scope.user = localStorageService.get(localStorageKeys.USERNAME);
     $scope.userId = localStorageService.get(localStorageKeys.USER_ID);
@@ -28,5 +28,9 @@ function OpenLmisFooterController($scope, localStorageService, loginConfig,$cook
 
 
     };
+
+    SettingsByKey.get({key: 'STATIC_PAGE_FOOTER_STATUS'}, function (data) {
+        $scope.footerSetting = data.settings;
+    });
 
 }
