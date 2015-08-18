@@ -30,11 +30,11 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       $scope.originalFacilityName = facility.name;
       $scope.isEdit = true;
       updateProgramsToDisplay();
-      updateInterfacesToDisplay()
+      updateInterfacesToDisplay();
     } else {
       $scope.facility = {};
       updateProgramsToDisplay();
-      updateInterfacesToDisplay()
+      updateInterfacesToDisplay();
       $scope.facility.enabled = true;
     }
     $scope.facilityProgramProductsList = [];
@@ -162,15 +162,6 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       window.program.editedStartDate = window.program.startDate;
     }
   };
-
-    function updateProgramsToDisplay() {
-        $scope.facility.supportedPrograms = $scope.facility.supportedPrograms || [];
-        var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'), "id");
-        $scope.programsToDisplay = _.reject($scope.programs, function (supportedProgram) {
-            return _.contains(supportedProgramIds, supportedProgram.id);
-        });
-        $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? 'label.select.program.supported' : 'label.no.programs.left';
-    }
 
   $scope.showRemoveProgramConfirmDialog = function (supportedProgram) {
     $scope.selectedSupportedProgram = supportedProgram;

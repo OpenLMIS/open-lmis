@@ -32,12 +32,12 @@ function InterfacesController($scope, elmisInterfaceData, $timeout, $location, E
         $scope.interface.dataSets.push($scope.newDataSet);
         $scope.newDataSet = {};
         $scope.showError = false;
-    }
+    };
 
     $scope.deleteInterfaceDatasets = function(index){
         console.log($scope.interface.dataSets[index]);
         $scope.interface.dataSets.splice(index, 1);
-    }
+    };
 
     $scope.save = function(){
         if ($scope.interfaceForm.$error.required) {
@@ -54,27 +54,27 @@ function InterfacesController($scope, elmisInterfaceData, $timeout, $location, E
         }, function () {});
 
         $scope.error = false;
-    }
+    };
 
     $scope.saveInterfaceDatasets = function(index){
         $scope.interface.dataSets[index].underEdit = false;
 
-    }
+    };
 
     $scope.editInterfaceDatasets = function(index){
         $scope.interface.dataSets[index].previousDataset = angular.copy($scope.interface.dataSets[index]);
         $scope.interface.dataSets[index].underEdit = true;
-    }
+    };
 
     $scope.cancleEditInterfaceDatasets = function(index){
         $scope.interface.dataSets[index] = $scope.interface.dataSets[index].previousDataset;
         $scope.interface.dataSets[index].previousDataset = undefined;
         $scope.interface.dataSets[index].underEdit = false;
-    }
+    };
 
     $scope.cancel = function(){
         $location.path('');
-    }
+    };
 }
 
 InterfacesController.resolve = {
@@ -101,4 +101,4 @@ InterfacesController.resolve = {
         }, 100);
         return deferred.promise;
     }
-}
+};
