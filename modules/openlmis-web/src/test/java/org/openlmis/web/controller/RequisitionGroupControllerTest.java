@@ -27,7 +27,7 @@ import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.form.RequisitionGroupFormDTO;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;

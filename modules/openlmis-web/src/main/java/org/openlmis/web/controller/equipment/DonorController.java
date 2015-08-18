@@ -14,8 +14,8 @@ package org.openlmis.web.controller.equipment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.service.DonorService;
-import org.openlmis.web.controller.BaseController;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
-import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.openlmis.core.web.OpenLmisResponse.*;
 
 @Controller
 @RequestMapping(value="/donor/")

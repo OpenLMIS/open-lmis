@@ -14,10 +14,11 @@ import org.openlmis.core.domain.Regimen;
 import org.openlmis.core.domain.RegimenCategory;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RegimenService;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.rnr.domain.RegimenTemplate;
 import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.web.form.RegimenFormDTO;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.openlmis.core.web.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 

@@ -43,7 +43,7 @@ public class MySwaggerConfig {
       .swaggerGroup("Rest API")
       .genericModelSubstitutes(ResponseEntity.class)
       //.requestMappingPatternMatcher()
-      .includePatterns(".*rest-api.*"); // assuming the API lives at something like http://myapp/api
+      .includePatterns(".*rest-api.*", ".*/api/.*"); // assuming the API lives at something like either http://myapp/rest-api or http://myapp/v2/api
   }
 
   private ApiInfo apiInfo() {

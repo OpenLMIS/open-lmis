@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.web.controller;
+package org.openlmis.core.web.controller;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,15 +16,16 @@ import org.junit.experimental.categories.Category;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.web.controller.BaseController.UNEXPECTED_EXCEPTION;
+import static org.openlmis.core.web.controller.BaseController.UNEXPECTED_EXCEPTION;
 
 @Category(UnitTests.class)
 public class BaseControllerTest {

@@ -27,7 +27,7 @@ import org.openlmis.upload.parser.CSVParser;
 import org.openlmis.web.controller.upload.MandatoryFields;
 import org.openlmis.web.controller.upload.NonMandatoryFields;
 import org.openlmis.web.model.UploadBean;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.ResponseEntity;

@@ -14,8 +14,8 @@ package org.openlmis.web.controller.equipment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.VendorUser;
 import org.openlmis.equipment.service.VendorUserService;
-import org.openlmis.web.controller.BaseController;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +28,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.openlmis.core.web.OpenLmisResponse.error;
+import static org.openlmis.core.web.OpenLmisResponse.success;
 
 @Controller
 @RequestMapping(value = "/equipment/vendor-user/")

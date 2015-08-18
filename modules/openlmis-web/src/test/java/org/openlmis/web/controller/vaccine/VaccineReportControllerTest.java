@@ -10,7 +10,6 @@
 
 package org.openlmis.web.controller.vaccine;
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -30,7 +29,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;

@@ -170,8 +170,8 @@ dependencies {
             project(':modules:odk-api'),
             project(':modules:equipment'),
             project(':modules:vaccine'),
-            project(':modules:help')
-
+            project(':modules:help'),
+            project(':modules:stock-management')
 
     testCompile  project(path: ':modules:core', configuration: 'testFixtures'),
             project(path: ':modules:rest-api', configuration: 'testFixtures'),

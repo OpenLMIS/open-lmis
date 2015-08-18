@@ -9,7 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.DiscardingReason;
 import org.openlmis.vaccine.service.DiscardingReasonsService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
