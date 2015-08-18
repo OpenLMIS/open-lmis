@@ -1271,3 +1271,29 @@ services.factory("FacilityGeoTree",function($resource)  {
 services.factory('GetLastPeriods', function($resource) {
    return $resource('/reports/last-periods.json', {}, {});
 });
+
+services.factory("ELMISInterface",function($resource)  {
+    return   {
+        getInterface : function(){
+            return $resource('/ELMISInterface/:id.json', {}, {});
+        },
+
+        getInterfacesReference : function(){
+            return $resource('/ELMISAllActiveInterfaces.json', {}, {});
+          },
+
+        getFacilityMapping : function(){
+            return $resource('/ELMISInterfacesMapping/{facilityId}.json', {}, {});
+        },
+
+        getAllinterfaces : function(){
+            return $resource('/ELMISAllInterfaces.json');
+        }
+
+    };
+});
+
+services.factory('ELMISInterfaceSave', function ($resource) {
+    return $resource('/ELMISInterface.json', {}, {save:{method:'POST'}});
+});
+

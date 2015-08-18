@@ -8,7 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, priceSchedules, facilityImages, $q, $dialog, messageService) {
+
+function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, $location, FacilityProgramProducts, priceSchedules, facilityImages, $q, $dialog, messageService, interfacesReferenceData) {
+
   $scope.$parent.facilityId = null;
   $scope.message = "";
   $scope.$parent.message = "";
@@ -21,15 +23,18 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.images = facilityImages.images;
     $scope.programs = facilityReferenceData.programs;
     $scope.priceSchedules = priceSchedules;
+    $scope.interfaces = interfacesReferenceData;
     if ($routeParams.facilityId) {
       $scope.facility = getFacilityWithDateObjects(facility);
       $scope.originalFacilityCode = facility.code;
       $scope.originalFacilityName = facility.name;
       $scope.isEdit = true;
       updateProgramsToDisplay();
+      updateInterfacesToDisplay()
     } else {
       $scope.facility = {};
       updateProgramsToDisplay();
+      updateInterfacesToDisplay()
       $scope.facility.enabled = true;
     }
     $scope.facilityProgramProductsList = [];
@@ -158,6 +163,15 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     }
   };
 
+    function updateProgramsToDisplay() {
+        $scope.facility.supportedPrograms = $scope.facility.supportedPrograms || [];
+        var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'), "id");
+        $scope.programsToDisplay = _.reject($scope.programs, function (supportedProgram) {
+            return _.contains(supportedProgramIds, supportedProgram.id);
+        });
+        $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? 'label.select.program.supported' : 'label.no.programs.left';
+    }
+
   $scope.showRemoveProgramConfirmDialog = function (supportedProgram) {
     $scope.selectedSupportedProgram = supportedProgram;
     var options = {
@@ -236,6 +250,55 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     });
     $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? 'label.select.program.supported' : 'label.no.programs.left';
   }
+
+    function updateInterfacesToDisplay() {
+        $scope.facility.interfaceMappings = $scope.facility.interfaceMappings || [];
+        var interfaceIds = _.pluck(_.pluck($scope.facility.interfaceMappings, 'interfaceId'), "id");
+        $scope.interfacesToDisplay = _.reject($scope.interfaces, function (_interface) {
+            return _.contains(interfaceIds, _interface.id);
+        });
+        $scope.interfaceSelectMessage = ($scope.interfacesToDisplay.length) ? 'label.select.interface' : 'label.no.interface.left';
+    }
+
+    $scope.addInterfaceMapping = function(mapping){
+        if(!mapping.interfaceId){
+            $scope.showInterfaceRequiredError = true;
+            return;
+        }
+        if(!mapping.mappedId){
+            $scope.showMappingIdRequiredError = true;
+            return;
+        }
+        $scope.showInterfaceRequiredError = false;
+        $scope.showMappingIdRequiredError = false;
+
+        mapping.interfaceId = getInterfaceById(mapping.interfaceId);
+        $scope.facility.interfaceMappings.push(mapping);
+        $scope.interfaceMapping = undefined;
+        updateInterfacesToDisplay();
+    };
+
+    function getInterfaceById(interfaceId){
+        return (_.findWhere($scope.interfaces, {'id': interfaceId}));
+    }
+
+    $scope.showRemoveInterfaceMappingConfirmDialog = function (interfaceMapping) {
+        $scope.selectedInterfaceMapping = interfaceMapping;
+        var options = {
+            id: "removeInterfaceMappingConfirmDialog",
+            header: 'delete.interface.mapping.header',
+            body: messageService.get('delete.facility.interface.mapping.confirm', $scope.selectedInterfaceMapping.interfaceId.name)
+        };
+        OpenLmisDialog.newDialog(options, $scope.removeInterfaceMappingConfirm, $dialog);
+    };
+
+    $scope.removeInterfaceMappingConfirm = function(result){
+        if (result) {
+            $scope.facility.interfaceMappings = _.without($scope.facility.interfaceMappings, $scope.selectedInterfaceMapping);
+        }
+        $scope.selectedInterfaceMapping = undefined;
+        updateInterfacesToDisplay();
+    };
 }
 
 FacilityController.resolve = {
@@ -285,5 +348,17 @@ FacilityController.resolve = {
             }, {});
         }, 100);
         return deferred.promise;
-    }
+    },
+    
+  interfacesReferenceData : function ($q, $route, $timeout, ELMISInterface) {
+       var deferred = $q.defer();
+
+       $timeout(function () {
+           ELMISInterface.getInterfacesReference().get({}, function (data) {
+               deferred.resolve(data.activeInterfaces);
+           }, {});
+       }, 100);
+
+       return deferred.promise;
+   }
 };
