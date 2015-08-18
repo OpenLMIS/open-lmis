@@ -8,16 +8,50 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
+function ViewLoadAmountController($scope, facilities, period, deliveryZone, fridges) {
   if (!isUndefined(facilities) && facilities.length > 0) {
     $scope.message = "";
     $scope.program = facilities[0].supportedPrograms[0].program;
     $scope.period = period;
     $scope.deliveryZone = deliveryZone;
+    $scope.facilities = facilities;
+    $scope.fridges = fridges.fridges;
     var otherGroupName = "";
     $scope.geoZoneLevelName = facilities[0].geographicZone.level.name;
 
     $scope.aggregateMap = {};
+
+    $scope.provincesForColdChainStatus = ['Sul', 'Tete', 'Niassa'];
+    $scope.viewColdChainStatusAvailable = false;
+    $scope.checkViewColdChainStatus = function () {
+      $scope.parentZoneName = $scope.facilities[0].geographicZone.parent.name;
+      $scope.viewColdChainStatusAvailable = _.contains($scope.provincesForColdChainStatus, $scope.parentZoneName);
+    };
+    $scope.checkViewColdChainStatus();
+
+    $scope.getFacitilityStatus = function (id) {
+      if (!isUndefined(id)) {
+          for (var i = 0; i < $scope.fridges.length; i++) {
+              var fridge = $scope.fridges[i];
+              if (fridge.FacilityID == id) {
+                  return fridge.Status;
+              }
+          }
+      }
+      return 1;
+    };
+
+    $scope.getURL = function (id) {
+      if (!isUndefined(id)) {
+          for (var i = 0; i < $scope.fridges.length; i++) {
+              var fridge = $scope.fridges[i];
+              if (fridge.FacilityID == id) {
+                  return fridge.URL;
+              }
+          }
+      }
+      return ".";
+    };
 
     $(facilities).each(function (i, facility) {
       var totalForGeoZone = $scope.aggregateMap[facility.geographicZone.name];
@@ -207,6 +241,16 @@ ViewLoadAmountController.resolve = {
     }, 100);
 
     return deferred.promise;
-  }
+  },
 
+  fridges: function (Fridges, $route, $timeout, $q) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      Fridges.get({}, function (data) {
+        deferred.resolve(data.coldTradeData);
+      }, {});
+    }, 100);
+
+    return deferred.promise;
+  }
 };

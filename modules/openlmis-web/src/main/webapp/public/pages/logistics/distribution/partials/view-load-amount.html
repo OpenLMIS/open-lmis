@@ -11,6 +11,11 @@
 <div>
   <h2 id="warehouseLoadAmountLabel" openlmis-message="label.warehouse.load.amount"></h2>
 
+  <div align="right">
+    <img src="/public/images/refrigator3.png"> = Normal operation
+    <img src="/public/images/refrigator2.png"> = Irregular operation
+    <img src="/public/images/refrigator4.png"> = No data from monitor
+  </div>
 
   <div class="alert alert-info" ng-show="message"><span openlmis-message="message"></span></div>
   <div ng-show="!message">
@@ -95,6 +100,9 @@
           <thead ng-model="facilityMap[geoZoneName]">
           <tr>
             <th></th>
+            <th ng-show="viewColdChainStatusAvailable">
+              <span id="coldChainLabel{{$index}}" openlmis-message="label.cold.chain"></span>
+            </th>
             <th></th>
             <th class="main-heading"
                 ng-repeat="productGroup in facilityMap[geoZoneName][0].supportedPrograms[0].sortedProductGroup"
@@ -106,6 +114,8 @@
             <th>
               <span id="facilityLabel{{$index}}" openlmis-message="label.facility"></span>
             </th>
+            <th ng-show="viewColdChainStatusAvailable">
+              <span id="equipmentStatusLabel{{$index}}" openlmis-message="label.cold.chain.equipment.status"></span></th>
             <th>
               <span id="populationLabel{{$index}}" openlmis-message="label.population"></span>
             </th>
@@ -120,6 +130,9 @@
               <span id="facilityName{{$parent.$index}}{{$index}}"ng-bind="facility.name"></span>
               <span id="facilityCode{{$parent.$index}}{{$index}}"ng-bind="facility.code"></span>
             </td>
+            <td ng-show="viewColdChainStatusAvailable">
+              <a ng-href="{{getURL(facility.id)}}"><img src="/public/images/refrigator{{getFacitilityStatus(facility.id)}}.png"/></a>
+            </td>
             <td>
               <span id="population{{$parent.$index}}{{$index}}" ng-bind="facility.catchmentPopulation"></span>
             </td>
@@ -132,6 +145,7 @@
               <span id="geoZoneNameLabel{{$index}}" ng-bind="geoZoneName"></span>
               <span id="totalLabel{{$index}}" openlmis-message="label.total"></span>
             </td>
+            <td ng-show="viewColdChainStatusAvailable"></td>
             <td>
               <span id="population{{$index}}" ng-bind="aggregateMap[geoZoneName]['totalPopulation']"></span>
             </td>
