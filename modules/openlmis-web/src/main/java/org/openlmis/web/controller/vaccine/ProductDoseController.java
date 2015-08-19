@@ -13,8 +13,8 @@ package org.openlmis.web.controller.vaccine;
 
 import org.openlmis.vaccine.dto.VaccineServiceConfigDTO;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
-import org.openlmis.web.controller.BaseController;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

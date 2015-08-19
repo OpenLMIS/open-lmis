@@ -8,12 +8,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.web.response;
+package org.openlmis.core.web;
 
-import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,6 +96,10 @@ public class OpenLmisResponse {
     MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
     headers.add("Content-Type", contentType);
     return new ResponseEntity<>(new OpenLmisResponse(key, message), headers, statusCode);
+  }
+
+  public static ResponseEntity<Object> response(Object value) {
+    return new ResponseEntity<>(value, OK);
   }
 
   public static ResponseEntity<OpenLmisResponse> response(String key, Object value) {
