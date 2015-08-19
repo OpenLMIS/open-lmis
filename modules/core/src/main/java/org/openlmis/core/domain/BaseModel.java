@@ -10,10 +10,11 @@
 
 package org.openlmis.core.domain;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.utils.DateUtil;
 
 import java.util.Date;
 
@@ -43,5 +44,10 @@ public abstract class BaseModel {
 
   public BaseModel(Long id) {
     this.id = id;
+  }
+
+  protected static String getFormattedDate(Date date)
+  {
+    return DateUtil.getFormattedDate(date, "yyyy-dd-MM");
   }
 }

@@ -12,14 +12,13 @@
 
 package org.openlmis.equipment.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -48,22 +47,13 @@ public class MaintenanceRequest extends BaseModel {
   private MaintenanceLog maintenanceDetails;
   // end of hack
 
-  private String formatDate(Date date){
-    try {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
-      return date == null ? null : simpleDateFormat.format(date);
-    }catch(Exception exp){
-
-    }
-    return null;
-  }
 
   public String getRequestedDateString()  {
-    return formatDate(this.requestDate);
+    return getFormattedDate(this.requestDate);
   }
 
   public String getRecommendedDateString()  {
-    return formatDate(this.recommendedDate);
+    return getFormattedDate(this.recommendedDate);
   }
 
 

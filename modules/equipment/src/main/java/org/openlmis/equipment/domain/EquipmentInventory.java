@@ -19,8 +19,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.utils.DateUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -52,22 +52,12 @@ public class EquipmentInventory extends BaseModel {
   private Date dateLastAssessed;
   private Boolean hasStabilizer;
 
-  private String formatDate(Date date){
-    try {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-      return date == null ? null : simpleDateFormat.format(date);
-    }catch(Exception exp){
-
-    }
-    return null;
-  }
-
-  public String getDateLastAssessedString()  {
-    return formatDate(this.dateLastAssessed);
+  public String getDateLastAssessedString() {
+    return DateUtil.getFormattedDate(this.dateLastAssessed, "yyyy-MM-dd");
   }
 
   public String getDateDecommissionedString(){
-    return formatDate(this.dateDecommissioned);
+    return DateUtil.getFormattedDate(this.dateDecommissioned, "yyyy-MM-dd");
   }
 
 }
