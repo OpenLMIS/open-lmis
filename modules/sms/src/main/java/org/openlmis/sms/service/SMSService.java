@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.sms.domain.SMS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.integration.annotation.Payload;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
