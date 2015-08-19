@@ -16,9 +16,9 @@ package org.openlmis.report.model.report;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.model.ReportData;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -52,17 +52,8 @@ public class TimelinessReport implements ReportData {
     private Date reportingLateStartDate;
     private Date reportingLateEndDate;
 
-    private String formatDate(Date date){
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-            return date == null ? null : simpleDateFormat.format(date);
-        }
-        catch(Exception exp){
 
-        }
-        return null;
-    }
     public String getDuration(){
-        return formatDate(this.duration);
+        return DateUtil.getFormattedDate(this.duration, "dd-MM-yyyy");
     }
 }
