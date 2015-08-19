@@ -44,25 +44,11 @@ public interface ProcessingPeriodReportMapper {
 
 
 
-    @Select("SELECT\n" +
-            "  * \n" +
-            "FROM (\n" +
-            "  SELECT\n" +
-            "    ROW_NUMBER() OVER (PARTITION BY t.scheduleid ORDER BY t.startdate desc) AS r,\n" +
-            "    t.*\n" +
-            "  FROM\n" +
-            "    (\n" +
-            "--------\n" +
-            "select processing_periods.id, scheduleId, startdate, to_char(startdate, 'Month') || '-'|| extract(year from processing_periods.startdate) || '(' || processing_schedules.name || ')'  as Name \n" +
-            "from processing_periods\n" +
-            "join processing_schedules on scheduleid = processing_schedules.id\n" +
-            " order by startdate desc\n" +
-            "--------\n" +
-            ") t) x\n" +
-            "\n" +
-            "WHERE\n" +
-            "  x.r <= 2\n" +
-            "order by r, startdate desc;")
+    @Select(" select processing_periods.id, scheduleId, startdate, to_char(startdate, 'Month') || '-'|| extract(year from processing_periods.startdate) || '(' || processing_schedules.name || ')'  as Name \n" +
+            "            from processing_periods\n" +
+            "            join processing_schedules on scheduleid = processing_schedules.id\n" +
+            "            where startdate <= NOW()\n" +
+            "             order by startdate desc limit 4")
     List<ProcessingPeriod> getLastPeriods();
 
 }
