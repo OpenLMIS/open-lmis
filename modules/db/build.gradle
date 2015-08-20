@@ -101,21 +101,18 @@ task migrateDB() << {
     println("Migrating database..")
     ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
     ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
+    ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: System.getenv("PGPASSWORD"))
 }
 
 task testSeed(type: Exec) {
-    environment("PGPASSWORD", dbPassword)
     commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
 task vimsSeed(type: Exec) {
-    environment("PGPASSWORD", dbPassword)
     commandLine 'psql', '-U', dbUser, '--file', '../../test-data/vims/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
 task seed(type: Exec) {
-    environment("PGPASSWORD", dbPassword)
     commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
