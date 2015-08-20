@@ -9,7 +9,7 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Fridge {
 
-    @JsonProperty("FacillityID")
+    @JsonProperty("FacilityID")
     String facilityID;
 
     @JsonProperty("FridgeID")

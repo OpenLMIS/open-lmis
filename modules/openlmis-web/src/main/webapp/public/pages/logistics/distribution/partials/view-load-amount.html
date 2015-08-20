@@ -12,9 +12,10 @@
   <h2 id="warehouseLoadAmountLabel" openlmis-message="label.warehouse.load.amount"></h2>
 
   <div align="right">
-    <img src="/public/images/refrigator3.png"> = Normal operation
-    <img src="/public/images/refrigator2.png"> = Irregular operation
-    <img src="/public/images/refrigator4.png"> = No data from monitor
+    <img src="/public/images/refrigator3.png"> Working
+    <img src="/public/images/refrigator2.png"> Follow Up
+    <img src="/public/images/refrigator1.png"> Failed
+    <img src="/public/images/refrigator4.png"> No Data
   </div>
 
   <div class="alert alert-info" ng-show="message"><span openlmis-message="message"></span></div>
@@ -100,7 +101,7 @@
           <thead ng-model="facilityMap[geoZoneName]">
           <tr>
             <th></th>
-            <th ng-show="viewColdChainStatusAvailable">
+            <th class="main-heading" ng-show="viewColdChainStatusAvailable">
               <span id="coldChainLabel{{$index}}" openlmis-message="label.cold.chain"></span>
             </th>
             <th></th>
@@ -130,7 +131,7 @@
               <span id="facilityName{{$parent.$index}}{{$index}}"ng-bind="facility.name"></span>
               <span id="facilityCode{{$parent.$index}}{{$index}}"ng-bind="facility.code"></span>
             </td>
-            <td ng-show="viewColdChainStatusAvailable">
+            <td class="equipment-status" ng-show="viewColdChainStatusAvailable">
               <a ng-href="{{getURL(facility.id)}}"><img src="/public/images/refrigator{{getFacitilityStatus(facility.id)}}.png"/></a>
             </td>
             <td>
@@ -156,8 +157,6 @@
           </tbody>
         </table>
       </div>
-
-
     </div>
   </div>
 </div>

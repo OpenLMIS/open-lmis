@@ -28,9 +28,8 @@
       </div>
     </div>
     <div class="cold-chain-refrigerators-list" ng-show=data>
-      <div class="cold-chain-refrigerators-table">
-        <h5><span id="failedRefrigeratorsLabel" openlmis-message="label.failed.refrigerators"></span></h5>
-        <h6 ng-show="failedRefrigerators.length == 0"> <span openlmis-message="label.no"> </span> <span openlmis-message="label.failed.refrigerators"></span></h6>
+      <div class="cold-chain-refrigerators-table" ng-show="failedRefrigerators.length > 0">
+        <h2><span id="failedRefrigeratorsLabel" openlmis-message="label.failed.refrigerators"></span></h2>
         <table ng-show=failedRefrigerators class="table table-bordered table-striped aggregate-table" id="failedRefrigeratorsTable">
           <thead>
           <tr>
@@ -47,8 +46,6 @@
           </thead>
           <tbody>
           <tr ng-repeat="failedRefrigerator in failedRefrigerators">
-            <td>{{getProvinceNameByFacilityId(failedRefrigerator.FacilityID)}}</td>
-            <td>{{deliveryZone.name}}</td>
             <td>{{getDistrictNameByFacilityId(failedRefrigerator.FacilityID)}}</td>
             <td>{{getFacilityNameById(failedRefrigerator.FacilityID)}}</td>
             <td>{{failedRefrigerator.FridgeID}}</td>
@@ -58,9 +55,8 @@
           </tbody>
         </table>
       </div>
-      <div class="cold-chain-refrigerators-table">
-        <h5><span id="followUpRefrigeratorsLabel" openlmis-message="label.followup.refrigerators"></span></h5>
-        <h6 ng-show="followUpRefrigerators.length == 0"> <span openlmis-message="label.no"> </span> <span openlmis-message="label.followup.refrigerators"></span></h6>
+      <div class="cold-chain-refrigerators-table" ng-show="followUpRefrigerators.length > 0">
+        <h2><span id="followUpRefrigeratorsLabel" openlmis-message="label.followup.refrigerators"></span></h2>
         <table ng-show=followUpRefrigerators class="table table-bordered table-striped aggregate-table" id="followUpRefrigeratorsTable">
           <thead>
           <tr>
@@ -77,8 +73,6 @@
           </thead>
           <tbody>
           <tr ng-repeat="followUpRefrigerator in followUpRefrigerators">
-            <td>{{getProvinceNameByFacilityId(followUpRefrigerator.FacilityID)}}</td>
-            <td>{{deliveryZone.name}}</td>
             <td>{{getDistrictNameByFacilityId(followUpRefrigerator.FacilityID)}}</td>
             <td>{{getFacilityNameById(followUpRefrigerator.FacilityID)}}</td>
             <td>{{followUpRefrigerator.FridgeID}}</td>
@@ -88,9 +82,8 @@
           </tbody>
         </table>
       </div>
-      <div class="cold-chain-refrigerators-table">
-        <h5><span id="noDataRefrigeratorsLabel" openlmis-message="label.nodata.refrigerators"></span></h5>
-        <h6 ng-show="noDataRefrigerators.length == 0"> <span openlmis-message="label.no"> </span> <span openlmis-message="label.nodata.refrigerators"></span></h6>
+      <div class="cold-chain-refrigerators-table" ng-show="noDataRefrigerators.length > 0">
+        <h2><span id="noDataRefrigeratorsLabel" openlmis-message="label.nodata.refrigerators"></span></h2>
         <table ng-show=noDataRefrigerators class="table table-bordered table-striped aggregate-table" id="noDataRefrigeratorsTable">
           <thead>
           <tr>
@@ -107,20 +100,17 @@
           </thead>
           <tbody>
           <tr ng-repeat="noDataRefrigerator in noDataRefrigerators">
-            <td>{{getProvinceNameByFacilityId(noDataRefrigerator.FacilityID)}}</td>
-            <td>{{deliveryZone.name}}</td>
             <td>{{getDistrictNameByFacilityId(noDataRefrigerator.FacilityID)}}</td>
             <td>{{getFacilityNameById(noDataRefrigerator.FacilityID)}}</td>
             <td>{{noDataRefrigerator.FridgeID}}</td>
-            <td>{{getDaysFromMinutes(noDataRefrigerator.MinutesNoData)}}</td>
+            <td class="noDataRefrigeratorTime">{{getDaysFromMinutes(noDataRefrigerator.MinutesNoData)}}</td>
             <td><a ng-href="{{noDataRefrigerator.URL}}">View</a></td>
           </tr>
           </tbody>
         </table>
       </div>
-      <div class="cold-chain-refrigerators-table">
-        <h5><span id="workingRefrigeratorsLabel" openlmis-message="label.working.refrigerators"></span></h5>
-        <h6 ng-show="workingRefrigerators.length == 0"> <span openlmis-message="label.no"> </span> <span openlmis-message="label.working.refrigerators"></span></h6>
+      <div class="cold-chain-refrigerators-table" ng-show="workingRefrigerators.length > 0">
+        <h2><span id="workingRefrigeratorsLabel" openlmis-message="label.working.refrigerators"></span></h2>
         <table ng-show=workingRefrigerators class="table table-bordered table-striped aggregate-table" id="workingRefrigeratorsTable">
           <thead>
           <tr>
@@ -134,8 +124,6 @@
           </thead>
           <tbody>
           <tr ng-repeat="workingRefrigerator in workingRefrigerators">
-            <td>{{getProvinceNameByFacilityId(workingRefrigerator.FacilityID)}}</td>
-            <td>{{deliveryZone.name}}</td>
             <td>{{getDistrictNameByFacilityId(workingRefrigerator.FacilityID)}}</td>
             <td>{{getFacilityNameById(workingRefrigerator.FacilityID)}}</td>
             <td>{{workingRefrigerator.FridgeID}}</td>

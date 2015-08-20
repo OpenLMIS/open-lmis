@@ -25,9 +25,8 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
   }
 
     $scope.getCommonTableHeaders = function () {
-      return ['label.province', 'label.delivery.zone', 'label.district',
-      'label.facility', 'label.fridge.id'];
-     };
+      return ['label.district', 'label.facility', 'label.fridge.id'];
+    };
 
     $scope.splitFridgesByStatus = function() {
       $scope.noDataRefrigerators = [];
@@ -52,7 +51,7 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
                 break;
           }
        }
-     }
+     };
 
     if (!isUndefined($scope.data)) {
         $scope.splitFridgesByStatus();
@@ -60,7 +59,7 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
 
     $scope.getDaysFromMinutes = function(minutes) {
         return Math.round(minutes * 2 / 60 / 24) / 2;
-    }
+    };
 
     $scope.getFacilityById = function(id) {
         if (!isUndefined(id)) {
@@ -72,7 +71,7 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
             }
         }
         return null;
-    }
+    };
 
     $scope.getFacilityNameById = function(id) {
         if (!isUndefined(id)) {
@@ -82,17 +81,17 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
             }
         }
         return "No facitility ID";
-    }
+    };
 
     $scope.getDistrictNameByFacilityId = function(id) {
         if (!isUndefined(id)) {
             var facility = $scope.getFacilityById(id);
-            if (!isUndefined(facility) > 0 ) {
+            if (!isUndefined(facility)) {
                 return facility.geographicZone.name;
             }
         }
         return "No facitility ID";
-    }
+    };
 
     $scope.getProvinceNameByFacilityId = function(id) {
         if (!isUndefined(id)) {
@@ -102,7 +101,7 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
             }
         }
         return "No facitility ID";
-    }
+    };
 }
 
 ViewColdChainStatusController.resolve = {
