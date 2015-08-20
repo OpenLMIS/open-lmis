@@ -56,7 +56,7 @@ task setupDB << {
 
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayInit(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
+    ant.flywayInit(driver: dbDriver, url: connectionString, user: dbUser, password: System.getenv("PGPASSWORD"))
 
     tasks.migrateDB.execute()
 }
@@ -131,7 +131,6 @@ def executeSql(String statement, Boolean includeDbName = false) {
     }
 
    // Class.forName(dbDriver)
-
-    Sql.newInstance(connectionString, dbUser, dbPassword, dbDriver).execute(statement)
+    Sql.newInstance(connectionString, dbUser, System.getenv("PGPASSWORD"), dbDriver).execute(statement)
 }
 
