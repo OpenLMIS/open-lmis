@@ -75,4 +75,4 @@ CREATE OR REPLACE VIEW vw_requisition_detail_2 AS
      LEFT JOIN dosage_units ON products.dosageunitid = dosage_units.id;
 
 ALTER TABLE vw_requisition_detail_2
-  OWNER TO postgres;
+  OWNER TO openlmis;

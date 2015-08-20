@@ -73,4 +73,4 @@ processing_schedules.name as schedulename
    JOIN product_forms ON product_forms.id = products.formid;
 
 ALTER TABLE vw_requisition_detail_2
-  OWNER TO postgres;
+  OWNER TO openlmis;

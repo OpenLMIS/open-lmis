@@ -36,7 +36,7 @@ CREATE OR REPLACE VIEW vw_equipment_operational_status AS
   ORDER BY geographic_zones.name, facilities.name, equipments.model, equipment_status_line_items.operationalstatusid;
 
 ALTER TABLE vw_equipment_operational_status
-OWNER TO postgres;
+OWNER TO openlmis;
 
 ALTER TABLE equipments
 DROP COLUMN code;

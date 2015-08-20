@@ -27,4 +27,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_previous_cb(integer, integer, integer, character varying)
-  OWNER TO postgres;
+  OWNER TO openlmis;

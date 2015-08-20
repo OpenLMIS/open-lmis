@@ -55,4 +55,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_get_parent_geographiczone(integer, integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;

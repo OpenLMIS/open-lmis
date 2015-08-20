@@ -10,4 +10,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE dosage_frequencies
-  OWNER TO postgres;
+  OWNER TO openlmis;

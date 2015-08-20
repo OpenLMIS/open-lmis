@@ -20,4 +20,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_get_program_product_id(integer, integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;

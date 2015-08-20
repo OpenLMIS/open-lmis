@@ -39,4 +39,4 @@ CREATE OR REPLACE VIEW vw_timeliness_report AS
   GROUP BY requisitions.status, requisitions.createddate, pp.enddate, requisitions.id, requisitions.programid, requisitions.periodid, rgps.scheduleid, facilities.geographiczoneid, facilities.name, facilities.code, facilities.id, facility_types.id, facility_types.name;
 
 ALTER TABLE vw_timeliness_report
-  OWNER TO postgres;
+  OWNER TO openlmis;

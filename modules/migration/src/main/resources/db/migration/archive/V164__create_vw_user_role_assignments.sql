@@ -9,5 +9,5 @@ CREATE OR REPLACE VIEW vw_user_role_assignments AS
    JOIN users ON users.id = role_assignments.userid;
 
 ALTER TABLE vw_user_role_assignments
-  OWNER TO postgres;
+  OWNER TO openlmis;
 

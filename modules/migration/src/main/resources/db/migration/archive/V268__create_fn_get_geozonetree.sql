@@ -46,5 +46,5 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION fn_get_geozonetree(integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;
 

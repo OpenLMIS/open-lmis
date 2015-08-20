@@ -140,4 +140,4 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION fn_get_vaccine_facility_targets(integer, integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;

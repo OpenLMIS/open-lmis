@@ -100,4 +100,4 @@ CREATE OR REPLACE VIEW vw_vaccine_coverage AS
            FROM temp t) a;
 
 ALTER TABLE vw_vaccine_coverage
-  OWNER TO postgres;
+  OWNER TO openlmis;

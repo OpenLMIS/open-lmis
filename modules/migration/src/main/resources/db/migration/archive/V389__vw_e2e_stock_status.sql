@@ -64,4 +64,4 @@ CREATE OR REPLACE VIEW vw_e2e_stock_status AS
    FROM tmp t;
 
 ALTER TABLE vw_e2e_stock_status
-  OWNER TO postgres;
+  OWNER TO openlmis;

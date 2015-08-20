@@ -531,6 +531,6 @@ END ; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_populate_dw_orders(integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;
 
 

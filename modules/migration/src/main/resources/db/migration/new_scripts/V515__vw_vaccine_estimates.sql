@@ -19,4 +19,4 @@ CREATE OR REPLACE VIEW vw_vaccine_estimates AS
      JOIN geographic_zones ON facilities.geographiczoneid = geographic_zones.id;
 
 ALTER TABLE vw_vaccine_estimates
-  OWNER TO postgres;
+  OWNER TO openlmis;

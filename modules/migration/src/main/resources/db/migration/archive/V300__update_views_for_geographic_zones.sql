@@ -537,7 +537,7 @@ CREATE OR REPLACE VIEW vw_rnr_feedback AS
    LEFT JOIN shipment_line_items ON orders.id = shipment_line_items.orderid AND vw_requisition_detail.product_code::text = shipment_line_items.productcode::text;
 
 ALTER TABLE vw_rnr_feedback
-  OWNER TO postgres;
+  OWNER TO openlmis;
 
 
 -- ----------------------------
@@ -729,22 +729,22 @@ CREATE OR REPLACE VIEW "vw_supply_status" AS
    JOIN facility_approved_products ON (((facility_types.id = facility_approved_products.facilitytypeid) AND (facility_approved_products.programproductid = program_products.id))));
 
 
-ALTER TABLE vw_district_consumption_summary OWNER TO postgres;
-ALTER TABLE vw_district_financial_summary OWNER TO postgres;
-ALTER TABLE vw_equipment_list_by_donor OWNER TO postgres;
-ALTER TABLE vw_equipment_operational_status OWNER TO postgres;
-ALTER TABLE vw_number_rnr_created_by_facility OWNER TO postgres;
-ALTER TABLE vw_order_fill_rate OWNER TO postgres;
-ALTER TABLE vw_order_fill_rate_details OWNER TO postgres;
-ALTER TABLE vw_regimen_district_distribution OWNER TO postgres;
-ALTER TABLE vw_regimen_summary OWNER TO postgres;
-ALTER TABLE vw_requisition_adjustment OWNER TO postgres;
-ALTER TABLE vw_rnr_feedback OWNER TO postgres;
-ALTER TABLE vw_requisition_detail OWNER TO postgres;
-ALTER TABLE vw_rnr_status OWNER TO postgres;
-ALTER TABLE vw_rnr_status_details OWNER TO postgres;
-ALTER TABLE vw_stock_status OWNER TO postgres;
-ALTER TABLE vw_supply_status OWNER TO postgres;
+ALTER TABLE vw_district_consumption_summary OWNER TO openlmis;
+ALTER TABLE vw_district_financial_summary OWNER TO openlmis;
+ALTER TABLE vw_equipment_list_by_donor OWNER TO openlmis;
+ALTER TABLE vw_equipment_operational_status OWNER TO openlmis;
+ALTER TABLE vw_number_rnr_created_by_facility OWNER TO openlmis;
+ALTER TABLE vw_order_fill_rate OWNER TO openlmis;
+ALTER TABLE vw_order_fill_rate_details OWNER TO openlmis;
+ALTER TABLE vw_regimen_district_distribution OWNER TO openlmis;
+ALTER TABLE vw_regimen_summary OWNER TO openlmis;
+ALTER TABLE vw_requisition_adjustment OWNER TO openlmis;
+ALTER TABLE vw_rnr_feedback OWNER TO openlmis;
+ALTER TABLE vw_requisition_detail OWNER TO openlmis;
+ALTER TABLE vw_rnr_status OWNER TO openlmis;
+ALTER TABLE vw_rnr_status_details OWNER TO openlmis;
+ALTER TABLE vw_stock_status OWNER TO openlmis;
+ALTER TABLE vw_supply_status OWNER TO openlmis;
 -- ----------------------------
 -- Alter Sequences Owned By 
 -- ----------------------------

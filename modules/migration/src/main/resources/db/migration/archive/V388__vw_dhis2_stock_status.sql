@@ -45,4 +45,4 @@ CREATE OR REPLACE VIEW vw_dhis2_stock_status AS
   WHERE requisitions.status::text <> ALL (ARRAY['SKIPPED'::character varying, 'INITIATED'::character varying]::text[]);
 
 ALTER TABLE vw_dhis2_stock_status
-  OWNER TO postgres;
+  OWNER TO openlmis;

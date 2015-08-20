@@ -21,4 +21,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_get_supervisorynodeid_by_facilityid(integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;

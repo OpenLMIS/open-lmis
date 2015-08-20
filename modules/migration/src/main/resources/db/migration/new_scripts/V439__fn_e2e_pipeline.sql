@@ -151,4 +151,4 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION fn_e2e_pipeline(integer, integer, integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;

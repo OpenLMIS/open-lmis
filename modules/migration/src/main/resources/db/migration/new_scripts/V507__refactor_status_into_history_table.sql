@@ -25,7 +25,7 @@ BEGIN
   );
 
   ALTER TABLE equipment_inventory_statuses
-  OWNER TO postgres;
+  OWNER TO openlmis;
 
   DROP VIEW vw_equipment_list_by_donor;
 
@@ -74,7 +74,7 @@ BEGIN
     ORDER BY geographic_zones.name, facilities.name, equipments.model;
 
   ALTER TABLE vw_equipment_list_by_donor
-    OWNER TO postgres;
+    OWNER TO openlmis;
 
   DROP VIEW vw_lab_equipment_status;
 
@@ -116,7 +116,7 @@ BEGIN
     ORDER BY facilities.name;
 
   ALTER TABLE vw_lab_equipment_status
-    OWNER TO postgres;
+    OWNER TO openlmis;
 
   ALTER TABLE equipment_inventories
   DROP COLUMN operationalstatusid;
@@ -171,7 +171,7 @@ BEGIN
     ORDER BY geographic_zones.name, facilities.name, equipments.model, equipment_inventory_statuses.statusid;
 
   ALTER TABLE vw_equipment_operational_status
-    OWNER TO postgres;
+    OWNER TO openlmis;
 
   ALTER TABLE equipment_status_line_items
     DROP CONSTRAINT equipment_status_line_items_operationalstatusid_fkey;

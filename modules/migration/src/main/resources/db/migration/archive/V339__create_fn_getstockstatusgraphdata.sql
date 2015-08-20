@@ -104,4 +104,4 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION fn_getstockstatusgraphdata(integer, integer, integer, character varying)
-  OWNER TO postgres;
+  OWNER TO openlmis;

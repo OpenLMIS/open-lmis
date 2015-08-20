@@ -30,4 +30,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_get_reporting_status_by_facilityid_programid_and_periodid(integer,integer,integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;

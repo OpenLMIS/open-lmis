@@ -340,4 +340,4 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION fn_vims_monthly_report_detail(integer, integer, integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;

@@ -17,4 +17,4 @@ JOIN geographic_zones d ON d.id = f.geographiczoneid
 WHERE ra.supervisorynodeid IS NOT NULL AND rg.supervisorynodeid IS NOT NULL;
 
 ALTER TABLE vw_user_geographic_zones
-  OWNER TO postgres;
+  OWNER TO openlmis;

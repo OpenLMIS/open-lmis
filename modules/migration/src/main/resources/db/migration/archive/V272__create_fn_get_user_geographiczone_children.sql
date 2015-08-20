@@ -35,5 +35,5 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-  ALTER FUNCTION fn_get_user_geographiczone_children(integer, integer) OWNER TO postgres;
+  ALTER FUNCTION fn_get_user_geographiczone_children(integer, integer) OWNER TO openlmis;
 

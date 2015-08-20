@@ -40,5 +40,5 @@ CREATE OR REPLACE VIEW vw_district_consumption_summary AS
    JOIN geographic_zones ON facilities.geographiczoneid = geographic_zones.id;
 
 ALTER TABLE vw_district_consumption_summary
-  OWNER TO postgres;
+  OWNER TO openlmis;
 

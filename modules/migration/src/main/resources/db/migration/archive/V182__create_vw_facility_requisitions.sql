@@ -16,4 +16,4 @@ CREATE OR REPLACE VIEW vw_facility_requisitions AS
    JOIN facilities ON facilities.id = requisitions.facilityid;
 
 ALTER TABLE vw_facility_requisitions
-  OWNER TO postgres;
+  OWNER TO openlmis;

@@ -51,4 +51,4 @@ CREATE OR REPLACE VIEW vw_order_fill_rate AS
     dw_orders.programid, dw_orders.geographiczoneid, dw_orders.geographiczonename;
 
 ALTER TABLE vw_order_fill_rate
-OWNER TO postgres;
+OWNER TO openlmis;

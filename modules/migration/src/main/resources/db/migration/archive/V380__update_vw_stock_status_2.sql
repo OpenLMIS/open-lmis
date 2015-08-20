@@ -66,7 +66,7 @@ CREATE OR REPLACE VIEW vw_stock_status_2 AS
   WHERE requisition_line_items.stockinhand IS NOT NULL AND requisition_line_items.skipped = false;
 
 ALTER TABLE vw_stock_status_2
-  OWNER TO postgres;
+  OWNER TO openlmis;
 
 
 
@@ -90,5 +90,5 @@ CREATE OR REPLACE VIEW dw_product_facility_stock_info_vw AS
   ORDER BY vw_stock_status_2.gz_id, vw_stock_status_2.programid, vw_stock_status_2.periodid, vw_stock_status_2.productid, vw_stock_status_2.product, vw_stock_status_2.status;
 
 ALTER TABLE dw_product_facility_stock_info_vw
-  OWNER TO postgres;
+  OWNER TO openlmis;
 

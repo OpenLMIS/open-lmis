@@ -57,4 +57,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_changeproductcodes()
-  OWNER TO postgres;
+  OWNER TO openlmis;

@@ -282,7 +282,7 @@ FOR rec IN SELECT * FROM vw_requisition_detail
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_populate_dw_orders(integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;
 COMMENT ON FUNCTION fn_populate_dw_orders(integer) IS 'populated data in dw_orders table - a flat table to store requisition, stock status, reporting status
 
 References:

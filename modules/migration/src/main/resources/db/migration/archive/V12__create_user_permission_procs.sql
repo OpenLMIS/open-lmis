@@ -18,7 +18,7 @@ CREATE OR REPLACE VIEW vw_user_program_facilities AS
    JOIN facilities ON facilities.id = requisition_group_members.facilityid;
 
 ALTER TABLE vw_user_program_facilities
-  OWNER TO postgres;
+  OWNER TO openlmis;
 COMMENT ON VIEW vw_user_program_facilities
   IS 'This view combines information from users, user_assignments, programs, facilities. This is used in user related stored functions. If using directly, please use DISTINCT ON to get distrinct list';
 
@@ -40,7 +40,7 @@ CREATE OR REPLACE VIEW vw_user_role_program_rg AS
    JOIN users ON role_assignments.userid = users.id;
 
 ALTER TABLE vw_user_role_program_rg
-  OWNER TO postgres;
+  OWNER TO openlmis;
 COMMENT ON VIEW vw_user_role_program_rg
   IS 'This view combines information from user, role, role_assignment, program, requisition_group. This view is used in user related stored function. If using directly, make sure you use DISTINCT ON';
 
@@ -182,4 +182,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_tbl_user_attributes(integer, character varying, integer, text)
-  OWNER TO postgres;
+  OWNER TO openlmis;

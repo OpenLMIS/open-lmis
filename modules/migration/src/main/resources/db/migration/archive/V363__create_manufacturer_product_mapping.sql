@@ -20,7 +20,7 @@ CREATE TABLE product_mapping
 	modifiedBy integer,
 	modifiedDate  timestamp without time zone DEFAULT now()
 );
-ALTER TABLE product_mapping OWNER TO postgres;
+ALTER TABLE product_mapping OWNER TO openlmis;
   COMMENT ON TABLE product_mapping IS  'product mapping';
   COMMENT ON COLUMN product_mapping.productCode IS  'productCode';
   COMMENT ON COLUMN product_mapping.gtin IS  'gtin';

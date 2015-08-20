@@ -35,7 +35,7 @@ SELECT
  JOIN vw_districts ON vw_districts.district_id = facilities.geographiczoneid
  ORDER BY geographic_zones.name, facilities.name, facility_program_equipments.model, equipment_status_line_items.operationalstatusid;
  
- ALTER TABLE vw_equipment_operational_status OWNER TO postgres;
+ ALTER TABLE vw_equipment_operational_status OWNER TO openlmis;
  
  
  DROP VIEW IF EXISTS vw_equipment_list_by_donor;
@@ -94,4 +94,4 @@ CREATE OR REPLACE VIEW vw_equipment_list_by_donor AS
  JOIN vw_districts ON vw_districts.district_id = facilities.geographiczoneid
  ORDER BY geographic_zones.name, facilities.name, facility_program_equipments.model, equipment_status_line_items.operationalstatusid;
  
- ALTER TABLE vw_equipment_list_by_donor OWNER TO postgres;
+ ALTER TABLE vw_equipment_list_by_donor OWNER TO openlmis;

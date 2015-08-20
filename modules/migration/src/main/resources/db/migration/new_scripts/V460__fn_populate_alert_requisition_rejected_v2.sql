@@ -80,4 +80,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_populate_alert_requisition_rejected(integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;

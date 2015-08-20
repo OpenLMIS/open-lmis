@@ -37,4 +37,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_save_user_preference2(integer, integer, integer, character varying)
-  OWNER TO postgres;
+  OWNER TO openlmis;

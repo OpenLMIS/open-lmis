@@ -42,4 +42,4 @@ CREATE OR REPLACE VIEW vw_e2e_pipeline AS
    FROM tmp t;
 
 ALTER TABLE vw_e2e_pipeline
-  OWNER TO postgres;
+  OWNER TO openlmis;

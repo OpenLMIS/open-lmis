@@ -29,4 +29,4 @@ CREATE OR REPLACE VIEW vw_order_fill_rate_details AS
   GROUP BY li.product, r.id, li.productcategory, f.name, ft.name, li.productcode, li.quantityapproved, li.quantityreceived, gz.name, r.programid, programs.name, prc.id, pp.id, ps.id, ft.id, requisition_group_members.id, rg.name, f.id, pr.id, s.name, gz.id;
 
 ALTER TABLE vw_order_fill_rate_details
-  OWNER TO postgres;
+  OWNER TO openlmis;

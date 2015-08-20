@@ -18,7 +18,7 @@ CREATE OR REPLACE VIEW dw_product_lead_time_vw AS
   GROUP BY dw_orders.programid, dw_orders.geographiczoneid, dw_orders.periodid, facilities.name, facilities.code, dw_orders.facilityid;
 
 ALTER TABLE dw_product_lead_time_vw
-  OWNER TO postgres;
+  OWNER TO openlmis;
 COMMENT ON VIEW dw_product_lead_time_vw
   IS 'dw_product_lead_time_vw-
 calculate product shipping lead time - Total days from the day order submitted to received

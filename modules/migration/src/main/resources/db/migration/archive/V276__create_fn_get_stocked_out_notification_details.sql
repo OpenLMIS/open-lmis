@@ -13,4 +13,4 @@ END
 $BODY$
   LANGUAGE plpgsql ;
 ALTER FUNCTION fn_get_stocked_out_notification_details(anyelement,integer, integer, integer, integer, integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;

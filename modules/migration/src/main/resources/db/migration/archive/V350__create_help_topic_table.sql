@@ -29,4 +29,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE elmis_help_topic
-  OWNER TO postgres;
+  OWNER TO openlmis;

@@ -374,7 +374,7 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_populate_dw_rnr()
-  OWNER TO postgres;
+  OWNER TO openlmis;
 
 
 CREATE TRIGGER tg_requisition_line_items_insert_update_delete

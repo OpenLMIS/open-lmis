@@ -146,4 +146,4 @@ ALTER FUNCTION fn_get_elmis_stock_status_data(
 	INTEGER,
 	INTEGER,
 	character varying
-) OWNER TO postgres;
+) OWNER TO openlmis;

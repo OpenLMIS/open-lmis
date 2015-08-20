@@ -27,4 +27,4 @@ CREATE OR REPLACE VIEW dw_product_fill_rate_vw AS
           GROUP BY dw_orders.programid, dw_orders.periodid, dw_orders.geographiczoneid, dw_orders.facilityid, dw_orders.productid, products.primaryname;
           
 ALTER TABLE dw_product_fill_rate_vw
-  OWNER TO postgres;
+  OWNER TO openlmis;

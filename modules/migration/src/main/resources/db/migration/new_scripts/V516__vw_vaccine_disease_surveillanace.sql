@@ -30,4 +30,4 @@ CREATE OR REPLACE VIEW vw_vaccine_disease_surveillance AS
   ORDER BY t.facility_id, t.period_start_date;
 
 ALTER TABLE vw_vaccine_disease_surveillance
-  OWNER TO postgres;
+  OWNER TO openlmis;

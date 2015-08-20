@@ -26,4 +26,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_get_max_mos(integer, integer, character varying)
-  OWNER TO postgres;
+  OWNER TO openlmis;

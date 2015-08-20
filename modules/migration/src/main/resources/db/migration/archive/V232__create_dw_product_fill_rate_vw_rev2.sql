@@ -35,7 +35,7 @@ CREATE OR REPLACE VIEW dw_product_fill_rate_vw AS
    FROM order_summary;
 
 ALTER TABLE dw_product_fill_rate_vw
-  OWNER TO postgres;
+  OWNER TO openlmis;
 
 COMMENT ON VIEW dw_product_fill_rate_vw
   IS 'dw_product_fill_rate_vw-

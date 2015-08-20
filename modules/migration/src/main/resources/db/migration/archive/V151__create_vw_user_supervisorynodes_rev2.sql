@@ -50,4 +50,4 @@ CREATE OR REPLACE VIEW vw_user_supervisorynodes AS
    FROM supervisorynodesrec;
 
 ALTER TABLE vw_user_supervisorynodes
-  OWNER TO postgres;
+  OWNER TO openlmis;

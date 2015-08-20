@@ -72,5 +72,5 @@ CREATE OR REPLACE VIEW vw_rnr_feedback AS
    LEFT JOIN shipment_line_items ON orders.id = shipment_line_items.orderid AND vw_requisition_detail.product_code::text = shipment_line_items.productcode::text;
 
 ALTER TABLE vw_rnr_feedback
-  OWNER TO postgres;
+  OWNER TO openlmis;
 

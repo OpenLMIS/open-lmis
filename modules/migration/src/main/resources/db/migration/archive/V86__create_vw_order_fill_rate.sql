@@ -26,4 +26,4 @@ CREATE OR REPLACE VIEW vw_order_fill_rate AS
         END AS err_qty_received
    FROM vw_order_fill_rate_details;
 ALTER TABLE vw_order_fill_rate
-  OWNER TO postgres;
+  OWNER TO openlmis;

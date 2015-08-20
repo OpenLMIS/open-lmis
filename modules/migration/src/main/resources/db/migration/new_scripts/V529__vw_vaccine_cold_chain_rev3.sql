@@ -33,5 +33,5 @@ CREATE OR REPLACE VIEW vw_vaccine_cold_chain AS
      JOIN equipment_energy_types ON equipments.energytypeid = equipment_energy_types.id;
 
 ALTER TABLE vw_vaccine_cold_chain
-  OWNER TO postgres;
+  OWNER TO openlmis;
 

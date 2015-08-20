@@ -118,4 +118,4 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION fn_get_rmnch_stock_status_data(integer, integer, character varying)
-  OWNER TO postgres;
+  OWNER TO openlmis;

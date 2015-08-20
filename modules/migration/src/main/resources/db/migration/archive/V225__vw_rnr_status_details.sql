@@ -12,4 +12,4 @@ CREATE OR REPLACE VIEW vw_rnr_status_details AS
    JOIN requisition_status_changes ON r.id = requisition_status_changes.rnrid;
 
 ALTER TABLE  vw_rnr_status_details
-  OWNER TO postgres;
+  OWNER TO openlmis;

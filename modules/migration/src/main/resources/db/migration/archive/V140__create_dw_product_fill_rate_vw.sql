@@ -58,7 +58,7 @@ SELECT dw_orders.programid,dw_orders.periodid,dw_orders.requisitionGroupId,
     dw_orders.productid, products.primaryname,dw_orders.facilityid;
     
 ALTER TABLE dw_product_fill_rate_vw
-  OWNER TO postgres;
+  OWNER TO openlmis;
 COMMENT ON VIEW dw_product_fill_rate_vw
   IS 'dw_product_fill_rate_vw-
 calculate product fill rate- Total qty received / Total qty approved

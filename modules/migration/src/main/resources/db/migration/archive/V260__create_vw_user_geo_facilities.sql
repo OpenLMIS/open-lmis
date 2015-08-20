@@ -23,4 +23,4 @@ CREATE OR REPLACE VIEW vw_user_geo_facilities AS
    JOIN geographic_zones ON geographic_zones.id = facilities.geographiczoneid;
 
 ALTER TABLE vw_user_geo_facilities
-  OWNER TO postgres;
+  OWNER TO openlmis;

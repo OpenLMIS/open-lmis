@@ -80,4 +80,4 @@ ON gz.id = geo_zone_tree.leafid;
 
 
 ALTER TABLE vw_cold_chain_equipment
-  OWNER TO postgres;
+  OWNER TO openlmis;

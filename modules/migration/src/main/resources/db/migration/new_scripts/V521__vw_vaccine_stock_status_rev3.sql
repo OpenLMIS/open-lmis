@@ -44,4 +44,4 @@ CREATE OR REPLACE VIEW vw_vaccine_stock_status AS
      JOIN vaccine_report_campaign_line_items ON vaccine_report_campaign_line_items.reportid = vaccine_reports.id;
 
 ALTER TABLE vw_vaccine_stock_status
-  OWNER TO postgres;
+  OWNER TO openlmis;

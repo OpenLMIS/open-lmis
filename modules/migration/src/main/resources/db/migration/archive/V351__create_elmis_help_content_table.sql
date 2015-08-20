@@ -25,4 +25,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE elmis_help
-  OWNER TO postgres;
+  OWNER TO openlmis;

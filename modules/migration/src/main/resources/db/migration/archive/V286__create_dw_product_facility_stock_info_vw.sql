@@ -23,5 +23,5 @@ from vw_stock_status_2
 ORDER BY geographiczoneid, programid, periodid, productid, primaryname, status; 
 
 ALTER TABLE dw_product_facility_stock_info_vw
-  OWNER TO postgres;
+  OWNER TO openlmis;
 

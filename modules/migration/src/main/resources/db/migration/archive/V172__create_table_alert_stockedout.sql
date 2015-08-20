@@ -13,7 +13,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE alert_stockedout
-  OWNER TO postgres;
+  OWNER TO openlmis;
 
 INSERT INTO alert_stockedout(alertsummaryid,facilityid,facilityname,stockoutdays,amc)
 VALUES (1,  1, 'Facility 1', 5, 10),

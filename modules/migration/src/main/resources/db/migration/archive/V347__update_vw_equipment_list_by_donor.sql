@@ -53,4 +53,4 @@ CREATE OR REPLACE VIEW vw_equipment_list_by_donor AS
   ORDER BY geographic_zones.name, facilities.name, facility_program_equipments.model;
 
 ALTER TABLE vw_equipment_list_by_donor
-  OWNER TO postgres;
+  OWNER TO openlmis;

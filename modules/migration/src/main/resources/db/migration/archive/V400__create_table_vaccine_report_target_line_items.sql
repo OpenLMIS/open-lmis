@@ -23,4 +23,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE vaccine_report_target_line_items
-  OWNER TO postgres;
+  OWNER TO openlmis;

@@ -36,4 +36,4 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION fn_get_user_default_settings(integer, integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;

@@ -82,4 +82,4 @@ CREATE OR REPLACE VIEW vw_requisition_detail_dw AS
      LEFT JOIN facility_approved_products ON facility_approved_products.facilitytypeid = facility_types.id AND facility_approved_products.programproductid = program_products.id;
 
 ALTER TABLE vw_requisition_detail_dw
-  OWNER TO postgres;
+  OWNER TO openlmis;

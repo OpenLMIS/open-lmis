@@ -70,4 +70,4 @@ $BODY$
 LANGUAGE plpgsql VOLATILE
 COST 100;
 ALTER FUNCTION fn_delete_rnr(integer)
-OWNER TO postgres;
+OWNER TO openlmis;

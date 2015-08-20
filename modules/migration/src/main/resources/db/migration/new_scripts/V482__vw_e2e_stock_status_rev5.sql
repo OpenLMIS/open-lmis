@@ -49,4 +49,4 @@ FROM
 	dw_orders d;
 
 ALTER TABLE vw_e2e_stock_status
-  OWNER TO postgres;
+  OWNER TO openlmis;

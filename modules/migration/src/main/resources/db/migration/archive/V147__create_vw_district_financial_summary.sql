@@ -14,5 +14,5 @@ CREATE OR REPLACE VIEW vw_district_financial_summary AS
    JOIN programs p ON p.id = requisitions.programid;
 
 ALTER TABLE vw_district_financial_summary
-  OWNER TO postgres;
+  OWNER TO openlmis;
 

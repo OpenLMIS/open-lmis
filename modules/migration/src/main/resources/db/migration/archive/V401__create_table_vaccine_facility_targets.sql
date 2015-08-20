@@ -17,7 +17,7 @@ WITH (
 );
 
 ALTER TABLE vaccine_facility_targets
-  OWNER TO postgres;
+  OWNER TO openlmis;
 
 COMMENT ON COLUMN vaccine_facility_targets.targetYear	IS 'year';
 COMMENT ON COLUMN vaccine_facility_targets.facilityId	IS 'facilityid';

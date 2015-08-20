@@ -17,7 +17,7 @@ CREATE OR REPLACE VIEW dw_product_lead_time_vw AS
 
 
 ALTER TABLE dw_product_lead_time_vw
-  OWNER TO postgres;
+  OWNER TO openlmis;
 COMMENT ON VIEW dw_product_lead_time_vw
   IS 'dw_product_lead_time_vw-
 calculate product shipping lead time - Total days from the day order submitted to received

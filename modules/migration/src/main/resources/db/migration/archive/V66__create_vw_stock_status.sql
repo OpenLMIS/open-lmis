@@ -58,4 +58,4 @@ CREATE OR REPLACE VIEW vw_stock_status AS
   WHERE requisition_line_items.stockinhand IS NOT NULL;
 
 ALTER TABLE vw_stock_status
-  OWNER TO postgres;
+  OWNER TO openlmis;

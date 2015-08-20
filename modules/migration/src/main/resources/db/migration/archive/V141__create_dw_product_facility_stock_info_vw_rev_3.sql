@@ -9,4 +9,4 @@ CREATE OR REPLACE VIEW dw_product_facility_stock_info_vw AS
   ORDER BY dw_orders.requisitiongroupid, dw_orders.programid, dw_orders.periodid, dw_orders.productid, products.primaryname, dw_orders.stocking;
 
 ALTER TABLE dw_product_facility_stock_info_vw
-  OWNER TO postgres;
+  OWNER TO openlmis;

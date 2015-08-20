@@ -30,4 +30,4 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_dw_scheduler()
-  OWNER TO postgres;
+  OWNER TO openlmis;

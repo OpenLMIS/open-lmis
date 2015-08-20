@@ -12,5 +12,5 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE dhis2_products
-  OWNER TO postgres;
+  OWNER TO openlmis;
 

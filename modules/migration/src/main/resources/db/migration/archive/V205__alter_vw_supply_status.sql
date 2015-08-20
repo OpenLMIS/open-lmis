@@ -16,4 +16,4 @@ CREATE OR REPLACE VIEW vw_supply_status AS
    JOIN facility_approved_products ON facility_types.id = facility_approved_products.facilitytypeid and facility_approved_products.programproductid = program_products.id;
 
 ALTER TABLE vw_supply_status
-  OWNER TO postgres;
+  OWNER TO openlmis;

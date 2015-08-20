@@ -22,4 +22,4 @@ CREATE OR REPLACE VIEW vw_vaccine_iefi AS
      JOIN products ON vaccine_report_adverse_effect_line_items.productid = products.id;
 
 ALTER TABLE vw_vaccine_iefi
-  OWNER TO postgres;
+  OWNER TO openlmis;

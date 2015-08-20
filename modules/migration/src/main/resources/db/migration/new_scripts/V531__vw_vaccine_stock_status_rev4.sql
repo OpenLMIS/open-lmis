@@ -47,4 +47,4 @@ CREATE OR REPLACE VIEW vw_vaccine_stock_status AS
      JOIN product_categories ON program_products.productcategoryid = product_categories.id;
 
 ALTER TABLE vw_vaccine_stock_status
-  OWNER TO postgres;
+  OWNER TO openlmis;

@@ -18,4 +18,4 @@ CREATE OR REPLACE VIEW wv_user_sn_rg_facilities AS
    JOIN facilities ON facilities.id = requisition_group_members.facilityid;
 
 ALTER TABLE wv_user_sn_rg_facilities
-  OWNER TO postgres;
+  OWNER TO openlmis;

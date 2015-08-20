@@ -19,4 +19,4 @@ CREATE OR REPLACE VIEW vw_vaccine_target_population AS
   WHERE a.category_name::text = 'Population'::text AND b.category_name::text = 'Pregnant Woman'::text AND c.category_name::text = 'Live Birth'::text AND d.category_name::text = 'Children 0 - 1 Year'::text AND e.category_name::text = 'Children 1 - 2 Years'::text AND f.category_name::text = 'Girls 9 - 12 Years'::text;
 
 ALTER TABLE vw_vaccine_target_population
-  OWNER TO postgres;
+  OWNER TO openlmis;

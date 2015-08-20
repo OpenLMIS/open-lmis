@@ -38,4 +38,4 @@
   ORDER BY facilities.name;
 
 ALTER TABLE vw_lab_equipment_status
-  OWNER TO postgres;
+  OWNER TO openlmis;

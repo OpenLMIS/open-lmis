@@ -13,7 +13,7 @@ CREATE TABLE budgets (
  modifiedBy INTEGER,
  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-ALTER TABLE public.budgets OWNER TO postgres;
+ALTER TABLE public.budgets OWNER TO openlmis;
 
 ALTER TABLE ONLY budgets
     ADD CONSTRAINT budgets_facilityId_fkey FOREIGN KEY (facilityId) REFERENCES facilities(id);

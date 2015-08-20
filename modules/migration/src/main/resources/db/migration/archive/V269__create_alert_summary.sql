@@ -17,4 +17,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE alert_summary
-  OWNER TO postgres;
+  OWNER TO openlmis;

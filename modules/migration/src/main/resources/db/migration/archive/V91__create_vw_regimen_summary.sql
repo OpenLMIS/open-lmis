@@ -28,4 +28,4 @@ CREATE OR REPLACE VIEW vw_regimen_summary AS
    JOIN regimens reg ON reg.programid = programs.id;
 
 ALTER TABLE vw_regimen_summary
-  OWNER TO postgres;
+  OWNER TO openlmis;

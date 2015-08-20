@@ -25,7 +25,7 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 ALTER FUNCTION fn_get_geozonetree_names(IN in_geozone_id integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;
 
 
 /* This function calls fn_get_geozonetree_names(id) for each leaf-geozone that exists.
@@ -50,4 +50,4 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 ALTER FUNCTION fn_get_geozonetree_names()
-  OWNER TO postgres;
+  OWNER TO openlmis;

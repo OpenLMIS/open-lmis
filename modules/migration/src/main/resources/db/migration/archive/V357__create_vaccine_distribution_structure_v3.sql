@@ -65,7 +65,7 @@ CREATE TABLE  vaccine_distribution_batches
   modifiedBy        INTEGER                                       ,
   modifiedDate      TIMESTAMP            DEFAULT CURRENT_TIMESTAMP  
 );
-ALTER TABLE vaccine_distribution_batches OWNER TO postgres;
+ALTER TABLE vaccine_distribution_batches OWNER TO openlmis;
 COMMENT ON TABLE vaccine_distribution_batches IS  'vaccine distribution batches';
 COMMENT ON COLUMN vaccine_distribution_batches.id IS  'id';
 COMMENT ON COLUMN vaccine_distribution_batches.batchId IS  'batchId';
@@ -106,7 +106,7 @@ CREATE TABLE vaccine_distribution_line_items
   modifiedDate      TIMESTAMP            DEFAULT CURRENT_TIMESTAMP  
 
 );
-ALTER TABLE vaccine_distribution_line_items OWNER TO postgres;
+ALTER TABLE vaccine_distribution_line_items OWNER TO openlmis;
 COMMENT ON TABLE vaccine_distribution_line_items IS 'vaccine distribution line items';
 COMMENT ON COLUMN vaccine_distribution_line_items.id  IS 'id';
 COMMENT ON COLUMN vaccine_distribution_line_items.distributionBatchId IS 'distributionBatchId';

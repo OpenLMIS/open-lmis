@@ -24,5 +24,5 @@ CREATE OR REPLACE VIEW vw_expected_facilities AS
            FROM geographic_levels));
 
 ALTER TABLE vw_expected_facilities
-  OWNER TO postgres;
+  OWNER TO openlmis;
 

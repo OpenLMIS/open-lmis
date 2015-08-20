@@ -60,6 +60,6 @@ CREATE OR REPLACE VIEW vw_regimen_district_distribution AS
      JOIN processing_periods pp ON r.periodid = pp.id
      JOIN requisition_group_program_schedules rgps ON rgm.requisitiongroupid = rgps.requisitiongroupid AND pp.scheduleid = rgps.scheduleid;
 
-ALTER TABLE vw_regimen_district_distribution OWNER TO postgres;
-ALTER TABLE vw_regimen_summary OWNER TO postgres;
+ALTER TABLE vw_regimen_district_distribution OWNER TO openlmis;
+ALTER TABLE vw_regimen_summary OWNER TO openlmis;
 

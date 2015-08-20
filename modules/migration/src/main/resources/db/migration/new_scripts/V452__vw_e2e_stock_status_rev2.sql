@@ -44,4 +44,4 @@ from dw_orders d )
     t.productid
    FROM tmp t;
 ALTER TABLE vw_e2e_stock_status
-  OWNER TO postgres;
+  OWNER TO openlmis;

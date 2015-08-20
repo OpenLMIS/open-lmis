@@ -15,4 +15,4 @@ CREATE OR REPLACE VIEW vw_user_geographic_zones AS
   WHERE role_assignments.supervisorynodeid IS NOT NULL AND requisition_groups.supervisorynodeid IS NOT NULL;
 
 ALTER TABLE vw_user_geographic_zones
-  OWNER TO postgres;
+  OWNER TO openlmis;

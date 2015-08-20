@@ -32,4 +32,4 @@ CREATE OR REPLACE VIEW vw_e2e_stock_status_fill_rates AS
      LEFT JOIN dw_product_fill_rate_vw ON dw_product_fill_rate_vw.programid = vw_e2e_stock_status.programid AND dw_product_fill_rate_vw.periodid = vw_e2e_stock_status.periodid AND dw_product_fill_rate_vw.facilityid = vw_e2e_stock_status.facilityid AND dw_product_fill_rate_vw.productid = vw_e2e_stock_status.productid;
 
 ALTER TABLE vw_e2e_stock_status_fill_rates
-  OWNER TO postgres;
+  OWNER TO openlmis;

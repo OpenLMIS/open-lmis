@@ -32,4 +32,4 @@ CREATE OR REPLACE VIEW vw_vaccine_vitamin_supplementation AS
 
 
 ALTER TABLE vw_vaccine_vitamin_supplementation
-  OWNER TO postgres;
+  OWNER TO openlmis;

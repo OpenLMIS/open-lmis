@@ -75,4 +75,4 @@ CREATE OR REPLACE VIEW vw_requisition_detail_2 AS
    JOIN product_forms ON product_forms.id = products.formid;
 
 ALTER TABLE vw_requisition_detail_2
-  OWNER TO postgres;
+  OWNER TO openlmis;

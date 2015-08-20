@@ -14,4 +14,4 @@ END
 $BODY$
   LANGUAGE plpgsql ;
 ALTER FUNCTION fn_get_notification_details(anyelement,integer, integer, integer, integer)
-  OWNER TO postgres;
+  OWNER TO openlmis;

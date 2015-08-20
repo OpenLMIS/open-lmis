@@ -12,7 +12,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE emergency_requisitions
-  OWNER TO postgres;
+  OWNER TO openlmis;
 
 INSERT INTO emergency_requisitions(alertsummaryid,rnrid,facilityid,status)
 VALUES (3, 312, 5,'INITIATED'),

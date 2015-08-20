@@ -15,5 +15,5 @@ CREATE OR REPLACE VIEW vw_number_rnr_created_by_facility AS
   ORDER BY r.status;
 
 ALTER TABLE vw_number_rnr_created_by_facility
-  OWNER TO postgres;
+  OWNER TO openlmis;
 

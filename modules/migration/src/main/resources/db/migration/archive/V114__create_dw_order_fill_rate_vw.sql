@@ -56,7 +56,7 @@ sum(
   GROUP BY dw_orders.programid, dw_orders.geographiczoneid, dw_orders.periodid, dw_orders.facilityid;
 
 ALTER TABLE dw_order_fill_rate_vw
-  OWNER TO postgres;
+  OWNER TO openlmis;
 COMMENT ON VIEW dw_order_fill_rate_vw
   IS 'dw_order_fill_rate_vw 
 calculate order fill rate- Total number of products received / Total number of products approved

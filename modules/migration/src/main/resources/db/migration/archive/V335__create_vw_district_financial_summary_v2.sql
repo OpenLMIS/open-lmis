@@ -14,4 +14,4 @@ CREATE OR REPLACE VIEW vw_district_financial_summary AS
   WHERE requisitions.status::text = ANY (ARRAY['IN_APPROVAL'::character varying, 'APPROVED'::character varying, 'RELEASED'::character varying]::text[]);
 
 ALTER TABLE vw_district_financial_summary
-  OWNER TO postgres;
+  OWNER TO openlmis;

@@ -11,4 +11,4 @@ select geographicZoneid,programid,periodid,productid,primaryname,
 group by geographicZoneid,programid,periodid,productid,primaryname
 order by geographicZoneid,programid,periodid,productid,primaryname;
 ALTER TABLE dw_product_stock_efficiency_statics_vw
-  OWNER TO postgres;
+  OWNER TO openlmis;

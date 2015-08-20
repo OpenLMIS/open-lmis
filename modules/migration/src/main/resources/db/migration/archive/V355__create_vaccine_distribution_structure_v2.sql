@@ -9,7 +9,7 @@ CREATE TABLE vaccine_distribution_types
   nature character varying(2),
   CONSTRAINT vaccine_distribution_types_pkey PRIMARY KEY (id)
 );
-ALTER TABLE vaccine_distribution_types OWNER TO postgres;  
+ALTER TABLE vaccine_distribution_types OWNER TO openlmis;
 --------------------------------------------------------
 -- Table: vaccine_targets
 DROP TABLE IF EXISTS vaccine_targets;
@@ -225,7 +225,7 @@ CREATE TABLE manufacturers
   modifiedBy integer,
   modifiedDate timestamp without time zone DEFAULT now()
 );
-ALTER TABLE manufacturers OWNER TO postgres;
+ALTER TABLE manufacturers OWNER TO openlmis;
 CREATE UNIQUE INDEX uc_manufacturers_lower_name ON manufacturers(LOWER(name));
 
 COMMENT ON TABLE manufacturers IS 'Manufacturers';
@@ -303,7 +303,7 @@ CREATE TABLE  vaccine_distribution_batches
   modifiedBy        INTEGER                                       ,
   modifiedDate      TIMESTAMP            DEFAULT CURRENT_TIMESTAMP  
 );
-ALTER TABLE vaccine_distribution_batches OWNER TO postgres;
+ALTER TABLE vaccine_distribution_batches OWNER TO openlmis;
 COMMENT ON TABLE vaccine_distribution_batches IS  'vaccine distribution batches';
 COMMENT ON COLUMN vaccine_distribution_batches.id IS  'id';
 COMMENT ON COLUMN vaccine_distribution_batches.batchId IS  'batchId';
@@ -344,7 +344,7 @@ CREATE TABLE vaccine_distribution_line_items
   modifiedDate      TIMESTAMP            DEFAULT CURRENT_TIMESTAMP  
 
 );
-ALTER TABLE vaccine_distribution_line_items OWNER TO postgres;
+ALTER TABLE vaccine_distribution_line_items OWNER TO openlmis;
 COMMENT ON TABLE vaccine_distribution_line_items IS 'vaccine distribution line items';
 COMMENT ON COLUMN vaccine_distribution_line_items.id  IS 'id';
 COMMENT ON COLUMN vaccine_distribution_line_items.distributionBatchId IS 'distributionBatchId';
