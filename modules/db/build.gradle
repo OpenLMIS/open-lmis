@@ -61,17 +61,17 @@ task setupDB << {
     tasks.migrateDB.execute()
 }
 
-task createDB << {
+task createDB (type: Exec) {
     println("Creating Database..")
-    executeSql("create database $dbName")
+    commandLine 'createdb', '-U', dbUser, dbName
 }
 
-task dropDB << {
+task dropDB (type: Exec) {
     println("Dropping Database..")
     if (!closeActiveConnections("procpid")) {
         closeActiveConnections("pid")
     }
-    executeSql("DROP DATABASE IF EXISTS $dbName")
+    commandLine 'dropdb', '-U', dbUser, '--if-exists', dbName
 }
 
 task dropSchemas << {
