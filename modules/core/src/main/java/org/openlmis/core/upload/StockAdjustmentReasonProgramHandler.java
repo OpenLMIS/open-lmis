@@ -2,7 +2,7 @@ package org.openlmis.core.upload;
 
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.dto.StockAdjustmentReasonProgram;
-import org.openlmis.core.service.StockManagementConfigService;
+import org.openlmis.core.service.StockAdjustmentReasonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class StockAdjustmentReasonProgramHandler extends AbstractModelPersistenceHandler {
 
   @Autowired
-  private StockManagementConfigService service;
+  private StockAdjustmentReasonService service;
 
   @Override
   protected BaseModel getExisting(BaseModel record) {

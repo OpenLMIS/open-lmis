@@ -3,7 +3,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.dto.StockAdjustmentReason;
 import org.openlmis.core.dto.StockAdjustmentReasonProgram;
-import org.openlmis.core.repository.StockManagementConfigRepository;
+import org.openlmis.core.repository.StockAdjustmentReasonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +11,10 @@ import java.util.List;
 
 @Service
 @NoArgsConstructor
-public class StockManagementConfigService {
+public class StockAdjustmentReasonService {
 
   @Autowired
-  StockManagementConfigRepository repository;
+  StockAdjustmentReasonRepository repository;
 
   public List<StockAdjustmentReason> getAdjustmentReasons(Boolean additive, Long programId) {
     return repository.getAdjustmentReasons(additive, programId);

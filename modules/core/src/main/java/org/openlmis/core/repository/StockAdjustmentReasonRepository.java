@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 @NoArgsConstructor
-public class StockManagementConfigRepository {
+public class StockAdjustmentReasonRepository {
 
   @Autowired
   StockAdjustmentReasonMapper adjustmentReasonMapper;
