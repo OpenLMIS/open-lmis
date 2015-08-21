@@ -8,15 +8,100 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewColdChainStatusController($scope, facilities, period, deliveryZone) {
+function ViewColdChainStatusController($scope, facilities, period, deliveryZone, fridges) {
   if (!isUndefined(facilities) && facilities.length > 0) {
     $scope.message = "";
     $scope.program = facilities[0].supportedPrograms[0].program;
     $scope.period = period;
     $scope.deliveryZone = deliveryZone;
+    if (!isUndefined(fridges) && !isUndefined(fridges.fridges) && fridges.fridges.length > 0) {
+        $scope.data = fridges.fridges;
+    } else {
+        $scope.message = "label.no.cold.chain.status.information";
+    }
+    $scope.facilities = facilities;
   } else {
     $scope.message = "msg.delivery.zone.no.record";
   }
+
+    $scope.getCommonTableHeaders = function () {
+      return ['label.district', 'label.facility', 'label.fridge.id'];
+    };
+
+    $scope.splitFridgesByStatus = function() {
+      $scope.noDataRefrigerators = [];
+      $scope.followUpRefrigerators = [];
+      $scope.failedRefrigerators = [];
+      $scope.workingRefrigerators = [];
+
+       for (var i = 0; i < $scope.data.length; i++) {
+          var fridge = $scope.data[i];
+          switch (fridge.Status) {
+            case 1:
+                $scope.failedRefrigerators.push(fridge);
+                break;
+            case 2:
+                $scope.followUpRefrigerators.push(fridge);
+                break;
+            case 3:
+                $scope.workingRefrigerators.push(fridge);
+                break;
+            case 4:
+                $scope.noDataRefrigerators.push(fridge);
+                break;
+          }
+       }
+     };
+
+    if (!isUndefined($scope.data)) {
+        $scope.splitFridgesByStatus();
+    }
+
+    $scope.getDaysFromMinutes = function(minutes) {
+        return Math.round(minutes * 2 / 60 / 24) / 2;
+    };
+
+    $scope.getFacilityById = function(id) {
+        if (!isUndefined(id)) {
+            for (var i = 0; i < $scope.facilities.length; i++) {
+                var facility = $scope.facilities[i];
+                if (facility.id == id) {
+                    return facility;
+                }
+            }
+        }
+        return null;
+    };
+
+    $scope.getFacilityNameById = function(id) {
+        if (!isUndefined(id)) {
+            var facility = $scope.getFacilityById(id);
+            if (!isUndefined(facility)) {
+                return facility.name;
+            }
+        }
+        return "No facitility ID";
+    };
+
+    $scope.getDistrictNameByFacilityId = function(id) {
+        if (!isUndefined(id)) {
+            var facility = $scope.getFacilityById(id);
+            if (!isUndefined(facility)) {
+                return facility.geographicZone.name;
+            }
+        }
+        return "No facitility ID";
+    };
+
+    $scope.getProvinceNameByFacilityId = function(id) {
+        if (!isUndefined(id)) {
+            var facility = $scope.getFacilityById(id);
+            if (!isUndefined(facility)) {
+                return facility.geographicZone.parent.name;
+            }
+        }
+        return "No facitility ID";
+    };
 }
 
 ViewColdChainStatusController.resolve = {
@@ -51,6 +136,17 @@ ViewColdChainStatusController.resolve = {
     }, 100);
 
     return deferred.promise;
-  }
+  },
+
+  fridges: function (Fridges, $route, $timeout, $q) {
+      var deferred = $q.defer();
+      $timeout(function () {
+        Fridges.get({}, function (data) {
+          deferred.resolve(data.coldTradeData);
+        }, {});
+      }, 100);
+
+      return deferred.promise;
+    }
 
 };

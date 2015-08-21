@@ -16,7 +16,7 @@ function DistributionController($scope, $rootScope, deliveryZones, DeliveryZoneA
   var DEFAULT_PERIOD_MESSAGE = messageService.get('label.select.period');
 
   $scope.zonePlaceholder = !!$scope.deliveryZones.length ? DELIVERY_ZONE_LABEL : NONE_ASSIGNED_LABEL;
-  $scope.provincesForColdChainStatus = ['Gaza', 'Tete', 'Niassa'];
+  $scope.provincesForColdChainStatus = ['Sul', 'Tete', 'Niassa'];
 
   $scope.reload = function() {
     window.location.reload();

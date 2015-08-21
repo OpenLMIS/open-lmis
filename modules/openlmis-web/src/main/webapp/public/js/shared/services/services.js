@@ -299,3 +299,7 @@ services.factory('EnabledWarehouse', function ($resource) {
 services.factory('OrderPOD', function ($resource) {
   return $resource('/pods/:action/:id.json', {id: '@id', action: '@action'}, update);
 });
+
+services.factory('Fridges', function ($resource) {
+  return $resource('/fridges.json', {id: '@id'}, update);
+});
