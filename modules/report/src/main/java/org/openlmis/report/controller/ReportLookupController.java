@@ -14,23 +14,17 @@ package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.report.model.dto.*;
-import org.openlmis.report.model.dto.GeographicZone;
-//import org.openlmis.report.model.dto.ProcessingPeriod;
-import org.openlmis.report.model.dto.Product;
-import org.openlmis.report.model.dto.ProductCategory;
-import org.openlmis.report.model.dto.Program;
-import org.openlmis.report.model.dto.Regimen;
-import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
-import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.util.InteractiveReportPeriodFilterParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +43,7 @@ import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+
 @Controller
 @NoArgsConstructor
 @RequestMapping(value = "/reports")
@@ -58,11 +53,6 @@ public class ReportLookupController extends BaseController {
 
   public static final String OPEN_LMIS_OPERATION_YEARS = "years";
   public static final String OPEN_LMIS_OPERATION_MONTHS = "months";
-/*
-  private String  getCommaSeparatedIds(List<Long> idList){
-
-      return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
-  }*/
 
   @Autowired
   private ReportLookupService reportLookupService;
@@ -535,8 +525,8 @@ public class ReportLookupController extends BaseController {
     }
 
     @RequestMapping(value = "/last-periods.json", method = GET, headers = BaseController.ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getLastPeriods(){
-        return OpenLmisResponse.response("lastPeriods", this.reportLookupService.getLastPeriods());
+    public ResponseEntity<OpenLmisResponse> getLastPeriods(@RequestParam("programId") Long programId){
+        return OpenLmisResponse.response("lastPeriods", this.reportLookupService.getLastPeriods(programId));
     }
 
 }

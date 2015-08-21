@@ -13,6 +13,7 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.ReportOutputOption;
 import org.openlmis.report.service.lookup.ReportLookupService;
@@ -28,7 +29,7 @@ import java.io.*;
 @Controller
 @NoArgsConstructor
 @RequestMapping(value = "/reports")
-public class ReportExportController {
+public class ReportExportController extends BaseController {
 
 
   public static final String USER_ID = "USER_ID";

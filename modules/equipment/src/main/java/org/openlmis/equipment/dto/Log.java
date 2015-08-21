@@ -14,8 +14,8 @@ package org.openlmis.equipment.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.utils.DateUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -30,18 +30,8 @@ public class Log {
   private String comment;
   private Date date;
 
-  private String formatDate(Date date){
-    try {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
-      return date == null ? null : simpleDateFormat.format(date);
-    }catch(Exception exp){
-
-    }
-    return null;
-  }
-
   public String getDateString()  {
-    return formatDate(this.date);
+    return DateUtil.getFormattedDate(this.date, "yyyy-dd-MM");
   }
 
 }

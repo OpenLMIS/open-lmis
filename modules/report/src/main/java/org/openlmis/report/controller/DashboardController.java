@@ -13,12 +13,12 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.annotations.Update;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.model.DashboardLookUpReportHeader;
 import org.openlmis.report.model.dto.Notification;
-import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.DashboardBatchDataUpdateExecutorService;
 import org.openlmis.report.service.lookup.DashboardLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +34,8 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
-/**
- * User: Issa
- * Date: 2/18/14
- * Time: 5:18 PM
- */
 @Controller
 @NoArgsConstructor
 @RequestMapping(value = "/dashboard")

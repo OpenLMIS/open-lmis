@@ -43,4 +43,9 @@ public class EquipmentInventoryStatus extends BaseModel {
       throw new IllegalArgumentException();
     }
   }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
 }

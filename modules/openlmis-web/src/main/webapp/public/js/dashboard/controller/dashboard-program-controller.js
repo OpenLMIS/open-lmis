@@ -38,34 +38,22 @@ function DashboardProgramController($scope,$routeParams,$timeout, dashboardMenuS
                 $scope.currentTab = $scope.programId =  dashboardMenuService.getTab(0).id;
             }
 
-    });
+        GetLastPeriods.get({programId: $scope.programId}, function(data){
+            $scope.lastPeriods = data.lastPeriods;
+            dashboardMenuService.tabs = [];
+            angular.forEach( $scope.lastPeriods, function(period){
 
-
-$timeout(function(){
-
-    GetLastPeriods.get({}, function(data){
-        $scope.lastPeriods = data.lastPeriods;
-        dashboardMenuService.tabs = [];
-        angular.forEach( $scope.lastPeriods, function(period){
-
-            dashboardMenuService.addTab("'"+period.name+"'",'/public/pages/dashboard/index_new.html#/dashboard-new?programId='+$scope.currentTab +'&periodId='+period.id,period.name,false, period.id);
-        });
-        $scope.dashboardPeriodTabs = dashboardMenuService.tabs;
+                dashboardMenuService.addTab("'"+period.name+"'",'/public/pages/dashboard/index_new.html#/dashboard-new?programId='+$scope.currentTab +'&periodId='+period.id,period.name,false, period.id);
+            });
+            $scope.dashboardPeriodTabs = dashboardMenuService.tabs;
             if(!isUndefined($routeParams.periodId)){
                 $scope.currentSubTab = $scope.periodId = $routeParams.periodId;
             }else{
                 $scope.currentSubTab = $scope.periodId =  $scope.dashboardPeriodTabs[0].id;
             }
 
-        dashboardMenuService.tabs = [];
+            dashboardMenuService.tabs = [];
+        });
     });
-
-},100);
-
-
-    if(!isUndefined($scope.programId) && !isUndefined($scope.periodId)){
-
-    }
-
 
 }

@@ -12,6 +12,7 @@
 
 package org.openlmis.report.service;
 
+import lombok.Data;
 import org.openlmis.report.DataSourceType;
 import org.openlmis.report.model.ReportData;
 
@@ -19,24 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Data
 public abstract class ReportDataProvider {
 
-  private long userId;
-
-  public void setUserId(Long id){
-    userId = id;
-  }
-
-  public long getUserId(){
-    return userId;
-  }
+  private Long userId;
 
   public final List<? extends ReportData> getReportDataByFilterCriteria(Map<String, String[]> params, DataSourceType dataSourceType){
     return getResultSetReportData(params);
-  }
-
-  public final List<? extends ReportData> getReportDataByFilterCriteria(Map<String, String[]> params){
-      return getReportDataByFilterCriteria(params, DataSourceType.BEAN_COLLECTION_DATA_SOURCE);
   }
 
   protected abstract List<? extends ReportData> getResultSetReportData(Map<String, String[]> params);

@@ -11,7 +11,6 @@
 
 package org.openlmis.order.task;
 
-import lombok.Setter;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.FailedToCreateProducerException;
 import org.apache.log4j.Logger;
@@ -27,7 +26,7 @@ import org.openlmis.order.helper.OrderCsvHelper;
 import org.openlmis.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.integration.annotation.Payload;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
