@@ -1,0 +1,64 @@
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th colspan="10" openlmis-message="label.vaccine.coverage.monthly.coverage"></th>
+      <th colspan="5" openlmis-message="label.vaccine.coverage.cumulative.coverage"></th>
+    </tr>
+    <tr>
+      <th colspan="4" openlmis-message="label.vaccine.coverage.within.catchment"></th>
+      <th colspan="4" openlmis-message="label.vaccine.coverage.outside.catchment"></th>
+      <th colspan="2" openlmis-message="label.vaccine.coverage.total.vaccination"></th>
+      <th colspan="2" openlmis-message="label.vaccine.coverage.within.catchment"></th>
+      <th openlmis-message="label.vaccine.coverage.outside"></th>
+      <th colspan="2" openlmis-message="label.vaccine.coverage.total"></th>
+    </tr>
+    <tr>
+      <th openlmis-message="label.vaccine.coverage.male"></th>
+      <th openlmis-message="label.vaccine.coverage.female"></th>
+      <th openlmis-message="label.vaccine.coverage.total"></th>
+      <th openlmis-message="label.vaccine.coverage.coverage"></th>
+      <th openlmis-message="label.vaccine.coverage.male"></th>
+      <th openlmis-message="label.vaccine.coverage.female"></th>
+      <th openlmis-message="label.vaccine.coverage.total"></th>
+      <th openlmis-message="label.vaccine.coverage.coverage"></th>
+      <th openlmis-message="label.vaccine.coverage.total"></th>
+      <th openlmis-message="label.vaccine.coverage.coverage"></th>
+      <th openlmis-message="label.vaccine.coverage.total"></th>
+      <th openlmis-message="label.vaccine.coverage.coverage"></th>
+      <th openlmis-message="label.vaccine.coverage.total"></th>
+      <th openlmis-message="label.vaccine.coverage.total"></th>
+      <th openlmis-message="label.vaccine.coverage.coverage"></th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat-start="(productId, productGroup) in report.coverageLineItemViews"></tr>
+  <tr ng-repeat-start="dose in productGroup">
+    <td class="cell-input col-general" >
+      <input  numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackMale" ng-model="dose.regularMale" type="text" />
+    </td>
+    <td  class="cell-input col-general">
+      <input numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackFemale" ng-model="dose.regularFemale" type="text" />
+    </td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{toNumber(dose.regularMale) + toNumber(dose.regularFemale)}}</span></td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> - %</span></td>
+    <td class="cell-input col-general" >
+      <input  numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackMale" ng-model="dose.outreachMale" type="text" />
+    </td>
+    <td  class="cell-input col-general">
+      <input numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackFemale" ng-model="dose.outreachFemale" type="text" />
+    </td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text">{{toNumber(dose.outreachMale) + toNumber(dose.outreachFemale)}}</span></td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text"> - %</span></td>
+
+
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{toNumber(dose.outreachMale) + toNumber(dose.outreachFemale) + toNumber(dose.regularMale) + toNumber(dose.regularFemale)}}</span></td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> - %</span></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr ng-repeat-end></tr>
+  <tr ng-repeat-end></tr>
+</table>
