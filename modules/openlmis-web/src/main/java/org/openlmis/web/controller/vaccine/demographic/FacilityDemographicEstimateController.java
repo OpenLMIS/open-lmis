@@ -11,12 +11,13 @@
  */
 package org.openlmis.web.controller.vaccine.demographic;
 
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.vaccine.dto.DemographicEstimateForm;
 import org.openlmis.vaccine.service.demographics.FacilityDemographicEstimateService;
-import org.openlmis.core.web.controller.BaseController;
-import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,19 +25,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+
 @Controller
-@RequestMapping(value = "/vaccine/demographic/estimate/facility/")
+@RequestMapping(value = "/vaccine/demographic/estimate/")
 public class FacilityDemographicEstimateController extends BaseController {
 
   @Autowired
   FacilityDemographicEstimateService service;
 
-  @RequestMapping("get")
+  @RequestMapping(value = "facilities", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
   public ResponseEntity<OpenLmisResponse> get( @RequestParam("year") Integer year, @RequestParam("programId") Long programId,  HttpServletRequest request){
     return OpenLmisResponse.response("estimates", service.getEstimateFor(loggedInUserId(request), programId, year));
   }
 
-  @RequestMapping("save")
+  @RequestMapping(value = "facilities", method = PUT)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody DemographicEstimateForm form,  HttpServletRequest request){
     service.save(form);
     return OpenLmisResponse.response("estimates", form);
