@@ -13,16 +13,15 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.report.ReportManager;
-import org.openlmis.report.ReportOutputOption;
 import org.openlmis.report.model.dto.MessageCollection;
 import org.openlmis.report.model.dto.MessageDto;
-import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.sms.domain.SMS;
 import org.openlmis.sms.service.SMSService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -32,19 +31,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.activation.DataSource;
-
 import javax.mail.MessagingException;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @NoArgsConstructor
 @RequestMapping(value = "/messages")
-public class MessageController extends BaseController{
+public class MessageController extends BaseController {
 
   @Autowired
   private SMSService smsService;

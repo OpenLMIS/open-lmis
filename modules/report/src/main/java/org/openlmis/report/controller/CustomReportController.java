@@ -15,9 +15,10 @@ package org.openlmis.report.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.model.CustomReport;
 import org.openlmis.report.repository.CustomReportRepository;
-import org.openlmis.report.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +39,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @NoArgsConstructor
 @Controller
 @RequestMapping(value="/report-api")
-public class CustomReportController extends BaseController{
+public class CustomReportController extends BaseController {
 
   @Autowired
   CustomReportRepository reportRepository;
