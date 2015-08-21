@@ -67,7 +67,7 @@ public class StockAdjustmentReasonRepositoryTest {
 
     List<StockAdjustmentReason> reasons = repository.getAdjustmentReasons(null, 1L);
 
-    verify(mapper).getAll();
+    verify(mapper).getAllByProgram(1L);
     assertEquals(reasons, positiveReasons);
   }
 
