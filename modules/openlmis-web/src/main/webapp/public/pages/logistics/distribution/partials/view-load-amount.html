@@ -9,17 +9,25 @@
   -->
 
 <div>
-  <h2 id="warehouseLoadAmountLabel" openlmis-message="label.warehouse.load.amount"></h2>
-
-  <div align="right">
-    <img src="/public/images/refrigator3.png"> Working
-    <img src="/public/images/refrigator2.png"> Follow Up
-    <img src="/public/images/refrigator1.png"> Failed
-    <img src="/public/images/refrigator4.png"> No Data
-  </div>
+  <h2 id="warehouseLoadAmountLabel" openlmis-message="label.warehouse.load.amount">
+    <span class="indicator">
+      <span class="span2">
+        <img src="/public/images/refrigator3.png">&nbsp;<span id="labelIndicatorGreen" openlmis-message="label.indicator.green"></span>
+      </span>
+      <span class="span2">
+        <img src="/public/images/refrigator2.png">&nbsp;<span id="indicatorRedLabel" openlmis-message="label.indicator.red"></span>
+      </span>
+      <span class="span2">
+        <img src="/public/images/refrigator1.png">&nbsp;<span id="indicatorYellowLabel" openlmis-message="label.indicator.yellow"></span>
+      </span>
+      <span class="span2">
+        <img src="/public/images/refrigator4.png">&nbsp;<span id="indicatorBlackLabel" openlmis-message="label.indicator.black"></span>
+      </span>
+    </span>
+  </h2>
 
   <div class="alert alert-info" ng-show="message"><span openlmis-message="message"></span></div>
-  <div ng-show="!message">
+  <div ng-show="message">
     <div class="info-box">
       <div class="row-fluid">
         <div class="span3">

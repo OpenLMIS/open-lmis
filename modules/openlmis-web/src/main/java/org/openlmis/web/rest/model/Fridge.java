@@ -38,4 +38,8 @@ public class Fridge {
 
     @JsonProperty("URL")
     String url;
+
+    public void updateURL(String user, String pwd) {
+        this.url = url.replace("://", "://" + user + ":" + pwd + "@");
+    }
 }
