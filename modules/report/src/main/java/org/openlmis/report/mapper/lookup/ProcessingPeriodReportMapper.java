@@ -44,12 +44,16 @@ public interface ProcessingPeriodReportMapper {
 
 
 
-    @Select(" select processing_periods.id, scheduleId, startdate, to_char(startdate, 'Month') || '-'|| extract(year from processing_periods.startdate) || '(' || processing_schedules.name || ')'  as Name \n" +
-            "            from processing_periods\n" +
-            "            join processing_schedules on scheduleid = processing_schedules.id\n" +
-            "            where startdate <= NOW()\n" +
-            "             order by startdate desc limit 4")
-    List<ProcessingPeriod> getLastPeriods();
+    @Select("select distinct on (pp.startdate) pp.id, pp.scheduleId, \n" +
+            "pp.startdate::date startdate, \n" +
+            "to_char(pp.startdate, 'Month') || '-'|| extract(year from pp.startdate) || '(' || pp.name || ')'  as Name\n" +
+            "from requisitions r\n" +
+            "inner join processing_periods pp on r.periodid = pp.id\n" +
+            "where pp.startdate < NOW()\n" +
+            "and r.programid = #{programId}\n" +
+            "order by pp.startdate desc\n" +
+            "limit 4")
+    List<ProcessingPeriod> getLastPeriods(@Param("programId")Long programId);
 
 }
 

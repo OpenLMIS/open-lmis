@@ -44,7 +44,6 @@ import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.model.params.UserSummaryParams;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.model.report.TimelinessReport;
-import org.openlmis.report.model.report.vaccine.ReplacementPlanSummary;
 import org.openlmis.report.util.Constants;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -660,8 +659,8 @@ public class ReportLookupService {
         return productMapper.getRmnchProducts();
     }
 
-    public List<ProcessingPeriod> getLastPeriods(){
-        return processingPeriodMapper.getLastPeriods();
+    public List<ProcessingPeriod> getLastPeriods(Long programId){
+        return processingPeriodMapper.getLastPeriods(programId);
     }
 
 }

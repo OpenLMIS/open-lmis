@@ -535,8 +535,8 @@ public class ReportLookupController extends BaseController {
     }
 
     @RequestMapping(value = "/last-periods.json", method = GET, headers = BaseController.ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getLastPeriods(){
-        return OpenLmisResponse.response("lastPeriods", this.reportLookupService.getLastPeriods());
+    public ResponseEntity<OpenLmisResponse> getLastPeriods(@RequestParam("programId") Long programId){
+        return OpenLmisResponse.response("lastPeriods", this.reportLookupService.getLastPeriods(programId));
     }
 
 }
