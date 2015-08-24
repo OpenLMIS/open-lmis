@@ -45,6 +45,7 @@ import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.builders.reports.VaccineReportBuilder;
+import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.reports.VaccineCoverageItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,5 +171,17 @@ public class VaccineReportCoverageMapperIT {
 
     List<VaccineCoverageItem> returned = mapper.getLineItems(report.getId());
     assertThat(returned.size(), is(1));
+  }
+
+  @Test
+  public void shouldGetVaccineDoseDetail() throws Exception{
+    VaccineCoverageItem item = getVaccineCoverageItem();
+    mapper.insert(item);
+
+    //TODO: insert the right program products
+    //Irregardless of the note above, this test should serve some purpose because if it does not throw error,
+    //it means that the schema is compatible with this code.
+    VaccineProductDose dose = mapper.getVaccineDoseDetail(item.getId());
+
   }
 }
