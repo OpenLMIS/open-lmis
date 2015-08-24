@@ -10,26 +10,33 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.vaccine.builders.reports;
+package org.openlmis.vaccine.repository.reports;
 
-import com.natpryce.makeiteasy.Instantiator;
-import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.vaccine.domain.reports.ReportStatus;
-import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.domain.reports.ReportStatusChange;
+import org.openlmis.vaccine.repository.mapper.reports.VaccineReportStatusChangeMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class VaccineReportBuilder {
+import java.util.List;
 
-  public static final Instantiator<VaccineReport> defaultVaccineReport = new Instantiator<VaccineReport>() {
+@Component
+public class VaccineReportStatusChangeRepository {
 
-    @Override
-    public VaccineReport instantiate(PropertyLookup<VaccineReport> lookup) {
-      VaccineReport item = new VaccineReport();
-      item.setProgramId(1L);
-      item.setFacilityId(1L);
-      item.setPeriodId(1L);
-      item.setSupervisoryNodeId(1L);
-      item.setStatus(ReportStatus.DRAFT);
-      return item;
-    }
-  };
+  @Autowired
+  private VaccineReportStatusChangeMapper mapper;
+
+  public void insert(ReportStatusChange change){
+    mapper.insert(change);
+  }
+
+
+  public List<ReportStatusChange> getChangesForReport(Long reportId){
+    return mapper.getChangeLogByReportId(reportId);
+  }
+
+  public ReportStatusChange getOperation(Long reportId, ReportStatus status){
+    return mapper.getOperationLog(reportId, status);
+  }
+
 }

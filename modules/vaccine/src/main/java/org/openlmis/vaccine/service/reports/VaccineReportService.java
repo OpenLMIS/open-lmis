@@ -16,18 +16,19 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
-import org.openlmis.core.service.*;
-import org.openlmis.vaccine.RequestStatus;
+import org.openlmis.core.service.ProgramProductService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.reports.*;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
-import org.openlmis.vaccine.repository.VitaminSupplementationAgeGroupRepository;
 import org.openlmis.vaccine.repository.VitaminRepository;
+import org.openlmis.vaccine.repository.VitaminSupplementationAgeGroupRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportColdChainRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportRepository;
+import org.openlmis.vaccine.repository.reports.VaccineReportStatusChangeRepository;
 import org.openlmis.vaccine.service.DiseaseService;
 import org.openlmis.vaccine.service.VaccineIvdTabVisibilityService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
@@ -35,7 +36,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
 
@@ -80,14 +84,19 @@ public class VaccineReportService {
   @Autowired
   VaccineIvdTabVisibilityService tabVisibilityService;
 
+  @Autowired
+  VaccineReportStatusChangeRepository reportStatusChangeRepository;
+
   @Transactional
-  public VaccineReport initialize(Long facilityId, Long programId, Long periodId) {
+  public VaccineReport initialize(Long facilityId, Long programId, Long periodId, Long userId) {
     VaccineReport report = repository.getByProgramPeriod(facilityId, programId, periodId);
     if (report != null) {
       return report;
     }
     report = createNewVaccineReport(facilityId, programId, periodId);
     repository.insert(report);
+    ReportStatusChange change = new ReportStatusChange(report, ReportStatus.DRAFT, userId);
+    reportStatusChangeRepository.insert(change);
     return report;
   }
 
@@ -96,8 +105,15 @@ public class VaccineReportService {
     repository.update(report);
   }
 
-  public VaccineReport createNewVaccineReport(Long facilityId, Long programId, Long periodId) {
+  @Transactional
+  public void submit(VaccineReport report, Long userId) {
+    report.setStatus(ReportStatus.SUBMITTED);
+    repository.update(report);
+    ReportStatusChange change = new ReportStatusChange(report, ReportStatus.SUBMITTED, userId);
+    reportStatusChangeRepository.insert(change);
+  }
 
+  private VaccineReport createNewVaccineReport(Long facilityId, Long programId, Long periodId) {
     VaccineReport report;
     List<ProgramProduct> programProducts = programProductService.getActiveByProgram(programId);
     List<VaccineDisease> diseases = diseaseService.getAll();
@@ -106,12 +122,11 @@ public class VaccineReportService {
     List<Vitamin> vitamins = vitaminRepository.getAll();
     List<VitaminSupplementationAgeGroup> ageGroups = ageGroupRepository.getAll();
 
-
     report = new VaccineReport();
     report.setFacilityId(facilityId);
     report.setProgramId(programId);
     report.setPeriodId(periodId);
-    report.setStatus(RequestStatus.DRAFT.toString());
+    report.setStatus(ReportStatus.DRAFT);
 
     // 1. copy the products list and initiate the logistics tab.
     report.initializeLogisticsLineItems(programProducts);
@@ -151,11 +166,11 @@ public class VaccineReportService {
     // find all periods that are after this period, and before today.
 
     List<ProcessingPeriod> periods = periodService.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
-    if (lastRequest != null && lastRequest.getStatus().equals(RequestStatus.DRAFT.toString())) {
+    if (lastRequest != null && lastRequest.getStatus().equals(ReportStatus.DRAFT)) {
       ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
       reportStatusDTO.setPeriodName(lastRequest.getPeriod().getName());
       reportStatusDTO.setPeriodId(lastRequest.getPeriod().getId());
-      reportStatusDTO.setStatus(lastRequest.getStatus());
+      reportStatusDTO.setStatus(lastRequest.getStatus().toString());
       reportStatusDTO.setProgramId(programId);
       reportStatusDTO.setFacilityId(facilityId);
       reportStatusDTO.setId(lastRequest.getId());
@@ -178,16 +193,15 @@ public class VaccineReportService {
     return results;
   }
 
+
+
   public VaccineReport getById(Long id) {
     VaccineReport report = repository.getByIdWithFullDetails(id);
     report.setTabVisibilitySettings(tabVisibilityService.getVisibilityForProgram(report.getProgramId()));
     return report;
   }
 
-  public void submit(VaccineReport report) {
-    report.setStatus(RequestStatus.SUBMITTED.toString());
-    save(report);
-  }
+
 
   public Long getReportIdForFacilityAndPeriod(Long facilityId, Long periodId){
     return repository.getReportIdForFacilityAndPeriod(facilityId, periodId);

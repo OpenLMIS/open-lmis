@@ -10,26 +10,34 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.vaccine.builders.reports;
+package org.openlmis.vaccine.domain.reports;
 
-import com.natpryce.makeiteasy.Instantiator;
-import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.vaccine.domain.reports.ReportStatus;
-import org.openlmis.vaccine.domain.reports.VaccineReport;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 
-public class VaccineReportBuilder {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class ReportStatusChange extends BaseModel{
 
-  public static final Instantiator<VaccineReport> defaultVaccineReport = new Instantiator<VaccineReport>() {
+  private Long reportId;
 
-    @Override
-    public VaccineReport instantiate(PropertyLookup<VaccineReport> lookup) {
-      VaccineReport item = new VaccineReport();
-      item.setProgramId(1L);
-      item.setFacilityId(1L);
-      item.setPeriodId(1L);
-      item.setSupervisoryNodeId(1L);
-      item.setStatus(ReportStatus.DRAFT);
-      return item;
-    }
-  };
+  private ReportStatus status;
+
+  private String userName;
+
+  private String firstName;
+
+  private String lastName;
+
+  public ReportStatusChange(VaccineReport report, ReportStatus statusToSave, Long userId) {
+    reportId = report.getId();
+    status = statusToSave;
+    createdBy  = userId;
+    modifiedBy = userId;
+  }
 }

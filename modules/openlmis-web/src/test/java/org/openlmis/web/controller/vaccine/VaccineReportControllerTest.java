@@ -129,11 +129,11 @@ public class VaccineReportControllerTest {
   @Test
   public void shouldInitialize() throws Exception {
     VaccineReport report = new VaccineReport();
-    when(service.initialize(1L, 1L, 1L)).thenReturn(report);
+    when(service.initialize(1L, 1L, 1L, 1L)).thenReturn(report);
 
     ResponseEntity<OpenLmisResponse> response = controller.initialize(1L, 1L, 1L, httpServletRequest);
 
-    verify(service).initialize(1L, 1L, 1L);
+    verify(service).initialize(1L, 1L, 1L, 1L);
     assertThat(report, is(response.getBody().getData().get("report")));
   }
 
@@ -162,11 +162,11 @@ public class VaccineReportControllerTest {
   @Test
   public void shouldSubmit() throws Exception {
     VaccineReport report = new VaccineReport();
-    doNothing().when(service).submit(report);
+    doNothing().when(service).submit(report, 1L);
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(report, httpServletRequest);
 
-    verify(service).submit(report);
+    verify(service).submit(report, 1L);
 
     // the status would have changed.
     assertThat(report, is(response.getBody().getData().get("report")));

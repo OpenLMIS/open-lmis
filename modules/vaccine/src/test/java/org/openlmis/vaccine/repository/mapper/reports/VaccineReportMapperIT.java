@@ -29,6 +29,7 @@ import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.vaccine.builders.reports.DiseaseLineItemBuilder;
 import org.openlmis.vaccine.builders.reports.VaccineReportBuilder;
 import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
+import org.openlmis.vaccine.domain.reports.ReportStatus;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -159,7 +160,7 @@ public class VaccineReportMapperIT {
     report.setFacilityId(facility.getId());
     vaccineReportMapper.insert(report);
 
-    report.setStatus("New Status");
+    report.setStatus(ReportStatus.DRAFT);
     report.setMajorImmunizationActivities("Major Immunization Activities were ... this and that.");
     vaccineReportMapper.update(report);
 
