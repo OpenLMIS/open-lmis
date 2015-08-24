@@ -1,7 +1,9 @@
 package org.openlmis.core.service;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -9,6 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.dto.StockAdjustmentReason;
 import org.openlmis.core.dto.StockAdjustmentReasonProgram;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.StockAdjustmentReasonRepository;
 
 import static org.mockito.Mockito.never;
@@ -25,6 +28,9 @@ public class StockAdjustmentReasonServiceTest {
 
   @InjectMocks
   StockAdjustmentReasonService service;
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   private StockAdjustmentReason reason;
   private StockAdjustmentReason newReason;
@@ -58,12 +64,14 @@ public class StockAdjustmentReasonServiceTest {
   }
 
   @Test
-  public void shouldUpdateExistingAdjustmentReason() throws Exception {
+  public void shouldThrowExceptionOnUpdateExistingAdjustmentReason() throws Exception {
     reason.setDescription("Changed Reason");
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.stock.adjustment.reason.exists");
 
     service.saveAdjustmentReason(reason);
 
-    verify(repository).updateAdjustmentReason(reason);
     verify(repository, never()).insertAdjustmentReason(reason);
   }
 
@@ -72,7 +80,6 @@ public class StockAdjustmentReasonServiceTest {
     service.saveAdjustmentReason(newReason);
 
     verify(repository).insertAdjustmentReason(newReason);
-    verify(repository, never()).updateAdjustmentReason(newReason);
   }
 
   @Test

@@ -30,11 +30,6 @@ public interface StockAdjustmentReasonMapper {
       " VALUES (#{name}, #{description}, #{additive}, #{displayOrder})"})
   void insert(StockAdjustmentReason reason);
 
-  @Update({"UPDATE losses_adjustments_types" +
-      " SET description = #{description}, additive = #{additive}, displayOrder = #{displayOrder}",
-      " WHERE name = #{name}"})
-  void update(StockAdjustmentReason reason);
-
   @Select("SELECT *" +
       " FROM stock_adjustment_reasons_programs" +
       " WHERE programCode = #{programCode} AND reasonName = #{reasonName}")

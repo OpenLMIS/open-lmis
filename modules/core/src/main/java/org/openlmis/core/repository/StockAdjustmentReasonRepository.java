@@ -46,10 +46,6 @@ public class StockAdjustmentReasonRepository {
     adjustmentReasonMapper.insert(reason);
   }
 
-  public void updateAdjustmentReason(StockAdjustmentReason reason) {
-    adjustmentReasonMapper.update(reason);
-  }
-
   public StockAdjustmentReasonProgram getAdjustmentReasonProgram(String programCode, String reasonName) {
     return adjustmentReasonMapper.getAdjustmentReasonProgram(programCode, reasonName);
   }

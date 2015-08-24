@@ -3,6 +3,7 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.dto.StockAdjustmentReason;
 import org.openlmis.core.dto.StockAdjustmentReasonProgram;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.StockAdjustmentReasonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class StockAdjustmentReasonService {
 
   public void saveAdjustmentReason(StockAdjustmentReason reason) {
     if (getAdjustmentReasonByName(reason.getName()) != null) {
-      repository.updateAdjustmentReason(reason);
+      throw new DataException("error.stock.adjustment.reason.exists");
     } else {
       repository.insertAdjustmentReason(reason);
     }
