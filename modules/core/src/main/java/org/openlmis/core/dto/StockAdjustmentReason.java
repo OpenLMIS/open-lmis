@@ -21,4 +21,7 @@ public class StockAdjustmentReason extends BaseModel implements Importable {
 
   @ImportField(mandatory = true, type = "int", name = "Display Order")
   Integer displayOrder;
+
+  @ImportField(name = "Is Default")
+  Boolean isDefault;
 }

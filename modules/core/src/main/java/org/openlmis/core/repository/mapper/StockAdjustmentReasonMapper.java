@@ -14,6 +14,11 @@ public interface StockAdjustmentReasonMapper {
       " FROM losses_adjustments_types")
   List<StockAdjustmentReason> getAll();
 
+  @Select("SELECT *" +
+      " FROM losses_adjustments_types" +
+      " WHERE isdefault = TRUE")
+  List<StockAdjustmentReason> getAllDefault();
+
   @Select("SELECT lat.*" +
       " FROM losses_adjustments_types lat" +
       "   JOIN stock_adjustment_reasons_programs sarp ON sarp.reasonName = lat.name" +
@@ -26,8 +31,8 @@ public interface StockAdjustmentReasonMapper {
       " WHERE name = #{name}")
   StockAdjustmentReason getByName(@Param("name") String name);
 
-  @Insert({"INSERT INTO losses_adjustments_types (name, description, additive, displayOrder)",
-      " VALUES (#{name}, #{description}, #{additive}, #{displayOrder})"})
+  @Insert({"INSERT INTO losses_adjustments_types (name, description, additive, displayOrder, isdefault)",
+      " VALUES (#{name}, #{description}, #{additive}, #{displayOrder}, #{isDefault})"})
   void insert(StockAdjustmentReason reason);
 
   @Select("SELECT *" +

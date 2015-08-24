@@ -22,7 +22,7 @@ public class StockAdjustmentReasonRepository {
     if (programId != null) {
       reasons = adjustmentReasonMapper.getAllByProgram(programId);
     } else {
-      reasons = adjustmentReasonMapper.getAll();
+      reasons = adjustmentReasonMapper.getAllDefault();
     }
 
     if (additive != null) {
