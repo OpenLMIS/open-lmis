@@ -42,7 +42,7 @@ public interface ELMISInterfaceMapper {
                     " COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))"
     })
     @Options(useGeneratedKeys = true)
-    void insert(ELMISInterface elmisInterface);
+    Integer insert(ELMISInterface elmisInterface);
 
     @Update({
             "UPDATE interface_apps \n" +
@@ -50,21 +50,21 @@ public interface ELMISInterfaceMapper {
                     " WHERE id = #{id}"
 
     })
-    void update(ELMISInterface elmisInterface);
+    Integer update(ELMISInterface elmisInterface);
 
     @Update("UPDATE interface_dataset\n" +
             "   SET datasetname=#{dataSetname}, interfaceid=#{interfaceId}, datasetid=#{dataSetId}, createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW())," +
             " modifiedby= #{modifiedBy}, \n" +
             "       modifieddate= COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) \n" +
             " WHERE id = #{id} ")
-    void updateDataSet(ELMISInterfaceDataSet dataSet);
+    Integer updateDataSet(ELMISInterfaceDataSet dataSet);
 
     @Insert("INSERT INTO interface_dataset(" +
             "             interfaceid, datasetname, datasetid, " +
             "            modifiedby, modifieddate, createdby, createddate)" +
             "    VALUES (#{interfaceId}, #{dataSetname}, #{dataSetId}, " +
             "     #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{createdBy}, COALESCE(#{createdDate}, NOW()))")
-    void insertDataSet(ELMISInterfaceDataSet dataSet);
+    Integer insertDataSet(ELMISInterfaceDataSet dataSet);
 
     @Delete("DELETE from interface_dataset where id = #{id}")
     void deleteDataset(ELMISInterfaceDataSet previous);
@@ -88,18 +88,18 @@ public interface ELMISInterfaceMapper {
     List<ELMISInterface> getAllActiveInterfaces();
 
     @Delete("Delete from facility_mappings where id = #{id}")
-    void deleteFacilityMapping(ELMISInterfaceFacilityMapping previous);
+    Integer deleteFacilityMapping(ELMISInterfaceFacilityMapping previous);
 
     @Insert("INSERT INTO facility_mappings( " +
             "  interfaceid, facilityid, mappedid, active, createdby, createddate, modifiedby, modifieddate)\n" +
             "     VALUES (#{interfaceId.id}, #{facilityId}, #{mappedId}, #{active}, " +
             " #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{createdBy}, COALESCE(#{createdDate}, NOW()))")
     @Options(useGeneratedKeys = true)
-    void insertFacilityMapping(ELMISInterfaceFacilityMapping mapping);
+    Integer insertFacilityMapping(ELMISInterfaceFacilityMapping mapping);
 
     @Update("UPDATE facility_mappings" +
             "   SET interfaceid=#{interfaceId.id}, facilityid=#{facilityId}, mappedid= #{mappedId}, active=#{active}, createdby= #{createdBy}, \n" +
             "    createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
             "   WHERE id = #{id}")
-    void updateFacilityMapping(ELMISInterfaceFacilityMapping mapping);
+    Integer updateFacilityMapping(ELMISInterfaceFacilityMapping mapping);
 }
