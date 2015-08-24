@@ -31,10 +31,10 @@ public interface VaccineReportStatusChangeMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(ReportStatusChange change);
 
-  @Select("SELECT sc.*, u.username, u.firstName, u.lastName  from vaccine_report_status_changes sc join users u on u.id = sc.createdBy where reportId = #{reportId}")
+  @Select("SELECT sc.status, sc.reportId, sc.createdDate as date,  u.username, u.firstName, u.lastName  from vaccine_report_status_changes sc join users u on u.id = sc.createdBy where reportId = #{reportId}")
   List<ReportStatusChange> getChangeLogByReportId(@Param("reportId") Long reportId);
 
-  @Select("SELECT sc.*, u.username, u.firstName, u.lastName from vaccine_report_status_changes sc join users u on u.id = sc.createdBy where reportId = #{reportId} and status = #{operation} order by createdDate desc limit 1")
+  @Select("SELECT sc.status, sc.reportId, sc.createdDate as date, u.username, u.firstName, u.lastName from vaccine_report_status_changes sc join users u on u.id = sc.createdBy where reportId = #{reportId} and status = #{operation} order by createdDate desc limit 1")
   ReportStatusChange getOperationLog(@Param("reportId")Long reportId, @Param("operation") ReportStatus status);
 
 }

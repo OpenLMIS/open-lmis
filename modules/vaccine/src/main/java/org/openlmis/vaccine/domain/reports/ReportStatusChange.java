@@ -18,6 +18,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,6 +35,8 @@ public class ReportStatusChange extends BaseModel{
   private String firstName;
 
   private String lastName;
+
+  private Date date;
 
   public ReportStatusChange(VaccineReport report, ReportStatus statusToSave, Long userId) {
     reportId = report.getId();
