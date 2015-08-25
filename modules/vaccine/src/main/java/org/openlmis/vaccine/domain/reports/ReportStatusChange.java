@@ -10,9 +10,38 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.vaccine;
+package org.openlmis.vaccine.domain.reports;
 
-public enum RequestStatus {
-  DRAFT,
-  SUBMITTED
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
+
+import java.util.Date;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class ReportStatusChange extends BaseModel{
+
+  private Long reportId;
+
+  private ReportStatus status;
+
+  private String userName;
+
+  private String firstName;
+
+  private String lastName;
+
+  private Date date;
+
+  public ReportStatusChange(VaccineReport report, ReportStatus statusToSave, Long userId) {
+    reportId = report.getId();
+    status = statusToSave;
+    createdBy  = userId;
+    modifiedBy = userId;
+  }
 }

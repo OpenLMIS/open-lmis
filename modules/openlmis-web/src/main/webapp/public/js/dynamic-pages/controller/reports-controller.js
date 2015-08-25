@@ -22,9 +22,9 @@ function ReportsListController($scope, ngTableParams, $rootScope, PublicSiteData
                 { category:'Consumption', name: 'Consumption Average by Product', desription: '', roles: '' },
                 { category:'Consumption', name: 'District Consumption Comparision', desription: '', roles: '' },
 
-                { category:'Equipment Reports', name: 'Lab Equipment list', desription: '', roles: '' },
-                { category:'Equipment Reports', name: 'Lab Equipments by Funding Source', desription: '', roles: '' },
-                { category:'Equipment Reports', name: 'Lab Equipments by location', desription: '', roles: '' },
+                { category:'Equipment Reports', name: 'Lab Equipment List', desription: '', roles: '' },
+                { category:'Equipment Reports', name: 'Lab Equipment by Funding Source', desription: '', roles: '' },
+                { category:'Equipment Reports', name: 'Lab Equipment by Location', desription: '', roles: '' },
 
                 { category:'Order Fulfillment', name: 'District Order Compilation', desription: '', roles: '' },
                 { category:'Order Fulfillment', name: 'Order Fill Rate Report Summary', desription: '', roles: '' },
@@ -45,7 +45,7 @@ function ReportsListController($scope, ngTableParams, $rootScope, PublicSiteData
                 { category:'Stock Keeping', name: 'Stock Imbalance by Facility', desription: '', roles: '' },
                 { category:'Stock Keeping', name: 'Summary Report', desription: '', roles: '' },
                 { category:'Stock Keeping', name: 'Supply Status by Facility', desription: '', roles: '' },
-                { category:'Stock Keeping', name: 'Stock Status By Location', desription: '', roles: '' }
+                { category:'Stock Keeping', name: 'Stock Status by Location', desription: '', roles: '' }
             ];
 
             $scope.tableParams = new ngTableParams({

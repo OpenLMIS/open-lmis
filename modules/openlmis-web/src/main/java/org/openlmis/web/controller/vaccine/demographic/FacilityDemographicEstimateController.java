@@ -9,6 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.openlmis.web.controller.vaccine.demographic;
 
 import org.openlmis.core.web.OpenLmisResponse;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
