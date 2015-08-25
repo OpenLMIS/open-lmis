@@ -29,6 +29,8 @@ public interface AdjustmentTypeReportMapper {
     @Select("SELECT name, description" +
             " , additive , displayorder " +
             "   FROM " +
-            "       losses_adjustments_types order by name")
+            "       losses_adjustments_types" +
+            " WHERE isdefault = TRUE" +
+            " order by name")
     List<AdjustmentType> getAll();
 }
