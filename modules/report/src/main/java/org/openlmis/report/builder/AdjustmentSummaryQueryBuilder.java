@@ -33,7 +33,7 @@ public class AdjustmentSummaryQueryBuilder {
 
       JOIN(" facilities f on f.id = vw_requisition_adjustment.facility_id ");
       JOIN(" vw_districts d on f.geographicZoneId = d.district_id ");
-      JOIN(" losses_adjustments_types t on t.name = vw_requisition_adjustment.adjustment_type AND t.isdefault = TRUE ");
+      JOIN(" losses_adjustments_types t on t.name = vw_requisition_adjustment.adjustment_type ");
       JOIN(" products p on p.id = vw_requisition_adjustment.product_id");
     WHERE(rnrStatusFilteredBy("req_status", filter.getAcceptedRnrStatuses()));
     WHERE(programIsFilteredBy("program_id"));
