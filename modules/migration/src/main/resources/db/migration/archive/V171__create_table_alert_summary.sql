@@ -12,7 +12,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE  alert_summary
-  OWNER TO openlmis;
+  OWNER TO postgres;
 
  --sample alerts data
 INSERT INTO alert_summary(statics_value,description,supervisorynodeId,alertTypeId)

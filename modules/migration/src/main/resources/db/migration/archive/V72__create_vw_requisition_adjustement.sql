@@ -112,4 +112,4 @@ AS
    JOIN losses_adjustments_types ON requisition_line_item_losses_adjustments.type::text = losses_adjustments_types.name::text AND requisition_line_item_losses_adjustments.type::text = losses_adjustments_types.name::text;
 
 ALTER TABLE vw_requisition_adjustment
-  OWNER TO openlmis;
+  OWNER TO postgres;

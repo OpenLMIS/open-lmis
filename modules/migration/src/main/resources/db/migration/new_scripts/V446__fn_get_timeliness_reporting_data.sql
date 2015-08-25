@@ -30,7 +30,7 @@ $BODY$
   COST 100
   ROWS 1000;
 ALTER FUNCTION fn_gettimelinessreportdata(integer, integer, integer, integer, character varying, character varying)
-  OWNER TO openlmis;
+  OWNER TO postgres;
 
 
   

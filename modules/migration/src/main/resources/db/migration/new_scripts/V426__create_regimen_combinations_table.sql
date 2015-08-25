@@ -13,4 +13,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE regimen_product_combinations
-  OWNER TO openlmis;
+  OWNER TO postgres;

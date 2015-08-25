@@ -17,4 +17,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE alert_requisition_emergency
-  OWNER TO openlmis;
+  OWNER TO postgres;

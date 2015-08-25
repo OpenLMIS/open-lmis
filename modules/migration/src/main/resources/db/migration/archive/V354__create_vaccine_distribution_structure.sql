@@ -13,7 +13,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE vaccine_distribution_types
-  OWNER TO openlmis;
+  OWNER TO postgres;  
 --------------------------------------------------------
 -- Table: vaccine_distribution_demographics
 DROP TABLE IF EXISTS vaccine_distribution_demographics;
@@ -32,7 +32,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE vaccine_distribution_demographics
-  OWNER TO openlmis;
+  OWNER TO postgres;
 -------------------------------------------------------------------
 -- Table: vaccine_distribution_parameters
 DROP TABLE IF EXISTS vaccine_distribution_parameters;
@@ -57,7 +57,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE vaccine_distribution_parameters
-  OWNER TO openlmis;
+  OWNER TO postgres;
 -----------------------------------------------
 -- Table: vaccine_distribution_batches
 DROP TABLE IF EXISTS vaccine_distribution_batches;
@@ -87,7 +87,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE vaccine_distribution_batches
-  OWNER TO openlmis;
+  OWNER TO postgres;
 --------------------------------------------
 -- Table: vaccine_distribution_line_items
 DROP TABLE IF EXISTS vaccine_distribution_line_items;
@@ -105,4 +105,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE vaccine_distribution_line_items
-  OWNER TO openlmis;
+  OWNER TO postgres;

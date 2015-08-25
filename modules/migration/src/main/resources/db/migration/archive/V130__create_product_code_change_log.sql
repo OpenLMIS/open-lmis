@@ -12,7 +12,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE product_code_change_log
-  OWNER TO openlmis;
+  OWNER TO postgres;
 
 
 

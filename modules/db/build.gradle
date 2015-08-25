@@ -56,22 +56,22 @@ task setupDB << {
 
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayInit(driver: dbDriver, url: connectionString, user: dbUser, password: System.getenv("PGPASSWORD"))
+    ant.flywayInit(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
 
     tasks.migrateDB.execute()
 }
 
-task createDB (type: Exec) {
+task createDB << {
     println("Creating Database..")
-    commandLine 'createdb', '-U', dbUser, dbName
+    executeSql("create database $dbName")
 }
 
-task dropDB (type: Exec) {
+task dropDB << {
     println("Dropping Database..")
     if (!closeActiveConnections("procpid")) {
         closeActiveConnections("pid")
     }
-    commandLine 'dropdb', '-U', dbUser, '--if-exists', dbName
+    executeSql("DROP DATABASE IF EXISTS $dbName")
 }
 
 task dropSchemas << {
@@ -101,18 +101,21 @@ task migrateDB() << {
     println("Migrating database..")
     ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
     ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: System.getenv("PGPASSWORD"))
+    ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
 }
 
 task testSeed(type: Exec) {
+    environment("PGPASSWORD", dbPassword)
     commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
 task vimsSeed(type: Exec) {
+    environment("PGPASSWORD", dbPassword)
     commandLine 'psql', '-U', dbUser, '--file', '../../test-data/vims/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
 task seed(type: Exec) {
+    environment("PGPASSWORD", dbPassword)
     commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
@@ -128,6 +131,7 @@ def executeSql(String statement, Boolean includeDbName = false) {
     }
 
    // Class.forName(dbDriver)
-    Sql.newInstance(connectionString, dbUser, System.getenv("PGPASSWORD"), dbDriver).execute(statement)
+
+    Sql.newInstance(connectionString, dbUser, dbPassword, dbDriver).execute(statement)
 }
 

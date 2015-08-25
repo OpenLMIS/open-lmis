@@ -15,7 +15,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE alerts
-  OWNER TO openlmis;
+  OWNER TO postgres;
 
 
  --Sample alerts configuration

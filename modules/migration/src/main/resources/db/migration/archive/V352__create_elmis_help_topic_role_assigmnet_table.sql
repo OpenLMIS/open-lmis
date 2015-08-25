@@ -25,7 +25,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE elmis_help_topic_roles
-  OWNER TO openlmis;
+  OWNER TO postgres;
 
   -- Table: elmis_help_document
 

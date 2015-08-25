@@ -18,4 +18,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE alert_facility_stockedout
-  OWNER TO openlmis;
+  OWNER TO postgres;

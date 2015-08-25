@@ -25,7 +25,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE dw_orders
-  OWNER TO openlmis;
+  OWNER TO postgres;
 COMMENT ON TABLE dw_orders
   IS 'stores data to calculate order fill rate and item fill rate
 

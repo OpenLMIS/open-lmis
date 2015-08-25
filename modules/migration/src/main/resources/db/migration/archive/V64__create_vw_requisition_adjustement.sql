@@ -191,4 +191,4 @@ FROM ((((((((((((((((facilities
     ));
     
   ALTER TABLE vw_requisition_adjustment
-  OWNER TO openlmis;
+  OWNER TO postgres;

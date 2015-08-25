@@ -232,4 +232,4 @@ EXCEPTION
   LANGUAGE plpgsql VOLATILE
   COST 100;
 ALTER FUNCTION fn_populate_alert_facility_stockedout()
-  OWNER TO openlmis;
+  OWNER TO postgres;

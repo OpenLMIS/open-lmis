@@ -13,7 +13,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE equipment_cold_chain_equipment_designations
-  OWNER TO openlmis;
+  OWNER TO postgres;
 
 DROP TABLE IF EXISTS equipment_cold_chain_equipment_energy_types;
 CREATE TABLE equipment_cold_chain_equipment_energy_types
@@ -30,7 +30,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE equipment_cold_chain_equipment_energy_types
-  OWNER TO openlmis;
+  OWNER TO postgres;
 
 DROP TABLE IF EXISTS equipment_cold_chain_equipment_pqs_status;
 CREATE TABLE equipment_cold_chain_equipment_pqs_status
@@ -47,7 +47,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE equipment_cold_chain_equipment_pqs_status
-  OWNER TO openlmis;
+  OWNER TO postgres;
 
 DROP TABLE IF EXISTS equipment_cold_chain_equipments;
 CREATE TABLE equipment_cold_chain_equipments
@@ -97,4 +97,4 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE equipment_cold_chain_equipments
-  OWNER TO openlmis
+  OWNER TO postgres
