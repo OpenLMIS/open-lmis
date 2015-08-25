@@ -52,13 +52,11 @@ public class VaccineReportService {
   public static final String VACCINE_REPORT_SYRINGES_CATEGORY_CODE = "VACCINE_REPORT_SYRINGES_CATEGORY_CODE";
 
 
-
   @Autowired
   VaccineReportRepository repository;
 
   @Autowired
   ProgramProductService programProductService;
-
 
   @Autowired
   DiseaseService diseaseService;
@@ -179,7 +177,7 @@ public class VaccineReportService {
     }
 
     for (ProcessingPeriod period : emptyIfNull(periods)) {
-      if (lastRequest == null || lastRequest.getPeriodId() != period.getId()) {
+      if (lastRequest == null || !lastRequest.getPeriodId().equals(period.getId())) {
         ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
 
         reportStatusDTO.setPeriodName(period.getName());

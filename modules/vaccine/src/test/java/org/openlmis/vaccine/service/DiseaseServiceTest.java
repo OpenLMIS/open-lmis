@@ -17,19 +17,17 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
+import org.openlmis.vaccine.builders.VaccineDiseaseBuilder;
+import org.openlmis.vaccine.domain.VaccineDisease;
+import org.openlmis.vaccine.repository.DiseaseRepository;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-
-import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.db.categories.UnitTests;
-import org.openlmis.vaccine.builders.VaccineDiseaseBuilder;
-import org.openlmis.vaccine.domain.VaccineDisease;
-import org.openlmis.vaccine.repository.DiseaseRepository;
-import org.openlmis.vaccine.repository.mapper.DiseaseMapper;
 
 
 @Category(UnitTests.class)

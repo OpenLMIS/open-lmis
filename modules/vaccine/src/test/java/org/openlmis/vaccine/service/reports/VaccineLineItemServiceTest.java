@@ -20,15 +20,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.reports.*;
 import org.openlmis.vaccine.repository.reports.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Category(UnitTests.class)
