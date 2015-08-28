@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-06-22T15:22:30 -->
+<!-- 2015-07-29T16:01:15 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="district-consumption" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="3.4522712143931065"/>
 	<property name="ireport.x" value="210"/>
@@ -93,12 +105,12 @@
 						<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($V{consumption_1})]]></textFieldExpression>
+					<textFieldExpression><![CDATA[($V{consumption_1} != null)? new java.text.DecimalFormat("#,##0").format($V{consumption_1}): "0"]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="0" y="0" width="185" height="20" uuid="49036606-a4dd-4d9c-89d0-dccd63923506"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$R{label.total}+' :']]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{label.total} + ' :']]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -187,7 +199,7 @@
 			<textField>
 				<reportElement x="185" y="0" width="192" height="20" uuid="5a01a3cf-e81b-4564-b06e-ad43feb067a7"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($F{consumption})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{consumption} != null)?new java.text.DecimalFormat("#,##0").format($F{consumption}): ""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="377" y="0" width="165" height="20" uuid="10e6e842-7414-4456-8d71-a9f99b6249ed"/>

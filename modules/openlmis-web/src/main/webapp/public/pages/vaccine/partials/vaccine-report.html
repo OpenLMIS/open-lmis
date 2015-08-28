@@ -1,5 +1,17 @@
 
 <!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!--
   ~ This program is part of the OpenLMIS logistics management information system platform software.
   ~   Copyright © 2013 VillageReach
   ~
@@ -8,7 +20,19 @@
   ~   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
   ~   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
-
+<script type="text/ng-template" id="amc">
+    <div class="triangle"></div>
+    <div class="ns-popover-tooltip vaccine-report">
+        <a-float af-render="renderIt"  af-option="amcChartOption" af-data="amcChart" style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
+     </div>
+</script>
+<script type="text/ng-template" id="soh">
+    <div class="triangle"></div>
+    <div class="ns-popover-tooltip vaccine-report">
+        <a-float af-render="renderIt"  af-option="sohChartOption" af-data="sohChart" style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
+        <div class="clearfix"></div>
+    </div>
+</script>
 
 <h2><span>Monthly Vaccination Report </span><span style="margin-left: 15px;">Month : mm &nbsp; &nbsp; Year: YYYY</span></h2>
 <div id="vaccine-report" class="vaccine-report app-form">
@@ -319,10 +343,28 @@
                                         <td>{{vc.product_name}}</td>
                                         <td class="number">{{vc.opening_balance}}</td>
                                         <td class="number">{{vc.quantity_received}}</td>
-                                        <td class="number">{{vc.quantity_issued}}</td>
+                                        <td class="number" ng-class="colorify(vc.quantity_issued)">
+                                            <a ng-mouseover="renderGraph(vc.facility_code, vc.product_code)" href="" ns-popover
+                                               ns-popover-template="amc"
+                                               ns-popover-trigger="mouseenter"
+                                               ns-popover-timeout="0.2"
+                                               ns-popover-placement="right|center"
+                                               ns-popover-theme="ns-popover-tooltip-theme">{{vc.quantity_issued === null ? '-': (vc.quantity_issued | number)}}
+                                            </a>
+                                        </td>
                                         <td class="number">{{vc.quantity_discarded_unopened}}</td>
-                                        <td>{{vc.reasonf_for_discarding}}</td>
-                                        <td>E</td>
+                                        <td>{{vc.reason_for_discarding}}</td>
+                                        <td class="number" ng-class="colorify(vc.closing_balance)">
+                                            <a ng-mouseover="renderGraph(vc.facility_code, vc.product_code)" href="" ns-popover
+                                               ns-popover-template="soh"
+                                               ns-popover-trigger="mouseenter"
+                                               ns-popover-timeout="0.2"
+                                               ns-popover-placement="right|center"
+                                               ns-popover-theme="ns-popover-tooltip-theme"> {{vc.closing_balance === null ? '-' : (vc.closing_balance | number)}}
+                                            </a>
+
+                                        </td>
+
                                         <td class="number">{{vc.days_stocked_out}}</td>
                                         <td class="number">{{vc.children_immunized}}</td>
                                         <td class="number">{{vc.usage_rate}}%</td>

@@ -1,11 +1,13 @@
 /*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.openlmis.report.service;
@@ -16,10 +18,10 @@ import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.StockImbalanceReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.StockImbalanceReportParam;
-import org.openlmis.report.util.Constants;
+import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
-import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,8 +32,8 @@ import java.util.Map;
 public class StockImbalanceReportDataProvider extends ReportDataProvider {
 
 
-    @Autowired
-    private SelectedFilterHelper filterHelper;
+  @Autowired
+  private SelectedFilterHelper filterHelper;
 
   @Autowired
   private StockImbalanceReportMapper reportMapper;
@@ -39,7 +41,8 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
   @Autowired
   private ConfigurationSettingService configurationService;
 
-  private StockImbalanceReportParam stockImbalanceReportParam = null;
+  @Value("${report.status.considered.accepted}")
+  private String configuredAcceptedRnrStatuses;
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
@@ -54,51 +57,13 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
   }
 
   public StockImbalanceReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-
-    if (filterCriteria != null) {
-      stockImbalanceReportParam = new StockImbalanceReportParam();
-
-      stockImbalanceReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType")? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
-
-//      stockImbalanceReportParam.setProductCategoryId(StringHelper.isBlank(filterCriteria,"productCategory") ? 0 : Integer.parseInt(filterCriteria.get("productCategory")[0])); //defaults to 0
-        stockImbalanceReportParam.setProductCategoryId(!filterCriteria.containsKey("productCategory") ? "0" : java.util.Arrays.toString(filterCriteria.get("productCategory")).replace("]", "}").replace("[", "{").replaceAll("\"", ""));
-//      stockImbalanceReportParam.setProductId(StringHelper.isBlank(filterCriteria,"productId") ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-        stockImbalanceReportParam.setProductId(!filterCriteria.containsKey("product") ? "0" : java.util.Arrays.toString(filterCriteria.get("product")).replace("]", "}").replace("[", "{").replaceAll("\"", "")); //defaults to 0
-      //stockImbalanceReportParam.setRgroupId(StringHelper.isBlank( filterCriteria,"requisitionGroup") ? 0 : Integer.parseInt(filterCriteria.get("requisitionGroup")[0])); //defaults to 0
-      stockImbalanceReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program")  ? 0 : Integer.parseInt(filterCriteria.get("program")[0]));
-      stockImbalanceReportParam.setScheduleId(StringHelper.isBlank(filterCriteria, "schedule") ? 0 : Integer.parseInt(filterCriteria.get("schedule")[0]));
-      stockImbalanceReportParam.setPeriodId(StringHelper.isBlank(filterCriteria,"period") ? 0 : Integer.parseInt(filterCriteria.get("period")[0]));
-      stockImbalanceReportParam.setYear(StringHelper.isBlank(filterCriteria, "year") ? 0 : Integer.parseInt(filterCriteria.get("year")[0]));
-      stockImbalanceReportParam.setSchedule(StringHelper.isBlank(filterCriteria, "schedule") ? "" : filterCriteria.get("schedule")[0]);
-      stockImbalanceReportParam.setPeriod(StringHelper.isBlank(filterCriteria,"period") ? "" : filterCriteria.get("period")[0]);
-      stockImbalanceReportParam.setZoneId(StringHelper.isBlank(filterCriteria,"zone") ? 0 : Long.parseLong(filterCriteria.get("zone")[0]));
-
-//      if (stockImbalanceReportParam.getProductId() == 0) {
-//        if (stockImbalanceReportParam.getProductId() == null) {
-//        stockImbalanceReportParam.setProduct("All Products");
-//      }else if (stockImbalanceReportParam.getProductId() == -1) {//Indicator Products
-//        stockImbalanceReportParam.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
-//      }else {
-//        stockImbalanceReportParam.setProduct(filterCriteria.get("product")[0]);
-//      }
-      stockImbalanceReportParam.setProductCategory((StringHelper.isBlank(filterCriteria, "productCategory") ) ? "All Product Categories" : filterCriteria.get("productCategory")[0]);
-      stockImbalanceReportParam.setFacilityType((StringHelper.isBlank(filterCriteria,"facilityType") ) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
-      stockImbalanceReportParam.setFacility(StringHelper.isBlank(filterCriteria,"facility")? "" : filterCriteria.get("facility")[0]);
-      //stockImbalanceReportParam.setRgroup(StringHelper.isBlank(filterCriteria, "requisitionGroup") ? "All Reporting Groups" : filterCriteria.get("requisitionGroup")[0]);
-      if (stockImbalanceReportParam.getProgramId() == 0 || stockImbalanceReportParam.getProgramId() == -1) {
-        stockImbalanceReportParam.setProgram("All Programs");
-      }else {
-        stockImbalanceReportParam.setProgram(filterCriteria.get("program")[0]);
-      }
-
-    }
-
-    return stockImbalanceReportParam;
+    StockImbalanceReportParam param = ParameterAdaptor.parse(filterCriteria, StockImbalanceReportParam.class);
+    param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
+    return param;
   }
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-   // return getReportFilterData(params).toString();
-      return filterHelper.getProgramPeriodGeoZone(params);
+    return filterHelper.getProgramPeriodGeoZone(params);
   }
 }

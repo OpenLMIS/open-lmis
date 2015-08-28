@@ -18,7 +18,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.reports.LogisticsColumn;
 import org.openlmis.vaccine.dto.ProgramColumnTemplateDTO;
 import org.openlmis.vaccine.service.VaccineColumnTemplateService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

@@ -306,6 +306,24 @@ public class UserServiceTest {
   }
 
   @Test
+  public void shouldCreateMobileUserWithoutSendEmail() throws Exception {
+    User user = new User();
+    user.setIsMobileUser(true);
+
+    SimpleMailMessage emailMessage = new SimpleMailMessage();
+    whenNew(SimpleMailMessage.class).withNoArguments().thenReturn(emailMessage);
+
+    when(messageService.message("account.created.email.subject")).thenReturn("Account created message");
+
+    userService.createUser(user, "resetPasswordLink");
+
+    verify(userRepository).create(user);
+    //verify(userRepository).insertEmailNotification(emailMessage);
+    verify(emailService, never()).send(emailMessage);
+    verify(roleAssignmentService).saveRolesForUser(user);
+  }
+
+  @Test
   public void shouldInsertUsersWithAllRoles() throws Exception {
     User user = new User();
 

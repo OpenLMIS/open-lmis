@@ -18,10 +18,7 @@ import org.ict4h.atomfeed.server.service.Event;
 import org.ict4h.atomfeed.server.service.EventService;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.dto.FacilityContact;
-import org.openlmis.core.dto.FacilityFeedDTO;
-import org.openlmis.core.dto.FacilityImages;
-import org.openlmis.core.dto.FacilitySupervisor;
+import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
@@ -63,6 +60,9 @@ public class FacilityService {
   private SupervisoryNodeService supervisoryNodeService;
 
   @Autowired
+  private ELMISInterfaceService elmisInterfaceService;
+
+  @Autowired
   private EventService eventService;
 
   private static final Logger logger = Logger.getLogger(FacilityService.class);
@@ -71,6 +71,7 @@ public class FacilityService {
   public void update(Facility facility) {
     save(facility);
     programSupportedService.updateSupportedPrograms(facility);
+    elmisInterfaceService.updateFacilityInterfaceMapping(facility);
   }
 
   public List<FacilityType> getAllTypes() {
@@ -92,6 +93,7 @@ public class FacilityService {
   public Facility getById(Long id) {
     Facility facility = facilityRepository.getById(id);
     facility.setSupportedPrograms(programSupportedService.getAllByFacilityId(id));
+    facility.setInterfaceMappings(elmisInterfaceService.getFacilityInterfaceMappingById(id));
     return facility;
   }
 
@@ -286,4 +288,16 @@ public class FacilityService {
   public List<Facility> getFacilityByTypeAndRequisitionGroupId(Long facilityTypeId, Long rgroupId){
     return facilityRepository.getFacilityByTypeAndRequisitionGroupId(facilityTypeId, rgroupId);
   }
+
+    public List<FacilityGeoTreeDto> getGeoRegionFacilityTree(Long userId) {
+        return facilityRepository.getGeoRegionFacilityTree(userId);
+    }
+
+    public List<FacilityGeoTreeDto> getGeoDistrictFacility(Long userId) {
+        return facilityRepository.getGeoDistrictFacility(userId);
+    }
+    public List<FacilityGeoTreeDto> getGeoFlatFacilityTree(Long userId) {
+        return facilityRepository.getGeoFlatFacilityTree(userId);
+    }
+
 }

@@ -1,0 +1,65 @@
+<div class="modal-header">
+    <h3 class="modal-title centered">Facility Lookup</h3>
+</div>
+<div class="modal-body">
+    <tabset justified="true">
+        <tab heading="Regions" select="setItemDataSet('region')">
+            <div>
+                <div id="facility-component-wrapper">
+                    <div id="leftcolumn">
+                        <div tree-view="currentPageColOneItems" node-label="name"></div>
+                    </div>
+                    <div id="rightcolumn">
+                        <div tree-view="currentPageColTwoItems" node-label="name"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="centered-input">
+                <input type="submit" class="btn btn-primary" value="Select" ng-click="ok()">
+            </div>
+            <div class="centered-input">
+                <pagination total-items="totalItems" max-size="maxSize" items-per-page="itemsPerPage" page="currentPage" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </div>
+        </tab>
+        <tab heading="Districts" select="setItemDataSet('district')">
+            <div>
+                <div id="facility-component-wrapper">
+                    <div id="leftcolumn">
+                        <div tree-view="currentPageColOneItems" node-label="name"></div>
+                    </div>
+                    <div id="rightcolumn">
+                        <div tree-view="currentPageColTwoItems" node-label="name"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="centered-input">
+                <input type="submit" class="btn btn-primary" value="Select" ng-click="ok()">
+            </div>
+            <div class="centered-input">
+                <pagination total-items="totalItems" max-size="maxSize" items-per-page="itemsPerPage" page="currentPage" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </div>
+        </tab>
+        <tab heading="Facilities" select="setItemDataSet('facility')">
+            <div>
+                <div id="facility-component-wrapper">
+                    <div id="leftcolumn">
+                        <div tree-view="currentPageColOneItems" node-label="name"></div>
+                    </div>
+                    <div id="rightcolumn">
+                        <div tree-view="currentPageColTwoItems" node-label="name"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="centered-input">
+                <input type="submit" class="btn btn-primary" value="Select" ng-click="ok()">
+            </div>
+            <div class="centered-input">
+                <pagination total-items="totalItems" max-size="maxSize" items-per-page="itemsPerPage" page="currentPage" class="pagination-sm" boundary-links="true" rotate="false" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </div>
+        </tab>
+    </tabset>
+</div>
+</div>

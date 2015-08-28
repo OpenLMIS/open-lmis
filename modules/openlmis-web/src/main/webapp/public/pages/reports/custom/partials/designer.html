@@ -1,0 +1,104 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<style media="screen" type="text/css">
+  .editor {
+    position: relative;
+    height: 100px;
+  }
+</style>
+<div class="box">
+  <div class="box-header">Report Designer</div>
+  <div class="box-content">
+    <div>
+      <a class="btn btn-primary pull-right" href="" ng-click="New()">New Report</a>
+      <div class="row-fluid">
+        <div class="span3">
+          <div style="overflow-y:scroll;max-height: 700px;">
+            <div ng-repeat="(category, rs) in reports">
+              <h5>{{category}}</h5>
+              <table class="basic table ui">
+                <tr ng-repeat="report in rs">
+                  <td>
+                    <span class="red" ng-show="current.id == report.id">>></span>
+                    {{$index + 1}}
+                    <a href="" ng-click="select(report)">{{report.name}}</a>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="span9">
+          <div class="green message ui" ng-show="message != undefined">{{message}}</div>
+          <form class="app-form" ng-show="current != undefined">
+            <h4>Report Detail</h4>
+            <div class="divider ui"></div>
+            <div class="form-row row-fluid">
+              <div class="span6">
+                <div class="form-cell">
+                  <label>Name of Report</label>
+                  <div class="form-field">
+                    <input ng-model="current.name" placeholder="Name" type="text">
+                  </div>
+                </div>
+              </div>
+              <div class="span6">
+                <div class="form-cell">
+                  <label>Report Key</label>
+                  <div class="form-field">
+                    <input ng-model="current.reportkey" placeholder="Key" type="text">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row row-fluid">
+              <div class="span6">
+                <div class="form-cell">
+                  <label>Category</label>
+                  <div class="form-field">
+                    <input ng-model="current.category" placeholder="Category Name" type="text">
+                  </div>
+                </div>
+              </div>
+              <div class="span6">
+                <div class="form-cell">
+                  <div class="form-field">
+                    <label>Description</label>
+                    <div>
+                      <textarea  ng-model="current.description" placeholder="Name" rows="3" type="text"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label>Query</label>
+                <div class="editor" id="sqleditor"></div>
+              </div>
+              <div class="field">
+                <label>Column Options</label>
+                <div class="editor" id="columneditor"></div>
+              </div>
+              <div class="field">
+                <label>Filters</label>
+                <div class="editor" id="filtereditor"></div>
+              </div>
+              <div class="divider ui"></div>
+              <button ng-click="Save()">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

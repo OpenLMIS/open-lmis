@@ -1,5 +1,17 @@
 <!DOCTYPE html>
 
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <script id="template/accordion/accordion.html" type="text/ng-template">
     <div class="accordion" ng-transclude></div>
 </script>
@@ -168,101 +180,6 @@
         </div>
     </div>
 
-    <!-- BEGIN TAB PORTLET-->
-    <!--<div class="portlet box light-grey tabbable">
-        <div class="portlet-title">
-                <div class="caption">
-                            <i class="fa fa-reorder"></i>Sample Tabs
-                </div>
-        </div>
-        <div class="portlet-body">
-            <div class=" portlet-tabs">
-                <ul class="nav nav-tabs" id="dashboard-tabs">
-                    <li id="dashboard-tab-1" class="active"><a href="#dashboard-tab-1-1" data-toggle="tab">Tab 1</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="dashboard-tab-1-1">
-                        <a-float id="afloat1" af-option="barChartOption" af-data="barChartData"  class="chart"></a-float>
-                        <div id="barChartLegend" class="chartLegend"></div>
-                    </div>
-                    <div class="tab-pane" id="dashboard-tab-2-2">
-                        <h2>District Reporting Performance</h2>
-                        <a-float id="afloat2" af-option="pieChartOption" af-data="pieChartData" class="chart"></a-float>
-                    </div>
-                    <div class="tab-pane" id="dashboard-tab-3-3">
-
-                       &lt;!&ndash; <div   ng-model="eventSources" calendar="myCalendar"  ui-calendar="uiConfig.calendar"></div>&ndash;&gt;
-                        <a-float id="multipleBars" af-option="multipleBarsOption" af-data="multiBarsData" class="chart"> </a-float>
-                        &lt;!&ndash;<div id="multiBarsLegend" class="chartLegend"></div>&ndash;&gt;
-                    </div>
-                    <div class="tab-pane" id="dashboard-tab-4-4">
-                            <span class="easychart" easypiechart options="option1" percent="percent1">
-                                <span class="easychart-percent" ng-bind="percent1"></span>
-                            </span>
-                            <span class="easychart" easypiechart   options="option2" percent="percent2">
-                                <span class="easychart-percent" ng-bind="percent2"></span>
-                            </span>
-                            <span class="easychart" easypiechart  options="option3" percent="percent3">
-                                <span class="easychart-percent" ng-bind="percent3"></span>
-                            </span>
-                            <span class="easychart" easypiechart   options="option4" percent="percent4">
-                                <span class="easychart-percent" ng-bind="percent4"></span>
-                            </span>
-                            <input type="range" min="-100" max="100" step="1" ng-model="percent4" />
-                            &lt;!&ndash;span class="easychart" easypiechart percent="anotherPercent" options="anotherOptions">
-                                <span class="easychart-percent" ng-bind="anotherPercent"></span>
-                            </span>&ndash;&gt;
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>-->
-    <!-- END TAB PORTLET-->
-    <!--<div class="well">
-        <table  class="table-bordered table table-striped pull-right"
-               >
-            <tbody style="height:200px" ng-scroll-viewport >
-            <tr ng-scroll="alert in alertData" >
-                &lt;!&ndash;<td style="width: 20px;">{{$index + 1}}</td>&ndash;&gt;
-                <td data-title="Alerts" style="width:95%">
-                    {{alert.percent}} {{alert.alert}}
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="row-fluid">
-            <div class="box span4">
-                <div class="center-justified"><h2>Events</h2></div>
-                <div style="margin-bottom: 3px;">
-                    <button type="button" class="btn btn-primary" ng-click="addEvent()">
-                        Add Event
-                    </button>
-                </div>
-                <div>
-                    <ul class="unstyled">
-                        <li ng-repeat="e in events">
-                            <div class="row-fluid" style="margin-bottom: 3px;">
-                                <div class="span7"><div><input ng-model="e.title"/></div></div>
-                                <div class="span3"><div>{{e.start | date:"MMM dd"}} - {{e.end | date:"MMM dd"}}</div></div>
-                                <div class="span2"><div><button class="btn btn-primary" ng-click="remove($index)">Remove</button></div></div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="box span8">
-                <div class="center-justified"><h2>Calendar Events View</h2></div>
-                <div class="btn-toolbar pull-right">
-                    <div class="btn-group">
-                        <button class="btn" ng-click="changeView('agendaDay', myCalendar)">AgendaDay</button>
-                        <button class="btn" ng-click="changeView('agendaWeek', myCalendar)">AgendaWeek</button>
-                        <button class="btn" ng-click="changeView('month', myCalendar)">Month</button>
-                    </div>
-                </div>
-                <div class="calendar"  ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
-            </div>
-        </div>
-    </div>-->
     </div>
 
 

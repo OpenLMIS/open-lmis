@@ -1,11 +1,13 @@
 /*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -28,7 +30,7 @@ public class OrderFillRateQueryBuilder {
         String facilityType = params.containsKey("facilityType") ? ((String[]) params.get("facilityType"))[0] : "";
         String program = params.containsKey("program") ? ((String[]) params.get("program"))[0] : "";
         String schedule = params.containsKey("schedule") ? ((String[]) params.get("schedule"))[0] : "";
-        String product = params.containsKey("product") ? java.util.Arrays.toString((String[]) params.get("product")) : "0";//.replace("]", "}").replace("]", "{").replaceAll("\"","") : "";
+        String product = params.containsKey("products") ? java.util.Arrays.toString((String[]) params.get("products")) : "0";//.replace("]", "}").replace("]", "{").replaceAll("\"","") : "";
         String productCategory = params.containsKey("productCategory") ? ((String[]) params.get("productCategory"))[0] : "";
 
         return getQueryString(params, zone, program, period, schedule, facility, product, facilityType, productCategory, userId);
@@ -51,7 +53,7 @@ public class OrderFillRateQueryBuilder {
             WHERE("facilityid = cast(" + facility + " as int4)");
         }
 
-        if (!product.equals("0") && !product.equals("-1") && product != null && !product.isEmpty() && !product.equals("{}") && !product.equals("{0}")&& !product.equals("[-1]") && !product.endsWith("undefined") && !product.isEmpty()) {
+        if (!product.equals("0") && !product.equals("-1") && product != null && !product.isEmpty() && !product.equals("[0]") && !product.equals("{0}")&& !product.equals("[-1]") && !product.endsWith("undefined") && !product.isEmpty()) {
             WHERE("productId =  ANY(array" + product + "::INT[]) ");
         }
 

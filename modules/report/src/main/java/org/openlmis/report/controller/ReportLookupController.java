@@ -1,34 +1,30 @@
 /*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.report.model.dto.*;
-import org.openlmis.report.model.dto.GeographicZone;
-//import org.openlmis.report.model.dto.ProcessingPeriod;
-import org.openlmis.report.model.dto.Product;
-import org.openlmis.report.model.dto.ProductCategory;
-import org.openlmis.report.model.dto.Program;
-import org.openlmis.report.model.dto.Regimen;
-import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
-import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.util.InteractiveReportPeriodFilterParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +43,7 @@ import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+
 @Controller
 @NoArgsConstructor
 @RequestMapping(value = "/reports")
@@ -56,11 +53,6 @@ public class ReportLookupController extends BaseController {
 
   public static final String OPEN_LMIS_OPERATION_YEARS = "years";
   public static final String OPEN_LMIS_OPERATION_MONTHS = "months";
-/*
-  private String  getCommaSeparatedIds(List<Long> idList){
-
-      return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
-  }*/
 
   @Autowired
   private ReportLookupService reportLookupService;
@@ -84,13 +76,13 @@ public class ReportLookupController extends BaseController {
   }
 
   //It Get only programs with regimens
-  @RequestMapping(value="/regimenPrograms", method = GET, headers = BaseController.ACCEPT_JSON)
+  @RequestMapping(value="/programs-supporting-regimen", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getRegimenPrograms(){
-      return OpenLmisResponse.response( "regimenPrograms", this.reportLookupService.getAllRegimenPrograms());
+      return OpenLmisResponse.response( "programs", this.reportLookupService.getAllRegimenPrograms());
   }
-  @RequestMapping(value = "/programsWithBudgetApplies", method = GET,headers = BaseController.ACCEPT_JSON)
+  @RequestMapping(value = "/programs-supporting-budget", method = GET,headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse>getProgramsWithBudgetingApplies(){
-      return OpenLmisResponse.response("programWithBudgetingApplies",this.reportLookupService.getAllProgramsWithBudgeting());
+      return OpenLmisResponse.response("programs",this.reportLookupService.getAllProgramsWithBudgeting());
   }
   @RequestMapping(value="/schedules", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getSchedules(){
@@ -214,7 +206,7 @@ public class ReportLookupController extends BaseController {
           @RequestParam(value = "program", required = true, defaultValue = "1") int program,
           @RequestParam(value = "schedule", required = true, defaultValue = "10") int schedule
   ){
-      return this.reportLookupService.getRequisitionGroupsByProgramAndSchedule(program,schedule);
+      return this.reportLookupService.getRequisitionGroupsByProgramAndSchedule(program, schedule);
   }
 
 
@@ -289,7 +281,7 @@ public class ReportLookupController extends BaseController {
     type = (type != null)? type: 0L;
     requisitionGroup = (requisitionGroup != null)?requisitionGroup: 0L;
 
-    return OpenLmisResponse.response("facilities", reportLookupService.getFacilities( program, schedule, type, requisitionGroup, zone, loggedInUserId(request) ));
+    return OpenLmisResponse.response("facilities", reportLookupService.getFacilities(program, schedule, type, requisitionGroup, zone, loggedInUserId(request)));
   }
     @RequestMapping(value = "/facilitiesByType/{facilityTypeId}.json", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilitiesByFacilityType(
@@ -321,7 +313,7 @@ public class ReportLookupController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(
           HttpServletRequest request
   ) {
-            return OpenLmisResponse.response("facilities", facilityService.getForUserAndRights(loggedInUserId(request),"VIEW_REQUISITION"));
+            return OpenLmisResponse.response("facilities", facilityService.getForUserAndRights(loggedInUserId(request), "VIEW_REQUISITION"));
   }
 
 
@@ -332,7 +324,7 @@ public class ReportLookupController extends BaseController {
             @RequestParam("programId") Long programId,
             HttpServletRequest request
     ) {
-        return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZoneTree(loggedInUserId(request),zoneId, programId));
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZoneTree(loggedInUserId(request), zoneId, programId));
     }
 
     @RequestMapping(value = "/geographic-zone/{geoId}/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -340,7 +332,7 @@ public class ReportLookupController extends BaseController {
             @PathVariable("geoId") Long zoneId,
             HttpServletRequest request
     ) {
-        return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZone(loggedInUserId(request),zoneId));
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilityByGeographicZone(loggedInUserId(request), zoneId));
     }
 
     @RequestMapping(value = "notification/facilities", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -348,7 +340,7 @@ public class ReportLookupController extends BaseController {
             @RequestParam("zoneId") Long zoneId,
             HttpServletRequest request
     ) {
-        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesForNotifications(loggedInUserId(request),zoneId));
+        return OpenLmisResponse.response("facilities", reportLookupService.getFacilitiesForNotifications(loggedInUserId(request), zoneId));
     }
 
   @RequestMapping(value = "/user/geographic-zones/tree", method = GET, headers = ACCEPT_JSON)
@@ -366,7 +358,7 @@ public class ReportLookupController extends BaseController {
 
   @RequestMapping(value = "/schedules/{scheduleId}/year/{year}/periods", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getPeriodsByScheduleAndYear(@PathVariable("scheduleId") Long scheduleId, @PathVariable("year") Long year) {
-      List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriodsForScheduleAndYear(scheduleId,year);
+      List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriodsForScheduleAndYear(scheduleId, year);
       return OpenLmisResponse.response("periods", periodList);
   }
 
@@ -382,7 +374,7 @@ public class ReportLookupController extends BaseController {
       Date startDate = InteractiveReportPeriodFilterParser.getStartDateFilterValue(request.getParameterMap());
       Date endDate = InteractiveReportPeriodFilterParser.getEndDateFilterValue(request.getParameterMap());
 
-      List<org.openlmis.report.model.dto.ProcessingPeriod> periodList = reportLookupService.getFilteredPeriods(startDate,endDate);
+      List<org.openlmis.report.model.dto.ProcessingPeriod> periodList = reportLookupService.getFilteredPeriods(startDate, endDate);
 
       return OpenLmisResponse.response("periods", periodList);
   }
@@ -417,7 +409,7 @@ public class ReportLookupController extends BaseController {
   public ResponseEntity<OpenLmisResponse>  getUserRoleAssignments(@PathVariable("roleId") Long roleId,
                                                             @PathVariable("programId") Long programId,
                                                             @PathVariable("supervisoryNodeId") Long supervisoryNodeId){
-      List<UserRoleAssignmentsReport> userRoleAssignments = reportLookupService.getAllRolesBySupervisoryNodeHavingProgram(roleId,programId,supervisoryNodeId);
+      List<UserRoleAssignmentsReport> userRoleAssignments = reportLookupService.getAllRolesBySupervisoryNodeHavingProgram(roleId, programId, supervisoryNodeId);
 
       return OpenLmisResponse.response("userRoleAssignments", userRoleAssignments);
   }
@@ -498,7 +490,7 @@ public class ReportLookupController extends BaseController {
 
             HttpServletRequest request
     ) {
-        return OpenLmisResponse.response("timelinessData", reportLookupService.getTimelinessStatusData(programId,periodId,scheduleId,zoneId,status));
+        return OpenLmisResponse.response("timelinessData", reportLookupService.getTimelinessStatusData(programId, periodId, scheduleId, zoneId, status));
     }
 
 
@@ -514,7 +506,7 @@ public class ReportLookupController extends BaseController {
 
             HttpServletRequest request
     ) {
-        return OpenLmisResponse.response("timelinessStatusData", reportLookupService.getFacilityRnRStatusData(programId,periodId,scheduleId,zoneId,status,facilityIds));
+        return OpenLmisResponse.response("timelinessStatusData", reportLookupService.getFacilityRnRStatusData(programId, periodId, scheduleId, zoneId, status, facilityIds));
     }
 
     @RequestMapping(value = "/reportingDates/getTimelinessReportingDates", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -532,5 +524,9 @@ public class ReportLookupController extends BaseController {
         return this.reportLookupService.getRmnchProducts();
     }
 
+    @RequestMapping(value = "/last-periods.json", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getLastPeriods(@RequestParam("programId") Long programId){
+        return OpenLmisResponse.response("lastPeriods", this.reportLookupService.getLastPeriods(programId));
+    }
 
 }

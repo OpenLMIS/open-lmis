@@ -1,4 +1,14 @@
-
+/*
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+ *
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 services.factory('MailingLabels', function ($resource) {
     return $resource('/reports/reportdata/mailingLabels.json', {}, {});
 });
@@ -389,7 +399,7 @@ services.factory('AggregateRegimenSummaryReport', function($resource){
 
 //It populate all programs with regimens
 services.factory('ReportRegimenPrograms', function ($resource) {
-    return $resource('/reports/regimenPrograms.json', {}, {});
+    return $resource('/reports/programs-supporting-regimen.json', {}, {});
 });
 
 services.factory('DistrictFinancialSummaryReport', function ($resource) {
@@ -595,8 +605,8 @@ services.factory("PipelineExportReport", function($resource){
 
 });
 
-services.factory('GetProgramWithBudgetingApplies',function($resource){
-    return $resource('/reports/programsWithBudgetApplies.json',{},{});
+services.factory('ReportProgramsWithBudgeting',function($resource){
+    return $resource('/reports/programs-supporting-budget.json',{},{});
 
 });
 services.factory('RegimenDistributionReport',function($resource){
@@ -777,7 +787,10 @@ services.factory('HelpContentDetail', function ($resource) {
 services.factory('HelpUsertopicList', function ($resource) {
     return $resource('/userHelpTopicList.json', {}, {});
 });
-
+//load helptopic detail
+services.factory('SiteContent', function ($resource) {
+    return $resource('/site_content/:content_name.json', {}, {post:{method:'GET'}});
+});
 services.factory('VaccineTargetUpdate', function ($resource) {
     return $resource('/vaccine/target/create.json', {}, {post:{method:'POST'}});
 });
@@ -1209,6 +1222,14 @@ services.factory('CustomReportList', function ($resource) {
     return $resource('/report-api/list.json', {}, {});
 });
 
+services.factory('CustomReportFullList', function ($resource) {
+    return $resource('/report-api/full-list.json', {}, {});
+});
+
+services.factory('SaveCustomReport', function ($resource) {
+    return $resource('/report-api/save.json', {}, {method: 'POST'});
+});
+
 services.factory('CustomReportValue', function ($resource) {
     return $resource('/report-api/report.json', {}, {});
 });
@@ -1216,6 +1237,63 @@ services.factory('CustomReportValue', function ($resource) {
 services.factory('PriceScheduleCategories', function ($resource) {
     return $resource('/priceScheduleCategories.json', {}, {});
 });
+
+services.factory('CCERepairManagement', function ($resource) {
+    return $resource('/reports/reportdata/cceRepairManagement.json', {}, {});
+});
+
+services.factory('CCERepairManagementEquipmentList', function ($resource) {
+    return $resource('/reports/reportdata/cceRepairManagementEquipmentList.json', {}, {});
+});
+
+services.factory('ReplacementPlanSummaryReport', function($resource){
+    return $resource('/reports/reportdata/replacementPlanSummary.json',{},{});
+});
+
+services.factory('EquipmentsInNeedForReplacement', function($resource){
+    return $resource('/reports/reportdata/equipmentsInNeedForReplacement.json',{},{});
+});
+
 services.factory('VaccineMonthlyReport', function ($resource){
     return $resource('/vaccine/report/vaccine-monthly-report.json', {}, {});
 });
+
+
+services.factory('VaccineUsageTrend', function ($resource){
+    return $resource('/vaccine/report/vaccine-usage-trend.json', {}, {});
+});
+
+
+services.factory("FacilityGeoTree",function($resource)  {
+    return   $resource('/geoFacilityTree.json', {}, {});
+});
+
+services.factory('GetLastPeriods', function($resource) {
+   return $resource('/reports/last-periods.json', {}, {});
+});
+
+services.factory("ELMISInterface",function($resource)  {
+    return   {
+        getInterface : function(){
+            return $resource('/ELMISInterface/:id.json', {}, {});
+        },
+
+        getInterfacesReference : function(){
+            return $resource('/ELMISAllActiveInterfaces.json', {}, {});
+          },
+
+        getFacilityMapping : function(){
+            return $resource('/ELMISInterfacesMapping/{facilityId}.json', {}, {});
+        },
+
+        getAllinterfaces : function(){
+            return $resource('/ELMISAllInterfaces.json');
+        }
+
+    };
+});
+
+services.factory('ELMISInterfaceSave', function ($resource) {
+    return $resource('/ELMISInterface.json', {}, {save:{method:'POST'}});
+});
+

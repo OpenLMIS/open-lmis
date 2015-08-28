@@ -13,6 +13,7 @@ package org.openlmis.core.repository;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.FacilityContact;
+import org.openlmis.core.dto.FacilityGeoTreeDto;
 import org.openlmis.core.dto.FacilityImages;
 import org.openlmis.core.dto.FacilitySupervisor;
 import org.openlmis.core.exception.DataException;
@@ -78,12 +79,11 @@ public class FacilityRepository {
 
     private void validateAndSetPriceScheduleCategory(Facility facility) {
 
-        PriceScheduleCategory priceScheduleCategory = facility.getPriceScheduleCategory();
-        if (priceScheduleCategory == null || priceScheduleCategory.getId() != null) return;
+        PriceSchedule priceSchedule = facility.getPriceSchedule();
+        if (priceSchedule == null || priceSchedule.getId() != null) return;
 
-        priceScheduleCategory = priceScheduleService.getPriceScheduleCategoryByCode(facility.getPriceScheduleCategory().getPrice_category());
-        facility.setPriceScheduleCategory(priceScheduleCategory);
-
+        priceSchedule = priceScheduleService.getByCode(facility.getPriceSchedule().getCode());
+        facility.setPriceSchedule(priceSchedule);
     }
 
     private void validateEnabledAndActive(Facility facility) {
@@ -255,4 +255,14 @@ public class FacilityRepository {
   public List<Facility> getFacilityByTypeAndRequisitionGroupId(Long facilityTypeId, Long rgroupId){
       return mapper.getFacilitiesByTypeAndRequisitionGroupId(facilityTypeId, rgroupId);
   }
+
+    public List<FacilityGeoTreeDto> getGeoRegionFacilityTree(Long userId) {
+        return mapper.getGeoRegionFacilityTree(userId);
+    }
+
+    public List<FacilityGeoTreeDto> getGeoDistrictFacility(Long userId)  {
+        return mapper.getGeoTreeDistricts(userId);
+    }
+
+    public List<FacilityGeoTreeDto> getGeoFlatFacilityTree(Long userId) {   return mapper.getGeoTreeFlatFacilities(userId);  }
 }

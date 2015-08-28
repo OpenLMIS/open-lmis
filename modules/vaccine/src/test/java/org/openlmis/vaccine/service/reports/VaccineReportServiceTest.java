@@ -1,3 +1,15 @@
+/*
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+ *
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.openlmis.vaccine.service.reports;
 
 import org.junit.Before;
@@ -15,7 +27,6 @@ import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.vaccine.RequestStatus;
 import org.openlmis.vaccine.builders.reports.VaccineReportBuilder;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
@@ -23,12 +34,14 @@ import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
 import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
+import org.openlmis.vaccine.domain.reports.ReportStatus;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.VitaminRepository;
 import org.openlmis.vaccine.repository.VitaminSupplementationAgeGroupRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportColdChainRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportRepository;
+import org.openlmis.vaccine.repository.reports.VaccineReportStatusChangeRepository;
 import org.openlmis.vaccine.service.DiseaseService;
 import org.openlmis.vaccine.service.VaccineIvdTabVisibilityService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
@@ -82,6 +95,9 @@ public class VaccineReportServiceTest {
   @Mock
   ProgramService programService;
 
+  @Mock
+  VaccineReportStatusChangeRepository statusChangeRepository;
+
   @InjectMocks
   VaccineReportService service;
 
@@ -108,7 +124,7 @@ public class VaccineReportServiceTest {
     VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
     when(repository.getByProgramPeriod(1L, 1L, 1L)).thenReturn(report);
 
-    VaccineReport result = service.initialize(1L, 1L, 1L);
+    VaccineReport result = service.initialize(1L, 1L, 1L, 1L);
     verify(programProductService, never() ).getActiveByProgram(1L);
     assertThat(result, is(report));
   }
@@ -121,7 +137,7 @@ public class VaccineReportServiceTest {
 
     doNothing().when(repository).insert(report);
 
-    VaccineReport result = service.initialize(1L, 1L, 1L);
+    VaccineReport result = service.initialize(1L, 1L, 1L, 1L);
 
     verify(repository).insert(Matchers.any(VaccineReport.class));
   }
@@ -154,9 +170,9 @@ public class VaccineReportServiceTest {
   public void shouldSubmit() throws Exception {
     VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
     doNothing().when(repository).update(report);
-    service.submit(report);
+    service.submit(report, 1L);
     verify(repository).update(report);
-    assertThat(report.getStatus(), is(RequestStatus.SUBMITTED.toString()));
+    assertThat(report.getStatus(), is(ReportStatus.SUBMITTED));
   }
 
   @Test

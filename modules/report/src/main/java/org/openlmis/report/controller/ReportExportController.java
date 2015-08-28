@@ -1,6 +1,19 @@
+/*
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+ *
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.ReportOutputOption;
 import org.openlmis.report.service.lookup.ReportLookupService;
@@ -16,7 +29,7 @@ import java.io.*;
 @Controller
 @NoArgsConstructor
 @RequestMapping(value = "/reports")
-public class ReportExportController {
+public class ReportExportController extends BaseController {
 
 
   public static final String USER_ID = "USER_ID";
@@ -98,4 +111,14 @@ public class ReportExportController {
     ) {
         showReport("unscheduled_reporting", outputOption, request, response);
     }
+
+    @RequestMapping(value = "/download/equipment_replacement_list/list/{outputOption}")
+    public void showReplacementEquipmentList(
+            @PathVariable(value = "outputOption") String outputOption
+            , HttpServletRequest request
+            , HttpServletResponse response
+    ) {
+        showReport("equipment_replacement_list", outputOption, request, response);
+    }
+
 }

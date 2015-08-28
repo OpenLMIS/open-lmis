@@ -22,7 +22,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.MaintenanceRequest;
 import org.openlmis.equipment.dto.Log;
 import org.openlmis.equipment.service.MaintenanceRequestService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.springframework.http.ResponseEntity;

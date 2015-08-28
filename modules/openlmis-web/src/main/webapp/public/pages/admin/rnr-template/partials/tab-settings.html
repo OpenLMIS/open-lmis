@@ -16,14 +16,18 @@
     <div class="row-fluid" ng-repeat="setting in protocol.tabVisibilitySettings">
       <div class="span4">
         <div class="form-cell">
+          <div class="form-field">
+            <div class="checkbox">
+
           <label>
             <input id="{{setting.key}}" ng-model="setting.visible" type="checkbox" />
             <span openlmis-message="label.show"></span>
             <span ng-bind="setting.name"></span>
           </label>
+              </div>
         </div>
       </div>
-    </div>
+      </div>
   </div>
   <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">

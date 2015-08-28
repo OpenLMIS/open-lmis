@@ -16,7 +16,8 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static org.openlmis.core.domain.RightName.MANAGE_USER;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -40,7 +40,8 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.Integer.parseInt;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
-import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.openlmis.core.domain.RightName.MANAGE_USER;
+import static org.openlmis.core.web.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -111,6 +112,11 @@ public class UserController extends BaseController {
   public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
     user.setCreatedBy(loggedInUserId(request));
     user.setModifiedBy(loggedInUserId(request));
+    if (user.isMobileUser()) {
+      user.setVerified(true);
+    } else {
+      user.setIsMobileUser(false);
+    }
     try {
       String resetPasswordBaseLink = baseUrl + RESET_PASSWORD_PATH;
       userService.create(user, resetPasswordBaseLink);
@@ -129,6 +135,11 @@ public class UserController extends BaseController {
                                                  HttpServletRequest request) {
     user.setModifiedBy(loggedInUserId(request));
     user.setId(id);
+    if (user.isMobileUser()) {
+      user.setVerified(true);
+    } else {
+      user.setIsMobileUser(false);
+    }
     try {
       userService.update(user);
     } catch (DataException e) {
@@ -258,5 +269,5 @@ public class UserController extends BaseController {
     }
     return null;
   }
-  
+
 }

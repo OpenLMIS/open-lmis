@@ -22,7 +22,7 @@ import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.core.service.BudgetFileTemplateService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;

@@ -97,6 +97,8 @@ public class RestRequisitionService {
 
     copyRegimens(rnr, report);
 
+    copyPatientQuantifications(rnr, report);
+
     requisitionService.save(rnr);
 
     rnr = requisitionService.submit(rnr);
@@ -197,6 +199,16 @@ public class RestRequisitionService {
         if (correspondingRegimenLineItem == null)
           throw new DataException("error.invalid.regimen");
         correspondingRegimenLineItem.populate(regimenLineItem);
+      }
+    }
+  }
+
+  private void copyPatientQuantifications(Rnr rnr, Report report) {
+    if (report.getPatientQuantifications() != null) {
+      List<PatientQuantificationLineItem> patientQuantifications = new ArrayList();
+      rnr.setPatientQuantifications(patientQuantifications);
+      for (PatientQuantificationLineItem regimenLineItem : report.getPatientQuantifications()) {
+        patientQuantifications.add(regimenLineItem);
       }
     }
   }
