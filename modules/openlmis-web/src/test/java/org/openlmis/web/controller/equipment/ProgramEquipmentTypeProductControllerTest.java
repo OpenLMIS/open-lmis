@@ -32,7 +32,7 @@ import org.openlmis.core.domain.Product;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.equipment.domain.EquipmentTypeProduct;
 import org.openlmis.equipment.service.ProgramEquipmentTypeProductService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 

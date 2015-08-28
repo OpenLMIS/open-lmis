@@ -1,4 +1,4 @@
-package org.openlmis.web.controller.vaccine;
+package org.openlmis.web.controller.vaccine.demographic;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -10,7 +10,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.demographics.DemographicEstimateCategory;
 import org.openlmis.vaccine.service.demographics.DemographicEstimateCategoryService;
 import org.openlmis.web.controller.vaccine.demographic.DemographicEstimateCategoryController;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;

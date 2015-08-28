@@ -8,11 +8,11 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.web.controller;
+package org.openlmis.core.web.controller;
 
 import org.openlmis.core.service.MessageService;
-import org.openlmis.web.logger.ApplicationLogger;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.logging.ApplicationLogger;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
-import static org.openlmis.web.response.OpenLmisResponse.error;
+import static org.openlmis.core.web.OpenLmisResponse.error;
 
 /**
  * This controller has responsibility to respond with appropriate error response for an exception. Every controller should extend this class.
@@ -42,7 +41,7 @@ public class BaseController {
   public MessageService messageService;
 
   protected Long loggedInUserId(HttpServletRequest request) {
-    return (Long) request.getSession().getAttribute(USER_ID);
+    return (Long) request.getSession().getAttribute("USER_ID");
   }
 
   protected String homePageUrl() {

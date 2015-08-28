@@ -12,6 +12,7 @@
 
 package org.openlmis.core.domain;
 
+import groovy.transform.EqualsAndHashCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class OrderQuantityAdjustmentFactor extends BaseModel{
     private String name;
     private String description;

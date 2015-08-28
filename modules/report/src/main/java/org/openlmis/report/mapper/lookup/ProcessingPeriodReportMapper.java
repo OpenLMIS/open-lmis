@@ -44,26 +44,16 @@ public interface ProcessingPeriodReportMapper {
 
 
 
-    @Select("SELECT\n" +
-            "  * \n" +
-            "FROM (\n" +
-            "  SELECT\n" +
-            "    ROW_NUMBER() OVER (PARTITION BY t.scheduleid ORDER BY t.startdate desc) AS r,\n" +
-            "    t.*\n" +
-            "  FROM\n" +
-            "    (\n" +
-            "--------\n" +
-            "select processing_periods.id, scheduleId, startdate, to_char(startdate, 'Month') || '-'|| extract(year from processing_periods.startdate) || '(' || processing_schedules.name || ')'  as Name \n" +
-            "from processing_periods\n" +
-            "join processing_schedules on scheduleid = processing_schedules.id\n" +
-            " order by startdate desc\n" +
-            "--------\n" +
-            ") t) x\n" +
-            "\n" +
-            "WHERE\n" +
-            "  x.r <= 2\n" +
-            "order by r, startdate desc;")
-    List<ProcessingPeriod> getLastPeriods();
+    @Select("select distinct on (pp.startdate) pp.id, pp.scheduleId, \n" +
+            "pp.startdate::date startdate, \n" +
+            "to_char(pp.startdate, 'Month') || '-'|| extract(year from pp.startdate) || '(' || pp.name || ')'  as Name\n" +
+            "from requisitions r\n" +
+            "inner join processing_periods pp on r.periodid = pp.id\n" +
+            "where pp.startdate < NOW()\n" +
+            "and r.programid = #{programId}\n" +
+            "order by pp.startdate desc\n" +
+            "limit 4")
+    List<ProcessingPeriod> getLastPeriods(@Param("programId")Long programId);
 
 }
 

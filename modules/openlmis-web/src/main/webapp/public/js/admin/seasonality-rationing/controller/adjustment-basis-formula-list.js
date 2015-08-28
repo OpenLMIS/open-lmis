@@ -110,7 +110,7 @@ function AdjustmentBasisFormulaController($scope, $route, $location, $filter, $d
         var options = {
             id: "removeSeasonalityRationingTypesConfirmDialog",
             header: "Confirmation",
-            body: "Are you sure you want to remove the Adjustment Basis(Formula): " + adjustmentFactor.name
+            body: "Are you sure you want to remove the Adjustment Basis (Formula): " + adjustmentFactor.name
         };
         OpenLmisDialog.newDialog(options, $scope.deleteAdjustmentFactor, $dialog, messageService);
     };

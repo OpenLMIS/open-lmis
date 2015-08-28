@@ -184,4 +184,8 @@ public class HelpTopicService {
         helpDocumentList=this.repository.loadHelpDocumentList();
         return helpDocumentList;
     }
+    public HelpTopic getSiteContent(String contentName){
+        HelpTopic siteContent= this.repository.getSiteContent(contentName);
+        return siteContent;
+    }
 }

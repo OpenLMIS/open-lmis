@@ -787,7 +787,10 @@ services.factory('HelpContentDetail', function ($resource) {
 services.factory('HelpUsertopicList', function ($resource) {
     return $resource('/userHelpTopicList.json', {}, {});
 });
-
+//load helptopic detail
+services.factory('SiteContent', function ($resource) {
+    return $resource('/site_content/:content_name.json', {}, {post:{method:'GET'}});
+});
 services.factory('VaccineTargetUpdate', function ($resource) {
     return $resource('/vaccine/target/create.json', {}, {post:{method:'POST'}});
 });
@@ -1268,3 +1271,29 @@ services.factory("FacilityGeoTree",function($resource)  {
 services.factory('GetLastPeriods', function($resource) {
    return $resource('/reports/last-periods.json', {}, {});
 });
+
+services.factory("ELMISInterface",function($resource)  {
+    return   {
+        getInterface : function(){
+            return $resource('/ELMISInterface/:id.json', {}, {});
+        },
+
+        getInterfacesReference : function(){
+            return $resource('/ELMISAllActiveInterfaces.json', {}, {});
+          },
+
+        getFacilityMapping : function(){
+            return $resource('/ELMISInterfacesMapping/{facilityId}.json', {}, {});
+        },
+
+        getAllinterfaces : function(){
+            return $resource('/ELMISAllInterfaces.json');
+        }
+
+    };
+});
+
+services.factory('ELMISInterfaceSave', function ($resource) {
+    return $resource('/ELMISInterface.json', {}, {save:{method:'POST'}});
+});
+

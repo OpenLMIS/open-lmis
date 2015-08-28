@@ -22,20 +22,22 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.report.SeasonalRationingReport;
-import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.SeasonalRationingReportDataProvider;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.context.ContextConfiguration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

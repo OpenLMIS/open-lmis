@@ -10,9 +10,16 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function StaticPageController($scope, localStorageService, loginConfig, ConfigSettingsByKey, $window) {
+function StaticPageController($scope, localStorageService, loginConfig, SiteContent, ConfigSettingsByKey, $window) {
     $scope.loginConfig = loginConfig;
     $scope.user = localStorageService.get(localStorageKeys.USERNAME);
     $scope.userId = localStorageService.get(localStorageKeys.USER_ID);
+    var path = $window.location.href;
+    var val = path.lastIndexOf("#/");
+    var siteName = path.substring(val + 2);
+    SiteContent.get({content_name: siteName}, function (data) {
+        $scope.siteContent = data.siteContent;
+    });
+
 
 }

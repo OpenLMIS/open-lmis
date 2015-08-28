@@ -15,10 +15,11 @@ package org.openlmis.web.controller;
 
 import org.apache.log4j.Logger;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.help.domain.HelpDocument;
 import org.openlmis.help.domain.HelpTopic;
 import org.openlmis.help.service.HelpTopicService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
@@ -41,8 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.openlmis.web.response.OpenLmisResponse.error;
-import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.openlmis.core.web.OpenLmisResponse.error;
+import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
@@ -53,6 +54,7 @@ public class HelpCateoryController extends BaseController {
     public static final String HELPDOCUMENTLIST = "helpDocumentList";
     public static final String HELPTOPIC = "helpTopic";
     public static final String HELPTOPICDETAIL = "helpTopic";
+    public static final String SITECONTENT = "siteContent";
     public static final String UPLOAD_FILE_SUCCESS = "upload.file.successful";
     public static final String SUCCESS = "success";
     public static final String ERROR = "error";
@@ -68,12 +70,12 @@ public class HelpCateoryController extends BaseController {
     @RequestMapping(value = "/createHelpTopic", method = RequestMethod.POST, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_HELP_CONTENT')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody HelpTopic helpTopic, HttpServletRequest request) {
-        //System.out.println(" here saving help topic");
+
         helpTopic.setCreatedBy(loggedInUserId(request));
         helpTopic.setModifiedBy(loggedInUserId(request));
         helpTopic.setModifiedDate(new Date());
         helpTopic.setCreatedDate(new Date());
-        //System.out.println(" help topic id is" + helpTopic.getName());
+
         return saveHelpTopic(helpTopic, true);
     }
 
@@ -114,7 +116,7 @@ public class HelpCateoryController extends BaseController {
 
 
     @RequestMapping(value = "/helpTopicDetail/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_HELP_CONTENT')")
     public ResponseEntity<OpenLmisResponse> getHelpTopicDetail(@PathVariable("id") Long id) {
         //System.out.println(" here calling");
         HelpTopic helpTopic = this.helpTopicService.get(id);
@@ -122,7 +124,7 @@ public class HelpCateoryController extends BaseController {
     }
 
     @RequestMapping(value = "/updateHelpTopic", method = RequestMethod.POST, headers = "Accept=application/json")
-//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_HELP_CONTENT')")
     public ResponseEntity<OpenLmisResponse> update(@RequestBody HelpTopic helpTopic, HttpServletRequest request) {
         //System.out.println(" updating ");
         this.helpTopicService.updateHelpTopicRole(helpTopic);
@@ -132,26 +134,27 @@ public class HelpCateoryController extends BaseController {
 
     // supply line list for view
     @RequestMapping(value = "/helpTopicForCreate", method = RequestMethod.GET, headers = "Accept=application/json")
-//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_HELP_CONTENT')")
     public ResponseEntity<OpenLmisResponse> intializeHelptopic() {
-        //System.out.println(" here calling");
+
         HelpTopic helpTopic = this.helpTopicService.intializeHelpTopicForCreate();
         return OpenLmisResponse.response(HELPTOPICDETAIL, helpTopic);
     }
 
     // supply line list for view
     @RequestMapping(value = "/userHelpTopicList", method = RequestMethod.GET, headers = "Accept=application/json")
-//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_HELP_CONTENT')")
     public ResponseEntity<OpenLmisResponse> getUserHelpToicsList(HttpServletRequest request) {
-        //System.out.println(" here calling");
+
         Long userId = loggedInUserId(request);
-        //System.out.println(" uz" + userId);
+
         return OpenLmisResponse.response(HELPTOPICLIST, this.helpTopicService.buildRoleHelpTopicTree(userId, null, true));
     }
 
     ///////////////////////////////////////////////////////////////
 //   video image and file uploads
     @RequestMapping(value = "/uploadDocument", method = RequestMethod.POST)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_HELP_CONTENT')")
     public ResponseEntity<OpenLmisResponse> uploadHelpDocuments(MultipartFile helpDocuments, String documentType, HttpServletRequest request) {
         FileOutputStream outputStream = null;
         try {
@@ -176,7 +179,6 @@ public class HelpCateoryController extends BaseController {
             fileType = helpDocuments.getContentType();
 
 
-//            filePath = request.getSession().getServletContext().getRealPath("public/images/help/" + fileName);
             filePath = this.fileStoreLocation + fileName;
 
             helpDocument.setDocumentType(documentType);
@@ -224,6 +226,7 @@ public class HelpCateoryController extends BaseController {
 
     ///////////////////////////////////////
     @RequestMapping(value = "/loadDocumentList", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_HELP_CONTENT')")
     public ResponseEntity<OpenLmisResponse> loadHelpDocumentList(HttpServletRequest request) {
         List<HelpDocument> helpDocumentList = null;
         String uriPath = null;
@@ -238,5 +241,12 @@ public class HelpCateoryController extends BaseController {
             helpDocument.setFileUrl(imageUrl);
         }
         return OpenLmisResponse.response(HELPDOCUMENTLIST, helpDocumentList);
+    }
+    @RequestMapping(value = "/site_content/{content_name}", method = RequestMethod.GET, headers = "Accept=application/json")
+
+    public ResponseEntity<OpenLmisResponse> getSiteContent(@PathVariable("content_name") String content_name) {
+
+        HelpTopic siteContent = this.helpTopicService.getSiteContent(content_name);
+        return OpenLmisResponse.response(SITECONTENT, siteContent);
     }
 }

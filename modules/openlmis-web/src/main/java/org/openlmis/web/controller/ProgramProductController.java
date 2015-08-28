@@ -14,7 +14,8 @@ import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
-import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**

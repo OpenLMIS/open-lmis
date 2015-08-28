@@ -84,6 +84,9 @@ public class FacilityServiceTest {
   private GeographicZoneRepository geographicZoneRepository;
 
   @Mock
+  private ELMISInterfaceService elmisInterfaceService;
+
+  @Mock
   private EventService eventService;
 
   @Mock
@@ -206,6 +209,7 @@ public class FacilityServiceTest {
 
     verify(facilityRepository).save(facility);
     verify(programSupportedService).updateSupportedPrograms(facility);
+    verify(elmisInterfaceService).updateFacilityInterfaceMapping(facility);
     verify(eventService).notify(any(Event.class));
   }
 

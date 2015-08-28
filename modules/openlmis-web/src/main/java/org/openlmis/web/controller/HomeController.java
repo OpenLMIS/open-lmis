@@ -10,7 +10,8 @@
 
 package org.openlmis.web.controller;
 
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 

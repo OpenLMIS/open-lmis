@@ -13,12 +13,13 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.report.*;
 import org.openlmis.report.model.report.vaccine.ReplacementPlanSummary;
-import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

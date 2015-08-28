@@ -15,9 +15,10 @@ package org.openlmis.report.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.model.CustomReport;
 import org.openlmis.report.repository.CustomReportRepository;
-import org.openlmis.report.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,15 +27,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Controller
 @RequestMapping(value="/report-api")
-public class CustomReportController extends BaseController{
+public class CustomReportController extends BaseController {
 
   @Autowired
   CustomReportRepository reportRepository;
@@ -56,12 +61,21 @@ public class CustomReportController extends BaseController{
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("values", reportRepository.getReportData(filter));
     response.getBody().addData("date", new Date());
     long responseTime = new Date().getTime();
-    //return the milliseconds it took to run this query.
-    //TODO: log this time.
     long duration = responseTime - requestTime;
     response.getBody().addData("duration", duration);
     return response;
   }
+
+  @RequestMapping(value="report.csv" , method = GET)
+  public ModelAndView getCsvReport( @RequestParam Map filter){
+    List<Map> report = reportRepository.getReportData(filter);
+    Map queryModel = reportRepository.getQueryModelByKey(filter.get("report_key").toString());
+    ModelAndView view = new ModelAndView("customCsvTemplate");
+    view.addObject("report", report);
+    view.addObject("queryModel", queryModel);
+    return view;
+  }
+
 
   @RequestMapping(value = "save", method = RequestMethod.POST)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_CUSTOM_REPORTS')")
@@ -71,7 +85,6 @@ public class CustomReportController extends BaseController{
     }else{
       reportRepository.insert(report);
     }
-
     return OpenLmisResponse.response("report", report);
   }
 

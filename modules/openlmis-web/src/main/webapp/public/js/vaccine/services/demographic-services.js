@@ -22,17 +22,17 @@ services.factory('SaveDemographicEstimateCategory', function ($resource) {
 });
 
 services.factory('FacilityDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/facility/get.json', {}, {});
+  return $resource('/vaccine/demographic/estimate/facilities.json', {}, {});
 });
 
 services.factory('SaveFacilityDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/facility/save.json', {}, update);
+  return $resource('/vaccine/demographic/estimate/facilities.json', {}, update);
 });
 
 services.factory('DistrictDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/district/get.json', {}, {});
+  return $resource('/vaccine/demographic/estimate/districts.json', {}, {});
 });
 
 services.factory('SaveDistrictDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/district/save.json', {}, update);
+  return $resource('/vaccine/demographic/estimate/districts.json', {}, update);
 });

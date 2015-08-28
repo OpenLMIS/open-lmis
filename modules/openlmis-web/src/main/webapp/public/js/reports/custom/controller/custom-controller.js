@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function CustomReportController($scope, reports, CustomReportValue) {
+function CustomReportController($scope, $window, reports, CustomReportValue) {
 
   $scope.reports = reports;
   $scope.displayReports = _.groupBy(reports, 'category');
@@ -61,7 +61,12 @@ function CustomReportController($scope, reports, CustomReportValue) {
       $scope.meta = data;
       $scope.data = data.values;
     });
+  };
 
+  $scope.exportCSV = function() {
+    var params = jQuery.param($scope.getSanitizedParameter());
+    var url = '/report-api/report.csv?' + params;
+    $window.open(url, '_blank');
   };
 
 }

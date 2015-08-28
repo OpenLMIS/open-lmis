@@ -21,9 +21,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.model.dto.*;
-import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.lookup.DashboardLookupService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.http.HttpStatus;
@@ -43,11 +43,6 @@ import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.U
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.report.controller.DashboardController.*;
 
-/**
- * User: Issa
- * Date: 3/11/14
- * Time: 8:20 PM
- */
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
 @PrepareForTest(OpenLmisResponse.class)

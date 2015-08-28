@@ -15,9 +15,9 @@ package org.openlmis.report.model.report;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.model.ReportData;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -36,21 +36,11 @@ public class SeasonalRationingReport implements ReportData {
     private int maxmonthsofstock;
     private String formula;
 
-    private String formatDate(Date date){
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM");
-            return date == null ? null : simpleDateFormat.format(date);
-        }catch(Exception exp){
-
-        }
-        return null;
-    }
-
     public String getStartdateString()  {
-        return formatDate(this.startdate);
+        return DateUtil.getFormattedDate(this.startdate, "yyyy-dd-MM");
     }
 
     public String getEnddateString()  {
-        return formatDate(this.enddate);
+        return  DateUtil.getFormattedDate(this.enddate, "yyyy-dd-MM");
     }
 }

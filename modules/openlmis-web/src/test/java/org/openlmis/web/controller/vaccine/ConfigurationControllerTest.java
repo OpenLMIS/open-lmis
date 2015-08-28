@@ -20,7 +20,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
 import org.openlmis.vaccine.dto.VaccineServiceConfigDTO;
 import org.openlmis.vaccine.service.VaccineIvdTabVisibilityService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

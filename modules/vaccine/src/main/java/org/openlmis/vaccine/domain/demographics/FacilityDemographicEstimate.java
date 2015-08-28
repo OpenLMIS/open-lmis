@@ -14,12 +14,14 @@ package org.openlmis.vaccine.domain.demographics;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class FacilityDemographicEstimate extends BaseModel {
 
   private Integer year;

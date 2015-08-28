@@ -16,7 +16,8 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.core.service.UserService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ import static java.lang.Integer.parseInt;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.RightName.MANAGE_USER;
-import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.openlmis.core.web.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -268,5 +269,5 @@ public class UserController extends BaseController {
     }
     return null;
   }
-  
+
 }

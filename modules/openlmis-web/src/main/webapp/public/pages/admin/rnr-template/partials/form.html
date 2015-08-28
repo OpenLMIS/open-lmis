@@ -13,9 +13,16 @@
 
   <div class="info-box">
     <div class="pull-right">
-      <label for="enableIvd">
-        <span style="vertical-align: middle; font-size: 0.8em;" class="cell-text" openlmis-message="admin.program.enable.ivd"></span> <input ng-model="program.enableIvdForm" id="enableIvd" type="checkbox"/>
-      </label>
+      <div class="form-cell">
+        <div class="checkbox">
+          <label for="enableIvd">
+            <input class="checkbox"
+                   ng-model="program.enableIvdForm"
+                   id="enableIvd" type="checkbox"/>
+            <span class="col-desc" openlmis-message="admin.program.enable.ivd"></span>
+          </label>
+        </div>
+      </div>
     </div>
 
     <p><strong openlmis-message="template.programName"></strong> {{program.name}} <a ng-href="{{selectProgramUrl}}" openlmis-message="template.change"></a>
