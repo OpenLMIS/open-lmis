@@ -22,6 +22,7 @@ import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +53,7 @@ public class ELMISInterfacesController extends BaseController {
     }
 
     @RequestMapping(value = "/ELMISInterface", method = POST, headers = "Accept=application/json")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ELMIS_INTERFACE')")
     public ResponseEntity<OpenLmisResponse> save(@RequestBody ELMISInterface elmisInterface, HttpServletRequest request) {
 
         Long userId = loggedInUserId(request);

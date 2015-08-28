@@ -42,7 +42,7 @@ public interface LossesAndAdjustmentsMapper {
   @Delete("DELETE FROM requisition_line_item_losses_adjustments WHERE id = #{lossesAndAdjustmentsId}")
   void delete(Long lossesAndAdjustmentsId);
 
-  @Select("SELECT * FROM losses_adjustments_types ORDER BY displayOrder")
+  @Select("SELECT * FROM losses_adjustments_types WHERE isdefault = TRUE ORDER BY displayOrder")
   List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes();
 
   @Delete("DELETE FROM requisition_line_item_losses_adjustments WHERE requisitionLineItemId = #{rnrLineItemId}")

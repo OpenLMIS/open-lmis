@@ -27,7 +27,6 @@ import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.vaccine.RequestStatus;
 import org.openlmis.vaccine.builders.reports.VaccineReportBuilder;
 import org.openlmis.vaccine.domain.VaccineDisease;
 import org.openlmis.vaccine.domain.VaccineProductDose;
@@ -35,12 +34,14 @@ import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
 import org.openlmis.vaccine.domain.reports.ColdChainLineItem;
+import org.openlmis.vaccine.domain.reports.ReportStatus;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.VitaminRepository;
 import org.openlmis.vaccine.repository.VitaminSupplementationAgeGroupRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportColdChainRepository;
 import org.openlmis.vaccine.repository.reports.VaccineReportRepository;
+import org.openlmis.vaccine.repository.reports.VaccineReportStatusChangeRepository;
 import org.openlmis.vaccine.service.DiseaseService;
 import org.openlmis.vaccine.service.VaccineIvdTabVisibilityService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
@@ -94,6 +95,9 @@ public class VaccineReportServiceTest {
   @Mock
   ProgramService programService;
 
+  @Mock
+  VaccineReportStatusChangeRepository statusChangeRepository;
+
   @InjectMocks
   VaccineReportService service;
 
@@ -120,7 +124,7 @@ public class VaccineReportServiceTest {
     VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
     when(repository.getByProgramPeriod(1L, 1L, 1L)).thenReturn(report);
 
-    VaccineReport result = service.initialize(1L, 1L, 1L);
+    VaccineReport result = service.initialize(1L, 1L, 1L, 1L);
     verify(programProductService, never() ).getActiveByProgram(1L);
     assertThat(result, is(report));
   }
@@ -133,7 +137,7 @@ public class VaccineReportServiceTest {
 
     doNothing().when(repository).insert(report);
 
-    VaccineReport result = service.initialize(1L, 1L, 1L);
+    VaccineReport result = service.initialize(1L, 1L, 1L, 1L);
 
     verify(repository).insert(Matchers.any(VaccineReport.class));
   }
@@ -166,9 +170,9 @@ public class VaccineReportServiceTest {
   public void shouldSubmit() throws Exception {
     VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
     doNothing().when(repository).update(report);
-    service.submit(report);
+    service.submit(report, 1L);
     verify(repository).update(report);
-    assertThat(report.getStatus(), is(RequestStatus.SUBMITTED.toString()));
+    assertThat(report.getStatus(), is(ReportStatus.SUBMITTED));
   }
 
   @Test

@@ -95,7 +95,7 @@ public class VaccineReportController extends BaseController {
     @PathVariable Long periodId,
     HttpServletRequest request
   ){
-    return OpenLmisResponse.response("report", service.initialize(facilityId, programId, periodId));
+    return OpenLmisResponse.response("report", service.initialize(facilityId, programId, periodId, loggedInUserId(request)));
   }
 
   @RequestMapping(value = "get/{id}.json", method = RequestMethod.GET)
@@ -114,7 +114,7 @@ public class VaccineReportController extends BaseController {
   @RequestMapping(value = "submit")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
-    service.submit(report);
+    service.submit(report, loggedInUserId(request));
     return OpenLmisResponse.response("report", report);
   }
 

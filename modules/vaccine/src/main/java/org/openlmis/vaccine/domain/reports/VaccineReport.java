@@ -37,7 +37,7 @@ public class VaccineReport extends BaseModel {
   private Long   periodId;
   private Long   programId;
   private Long   facilityId;
-  private String status;
+  private ReportStatus status;
   private Long   supervisoryNodeId;
   private ProcessingPeriod period;
   private Facility facility;
@@ -60,6 +60,8 @@ public class VaccineReport extends BaseModel {
   private List<VaccineCoverageItem> coverageLineItems;
   private List<DiseaseLineItem> diseaseLineItems;
   private List<ColdChainLineItem> coldChainLineItems;
+  private List<ReportStatusChange> reportStatusChanges;
+
 
   public void initializeLogisticsLineItems(List<ProgramProduct> programProducts){
     logisticsLineItems = new ArrayList<>();
