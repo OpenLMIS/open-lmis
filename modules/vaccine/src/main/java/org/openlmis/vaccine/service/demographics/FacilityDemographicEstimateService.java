@@ -92,6 +92,16 @@ public class FacilityDemographicEstimateService {
   }
 
   public List<FacilityDemographicEstimate> getEstimateValuesForFacility(Long facilityId, Integer year){
-    return null;
+    List<FacilityDemographicEstimate> result =  repository.getFacilityEstimate(year, facilityId);
+    if(result == null || result.size() == 0){
+      Facility facility = facilityService.getById(facilityId);
+       ;
+      List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
+      result = getEmptyEstimateObjects(categories, facility.getId(), year);
+      for(FacilityDemographicEstimate estimate: result){
+        estimate.calculateAndSetValue(facility.getCatchmentPopulation());
+      }
+    }
+    return result;
   }
 }

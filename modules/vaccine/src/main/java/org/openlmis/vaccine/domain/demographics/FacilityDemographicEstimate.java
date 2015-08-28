@@ -33,4 +33,9 @@ public class FacilityDemographicEstimate extends BaseModel {
   private Double conversionFactor;
 
   private Long value;
+
+  public void calculateAndSetValue(Long populationValue){
+    Double calculatedValue = conversionFactor * populationValue / 100;
+    value = calculatedValue.longValue();
+  }
 }
