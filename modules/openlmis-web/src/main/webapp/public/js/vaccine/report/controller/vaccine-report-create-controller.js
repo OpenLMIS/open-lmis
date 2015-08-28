@@ -13,7 +13,7 @@ function CreateVaccineReportController($scope, $location, $filter, $dialog, repo
 
   // initial state of the display
   $scope.report = new VaccineReport(report);
-  $scope.report.coverageLineItemViews = _.groupBy($scope.report.coverageLineItems, 'productId');
+
   $scope.discardingReasons = discardingReasons;
 
   //prepare tab visibility settings

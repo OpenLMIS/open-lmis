@@ -30,9 +30,30 @@ var CoverageLineItem = function(lineItem, report){
     return (this.getMonthlyTotal() / this.monthlyTarget) * 100;
   };
 
+  CoverageLineItem.prototype.getTotalAnnualRegular = function(){
+    return this.getTotalRegular() + Number(this.previousRegular);
+  };
+
+  CoverageLineItem.prototype.getTotalAnnualRegularCoveragePercentage = function(){
+    return (this.getTotalAnnualRegular() / this.annualTarget) * 100;
+  };
+
+  CoverageLineItem.prototype.getTotalAnnualOutreach = function(){
+    return this.getTotalOutreach() + Number(this.previousRegular);
+  };
+
+  CoverageLineItem.prototype.getTotalAnnualOutreachCoveragePercentage = function(){
+    return (this.getTotalAnnualOutreach() / this.annualTarget) * 100;
+  };
+
+  CoverageLineItem.prototype.getAnnualTotal = function(){
+    return (this.getTotalAnnualOutreach() + this.getTotalAnnualRegular());
+  };
+
   CoverageLineItem.prototype.init = function(){
     // find the right estimate denominator.
     this.annualTargetObject = _.findWhere(report.facilityDemographicEstimates,{demographicEstimateId: this.vaccineProductDose.denominatorEstimateCategoryId});
+    this.annualTarget = Number(this.annualTargetObject.value);
     this.monthlyTarget = Number(this.annualTargetObject.value / 12);
   };
 

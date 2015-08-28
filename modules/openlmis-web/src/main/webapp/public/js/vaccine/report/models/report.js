@@ -12,6 +12,7 @@ var VaccineReport = function(report){
     }
 
     this.coverageLineItems = getLineItems(this.coverageLineItems, this);
+    this.coverageLineItemViews = _.groupBy(this.coverageLineItems, 'productId');
   };
 
   this.init();
