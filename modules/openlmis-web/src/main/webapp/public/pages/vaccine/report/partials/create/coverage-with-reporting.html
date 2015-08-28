@@ -39,20 +39,20 @@
     <td  class="cell-input col-general">
       <input numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackFemale" ng-model="dose.regularFemale" type="text" />
     </td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{toNumber(dose.regularMale) + toNumber(dose.regularFemale)}}</span></td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> - %</span></td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{dose.getTotalRegular() | number : 0}}</span></td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> {{dose.getRegularCoveragePercentage() | number : 2}}%</span></td>
     <td class="cell-input col-general" >
       <input  numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackMale" ng-model="dose.outreachMale" type="text" />
     </td>
     <td  class="cell-input col-general">
       <input numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackFemale" ng-model="dose.outreachFemale" type="text" />
     </td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text">{{toNumber(dose.outreachMale) + toNumber(dose.outreachFemale)}}</span></td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text"> - %</span></td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text">{{dose.getTotalOutreach() | number : 0}}</span></td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text"> {{dose.getOutreachCoveragePercentage() | number : 2}} %</span></td>
 
 
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{toNumber(dose.outreachMale) + toNumber(dose.outreachFemale) + toNumber(dose.regularMale) + toNumber(dose.regularFemale)}}</span></td>
-    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> - %</span></td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number">{{dose.getMonthlyTotal() | number : 0}}</span></td>
+    <td class="cell-input col-general" style="text-align: right"><span class="cell-text number"> {{ dose.getMonthlyCoverage() | number : 2 }} %</span></td>
     <td></td>
     <td></td>
     <td></td>

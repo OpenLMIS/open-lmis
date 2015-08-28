@@ -17,16 +17,16 @@
   <tbody>
   <tr ng-repeat-start="(productId, productGroup) in report.coverageLineItemViews"></tr>
   <tr ng-repeat-start="dose in productGroup">
-    <td class="cell-input col-general" >
+    <td class="cell-input" >
       <input  numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackMale" ng-model="dose.regularMale" type="text" />
     </td>
-    <td  class="cell-input col-general">
+    <td  class="cell-input">
       <input numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackFemale" ng-model="dose.regularFemale" type="text" />
     </td>
-    <td class="cell-input col-general" >
+    <td class="cell-input" >
       <input  numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackMale" ng-model="dose.outreachMale" type="text" />
     </td>
-    <td  class="cell-input col-general">
+    <td  class="cell-input">
       <input numeric-validator="positiveInteger" maxlength="8" ng-disabled="!dose.trackFemale" ng-model="dose.outreachFemale" type="text" />
     </td>
   </tr>
