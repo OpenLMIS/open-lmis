@@ -45,6 +45,7 @@ import org.openlmis.vaccine.repository.reports.VaccineReportStatusChangeReposito
 import org.openlmis.vaccine.service.DiseaseService;
 import org.openlmis.vaccine.service.VaccineIvdTabVisibilityService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
+import org.openlmis.vaccine.service.demographics.FacilityDemographicEstimateService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -97,6 +98,9 @@ public class VaccineReportServiceTest {
 
   @Mock
   VaccineReportStatusChangeRepository statusChangeRepository;
+
+  @Mock
+  FacilityDemographicEstimateService facilityDemographicEstimateService;
 
   @InjectMocks
   VaccineReportService service;
@@ -158,9 +162,11 @@ public class VaccineReportServiceTest {
   @Test
   public void shouldGetById() throws Exception {
     VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
+    ProcessingPeriod period = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod));
+    report.setPeriod(period);
     when(repository.getByIdWithFullDetails(2L)).thenReturn(report);
     when(settingService.getVisibilityForProgram(report.getProgramId())).thenReturn(new ArrayList<VaccineIvdTabVisibility>());
-
+    when(facilityDemographicEstimateService.getEstimateValuesForFacility(report.getFacilityId(),report.getPeriod().getStartDate().getYear())).thenReturn(null);
     VaccineReport result = service.getById(2L);
     verify(repository).getByIdWithFullDetails(2L);
     assertThat(result.getStatus(), is(report.getStatus()));
