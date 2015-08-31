@@ -1,4 +1,4 @@
-package org.openlmis.core.dto;
+package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

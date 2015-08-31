@@ -1,7 +1,7 @@
 package org.openlmis.core.upload;
 
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.dto.StockAdjustmentReasonProgram;
+import org.openlmis.core.domain.StockAdjustmentReasonProgram;
 import org.openlmis.core.service.StockAdjustmentReasonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

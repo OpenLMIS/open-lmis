@@ -2,7 +2,7 @@ package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.dto.StockAdjustmentReason;
+import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.service.StockAdjustmentReasonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -304,7 +304,7 @@
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="label.stock.adjustment.reason"/>
                         <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.dto.StockAdjustmentReason</value>
+                            <value type="java.lang.Class">org.openlmis.core.domain.StockAdjustmentReason</value>
                         </property>
                         <property name="recordHandler" ref="stockAdjustmentReasonHandler"/>
                     </bean>
@@ -313,7 +313,7 @@
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="label.stock.adjustment.reason.program"/>
                         <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.dto.StockAdjustmentReasonProgram</value>
+                            <value type="java.lang.Class">org.openlmis.core.domain.StockAdjustmentReasonProgram</value>
                         </property>
                         <property name="recordHandler" ref="stockAdjustmentReasonProgramHandler"/>
                     </bean>
