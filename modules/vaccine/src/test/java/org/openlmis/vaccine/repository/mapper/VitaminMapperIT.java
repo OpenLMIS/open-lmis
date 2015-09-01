@@ -12,20 +12,14 @@
 
 package org.openlmis.vaccine.repository.mapper;
 
-import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
 
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

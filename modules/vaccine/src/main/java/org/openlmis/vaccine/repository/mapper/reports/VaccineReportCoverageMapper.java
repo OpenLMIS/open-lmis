@@ -14,6 +14,7 @@ package org.openlmis.vaccine.repository.mapper.reports;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
+import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.reports.VaccineCoverageItem;
 import org.springframework.stereotype.Repository;
 
@@ -49,6 +50,7 @@ public interface VaccineReportCoverageMapper {
     " WHERE id = #{id} ")
   void update(VaccineCoverageItem item);
 
+  @SuppressWarnings("unused")
   @Select("SELECT id, code, primaryName FROM products where id = #{id}")
   Product getProductDetails(Long id);
 
@@ -63,11 +65,28 @@ public interface VaccineReportCoverageMapper {
   })
   VaccineCoverageItem getCoverageByReportProductDosage(@Param("reportId") Long reportId, @Param("productId") Long productId, @Param("doseId") Long doseId);
 
-  @Select("SELECT * from vaccine_report_coverage_line_items WHERE reportId = #{reportId} order by displayOrder")
+  @Select("select d.* from vaccine_reports r " +
+                          " join vaccine_report_coverage_line_items cli on cli.reportId = r.id " +
+                          " join vaccine_product_doses d on d.doseId = cli.doseId and cli.productId = d.productId and d.programId = r.programId" +
+    " where cli.id = #{id}")
+  VaccineProductDose  getVaccineDoseDetail(@Param("id") Long id);
+
+  @Select("SELECT " +
+    "li.*, " +
+    "(select sum(regularMale + regularFemale) from vaccine_report_coverage_line_items ili join vaccine_reports ir on ir.id = ili.reportId join processing_periods ipps on ipps.id = ir.periodId where ir.facilityId = r.facilityId and ili.productId = li.productId and li.doseId = ili.doseId and pps.startDate > ipps.startDate and extract(year from ipps.startDate) = extract(year from pps.startDate) ) as previousRegular , " +
+    "(select sum(outreachMale + outreachFemale) from vaccine_report_coverage_line_items ili join vaccine_reports ir on ir.id = ili.reportId join processing_periods ipps on ipps.id = ir.periodId where ir.facilityId = r.facilityId and ili.productId = li.productId and li.doseId = ili.doseId and pps.startDate > ipps.startDate and extract(year from ipps.startDate) = extract(year from pps.startDate) ) as previousOutreach " +
+    " from " +
+    "   vaccine_report_coverage_line_items li join vaccine_reports r on r.id = li.reportId " +
+    "     join processing_periods pps on pps.id = r.periodId " +
+    "WHERE " +
+    "     reportId = #{reportId} " +
+    "order by displayOrder")
   @Results(value = {
+    @Result(property = "id", column = "id"),
     @Result(property = "productId", column = "productId"),
     @Result(property = "product", javaType = Product.class, column = "productId",
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportCoverageMapper.getProductDetails")),
+    @Result(property = "vaccineProductDose", column = "id", one = @One( select= "org.openlmis.vaccine.repository.mapper.reports.VaccineReportCoverageMapper.getVaccineDoseDetail"))
   })
   List<VaccineCoverageItem> getLineItems(@Param("reportId") Long reportId);
 

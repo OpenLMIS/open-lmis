@@ -17,14 +17,12 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.reports.CampaignLineItem;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportCampaignLineItemMapper;
+
+import static org.mockito.Mockito.verify;
 
 
 @Category(UnitTests.class)

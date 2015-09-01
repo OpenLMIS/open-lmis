@@ -32,6 +32,7 @@ import org.openlmis.vaccine.repository.reports.VaccineReportStatusChangeReposito
 import org.openlmis.vaccine.service.DiseaseService;
 import org.openlmis.vaccine.service.VaccineIvdTabVisibilityService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
+import org.openlmis.vaccine.service.demographics.FacilityDemographicEstimateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,13 +53,11 @@ public class VaccineReportService {
   public static final String VACCINE_REPORT_SYRINGES_CATEGORY_CODE = "VACCINE_REPORT_SYRINGES_CATEGORY_CODE";
 
 
-
   @Autowired
   VaccineReportRepository repository;
 
   @Autowired
   ProgramProductService programProductService;
-
 
   @Autowired
   DiseaseService diseaseService;
@@ -86,6 +85,9 @@ public class VaccineReportService {
 
   @Autowired
   VaccineReportStatusChangeRepository reportStatusChangeRepository;
+
+  @Autowired
+  FacilityDemographicEstimateService facilityDemographicEstimateService;
 
   @Transactional
   public VaccineReport initialize(Long facilityId, Long programId, Long periodId, Long userId) {
@@ -179,7 +181,7 @@ public class VaccineReportService {
     }
 
     for (ProcessingPeriod period : emptyIfNull(periods)) {
-      if (lastRequest == null || lastRequest.getPeriodId() != period.getId()) {
+      if (lastRequest == null || !lastRequest.getPeriodId().equals(period.getId())) {
         ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
 
         reportStatusDTO.setPeriodName(period.getName());
@@ -198,6 +200,7 @@ public class VaccineReportService {
   public VaccineReport getById(Long id) {
     VaccineReport report = repository.getByIdWithFullDetails(id);
     report.setTabVisibilitySettings(tabVisibilityService.getVisibilityForProgram(report.getProgramId()));
+    report.setFacilityDemographicEstimates(facilityDemographicEstimateService.getEstimateValuesForFacility(report.getFacilityId(), report.getPeriod().getStartDate().getYear()));
     return report;
   }
 

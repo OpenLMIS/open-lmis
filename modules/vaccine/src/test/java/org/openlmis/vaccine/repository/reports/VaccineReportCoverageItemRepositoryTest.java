@@ -18,8 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 
 import org.mockito.runners.MockitoJUnitRunner;
