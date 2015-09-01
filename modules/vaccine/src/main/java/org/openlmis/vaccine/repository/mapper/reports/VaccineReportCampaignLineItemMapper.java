@@ -13,7 +13,6 @@
 package org.openlmis.vaccine.repository.mapper.reports;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.vaccine.domain.reports.AdverseEffectLineItem;
 import org.openlmis.vaccine.domain.reports.CampaignLineItem;
 import org.springframework.stereotype.Repository;
 

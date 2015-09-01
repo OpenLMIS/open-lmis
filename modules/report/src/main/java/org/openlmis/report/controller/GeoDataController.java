@@ -13,9 +13,10 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.mapper.lookup.GeographicZoneReportMapper;
 import org.openlmis.report.model.geo.GeoFacilityIndicator;
-import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.service.GeographicReportProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 

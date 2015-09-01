@@ -18,16 +18,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.reports.LogisticsColumn;
 import org.openlmis.vaccine.repository.mapper.VaccineColumnTemplateMapper;
-
-import java.util.List;
 
 
 @Category(UnitTests.class)

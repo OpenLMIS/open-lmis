@@ -14,6 +14,7 @@ package org.openlmis.vaccine.builders.reports;
 
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.PropertyLookup;
+import org.openlmis.vaccine.domain.reports.ReportStatus;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 
 public class VaccineReportBuilder {
@@ -27,7 +28,7 @@ public class VaccineReportBuilder {
       item.setFacilityId(1L);
       item.setPeriodId(1L);
       item.setSupervisoryNodeId(1L);
-      item.setStatus("DRAFT");
+      item.setStatus(ReportStatus.DRAFT);
       return item;
     }
   };

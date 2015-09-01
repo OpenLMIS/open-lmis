@@ -22,11 +22,11 @@
       <option ng-selected="year == y" ng-repeat="y in years" value="{{y}}">{{y}}</option>
     </select>
   </div>
-  <div class="rnr-table">
+  <div class="">
   <div class="parent">
     <table  class="table table-bordered scrollable">
     <thead>
-    <tr>
+    <tr class="gradient-header">
       <th class="span1"><span openlmis-message="label.demographic.district.code"></span></th>
       <th class="span3"><span openlmis-message="label.demographic.district.name"></span></th>
       <th ng-repeat="category in categories">
@@ -45,11 +45,9 @@
         </span>
       </td>
       <td class="cell-input number" style="text-align: right" ng-repeat="category in categories">
-        <!-- <span class="cell-text number"  ng-show="!category.isPrimaryEstimate">{{ facility.indexedEstimates[category.id].value | number }}</span> -->
         <span class="ng-scope">
           <span class="position-relative ng-scope">
             <input class="number numeric-input"
-                    style="width:90%"
                     numeric-validator="positiveInteger"
                     maxlength="8"
                     ng-change="OnPopulationChanged(district.indexedEstimates[category.id], district, category)"

@@ -88,7 +88,7 @@
       </div>
     </li>
     <li ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')">
-      <a id="vaccine" openlmis-message="link.vaccine"></a>
+      <a id="vaccine" href="" openlmis-message="link.vaccine"></a>
 
       <div class="submenu">
         <ul>
@@ -446,7 +446,7 @@
                   <a id="productsMenu" href="/public/pages/admin/product/index.html"
                      openlmis-message="header.products"></a>
                 </li>
-                  <li>
+                  <li ng-show="hasPermission('MANAGE_ELMIS_INTERFACE')">
                       <a href="/public/pages/admin/interfaces/index.html"
                          openlmis-message="link.admin.elmis.interface"></a>
                   </li>

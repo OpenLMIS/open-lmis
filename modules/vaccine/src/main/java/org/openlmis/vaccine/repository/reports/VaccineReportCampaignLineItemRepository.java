@@ -12,9 +12,7 @@
 
 package org.openlmis.vaccine.repository.reports;
 
-import org.openlmis.vaccine.domain.reports.AdverseEffectLineItem;
 import org.openlmis.vaccine.domain.reports.CampaignLineItem;
-import org.openlmis.vaccine.repository.mapper.reports.VaccineReportAdverseEffectMapper;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportCampaignLineItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -14,7 +14,6 @@ package org.openlmis.vaccine.builders.reports;
 
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.vaccine.domain.reports.DiseaseLineItem;
 import org.openlmis.vaccine.domain.reports.LogisticsLineItem;
 
 public class LogisticsLineItemBuilder {

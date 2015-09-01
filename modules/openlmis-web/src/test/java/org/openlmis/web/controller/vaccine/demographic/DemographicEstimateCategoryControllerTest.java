@@ -1,4 +1,4 @@
-package org.openlmis.web.controller.vaccine;
+package org.openlmis.web.controller.vaccine.demographic;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

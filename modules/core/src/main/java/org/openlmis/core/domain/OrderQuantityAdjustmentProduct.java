@@ -31,7 +31,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class OrderQuantityAdjustmentProduct extends BaseModel {
 
     private Facility facility;

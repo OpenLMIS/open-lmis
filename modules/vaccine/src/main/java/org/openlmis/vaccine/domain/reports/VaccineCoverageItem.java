@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
-import org.openlmis.vaccine.domain.VaccineDose;
+import org.openlmis.vaccine.domain.VaccineProductDose;
 
 @Data
 @NoArgsConstructor
@@ -37,6 +37,9 @@ public class VaccineCoverageItem extends BaseModel{
   private Boolean trackFemale;
   private Long doseId;
 
+  // this is needed to make the calculations of coverage on the front end.
+  private VaccineProductDose vaccineProductDose;
+
   private Long displayOrder;
   private String displayName;
 
@@ -48,5 +51,8 @@ public class VaccineCoverageItem extends BaseModel{
 
   private Long campaignMale;
   private Long campaignFemale;
+
+  private Long previousRegular;
+  private Long previousOutreach;
 
 }

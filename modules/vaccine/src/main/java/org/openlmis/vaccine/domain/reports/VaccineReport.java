@@ -23,6 +23,7 @@ import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
+import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class VaccineReport extends BaseModel {
   private Long   periodId;
   private Long   programId;
   private Long   facilityId;
-  private String status;
+  private ReportStatus status;
   private Long   supervisoryNodeId;
   private ProcessingPeriod period;
   private Facility facility;
@@ -53,6 +54,8 @@ public class VaccineReport extends BaseModel {
   private List<AdverseEffectLineItem> adverseEffectLineItems;
   private List<CampaignLineItem> campaignLineItems;
 
+  private List<FacilityDemographicEstimate> facilityDemographicEstimates;
+
   private List<VitaminSupplementationLineItem> vitaminSupplementationLineItems;
 
   private List<LogisticsColumn> columnTemplate;
@@ -60,6 +63,8 @@ public class VaccineReport extends BaseModel {
   private List<VaccineCoverageItem> coverageLineItems;
   private List<DiseaseLineItem> diseaseLineItems;
   private List<ColdChainLineItem> coldChainLineItems;
+  private List<ReportStatusChange> reportStatusChanges;
+
 
   public void initializeLogisticsLineItems(List<ProgramProduct> programProducts){
     logisticsLineItems = new ArrayList<>();
