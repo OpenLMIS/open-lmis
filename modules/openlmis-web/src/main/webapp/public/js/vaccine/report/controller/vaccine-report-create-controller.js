@@ -12,7 +12,8 @@
 function CreateVaccineReportController($scope, $location, $filter, $dialog, report, discardingReasons, VaccineReportSave, VaccineReportSubmit) {
 
   // initial state of the display
-  $scope.report = report;
+  $scope.report = new VaccineReport(report);
+
   $scope.discardingReasons = discardingReasons;
 
   //prepare tab visibility settings
@@ -126,14 +127,13 @@ function CreateVaccineReportController($scope, $location, $filter, $dialog, repo
   };
 
 }
+
 CreateVaccineReportController.resolve = {
 
   report: function ($q, $timeout, $route, VaccineReport) {
     var deferred = $q.defer();
-
     $timeout(function () {
       VaccineReport.get({id: $route.current.params.id}, function (data) {
-        data.report.coverageLineItemViews = _.groupBy(data.report.coverageLineItems, 'productId');
         deferred.resolve(data.report);
       });
     }, 100);

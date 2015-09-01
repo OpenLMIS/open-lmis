@@ -12,23 +12,17 @@
 
 package org.openlmis.vaccine.repository.mapper;
 
-import com.natpryce.makeiteasy.Instantiator;
-import com.natpryce.makeiteasy.Maker;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
 
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Product;
@@ -36,7 +30,6 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.VaccineDose;
 import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -16,8 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -25,11 +23,9 @@ import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
@@ -43,8 +39,8 @@ import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.builders.reports.VaccineReportBuilder;
+import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.reports.VaccineCoverageItem;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,5 +166,17 @@ public class VaccineReportCoverageMapperIT {
 
     List<VaccineCoverageItem> returned = mapper.getLineItems(report.getId());
     assertThat(returned.size(), is(1));
+  }
+
+  @Test
+  public void shouldGetVaccineDoseDetail() throws Exception{
+    VaccineCoverageItem item = getVaccineCoverageItem();
+    mapper.insert(item);
+
+    //TODO: insert the right program products
+    //Irregardless of the note above, this test should serve some purpose because if it does not throw error,
+    //it means that the schema is compatible with this code.
+    VaccineProductDose dose = mapper.getVaccineDoseDetail(item.getId());
+
   }
 }

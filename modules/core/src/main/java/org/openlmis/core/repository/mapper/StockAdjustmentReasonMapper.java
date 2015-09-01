@@ -1,8 +1,8 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.dto.StockAdjustmentReason;
-import org.openlmis.core.dto.StockAdjustmentReasonProgram;
+import org.openlmis.core.domain.StockAdjustmentReason;
+import org.openlmis.core.domain.StockAdjustmentReasonProgram;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
