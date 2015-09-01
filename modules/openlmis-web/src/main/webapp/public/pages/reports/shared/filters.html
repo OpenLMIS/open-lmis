@@ -1,18 +1,20 @@
 <!--
-  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
   ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
   ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
   ~
-  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <script type="text/ng-template" id="filter-program-template">
     <div>
-        <label class="labels" openlmis-message="label.program"><span ng-show="requiredFilters.program" class="label-required">*</span></label>
+        <label for="program" class="labels" openlmis-message="label.program"><span ng-show="requiredFilters.program" class="label-required">*</span></label>
         <div>
-            <select ui-select2 class="input-large" ng-model="filter.program" ng-change="filterChanged()">
+            <select id="program" ui-select2 class="input-large" ng-model="filter.program" ng-change="notifyFilterChanged('program-changed');">
                 <option ng-repeat="program in programs" value="{{ program.id }}" ng-selected="program.id == filter.program">{{program.name}}</option>
             </select>
         </div>
@@ -21,9 +23,9 @@
 
 <script type="text/ng-template" id="filter-year-template">
     <div>
-        <label class="labels" openlmis-message="label.year"><span ng-show="requiredFilters.year" class="label-required">*</span></label>
+        <label for="year" class="labels" openlmis-message="label.year"><span ng-show="requiredFilters.year" class="label-required">*</span></label>
         <div>
-            <select ui-select2 class="input-medium" ng-model="filter.year" ng-change="filterChanged()">
+            <select id="year" ui-select2 class="input-medium" ng-model="filter.year" ng-change="notifyFilterChanged('year-changed');">
                 <option ng-repeat="year in years" ng-selected="filter.year == year" value="{{ year }}">{{year}}</option>
             </select>
         </div>
@@ -34,7 +36,7 @@
     <div>
         <label class="labels" openlmis-message="label.quarter"><span ng-show="requiredFilters.quarter" class="label-required">*</span></label>
         <div>
-            <select ui-select2 class="input-medium" ng-model="filter.quarter" ng-change="filterChanged()">
+            <select ui-select2 class="input-medium" ng-model="filter.quarter" ng-change="notifyFilterChanged('quarter-changed');">
                 <option ng-repeat="quarter in quarters" ng-selected="filter.quarter == quarter" value="{{ quarter }}">{{quarter}}</option>
             </select>
         </div>
@@ -43,9 +45,9 @@
 
 <script type="text/ng-template" id="filter-facility-type-template">
     <div>
-        <label class="labels" openlmis-message="label.facility.type"><span ng-show="requiredFilters.facilityType" class="label-required">*</span></label>
+        <label for="facilityType" class="labels" openlmis-message="label.facility.type"><span ng-show="requiredFilters.facilityType" class="label-required">*</span></label>
          <div>
-         <select ui-select2 class="input-large" ng-model="filter.facilityType" ng-change="filterChanged()">
+         <select id="facilityType" ui-select2 class="input-large" ng-model="filter.facilityType" ng-change="notifyFilterChanged('facility-type-changed');">
                 <option ng-repeat="type in facilityTypes" ng-selected="filter.facilityType == type.id" value="{{ type.id }}">{{type.name}}</option>
          </select>
         </div>
@@ -54,9 +56,9 @@
 
 <script type="text/ng-template" id="filter-facility-level-template">
     <div>
-        <label class="labels" openlmis-message="label.facility.level"><span ng-show="requiredFilters.facilityLevel" class="label-required">*</span></label>
+        <label for="facilityLevel" class="labels" openlmis-message="label.facility.level"><span ng-show="requiredFilters.facilityLevel" class="label-required">*</span></label>
         <div>
-            <select ui-select2 class="input-large" ng-model="filter.facilityLevel" ng-change="filterChanged()">
+            <select id="facilityLevel" ui-select2 class="input-large" ng-model="filter.facilityLevel" ng-change="notifyFilterChanged('facility-level-changed');">
                 <option ng-repeat="level in facilityLevels | orderBy: 'display_order'" ng-selected="filter.facilityLevel == level.id" value="{{ level.id }}">{{level.name}}</option>
             </select>
         </div>
@@ -65,29 +67,26 @@
 
 <script type="text/ng-template" id="filter-facility-template">
     <div>
-        <label class="labels" openlmis-message="label.facility"><span ng-show="requiredFilters.facility" class="label-required">*</span></label>
+        <label for="facility" class="labels" openlmis-message="label.facility"><span ng-show="requiredFilters.facility" class="label-required">*</span></label>
         <div>
-        <select ui-select2 class="input-large" ng-model="filter.facility" ng-change="filterChanged();">
-               <option  ng-repeat="option in facilities" ng-selected="filter.facility == option.id" value="{{ option.id }}">{{ option.name }}</option>
+        <select id="facility" ui-select2 class="input-large" ng-model="filter.facility" ng-change="notifyFilterChanged('facility-changed');">
+               <option  ng-repeat="option in facilities" ng-selected="filter.facility == option.id" value="{{ option.id }}" openlmis-message="option.name"></option>
             </select>
         </div>
     </div>
 </script>
 
+<!-- remember how to re-implement this to be more generic  -->
 <script type="text/ng-template" id="filter-zone-template">
   <div>
-    <label class="labels" openlmis-message="label.geographic.zone"><span ng-show="requiredFilters.zone" class="label-required">*</span></label>
+    <label for="zone" class="labels" openlmis-message="label.geographic.zone"><span ng-show="requiredFilters.zone" class="label-required">*</span></label>
     <div>
-      <select ui-select2 class="input-large" ng-change="filterChanged();" ng-model="filter.zone">
-          <option ng-hide="showDistrictOnly" ng-selected="filter.zone == 0" value="0">{{user_geo_level}}</option>
-
-        <!--<option value="{{zones.id}}">{{zones.name}}</option>-->
+      <select id="zone" ui-select2 class="input-large" data-placeholder="-- All Zones --"  ng-change="notifyFilterChanged('zone-changed');" ng-model="filter.zone">
+        <option ng-selected="filter.zone == undefined || filter.zone == ''">{{user_geo_level}}</option>
         <optgroup ng-repeat="value in zones.children" value="{{ value.id }}" ng-selected="filter.zone == value.id" label="{{value.name}}">
-          <option value="{{value.id}}"><b class="green">All of {{value.name}}</b></option>
-
-          <option ng-repeat-start="v in value.children" value="{{v.id}}">{{v.name}}</option>
-          <option ng-repeat-end ng-repeat="d in v.children" value="{{d.id}}"> &nbsp; &nbsp; {{d.name}}</option>
-
+          <option ng-selected="filter.zone == value.id" value="{{value.id}}"><b class="green"> -- All of {{value.name}}</b></option>
+          <option ng-repeat-start="v in value.children" ng-selected="filter.zone == v.id" value="{{v.id}}">{{v.name}}</option>
+          <option ng-repeat-end ng-repeat="d in v.children" ng-selected="filter.zone == d.id" value="{{d.id}}"> &nbsp; &nbsp; {{d.name}}</option>
         </optgroup>
       </select>
     </div>
@@ -96,10 +95,10 @@
 
 <script type="text/ng-template" id="filter-schedule-template">
     <div>
-        <label class="labels" openlmis-message="label.schedule"><span ng-show="requiredFilters.schedule" class="label-required">*</span></label>
+        <label for="schedule" class="labels" openlmis-message="label.schedule"><span ng-show="requiredFilters.schedule" class="label-required">*</span></label>
         <div>
-        <select ui-select2 class="input-medium" ng-change="filterChanged();" ng-model="filter.schedule">
-            <option ng-repeat="schedule in schedules" value="{{ schedule.id }}" ng-selected="filter.schedule == schedule.id">{{schedule.name}}</option>
+        <select id="schedule" ui-select2 class="input-medium" ng-change="notifyFilterChanged('schedule-changed');" ng-model="filter.schedule">
+            <option ng-repeat="schedule in schedules" value="{{ schedule.id }}" ng-selected="filter.schedule == schedule.id" openlmis-message="schedule.name"></option>
             </select>
         </div>
     </div>
@@ -107,9 +106,9 @@
 
 <script type="text/ng-template" id="filter-adjustment-type-template">
   <div>
-    <label class="labels" openlmis-message="label.adjustment.type"><span ng-show="requiredFilters.adjustmentType" class="label-required">*</span></label><div>
-    <select ui-select2 class="input-large" ng-model="filter.adjustmentType" ng-change="filterChanged();">
-      <option ng-repeat="adjustmentType in adjustmentTypes" value="{{ adjustmentType.name }}" ng-selected="adjustmentType.id == filter.adjustmentType">{{adjustmentType.description}}</option>
+    <label for="adjustmentType" class="labels" openlmis-message="label.adjustment.type"><span ng-show="requiredFilters.adjustmentType" class="label-required">*</span></label><div>
+    <select id="adjustmentType" ui-select2 class="input-large" ng-model="filter.adjustmentType" ng-change="notifyFilterChanged('adjustment-type-changed');">
+      <option ng-repeat="adjustmentType in adjustmentTypes" value="{{ adjustmentType.name }}" ng-selected="adjustmentType.name == filter.adjustmentType">{{adjustmentType.description}}</option>
     </select>
   </div>
   </div>
@@ -117,8 +116,8 @@
 
 <script type="text/ng-template" id="filter-period-template">
     <div>
-        <label class="labels" openlmis-message="label.period"><span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
-        <select ui-select2 class="input-medium" ng-model="filter.period" ng-change="filterChanged();">
+        <label for="period" class="labels" openlmis-message="label.period"><span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
+        <select id="period" ui-select2 class="input-medium" ng-model="filter.period" ng-change="notifyFilterChanged('period-changed');">
             <option ng-repeat="period in periods" value="{{ period.id }}" ng-selected="period.id == filter.period">{{period.name}}</option>
          </select>
         </div>
@@ -127,19 +126,19 @@
 
 <script type="text/ng-template" id="filter-product-category-template">
     <div>
-        <label class="labels" openlmis-message="label.product.category"><span ng-show="requiredFilters.productCategory" class="label-required">*</span></label>
+        <label for="productCategory" class="labels" openlmis-message="label.product.category"><span ng-show="requiredFilters.productCategory" class="label-required">*</span></label>
         <div>
-        <select ui-select2 class="input-large" ng-model="filter.productCategory" ng-change="filterChanged();">
+          <select id="productCategory" ui-select2 class="input-large" ng-model="filter.productCategory" ng-change="notifyFilterChanged('product-category-changed');">
                <option  ng-repeat="option in productCategories" value="{{ option.id }}" ng-selected="option.id == filter.productCategory">{{ option.name }}</option>
-            </select>
+          </select>
         </div>
     </div>
 </script>
 <!--product multi category-->
 <script type="text/ng-template" id="filter-product-category-multi-template">
     <div>
-        <label class="labels" openlmis-message="label.product.category"><span ng-show="requiredFilters.productCategory" class="label-required">*</span></label><div>
-        <select ui-select2="wideOption" multiple data-placeholder="-- All product Categories --" class="input-large" ng-model="filter.productCategory" ng-change="filterChanged();">
+        <label for="productCategoryMulti" class="labels" openlmis-message="label.product.category"><span ng-show="requiredFilters.productCategory" class="label-required">*</span></label><div>
+        <select id="productCategoryMulti" ui-select2="wideOption" multiple data-placeholder="-- All product Categories --" class="input-large" ng-model="filter.productCategory" ng-change="notifyFilterChanged('product-categories-changed');">
             <option  ng-repeat="option in productCategories" value="{{ option.id }}" ng-selected="filter.productCategory == option.id">{{ option.name }}</option>
         </select>
     </div>
@@ -148,18 +147,18 @@
         <!--end-->
 <script type="text/ng-template" id="filter-product-template">
     <div>
-        <label class="labels" openlmis-message="label.product"><span ng-show="requiredFilters.product" class="label-required">*</span></label><div>
-        <select ui-select2 class="input-large" ng-model="filter.product" ng-change="filterChanged();">
-               <option ng-repeat="option in products | filter:productCFilter" value="{{ option.id }}" ng-selected="filter.product == option.id">{{ option.name }}</option>
-            </select>
+        <label for="product" class="labels" ><span openlmis-message="label.product"></span><span ng-show="requiredFilters.product" class="label-required">*</span></label><div>
+          <select id="product" ui-select2 class="input-large" ng-model="filter.product" ng-change="notifyFilterChanged('product-changed');">
+                 <option ng-repeat="option in products | filter:productCFilter" value="{{ option.id }}" ng-selected="filter.product == option.id">{{ option.name }}</option>
+          </select>
         </div>
     </div>
 </script>
 
 <script type="text/ng-template" id="filter-product-multi-template">
     <div>
-        <label class="labels" openlmis-message="label.product"><span ng-show="requiredFilters.product" class="label-required">*</span></label><div>
-        <select ui-select2="wideOption" multiple data-placeholder="-- All Products --" class="input-large" ng-model="filter.product" ng-change="filterChanged();">
+        <label for="productMulti" class="labels" openlmis-message="label.product"><span ng-show="requiredFilters.product" class="label-required">*</span></label><div>
+        <select id="productMulti" ui-select2="wideOption" multiple data-placeholder="-- All Products --" class="input-large" ng-model="filter.products" ng-change="notifyFilterChanged('products-changed');">
             <option  ng-repeat="option in products | filter:productCFilter" value="{{ option.id }}" ng-selected="filter.product == option.id">{{ option.name }}</option>
         </select>
     </div>
@@ -168,28 +167,18 @@
 
 <script type="text/ng-template" id="filter-requisition-group-template">
     <div>
-        <label class="labels" openlmis-message="label.requistion.group"><span ng-show="requiredFilters.requisitionGroup" class="label-required">*</span></label><div>
-        <select ui-select2 class="input-large" ng-model="filter.requisitionGroup" ng-change="filterChanged();">
+        <label for="requisitionGroup" class="labels" openlmis-message="label.requistion.group"><span ng-show="requiredFilters.requisitionGroup" class="label-required">*</span></label><div>
+        <select id="requisitionGroup" ui-select2 class="input-large" ng-model="filter.requisitionGroup" ng-change="notifyFilterChanged('requisition-group-changed');">
                  <option ng-repeat="requisitionGroup in requisitionGroups" value="{{ requisitionGroup.id }}" ng-selected="filter.requisitionGroup == requisitionGroup.id">{{requisitionGroup.name}}</option>
             </select>
         </div>
     </div>
 </script>
 
-<script type="text/ng-template" id="filter-program-by-regimen-template">
-    <div>
-        <label class="labels" openlmis-message="label.program"><span ng-show="requiredFilters.program" class="label-required">*</span></label><div>
-        <select class="input-large" ng-model="filter.program" ng-change="filterChanged();">
-            <option ng-repeat="programByRegimen in programs" value="{{ programByRegimen.id }}" ng-selected="filter.program == programByRegimen.id">{{programByRegimen.name}}</option>
-        </select>
-    </div>
-    </div>
-</script>
-
 <script type="text/ng-template" id="filter-regimen-category-template">
     <div>
-        <label class="labels" openlmis-message="label.regimen.category"><span ng-show="requiredFilters.regimenCategory" class="label-required">*</span></label><div>
-        <select class="input-large" ng-model="filter.regimenCategory" ng-change="filterChanged();">
+        <label for="regimenCategory" class="labels" openlmis-message="label.regimen.category"><span ng-show="requiredFilters.regimenCategory" class="label-required">*</span></label><div>
+        <select id="regimenCategory" ui-select2 class="input-large" ng-model="filter.regimenCategory" ng-change="notifyFilterChanged('regimen-category-changed');">
             <option  ng-repeat="option in regimenCategories" value="{{ option.id }}" ng-selected="option.id == filter.regimenCategory">{{ option.name }}</option>
 
         </select>
@@ -199,8 +188,8 @@
 
 <script type="text/ng-template" id="filter-regimen-template">
     <div>
-        <label class="labels" openlmis-message="label.regimen"><span ng-show="requiredFilters.regimen" class="label-required">*</span></label><div>
-        <select class="input-large" ng-model="filter.regimen" ng-change="filterChanged();">
+        <label for="regimen" class="labels" openlmis-message="label.regimen"><span ng-show="requiredFilters.regimen" class="label-required">*</span></label><div>
+        <select id="regimen" ui-select2 class="input-large" ng-model="filter.regimen" ng-change="notifyFilterChanged('regimen-changed');">
             <option ng-repeat="regimen in regimens" value="{{ regimen.id }}" ng-selected="filter.regimen == regimen.id">{{regimen.name}}</option>
         </select>
     </div>
@@ -210,21 +199,10 @@
 
 <script type="text/ng-template" id="filter-equipment-type">
     <div>
-        <label class="labels" openlmis-message="label.equipment.type"><span ng-show="requiredFilters.equipmentType" class="label-required">*</span></label><div>
-        <select class="input-large" ng-model="filter.equipmentType" ng-change="filterChanged();">
+        <label for="equipmentType" class="labels" openlmis-message="label.equipment.type"><span ng-show="requiredFilters.equipmentType" class="label-required">*</span></label><div>
+        <select id="equipmentType" ui-select2 class="input-large" ng-model="filter.equipmentType" ng-change="notifyFilterChanged('equipemnt-type-changed');">
             <option ng-repeat="equipment in equipmentTypes" value="{{ equipment.id }}" ng-selected="filter.equipmentType == equipment.id">{{equipment.name}}</option>
         </select>
-    </div>
-    </div>
-</script>
-
-<script type="text/ng-template" id="filter-program-with-budget-template">
-    <div>
-        <label class="labels" openlmis-message="label.program"><span ng-show="requiredFilters.program" class="label-required">*</span></label><div>
-        <select class="input-large" ng-model="filter.program" ng-change="filterChanged();">
-            <option ng-repeat="programWithBudget in programs" value="{{ programWithBudget.id }}" ng-selected="filter.program == programWithBudget.id">{{programWithBudget.name}}</option>
-        </select>
-
     </div>
     </div>
 </script>
@@ -234,7 +212,7 @@
         <div class="span3">
             <label class="labels" openlmis-message="label.program"><span ng-show="requiredFilters.program" class="label-required">*</span></label>
             <div>
-                <select class="input-large" ng-model="filter.program" ng-change="filterChanged()">
+                <select ui-select2 class="input-large" ng-model="filter.program" ng-change="filterChanged()">
                     <option ng-repeat="program in programs" value="{{ program.id }}" ng-selected="program.id == filter.program">{{program.name}}</option>
                 </select>
             </div>
@@ -242,7 +220,7 @@
         <div class="span3">
             <label class="labels" openlmis-message="label.product"> <span ng-show="requiredFilters.product" class="label-required">*</span></label>
             <div>
-                <select class="input-large" ng-model="filter.product" ng-change="filterChanged();">
+                <select ui-select2 class="input-large" ng-model="filter.product" ng-change="filterChanged();">
 
                     <option ng-selected="filter.product === 0" ng-value="0">--Select Product --</option>
                     <!-- <option ng-selected="filter.product === -1" ng-value="-1">--Indicator Products --</option> -->
@@ -256,7 +234,7 @@
         <div class="span4">
             <label class="labels" openlmis-message="label.period"> <span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
             <div>
-            <select class="input-large" ng-change="filterChanged();" ng-model="filter.period">
+            <select ui-select2 class="input-large" ng-change="filterChanged();" ng-model="filter.period">
                 <option ng-selected="filter.period === 0" ng-value="0">--Select Period --</option>
                 <optgroup ng-repeat="year in periods"  label="{{year.year}}">
 
@@ -268,12 +246,13 @@
           </div>
         </div>
     </div>
+    </div>
 </script>
 
 <script type="text/ng-template" id="filter-equipment">
     <div>
-        <label class="labels" openlmis-message="label.equipment"> <span ng-show="requiredFilters.equipment" class="label-required">*</span></label><div>
-        <select class="input-large" ng-model="filter.equipment" ng-change="filterChanged();">
+        <label for="equipment" class="labels" openlmis-message="label.equipment"> <span ng-show="requiredFilters.equipment" class="label-required">*</span></label><div>
+        <select id="equipment" ui-select2 class="input-large" ng-model="filter.equipment" ng-change="notifyFilterChanged('equipment-changed');">
             <option ng-repeat="equipment in equipments" value="{{ equipment.id }}" ng-selected="filter.equipment == equipment.id">{{equipment.name}}</option>
         </select>
     </div>
@@ -283,8 +262,8 @@
 
 <script type="text/ng-template" id="filter-service-contract">
     <div>
-        <label class="labels" openlmis-message="label.service.contract.available"><span ng-show="requiredFilters.serviceContract" class="label-required">*</span></label><div>
-        <select class="input-large" ng-model="filter.serviceContract" ng-change="filterChanged();">
+        <label for="serviceContract" class="labels" openlmis-message="label.service.contract.available"><span ng-show="requiredFilters.serviceContract" class="label-required">*</span></label><div>
+        <select id="serviceContract" ui-select2 class="input-large" ng-model="filter.serviceContract" ng-change="notifyFilterChanged('service-contract-changed');">
             <option  ng-repeat="contract in serviceContract" value="{{ contract.key }}" ng-selected="filter.serviceContract == contract.key">{{contract.value}}</option>
         </select>
 
@@ -294,8 +273,8 @@
 
 <script type="text/ng-template" id="filter-donors">
     <div>
-        <label class="labels" openlmis-message="label.donor"> <span ng-show="requiredFilters.donor" class="label-required">*</span></label><div>
-        <select class="input-large" ng-model="filter.donor" ng-change="filterChanged();">
+        <label for="donor" class="labels" openlmis-message="label.donor"> <span ng-show="requiredFilters.donor" class="label-required">*</span></label><div>
+        <select id="donor" ui-select2 class="input-large" ng-model="filter.donor" ng-change="notifyFilterChanged('donor-changed');">
             <option  ng-repeat="donor in donors" value="{{ donor.id }}" ng-selected="filter.donors == donor.id">{{donor.shortName}}</option>
         </select>
     </div>
@@ -303,9 +282,11 @@
 </script>
 
 <script type="text/ng-template" id="filter-period-tree-template">
-    <label class="labels" openlmis-message="label.period"> <span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
+    <label for="periodTree" class="labels" openlmis-message="label.period"> <span ng-show="requiredFilters.period" class="label-required">*</span></label>
+    <div>
         <div>
-            <select class="input-large" ng-change="filterChanged();" ng-model="filter.period">
+            <select id="periodTree"
+                    ui-select2 class="input-large" ng-change="notifyFilterChanged('period-tree-changed');" ng-model="filter.period">
                 <option ng-selected="filter.period === 0" ng-value="0">--Select Period --</option>
                 <optgroup ng-repeat="year in periods"  label="{{year.year}}">
 
@@ -315,14 +296,15 @@
                 </optgroup>
             </select>
         </div>
+      </div>
 </script>
 
 <script type="text/ng-template" id="filter-rmnch-product-period">
     <div class="row">
         <div class="span4">
-            <label class="labels" openlmis-message="label.product"> <span ng-show="requiredFilters.product" class="label-required">*</span></label>
+            <label for="rmnchProduct" class="labels" openlmis-message="label.product"> <span ng-show="requiredFilters.product" class="label-required">*</span></label>
             <div>
-                <select class="input-large" ng-model="filter.product" ng-change="filterChanged();">
+                <select id="rmnchProduct" ui-select2 class="input-large" ng-model="filter.product" ng-change="filterChanged();">
                     <option ng-selected="filter.product === 0" ng-value="0">--Select Product --</option>
                     <option  ng-repeat="option in products | filter:productCFilter" value="{{ option.id }}" ng-selected="filter.product == option.id">{{ option.name }}</option>
                 </select>
@@ -331,16 +313,16 @@
         <div class="span4">
             <label class="labels" openlmis-message="label.period"> <span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
             <div>
-                <select class="input-large" ng-change="filterChanged();" ng-model="filter.period">
+                <select ui-select2 class="input-large" ng-change="filterChanged();" ng-model="filter.period">
                     <option ng-selected="filter.period === 0" ng-value="0">--Select Period --</option>
                     <optgroup ng-repeat="year in periods"  label="{{year.year}}">
 
                         <option ng-repeat-start="v in year.children" value="-1">{{v.groupname}}</option>
                         <option ng-repeat-end ng-repeat="d in v.children" value="{{d.periodid}}" ng-selected="filter.period == d.periodid"> &nbsp; &nbsp; {{d.periodname}}</option>
-
                     </optgroup>
                 </select>
             </div>
         </div>
         </div>
+    </div>
 </script>

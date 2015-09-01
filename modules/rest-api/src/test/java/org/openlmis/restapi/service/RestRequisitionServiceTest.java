@@ -30,6 +30,7 @@ import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.builder.ReportBuilder;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
+import org.openlmis.rnr.builder.PatientQuantificationsBuilder;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -167,6 +168,49 @@ public class RestRequisitionServiceTest {
     verify(requisitionService).submit(requisition);
     assertThat(requisition.getRegimenLineItems().get(0).getPatientsOnTreatment(), is(10));
     assertThat(requisition.getRegimenLineItems().get(0).getPatientsStoppedTreatment(), is(5));
+  }
+
+  @Test
+  public void shouldCopyPatientQuantificationWhenReportHasData() throws Exception {
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
+    List<RnrLineItem> products = asList(rnrLineItem);
+    requisition.setFullSupplyLineItems(products);
+    requisition.setProgram(new Program());
+
+    when(facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(any(Long.class), any(Long.class))).thenReturn(new ArrayList<FacilityTypeApprovedProduct>());
+
+    RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
+    requisition.setRegimenLineItems(asList(regimenLineItem));
+
+
+    report.setProducts(products);
+    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
+    report.setRegimens(asList(reportRegimenLineItem));
+    Long facility_id = 5L;
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
+    Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
+
+    when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false, null)).thenReturn(requisition);
+    when(requisitionService.save(requisition)).thenReturn(requisition);
+    when(productService.getByCode(validProductCode)).thenReturn(new Product());
+    Rnr reportedRequisition = mock(Rnr.class);
+    whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
+
+    when(requisitionService.submit(requisition)).thenReturn(requisition);
+
+    PatientQuantificationsBuilder patientQuantificationsBuilder = new PatientQuantificationsBuilder();
+    List<PatientQuantificationLineItem> patientQuantifications = patientQuantificationsBuilder.addLineItem(new PatientQuantificationLineItem("newborn", new Integer(10))).
+            addLineItem(new PatientQuantificationLineItem("adults", new Integer(5))).build();
+    report.setPatientQuantifications(patientQuantifications);
+
+    service.submitReport(report, 1L);
+
+    assertThat(requisition.getPatientQuantifications().get(0).getTotal(), is(10));
+    assertThat(requisition.getPatientQuantifications().get(1).getTotal(), is(5));
   }
 
   @Test

@@ -22,6 +22,7 @@ import org.junit.experimental.categories.Category;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openlmis.LmisThreadLocal;
+import org.openlmis.core.logging.ApplicationLogger;
 import org.openlmis.db.categories.UnitTests;
 
 import java.io.ByteArrayOutputStream;

@@ -1,29 +1,26 @@
 /*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.mapper.FacilityReportMapper;
-import org.openlmis.report.model.params.FacilityReportParam;
-import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.sorter.FacilityReportSorter;
-import org.openlmis.report.util.StringHelper;
+import org.openlmis.report.model.params.FacilityReportParam;
+import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,40 +29,30 @@ import java.util.Map;
 public class FacilityReportDataProvider extends ReportDataProvider {
 
   @Autowired
-  private FacilityService facilityService;
+  SelectedFilterHelper filterHelper;
 
   @Autowired
   private FacilityReportMapper facilityReportMapper;
 
-  private FacilityReportParam facilityReportParam = null;
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
-
     return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(params), this.getUserId());
   }
 
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
     return facilityReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria), this.getUserId());
   }
 
 
   public FacilityReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-    if (filterCriteria != null) {
-      facilityReportParam = new FacilityReportParam();
-      facilityReportParam.setZoneId(StringHelper.isBlank(filterCriteria,"zone") ? 0 : Integer.parseInt(filterCriteria.get("zone")[0]));  //defaults to 0
-      facilityReportParam.setFacilityTypeId(filterCriteria.get("facilityType") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityType")[0])); //defaults to 0
-      facilityReportParam.setStatusId(StringHelper.isBlank(filterCriteria, "status") ? null : Boolean.valueOf(filterCriteria.get("status")[0]));
-      facilityReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program") ? 0 :Integer.parseInt(filterCriteria.get("program")[0]));
-
-    }
-    return facilityReportParam;
+    FacilityReportParam param = ParameterAdaptor.parse(filterCriteria, FacilityReportParam.class);
+    return param;
   }
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    return getReportFilterData(params).toString();
+    return filterHelper.getProgramPeriodGeoZone(params);
   }
 }

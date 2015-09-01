@@ -88,7 +88,7 @@
       </div>
     </li>
     <li ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')">
-      <a id="vaccine" openlmis-message="link.vaccine"></a>
+      <a id="vaccine" href="" openlmis-message="link.vaccine"></a>
 
       <div class="submenu">
         <ul>
@@ -208,13 +208,21 @@
                 <li ng-show="hasPermission('VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT')">
                   <a href="/public/pages/reports/lab-equipments-by-location/index.html" openlmis-message="menu.report.lab.equipment.by.location"></a>
                 </li>
+
+                <li ng-show="hasPermission('VIEW_REPAIR_MANAGEMENT_REPORT')">
+                      <a href="/public/pages/reports/cce-repair-management/index.html" openlmis-message="menu.report.repair.management"></a>
+
                 <li ng-show="hasPermission('VIEW_COLD_CHAIN_EQUIPMENT_LIST_REPORT')">
                   <a href="/public/pages/reports/cold-chain-equipment-inventory/index.html" openlmis-message="menu.report.lab.equipment.coldchain.inventory"></a>
                 </li>
                 <li ng-show="hasPermission('VIEW_CCE_STORAGE_CAPACITY_REPORT')">
                   <a href="/public/pages/reports/cce-storage-capacity/index.html" openlmis-message="menu.report.cce.storage.capacity"></a>
                 </li>
-                <li class="beak"></li>
+                  <li ng-show="hasPermission('VIEW_VACCINE_REPLACEMENT_PLAN_SUMMARY')">
+                      <a href="/public/pages/reports/replacement-plan-summary/index.html" openlmis-message="menu.report.vaccine.replacement.plan.summary"></a>
+                  </li>
+
+                  <li class="beak"></li>
               </ul>
             </div>
           </li>
@@ -318,6 +326,9 @@
               </ul>
             </div>
           </li>
+
+
+          <li class="has-children">
 
           <li>
             <a href="/public/pages/reports/custom/index.html" openlmis-message="menu.report.custom.reports"></a>
@@ -435,6 +446,10 @@
                   <a id="productsMenu" href="/public/pages/admin/product/index.html"
                      openlmis-message="header.products"></a>
                 </li>
+                  <li ng-show="hasPermission('MANAGE_ELMIS_INTERFACE')">
+                      <a href="/public/pages/admin/interfaces/index.html"
+                         openlmis-message="link.admin.elmis.interface"></a>
+                  </li>
                 <li class="beak"></li>
               </ul>
             </div>
@@ -532,6 +547,12 @@
                     </ul>
                 </div>
             </li>
+
+          <li ng-show="hasPermission('MANAGE_CUSTOM_REPORTS')">
+            <a id='manageCustomReports' href="/public/pages/reports/custom/designer.html#/designer"
+               openlmis-message="link.admin.manage.custom.reports"></a>
+          </li>
+
           <li class="beak"></li>
         </ul>
       </div>
@@ -540,6 +561,11 @@
         <a
             href="/public/pages/ils-gateway/index.html#/dashboard"
             openlmis-message="link.ils"></a>
+    </li>
+    <li ng-show="hasPermission('ACCESS_NEW_DASHBOARD')">
+      <a
+              href="/public/pages/dashboard/index_new.html#/dashboard-new"
+              openlmis-message="link.dashboard"></a>
     </li>
   </ul>
 </div>

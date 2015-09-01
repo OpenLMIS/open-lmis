@@ -10,22 +10,12 @@
 
 package org.openlmis.web.controller;
 
-import org.openlmis.core.domain.DosageUnit;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProductCategory;
-import org.openlmis.core.domain.ProductForm;
-import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.PriceSchedule;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.ProductCategoryService;
-import org.openlmis.core.service.ProductFormService;
-import org.openlmis.core.service.ProductGroupService;
-import org.openlmis.core.service.ProductService;
-import org.openlmis.core.service.PriceScheduleService;
-import org.openlmis.core.service.ProgramProductService;
+import org.openlmis.core.service.*;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.web.form.ProductDTO;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.openlmis.core.web.OpenLmisResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -62,7 +52,7 @@ public class ProductController extends BaseController {
   private ProgramProductService programProductService;
 
   @Autowired
-  private PriceScheduleService priceScheduleService;
+  private ProductPriceScheduleService priceScheduleService;
 
   @Autowired
   private ProductService service;
@@ -94,9 +84,9 @@ public class ProductController extends BaseController {
 
     List<ProgramProduct> programProducts = programProductService.getByProductCode(product.getCode());
 
-    List<PriceSchedule> priceSchedules = priceScheduleService.getByProductId(product.getId());
+    List<ProductPriceSchedule> productPriceSchedules = priceScheduleService.getByProductId(product.getId());
 
-    return new ProductDTO(product, product.getModifiedDate(), programProducts, priceSchedules);
+    return new ProductDTO(product, product.getModifiedDate(), programProducts, productPriceSchedules);
   }
 
   @RequestMapping(method = POST, headers = ACCEPT_JSON)
@@ -127,7 +117,7 @@ public class ProductController extends BaseController {
                                                  HttpServletRequest request) {
     Product product = productDTO.getProduct();
     List<ProgramProduct> programProducts = productDTO.getProgramProducts();
-    List<PriceSchedule> priceSchedules = productDTO.getPriceSchedules();
+    List<ProductPriceSchedule> productPriceSchedules = productDTO.getProductPriceSchedules();
 
     try {
       Long userId = loggedInUserId(request);
@@ -135,7 +125,7 @@ public class ProductController extends BaseController {
       product.setModifiedBy(userId);
       service.save(product);
       programProductService.saveAll(programProducts, product);
-      priceScheduleService.saveAll(priceSchedules, product);
+      priceScheduleService.saveAll(productPriceSchedules, product);
     } catch (DataException e) {
       return OpenLmisResponse.error(e, BAD_REQUEST);
     }

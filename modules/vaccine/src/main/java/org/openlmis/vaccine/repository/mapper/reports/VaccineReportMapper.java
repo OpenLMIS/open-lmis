@@ -1,11 +1,13 @@
 /*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.openlmis.vaccine.repository.mapper.reports;
@@ -56,6 +58,8 @@ public interface VaccineReportMapper {
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportDiseaseLineItemMapper.getLineItems")),
     @Result(property = "vitaminSupplementationLineItems", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.vaccine.repository.mapper.reports.VitaminSupplementationLineItemMapper.getLineItems")),
+    @Result(property = "reportStatusChanges", javaType = List.class, column = "id",
+      many = @Many( select = "org.openlmis.vaccine.repository.mapper.reports.VaccineReportStatusChangeMapper.getChangeLogByReportId")),
     @Result(property = "period", javaType = ProcessingPeriod.class, column = "periodId",
       many = @Many(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
     @Result(property = "facility", javaType = Facility.class, column = "facilityId",
@@ -138,5 +142,41 @@ public interface VaccineReportMapper {
 
   @Select("Select age_group AS ageGroup, vitamin_name AS vitaminName, male_value AS maleValue, female_value AS femaleValue from vw_vaccine_vitamin_supplementation where report_id = #{reportId}")
   List<VitaminSupplementationLineItem> getVitaminSupplementationReport(@Param("reportId") Long reportId);
+
+  @Select("select COALESCE(fr.quantity_issued, 0) quantity_issued, COALESCE(fr.closing_balance, 0) closing_balance, pp.name period_name \n" +
+          "from fn_vaccine_facility_n_rnrs('Vaccine',#{facilityCode}, #{productCode},4) fr \n" +
+          "JOIN processing_periods pp ON pp.id = fr.period_id\n" +
+          "order by pp.id asc;")
+  List<HashMap<String, Object>> vaccineUsageTrend(@Param("facilityCode")String facilityCode, @Param("productCode")String productCode);
+
+  @Select("SELECT product_code,\n" +
+          "MAX(product_name) product_name,\n" +
+          "sum(opening_balanace) opening_balance,\n" +
+          "sum(quantity_received) quantity_received,\n" +
+          "sum(quantity_issued) quantity_issued,\n" +
+          "sum(quantity_vvm_alerted) quantity_vvm_alerted,\n" +
+          "sum(quantity_freezed) quantity_freezed,\n" +
+          "sum(quantity_expired) quantity_expired,\n" +
+          "sum(quantity_discarded_unopened) quantity_discarded_unopened,\n" +
+          "sum(quantity_discarded_opened) quantity_discarded_opened,\n" +
+          "sum(quantity_wasted_other) quantity_wasted_other,\n" +
+          "sum(closing_balance) closing_balance,\n" +
+          "sum(days_stocked_out) days_stocked_out,\n" +
+          "'' AS reason_for_discarding,\n" +
+          "sum(children_immunized) children_immunized,\n" +
+          "sum(pregnant_women_immunized) pregnant_women_immunized,\n" +
+          "sum(usage_rate) usage_rate,\n" +
+          "sum(wastage_rate) wastage_rate \n" +
+          "from vw_vaccine_stock_status \n" +
+          "INNER JOIN vw_districts vd ON vd.district_id = geographic_zone_id\n" +
+          "where period_id = #{periodId} and (vd.parent = #{zoneId} or vd.district_id = #{zoneId} or vd.region_id = #{zoneId} or vd.zone_id = #{zoneId} )\n" +
+          "group by product_code")
+  List<HashMap<String, Object>> getVaccinationAggregateByGeoZoneReport(@Param("periodId")Long periodId, @Param("zoneId") Long zoneId);
+  @Select("select COALESCE(fr.quantity_issued, 0) quantity_issued, COALESCE(fr.closing_balance, 0) closing_balance, pp.name period_name \n" +
+          "from fn_vaccine_geozone_n_rnrs('Vaccine', #{periodId}::integer ,#{zoneId}::integer, #{productCode},4) fr\n" +
+          "JOIN processing_periods pp ON pp.id = fr.period_id\n" +
+          "order by pp.id asc")
+  List<HashMap<String, Object>>vaccineUsageTrendByGeographicZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId, @Param("productCode") String productCode);
+
 
 }

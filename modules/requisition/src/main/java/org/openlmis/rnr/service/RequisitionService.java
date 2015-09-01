@@ -100,7 +100,7 @@ public class RequisitionService {
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
   @Autowired
-  private PriceScheduleService priceScheduleService;
+  private ProductPriceScheduleService priceScheduleService;
 
   @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
@@ -161,12 +161,12 @@ public class RequisitionService {
   }
 
     public void populateProductsPriceBasedOnPriceSchedule(Long facilityId, Long programId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts) {
-        List<PriceSchedule> priceSchedules = priceScheduleService.getPriceScheduleFullSupplyFacilityApprovedProduct(programId, facilityId);
+        List<ProductPriceSchedule> productPriceSchedules = priceScheduleService.getPriceScheduleFullSupplyFacilityApprovedProduct(programId, facilityId);
 
-        for(PriceSchedule priceSchedule : priceSchedules){
+        for(ProductPriceSchedule productPriceSchedule : productPriceSchedules){
             for(FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
-                if (priceSchedule.getProduct().getId().equals(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId()))
-                    facilityTypeApprovedProduct.getProgramProduct().setCurrentPrice(new Money(BigDecimal.valueOf(priceSchedule.getSalePrice())));
+                if (productPriceSchedule.getProduct().getId().equals(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId()))
+                    facilityTypeApprovedProduct.getProgramProduct().setCurrentPrice(new Money(BigDecimal.valueOf(productPriceSchedule.getPrice())));
             }
         }
     }

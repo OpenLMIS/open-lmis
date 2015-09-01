@@ -1,11 +1,13 @@
 <!--
-  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
   ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
   ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
   ~
-  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <div xmlns="http://www.w3.org/1999/html">
   <h2>
@@ -15,6 +17,9 @@
 
   <div class="alert alert-success clearfix" ng-show="message">
     <span ng-bind="message"></span>
+  </div>
+  <div class="alert alert-error clearfix" ng-show="error">
+    <span ng-bind="error"></span>
   </div>
   <div class="content-body">
     <div class="">
@@ -68,7 +73,7 @@
         <td>{{eq.model}}</td>
         <td>{{eq.energyType.name}}</td>
         <td>{{eq.equipmentType.code}}</td>
-        <td><a openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)"></a></td>
+        <td><a openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)" ng-hide="eq.inventoryCount > 0"></a></td>
       </tr>
       </tbody>
     </table>
@@ -106,7 +111,7 @@
           <span class="fadeout clearfix" ng-show="eq.showSuccess == true">Status Saved</span>
         </td>
         <td>{{eq.pqsCode}}</td>
-        <td><a  openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)"></a></td>
+        <td><a openlmis-message="label.equipment.remove" href="" ng-click="showRemoveEquipmentConfirmDialog(eq.id)" ng-hide="eq.inventoryCount > 0"></a></td>
       </tr>
       </tbody>
     </table>

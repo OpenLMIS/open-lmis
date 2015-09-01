@@ -76,6 +76,8 @@
     <import resource="classpath:/applicationContext-equipment.xml" />
     <import resource="classpath:/applicationContext-help.xml" />
     <import resource="classpath:/applicationContext-vaccine.xml" />
+    <import resource="classpath:/applicationContext-stock-management.xml" />
+
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 
     <bean id="multipartResolver"
@@ -230,7 +232,7 @@
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="label.price.schedule"/>
                         <property name="importableClass">
-                            <value type="java.lang.Class">org.openlmis.core.domain.PriceSchedule</value>
+                            <value type="java.lang.Class">org.openlmis.core.domain.ProductPriceSchedule</value>
                         </property>
                         <property name="recordHandler" ref="priceSchedulePersistenceHandler"/>
                     </bean>
@@ -290,14 +292,32 @@
                     </bean>
                 </entry>
                 <entry key="facilityFtpDetails">
-                <bean class="org.openlmis.web.model.UploadBean">
-                    <property name="displayName" value="label.facility.ftp.details"/>
-                    <property name="importableClass">
-                        <value type="java.lang.Class">org.openlmis.core.domain.FacilityFtpDetails</value>
-                    </property>
-                    <property name="recordHandler" ref="facilityFtpDetailsPersistenceHandler"/>
-                </bean>
-            </entry>
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.facility.ftp.details"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.FacilityFtpDetails</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityFtpDetailsPersistenceHandler"/>
+                    </bean>
+                </entry>
+                <entry key="stockAdjustmentReason">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.stock.adjustment.reason"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.dto.StockAdjustmentReason</value>
+                        </property>
+                        <property name="recordHandler" ref="stockAdjustmentReasonHandler"/>
+                    </bean>
+                </entry>
+                <entry key="stockAdjustmentReasonProgram">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.stock.adjustment.reason.program"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.dto.StockAdjustmentReasonProgram</value>
+                        </property>
+                        <property name="recordHandler" ref="stockAdjustmentReasonProgramHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

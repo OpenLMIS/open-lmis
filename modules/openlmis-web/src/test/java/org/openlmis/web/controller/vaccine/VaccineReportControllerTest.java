@@ -10,7 +10,6 @@
 
 package org.openlmis.web.controller.vaccine;
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -30,7 +29,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -130,11 +129,11 @@ public class VaccineReportControllerTest {
   @Test
   public void shouldInitialize() throws Exception {
     VaccineReport report = new VaccineReport();
-    when(service.initialize(1L, 1L, 1L)).thenReturn(report);
+    when(service.initialize(1L, 1L, 1L, 1L)).thenReturn(report);
 
     ResponseEntity<OpenLmisResponse> response = controller.initialize(1L, 1L, 1L, httpServletRequest);
 
-    verify(service).initialize(1L, 1L, 1L);
+    verify(service).initialize(1L, 1L, 1L, 1L);
     assertThat(report, is(response.getBody().getData().get("report")));
   }
 
@@ -163,11 +162,11 @@ public class VaccineReportControllerTest {
   @Test
   public void shouldSubmit() throws Exception {
     VaccineReport report = new VaccineReport();
-    doNothing().when(service).submit(report);
+    doNothing().when(service).submit(report, 1L);
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(report, httpServletRequest);
 
-    verify(service).submit(report);
+    verify(service).submit(report, 1L);
 
     // the status would have changed.
     assertThat(report, is(response.getBody().getData().get("report")));

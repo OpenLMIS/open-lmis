@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
   ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
   ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
   ~
-  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -37,7 +39,7 @@
             <list><!-- list of open-lmis reports -->
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="facilities"/>
-                    <property name="template" value="facility-report.jasper"/>
+                    <property name="template" value="facilities-listings.jasper"/>
                     <property name="reportDataProvider" ref="facilityReportDataProvider"/>
                     <property name="id" value="RP-FAL-ALL"/>
                     <property name="name" value="Facility list report"/>
@@ -45,11 +47,11 @@
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
-                    <property name="reportKey" value="mailinglabels"/>
-                    <property name="template" value="mailing-labels.jasper"/>
-                    <property name="reportDataProvider" ref="mailingLabelReportDataProvider"/>
+                    <property name="reportKey" value="facility-list"/>
+                    <property name="template" value="facilities-listings.jasper"/>
+                    <property name="reportDataProvider" ref="facilityReportDataProvider"/>
                     <property name="id" value="RP-MAL-LAB"/>
-                    <property name="name" value="Facility List: Lists facilities with contact addresses"/>
+                    <property name="name" value="List of facilities with contact addresses"/>
                     <property name="title" value="report.title.facility.list"/>
                     <property name="version" value="1.0"/>
                 </bean>
@@ -332,12 +334,62 @@
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cce_repair_management"/>
+                    <property name="template" value="cce-repair-management.jasper"/>
+                    <property name="reportDataProvider" ref="CCERepairManagementReportDataProvider"/>
+                    <property name="id" value="REPAIR"/>
+                    <property name="name" value="Cold Chain Repair Management"/>
+                    <property name="title" value="report.title.repair.management"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="cce_repair_management_equipment_list"/>
+                    <property name="template" value="cce-repair-management-equipment-list.jasper"/>
+                    <property name="reportDataProvider" ref="CCERepairManagementEquipmentListDataProvider"/>
+                    <property name="id" value="REPAIR"/>
+                    <property name="name" value="Cold Chain Equipment List"/>
+                    <property name="title" value="report.title.repair.management.equipment.list"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="cold_chain_equipment"/>
                     <property name="template" value="cold-chain-equipment.jasper"/>
                     <property name="reportDataProvider" ref="coldChainEquipmentReportDataProvider"/>
                     <property name="id" value="RP-Cold-Chain-Equipment-Report"/>
                     <property name="name" value="Cold Chain Equipment Inventory"/>
                     <property name="title" value="report.title.cold.chain.equipment.inventory"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="equipment_replacement_list"/>
+                    <property name="template" value="replacement-equipment-list.jasper"/>
+                    <property name="reportDataProvider" ref="equipmentReplacementListDataProvider"/>
+                    <property name="id" value="RP-replacement-plan"/>
+                    <property name="name" value="Equipment To Be Replaced"/>
+                    <property name="title" value="report.title.equipment.in.need.of.replacement"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="replacement_plan_summary"/>
+                    <property name="template" value="replacement-plan-summary.jasper"/>
+                    <property name="reportDataProvider" ref="replacementPlanSummaryReportDataProvider"/>
+                    <property name="id" value="RP-replacement-plan"/>
+                    <property name="name" value="Replacement Plan Summary"/>
+                    <property name="title" value="report.title.replacement.plan.summary"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="replacement_plan_summary_annual"/>
+                    <property name="template" value="annual-replacement.jasper"/>
+                    <property name="reportDataProvider" ref="replacementPlanSummaryReportDataProvider"/>
+                    <property name="id" value="RP-replacement-plan"/>
+                    <property name="name" value="Annual Replacement Plan Summary"/>
+                    <property name="title" value="report.title.annual.replacement.plan.summary"/>
                     <property name="version" value="1.0"/>
                 </bean>
 

@@ -1,1 +1,0 @@
-ALTER TABLE facilities ADD COLUMN pricecatid INTEGER REFERENCES price_schedule_category (id);

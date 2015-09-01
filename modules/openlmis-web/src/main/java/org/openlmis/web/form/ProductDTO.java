@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.PriceSchedule;
+import org.openlmis.core.domain.ProductPriceSchedule;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProgramProduct;
 
@@ -37,5 +37,5 @@ public class ProductDTO {
 
   private List<ProgramProduct> programProducts;
 
-  private List<PriceSchedule> priceSchedules;
+  private List<ProductPriceSchedule> productPriceSchedules;
 }

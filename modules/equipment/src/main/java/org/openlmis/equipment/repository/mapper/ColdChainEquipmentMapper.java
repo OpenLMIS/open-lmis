@@ -1,13 +1,12 @@
 /*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
- *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-
 package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
@@ -20,8 +19,15 @@ import java.util.List;
 @Repository
 public interface ColdChainEquipmentMapper {
 
-    @Select("SELECT * from equipment_cold_chain_equipments " +
-          "JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id WHERE equipments.equipmentTypeId = #{equipmentTypeId} ORDER BY id DESC")
+    @Select("SELECT equipment_cold_chain_equipments.*" +
+        "   , equipments.*" +
+        "   , COUNT(equipment_inventories.id) AS inventorycount" +
+        " FROM equipment_cold_chain_equipments" +
+        "   JOIN equipments ON equipments.id = equipment_cold_chain_equipments.equipmentid" +
+        "   LEFT JOIN equipment_inventories ON equipment_inventories.equipmentid = equipments.id" +
+        " WHERE equipments.equipmentTypeId = #{equipmentTypeId}" +
+        " GROUP BY equipments.id, equipment_cold_chain_equipments.equipmentid" +
+        " ORDER BY equipments.id DESC")
      @Results({
             @Result(
                     property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
@@ -47,7 +53,14 @@ public interface ColdChainEquipmentMapper {
             "JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id WHERE equipments.equipmentTypeId = #{equipmentTypeId}")
     Integer getCountByType(@Param("equipmentTypeId") Long equipmentTypeId);
 
-    @Select("SELECT * from equipment_cold_chain_equipments JOIN equipments ON equipment_cold_chain_equipments.equipmentid=equipments.id where equipment_cold_chain_equipments.equipmentid = #{id}")
+    @Select("SELECT equipments.*" +
+        "   , equipment_cold_chain_equipments.*" +
+        "   , COUNT(equipment_inventories.id) AS inventorycount" +
+        " FROM equipment_cold_chain_equipments" +
+        "   JOIN equipments ON equipment_cold_chain_equipments.equipmentid = equipments.id" +
+        "   LEFT JOIN equipment_inventories ON equipment_inventories.equipmentid = equipments.id" +
+        " WHERE equipment_cold_chain_equipments.equipmentid = #{id}" +
+        " GROUP BY equipments.id, equipment_cold_chain_equipments.equipmentid")
     @Results({
             @Result(
                     property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,

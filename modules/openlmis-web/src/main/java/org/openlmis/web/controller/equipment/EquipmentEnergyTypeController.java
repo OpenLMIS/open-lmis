@@ -2,8 +2,8 @@ package org.openlmis.web.controller.equipment;
 
 import org.openlmis.equipment.domain.EquipmentEnergyType;
 import org.openlmis.equipment.service.EquipmentEnergyTypeService;
-import org.openlmis.web.controller.BaseController;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;

@@ -1,13 +1,14 @@
 /*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.openlmis.web.controller.vaccine;
 
 import org.openlmis.core.domain.RightName;
@@ -17,8 +18,8 @@ import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
-import org.openlmis.web.controller.BaseController;
-import org.openlmis.web.response.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -94,7 +95,7 @@ public class VaccineReportController extends BaseController {
     @PathVariable Long periodId,
     HttpServletRequest request
   ){
-    return OpenLmisResponse.response("report", service.initialize(facilityId, programId, periodId));
+    return OpenLmisResponse.response("report", service.initialize(facilityId, programId, periodId, loggedInUserId(request)));
   }
 
   @RequestMapping(value = "get/{id}.json", method = RequestMethod.GET)
@@ -113,26 +114,41 @@ public class VaccineReportController extends BaseController {
   @RequestMapping(value = "submit")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
-    service.submit(report);
+    service.submit(report, loggedInUserId(request));
     return OpenLmisResponse.response("report", report);
   }
 
   @RequestMapping(value = "vaccine-monthly-report")
-  public ResponseEntity<OpenLmisResponse> diseaseSurveillance(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId){
+  public ResponseEntity<OpenLmisResponse> getVaccineMonthlyReport(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId){
+
+    if (periodId == null || periodId == 0) return null;
+
     Map<String, Object> data = new HashMap();
-    Long reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
-    data.put("diseaseSurveillance", service.getDiseaseSurveillance(reportId));
-    data.put("coldChain", service.getColdChain(reportId));
-    data.put("adverseEffect", service.getAdverseEffectReport(reportId));
-    data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId));
-    data.put("immunizationSession", service.getImmunizationSession(reportId));
-    data.put("vaccination", service.getVaccineReport(reportId));
-    data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId));
-    data.put("vitamins", service.getVitaminsReport(reportId));
-    data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId));
-    data.put("vitaminSupplementation", service.getVitaminSupplementationReport(reportId));
+
+    if (facilityId == null || facilityId == 0 ){ // Return aggregated data for the selected geozone
+
+      data.put("vaccination", service.getVaccineReport(null, facilityId, periodId, zoneId));
+
+    } else {
+      Long reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
+      data.put("diseaseSurveillance", service.getDiseaseSurveillance(reportId));
+      data.put("coldChain", service.getColdChain(reportId));
+      data.put("adverseEffect", service.getAdverseEffectReport(reportId));
+      data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId));
+      data.put("immunizationSession", service.getImmunizationSession(reportId));
+      data.put("vaccination", service.getVaccineReport(reportId, facilityId, periodId, zoneId));
+      data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId));
+      data.put("vitamins", service.getVitaminsReport(reportId));
+      data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId));
+      data.put("vitaminSupplementation", service.getVitaminSupplementationReport(reportId));
+    }
 
     return OpenLmisResponse.response("vaccineData", data);
+  }
+
+  @RequestMapping(value = "vaccine-usage-trend")
+  public ResponseEntity<OpenLmisResponse> vaccineUsageTrend(@RequestParam("facilityCode") String facilityCode, @RequestParam("productCode") String productCode, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId){
+    return OpenLmisResponse.response("vaccineUsageTrend", service.vaccineUsageTrend(facilityCode, productCode, periodId, zoneId));
   }
 
 }

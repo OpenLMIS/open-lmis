@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-06-22T14:12:20 -->
+<!-- 2015-07-16T20:31:59 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="district-consumption" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="open_lmis"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -22,19 +35,7 @@
 	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
 	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[WITH temp AS (select product,zone_name, SUM(normalizedconsumption) normalizedconsumption
-
-      from vw_district_consumption_summary
-     --writePredicates(filter)
-      group by product,zone_name
-      order by product)
-
-      select t.product, t.zone_name district, t.normalizedconsumption consumption, case when temp2.total > 0 THEN round(((t.normalizedconsumption*100)/temp2.total),1) ELSE temp2.total END totalPercentage
-      from temp t
-      INNER JOIN ( select product,SUM(normalizedconsumption) total
-      from temp
-      group by product
-      order by product) temp2 ON t.product = temp2.product]]>
+		<![CDATA[]]>
 	</queryString>
 	<field name="product" class="java.lang.String"/>
 	<field name="district" class="java.lang.String"/>
@@ -48,7 +49,7 @@
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
 	<variable name="consumption_1" class="java.lang.Long" resetType="Group" resetGroup="GroupByProduct" calculation="Sum">
-		<variableExpression><![CDATA[$F{consumption}]]></variableExpression>
+		<variableExpression><![CDATA[($F{consumptionInPacks} != null)?$F{consumptionInPacks}:0]]></variableExpression>
 	</variable>
 	<group name="GroupByProduct" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{district}]]></groupExpression>
@@ -97,7 +98,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Reported Consumption per pack]]></text>
+					<text><![CDATA[Consumption (in Packs)]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -182,15 +183,15 @@
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="false">
 				<reportElement x="634" y="0" width="167" height="20" uuid="f463c503-d878-4a0f-a32a-711b3bee6a24"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($F{consumptionInPacks})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{consumptionInPacks} != null)?new java.text.DecimalFormat("#,##0").format($F{consumptionInPacks}):"0"]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="false">
 				<reportElement x="441" y="0" width="193" height="20" uuid="e87d5541-e8ba-49eb-ac05-35ed11254222"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($F{dispensed})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{dispensed} != null)?new java.text.DecimalFormat("#,##0").format($F{dispensed}):"0"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
