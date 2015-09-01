@@ -248,7 +248,7 @@ public class DashboardController extends BaseController {
                                                                          @PathVariable("programId") Long programId,
                                                                          HttpServletRequest request) {
 
-        return OpenLmisResponse.response(EXTRA_ANALYTICS_DATA_FOR_RNR_SUMMARY, this.lookupService.getExtraAnalyticsDataForRnRSummary(loggedInUserId(request), zoneId,periodId, programId));
+        return OpenLmisResponse.response(EXTRA_ANALYTICS_DATA_FOR_RNR_SUMMARY, this.lookupService.getExtraAnalyticsDataForRnRSummary(loggedInUserId(request), zoneId, periodId, programId));
     }
 
     @RequestMapping(value = "/rnrStatus-detail", method = GET, headers = ACCEPT_JSON)
@@ -268,6 +268,12 @@ public class DashboardController extends BaseController {
             return OpenLmisResponse.error(e, BAD_REQUEST);
         }
         return new OpenLmisResponse().response(OK);
+    }
+
+
+    @RequestMapping(value = "/program/{programId}/period/{periodId}/tracer-products-trend.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getProgramPeriodTracerProductsTrend(@PathVariable("programId") Long programId, @PathVariable("periodId") Long periodId, @RequestParam(value = "limit", required = false, defaultValue = "4") Long limit){
+        return OpenLmisResponse.response("tracerProducts", this.lookupService.getProgramPeriodTracerProductsTrend(programId, periodId, limit));
     }
 
 }

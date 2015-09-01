@@ -30,9 +30,24 @@
 <div xmlns="http://www.w3.org/1999/html">
 
     <ng-include src="'/public/pages/dashboard/shared/dashboard-header_new.html'"></ng-include>
-    <div>
 
-        selected program and period: {{programId}} {{ periodId}}
+    <div class="row">
+        <div class="span2" style="border-right: solid 1px #EAEFF3">
+            <div>
+          <!--  {{periodId}}-->
+            <div ng-repeat="trend in productsTrend">
+                <div style="margin-top:10px; padding: 10px 30px; border-bottom: solid 1px #EAEFF3">
+                    <div>{{trend.code}}</div>
+                    <spark-line af-data="trend.sohTrend" af-option="sparkOption" ></spark-line>
+                    <div style="margin-top:5px;"><span ng-class="colorify(trend.sohTrend[0])"  style="  color:white; padding:2px 7px; border-radius:10px; font-size:12px;">{{trend.sohTrend[0] | number}}</span></div>
+
+
+                </div>
+
+            </div>
+        </div>
+        </div>
+        <div class="span10"></div>
     </div>
 
 </div>

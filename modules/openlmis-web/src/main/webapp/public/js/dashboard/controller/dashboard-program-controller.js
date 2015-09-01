@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function DashboardProgramController($scope,$routeParams,$timeout, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods) {
+function DashboardProgramController($scope,$routeParams,$timeout, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend) {
     var dashboardMenuService = dashboardMenuServiceNew;
 
     $scope.dashboardTabs = dashboardMenuService.tabs;
@@ -37,7 +37,11 @@ function DashboardProgramController($scope,$routeParams,$timeout, dashboardMenuS
 
                 $scope.currentTab = $scope.programId =  dashboardMenuService.getTab(0).id;
             }
+        getLastPeriods();
 
+    });
+
+    function getLastPeriods(){
         GetLastPeriods.get({programId: $scope.programId}, function(data){
             $scope.lastPeriods = data.lastPeriods;
             dashboardMenuService.tabs = [];
@@ -48,12 +52,43 @@ function DashboardProgramController($scope,$routeParams,$timeout, dashboardMenuS
             $scope.dashboardPeriodTabs = dashboardMenuService.tabs;
             if(!isUndefined($routeParams.periodId)){
                 $scope.currentSubTab = $scope.periodId = $routeParams.periodId;
-            }else{
+            }else if(!isUndefined($scope.dashboardPeriodTabs[0])){
                 $scope.currentSubTab = $scope.periodId =  $scope.dashboardPeriodTabs[0].id;
             }
 
             dashboardMenuService.tabs = [];
         });
-    });
+
+
+        $timeout(function(){
+
+        getSohChartData();
+        }, 100)
+
+    };
+
+    function getSohChartData(){
+        $scope.productsTrend = [];
+        GetProgramPeriodTracerProductsTrend.get({programId: $scope.programId, periodId: $scope.periodId,  limit: 5}, function(data){
+           $scope.tracerProducts = data.tracerProducts;
+            $scope.sparkOption =  {  fillColor:'#F0F0F0', lineColor:'#ADA8A8',spotColor:'#ADA8A8e', width: '50px', chartRangeMin:'0', height:'20px'};
+
+            angular.forEach(data.tracerProducts, function(productTrend){
+                $scope.sohValue = _.pluck(productTrend.trends,'stock_in_hand');
+                $scope.productsTrend.push({'code': productTrend.code, "sohTrend": $scope.sohValue});
+            });
+
+        });
+    };
+
+    $scope.colorify = function(value){
+
+        if(!isUndefined(value)){
+            if(value >= 585450) return 'bg-green';
+            if(value <= 283261) return 'bg-red';
+            if(value < 585450) return 'bg-blue';
+        }
+
+    };
 
 }

@@ -176,5 +176,22 @@ public interface DashboardMapper {
 
     @Select("select name from processing_periods where id = #{id}")
     public String getPeriodName(@Param("id")Long id);
+
+
+    @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code\n" +
+            "      FROM \n" +
+            "          products as p \n" +
+            "                join product_forms as form on form.id = p.formid \n" +
+            "                join dosage_units as du on du.id = p.dosageunitid\n" +
+            "            join program_products pp on p.id = pp.productId \n" +
+            "        where pp.programId = #{programId} and pp.active = true  and p.tracer = true \n" +
+            "    order by name \n" +
+            "    limit #{limit}\n"
+    )
+    List<Product> getTracerProductsForProgram(@Param("programId")Long programId, @Param("limit")Long limit);
+
+    @Select("SELECT * from fn_geozone_n_rnrs(#{programId}::integer ,#{periodId}::integer , 437::integer, #{productCode}  );")
+    List<HashMap<String, Object>> getProgramPeriodTracerProductTrend(@Param("programId")Long programId, @Param("periodId") Long periodId, @Param("productCode") String productCode, Long geoId);
+
 }
 
