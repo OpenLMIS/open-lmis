@@ -14,10 +14,15 @@ function ViewColdChainStatusController($scope, facilities, period, deliveryZone,
     $scope.program = facilities[0].supportedPrograms[0].program;
     $scope.period = period;
     $scope.deliveryZone = deliveryZone;
-    if (!isUndefined(fridges) && !isUndefined(fridges.fridges) && fridges.fridges.length > 0) {
-        $scope.data = fridges.fridges;
+    if (!fridges || isUndefined(fridges)) {
+      $scope.apimessage = "message.api.error";
+      $scope.apiError = true;
     } else {
-        $scope.message = "label.no.cold.chain.status.information";
+        if (!isUndefined(fridges.fridges) && fridges.fridges.length > 0) {
+            $scope.data = fridges.fridges;
+        } else {
+            $scope.message = "label.no.cold.chain.status.information";
+        }
     }
     $scope.facilities = facilities;
   } else {

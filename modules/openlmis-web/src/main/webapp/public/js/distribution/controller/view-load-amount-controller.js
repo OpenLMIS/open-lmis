@@ -9,7 +9,7 @@
  */
 
 function ViewLoadAmountController($scope, facilities, period, deliveryZone, fridges) {
-if (!isUndefined(facilities) && facilities.length > 0) {
+  if (!isUndefined(facilities) && facilities.length > 0) {
     $scope.message = "";
     $scope.program = facilities[0].supportedPrograms[0].program;
     $scope.period = period;
@@ -18,18 +18,19 @@ if (!isUndefined(facilities) && facilities.length > 0) {
     var otherGroupName = "";
     $scope.geoZoneLevelName = facilities[0].geographicZone.level.name;
 
+    $scope.provincesForColdChainStatus = ['Gaza', 'Tete', 'Niassa'];
+    $scope.viewColdChainStatusAvailable = false;
+    $scope.checkViewColdChainStatus = function () {
+      $scope.parentZoneName = $scope.facilities[0].geographicZone.parent.name;
+      $scope.viewColdChainStatusAvailable = _.contains($scope.provincesForColdChainStatus, $scope.parentZoneName);
+    };
+    $scope.checkViewColdChainStatus();
+
     $scope.aggregateMap = {};
     if (!fridges.coldTradeData) {
-      $scope.message = "message.api.error";
+      $scope.apimessage = "message.api.error";
     } else if (fridges.coldTradeData) {
       $scope.fridges = fridges.coldTradeData.fridges;
-      $scope.provincesForColdChainStatus = ['Sul', 'Tete', 'Niassa'];
-      $scope.viewColdChainStatusAvailable = false;
-      $scope.checkViewColdChainStatus = function () {
-        $scope.parentZoneName = $scope.facilities[0].geographicZone.parent.name;
-        $scope.viewColdChainStatusAvailable = _.contains($scope.provincesForColdChainStatus, $scope.parentZoneName);
-      };
-      $scope.checkViewColdChainStatus();
 
       $scope.getFacitilityStatus = function (id) {
         if (!isUndefined(id)) {
