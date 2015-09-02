@@ -44,6 +44,19 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, frid
         return 1;
       };
 
+      $scope.isDataAvailable = function (id) {
+          if (!isUndefined(id)) {
+              for (var i = 0; i < $scope.fridges.length; i++) {
+                  var fridge = $scope.fridges[i];
+                  if (fridge.FacilityID == id) {
+                      return true;
+                  }
+              }
+          }
+          $scope.apimessage = "message.api.error.no.data";
+          return false;
+      };
+
       $scope.getURL = function (id) {
         if (!isUndefined(id)) {
             for (var i = 0; i < $scope.fridges.length; i++) {
