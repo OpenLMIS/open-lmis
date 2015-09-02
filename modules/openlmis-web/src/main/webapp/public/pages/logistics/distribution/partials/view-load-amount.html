@@ -27,7 +27,8 @@
   </h2>
 
   <div class="alert alert-info" ng-show="message"><span openlmis-message="message"></span></div>
-  <div ng-show="message">
+  <div class="alert alert-danger" ng-show="apimessage"><span id="apimessage" openlmis-message="apimessage"></span></div>
+  <div ng-hide="message">
     <div class="info-box">
       <div class="row-fluid">
         <div class="span3">
@@ -140,7 +141,7 @@
               <span id="facilityCode{{$parent.$index}}{{$index}}"ng-bind="facility.code"></span>
             </td>
             <td class="equipment-status" ng-show="viewColdChainStatusAvailable">
-              <a ng-href="{{getURL(facility.id)}}"><img src="/public/images/refrigator{{getFacitilityStatus(facility.id)}}.png"/></a>
+              <a ng-hide="apimessage" ng-href="{{getURL(facility.id)}}"><img src="/public/images/refrigator{{getFacitilityStatus(facility.id)}}.png"/></a>
             </td>
             <td>
               <span id="population{{$parent.$index}}{{$index}}" ng-bind="facility.catchmentPopulation"></span>

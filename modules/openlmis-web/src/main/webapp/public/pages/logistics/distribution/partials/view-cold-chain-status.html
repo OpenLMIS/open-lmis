@@ -130,7 +130,6 @@
       </table>
     </div>
   </div>
-  <div ng-show="message">
-    <h2 id="cold-status" ng-show="message"><span openlmis-message="message"></span></h2>
-  </div>
+  <div class="alert alert-info" ng-show="message"><span openlmis-message="message"></span></div>
+  <div class="alert alert-danger" ng-show="apimessage"><span id="apimessage" openlmis-message="apimessage"></span></div>
 </div>
