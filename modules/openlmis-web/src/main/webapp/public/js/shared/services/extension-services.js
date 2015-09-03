@@ -1297,3 +1297,7 @@ services.factory('ELMISInterfaceSave', function ($resource) {
     return $resource('/ELMISInterface.json', {}, {save:{method:'POST'}});
 });
 
+services.factory('FacilitiesByLevel', function($resource){
+    return $resource('/reports/facility-By-level.json',{},{});
+});
+
