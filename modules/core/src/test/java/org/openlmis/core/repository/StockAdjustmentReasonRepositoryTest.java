@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.dto.StockAdjustmentReason;
+import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.repository.mapper.StockAdjustmentReasonMapper;
 
 import java.util.ArrayList;

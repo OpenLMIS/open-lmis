@@ -9,8 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.dto.StockAdjustmentReason;
-import org.openlmis.core.dto.StockAdjustmentReasonProgram;
+import org.openlmis.core.domain.StockAdjustmentReason;
+import org.openlmis.core.domain.StockAdjustmentReasonProgram;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.StockAdjustmentReasonRepository;
 

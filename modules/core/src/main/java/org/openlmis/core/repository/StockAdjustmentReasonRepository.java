@@ -1,8 +1,8 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.dto.StockAdjustmentReason;
-import org.openlmis.core.dto.StockAdjustmentReasonProgram;
+import org.openlmis.core.domain.StockAdjustmentReason;
+import org.openlmis.core.domain.StockAdjustmentReasonProgram;
 import org.openlmis.core.repository.mapper.StockAdjustmentReasonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

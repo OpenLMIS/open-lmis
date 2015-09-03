@@ -1,9 +1,10 @@
-package org.openlmis.core.dto;
+package org.openlmis.core.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 

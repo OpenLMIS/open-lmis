@@ -12,7 +12,7 @@
 function ViewVaccineReportDetailController($scope, $location, $filter, report, discardingReasons) {
 
   // initial state of the display
-  $scope.report = report;
+  $scope.report = new VaccineReport(report);
   $scope.discardingReasons = discardingReasons;
   // populate scope with tab visibility info
   $scope.tabVisibility = {};
@@ -78,7 +78,6 @@ ViewVaccineReportDetailController.resolve = {
 
     $timeout(function () {
       VaccineReport.get({id: $route.current.params.id}, function (data) {
-        data.report.coverageLineItemViews = _.groupBy(data.report.coverageLineItems, 'productId');
         deferred.resolve(data.report);
       });
     }, 100);
