@@ -529,4 +529,12 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("lastPeriods", this.reportLookupService.getLastPeriods(programId));
     }
 
+    @RequestMapping(value = "/facility-By-level", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilityByLevel(@RequestParam("program") Long programId,
+                                                               HttpServletRequest request) {
+        List<FacilityLevelTree> facilityLevelTrees = reportLookupService.getFacilityByLevel(programId, loggedInUserId(request));
+        return OpenLmisResponse.response("facilityLevels", facilityLevelTrees);
+
+    }
+
 }
