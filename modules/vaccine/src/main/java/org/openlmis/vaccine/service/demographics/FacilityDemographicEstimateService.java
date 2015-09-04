@@ -67,18 +67,18 @@ public class FacilityDemographicEstimateService {
     return result;
   }
 
-  public DemographicEstimateForm getEstimateFor(Long userId, Long programId, Integer year){
+  public DemographicEstimateForm getEstimateFor(Long userId, Integer year){
     DemographicEstimateForm form = new DemographicEstimateForm();
     List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
-    List<Facility> facilities =  facilityService.getUserSupervisedFacilities(userId, programId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES);
-    // Not scalable - please refactor this.
+    List<Facility> facilities =  facilityService.getForUserAndRights(userId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES);
 
     for(Facility facility : facilities){
       DemographicEstimateLineItem dto = new DemographicEstimateLineItem();
       dto.setFacilityId(facility.getId());
       dto.setCode(facility.getCode());
       dto.setName(facility.getName());
+      dto.setParentName(facility.getGeographicZone().getName());
       dto.setFacilityEstimates(repository.getFacilityEstimate(year, facility.getId()));
 
       if( dto.getFacilityEstimates().size() == 0 ){
