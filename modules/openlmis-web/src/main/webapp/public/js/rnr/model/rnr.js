@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
+var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses) {
   
   // separate the skipped products from the not so skipped. 
   rnr.allSupplyLineItems = rnr.fullSupplyLineItems;
@@ -16,6 +16,7 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
     rnr.skippedLineItems = _.where(rnr.allSupplyLineItems, { skipped:true});
     rnr.fullSupplyLineItems =  _.where(rnr.allSupplyLineItems, {skipped: false});
   }
+  rnr.operationalStatusList = operationalStatuses;
 
   $.extend(true, this, rnr);
   var thisRnr = this;
@@ -100,9 +101,9 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
     function validateEquipmentStatus(lineItem){
       lineItem.isEquipmentValid = true;
       if(lineItem.equipments !== undefined && ((lineItem.calculatedOrderQuantity > 0 && lineItem.quantityRequested !== 0) || lineItem.quantityRequested > 0 )){
-        //TODO: remove the hardcoded status
         for(var i = 0; i < lineItem.equipments.length; i++){
-          if(lineItem.equipments[i].operationalStatusId === 3 && (lineItem.equipments[i].remarks === '' || lineItem.equipments[i].remarks === undefined)){
+          var status = _.findWhere(this.operationalStatusList, {'id': lineItem.equipments[i].operationalStatusId});
+          if( statis !== undefined && status.isBad === true && (lineItem.equipments[i].remarks === '' || lineItem.equipments[i].remarks === undefined)){
             lineItem.isEquipmentValid = false;
           }
         }
@@ -235,11 +236,10 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths) {
   };
 
   Rnr.prototype.initEquipments = function(){
-  
-    
+
     for(var i= 0; this.equipmentLineItems !== undefined && i < this.equipmentLineItems.length; i++){
       var eqli = this.equipmentLineItems[i];
-      for(var j = 0; j < eqli.relatedProducts.length;j++){
+      for(var j = 0;eqli.relatedProducts !== undefined && j < eqli.relatedProducts.length;j++){
         var prod = eqli.relatedProducts[j];
         var lineItem = _.findWhere(this.fullSupplyLineItems, {productCode: prod.code});
         if(lineItem !== null){
