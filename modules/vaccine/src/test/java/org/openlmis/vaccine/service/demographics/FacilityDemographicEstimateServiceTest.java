@@ -60,7 +60,7 @@ public class FacilityDemographicEstimateServiceTest {
     DemographicEstimateForm form = new DemographicEstimateForm();
     DemographicEstimateLineItem estimateLineItem = new DemographicEstimateLineItem();
     estimateLineItem.setFacilityEstimates(new ArrayList<FacilityDemographicEstimate>());
-    estimateLineItem.getFacilityEstimates().add(new FacilityDemographicEstimate(2000,12L, 1L, 1.0d,2L));
+    estimateLineItem.getFacilityEstimates().add(new FacilityDemographicEstimate(2000,12L, 1L, false, 2L, 1.0d,2L));
     form.setEstimateLineItems(asList(estimateLineItem));
 
     when(repository.insert(estimateLineItem.getFacilityEstimates().get(0))).thenReturn(1);
@@ -81,13 +81,13 @@ public class FacilityDemographicEstimateServiceTest {
     facility.setGeographicZone(new GeographicZone());
     facility.getGeographicZone().setName("Geo Name");
 
-    when(facilityService.getForUserAndRights(1L, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES)).thenReturn(asList(facility));
+    when(facilityService.getUserSupervisedFacilities(1L, 2L, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES)).thenReturn(asList(facility));
 
     when(categoryService.getAll()).thenReturn(asList(category1, category2));
-    when(repository.getFacilityEstimate(2005, 2L)).thenReturn(null);
+    when(repository.getFacilityEstimate(2005, 2L, 2L)).thenReturn(null);
 
 
-    DemographicEstimateForm form =  service.getEstimateFor(1L, 2002);
+    DemographicEstimateForm form =  service.getEstimateFor(1L, 2L ,2005);
 
     verify(categoryService, atMost(1)).getAll();
     assertThat(form.getEstimateLineItems().size(), is(1));
@@ -100,9 +100,9 @@ public class FacilityDemographicEstimateServiceTest {
   @Test
   public void shouldGetEstimateValuesForFacilityWhenEstimatesWereSaved() throws Exception {
     List<FacilityDemographicEstimate> list = asList(new FacilityDemographicEstimate());
-    when(repository.getFacilityEstimate(2005, 2L)).thenReturn(list);
+    when(repository.getFacilityEstimate(2005, 2L, 2L)).thenReturn(list);
 
-    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2005);
+    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2L, 2005);
     assertThat(response, is(list));
     verify(facilityService, never()).getById(any(Long.class));
     verify(categoryService, never()).getAll();
@@ -119,10 +119,10 @@ public class FacilityDemographicEstimateServiceTest {
     facility.setCatchmentPopulation(20000L);
     when(facilityService.getById(2L)).thenReturn(facility);
     when(categoryService.getAll()).thenReturn(asList(category1, category2));
-    when(repository.getFacilityEstimate(2005, 2L)).thenReturn(null);
+    when(repository.getFacilityEstimate(2005, 2L, 2L)).thenReturn(null);
 
 
-    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2005);
+    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2L ,2005);
     assertThat(response.size(), is(2));
     assertThat(response.get(0).getValue(), is(10000L));
     assertThat(response.get(1).getValue(), is(1000L));

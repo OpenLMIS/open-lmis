@@ -25,8 +25,8 @@ public class FacilityDemographicEstimateRepository {
   @Autowired
   FacilityDemographicEstimateMapper mapper;
 
-  public List<FacilityDemographicEstimate> getFacilityEstimate(Integer year, Long facilityId){
-    return mapper.getEstimatesForFacility(year,facilityId);
+  public List<FacilityDemographicEstimate> getFacilityEstimate(Integer year, Long facilityId, Long programId){
+    return mapper.getEstimatesForFacility(year,facilityId, programId);
   }
 
   public Integer insert(FacilityDemographicEstimate estimate){

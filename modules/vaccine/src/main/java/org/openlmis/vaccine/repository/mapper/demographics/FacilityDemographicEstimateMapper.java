@@ -22,22 +22,32 @@ import java.util.List;
 public interface FacilityDemographicEstimateMapper {
 
   @Insert("insert into facility_demographic_estimates " +
-    " (year, facilityId, demographicEstimateId, conversionFactor, value)" +
+    " (year, facilityId, demographicEstimateId, conversionFactor, programId , value)" +
     " values " +
-    " (#{year}, #{facilityId}, #{demographicEstimateId}, #{conversionFactor}, #{value}) ")
+    " (#{year}, #{facilityId}, #{demographicEstimateId}, #{conversionFactor}, #{programId}, #{value}) ")
   @Options(flushCache = true, useGeneratedKeys = true)
   Integer insert(FacilityDemographicEstimate estimate);
 
   @Update("update facility_demographic_estimates " +
     " set " +
-    " year = #{year}, " +
-    " facilityId = #{facilityId}," +
-    " demographicEstimateId = #{demographicEstimateId}," +
     " conversionFactor = #{conversionFactor}," +
     " value = #{value}" +
-    "where id = #{id} ")
+    " where id = #{id} ")
   Integer update(FacilityDemographicEstimate estimate);
 
-  @Select("select * from facility_demographic_estimates where year = #{year} and facilityId = #{facilityId}")
-  List<FacilityDemographicEstimate> getEstimatesForFacility(@Param("year") Integer year, @Param("facilityId") Long facilityId);
+  @Update("update facility_demographic_estimates " +
+    " set " +
+    " isFinal = true" +
+    " where id = #{id} ")
+  Integer finalize(FacilityDemographicEstimate estimate);
+
+  @Update("update facility_demographic_estimates " +
+    " set " +
+    " isFinal = false" +
+    "where id = #{id} ")
+  Integer undoFinalize(FacilityDemographicEstimate estimate);
+
+
+  @Select("select * from facility_demographic_estimates where year = #{year} and facilityId = #{facilityId} and programId = #{programId}")
+  List<FacilityDemographicEstimate> getEstimatesForFacility(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
 }

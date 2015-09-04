@@ -45,10 +45,10 @@ public class FacilityDemographicEstimateRepositoryTest {
 
   @Test
   public void shouldGetFacilityEstimate() throws Exception {
-    when(mapper.getEstimatesForFacility(2005, 2L)).thenReturn(asList(new FacilityDemographicEstimate()));
-    List<?> result = repository.getFacilityEstimate(2005, 2L);
+    when(mapper.getEstimatesForFacility(2005, 2L, 2L)).thenReturn(asList(new FacilityDemographicEstimate()));
+    List<?> result = repository.getFacilityEstimate(2005, 2L, 2L);
     assertThat(result.size(), is(1));
-    verify(mapper).getEstimatesForFacility(2005, 2L);
+    verify(mapper).getEstimatesForFacility(2005, 2L, 2L);
   }
 
   @Test

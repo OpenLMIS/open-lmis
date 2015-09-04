@@ -50,12 +50,13 @@ public class DistrictDemographicEstimateService {
     }
   }
 
-  private List<DistrictDemographicEstimate> getEmptyEstimateObjects(List<DemographicEstimateCategory> categories, Long districtId , Integer year){
+  private List<DistrictDemographicEstimate> getEmptyEstimateObjects(List<DemographicEstimateCategory> categories, Long districtId, Long programId, Integer year){
     List<DistrictDemographicEstimate> result = new ArrayList<>();
     for(DemographicEstimateCategory category: categories){
       DistrictDemographicEstimate estimate = new DistrictDemographicEstimate();
       estimate.setYear(year);
       estimate.setDistrictId(districtId);
+      estimate.setProgramId(programId);
       estimate.setConversionFactor(category.getDefaultConversionFactor());
       estimate.setDemographicEstimateId(category.getId());
       estimate.setValue(0L);
@@ -64,7 +65,7 @@ public class DistrictDemographicEstimateService {
     return result;
   }
 
-  public DemographicEstimateForm getEstimateFor(Integer year){
+  public DemographicEstimateForm getEstimateFor(Integer year, Long programId){
     DemographicEstimateForm form = new DemographicEstimateForm();
     List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
@@ -77,9 +78,9 @@ public class DistrictDemographicEstimateService {
       dto.setDistrictId(district.getId());
       dto.setCode(district.getCode());
       dto.setName(district.getName());
-      dto.setDistrictEstimates(repository.getDistrictEstimate(year, district.getId()));
+      dto.setDistrictEstimates(repository.getDistrictEstimate(year, district.getId(), programId));
       if( dto.getDistrictEstimates().size() == 0 ){
-        dto.setDistrictEstimates(getEmptyEstimateObjects(categories, district.getId(), year));
+        dto.setDistrictEstimates(getEmptyEstimateObjects(categories, district.getId(), programId, year));
       }
       form.getEstimateLineItems().add(dto);
     }

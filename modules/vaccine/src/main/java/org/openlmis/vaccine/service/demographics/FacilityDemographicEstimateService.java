@@ -53,12 +53,13 @@ public class FacilityDemographicEstimateService {
     }
   }
 
-  private List<FacilityDemographicEstimate> getEmptyEstimateObjects(List<DemographicEstimateCategory> categories, Long facilityId , Integer year){
+  private List<FacilityDemographicEstimate> getEmptyEstimateObjects(List<DemographicEstimateCategory> categories, Long facilityId, Long programId, Integer year){
     List<FacilityDemographicEstimate> result = new ArrayList<>();
     for(DemographicEstimateCategory category: categories){
       FacilityDemographicEstimate estimate = new FacilityDemographicEstimate();
       estimate.setYear(year);
       estimate.setFacilityId(facilityId);
+      estimate.setProgramId(programId);
       estimate.setConversionFactor(category.getDefaultConversionFactor());
       estimate.setDemographicEstimateId(category.getId());
       estimate.setValue(0L);
@@ -67,11 +68,11 @@ public class FacilityDemographicEstimateService {
     return result;
   }
 
-  public DemographicEstimateForm getEstimateFor(Long userId, Integer year){
+  public DemographicEstimateForm getEstimateFor(Long userId, Long programId , Integer year){
     DemographicEstimateForm form = new DemographicEstimateForm();
     List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
-    List<Facility> facilities =  facilityService.getForUserAndRights(userId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES);
+    List<Facility> facilities =  facilityService.getUserSupervisedFacilities(userId, programId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES);
 
     for(Facility facility : facilities){
       DemographicEstimateLineItem dto = new DemographicEstimateLineItem();
@@ -79,25 +80,24 @@ public class FacilityDemographicEstimateService {
       dto.setCode(facility.getCode());
       dto.setName(facility.getName());
       dto.setParentName(facility.getGeographicZone().getName());
-      dto.setFacilityEstimates(repository.getFacilityEstimate(year, facility.getId()));
+      dto.setFacilityEstimates(repository.getFacilityEstimate(year, facility.getId(),programId));
 
       if( dto.getFacilityEstimates().size() == 0 ){
-        dto.setFacilityEstimates(getEmptyEstimateObjects(categories, facility.getId(), year));
+        dto.setFacilityEstimates(getEmptyEstimateObjects(categories, facility.getId(), programId, year));
       }
-
       form.getEstimateLineItems().add(dto);
     }
 
     return form;
   }
 
-  public List<FacilityDemographicEstimate> getEstimateValuesForFacility(Long facilityId, Integer year){
-    List<FacilityDemographicEstimate> result =  repository.getFacilityEstimate(year, facilityId);
+  public List<FacilityDemographicEstimate> getEstimateValuesForFacility(Long facilityId, Long programId, Integer year){
+    List<FacilityDemographicEstimate> result =  repository.getFacilityEstimate(year, facilityId, programId);
     if(result == null || result.size() == 0){
       Facility facility = facilityService.getById(facilityId);
        ;
       List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
-      result = getEmptyEstimateObjects(categories, facility.getId(), year);
+      result = getEmptyEstimateObjects(categories, facility.getId(), programId, year);
       for(FacilityDemographicEstimate estimate: result){
         estimate.calculateAndSetValue(facility.getCatchmentPopulation());
       }
