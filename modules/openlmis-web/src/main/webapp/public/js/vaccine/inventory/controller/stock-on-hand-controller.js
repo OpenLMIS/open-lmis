@@ -32,7 +32,7 @@ function StockOnHandController($scope,$window,programs,$location,homeFacility, l
                }
 
         });
-    }
+    };
 
     if($scope.userPrograms.length > 1)
     {
@@ -52,7 +52,7 @@ function StockOnHandController($scope,$window,programs,$location,homeFacility, l
             $scope.showGraph=false;
             $scope.filter.facilityId=null;
             $scope.selectedFacilityId= $scope.homeFacilityId;
-            loadStockCards(parseInt($scope.selectedProgramId),parseInt($scope.selectedFacilityId));
+            loadStockCards(parseInt($scope.selectedProgramId,10),parseInt($scope.selectedFacilityId,10));
 
         }
         else if($scope.selectedType === "1")
@@ -76,7 +76,7 @@ function StockOnHandController($scope,$window,programs,$location,homeFacility, l
             }
             if($scope.selectedFacilityId !== "0" && $scope.selectedFacilityId !== undefined)
              {
-                loadStockCards(parseInt($scope.selectedProgramId),parseInt($scope.selectedFacilityId));
+                loadStockCards(parseInt($scope.selectedProgramId,10),parseInt($scope.selectedFacilityId,10));
              }
      };
 
@@ -129,4 +129,4 @@ StockOnHandController.resolve = {
             }, 100);
             return deferred.promise;
          }
-}
+};
