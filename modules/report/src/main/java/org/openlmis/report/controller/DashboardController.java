@@ -265,8 +265,11 @@ public class DashboardController extends BaseController {
 
 
     @RequestMapping(value = "/program/{programId}/period/{periodId}/tracer-products-trend.json", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getProgramPeriodTracerProductsTrend(@PathVariable("programId") Long programId, @PathVariable("periodId") Long periodId, @RequestParam(value = "limit", required = false, defaultValue = "4") Long limit){
-        return OpenLmisResponse.response("tracerProducts", this.lookupService.getProgramPeriodTracerProductsTrend(programId, periodId, limit));
+    public ResponseEntity<OpenLmisResponse> getProgramPeriodTracerProductsTrend(@PathVariable("programId") Long programId, @PathVariable("periodId") Long periodId,
+                                                                                @RequestParam(value = "limit", required = false, defaultValue = "4") Long limit,
+                                                                                HttpServletRequest request){
+
+        return OpenLmisResponse.response("tracerProducts", this.lookupService.getProgramPeriodTracerProductsTrend(programId, periodId, loggedInUserId(request), limit));
     }
 
 }

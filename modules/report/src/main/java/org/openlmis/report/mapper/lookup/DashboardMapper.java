@@ -178,7 +178,7 @@ public interface DashboardMapper {
     public String getPeriodName(@Param("id")Long id);
 
 
-    @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code\n" +
+    /*@Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code\n" +
             "      FROM \n" +
             "          products as p \n" +
             "                join product_forms as form on form.id = p.formid \n" +
@@ -188,10 +188,29 @@ public interface DashboardMapper {
             "    order by name \n" +
             "    limit #{limit}\n"
     )
-    List<Product> getTracerProductsForProgram(@Param("programId")Long programId, @Param("limit")Long limit);
+    List<Product> getTracerProductsForProgram(@Param("programId")Long programId, @Param("limit")Long limit);*/
 
-    @Select("SELECT * from fn_geozone_n_rnrs(#{programId}::integer ,#{periodId}::integer , 437::integer, #{productCode}  );")
-    List<HashMap<String, Object>> getProgramPeriodTracerProductTrend(@Param("programId")Long programId, @Param("periodId") Long periodId, @Param("productCode") String productCode, Long geoId);
+    @Select("select r as order, product_code,\n" +
+            " beginning_balance,\n" +
+            " quantity_received,\n" +
+            " quantity_dispensed,\n" +
+            " total_losses_and_adjustments,\n" +
+            " stock_in_hand_facility,\n" +
+            " stock_in_hand_upper,\n" +
+            " COALESCE(stock_in_hand_facility, 0)+ COALESCE(stock_in_hand_upper, 0) as stock_in_hand_total,\n" +
+            " amc,\n" +
+            " quantity_requested,\n" +
+            " calculated_order_quantity,\n" +
+            " quantity_approved,\n" +
+            " quantity_expired_facility,\n" +
+            " quantity_expired_upper,\n" +
+            " COALESCE(quantity_expired_facility,0)+COALESCE(quantity_expired_upper,0) as quantity_expired_total,\n" +
+            " number_of_facilities_stocked_out_facility,\n" +
+            " number_of_facilities_stocked_out_upper,\n" +
+            " COALESCE(number_of_facilities_stocked_out_facility, 0) + COALESCE(number_of_facilities_stocked_out_upper, 0) as total_facilities_stocked_out,\n" +
+            " price\n" +
+            " from fn_get_dashboard_summary_data(#{programId}::integer, #{periodId}::integer, #{userId}::integer)")
+    List<HashMap<String, Object>> getProgramPeriodTracerProductTrend(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("userId")Long userId);
 
 }
 

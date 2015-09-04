@@ -173,16 +173,16 @@ public class DashboardLookupService {
         return dashboardLookUpReportHeader;
     }
 
-    public List<Map<String, Object>> getProgramPeriodTracerProductsTrend(Long programId, Long periodId, Long limit){
-        List<Product> tracerProducts = dashboardMapper.getTracerProductsForProgram(programId, limit);
-        List<Map<String, Object>> productTrends = new ArrayList<Map<String, java.lang.Object>>();
+    public List<HashMap<String, Object>> getProgramPeriodTracerProductsTrend(Long programId, Long periodId, Long userId, Long limit){
+       // List<Product> tracerProducts = dashboardMapper.getTracerProductsForProgram(programId, limit);
+      /*  List<Map<String, Object>> productTrends = new ArrayList<>();
 
         for (Product p : tracerProducts){
-            Map<String, Object> products = new HashMap<String, Object>();
+            Map<String, Object> products = new HashMap<>();
             products.put("code",p.getCode());
-            products.put("trends", dashboardMapper.getProgramPeriodTracerProductTrend(programId, periodId, p.getCode(), 0L));
+            products.put("trends", dashboardMapper.getProgramPeriodTracerProductTrend(programId, periodId, userId));
             productTrends.add(products);
-        }
-        return productTrends;
+        }*/
+        return dashboardMapper.getProgramPeriodTracerProductTrend(programId, periodId, userId);
     }
 }
