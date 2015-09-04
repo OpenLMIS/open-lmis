@@ -179,6 +179,7 @@ public class RequisitionService {
       lineItem.setRnrId(requisition.getId());
       lineItem.setEquipmentSerial(inv.getSerialNumber());
       lineItem.setEquipmentInventoryId(inv.getId());
+      lineItem.setCode(inv.getEquipment().getEquipmentType().getCode());
       lineItem.setEquipmentCategory(inv.getEquipment().getEquipmentType().getName());
       lineItem.setOperationalStatusId(inv.getOperationalStatusId());
       lineItem.setEquipmentName(inv.getEquipment().getName());
