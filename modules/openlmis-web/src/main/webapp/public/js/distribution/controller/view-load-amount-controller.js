@@ -27,47 +27,49 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone, frid
     $scope.checkViewColdChainStatus();
 
     $scope.aggregateMap = {};
-    if (!fridges.coldTradeData) {
-      $scope.apimessage = "message.api.error";
-    } else if (fridges.coldTradeData) {
-      $scope.fridges = fridges.coldTradeData.fridges;
+    if ($scope.viewColdChainStatusAvailable) {
+      if (!fridges.coldTradeData) {
+        $scope.apimessage = "message.api.error";
+      } else if (fridges.coldTradeData) {
+        $scope.fridges = fridges.coldTradeData.fridges;
 
-      $scope.getFacitilityStatus = function (id) {
-        if (!isUndefined(id)) {
-            for (var i = 0; i < $scope.fridges.length; i++) {
-                var fridge = $scope.fridges[i];
-                if (fridge.FacilityID == id) {
-                    return fridge.Status;
-                }
-            }
-        }
-        return 1;
-      };
-
-      $scope.isDataAvailable = function (id) {
+        $scope.getFacitilityStatus = function (id) {
           if (!isUndefined(id)) {
               for (var i = 0; i < $scope.fridges.length; i++) {
                   var fridge = $scope.fridges[i];
                   if (fridge.FacilityID == id) {
-                      return true;
+                      return fridge.Status;
                   }
               }
           }
-          $scope.apimessage = "message.api.error.no.data";
-          return false;
-      };
+          return 1;
+        };
 
-      $scope.getURL = function (id) {
-        if (!isUndefined(id)) {
-            for (var i = 0; i < $scope.fridges.length; i++) {
-                var fridge = $scope.fridges[i];
-                if (fridge.FacilityID == id) {
-                    return fridge.URL;
+        $scope.isDataAvailable = function (id) {
+            if (!isUndefined(id)) {
+                for (var i = 0; i < $scope.fridges.length; i++) {
+                    var fridge = $scope.fridges[i];
+                    if (fridge.FacilityID == id) {
+                        return true;
+                    }
                 }
             }
-        }
-        return ".";
-      };
+            $scope.apimessage = "message.api.error.no.data";
+            return false;
+        };
+
+        $scope.getURL = function (id) {
+          if (!isUndefined(id)) {
+              for (var i = 0; i < $scope.fridges.length; i++) {
+                  var fridge = $scope.fridges[i];
+                  if (fridge.FacilityID == id) {
+                      return fridge.URL;
+                  }
+              }
+          }
+          return ".";
+        };
+      }
     }
     $(facilities).each(function (i, facility) {
       var totalForGeoZone = $scope.aggregateMap[facility.geographicZone.name];
