@@ -9,18 +9,28 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function FacilityDemographicEstimateController($scope, categories, years, FacilityDemographicEstimates, SaveFacilityDemographicEstimates) {
+function FacilityDemographicEstimateController($scope, $filter, categories, years, programs, FacilityDemographicEstimates, SaveFacilityDemographicEstimates) {
 
   $scope.currentPage = 1;
   $scope.pageSize = 15;
 
   $scope.categories = categories;
   $scope.years = years;
-  $scope.year = years[0];
+  // default to the current year
+  $scope.year = Number( $filter('date')(new Date(), 'yyyy') );
+
+  $scope.programs = programs;
+
+  $scope.isDirty = function(){
+    return $scope.$dirty;
+  };
 
   $scope.onParamChanged = function(){
-    FacilityDemographicEstimates.get({year: $scope.year}, function(data){
+    if(angular.isUndefined($scope.program) || angular.isUndefined($scope.year)){
+      return;
+    }
 
+    FacilityDemographicEstimates.get({year: $scope.year, program: $scope.program}, function(data){
       $scope.lineItems = [];
       // initiate all objects.
       for(var i = 0; i < data.estimates.estimateLineItems.length; i ++){
@@ -29,7 +39,7 @@ function FacilityDemographicEstimateController($scope, categories, years, Facili
       }
 
       $scope.pageCount = $scope.lineItems.length / $scope.pageSize;
-      data.estimates.estimateLineItems = [];//'data.estimates.estimateLineItems.slice(0, $scope.pageSize);'
+      data.estimates.estimateLineItems = [];
       $scope.form = data.estimates;
       $scope.currentPage = 1;
       $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
@@ -37,7 +47,10 @@ function FacilityDemographicEstimateController($scope, categories, years, Facili
   };
 
   $scope.$watch('currentPage', function(){
-    $scope.save();
+    if($scope.isDirty()){
+      $scope.save();
+    }
+
 
     if(angular.isDefined($scope.lineItems)){
         $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
@@ -47,8 +60,8 @@ function FacilityDemographicEstimateController($scope, categories, years, Facili
   $scope.save = function(){
     SaveFacilityDemographicEstimates.update($scope.form, function(data){
       $scope.message = "message.facility.demographic.estimates.saved";
-    }, function(e){
-      $scope.error = e.error;
+    }, function(data){
+      $scope.error = data.error;
     });
   };
   $scope.onParamChanged();
@@ -71,6 +84,14 @@ FacilityDemographicEstimateController.resolve = {
         deferred.resolve(data.years);
       });
     }, 100);
+    return deferred.promise;
+  }, programs: function($q, $timeout, DemographicEstimatePrograms){
+      var deferred = $q.defer();
+      $timeout(function(){
+        DemographicEstimatePrograms.get({}, function(data){
+          deferred.resolve(data.programs);
+        });
+      },100);
     return deferred.promise;
   }
 

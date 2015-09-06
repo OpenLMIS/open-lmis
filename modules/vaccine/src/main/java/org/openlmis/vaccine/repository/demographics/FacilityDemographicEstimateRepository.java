@@ -13,6 +13,7 @@
 package org.openlmis.vaccine.repository.demographics;
 
 import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
+import org.openlmis.vaccine.dto.DemographicEstimateLineItem;
 import org.openlmis.vaccine.repository.mapper.demographics.FacilityDemographicEstimateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -35,5 +36,10 @@ public class FacilityDemographicEstimateRepository {
 
   public Integer update(FacilityDemographicEstimate estimate){
     return mapper.update(estimate);
+  }
+
+  public List<DemographicEstimateLineItem> getFacilityList(Long programId, String requsitionGroupIds){
+
+    return mapper.getFacilityList(programId, requsitionGroupIds);
   }
 }

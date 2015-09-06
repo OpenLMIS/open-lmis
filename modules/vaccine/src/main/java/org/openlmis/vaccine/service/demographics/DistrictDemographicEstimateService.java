@@ -38,7 +38,7 @@ public class DistrictDemographicEstimateService {
   public void save(DemographicEstimateForm estimate, Long userId){
     for(DemographicEstimateLineItem dto: emptyIfNull(estimate.getEstimateLineItems())){
       for(DistrictDemographicEstimate est: emptyIfNull(dto.getDistrictEstimates())){
-        est.setDistrictId(dto.getDistrictId());
+        est.setDistrictId(dto.getId());
         if(est.getId() == null){
           est.setCreatedBy(userId);
           repository.insert(est);
@@ -75,7 +75,7 @@ public class DistrictDemographicEstimateService {
 
     for(GeographicZone district : districts){
       DemographicEstimateLineItem dto = new DemographicEstimateLineItem();
-      dto.setDistrictId(district.getId());
+      dto.setId(district.getId());
       dto.setCode(district.getCode());
       dto.setName(district.getName());
       dto.setDistrictEstimates(repository.getDistrictEstimate(year, district.getId(), programId));

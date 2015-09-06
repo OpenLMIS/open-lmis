@@ -25,7 +25,13 @@
         <span openlmis-message="label.demographic.estimate.auto.calculate"></span>
       </label>
     </div>
-    <div>
+    <div class="pull-left">
+      <label openlmis-message="label.program"></label>
+      <select ng-model="program" ng-change="onParamChanged()">
+        <option ng-repeat="p in programs" value="{{p.id}}">{{p.name}}</option>
+      </select>
+    </div>
+    <div class="form-inline">
       <label>
         <span openlmis-message="label.demographic.parameter.year"></span>
       </label>

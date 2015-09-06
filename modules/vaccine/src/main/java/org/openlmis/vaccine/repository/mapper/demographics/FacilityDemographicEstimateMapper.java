@@ -14,6 +14,7 @@ package org.openlmis.vaccine.repository.mapper.demographics;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
+import org.openlmis.vaccine.dto.DemographicEstimateLineItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -50,4 +51,14 @@ public interface FacilityDemographicEstimateMapper {
 
   @Select("select * from facility_demographic_estimates where year = #{year} and facilityId = #{facilityId} and programId = #{programId}")
   List<FacilityDemographicEstimate> getEstimatesForFacility(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+
+  @Select("select f.name, f.id, f.code, gz.id as parentId, gz.name as parentName " +
+    " from facilities f " +
+    "     join geographic_zones gz on gz.id = f.geographicZoneId " +
+    "     join programs_supported ps on ps.facilityId = f.id  and ps.programId = #{programId} " +
+    "     join requisition_group_members m on m.facilityId = f.id " +
+    " where m.requisitionGroupId  = ANY(#{requisitionGroupIds}::INTEGER[]) " +
+    " order by gz.name, f.name")
+  List<DemographicEstimateLineItem> getFacilityList(@Param("programId") Long programId, @Param("requisitionGroupIds") String requsitionGroupIds);
 }

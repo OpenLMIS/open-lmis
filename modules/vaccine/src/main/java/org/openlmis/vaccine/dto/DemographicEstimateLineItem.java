@@ -25,15 +25,15 @@ import java.util.List;
 @NoArgsConstructor
 public class DemographicEstimateLineItem {
 
-  private Long districtId;
-
-  private Long facilityId;
+  private Long id;
 
   private String name;
 
-  private String parentName;
-
   private String code;
+
+  private Long parentId;
+
+  private String parentName;
 
   private List<FacilityDemographicEstimate> facilityEstimates;
 
