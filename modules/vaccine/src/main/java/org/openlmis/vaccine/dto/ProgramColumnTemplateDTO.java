@@ -19,5 +19,9 @@ import java.util.List;
 
 @Data
 public class ProgramColumnTemplateDTO {
+
+  Long programId;
+
   List<LogisticsColumn> columns;
+
 }
