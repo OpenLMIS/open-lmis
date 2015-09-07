@@ -116,7 +116,6 @@
                         </div>
                     </div>
 
-
                 </div>
                 <div class="clearfix"><br/></div>
 
@@ -141,9 +140,10 @@
                                     </tr>
                                     </thead>
                                     <tbody ng-repeat="category in stockCardsByCategory">
-                                    <tr>
+                                    <tr ng-if="category.productCategory !=='no-category'">
                                         <td class="productCategory" id="vaccine" colspan="2">
-                                            {{category.productCategory}}
+                                            <!--<span ng-if="category.productCategory ==='no-category'" openlmis-message="label.products" ></span>-->
+                                            <span ng-if="category.productCategory !=='no-category'">{{category.productCategory}}</span>
                                         </td>
                                     </tr>
                                     <tr ng-repeat="stock in category.stockCards">

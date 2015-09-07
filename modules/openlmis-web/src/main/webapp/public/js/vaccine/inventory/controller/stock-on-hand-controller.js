@@ -40,7 +40,7 @@ function StockOnHandController($scope,$window,programs,$location,homeFacility, l
             //TODO: load stock cards on program change
             $scope.selectedProgramId=$scope.userPrograms[0].id;
     }
-    else{
+    else if($scope.userPrograms.length === 1){
             $scope.showPrograms=false;
             $scope.selectedProgramId=$scope.userPrograms[0].id;
     }
@@ -52,7 +52,10 @@ function StockOnHandController($scope,$window,programs,$location,homeFacility, l
             $scope.showGraph=false;
             $scope.filter.facilityId=null;
             $scope.selectedFacilityId= $scope.homeFacilityId;
-            loadStockCards(parseInt($scope.selectedProgramId,10),parseInt($scope.selectedFacilityId,10));
+            if($scope.selectedProgramId !== null && $scope.selectedFacilityId !== null){
+                   loadStockCards(parseInt($scope.selectedProgramId,10),parseInt($scope.selectedFacilityId,10));
+            }
+
 
         }
         else if($scope.selectedType === "1")
@@ -66,18 +69,16 @@ function StockOnHandController($scope,$window,programs,$location,homeFacility, l
     };
      //When the filter change reload Data
     $scope.OnFilterChanged = function () {
-               //Reload data with Supervised facility ID
             $scope.showGraph=false;
             $scope.data={"stockcards": null};
             if($scope.selectedType === "1")
             {
                $scope.selectedFacilityId = $scope.filter.facilityId;
-               console.log($scope.selectedFacilityId);
             }
-            if($scope.selectedFacilityId !== "0" && $scope.selectedFacilityId !== undefined)
-             {
+//            if($scope.selectedProgramId !== null && $scope.selectedFacilityId !== null)
+//             {
                 loadStockCards(parseInt($scope.selectedProgramId,10),parseInt($scope.selectedFacilityId,10));
-             }
+//             }
      };
 
     //Load Right to check if user level can Send Requisition ond do stock adjustment

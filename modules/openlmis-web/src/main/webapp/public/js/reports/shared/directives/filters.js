@@ -946,7 +946,10 @@ app.directive('vaccineFacilityLevelFilter',['FacilitiesByLevel','VaccineInventor
         var getVaccineEquipmentProgram = function($scope){
 
           VaccineInventoryPrograms.get({},function(data){
-            $scope.filter.program = data.programs[0].id;
+            if(data.programs.length > 0){
+              $scope.filter.program = data.programs[0].id;
+            }
+
           });
         };
 
