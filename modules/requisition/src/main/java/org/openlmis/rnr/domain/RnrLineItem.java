@@ -321,6 +321,9 @@ public class RnrLineItem extends LineItem {
   }
 
   public void calculateTotalLossesAndAdjustments(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    if (lossesAndAdjustments.isEmpty()) {
+      return;
+    }
     Integer total = 0;
     for (LossesAndAdjustments lossAndAdjustment : lossesAndAdjustments) {
       if (getAdditive(lossAndAdjustment, lossesAndAdjustmentsTypes)) {

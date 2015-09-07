@@ -31,6 +31,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -844,6 +845,15 @@ public class RnrLineItemTest {
     assertThat(lineItem.getBeginningBalance(), is(0));
     assertThat(lineItem.getPreviousStockInHand(), is(nullValue()));
   }
+
+  @Test
+  public void shouldNotUpdateTotalLossesAndAdjustmentsFieldIfLossesAndAdjustmentsAreNullAndTotalHaveValue() {
+    RnrLineItem lineItem = new RnrLineItem();
+    lineItem.setTotalLossesAndAdjustments(10);
+    lineItem.calculateTotalLossesAndAdjustments(new ArrayList<LossesAndAdjustmentsType>());
+    assertEquals(10, lineItem.getTotalLossesAndAdjustments().intValue());
+  }
+
 
   private ArrayList<RnrColumn> getRnrColumns() {
     return new ArrayList<RnrColumn>() {{
