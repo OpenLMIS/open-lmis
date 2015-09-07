@@ -19,31 +19,45 @@ services.factory('StockCardsByCategory', function($resource,StockCards,$q, $time
  function get(pId,fId) {
     var deferred =$q.defer();
                 $timeout(function(){
-                    ProgramProducts.get({programId:pId},function(data){
-                                programProducts=data.programProductList;
+                    if(!isNaN(pId)){
+                        ProgramProducts.get({programId:pId},function(data){
+                                 programProducts=data.programProductList;
 
-                                StockCards.get({facilityId:fId},function(data){
-                                       var stockCards=data.stockCards;
+                                 StockCards.get({facilityId:fId},function(data){
+                                        var stockCards=data.stockCards;
 
-                                       stockCards.forEach(function(s){
-                                             var product= _.filter(programProducts, function(obj) {
+                                        stockCards.forEach(function(s){
+                                              var product= _.filter(programProducts, function(obj) {
                                                   return obj.product.primaryName === s.product.primaryName;
-                                             });
+                                              });
 
-                                              s.productCategory=product[0].productCategory;
-                                       });
+                                                    s.productCategory=product[0].productCategory;
+                                              });
 
-                                       var byCategory=_.groupBy(stockCards,function(s){
-                                              return s.productCategory.name;
-                                       });
+                                              var byCategory=_.groupBy(stockCards,function(s){
+                                                   return s.productCategory.name;
+                                              });
 
-                                       var stockCardsToDisplay = $.map(byCategory, function(value, index) {
-                                              return [{"productCategory":index,"stockCards":value}];
-                                       });
+                                              var stockCardsToDisplay = $.map(byCategory, function(value, index) {
+                                                  return [{"productCategory":index,"stockCards":value}];
+                                              });
 
-                                       deferred.resolve(stockCardsToDisplay);
-                                });
+                                              deferred.resolve(stockCardsToDisplay);
+                                 });
                         });
+                    }
+                    else{
+                            var stockCardsToDisplay=[];
+                            StockCards.get({facilityId:fId},function(data){
+                                var stockCards=data.stockCards;
+                                if(stockCards.length > 0){
+                                     stockCardsToDisplay=[{"productCategory":"no-category","stockCards":stockCards}];
+                                }
+                                deferred.resolve(stockCardsToDisplay);
+                            });
+
+                    }
+
 
                 },100);
      return deferred.promise;
