@@ -31,10 +31,13 @@ public class DemographicEstimateLineItem {
 
   private String name;
 
+  private String parentName;
+
   private String code;
 
   private List<FacilityDemographicEstimate> facilityEstimates;
 
   private List<DistrictDemographicEstimate> districtEstimates;
+
 
 }

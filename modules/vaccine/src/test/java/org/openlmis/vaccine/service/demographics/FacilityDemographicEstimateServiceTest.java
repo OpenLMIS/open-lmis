@@ -20,6 +20,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.RightName;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.db.categories.UnitTests;
@@ -77,14 +78,16 @@ public class FacilityDemographicEstimateServiceTest {
     Facility facility = new Facility();
     facility.setId(39L);
     facility.setCatchmentPopulation(20000L);
+    facility.setGeographicZone(new GeographicZone());
+    facility.getGeographicZone().setName("Geo Name");
 
-    when(facilityService.getUserSupervisedFacilities(1L, 1L, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES)).thenReturn(asList(facility));
+    when(facilityService.getForUserAndRights(1L, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES)).thenReturn(asList(facility));
 
     when(categoryService.getAll()).thenReturn(asList(category1, category2));
     when(repository.getFacilityEstimate(2005, 2L)).thenReturn(null);
 
 
-    DemographicEstimateForm form =  service.getEstimateFor(1L, 1L, 2002);
+    DemographicEstimateForm form =  service.getEstimateFor(1L, 2002);
 
     verify(categoryService, atMost(1)).getAll();
     assertThat(form.getEstimateLineItems().size(), is(1));
