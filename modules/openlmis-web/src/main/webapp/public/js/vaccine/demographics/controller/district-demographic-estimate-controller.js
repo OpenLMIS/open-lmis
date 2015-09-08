@@ -27,7 +27,7 @@ function DistrictDemographicEstimateController($scope, $filter, categories, prog
 
   $scope.OnPopulationChanged = function(population, district, category){
     var pop = $scope.toNumber(population.value);
-    if(category.isPrimaryEstimate && $scope.autoCalculate == true){
+    if(category.isPrimaryEstimate && $scope.autoCalculate === true){
       angular.forEach(district.districtEstimates, function(estimate){
         if(population.demographicEstimateId !== estimate.demographicEstimateId){
           estimate.value = $scope.round(estimate.conversionFactor * pop / 100) ;

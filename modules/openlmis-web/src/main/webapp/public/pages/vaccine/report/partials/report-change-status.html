@@ -14,22 +14,22 @@
   <div class="pull-left span6">
     <table class="table table-bordered">
       <thead>
-      <tr class="gradient-header">
+      <tr class="text-row gradient-header">
         <th colspan="3"><span openlmis-message="label.vaccine.report.status.change.history"></span></th>
       </tr>
-      <tr class="gradient-header">
+      <tr class="text-row gradient-header">
         <th class="cell-input"><span class="cell-text" openlmis-message="label.vaccine.report.status.change.history.date"></span></th>
         <th class="cell-input"><span class="cell-text" openlmis-message="label.vaccine.report.status.change.history.by"></span></th>
         <th class="cell-input"><span class="cell-text" openlmis-message="label.vaccine.report.status.change.history.status"></span></th>
       </tr>
       </thead>
       <tbody>
-      <tr ng-show="report.reportStatusChanges.length > 0" ng-repeat="history in report.reportStatusChanges">
+      <tr class="text-row" ng-show="report.reportStatusChanges.length > 0" ng-repeat="history in report.reportStatusChanges">
         <td class="cell-input"><span class="cell-text">{{history.date | date : 'dd-MMM-yyyy'}}</span></td>
         <td class="cell-input"><span class="cell-text">{{history.firstName}} {{history.lastName}}</span></td>
         <td class="cell-input"><span class="cell-text">{{history.status}}</span></td>
       </tr>
-      <tr ng-show="report.reportStatusChanges.length == 0">
+      <tr class="text-row" ng-show="report.reportStatusChanges.length == 0">
         <td colspan="3" class="text-input">
           <span openlmis-message="label.vaccine.report.status.change.history.not.found"></span>
         </td>

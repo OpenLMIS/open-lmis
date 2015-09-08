@@ -16,7 +16,7 @@
 
   <table class="table table-bordered">
     <thead>
-    <tr>
+    <tr class="text-row">
       <th ng-repeat-start="column in report.columnTemplate | filter : {visible:true}" ng-if="false"></th>
       <th class="span5" ng-if="column.name == 'productName'"><span openlmis-message="label.vaccine.stock.status.product"></span></th>
       <th ng-repeat-end="" class="span1" ng-if="column.name != 'productName' && column.name != 'skipped'">{{column.label}}</th>
@@ -24,7 +24,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr class="productCategory" ng-repeat-start="product in report.logisticsLineItems" ng-show="$index == 0 || ( $index > 0 && product.productCategory != report.logisticsLineItems[$index - 1].productCategory)">
+    <tr class="text-row productCategory" ng-repeat-start="product in report.logisticsLineItems" ng-show="$index == 0 || ( $index > 0 && product.productCategory != report.logisticsLineItems[$index - 1].productCategory)">
       <td colspan="14">{{product.productCategory}}</td>
     </tr>
     <tr ng-repeat-end >
@@ -67,4 +67,7 @@
     </tr>
     </tbody>
   </table>
+
+  <ng-include src="'/public/pages/vaccine/report/partials/report-change-status.html'"></ng-include>
+
 </div>
