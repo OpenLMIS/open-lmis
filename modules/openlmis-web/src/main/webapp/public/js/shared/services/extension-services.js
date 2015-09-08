@@ -1276,6 +1276,10 @@ services.factory('GetProgramPeriodTracerProductsTrend', function($resource) {
     return $resource('/dashboard/program/:programId/period/:periodId/tracer-products-trend.json', {}, {});
 });
 
+services.factory('GetStockOutFacilitiesForProgramPeriodAndProductCode', function($resource) {
+    return $resource('/dashboard/program/:programId/period/:periodId/product/:productCode/stocked-out-facilities.json', {}, {});
+});
+
 services.factory("ELMISInterface",function($resource)  {
     return   {
         getInterface : function(){

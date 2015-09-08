@@ -28,7 +28,7 @@
 </script>
 
 
-<script type="text/ng-template" id="proudct-summary">
+<script type="text/ng-template" id="product-summary">
     <div style="width: 600px;">
         <div class="triangle"></div>
         <div class="ns-popover-tooltip">
@@ -76,18 +76,48 @@
 
 </script>
 
+<script type="text/ng-template" id="facilities-stock-out">
+    <div style="width: 600px;">
+        <div class="triangle"></div>
+        <div class="ns-popover-tooltip" style="max-height: 300px; overflow-y: scroll;">
+            <table style="width: 100%; " class="table">
+                <thead>
+                <tr class="gradient-header">
+                    <th openlmis-message="label.facility" rowspan="2"></th>
+                    <th openlmis-message="label.stock.on.hand" colspan="2"></th>
+                </tr>
+                <tr class="gradient-header">
+                    <th openlmis-message="label.this.period"></th>
+                    <th openlmis-message="label.last.period"></th>
+                </tr>
+
+                </thead>
+                <tbody>
+                    <tr ng-repeat="facility in facilities">
+                        <td>{{facility.facility_name}}</td>
+                        <td>{{facility.stock_in_hand}}</td>
+                        <td>{{facility.previous_stock_in_hand}}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</script>
+
 <div xmlns="http://www.w3.org/1999/html">
 
     <ng-include src="'/public/pages/dashboard/shared/dashboard-header_new.html'"></ng-include>
 
     <div class="row">
         <div class="span2" style="border-right: solid 1px #EAEFF3">
-            <div>{{periodId}}</div>
             <div>
             <div ng-repeat="trend in productsTrend">
                 <div style="padding: 10px 30px; border-bottom: solid 1px #EAEFF3">
                     <div ns-popover ng-click="getProductSummary(trend.code)"
-                         ns-popover-template="proudct-summary"
+                         ns-popover-template="product-summary"
                          ns-popover-trigger="click"
                          ns-popover-theme="ns-popover-tooltip-theme"
                          ns-popover-timeout="1000"
@@ -96,7 +126,20 @@
                          ns-popover-hide-on-outside-click="true"
                          ns-popover-hide-on-button-click="true" style="cursor: pointer; padding: 10px 0px;">{{trend.code}}</div>
                     <spark-line af-data="trend.sohTrend" af-option="sparkOption" ></spark-line>
-                    <div style="margin-top:5px; text-align: center"><span ng-class="trend.color"  style="  color:white; padding:2px 20px; border-radius:10px; font-size:12px;">{{trend.facilityStockedOut | number}}</span></div>
+                    <div style="margin-top:5px; text-align: center">
+                        <div ns-popover ng-click="getFacilitiesStockedOut(trend.code)"
+                             ns-popover-template="facilities-stock-out"
+                             ns-popover-trigger="click"
+                             ns-popover-theme="ns-popover-tooltip-theme"
+                             ns-popover-timeout="1000"
+                             ns-popover-placement="{{adjustPlacement($index)}}"
+                             ns-popover-hide-on-inside-click="false"
+                             ns-popover-hide-on-outside-click="true"
+                             ns-popover-hide-on-button-click="true" style="cursor: pointer; padding: 10px 0px;">
+                            <span ng-class="trend.color"  style="  color:white; padding:2px 20px; border-radius:10px; font-size:12px;">{{trend.facilityStockedOut | number}}</span>
+                        </div>
+
+                    </div>
 
 
                 </div>

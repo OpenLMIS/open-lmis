@@ -212,5 +212,34 @@ public interface DashboardMapper {
             " from fn_get_dashboard_summary_data(#{programId}::integer, #{periodId}::integer, #{userId}::integer)")
     List<HashMap<String, Object>> getProgramPeriodTracerProductTrend(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("userId")Long userId);
 
+
+    @Select("SELECT\n" +
+            "facilities.id facility_id,\n" +
+            "facilities.name facility_name,\n" +
+            "facility_types.id facility_type_id,\n" +
+            "facility_types.name facility_type_name,\n" +
+            "geographic_zones.name geographiczone_name,\n" +
+            "geographic_zones.levelid, \n"+
+            "productcode product_code, \n" +
+            "processing_periods.startdate::date start_date,\n" +
+            "requisition_line_items.stockinhand stock_in_hand,\n" +
+            "COALESCE (requisition_line_items.previousstockinhand,0) previous_stock_in_hand,\n" +
+            "requisition_line_items.stockoutdays stock_out_days,\n" +
+            "requisition_line_items.quantitydispensed quantity_dispensed,\n" +
+            "requisition_line_items.amc,\n" +
+            "requisitions.id rnrid\n" +
+            "from requisition_line_items\n" +
+            "INNER JOIN requisitions ON requisition_line_items.rnrid = requisitions.id\n" +
+            "INNER JOIN processing_periods ON processing_periods.id = requisitions.periodid\n" +
+            "INNER JOIN facilities ON facilities.id = requisitions.facilityid\n" +
+            "INNER JOIN facility_types ON facilities.typeid = facility_types.id\n" +
+            "INNER JOIN geographic_zones ON facilities.geographiczoneid = geographic_zones.id\n" +
+            "INNER JOIN products ON requisition_line_items.productcode= products.code \n" +
+            "where requisitions.programid = #{programId} \n" +
+            "and processing_periods.id = #{periodId}\n" +
+            "and products.code = #{code} and requisition_line_items.stockinhand = 0 \n" +
+            "order by geographic_zones.levelid")
+    List<HashMap<String, Object>> getFacilityStockedOut(@Param("programId")Long programId, @Param("periodId")Long periodId, @Param("code")String code);
+
 }
 

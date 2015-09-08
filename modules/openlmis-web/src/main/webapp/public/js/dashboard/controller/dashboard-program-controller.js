@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function DashboardProgramController($scope,$routeParams,$timeout,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend) {
+function DashboardProgramController($scope,$routeParams,$timeout,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend, GetStockOutFacilitiesForProgramPeriodAndProductCode) {
     var dashboardMenuService = dashboardMenuServiceNew;
 
     var  colors = ["bg-green", "bg-red","bg-blue"];
@@ -147,6 +147,12 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
         }
     };
 
+    /**
+     * Holds definition of legends for the mini consumption chart
+     *
+     * @type {*[]}
+     */
+
     $scope.definitions = [
         {'label': messageService.get('label.stock.on.hand.at.facility.level'), 'definition' :  messageService.get('label.stock.on.hand.at.facility.level.definition')},
         {'label': messageService.get('label.stock.on.hand.at.upper.level'), 'definition' :  messageService.get('label.stock.on.hand.at.upper.level.definition')},
@@ -157,6 +163,19 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
         {'label': messageService.get('label.max.facility.level'), 'definition' :  messageService.get('label.max.facility.level.definition')},
         {'label': messageService.get('label.min.facility.level'), 'definition' :  messageService.get('label.min.facility.level.definition')}
     ];
+
+    /**
+     * Function used to fetch list of facilities stock out for program, period and product code selected from dashboard page.
+     * It uses $scope.programId and $scope.periodId set per the dashboard page. Product code passed to this function when the user clicks on
+     * product consumption mini chart.
+     *
+     * @param code
+     */
+    $scope.getFacilitiesStockedOut = function(code){
+        GetStockOutFacilitiesForProgramPeriodAndProductCode.get({programId: $scope.programId, periodId: $scope.periodId, productCode: code}, function(data){
+            $scope.facilities = data.facilities;
+        });
+    }
 
 
 }
