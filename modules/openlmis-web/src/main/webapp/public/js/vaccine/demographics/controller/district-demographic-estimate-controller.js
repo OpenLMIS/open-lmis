@@ -9,15 +9,25 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function DistrictDemographicEstimateController($scope, categories, years, DistrictDemographicEstimates, SaveDistrictDemographicEstimates) {
+function DistrictDemographicEstimateController($scope, $filter, categories, programs , years, DistrictDemographicEstimates, SaveDistrictDemographicEstimates) {
+
+  $scope.currentPage = 1;
+  $scope.pageSize = 15;
 
   $scope.categories = categories;
   $scope.years = years;
-  $scope.year = years[0];
+  // default to the current year
+  $scope.year = Number( $filter('date')(new Date(), 'yyyy') );
+
+  $scope.programs = programs;
+
+  $scope.isDirty = function(){
+    return $scope.$dirty;
+  };
 
   $scope.OnPopulationChanged = function(population, district, category){
     var pop = $scope.toNumber(population.value);
-    if(category.isPrimaryEstimate){
+    if(category.isPrimaryEstimate && $scope.autoCalculate == true){
       angular.forEach(district.districtEstimates, function(estimate){
         if(population.demographicEstimateId !== estimate.demographicEstimateId){
           estimate.value = $scope.round(estimate.conversionFactor * pop / 100) ;
@@ -27,13 +37,35 @@ function DistrictDemographicEstimateController($scope, categories, years, Distri
   };
 
   $scope.onParamChanged = function(){
-    DistrictDemographicEstimates.get({year: $scope.year}, function(data){
-      $scope.form = data.estimates;
-      angular.forEach($scope.form.estimateLineItems, function(fe){
+
+    if(angular.isUndefined($scope.program) || angular.isUndefined($scope.year)){
+      return;
+    }
+
+    DistrictDemographicEstimates.get({year: $scope.year, program: $scope.program}, function(data){
+
+      $scope.lineItems = [];
+      angular.forEach(data.estimates.estimateLineItems, function(fe){
         fe.indexedEstimates = _.indexBy( fe.districtEstimates , 'demographicEstimateId' );
+        $scope.lineItems.push(fe);
       });
+      $scope.form = data.estimates;
+      $scope.pageCount = $scope.lineItems.length / $scope.pageSize;
+      $scope.currentPage = 1;
+      $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
     });
   };
+
+  $scope.$watch('currentPage', function(){
+    if($scope.isDirty()){
+      $scope.save();
+    }
+
+
+    if(angular.isDefined($scope.lineItems)){
+      $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+    }
+  });
 
   $scope.toNumber = function (val) {
     if (angular.isDefined(val) && val !== null) {
@@ -77,6 +109,14 @@ DistrictDemographicEstimateController.resolve = {
       });
     }, 100);
 
+    return deferred.promise;
+  }, programs: function($q, $timeout, DemographicEstimatePrograms){
+    var deferred = $q.defer();
+    $timeout(function(){
+      DemographicEstimatePrograms.get({}, function(data){
+        deferred.resolve(data.programs);
+      });
+    },100);
     return deferred.promise;
   }
 
