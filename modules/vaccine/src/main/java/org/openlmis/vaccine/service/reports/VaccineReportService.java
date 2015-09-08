@@ -200,7 +200,7 @@ public class VaccineReportService {
   public VaccineReport getById(Long id) {
     VaccineReport report = repository.getByIdWithFullDetails(id);
     report.setTabVisibilitySettings(tabVisibilityService.getVisibilityForProgram(report.getProgramId()));
-    report.setFacilityDemographicEstimates(facilityDemographicEstimateService.getEstimateValuesForFacility(report.getFacilityId(), report.getPeriod().getStartDate().getYear()));
+    report.setFacilityDemographicEstimates(facilityDemographicEstimateService.getEstimateValuesForFacilityWithDetails(report.getFacilityId(), report.getProgramId(), report.getPeriod().getStartDate().getYear()));
     return report;
   }
 

@@ -166,7 +166,7 @@ public class VaccineReportServiceTest {
     report.setPeriod(period);
     when(repository.getByIdWithFullDetails(2L)).thenReturn(report);
     when(settingService.getVisibilityForProgram(report.getProgramId())).thenReturn(new ArrayList<VaccineIvdTabVisibility>());
-    when(facilityDemographicEstimateService.getEstimateValuesForFacility(report.getFacilityId(),report.getPeriod().getStartDate().getYear())).thenReturn(null);
+    when(facilityDemographicEstimateService.getEstimateValuesForFacility(report.getFacilityId(), report.getProgramId(),report.getPeriod().getStartDate().getYear())).thenReturn(null);
     VaccineReport result = service.getById(2L);
     verify(repository).getByIdWithFullDetails(2L);
     assertThat(result.getStatus(), is(report.getStatus()));

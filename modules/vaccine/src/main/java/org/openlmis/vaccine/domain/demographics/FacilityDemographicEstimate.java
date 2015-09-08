@@ -28,7 +28,13 @@ public class FacilityDemographicEstimate extends BaseModel {
 
   private Long facilityId;
 
+  private Long programId;
+
+  private Boolean isFinal;
+
   private Long demographicEstimateId;
+
+  private DemographicEstimateCategory category;
 
   private Double conversionFactor;
 

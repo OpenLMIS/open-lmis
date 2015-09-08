@@ -36,3 +36,7 @@ services.factory('DistrictDemographicEstimates', function ($resource) {
 services.factory('SaveDistrictDemographicEstimates', function ($resource) {
   return $resource('/vaccine/demographic/estimate/districts.json', {}, update);
 });
+
+services.factory('DemographicEstimatePrograms', function($resource){
+  return $resource('/vaccine/demographics/programs.json', {}, {});
+});
