@@ -13,6 +13,7 @@
 package org.openlmis.vaccine.service.reports;
 
 import lombok.NoArgsConstructor;
+import org.joda.time.DateTime;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
@@ -150,7 +151,6 @@ public class VaccineReportService {
     return repository.getReportedPeriodsForFacility(facilityId, programId);
   }
 
-
   public List<ReportStatusDTO> getPeriodsFor(Long facilityId, Long programId, Date endDate) {
     Date startDate = programService.getProgramStartDate(facilityId, programId);
 
@@ -195,16 +195,13 @@ public class VaccineReportService {
     return results;
   }
 
-
-
   public VaccineReport getById(Long id) {
     VaccineReport report = repository.getByIdWithFullDetails(id);
     report.setTabVisibilitySettings(tabVisibilityService.getVisibilityForProgram(report.getProgramId()));
-    report.setFacilityDemographicEstimates(facilityDemographicEstimateService.getEstimateValuesForFacilityWithDetails(report.getFacilityId(), report.getProgramId(), report.getPeriod().getStartDate().getYear()));
+    DateTime periodStartDate = new DateTime(report.getPeriod().getStartDate());
+    report.setFacilityDemographicEstimates(facilityDemographicEstimateService.getEstimateValuesForFacilityWithDetails(report.getFacilityId(), report.getProgramId(), periodStartDate.getYear()));
     return report;
   }
-
-
 
   public Long getReportIdForFacilityAndPeriod(Long facilityId, Long periodId){
     return repository.getReportIdForFacilityAndPeriod(facilityId, periodId);
@@ -257,9 +254,7 @@ public class VaccineReportService {
   public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode, Long periodId, Long zoneId){
     if ((facilityCode == null || facilityCode.isEmpty()) && periodId != 0 && zoneId != 0 ){ // Return aggregated data for selected geographic zone
       return repository.vaccineUsageTrendByGeographicZone(periodId, zoneId, productCode);
-
-    }else{ // return vaccine usage trend for facility
-
+    }else{
       return repository.vaccineUsageTrend(facilityCode, productCode);
     }
   }

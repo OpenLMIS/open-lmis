@@ -54,10 +54,14 @@ public interface FacilityDemographicEstimateMapper {
 
 
 
-  @Select("select * from facility_demographic_estimates where year = #{year} and facilityId = #{facilityId} and programId = #{programId}")
+  @Select("select s.* from facility_demographic_estimates s " +
+    " join demographic_estimate_categories c on c.id = s.demographicEstimateId " +
+    " where year = #{year} and facilityId = #{facilityId} " +
+    "   and programId = #{programId} " +
+    " order by c.id")
   @Results( value = {
-    @Result(column = "demographicCategoryId", property = "demographicCategoryId"),
-    @Result(property = "category" ,  column = "demographicCategoryId", one = @One( select = "org.openlmis.vaccine.repository.mapper.demographics.DemographicEstimateCategoryMapper.getById"))
+    @Result(column = "demographicEstimateId", property = "demographicEstimateId"),
+    @Result(property = "category" ,  column = "demographicEstimateId", one = @One( select = "org.openlmis.vaccine.repository.mapper.demographics.DemographicEstimateCategoryMapper.getById"))
   }
   )
   List<FacilityDemographicEstimate> getEstimatesForFacilityWithDetails(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
