@@ -48,7 +48,6 @@ public class FacilityDemographicEstimateService {
   @Autowired
   private CommaSeparator commaSeparator;
 
-
   @Autowired
   private SupervisoryNodeService supervisoryNodeService;
 
@@ -86,7 +85,7 @@ public class FacilityDemographicEstimateService {
     return result;
   }
 
-  public DemographicEstimateForm getEstimateFor(Long userId, Long programId , Integer year){
+  public DemographicEstimateForm getEstimateForm(Long userId, Long programId , Integer year){
     DemographicEstimateForm form = new DemographicEstimateForm();
     List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
@@ -101,29 +100,13 @@ public class FacilityDemographicEstimateService {
       }
       form.getEstimateLineItems().add(facility);
     }
-
     return form;
   }
 
   public List<FacilityDemographicEstimate> getEstimateValuesForFacility(Long facilityId, Long programId, Integer year){
-    List<FacilityDemographicEstimate> result =  repository.getFacilityEstimate(year, facilityId, programId);
-    if(result == null || result.size() == 0){
-      Facility facility = facilityService.getById(facilityId);
-       ;
-      List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
-      result = getEmptyEstimateObjects(categories, facility.getId(), programId, year, false);
-      for(FacilityDemographicEstimate estimate: result){
-        estimate.calculateAndSetValue(facility.getCatchmentPopulation());
-      }
-    }
-    return result;
-  }
-
-  public List<FacilityDemographicEstimate> getEstimateValuesForFacilityWithDetails(Long facilityId, Long programId, Integer year){
     List<FacilityDemographicEstimate> result =  repository.getFacilityEstimateWithDetails(year, facilityId, programId);
     if(result == null || result.size() == 0){
       Facility facility = facilityService.getById(facilityId);
-      ;
       List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
       result = getEmptyEstimateObjects(categories, facility.getId(), programId, year, true);
       for(FacilityDemographicEstimate estimate: result){

@@ -25,6 +25,13 @@ function FacilityDemographicEstimateController($scope, $filter, categories, year
     return $scope.$dirty;
   };
 
+  $scope.showParent = function(index){
+    if(index > 0){
+      return ($scope.form.estimateLineItems[index].parentName != $scope.form.estimateLineItems[index - 1].parentName);
+    }
+    return true;
+  };
+
   $scope.onParamChanged = function(){
     if(angular.isUndefined($scope.program) || angular.isUndefined($scope.year)){
       return;

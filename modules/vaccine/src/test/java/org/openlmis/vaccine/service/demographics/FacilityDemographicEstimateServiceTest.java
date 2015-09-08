@@ -103,7 +103,7 @@ public class FacilityDemographicEstimateServiceTest {
 
     when( repository.getFacilityList(2L, "{1}") ).thenReturn(asList(new DemographicEstimateLineItem()));
 
-    DemographicEstimateForm form =  service.getEstimateFor(1L, 2L ,2005);
+    DemographicEstimateForm form =  service.getEstimateForm(1L, 2L ,2005);
 
     verify(categoryService, atMost(1)).getAll();
     assertThat(form.getEstimateLineItems().size(), is(1));
@@ -115,7 +115,7 @@ public class FacilityDemographicEstimateServiceTest {
   @Test
   public void shouldGetEstimateValuesForFacilityWhenEstimatesWereSaved() throws Exception {
     List<FacilityDemographicEstimate> list = asList(new FacilityDemographicEstimate());
-    when(repository.getFacilityEstimate(2005, 2L, 2L)).thenReturn(list);
+    when(repository.getFacilityEstimateWithDetails(2005, 2L, 2L)).thenReturn(list);
 
     List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2L, 2005);
     assertThat(response, is(list));
