@@ -53,6 +53,16 @@ public interface FacilityDemographicEstimateMapper {
   List<FacilityDemographicEstimate> getEstimatesForFacility(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
 
+
+  @Select("select * from facility_demographic_estimates where year = #{year} and facilityId = #{facilityId} and programId = #{programId}")
+  @Results( value = {
+    @Result(column = "demographicCategoryId", property = "demographicCategoryId"),
+    @Result(property = "category" ,  column = "demographicCategoryId", one = @One( select = "org.openlmis.vaccine.repository.mapper.demographics.DemographicEstimateCategoryMapper.getById"))
+  }
+  )
+  List<FacilityDemographicEstimate> getEstimatesForFacilityWithDetails(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+
   @Select("select f.name, f.id, f.code, gz.id as parentId, gz.name as parentName " +
     " from facilities f " +
     "     join geographic_zones gz on gz.id = f.geographicZoneId " +

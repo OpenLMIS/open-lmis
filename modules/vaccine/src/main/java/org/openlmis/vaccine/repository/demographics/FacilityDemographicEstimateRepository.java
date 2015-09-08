@@ -30,6 +30,10 @@ public class FacilityDemographicEstimateRepository {
     return mapper.getEstimatesForFacility(year,facilityId, programId);
   }
 
+  public List<FacilityDemographicEstimate> getFacilityEstimateWithDetails(Integer year, Long facilityId, Long programId){
+    return mapper.getEstimatesForFacilityWithDetails(year,facilityId, programId);
+  }
+
   public Integer insert(FacilityDemographicEstimate estimate){
     return mapper.insert(estimate);
   }

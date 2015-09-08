@@ -34,6 +34,8 @@ public class FacilityDemographicEstimate extends BaseModel {
 
   private Long demographicEstimateId;
 
+  private DemographicEstimateCategory category;
+
   private Double conversionFactor;
 
   private Long value;

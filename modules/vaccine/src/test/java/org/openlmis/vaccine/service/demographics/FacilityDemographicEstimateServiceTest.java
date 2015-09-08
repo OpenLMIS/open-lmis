@@ -70,7 +70,7 @@ public class FacilityDemographicEstimateServiceTest {
     DemographicEstimateForm form = new DemographicEstimateForm();
     DemographicEstimateLineItem estimateLineItem = new DemographicEstimateLineItem();
     estimateLineItem.setFacilityEstimates(new ArrayList<FacilityDemographicEstimate>());
-    estimateLineItem.getFacilityEstimates().add(new FacilityDemographicEstimate(2000,12L, 1L, false, 2L, 1.0d,2L));
+    estimateLineItem.getFacilityEstimates().add(new FacilityDemographicEstimate(2000,12L, 1L, false, 2L, null , 1.0d,2L));
     form.setEstimateLineItems(asList(estimateLineItem));
 
     when(repository.insert(estimateLineItem.getFacilityEstimates().get(0))).thenReturn(1);
