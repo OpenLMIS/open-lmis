@@ -14,6 +14,10 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
     var dashboardMenuService = dashboardMenuServiceNew;
 
     var  colors = ["bg-green", "bg-red","bg-blue"];
+    /**
+     * Returns Random color
+     * @returns {string}
+     */
     $scope.colorify = function(){
         var index = Math.floor(Math.random() * (2 - 0 + 1)) + 0;
          return colors[index];
@@ -90,7 +94,6 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
                     angular.forEach( $scope.tracerProducts , function(productTrend){
                         var productSummary = [];
 
-                       /// alert('product '+JSON.stringify(productTrend))
                         $scope.sohValue = _.pluck(productTrend,'quantity_dispensed').reverse();
 
                         productSummary.push(productTrend[0]);//this period
