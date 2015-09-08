@@ -75,9 +75,9 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
         $timeout(function(){
 
         getSohChartData();
-        }, 100)
+        }, 100);
 
-    };
+    }
 
     function getSohChartData(){
 
@@ -87,7 +87,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
             GetProgramPeriodTracerProductsTrend.get({programId: $scope.programId, periodId: $scope.periodId,  limit: 5}, function(data){
                 $scope.tracerProducts = data.tracerProducts;
                 $scope.sparkOption =  {  fillColor:'#F0F0F0', lineColor:'#ADA8A8',spotColor:'#ADA8A8e', width: '100%', chartRangeMin:'0', height:'20px'};
-                $scope.tracerProducts = _.groupBy(data.tracerProducts, function(record){return record.product_code});
+                $scope.tracerProducts = _.groupBy(data.tracerProducts, function(record){return record.product_code;});
 
                 if(!isUndefined($scope.tracerProducts)){
 
@@ -107,7 +107,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
             });
         }
 
-    };
+    }
 
     /**
      * A simple popover placement adjustment based on the current index position.
@@ -178,7 +178,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
         GetStockOutFacilitiesForProgramPeriodAndProductCode.get({programId: $scope.programId, periodId: $scope.periodId, productCode: code}, function(data){
             $scope.facilities = data.facilities;
         });
-    }
+    };
 
 
 }
