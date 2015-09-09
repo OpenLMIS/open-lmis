@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('vaccine-protocol', ['openlmis','ngTable','ui.sortable' , 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
+angular.module('vaccineDisease', ['openlmis','ngTable','ui.sortable' , 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
   config(['$routeProvider', function ($routeProvider) {
     $routeProvider.
         when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html', resolve : VaccineDiseaseController.resolve }).
@@ -17,5 +17,5 @@ angular.module('vaccine-protocol', ['openlmis','ngTable','ui.sortable' , 'ui.boo
         when('/disease/edit/:id', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
         otherwise({redirectTo:'/disease'});
   }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('VIEW_REPORT');
+    //AuthorizationService.preAuthorize('MANAGE_VACCINE_DISEASE');
   });

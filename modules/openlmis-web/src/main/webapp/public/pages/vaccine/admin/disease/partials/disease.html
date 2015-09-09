@@ -13,30 +13,33 @@
   <h2>
     <span openlmis-message="header.track.disease"></span>
   </h2>
-  <a href="#/disease/add" class="pull-right btn btn-primary"><span openlmis-message="link.add.new"></span></a>
-  <p>
-    <span openlmis-message="label.track.disease.intro"></span>
-  </p>
 </div>
-<div class="">
-
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th class="span1">#</th>
-        <th class="span5"><span openlmis-message="label.disease.name"></span></th>
+<div class="row-fluid">
+  <div class="span8">
+    <a href="#/disease/add" class="pull-right btn btn-primary"><span openlmis-message="link.add.new"></span></a>
+    <p>
+      <span openlmis-message="label.track.disease.intro"></span>
+    </p>
+    <div class="padding2px"></div>
+    <table class="table table-bordered">
+      <thead>
+      <tr class="gradient-header">
+        <th style="width: 25px;">#</th>
+        <th><span openlmis-message="label.disease.name"></span></th>
         <th><span openlmis-message="label.disease.description"></span></th>
         <th><span openlmis-message="label.disease.display.order"></span></th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       <tr ng-repeat="disease in diseases">
         <th>{{$index + 1}}</th>
-        <td><a ng-href="#/disease/edit/{{disease.id}}">{{disease.name}}</a></td>
+        <td>
+          <a ng-href="#/disease/edit/{{disease.id}}">{{disease.name}}</a>
+        </td>
         <td>{{disease.description}}</td>
         <td>{{disease.displayOrder}}</td>
       </tr>
-    </tbody>
-  </table>
-
+      </tbody>
+    </table>
+  </div>
 </div>
