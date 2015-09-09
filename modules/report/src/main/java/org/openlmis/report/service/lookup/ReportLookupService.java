@@ -18,17 +18,19 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.repository.RegimenRepository;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.RequisitionGroupService;
+import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.repository.DonorRepository;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.*;
-
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.dto.DosageUnit;
 import org.openlmis.report.model.dto.Facility;
@@ -144,6 +146,18 @@ public class ReportLookupService {
 
     @Autowired
     private FacilityService facilityService;
+
+    @Autowired
+    private SupervisoryNodeService supervisoryNodeService;
+
+    @Autowired
+    private RequisitionGroupService requisitionGroupService;
+
+    @Autowired
+    private FacilityLevelMapper levelMapper;
+
+    @Autowired
+    private CommaSeparator commaSeparator;
 
     public List<Product> getAllProducts() {
         return productMapper.getAll();
@@ -662,5 +676,50 @@ public class ReportLookupService {
     public List<ProcessingPeriod> getLastPeriods(Long programId){
         return processingPeriodMapper.getLastPeriods(programId);
     }
+
+    //New
+    public List<FacilityLevelTree> getFacilityByLevel(Long programId, Long userId) {
+
+
+        org.openlmis.core.domain.Facility homeFacility = facilityService.getHomeFacility(userId);
+
+        List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, MANAGE_EQUIPMENT_INVENTORY);
+        List<org.openlmis.core.domain.RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
+
+        List<FacilityLevelTree> facilityLevels = levelMapper.getFacilitiesByLevel(programId, commaSeparator.commaSeparateIds(requisitionGroups));
+        List<FacilityLevelTree> parentTree = levelMapper.getParentTree(programId, commaSeparator.commaSeparateIds(requisitionGroups));
+
+        List<FacilityLevelTree> treeList = new ArrayList<FacilityLevelTree>();
+
+        for (FacilityLevelTree fa : facilityLevels) {
+
+            FacilityLevelTree facilityObject = new FacilityLevelTree();
+            facilityObject.setSuperVisedFacility(fa.getSuperVisedFacility());
+            facilityObject.setSuperVisedFacilityId(fa.getSuperVisedFacilityId());
+            facilityObject.setParentId(fa.getParentId());
+            facilityObject.setHomeFacilityName(homeFacility.getName());
+            facilityObject.setFacilityId(homeFacility.getId());
+
+            for (FacilityLevelTree tree : parentTree) {
+
+                if ((tree.getParentId() == facilityObject.getParentId()) && (tree.getSuperVisedFacilityId() == facilityObject.getSuperVisedFacilityId())) {
+
+                    facilityObject.getChildren().add(tree);
+
+                }
+
+            }
+
+            treeList.add(facilityObject);
+
+
+        }
+
+
+        return treeList;
+
+    }
+
+//End new
 
 }

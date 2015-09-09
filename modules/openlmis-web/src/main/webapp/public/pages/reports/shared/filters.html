@@ -326,3 +326,36 @@
         </div>
     </div>
 </script>
+
+<script type="text/ng-template" id="filter-vaccine-facility-level-template">
+
+    <div ng-show="facilityLevels.length > 0 ">
+
+        <div>
+
+            <select ui-select2 class="input-large" ng-change="filterChanged();" ng-model="filter.facilityId">
+                <option ng-selected="filter.facilityId === 0" ng-value="0">--Select Facility --</option>
+
+                <optgroup ng-repeat="value in facilityLevels | orderBy:'superVisedFacility'"
+                          value="{{ value.superVisedFacilityId }}"
+                          ng-selected="filter.facilityId == value.superVisedFacilityId"
+                          label="{{value.superVisedFacility}}">
+
+                    <option ng-show="homeFacilityId[0] !==value.superVisedFacilityId "
+                            value="{{value.superVisedFacilityId}}"><b class="green">{{value.superVisedFacility}}</b>
+                    </option>
+
+                    <option ng-repeat-end ng-repeat="d in value.children" value="{{d.facilityId}}"> &nbsp; &nbsp;&nbsp;
+                        {{d.facilityName}}
+                    </option>
+
+                </optgroup>
+
+
+            </select>
+        </div>
+    </div>
+
+
+</script>
+
