@@ -50,7 +50,7 @@ public class DistrictDemographicEstimateService {
     }
   }
 
-  private List<DistrictDemographicEstimate> getEmptyEstimateObjects(List<DemographicEstimateCategory> categories, Long districtId, Long programId, Integer year){
+  private List<DistrictDemographicEstimate> getEmptyEstimateObjects(List<DemographicEstimateCategory> categories, Long districtId, Long programId, Integer year) {
     List<DistrictDemographicEstimate> result = new ArrayList<>();
     for(DemographicEstimateCategory category: categories){
       DistrictDemographicEstimate estimate = new DistrictDemographicEstimate();
@@ -65,7 +65,7 @@ public class DistrictDemographicEstimateService {
     return result;
   }
 
-  public DemographicEstimateForm getEstimateFor(Integer year, Long programId){
+  public DemographicEstimateForm getEstimateFor(Integer year, Long programId) {
     DemographicEstimateForm form = new DemographicEstimateForm();
     List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());

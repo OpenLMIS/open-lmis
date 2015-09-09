@@ -267,7 +267,7 @@ public class DashboardController extends BaseController {
     @RequestMapping(value = "/program/{programId}/period/{periodId}/tracer-products-trend.json", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getProgramPeriodTracerProductsTrend(@PathVariable("programId") Long programId, @PathVariable("periodId") Long periodId,
                                                                                 @RequestParam(value = "limit", required = false, defaultValue = "4") Long limit,
-                                                                                HttpServletRequest request){
+                                                                                HttpServletRequest request) {
 
         return OpenLmisResponse.response("tracerProducts", this.lookupService.getProgramPeriodTracerProductsTrend(programId, periodId, loggedInUserId(request), limit));
     }
@@ -276,7 +276,7 @@ public class DashboardController extends BaseController {
     @RequestMapping(value = "/program/{programId}/period/{periodId}/product/{productCode}/stocked-out-facilities.json", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getFacilitiesStockedOutForProgramPeriodAndProductCode(@PathVariable("programId") Long programId,
                                                                                                   @PathVariable("periodId") Long periodId,
-                                                                                                  @PathVariable("productCode") String productCode){
+                                                                                                  @PathVariable("productCode") String productCode) {
         return OpenLmisResponse.response("facilities", this.lookupService.getFacilitiesStockedOut(programId, periodId, productCode));
     }
 

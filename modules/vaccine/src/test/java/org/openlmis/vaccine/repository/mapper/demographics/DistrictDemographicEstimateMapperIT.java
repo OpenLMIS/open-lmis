@@ -45,101 +45,101 @@ import static org.hamcrest.core.Is.is;
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class DistrictDemographicEstimateMapperIT {
 
-  @Autowired
-  GeographicZoneMapper geographicZoneMapper;
+    @Autowired
+    GeographicZoneMapper geographicZoneMapper;
 
-  @Autowired
-  ProgramMapper programMapper;
+    @Autowired
+    ProgramMapper programMapper;
 
-  @Autowired
-  DemographicEstimateCategoryMapper demographicEstimateCategoryMapper;
+    @Autowired
+    DemographicEstimateCategoryMapper demographicEstimateCategoryMapper;
 
-  @Autowired
-  private DistrictDemographicEstimateMapper mapper;
+    @Autowired
+    private DistrictDemographicEstimateMapper mapper;
 
-  private GeographicZone district;
+    private GeographicZone district;
 
-  private Program program;
+    private Program program;
 
-  private DemographicEstimateCategory category;
+    private DemographicEstimateCategory category;
 
-  @Before
-  public void setup(){
-    district = new GeographicZone(null, "code", "name",
-      new GeographicLevel(2L, "state", "State", 2), null);
+    @Before
+    public void setup() {
+        district = new GeographicZone(null, "code", "name",
+                new GeographicLevel(2L, "state", "State", 2), null);
 
-    geographicZoneMapper.insert(district);
-    program = make(a(ProgramBuilder.defaultProgram));
-    programMapper.insert(program);
+        geographicZoneMapper.insert(district);
+        program = make(a(ProgramBuilder.defaultProgram));
+        programMapper.insert(program);
 
-    category = new DemographicEstimateCategory("Live Birth", "", true, 1.0);
-    demographicEstimateCategoryMapper.insert(category);
-  }
+        category = new DemographicEstimateCategory("Live Birth", "", true, 1.0);
+        demographicEstimateCategoryMapper.insert(category);
+    }
 
-  @Test
-  public void shouldInsert() throws Exception {
-    DistrictDemographicEstimate districtDemographicEstimate = createDistrictDemographicEstimate();
+    @Test
+    public void shouldInsert() throws Exception {
+        DistrictDemographicEstimate districtDemographicEstimate = createDistrictDemographicEstimate();
 
-    Integer result = mapper.insert(districtDemographicEstimate);
+        Integer result = mapper.insert(districtDemographicEstimate);
 
-    assertThat(result, is(1));
-    assertThat(districtDemographicEstimate.getId(), is(notNullValue()));
-  }
+        assertThat(result, is(1));
+        assertThat(districtDemographicEstimate.getId(), is(notNullValue()));
+    }
 
-  private DistrictDemographicEstimate createDistrictDemographicEstimate() {
-    DistrictDemographicEstimate districtDemographicEstimate = new DistrictDemographicEstimate();
-    districtDemographicEstimate.setProgramId(program.getId());
-    districtDemographicEstimate.setYear(2005);
-    districtDemographicEstimate.setDistrictId(district.getId());
-    districtDemographicEstimate.setDemographicEstimateId(category.getId());
-    districtDemographicEstimate.setConversionFactor(category.getDefaultConversionFactor());
-    districtDemographicEstimate.setValue(1000L);
-    return districtDemographicEstimate;
-  }
+    private DistrictDemographicEstimate createDistrictDemographicEstimate() {
+        DistrictDemographicEstimate districtDemographicEstimate = new DistrictDemographicEstimate();
+        districtDemographicEstimate.setProgramId(program.getId());
+        districtDemographicEstimate.setYear(2005);
+        districtDemographicEstimate.setDistrictId(district.getId());
+        districtDemographicEstimate.setDemographicEstimateId(category.getId());
+        districtDemographicEstimate.setConversionFactor(category.getDefaultConversionFactor());
+        districtDemographicEstimate.setValue(1000L);
+        return districtDemographicEstimate;
+    }
 
-  @Test
-  public void shouldUpdate() throws Exception {
-    DistrictDemographicEstimate districtDemographicEstimate = createDistrictDemographicEstimate();
-    mapper.insert(districtDemographicEstimate);
+    @Test
+    public void shouldUpdate() throws Exception {
+        DistrictDemographicEstimate districtDemographicEstimate = createDistrictDemographicEstimate();
+        mapper.insert(districtDemographicEstimate);
 
-    districtDemographicEstimate.setValue(10002L);
-    Integer result = mapper.update(districtDemographicEstimate);
+        districtDemographicEstimate.setValue(10002L);
+        Integer result = mapper.update(districtDemographicEstimate);
 
-    assertThat(result, is(1));
-    // check if the value is actually saved here.
-    assertThat(mapper.getById(districtDemographicEstimate.getId()).getValue(), is(districtDemographicEstimate.getValue()));
+        assertThat(result, is(1));
+        // check if the value is actually saved here.
+        assertThat(mapper.getById(districtDemographicEstimate.getId()).getValue(), is(districtDemographicEstimate.getValue()));
 
-  }
+    }
 
-  @Test
-  public void shouldFinalize() throws Exception {
-    DistrictDemographicEstimate districtDemographicEstimate = createDistrictDemographicEstimate();
-    mapper.insert(districtDemographicEstimate);
+    @Test
+    public void shouldFinalize() throws Exception {
+        DistrictDemographicEstimate districtDemographicEstimate = createDistrictDemographicEstimate();
+        mapper.insert(districtDemographicEstimate);
 
-    Integer result = mapper.finalize(districtDemographicEstimate);
-    assertThat(result, is(1));
-    // check if the value is actually saved here.
-    assertThat(mapper.getById(districtDemographicEstimate.getId()).getIsFinal(), is(true));
-  }
+        Integer result = mapper.finalize(districtDemographicEstimate);
+        assertThat(result, is(1));
+        // check if the value is actually saved here.
+        assertThat(mapper.getById(districtDemographicEstimate.getId()).getIsFinal(), is(true));
+    }
 
-  @Test
-  public void shouldUndoFinalize() throws Exception {
-    DistrictDemographicEstimate districtDemographicEstimate = createDistrictDemographicEstimate();
-    mapper.insert(districtDemographicEstimate);
+    @Test
+    public void shouldUndoFinalize() throws Exception {
+        DistrictDemographicEstimate districtDemographicEstimate = createDistrictDemographicEstimate();
+        mapper.insert(districtDemographicEstimate);
 
-    Integer result = mapper.undoFinalize(districtDemographicEstimate);
-    assertThat(result, is(1));
-    // check if the value is actually saved here.
-    assertThat(mapper.getById(districtDemographicEstimate.getId()).getIsFinal(), is(false));
-  }
+        Integer result = mapper.undoFinalize(districtDemographicEstimate);
+        assertThat(result, is(1));
+        // check if the value is actually saved here.
+        assertThat(mapper.getById(districtDemographicEstimate.getId()).getIsFinal(), is(false));
+    }
 
-  @Test
-  public void shouldGetEstimatesForDistrict() throws Exception {
+    @Test
+    public void shouldGetEstimatesForDistrict() throws Exception {
 
-  }
+    }
 
-  @Test
-  public void shouldGetDistricts() throws Exception {
+    @Test
+    public void shouldGetDistricts() throws Exception {
 
-  }
+    }
 }

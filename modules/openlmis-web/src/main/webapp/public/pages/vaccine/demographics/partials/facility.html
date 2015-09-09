@@ -58,10 +58,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="gradient-header" ng-repeat-start="facility in form.estimateLineItems" ng-show="showParent($index)">
-              <th colspan="{{categories.length + 2}}">{{facility.parentName}}</th>
-          </tr>
-          <tr>
+        <tr class="gradient-header" ng-repeat-start="facility in form.estimateLineItems" ng-show="showParent($index)">
+          <th colspan="{{categories.length + 2}}">{{facility.parentName}}</th>
+        </tr>
+        <tr>
             <td class="cell-input">
               <span class="cell-text">{{facility.code}}</span>
             </td>
@@ -83,7 +83,7 @@
               </span>
             </td>
           </tr>
-          <tr ng-repeat-end></tr>
+        <tr ng-repeat-end></tr>
         </tbody>
       </table>
     </div>

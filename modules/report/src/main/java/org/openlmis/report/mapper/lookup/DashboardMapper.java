@@ -210,7 +210,7 @@ public interface DashboardMapper {
             " COALESCE(number_of_facilities_stocked_out_facility, 0) + COALESCE(number_of_facilities_stocked_out_upper, 0) as total_facilities_stocked_out,\n" +
             " price\n" +
             " from fn_get_dashboard_summary_data(#{programId}::integer, #{periodId}::integer, #{userId}::integer)")
-    List<HashMap<String, Object>> getProgramPeriodTracerProductTrend(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("userId")Long userId);
+    List<HashMap<String, Object>> getProgramPeriodTracerProductTrend(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("userId") Long userId);
 
 
     @Select("SELECT\n" +
@@ -219,7 +219,7 @@ public interface DashboardMapper {
             "facility_types.id facility_type_id,\n" +
             "facility_types.name facility_type_name,\n" +
             "geographic_zones.name geographiczone_name,\n" +
-            "geographic_zones.levelid, \n"+
+            "geographic_zones.levelid, \n" +
             "productcode product_code, \n" +
             "processing_periods.startdate::date start_date,\n" +
             "requisition_line_items.stockinhand stock_in_hand,\n" +
@@ -239,7 +239,7 @@ public interface DashboardMapper {
             "and processing_periods.id = #{periodId}\n" +
             "and products.code = #{code} and requisition_line_items.stockinhand = 0 \n" +
             "order by geographic_zones.levelid")
-    List<HashMap<String, Object>> getFacilityStockedOut(@Param("programId")Long programId, @Param("periodId")Long periodId, @Param("code")String code);
+    List<HashMap<String, Object>> getFacilityStockedOut(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("code") String code);
 
 }
 

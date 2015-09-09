@@ -70,7 +70,7 @@ public class FacilityDemographicEstimateServiceTest {
     DemographicEstimateForm form = new DemographicEstimateForm();
     DemographicEstimateLineItem estimateLineItem = new DemographicEstimateLineItem();
     estimateLineItem.setFacilityEstimates(new ArrayList<FacilityDemographicEstimate>());
-    estimateLineItem.getFacilityEstimates().add(new FacilityDemographicEstimate(2000,12L, 1L, false, 2L, null , 1.0d,2L));
+    estimateLineItem.getFacilityEstimates().add(new FacilityDemographicEstimate(2000, 12L, 1L, false, 2L, null, 1.0d, 2L));
     form.setEstimateLineItems(asList(estimateLineItem));
 
     when(repository.insert(estimateLineItem.getFacilityEstimates().get(0))).thenReturn(1);
@@ -101,9 +101,9 @@ public class FacilityDemographicEstimateServiceTest {
     when(categoryService.getAll()).thenReturn(asList(category1, category2));
     when(commaSeparator.commaSeparateIds(groups)).thenReturn("{1}");
 
-    when( repository.getFacilityList(2L, "{1}") ).thenReturn(asList(new DemographicEstimateLineItem()));
+    when(repository.getFacilityList(2L, "{1}")).thenReturn(asList(new DemographicEstimateLineItem()));
 
-    DemographicEstimateForm form =  service.getEstimateForm(1L, 2L ,2005);
+    DemographicEstimateForm form = service.getEstimateForm(1L, 2L, 2005);
 
     verify(categoryService, atMost(1)).getAll();
     assertThat(form.getEstimateLineItems().size(), is(1));
@@ -137,7 +137,7 @@ public class FacilityDemographicEstimateServiceTest {
     when(repository.getFacilityEstimate(2005, 2L, 2L)).thenReturn(null);
 
 
-    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2L ,2005);
+    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2L, 2005);
     assertThat(response.size(), is(2));
     assertThat(response.get(0).getValue(), is(10000L));
     assertThat(response.get(1).getValue(), is(1000L));

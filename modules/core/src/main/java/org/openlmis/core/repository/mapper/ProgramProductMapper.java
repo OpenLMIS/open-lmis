@@ -23,7 +23,7 @@ import java.util.List;
  */
 
 @Repository
-public interface  ProgramProductMapper {
+public interface ProgramProductMapper {
 
   @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, productCategoryId, displayOrder, fullSupply, currentprice, createdBy, modifiedBy, modifiedDate)",
     "VALUES (#{program.id},",

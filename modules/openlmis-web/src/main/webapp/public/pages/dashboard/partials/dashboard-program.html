@@ -38,11 +38,11 @@
                     <tab-heading style="cursor: pointer;"><span openlmis-message="title.overview"></span></tab-heading>
                     <table style="width: 100%;">
                         <thead>
-                            <tr class="gradient-header">
-                                <th openlmis-message="label.items"></th>
-                                <th openlmis-message="label.this.period"></th>
-                                <th openlmis-message="label.last.period"></th>
-                            </tr>
+                        <tr class="gradient-header">
+                            <th openlmis-message="label.items"></th>
+                            <th openlmis-message="label.this.period"></th>
+                            <th openlmis-message="label.last.period"></th>
+                        </tr>
 
                         </thead>
                         <tr ng-repeat="item in productSummary">
@@ -57,10 +57,10 @@
                     <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
                     <table class="table">
                         <thead>
-                            <tr class="gradient-header">
-                                <th openlmis-message="title.legend"></th>
-                                <th openlmis-message="title.definition"></th>
-                            </tr>
+                        <tr class="gradient-header">
+                            <th openlmis-message="title.legend"></th>
+                            <th openlmis-message="title.definition"></th>
+                        </tr>
                         </thead>
                         <tr ng-repeat="def in definitions">
                             <td>{{def.label}}</td>
@@ -93,11 +93,11 @@
 
                 </thead>
                 <tbody>
-                    <tr ng-repeat="facility in facilities">
-                        <td>{{facility.facility_name}}</td>
-                        <td>{{facility.stock_in_hand}}</td>
-                        <td>{{facility.previous_stock_in_hand}}</td>
-                    </tr>
+                <tr ng-repeat="facility in facilities">
+                    <td>{{facility.facility_name}}</td>
+                    <td>{{facility.stock_in_hand}}</td>
+                    <td>{{facility.previous_stock_in_hand}}</td>
+                </tr>
                 </tbody>
 
             </table>
@@ -114,21 +114,10 @@
     <div class="row">
         <div class="span2" style="border-right: solid 1px #EAEFF3">
             <div>
-            <div ng-repeat="trend in productsTrend">
-                <div style="padding: 10px 30px; border-bottom: solid 1px #EAEFF3">
-                    <div ns-popover ng-click="getProductSummary(trend.code)"
-                         ns-popover-template="product-summary"
-                         ns-popover-trigger="click"
-                         ns-popover-theme="ns-popover-tooltip-theme"
-                         ns-popover-timeout="1000"
-                         ns-popover-placement="{{adjustPlacement($index)}}"
-                         ns-popover-hide-on-inside-click="false"
-                         ns-popover-hide-on-outside-click="true"
-                         ns-popover-hide-on-button-click="true" style="cursor: pointer; padding: 10px 0px;">{{trend.code}}</div>
-                    <spark-line af-data="trend.sohTrend" af-option="sparkOption" ></spark-line>
-                    <div style="margin-top:5px; text-align: center">
-                        <div ns-popover ng-click="getFacilitiesStockedOut(trend.code)"
-                             ns-popover-template="facilities-stock-out"
+                <div ng-repeat="trend in productsTrend">
+                    <div style="padding: 10px 30px; border-bottom: solid 1px #EAEFF3">
+                        <div ns-popover ng-click="getProductSummary(trend.code)"
+                             ns-popover-template="product-summary"
                              ns-popover-trigger="click"
                              ns-popover-theme="ns-popover-tooltip-theme"
                              ns-popover-timeout="1000"
@@ -136,16 +125,30 @@
                              ns-popover-hide-on-inside-click="false"
                              ns-popover-hide-on-outside-click="true"
                              ns-popover-hide-on-button-click="true" style="cursor: pointer; padding: 10px 0px;">
-                            <span ng-class="trend.color"  style="  color:white; padding:2px 20px; border-radius:10px; font-size:12px;">{{trend.facilityStockedOut | number}}</span>
+                            {{trend.code}}
                         </div>
+                        <spark-line af-data="trend.sohTrend" af-option="sparkOption"></spark-line>
+                        <div style="margin-top:5px; text-align: center">
+                            <div ns-popover ng-click="getFacilitiesStockedOut(trend.code)"
+                                 ns-popover-template="facilities-stock-out"
+                                 ns-popover-trigger="click"
+                                 ns-popover-theme="ns-popover-tooltip-theme"
+                                 ns-popover-timeout="1000"
+                                 ns-popover-placement="{{adjustPlacement($index)}}"
+                                 ns-popover-hide-on-inside-click="false"
+                                 ns-popover-hide-on-outside-click="true"
+                                 ns-popover-hide-on-button-click="true" style="cursor: pointer; padding: 10px 0px;">
+                                <span ng-class="trend.color"
+                                      style="  color:white; padding:2px 20px; border-radius:10px; font-size:12px;">{{trend.facilityStockedOut | number}}</span>
+                            </div>
+
+                        </div>
+
 
                     </div>
 
-
                 </div>
-
             </div>
-        </div>
         </div>
         <div class="span10"></div>
     </div>

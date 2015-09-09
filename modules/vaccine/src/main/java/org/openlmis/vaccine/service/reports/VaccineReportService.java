@@ -254,7 +254,7 @@ public class VaccineReportService {
   public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode, Long periodId, Long zoneId){
     if ((facilityCode == null || facilityCode.isEmpty()) && periodId != 0 && zoneId != 0 ){ // Return aggregated data for selected geographic zone
       return repository.vaccineUsageTrendByGeographicZone(periodId, zoneId, productCode);
-    }else{
+    } else {
       return repository.vaccineUsageTrend(facilityCode, productCode);
     }
   }

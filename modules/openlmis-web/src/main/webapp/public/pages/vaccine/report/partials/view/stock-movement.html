@@ -24,7 +24,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr class="text-row productCategory" ng-repeat-start="product in report.logisticsLineItems" ng-show="$index == 0 || ( $index > 0 && product.productCategory != report.logisticsLineItems[$index - 1].productCategory)">
+    <tr class="text-row productCategory" ng-repeat-start="product in report.logisticsLineItems"
+        ng-show="$index == 0 || ( $index > 0 && product.productCategory != report.logisticsLineItems[$index - 1].productCategory)">
       <td colspan="14">{{product.productCategory}}</td>
     </tr>
     <tr ng-repeat-end >

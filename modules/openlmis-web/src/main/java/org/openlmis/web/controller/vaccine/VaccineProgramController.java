@@ -31,52 +31,52 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class VaccineProgramController extends BaseController{
+public class VaccineProgramController extends BaseController {
 
-  @Autowired
-  VaccineReportService service;
+    @Autowired
+    VaccineReportService service;
 
-  @Autowired
-  ProgramService programService;
+    @Autowired
+    ProgramService programService;
 
-  @Autowired
-  UserService userService;
+    @Autowired
+    UserService userService;
 
-  @Autowired
-  FacilityService facilityService;
+    @Autowired
+    FacilityService facilityService;
 
-  @RequestMapping(value = "/vaccine/report/programs.json", method = RequestMethod.GET)
-  public ResponseEntity<OpenLmisResponse> getProgramsForConfiguration(){
-    return OpenLmisResponse.response("programs", programService.getAllIvdPrograms() );
-  }
+    @RequestMapping(value = "/vaccine/report/programs.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getProgramsForConfiguration() {
+        return OpenLmisResponse.response("programs", programService.getAllIvdPrograms());
+    }
 
-  @RequestMapping(value = "/vaccine/report/ivd-form/programs.json", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getProgramForIvdFormHomeFacility(HttpServletRequest request){
-    Long userId = loggedInUserId(request);
-    User user = userService.getById(userId);
-    return OpenLmisResponse.response("programs", programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(user.getFacilityId(), userId, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION") );
-  }
+    @RequestMapping(value = "/vaccine/report/ivd-form/programs.json", method = RequestMethod.GET)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+    public ResponseEntity<OpenLmisResponse> getProgramForIvdFormHomeFacility(HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        User user = userService.getById(userId);
+        return OpenLmisResponse.response("programs", programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(user.getFacilityId(), userId, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION"));
+    }
 
-  @RequestMapping(value = "/vaccine/report/ivd-form/supervised-programs")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getProgramForIvdFormSupervisedFacilities(HttpServletRequest request){
-    return OpenLmisResponse.response("programs", programService.getIvdProgramForSupervisedFacilities(loggedInUserId(request), "CREATE_REQUISITION", "AUTHORIZE_REQUISITION") );
-  }
+    @RequestMapping(value = "/vaccine/report/ivd-form/supervised-programs")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+    public ResponseEntity<OpenLmisResponse> getProgramForIvdFormSupervisedFacilities(HttpServletRequest request) {
+        return OpenLmisResponse.response("programs", programService.getIvdProgramForSupervisedFacilities(loggedInUserId(request), "CREATE_REQUISITION", "AUTHORIZE_REQUISITION"));
+    }
 
-  @RequestMapping(value = "/vaccine/report/ivd-form/facilities/{programId}.json", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getFacilities(@PathVariable Long programId, HttpServletRequest request){
-    Long userId = loggedInUserId(request);
-    //TODO: make sure this method also supports home facility.
-    return OpenLmisResponse.response("facilities", facilityService.getUserSupervisedFacilities(userId, programId, RightName.CREATE_REQUISITION));
-  }
+    @RequestMapping(value = "/vaccine/report/ivd-form/facilities/{programId}.json", method = RequestMethod.GET)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+    public ResponseEntity<OpenLmisResponse> getFacilities(@PathVariable Long programId, HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        //TODO: make sure this method also supports home facility.
+        return OpenLmisResponse.response("facilities", facilityService.getUserSupervisedFacilities(userId, programId, RightName.CREATE_REQUISITION));
+    }
 
-  @RequestMapping(value = "/vaccine/demographics/programs.json", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
-  public ResponseEntity<OpenLmisResponse> getProgramsForDemographicEstimates(HttpServletRequest request){
-    return OpenLmisResponse.response("programs", programService.getProgramsForUserByRights(loggedInUserId(request), RightName.MANAGE_DEMOGRAPHIC_ESTIMATES));
-  }
+    @RequestMapping(value = "/vaccine/demographics/programs.json", method = RequestMethod.GET)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
+    public ResponseEntity<OpenLmisResponse> getProgramsForDemographicEstimates(HttpServletRequest request) {
+        return OpenLmisResponse.response("programs", programService.getProgramsForUserByRights(loggedInUserId(request), RightName.MANAGE_DEMOGRAPHIC_ESTIMATES));
+    }
 
 
 }

@@ -52,7 +52,7 @@ public class VaccineColumnTemplateServiceTest {
     when(repository.getTemplateForProgram(1L)).thenReturn(emptyList);
     when(repository.getMasterColumns()).thenReturn(masterColumns);
 
-    ProgramColumnTemplateDTO columnsDto =  service.getTemplate(1L);
+    ProgramColumnTemplateDTO columnsDto = service.getTemplate(1L);
     assertThat(columnsDto.getColumns().size(), is(1));
     assertThat(columnsDto.getProgramId(), is(1L));
   }
@@ -64,7 +64,7 @@ public class VaccineColumnTemplateServiceTest {
     List<LogisticsColumn> emptyList = new ArrayList<>();
     when(repository.getTemplateForProgram(1L)).thenReturn(configuredColumns);
 
-    ProgramColumnTemplateDTO columns =  service.getTemplate(1L);
+    ProgramColumnTemplateDTO columns = service.getTemplate(1L);
     assertThat(columns.getColumns().size(), is(1));
   }
 

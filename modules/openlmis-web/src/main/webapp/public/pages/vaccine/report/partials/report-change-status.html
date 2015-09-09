@@ -24,7 +24,8 @@
       </tr>
       </thead>
       <tbody>
-      <tr class="text-row" ng-show="report.reportStatusChanges.length > 0" ng-repeat="history in report.reportStatusChanges">
+      <tr class="text-row" ng-show="report.reportStatusChanges.length > 0"
+          ng-repeat="history in report.reportStatusChanges">
         <td class="cell-input"><span class="cell-text">{{history.date | date : 'dd-MMM-yyyy'}}</span></td>
         <td class="cell-input"><span class="cell-text">{{history.firstName}} {{history.lastName}}</span></td>
         <td class="cell-input"><span class="cell-text">{{history.status}}</span></td>

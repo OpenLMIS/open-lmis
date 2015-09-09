@@ -19,7 +19,6 @@ import org.openlmis.report.model.dto.YearSchedulePeriodTree;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 @Repository

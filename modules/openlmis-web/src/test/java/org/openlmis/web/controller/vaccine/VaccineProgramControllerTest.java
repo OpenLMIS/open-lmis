@@ -53,69 +53,69 @@ import static org.mockito.Mockito.when;
 public class VaccineProgramControllerTest {
 
 
-  @Mock
-  VaccineReportService service;
+    @Mock
+    VaccineReportService service;
 
-  @Mock
-  ProgramService programService;
+    @Mock
+    ProgramService programService;
 
-  @Mock
-  FacilityService facilityService;
+    @Mock
+    FacilityService facilityService;
 
-  @Mock
-  UserService userService;
+    @Mock
+    UserService userService;
 
-  @InjectMocks
-  VaccineProgramController controller;
+    @InjectMocks
+    VaccineProgramController controller;
 
-  private MockHttpSession session;
-  private MockHttpServletRequest httpServletRequest;
+    private MockHttpSession session;
+    private MockHttpServletRequest httpServletRequest;
 
-  @Before
-  public void setUp() throws Exception {
-    httpServletRequest = new MockHttpServletRequest();
-    session = new MockHttpSession();
-    httpServletRequest.setSession(session);
-    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, 1L);
-  }
+    @Before
+    public void setUp() throws Exception {
+        httpServletRequest = new MockHttpServletRequest();
+        session = new MockHttpSession();
+        httpServletRequest.setSession(session);
+        session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, 1L);
+    }
 
-  @Test
-  public void shouldGetProgramsForConfiguration() throws Exception {
-    List<Program> programs = new ArrayList<>();
+    @Test
+    public void shouldGetProgramsForConfiguration() throws Exception {
+        List<Program> programs = new ArrayList<>();
 
-    when(programService.getAllIvdPrograms()).thenReturn(programs);
-    ResponseEntity<OpenLmisResponse> response = controller.getProgramsForConfiguration();
+        when(programService.getAllIvdPrograms()).thenReturn(programs);
+        ResponseEntity<OpenLmisResponse> response = controller.getProgramsForConfiguration();
 
-    verify(programService).getAllIvdPrograms();
-    assertThat(programs, is(response.getBody().getData().get("programs")));
-  }
+        verify(programService).getAllIvdPrograms();
+        assertThat(programs, is(response.getBody().getData().get("programs")));
+    }
 
 
-  @Test
-  public void shouldGetProgramsForIVDForm() throws Exception {
-    List<Program> programs = new ArrayList<>();
-    User user = new User();
-    user.setFacilityId(1L);
+    @Test
+    public void shouldGetProgramsForIVDForm() throws Exception {
+        List<Program> programs = new ArrayList<>();
+        User user = new User();
+        user.setFacilityId(1L);
 
-    when(programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, 1L, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION")).thenReturn(programs);
-    when(userService.getById(1L)).thenReturn(user);
-    ResponseEntity<OpenLmisResponse> response = controller.getProgramForIvdFormHomeFacility(httpServletRequest);
+        when(programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, 1L, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION")).thenReturn(programs);
+        when(userService.getById(1L)).thenReturn(user);
+        ResponseEntity<OpenLmisResponse> response = controller.getProgramForIvdFormHomeFacility(httpServletRequest);
 
-    verify(programService).getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, 1L, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION");
-    assertThat(programs, is(response.getBody().getData().get("programs")));
-  }
+        verify(programService).getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, 1L, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION");
+        assertThat(programs, is(response.getBody().getData().get("programs")));
+    }
 
-  @Test
-  public void shouldGetFacilities() throws Exception {
-    List<Facility> facilities = new ArrayList<>();
-    when(facilityService.getUserSupervisedFacilities(1L, 1L, RightName.CREATE_REQUISITION)).thenReturn(facilities);
-    ResponseEntity<OpenLmisResponse> response = controller.getFacilities(1L, httpServletRequest);
+    @Test
+    public void shouldGetFacilities() throws Exception {
+        List<Facility> facilities = new ArrayList<>();
+        when(facilityService.getUserSupervisedFacilities(1L, 1L, RightName.CREATE_REQUISITION)).thenReturn(facilities);
+        ResponseEntity<OpenLmisResponse> response = controller.getFacilities(1L, httpServletRequest);
 
-    assertThat(facilities, is(response.getBody().getData().get("facilities")));
-  }
+        assertThat(facilities, is(response.getBody().getData().get("facilities")));
+    }
 
-  @Test
-  public void shouldGetProgramsForDemographicEstimates() throws Exception {
+    @Test
+    public void shouldGetProgramsForDemographicEstimates() throws Exception {
 
-  }
+    }
 }

@@ -21,7 +21,8 @@ import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * User: Issa
@@ -173,11 +174,11 @@ public class DashboardLookupService {
         return dashboardLookUpReportHeader;
     }
 
-    public List<HashMap<String, Object>> getProgramPeriodTracerProductsTrend(Long programId, Long periodId, Long userId, Long limit){
-         return dashboardMapper.getProgramPeriodTracerProductTrend(programId, periodId, userId);
+    public List<HashMap<String, Object>> getProgramPeriodTracerProductsTrend(Long programId, Long periodId, Long userId, Long limit) {
+        return dashboardMapper.getProgramPeriodTracerProductTrend(programId, periodId, userId);
     }
 
-    public List<HashMap<String, Object>> getFacilitiesStockedOut(Long programId, Long periodId, String productCode){
+    public List<HashMap<String, Object>> getFacilitiesStockedOut(Long programId, Long periodId, String productCode) {
         return dashboardMapper.getFacilityStockedOut(programId, periodId, productCode);
     }
 }

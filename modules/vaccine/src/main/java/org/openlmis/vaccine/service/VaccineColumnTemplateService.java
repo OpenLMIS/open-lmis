@@ -26,7 +26,7 @@ public class VaccineColumnTemplateService {
   @Autowired
   private VaccineColumnTemplateRepository repository;
 
-  public ProgramColumnTemplateDTO getTemplate(Long programId){
+  public ProgramColumnTemplateDTO getTemplate(Long programId) {
     List<LogisticsColumn> columns = repository.getTemplateForProgram(programId);
     if(columns == null || columns.size() == 0){
       columns = repository.getMasterColumns();
