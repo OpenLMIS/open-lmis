@@ -23,24 +23,38 @@ import java.util.List;
 public interface DistrictDemographicEstimateMapper {
 
   @Insert("insert into district_demographic_estimates " +
-    " (year, districtId, demographicEstimateId, conversionFactor, value)" +
+    " (year, districtId, demographicEstimateId, programId , conversionFactor, value)" +
     " values " +
-    " (#{year}, #{districtId}, #{demographicEstimateId}, #{conversionFactor}, #{value}) ")
+    " (#{year}, #{districtId}, #{demographicEstimateId}, #{programId}, #{conversionFactor}, #{value}) ")
   @Options(flushCache = true, useGeneratedKeys = true)
   Integer insert(DistrictDemographicEstimate estimate);
 
+  @Select("select * from district_demographic_estimates where id = #{id}")
+  DistrictDemographicEstimate getById(@Param("id") Long id);
+
   @Update("update district_demographic_estimates " +
     " set " +
-    " year = #{year}, " +
-    " districtId = #{districtId}," +
-    " demographicEstimateId = #{demographicEstimateId}," +
     " conversionFactor = #{conversionFactor}," +
     " value = #{value}" +
     "where id = #{id} ")
   Integer update(DistrictDemographicEstimate estimate);
 
-  @Select("select * from district_demographic_estimates where year = #{year} and districtId = #{districtId}")
-  List<DistrictDemographicEstimate> getEstimatesForDistrict(@Param("year") Integer year, @Param("districtId") Long districtId);
+  @Update("update district_demographic_estimates " +
+    " set " +
+    " isFinal = true" +
+    " where id = #{id} ")
+  Integer finalize(DistrictDemographicEstimate estimate);
+
+  @Update("update district_demographic_estimates " +
+    " set " +
+    " isFinal = false" +
+    " where id = #{id} ")
+  Integer undoFinalize(DistrictDemographicEstimate estimate);
+
+  @Select("select * from district_demographic_estimates " +
+    " where " +
+    "     year = #{year} and districtId = #{districtId} and programId = #{programId}")
+  List<DistrictDemographicEstimate> getEstimatesForDistrict(@Param("year") Integer year, @Param("districtId") Long districtId, @Param("programId") Long programId);
 
   @Select("select * from geographic_zones " +
     "     where levelId = (select max(levelNumber) from geographic_levels)" +

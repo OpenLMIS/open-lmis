@@ -15,7 +15,7 @@
   <div class="span9" style="margin-left: 0px;">
   <table class="table table-bordered">
     <thead>
-    <tr>
+    <tr class="text-row">
       <th class="span5"><span openlmis-message="label.vaccine.disease.name"></span></th>
       <th class="span1"><span openlmis-message="label.vaccine.disease.cases"></span></th>
       <th class="span1"><span openlmis-message="label.vaccine.disease.cumulative"></span></th>
@@ -23,7 +23,7 @@
     </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="disease in report.diseaseLineItems">
+      <tr class="text-row" ng-repeat="disease in report.diseaseLineItems">
         <td class="cell-input"><span class="cell-text">{{disease.diseaseName}}</span></td>
         <td class="cell-input col-general"><input disabled numeric-validator="positiveInteger" maxlength="8" type="text" ng-model="disease.cases" /></td>
         <td class="cell-input col-general number" style="text-align: right"><span class="cell-text" ng-bind="(disease.calculatedCumulativeCases + toNumber(disease.cases))"></span></td>

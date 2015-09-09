@@ -133,4 +133,8 @@ public class ProgramService {
   public Program update(Program program) {
     return programRepository.update(program);
   }
+
+  public List<Program> getProgramsForUserByRights(Long userId, String rightName) {
+    return programRepository.getActiveProgramsForUserWithRights(userId, rightName);
+  }
 }

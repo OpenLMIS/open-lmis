@@ -15,7 +15,7 @@
   <div class="span9" style="margin-left: 0px;">
   <table class="table table-bordered">
     <thead>
-    <tr>
+    <tr class="text-row">
       <th class="span5"><span openlmis-message="label.vaccine.vitamin.name"></span></th>
       <th class="span1"><span openlmis-message="label.vaccine.vitamin.age.group"></span></th>
       <th class="span1"><span openlmis-message="label.vaccine.vitamin.supplementation.male"></span></th>
@@ -24,7 +24,7 @@
     </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="vitamin in report.vitaminSupplementationLineItems">
+      <tr class="text-row" ng-repeat="vitamin in report.vitaminSupplementationLineItems">
         <td class="cell-input"><span class="cell-text">{{vitamin.vitaminName}}</span></td>
         <td class="cell-input"><span class="cell-text">{{vitamin.ageGroup}}</span></td>
         <td class="cell-input col-general"><input numeric-validator="positiveInteger" maxlength="8" type="text" ng-model="vitamin.maleValue" /></td>

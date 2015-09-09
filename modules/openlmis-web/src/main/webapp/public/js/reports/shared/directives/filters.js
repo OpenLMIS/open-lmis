@@ -340,7 +340,13 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
           }
           onCascadedVarsChanged(scope, attr);
         };
-        scope.subscribeOnChanged('zone', 'program', onParamsChanged, true);
+
+        //check if the directive does not depend on any other property to load data
+        if(attr.standAlone){
+            onParamsChanged();
+        }else{
+          scope.subscribeOnChanged('zone', 'program', onParamsChanged, true);
+        }
       },
       templateUrl: 'filter-zone-template'
     };

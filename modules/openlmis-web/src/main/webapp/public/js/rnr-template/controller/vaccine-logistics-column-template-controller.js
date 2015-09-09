@@ -12,7 +12,7 @@
 function IVDLogisticsColumnTemplate($scope,$routeParams, VaccineColumnTemplate, VaccineColumnTemplateSave){
 
   VaccineColumnTemplate.get( {id: $routeParams.programId}, function(data){
-    $scope.sortableColumns       = data.columns;
+    $scope.sortableColumns       = data.columns.columns;
   });
 
   var updateDisplayOrder = function(){

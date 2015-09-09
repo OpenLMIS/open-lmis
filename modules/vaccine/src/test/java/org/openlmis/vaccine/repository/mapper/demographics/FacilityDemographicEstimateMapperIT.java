@@ -17,8 +17,11 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.repository.mapper.FacilityMapper;
+import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.vaccine.domain.demographics.DemographicEstimateCategory;
 import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
@@ -51,16 +54,24 @@ public class FacilityDemographicEstimateMapperIT {
   FacilityMapper facilityMapper;
 
   @Autowired
+  ProgramMapper programMapper;
+
+  @Autowired
   DemographicEstimateCategoryMapper demographicEstimateCategoryMapper;
 
   private Facility facility;
 
   private DemographicEstimateCategory category;
 
+  private Program program;
+
   @Before
   public void setup(){
     facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
+
+    program = make(a(ProgramBuilder.defaultProgram));
+    programMapper.insert(program);
 
     category = new DemographicEstimateCategory();
     category.setName("1 - 2 years of age");
@@ -74,6 +85,7 @@ public class FacilityDemographicEstimateMapperIT {
     FacilityDemographicEstimate estimate = new FacilityDemographicEstimate();
 
     estimate.setFacilityId(facility.getId());
+    estimate.setProgramId(program.getId());
     estimate.setDemographicEstimateId(category.getId());
     estimate.setYear(2005);
     estimate.setConversionFactor(1.0);
@@ -102,7 +114,7 @@ public class FacilityDemographicEstimateMapperIT {
     estimate.setValue(0L);
     mapper.update(estimate);
 
-    List<FacilityDemographicEstimate> list = mapper.getEstimatesForFacility(2005, facility.getId());
+    List<FacilityDemographicEstimate> list = mapper.getEstimatesForFacility(2005, facility.getId(), program.getId());
     assertThat(list.size(), is(1));
     assertThat(list.get(0).getValue(), is(0L));
   }
@@ -113,7 +125,7 @@ public class FacilityDemographicEstimateMapperIT {
 
     mapper.insert(estimate);
 
-    List<FacilityDemographicEstimate> list = mapper.getEstimatesForFacility(2005, facility.getId());
+    List<FacilityDemographicEstimate> list = mapper.getEstimatesForFacility(2005, facility.getId(), program.getId());
     assertThat(list.size(), is(1));
     assertThat(list.get(0).getValue(), is(estimate.getValue()));
   }

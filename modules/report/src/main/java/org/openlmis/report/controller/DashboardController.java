@@ -241,7 +241,7 @@ public class DashboardController extends BaseController {
                                                                          @PathVariable("programId") Long programId,
                                                                          HttpServletRequest request) {
 
-        return OpenLmisResponse.response(EXTRA_ANALYTICS_DATA_FOR_RNR_SUMMARY, this.lookupService.getExtraAnalyticsDataForRnRSummary(loggedInUserId(request), zoneId,periodId, programId));
+        return OpenLmisResponse.response(EXTRA_ANALYTICS_DATA_FOR_RNR_SUMMARY, this.lookupService.getExtraAnalyticsDataForRnRSummary(loggedInUserId(request), zoneId, periodId, programId));
     }
 
     @RequestMapping(value = "/rnrStatus-detail", method = GET, headers = ACCEPT_JSON)
@@ -261,6 +261,23 @@ public class DashboardController extends BaseController {
             return OpenLmisResponse.error(e, BAD_REQUEST);
         }
         return new OpenLmisResponse().response(OK);
+    }
+
+
+    @RequestMapping(value = "/program/{programId}/period/{periodId}/tracer-products-trend.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getProgramPeriodTracerProductsTrend(@PathVariable("programId") Long programId, @PathVariable("periodId") Long periodId,
+                                                                                @RequestParam(value = "limit", required = false, defaultValue = "4") Long limit,
+                                                                                HttpServletRequest request){
+
+        return OpenLmisResponse.response("tracerProducts", this.lookupService.getProgramPeriodTracerProductsTrend(programId, periodId, loggedInUserId(request), limit));
+    }
+
+
+    @RequestMapping(value = "/program/{programId}/period/{periodId}/product/{productCode}/stocked-out-facilities.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilitiesStockedOutForProgramPeriodAndProductCode(@PathVariable("programId") Long programId,
+                                                                                                  @PathVariable("periodId") Long periodId,
+                                                                                                  @PathVariable("productCode") String productCode){
+        return OpenLmisResponse.response("facilities", this.lookupService.getFacilitiesStockedOut(programId, periodId, productCode));
     }
 
 }

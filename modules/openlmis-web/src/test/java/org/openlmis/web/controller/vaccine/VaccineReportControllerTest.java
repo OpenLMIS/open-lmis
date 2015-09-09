@@ -18,18 +18,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RightName;
-import org.openlmis.core.domain.User;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
-import org.openlmis.core.web.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -79,40 +75,7 @@ public class VaccineReportControllerTest {
     session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, 1L);
   }
 
-  @Test
-  public void shouldGetProgramsForConfiguration() throws Exception {
-    List<Program> programs = new ArrayList<>();
 
-    when(programService.getAllIvdPrograms()).thenReturn(programs);
-    ResponseEntity<OpenLmisResponse> response = controller.getProgramsForConfiguration();
-
-    verify(programService).getAllIvdPrograms();
-    assertThat(programs, is(response.getBody().getData().get("programs")));
-  }
-
-
-  @Test
-  public void shouldGetProgramsForIVDForm() throws Exception {
-    List<Program> programs = new ArrayList<>();
-    User user = new User();
-    user.setFacilityId(1L);
-
-    when(programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, 1L, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION")).thenReturn(programs);
-    when(userService.getById(1L)).thenReturn(user);
-    ResponseEntity<OpenLmisResponse> response = controller.getProgramForIvdFormHomeFacility(httpServletRequest);
-
-    verify(programService).getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, 1L, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION");
-    assertThat(programs, is(response.getBody().getData().get("programs")));
-  }
-
-  @Test
-  public void shouldGetFacilities() throws Exception {
-    List<Facility> facilities = new ArrayList<>();
-    when(facilityService.getUserSupervisedFacilities(1L, 1L, RightName.CREATE_REQUISITION)).thenReturn(facilities);
-    ResponseEntity<OpenLmisResponse> response = controller.getFacilities(1L, httpServletRequest);
-
-    assertThat(facilities, is(response.getBody().getData().get("facilities")));
-  }
 
   @Test
   public void shouldGetPeriods() throws Exception {
