@@ -37,6 +37,5 @@ update rights set displayNameKey = 'right.manage.donor' where name = 'MANAGE_DON
 update rights set displayNameKey = 'right.report.lab.equipment' where name = 'VIEW_LAB_EQUIPMENT_LIST_REPORT';
 update rights set displayNameKey = 'right.report.equipment.funding' where name = 'VIEW_LAB_EQUIPMENTS_BY_FUNDING_SOURCE';
 update rights set displayNameKey = 'right.report.fill.rate' where name = 'VIEW_ORDER_FILL_RATE_SUMMARY_REPORT';
-update rights set displayNameKey = 'right.admin.maos' where name = 'MANAGE_MAOS_SETTINGS';
 update rights set displayNameKey = 'right.report.lab.equipment.by.location'  where name = 'VIEW_LAB_EQUIPMENTS_BY_LOCATION_REPORT';
 update rights set displayNameKey = 'right.admin.vaccine' where name = 'MANAGE_VACCINE_SETTINGS';
