@@ -17,5 +17,5 @@ angular.module('vaccineDisease', ['openlmis','ngTable','ui.sortable' , 'ui.boots
         when('/disease/edit/:id', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
         otherwise({redirectTo:'/disease'});
   }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('MANAGE_VACCINE_DISEASE');
+    AuthorizationService.preAuthorize('MANAGE_VACCINE_DISEASE_LIST');
   });

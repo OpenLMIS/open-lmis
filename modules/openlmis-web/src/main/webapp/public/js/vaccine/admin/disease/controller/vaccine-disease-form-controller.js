@@ -23,7 +23,6 @@ function VaccineDiseaseFormController($scope, disease, SaveVaccineDisease,$locat
     }
   };
 
-
 }
 
 VaccineDiseaseFormController.resolve = {

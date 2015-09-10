@@ -18,10 +18,13 @@ import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -43,7 +46,9 @@ public class DiseaseController extends BaseController {
     return OpenLmisResponse.response("diseases", service.getAll());
   }
 
-  @RequestMapping(value="save")
+  @RequestMapping(value="save", headers = ACCEPT_JSON, method = RequestMethod.POST)
+  @Transactional
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE_DISEASE_LIST')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineDisease disease) {
     try {
       service.save(disease);
