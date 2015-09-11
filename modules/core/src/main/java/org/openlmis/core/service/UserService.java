@@ -12,10 +12,7 @@ package org.openlmis.core.service;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
@@ -239,4 +236,7 @@ public class UserService {
 
   }
 
+  public List<String> getSupervisoryRights(Long userId) {
+    return userRepository.getSupervisoryRights(userId);
+  }
 }
