@@ -486,6 +486,24 @@ public class RnrLineItemTest {
   }
 
   @Test
+  public void shouldNotCalculateOrderQuantityIfUserInput() throws Exception {
+    RnrLineItem spyLineItem = spy(lineItem);
+    ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, STOCK_IN_HAND))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, CALCULATED_ORDER_QUANTITY))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, NEW_PATIENT_COUNT),
+          with(option, new RnrColumnOption("newPatientCount", "NPC")))));
+    }};
+
+    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), AUTHORIZED, lossesAndAdjustmentsList,
+        numberOfMonths);
+
+    verify(spyLineItem, never()).calculateOrderQuantity();
+  }
+
+
+  @Test
   public void shouldCopyBeginningBalanceIfItIsVisible() throws Exception {
     RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
     editedLineItem.setBeginningBalance(44);

@@ -225,7 +225,9 @@ public class RnrLineItem extends LineItem {
     if (rnrStatus == AUTHORIZED) {
       calculateAmc(numberOfMonths);
       calculateMaxStockQuantity(template);
-      calculateOrderQuantity();
+      if (!(template.getRnrColumnsMap().get(CALCULATED_ORDER_QUANTITY) != null && template.columnsUserInput(CALCULATED_ORDER_QUANTITY))) {
+        calculateOrderQuantity();
+      }
     }
 
     calculatePacksToShip();
