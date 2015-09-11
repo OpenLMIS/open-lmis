@@ -9,13 +9,33 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('vaccine-protocol', ['openlmis','ngTable','ui.sortable' , 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
-  config(['$routeProvider', function ($routeProvider) {
-    $routeProvider.
-        when('/disease', {controller:VaccineDiseaseController, templateUrl:'partials/disease.html', resolve : VaccineDiseaseController.resolve }).
-        when('/disease/add', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
-        when('/disease/edit/:id', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
-        otherwise({redirectTo:'/disease'});
-  }]).run(function ($rootScope, AuthorizationService) {
-    //AuthorizationService.preAuthorize('VIEW_REPORT');
-  });
+function VaccineDiseaseFormController($scope, disease, SaveVaccineDisease,$location) {
+
+  $scope.disease = disease;
+
+  $scope.save = function(form){
+    if(form.$valid){
+      SaveVaccineDisease.update($scope.disease, function(data){
+        $location.path('/disease');
+      },function(error){
+        alert(error.message);
+      });
+    }
+  };
+
+}
+
+VaccineDiseaseFormController.resolve = {
+  disease : function($q, $timeout, VaccineDisease, $route){
+    if(!$route.current.params.id){
+      return {};
+    }
+    var deferred = $q.defer();
+    $timeout(function(){
+      VaccineDisease.get({id:$route.current.params.id}, function(data){
+        deferred.resolve(data.disease);
+      },{});
+    }, 100);
+    return deferred.promise;
+  }
+};

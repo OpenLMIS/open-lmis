@@ -26,8 +26,8 @@ public class DistrictDemographicEstimateRepository {
   @Autowired
   DistrictDemographicEstimateMapper mapper;
 
-  public List<DistrictDemographicEstimate> getDistrictEstimate(Integer year, Long districtId){
-    return mapper.getEstimatesForDistrict(year, districtId);
+  public List<DistrictDemographicEstimate> getDistrictEstimate(Integer year, Long districtId, Long programId) {
+    return mapper.getEstimatesForDistrict(year, districtId, programId);
   }
 
   public Integer insert(DistrictDemographicEstimate estimate){

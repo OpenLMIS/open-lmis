@@ -17,20 +17,18 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.reports.LogisticsColumn;
+import org.openlmis.vaccine.dto.ProgramColumnTemplateDTO;
 import org.openlmis.vaccine.repository.VaccineColumnTemplateRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
 
 
 @Category(UnitTests.class)
@@ -48,12 +46,15 @@ public class VaccineColumnTemplateServiceTest {
     List<LogisticsColumn> masterColumns = new ArrayList<LogisticsColumn>();
     masterColumns.add(new LogisticsColumn());
     List<LogisticsColumn> emptyList = new ArrayList<>();
+    ProgramColumnTemplateDTO dto = new ProgramColumnTemplateDTO();
+    dto.setProgramId(1L);
+    dto.setColumns(emptyList);
     when(repository.getTemplateForProgram(1L)).thenReturn(emptyList);
     when(repository.getMasterColumns()).thenReturn(masterColumns);
 
-    List<LogisticsColumn> columns =  service.getTemplate(1L);
-    assertThat(columns.size(), is(1));
-    assertThat(columns.get(0).getProgramId(), is(1L));
+    ProgramColumnTemplateDTO columnsDto = service.getTemplate(1L);
+    assertThat(columnsDto.getColumns().size(), is(1));
+    assertThat(columnsDto.getProgramId(), is(1L));
   }
 
   @Test
@@ -63,8 +64,8 @@ public class VaccineColumnTemplateServiceTest {
     List<LogisticsColumn> emptyList = new ArrayList<>();
     when(repository.getTemplateForProgram(1L)).thenReturn(configuredColumns);
 
-    List<LogisticsColumn> columns =  service.getTemplate(1L);
-    assertThat(columns.size(), is(1));
+    ProgramColumnTemplateDTO columns = service.getTemplate(1L);
+    assertThat(columns.getColumns().size(), is(1));
   }
 
   @Test

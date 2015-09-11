@@ -19,7 +19,6 @@ import org.openlmis.report.model.dto.YearSchedulePeriodTree;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -52,7 +51,7 @@ public interface ProcessingPeriodReportMapper {
             "where pp.startdate < NOW()\n" +
             "and r.programid = #{programId}\n" +
             "order by pp.startdate desc\n" +
-            "limit 4")
+            "limit (select COALESCE(value::integer, 4) from configuration_settings where key ='PROGRAM_VIEWABLE_MAX_LAST_PERIODS')\n")
     List<ProcessingPeriod> getLastPeriods(@Param("programId")Long programId);
 
 }

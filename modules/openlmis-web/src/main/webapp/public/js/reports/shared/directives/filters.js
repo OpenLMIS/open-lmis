@@ -340,7 +340,13 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
           }
           onCascadedVarsChanged(scope, attr);
         };
-        scope.subscribeOnChanged('zone', 'program', onParamsChanged, true);
+
+        //check if the directive does not depend on any other property to load data
+        if(attr.standAlone){
+            onParamsChanged();
+        }else{
+          scope.subscribeOnChanged('zone', 'program', onParamsChanged, true);
+        }
       },
       templateUrl: 'filter-zone-template'
     };
@@ -939,3 +945,68 @@ app.directive('donorFilter', ['$routeParams', 'GetDonors', function($routeParams
     templateUrl: 'filter-donors'
   };
 }]);
+
+app.directive('vaccineFacilityLevelFilter',['FacilitiesByLevel','VaccineInventoryPrograms','$routeParams',
+      function (FacilitiesByLevel,VaccineInventoryPrograms,$routeParams){
+
+        var getVaccineEquipmentProgram = function($scope){
+
+          VaccineInventoryPrograms.get({},function(data){
+            if(data.programs.length > 0){
+              $scope.filter.program = data.programs[0].id;
+            }
+
+          });
+        };
+
+
+
+        var onCascadedVarsChanged = function ($scope, newValue) {
+
+          if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {
+            $scope.$parent.facilityLevels = $scope.$parent.homeFacility= [];
+            FacilitiesByLevel.get({program: $scope.filter.program}, function (data) {
+              if (data.facilityLevels !== undefined && data.facilityLevels.length !== 0) {
+                $scope.$parent.homeFacility = _.pluck(data.facilityLevels,'homeFacilityName');
+                $scope.homeFacilityId = _.pluck(data.facilityLevels,'facilityId');
+
+                $scope.$parent.facilityLevels = _.uniq(data.facilityLevels, 'superVisedFacilityId');
+
+               $scope.greaterThan = function(prop, val){
+                  return function(item){
+                    return item[prop] > val;
+                  };
+                };
+
+              }
+            });
+            $scope.filter.facilityId = (isUndefined($routeParams.facilityId) || $routeParams.facilityId === '') ? 0 : $routeParams.facilityId;
+
+          }
+        };
+
+        return {
+          restrict: 'E',
+          require: '^filterContainer',
+          link: function (scope, elm, attr) {
+            scope.filter.facilityId = $routeParams.facilityId;
+
+            scope.filter.facilityId = (isUndefined($routeParams.facilityId) || $routeParams.facilityId === '') ? 0 : $routeParams.facilityId;
+           // scope.facilityLevel = [];
+
+          //  scope.facilityLevel.unshift({'name': '-- Select Facility Level --', id: -1});
+
+            if (attr.required) {
+              scope.requiredFilters.facilityId = 'facilityId';
+            }
+
+            scope.$watch('filter.program', function (value) {
+              getVaccineEquipmentProgram(scope);
+              onCascadedVarsChanged(scope, value);
+            });
+          },
+          templateUrl: 'filter-vaccine-facility-level-template'
+        };
+
+      }]
+);

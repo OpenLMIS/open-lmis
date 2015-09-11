@@ -14,6 +14,7 @@ package org.openlmis.vaccine.repository.mapper.demographics;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
+import org.openlmis.vaccine.dto.DemographicEstimateLineItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,22 +23,55 @@ import java.util.List;
 public interface FacilityDemographicEstimateMapper {
 
   @Insert("insert into facility_demographic_estimates " +
-    " (year, facilityId, demographicEstimateId, conversionFactor, value)" +
+          " (year, facilityId, demographicEstimateId, conversionFactor, programId , value)" +
     " values " +
-    " (#{year}, #{facilityId}, #{demographicEstimateId}, #{conversionFactor}, #{value}) ")
+          " (#{year}, #{facilityId}, #{demographicEstimateId}, #{conversionFactor}, #{programId}, #{value}) ")
   @Options(flushCache = true, useGeneratedKeys = true)
   Integer insert(FacilityDemographicEstimate estimate);
 
   @Update("update facility_demographic_estimates " +
     " set " +
-    " year = #{year}, " +
-    " facilityId = #{facilityId}," +
-    " demographicEstimateId = #{demographicEstimateId}," +
     " conversionFactor = #{conversionFactor}," +
     " value = #{value}" +
-    "where id = #{id} ")
+          " where id = #{id} ")
   Integer update(FacilityDemographicEstimate estimate);
 
-  @Select("select * from facility_demographic_estimates where year = #{year} and facilityId = #{facilityId}")
-  List<FacilityDemographicEstimate> getEstimatesForFacility(@Param("year") Integer year, @Param("facilityId") Long facilityId);
+    @Update("update facility_demographic_estimates " +
+            " set " +
+            " isFinal = true" +
+            " where id = #{id} ")
+    Integer finalize(FacilityDemographicEstimate estimate);
+
+    @Update("update facility_demographic_estimates " +
+            " set " +
+            " isFinal = false" +
+            "where id = #{id} ")
+    Integer undoFinalize(FacilityDemographicEstimate estimate);
+
+
+    @Select("select * from facility_demographic_estimates where year = #{year} and facilityId = #{facilityId} and programId = #{programId}")
+    List<FacilityDemographicEstimate> getEstimatesForFacility(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+
+    @Select("select s.* from facility_demographic_estimates s " +
+            " join demographic_estimate_categories c on c.id = s.demographicEstimateId " +
+            " where year = #{year} and facilityId = #{facilityId} " +
+            "   and programId = #{programId} " +
+            " order by c.id")
+    @Results(value = {
+            @Result(column = "demographicEstimateId", property = "demographicEstimateId"),
+            @Result(property = "category", column = "demographicEstimateId", one = @One(select = "org.openlmis.vaccine.repository.mapper.demographics.DemographicEstimateCategoryMapper.getById"))
+    }
+    )
+    List<FacilityDemographicEstimate> getEstimatesForFacilityWithDetails(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+
+    @Select("select f.name, f.id, f.code, gz.id as parentId, gz.name as parentName " +
+            " from facilities f " +
+            "     join geographic_zones gz on gz.id = f.geographicZoneId " +
+            "     join programs_supported ps on ps.facilityId = f.id  and ps.programId = #{programId} " +
+            "     join requisition_group_members m on m.facilityId = f.id " +
+            " where m.requisitionGroupId  = ANY(#{requisitionGroupIds}::INTEGER[]) " +
+            " order by gz.name, f.name")
+    List<DemographicEstimateLineItem> getFacilityList(@Param("programId") Long programId, @Param("requisitionGroupIds") String requsitionGroupIds);
 }

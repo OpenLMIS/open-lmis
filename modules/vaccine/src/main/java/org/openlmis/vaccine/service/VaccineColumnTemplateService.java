@@ -13,6 +13,7 @@
 package org.openlmis.vaccine.service;
 
 import org.openlmis.vaccine.domain.reports.LogisticsColumn;
+import org.openlmis.vaccine.dto.ProgramColumnTemplateDTO;
 import org.openlmis.vaccine.repository.VaccineColumnTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class VaccineColumnTemplateService {
   @Autowired
   private VaccineColumnTemplateRepository repository;
 
-  public List<LogisticsColumn> getTemplate(Long programId){
+  public ProgramColumnTemplateDTO getTemplate(Long programId) {
     List<LogisticsColumn> columns = repository.getTemplateForProgram(programId);
     if(columns == null || columns.size() == 0){
       columns = repository.getMasterColumns();
@@ -35,7 +36,10 @@ public class VaccineColumnTemplateService {
         column.setVisible(true);
       }
     }
-    return columns;
+    ProgramColumnTemplateDTO dto = new ProgramColumnTemplateDTO();
+    dto.setProgramId(programId);
+    dto.setColumns(columns);
+    return dto;
   }
 
   public void saveChanges(List<LogisticsColumn> columns){

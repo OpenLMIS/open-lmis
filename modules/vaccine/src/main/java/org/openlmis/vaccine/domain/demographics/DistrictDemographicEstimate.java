@@ -28,6 +28,10 @@ public class DistrictDemographicEstimate extends BaseModel {
 
   private Long districtId;
 
+  private Long programId;
+
+  private Boolean isFinal;
+
   private Long demographicEstimateId;
 
   private Double conversionFactor;

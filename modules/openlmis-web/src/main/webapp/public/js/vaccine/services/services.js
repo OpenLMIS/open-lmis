@@ -97,3 +97,21 @@ services.factory('VaccineColumnTemplateSave', function ($resource) {
 services.factory('VaccineDiscardingReasons', function($resource){
   return $resource('/vaccine/discarding/reasons/all.json',{},{});
 });
+
+services.factory('StockCards', function($resource){
+   return $resource('/api/v2/facilities/:facilityId/stockCards.json', {facilityId: '@facilityId'}, {});
+});
+
+services.factory('Forecast', function($resource){
+//TODO call Forecast API
+});
+
+services.factory('ProgramProducts',function($resource){
+    return $resource('/programProducts/programId/:programId.json',{programId:'@programId'},{});
+});
+
+services.factory('VaccineInventoryPrograms',function($resource){
+    return $resource('/vaccine/inventory/programs.json',{},{});
+});
+
+

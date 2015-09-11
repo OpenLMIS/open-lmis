@@ -56,16 +56,16 @@ public class DashboardLookupService {
     }
 
     public List<ShipmentLeadTime> getShipmentLeadTime(Long userId,Long periodId, Long programId, Long zoneId){
-        return dashboardMapper.getShipmentLeadTime(userId,periodId,programId, zoneId);
+        return dashboardMapper.getShipmentLeadTime(userId, periodId, programId, zoneId);
 
     }
 
     public List<StockingInfo> getStockEfficiencyData(Long userId,Long periodId, Long programId, Long zoneId, List<Long> productListId){
-        return dashboardMapper.getStockEfficiencyData(userId,periodId, programId, zoneId , getCommaSeparatedIds(productListId));
+        return dashboardMapper.getStockEfficiencyData(userId, periodId, programId, zoneId, getCommaSeparatedIds(productListId));
 
     }
     public List<StockingInfo> getStockEfficiencyDetailData(Long userId,Long periodId, Long programId, Long zoneId, List<Long> productListId){
-        return dashboardMapper.getStockEfficiencyDetailData(userId, periodId, programId,zoneId, getCommaSeparatedIds(productListId));
+        return dashboardMapper.getStockEfficiencyDetailData(userId, periodId, programId, zoneId, getCommaSeparatedIds(productListId));
 
     }
 
@@ -78,11 +78,11 @@ public class DashboardLookupService {
 
     }
     public List<AlertSummary> getAlerts(Long userId, Long programId, Long periodId, Long zoneId){
-        return dashboardMapper.getAlerts(userId, programId, periodId, zoneId );
+        return dashboardMapper.getAlerts(userId, programId, periodId, zoneId);
 
     }
     public List<AlertSummary> getStockedOutAlerts(Long userId, Long programId, Long periodId, Long zoneId){
-        return dashboardMapper.getStockedOutAlerts(userId, programId, periodId, zoneId );
+        return dashboardMapper.getStockedOutAlerts(userId, programId, periodId, zoneId);
 
     }
 
@@ -93,12 +93,12 @@ public class DashboardLookupService {
 
     public List<HashMap> getNotificationsByCategory(Long userId, Long programId, Long periodId, Long zoneId,String detailTable) {
         if (detailTable == null || detailTable.isEmpty()) return null;
-        return dashboardMapper.getNotificationDetails(userId,programId,periodId,zoneId,detailTable);
+        return dashboardMapper.getNotificationDetails(userId, programId, periodId, zoneId, detailTable);
     }
 
     public List<HashMap> getStockedOutNotificationDetails(Long userId, Long programId, Long periodId, Long zoneId, Long productId,String detailTable) {
         if (detailTable == null || detailTable.isEmpty()) return null;
-        return dashboardMapper.getStockedOutNotificationDetails(userId,programId,periodId,zoneId,productId,detailTable);
+        return dashboardMapper.getStockedOutNotificationDetails(userId, programId, periodId, zoneId, productId, detailTable);
     }
 
     public void sendNotification(Notification notification){
@@ -145,7 +145,7 @@ public class DashboardLookupService {
         return dashboardMapper.getReportingPerformanceDetail(userId,periodId,programId,zoneId, status);
     }
     public List<RnRStatusSummaryReport>getRnRStatusDetails(Long requisitionGroupId,Long programId,Long periodId){
-        return rnRStatusSummaryReportMapper.getRnRStatusDetails(requisitionGroupId,programId,periodId);
+        return rnRStatusSummaryReportMapper.getRnRStatusDetails(requisitionGroupId, programId, periodId);
     }
 
     public List<RnRStatusSummaryReport> getRnRStatusSummary(Long userId, Long zoneId, Long periodId, Long programId){
@@ -155,14 +155,14 @@ public class DashboardLookupService {
         return  rnRStatusSummaryReportMapper.getEmergencyRnRStatusSummary(userId, zoneId, periodId, programId);
     }
     public List<RnRStatusSummaryReport>getRnRStatusByRequisitionGroupAndPeriodData(Long requisitionGroupId,Long periodId){
-        return rnRStatusSummaryReportMapper.getRnRStatusByRequisitionGroupAndPeriodData(requisitionGroupId,periodId);
+        return rnRStatusSummaryReportMapper.getRnRStatusByRequisitionGroupAndPeriodData(requisitionGroupId, periodId);
     }
 
     public List<RnRStatusSummaryReport> getRnRStatusDetail(Long userId, Long periodId, Long programId,  Long zoneId, String status){
-        return rnRStatusSummaryReportMapper.getRnRStatusDetail(userId,periodId,programId, zoneId, status);
+        return rnRStatusSummaryReportMapper.getRnRStatusDetail(userId, periodId, programId, zoneId, status);
     }
     public List<RnRStatusSummaryReport>getExtraAnalyticsDataForRnRSummary(Long userId, Long zoneId,Long periodId, Long programId){
-        return rnRStatusSummaryReportMapper.getExtraAnalyticsDataForRnRSummary(userId,zoneId,periodId,programId);
+        return rnRStatusSummaryReportMapper.getExtraAnalyticsDataForRnRSummary(userId, zoneId, periodId, programId);
     }
 
     public DashboardLookUpReportHeader getProductNameById(Long id,long periodId) {
@@ -172,5 +172,13 @@ public class DashboardLookupService {
         dashboardLookUpReportHeader.setProductName(productName);
         dashboardLookUpReportHeader.setPeriodName(periodName);
         return dashboardLookUpReportHeader;
+    }
+
+    public List<HashMap<String, Object>> getProgramPeriodTracerProductsTrend(Long programId, Long periodId, Long userId, Long limit) {
+        return dashboardMapper.getProgramPeriodTracerProductTrend(programId, periodId, userId);
+    }
+
+    public List<HashMap<String, Object>> getFacilitiesStockedOut(Long programId, Long periodId, String productCode) {
+        return dashboardMapper.getFacilityStockedOut(programId, periodId, productCode);
     }
 }

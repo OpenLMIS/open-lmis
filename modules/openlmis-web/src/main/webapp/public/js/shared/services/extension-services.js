@@ -1272,6 +1272,14 @@ services.factory('GetLastPeriods', function($resource) {
    return $resource('/reports/last-periods.json', {}, {});
 });
 
+services.factory('GetProgramPeriodTracerProductsTrend', function($resource) {
+    return $resource('/dashboard/program/:programId/period/:periodId/tracer-products-trend.json', {}, {});
+});
+
+services.factory('GetStockOutFacilitiesForProgramPeriodAndProductCode', function($resource) {
+    return $resource('/dashboard/program/:programId/period/:periodId/product/:productCode/stocked-out-facilities.json', {}, {});
+});
+
 services.factory("ELMISInterface",function($resource)  {
     return   {
         getInterface : function(){
@@ -1295,5 +1303,9 @@ services.factory("ELMISInterface",function($resource)  {
 
 services.factory('ELMISInterfaceSave', function ($resource) {
     return $resource('/ELMISInterface.json', {}, {save:{method:'POST'}});
+});
+
+services.factory('FacilitiesByLevel', function($resource){
+    return $resource('/reports/facility-By-level.json',{},{});
 });
 

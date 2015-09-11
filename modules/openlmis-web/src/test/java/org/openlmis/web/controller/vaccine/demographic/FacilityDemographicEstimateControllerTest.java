@@ -21,24 +21,20 @@ import java.util.ArrayList;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityDemographicEstimateControllerTest {
 
+  private static final Long USER_ID = 1L;
+  private static final String USER = "user";
   @Mock
   FacilityDemographicEstimateService service;
-
   @InjectMocks
   FacilityDemographicEstimateController controller;
-
-  private static final Long USER_ID = 1L;
   private MockHttpServletRequest request;
-  private static final String USER = "user";
 
   @Before
   public void setUp() throws Exception {
@@ -54,12 +50,12 @@ public class FacilityDemographicEstimateControllerTest {
   public void shouldGet() throws Exception {
     DemographicEstimateForm form = new DemographicEstimateForm();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
-    when(service.getEstimateFor(1L, 2005)).thenReturn(form);
+    when(service.getEstimateForm(1L, 2L, 2005)).thenReturn(form);
 
-    ResponseEntity<OpenLmisResponse> response = controller.get(2005,  request);
+    ResponseEntity<OpenLmisResponse> response = controller.get(2005, 2L, request);
 
     assertThat(form, is(response.getBody().getData().get("estimates")));
-    verify(service).getEstimateFor(1L, 2005);
+    verify(service).getEstimateForm(1L, 2L, 2005);
   }
 
   @Test

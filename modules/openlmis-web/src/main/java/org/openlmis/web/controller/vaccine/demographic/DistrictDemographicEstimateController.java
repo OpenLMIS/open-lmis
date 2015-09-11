@@ -37,8 +37,8 @@ public class DistrictDemographicEstimateController extends BaseController {
 
   @RequestMapping(value = "districts", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_PARAMETERS')")
-  public ResponseEntity<OpenLmisResponse> get( @RequestParam("year") Integer year, HttpServletRequest request){
-    return OpenLmisResponse.response("estimates", service.getEstimateFor(year));
+  public ResponseEntity<OpenLmisResponse> get(@RequestParam("year") Integer year, @RequestParam("program") Long programId, HttpServletRequest request) {
+    return OpenLmisResponse.response("estimates", service.getEstimateFor(year, programId));
   }
 
   @RequestMapping(value = "districts", method = PUT)

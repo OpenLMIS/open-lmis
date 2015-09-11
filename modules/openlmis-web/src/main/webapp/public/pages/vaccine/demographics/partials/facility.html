@@ -25,7 +25,13 @@
         <span openlmis-message="label.demographic.estimate.auto.calculate"></span>
       </label>
     </div>
-    <div>
+    <div class="pull-left">
+      <label openlmis-message="label.program"></label>
+      <select ng-model="program" ng-change="onParamChanged()">
+        <option ng-repeat="p in programs" value="{{p.id}}">{{p.name}}</option>
+      </select>
+    </div>
+    <div class="form-inline">
       <label>
         <span openlmis-message="label.demographic.parameter.year"></span>
       </label>
@@ -52,7 +58,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="facility in form.estimateLineItems">
+        <tr class="gradient-header" ng-repeat-start="facility in form.estimateLineItems" ng-show="showParent($index)">
+          <th colspan="{{categories.length + 2}}">{{facility.parentName}}</th>
+        </tr>
+        <tr>
             <td class="cell-input">
               <span class="cell-text">{{facility.code}}</span>
             </td>
@@ -74,6 +83,7 @@
               </span>
             </td>
           </tr>
+        <tr ng-repeat-end></tr>
         </tbody>
       </table>
     </div>

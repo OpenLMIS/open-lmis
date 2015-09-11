@@ -19,10 +19,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.domain.RightName;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.RequisitionGroupService;
+import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.vaccine.domain.demographics.DemographicEstimateCategory;
 import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
@@ -52,15 +53,24 @@ public class FacilityDemographicEstimateServiceTest {
   @Mock
   DemographicEstimateCategoryService categoryService;
 
+  @Mock
+  SupervisoryNodeService supervisoryNodeService;
+
+  @Mock
+  CommaSeparator commaSeparator;
+
+
+  @Mock
+  RequisitionGroupService requisitionGroupService;
+
   @InjectMocks
   FacilityDemographicEstimateService service;
-
   @Test
   public void shouldSave() throws Exception {
     DemographicEstimateForm form = new DemographicEstimateForm();
     DemographicEstimateLineItem estimateLineItem = new DemographicEstimateLineItem();
     estimateLineItem.setFacilityEstimates(new ArrayList<FacilityDemographicEstimate>());
-    estimateLineItem.getFacilityEstimates().add(new FacilityDemographicEstimate(2000,12L, 1L, 1.0d,2L));
+    estimateLineItem.getFacilityEstimates().add(new FacilityDemographicEstimate(2000, 12L, 1L, false, 2L, null, 1.0d, 2L));
     form.setEstimateLineItems(asList(estimateLineItem));
 
     when(repository.insert(estimateLineItem.getFacilityEstimates().get(0))).thenReturn(1);
@@ -81,17 +91,22 @@ public class FacilityDemographicEstimateServiceTest {
     facility.setGeographicZone(new GeographicZone());
     facility.getGeographicZone().setName("Geo Name");
 
-    when(facilityService.getForUserAndRights(1L, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES)).thenReturn(asList(facility));
+    List<SupervisoryNode> nodes = asList(new SupervisoryNode());
+    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1L, 2L, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES)).thenReturn(nodes);
+    List<RequisitionGroup> groups = asList(new RequisitionGroup());
+    groups.get(0).setId(1L);
 
+    when(requisitionGroupService.getRequisitionGroupsBy(nodes)).thenReturn(groups);
+    when(facilityService.getUserSupervisedFacilities(1L, 2L, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES)).thenReturn(asList(facility));
     when(categoryService.getAll()).thenReturn(asList(category1, category2));
-    when(repository.getFacilityEstimate(2005, 2L)).thenReturn(null);
+    when(commaSeparator.commaSeparateIds(groups)).thenReturn("{1}");
 
+    when(repository.getFacilityList(2L, "{1}")).thenReturn(asList(new DemographicEstimateLineItem()));
 
-    DemographicEstimateForm form =  service.getEstimateFor(1L, 2002);
+    DemographicEstimateForm form = service.getEstimateForm(1L, 2L, 2005);
 
     verify(categoryService, atMost(1)).getAll();
     assertThat(form.getEstimateLineItems().size(), is(1));
-
     assertThat(form.getEstimateLineItems().get(0).getFacilityEstimates().size(), is(2));
     assertThat(form.getEstimateLineItems().get(0).getFacilityEstimates().get(0).getConversionFactor(), is(category1.getDefaultConversionFactor()));
 
@@ -100,9 +115,9 @@ public class FacilityDemographicEstimateServiceTest {
   @Test
   public void shouldGetEstimateValuesForFacilityWhenEstimatesWereSaved() throws Exception {
     List<FacilityDemographicEstimate> list = asList(new FacilityDemographicEstimate());
-    when(repository.getFacilityEstimate(2005, 2L)).thenReturn(list);
+    when(repository.getFacilityEstimateWithDetails(2005, 2L, 2L)).thenReturn(list);
 
-    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2005);
+    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2L, 2005);
     assertThat(response, is(list));
     verify(facilityService, never()).getById(any(Long.class));
     verify(categoryService, never()).getAll();
@@ -119,10 +134,10 @@ public class FacilityDemographicEstimateServiceTest {
     facility.setCatchmentPopulation(20000L);
     when(facilityService.getById(2L)).thenReturn(facility);
     when(categoryService.getAll()).thenReturn(asList(category1, category2));
-    when(repository.getFacilityEstimate(2005, 2L)).thenReturn(null);
+    when(repository.getFacilityEstimate(2005, 2L, 2L)).thenReturn(null);
 
 
-    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2005);
+    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2L, 2005);
     assertThat(response.size(), is(2));
     assertThat(response.get(0).getValue(), is(10000L));
     assertThat(response.get(1).getValue(), is(1000L));
