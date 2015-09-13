@@ -165,8 +165,18 @@ public interface VaccineReportMapper {
           "'' AS reason_for_discarding,\n" +
           "sum(children_immunized) children_immunized,\n" +
           "sum(pregnant_women_immunized) pregnant_women_immunized,\n" +
-          "sum(usage_rate) usage_rate,\n" +
-          "sum(wastage_rate) wastage_rate \n" +
+          "sum(COALESCE(vaccinated,0)::numeric) vaccinated,\n" +
+          "sum(COALESCE(usage_denominator,0)::numeric) usage_denominator,\n" +
+          "case when sum(usage_denominator) > 0 \n" +
+          "then sum(vaccinated)::numeric/ sum(usage_denominator)::numeric * 100 else 0 \n" +
+          "end usage_rate,\n" +
+          "100 - \n" +
+          "case \n" +
+          "when sum(usage_denominator) = 0 then 0 \n" +
+          "when sum(usage_denominator) > 0 \n" +
+          "then sum(vaccinated)::numeric/ sum(usage_denominator)::numeric * 100 \n" +
+          "else 0 \n" +
+          "end wastage_rate\n" +
           "from vw_vaccine_stock_status \n" +
           "INNER JOIN vw_districts vd ON vd.district_id = geographic_zone_id\n" +
           "where period_id = #{periodId} and (vd.parent = #{zoneId} or vd.district_id = #{zoneId} or vd.region_id = #{zoneId} or vd.zone_id = #{zoneId} )\n" +
