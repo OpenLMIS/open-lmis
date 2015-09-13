@@ -40,3 +40,15 @@ services.factory('SaveDistrictDemographicEstimates', function ($resource) {
 services.factory('DemographicEstimatePrograms', function($resource){
   return $resource('/vaccine/demographics/programs.json', {}, {});
 });
+
+services.factory('UserSupervisoryRights', function($resource){
+  return $resource('/users/supervisory/rights.json', {},{});
+});
+
+services.factory('FinalizeFacilityDemographicEstimates', function($resource){
+  return $resource('/vaccine/demographic/estimate/finalize/facilities.json', {}, update)
+});
+
+services.factory('UndoFinalizeFacilityDemographicEstimates', function($resource){
+  return $resource('/vaccine/demographic/estimate/undo-finalize/facilities.json', {}, update)
+});
