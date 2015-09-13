@@ -51,7 +51,7 @@ public class VaccineProgramController extends BaseController {
     }
 
     @RequestMapping(value = "/vaccine/report/ivd-form/programs.json", method = RequestMethod.GET)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD,APPROVE_IVD, VIEW_IVD')")
     public ResponseEntity<OpenLmisResponse> getProgramForIvdFormHomeFacility(HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         User user = userService.getById(userId);
@@ -59,17 +59,17 @@ public class VaccineProgramController extends BaseController {
     }
 
     @RequestMapping(value = "/vaccine/report/ivd-form/supervised-programs")
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD,APPROVE_IVD, VIEW_IVD')")
     public ResponseEntity<OpenLmisResponse> getProgramForIvdFormSupervisedFacilities(HttpServletRequest request) {
         return OpenLmisResponse.response("programs", programService.getIvdProgramForSupervisedFacilities(loggedInUserId(request), "CREATE_REQUISITION", "AUTHORIZE_REQUISITION"));
     }
 
     @RequestMapping(value = "/vaccine/report/ivd-form/facilities/{programId}.json", method = RequestMethod.GET)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD,APPROVE_IVD, VIEW_IVD')")
     public ResponseEntity<OpenLmisResponse> getFacilities(@PathVariable Long programId, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         //TODO: make sure this method also supports home facility.
-        return OpenLmisResponse.response("facilities", facilityService.getUserSupervisedFacilities(userId, programId, RightName.CREATE_REQUISITION));
+        return OpenLmisResponse.response("facilities", facilityService.getUserSupervisedFacilities(userId, programId, RightName.CREATE_IVD, RightName.APPROVE_IVD));
     }
 
     @RequestMapping(value = "/vaccine/demographics/programs.json", method = RequestMethod.GET)

@@ -87,16 +87,15 @@
         </ul>
       </div>
     </li>
-    <li>
+    <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('MANAGE_DISTRIBUTION')">
       <a id="vaccine" href="" openlmis-message="link.vaccine"></a>
-
       <div class="submenu">
         <ul>
-          <li>
+          <li ng-show="hasPermission('CREATE_IVD')">
             <a href="/public/pages/vaccine/report/index.html"
                 openlmis-message="link.vaccine.create"></a>
           </li>
-          <li>
+          <li ng-show="hasPermission('VIEW_IVD')">
             <a href="/public/pages/vaccine/report/index.html#/view" openlmis-message="link.view.ivd"></a>
           </li>
           <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">

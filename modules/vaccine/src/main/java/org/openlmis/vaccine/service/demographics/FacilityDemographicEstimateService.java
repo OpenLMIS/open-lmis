@@ -109,6 +109,7 @@ public class FacilityDemographicEstimateService {
       FacilityDemographicEstimate estimate = new FacilityDemographicEstimate();
       estimate.setYear(year);
       estimate.setFacilityId(facilityId);
+      estimate.setIsFinal(false);
       estimate.setProgramId(programId);
       estimate.setConversionFactor(category.getDefaultConversionFactor());
       estimate.setDemographicEstimateId(category.getId());
