@@ -24,3 +24,8 @@ INSERT INTO rights (name, rightType, description, displayNameKey, displayOrder) 
  update rights set displayOrder = 42 where name = 'MANAGE_DONOR';
  update rights set displayOrder = 50 where name = 'MANAGE_SEASONALITY_RATIONING';
  update rights set displayOrder = 60 where name = 'MANAGE_DEMOGRAPHIC_PARAMETERS';
+
+
+ update rights set displayOrder = 17 where name = 'DELETE_REQUISITION';
+ update rights set displayOrder = 20 where name = 'MANAGE_EQUIPMENT_INVENTORY';
+ update rights set displayOrder = 30 where name = 'MANAGE_DEMOGRAPHIC_ESTIMATES';

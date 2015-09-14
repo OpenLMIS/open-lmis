@@ -136,4 +136,9 @@ public interface UserMapper {
   @Select("select * from fn_save_user_preference(#{userId}::int,#{programId}::int,#{facilityId}::int,#{products})")
   String updateUserPreferences(@Param(value = "userId") Long userId, @Param("programId") Long programId, @Param("facilityId") Long facilityId, @Param(value = "products") String products);
 
+  @Select("select distinct rr.rightName " +
+    "from  rights r join role_rights rr on r.name = rr.rightName " +
+    "   join role_assignments ras on ras.roleid = rr.roleId " +
+    "where r.righttype = 'REQUISITION' and ras.userId = #{userId}")
+  List<String> getSupervisoryRights(@Param("userId") Long userId);
 }

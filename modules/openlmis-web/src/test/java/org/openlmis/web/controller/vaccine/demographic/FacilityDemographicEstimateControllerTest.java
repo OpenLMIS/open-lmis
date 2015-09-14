@@ -62,11 +62,11 @@ public class FacilityDemographicEstimateControllerTest {
   public void shouldSave() throws Exception {
     DemographicEstimateForm form = new DemographicEstimateForm();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
-    doNothing().when(service).save(form);
+    doNothing().when(service).save(form, 1L);
 
     ResponseEntity<OpenLmisResponse> response = controller.save(form, request);
 
     assertThat(form, is(response.getBody().getData().get("estimates")));
-    verify(service).save(form);
+    verify(service).save(form, 1L);
   }
 }

@@ -30,21 +30,27 @@ public interface FacilityDemographicEstimateMapper {
   Integer insert(FacilityDemographicEstimate estimate);
 
   @Update("update facility_demographic_estimates " +
-    " set " +
-    " conversionFactor = #{conversionFactor}," +
-    " value = #{value}" +
+          " set " +
+          " conversionFactor = #{conversionFactor}," +
+          " value = #{value}, " +
+          " modifiedBy = #{modifiedBy}, " +
+          " modifiedDate = NOW()" +
           " where id = #{id} ")
   Integer update(FacilityDemographicEstimate estimate);
 
     @Update("update facility_demographic_estimates " +
             " set " +
-            " isFinal = true" +
+            " isFinal = true, " +
+            " modifiedBy = #{modifiedBy}, " +
+            " modifiedDate = NOW()" +
             " where id = #{id} ")
     Integer finalize(FacilityDemographicEstimate estimate);
 
     @Update("update facility_demographic_estimates " +
             " set " +
-            " isFinal = false" +
+            " isFinal = false, " +
+            " modifiedBy = #{modifiedBy}," +
+            " modifiedDate = NOW()" +
             "where id = #{id} ")
     Integer undoFinalize(FacilityDemographicEstimate estimate);
 

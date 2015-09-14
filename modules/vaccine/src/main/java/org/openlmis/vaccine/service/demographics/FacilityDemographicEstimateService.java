@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
@@ -54,14 +55,49 @@ public class FacilityDemographicEstimateService {
   @Autowired
   private RequisitionGroupService requisitionGroupService;
 
-  public void save(DemographicEstimateForm estimate){
+  public void save(DemographicEstimateForm estimate, Long userId){
     for(DemographicEstimateLineItem dto: emptyIfNull(estimate.getEstimateLineItems())){
       for(FacilityDemographicEstimate est: emptyIfNull(dto.getFacilityEstimates())){
+        // check if this record was already finalized. if so ... do not update it. continue to the next record instead.
+        if(est.getIsFinal()){
+          continue;
+        }
         est.setFacilityId(dto.getId());
+
         if(est.getId() == null){
+          est.setCreatedBy(userId);
           repository.insert(est);
         }else{
+          est.setModifiedBy(userId);
           repository.update(est);
+        }
+      }
+    }
+  }
+
+  public void finalize(DemographicEstimateForm form, Long userId) {
+    for(DemographicEstimateLineItem dto: emptyIfNull(form.getEstimateLineItems())) {
+      for (FacilityDemographicEstimate est : emptyIfNull(dto.getFacilityEstimates())) {
+        est.setFacilityId(dto.getId());
+        if(est.getId() != null){
+          est.setModifiedBy(userId);
+          est.setModifiedDate(new Date());
+          est.setIsFinal(true);
+          repository.finalize(est);
+        }
+      }
+    }
+  }
+
+  public void undoFinalize(DemographicEstimateForm form, Long userId) {
+    for(DemographicEstimateLineItem dto: emptyIfNull(form.getEstimateLineItems())) {
+      for (FacilityDemographicEstimate est : emptyIfNull(dto.getFacilityEstimates())) {
+        est.setFacilityId(dto.getId());
+        if(est.getId() != null){
+          est.setModifiedBy(userId);
+          est.setModifiedDate(new Date());
+          est.setIsFinal(false);
+          repository.undoFinalize(est);
         }
       }
     }
@@ -73,6 +109,7 @@ public class FacilityDemographicEstimateService {
       FacilityDemographicEstimate estimate = new FacilityDemographicEstimate();
       estimate.setYear(year);
       estimate.setFacilityId(facilityId);
+      estimate.setIsFinal(false);
       estimate.setProgramId(programId);
       estimate.setConversionFactor(category.getDefaultConversionFactor());
       estimate.setDemographicEstimateId(category.getId());
@@ -115,4 +152,6 @@ public class FacilityDemographicEstimateService {
     }
     return result;
   }
+
+
 }

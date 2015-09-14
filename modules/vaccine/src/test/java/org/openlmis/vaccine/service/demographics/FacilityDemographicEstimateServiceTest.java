@@ -74,7 +74,7 @@ public class FacilityDemographicEstimateServiceTest {
     form.setEstimateLineItems(asList(estimateLineItem));
 
     when(repository.insert(estimateLineItem.getFacilityEstimates().get(0))).thenReturn(1);
-    service.save(form);
+    service.save(form, 1L);
     verify(repository, atLeastOnce()).insert(Matchers.<FacilityDemographicEstimate>any());
   }
 
