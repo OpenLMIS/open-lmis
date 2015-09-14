@@ -10,7 +10,7 @@
 * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <!DOCTYPE html>
-
+<!--<ng-include src="/public/lib/angular-ui/bootstrap/ui-bootstrap-tpls-0.8.0.min.js"></ng-include>-->
 <script id="template/accordion/accordion.html" type="text/ng-template">
     <div class="accordion" ng-transclude></div>
 </script>
@@ -167,7 +167,7 @@
 
     <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
-            <input ng-show="hasPermission('CREATE_REQUISITION')" ng-click="Requisition()" id="requisitionButton"
+            <input ng-show="false" ng-click="Requisition()" id="requisitionButton"
                    type="submit" id="requisition-button" class="btn btn-primary save-button"
                    openlmis-message="button.create.requisition"/>
             <input id="adjustButton" type="submit" id="adjust-button" ng-click="Adjustment()"
