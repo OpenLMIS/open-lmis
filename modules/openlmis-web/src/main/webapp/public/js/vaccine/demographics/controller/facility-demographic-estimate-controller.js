@@ -25,7 +25,7 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
   };
 
   $scope.hasPermission = function (permission) {
-    return ($scope.rights.indexOf(permission) >= 0)
+    return ($scope.rights.indexOf(permission) >= 0);
   };
 
   $scope.showParent = function(index){
@@ -50,8 +50,11 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
     $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
     // todo - check if the list is partially final or not?
     // the list can be partially finalized if the rivo or civo are the once that see whatever is in their respective facilities.
-    console.log(data.estimates.estimateLineItems[0]);
+
     $scope.isFinalized = data.estimates.estimateLineItems[0].facilityEstimates[0].isFinal;
+
+    $scope.districtSummary = new DistrictEstimateModel($scope.lineItems);
+
   };
 
   $scope.onParamChanged = function(){
@@ -93,7 +96,7 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
         $scope.form.estimateLineItems = $scope.lineItems;
         FinalizeFacilityDemographicEstimates.update($scope.form, function (data) {
           $scope.bindEstimates(data);
-          $scope.message = 'Estimates are now finalized'
+          $scope.message = 'Estimates are now finalized';
         });
       }
     };
@@ -113,7 +116,7 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
         $scope.form.estimateLineItems = $scope.lineItems;
         UndoFinalizeFacilityDemographicEstimates.update($scope.form, function (data) {
           $scope.bindEstimates(data);
-          $scope.message = 'Estimates are now available for editing.'
+          $scope.message = 'Estimates are now available for editing.';
         });
       }
     };

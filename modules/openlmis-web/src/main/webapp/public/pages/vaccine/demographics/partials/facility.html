@@ -59,7 +59,9 @@
         </thead>
         <tbody>
         <tr class="gradient-header" ng-repeat-start="facility in form.estimateLineItems" ng-show="showParent($index)">
-          <th colspan="{{categories.length + 2}}">{{facility.parentName}}</th>
+          <th colspan="2">{{facility.parentName}}</th>
+          <th class="number" ng-repeat="category in categories">
+            {{districtSummary.getSummary(facility.parentId, category, year) | number : 0}}</th>
         </tr>
         <tr>
             <td class="cell-input">

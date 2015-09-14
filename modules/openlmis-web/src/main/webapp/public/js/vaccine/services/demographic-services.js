@@ -46,9 +46,9 @@ services.factory('UserSupervisoryRights', function($resource){
 });
 
 services.factory('FinalizeFacilityDemographicEstimates', function($resource){
-  return $resource('/vaccine/demographic/estimate/finalize/facilities.json', {}, update)
+  return $resource('/vaccine/demographic/estimate/finalize/facilities.json', {}, update);
 });
 
 services.factory('UndoFinalizeFacilityDemographicEstimates', function($resource){
-  return $resource('/vaccine/demographic/estimate/undo-finalize/facilities.json', {}, update)
+  return $resource('/vaccine/demographic/estimate/undo-finalize/facilities.json', {}, update);
 });
