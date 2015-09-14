@@ -43,7 +43,7 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
       $scope.lineItems.push(data.estimates.estimateLineItems[i]);
     }
 
-    $scope.pageCount = $scope.lineItems.length / $scope.pageSize;
+    $scope.pageCount = Math.round($scope.lineItems.length / $scope.pageSize);
     data.estimates.estimateLineItems = [];
     $scope.form = data.estimates;
     $scope.currentPage = 1;
@@ -54,7 +54,6 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
     }
     // todo - check if the list is partially final or not?
     // the list can be partially finalized if the rivo or civo are the once that see whatever is in their respective facilities.
-    console.log($scope.lineItems);
     $scope.isFinalized = data.estimates.estimateLineItems[0].facilityEstimates[0].isFinal;
     $scope.districtSummary = new AggregateFacilityEstimateModel($scope.lineItems);
 
@@ -98,8 +97,9 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
   $scope.finalize = function(){
     var callBack = function (result) {
       if (result) {
-        $scope.form.estimateLineItems = $scope.lineItems;
-        FinalizeFacilityDemographicEstimates.update($scope.form, function (data) {
+        var form = angular.copy($scope.form);
+        form.estimateLineItems = $scope.lineItems;
+        FinalizeFacilityDemographicEstimates.update(form, function (data) {
           $scope.bindEstimates(data);
           $scope.message = 'Estimates are now finalized';
         });
@@ -118,8 +118,9 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
   $scope.undoFinalize = function(){
     var callBack = function (result) {
       if (result) {
-        $scope.form.estimateLineItems = $scope.lineItems;
-        UndoFinalizeFacilityDemographicEstimates.update($scope.form, function (data) {
+        var form = angular.copy($scope.form);
+        form.estimateLineItems = $scope.lineItems;
+        UndoFinalizeFacilityDemographicEstimates.update(form, function (data) {
           $scope.bindEstimates(data);
           $scope.message = 'Estimates are now available for editing.';
         });

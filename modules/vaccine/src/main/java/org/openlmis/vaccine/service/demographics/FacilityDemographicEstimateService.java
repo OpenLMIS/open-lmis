@@ -76,6 +76,7 @@ public class FacilityDemographicEstimateService {
   }
 
   public void finalize(DemographicEstimateForm form, Long userId) {
+    this.save(form, userId);
     for(DemographicEstimateLineItem dto: emptyIfNull(form.getEstimateLineItems())) {
       for (FacilityDemographicEstimate est : emptyIfNull(dto.getFacilityEstimates())) {
         est.setFacilityId(dto.getId());

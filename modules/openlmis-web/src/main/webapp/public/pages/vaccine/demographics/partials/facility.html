@@ -109,10 +109,35 @@
   </div>
   <div class="action-buttons" form-toolbar id="action_buttons">
     <div class="form-cell button-row">
-      <input ng-disabled="isFinalized" class="btn btn-primary save-button" id="save-button" id="saveButton" ng-click="save()" openlmis-message="button.save" type="submit"/>
-      <input ng-disabled="isFinalized" ng-show="hasPermission('FINALIZE_DEMOGRAPHIC_ESTIMATES')" class="btn btn-primary save-button" id="finalize-button" id="finalizeButton" ng-click="finalize()" openlmis-message="button.finalize" type="submit"/>
-      <input ng-disabled="!isFinalized" ng-show="hasPermission('UNLOCK_FINALIZED_DEMOGRAPHIC_ESTIMATES')" class="btn btn-primary save-button" id="undo-finalize-button" id="undoFinalizeButton" ng-click="undoFinalize()" openlmis-message="button.undo.finalize" type="submit"/>
-      <input class="btn btn-cancel cancel-button" id="cancelButton" ng-click="cancel()" openlmis-message="button.cancel" type="button"/>
+      <input
+        ng-disabled="isFinalized"
+        class="btn btn-primary save-button"
+        id="saveButton"
+        ng-click="save()"
+        openlmis-message="button.save"
+        type="submit"/>
+      <input
+        ng-disabled="isFinalized"
+        ng-show="hasPermission('FINALIZE_DEMOGRAPHIC_ESTIMATES')"
+        class="btn btn-primary save-button"
+        id="finalizeButton"
+        ng-click="finalize()"
+        openlmis-message="button.finalize"
+        type="submit"/>
+      <input
+        ng-disabled="!isFinalized"
+        ng-show="hasPermission('UNLOCK_FINALIZED_DEMOGRAPHIC_ESTIMATES')"
+        class="btn btn-primary save-button"
+        id="undoFinalizeButton"
+        ng-click="undoFinalize()"
+        openlmis-message="button.undo.finalize"
+        type="submit"/>
+      <input
+        class="btn btn-cancel cancel-button"
+        id="cancelButton"
+        ng-click="cancel()"
+        openlmis-message="button.cancel"
+        type="button"/>
     </div>
 
     <div class="toolbar-error" id="saveErrorMsgDiv">
