@@ -60,7 +60,7 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
   };
 
   $scope.onParamChanged = function(){
-    if(angular.isUndefined($scope.program) || angular.isUndefined($scope.year)){
+    if(angular.isUndefined($scope.program) || $scope.program === null || angular.isUndefined($scope.year)){
       return;
     }
 
