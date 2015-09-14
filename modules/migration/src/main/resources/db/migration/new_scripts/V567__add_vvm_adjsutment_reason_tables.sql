@@ -3,7 +3,7 @@ DO $$
     BEGIN
       CREATE TABLE vaccine_lots_on_hand_adjustments
       (
-        id integer NOT NULL DEFAULT nextval('vaccine_lots_on_hand_adjustment_id_seq'::regclass),
+        id serial NOT NULL,
         lotonhandid integer,
         adjustmentreason character(50),
         quantity integer,
