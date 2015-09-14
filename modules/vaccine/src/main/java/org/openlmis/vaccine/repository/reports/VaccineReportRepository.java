@@ -83,6 +83,10 @@ public class VaccineReportRepository {
     return mapper.getDiseaseSurveillance(reportId);
   }
 
+  public List<DiseaseLineItem> getDiseaseSurveillanceAggregateReport(Long periodId, Long zoneId){
+    return mapper.getDiseaseSurveillanceAggregateByGeoZone(periodId, zoneId);
+  }
+
   public List<ColdChainLineItem> getColdChain(Long reportId){
     return mapper.getColdChain(reportId);
   }
@@ -93,6 +97,10 @@ public class VaccineReportRepository {
 
   public List<HashMap<String, Object>> getVaccineCoverageReport(Long reportId){
     return mapper.getVaccineCoverageReport(reportId);
+  }
+
+  public List<HashMap<String , Object>> getVaccineCoverageAggregateReport(Long periodId, Long zoneId){
+    return mapper.getVaccineCoverageAggregateReportByGeoZone(periodId, zoneId);
   }
 
   public List<VaccineReport> getImmunizationSession(Long reportId){

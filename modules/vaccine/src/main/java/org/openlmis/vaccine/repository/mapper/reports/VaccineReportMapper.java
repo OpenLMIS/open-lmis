@@ -141,6 +141,28 @@ public interface VaccineReportMapper {
           "where report_id = #{reportId}")
   List<HashMap<String, Object>> getVaccineCoverageReport(@Param("reportId")Long reportId);
 
+   @Select("select MAX(product_name) product_name,\n" +
+           "MAX(display_name) display_name, \n" +
+           "SUM(COALESCE(within_male, 0)) within_male, \n" +
+           "SUM(COALESCE(within_female,0)) within_female, \n" +
+           "SUM(COALESCE(within_total,0)) within_total, \n" +
+           "SUM(COALESCE(within_coverage, 0)) within_coverage, \n" +
+           "SUM(COALESCE(outside_male, 0)) outside_male, \n" +
+           "SUM(COALESCE(outside_female,0)) outside_female,\n" +
+           "SUM(COALESCE(outside_total, 0)) outside_total,\n" +
+           "SUM(COALESCE(within_outside_total, 0)) within_outside_total, \n" +
+           "SUM(COALESCE(within_outside_coverage,0)) within_outside_coverage,\n" +
+           "SUM(COALESCE(cum_within_total,0)) cum_within_total, \n" +
+           "SUM(COALESCE(cum_within_coverage,0)) cum_within_coverage,\n" +
+           "SUM(COALESCE(cum_outside_total,0)) cum_outside_total, \n" +
+           "SUM(COALESCE(cum_within_outside_total,0)) cum_within_outside_total,\n" +
+           "SUM(COALESCE(cum_within_outside_coverage ,0)) cum_within_outside_coverage\n" +
+           "from vw_vaccine_coverage \n" +
+           "INNER JOIN vw_districts vd ON vd.district_id = geographic_zone_id\n" +
+           "where period_id = #{periodId} and (vd.parent = #{zoneId} or vd.district_id = #{zoneId} or vd.region_id = #{zoneId} or vd.zone_id = #{zoneId} )\n" +
+           "group by product_code\n" )
+  List<HashMap<String, Object>> getVaccineCoverageAggregateReportByGeoZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId);
+
   @Select("SELECT COALESCE(fixedimmunizationsessions, 0) fixedimmunizationsessions, COALESCE(outreachimmunizationsessions, 0) outreachimmunizationsessions, COALESCE(outreachimmunizationsessionscanceled, 0) outreachimmunizationsessionscanceled FROM vaccine_reports WHERE id = #{reportId} ")
   List<VaccineReport> getImmunizationSession(@Param("reportId")Long reportId);
 

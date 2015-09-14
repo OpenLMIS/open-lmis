@@ -95,24 +95,25 @@ public class VaccineReportController extends BaseController {
     if (periodId == null || periodId == 0) return null;
 
     Map<String, Object> data = new HashMap();
+    Long reportId = null;
 
-    if (facilityId == null || facilityId == 0 ){ // Return aggregated data for the selected geozone
+    if (facilityId != null && facilityId != 0 ){ // Return aggregated data for the selected geozone
+      reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
 
-      data.put("vaccination", service.getVaccineReport(null, facilityId, periodId, zoneId));
+    }
 
-    } else {
-      Long reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
-      data.put("diseaseSurveillance", service.getDiseaseSurveillance(reportId));
-      data.put("coldChain", service.getColdChain(reportId));
+    data.put("vaccination", service.getVaccineReport(reportId, facilityId, periodId, zoneId));
+    data.put("diseaseSurveillance", service.getDiseaseSurveillance(reportId, facilityId, periodId, zoneId));
+    data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId, facilityId, periodId, zoneId));
+
+    data.put("coldChain", service.getColdChain(reportId));
       data.put("adverseEffect", service.getAdverseEffectReport(reportId));
-      data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId));
       data.put("immunizationSession", service.getImmunizationSession(reportId));
-      data.put("vaccination", service.getVaccineReport(reportId, facilityId, periodId, zoneId));
       data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId));
       data.put("vitamins", service.getVitaminsReport(reportId));
       data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId));
       data.put("vitaminSupplementation", service.getVitaminSupplementationReport(reportId));
-    }
+
 
     return OpenLmisResponse.response("vaccineData", data);
   }

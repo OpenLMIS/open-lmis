@@ -207,8 +207,13 @@ public class VaccineReportService {
     return repository.getReportIdForFacilityAndPeriod(facilityId, periodId);
   }
 
-  public List<DiseaseLineItem> getDiseaseSurveillance(Long reportId){
-    return repository.getDiseaseSurveillance(reportId);
+  public List<DiseaseLineItem> getDiseaseSurveillance(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId !=0 ){
+
+      return repository.getDiseaseSurveillance(reportId);
+    }
+
+    return repository.getDiseaseSurveillanceAggregateReport(periodId, zoneId);
   }
 
   public List<ColdChainLineItem> getColdChain(Long reportId){
@@ -219,8 +224,12 @@ public class VaccineReportService {
     return repository.getAdverseEffectReport(reportId);
   }
 
-  public List<HashMap<String, Object>> getVaccineCoverageReport(Long reportId){
-    return repository.getVaccineCoverageReport(reportId);
+  public List<HashMap<String, Object>> getVaccineCoverageReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId !=0 ){
+
+      return repository.getVaccineCoverageReport(reportId);
+    }
+    return repository.getVaccineCoverageAggregateReport(periodId, zoneId);
   }
 
   public List<VaccineReport> getImmunizationSession(Long reportId){
