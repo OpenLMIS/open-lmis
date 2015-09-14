@@ -259,8 +259,12 @@ public class VaccineReportService {
     return repository.getTargetPopulation(facilityId, periodId);
   }
 
-  public List<VitaminSupplementationLineItem> getVitaminSupplementationReport(Long reportId){
-    return repository.getVitaminSupplementationReport(reportId);
+  public List<VitaminSupplementationLineItem> getVitaminSupplementationReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0){
+
+      return repository.getVitaminSupplementationReport(reportId);
+    }
+    return repository.getVitaminSupplementationAggregateReport(periodId, zoneId);
   }
 
   public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode, Long periodId, Long zoneId){

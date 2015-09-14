@@ -186,6 +186,17 @@ public interface VaccineReportMapper {
   @Select("Select age_group AS ageGroup, vitamin_name AS vitaminName, male_value AS maleValue, female_value AS femaleValue from vw_vaccine_vitamin_supplementation where report_id = #{reportId}")
   List<VitaminSupplementationLineItem> getVitaminSupplementationReport(@Param("reportId") Long reportId);
 
+  @Select("Select age_group AS ageGroup,\n" +
+          "vitamin_name AS vitaminName,\n" +
+          "male_value AS maleValue,\n" +
+          "female_value AS femaleValue\n" +
+          "from vw_vaccine_vitamin_supplementation\n" +
+          "where report_id = #{reportId}\n" +
+          "join facilities f on r.facilityid = r.facilityid\n" +
+          "join vw_districts d ON d.district_id = f.geographiczoneid\n" +
+          "where r.periodid = #{periodId} and (d.parent = #{zoneId} or d.district_id = #{zoneId} or d.region_id = #{zoneId} or d.zone_id = #{zoneId} )")
+  List<VitaminSupplementationLineItem> getVitaminSupplementationAggregateReport(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId);
+
   @Select("select COALESCE(fr.quantity_issued, 0) quantity_issued, COALESCE(fr.closing_balance, 0) closing_balance, pp.name period_name \n" +
           "from fn_vaccine_facility_n_rnrs('Vaccine',#{facilityCode}, #{productCode},4) fr \n" +
           "JOIN processing_periods pp ON pp.id = fr.period_id\n" +

@@ -125,6 +125,10 @@ public class VaccineReportRepository {
     return mapper.getVitaminSupplementationReport(reportId);
   }
 
+  public List<VitaminSupplementationLineItem> getVitaminSupplementationAggregateReport(Long periodId, Long zoneId){
+    return mapper.getVitaminSupplementationAggregateReport(periodId, zoneId);
+  }
+
   public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode){
     return mapper.vaccineUsageTrend(facilityCode, productCode);
   }
