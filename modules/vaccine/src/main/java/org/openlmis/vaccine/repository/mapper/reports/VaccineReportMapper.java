@@ -262,13 +262,20 @@ public interface VaccineReportMapper {
           "case when sum(usage_denominator) > 0 \n" +
           "then sum(vaccinated)::numeric/ sum(usage_denominator)::numeric * 100 else 0 \n" +
           "end usage_rate,\n" +
-          "100 - \n" +
-          "case \n" +
-          "when sum(usage_denominator) = 0 then 0 \n" +
-          "when sum(usage_denominator) > 0 \n" +
-          "then sum(vaccinated)::numeric/ sum(usage_denominator)::numeric * 100 \n" +
-          "else 0 \n" +
-          "end wastage_rate\n" +
+          "case when (\n" +
+          "100 - case \n" +
+          "    when sum(usage_denominator) = 0 then 0 \n" +
+          "    when sum(usage_denominator) > 0 then \n" +
+          "    sum(vaccinated)::numeric/ sum(usage_denominator)::numeric * 100\n" +
+          "   else 0 \n" +
+          "   end ) < 0 then 0 else\n" +
+          "100 - case \n" +
+          "    when sum(usage_denominator) = 0 then 0 \n" +
+          "    when sum(usage_denominator) > 0 then \n" +
+          "    sum(vaccinated)::numeric/ sum(usage_denominator)::numeric * 100\n" +
+          "   else 0 \n" +
+          "   end \n" +
+          "end wastage_rate" +
           "from vw_vaccine_stock_status \n" +
           "INNER JOIN vw_districts vd ON vd.district_id = geographic_zone_id\n" +
           "where  product_category_code = (select value from configuration_settings where key = #{productCategoryCode}) and period_id = #{periodId} and (vd.parent = #{zoneId} or vd.district_id = #{zoneId} or vd.region_id = #{zoneId} or vd.zone_id = #{zoneId} )\n" +
