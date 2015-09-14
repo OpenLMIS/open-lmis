@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function DistrictDemographicEstimateController($scope, $filter, rights, categories, programs , years, DistrictDemographicEstimates, SaveDistrictDemographicEstimates) {
+function DistrictDemographicEstimateController($scope, $filter, $dialog, rights, categories, programs , years, DistrictDemographicEstimates, UndoFinalizeDistrictDemographicEstimates, FinalizeDistrictDemographicEstimates , SaveDistrictDemographicEstimates) {
 
   $scope.currentPage = 1;
   $scope.pageSize = 10;
@@ -43,7 +43,7 @@ function DistrictDemographicEstimateController($scope, $filter, rights, categori
       $scope.lineItems.push(data.estimates.estimateLineItems[i]);
     }
 
-    $scope.pageCount = $scope.lineItems.length / $scope.pageSize;
+    $scope.pageCount = Math.round($scope.lineItems.length / $scope.pageSize);
     data.estimates.estimateLineItems = [];
     $scope.form = data.estimates;
     $scope.currentPage = 1;
@@ -58,7 +58,7 @@ function DistrictDemographicEstimateController($scope, $filter, rights, categori
   };
 
   $scope.onParamChanged = function(){
-    if(angular.isUndefined($scope.program) || angular.isUndefined($scope.year)){
+    if(angular.isUndefined($scope.program) || $scope.program == null || angular.isUndefined($scope.year)){
       return;
     }
 
@@ -87,6 +87,50 @@ function DistrictDemographicEstimateController($scope, $filter, rights, categori
       $scope.error = data.error;
     });
   };
+
+  $scope.finalize = function(){
+    var callBack = function (result) {
+      if (result) {
+        var form = angular.copy($scope.form);
+        form.estimateLineItems = $scope.lineItems;
+        FinalizeDistrictDemographicEstimates.update(form, function (data) {
+          $scope.bindEstimates(data);
+          $scope.message = 'Estimates are now finalized';
+        });
+      }
+    };
+
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.finalize.title",
+      body: "label.confirm.finalize.demographic.estimate"
+    };
+
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
+
+  $scope.undoFinalize = function(){
+    var callBack = function (result) {
+      if (result) {
+        var form = angular.copy($scope.form);
+        form.estimateLineItems = $scope.lineItems;
+        UndoFinalizeDistrictDemographicEstimates.update(form, function (data) {
+          $scope.bindEstimates(data);
+          $scope.message = 'Estimates are now available for editing.';
+        });
+      }
+    };
+
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.undo.finalize.title",
+      body: "label.confirm.undo.finalize.demographic.estimate"
+    };
+
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
+
+
 
   $scope.init = function(){
     // default to the current year

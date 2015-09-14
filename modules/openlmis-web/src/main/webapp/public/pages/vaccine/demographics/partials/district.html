@@ -121,9 +121,30 @@
   </div>
   <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
-      <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
-             openlmis-message="button.save" ng-click="save()"/>
-      <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+      <input ng-disabled="isFinalized"
+             class="btn btn-primary save-button"
+             id="save-button" id="saveButton"
+             ng-click="save()"
+             openlmis-message="button.save"
+             type="submit"/>
+      <input ng-disabled="isFinalized"
+             ng-show="hasPermission('FINALIZE_DEMOGRAPHIC_ESTIMATES')"
+             class="btn btn-primary save-button"
+             id="finalizeButton"
+             ng-click="finalize()"
+             openlmis-message="button.finalize"
+             type="submit"/>
+      <input ng-disabled="!isFinalized"
+             ng-show="hasPermission('UNLOCK_FINALIZED_DEMOGRAPHIC_ESTIMATES')"
+             class="btn btn-primary save-button"
+             id="undoFinalizeButton"
+             ng-click="undoFinalize()"
+             openlmis-message="button.undo.finalize"
+             type="submit"/>
+      <input id="cancelButton"
+             type="button"
+             class="btn btn-cancel cancel-button"
+             openlmis-message="button.cancel"
              ng-click="cancel()"/>
     </div>
 

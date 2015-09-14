@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,13 +39,29 @@ public class DistrictDemographicEstimateController extends BaseController {
   @RequestMapping(value = "districts", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_PARAMETERS')")
   public ResponseEntity<OpenLmisResponse> get(@RequestParam("year") Integer year, @RequestParam("program") Long programId, HttpServletRequest request) {
-    return OpenLmisResponse.response("estimates", service.getEstimateFor(year, programId));
+    return OpenLmisResponse.response("estimates", service.getEstimateForm(year, programId));
   }
 
   @RequestMapping(value = "districts", method = PUT)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_PARAMETERS')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody DemographicEstimateForm form,  HttpServletRequest request){
     service.save(form, loggedInUserId(request));
+    return OpenLmisResponse.response("estimates", form);
+  }
+
+  @Transactional
+  @RequestMapping(value = "finalize/districts.json", method = PUT)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'FINALIZE_DEMOGRAPHIC_ESTIMATES')")
+  public ResponseEntity<OpenLmisResponse> finalize(@RequestBody DemographicEstimateForm form, HttpServletRequest request){
+    service.finalize(form, loggedInUserId(request));
+    return OpenLmisResponse.response("estimates", form);
+  }
+
+  @Transactional
+  @RequestMapping(value = "undo-finalize/districts.json", method = PUT)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UNLOCK_FINALIZED_DEMOGRAPHIC_ESTIMATES')")
+  public ResponseEntity<OpenLmisResponse> undoFinalize(@RequestBody DemographicEstimateForm form, HttpServletRequest request){
+    service.undoFinalize(form, loggedInUserId(request));
     return OpenLmisResponse.response("estimates", form);
   }
 

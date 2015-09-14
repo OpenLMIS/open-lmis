@@ -12,7 +12,6 @@
 
 package org.openlmis.vaccine.repository.demographics;
 
-import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.vaccine.domain.demographics.DistrictDemographicEstimate;
 import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
 import org.openlmis.vaccine.dto.DemographicEstimateLineItem;
@@ -46,5 +45,13 @@ public class DistrictDemographicEstimateRepository {
 
   public List<FacilityDemographicEstimate> getFacilityEstimateAggregate(Integer year, Long districtId, Long programId) {
     return mapper.getFacilityEstimateAggregate(year, districtId, programId);
+  }
+
+  public void finalize(DistrictDemographicEstimate est) {
+    mapper.finalize(est);
+  }
+
+  public void undoFinalize(DistrictDemographicEstimate est) {
+    mapper.undoFinalize(est);
   }
 }

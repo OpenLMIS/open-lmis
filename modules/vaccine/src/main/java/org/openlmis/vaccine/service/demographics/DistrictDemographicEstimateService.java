@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
@@ -49,6 +50,35 @@ public class DistrictDemographicEstimateService {
     }
   }
 
+  public void finalize(DemographicEstimateForm form, Long userId) {
+    this.save(form, userId);
+    for(DemographicEstimateLineItem dto: emptyIfNull(form.getEstimateLineItems())) {
+      for (DistrictDemographicEstimate est : emptyIfNull(dto.getDistrictEstimates())) {
+        est.setDistrictId(dto.getId());
+        if(est.getId() != null){
+          est.setModifiedBy(userId);
+          est.setModifiedDate(new Date());
+          est.setIsFinal(true);
+          repository.finalize(est);
+        }
+      }
+    }
+  }
+
+  public void undoFinalize(DemographicEstimateForm form, Long userId) {
+    for(DemographicEstimateLineItem dto: emptyIfNull(form.getEstimateLineItems())) {
+      for (DistrictDemographicEstimate est : emptyIfNull(dto.getDistrictEstimates())) {
+        est.setDistrictId(dto.getId());
+        if(est.getId() != null){
+          est.setModifiedBy(userId);
+          est.setModifiedDate(new Date());
+          est.setIsFinal(false);
+          repository.undoFinalize(est);
+        }
+      }
+    }
+  }
+
   private List<DistrictDemographicEstimate> getEmptyEstimateObjects(List<DemographicEstimateCategory> categories, Long districtId, Long programId, Integer year) {
     List<DistrictDemographicEstimate> result = new ArrayList<>();
     for(DemographicEstimateCategory category: categories){
@@ -65,7 +95,7 @@ public class DistrictDemographicEstimateService {
     return result;
   }
 
-  public DemographicEstimateForm getEstimateFor(Integer year, Long programId) {
+  public DemographicEstimateForm getEstimateForm(Integer year, Long programId) {
     DemographicEstimateForm form = new DemographicEstimateForm();
     List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());

@@ -52,3 +52,11 @@ services.factory('FinalizeFacilityDemographicEstimates', function($resource){
 services.factory('UndoFinalizeFacilityDemographicEstimates', function($resource){
   return $resource('/vaccine/demographic/estimate/undo-finalize/facilities.json', {}, update);
 });
+
+services.factory('FinalizeDistrictDemographicEstimates', function($resource){
+  return $resource('/vaccine/demographic/estimate/finalize/districts.json', {}, update);
+});
+
+services.factory('UndoFinalizeDistrictDemographicEstimates', function($resource){
+  return $resource('/vaccine/demographic/estimate/undo-finalize/districts.json', {}, update);
+});
