@@ -1,5 +1,4 @@
 -- View: vw_vaccine_target_population
-select * from vw_vaccine_target_population
  DROP VIEW IF EXISTS vw_vaccine_target_population;
 
 CREATE OR REPLACE VIEW vw_vaccine_target_population AS 
