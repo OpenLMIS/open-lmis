@@ -128,10 +128,10 @@ public interface VaccineReportMapper {
   List<ColdChainLineItem> getColdChain(@Param("reportId")Long reportId);
   @Select("select equipment_type_name as equipmentName,\n" +
           "model,\n" +
-          "SUM(COALESCE(minTemp,0)) minTemp,\n" +
-          "SUM(COALESCE(maxTemp,0)) maxTemp,\n" +
-          "SUM(COALESCE(minEpisodeTemp,0)) minEpisodeTemp,\n" +
-          "SUM(COALESCE(maxEpisodeTemp,0)) maxEpisodeTemp,\n" +
+          "MIN(COALESCE(minTemp,0)) minTemp,\n" +
+          "MAX(COALESCE(maxTemp,0)) maxTemp,\n" +
+          "MIN(COALESCE(minEpisodeTemp,0)) minEpisodeTemp,\n" +
+          "MAX(COALESCE(maxEpisodeTemp,0)) maxEpisodeTemp,\n" +
           "MAX(energy_source ) as energySource \n" +
           "from vw_vaccine_cold_chain \n" +
           "join vw_districts d ON d.district_id = geographic_zone_id\n" +
@@ -275,7 +275,7 @@ public interface VaccineReportMapper {
           "    sum(vaccinated)::numeric/ sum(usage_denominator)::numeric * 100\n" +
           "   else 0 \n" +
           "   end \n" +
-          "end wastage_rate" +
+          "end wastage_rate \n" +
           "from vw_vaccine_stock_status \n" +
           "INNER JOIN vw_districts vd ON vd.district_id = geographic_zone_id\n" +
           "where  product_category_code = (select value from configuration_settings where key = #{productCategoryCode}) and period_id = #{periodId} and (vd.parent = #{zoneId} or vd.district_id = #{zoneId} or vd.region_id = #{zoneId} or vd.zone_id = #{zoneId} )\n" +
