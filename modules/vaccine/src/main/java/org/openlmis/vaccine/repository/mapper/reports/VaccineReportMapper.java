@@ -208,18 +208,18 @@ public interface VaccineReportMapper {
           "where facility_id = #{facilityId} and year =  (select date_part('year'::text, processing_periods.startdate) from processing_periods where id = #{periodId})\n")
   List<HashMap<String, Object>> getTargetPopulation(@Param("facilityId") Long facilityId, @Param("periodId") Long periodId);
 
-  @Select("select \n" +
-         "sum(COALESCE(tp.population,0)) population, \n" +
-         "sum(COALESCE(tp.pregnant_woman,0)) pregnant_woman, \n" +
-         "sum(COALESCE(tp.live_birth,0)) live_birth,\n" +
-         "sum(COALESCE(tp.children_0_1,0)) children_0_1,\n" +
-         "sum(COALESCE(tp.children_1_2,0)) children_1_2,\n" +
-         "sum(COALESCE(tp.girls_9_12,0)) girls_9_12\n" +
-         "from vw_vaccine_target_population tp\n" +
-         "join facilities f on tp.facility_id = f.id\n" +
-         "join vw_districts d on d.district_id = f.geographiczoneid\n" +
-         "and year =  (select date_part('year'::text, processing_periods.startdate) from processing_periods where id = #{periodId})\n" +
-         "and (d.parent = #{zoneId} or d.district_id = #{zoneId} or d.region_id = #{zoneId} or d.zone_id = #{zoneId} ) ")
+  @Select(" select   " +
+          " sum( case when e.category_name = 'Population'::text then COALESCE(e.value,0) else 0 end ) population,   " +
+          " sum( case when e.category_name = 'Pregnant Women'::text then COALESCE(e.value,0) else 0 end ) pregnant_woman,   " +
+          " sum( case when e.category_name = 'Live Births'::text then COALESCE(e.value,0) else 0 end ) live_birth,  " +
+          " sum( case when e.category_name = 'Children 0 - 1 Year'::text then COALESCE(e.value,0) else 0 end ) children_0_1,  " +
+          " sum( case when e.category_name = 'Children 1 - 2 Years'::text then COALESCE(e.value,0) else 0 end ) children_1_2,  " +
+          " sum( case when e.category_name = 'Girls 9 - 12 Years'::text then COALESCE(e.value,0) else 0 end ) girls_9_12  " +
+          " from vw_vaccine_estimates e  " +
+          " join facilities f on e.facility_id = f.id  " +
+          " join vw_districts d on d.district_id = f.geographiczoneid  " +
+          "and year =  (select date_part('year'::text, processing_periods.startdate) from processing_periods where id = #{periodId})\n" +
+          "and (d.parent = #{zoneId} or d.district_id = #{zoneId} or d.region_id = #{zoneId} or d.zone_id = #{zoneId} ) ")
   List<HashMap<String, Object>> getTargetPopulationAggregateByGeoZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId);
 
   @Select("Select age_group AS ageGroup, vitamin_name AS vitaminName, male_value AS maleValue, female_value AS femaleValue from vw_vaccine_vitamin_supplementation where report_id = #{reportId}")
