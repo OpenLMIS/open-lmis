@@ -216,8 +216,11 @@ public class VaccineReportService {
     return repository.getDiseaseSurveillanceAggregateReport(periodId, zoneId);
   }
 
-  public List<ColdChainLineItem> getColdChain(Long reportId){
-    return repository.getColdChain(reportId);
+  public List<ColdChainLineItem> getColdChain(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId !=0 ) {
+      return repository.getColdChain(reportId);
+    }
+    return repository.getColdChainAggregateReport(periodId, zoneId);
   }
 
   public List<AdverseEffectLineItem> getAdverseEffectReport(Long reportId, Long facilityId, Long periodId, Long zoneId){

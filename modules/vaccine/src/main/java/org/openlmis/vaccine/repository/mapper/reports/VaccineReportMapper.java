@@ -126,9 +126,18 @@ public interface VaccineReportMapper {
   @Select("select equipment_type_name as equipmentName, model, minTemp, maxTemp, minEpisodeTemp, maxEpisodeTemp, energy_source as energySource from vw_vaccine_cold_chain \n" +
           "where report_id = #{reportId}")
   List<ColdChainLineItem> getColdChain(@Param("reportId")Long reportId);
+  @Select("select MAX(product_name) as productName,\n" +
+          "MAX(aefi_expiry_date) as expiry,\n" +
+          "SUM(COALESCE(aefi_case,0)) as cases, \n" +
+          "MAX(aefi_batch) as batch,\n" +
+          "MAX(manufacturer) as manufacturer,\n" +
+          "MAX(is_investigated) as isInvestigated \n" +
+          "from vw_vaccine_iefi \n" +
+          "join vw_districts d ON d.district_id = f.geographiczoneid\n" +
+          "where r.periodid = #{periodId} and (d.parent = #{zoneId} or d.district_id = #{zoneId} or d.region_id = #{zoneId} or d.zone_id = #{zoneId} )\n" )
+  List<ColdChainLineItem> getColdChainAggregateReport(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId);
 
-
-  @Select("select product_name as productName, aefi_expiry_date as expiry, aefi_case as cases, aefi_batch as batch, manufacturer, is_investigated as isInvestigated from vw_vaccine_iefi \n" +
+    @Select("select product_name as productName, aefi_expiry_date as expiry, aefi_case as cases, aefi_batch as batch, manufacturer, is_investigated as isInvestigated from vw_vaccine_iefi \n" +
           "where report_id = #{reportId}")
   List<AdverseEffectLineItem> getAdverseEffectReport(@Param("reportId")Long reportId);
 

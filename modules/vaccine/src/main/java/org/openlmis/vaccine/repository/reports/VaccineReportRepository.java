@@ -91,6 +91,10 @@ public class VaccineReportRepository {
     return mapper.getColdChain(reportId);
   }
 
+  public List<ColdChainLineItem> getColdChainAggregateReport(Long periodId, Long zoneId){
+    return mapper.getColdChainAggregateReport(periodId, zoneId);
+  }
+
   public List<AdverseEffectLineItem> getAdverseEffectReport(Long reportId){
     return mapper.getAdverseEffectReport(reportId);
   }
