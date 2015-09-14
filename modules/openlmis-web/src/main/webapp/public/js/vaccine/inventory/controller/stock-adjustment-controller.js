@@ -8,19 +8,39 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockAdjustmentController($scope, $timeout,$location,$routeParams,StockCardsByCategory,SaveVaccineInventoryAdjustment,localStorageService,homeFacility,adjustmentTypes,UserFacilityList) {
+function StockAdjustmentController($scope, $timeout,$location,$routeParams,programs,StockCardsByCategory,SaveVaccineInventoryAdjustment,localStorageService,homeFacility,adjustmentTypes,UserFacilityList) {
 
     //Get Home Facility
     $scope.currentStockLot = undefined;
     $scope.adjustmentReasonsDialogModal = false;
-    $scope.homeFacility = homeFacility;
+    $scope.userPrograms=programs;
     $scope.adjustmentTypes=adjustmentTypes;
     $scope.adjustmentReason={};
     var AdjustmentReasons=[];
 
-    StockCardsByCategory.get(82,19074).then(function(data){
-        $scope.stockCardsToDisplay=data;
-    });
+    var loadStockCards=function(programId, facilityId){
+            StockCardsByCategory.get(programId,facilityId).then(function(data){
+                $scope.stockCardsToDisplay=data;
+            });
+        };
+    if(homeFacility){
+            $scope.homeFacility = homeFacility;
+            $scope.homeFacilityId=homeFacility.id;
+            $scope.selectedFacilityId=homeFacility.id;
+            $scope.facilityDisplayName=homeFacility.name;
+            }
+    if($scope.userPrograms.length > 1)
+    {
+                $scope.showPrograms=true;
+                //TODO: load stock cards on program change
+                $scope.selectedProgramId=$scope.userPrograms[0].id;
+                loadStockCards(parseInt($scope.selectedProgramId,10),parseInt($scope.selectedFacilityId,10));
+     }
+    else if($scope.userPrograms.length === 1){
+                $scope.showPrograms=false;
+                $scope.selectedProgramId=$scope.userPrograms[0].id;
+                loadStockCards(parseInt($scope.selectedProgramId,10),parseInt($scope.selectedFacilityId,10));
+    }
 
 //    LoggedInUserDetails.get({}, function (data) {
 //            $scope.loggedInUser= data.userDetails;
@@ -43,10 +63,11 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,Stock
        $scope.adjustmentReasonsDialogModal = true;
 
     };
-    $scope.removeAdjustmentReason=function(reasonToDelete)
+    $scope.removeAdjustmentReason=function(adjustment)
     {
+        console.log(adjustment);
         $scope.currentStockLot.adjustmentReasons = $.grep($scope.currentStockLot.adjustmentReasons, function (reasonObj) {
-              return !(reasonToDelete === reasonObj);
+              return (adjustment !== reasonObj);
             });
         updateAdjustmentReasonForLot($scope.currentStockLot.adjustmentReasons);
         reEvaluateTotalAdjustmentReasons();
@@ -77,7 +98,7 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,Stock
          adjustmentReason.quantity= newAdjustmentReason.quantity;
 
          $scope.currentStockLot.adjustmentReasons.push(adjustmentReason);
-         updateAdjustmentReasonForLot($scope.currentStockLot.AdjustmentReasons);
+         updateAdjustmentReasonForLot($scope.currentStockLot.adjustmentReasons);
          reEvaluateTotalAdjustmentReasons();
          newAdjustmentReason.type = undefined;
          newAdjustmentReason.quantity = undefined;
@@ -110,7 +131,7 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,Stock
                      $scope.message=data.success;
                      $timeout(function(){
                          $location.path('/stock-on-hand');
-                     },1200)
+                     },1200);
                }
 
             });
@@ -118,7 +139,7 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,Stock
      };
      $scope.cancel=function(){
         $location.path('/stock-on-hand');
-     }
+     };
 
 
       function reEvaluateTotalAdjustmentReasons()
@@ -127,9 +148,9 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,Stock
              $($scope.currentStockLot.adjustmentReasons).each(function (index, adjustmentObject) {
                if(adjustmentObject.type.additive)
                {
-                    totalAdjustments = totalAdjustments + parseInt(adjustmentObject.quantity);
+                    totalAdjustments = totalAdjustments + parseInt(adjustmentObject.quantity,10);
                }else{
-                    totalAdjustments = totalAdjustments - parseInt(adjustmentObject.quantity);
+                    totalAdjustments = totalAdjustments - parseInt(adjustmentObject.quantity,10);
                }
 
              });
@@ -203,4 +224,4 @@ StockAdjustmentController.resolve = {
         }
 
 
-}
+};
