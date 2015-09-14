@@ -232,8 +232,11 @@ public class VaccineReportService {
     return repository.getVaccineCoverageAggregateReport(periodId, zoneId);
   }
 
-  public List<VaccineReport> getImmunizationSession(Long reportId){
-    return repository.getImmunizationSession(reportId);
+  public List<VaccineReport> getImmunizationSession(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0){
+      return repository.getImmunizationSession(reportId);
+    }
+    return repository.getImmunizationSessionAggregate(periodId, zoneId);
   }
 
   public List<HashMap<String, Object>> getVaccineReport(Long reportId, Long facilityId, Long periodId, Long zoneId){

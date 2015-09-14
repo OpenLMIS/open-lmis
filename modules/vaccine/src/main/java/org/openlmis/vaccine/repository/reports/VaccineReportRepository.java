@@ -107,6 +107,10 @@ public class VaccineReportRepository {
     return mapper.getImmunizationSession(reportId);
   }
 
+  public List<VaccineReport> getImmunizationSessionAggregate(Long periodId, Long zoneId){
+    return mapper.getImmunizationSessionAggregate(periodId, zoneId);
+  }
+
   public List<HashMap<String, Object>> getVaccinationReport(String productCategoryCode, Long reportId){
     return mapper.getVaccinationReport(productCategoryCode, reportId);
   }

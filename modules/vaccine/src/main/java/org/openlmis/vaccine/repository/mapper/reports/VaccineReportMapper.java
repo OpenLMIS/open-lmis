@@ -166,6 +166,16 @@ public interface VaccineReportMapper {
   @Select("SELECT COALESCE(fixedimmunizationsessions, 0) fixedimmunizationsessions, COALESCE(outreachimmunizationsessions, 0) outreachimmunizationsessions, COALESCE(outreachimmunizationsessionscanceled, 0) outreachimmunizationsessionscanceled FROM vaccine_reports WHERE id = #{reportId} ")
   List<VaccineReport> getImmunizationSession(@Param("reportId")Long reportId);
 
+  @Select("SELECT \n" +
+          "sum(COALESCE(fixedimmunizationsessions, 0)) fixedimmunizationsessions, \n" +
+          "sum(COALESCE(outreachimmunizationsessions, 0)) outreachimmunizationsessions, \n" +
+          "sum(COALESCE(outreachimmunizationsessionscanceled, 0)) outreachimmunizationsessionscanceled \n" +
+          "FROM vaccine_reports r\n" +
+          "join facilities f on r.facilityid = r.facilityid\n" +
+          "join vw_districts d ON d.district_id = f.geographiczoneid\n" +
+          "where r.periodid = #{periodId} and (d.parent = #{zoneId} or d.district_id = #{zoneId} or d.region_id = #{zoneId} or d.zone_id = #{zoneId} )")
+  List<VaccineReport> getImmunizationSessionAggregate(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId);
+
   @Select("select * from vw_vaccine_stock_status where product_category_code = (select value from configuration_settings where key = #{productCategoryCode}) and report_id = #{reportId}")
   List<HashMap<String, Object>> getVaccinationReport(@Param("productCategoryCode") String categoryCode, @Param("reportId")Long reportId);
 
