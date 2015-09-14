@@ -122,12 +122,16 @@ public class VaccineReportRepository {
   public List<HashMap<String, Object>> getVaccinationReport(String productCategoryCode, Long reportId){
     return mapper.getVaccinationReport(productCategoryCode, reportId);
   }
-  public List<HashMap<String, Object>> getVaccinationAggregateByGeoZoneReport(Long periodId, Long zoneId){
-    return mapper.getVaccinationAggregateByGeoZoneReport(periodId, zoneId);
+  public List<HashMap<String, Object>> getVaccinationAggregateByGeoZoneReport(String productCategoryCode, Long periodId, Long zoneId){
+    return mapper.getVaccinationAggregateByGeoZoneReport(productCategoryCode, periodId, zoneId);
   }
 
   public List<HashMap<String, Object>> getTargetPopulation(Long facilityId, Long periodId){
     return mapper.getTargetPopulation(facilityId, periodId);
+  }
+
+  public List<HashMap<String, Object>> getTargetPopulationAggregateByGeoZone(Long periodId, Long zoneId){
+    return mapper.getTargetPopulationAggregateByGeoZone(periodId, zoneId);
   }
   public List<VitaminSupplementationLineItem> getVitaminSupplementationReport(Long reportId){
     return mapper.getVitaminSupplementationReport(reportId);

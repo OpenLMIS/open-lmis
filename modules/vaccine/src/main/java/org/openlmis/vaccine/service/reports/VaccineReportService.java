@@ -249,20 +249,30 @@ public class VaccineReportService {
     if (facilityId != null && facilityId != 0){
       return repository.getVaccinationReport(VACCINE_REPORT_VACCINE_CATEGORY_CODE, reportId);
     }else{
-      return repository.getVaccinationAggregateByGeoZoneReport(periodId, zoneId);
+      return repository.getVaccinationAggregateByGeoZoneReport(VACCINE_REPORT_VACCINE_CATEGORY_CODE, periodId, zoneId);
     }
   }
 
-  public List<HashMap<String, Object>> getSyringeAndSafetyBoxReport(Long reportId){
-    return repository.getVaccinationReport(VACCINE_REPORT_SYRINGES_CATEGORY_CODE, reportId);
+  public List<HashMap<String, Object>> getSyringeAndSafetyBoxReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0) {
+      return repository.getVaccinationReport(VACCINE_REPORT_SYRINGES_CATEGORY_CODE, reportId);
+    }
+    return repository.getVaccinationAggregateByGeoZoneReport(VACCINE_REPORT_SYRINGES_CATEGORY_CODE, periodId, zoneId);
+
   }
 
-  public List<HashMap<String, Object>> getVitaminsReport(Long reportId){
-    return repository.getVaccinationReport(VACCINE_REPORT_VITAMINS_CATEGORY_CODE,  reportId);
+  public List<HashMap<String, Object>> getVitaminsReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0) {
+      return repository.getVaccinationReport(VACCINE_REPORT_VITAMINS_CATEGORY_CODE, reportId);
+    }
+    return repository.getVaccinationAggregateByGeoZoneReport(VACCINE_REPORT_VITAMINS_CATEGORY_CODE, periodId, zoneId);
   }
 
-  public List<HashMap<String, Object>> getTargetPopulation(Long facilityId, Long periodId){
-    return repository.getTargetPopulation(facilityId, periodId);
+  public List<HashMap<String, Object>> getTargetPopulation(Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0) {
+      return repository.getTargetPopulation(facilityId, periodId);
+    }
+    return repository.getTargetPopulationAggregateByGeoZone(periodId, zoneId);
   }
 
   public List<VitaminSupplementationLineItem> getVitaminSupplementationReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
