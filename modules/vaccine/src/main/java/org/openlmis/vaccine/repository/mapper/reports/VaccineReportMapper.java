@@ -112,6 +112,17 @@ public interface VaccineReportMapper {
           "where report_id = #{reportId}")
   List<DiseaseLineItem> getDiseaseSurveillance(@Param("reportId")Long reportId);
 
+  @Select("select disease_name as diseaseName,\n" +
+          "SUM(COALESCE(cum_cases,0)) cumulative,\n" +
+          "SUM(COALESCE(cum_deaths,0)) cum_deaths,\n" +
+          "SUM(COALESCE(cases, 0)) cases,\n" +
+          "SUM(COALESCE(death,0)) death\n" +
+          "from vw_vaccine_disease_surveillance\n" +
+          "INNER JOIN vw_districts vd ON vd.district_id = geographic_zone_id\n" +
+          "where period_id = #{periodId} and (vd.parent = #{zoneId} or vd.district_id = #{zoneId} or vd.region_id = #{zoneId} or vd.zone_id = #{zoneId} )\n" +
+          "group by disease_name\n")
+  List<DiseaseLineItem>  getDiseaseSurveillanceAggregateByGeoZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId);
+
   @Select("select equipment_type_name as equipmentName, model, minTemp, maxTemp, minEpisodeTemp, maxEpisodeTemp, energy_source as energySource from vw_vaccine_cold_chain \n" +
           "where report_id = #{reportId}")
   List<ColdChainLineItem> getColdChain(@Param("reportId")Long reportId);
