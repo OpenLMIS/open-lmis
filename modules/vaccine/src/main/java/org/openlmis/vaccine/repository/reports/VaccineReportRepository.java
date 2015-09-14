@@ -95,6 +95,10 @@ public class VaccineReportRepository {
     return mapper.getAdverseEffectReport(reportId);
   }
 
+  public List<AdverseEffectLineItem> getAdverseEffectAggregateReport(Long periodId, Long zoneId){
+    return mapper.getAdverseEffectAggregateReport(periodId, zoneId);
+  }
+
   public List<HashMap<String, Object>> getVaccineCoverageReport(Long reportId){
     return mapper.getVaccineCoverageReport(reportId);
   }

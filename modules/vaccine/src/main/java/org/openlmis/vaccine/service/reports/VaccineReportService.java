@@ -220,8 +220,11 @@ public class VaccineReportService {
     return repository.getColdChain(reportId);
   }
 
-  public List<AdverseEffectLineItem> getAdverseEffectReport(Long reportId){
-    return repository.getAdverseEffectReport(reportId);
+  public List<AdverseEffectLineItem> getAdverseEffectReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0) {
+      return repository.getAdverseEffectReport(reportId);
+    }
+    return repository.getAdverseEffectAggregateReport(periodId, zoneId);
   }
 
   public List<HashMap<String, Object>> getVaccineCoverageReport(Long reportId, Long facilityId, Long periodId, Long zoneId){

@@ -107,9 +107,9 @@ public class VaccineReportController extends BaseController {
     data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId, facilityId, periodId, zoneId));
     data.put("immunizationSession", service.getImmunizationSession(reportId, facilityId, periodId, zoneId));
     data.put("vitaminSupplementation", service.getVitaminSupplementationReport(reportId, facilityId, periodId, zoneId));
+    data.put("adverseEffect", service.getAdverseEffectReport(reportId, facilityId, periodId, zoneId));
 
     data.put("coldChain", service.getColdChain(reportId));
-      data.put("adverseEffect", service.getAdverseEffectReport(reportId));
       data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId));
       data.put("vitamins", service.getVitaminsReport(reportId));
       data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId));

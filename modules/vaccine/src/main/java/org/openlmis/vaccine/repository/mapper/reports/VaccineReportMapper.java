@@ -127,9 +127,22 @@ public interface VaccineReportMapper {
           "where report_id = #{reportId}")
   List<ColdChainLineItem> getColdChain(@Param("reportId")Long reportId);
 
-  @Select("select product_name as productName, aefi_expiry_date as expiry, aefi_case as cases, aefi_batch as batch, 'missing'::text as manufacturer, false as isInvestigated from vw_vaccine_iefi \n" +
+
+  @Select("select product_name as productName, aefi_expiry_date as expiry, aefi_case as cases, aefi_batch as batch, manufacturer, is_investigated as isInvestigated from vw_vaccine_iefi \n" +
           "where report_id = #{reportId}")
   List<AdverseEffectLineItem> getAdverseEffectReport(@Param("reportId")Long reportId);
+
+  @Select("select MAX(product_name) as productName,\n" +
+          "MAX(aefi_expiry_date) as expiry,\n" +
+          "SUM(COALESCE(aefi_case,0)) as cases, \n" +
+          "MAX(aefi_batch) as batch,\n" +
+          "MAX(manufacturer) as manufacturer,\n" +
+          "MAX(is_investigated) as isInvestigated \n" +
+          "from vw_vaccine_iefi \n" +
+          "join vw_districts d ON d.district_id = f.geographiczoneid\n" +
+          "where r.periodid = #{periodId} and (d.parent = #{zoneId} or d.district_id = #{zoneId} or d.region_id = #{zoneId} or d.zone_id = #{zoneId} )\n" +
+          "group by product_code")
+  List<AdverseEffectLineItem> getAdverseEffectAggregateReport(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId);
 
   @Select("select product_name,display_name, COALESCE(within_male, 0) within_male, COALESCE(within_female,0) within_female, COALESCE(within_total,0) within_total, COALESCE(within_coverage, 0) within_coverage, \n" +
           "COALESCE(outside_male, 0) outside_male, COALESCE(outside_female,0) outside_female, COALESCE(outside_total, 0) outside_total,\n" +
