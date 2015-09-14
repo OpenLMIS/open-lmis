@@ -12,7 +12,6 @@
 
 package org.openlmis.vaccine.service.demographics;
 
-import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.vaccine.domain.demographics.DemographicEstimateCategory;
 import org.openlmis.vaccine.domain.demographics.DistrictDemographicEstimate;
 import org.openlmis.vaccine.dto.DemographicEstimateForm;
@@ -56,6 +55,7 @@ public class DistrictDemographicEstimateService {
       DistrictDemographicEstimate estimate = new DistrictDemographicEstimate();
       estimate.setYear(year);
       estimate.setDistrictId(districtId);
+      estimate.setIsFinal(false);
       estimate.setProgramId(programId);
       estimate.setConversionFactor(category.getDefaultConversionFactor());
       estimate.setDemographicEstimateId(category.getId());
@@ -70,21 +70,16 @@ public class DistrictDemographicEstimateService {
     List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
 
-    List<GeographicZone> districts =  repository.getDistricts();
-    // Not scalable - please refactor this.
+    List<DemographicEstimateLineItem> districts =  repository.getDistrictLineItems();
 
-    for(GeographicZone district : districts){
-      DemographicEstimateLineItem dto = new DemographicEstimateLineItem();
-      dto.setId(district.getId());
-      dto.setCode(district.getCode());
-      dto.setName(district.getName());
-      dto.setDistrictEstimates(repository.getDistrictEstimate(year, district.getId(), programId));
+    for(DemographicEstimateLineItem dto : districts){
+      dto.setDistrictEstimates(repository.getDistrictEstimate(year, dto.getId(), programId));
+      dto.setFacilityEstimates(repository.getFacilityEstimateAggregate(year, dto.getId(), programId));
       if( dto.getDistrictEstimates().size() == 0 ){
-        dto.setDistrictEstimates(getEmptyEstimateObjects(categories, district.getId(), programId, year));
+        dto.setDistrictEstimates(getEmptyEstimateObjects(categories, dto.getId(), programId, year));
       }
       form.getEstimateLineItems().add(dto);
     }
-
     return form;
   }
 }

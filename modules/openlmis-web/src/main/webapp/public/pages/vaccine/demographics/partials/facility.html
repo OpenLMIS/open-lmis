@@ -58,12 +58,14 @@
           </tr>
         </thead>
         <tbody>
-        <tr class="gradient-header" ng-repeat-start="facility in form.estimateLineItems" ng-show="showParent($index)">
+        <tr ng-repeat-start="facility in form.estimateLineItems"></tr>
+        <tr class="gradient-header"  ng-show="showParent($index)">
           <th colspan="2">{{facility.parentName}}</th>
           <th class="number" ng-repeat="category in categories">
-            {{districtSummary.getSummary(facility.parentId, category, year) | number : 0}}</th>
+            {{districtSummary.getSummary(facility.parentId, category, year) | number : 0}}
+          </th>
         </tr>
-        <tr>
+        <tr ng-repeat-end>
             <td class="cell-input">
               <span class="cell-text">{{facility.code}}</span>
             </td>
@@ -72,7 +74,7 @@
                 {{facility.name}}
               </span>
             </td>
-            <td class="cell-input number" ng-repeat="category in categories" style="text-align: right">
+            <td class="cell-input number" ng-repeat="category in categories" class="number">
               <span class="ng-scope" ng-if="category.isPrimaryEstimate">
                 <span class="position-relative ng-scope">
                   <input
@@ -98,7 +100,7 @@
               </span>
             </td>
           </tr>
-        <tr ng-repeat-end></tr>
+
         </tbody>
       </table>
     </div>

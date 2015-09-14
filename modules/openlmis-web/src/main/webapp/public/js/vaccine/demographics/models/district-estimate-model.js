@@ -10,18 +10,69 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function DistrictEstimateModel( facilityList ){
+function DistrictEstimateModel (){
 
-  this.indexedList = _.groupBy(facilityList, 'parentId');
+  DistrictEstimateModel.prototype.getByCategory = function(category, year) {
+    var categoryValue = _.findWhere(this.districtEstimates, {
+      'demographicEstimateId': category.id
+    });
+    if (angular.isUndefined(categoryValue)) {
+      categoryValue = {
+        'demographicEstimateId': category.id,
+        'year': year,
+        'conversionFactor': category.defaultConverstionFactor,
+        'value': 0
+      };
+      this.districtEstimates.push(categoryValue);
+    }
+    return categoryValue;
+  };
 
-  DistrictEstimateModel.prototype.getSummary = function(district, category, year){
-    var facilities = this.indexedList[district];
+  DistrictEstimateModel.prototype.getFacilityAggregateByCategory = function(category, year) {
+    var categoryValue = _.findWhere(this.facilityEstimates, {
+      'demographicEstimateId': category.id
+    });
+    if (angular.isUndefined(categoryValue)) {
+      categoryValue = {
+        'demographicEstimateId': category.id,
+        'year': year,
+        'conversionFactor': category.defaultConverstionFactor,
+        'value': 0
+      };
+      this.facilityEstimates.push(categoryValue);
+    }
+    return categoryValue;
+  };
+
+  DistrictEstimateModel.prototype.populationChanged = function(autoCalculate) {
+    if (autoCalculate) {
+      var population = _.findWhere(this.districtEstimates, {
+        'demographicEstimateId': 1
+      });
+      var pop =  Number(population.value);
+      angular.forEach(this.districtEstimates, function(estimate) {
+        if (population.demographicEstimateId !== estimate.demographicEstimateId) {
+          estimate.value = Math.round(estimate.conversionFactor * pop / 100);
+        }
+      });
+    }
+  };
+
+}
+
+function AggregateRegionEstimateModel( districtList ){
+
+  this.indexedList = _.groupBy(districtList, 'parentId');
+
+  AggregateRegionEstimateModel.prototype.getSummary = function(region, category, year){
+    var districts = this.indexedList[region];
     var sum = 0;
-    angular.forEach(facilities, function(facility){
-      var val = facility.getByCategory(category, year);
+    angular.forEach(districts, function(district){
+      var val = district.getByCategory(category, year);
       sum = sum + Number(val.value);
     });
     return sum;
   };
 
 }
+

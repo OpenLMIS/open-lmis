@@ -12,7 +12,7 @@
 function FacilityDemographicEstimateController($scope, $dialog, $filter, rights, categories, years, programs, FacilityDemographicEstimates, SaveFacilityDemographicEstimates, FinalizeFacilityDemographicEstimates, UndoFinalizeFacilityDemographicEstimates) {
 
   $scope.currentPage = 1;
-  $scope.pageSize = 15;
+  $scope.pageSize = 10;
 
   $scope.categories = categories;
   $scope.rights = rights;
@@ -47,13 +47,16 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
     data.estimates.estimateLineItems = [];
     $scope.form = data.estimates;
     $scope.currentPage = 1;
-    $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+    if($scope.lineItems.length > $scope.pageSize){
+      $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+    } else{
+      $scope.form.estimateLineItems = $scope.lineItems;
+    }
     // todo - check if the list is partially final or not?
     // the list can be partially finalized if the rivo or civo are the once that see whatever is in their respective facilities.
-
+    console.log($scope.lineItems);
     $scope.isFinalized = data.estimates.estimateLineItems[0].facilityEstimates[0].isFinal;
-
-    $scope.districtSummary = new DistrictEstimateModel($scope.lineItems);
+    $scope.districtSummary = new AggregateFacilityEstimateModel($scope.lineItems);
 
   };
 
@@ -73,10 +76,12 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
     if($scope.isDirty()){
       $scope.save();
     }
-
-
     if(angular.isDefined($scope.lineItems)){
-        $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+      if($scope.lineItems.length > $scope.pageSize){
+        $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * Number($scope.currentPage));
+      } else{
+        $scope.form.estimateLineItems = $scope.lineItems;
+      }
     }
   });
 
@@ -124,7 +129,7 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
     var options = {
       id: "confirmDialog",
       header: "label.confirm.undo.finalize.title",
-      body: "label.confirm.finalize.demographic.estimate"
+      body: "label.confirm.undo.finalize.demographic.estimate"
     };
 
     OpenLmisDialog.newDialog(options, callBack, $dialog);

@@ -1,4 +1,4 @@
-var FacilityEstimateModel = function() {
+ function FacilityEstimateModel (){
 
   FacilityEstimateModel.prototype.getByCategory = function(category, year) {
     var categoryValue = _.findWhere(this.facilityEstimates, {
@@ -30,4 +30,21 @@ var FacilityEstimateModel = function() {
     }
   };
 
-};
+}
+
+
+function AggregateFacilityEstimateModel( facilityList ){
+
+  this.indexedList = _.groupBy(facilityList, 'parentId');
+
+  AggregateFacilityEstimateModel.prototype.getSummary = function(district, category, year){
+    var facilities = this.indexedList[district];
+    var sum = 0;
+    angular.forEach(facilities, function(facility){
+      var val = facility.getByCategory(category, year);
+      sum = sum + Number(val.value);
+    });
+    return sum;
+  };
+
+}
