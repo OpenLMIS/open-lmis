@@ -58,9 +58,9 @@ public interface DistrictDemographicEstimateMapper {
     List<DistrictDemographicEstimate> getEstimatesForDistrict(@Param("year") Integer year, @Param("districtId") Long districtId, @Param("programId") Long programId);
 
   @Select("select r.id as parentId, r.name as parentName, z.* from geographic_zones z join geographic_zones r on r.id = z.parentId " +
-    "     where z.levelId = (select max(levelNumber) from geographic_levels)" +
+    "     where z.levelId = (select max(levelNumber) from geographic_levels) and z.id in (select ff.geographicZoneId from facilities ff where ff.id  = Any(#{facilities}::INTEGER[]))" +
     "     order by r.name, z.name")
-  List<DemographicEstimateLineItem> getDistrictLineItems();
+  List<DemographicEstimateLineItem> getDistrictLineItems(@Param("facilities") String facilityIds);
 
   @Select("select z.name as name, e.demographicEstimateId, f.geographicZoneId as facilityId, sum(e.value) as value " +
     " from facility_demographic_estimates e " +
