@@ -114,7 +114,7 @@ public interface VaccineReportMapper {
 
   @Select("select disease_name as diseaseName,\n" +
           "SUM(COALESCE(cum_cases,0)) cumulative,\n" +
-          "SUM(COALESCE(cum_deaths,0)) cum_deaths,\n" +
+          "SUM(COALESCE(cum_deaths,0)) calculatedCumulativeDeaths,\n" +
           "SUM(COALESCE(cases, 0)) cases,\n" +
           "SUM(COALESCE(death,0)) death\n" +
           "from vw_vaccine_disease_surveillance\n" +
