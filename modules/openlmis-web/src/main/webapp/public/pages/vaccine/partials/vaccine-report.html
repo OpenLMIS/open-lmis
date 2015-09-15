@@ -39,7 +39,7 @@
     </div>
 </script>
 
-<h2><span>Monthly Vaccination Report </span><span style="margin-left: 15px;">Month : mm &nbsp; &nbsp; Year: {{year}}</span></h2>
+<h2><span style="margin-left: 15px;" openlmis-message="title.monthly.vaccination.report"></span> : {{period.name}} , {{period.stringYear}}<span></span></h2>
 <div id="vaccine-report" class="vaccine-report app-form">
         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
             <div filter-container class="clearfix">
@@ -51,8 +51,8 @@
         </form>
     <div class="container-fluid">
         <div class="pull-right control-accordion">
-            <a id="expandAll" href="javascript:void(0);" onclick="accordion.expandCollapse('expand')" openlmis-message="label.expand.all">Expand all</a> /
-            <a id="collapseAll" href="javascript:void(0);" onclick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all">Collapse all</a>
+            <a id="expandAll" href="javascript:void(0);" onclick="accordion.expandCollapse('expand')" openlmis-message="label.expand.all"></a> /
+            <a id="collapseAll" href="javascript:void(0);" onclick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all"></a>
         </div>
     </div>
 
@@ -66,7 +66,7 @@
 
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);">Target Population </a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="label.target.population"></a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
                                 <table client-side-sort-pagination class="table table-bordered"
@@ -79,12 +79,12 @@
                                 <table ng-show="targetPopulation.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th>Population</th>
-                                        <th>live birth</th>
-                                        <th>0-11 months</th>
-                                        <th>12-23 months</th>
-                                        <th>Girls of 9 years</th>
-                                        <th>Preg. Women</th>
+                                        <th openlmis-message="label.population"></th>
+                                        <th openlmis-message="label.live.birth"></th>
+                                        <th openlmis-message="label.0.to.11.months"></th>
+                                        <th openlmis-message="label.12.to.23.months"></th>
+                                        <th openlmis-message="label.girls.of.9.years"></th>
+                                        <th openlmis-message="label.pregnant.women"></th>
                                     </tr>
                                     </thead>
 
@@ -107,7 +107,7 @@
                     <div class="span6">
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);">Disease surveillance </a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="label.disease.surveillance"> </a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
                                 <table client-side-sort-pagination class="table table-bordered"
@@ -121,9 +121,9 @@
                                     <thead class="gradient-header">
                                     <tr>
                                         <th></th>
-                                        <th>Cases this month</th>
-                                        <th>Cases cumulative</th>
-                                        <th>Death this month</th>
+                                        <th openlmis-message="label.case.this.month"></th>
+                                        <th openlmis-message="label.cases.cumulative"></th>
+                                        <th openlmis-message="label.death.this.month"></th>
                                     </tr>
                                     </thead>
 
@@ -148,7 +148,7 @@
 
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);">Vaccination</a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="label.vaccination"></a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
 
@@ -162,35 +162,35 @@
                                 <table ng-show="vaccineCoverage.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th rowspan="3" style="text-align: center; vertical-align: middle">Antigens</th>
-                                        <th rowspan="3" style="text-align: center; vertical-align: middle">Doses</th>
-                                        <th colspan="9" style="text-align: center; vertical-align: middle">Monthly Vaccination</th>
-                                        <th colspan="5" style="text-align: center; vertical-align: middle">Commulative Vaccination</th>
+                                        <th rowspan="3" style="text-align: center; vertical-align: middle" openlmis-message="label.antigens"></th>
+                                        <th rowspan="3" style="text-align: center; vertical-align: middle" openlmis-message="label.doses"></th>
+                                        <th colspan="9" style="text-align: center; vertical-align: middle" openlmis-message="label.monthly.vaccination"></th>
+                                        <th colspan="5" style="text-align: center; vertical-align: middle" openlmis-message="label.cumulative.vaccination"></th>
 
                                     </tr>
                                     <tr>
-                                        <th colspan="4" style="text-align: center; vertical-align: middle">With catchment</th>
-                                        <th colspan="3" style="text-align: center; vertical-align: middle">Outside catchment</th>
-                                        <th colspan="2" style="text-align: center; vertical-align: middle">Total Vaccinations( Within & Outside Catchment Area)</th>
-                                        <th colspan="2" style="text-align: center; vertical-align: middle">With catchment</th>
-                                        <th  style="text-align: center; vertical-align: middle">Outside catchment</th>
-                                        <th colspan="2" style="text-align: center; vertical-align: middle">Cummulative total Vaccinations ( Within & Outside Catchment Area)</th>
+                                        <th colspan="4" style="text-align: center; vertical-align: middle" openlmis-message="label.with.catchment"></th>
+                                        <th colspan="3" style="text-align: center; vertical-align: middle" openlmis-message="label.outside.catchment"></th>
+                                        <th colspan="2" style="text-align: center; vertical-align: middle" openlmis-message="label.total.vaccination.with.and.outside.catchment"></th>
+                                        <th colspan="2" style="text-align: center; vertical-align: middle" openlmis-message="label.with.catchment"></th>
+                                        <th  style="text-align: center; vertical-align: middle" openlmis-message="label.outside.catchment"></th>
+                                        <th colspan="2" style="text-align: center; vertical-align: middle" openlmis-message="label.cumulative.total.vaccinations.with.and.outside.catchment"></th>
                                     </tr>
                                     <tr>
-                                        <th style="text-align: center; vertical-align: middle">Male</th>
-                                        <th style="text-align: center; vertical-align: middle">Female</th>
-                                        <th style="text-align: center; vertical-align: middle">Total Vaccinated</th>
-                                        <th style="text-align: center; vertical-align: middle">Coverage(%)</th>
-                                        <th style="text-align: center; vertical-align: middle">Male</th>
-                                        <th style="text-align: center; vertical-align: middle">Female</th>
-                                        <th style="text-align: center; vertical-align: middle">Total</th>
-                                        <th style="text-align: center; vertical-align: middle">Total</th>
-                                        <th style="text-align: center; vertical-align: middle">Coverage(%)</th>
-                                        <th style="text-align: center; vertical-align: middle">Total</th>
-                                        <th style="text-align: center; vertical-align: middle">Coverage(%)</th>
-                                        <th style="text-align: center; vertical-align: middle">Total</th>
-                                        <th style="text-align: center; vertical-align: middle">Total</th>
-                                        <th style="text-align: center; vertical-align: middle">Coverage(%)</th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.male"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.female"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.total.vaccinated"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.coverage.percent"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.male"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.female"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.total"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.total"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.coverage.percent"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.total"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.coverage.percent"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.total"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.total"></th>
+                                        <th style="text-align: center; vertical-align: middle" openlmis-message="label.coverage.percent"></th>
                                     </tr>
 
                                     </thead>
@@ -223,7 +223,7 @@
                     <div class="span6">
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);">Immunization Session </a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.immunization.session"></a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
                                 <table client-side-sort-pagination class="table table-bordered"
@@ -236,9 +236,9 @@
                                 <table ng-show="immunizationSession.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th>Fixed(Conducted)</th>
-                                        <th>Outreach conducted</th>
-                                        <th>Outreach cancelled</th>
+                                        <th openlmis-message="label.fixed.conducted"></th>
+                                        <th openlmis-message="label.outreach.conducted"></th>
+                                        <th openlmis-message="label.outreach.cancelled"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -256,7 +256,7 @@
                     <div class="span6">
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);">Other Immunization Activities </a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.other.immunization.activities"></a></span>
                             </div>
                             <div class="accordion-body" >
                                 <textarea rows="5" style="width: 100%"></textarea>
@@ -270,7 +270,7 @@
 
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);">Vitamin A Supplementation</a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.vitamin.A.supplementation"></a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
                                 <table client-side-sort-pagination class="table table-bordered"
@@ -283,13 +283,13 @@
                                 <table ng-show="vitaminSupplementation.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th rowspan="2" colspan="2">Age group</th>
-                                        <th colspan="3">Vitamin Supplementation</th>
+                                        <th rowspan="2" colspan="2" openlmis-message="label.age.group"></th>
+                                        <th colspan="3" openlmis-message="label.vitamin.supplementation">Vitamin Supplementation</th>
                                     </tr>
                                     <tr>
-                                        <th>Male</th>
-                                        <th>Female</th>
-                                        <th>Total Supplemented</th>
+                                        <th openlmis-message="label.male"></th>
+                                        <th openlmis-message="label.female"></th>
+                                        <th openlmis-message="label.total.supplemented"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -314,7 +314,7 @@
 
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);">Vaccines, Vaccination, VitA</a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.vaccines.vaccination.vita"></a></span>
                             </div>
                             <div class="accordion-body" style="background-color: #ffffff">
                                 <table client-side-sort-pagination class="table table-bordered"
@@ -327,20 +327,20 @@
                                 <table ng-show="vaccination.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th colspan="11" style="text-align: center; vertical-align: middle">Vaccine Stock (doses)</th>
+                                        <th colspan="11" style="text-align: center; vertical-align: middle" openlmis-message="label.vaccine.stock.doses"></th>
                                     </tr>
                                     <tr>
-                                        <th>Type of Antigen</th>
-                                        <th>Openning Balance (Doses)</th>
-                                        <th>Doses of Vaccine Received</th>
-                                        <th>Doses of Vaccine Used During vaccination </th>
-                                        <th>Doses discarded unopened</th>
-                                        <th>Reasons for Discarding unopened vial***</th>
-                                        <th>Doses of Vaccine Stock On Hand</th>
-                                        <th>No. of Days stocked Out</th>
-                                        <th>Children immunized</th>
-                                        <th>USAGE RATE (F/(C+D))*100</th>
-                                        <th>WASTAGE RATE (100-G)</th>
+                                        <th openlmis-message="label.type.of.antigen"></th>
+                                        <th openlmis-message="label.opening.balance.doses"></th>
+                                        <th openlmis-message="label.doses.of.vaccine.received"></th>
+                                        <th openlmis-message="label.doses.of.vaccine.used.during.vaccination"> </th>
+                                        <th openlmis-message="label.doses.discarded.unopened"></th>
+                                        <th openlmis-message="label.reasons.for.discarding.unopened.vial"></th>
+                                        <th openlmis-message="label.doses.of.vaccine.stock.on.hand"></th>
+                                        <th openlmis-message="label.no.of.days.stocked.out"></th>
+                                        <th openlmis-message="label.children.immunized"></th>
+                                        <th openlmis-message="label.usage.rate.formula"></th>
+                                        <th openlmis-message="label.wastage.rate.formula"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -377,7 +377,7 @@
                                     </tr>
                                     </tbody>
                                     <tfoot>
-                                    <tr><td colspan="11">***Reasons for discarding unopened vials: 1= expired vaccines   2= broken vial   3= cold chain failure 4= other  (specify)</td></tr>
+                                    <tr><td colspan="11" openlmis-message="label.reasons.for.discarding.unopened.vials.options"></td></tr>
                                     </tfoot>
                                 </table>
 
@@ -391,7 +391,7 @@
 
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);"> Syringes and safety boxes</a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.syringes.and.safety.boxes"></a></span>
                             </div>
                             <div style="background-color: #ffffff" class="accordion-body prog-role-grid">
                                 <table client-side-sort-pagination class="table table-bordered"
@@ -404,19 +404,17 @@
                                 <table ng-show="syringes.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th colspan="7" style="text-align: center; vertical-align: middle">Safe Injection Equipment</th>
+                                        <th colspan="7" style="text-align: center; vertical-align: middle" openlmis-message="label.safe.injection.equipment"></th>
 
                                     </tr>
                                     <tr>
                                         <th></th>
-                                        <th>Opening
-                                            Balance</th>
-                                        <th>Received</th>
-                                        <th>Used</th>
-                                        <th>Wastage</th>
-                                        <th>Stock
-                                            On Hand</th>
-                                        <th>No. of Days stocked Out</th>
+                                        <th openlmis-message="label.opening.balance"></th>
+                                        <th openlmis-message="label.received"></th>
+                                        <th openlmis-message="label.used"></th>
+                                        <th openlmis-message="label.wastage"></th>
+                                        <th openlmis-message="label.stock.on.hand"></th>
+                                        <th openlmis-message="label.no.of.days.stocked.out"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -440,7 +438,7 @@
 
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);">Health Facility Vitamin A stock</a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.health.facility.vitamin.A.stock"></a></span>
                             </div>
                             <div style="background-color: #ffffff" class="accordion-body prog-role-grid">
                                 <table client-side-sort-pagination class="table table-bordered"
@@ -453,18 +451,16 @@
                                 <table ng-show="vitamins.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th colspan="6" style="text-align: center; vertical-align: middle">Vitamin A Stock</th>
+                                        <th colspan="6" style="text-align: center; vertical-align: middle" openlmis-message="label.vitamin.A.stock"></th>
 
                                     </tr>
                                     <tr>
                                         <th></th>
-                                        <th>Opening
-                                            Balance</th>
-                                        <th>Vit. A Received</th>
-                                        <th>Total Vit. A Administered</th>
-                                        <th>Wastage</th>
-                                        <th>Stock
-                                            On Hand</th>
+                                        <th openlmis-message="label.opening.balance"></th>
+                                        <th openlmis-message="label.vitamin.A.received"></th>
+                                        <th openlmis-message="label.total.vitamin.A.administered"></th>
+                                        <th openlmis-message="label.wastage"></th>
+                                        <th openlmis-message="label.stock.on.hand"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -489,7 +485,7 @@
 
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);">Refrigerator temperature monitoring</a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.refrigerator.temperature.monitoring"></a></span>
                             </div>
                             <div style="background-color: #ffffff" class="accordion-body prog-role-grid">
                                 <table client-side-sort-pagination class="table table-bordered"
@@ -502,22 +498,22 @@
                                 <table ng-show="coldChain.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th colspan="7" style="text-align: center; vertical-align: middle">Refrigerators Temperature Monitoring</th>
+                                        <th colspan="7" style="text-align: center; vertical-align: middle" openlmis-message="label.refrigerators.temperature.monitoring"></th>
 
                                     </tr>
                                     <tr>
-                                        <th colspan="3" style="text-align: center; vertical-align: middle">Refrigerator information</th>
-                                        <th colspan="2" style="text-align: center; vertical-align: middle">Temperature</th>
-                                        <th colspan="2" style="text-align: center; vertical-align: middle">No. of Alarm Episode</th>
+                                        <th colspan="3" style="text-align: center; vertical-align: middle" openlmis-message="label.refrigerator.information"></th>
+                                        <th colspan="2" style="text-align: center; vertical-align: middle" openlmis-message="label.temperature">x</th>
+                                        <th colspan="2" style="text-align: center; vertical-align: middle" openlmis-message="label.no.of.alarm.episode"></th>
                                     </tr>
                                     <tr>
-                                        <th>Type</th>
-                                        <th>Model</th>
-                                        <th>Energy Source</th>
-                                        <th>Min</th>
-                                        <th>Max</th>
-                                        <th>Low Temp</th>
-                                        <th>High Temp</th>
+                                        <th openlmis-message="label.type"></th>
+                                        <th openlmis-message="label.model"></th>
+                                        <th openlmis-message="label.energy.source"></th>
+                                        <th openlmis-message="label.min"></th>
+                                        <th openlmis-message="label.max"></th>
+                                        <th openlmis-message="label.low.temp"></th>
+                                        <th openlmis-message="label.high.temp"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -540,7 +536,7 @@
 
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);">AEFI reporting</a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.aefi.reporting"></a></span>
                             </div>
                             <div style="background-color: #ffffff" class="accordion-body prog-role-grid">
                                 <table client-side-sort-pagination class="table table-bordered"
@@ -553,16 +549,16 @@
                                 <table ng-show="adverseEffect.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th colspan="6" style="text-align: center; vertical-align: middle">Reported Adverse Events Following Immunization</th>
+                                        <th colspan="6" style="text-align: center; vertical-align: middle" openlmis-message="label.reported.adverse.events.following.immunization"></th>
 
                                     </tr>
                                     <tr>
-                                        <th>Vaccine</th>
-                                        <th>No. of cases</th>
-                                        <th>Batch No.</th>
-                                        <th>Manufacturer</th>
-                                        <th>Exp Date</th>
-                                        <th>Investigated (Y/N)</th>
+                                        <th openlmis-message="label.vaccine"></th>
+                                        <th openlmis-message="label.no.of.cases"></th>
+                                        <th openlmis-message="label.batch.no"></th>
+                                        <th openlmis-message="label.manufacturer"></th>
+                                        <th openlmis-message="label.expired.date"></th>
+                                        <th openlmis-message="label.investigated.yes.no"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -588,22 +584,22 @@
 
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                                <span><b>+</b><a href="javascript:void(0);">Submission</a></span>
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.submission"></a></span>
                             </div>
                             <div  class="accordion-body prog-role-grid">
                                 <form>
                                     <div class="form-cell horizontalFilters">
-                                        <label class="labels">Date prepared</label>
+                                        <label class="labels" openlmis-message="label.date.prepared"></label>
                                         <div>
                                             <input id="preparedDate"/>
                                         </div>
                                     </div>
                                     <div class="form-cell horizontalFilters">
-                                        <label class="labels">Date submitted</label>
+                                        <label class="labels" openlmis-message="label.date.submitted"></label>
                                         <div><input id="submittedDate"/></div>
                                     </div>
                                     <div class="form-cell horizontalFilters">
-                                        <label class="labels">Name and signature</label>
+                                        <label class="labels" openlmis-message="label.name.and.signature"></label>
                                         <div><input id="signature"/></div>
                                     </div>
 
