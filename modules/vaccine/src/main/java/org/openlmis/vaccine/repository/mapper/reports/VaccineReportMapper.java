@@ -227,8 +227,8 @@ public interface VaccineReportMapper {
 
   @Select("Select MAX(age_group) AS ageGroup,\n" +
           "MAX(vitamin_name) AS vitaminName,\n" +
-          "SUM(male_value) AS maleValue,\n" +
-          "SUM(female_value) AS femaleValue\n" +
+          "SUM(COALESCE(male_value, 0)) AS maleValue,\n" +
+          "SUM(COALESCE(female_value,0)) AS femaleValue\n" +
           "from vw_vaccine_vitamin_supplementation\n" +
           "join vw_districts d ON d.district_id = geographic_zone_id\n" +
           "where period_id = #{periodId} and (d.parent = #{zoneId} or d.district_id = #{zoneId} or d.region_id = #{zoneId} or d.zone_id = #{zoneId} )\n")
