@@ -55,17 +55,17 @@ public class VaccineProgramController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getProgramForIvdFormHomeFacility(HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         User user = userService.getById(userId);
-        return OpenLmisResponse.response("programs", programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(user.getFacilityId(), userId, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION"));
+        return OpenLmisResponse.response("programs", programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(user.getFacilityId(), userId, RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD));
     }
 
     @RequestMapping(value = "/vaccine/report/ivd-form/supervised-programs")
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD,APPROVE_IVD, VIEW_IVD')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD, APPROVE_IVD, VIEW_IVD')")
     public ResponseEntity<OpenLmisResponse> getProgramForIvdFormSupervisedFacilities(HttpServletRequest request) {
-        return OpenLmisResponse.response("programs", programService.getIvdProgramForSupervisedFacilities(loggedInUserId(request), "CREATE_REQUISITION", "AUTHORIZE_REQUISITION"));
+        return OpenLmisResponse.response("programs", programService.getIvdProgramForSupervisedFacilities(loggedInUserId(request), RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD));
     }
 
     @RequestMapping(value = "/vaccine/report/ivd-form/facilities/{programId}.json", method = RequestMethod.GET)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD,APPROVE_IVD, VIEW_IVD')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD, APPROVE_IVD, VIEW_IVD')")
     public ResponseEntity<OpenLmisResponse> getFacilities(@PathVariable Long programId, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         //TODO: make sure this method also supports home facility.
