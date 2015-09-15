@@ -39,7 +39,7 @@
     </div>
 </script>
 
-<h2><span style="margin-left: 15px;" openlmis-message="title.monthly.vaccination.report"></span> : {{period.name}} , {{period.stringYear}}<span></span></h2>
+<h2><span style="margin-left: 15px;" openlmis-message="title.monthly.vaccination.report"></span><span> {{period != null ? (' : '+period.name+' , '+period.stringYear) : ''}}</span></h2>
 <div id="vaccine-report" class="vaccine-report app-form">
         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
             <div filter-container class="clearfix">
@@ -124,6 +124,7 @@
                                         <th openlmis-message="label.case.this.month"></th>
                                         <th openlmis-message="label.cases.cumulative"></th>
                                         <th openlmis-message="label.death.this.month"></th>
+                                        <th openlmis-message="label.death.cumulative"></th>
                                     </tr>
                                     </thead>
 
@@ -133,6 +134,7 @@
                                         <td class="number">{{ds == null ? 'nul' : ds.cases}}</td>
                                         <td class="number">{{ds == null ? 'nul' :ds.cumulative}}</td>
                                         <td class="number">{{ds == null ? 'nul' :ds.death}}</td>
+                                        <td class="number">{{ds == null ? 'nul' :ds.calculatedCumulativeDeaths}}</td>
                                     </tr>
 
                                     </tbody>

@@ -18,7 +18,6 @@ function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineU
 
         Period.get({id: $scope.filter.period}, function(data){
             $scope.period = data.period;
-            alert(JSON.stringify($scope.period))
         });
 
         if($scope.filter.period !== null && $scope.filter.period !== 0 &&
