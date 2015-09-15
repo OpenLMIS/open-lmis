@@ -207,48 +207,80 @@ public class VaccineReportService {
     return repository.getReportIdForFacilityAndPeriod(facilityId, periodId);
   }
 
-  public List<DiseaseLineItem> getDiseaseSurveillance(Long reportId){
-    return repository.getDiseaseSurveillance(reportId);
+  public List<DiseaseLineItem> getDiseaseSurveillance(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId !=0 ){
+
+      return repository.getDiseaseSurveillance(reportId);
+    }
+
+    return repository.getDiseaseSurveillanceAggregateReport(periodId, zoneId);
   }
 
-  public List<ColdChainLineItem> getColdChain(Long reportId){
-    return repository.getColdChain(reportId);
+  public List<ColdChainLineItem> getColdChain(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId !=0 ) {
+      return repository.getColdChain(reportId);
+    }
+    return repository.getColdChainAggregateReport(periodId, zoneId);
   }
 
-  public List<AdverseEffectLineItem> getAdverseEffectReport(Long reportId){
-    return repository.getAdverseEffectReport(reportId);
+  public List<AdverseEffectLineItem> getAdverseEffectReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0) {
+      return repository.getAdverseEffectReport(reportId);
+    }
+    return repository.getAdverseEffectAggregateReport(periodId, zoneId);
   }
 
-  public List<HashMap<String, Object>> getVaccineCoverageReport(Long reportId){
-    return repository.getVaccineCoverageReport(reportId);
+  public List<HashMap<String, Object>> getVaccineCoverageReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId !=0 ){
+
+      return repository.getVaccineCoverageReport(reportId);
+    }
+    return repository.getVaccineCoverageAggregateReport(periodId, zoneId);
   }
 
-  public List<VaccineReport> getImmunizationSession(Long reportId){
-    return repository.getImmunizationSession(reportId);
+  public List<VaccineReport> getImmunizationSession(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0){
+      return repository.getImmunizationSession(reportId);
+    }
+    return repository.getImmunizationSessionAggregate(periodId, zoneId);
   }
 
   public List<HashMap<String, Object>> getVaccineReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
     if (facilityId != null && facilityId != 0){
       return repository.getVaccinationReport(VACCINE_REPORT_VACCINE_CATEGORY_CODE, reportId);
     }else{
-      return repository.getVaccinationAggregateByGeoZoneReport(periodId, zoneId);
+      return repository.getVaccinationAggregateByGeoZoneReport(VACCINE_REPORT_VACCINE_CATEGORY_CODE, periodId, zoneId);
     }
   }
 
-  public List<HashMap<String, Object>> getSyringeAndSafetyBoxReport(Long reportId){
-    return repository.getVaccinationReport(VACCINE_REPORT_SYRINGES_CATEGORY_CODE, reportId);
+  public List<HashMap<String, Object>> getSyringeAndSafetyBoxReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0) {
+      return repository.getVaccinationReport(VACCINE_REPORT_SYRINGES_CATEGORY_CODE, reportId);
+    }
+    return repository.getVaccinationAggregateByGeoZoneReport(VACCINE_REPORT_SYRINGES_CATEGORY_CODE, periodId, zoneId);
+
   }
 
-  public List<HashMap<String, Object>> getVitaminsReport(Long reportId){
-    return repository.getVaccinationReport(VACCINE_REPORT_VITAMINS_CATEGORY_CODE,  reportId);
+  public List<HashMap<String, Object>> getVitaminsReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0) {
+      return repository.getVaccinationReport(VACCINE_REPORT_VITAMINS_CATEGORY_CODE, reportId);
+    }
+    return repository.getVaccinationAggregateByGeoZoneReport(VACCINE_REPORT_VITAMINS_CATEGORY_CODE, periodId, zoneId);
   }
 
-  public List<HashMap<String, Object>> getTargetPopulation(Long facilityId, Long periodId){
-    return repository.getTargetPopulation(facilityId, periodId);
+  public List<HashMap<String, Object>> getTargetPopulation(Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0) {
+      return repository.getTargetPopulation(facilityId, periodId);
+    }
+    return repository.getTargetPopulationAggregateByGeoZone(periodId, zoneId);
   }
 
-  public List<VitaminSupplementationLineItem> getVitaminSupplementationReport(Long reportId){
-    return repository.getVitaminSupplementationReport(reportId);
+  public List<VitaminSupplementationLineItem> getVitaminSupplementationReport(Long reportId, Long facilityId, Long periodId, Long zoneId){
+    if (facilityId != null && facilityId != 0){
+
+      return repository.getVitaminSupplementationReport(reportId);
+    }
+    return repository.getVitaminSupplementationAggregateReport(periodId, zoneId);
   }
 
   public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode, Long periodId, Long zoneId){

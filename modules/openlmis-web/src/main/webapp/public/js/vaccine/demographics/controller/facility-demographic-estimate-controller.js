@@ -9,20 +9,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function FacilityDemographicEstimateController($scope, $filter, categories, years, programs, FacilityDemographicEstimates, SaveFacilityDemographicEstimates) {
+function FacilityDemographicEstimateController($scope, $dialog, $filter, rights, categories, years, programs, FacilityDemographicEstimates, SaveFacilityDemographicEstimates, FinalizeFacilityDemographicEstimates, UndoFinalizeFacilityDemographicEstimates) {
 
   $scope.currentPage = 1;
-  $scope.pageSize = 15;
+  $scope.pageSize = 10;
 
   $scope.categories = categories;
+  $scope.rights = rights;
   $scope.years = years;
-  // default to the current year
-  $scope.year = Number( $filter('date')(new Date(), 'yyyy') );
-
   $scope.programs = programs;
+
 
   $scope.isDirty = function(){
     return $scope.$dirty;
+  };
+
+  $scope.hasPermission = function (permission) {
+    return ($scope.rights.indexOf(permission) >= 0);
   };
 
   $scope.showParent = function(index){
@@ -32,35 +35,52 @@ function FacilityDemographicEstimateController($scope, $filter, categories, year
     return true;
   };
 
+  $scope.bindEstimates = function(data){
+    $scope.lineItems = [];
+    // initiate all objects.
+    for(var i = 0; i < data.estimates.estimateLineItems.length; i ++){
+      $.extend(data.estimates.estimateLineItems[i], new FacilityEstimateModel());
+      $scope.lineItems.push(data.estimates.estimateLineItems[i]);
+    }
+
+    $scope.pageCount = Math.round($scope.lineItems.length / $scope.pageSize);
+    data.estimates.estimateLineItems = [];
+    $scope.form = data.estimates;
+    $scope.currentPage = 1;
+    if($scope.lineItems.length > $scope.pageSize){
+      $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+    } else{
+      $scope.form.estimateLineItems = $scope.lineItems;
+    }
+    // todo - check if the list is partially final or not?
+    // the list can be partially finalized if the rivo or civo are the once that see whatever is in their respective facilities.
+    $scope.isFinalized = data.estimates.estimateLineItems[0].facilityEstimates[0].isFinal;
+    $scope.districtSummary = new AggregateFacilityEstimateModel($scope.lineItems);
+
+  };
+
   $scope.onParamChanged = function(){
-    if(angular.isUndefined($scope.program) || angular.isUndefined($scope.year)){
+    if(angular.isUndefined($scope.program) || $scope.program === null || angular.isUndefined($scope.year)){
       return;
     }
 
     FacilityDemographicEstimates.get({year: $scope.year, program: $scope.program}, function(data){
-      $scope.lineItems = [];
-      // initiate all objects.
-      for(var i = 0; i < data.estimates.estimateLineItems.length; i ++){
-        $.extend(data.estimates.estimateLineItems[i], new FacilityEstimateModel());
-        $scope.lineItems.push(data.estimates.estimateLineItems[i]);
-      }
-
-      $scope.pageCount = $scope.lineItems.length / $scope.pageSize;
-      data.estimates.estimateLineItems = [];
-      $scope.form = data.estimates;
-      $scope.currentPage = 1;
-      $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+      $scope.bindEstimates(data);
     });
   };
+
+
 
   $scope.$watch('currentPage', function(){
     if($scope.isDirty()){
       $scope.save();
     }
-
-
     if(angular.isDefined($scope.lineItems)){
-        $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+      if($scope.lineItems.length > $scope.pageSize){
+        $scope.form.estimateLineItems = $scope.lineItems.slice( $scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * Number($scope.currentPage));
+      } else{
+        $scope.form.estimateLineItems = $scope.lineItems;
+      }
     }
   });
 
@@ -71,7 +91,62 @@ function FacilityDemographicEstimateController($scope, $filter, categories, year
       $scope.error = data.error;
     });
   };
-  $scope.onParamChanged();
+
+
+
+  $scope.finalize = function(){
+    var callBack = function (result) {
+      if (result) {
+        var form = angular.copy($scope.form);
+        form.estimateLineItems = $scope.lineItems;
+        FinalizeFacilityDemographicEstimates.update(form, function (data) {
+          $scope.bindEstimates(data);
+          $scope.message = 'Estimates are now finalized';
+        });
+      }
+    };
+
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.finalize.title",
+      body: "label.confirm.finalize.demographic.estimate"
+    };
+
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
+
+  $scope.undoFinalize = function(){
+    var callBack = function (result) {
+      if (result) {
+        var form = angular.copy($scope.form);
+        form.estimateLineItems = $scope.lineItems;
+        UndoFinalizeFacilityDemographicEstimates.update(form, function (data) {
+          $scope.bindEstimates(data);
+          $scope.message = 'Estimates are now available for editing.';
+        });
+      }
+    };
+
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.undo.finalize.title",
+      body: "label.confirm.undo.finalize.demographic.estimate"
+    };
+
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
+
+  $scope.init = function(){
+    // default to the current year
+    $scope.year = Number( $filter('date')(new Date(), 'yyyy') );
+    // when the available program is only 1, default to this program.
+    if(programs.length == 1){
+      $scope.program = programs[0].id;
+    }
+    $scope.onParamChanged();
+  };
+
+  $scope.init();
 }
 
 FacilityDemographicEstimateController.resolve = {
@@ -100,7 +175,14 @@ FacilityDemographicEstimateController.resolve = {
         });
       },100);
     return deferred.promise;
+  }, rights: function ($q, $timeout, UserSupervisoryRights) {
+    var deferred = $q.defer();
+    $timeout(function () {
+      UserSupervisoryRights.get({}, function (data) {
+          deferred.resolve(data.rights);
+        }, {});
+    }, 100);
+    return deferred.promise;
   }
-
 
 };

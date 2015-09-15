@@ -20,6 +20,11 @@
   ~   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
   ~   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
+<style type="text/css">
+    .ns-popover-tooltip-theme .ns-popover-tooltip{
+        max-width: none !important;
+    }
+</style>
 <script type="text/ng-template" id="amc">
     <div class="triangle"></div>
     <div class="ns-popover-tooltip vaccine-report">
@@ -34,7 +39,7 @@
     </div>
 </script>
 
-<h2><span>Monthly Vaccination Report </span><span style="margin-left: 15px;">Month : mm &nbsp; &nbsp; Year: YYYY</span></h2>
+<h2><span>Monthly Vaccination Report </span><span style="margin-left: 15px;">Month : mm &nbsp; &nbsp; Year: {{year}}</span></h2>
 <div id="vaccine-report" class="vaccine-report app-form">
         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
             <div filter-container class="clearfix">
@@ -349,7 +354,7 @@
                                                ns-popover-trigger="mouseenter"
                                                ns-popover-timeout="0.2"
                                                ns-popover-placement="right|center"
-                                               ns-popover-theme="ns-popover-tooltip-theme">{{vc.quantity_issued === null ? '-': (vc.quantity_issued | number)}}
+                                               ns-popover-theme="ns-popover-tooltip-theme">{{vc.quantity_issued == null ? '-': (vc.quantity_issued | number)}}
                                             </a>
                                         </td>
                                         <td class="number">{{vc.quantity_discarded_unopened}}</td>
@@ -360,7 +365,7 @@
                                                ns-popover-trigger="mouseenter"
                                                ns-popover-timeout="0.2"
                                                ns-popover-placement="right|center"
-                                               ns-popover-theme="ns-popover-tooltip-theme"> {{vc.closing_balance === null ? '-' : (vc.closing_balance | number)}}
+                                               ns-popover-theme="ns-popover-tooltip-theme"> {{vc.closing_balance == null ? '-' : (vc.closing_balance | number)}}
                                             </a>
 
                                         </td>

@@ -269,5 +269,9 @@ public class UserController extends BaseController {
     }
     return null;
   }
-
+  
+  @RequestMapping(value = "/users/supervisory/rights.json", method= GET)
+  public ResponseEntity<OpenLmisResponse> getRights(HttpServletRequest request){
+    return response("rights", userService.getSupervisoryRights(loggedInUserId(request)));
+  }
 }

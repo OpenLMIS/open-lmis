@@ -12,7 +12,6 @@
 
 package org.openlmis.vaccine.service.demographics;
 
-import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.vaccine.domain.demographics.DemographicEstimateCategory;
 import org.openlmis.vaccine.domain.demographics.DistrictDemographicEstimate;
 import org.openlmis.vaccine.dto.DemographicEstimateForm;
@@ -22,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
@@ -50,12 +50,42 @@ public class DistrictDemographicEstimateService {
     }
   }
 
+  public void finalize(DemographicEstimateForm form, Long userId) {
+    this.save(form, userId);
+    for(DemographicEstimateLineItem dto: emptyIfNull(form.getEstimateLineItems())) {
+      for (DistrictDemographicEstimate est : emptyIfNull(dto.getDistrictEstimates())) {
+        est.setDistrictId(dto.getId());
+        if(est.getId() != null){
+          est.setModifiedBy(userId);
+          est.setModifiedDate(new Date());
+          est.setIsFinal(true);
+          repository.finalize(est);
+        }
+      }
+    }
+  }
+
+  public void undoFinalize(DemographicEstimateForm form, Long userId) {
+    for(DemographicEstimateLineItem dto: emptyIfNull(form.getEstimateLineItems())) {
+      for (DistrictDemographicEstimate est : emptyIfNull(dto.getDistrictEstimates())) {
+        est.setDistrictId(dto.getId());
+        if(est.getId() != null){
+          est.setModifiedBy(userId);
+          est.setModifiedDate(new Date());
+          est.setIsFinal(false);
+          repository.undoFinalize(est);
+        }
+      }
+    }
+  }
+
   private List<DistrictDemographicEstimate> getEmptyEstimateObjects(List<DemographicEstimateCategory> categories, Long districtId, Long programId, Integer year) {
     List<DistrictDemographicEstimate> result = new ArrayList<>();
     for(DemographicEstimateCategory category: categories){
       DistrictDemographicEstimate estimate = new DistrictDemographicEstimate();
       estimate.setYear(year);
       estimate.setDistrictId(districtId);
+      estimate.setIsFinal(false);
       estimate.setProgramId(programId);
       estimate.setConversionFactor(category.getDefaultConversionFactor());
       estimate.setDemographicEstimateId(category.getId());
@@ -65,26 +95,21 @@ public class DistrictDemographicEstimateService {
     return result;
   }
 
-  public DemographicEstimateForm getEstimateFor(Integer year, Long programId) {
+  public DemographicEstimateForm getEstimateForm(Integer year, Long programId) {
     DemographicEstimateForm form = new DemographicEstimateForm();
     List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
 
-    List<GeographicZone> districts =  repository.getDistricts();
-    // Not scalable - please refactor this.
+    List<DemographicEstimateLineItem> districts =  repository.getDistrictLineItems();
 
-    for(GeographicZone district : districts){
-      DemographicEstimateLineItem dto = new DemographicEstimateLineItem();
-      dto.setId(district.getId());
-      dto.setCode(district.getCode());
-      dto.setName(district.getName());
-      dto.setDistrictEstimates(repository.getDistrictEstimate(year, district.getId(), programId));
+    for(DemographicEstimateLineItem dto : districts){
+      dto.setDistrictEstimates(repository.getDistrictEstimate(year, dto.getId(), programId));
+      dto.setFacilityEstimates(repository.getFacilityEstimateAggregate(year, dto.getId(), programId));
       if( dto.getDistrictEstimates().size() == 0 ){
-        dto.setDistrictEstimates(getEmptyEstimateObjects(categories, district.getId(), programId, year));
+        dto.setDistrictEstimates(getEmptyEstimateObjects(categories, dto.getId(), programId, year));
       }
       form.getEstimateLineItems().add(dto);
     }
-
     return form;
   }
 }

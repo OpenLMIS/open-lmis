@@ -13,8 +13,9 @@
 package org.openlmis.vaccine.repository.mapper.demographics;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.vaccine.domain.demographics.DistrictDemographicEstimate;
+import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
+import org.openlmis.vaccine.dto.DemographicEstimateLineItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -56,8 +57,17 @@ public interface DistrictDemographicEstimateMapper {
             "     year = #{year} and districtId = #{districtId} and programId = #{programId}")
     List<DistrictDemographicEstimate> getEstimatesForDistrict(@Param("year") Integer year, @Param("districtId") Long districtId, @Param("programId") Long programId);
 
-  @Select("select * from geographic_zones " +
-    "     where levelId = (select max(levelNumber) from geographic_levels)" +
-    "     order by name")
-  List<GeographicZone> getDistricts();
+  @Select("select r.id as parentId, r.name as parentName, z.* from geographic_zones z join geographic_zones r on r.id = z.parentId " +
+    "     where z.levelId = (select max(levelNumber) from geographic_levels)" +
+    "     order by r.name, z.name")
+  List<DemographicEstimateLineItem> getDistrictLineItems();
+
+  @Select("select z.name as name, e.demographicEstimateId, f.geographicZoneId as facilityId, sum(e.value) as value " +
+    " from facility_demographic_estimates e " +
+    " join facilities f on e.facilityId = f.id " +
+    " join geographic_zones z on z.id = f.geographicZoneId " +
+    " where e.year = #{year} and f.geographicZoneId = #{districtId} and e.programId = #{programId} " +
+    "group by z.name, e.demographicEstimateId, f.geographicZoneId ")
+  List<FacilityDemographicEstimate> getFacilityEstimateAggregate(@Param("year") Integer year,@Param("districtId") Long districtId, @Param("programId") Long programId);
+
 }

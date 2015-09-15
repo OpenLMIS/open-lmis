@@ -47,19 +47,19 @@ public class VaccineReportController extends BaseController {
 
 
   @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> getPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request){
     return OpenLmisResponse.response("periods", service.getPeriodsFor(facilityId, programId, new Date()));
   }
 
   @RequestMapping(value = "view-periods/{facilityId}/{programId}", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_IVD')")
   public ResponseEntity<OpenLmisResponse> getViewPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request){
     return OpenLmisResponse.response("periods", service.getReportedPeriodsFor(facilityId, programId));
   }
 
   @RequestMapping(value = "initialize/{facilityId}/{programId}/{periodId}")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> initialize(
     @PathVariable Long facilityId,
     @PathVariable Long programId,
@@ -70,49 +70,50 @@ public class VaccineReportController extends BaseController {
   }
 
   @RequestMapping(value = "get/{id}.json", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD, VIEW_IVD')")
   public ResponseEntity<OpenLmisResponse> getReport(@PathVariable Long id, HttpServletRequest request){
     return OpenLmisResponse.response("report", service.getById(id));
   }
 
   @RequestMapping(value = "save")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineReport report, HttpServletRequest request){
     service.save(report);
     return OpenLmisResponse.response("report", report);
   }
 
   @RequestMapping(value = "submit")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'AUTHORIZE_REQUISITION')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
     service.submit(report, loggedInUserId(request));
     return OpenLmisResponse.response("report", report);
   }
 
   @RequestMapping(value = "vaccine-monthly-report")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> getVaccineMonthlyReport(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId){
 
     if (periodId == null || periodId == 0) return null;
 
     Map<String, Object> data = new HashMap();
+    Long reportId = null;
 
-    if (facilityId == null || facilityId == 0 ){ // Return aggregated data for the selected geozone
+    if (facilityId != null && facilityId != 0 ){ // Return aggregated data for the selected geozone
+      reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
 
-      data.put("vaccination", service.getVaccineReport(null, facilityId, periodId, zoneId));
-
-    } else {
-      Long reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
-      data.put("diseaseSurveillance", service.getDiseaseSurveillance(reportId));
-      data.put("coldChain", service.getColdChain(reportId));
-      data.put("adverseEffect", service.getAdverseEffectReport(reportId));
-      data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId));
-      data.put("immunizationSession", service.getImmunizationSession(reportId));
-      data.put("vaccination", service.getVaccineReport(reportId, facilityId, periodId, zoneId));
-      data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId));
-      data.put("vitamins", service.getVitaminsReport(reportId));
-      data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId));
-      data.put("vitaminSupplementation", service.getVitaminSupplementationReport(reportId));
     }
+
+    data.put("vaccination", service.getVaccineReport(reportId, facilityId, periodId, zoneId));
+    data.put("diseaseSurveillance", service.getDiseaseSurveillance(reportId, facilityId, periodId, zoneId));
+    data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId, facilityId, periodId, zoneId));
+    data.put("immunizationSession", service.getImmunizationSession(reportId, facilityId, periodId, zoneId));
+    data.put("vitaminSupplementation", service.getVitaminSupplementationReport(reportId, facilityId, periodId, zoneId));
+    data.put("adverseEffect", service.getAdverseEffectReport(reportId, facilityId, periodId, zoneId));
+    data.put("coldChain", service.getColdChain(reportId, facilityId, periodId, zoneId));
+    data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId, zoneId));
+    data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId, facilityId, periodId, zoneId));
+    data.put("vitamins", service.getVitaminsReport(reportId, facilityId, periodId, zoneId));
+
 
     return OpenLmisResponse.response("vaccineData", data);
   }

@@ -43,7 +43,14 @@ public class FacilityDemographicEstimateRepository {
   }
 
   public List<DemographicEstimateLineItem> getFacilityList(Long programId, String requsitionGroupIds) {
-
     return mapper.getFacilityList(programId, requsitionGroupIds);
+  }
+
+  public Integer finalize(FacilityDemographicEstimate estimate){
+    return mapper.finalize(estimate);
+  }
+
+  public Integer undoFinalize(FacilityDemographicEstimate estimate){
+    return mapper.undoFinalize(estimate);
   }
 }
