@@ -14,6 +14,8 @@ BEGIN
     ,((SELECT id FROM facilities WHERE name = 'Arusha RVS'),(SELECT id FROM products WHERE primaryname = 'OPV'),750,'2015-08-02 00:00:00','Test stock card for OPV at Arusha RVS')
     ,((SELECT id FROM facilities WHERE name = 'Karatu DVS'),(SELECT id FROM products WHERE primaryname = 'BCG'),110,'2015-08-03 00:00:00','Test stock card for BCG at Karatu DVS')
     ,((SELECT id FROM facilities WHERE name = 'Karatu DVS'),(SELECT id FROM products WHERE primaryname = 'OPV'),90,'2015-08-04 00:00:00','Test stock card for OPV at Karatu DVS')
+    ,((SELECT id FROM facilities WHERE name = 'Tanzania CVS'),(SELECT id FROM products WHERE primaryname = 'BCG'),1000,'2015-08-04 00:00:00','Test stock card for BCG at Tanzania CVS')
+    ,((SELECT id FROM facilities WHERE name = 'Tanzania CVS'),(SELECT id FROM products WHERE primaryname = 'OPV'),900,'2015-08-04 00:00:00','Test stock card for OPV at Tanzania CVS')
   ;
 
   INSERT INTO lots_on_hand (stockcardid, lotid, quantityonhand, effectivedate)
@@ -25,6 +27,10 @@ BEGIN
     ,((SELECT id FROM stock_cards WHERE notes = 'Test stock card for BCG at Karatu DVS'),(SELECT id FROM lots WHERE lotnumber = 'B1'),95,'2015-08-03 00:00:00')
     ,((SELECT id FROM stock_cards WHERE notes = 'Test stock card for OPV at Karatu DVS'),(SELECT id FROM lots WHERE lotnumber = 'A2'),10,'2015-08-04 00:00:00')
     ,((SELECT id FROM stock_cards WHERE notes = 'Test stock card for OPV at Karatu DVS'),(SELECT id FROM lots WHERE lotnumber = 'B2'),80,'2015-08-04 00:00:00')
+    ,((SELECT id FROM stock_cards WHERE notes = 'Test stock card for BCG at Tanzania CVS'),(SELECT id FROM lots WHERE lotnumber = 'A1'),500,'2015-08-04 00:00:00')
+    ,((SELECT id FROM stock_cards WHERE notes = 'Test stock card for BCG at Tanzania CVS'),(SELECT id FROM lots WHERE lotnumber = 'B1'),500,'2015-08-04 00:00:00')
+    ,((SELECT id FROM stock_cards WHERE notes = 'Test stock card for OPV at Tanzania CVS'),(SELECT id FROM lots WHERE lotnumber = 'A2'),600,'2015-08-04 00:00:00')
+    ,((SELECT id FROM stock_cards WHERE notes = 'Test stock card for OPV at Tanzania CVS'),(SELECT id FROM lots WHERE lotnumber = 'B2'),300,'2015-08-04 00:00:00')
   ;
 
   INSERT INTO stock_card_entries (stockcardid, lotonhandid, type, quantity)
