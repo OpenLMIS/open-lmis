@@ -109,8 +109,8 @@
                 </td>
                 <td class="col-skip cell-input "
                     ng-class="{'disabled':c.lotsOnHand[0].isSkipped,'':!c.lotsOnHand[0].isSkipped, 'last-row':c.lotsOnHand.length===1}">
-                    <input
-                        style="margin-left:10px" type="checkbox" ng-model="c.lotsOnHand[0].isSkipped"/></td>
+                    <input ng-disabled="c.lotsOnHand[0].quantity !==undefined && c.lotsOnHand[0].quantity !==''"
+                           style="margin-left:10px" type="checkbox" ng-model="c.lotsOnHand[0].isSkipped"/></td>
                 <td class="col-reason cell-input "
                     ng-class="{'disabled':c.lotsOnHand[0].isSkipped,'':!c.lotsOnHand[0].isSkipped, 'last-row':c.lotsOnHand.length===1}">
                     <a ng-hide="c.lotsOnHand[0].isSkipped" href id="lossesAndAdjustmentLink_0"
@@ -153,7 +153,8 @@
                     </select>
                 </td>
                 <td ng-class="{'last-row':$last, 'disabled':lot.isSkipped}" class="col-skip cell-input ">
-                    <input style="margin-left:10px" type="checkbox" ng-model="lot.isSkipped"/></td>
+                    <input ng-disabled="lot.quantity !==undefined && lot.quantity !==''" style="margin-left:10px"
+                           type="checkbox" ng-model="lot.isSkipped"/></td>
                 <td ng-class="{'last-row':$last, 'disabled':lot.isSkipped}" class="col-reason cell-input ">
                     <a ng-hide="lot.isSkipped" href id="lossesAndAdjustmentLink_{{$index}}"
                        ng-click="showAdjustmentReason(lot)" class="rnr-adjustment">
