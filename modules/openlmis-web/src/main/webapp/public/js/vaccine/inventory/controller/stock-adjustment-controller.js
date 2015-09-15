@@ -16,6 +16,7 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,progr
     $scope.userPrograms=programs;
     $scope.adjustmentTypes=adjustmentTypes;
     $scope.adjustmentReason={};
+    $scope.vvmStatuses=[{"value":1,"name":"Stage 1"},{"value":2,"name":"Stage 2"},{"value":3,"name":"Stage 3"},{"value":4,"name":"Stage 4"}];
     var AdjustmentReasons=[];
 
     var loadStockCards=function(programId, facilityId){
@@ -117,6 +118,7 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,progr
                         var lot={};
                         lot.lotId=l.lot.id;
                         lot.quantity=l.quantity;
+                        lot.vvmStatus=l.vvmStatus;
                         lot.adjustmentReasons=l.adjustmentReasons;
                         list.lots.push(lot);
                     });
@@ -131,7 +133,7 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,progr
                      $scope.message=data.success;
                      $timeout(function(){
                          $location.path('/stock-on-hand');
-                     },1200);
+                     },900);
                }
 
             });
