@@ -97,11 +97,11 @@ public class VaccineProgramControllerTest {
         User user = new User();
         user.setFacilityId(1L);
 
-        when(programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, 1L, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION")).thenReturn(programs);
+        when(programService.getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, 1L, RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD)).thenReturn(programs);
         when(userService.getById(1L)).thenReturn(user);
         ResponseEntity<OpenLmisResponse> response = controller.getProgramForIvdFormHomeFacility(httpServletRequest);
 
-        verify(programService).getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, 1L, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION");
+        verify(programService).getIvdProgramsSupportedByUserHomeFacilityWithRights(1L, 1L, RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD);
         assertThat(programs, is(response.getBody().getData().get("programs")));
     }
 

@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-services.factory('StockCardsByCategory', function($resource,StockCards,$q, $timeout, ProgramProducts){
+services.factory('StockCardsByCategory', function($resource,StockCards,$q, $timeout, VaccineProgramProducts){
 
  var programId;
  var facilityId;
@@ -20,7 +20,7 @@ services.factory('StockCardsByCategory', function($resource,StockCards,$q, $time
     var deferred =$q.defer();
                 $timeout(function(){
                     if(!isNaN(pId)){
-                        ProgramProducts.get({programId:pId},function(data){
+                        VaccineProgramProducts.get({programId:pId},function(data){
                                  programProducts=data.programProductList;
 
                                  StockCards.get({facilityId:fId},function(data){

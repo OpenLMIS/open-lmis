@@ -12,6 +12,9 @@
 package org.openlmis.web.controller.vaccine.inventory;
 
 
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
@@ -21,13 +24,18 @@ import org.openlmis.vaccine.dto.VaccineInventoryTransactionDTO;
 import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
+import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
@@ -35,12 +43,20 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @RequestMapping(value = "/vaccine/inventory/")
 public class VaccineInventoryController extends BaseController {
 
+    private static final String PROGRAM_PRODUCT_LIST = "programProductList";
     @Autowired
     VaccineInventoryService service;
-
     @Autowired
     ProgramService programService;
+    @Autowired
+    ProgramProductService programProductService;
 
+    @RequestMapping(value = "programProducts/programId/{programId}", method = GET, headers = ACCEPT_JSON)
+    //TODO @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
+    public ResponseEntity<OpenLmisResponse> getProgramProductsByProgram(@PathVariable Long programId) {
+        List<ProgramProduct> programProductsByProgram = programProductService.getByProgram(new Program(programId));
+        return response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
+    }
 
     @RequestMapping(value = "programs")
 //TODO:  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VACCINE_INVENTORY')")

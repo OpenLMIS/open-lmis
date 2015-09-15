@@ -253,6 +253,10 @@ public interface VaccineReportMapper {
           "sum(quantity_discarded_opened) quantity_discarded_opened,\n" +
           "sum(quantity_wasted_other) quantity_wasted_other,\n" +
           "sum(closing_balance) closing_balance,\n" +
+          "sum(expired) expired,\n" +
+          "sum(broken) broken,\n" +
+          "sum(cold_chain_failure) cold_chain_failure,\n" +
+          "sum(other) other,\n" +
           "sum(days_stocked_out) days_stocked_out,\n" +
           "'' AS reason_for_discarding,\n" +
           "sum(children_immunized) children_immunized,\n" +
