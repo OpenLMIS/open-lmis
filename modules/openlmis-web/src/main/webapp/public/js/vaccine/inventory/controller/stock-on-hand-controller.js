@@ -14,11 +14,15 @@
 function StockOnHandController($scope,$window,programs,$location,homeFacility, localStorageService,StockCardsByCategory,Forecast) {
 
     $scope.selectedProgramId=null;
-    $scope.homeFacilityId=homeFacility.id;
+    if(homeFacility){
+        $scope.homeFacilityId=homeFacility.id;
+        $scope.selectedFacilityId=homeFacility.id;
+        $scope.facilityDisplayName=homeFacility.name;
+        }
     $scope.userPrograms=programs;
-    $scope.selectedFacilityId=homeFacility.id;
+
     $scope.selectedType="0";//My facility selected by default;
-    $scope.facilityDisplayName=homeFacility.name;
+
 
     $scope.data={"stockcards": null};//Set default chart stock cards data to null;
     $scope.panel = {alerts:false};//Close Alert Accordion by default

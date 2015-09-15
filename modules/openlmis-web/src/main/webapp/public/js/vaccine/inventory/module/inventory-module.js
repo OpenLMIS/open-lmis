@@ -14,7 +14,7 @@ angular.module('vaccine-inventory', ['openlmis', 'ngTable','ui.bootstrap.accordi
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/stock-on-hand', {controller:StockOnHandController, templateUrl:'partials/stock-on-hand.html',reloadOnSearch:false,resolve:StockOnHandController.resolve}).
-//  TODO    when('/stock-adjustment', {controller:StockAdjustmentController, templateUrl:'partials/stock-adjustment.html',resolve:StockAdjustmentController.resolve}).
+            when('/stock-adjustment', {controller:StockAdjustmentController, templateUrl:'partials/stock-adjustment.html',resolve:StockAdjustmentController.resolve}).
             otherwise({redirectTo:'/stock-on-hand'});
     }]).run(function ($rootScope, AuthorizationService) {
 

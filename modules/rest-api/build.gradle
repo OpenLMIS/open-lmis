@@ -23,7 +23,8 @@ dependencies {
     compile 'com.wordnik:swagger-annotations:1.3.12',
             project(':modules:requisition'),
             project(':modules:report'),
-            project(':modules:shipment')
+            project(':modules:shipment'),
+            project(':modules:vaccine')
 
     testCompile  project(path: ':modules:requisition', configuration: 'testFixtures')
 
