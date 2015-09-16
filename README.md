@@ -63,22 +63,9 @@ IntelliJ IDEA Setup
 3. Install Lombok plugin according to the IntelliJ version.
 4. To run individual tests in IntelliJ, configure your IntelliJ preferences to enable "annotation processing"
 
-VM setup (To improve...)
--------------------
-1. Make sure you have vagrant and VirtualBox installed (TODO: add install steps for these)
-2. Please obtain the vagrant box LMIS-2.0.box and related project setup from Danni or Ming (TODO: check this in somewhere)
-3. In the project directory, run "vagrant box add openlmis-box LMIS-2.0.box"
-4. Run "vagrant up" to start the vm
-5. Run "vagrant ssh" to log onto the box
-6. Run "cd projects/open-lmis" to go to your home directory
-7. You can run gradle from there
-8. Your openlmis 2.0 directory is set up as as shared folder in VM and local machine in projects/open-lmis
-
 Jasmine Tests
 -------------------
-1. Install xvfb: apt-get install xvfb firefox
-2. To run jasmine tests headlessly: gradle karmaRun (default task in build, for VM and CI)
-3. To run jasmine tests with browser: gradle karmaRunWithBrowser
+1. To run jasmine tests headlessly: gradle karmaRun
 
 Running App on embedded Jetty server
 --------------------------------------------------
