@@ -79,23 +79,18 @@
                                 <table ng-show="targetPopulation.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th openlmis-message="label.population"></th>
-                                        <th openlmis-message="label.live.birth"></th>
-                                        <th openlmis-message="label.0.to.11.months"></th>
-                                        <th openlmis-message="label.12.to.23.months"></th>
-                                        <th openlmis-message="label.girls.of.9.years"></th>
-                                        <th openlmis-message="label.pregnant.women"></th>
+                                        <th>Demographics/Targets</th>
+                                        <th>Monthly</th>
+                                        <th>Annual</th>
                                     </tr>
                                     </thead>
 
                                     <tbody>
                                     <tr ng-repeat="tp in targetPopulation">
-                                        <td>{{tp.population}}</td>
-                                        <td class="number">{{tp.live_birth}}</td>
-                                        <td class="number">{{tp.children_0_1}}</td>
-                                        <td class="number">{{tp.children_1_2}}</td>
-                                        <td class="number">{{tp.girls_9_12}}</td>
-                                        <td class="number">{{tp.pregnant_woman}}</td>
+                                        <td>{{tp.category_name}}</td>
+                                        <td class="number">{{tp.target_value_monthly}}</td>
+                                        <td class="number">{{tp.target_value_annual}}</td>
+
                                     </tr>
 
                                     </tbody>
