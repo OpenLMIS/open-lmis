@@ -12,6 +12,12 @@
 
 package org.openlmis.vaccine.service.demographics;
 
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.RightName;
+import org.openlmis.core.repository.helper.CommaSeparator;
+import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.RequisitionGroupService;
+import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.vaccine.domain.demographics.DemographicEstimateCategory;
 import org.openlmis.vaccine.domain.demographics.DistrictDemographicEstimate;
 import org.openlmis.vaccine.dto.DemographicEstimateForm;
@@ -34,6 +40,18 @@ public class DistrictDemographicEstimateService {
 
   @Autowired
   private DistrictDemographicEstimateRepository repository;
+
+  @Autowired
+  private FacilityService facilityService;
+
+  @Autowired
+  private CommaSeparator commaSeparator;
+
+  @Autowired
+  private SupervisoryNodeService supervisoryNodeService;
+
+  @Autowired
+  private RequisitionGroupService requisitionGroupService;
 
   public void save(DemographicEstimateForm estimate, Long userId){
     for(DemographicEstimateLineItem dto: emptyIfNull(estimate.getEstimateLineItems())){
@@ -95,12 +113,15 @@ public class DistrictDemographicEstimateService {
     return result;
   }
 
-  public DemographicEstimateForm getEstimateForm(Integer year, Long programId) {
+  public DemographicEstimateForm getEstimateForm(Integer year, Long programId, Long userId) {
     DemographicEstimateForm form = new DemographicEstimateForm();
     List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
 
-    List<DemographicEstimateLineItem> districts =  repository.getDistrictLineItems();
+    List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES );
+    String facilityIds = commaSeparator.commaSeparateIds(facilities);
+
+    List<DemographicEstimateLineItem> districts =  repository.getDistrictLineItems(facilityIds);
 
     for(DemographicEstimateLineItem dto : districts){
       dto.setDistrictEstimates(repository.getDistrictEstimate(year, dto.getId(), programId));

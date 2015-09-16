@@ -9,16 +9,15 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineUsageTrend, GetPeriod) {
-
+function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineUsageTrend, Period) {
 
     $scope.OnFilterChanged = function() {
         // clear old data if there was any
         $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;
 
-        GetPeriod.get({id: $scope.filter.period}, function(data){
-           $scope.year = data.year;
+        Period.get({id: $scope.filter.period}, function(data){
+            $scope.period = data.period;
         });
 
         if($scope.filter.period !== null && $scope.filter.period !== 0 &&

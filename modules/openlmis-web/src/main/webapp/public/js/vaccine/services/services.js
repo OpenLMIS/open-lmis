@@ -114,4 +114,17 @@ services.factory('VaccineInventoryPrograms',function($resource){
     return $resource('/vaccine/inventory/programs.json',{},{});
 });
 
+services.factory('SaveVaccineInventoryAdjustment',function($resource){
+    return $resource('/vaccine/inventory/stock/adjustment.json',{},{update:{method:'PUT'}});
+});
+
+services.factory('VaccineAdjustmentReasons',function($resource){
+    return $resource('/api/v2/stockManagement/adjustmentReasons.json',{},{});
+});
+
+services.factory('VaccineProgramProducts', function ($resource) {
+  return $resource('/vaccine/inventory/programProducts/programId/:programId.json', {}, {});
+});
+
+
 

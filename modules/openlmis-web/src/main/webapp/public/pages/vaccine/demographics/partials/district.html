@@ -51,38 +51,57 @@
 
 
   <div class="clearfix padding2px"></div>
-  <div>
-    <div class="parent">
+  <div  class="rnr-table">
+
+    <div adjust-height bottom-offset="180" tab-scroll>
+      <div class="float-left left-table parent">
+        <table class="table table-bordered scrollable">
+          <thead>
+          <tr style="height: 40px;"  class="text-row gradient-header">
+            <th class="span1">
+              <span openlmis-message="label.demographic.district.code"></span>
+            </th>
+            <th class="span3">
+              <span openlmis-message="label.demographic.district.name"></span>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="text-row gradient-header" ng-repeat-start="facility in form.estimateLineItems" ng-show="showParent($index)">
+            <th colspan="2">Region: {{facility.parentName}}</th>
+          </tr>
+          <tr class="text-row">
+            <td class="cell-input">
+              <span class="cell-text">{{facility.code}}</span>
+            </td>
+            <td class="cell-input">
+              <span class="cell-text">
+                {{facility.name}}
+              </span>
+            </td>
+          </tr>
+          <tr ng-repeat-end></tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    <div class="float-left right-table parent" custom-horizontal-scroll">
       <table class="table table-bordered scrollable">
         <thead>
-        <tr class="gradient-header">
-          <th class="span1">
-            <span openlmis-message="label.demographic.district.code"></span>
-          </th>
-          <th class="span3">
-            <span openlmis-message="label.demographic.district.name"></span>
-          </th>
+        <tr style="height: 40px;" class="text-row gradient-header">
           <th ng-repeat="category in categories" colspan="{{showFacilityAggregate == true ? 2 : 1 }}">
             {{category.name}}
           </th>
         </tr>
         </thead>
         <tbody>
-        <tr class="gradient-header" ng-repeat-start="facility in form.estimateLineItems" ng-show="showParent($index)">
-          <th colspan="2">Region: {{facility.parentName}}</th>
+        <tr class="text-row gradient-header" ng-repeat-start="facility in form.estimateLineItems" ng-show="showParent($index)">
           <th  ng-repeat-start="category in categories" ng-show="showFacilityAggregate"></th>
           <th  ng-repeat-end class="number">
             {{districtSummary.getSummary(facility.parentId, category, year) | number : 0}}</th>
         </tr>
-        <tr>
-          <td class="cell-input">
-            <span class="cell-text">{{facility.code}}</span>
-          </td>
-          <td class="cell-input">
-              <span class="cell-text">
-                {{facility.name}}
-              </span>
-          </td>
+        <tr class="text-row">
           <td ng-repeat-start="category in categories" ng-show="showFacilityAggregate" class="number cell-input padding2px">
             <span class="cell-text">{{facility.getFacilityAggregateByCategory(category, year).value}}</span>
           </td>

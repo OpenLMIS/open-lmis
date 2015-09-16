@@ -39,8 +39,8 @@ public class DistrictDemographicEstimateRepository {
     return mapper.update(estimate);
   }
 
-  public List<DemographicEstimateLineItem> getDistrictLineItems(){
-    return mapper.getDistrictLineItems();
+  public List<DemographicEstimateLineItem> getDistrictLineItems(String facilityIds){
+    return mapper.getDistrictLineItems(facilityIds);
   }
 
   public List<FacilityDemographicEstimate> getFacilityEstimateAggregate(Integer year, Long districtId, Long programId) {

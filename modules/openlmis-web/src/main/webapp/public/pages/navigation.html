@@ -119,6 +119,10 @@
                      openlmis-message="link.vaccine.stock.on.hand"></a>
                 </li>
                 <li>
+                  <a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment"
+                     openlmis-message="link.vaccine.stock.adjustment"></a>
+                </li>
+                <li>
                   <a href="/public/pages/vaccine/index.html#/receive"
                       openlmis-message="link.vaccine.receive"></a>
                 </li>
@@ -501,7 +505,7 @@
                 </div>
             </li>
             <li class="has-children"  >
-              <a  id="vaccine-admin" openlmis-message="link.manage.vaccine"></a>
+              <a id="vaccine-admin" href="" openlmis-message="link.manage.vaccine"></a>
               <div class="submenu">
                 <ul>
                   <li ng-show="hasPermission('MANAGE_VACCINE_DISEASE_LIST')">
@@ -509,6 +513,13 @@
                         href="/public/pages/vaccine/admin/disease/index.html#/disease"
                         openlmis-message="link.manage.vaccine.diseases"></a>
                   </li>
+                  </ul>
+                </div>
+            </li>
+            <li class="has-children"  >
+            <a id="demographic-admin" href="" openlmis-message="link.manage.demographic.estimates"></a>
+            <div class="submenu">
+              <ul>
                   <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')" >
                     <a
                       href="/public/pages/vaccine/demographics/index.html#/list"
