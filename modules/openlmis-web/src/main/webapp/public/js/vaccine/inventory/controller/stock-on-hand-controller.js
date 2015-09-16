@@ -20,7 +20,7 @@ function StockOnHandController($scope,$window,programs,$location,homeFacility, l
         $scope.facilityDisplayName=homeFacility.name;
         }
     $scope.userPrograms=programs;
-
+    $scope.date = new Date();
     $scope.selectedType="0";//My facility selected by default;
 
 
