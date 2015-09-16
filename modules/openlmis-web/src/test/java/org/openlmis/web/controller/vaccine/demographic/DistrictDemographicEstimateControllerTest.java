@@ -50,12 +50,12 @@ public class DistrictDemographicEstimateControllerTest {
   public void shouldGet() throws Exception {
     DemographicEstimateForm form = new DemographicEstimateForm();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
-    when(service.getEstimateForm(2005, 1L)).thenReturn(form);
+    when(service.getEstimateForm(2005, 1L, 1L)).thenReturn(form);
 
     ResponseEntity<OpenLmisResponse> response = controller.get(2005, 1L, request);
 
     assertThat(form, is(response.getBody().getData().get("estimates")));
-    verify(service).getEstimateForm(2005, 1L);
+    verify(service).getEstimateForm(2005, 1L, 1L);
   }
 
   @Test

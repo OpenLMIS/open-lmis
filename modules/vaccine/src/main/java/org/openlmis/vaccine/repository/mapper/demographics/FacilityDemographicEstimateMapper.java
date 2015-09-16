@@ -72,7 +72,7 @@ public interface FacilityDemographicEstimateMapper {
     List<FacilityDemographicEstimate> getEstimatesForFacilityWithDetails(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
 
-    @Select("select f.name, f.id, f.code, gz.id as parentId, gz.name as parentName " +
+    @Select("select distinct f.name, f.id, f.code, gz.id as parentId, gz.name as parentName " +
             " from facilities f " +
             "     join geographic_zones gz on gz.id = f.geographicZoneId " +
             "     join programs_supported ps on ps.facilityId = f.id  and ps.programId = #{programId} " +
