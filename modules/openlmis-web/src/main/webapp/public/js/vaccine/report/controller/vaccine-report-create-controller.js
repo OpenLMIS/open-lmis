@@ -9,11 +9,11 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function CreateVaccineReportController($scope, $location, $filter, $dialog, report, discardingReasons, VaccineReportSave, VaccineReportSubmit) {
+function CreateVaccineReportController($scope, $location , $filter, $dialog, manufacturers, report, discardingReasons, VaccineReportSave, VaccineReportSubmit) {
 
   // initial state of the display
   $scope.report = new VaccineReport(report);
-
+  $scope.manufacturers = manufacturers;
   $scope.discardingReasons = discardingReasons;
 
   //prepare tab visibility settings
@@ -145,6 +145,16 @@ CreateVaccineReportController.resolve = {
     $timeout(function () {
       VaccineDiscardingReasons.get(function (data) {
         deferred.resolve(data.reasons);
+      });
+    }, 100);
+    return deferred.promise;
+  },
+  manufacturers : function($q, $timeout, $route, ManufacturerList){
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      ManufacturerList.get(function (data) {
+        deferred.resolve(data.manufacturers);
       });
     }, 100);
     return deferred.promise;
