@@ -10,35 +10,35 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 services.factory('DemographicEstimateCategories', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/categories.json', {}, {});
+  return $resource('/demographic/estimate/categories.json', {}, {});
 });
 
 services.factory('DemographicEstimateCategory', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/category/:id.json', {}, {});
+  return $resource('/demographic/estimate/category/:id.json', {}, {});
 });
 
 services.factory('SaveDemographicEstimateCategory', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/category/save.json', {}, update);
+  return $resource('/demographic/estimate/category/save.json', {}, update);
 });
 
 services.factory('FacilityDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/facilities.json', {}, {});
+  return $resource('/demographic/estimate/facilities.json', {}, {});
 });
 
 services.factory('SaveFacilityDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/facilities.json', {}, update);
+  return $resource('/demographic/estimate/facilities.json', {}, update);
 });
 
 services.factory('DistrictDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/districts.json', {}, {});
+  return $resource('/demographic/estimate/districts.json', {}, {});
 });
 
 services.factory('SaveDistrictDemographicEstimates', function ($resource) {
-  return $resource('/vaccine/demographic/estimate/districts.json', {}, update);
+  return $resource('/demographic/estimate/districts.json', {}, update);
 });
 
 services.factory('DemographicEstimatePrograms', function($resource){
-  return $resource('/vaccine/demographics/programs.json', {}, {});
+  return $resource('/demographics/programs.json', {}, {});
 });
 
 services.factory('UserSupervisoryRights', function($resource){
@@ -46,17 +46,17 @@ services.factory('UserSupervisoryRights', function($resource){
 });
 
 services.factory('FinalizeFacilityDemographicEstimates', function($resource){
-  return $resource('/vaccine/demographic/estimate/finalize/facilities.json', {}, update);
+  return $resource('/demographic/estimate/finalize/facilities.json', {}, update);
 });
 
 services.factory('UndoFinalizeFacilityDemographicEstimates', function($resource){
-  return $resource('/vaccine/demographic/estimate/undo-finalize/facilities.json', {}, update);
+  return $resource('/demographic/estimate/undo-finalize/facilities.json', {}, update);
 });
 
 services.factory('FinalizeDistrictDemographicEstimates', function($resource){
-  return $resource('/vaccine/demographic/estimate/finalize/districts.json', {}, update);
+  return $resource('/demographic/estimate/finalize/districts.json', {}, update);
 });
 
 services.factory('UndoFinalizeDistrictDemographicEstimates', function($resource){
-  return $resource('/vaccine/demographic/estimate/undo-finalize/districts.json', {}, update);
+  return $resource('/demographic/estimate/undo-finalize/districts.json', {}, update);
 });
