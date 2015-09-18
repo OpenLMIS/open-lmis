@@ -24,19 +24,77 @@
     .ns-popover-tooltip-theme .ns-popover-tooltip{
         max-width: none !important;
     }
+    .tab-pane .ns-popover-tooltip{
+        border: none !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        box-shadow: none !important;
+    }
 </style>
 <script type="text/ng-template" id="amc">
-    <div class="triangle"></div>
-    <div class="ns-popover-tooltip vaccine-report">
-        <a-float af-render="renderIt"  af-option="amcChartOption" af-data="amcChart" style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
-     </div>
+
+            <div class="ns-popover-tooltip vaccine-report">
+                <tabset class="table">
+                    <tab>
+                        <tab-heading style="cursor: pointer;"><span openlmis-message="title.overview"></span></tab-heading>
+                        <div class="triangle"></div>
+                        <div class="ns-popover-tooltip vaccine-report">
+                            <a-float af-render="renderIt"  af-option="amcChartOption" af-data="amcChart" style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
+                        </div>
+
+                    </tab>
+                    <tab>
+                        <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
+                        <table class="table" style="width: 500px;">
+                            <thead>
+                            <tr class="gradient-header">
+                                <th openlmis-message="title.legend"></th>
+                                <th openlmis-message="title.definition"></th>
+                            </tr>
+                            </thead>
+                            <tr ng-repeat="def in definitions">
+                                <td>{{def.label}}</td>
+                                <td>{{def.definition}}</td>
+                            </tr>
+                        </table>
+
+                    </tab>
+                </tabset>
+            </div>
+
 </script>
 <script type="text/ng-template" id="soh">
-    <div class="triangle"></div>
-    <div class="ns-popover-tooltip vaccine-report">
-        <a-float af-render="renderIt"  af-option="sohChartOption" af-data="sohChart" style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
-        <div class="clearfix"></div>
-    </div>
+            <div class="ns-popover-tooltip vaccine-report">
+                  <tabset class="table">
+                      <tab>
+                          <tab-heading style="cursor: pointer;"><span openlmis-message="title.overview"></span></tab-heading>
+                          <div class="triangle"></div>
+                            <div class="ns-popover-tooltip vaccine-report">
+                                <a-float af-render="renderIt"  af-option="sohChartOption" af-data="sohChart" style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
+                                <div class="clearfix"></div>
+                            </div>
+
+                      </tab>
+                      <tab>
+                          <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
+                          <table class="table" style="width: 500px;">
+                              <thead>
+                              <tr class="gradient-header">
+                                  <th openlmis-message="title.legend"></th>
+                                  <th openlmis-message="title.definition"></th>
+                              </tr>
+                              </thead>
+                              <tr ng-repeat="def in definitions">
+                                  <td>{{def.label}}</td>
+                                  <td>{{def.definition}}</td>
+                              </tr>
+                          </table>
+
+                      </tab>
+                  </tabset>
+            </div>
+
+
 </script>
 
 <h2 style="padding: 10px;"><span style="margin-left: 15px;" openlmis-message="title.monthly.vaccination.report"></span><span> {{period != null ? (' : '+period.name+' , '+period.stringYear) : ''}}</span></h2>
