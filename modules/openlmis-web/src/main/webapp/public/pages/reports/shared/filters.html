@@ -287,7 +287,7 @@
         <div>
             <select id="periodTree"
                     ui-select2 class="input-large" ng-change="notifyFilterChanged('period-tree-changed');" ng-model="filter.period">
-                <option ng-selected="filter.period === 0" ng-value="0">--Select Period --</option>
+               <option ng-selected="filter.period === 0" ng-value="0">{{period_placeholder}}</option>
                 <optgroup ng-repeat="year in periods"  label="{{year.year}}">
 
                     <option ng-repeat-start="v in year.children" value="-1">{{v.groupname}}</option>

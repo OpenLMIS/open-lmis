@@ -450,6 +450,14 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response("yearSchedulePeriod", yearSchedulePeriodTree);
     }
 
+    @RequestMapping(value="/vaccineYearSchedulePeriod", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getVaccineScheduleYearPeriod(){
+
+        List<YearSchedulePeriodTree> yearSchedulePeriodTree = reportLookupService.getVaccineYearSchedulePeriodTree();
+
+        return OpenLmisResponse.response("yearSchedulePeriod", yearSchedulePeriodTree);
+    }
+
     @RequestMapping(value = "/OrderFillRateSummary/program/{programId}/period/{periodId}/schedule/{scheduleId}/facilityTypeId/{facilityTypeId}/zone/{zoneId}/status/{status}/orderFillRateSummary", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getOrderFillRateSummaryData(@PathVariable("programId") Long programId,
                                                                         @PathVariable("periodId") Long periodId,

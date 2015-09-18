@@ -1280,6 +1280,11 @@ services.factory('GetStockOutFacilitiesForProgramPeriodAndProductCode', function
     return $resource('/dashboard/program/:programId/period/:periodId/product/:productCode/stocked-out-facilities.json', {}, {});
 });
 
+
+services.factory('GetVaccineReportPeriodTree',function ($resource){
+    return $resource('/reports/vaccineYearSchedulePeriod', {}, {});
+});
+
 services.factory("ELMISInterface",function($resource)  {
     return   {
         getInterface : function(){
