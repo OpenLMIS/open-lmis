@@ -660,8 +660,8 @@ app.directive('rmnchProductPeriodFilter', ['RmnchProducts', 'GetYearSchedulePeri
   }
 ]);
 
-app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams',
-  function(GetYearSchedulePeriodTree, $routeParams) {
+app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams','messageService',
+  function(GetYearSchedulePeriodTree, $routeParams, messageService) {
     return {
       restrict: 'E',
       require: '^filterContainer',
@@ -677,6 +677,41 @@ app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams',
           //Load period tree
           GetYearSchedulePeriodTree.get({}, function(data) {
             scope.periods = data.yearSchedulePeriod;
+          });
+
+          scope.period_placeholder = messageService.get('label.select.period');
+        });
+
+      },
+      templateUrl: 'filter-period-tree-template'
+    };
+  }
+]);
+
+
+app.directive('vaccinePeriodTreeFilter', ['GetVaccineReportPeriodTree', '$routeParams','messageService',
+  function(GetVaccineReportPeriodTree, $routeParams, messageService) {
+    return {
+      restrict: 'E',
+      require: '^filterContainer',
+      link: function(scope, elm, attr) {
+
+        if (attr.required) {
+          scope.requiredFilters.period = 'period';
+        }
+
+        scope.filter.period = (isUndefined($routeParams.period) || $routeParams.period === '') ? 0 : $routeParams.period;
+
+        scope.$evalAsync(function() {
+          //Load period tree
+          GetVaccineReportPeriodTree.get({}, function(data) {
+            scope.periods = data.yearSchedulePeriod;
+
+            scope.period_placeholder = messageService.get('label.select.period');
+            if (!angular.isUndefined( scope.periods)) {
+              if (scope.periods.length === 0)
+                scope.period_placeholder = messageService.get('report.filter.period.no.vaccine.record');
+            }
           });
         });
 
