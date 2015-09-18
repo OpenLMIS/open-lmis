@@ -20,12 +20,14 @@ function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineU
             $scope.period = data.period;
         });
 
-        if($scope.filter.zone && messageService.get('report.filter.all.geographic.zones') == $scope.filter.zone){
+        if(isUndefined($scope.filter.zone) || messageService.get('report.filter.all.geographic.zones') == $scope.filter.zone){
             $scope.filter.zone = -1;
         }
+        if(isUndefined($scope.filter.facility)){
+            $scope.filter.facility = 0;
+        }
 
-        if($scope.filter.period !== null && $scope.filter.period !== 0 &&
-            $scope.filter.facility !== null && $scope.filter.facility !== 0
+        if($scope.filter.period !== null && $scope.filter.period !== 0
         ){
             VaccineMonthlyReport.get($scope.filter, function(data){
                 $scope.data = data.vaccineData;
