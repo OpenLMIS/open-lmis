@@ -10,34 +10,18 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'cobertura'
+package org.openlmis.demographics.helpers;
 
-dependencies {
+import java.util.Collections;
+import java.util.List;
 
-    compile  project(':modules:core')
-    compile  project(':modules:demographics')
-   
-    testCompile project(path: ':modules:core', configuration: 'testFixtures')
+public class ListUtil {
 
-
-    configurations {
-        testFixtures {
-            extendsFrom testRuntime
-        }
+  public static <T> List<T> emptyIfNull(List<T> list) {
+    if (list == null) {
+      return Collections.emptyList();
     }
-
-    task testJar(type: Jar) {
-        from sourceSets.test.output
-        classifier = 'test'
-    }
-
-    artifacts {
-        testFixtures testJar
-    }
-}
-
-cobertura {
-    coverageFormats << 'xml'
-    coverageIgnoreTrivial = true
+    return list;
+  }
 
 }

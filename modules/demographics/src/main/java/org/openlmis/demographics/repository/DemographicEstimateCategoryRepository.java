@@ -10,34 +10,34 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'cobertura'
+package org.openlmis.demographics.repository;
 
-dependencies {
+import org.openlmis.demographics.domain.DemographicEstimateCategory;
+import org.openlmis.demographics.repository.mapper.DemographicEstimateCategoryMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-    compile  project(':modules:core')
-    compile  project(':modules:demographics')
-   
-    testCompile project(path: ':modules:core', configuration: 'testFixtures')
+import java.util.List;
 
+@Repository
+public class DemographicEstimateCategoryRepository {
 
-    configurations {
-        testFixtures {
-            extendsFrom testRuntime
-        }
-    }
+  @Autowired
+  private DemographicEstimateCategoryMapper mapper;
 
-    task testJar(type: Jar) {
-        from sourceSets.test.output
-        classifier = 'test'
-    }
+  public List<DemographicEstimateCategory> getAll(){
+    return mapper.getAll();
+  }
 
-    artifacts {
-        testFixtures testJar
-    }
-}
+  public DemographicEstimateCategory getById(Long id){
+    return mapper.getById(id);
+  }
 
-cobertura {
-    coverageFormats << 'xml'
-    coverageIgnoreTrivial = true
+  public void insert(DemographicEstimateCategory category){
+    mapper.insert(category);
+  }
 
+  public void update(DemographicEstimateCategory category){
+    mapper.update(category);
+  }
 }

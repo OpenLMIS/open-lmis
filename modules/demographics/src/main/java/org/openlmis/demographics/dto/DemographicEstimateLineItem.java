@@ -10,34 +10,34 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'cobertura'
+package org.openlmis.demographics.dto;
 
-dependencies {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.openlmis.demographics.domain.DistrictDemographicEstimate;
+import org.openlmis.demographics.domain.FacilityDemographicEstimate;
 
-    compile  project(':modules:core')
-    compile  project(':modules:demographics')
-   
-    testCompile project(path: ':modules:core', configuration: 'testFixtures')
+import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class DemographicEstimateLineItem {
 
-    configurations {
-        testFixtures {
-            extendsFrom testRuntime
-        }
-    }
+  private Long id;
 
-    task testJar(type: Jar) {
-        from sourceSets.test.output
-        classifier = 'test'
-    }
+  private String name;
 
-    artifacts {
-        testFixtures testJar
-    }
-}
+  private String code;
 
-cobertura {
-    coverageFormats << 'xml'
-    coverageIgnoreTrivial = true
+  private Long parentId;
+
+  private String parentName;
+
+  private List<FacilityDemographicEstimate> facilityEstimates;
+
+  private List<DistrictDemographicEstimate> districtEstimates;
+
 
 }

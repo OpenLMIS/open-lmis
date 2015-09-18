@@ -23,7 +23,7 @@ import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
-import org.openlmis.vaccine.domain.demographics.FacilityDemographicEstimate;
+import org.openlmis.demographics.domain.FacilityDemographicEstimate;
 
 import java.util.ArrayList;
 import java.util.List;

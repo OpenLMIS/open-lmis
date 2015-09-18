@@ -10,34 +10,37 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'cobertura'
+package org.openlmis.demographics.service;
 
-dependencies {
+import org.openlmis.demographics.domain.DemographicEstimateCategory;
+import org.openlmis.demographics.helpers.ListUtil;
+import org.openlmis.demographics.repository.DemographicEstimateCategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-    compile  project(':modules:core')
-    compile  project(':modules:demographics')
-   
-    testCompile project(path: ':modules:core', configuration: 'testFixtures')
+import java.util.List;
 
+@Service
+public class DemographicEstimateCategoryService {
 
-    configurations {
-        testFixtures {
-            extendsFrom testRuntime
-        }
+  @Autowired
+  private DemographicEstimateCategoryRepository repository;
+
+  public List<DemographicEstimateCategory> getAll(){
+    return repository.getAll();
+  }
+
+  public DemographicEstimateCategory getById(Long id){
+    return repository.getById(id);
+  }
+
+  public void save(List<DemographicEstimateCategory> categories){
+    for(DemographicEstimateCategory category : ListUtil.emptyIfNull(categories)){
+      if(category.getId() == null){
+        repository.insert(category);
+      }else{
+        repository.update(category);
+      }
     }
-
-    task testJar(type: Jar) {
-        from sourceSets.test.output
-        classifier = 'test'
-    }
-
-    artifacts {
-        testFixtures testJar
-    }
-}
-
-cobertura {
-    coverageFormats << 'xml'
-    coverageIgnoreTrivial = true
-
+  }
 }

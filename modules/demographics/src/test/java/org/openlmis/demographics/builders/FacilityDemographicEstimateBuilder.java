@@ -10,34 +10,24 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'cobertura'
+package org.openlmis.demographics.builders;
 
-dependencies {
+import com.natpryce.makeiteasy.Instantiator;
+import com.natpryce.makeiteasy.PropertyLookup;
+import org.openlmis.demographics.domain.FacilityDemographicEstimate;
 
-    compile  project(':modules:core')
-    compile  project(':modules:demographics')
-   
-    testCompile project(path: ':modules:core', configuration: 'testFixtures')
+public class FacilityDemographicEstimateBuilder {
 
+  public static final Instantiator<FacilityDemographicEstimate> defaultFacilityDemographicEstimate = new Instantiator<FacilityDemographicEstimate>() {
 
-    configurations {
-        testFixtures {
-            extendsFrom testRuntime
-        }
+    @Override
+    public FacilityDemographicEstimate instantiate(PropertyLookup<FacilityDemographicEstimate> lookup) {
+      FacilityDemographicEstimate item = new FacilityDemographicEstimate();
+      item.setFacilityId(1L);
+      item.setConversionFactor(1.0);
+      item.setDemographicEstimateId(1L);
+      item.setValue(20L);
+      return item;
     }
-
-    task testJar(type: Jar) {
-        from sourceSets.test.output
-        classifier = 'test'
-    }
-
-    artifacts {
-        testFixtures testJar
-    }
-}
-
-cobertura {
-    coverageFormats << 'xml'
-    coverageIgnoreTrivial = true
-
+  };
 }

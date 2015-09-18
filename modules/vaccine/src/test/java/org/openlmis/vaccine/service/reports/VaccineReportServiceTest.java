@@ -45,7 +45,7 @@ import org.openlmis.vaccine.repository.reports.VaccineReportStatusChangeReposito
 import org.openlmis.vaccine.service.DiseaseService;
 import org.openlmis.vaccine.service.VaccineIvdTabVisibilityService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
-import org.openlmis.vaccine.service.demographics.FacilityDemographicEstimateService;
+import org.openlmis.demographics.service.FacilityDemographicEstimateService;
 
 import java.util.ArrayList;
 import java.util.Date;
