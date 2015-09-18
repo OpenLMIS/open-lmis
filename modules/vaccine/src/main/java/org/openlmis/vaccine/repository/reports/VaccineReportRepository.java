@@ -12,6 +12,7 @@
 
 package org.openlmis.vaccine.repository.reports;
 
+import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.vaccine.domain.reports.*;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportMapper;
@@ -146,5 +147,9 @@ public class VaccineReportRepository {
   }
   public List<HashMap<String, Object>> vaccineUsageTrendByGeographicZone(Long periodId, Long zoneId, String productCode){
     return mapper.vaccineUsageTrendByGeographicZone(periodId, zoneId, productCode);
+  }
+
+  public GeographicZone getNationalZone(){
+    return mapper.getNationalZone();
   }
 }

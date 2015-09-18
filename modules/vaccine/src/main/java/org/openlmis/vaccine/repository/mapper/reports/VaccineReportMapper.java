@@ -14,6 +14,7 @@ package org.openlmis.vaccine.repository.mapper.reports;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.vaccine.domain.reports.*;
 import org.openlmis.vaccine.dto.ReportStatusDTO;
@@ -289,5 +290,7 @@ public interface VaccineReportMapper {
           "order by pp.id asc")
   List<HashMap<String, Object>>vaccineUsageTrendByGeographicZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId, @Param("productCode") String productCode);
 
+  @Select("select * from geographic_zones where parentid is null")
+  GeographicZone getNationalZone();
 
 }
