@@ -677,6 +677,50 @@ public class ReportLookupService {
         return processingPeriodMapper.getLastPeriods(programId);
     }
 
+
+    public List<YearSchedulePeriodTree> getVaccineYearSchedulePeriodTree() {
+        List<YearSchedulePeriodTree> yearSchedulePeriodTree = processingPeriodMapper.getVaccineYearSchedulePeriodTree();
+
+        Set<String> years = new HashSet<>();
+        Set<Schedule> schedules = new HashSet<>();
+        for (YearSchedulePeriodTree periodTree: yearSchedulePeriodTree){
+            years.add(periodTree.getYear());
+            schedules.add(new Schedule(periodTree.getGroupid(), periodTree.getGroupname(),null, null));
+        }
+
+        List<YearSchedulePeriodTree> yearList = new ArrayList<>();
+
+        //add the year layer
+        for (String year : years) {
+
+            YearSchedulePeriodTree yearObject = new YearSchedulePeriodTree();
+            yearObject.setYear(year);
+
+            // Add the schedule layer
+            for (Schedule schedule : schedules) {
+
+                YearSchedulePeriodTree scheduleObject = new YearSchedulePeriodTree();
+                scheduleObject.setGroupname(schedule.getName());
+
+                for (YearSchedulePeriodTree period : yearSchedulePeriodTree) {
+
+                    if (schedule.getId() == period.getGroupid() && period.getYear().equals(year)) {
+                        scheduleObject.getChildren().add(period);
+                    }
+                }
+                if (scheduleObject.getChildren().size() > 0){
+
+                    yearObject.getChildren().add(scheduleObject);
+                }
+
+            }
+
+            yearList.add(yearObject);
+        }
+
+        return yearList;
+    }
+
     //New
     public List<FacilityLevelTree> getFacilityByLevel(Long programId, Long userId) {
 
