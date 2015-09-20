@@ -75,6 +75,7 @@
     <import resource="classpath:/applicationContext-odkapi.xml"/>
     <import resource="classpath:/applicationContext-equipment.xml" />
     <import resource="classpath:/applicationContext-help.xml" />
+    <import resource="classpath:/applicationContext-demographics.xml" />
     <import resource="classpath:/applicationContext-vaccine.xml" />
     <import resource="classpath:/applicationContext-stock-management.xml" />
 
