@@ -43,6 +43,16 @@ public interface ProcessingPeriodReportMapper {
 
 
 
+    @Select(" select  EXTRACT(YEAR FROM pp.startdate) as year, ps.name as groupname, pp.name as periodname, pp.id AS periodid, ps.id as groupid   \n" +
+            " from processing_periods pp    \n" +
+            " join processing_schedules ps on pp.scheduleid = ps.id  \n" +
+            " join (select distinct programid, scheduleid from requisition_group_program_schedules) rps on rps.scheduleid = ps.id and rps.scheduleid = pp.scheduleid  \n" +
+            " where rps.programid in (select distinct programid from vaccine_reports)    \n" +
+            " order by year,groupname,pp.startdate  asc")
+    List<YearSchedulePeriodTree> getVaccineYearSchedulePeriodTree();
+
+
+
     @Select("select distinct on (pp.startdate) pp.id, pp.scheduleId, \n" +
             "pp.startdate::date startdate, \n" +
             "to_char(pp.startdate, 'Month') || '-'|| extract(year from pp.startdate) || '(' || pp.name || ')'  as Name\n" +

@@ -10,8 +10,8 @@
 
 package org.openlmis.core.web.controller;
 
-import org.openlmis.core.service.MessageService;
 import org.openlmis.core.logging.ApplicationLogger;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
