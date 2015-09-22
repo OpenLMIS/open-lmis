@@ -534,7 +534,7 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
           $scope.facilities = [];
         }
         $scope.facilities.unshift({
-          name: messageService.get('report.filter.select.facility')
+          name: messageService.get('report.filter.all.facilities')
         });
       });
     };
@@ -546,7 +546,7 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
 
         scope.facilities = [];
         scope.facilities.push({
-          name: messageService.get('report.filter.select.facility')
+          name: messageService.get('report.filter.all.facilities')
         });
 
         scope.filter.facility = (isUndefined($routeParams.facility) || $routeParams.facility === '') ? 0 : $routeParams.facility;
