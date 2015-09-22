@@ -13,7 +13,7 @@
 package org.openlmis.demographics.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.demographics.domain.DemographicEstimateCategory;
+import org.openlmis.demographics.domain.EstimateCategory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,17 +22,17 @@ import java.util.List;
 public interface DemographicEstimateCategoryMapper {
 
   @Select("select * from demographic_estimate_categories order by id")
-  List<DemographicEstimateCategory> getAll();
+  List<EstimateCategory> getAll();
 
   @Select("select * from demographic_estimate_categories where id = #{id}")
-  DemographicEstimateCategory getById( @Param("id") Long id);
+  EstimateCategory getById(@Param("id") Long id);
 
   @Insert("insert into demographic_estimate_categories " +
     "(name, description, isPrimaryEstimate, defaultConversionFactor, createdBy, createdDate)" +
     "values " +
     "(#{name}, #{description}, #{isPrimaryEstimate}, #{defaultConversionFactor}, #{createdBy}, NOW())")
   @Options(flushCache = true, useGeneratedKeys = true)
-  Integer insert(DemographicEstimateCategory category);
+  Integer insert(EstimateCategory category);
 
   @Update("update demographic_estimate_categories " +
     " set " +
@@ -43,5 +43,5 @@ public interface DemographicEstimateCategoryMapper {
     ", modifiedBy = #{modifiedBy} " +
     ", modifiedDate = NOW() " +
     " where id = #{id} ")
-  Integer update(DemographicEstimateCategory category);
+  Integer update(EstimateCategory category);
 }

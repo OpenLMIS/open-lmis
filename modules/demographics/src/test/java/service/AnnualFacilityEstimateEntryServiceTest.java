@@ -25,8 +25,8 @@ import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.demographics.domain.DemographicEstimateCategory;
-import org.openlmis.demographics.domain.FacilityDemographicEstimate;
+import org.openlmis.demographics.domain.EstimateCategory;
+import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 import org.openlmis.demographics.dto.DemographicEstimateForm;
 import org.openlmis.demographics.dto.DemographicEstimateLineItem;
 import org.openlmis.demographics.repository.FacilityDemographicEstimateRepository;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class FacilityDemographicEstimateServiceTest {
+public class AnnualFacilityEstimateEntryServiceTest {
 
   @Mock
   FacilityDemographicEstimateRepository repository;
@@ -71,20 +71,20 @@ public class FacilityDemographicEstimateServiceTest {
   public void shouldSave() throws Exception {
     DemographicEstimateForm form = new DemographicEstimateForm();
     DemographicEstimateLineItem estimateLineItem = new DemographicEstimateLineItem();
-    estimateLineItem.setFacilityEstimates(new ArrayList<FacilityDemographicEstimate>());
-    estimateLineItem.getFacilityEstimates().add(new FacilityDemographicEstimate(2000, 12L, 1L, false, 2L, null, 1.0d, 2L));
+    estimateLineItem.setFacilityEstimates(new ArrayList<AnnualFacilityEstimateEntry>());
+    estimateLineItem.getFacilityEstimates().add(new AnnualFacilityEstimateEntry(2000, 12L, 1L, false, 2L, null, 1.0d, 2L));
     form.setEstimateLineItems(asList(estimateLineItem));
 
     when(repository.insert(estimateLineItem.getFacilityEstimates().get(0))).thenReturn(1);
     service.save(form, 1L);
-    verify(repository, atLeastOnce()).insert(Matchers.<FacilityDemographicEstimate>any());
+    verify(repository, atLeastOnce()).insert(Matchers.<AnnualFacilityEstimateEntry>any());
   }
 
   @Test
   public void shouldGetEstimateFor() throws Exception {
-    DemographicEstimateCategory category1 = new DemographicEstimateCategory();
+    EstimateCategory category1 = new EstimateCategory();
     category1.setDefaultConversionFactor(50.0);
-    DemographicEstimateCategory category2 = new DemographicEstimateCategory();
+    EstimateCategory category2 = new EstimateCategory();
     category2.setDefaultConversionFactor(5.0);
 
     Facility facility = new Facility();
@@ -116,10 +116,10 @@ public class FacilityDemographicEstimateServiceTest {
 
   @Test
   public void shouldGetEstimateValuesForFacilityWhenEstimatesWereSaved() throws Exception {
-    List<FacilityDemographicEstimate> list = asList(new FacilityDemographicEstimate());
+    List<AnnualFacilityEstimateEntry> list = asList(new AnnualFacilityEstimateEntry());
     when(repository.getFacilityEstimateWithDetails(2005, 2L, 2L)).thenReturn(list);
 
-    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2L, 2005);
+    List<AnnualFacilityEstimateEntry> response = service.getEstimateValuesForFacility(2L, 2L, 2005);
     assertThat(response, is(list));
     verify(facilityService, never()).getById(any(Long.class));
     verify(categoryService, never()).getAll();
@@ -127,9 +127,9 @@ public class FacilityDemographicEstimateServiceTest {
 
   @Test
   public void shouldGetEstimateValuesForFacilityWhenEstimatesAreNotFound() throws Exception{
-    DemographicEstimateCategory category1 = new DemographicEstimateCategory();
+    EstimateCategory category1 = new EstimateCategory();
     category1.setDefaultConversionFactor(50.0);
-    DemographicEstimateCategory category2 = new DemographicEstimateCategory();
+    EstimateCategory category2 = new EstimateCategory();
     category2.setDefaultConversionFactor(5.0);
 
     Facility facility = new Facility();
@@ -139,7 +139,7 @@ public class FacilityDemographicEstimateServiceTest {
     when(repository.getFacilityEstimate(2005, 2L, 2L)).thenReturn(null);
 
 
-    List<FacilityDemographicEstimate> response = service.getEstimateValuesForFacility(2L, 2L, 2005);
+    List<AnnualFacilityEstimateEntry> response = service.getEstimateValuesForFacility(2L, 2L, 2005);
     assertThat(response.size(), is(2));
     assertThat(response.get(0).getValue(), is(10000L));
     assertThat(response.get(1).getValue(), is(1000L));

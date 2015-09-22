@@ -19,52 +19,46 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.demographics.builders.FacilityDemographicEstimateBuilder;
-import org.openlmis.demographics.domain.FacilityDemographicEstimate;
-import org.openlmis.demographics.repository.mapper.FacilityDemographicEstimateMapper;
+import org.openlmis.demographics.domain.EstimateCategory;
+import org.openlmis.demographics.repository.mapper.DemographicEstimateCategoryMapper;
 
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class FacilityDemographicEstimateRepositoryTest {
+public class EstimateCategoryRepositoryTest {
 
   @Mock
-  FacilityDemographicEstimateMapper mapper;
+  DemographicEstimateCategoryMapper mapper;
 
   @InjectMocks
-  FacilityDemographicEstimateRepository repository;
+  DemographicEstimateCategoryRepository repository;
 
   @Test
-  public void shouldGetFacilityEstimate() throws Exception {
-    when(mapper.getEstimatesForFacility(2005, 2L, 2L)).thenReturn(asList(new FacilityDemographicEstimate()));
-    List<?> result = repository.getFacilityEstimate(2005, 2L, 2L);
-    assertThat(result.size(), is(1));
-    verify(mapper).getEstimatesForFacility(2005, 2L, 2L);
+  public void shouldGetAll() throws Exception {
+    List<EstimateCategory> categories = repository.getAll();
+    verify(mapper).getAll();
+  }
+
+  @Test
+  public void shouldGetById() throws Exception {
+    EstimateCategory category = repository.getById(1L);
+    verify(mapper).getById(1L);
   }
 
   @Test
   public void shouldInsert() throws Exception {
-    FacilityDemographicEstimate estimate = make(a(FacilityDemographicEstimateBuilder.defaultFacilityDemographicEstimate));
-    when(mapper.insert(estimate)).thenReturn(1);
-    repository.insert(estimate);
-    verify(mapper).insert(estimate);
+    EstimateCategory category = new EstimateCategory();
+    repository.insert(category);
+    verify(mapper).insert(category);
   }
 
   @Test
   public void shouldUpdate() throws Exception {
-    FacilityDemographicEstimate estimate = make(a(FacilityDemographicEstimateBuilder.defaultFacilityDemographicEstimate));
-    when(mapper.update(estimate)).thenReturn(1);
-    repository.update(estimate);
-    verify(mapper).update(estimate);
+    EstimateCategory category = new EstimateCategory();
+    repository.update(category);
+    verify(mapper).update(category);
   }
 }

@@ -22,11 +22,11 @@ import org.openlmis.core.domain.BaseModel;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class DistrictDemographicEstimate extends BaseModel {
+public class AnnualFacilityEstimateEntry extends BaseModel {
 
   private Integer year;
 
-  private Long districtId;
+  private Long facilityId;
 
   private Long programId;
 
@@ -34,7 +34,14 @@ public class DistrictDemographicEstimate extends BaseModel {
 
   private Long demographicEstimateId;
 
+  private EstimateCategory category;
+
   private Double conversionFactor;
 
   private Long value;
+
+  public void calculateAndSetValue(Long populationValue){
+    Double calculatedValue = conversionFactor * populationValue / 100;
+    value = calculatedValue.longValue();
+  }
 }

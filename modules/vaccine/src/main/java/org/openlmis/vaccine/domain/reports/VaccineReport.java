@@ -23,7 +23,7 @@ import org.openlmis.vaccine.domain.VaccineProductDose;
 import org.openlmis.vaccine.domain.Vitamin;
 import org.openlmis.vaccine.domain.VitaminSupplementationAgeGroup;
 import org.openlmis.vaccine.domain.config.VaccineIvdTabVisibility;
-import org.openlmis.demographics.domain.FacilityDemographicEstimate;
+import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class VaccineReport extends BaseModel {
   private List<AdverseEffectLineItem> adverseEffectLineItems;
   private List<CampaignLineItem> campaignLineItems;
 
-  private List<FacilityDemographicEstimate> facilityDemographicEstimates;
+  private List<AnnualFacilityEstimateEntry> annualFacilityEstimateEntries;
 
   private List<VitaminSupplementationLineItem> vitaminSupplementationLineItems;
 

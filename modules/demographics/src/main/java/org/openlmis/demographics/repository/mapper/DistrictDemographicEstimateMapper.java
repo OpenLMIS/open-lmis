@@ -14,8 +14,8 @@ package org.openlmis.demographics.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.demographics.dto.DemographicEstimateLineItem;
-import org.openlmis.demographics.domain.DistrictDemographicEstimate;
-import org.openlmis.demographics.domain.FacilityDemographicEstimate;
+import org.openlmis.demographics.domain.AnnualDistrictEstimateEntry;
+import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,34 +28,34 @@ public interface DistrictDemographicEstimateMapper {
     " values " +
           " (#{year}, #{districtId}, #{demographicEstimateId}, #{programId}, #{conversionFactor}, #{value}) ")
   @Options(flushCache = true, useGeneratedKeys = true)
-  Integer insert(DistrictDemographicEstimate estimate);
+  Integer insert(AnnualDistrictEstimateEntry estimate);
 
     @Select("select * from district_demographic_estimates where id = #{id}")
-    DistrictDemographicEstimate getById(@Param("id") Long id);
+    AnnualDistrictEstimateEntry getById(@Param("id") Long id);
 
   @Update("update district_demographic_estimates " +
     " set " +
     " conversionFactor = #{conversionFactor}," +
     " value = #{value}" +
     "where id = #{id} ")
-  Integer update(DistrictDemographicEstimate estimate);
+  Integer update(AnnualDistrictEstimateEntry estimate);
 
     @Update("update district_demographic_estimates " +
             " set " +
             " isFinal = true" +
             " where id = #{id} ")
-    Integer finalize(DistrictDemographicEstimate estimate);
+    Integer finalize(AnnualDistrictEstimateEntry estimate);
 
     @Update("update district_demographic_estimates " +
             " set " +
             " isFinal = false" +
             " where id = #{id} ")
-    Integer undoFinalize(DistrictDemographicEstimate estimate);
+    Integer undoFinalize(AnnualDistrictEstimateEntry estimate);
 
     @Select("select * from district_demographic_estimates " +
             " where " +
             "     year = #{year} and districtId = #{districtId} and programId = #{programId}")
-    List<DistrictDemographicEstimate> getEstimatesForDistrict(@Param("year") Integer year, @Param("districtId") Long districtId, @Param("programId") Long programId);
+    List<AnnualDistrictEstimateEntry> getEstimatesForDistrict(@Param("year") Integer year, @Param("districtId") Long districtId, @Param("programId") Long programId);
 
   @Select("select r.id as parentId, r.name as parentName, z.* from geographic_zones z join geographic_zones r on r.id = z.parentId " +
     "     where z.levelId = (select max(levelNumber) from geographic_levels) and z.parentId in (select gz.parentId from facilities ff join geographic_zones gz on gz.id = ff.geographicZoneId where ff.id  = Any(#{facilities}::INTEGER[]))" +
@@ -68,6 +68,6 @@ public interface DistrictDemographicEstimateMapper {
     " join geographic_zones z on z.id = f.geographicZoneId " +
     " where e.year = #{year} and f.geographicZoneId = #{districtId} and e.programId = #{programId} " +
     "group by z.name, e.demographicEstimateId, f.geographicZoneId ")
-  List<FacilityDemographicEstimate> getFacilityEstimateAggregate(@Param("year") Integer year, @Param("districtId") Long districtId, @Param("programId") Long programId);
+  List<AnnualFacilityEstimateEntry> getFacilityEstimateAggregate(@Param("year") Integer year, @Param("districtId") Long districtId, @Param("programId") Long programId);
 
 }

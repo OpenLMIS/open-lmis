@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.demographics.domain.DemographicEstimateCategory;
+import org.openlmis.demographics.domain.EstimateCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -39,8 +39,8 @@ public class DemographicEstimateCategoryMapperIT {
   @Autowired
   DemographicEstimateCategoryMapper mapper;
 
-  private DemographicEstimateCategory getNewDemographicEstimateCategory() {
-    DemographicEstimateCategory category = new DemographicEstimateCategory();
+  private EstimateCategory getNewDemographicEstimateCategory() {
+    EstimateCategory category = new EstimateCategory();
     category.setName("Children Below 6");
     category.setDescription("All Children below 6");
     category.setIsPrimaryEstimate(false);
@@ -51,16 +51,16 @@ public class DemographicEstimateCategoryMapperIT {
   @Test
   public void shouldGetAll() throws Exception {
 
-    List<DemographicEstimateCategory> categories = mapper.getAll();
+    List<EstimateCategory> categories = mapper.getAll();
     assertThat(categories.size(), is(1));
   }
 
   @Test
   public void shouldGetById() {
-    DemographicEstimateCategory category = getNewDemographicEstimateCategory();
+    EstimateCategory category = getNewDemographicEstimateCategory();
     mapper.insert(category);
 
-    DemographicEstimateCategory result = mapper.getById(category.getId());
+    EstimateCategory result = mapper.getById(category.getId());
 
     assertThat(result.getName(), is(category.getName()));
     assertThat(result.getDescription(), is(category.getDescription()));
@@ -70,7 +70,7 @@ public class DemographicEstimateCategoryMapperIT {
 
   @Test
   public void shouldInsert() {
-    DemographicEstimateCategory category = getNewDemographicEstimateCategory();
+    EstimateCategory category = getNewDemographicEstimateCategory();
 
     Integer result =  mapper.insert(category);
     assertThat(category.getId(), is(notNullValue()));
@@ -79,13 +79,13 @@ public class DemographicEstimateCategoryMapperIT {
 
   @Test
   public void shouldUpdate() {
-    DemographicEstimateCategory category = getNewDemographicEstimateCategory();
+    EstimateCategory category = getNewDemographicEstimateCategory();
     Integer result =  mapper.insert(category);
     category.setName("a different name");
     category.setDescription("another description as well");
 
     Integer updateResult = mapper.update(category);
-    DemographicEstimateCategory updatedCategory = mapper.getById(category.getId());
+    EstimateCategory updatedCategory = mapper.getById(category.getId());
 
     assertThat(updateResult, is(1));
     assertThat(updatedCategory.getName(), is(category.getName()));

@@ -9,13 +9,12 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.openlmis.web.controller.demographics;
 
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.demographics.dto.DemographicEstimateForm;
-import org.openlmis.demographics.service.FacilityDemographicEstimateService;
+import org.openlmis.demographics.service.DistrictDemographicEstimateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,27 +31,26 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @RequestMapping(value = "/demographic/estimate/")
-public class FacilityDemographicEstimateController extends BaseController {
+public class DistrictEstimateController extends BaseController {
 
   @Autowired
-  FacilityDemographicEstimateService service;
+  DistrictDemographicEstimateService service;
 
-  @RequestMapping(value = "facilities", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
+  @RequestMapping(value = "districts", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_PARAMETERS')")
   public ResponseEntity<OpenLmisResponse> get(@RequestParam("year") Integer year, @RequestParam("program") Long programId, HttpServletRequest request) {
-    return OpenLmisResponse.response("estimates", service.getEstimateForm(loggedInUserId(request), programId, year));
+    return OpenLmisResponse.response("estimates", service.getEstimateForm(year, programId, loggedInUserId(request)));
   }
 
-  @Transactional
-  @RequestMapping(value = "facilities", method = PUT, headers = ACCEPT_JSON )
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
+  @RequestMapping(value = "districts", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_PARAMETERS')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody DemographicEstimateForm form,  HttpServletRequest request){
     service.save(form, loggedInUserId(request));
     return OpenLmisResponse.response("estimates", form);
   }
 
   @Transactional
-  @RequestMapping(value = "finalize/facilities.json", method = PUT, headers = ACCEPT_JSON)
+  @RequestMapping(value = "finalize/districts.json", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'FINALIZE_DEMOGRAPHIC_ESTIMATES')")
   public ResponseEntity<OpenLmisResponse> finalize(@RequestBody DemographicEstimateForm form, HttpServletRequest request){
     service.finalize(form, loggedInUserId(request));
@@ -60,7 +58,7 @@ public class FacilityDemographicEstimateController extends BaseController {
   }
 
   @Transactional
-  @RequestMapping(value = "undo-finalize/facilities.json", method = PUT, headers = ACCEPT_JSON)
+  @RequestMapping(value = "undo-finalize/districts.json", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UNLOCK_FINALIZED_DEMOGRAPHIC_ESTIMATES')")
   public ResponseEntity<OpenLmisResponse> undoFinalize(@RequestBody DemographicEstimateForm form, HttpServletRequest request){
     service.undoFinalize(form, loggedInUserId(request));

@@ -12,8 +12,8 @@
 
 package org.openlmis.demographics.repository;
 
-import org.openlmis.demographics.domain.DistrictDemographicEstimate;
-import org.openlmis.demographics.domain.FacilityDemographicEstimate;
+import org.openlmis.demographics.domain.AnnualDistrictEstimateEntry;
+import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 import org.openlmis.demographics.dto.DemographicEstimateLineItem;
 import org.openlmis.demographics.repository.mapper.DistrictDemographicEstimateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +27,15 @@ public class DistrictDemographicEstimateRepository {
   @Autowired
   DistrictDemographicEstimateMapper mapper;
 
-  public List<DistrictDemographicEstimate> getDistrictEstimate(Integer year, Long districtId, Long programId) {
+  public List<AnnualDistrictEstimateEntry> getDistrictEstimate(Integer year, Long districtId, Long programId) {
     return mapper.getEstimatesForDistrict(year, districtId, programId);
   }
 
-  public Integer insert(DistrictDemographicEstimate estimate){
+  public Integer insert(AnnualDistrictEstimateEntry estimate){
     return mapper.insert(estimate);
   }
 
-  public Integer update(DistrictDemographicEstimate estimate){
+  public Integer update(AnnualDistrictEstimateEntry estimate){
     return mapper.update(estimate);
   }
 
@@ -43,15 +43,15 @@ public class DistrictDemographicEstimateRepository {
     return mapper.getDistrictLineItems(facilityIds);
   }
 
-  public List<FacilityDemographicEstimate> getFacilityEstimateAggregate(Integer year, Long districtId, Long programId) {
+  public List<AnnualFacilityEstimateEntry> getFacilityEstimateAggregate(Integer year, Long districtId, Long programId) {
     return mapper.getFacilityEstimateAggregate(year, districtId, programId);
   }
 
-  public void finalize(DistrictDemographicEstimate est) {
+  public void finalize(AnnualDistrictEstimateEntry est) {
     mapper.finalize(est);
   }
 
-  public void undoFinalize(DistrictDemographicEstimate est) {
+  public void undoFinalize(AnnualDistrictEstimateEntry est) {
     mapper.undoFinalize(est);
   }
 }

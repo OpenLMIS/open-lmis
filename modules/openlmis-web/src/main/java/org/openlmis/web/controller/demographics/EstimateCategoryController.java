@@ -11,7 +11,7 @@
  */
 package org.openlmis.web.controller.demographics;
 
-import org.openlmis.demographics.domain.DemographicEstimateCategory;
+import org.openlmis.demographics.domain.EstimateCategory;
 import org.openlmis.demographics.service.DemographicEstimateCategoryService;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.core.web.OpenLmisResponse;
@@ -27,7 +27,7 @@ import static java.util.Arrays.asList;
 
 @Controller
 @RequestMapping(value = "/demographic/estimate/")
-public class DemographicEstimateCategoryController extends BaseController{
+public class EstimateCategoryController extends BaseController{
 
   @Autowired
   DemographicEstimateCategoryService service;
@@ -43,7 +43,7 @@ public class DemographicEstimateCategoryController extends BaseController{
   }
 
   @RequestMapping(value = "category/save", method = RequestMethod.PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody DemographicEstimateCategory category){
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody EstimateCategory category){
     service.save(asList(category));
     return OpenLmisResponse.response("estimate_category", category);
   }

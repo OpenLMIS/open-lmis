@@ -12,7 +12,7 @@
 
 package org.openlmis.demographics.repository;
 
-import org.openlmis.demographics.domain.DemographicEstimateCategory;
+import org.openlmis.demographics.domain.EstimateCategory;
 import org.openlmis.demographics.repository.mapper.DemographicEstimateCategoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -25,19 +25,19 @@ public class DemographicEstimateCategoryRepository {
   @Autowired
   private DemographicEstimateCategoryMapper mapper;
 
-  public List<DemographicEstimateCategory> getAll(){
+  public List<EstimateCategory> getAll(){
     return mapper.getAll();
   }
 
-  public DemographicEstimateCategory getById(Long id){
+  public EstimateCategory getById(Long id){
     return mapper.getById(id);
   }
 
-  public void insert(DemographicEstimateCategory category){
+  public void insert(EstimateCategory category){
     mapper.insert(category);
   }
 
-  public void update(DemographicEstimateCategory category){
+  public void update(EstimateCategory category){
     mapper.update(category);
   }
 }

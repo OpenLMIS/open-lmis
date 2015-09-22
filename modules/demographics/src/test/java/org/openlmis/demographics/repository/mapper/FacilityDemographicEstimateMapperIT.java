@@ -23,8 +23,8 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.demographics.domain.DemographicEstimateCategory;
-import org.openlmis.demographics.domain.FacilityDemographicEstimate;
+import org.openlmis.demographics.domain.EstimateCategory;
+import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -61,7 +61,7 @@ public class FacilityDemographicEstimateMapperIT {
 
   private Facility facility;
 
-  private DemographicEstimateCategory category;
+  private EstimateCategory category;
 
   private Program program;
 
@@ -73,7 +73,7 @@ public class FacilityDemographicEstimateMapperIT {
     program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
 
-    category = new DemographicEstimateCategory();
+    category = new EstimateCategory();
     category.setName("1 - 2 years of age");
     category.setDescription("Random Description");
     category.setDefaultConversionFactor(1.0);
@@ -81,8 +81,8 @@ public class FacilityDemographicEstimateMapperIT {
     demographicEstimateCategoryMapper.insert(category);
   }
 
-  private FacilityDemographicEstimate createAFacilityDemographicEstimate() {
-    FacilityDemographicEstimate estimate = new FacilityDemographicEstimate();
+  private AnnualFacilityEstimateEntry createAFacilityDemographicEstimate() {
+    AnnualFacilityEstimateEntry estimate = new AnnualFacilityEstimateEntry();
 
     estimate.setFacilityId(facility.getId());
     estimate.setProgramId(program.getId());
@@ -95,7 +95,7 @@ public class FacilityDemographicEstimateMapperIT {
 
   @Test
   public void shouldInsert() throws Exception {
-    FacilityDemographicEstimate estimate = createAFacilityDemographicEstimate();
+    AnnualFacilityEstimateEntry estimate = createAFacilityDemographicEstimate();
 
     Integer result = mapper.insert(estimate);
 
@@ -107,25 +107,25 @@ public class FacilityDemographicEstimateMapperIT {
 
   @Test
   public void shouldUpdate() throws Exception {
-    FacilityDemographicEstimate estimate = createAFacilityDemographicEstimate();
+    AnnualFacilityEstimateEntry estimate = createAFacilityDemographicEstimate();
 
     mapper.insert(estimate);
 
     estimate.setValue(0L);
     mapper.update(estimate);
 
-    List<FacilityDemographicEstimate> list = mapper.getEstimatesForFacility(2005, facility.getId(), program.getId());
+    List<AnnualFacilityEstimateEntry> list = mapper.getEstimatesForFacility(2005, facility.getId(), program.getId());
     assertThat(list.size(), is(1));
     assertThat(list.get(0).getValue(), is(0L));
   }
 
   @Test
   public void shouldGetEstimatesForFacility() throws Exception {
-    FacilityDemographicEstimate estimate = createAFacilityDemographicEstimate();
+    AnnualFacilityEstimateEntry estimate = createAFacilityDemographicEstimate();
 
     mapper.insert(estimate);
 
-    List<FacilityDemographicEstimate> list = mapper.getEstimatesForFacility(2005, facility.getId(), program.getId());
+    List<AnnualFacilityEstimateEntry> list = mapper.getEstimatesForFacility(2005, facility.getId(), program.getId());
     assertThat(list.size(), is(1));
     assertThat(list.get(0).getValue(), is(estimate.getValue()));
   }

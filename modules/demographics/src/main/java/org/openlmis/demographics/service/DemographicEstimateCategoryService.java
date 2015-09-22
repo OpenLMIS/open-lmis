@@ -12,7 +12,7 @@
 
 package org.openlmis.demographics.service;
 
-import org.openlmis.demographics.domain.DemographicEstimateCategory;
+import org.openlmis.demographics.domain.EstimateCategory;
 import org.openlmis.demographics.helpers.ListUtil;
 import org.openlmis.demographics.repository.DemographicEstimateCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +26,16 @@ public class DemographicEstimateCategoryService {
   @Autowired
   private DemographicEstimateCategoryRepository repository;
 
-  public List<DemographicEstimateCategory> getAll(){
+  public List<EstimateCategory> getAll(){
     return repository.getAll();
   }
 
-  public DemographicEstimateCategory getById(Long id){
+  public EstimateCategory getById(Long id){
     return repository.getById(id);
   }
 
-  public void save(List<DemographicEstimateCategory> categories){
-    for(DemographicEstimateCategory category : ListUtil.emptyIfNull(categories)){
+  public void save(List<EstimateCategory> categories){
+    for(EstimateCategory category : ListUtil.emptyIfNull(categories)){
       if(category.getId() == null){
         repository.insert(category);
       }else{

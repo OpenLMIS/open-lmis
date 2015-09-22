@@ -6,10 +6,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.db.categories.UnitTests;
-import org.openlmis.demographics.domain.DemographicEstimateCategory;
-import org.openlmis.demographics.service.DemographicEstimateCategoryService;
 import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.db.categories.UnitTests;
+import org.openlmis.demographics.domain.EstimateCategory;
+import org.openlmis.demographics.service.DemographicEstimateCategoryService;
+import org.openlmis.web.controller.demographics.EstimateCategoryController;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -18,24 +19,22 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.anyList;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class DemographicEstimateCategoryControllerTest {
+public class EstimateCategoryControllerTest {
 
   @Mock
   DemographicEstimateCategoryService service;
 
   @InjectMocks
-  DemographicEstimateCategoryController controller;
+  EstimateCategoryController controller;
 
   @Test
   public void shouldGetAll() throws Exception {
-    List<DemographicEstimateCategory> categories = new ArrayList<>();
+    List<EstimateCategory> categories = new ArrayList<>();
     when(service.getAll()).thenReturn(categories);
 
     ResponseEntity<OpenLmisResponse> result  = controller.getAll();
@@ -45,7 +44,7 @@ public class DemographicEstimateCategoryControllerTest {
 
   @Test
   public void shouldGetById() throws Exception {
-    DemographicEstimateCategory category = new DemographicEstimateCategory();
+    EstimateCategory category = new EstimateCategory();
     when(service.getById(2L)).thenReturn(category);
 
     ResponseEntity<OpenLmisResponse> result = controller.getById(2L);
@@ -56,7 +55,7 @@ public class DemographicEstimateCategoryControllerTest {
   @Test
   public void shouldSave() throws Exception {
     doNothing().when(service).save(anyList());
-    DemographicEstimateCategory category = new DemographicEstimateCategory();
+    EstimateCategory category = new EstimateCategory();
 
     ResponseEntity<OpenLmisResponse> result = controller.save(category);
 

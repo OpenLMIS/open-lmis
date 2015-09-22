@@ -14,15 +14,15 @@ package org.openlmis.demographics.builders;
 
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.demographics.domain.FacilityDemographicEstimate;
+import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 
 public class FacilityDemographicEstimateBuilder {
 
-  public static final Instantiator<FacilityDemographicEstimate> defaultFacilityDemographicEstimate = new Instantiator<FacilityDemographicEstimate>() {
+  public static final Instantiator<AnnualFacilityEstimateEntry> defaultFacilityDemographicEstimate = new Instantiator<AnnualFacilityEstimateEntry>() {
 
     @Override
-    public FacilityDemographicEstimate instantiate(PropertyLookup<FacilityDemographicEstimate> lookup) {
-      FacilityDemographicEstimate item = new FacilityDemographicEstimate();
+    public AnnualFacilityEstimateEntry instantiate(PropertyLookup<AnnualFacilityEstimateEntry> lookup) {
+      AnnualFacilityEstimateEntry item = new AnnualFacilityEstimateEntry();
       item.setFacilityId(1L);
       item.setConversionFactor(1.0);
       item.setDemographicEstimateId(1L);

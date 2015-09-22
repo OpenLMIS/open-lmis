@@ -15,8 +15,8 @@ package org.openlmis.demographics.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openlmis.demographics.domain.DistrictDemographicEstimate;
-import org.openlmis.demographics.domain.FacilityDemographicEstimate;
+import org.openlmis.demographics.domain.AnnualDistrictEstimateEntry;
+import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 
 import java.util.List;
 
@@ -35,9 +35,9 @@ public class DemographicEstimateLineItem {
 
   private String parentName;
 
-  private List<FacilityDemographicEstimate> facilityEstimates;
+  private List<AnnualFacilityEstimateEntry> facilityEstimates;
 
-  private List<DistrictDemographicEstimate> districtEstimates;
+  private List<AnnualDistrictEstimateEntry> districtEstimates;
 
 
 }

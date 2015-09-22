@@ -12,7 +12,7 @@
 
 package org.openlmis.demographics.repository;
 
-import org.openlmis.demographics.domain.FacilityDemographicEstimate;
+import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 import org.openlmis.demographics.dto.DemographicEstimateLineItem;
 import org.openlmis.demographics.repository.mapper.FacilityDemographicEstimateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +26,19 @@ public class FacilityDemographicEstimateRepository {
   @Autowired
   FacilityDemographicEstimateMapper mapper;
 
-  public List<FacilityDemographicEstimate> getFacilityEstimate(Integer year, Long facilityId, Long programId) {
+  public List<AnnualFacilityEstimateEntry> getFacilityEstimate(Integer year, Long facilityId, Long programId) {
     return mapper.getEstimatesForFacility(year, facilityId, programId);
   }
 
-  public List<FacilityDemographicEstimate> getFacilityEstimateWithDetails(Integer year, Long facilityId, Long programId) {
+  public List<AnnualFacilityEstimateEntry> getFacilityEstimateWithDetails(Integer year, Long facilityId, Long programId) {
     return mapper.getEstimatesForFacilityWithDetails(year, facilityId, programId);
   }
 
-  public Integer insert(FacilityDemographicEstimate estimate){
+  public Integer insert(AnnualFacilityEstimateEntry estimate){
     return mapper.insert(estimate);
   }
 
-  public Integer update(FacilityDemographicEstimate estimate){
+  public Integer update(AnnualFacilityEstimateEntry estimate){
     return mapper.update(estimate);
   }
 
@@ -46,11 +46,11 @@ public class FacilityDemographicEstimateRepository {
     return mapper.getFacilityList(programId, requsitionGroupIds);
   }
 
-  public Integer finalize(FacilityDemographicEstimate estimate){
+  public Integer finalize(AnnualFacilityEstimateEntry estimate){
     return mapper.finalize(estimate);
   }
 
-  public Integer undoFinalize(FacilityDemographicEstimate estimate){
+  public Integer undoFinalize(AnnualFacilityEstimateEntry estimate){
     return mapper.undoFinalize(estimate);
   }
 }

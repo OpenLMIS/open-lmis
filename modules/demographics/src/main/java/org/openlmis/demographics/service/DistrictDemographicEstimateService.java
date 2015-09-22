@@ -16,10 +16,8 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RightName;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.RequisitionGroupService;
-import org.openlmis.core.service.SupervisoryNodeService;
-import org.openlmis.demographics.domain.DemographicEstimateCategory;
-import org.openlmis.demographics.domain.DistrictDemographicEstimate;
+import org.openlmis.demographics.domain.AnnualDistrictEstimateEntry;
+import org.openlmis.demographics.domain.EstimateCategory;
 import org.openlmis.demographics.dto.DemographicEstimateForm;
 import org.openlmis.demographics.dto.DemographicEstimateLineItem;
 import org.openlmis.demographics.helpers.ListUtil;
@@ -46,22 +44,17 @@ public class DistrictDemographicEstimateService {
   @Autowired
   private CommaSeparator commaSeparator;
 
-  @Autowired
-  private SupervisoryNodeService supervisoryNodeService;
-
-  @Autowired
-  private RequisitionGroupService requisitionGroupService;
 
   public void save(DemographicEstimateForm estimate, Long userId){
     for(DemographicEstimateLineItem dto: ListUtil.emptyIfNull(estimate.getEstimateLineItems())){
-      for(DistrictDemographicEstimate est: ListUtil.emptyIfNull(dto.getDistrictEstimates())){
-        est.setDistrictId(dto.getId());
-        if(est.getId() == null){
-          est.setCreatedBy(userId);
-          repository.insert(est);
+      for(AnnualDistrictEstimateEntry aEstimate : ListUtil.emptyIfNull(dto.getDistrictEstimates())){
+        aEstimate.setDistrictId(dto.getId());
+        if(aEstimate.getId() == null){
+          aEstimate.setCreatedBy(userId);
+          repository.insert(aEstimate);
         }else{
-          est.setModifiedBy(userId);
-          repository.update(est);
+          aEstimate.setModifiedBy(userId);
+          repository.update(aEstimate);
         }
       }
     }
@@ -70,7 +63,7 @@ public class DistrictDemographicEstimateService {
   public void finalize(DemographicEstimateForm form, Long userId) {
     this.save(form, userId);
     for(DemographicEstimateLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
-      for (DistrictDemographicEstimate est : ListUtil.emptyIfNull(dto.getDistrictEstimates())) {
+      for (AnnualDistrictEstimateEntry est : ListUtil.emptyIfNull(dto.getDistrictEstimates())) {
         est.setDistrictId(dto.getId());
         if(est.getId() != null){
           est.setModifiedBy(userId);
@@ -84,7 +77,7 @@ public class DistrictDemographicEstimateService {
 
   public void undoFinalize(DemographicEstimateForm form, Long userId) {
     for(DemographicEstimateLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
-      for (DistrictDemographicEstimate est : ListUtil.emptyIfNull(dto.getDistrictEstimates())) {
+      for (AnnualDistrictEstimateEntry est : ListUtil.emptyIfNull(dto.getDistrictEstimates())) {
         est.setDistrictId(dto.getId());
         if(est.getId() != null){
           est.setModifiedBy(userId);
@@ -96,10 +89,10 @@ public class DistrictDemographicEstimateService {
     }
   }
 
-  private List<DistrictDemographicEstimate> getEmptyEstimateObjects(List<DemographicEstimateCategory> categories, Long districtId, Long programId, Integer year) {
-    List<DistrictDemographicEstimate> result = new ArrayList<>();
-    for(DemographicEstimateCategory category: categories){
-      DistrictDemographicEstimate estimate = new DistrictDemographicEstimate();
+  private List<AnnualDistrictEstimateEntry> getEmptyEstimateObjects(List<EstimateCategory> categories, Long districtId, Long programId, Integer year) {
+    List<AnnualDistrictEstimateEntry> result = new ArrayList<>();
+    for(EstimateCategory category: categories){
+      AnnualDistrictEstimateEntry estimate = new AnnualDistrictEstimateEntry();
       estimate.setYear(year);
       estimate.setDistrictId(districtId);
       estimate.setIsFinal(false);
@@ -114,7 +107,7 @@ public class DistrictDemographicEstimateService {
 
   public DemographicEstimateForm getEstimateForm(Integer year, Long programId, Long userId) {
     DemographicEstimateForm form = new DemographicEstimateForm();
-    List<DemographicEstimateCategory> categories = estimateCategoryService.getAll();
+    List<EstimateCategory> categories = estimateCategoryService.getAll();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
 
     List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES );

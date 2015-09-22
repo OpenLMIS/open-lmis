@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.demographics.repository;
+package service;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -19,46 +19,49 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.demographics.domain.DemographicEstimateCategory;
-import org.openlmis.demographics.repository.mapper.DemographicEstimateCategoryMapper;
+import org.openlmis.demographics.domain.EstimateCategory;
+import org.openlmis.demographics.repository.DemographicEstimateCategoryRepository;
+import org.openlmis.demographics.service.DemographicEstimateCategoryService;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
+
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class DemographicEstimateCategoryRepositoryTest {
+public class EstimateCategoryServiceTest {
 
   @Mock
-  DemographicEstimateCategoryMapper mapper;
+  DemographicEstimateCategoryRepository repository;
 
   @InjectMocks
-  DemographicEstimateCategoryRepository repository;
+  DemographicEstimateCategoryService service;
 
   @Test
   public void shouldGetAll() throws Exception {
-    List<DemographicEstimateCategory> categories = repository.getAll();
-    verify(mapper).getAll();
+    List<EstimateCategory> categories = service.getAll();
+    verify(repository).getAll();
   }
 
   @Test
   public void shouldGetById() throws Exception {
-    DemographicEstimateCategory category = repository.getById(1L);
-    verify(mapper).getById(1L);
+    EstimateCategory category = service.getById(1L);
+    verify(repository).getById(1L);
   }
 
   @Test
-  public void shouldInsert() throws Exception {
-    DemographicEstimateCategory category = new DemographicEstimateCategory();
-    repository.insert(category);
-    verify(mapper).insert(category);
-  }
+  public void shouldSave() throws Exception {
+    EstimateCategory category1 = new EstimateCategory();
+    EstimateCategory category2 = new EstimateCategory();
+    category2.setId(2L);
+    List<EstimateCategory> categories = asList(category1, category2);
 
-  @Test
-  public void shouldUpdate() throws Exception {
-    DemographicEstimateCategory category = new DemographicEstimateCategory();
-    repository.update(category);
-    verify(mapper).update(category);
+    // hmm, this covers both conditions but would it be better to break it into 2 differnt tests?
+    service.save(categories);
+
+    verify(repository).insert(category1);
+    verify(repository).update(category2);
   }
 }

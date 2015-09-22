@@ -12,7 +12,8 @@ import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.demographics.dto.DemographicEstimateForm;
 import org.openlmis.demographics.dto.DemographicEstimateLineItem;
-import org.openlmis.demographics.service.FacilityDemographicEstimateService;
+import org.openlmis.demographics.service.DistrictDemographicEstimateService;
+import org.openlmis.web.controller.demographics.DistrictEstimateController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -26,14 +27,14 @@ import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class FacilityDemographicEstimateControllerTest {
+public class DistrictEstimateEntryControllerTest {
 
   private static final Long USER_ID = 1L;
   private static final String USER = "user";
   @Mock
-  FacilityDemographicEstimateService service;
+  DistrictDemographicEstimateService service;
   @InjectMocks
-  FacilityDemographicEstimateController controller;
+  DistrictEstimateController controller;
   private MockHttpServletRequest request;
 
   @Before
@@ -50,12 +51,12 @@ public class FacilityDemographicEstimateControllerTest {
   public void shouldGet() throws Exception {
     DemographicEstimateForm form = new DemographicEstimateForm();
     form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
-    when(service.getEstimateForm(1L, 2L, 2005)).thenReturn(form);
+    when(service.getEstimateForm(2005, 1L, 1L)).thenReturn(form);
 
-    ResponseEntity<OpenLmisResponse> response = controller.get(2005, 2L, request);
+    ResponseEntity<OpenLmisResponse> response = controller.get(2005, 1L, request);
 
     assertThat(form, is(response.getBody().getData().get("estimates")));
-    verify(service).getEstimateForm(1L, 2L, 2005);
+    verify(service).getEstimateForm(2005, 1L, 1L);
   }
 
   @Test
