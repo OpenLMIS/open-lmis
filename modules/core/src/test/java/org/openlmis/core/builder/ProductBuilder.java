@@ -22,9 +22,11 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class ProductBuilder {
 
+  public static final Long PRODUCT_ID = null;
   public static final String PRODUCT_CODE = "P999";
   public static final String PRIMARY_NAME = "Primary Name";
 
+  public static final Property<Product, Long> productId = newProperty();
   public static final Property<Product, String> code = newProperty();
   public static final Property<Product, String> primaryName = newProperty();
   public static final Property<Product, Boolean> fullSupply = newProperty();
@@ -35,6 +37,7 @@ public class ProductBuilder {
     public Product instantiate(PropertyLookup<Product> lookup) {
       Product product = new Product();
 
+      product.setId(lookup.valueOf(productId, PRODUCT_ID));
       product.setCode(lookup.valueOf(code, PRODUCT_CODE));
       product.setFullSupply(lookup.valueOf(fullSupply, true));
       product.setActive(lookup.valueOf(active, true));

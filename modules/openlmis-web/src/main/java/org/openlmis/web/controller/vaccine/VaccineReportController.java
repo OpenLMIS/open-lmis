@@ -26,8 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/vaccine/report/")
@@ -95,27 +93,8 @@ public class VaccineReportController extends BaseController {
 
     if (periodId == null || periodId == 0) return null;
 
-    Map<String, Object> data = new HashMap();
-    Long reportId = null;
+    return OpenLmisResponse.response("vaccineData", service.getMonthlyVaccineReport( facilityId, periodId, zoneId));
 
-    if (facilityId != null && facilityId != 0 ){ // Return aggregated data for the selected geozone
-      reportId = service.getReportIdForFacilityAndPeriod(facilityId, periodId);
-
-    }
-
-    data.put("vaccination", service.getVaccineReport(reportId, facilityId, periodId, zoneId));
-    data.put("diseaseSurveillance", service.getDiseaseSurveillance(reportId, facilityId, periodId, zoneId));
-    data.put("vaccineCoverage", service.getVaccineCoverageReport(reportId, facilityId, periodId, zoneId));
-    data.put("immunizationSession", service.getImmunizationSession(reportId, facilityId, periodId, zoneId));
-    data.put("vitaminSupplementation", service.getVitaminSupplementationReport(reportId, facilityId, periodId, zoneId));
-    data.put("adverseEffect", service.getAdverseEffectReport(reportId, facilityId, periodId, zoneId));
-    data.put("coldChain", service.getColdChain(reportId, facilityId, periodId, zoneId));
-    data.put("targetPopulation", service.getTargetPopulation(facilityId, periodId, zoneId));
-    data.put("syringes", service.getSyringeAndSafetyBoxReport(reportId, facilityId, periodId, zoneId));
-    data.put("vitamins", service.getVitaminsReport(reportId, facilityId, periodId, zoneId));
-
-
-    return OpenLmisResponse.response("vaccineData", data);
   }
 
   @RequestMapping(value = "vaccine-usage-trend")

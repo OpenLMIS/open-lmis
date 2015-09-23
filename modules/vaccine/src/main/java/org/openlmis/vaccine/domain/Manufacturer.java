@@ -9,11 +9,21 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('vaccine', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap', 'nsPopover'])
-    .config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.
-            when('/vaccine-report', {controller:VaccineReportPOCReportController, templateUrl:'partials/vaccine-report.html',reloadOnSearch:false}).
-            otherwise({redirectTo:'/vaccine-report'});
-    }]).config(function(angularCombineConfigProvider) {
-        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-    });
+
+package org.openlmis.vaccine.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Manufacturer extends BaseModel {
+
+  private String name;
+
+  private String website;
+
+}

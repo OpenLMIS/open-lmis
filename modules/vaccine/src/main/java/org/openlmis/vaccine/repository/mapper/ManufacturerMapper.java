@@ -9,11 +9,18 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('vaccine', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap', 'nsPopover'])
-    .config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.
-            when('/vaccine-report', {controller:VaccineReportPOCReportController, templateUrl:'partials/vaccine-report.html',reloadOnSearch:false}).
-            otherwise({redirectTo:'/vaccine-report'});
-    }]).config(function(angularCombineConfigProvider) {
-        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-    });
+
+package org.openlmis.vaccine.repository.mapper;
+
+import org.apache.ibatis.annotations.Select;
+import org.openlmis.vaccine.domain.Manufacturer;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ManufacturerMapper {
+
+  @Select("select * from manufacturers order by name")
+  List<Manufacturer> getAll();
+}

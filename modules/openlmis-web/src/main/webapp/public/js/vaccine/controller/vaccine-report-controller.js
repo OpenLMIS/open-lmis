@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineUsageTrend, Period) {
+function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineUsageTrend, Period, messageService) {
 
     $scope.OnFilterChanged = function() {
         // clear old data if there was any
@@ -20,8 +20,14 @@ function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineU
             $scope.period = data.period;
         });
 
-        if($scope.filter.period !== null && $scope.filter.period !== 0 &&
-            $scope.filter.facility !== null && $scope.filter.facility !== 0
+        if(isUndefined($scope.filter.zone) || messageService.get('report.filter.all.geographic.zones') == $scope.filter.zone){
+            $scope.filter.zone = -1;
+        }
+        if(isUndefined($scope.filter.facility)){
+            $scope.filter.facility = 0;
+        }
+
+        if($scope.filter.period !== null && $scope.filter.period !== 0
         ){
             VaccineMonthlyReport.get($scope.filter, function(data){
                 $scope.data = data.vaccineData;

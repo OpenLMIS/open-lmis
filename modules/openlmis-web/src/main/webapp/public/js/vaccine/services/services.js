@@ -126,5 +126,7 @@ services.factory('VaccineProgramProducts', function ($resource) {
   return $resource('/vaccine/inventory/programProducts/programId/:programId.json', {}, {});
 });
 
-
+services.factory('ManufacturerList', function ($resource) {
+  return $resource('/vaccine/manufacturers.json', {}, {});
+});
 

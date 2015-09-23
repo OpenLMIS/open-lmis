@@ -9,11 +9,27 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('vaccine', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap', 'nsPopover'])
-    .config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.
-            when('/vaccine-report', {controller:VaccineReportPOCReportController, templateUrl:'partials/vaccine-report.html',reloadOnSearch:false}).
-            otherwise({redirectTo:'/vaccine-report'});
-    }]).config(function(angularCombineConfigProvider) {
-        angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-    });
+
+package org.openlmis.web.controller.vaccine;
+
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.vaccine.service.ManufacturerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping(value = "/vaccine/")
+public class ManufacturerController extends BaseController{
+
+  @Autowired
+  private ManufacturerService service;
+
+  @RequestMapping(value = "manufacturers")
+  public ResponseEntity<OpenLmisResponse> getAll(){
+    return OpenLmisResponse.response("manufacturers", service.getAll());
+  }
+
+}

@@ -46,6 +46,14 @@ public abstract class BaseModel {
     this.id = id;
   }
 
+  /**
+   * Returns weather this object has a domain identity.  That is, is it persistent.
+   * @return true if it has an id.  False otherwise.
+   */
+  public boolean hasId() {
+    return (null == id) ? false : true;
+  }
+
   protected static String getFormattedDate(Date date)
   {
     return DateUtil.getFormattedDate(date, "yyyy-dd-MM");
