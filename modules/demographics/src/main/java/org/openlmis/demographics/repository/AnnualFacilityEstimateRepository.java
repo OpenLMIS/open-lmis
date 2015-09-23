@@ -13,18 +13,18 @@
 package org.openlmis.demographics.repository;
 
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
-import org.openlmis.demographics.dto.DemographicEstimateLineItem;
-import org.openlmis.demographics.repository.mapper.FacilityDemographicEstimateMapper;
+import org.openlmis.demographics.dto.EstimateFormLineItem;
+import org.openlmis.demographics.repository.mapper.AnnualFacilityEstimateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class FacilityDemographicEstimateRepository {
+public class AnnualFacilityEstimateRepository {
 
   @Autowired
-  FacilityDemographicEstimateMapper mapper;
+  AnnualFacilityEstimateMapper mapper;
 
   public List<AnnualFacilityEstimateEntry> getFacilityEstimate(Integer year, Long facilityId, Long programId) {
     return mapper.getEstimatesForFacility(year, facilityId, programId);
@@ -42,7 +42,7 @@ public class FacilityDemographicEstimateRepository {
     return mapper.update(estimate);
   }
 
-  public List<DemographicEstimateLineItem> getFacilityList(Long programId, String requsitionGroupIds) {
+  public List<EstimateFormLineItem> getFacilityList(Long programId, String requsitionGroupIds) {
     return mapper.getFacilityList(programId, requsitionGroupIds);
   }
 

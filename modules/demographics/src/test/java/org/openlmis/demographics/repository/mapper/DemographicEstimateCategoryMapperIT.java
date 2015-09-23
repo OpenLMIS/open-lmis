@@ -37,7 +37,7 @@ import static org.hamcrest.core.Is.is;
 public class DemographicEstimateCategoryMapperIT {
 
   @Autowired
-  DemographicEstimateCategoryMapper mapper;
+  EstimateCategoryMapper mapper;
 
   private EstimateCategory getNewDemographicEstimateCategory() {
     EstimateCategory category = new EstimateCategory();

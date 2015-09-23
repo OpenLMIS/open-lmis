@@ -27,9 +27,9 @@ import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.demographics.domain.EstimateCategory;
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
-import org.openlmis.demographics.dto.DemographicEstimateForm;
-import org.openlmis.demographics.dto.DemographicEstimateLineItem;
-import org.openlmis.demographics.repository.FacilityDemographicEstimateRepository;
+import org.openlmis.demographics.dto.EstimateForm;
+import org.openlmis.demographics.dto.EstimateFormLineItem;
+import org.openlmis.demographics.repository.AnnualFacilityEstimateRepository;
 import org.openlmis.demographics.service.DemographicEstimateCategoryService;
 import org.openlmis.demographics.service.FacilityDemographicEstimateService;
 
@@ -47,7 +47,7 @@ import static org.mockito.Mockito.*;
 public class AnnualFacilityEstimateEntryServiceTest {
 
   @Mock
-  FacilityDemographicEstimateRepository repository;
+  AnnualFacilityEstimateRepository repository;
 
   @Mock
   FacilityService facilityService;
@@ -69,8 +69,8 @@ public class AnnualFacilityEstimateEntryServiceTest {
   FacilityDemographicEstimateService service;
   @Test
   public void shouldSave() throws Exception {
-    DemographicEstimateForm form = new DemographicEstimateForm();
-    DemographicEstimateLineItem estimateLineItem = new DemographicEstimateLineItem();
+    EstimateForm form = new EstimateForm();
+    EstimateFormLineItem estimateLineItem = new EstimateFormLineItem();
     estimateLineItem.setFacilityEstimates(new ArrayList<AnnualFacilityEstimateEntry>());
     estimateLineItem.getFacilityEstimates().add(new AnnualFacilityEstimateEntry(2000, 12L, 1L, false, 2L, null, 1.0d, 2L));
     form.setEstimateLineItems(asList(estimateLineItem));
@@ -103,9 +103,9 @@ public class AnnualFacilityEstimateEntryServiceTest {
     when(categoryService.getAll()).thenReturn(asList(category1, category2));
     when(commaSeparator.commaSeparateIds(groups)).thenReturn("{1}");
 
-    when(repository.getFacilityList(2L, "{1}")).thenReturn(asList(new DemographicEstimateLineItem()));
+    when(repository.getFacilityList(2L, "{1}")).thenReturn(asList(new EstimateFormLineItem()));
 
-    DemographicEstimateForm form = service.getEstimateForm(1L, 2L, 2005);
+    EstimateForm form = service.getEstimateForm(1L, 2L, 2005);
 
     verify(categoryService, atMost(1)).getAll();
     assertThat(form.getEstimateLineItems().size(), is(1));

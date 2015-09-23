@@ -52,10 +52,10 @@ public class DistrictDemographicEstimateMapperIT {
     ProgramMapper programMapper;
 
     @Autowired
-    DemographicEstimateCategoryMapper demographicEstimateCategoryMapper;
+    EstimateCategoryMapper estimateCategoryMapper;
 
     @Autowired
-    private DistrictDemographicEstimateMapper mapper;
+    private AnnualDistrictEstimateMapper mapper;
 
     private GeographicZone district;
 
@@ -73,7 +73,7 @@ public class DistrictDemographicEstimateMapperIT {
         programMapper.insert(program);
 
         category = new EstimateCategory("Live Birth", "", true, 1.0);
-        demographicEstimateCategoryMapper.insert(category);
+        estimateCategoryMapper.insert(category);
     }
 
     @Test

@@ -22,10 +22,10 @@ import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.demographics.domain.EstimateCategory;
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
-import org.openlmis.demographics.dto.DemographicEstimateForm;
-import org.openlmis.demographics.dto.DemographicEstimateLineItem;
+import org.openlmis.demographics.dto.EstimateForm;
+import org.openlmis.demographics.dto.EstimateFormLineItem;
 import org.openlmis.demographics.helpers.ListUtil;
-import org.openlmis.demographics.repository.FacilityDemographicEstimateRepository;
+import org.openlmis.demographics.repository.AnnualFacilityEstimateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +40,7 @@ public class FacilityDemographicEstimateService {
   DemographicEstimateCategoryService estimateCategoryService;
 
   @Autowired
-  private FacilityDemographicEstimateRepository repository;
+  private AnnualFacilityEstimateRepository repository;
 
   @Autowired
   private FacilityService facilityService;
@@ -54,32 +54,31 @@ public class FacilityDemographicEstimateService {
   @Autowired
   private RequisitionGroupService requisitionGroupService;
 
-  public void save(DemographicEstimateForm estimate, Long userId){
-    for(DemographicEstimateLineItem dto: ListUtil.emptyIfNull(estimate.getEstimateLineItems())){
-      for(AnnualFacilityEstimateEntry est: ListUtil.emptyIfNull(dto.getFacilityEstimates())){
-        // check if this record was already finalized. if so ... do not update it. continue to the next record instead.
-        if(est.getIsFinal()){
+  public void save(EstimateForm estimateForm, Long userId){
+    for(EstimateFormLineItem dto: ListUtil.emptyIfNull(estimateForm.getEstimateLineItems())){
+      for(AnnualFacilityEstimateEntry estimate: ListUtil.emptyIfNull(dto.getFacilityEstimates())){
+        if(estimate.getIsFinal()){
           continue;
         }
-        est.setFacilityId(dto.getId());
+        estimate.setFacilityId(dto.getId());
 
-        if(est.getId() == null){
-          est.setCreatedBy(userId);
-          repository.insert(est);
+        if(!estimate.hasId()){
+          estimate.setCreatedBy(userId);
+          repository.insert(estimate);
         }else{
-          est.setModifiedBy(userId);
-          repository.update(est);
+          estimate.setModifiedBy(userId);
+          repository.update(estimate);
         }
       }
     }
   }
 
-  public void finalize(DemographicEstimateForm form, Long userId) {
+  public void finalize(EstimateForm form, Long userId) {
     this.save(form, userId);
-    for(DemographicEstimateLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
+    for(EstimateFormLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
       for (AnnualFacilityEstimateEntry est : ListUtil.emptyIfNull(dto.getFacilityEstimates())) {
         est.setFacilityId(dto.getId());
-        if(est.getId() != null){
+        if(est.hasId()){
           est.setModifiedBy(userId);
           est.setModifiedDate(new Date());
           est.setIsFinal(true);
@@ -89,11 +88,11 @@ public class FacilityDemographicEstimateService {
     }
   }
 
-  public void undoFinalize(DemographicEstimateForm form, Long userId) {
-    for(DemographicEstimateLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
+  public void undoFinalize(EstimateForm form, Long userId) {
+    for(EstimateFormLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
       for (AnnualFacilityEstimateEntry est : ListUtil.emptyIfNull(dto.getFacilityEstimates())) {
         est.setFacilityId(dto.getId());
-        if(est.getId() != null){
+        if(est.hasId()){
           est.setModifiedBy(userId);
           est.setModifiedDate(new Date());
           est.setIsFinal(false);
@@ -103,8 +102,10 @@ public class FacilityDemographicEstimateService {
     }
   }
 
-  private List<AnnualFacilityEstimateEntry> getEmptyEstimateObjects(List<EstimateCategory> categories, Long facilityId, Long programId, Integer year, Boolean includeDetails) {
+  private List<AnnualFacilityEstimateEntry> createDefaultEstimateEntries(List<EstimateCategory> categories, Long facilityId, Long programId, Integer year, Boolean includeDetails) {
+
     List<AnnualFacilityEstimateEntry> result = new ArrayList<>();
+
     for(EstimateCategory category: categories){
       AnnualFacilityEstimateEntry estimate = new AnnualFacilityEstimateEntry();
       estimate.setYear(year);
@@ -119,21 +120,22 @@ public class FacilityDemographicEstimateService {
       }
       result.add(estimate);
     }
+
     return result;
   }
 
-  public DemographicEstimateForm getEstimateForm(Long userId, Long programId, Integer year) {
-    DemographicEstimateForm form = new DemographicEstimateForm();
+  public EstimateForm getEstimateForm(Long userId, Long programId, Integer year) {
+    EstimateForm form = new EstimateForm();
     List<EstimateCategory> categories = estimateCategoryService.getAll();
-    form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
+    form.setEstimateLineItems(new ArrayList<EstimateFormLineItem>());
     List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, programId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES);
     List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
 
-    List<DemographicEstimateLineItem> facilities = repository.getFacilityList(programId, commaSeparator.commaSeparateIds(requisitionGroups));
-    for (DemographicEstimateLineItem facility : facilities) {
+    List<EstimateFormLineItem> facilities = repository.getFacilityList(programId, commaSeparator.commaSeparateIds(requisitionGroups));
+    for (EstimateFormLineItem facility : facilities) {
       facility.setFacilityEstimates(repository.getFacilityEstimate(year, facility.getId(), programId));
       if (facility.getFacilityEstimates().size() == 0) {
-        facility.setFacilityEstimates(getEmptyEstimateObjects(categories, facility.getId(), programId, year, false));
+        facility.setFacilityEstimates(createDefaultEstimateEntries(categories, facility.getId(), programId, year, false));
       }
       form.getEstimateLineItems().add(facility);
     }
@@ -141,16 +143,16 @@ public class FacilityDemographicEstimateService {
   }
 
   public List<AnnualFacilityEstimateEntry> getEstimateValuesForFacility(Long facilityId, Long programId, Integer year) {
-    List<AnnualFacilityEstimateEntry> result = repository.getFacilityEstimateWithDetails(year, facilityId, programId);
-    if(result == null || result.size() == 0){
+    List<AnnualFacilityEstimateEntry> estimates = repository.getFacilityEstimateWithDetails(year, facilityId, programId);
+    if(estimates == null || estimates.size() == 0){
       Facility facility = facilityService.getById(facilityId);
       List<EstimateCategory> categories = estimateCategoryService.getAll();
-      result = getEmptyEstimateObjects(categories, facility.getId(), programId, year, true);
-      for(AnnualFacilityEstimateEntry estimate: result){
+      estimates = createDefaultEstimateEntries(categories, facility.getId(), programId, year, true);
+      for(AnnualFacilityEstimateEntry estimate: estimates){
         estimate.calculateAndSetValue(facility.getCatchmentPopulation());
       }
     }
-    return result;
+    return estimates;
   }
 
 

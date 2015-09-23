@@ -10,34 +10,27 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.demographics.repository;
+package org.openlmis.demographics.builders;
 
+import com.natpryce.makeiteasy.Instantiator;
+import com.natpryce.makeiteasy.Property;
+import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.demographics.domain.EstimateCategory;
-import org.openlmis.demographics.repository.mapper.DemographicEstimateCategoryMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
+public class EstimateCategoryBuilder {
 
-@Repository
-public class DemographicEstimateCategoryRepository {
+  public static Property<EstimateCategory, Double> conversionFactor = Property.newProperty();
 
-  @Autowired
-  private DemographicEstimateCategoryMapper mapper;
+  public static final Instantiator<EstimateCategory> defaultEstimateCategory = new Instantiator<EstimateCategory>() {
 
-  public List<EstimateCategory> getAll(){
-    return mapper.getAll();
-  }
-
-  public EstimateCategory getById(Long id){
-    return mapper.getById(id);
-  }
-
-  public void insert(EstimateCategory category){
-    mapper.insert(category);
-  }
-
-  public void update(EstimateCategory category){
-    mapper.update(category);
-  }
+    @Override
+    public EstimateCategory instantiate(PropertyLookup<EstimateCategory> lookup) {
+      EstimateCategory item = new EstimateCategory();
+      item.setId(1L);
+      item.setDefaultConversionFactor(lookup.valueOf(conversionFactor, 100.0));
+      item.setName("Population");
+      item.setIsPrimaryEstimate(true);
+      return item;
+    }
+  };
 }

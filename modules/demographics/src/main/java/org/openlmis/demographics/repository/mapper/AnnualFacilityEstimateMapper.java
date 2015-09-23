@@ -14,13 +14,13 @@ package org.openlmis.demographics.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
-import org.openlmis.demographics.dto.DemographicEstimateLineItem;
+import org.openlmis.demographics.dto.EstimateFormLineItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface FacilityDemographicEstimateMapper {
+public interface AnnualFacilityEstimateMapper {
 
   @Insert("insert into facility_demographic_estimates " +
           " (year, facilityId, demographicEstimateId, conversionFactor, programId , value)" +
@@ -79,5 +79,5 @@ public interface FacilityDemographicEstimateMapper {
             "     join requisition_group_members m on m.facilityId = f.id " +
             " where m.requisitionGroupId  = ANY(#{requisitionGroupIds}::INTEGER[]) " +
             " order by gz.name, f.name")
-    List<DemographicEstimateLineItem> getFacilityList(@Param("programId") Long programId, @Param("requisitionGroupIds") String requsitionGroupIds);
+    List<EstimateFormLineItem> getFacilityList(@Param("programId") Long programId, @Param("requisitionGroupIds") String requsitionGroupIds);
 }

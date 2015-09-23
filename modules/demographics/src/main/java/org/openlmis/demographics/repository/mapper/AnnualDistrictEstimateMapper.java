@@ -13,7 +13,7 @@
 package org.openlmis.demographics.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.demographics.dto.DemographicEstimateLineItem;
+import org.openlmis.demographics.dto.EstimateFormLineItem;
 import org.openlmis.demographics.domain.AnnualDistrictEstimateEntry;
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 import org.springframework.stereotype.Repository;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DistrictDemographicEstimateMapper {
+public interface AnnualDistrictEstimateMapper {
 
   @Insert("insert into district_demographic_estimates " +
           " (year, districtId, demographicEstimateId, programId , conversionFactor, value)" +
@@ -60,7 +60,7 @@ public interface DistrictDemographicEstimateMapper {
   @Select("select r.id as parentId, r.name as parentName, z.* from geographic_zones z join geographic_zones r on r.id = z.parentId " +
     "     where z.levelId = (select max(levelNumber) from geographic_levels) and z.parentId in (select gz.parentId from facilities ff join geographic_zones gz on gz.id = ff.geographicZoneId where ff.id  = Any(#{facilities}::INTEGER[]))" +
     "     order by r.name, z.name")
-  List<DemographicEstimateLineItem> getDistrictLineItems(@Param("facilities") String facilityIds);
+  List<EstimateFormLineItem> getDistrictLineItems(@Param("facilities") String facilityIds);
 
   @Select("select z.name as name, e.demographicEstimateId, f.geographicZoneId as facilityId, sum(e.value) as value " +
     " from facility_demographic_estimates e " +

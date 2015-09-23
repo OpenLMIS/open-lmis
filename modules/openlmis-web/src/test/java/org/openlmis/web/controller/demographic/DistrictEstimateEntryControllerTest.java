@@ -10,8 +10,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.demographics.dto.DemographicEstimateForm;
-import org.openlmis.demographics.dto.DemographicEstimateLineItem;
+import org.openlmis.demographics.dto.EstimateForm;
+import org.openlmis.demographics.dto.EstimateFormLineItem;
 import org.openlmis.demographics.service.DistrictDemographicEstimateService;
 import org.openlmis.web.controller.demographics.DistrictEstimateController;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +49,8 @@ public class DistrictEstimateEntryControllerTest {
 
   @Test
   public void shouldGet() throws Exception {
-    DemographicEstimateForm form = new DemographicEstimateForm();
-    form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
+    EstimateForm form = new EstimateForm();
+    form.setEstimateLineItems(new ArrayList<EstimateFormLineItem>());
     when(service.getEstimateForm(2005, 1L, 1L)).thenReturn(form);
 
     ResponseEntity<OpenLmisResponse> response = controller.get(2005, 1L, request);
@@ -61,8 +61,8 @@ public class DistrictEstimateEntryControllerTest {
 
   @Test
   public void shouldSave() throws Exception {
-    DemographicEstimateForm form = new DemographicEstimateForm();
-    form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
+    EstimateForm form = new EstimateForm();
+    form.setEstimateLineItems(new ArrayList<EstimateFormLineItem>());
     doNothing().when(service).save(form, 1L);
 
     ResponseEntity<OpenLmisResponse> response = controller.save(form, request);

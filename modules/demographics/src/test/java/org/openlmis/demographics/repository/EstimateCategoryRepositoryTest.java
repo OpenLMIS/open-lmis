@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.demographics.domain.EstimateCategory;
-import org.openlmis.demographics.repository.mapper.DemographicEstimateCategoryMapper;
+import org.openlmis.demographics.repository.mapper.EstimateCategoryMapper;
 
 import java.util.List;
 
@@ -31,10 +31,10 @@ import static org.mockito.Mockito.verify;
 public class EstimateCategoryRepositoryTest {
 
   @Mock
-  DemographicEstimateCategoryMapper mapper;
+  EstimateCategoryMapper mapper;
 
   @InjectMocks
-  DemographicEstimateCategoryRepository repository;
+  EstimateCategoryRepository repository;
 
   @Test
   public void shouldGetAll() throws Exception {

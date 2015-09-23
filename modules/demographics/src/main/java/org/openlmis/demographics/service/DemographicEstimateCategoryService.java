@@ -14,7 +14,7 @@ package org.openlmis.demographics.service;
 
 import org.openlmis.demographics.domain.EstimateCategory;
 import org.openlmis.demographics.helpers.ListUtil;
-import org.openlmis.demographics.repository.DemographicEstimateCategoryRepository;
+import org.openlmis.demographics.repository.EstimateCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ import java.util.List;
 public class DemographicEstimateCategoryService {
 
   @Autowired
-  private DemographicEstimateCategoryRepository repository;
+  private EstimateCategoryRepository repository;
 
   public List<EstimateCategory> getAll(){
     return repository.getAll();

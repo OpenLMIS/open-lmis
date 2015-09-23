@@ -23,7 +23,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DemographicEstimateLineItem {
+public class EstimateFormLineItem {
 
   private Long id;
 

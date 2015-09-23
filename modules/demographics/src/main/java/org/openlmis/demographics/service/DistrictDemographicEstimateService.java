@@ -18,10 +18,10 @@ import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.demographics.domain.AnnualDistrictEstimateEntry;
 import org.openlmis.demographics.domain.EstimateCategory;
-import org.openlmis.demographics.dto.DemographicEstimateForm;
-import org.openlmis.demographics.dto.DemographicEstimateLineItem;
+import org.openlmis.demographics.dto.EstimateForm;
+import org.openlmis.demographics.dto.EstimateFormLineItem;
 import org.openlmis.demographics.helpers.ListUtil;
-import org.openlmis.demographics.repository.DistrictDemographicEstimateRepository;
+import org.openlmis.demographics.repository.AnnualDistrictEstimateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ public class DistrictDemographicEstimateService {
   DemographicEstimateCategoryService estimateCategoryService;
 
   @Autowired
-  private DistrictDemographicEstimateRepository repository;
+  private AnnualDistrictEstimateRepository repository;
 
   @Autowired
   private FacilityService facilityService;
@@ -45,8 +45,8 @@ public class DistrictDemographicEstimateService {
   private CommaSeparator commaSeparator;
 
 
-  public void save(DemographicEstimateForm estimate, Long userId){
-    for(DemographicEstimateLineItem dto: ListUtil.emptyIfNull(estimate.getEstimateLineItems())){
+  public void save(EstimateForm estimate, Long userId){
+    for(EstimateFormLineItem dto: ListUtil.emptyIfNull(estimate.getEstimateLineItems())){
       for(AnnualDistrictEstimateEntry aEstimate : ListUtil.emptyIfNull(dto.getDistrictEstimates())){
         aEstimate.setDistrictId(dto.getId());
         if(aEstimate.getId() == null){
@@ -60,9 +60,9 @@ public class DistrictDemographicEstimateService {
     }
   }
 
-  public void finalize(DemographicEstimateForm form, Long userId) {
+  public void finalize(EstimateForm form, Long userId) {
     this.save(form, userId);
-    for(DemographicEstimateLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
+    for(EstimateFormLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
       for (AnnualDistrictEstimateEntry est : ListUtil.emptyIfNull(dto.getDistrictEstimates())) {
         est.setDistrictId(dto.getId());
         if(est.getId() != null){
@@ -75,8 +75,8 @@ public class DistrictDemographicEstimateService {
     }
   }
 
-  public void undoFinalize(DemographicEstimateForm form, Long userId) {
-    for(DemographicEstimateLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
+  public void undoFinalize(EstimateForm form, Long userId) {
+    for(EstimateFormLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
       for (AnnualDistrictEstimateEntry est : ListUtil.emptyIfNull(dto.getDistrictEstimates())) {
         est.setDistrictId(dto.getId());
         if(est.getId() != null){
@@ -105,18 +105,18 @@ public class DistrictDemographicEstimateService {
     return result;
   }
 
-  public DemographicEstimateForm getEstimateForm(Integer year, Long programId, Long userId) {
-    DemographicEstimateForm form = new DemographicEstimateForm();
+  public EstimateForm getEstimateForm(Integer year, Long programId, Long userId) {
+    EstimateForm form = new EstimateForm();
     List<EstimateCategory> categories = estimateCategoryService.getAll();
-    form.setEstimateLineItems(new ArrayList<DemographicEstimateLineItem>());
+    form.setEstimateLineItems(new ArrayList<EstimateFormLineItem>());
 
     List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES );
     String facilityIds = commaSeparator.commaSeparateIds(facilities);
 
-    List<DemographicEstimateLineItem> districts =  repository.getDistrictLineItems(facilityIds);
+    List<EstimateFormLineItem> districts =  repository.getDistrictLineItems(facilityIds);
 
-    for(DemographicEstimateLineItem dto : districts){
-      dto.setDistrictEstimates(repository.getDistrictEstimate(year, dto.getId(), programId));
+    for(EstimateFormLineItem dto : districts){
+      dto.setDistrictEstimates(repository.getDistrictEstimates(year, dto.getId(), programId));
       dto.setFacilityEstimates(repository.getFacilityEstimateAggregate(year, dto.getId(), programId));
       if( dto.getDistrictEstimates().size() == 0 ){
         dto.setDistrictEstimates(getEmptyEstimateObjects(categories, dto.getId(), programId, year));

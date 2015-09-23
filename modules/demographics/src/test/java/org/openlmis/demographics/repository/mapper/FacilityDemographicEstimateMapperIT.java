@@ -48,7 +48,7 @@ import static org.hamcrest.Matchers.notNullValue;
 public class FacilityDemographicEstimateMapperIT {
 
   @Autowired
-  FacilityDemographicEstimateMapper mapper;
+  AnnualFacilityEstimateMapper mapper;
 
   @Autowired
   FacilityMapper facilityMapper;
@@ -57,7 +57,7 @@ public class FacilityDemographicEstimateMapperIT {
   ProgramMapper programMapper;
 
   @Autowired
-  DemographicEstimateCategoryMapper demographicEstimateCategoryMapper;
+  EstimateCategoryMapper estimateCategoryMapper;
 
   private Facility facility;
 
@@ -78,7 +78,7 @@ public class FacilityDemographicEstimateMapperIT {
     category.setDescription("Random Description");
     category.setDefaultConversionFactor(1.0);
     category.setIsPrimaryEstimate(false);
-    demographicEstimateCategoryMapper.insert(category);
+    estimateCategoryMapper.insert(category);
   }
 
   private AnnualFacilityEstimateEntry createAFacilityDemographicEstimate() {

@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.demographics.domain.EstimateCategory;
-import org.openlmis.demographics.repository.DemographicEstimateCategoryRepository;
+import org.openlmis.demographics.repository.EstimateCategoryRepository;
 import org.openlmis.demographics.service.DemographicEstimateCategoryService;
 
 import java.util.List;
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.verify;
 public class EstimateCategoryServiceTest {
 
   @Mock
-  DemographicEstimateCategoryRepository repository;
+  EstimateCategoryRepository repository;
 
   @InjectMocks
   DemographicEstimateCategoryService service;

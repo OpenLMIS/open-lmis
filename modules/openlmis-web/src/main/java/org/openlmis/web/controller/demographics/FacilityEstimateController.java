@@ -14,7 +14,7 @@ package org.openlmis.web.controller.demographics;
 
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
-import org.openlmis.demographics.dto.DemographicEstimateForm;
+import org.openlmis.demographics.dto.EstimateForm;
 import org.openlmis.demographics.service.FacilityDemographicEstimateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +46,7 @@ public class FacilityEstimateController extends BaseController {
   @Transactional
   @RequestMapping(value = "facilities", method = PUT, headers = ACCEPT_JSON )
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody DemographicEstimateForm form,  HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody EstimateForm form, HttpServletRequest request){
     service.save(form, loggedInUserId(request));
     return OpenLmisResponse.response("estimates", form);
   }
@@ -54,7 +54,7 @@ public class FacilityEstimateController extends BaseController {
   @Transactional
   @RequestMapping(value = "finalize/facilities.json", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'FINALIZE_DEMOGRAPHIC_ESTIMATES')")
-  public ResponseEntity<OpenLmisResponse> finalize(@RequestBody DemographicEstimateForm form, HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> finalize(@RequestBody EstimateForm form, HttpServletRequest request){
     service.finalize(form, loggedInUserId(request));
     return OpenLmisResponse.response("estimates", form);
   }
@@ -62,7 +62,7 @@ public class FacilityEstimateController extends BaseController {
   @Transactional
   @RequestMapping(value = "undo-finalize/facilities.json", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UNLOCK_FINALIZED_DEMOGRAPHIC_ESTIMATES')")
-  public ResponseEntity<OpenLmisResponse> undoFinalize(@RequestBody DemographicEstimateForm form, HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> undoFinalize(@RequestBody EstimateForm form, HttpServletRequest request){
     service.undoFinalize(form, loggedInUserId(request));
     return OpenLmisResponse.response("estimates", form);
   }

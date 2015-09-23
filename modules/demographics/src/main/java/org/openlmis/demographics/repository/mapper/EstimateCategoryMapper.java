@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DemographicEstimateCategoryMapper {
+public interface EstimateCategoryMapper {
 
   @Select("select * from demographic_estimate_categories order by id")
   List<EstimateCategory> getAll();

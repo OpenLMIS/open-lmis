@@ -10,24 +10,34 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.demographics.builders;
+package org.openlmis.demographics.repository;
 
-import com.natpryce.makeiteasy.Instantiator;
-import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
+import org.openlmis.demographics.domain.EstimateCategory;
+import org.openlmis.demographics.repository.mapper.EstimateCategoryMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-public class FacilityDemographicEstimateBuilder {
+import java.util.List;
 
-  public static final Instantiator<AnnualFacilityEstimateEntry> defaultFacilityDemographicEstimate = new Instantiator<AnnualFacilityEstimateEntry>() {
+@Repository
+public class EstimateCategoryRepository {
 
-    @Override
-    public AnnualFacilityEstimateEntry instantiate(PropertyLookup<AnnualFacilityEstimateEntry> lookup) {
-      AnnualFacilityEstimateEntry item = new AnnualFacilityEstimateEntry();
-      item.setFacilityId(1L);
-      item.setConversionFactor(1.0);
-      item.setDemographicEstimateId(1L);
-      item.setValue(20L);
-      return item;
-    }
-  };
+  @Autowired
+  private EstimateCategoryMapper mapper;
+
+  public List<EstimateCategory> getAll(){
+    return mapper.getAll();
+  }
+
+  public EstimateCategory getById(Long id){
+    return mapper.getById(id);
+  }
+
+  public void insert(EstimateCategory category){
+    mapper.insert(category);
+  }
+
+  public void update(EstimateCategory category){
+    mapper.update(category);
+  }
 }
