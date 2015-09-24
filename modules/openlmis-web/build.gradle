@@ -188,7 +188,6 @@ jettyRun {
     contextPath = ''
     daemon = true;
     jettyRun.scanIntervalSeconds = 1
-    System.properties.get('environmentName', 'local')
     System.properties.get('defaultLocale', 'en')
 }
 

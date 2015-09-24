@@ -112,6 +112,11 @@ public class UserController extends BaseController {
   public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
     user.setCreatedBy(loggedInUserId(request));
     user.setModifiedBy(loggedInUserId(request));
+    if (user.isMobileUser()) {
+      user.setVerified(true);
+    } else {
+      user.setIsMobileUser(false);
+    }
     try {
       String resetPasswordBaseLink = baseUrl + RESET_PASSWORD_PATH;
       userService.create(user, resetPasswordBaseLink);
@@ -130,6 +135,11 @@ public class UserController extends BaseController {
                                                  HttpServletRequest request) {
     user.setModifiedBy(loggedInUserId(request));
     user.setId(id);
+    if (user.isMobileUser()) {
+      user.setVerified(true);
+    } else {
+      user.setIsMobileUser(false);
+    }
     try {
       userService.update(user);
     } catch (DataException e) {
@@ -259,10 +269,9 @@ public class UserController extends BaseController {
     }
     return null;
   }
-
+  
   @RequestMapping(value = "/users/supervisory/rights.json", method= GET)
   public ResponseEntity<OpenLmisResponse> getRights(HttpServletRequest request){
     return response("rights", userService.getSupervisoryRights(loggedInUserId(request)));
   }
-
 }

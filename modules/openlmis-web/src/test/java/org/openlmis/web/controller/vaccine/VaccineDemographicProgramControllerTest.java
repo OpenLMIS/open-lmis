@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 @PowerMockRunnerDelegate(MockitoJUnitRunner.class)
 @PrepareForTest({Date.class})
-public class VaccineProgramControllerTest {
+public class VaccineDemographicProgramControllerTest {
 
 
     @Mock

@@ -41,6 +41,7 @@
   <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
   <http pattern="/rest-api/**" use-expressions="true" authentication-manager-ref="restAuthenticationManager">
+    <intercept-url pattern="/rest-api/login" access="permitAll" requires-channel="any" />
     <intercept-url pattern="/rest-api/**" access="isAuthenticated()" requires-channel="any"/>
     <http-basic/>
   </http>
@@ -48,6 +49,8 @@
   <http pattern="/odk-api/**" security="none" />
 
   <http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint">
+    <intercept-url pattern="/health/ping" access="permitAll" requires-channel="any" />
+    <intercept-url pattern="/release.json" access="permitAll" requires-channel="any" />
     <intercept-url pattern="/j_spring_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="any"/>
     <intercept-url pattern="/favicon.ico" access="permitAll" requires-channel="any"/>
     <intercept-url pattern="/public/**" access="permitAll" requires-channel="any"/>

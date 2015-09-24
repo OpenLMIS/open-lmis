@@ -85,6 +85,22 @@ public class RestRequisitionControllerTest {
   }
 
   @Test
+  public void shouldSubmitSDPRequisitionForACommTrackUser() throws Exception {
+    Report report = new Report();
+
+    Rnr requisition = new Rnr();
+    requisition.setId(1L);
+    when(service.submitSdpReport(report, 1L)).thenReturn(requisition);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, requisition.getId()), OK);
+    when(RestResponse.response(RNR, requisition.getId(), HttpStatus.CREATED)).thenReturn(expectResponse);
+
+    ResponseEntity<RestResponse> response = controller.submitSDPRequisition(report, principal);
+
+    assertThat((Long) response.getBody().getData().get(RNR), is(1L));
+  }
+
+
+  @Test
   public void shouldGiveErrorMessageIfReportInvalid() throws Exception {
     String errorMessage = "some error";
     Report report = new Report();
