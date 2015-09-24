@@ -196,7 +196,7 @@ public class VaccineReportService {
     VaccineReport report = repository.getByIdWithFullDetails(id);
     report.setTabVisibilitySettings(tabVisibilityService.getVisibilityForProgram(report.getProgramId()));
     DateTime periodStartDate = new DateTime(report.getPeriod().getStartDate());
-    report.setAnnualFacilityEstimateEntries(annualFacilityDemographicEstimateService.getEstimateValuesForFacility(report.getFacilityId(), report.getProgramId(), periodStartDate.getYear()));
+    report.setFacilityDemographicEstimates(annualFacilityDemographicEstimateService.getEstimateValuesForFacility(report.getFacilityId(), report.getProgramId(), periodStartDate.getYear()));
     return report;
   }
 

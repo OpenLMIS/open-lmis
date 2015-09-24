@@ -66,7 +66,7 @@ public interface AnnualFacilityEstimateMapper {
             " order by c.id")
     @Results(value = {
             @Result(column = "demographicEstimateId", property = "demographicEstimateId"),
-            @Result(property = "category", column = "demographicEstimateId", one = @One(select = "org.openlmis.vaccine.repository.mapper.demographics.DemographicEstimateCategoryMapper.getById"))
+            @Result(property = "category", column = "demographicEstimateId", one = @One(select = "org.openlmis.demographics.repository.mapper.EstimateCategoryMapper.getById"))
     }
     )
     List<AnnualFacilityEstimateEntry> getEstimatesForFacilityWithDetails(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);

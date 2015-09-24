@@ -54,7 +54,7 @@ public class VaccineReport extends BaseModel {
   private List<AdverseEffectLineItem> adverseEffectLineItems;
   private List<CampaignLineItem> campaignLineItems;
 
-  private List<AnnualFacilityEstimateEntry> annualFacilityEstimateEntries;
+  private List<AnnualFacilityEstimateEntry> facilityDemographicEstimates;
 
   private List<VitaminSupplementationLineItem> vitaminSupplementationLineItems;
 
