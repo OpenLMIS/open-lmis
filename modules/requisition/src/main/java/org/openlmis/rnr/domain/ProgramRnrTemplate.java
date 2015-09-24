@@ -49,6 +49,7 @@ public class ProgramRnrTemplate extends Template {
   public static final String PRODUCT_CODE = "productCode";
   public static final String PACKS_TO_SHIP = "packsToShip";
   public static final String SKIPPED = "skipped";
+  public static final String CALCULATED_ORDER_QUANTITY = "calculatedOrderQuantity";
 
   final List<String> nonPrintableFullSupplyColumnNames = asList(REMARKS, REASON_FOR_REQUESTED_QUANTITY);
   final List<String> printableNonFullSupplyColumnNames = asList(PRODUCT, PRODUCT_CODE, DISPENSING_UNIT, QUANTITY_REQUESTED, PACKS_TO_SHIP, PRICE, COST, QUANTITY_APPROVED);

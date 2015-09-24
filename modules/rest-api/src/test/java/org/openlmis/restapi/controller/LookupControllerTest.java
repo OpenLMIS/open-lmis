@@ -8,6 +8,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.service.lookup.ReportLookupService;
@@ -152,6 +154,30 @@ public class LookupControllerTest {
 
 
   @Test
+  public void shouldGetProgramProducts() throws Exception {
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
+    when(RestResponse.response("program-products", new ArrayList<ProgramProduct>())).thenReturn(expectResponse);
+    when(lookupService.getAllProgramProducts()).thenReturn(new ArrayList<ProgramProduct>());
+
+    ResponseEntity<RestResponse> response = controller.getProgramProducts(principal);
+
+    verify(lookupService).getAllProgramProducts();
+    assertThat(response, is(expectResponse));
+  }
+
+  @Test
+  public void shouldGetFacilityApprovedProducts() throws Exception {
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
+    when(RestResponse.response("facility-approved-products", new ArrayList<FacilityTypeApprovedProduct>())).thenReturn(expectResponse);
+    when(lookupService.getAllFacilityTypeApprovedProducts()).thenReturn(new ArrayList<FacilityTypeApprovedProduct>());
+
+    ResponseEntity<RestResponse> response = controller.getFacilityApprovedProducts(principal);
+
+    verify(lookupService).getAllFacilityTypeApprovedProducts();
+    assertThat(response, is(expectResponse));
+  }
+
+  @Test
   public void shouldGetProgramByCode() throws Exception {
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
     when(RestResponse.response("program", new Program())).thenReturn(expectResponse);
@@ -186,6 +212,18 @@ public class LookupControllerTest {
     ResponseEntity<RestResponse> response = controller.getProcessingPeriods(principal);
 
     verify(lookupService).getAllProcessingPeriods();
+    assertThat(response, is(expectResponse));
+  }
+
+  @Test
+  public void shouldGetRegimes() throws Exception {
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(), HttpStatus.OK);
+    when(RestResponse.response("regimens", new ArrayList<Regimen>())).thenReturn(expectResponse);
+    when(lookupService.getAllRegimens()).thenReturn(new ArrayList<Regimen>());
+
+    ResponseEntity<RestResponse> response = controller.getRegimens(principal);
+
+    verify(lookupService).getAllRegimens();
     assertThat(response, is(expectResponse));
   }
 

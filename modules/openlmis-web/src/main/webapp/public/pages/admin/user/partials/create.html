@@ -20,6 +20,19 @@
 
   <div class="form-row clearfix">
     <div class="form-cell">
+      <label for="isMobileUser">
+        <span openlmis-message="create.user.mobileUser"></span>
+      </label>
+      <div class="form-field">
+        <input ng-model="user.isMobileUser" name="isMobileUser" id="isMobileUser" type="checkbox" checked="false" />
+        <strong openlmis-message="button.yes"></strong>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="form-row clearfix">
+    <div class="form-cell">
       <label for="userName">
         <span openlmis-message="create.user.userName"></span>
         <span class="label-required"> *</span>
@@ -37,14 +50,15 @@
       </div>
     </div>
 
-    <div class="form-cell">
+    <div class="form-cell" >
       <label for="email">
         <span openlmis-message="create.user.email"></span>
-        <span class="label-required"> *</span>
+        <span class="label-required"><span ng-hide="user.isMobileUser"> *</span></span>
       </label>
 
       <div class="form-field">
-        <input ng-model="user.email" name="email" id="email" type="text" maxlength="50" ng-required="true"/>
+        <input ng-model="user.email" name="email" id="email" type="text" maxlength="50"
+               ng-required="!user.isMobileUser"/>
         <span class="field-error" ng-show="userForm.email.$error.required && showError"
               openlmis-message="missing.value">
         </span>

@@ -50,6 +50,15 @@ public class ReportTest {
   }
 
   @Test
+  public void shouldNotThrowExceptionIfReportContainsAgentCodeAndProgramCode() {
+    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.agentCode, "123")));
+    report.setProgramCode("abc");
+
+    //should not throw an exception here
+    report.validate();
+  }
+
+  @Test
   public void shouldThrowExceptionIfReportContainsBlankAgentCode() {
     Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.agentCode, "")));
 

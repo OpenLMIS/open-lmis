@@ -73,6 +73,9 @@ public class NotificationServices {
             // iterate through the emails and send the email.
             // replace the template with the message
             for(User user : users){
+              if (user.isMobileUser()) {
+                continue;
+              }
 
               SimpleMailMessage message = new SimpleMailMessage();
               String emailMessage = emailTemplate;

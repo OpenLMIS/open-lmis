@@ -225,7 +225,9 @@ public class RnrLineItem extends LineItem {
     if (rnrStatus == AUTHORIZED) {
       calculateAmc(numberOfMonths);
       calculateMaxStockQuantity(template);
-      calculateOrderQuantity();
+      if (!(template.getRnrColumnsMap().get(CALCULATED_ORDER_QUANTITY) != null && template.columnsUserInput(CALCULATED_ORDER_QUANTITY))) {
+        calculateOrderQuantity();
+      }
     }
 
     calculatePacksToShip();
@@ -321,6 +323,9 @@ public class RnrLineItem extends LineItem {
   }
 
   public void calculateTotalLossesAndAdjustments(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    if (lossesAndAdjustments.isEmpty()) {
+      return;
+    }
     Integer total = 0;
     for (LossesAndAdjustments lossAndAdjustment : lossesAndAdjustments) {
       if (getAdditive(lossAndAdjustment, lossesAndAdjustmentsTypes)) {

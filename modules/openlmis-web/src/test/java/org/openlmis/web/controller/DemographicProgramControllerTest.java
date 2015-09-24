@@ -41,7 +41,7 @@ import static org.openlmis.web.controller.ProgramController.PROGRAM;
 import static org.openlmis.web.controller.ProgramController.PROGRAMS;
 
 @Category(UnitTests.class)
-public class ProgramControllerTest {
+public class DemographicProgramControllerTest {
 
   public static final Long USER_ID = 1L;
   @Mock
