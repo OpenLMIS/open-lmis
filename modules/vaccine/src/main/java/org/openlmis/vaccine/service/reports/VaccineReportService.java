@@ -33,7 +33,7 @@ import org.openlmis.vaccine.repository.reports.VaccineReportStatusChangeReposito
 import org.openlmis.vaccine.service.DiseaseService;
 import org.openlmis.vaccine.service.VaccineIvdTabVisibilityService;
 import org.openlmis.vaccine.service.VaccineProductDoseService;
-import org.openlmis.demographics.service.FacilityDemographicEstimateService;
+import org.openlmis.demographics.service.AnnualFacilityDemographicEstimateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,7 +85,7 @@ public class VaccineReportService {
   VaccineReportStatusChangeRepository reportStatusChangeRepository;
 
   @Autowired
-  FacilityDemographicEstimateService facilityDemographicEstimateService;
+  AnnualFacilityDemographicEstimateService annualFacilityDemographicEstimateService;
 
   @Transactional
   public VaccineReport initialize(Long facilityId, Long programId, Long periodId, Long userId) {
@@ -196,7 +196,7 @@ public class VaccineReportService {
     VaccineReport report = repository.getByIdWithFullDetails(id);
     report.setTabVisibilitySettings(tabVisibilityService.getVisibilityForProgram(report.getProgramId()));
     DateTime periodStartDate = new DateTime(report.getPeriod().getStartDate());
-    report.setAnnualFacilityEstimateEntries(facilityDemographicEstimateService.getEstimateValuesForFacility(report.getFacilityId(), report.getProgramId(), periodStartDate.getYear()));
+    report.setAnnualFacilityEstimateEntries(annualFacilityDemographicEstimateService.getEstimateValuesForFacility(report.getFacilityId(), report.getProgramId(), periodStartDate.getYear()));
     return report;
   }
 

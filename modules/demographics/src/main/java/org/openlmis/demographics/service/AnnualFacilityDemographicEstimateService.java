@@ -34,10 +34,10 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class FacilityDemographicEstimateService {
+public class AnnualFacilityDemographicEstimateService {
 
   @Autowired
-  DemographicEstimateCategoryService estimateCategoryService;
+  EstimateCategoryService estimateCategoryService;
 
   @Autowired
   private AnnualFacilityEstimateRepository repository;

@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package service;
+package org.openlmis.demographics.service;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -21,7 +21,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.demographics.domain.EstimateCategory;
 import org.openlmis.demographics.repository.EstimateCategoryRepository;
-import org.openlmis.demographics.service.DemographicEstimateCategoryService;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class EstimateCategoryServiceTest {
   EstimateCategoryRepository repository;
 
   @InjectMocks
-  DemographicEstimateCategoryService service;
+  EstimateCategoryService service;
 
   @Test
   public void shouldGetAll() throws Exception {

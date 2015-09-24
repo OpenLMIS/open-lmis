@@ -30,10 +30,10 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class DistrictDemographicEstimateService {
+public class AnnualDistrictDemographicEstimateService {
 
   @Autowired
-  DemographicEstimateCategoryService estimateCategoryService;
+  EstimateCategoryService estimateCategoryService;
 
   @Autowired
   private AnnualDistrictEstimateRepository repository;
@@ -45,16 +45,19 @@ public class DistrictDemographicEstimateService {
   private CommaSeparator commaSeparator;
 
 
-  public void save(EstimateForm estimate, Long userId){
-    for(EstimateFormLineItem dto: ListUtil.emptyIfNull(estimate.getEstimateLineItems())){
-      for(AnnualDistrictEstimateEntry aEstimate : ListUtil.emptyIfNull(dto.getDistrictEstimates())){
-        aEstimate.setDistrictId(dto.getId());
-        if(aEstimate.getId() == null){
-          aEstimate.setCreatedBy(userId);
-          repository.insert(aEstimate);
+  public void save(EstimateForm estimateForm, Long userId){
+    for(EstimateFormLineItem dto: ListUtil.emptyIfNull(estimateForm.getEstimateLineItems())){
+      for(AnnualDistrictEstimateEntry estimate : ListUtil.emptyIfNull(dto.getDistrictEstimates())){
+        if(estimate.getIsFinal()){
+          continue;
+        }
+        estimate.setDistrictId(dto.getId());
+        if(estimate.getId() == null){
+          estimate.setCreatedBy(userId);
+          repository.insert(estimate);
         }else{
-          aEstimate.setModifiedBy(userId);
-          repository.update(aEstimate);
+          estimate.setModifiedBy(userId);
+          repository.update(estimate);
         }
       }
     }

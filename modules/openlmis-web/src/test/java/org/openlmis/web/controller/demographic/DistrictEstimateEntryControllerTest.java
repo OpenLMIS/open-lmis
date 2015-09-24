@@ -12,7 +12,7 @@ import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.demographics.dto.EstimateForm;
 import org.openlmis.demographics.dto.EstimateFormLineItem;
-import org.openlmis.demographics.service.DistrictDemographicEstimateService;
+import org.openlmis.demographics.service.AnnualDistrictDemographicEstimateService;
 import org.openlmis.web.controller.demographics.DistrictEstimateController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -32,7 +32,7 @@ public class DistrictEstimateEntryControllerTest {
   private static final Long USER_ID = 1L;
   private static final String USER = "user";
   @Mock
-  DistrictDemographicEstimateService service;
+  AnnualDistrictDemographicEstimateService service;
   @InjectMocks
   DistrictEstimateController controller;
   private MockHttpServletRequest request;

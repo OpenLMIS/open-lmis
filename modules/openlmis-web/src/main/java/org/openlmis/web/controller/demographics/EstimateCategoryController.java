@@ -12,7 +12,7 @@
 package org.openlmis.web.controller.demographics;
 
 import org.openlmis.demographics.domain.EstimateCategory;
-import org.openlmis.demographics.service.DemographicEstimateCategoryService;
+import org.openlmis.demographics.service.EstimateCategoryService;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ import static java.util.Arrays.asList;
 public class EstimateCategoryController extends BaseController{
 
   @Autowired
-  DemographicEstimateCategoryService service;
+  EstimateCategoryService service;
 
   @RequestMapping(value = "categories", method = RequestMethod.GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getAll(){

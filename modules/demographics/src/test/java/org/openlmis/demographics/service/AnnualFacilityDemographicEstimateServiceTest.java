@@ -16,23 +16,19 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.builder.RequisitionGroupBuilder;
-import org.openlmis.core.builder.SupervisoryNodeBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.RequisitionGroup;
-import org.openlmis.core.domain.RightName;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.RequisitionGroupService;
 import org.openlmis.core.service.SupervisoryNodeService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.demographics.builders.AnnualFacilityEstimateBuilder;
-import org.openlmis.demographics.builders.EstimateFormLineItemBuilder;
 import org.openlmis.demographics.builders.EstimateCategoryBuilder;
+import org.openlmis.demographics.builders.EstimateFormLineItemBuilder;
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 import org.openlmis.demographics.domain.EstimateCategory;
 import org.openlmis.demographics.dto.EstimateForm;
@@ -51,10 +47,10 @@ import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class FacilityDemographicEstimateServiceTest {
+public class AnnualFacilityDemographicEstimateServiceTest {
 
   @Mock
-  DemographicEstimateCategoryService estimateCategoryService;
+  EstimateCategoryService estimateCategoryService;
 
   @Mock
   private AnnualFacilityEstimateRepository repository;
@@ -72,7 +68,7 @@ public class FacilityDemographicEstimateServiceTest {
   private RequisitionGroupService requisitionGroupService;
 
   @InjectMocks
-  private FacilityDemographicEstimateService service;
+  private AnnualFacilityDemographicEstimateService service;
 
   private EstimateForm getDemographicEstimateFormForOneFacility(AnnualFacilityEstimateEntry... facilityEstimateEntry) {
     EstimateForm form  = new EstimateForm();
@@ -158,29 +154,6 @@ public class FacilityDemographicEstimateServiceTest {
     verify(repository, times(1)).undoFinalize(any(AnnualFacilityEstimateEntry.class));
   }
 
-  @Test
-  public void shouldGetEstimateForm() throws Exception {
-    AnnualFacilityEstimateEntry facilityEstimateEntry = make(an(AnnualFacilityEstimateBuilder.defaultAnnualFacilityEstimateEntry));
-
-    EstimateCategory category = make(a(EstimateCategoryBuilder.defaultEstimateCategory));
-    when(estimateCategoryService.getAll()).thenReturn(asList(category));
-
-    List<SupervisoryNode> nodes = asList( make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.id, 1L))));
-    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1L,3L, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES)).thenReturn(nodes);
-
-    List<RequisitionGroup> groups = asList( make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "23"))));
-    when(requisitionGroupService.getRequisitionGroupsBy(nodes)).thenReturn(groups);
-
-    when(commaSeparator.commaSeparateIds(groups)).thenReturn("{1}");
-
-    List<EstimateFormLineItem> lineItems = asList(make(a(EstimateFormLineItemBuilder.defaultDemographicEstimateLineItem, with(EstimateFormLineItemBuilder.facilityAnnualEstimates, asList(facilityEstimateEntry)))));
-    when(repository.getFacilityList(3L, "{1}")).thenReturn(lineItems);
-
-    EstimateForm form = service.getEstimateForm(1L, 3L, 2015);
-
-    assertThat(form.getEstimateLineItems().size(), is(1));
-    assertThat(form.getEstimateLineItems().get(0).getFacilityEstimates().size(), is(1));
-  }
 
   @Test
   public void shouldGetEstimateValuesForFacilityWhenDemographicEstimateIsSaved() throws Exception {
@@ -204,5 +177,86 @@ public class FacilityDemographicEstimateServiceTest {
 
     List<AnnualFacilityEstimateEntry> result = service.getEstimateValuesForFacility(20L, 3L, 2015);
     assertThat(result.get(0).getValue(),is(1000L));
+  }
+
+
+  @Test
+  public void shouldSave() throws Exception {
+    EstimateForm form = new EstimateForm();
+    EstimateFormLineItem estimateLineItem = new EstimateFormLineItem();
+    estimateLineItem.setFacilityEstimates(new ArrayList<AnnualFacilityEstimateEntry>());
+    estimateLineItem.getFacilityEstimates().add(new AnnualFacilityEstimateEntry(2000, 12L, 1L, false, 2L, null, 1.0d, 2L));
+    form.setEstimateLineItems(asList(estimateLineItem));
+
+    when(repository.insert(estimateLineItem.getFacilityEstimates().get(0))).thenReturn(1);
+    service.save(form, 1L);
+    verify(repository, atLeastOnce()).insert(Matchers.<AnnualFacilityEstimateEntry>any());
+  }
+
+  @Test
+  public void shouldGetEstimateForm() throws Exception {
+    EstimateCategory category1 = new EstimateCategory();
+    category1.setDefaultConversionFactor(50.0);
+    EstimateCategory category2 = new EstimateCategory();
+    category2.setDefaultConversionFactor(5.0);
+
+    Facility facility = new Facility();
+    facility.setId(39L);
+    facility.setCatchmentPopulation(20000L);
+    facility.setGeographicZone(new GeographicZone());
+    facility.getGeographicZone().setName("Geo Name");
+
+    List<SupervisoryNode> nodes = asList(new SupervisoryNode());
+    when(supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(1L, 2L, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES)).thenReturn(nodes);
+    List<RequisitionGroup> groups = asList(new RequisitionGroup());
+    groups.get(0).setId(1L);
+
+    when(requisitionGroupService.getRequisitionGroupsBy(nodes)).thenReturn(groups);
+    when(facilityService.getUserSupervisedFacilities(1L, 2L, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES)).thenReturn(asList(facility));
+    when(estimateCategoryService.getAll()).thenReturn(asList(category1, category2));
+    when(commaSeparator.commaSeparateIds(groups)).thenReturn("{1}");
+
+    when(repository.getFacilityList(2L, "{1}")).thenReturn(asList(new EstimateFormLineItem()));
+
+    EstimateForm form = service.getEstimateForm(1L, 2L, 2005);
+
+    verify(estimateCategoryService, atMost(1)).getAll();
+    assertThat(form.getEstimateLineItems().size(), is(1));
+    assertThat(form.getEstimateLineItems().get(0).getFacilityEstimates().size(), is(2));
+    assertThat(form.getEstimateLineItems().get(0).getFacilityEstimates().get(0).getConversionFactor(), is(category1.getDefaultConversionFactor()));
+
+  }
+
+  @Test
+  public void shouldGetEstimateValuesForFacilityWhenEstimatesWereSaved() throws Exception {
+    List<AnnualFacilityEstimateEntry> list = asList(new AnnualFacilityEstimateEntry());
+    when(repository.getFacilityEstimateWithDetails(2005, 2L, 2L)).thenReturn(list);
+
+    List<AnnualFacilityEstimateEntry> response = service.getEstimateValuesForFacility(2L, 2L, 2005);
+    assertThat(response, is(list));
+    verify(facilityService, never()).getById(any(Long.class));
+    verify(estimateCategoryService, never()).getAll();
+  }
+
+  @Test
+  public void shouldGetEstimateValuesForFacilityWhenEstimatesAreNotFound() throws Exception{
+    EstimateCategory category1 = new EstimateCategory();
+    category1.setDefaultConversionFactor(50.0);
+    EstimateCategory category2 = new EstimateCategory();
+    category2.setDefaultConversionFactor(5.0);
+
+    Facility facility = new Facility();
+    facility.setCatchmentPopulation(20000L);
+    when(facilityService.getById(2L)).thenReturn(facility);
+    when(estimateCategoryService.getAll()).thenReturn(asList(category1, category2));
+    when(repository.getFacilityEstimate(2005, 2L, 2L)).thenReturn(null);
+
+
+    List<AnnualFacilityEstimateEntry> response = service.getEstimateValuesForFacility(2L, 2L, 2005);
+    assertThat(response.size(), is(2));
+    assertThat(response.get(0).getValue(), is(10000L));
+    assertThat(response.get(1).getValue(), is(1000L));
+
+    verify(estimateCategoryService, atMost(1)).getAll();
   }
 }

@@ -15,7 +15,7 @@ package org.openlmis.web.controller.demographics;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.demographics.dto.EstimateForm;
-import org.openlmis.demographics.service.FacilityDemographicEstimateService;
+import org.openlmis.demographics.service.AnnualFacilityDemographicEstimateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,7 +35,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 public class FacilityEstimateController extends BaseController {
 
   @Autowired
-  FacilityDemographicEstimateService service;
+  AnnualFacilityDemographicEstimateService service;
 
   @RequestMapping(value = "facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")

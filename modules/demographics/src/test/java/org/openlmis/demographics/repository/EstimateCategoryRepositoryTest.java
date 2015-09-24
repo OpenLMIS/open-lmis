@@ -19,11 +19,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.demographics.builders.EstimateCategoryBuilder;
 import org.openlmis.demographics.domain.EstimateCategory;
 import org.openlmis.demographics.repository.mapper.EstimateCategoryMapper;
 
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.an;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
@@ -50,14 +53,14 @@ public class EstimateCategoryRepositoryTest {
 
   @Test
   public void shouldInsert() throws Exception {
-    EstimateCategory category = new EstimateCategory();
+    EstimateCategory category = make(an(EstimateCategoryBuilder.defaultEstimateCategory));
     repository.insert(category);
     verify(mapper).insert(category);
   }
 
   @Test
   public void shouldUpdate() throws Exception {
-    EstimateCategory category = new EstimateCategory();
+    EstimateCategory category = make(an(EstimateCategoryBuilder.defaultEstimateCategory));
     repository.update(category);
     verify(mapper).update(category);
   }

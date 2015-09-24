@@ -9,7 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.demographics.domain.EstimateCategory;
-import org.openlmis.demographics.service.DemographicEstimateCategoryService;
+import org.openlmis.demographics.service.EstimateCategoryService;
 import org.openlmis.web.controller.demographics.EstimateCategoryController;
 import org.springframework.http.ResponseEntity;
 
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 public class EstimateCategoryControllerTest {
 
   @Mock
-  DemographicEstimateCategoryService service;
+  EstimateCategoryService service;
 
   @InjectMocks
   EstimateCategoryController controller;
