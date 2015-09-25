@@ -105,21 +105,11 @@ public class VaccineInventoryController extends BaseController {
 
     }
 
+    @RequestMapping(value = "lots/byProduct/{productId}", method = GET, headers = ACCEPT_JSON)
+//TODO:   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_LOT')")
+    public ResponseEntity getLotsByProductId(@PathVariable Long productId) {
 
-//    @RequestMapping(value = "test", method = PUT)
-//    public  ResponseEntity<OpenLmisResponse> test(@RequestBody LotOnHand lotOnHand,HttpServletRequest request )
-//    {
-//        lotOnHand.setCreatedBy(loggedInUserId(request));
-//        service.insertLotsOnHand(lotOnHand);
-//        return OpenLmisResponse.response("Lot", lotOnHand);
-//    }
-//
-//    @RequestMapping(value = "test", method = GET)
-//    public ResponseEntity<OpenLmisResponse> getLot(HttpServletRequest request)
-//    {
-//        LotOnHand lot=service.getLotOnHand(10L,12L);
-//        return OpenLmisResponse.response("LotOnHand",lot);
-//    }
-
+        return OpenLmisResponse.response("lots", service.getLotsByProductId(productId));
+    }
 
 }
