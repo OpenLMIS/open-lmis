@@ -126,5 +126,20 @@ services.factory('VaccineProgramProducts', function ($resource) {
   return $resource('/vaccine/inventory/programProducts/programId/:programId.json', {}, {});
 });
 
+services.factory('ProductLots', function ($resource) {
+  return $resource('/vaccine/inventory/lots/byProduct/:productId.json', {productId:'@productId'}, {});
+});
+
+services.factory('SaveVaccineInventoryReceived',function($resource){
+    return $resource('/vaccine/inventory/stock/credit.json',{},{update:{method:'PUT'}});
+});
+
+services.factory('SaveVaccineInventoryConfigurations',function($resource){
+    return $resource('/vaccine/inventory/configuration/save.json',{},{update:{method:'PUT'}});
+});
+
+services.factory('VaccineInventoryConfigurations',function($resource){
+    return $resource('/vaccine/inventory/configuration/getAll.json',{},{});
+});
 
 
