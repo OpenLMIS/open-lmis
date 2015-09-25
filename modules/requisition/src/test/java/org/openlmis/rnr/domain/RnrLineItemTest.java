@@ -31,6 +31,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -485,6 +486,24 @@ public class RnrLineItemTest {
   }
 
   @Test
+  public void shouldNotCalculateOrderQuantityIfUserInput() throws Exception {
+    RnrLineItem spyLineItem = spy(lineItem);
+    ArrayList<RnrColumn> columns = new ArrayList<RnrColumn>() {{
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, STOCK_IN_HAND))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, CALCULATED_ORDER_QUANTITY))));
+      add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, NEW_PATIENT_COUNT),
+          with(option, new RnrColumnOption("newPatientCount", "NPC")))));
+    }};
+
+    spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), AUTHORIZED, lossesAndAdjustmentsList,
+        numberOfMonths);
+
+    verify(spyLineItem, never()).calculateOrderQuantity();
+  }
+
+
+  @Test
   public void shouldCopyBeginningBalanceIfItIsVisible() throws Exception {
     RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
     editedLineItem.setBeginningBalance(44);
@@ -844,6 +863,15 @@ public class RnrLineItemTest {
     assertThat(lineItem.getBeginningBalance(), is(0));
     assertThat(lineItem.getPreviousStockInHand(), is(nullValue()));
   }
+
+  @Test
+  public void shouldNotUpdateTotalLossesAndAdjustmentsFieldIfLossesAndAdjustmentsAreNullAndTotalHaveValue() {
+    RnrLineItem lineItem = new RnrLineItem();
+    lineItem.setTotalLossesAndAdjustments(10);
+    lineItem.calculateTotalLossesAndAdjustments(new ArrayList<LossesAndAdjustmentsType>());
+    assertEquals(10, lineItem.getTotalLossesAndAdjustments().intValue());
+  }
+
 
   private ArrayList<RnrColumn> getRnrColumns() {
     return new ArrayList<RnrColumn>() {{

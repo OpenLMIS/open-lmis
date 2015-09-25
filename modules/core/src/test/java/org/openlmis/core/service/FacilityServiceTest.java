@@ -444,6 +444,16 @@ public class FacilityServiceTest {
   }
 
   @Test
+  public void shouldGetOperativeFacilityByCodeIfNotVirtual() throws Exception {
+    Facility expectedFacility = make(a(defaultFacility));
+    when(facilityRepository.getByCode("code")).thenReturn(expectedFacility);
+
+    Facility actualFacility = facilityService.getOperativeFacilityByCode("code");
+
+    assertThat(actualFacility, is(expectedFacility));
+  }
+
+  @Test
   public void shouldThrowErrorIfCodeInvalid() throws Exception {
     when(facilityRepository.getByCode("code")).thenReturn(null);
 

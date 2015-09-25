@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Column;
@@ -41,6 +42,9 @@ public class RnrTemplateServiceTest {
 
   @Mock
   private ProgramService programService;
+
+  @Mock
+  private ConfigurationSettingService configService;
 
   @InjectMocks
   private RnrTemplateService service;
@@ -88,5 +92,20 @@ public class RnrTemplateServiceTest {
 
     verify(repository).fetchRnrTemplateColumnsOrMasterColumns(1l);
     assertThat(template.getColumns().size(), is(columns.size()));
+  }
+
+  @Test
+  public void shouldFetchProgramTemplateForRequisition() {
+    List<? extends Column> columns = new ArrayList<>();
+    doReturn(columns).when(repository).fetchColumnsForRequisition(1L);
+    configService.getConfigurationStringValue("DEFAULT_ZERO");
+    when(configService.getConfigurationStringValue("DEFAULT_ZERO")).thenReturn("false");
+
+    ProgramRnrTemplate template = service.fetchProgramTemplateForRequisition(1L);
+
+    verify(repository).fetchColumnsForRequisition(1l);
+    assertThat(template.getColumns().size(), is(columns.size()));
+    assertThat(template.getApplyDefaultZero(), is(Boolean.FALSE));
+
   }
 }

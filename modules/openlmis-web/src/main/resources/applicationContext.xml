@@ -40,7 +40,7 @@
         <property name="locations">
             <list>
                 <value>classpath:/default.properties</value>
-                <value>classpath:${environmentName}/app.properties</value>
+                <value>classpath:/app.properties</value>
                 <value>classpath:/database-config.properties</value>
             </list>
         </property>
@@ -75,6 +75,7 @@
     <import resource="classpath:/applicationContext-odkapi.xml"/>
     <import resource="classpath:/applicationContext-equipment.xml" />
     <import resource="classpath:/applicationContext-help.xml" />
+    <import resource="classpath:/applicationContext-demographics.xml" />
     <import resource="classpath:/applicationContext-vaccine.xml" />
     <import resource="classpath:/applicationContext-stock-management.xml" />
 
