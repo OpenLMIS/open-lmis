@@ -53,25 +53,19 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class UserController extends BaseController {
 
-  static final String MSG_USER_DISABLE_SUCCESS = "msg.user.disable.success";
-  static final String USER_CREATED_SUCCESS_MSG = "message.user.created.success.email.sent";
-
-  @Autowired
-  private RoleRightsService roleRightService;
-
-  @Autowired
-  private UserService userService;
-
-  @Autowired
-  private SessionRegistry sessionRegistry;
-
-  @Value("${mail.base.url}")
-  public String baseUrl;
-
   public static final String TOKEN_VALID = "TOKEN_VALID";
   public static final String USERS = "userList";
-
+  static final String MSG_USER_DISABLE_SUCCESS = "msg.user.disable.success";
+  static final String USER_CREATED_SUCCESS_MSG = "message.user.created.success.email.sent";
   private static final String RESET_PASSWORD_PATH = "/public/pages/reset-password.html#/token/";
+  @Value("${mail.base.url}")
+  public String baseUrl;
+  @Autowired
+  private RoleRightsService roleRightService;
+  @Autowired
+  private UserService userService;
+  @Autowired
+  private SessionRegistry sessionRegistry;
 
   @RequestMapping(value = "/user-context", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> user(HttpServletRequest httpServletRequest) {
@@ -112,6 +106,11 @@ public class UserController extends BaseController {
   public ResponseEntity<OpenLmisResponse> create(@RequestBody User user, HttpServletRequest request) {
     user.setCreatedBy(loggedInUserId(request));
     user.setModifiedBy(loggedInUserId(request));
+    if (user.isMobileUser()) {
+      user.setVerified(true);
+    } else {
+      user.setIsMobileUser(false);
+    }
     try {
       String resetPasswordBaseLink = baseUrl + RESET_PASSWORD_PATH;
       userService.create(user, resetPasswordBaseLink);
@@ -130,6 +129,11 @@ public class UserController extends BaseController {
                                                  HttpServletRequest request) {
     user.setModifiedBy(loggedInUserId(request));
     user.setId(id);
+    if (user.isMobileUser()) {
+      user.setVerified(true);
+    } else {
+      user.setIsMobileUser(false);
+    }
     try {
       userService.update(user);
     } catch (DataException e) {
@@ -264,5 +268,4 @@ public class UserController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getRights(HttpServletRequest request){
     return response("rights", userService.getSupervisoryRights(loggedInUserId(request)));
   }
-
 }

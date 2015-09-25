@@ -197,7 +197,7 @@ public class ProgramSupportedServiceTest {
   }
 
   @Test
-  public void shouldReturnNullIfProgramNotSupportedByFacility() throws Exception {
+  public void shouldReturnProgramSupported() throws Exception {
     ProgramSupported expectedProgram = new ProgramSupported();
     when(repository.getByFacilityIdAndProgramId(1L, 2L)).thenReturn(expectedProgram);
 

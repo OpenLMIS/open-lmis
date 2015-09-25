@@ -142,4 +142,7 @@ services.factory('VaccineInventoryConfigurations',function($resource){
     return $resource('/vaccine/inventory/configuration/getAll.json',{},{});
 });
 
+services.factory('ManufacturerList', function ($resource) {
+  return $resource('/vaccine/manufacturers.json', {}, {});
+});
 

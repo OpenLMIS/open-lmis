@@ -69,14 +69,9 @@ public class VaccineProgramController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getFacilities(@PathVariable Long programId, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         //TODO: make sure this method also supports home facility.
-        return OpenLmisResponse.response("facilities", facilityService.getUserSupervisedFacilities(userId, programId, RightName.CREATE_IVD, RightName.APPROVE_IVD));
+        return OpenLmisResponse.response("facilities", facilityService.getUserSupervisedFacilities(userId, programId, RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD));
     }
 
-    @RequestMapping(value = "/vaccine/demographics/programs.json", method = RequestMethod.GET)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
-    public ResponseEntity<OpenLmisResponse> getProgramsForDemographicEstimates(HttpServletRequest request) {
-        return OpenLmisResponse.response("programs", programService.getProgramsForUserByRights(loggedInUserId(request), RightName.MANAGE_DEMOGRAPHIC_ESTIMATES));
-    }
 
 
 }

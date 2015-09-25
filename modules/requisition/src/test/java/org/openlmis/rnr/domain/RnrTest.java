@@ -10,7 +10,6 @@
 
 package org.openlmis.rnr.domain;
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,7 +28,6 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -48,10 +46,10 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 public class RnrTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();
-  private Rnr rnr;
   ProgramRnrTemplate rnrTemplate;
   RegimenTemplate regimenTemplate;
   List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
+  private Rnr rnr;
 
   @Before
   public void setUp() throws Exception {

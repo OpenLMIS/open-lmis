@@ -49,15 +49,13 @@ public class ProgramRnrTemplate extends Template {
   public static final String PRODUCT_CODE = "productCode";
   public static final String PACKS_TO_SHIP = "packsToShip";
   public static final String SKIPPED = "skipped";
-
-  final List<String> nonPrintableFullSupplyColumnNames = asList(REMARKS, REASON_FOR_REQUESTED_QUANTITY);
-  final List<String> printableNonFullSupplyColumnNames = asList(PRODUCT, PRODUCT_CODE, DISPENSING_UNIT, QUANTITY_REQUESTED, PACKS_TO_SHIP, PRICE, COST, QUANTITY_APPROVED);
-
+  public static final String CALCULATED_ORDER_QUANTITY = "calculatedOrderQuantity";
   public static final String USER_NEEDS_TO_ENTER_DEPENDENT_FIELD = "user.needs.to.enter.dependent.field";
   public static final String INTERDEPENDENT_FIELDS_CAN_NOT_BE_CALCULATED = "error.interdependent.fields.can.not.be.calculated";
   public static final String COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT = "error.column.should.be.visible.if.user.input";
   public static final String USER_NEED_TO_ENTER_REQUESTED_QUANTITY_REASON = "error.user.needs.to.enter.requested.quantity.reason";
-
+  final List<String> nonPrintableFullSupplyColumnNames = asList(REMARKS, REASON_FOR_REQUESTED_QUANTITY);
+  final List<String> printableNonFullSupplyColumnNames = asList(PRODUCT, PRODUCT_CODE, DISPENSING_UNIT, QUANTITY_REQUESTED, PACKS_TO_SHIP, PRICE, COST, QUANTITY_APPROVED);
   @Getter
   private Map<String, RnrColumn> rnrColumnsMap = new HashMap<>();
   private Map<String, OpenLmisMessage> errorMap = new HashMap<>();

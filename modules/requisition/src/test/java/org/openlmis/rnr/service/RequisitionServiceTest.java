@@ -81,20 +81,18 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PrepareForTest(RequisitionService.class)
 public class RequisitionServiceTest {
 
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
   private Facility FACILITY = new Facility(1L);
   private Program PROGRAM = new Program(3L);
   private ProcessingPeriod PERIOD = make(
     a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, 10L), with(numberOfMonths, 1)));
   private Long USER_ID = 1L;
-
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
   private Rnr authorizedRnr;
   private Rnr inApprovalRnr;
   private ArrayList<RnrColumn> rnrColumns;
-
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
   @Mock
   private FacilityApprovedProductService facilityApprovedProductService;
   @Mock
@@ -1435,6 +1433,21 @@ public class RequisitionServiceTest {
     expectedException.expectMessage("error.program.configuration.missing");
 
     requisitionService.getPeriodForInitiating(FACILITY, PROGRAM);
+  }
+
+  @Test
+  public void shouldThrowErrorIfLastRegularRequisitionExistsAndIsPreAuthorized() {
+    Date programStartDate = new Date();
+    Rnr requisition = new Rnr();
+    requisition.setStatus(INITIATED);
+    when(requisitionRepository.getLastRegularRequisition(FACILITY, PROGRAM)).thenReturn(requisition);
+    when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.rnr.previous.not.filled");
+
+    requisitionService.getPeriodForInitiating(FACILITY, PROGRAM);
+
   }
 
   @Test

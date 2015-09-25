@@ -10,8 +10,8 @@
 
 package org.openlmis.core.web.controller;
 
-import org.openlmis.core.service.MessageService;
 import org.openlmis.core.logging.ApplicationLogger;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +30,12 @@ import static org.openlmis.core.web.OpenLmisResponse.error;
  */
 
 public class BaseController {
-  private static Logger logger = LoggerFactory.getLogger(ApplicationLogger.class);
   public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
   public static final String FORBIDDEN_EXCEPTION = "error.authorisation";
   public static final String ACCEPT_JSON = "Accept=application/json";
   public static final String ACCEPT_PDF = "Accept=application/pdf";
   public static final String ACCEPT_CSV = "Accept=*/*";
-
+  private static Logger logger = LoggerFactory.getLogger(ApplicationLogger.class);
   @Autowired
   public MessageService messageService;
 

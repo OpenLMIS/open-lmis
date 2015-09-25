@@ -118,9 +118,11 @@
                       <tbody>
                       <tr ng-repeat="row in data">
                         <td style="width: 20px; max-width: 30px" ng-bind="($index + 1)"></td>
-                        <td class="span{{col.width}} {{col.formatting}}" ng-repeat="col in report.columns">
-                          <span ng-show="col.formatting != 'number'">{{row[col.name]}}</span>
+                        <td class="span{{col.width}} {{col.formatting}} {{col.formatting == 'percent'? 'number': ''}}"
+                            ng-repeat="col in report.columns">
+                          <span ng-show="col.formatting != 'number' && col.formatting != 'percent'">{{row[col.name]}}</span>
                           <span ng-show="col.formatting == 'number'">{{row[col.name] | number}}</span>
+                          <span ng-show="col.formatting == 'percent'">{{row[col.name] | number}} %</span>
                         </td>
                       </tr>
                       </tbody>

@@ -24,26 +24,89 @@
     .ns-popover-tooltip-theme .ns-popover-tooltip{
         max-width: none !important;
     }
+    .tab-pane .ns-popover-tooltip{
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    }
 </style>
 <script type="text/ng-template" id="amc">
-    <div class="triangle"></div>
+
     <div class="ns-popover-tooltip vaccine-report">
-        <a-float af-render="renderIt"  af-option="amcChartOption" af-data="amcChart" style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
-     </div>
+        <tabset class="table">
+            <tab>
+                <tab-heading style="cursor: pointer;"><span openlmis-message="title.overview"></span></tab-heading>
+                <div class="triangle"></div>
+                <div class="ns-popover-tooltip vaccine-report">
+                    <a-float af-render="renderIt" af-option="amcChartOption" af-data="amcChart"
+                             style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
+                </div>
+
+            </tab>
+            <tab>
+                <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
+                <table class="table" style="width: 500px;">
+                    <thead>
+                    <tr class="gradient-header">
+                        <th openlmis-message="title.legend"></th>
+                        <th openlmis-message="title.definition"></th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="def in definitions">
+                        <td>{{def.label}}</td>
+                        <td>{{def.definition}}</td>
+                    </tr>
+                </table>
+
+            </tab>
+        </tabset>
+    </div>
+
 </script>
 <script type="text/ng-template" id="soh">
-    <div class="triangle"></div>
     <div class="ns-popover-tooltip vaccine-report">
-        <a-float af-render="renderIt"  af-option="sohChartOption" af-data="sohChart" style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
-        <div class="clearfix"></div>
+        <tabset class="table">
+            <tab>
+                <tab-heading style="cursor: pointer;"><span openlmis-message="title.overview"></span></tab-heading>
+                <div class="triangle"></div>
+                <div class="ns-popover-tooltip vaccine-report">
+                    <a-float af-render="renderIt" af-option="sohChartOption" af-data="sohChart"
+                             style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
+                    <div class="clearfix"></div>
+                </div>
+
+            </tab>
+            <tab>
+                <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
+                <table class="table" style="width: 500px;">
+                    <thead>
+                    <tr class="gradient-header">
+                        <th openlmis-message="title.legend"></th>
+                        <th openlmis-message="title.definition"></th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="def in definitions">
+                        <td>{{def.label}}</td>
+                        <td>{{def.definition}}</td>
+                    </tr>
+                </table>
+
+            </tab>
+        </tabset>
     </div>
+
+
 </script>
 
-<h2><span style="margin-left: 15px;" openlmis-message="title.monthly.vaccination.report"></span><span> {{period != null ? (' : '+period.name+' , '+period.stringYear) : ''}}</span></h2>
+<h2 style="padding: 10px;"><span style="margin-left: 15px;"
+                                 openlmis-message="title.monthly.vaccination.report"></span><span> {{period != null ? (' : '+period.name+' , '+period.stringYear) : ''}}</span>
+</h2>
 <div id="vaccine-report" class="vaccine-report app-form">
         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
             <div filter-container class="clearfix">
-                <period-tree-filter required="true" class="form-cell horizontalFilters"></period-tree-filter>
+                <vaccine-period-tree-filter required="true"
+                                            class="form-cell horizontalFilters"></vaccine-period-tree-filter>
                 <zone-filter class="form-cell horizontalFilters" stand-alone="true"></zone-filter>
                 <geo-facility-filter class="form-cell horizontalFilters"></geo-facility-filter>
 
@@ -159,7 +222,8 @@
                                 <table ng-show="vaccineCoverage.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th rowspan="3" style="text-align: center; vertical-align: middle" openlmis-message="label.antigens"></th>
+                                        <th rowspan="3" style="text-align: center; vertical-align: middle;"
+                                            openlmis-message="label.antigens"></th>
                                         <th rowspan="3" style="text-align: center; vertical-align: middle" openlmis-message="label.doses"></th>
                                         <th colspan="9" style="text-align: center; vertical-align: middle" openlmis-message="label.monthly.vaccination"></th>
                                         <th colspan="5" style="text-align: center; vertical-align: middle" openlmis-message="label.cumulative.vaccination"></th>
@@ -193,7 +257,7 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="vc in vaccineCoverage">
-                                        <td style="text-align: center; vertical-align: middle">{{vc.product_name}}</td>
+                                        <td style="text-align: center; vertical-align: middle;">{{vc.product_name}}</td>
                                         <td class="number">{{vc.display_name}}</td>
                                         <td class="number">{{vc.within_male}}</td>
                                         <td class="number">{{vc.within_female}}</td>

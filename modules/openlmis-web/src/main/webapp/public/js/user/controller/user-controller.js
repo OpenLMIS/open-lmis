@@ -122,7 +122,9 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     };
 
     if (!requiredFieldsPresent($scope.user))  return false;
-
+    if ($scope.user.email === "") {
+      $scope.user.email = null;
+    }
     if ($scope.user.id) {
       Users.update({id: $scope.user.id}, $scope.user, updateSuccessHandler, errorHandler);
     } else {

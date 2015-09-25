@@ -48,34 +48,24 @@ import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 public class RestRequisitionService {
 
   public static final boolean EMERGENCY = false;
-
+  private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
   @Autowired
   private RequisitionService requisitionService;
-
   @Autowired
   private OrderService orderService;
-
   @Autowired
   private FacilityService facilityService;
-
   @Autowired
   private ProgramService programService;
-
   @Autowired
   private RnrTemplateService rnrTemplateService;
-
   @Autowired
   private RestRequisitionCalculator restRequisitionCalculator;
-
   @Autowired
   private ProcessingPeriodService processingPeriodService;
-
   @Autowired
   private FacilityApprovedProductService facilityApprovedProductService;
-
   private List<FacilityTypeApprovedProduct> nonFullSupplyFacilityApprovedProductByFacilityAndProgram;
-
-  private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
 
   @Transactional
   public Rnr submitReport(Report report, Long userId) {
@@ -96,6 +86,8 @@ public class RestRequisitionService {
       restRequisitionCalculator.setDefaultValues(rnr);
 
     copyRegimens(rnr, report);
+
+    copyPatientQuantifications(rnr, report);
 
     requisitionService.save(rnr);
 
@@ -197,6 +189,16 @@ public class RestRequisitionService {
         if (correspondingRegimenLineItem == null)
           throw new DataException("error.invalid.regimen");
         correspondingRegimenLineItem.populate(regimenLineItem);
+      }
+    }
+  }
+
+  private void copyPatientQuantifications(Rnr rnr, Report report) {
+    if (report.getPatientQuantifications() != null) {
+      List<PatientQuantificationLineItem> patientQuantifications = new ArrayList();
+      rnr.setPatientQuantifications(patientQuantifications);
+      for (PatientQuantificationLineItem regimenLineItem : report.getPatientQuantifications()) {
+        patientQuantifications.add(regimenLineItem);
       }
     }
   }
