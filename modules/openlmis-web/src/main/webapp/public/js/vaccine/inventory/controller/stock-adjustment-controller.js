@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockAdjustmentController($scope, $timeout,$location,$routeParams,programs,StockCardsByCategory,SaveVaccineInventoryAdjustment,localStorageService,homeFacility,adjustmentTypes,UserFacilityList) {
+function StockAdjustmentController($scope, $timeout,$location,$routeParams,programs,StockCardsByCategory,productsConfiguration,SaveVaccineInventoryAdjustment,localStorageService,homeFacility,adjustmentTypes,UserFacilityList) {
 
     //Get Home Facility
     $scope.currentStockLot = undefined;
@@ -16,7 +16,8 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,progr
     $scope.userPrograms=programs;
     $scope.adjustmentTypes=adjustmentTypes;
     $scope.adjustmentReason={};
-    $scope.vvmStatuses=[{"value":1,"name":"Stage 1"},{"value":2,"name":"Stage 2"},{"value":3,"name":"Stage 3"},{"value":4,"name":"Stage 4"}];
+    $scope.vvmStatuses=[{"value":1,"name":" 1 "},{"value":2,"name":" 2 "}];
+    $scope.productsConfiguration=productsConfiguration;
     var AdjustmentReasons=[];
 
     var loadStockCards=function(programId, facilityId){
@@ -42,10 +43,6 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,progr
                 $scope.selectedProgramId=$scope.userPrograms[0].id;
                 loadStockCards(parseInt($scope.selectedProgramId,10),parseInt($scope.selectedFacilityId,10));
     }
-
-//    LoggedInUserDetails.get({}, function (data) {
-//            $scope.loggedInUser= data.userDetails;
-//        });
 
     $scope.date = new Date();
     $scope.apply=function(){
@@ -113,6 +110,7 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,progr
                 st.stockCards.forEach(function(s){
                      var list={};
                      list.productId=s.product.id;
+                     list.quantity=s.quantity;
                      list.lots=[];
                     s.lotsOnHand.forEach(function(l){
                         var lot={};
@@ -162,9 +160,8 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,progr
 
      function updateAdjustmentReasonForLot(adjustmentReasons)
      {
-        // console.log(JSON.stringify(adjustmentReasons));
+
          var adjustmentReasonsForLot = _.pluck(_.pluck(adjustmentReasons, 'type'), 'name');
-       //  console.log(adjustmentReasonsForLot);
          $scope.adjustmentReasonsToDisplay = $.grep($scope.adjustmentTypes, function (adjustmentTypeObject) {
               return $.inArray(adjustmentTypeObject.name, adjustmentReasonsForLot) == -1;
           });
@@ -183,6 +180,20 @@ function StockAdjustmentController($scope, $timeout,$location,$routeParams,progr
                  }
                  return false;
            };
+          $scope.vvmTracked=function(c)
+          {
+             var config=_.filter(productsConfiguration, function(obj) {
+                   return obj.product.id===c.product.id;
+             });
+
+             if(config.length >0)
+             {
+                return config[0].vvmTracked;
+             }
+             else{
+                return false;
+             }
+          };
 
 }
 StockAdjustmentController.resolve = {
@@ -223,7 +234,20 @@ StockAdjustmentController.resolve = {
                              });
                     }, 100);
                     return deferred.promise;
-        }
+        },
+
+        productsConfiguration:function($q, $timeout, VaccineInventoryPrograms,VaccineInventoryConfigurations) {
+                     var deferred = $q.defer();
+                     var configurations={};
+                     $timeout(function () {
+                        VaccineInventoryConfigurations.get(function(data)
+                        {
+                              configurations=data.Configurations;
+                              deferred.resolve(configurations);
+                        });
+                     }, 100);
+                     return deferred.promise;
+                }
 
 
 };
