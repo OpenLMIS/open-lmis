@@ -79,9 +79,9 @@ function ReceiveStockController($scope,programs,$timeout,homeFacility,VaccinePro
                 });
             }
             transaction.transactionList.push(list);
-        });
+    });
 
-        SaveVaccineInventoryReceived.update(transaction,function(data)
+    SaveVaccineInventoryReceived.update(transaction,function(data)
         {
              if(data.success !==null)
              {
@@ -112,7 +112,7 @@ function ReceiveStockController($scope,programs,$timeout,homeFacility,VaccinePro
          var index = $scope.receivedProducts.indexOf(product);
          $scope.receivedProducts.splice(index, 1);
          updateProductToDisplay($scope.receivedProducts);
-    }
+    };
 
     $scope.addProduct=function(productToAdd){
         $scope.receivedProducts.push(productToAdd);
@@ -134,11 +134,11 @@ function ReceiveStockController($scope,programs,$timeout,homeFacility,VaccinePro
             var index = $scope.productToAdd.lots.indexOf(lot);
             $scope.productToAdd.lots.splice(index, 1);
             updateLotsToDisplay($scope.productToAdd.lots);
-        };
+    };
 
 
     $scope.removeReceivedLot=function(product,lot)
-        {
+    {
             if(product.lots.length ===1)
             {
                 $scope.removeProduct(product);
@@ -185,10 +185,10 @@ function ReceiveStockController($scope,programs,$timeout,homeFacility,VaccinePro
      $scope.sumLots = function(lots) {
             var total=0;
             angular.forEach(lots , function(lot){
-              total+= parseInt(lot.quantity);
+              total+= parseInt(lot.quantity,10);
             });
             return total;
-     }
+     };
 
 }
 ReceiveStockController.resolve = {
