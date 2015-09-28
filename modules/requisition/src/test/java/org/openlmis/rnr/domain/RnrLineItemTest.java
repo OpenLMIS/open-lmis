@@ -63,15 +63,13 @@ public class RnrLineItemTest {
   public ExpectedException expectedException = ExpectedException.none();
 
   Integer numberOfMonths;
+  @Mock
+  ProgramRnrTemplate template;
+  @Mock
+  RnrColumn column;
   private RnrLineItem lineItem;
   private List<RnrColumn> templateColumns;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
-
-  @Mock
-  ProgramRnrTemplate template;
-
-  @Mock
-  RnrColumn column;
 
   @Before
   public void setUp() throws Exception {
@@ -493,11 +491,11 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, QUANTITY_DISPENSED))));
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, CALCULATED_ORDER_QUANTITY))));
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, NEW_PATIENT_COUNT),
-          with(option, new RnrColumnOption("newPatientCount", "NPC")))));
+              with(option, new RnrColumnOption("newPatientCount", "NPC")))));
     }};
 
     spyLineItem.calculateForFullSupply(new ProgramRnrTemplate(columns), AUTHORIZED, lossesAndAdjustmentsList,
-        numberOfMonths);
+            numberOfMonths);
 
     verify(spyLineItem, never()).calculateOrderQuantity();
   }

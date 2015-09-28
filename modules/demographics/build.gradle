@@ -14,30 +14,30 @@ apply plugin: 'cobertura'
 
 dependencies {
 
-  compile  project(':modules:core')
+    compile project(':modules:core')
 
 
-  testCompile project(path: ':modules:core', configuration: 'testFixtures')
+    testCompile project(path: ':modules:core', configuration: 'testFixtures')
 
 
-  configurations {
-    testFixtures {
-      extendsFrom testRuntime
+    configurations {
+        testFixtures {
+            extendsFrom testRuntime
+        }
     }
-  }
 
-  task testJar(type: Jar) {
-    from sourceSets.test.output
-    classifier = 'test'
-  }
+    task testJar(type: Jar) {
+        from sourceSets.test.output
+        classifier = 'test'
+    }
 
-  artifacts {
-    testFixtures testJar
-  }
+    artifacts {
+        testFixtures testJar
+    }
 }
 
 cobertura {
-  coverageFormats << 'xml'
-  coverageIgnoreTrivial = true
+    coverageFormats << 'xml'
+    coverageIgnoreTrivial = true
 
 }

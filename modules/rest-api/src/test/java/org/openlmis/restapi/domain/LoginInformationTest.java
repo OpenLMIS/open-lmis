@@ -20,40 +20,40 @@ import static org.mockito.Mockito.when;
 @PowerMockRunnerDelegate(BlockJUnit4ClassRunner.class)
 public class LoginInformationTest {
 
-  @Mock
-  private User user;
+    @Mock
+    private User user;
 
-  @Mock
-  private Facility facility;
+    @Mock
+    private Facility facility;
 
-  @Test
-  public void shouldSetLoginInformationFields() {
-    when(user.getUserName()).thenReturn("username");
-    when(user.getFirstName()).thenReturn("first");
-    when(user.getLastName()).thenReturn("last");
-    when(facility.getCode()).thenReturn("code");
-    when(facility.getName()).thenReturn("name");
+    @Test
+    public void shouldSetLoginInformationFields() {
+        when(user.getUserName()).thenReturn("username");
+        when(user.getFirstName()).thenReturn("first");
+        when(user.getLastName()).thenReturn("last");
+        when(facility.getCode()).thenReturn("code");
+        when(facility.getName()).thenReturn("name");
 
-    LoginInformation loginInformation = LoginInformation.prepareForREST(user, facility);
-    assertEquals("username", loginInformation.getUserName());
-    assertEquals("first", loginInformation.getUserFirstName());
-    assertEquals("last", loginInformation.getUserLastName());
-    assertEquals("code", loginInformation.getFacilityCode());
-    assertEquals("name", loginInformation.getFacilityName());
-  }
+        LoginInformation loginInformation = LoginInformation.prepareForREST(user, facility);
+        assertEquals("username", loginInformation.getUserName());
+        assertEquals("first", loginInformation.getUserFirstName());
+        assertEquals("last", loginInformation.getUserLastName());
+        assertEquals("code", loginInformation.getFacilityCode());
+        assertEquals("name", loginInformation.getFacilityName());
+    }
 
-  @Test
-  public void shouldSetFacilityFieldsToNullIfUserIsNotAssociatedWithFacility() {
-    when(user.getUserName()).thenReturn("username");
-    when(user.getFirstName()).thenReturn("first");
-    when(user.getLastName()).thenReturn("last");
+    @Test
+    public void shouldSetFacilityFieldsToNullIfUserIsNotAssociatedWithFacility() {
+        when(user.getUserName()).thenReturn("username");
+        when(user.getFirstName()).thenReturn("first");
+        when(user.getLastName()).thenReturn("last");
 
-    LoginInformation loginInformation = LoginInformation.prepareForREST(user, null);
-    assertEquals("username", loginInformation.getUserName());
-    assertEquals("first", loginInformation.getUserFirstName());
-    assertEquals("last", loginInformation.getUserLastName());
-    assertEquals(null, loginInformation.getFacilityCode());
-    assertEquals(null, loginInformation.getFacilityName());
-  }
+        LoginInformation loginInformation = LoginInformation.prepareForREST(user, null);
+        assertEquals("username", loginInformation.getUserName());
+        assertEquals("first", loginInformation.getUserFirstName());
+        assertEquals("last", loginInformation.getUserLastName());
+        assertEquals(null, loginInformation.getFacilityCode());
+        assertEquals(null, loginInformation.getFacilityName());
+    }
 }
 

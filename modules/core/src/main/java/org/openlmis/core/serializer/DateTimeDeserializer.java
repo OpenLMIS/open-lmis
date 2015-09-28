@@ -22,14 +22,14 @@ import java.io.IOException;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class DateTimeDeserializer extends JsonDeserializer<DateTime> {
-  private static final DateTimeFormatter formatter = ISODateTimeFormat.basicDateTimeNoMillis();
+    private static final DateTimeFormatter formatter = ISODateTimeFormat.basicDateTimeNoMillis();
 
-  @Override
-  public DateTime deserialize(JsonParser jsonparser,
-                          DeserializationContext deserializationcontext) throws IOException {
+    @Override
+    public DateTime deserialize(JsonParser jsonparser,
+                                DeserializationContext deserializationcontext) throws IOException {
 
-    String dtToParse = jsonparser.getText();
-    if (isBlank(dtToParse)) return null;
-    return formatter.parseLocalDateTime(jsonparser.getText()).toDateTime();
-  }
+        String dtToParse = jsonparser.getText();
+        if (isBlank(dtToParse)) return null;
+        return formatter.parseLocalDateTime(jsonparser.getText()).toDateTime();
+    }
 }

@@ -149,7 +149,7 @@ public class VaccineReportRepository {
     return mapper.vaccineUsageTrendByGeographicZone(periodId, zoneId, productCode);
   }
 
-  public GeographicZone getNationalZone(){
+  public GeographicZone getNationalZone() {
     return mapper.getNationalZone();
   }
 }

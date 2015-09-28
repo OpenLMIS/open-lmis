@@ -14,7 +14,7 @@ import java.util.List;
 @JsonSerialize
 public class ProgramWithProducts {
 
-  private String programName;
-  private String programCode;
-  private List<Product> products;
+    private String programName;
+    private String programCode;
+    private List<Product> products;
 }

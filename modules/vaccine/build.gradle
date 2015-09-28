@@ -15,7 +15,7 @@ apply plugin: 'cobertura'
 dependencies {
 
     compile  project(':modules:core')
-    compile  project(':modules:demographics')
+    compile project(':modules:demographics')
    
     testCompile project(path: ':modules:core', configuration: 'testFixtures')
 

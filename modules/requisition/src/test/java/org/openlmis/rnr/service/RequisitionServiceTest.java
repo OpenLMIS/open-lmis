@@ -81,20 +81,18 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PrepareForTest(RequisitionService.class)
 public class RequisitionServiceTest {
 
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
   private Facility FACILITY = new Facility(1L);
   private Program PROGRAM = new Program(3L);
   private ProcessingPeriod PERIOD = make(
     a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, 10L), with(numberOfMonths, 1)));
   private Long USER_ID = 1L;
-
   private Rnr submittedRnr;
   private Rnr initiatedRnr;
   private Rnr authorizedRnr;
   private Rnr inApprovalRnr;
   private ArrayList<RnrColumn> rnrColumns;
-
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
   @Mock
   private FacilityApprovedProductService facilityApprovedProductService;
   @Mock

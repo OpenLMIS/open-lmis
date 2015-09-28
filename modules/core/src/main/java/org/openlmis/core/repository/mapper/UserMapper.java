@@ -32,16 +32,16 @@ public interface UserMapper {
 
   @Insert({"INSERT INTO users",
     "(userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle,",
-    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, createdBy, modifiedBy, modifiedDate,createdDate, verified, ismobileuser)",
+          "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, createdBy, modifiedBy, modifiedDate,createdDate, verified, ismobileuser)",
     "VALUES",
     "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, COALESCE(#{restrictLogin}, FALSE), #{jobTitle},",
     "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, ",
-    "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()),COALESCE(#{modifiedDate}, NOW()), #{verified}, #{isMobileUser})"})
+          "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()),COALESCE(#{modifiedDate}, NOW()), #{verified}, #{isMobileUser})"})
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
   @Select(value = {"SELECT id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, ",
-    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, verified, active, modifiedDate, ismobileuser",
+          "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, verified, active, modifiedDate, ismobileuser",
     " FROM users where LOWER(userName) = LOWER(#{userName}) AND active = TRUE"})
   @Results(
     @Result(property = "supervisor.id", column = "supervisorId")
@@ -53,7 +53,7 @@ public interface UserMapper {
   User getByEmail(String email);
 
   @Select({"SELECT id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod, ",
-    "officePhone, cellPhone, email, supervisorId ,verified, active, ismobileuser " +
+          "officePhone, cellPhone, email, supervisorId ,verified, active, ismobileuser " +
       "FROM users U INNER JOIN role_assignments RA ON U.id = RA.userId INNER JOIN role_rights RR ON RA.roleId = RR.roleId ",
     "WHERE RA.programId = #{program.id} AND COALESCE(RA.supervisoryNodeId, -1) = COALESCE(#{supervisoryNode.id}, -1) AND RR.rightName = #{right}"})
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
@@ -64,12 +64,12 @@ public interface UserMapper {
     "employeeId = #{employeeId},restrictLogin = #{restrictLogin}, facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
     "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, " +
     "email = #{email}, active = #{active}, " +
-    "verified = #{verified}, ismobileuser = #{isMobileUser}, " +
+          "verified = #{verified}, ismobileuser = #{isMobileUser}, " +
     "modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(User user);
 
   @Select("SELECT id, userName, firstName, lastName, employeeId, restrictLogin, facilityId, jobTitle, officePhone, " +
-    "primaryNotificationMethod, cellPhone, email, verified, active, ismobileuser FROM users WHERE id=#{id}")
+          "primaryNotificationMethod, cellPhone, email, verified, active, ismobileuser FROM users WHERE id=#{id}")
   User getById(Long id);
 
   @Insert("INSERT INTO user_password_reset_tokens (userId, token) VALUES (#{user.id}, #{token})")

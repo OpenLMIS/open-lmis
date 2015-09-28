@@ -34,15 +34,13 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @PrepareForTest(RestResponse.class)
 public class LookupControllerTest {
 
+  Principal principal;
+  RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
   @Mock
   private ReportLookupService lookupService;
-
   @InjectMocks
   private LookupController controller;
 
-  Principal principal;
-
-  RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
   @Before
   public void setUp() throws Exception {
     principal = mock(Principal.class);

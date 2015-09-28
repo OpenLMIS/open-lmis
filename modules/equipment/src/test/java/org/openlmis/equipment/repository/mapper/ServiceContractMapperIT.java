@@ -48,195 +48,195 @@ import static org.hamcrest.Matchers.*;
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 public class ServiceContractMapperIT {
 
-  @Autowired
-  ServiceContractMapper mapper;
+    @Autowired
+    ServiceContractMapper mapper;
 
-  @Autowired
-  VendorMapper vendorMapper;
+    @Autowired
+    VendorMapper vendorMapper;
 
-  @Autowired
-  FacilityMapper facilityMapper;
+    @Autowired
+    FacilityMapper facilityMapper;
 
-  @Autowired
-  ServiceTypeMapper serviceTypeMapper;
+    @Autowired
+    ServiceTypeMapper serviceTypeMapper;
 
-  @Autowired
-  EquipmentTypeMapper equipmentTypeMapper;
+    @Autowired
+    EquipmentTypeMapper equipmentTypeMapper;
 
-  Vendor vendor;
+    Vendor vendor;
 
-  @Before
-  public void setup(){
-    vendor = new Vendor();
-    vendor.setName("The Vendor");
-    vendor.setEmail("vendor@nowhere.nohow");
-    vendor.setWebsite("1.com");
-    vendorMapper.insert(vendor);
-  }
-
-
-  private ServiceContract createServiceContract() {
-    ServiceContract contract = new ServiceContract();
-    contract.setDescription("The service description");
-    contract.setContractDate(new Date());
-    contract.setCoverage("The coverage");
-    contract.setEndDate(new Date());
-    contract.setStartDate(new Date());
-    contract.setIdentifier("123");
-    contract.setTerms("The terms of service goes here");
-    contract.setVendorId(vendor.getId());
-    return contract;
-  }
-
-  @Test
-  public void shouldGetById() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
-
-    ServiceContract result = mapper.getById(contract.getId());
-
-    assertThat(result.getCoverage(), is(contract.getCoverage()));
-    assertThat(result.getDescription(), is(contract.getDescription()));
-  }
+    @Before
+    public void setup() {
+        vendor = new Vendor();
+        vendor.setName("The Vendor");
+        vendor.setEmail("vendor@nowhere.nohow");
+        vendor.setWebsite("1.com");
+        vendorMapper.insert(vendor);
+    }
 
 
-  @Test
-  public void shouldGetFacilityOptions() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
+    private ServiceContract createServiceContract() {
+        ServiceContract contract = new ServiceContract();
+        contract.setDescription("The service description");
+        contract.setContractDate(new Date());
+        contract.setCoverage("The coverage");
+        contract.setEndDate(new Date());
+        contract.setStartDate(new Date());
+        contract.setIdentifier("123");
+        contract.setTerms("The terms of service goes here");
+        contract.setVendorId(vendor.getId());
+        return contract;
+    }
 
-    List<ContractDetail> facilities =  mapper.getFacilityOptions(contract.getId());
-    assertThat(facilities.size(), is(notNullValue()));
+    @Test
+    public void shouldGetById() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
 
-  }
+        ServiceContract result = mapper.getById(contract.getId());
 
-  @Test
-  public void shouldGetServiceTypes() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
+        assertThat(result.getCoverage(), is(contract.getCoverage()));
+        assertThat(result.getDescription(), is(contract.getDescription()));
+    }
 
-    List<?> list = mapper.getServiceTypes(contract.getId());
-    assertThat(list.size(), is(notNullValue()));
-  }
 
-  @Test
-  public void shouldGetEquipments() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
+    @Test
+    public void shouldGetFacilityOptions() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
 
-    List<?> equipments = mapper.getEquipments(contract.getId());
-    assertThat(equipments.size(), is(notNullValue()));
-  }
+        List<ContractDetail> facilities = mapper.getFacilityOptions(contract.getId());
+        assertThat(facilities.size(), is(notNullValue()));
 
-  @Test
-  public void shouldGetAll() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
+    }
 
-    List<?> contracts = mapper.getAll();
-    assertThat(contracts.size(), is(greaterThan(0)));
-  }
+    @Test
+    public void shouldGetServiceTypes() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
 
-  @Test
-  public void shouldGetAllForFacility() throws Exception {
-    mapper.getAllForEquipment(2L);
-  }
+        List<?> list = mapper.getServiceTypes(contract.getId());
+        assertThat(list.size(), is(notNullValue()));
+    }
 
-  @Test
-  public void shouldGetAllForVendor() throws Exception {
-    mapper.getAllForVendor(2L);
-  }
+    @Test
+    public void shouldGetEquipments() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
 
-  @Test
-  public void shouldGetAllForEquipment() throws Exception {
-    mapper.getAllForEquipment(2L);
-  }
+        List<?> equipments = mapper.getEquipments(contract.getId());
+        assertThat(equipments.size(), is(notNullValue()));
+    }
 
-  @Test
-  public void shouldInsert() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
-    assertThat(contract.getId(), is(notNullValue()));
-  }
+    @Test
+    public void shouldGetAll() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
 
-  @Test
-  public void shouldUpdate() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
+        List<?> contracts = mapper.getAll();
+        assertThat(contracts.size(), is(greaterThan(0)));
+    }
 
-    contract.setTerms("Term 2");
-    contract.setIdentifier("Identifier 2");
+    @Test
+    public void shouldGetAllForFacility() throws Exception {
+        mapper.getAllForEquipment(2L);
+    }
 
-    mapper.update(contract);
-    ServiceContract result = mapper.getById(contract.getId());
+    @Test
+    public void shouldGetAllForVendor() throws Exception {
+        mapper.getAllForVendor(2L);
+    }
 
-    assertThat(result.getTerms(), is(contract.getTerms()));
-    assertThat(result.getIdentifier(), is(contract.getIdentifier()));
-  }
+    @Test
+    public void shouldGetAllForEquipment() throws Exception {
+        mapper.getAllForEquipment(2L);
+    }
 
-  @Test
-  public void shouldDeleteEquipments() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
+    @Test
+    public void shouldInsert() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
+        assertThat(contract.getId(), is(notNullValue()));
+    }
 
-    mapper.deleteEquipments(contract.getId());
+    @Test
+    public void shouldUpdate() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
 
-    // there is no verification here, however this test is still effective as it checks if the schema supports this specific query.
-  }
+        contract.setTerms("Term 2");
+        contract.setIdentifier("Identifier 2");
 
-  @Test
-  public void shouldDeleteServiceTypes() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
+        mapper.update(contract);
+        ServiceContract result = mapper.getById(contract.getId());
 
-    mapper.deleteServiceTypes(contract.getId());
+        assertThat(result.getTerms(), is(contract.getTerms()));
+        assertThat(result.getIdentifier(), is(contract.getIdentifier()));
+    }
 
-    // there is no verification here, however this test is still effective as it checks if the schema supports this specific query.
-  }
+    @Test
+    public void shouldDeleteEquipments() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
 
-  @Test
-  public void shouldDeleteFacilities() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
+        mapper.deleteEquipments(contract.getId());
 
-    mapper.deleteFacilities(contract.getId());
+        // there is no verification here, however this test is still effective as it checks if the schema supports this specific query.
+    }
 
-    // there is no verification here, however this test is still effective as it checks if the schema supports this specific query.
-  }
+    @Test
+    public void shouldDeleteServiceTypes() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
 
-  @Test
-  public void shouldInsertEquipment() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
+        mapper.deleteServiceTypes(contract.getId());
 
-    EquipmentType type = make(a(EquipmentTypeBuilder.defaultEquipmentType));
-    equipmentTypeMapper.insert(type);
+        // there is no verification here, however this test is still effective as it checks if the schema supports this specific query.
+    }
 
-    mapper.insertEquipment(contract.getId(), type.getId());
+    @Test
+    public void shouldDeleteFacilities() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
 
-  }
+        mapper.deleteFacilities(contract.getId());
 
-  @Test
-  public void shouldInsertServiceTypes() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
+        // there is no verification here, however this test is still effective as it checks if the schema supports this specific query.
+    }
 
-    ServiceType type = new ServiceType();
-    type.setName("Maintenance 1");
-    type.setDescription("Sample Description");
-    serviceTypeMapper.insert(type);
+    @Test
+    public void shouldInsertEquipment() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
 
-    mapper.insertServiceTypes(contract.getId(), type.getId());
-  }
+        EquipmentType type = make(a(EquipmentTypeBuilder.defaultEquipmentType));
+        equipmentTypeMapper.insert(type);
 
-  @Test
-  public void shouldInsertFacilities() throws Exception {
-    ServiceContract contract = createServiceContract();
-    mapper.insert(contract);
+        mapper.insertEquipment(contract.getId(), type.getId());
 
-    Facility facility = make(a(FacilityBuilder.defaultFacility));
-    facilityMapper.insert(facility);
+    }
 
-    mapper.insertFacilities(contract.getId(), facility.getId());
-  }
+    @Test
+    public void shouldInsertServiceTypes() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
+
+        ServiceType type = new ServiceType();
+        type.setName("Maintenance 1");
+        type.setDescription("Sample Description");
+        serviceTypeMapper.insert(type);
+
+        mapper.insertServiceTypes(contract.getId(), type.getId());
+    }
+
+    @Test
+    public void shouldInsertFacilities() throws Exception {
+        ServiceContract contract = createServiceContract();
+        mapper.insert(contract);
+
+        Facility facility = make(a(FacilityBuilder.defaultFacility));
+        facilityMapper.insert(facility);
+
+        mapper.insertFacilities(contract.getId(), facility.getId());
+    }
 }

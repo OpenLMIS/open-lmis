@@ -93,7 +93,7 @@ public class VaccineReportController extends BaseController {
 
     if (periodId == null || periodId == 0) return null;
 
-    return OpenLmisResponse.response("vaccineData", service.getMonthlyVaccineReport( facilityId, periodId, zoneId));
+    return OpenLmisResponse.response("vaccineData", service.getMonthlyVaccineReport(facilityId, periodId, zoneId));
 
   }
 

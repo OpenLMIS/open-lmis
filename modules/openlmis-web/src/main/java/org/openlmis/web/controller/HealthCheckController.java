@@ -13,17 +13,17 @@ import static org.springframework.http.HttpStatus.OK;
 @Controller
 public class HealthCheckController {
 
-  @Autowired
-  private StaticReferenceDataService service;
+    @Autowired
+    private StaticReferenceDataService service;
 
-  @RequestMapping(value={"/health/ping"}, method = RequestMethod.GET)
-  public ResponseEntity<?> ping(){
-    return new ResponseEntity<String>(OK);
-  }
+    @RequestMapping(value = {"/health/ping"}, method = RequestMethod.GET)
+    public ResponseEntity<?> ping() {
+        return new ResponseEntity<String>(OK);
+    }
 
-  @RequestMapping(value = "/release", method = RequestMethod.GET)
-  public ResponseEntity getRelease() {
-    String appVersion = service.getPropertyValue("app.version");
-    return OpenLmisResponse.response("version", appVersion, OK, "application/json");
-  }
+    @RequestMapping(value = "/release", method = RequestMethod.GET)
+    public ResponseEntity getRelease() {
+        String appVersion = service.getPropertyValue("app.version");
+        return OpenLmisResponse.response("version", appVersion, OK, "application/json");
+    }
 }

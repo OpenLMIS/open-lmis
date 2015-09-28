@@ -108,4 +108,12 @@ public interface VaccineInventoryMapper {
             " (#{lotOnHandId},#{name},#{quantity},NOW(),#{createdBy},NOW(),#{modifiedBy},NOW())")
     Integer insertAdjustmentReasons(AdjustmentReason adjustmentReason);
 
+    @Select("SELECT *" +
+            " FROM lots" +
+            " WHERE productid = #{productId} ")
+    @Results({
+            @Result(property = "lotCode", column = "lotnumber"),
+    })
+    List<Lot> getLotsByProductId(@Param("productId") Long productId);
+
 }

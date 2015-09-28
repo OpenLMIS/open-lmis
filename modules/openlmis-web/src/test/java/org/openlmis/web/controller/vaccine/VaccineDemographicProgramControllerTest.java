@@ -108,7 +108,7 @@ public class VaccineDemographicProgramControllerTest {
     @Test
     public void shouldGetFacilities() throws Exception {
         List<Facility> facilities = new ArrayList<>();
-        when(facilityService.getUserSupervisedFacilities(1L, 1L,RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD)).thenReturn(facilities);
+        when(facilityService.getUserSupervisedFacilities(1L, 1L, RightName.CREATE_IVD, RightName.APPROVE_IVD, RightName.VIEW_IVD)).thenReturn(facilities);
         ResponseEntity<OpenLmisResponse> response = controller.getFacilities(1L, httpServletRequest);
 
         assertThat(facilities, is(response.getBody().getData().get("facilities")));

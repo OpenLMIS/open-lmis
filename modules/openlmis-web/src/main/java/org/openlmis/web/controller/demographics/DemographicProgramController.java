@@ -14,16 +14,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class DemographicProgramController extends BaseController
-{
+public class DemographicProgramController extends BaseController {
 
-  @Autowired
-  ProgramService programService;
+    @Autowired
+    ProgramService programService;
 
-  @RequestMapping(value = "/demographics/programs.json", method = RequestMethod.GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
-  public ResponseEntity<OpenLmisResponse> getProgramsForDemographicEstimates(HttpServletRequest request) {
-    return OpenLmisResponse.response("programs", programService.getProgramsForUserByRights(loggedInUserId(request), RightName.MANAGE_DEMOGRAPHIC_ESTIMATES));
-  }
+    @RequestMapping(value = "/demographics/programs.json", method = RequestMethod.GET)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
+    public ResponseEntity<OpenLmisResponse> getProgramsForDemographicEstimates(HttpServletRequest request) {
+        return OpenLmisResponse.response("programs", programService.getProgramsForUserByRights(loggedInUserId(request), RightName.MANAGE_DEMOGRAPHIC_ESTIMATES));
+    }
 
 }
