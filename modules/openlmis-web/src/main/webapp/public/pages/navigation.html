@@ -87,7 +87,7 @@
         </ul>
       </div>
     </li>
-    <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('MANAGE_DISTRIBUTION')">
+    <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('MANAGE_DISTRIBUTION') || hasPermission('VIEW_ORDER_REQUISITION') || hasPermission('VIEW_PENDING_REQUEST') || hasPermission('CREATE_ORDER_REQUISITION')">
       <a id="vaccine" href="" openlmis-message="link.vaccine"></a>
       <div class="submenu">
         <ul>
@@ -108,6 +108,40 @@
             <a href="/public/pages/vaccine/index.html#/vaccine-report"
                openlmis-message="link.vaccine.report"></a>
           </li>
+
+          <li  class="has-children">
+
+            <a href="javascript: void(0);"
+               openlmis-message="link.vaccine.request.form"></a>
+            <div class="submenu">
+              <ul>
+                <li ng-show="hasPermission('CREATE_ORDER_REQUISITION')">
+                  <a href="/public/pages/vaccine/order-requisition/index.html#/initiate"> Create / Submit</a>
+
+                </li>
+
+                <li ng-show="hasPermission('VIEW_PENDING_REQUEST')">
+                  <a href="/public/pages/vaccine/order-requisition/index.html#/view">View Pending</a>
+
+                </li>
+
+
+                <li ng-show="hasPermission('VIEW_ORDER_REQUISITION')">
+                  <a href="/public/pages/vaccine/order-requisition/index.html#/search">View</a>
+
+                </li>
+
+
+
+              </ul>
+
+
+            </div>
+
+
+          </li>
+
+
 
           <li class="has-children">
             <a href="javascript: void(0);"
