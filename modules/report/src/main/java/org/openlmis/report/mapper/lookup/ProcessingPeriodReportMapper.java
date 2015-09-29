@@ -51,6 +51,9 @@ public interface ProcessingPeriodReportMapper {
             " order by year,groupname,pp.startdate  asc")
     List<YearSchedulePeriodTree> getVaccineYearSchedulePeriodTree();
 
+    @Select("select max(periodid) periodid from vaccine_reports where status = 'SUBMITTED'")
+    Long getCurrentPeriodIdForVaccine();
+
 
 
     @Select("select distinct on (pp.startdate) pp.id, pp.scheduleId, \n" +

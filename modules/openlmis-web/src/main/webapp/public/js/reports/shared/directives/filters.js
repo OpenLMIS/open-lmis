@@ -705,8 +705,8 @@ app.directive('vaccinePeriodTreeFilter', ['GetVaccineReportPeriodTree', '$routeP
         scope.$evalAsync(function() {
           //Load period tree
           GetVaccineReportPeriodTree.get({}, function(data) {
-            scope.periods = data.yearSchedulePeriod;
-
+            scope.periods = data.vaccinePeriods.periods;
+            scope.filter.defaultPeriodId = data.vaccinePeriods.currentPeriodId;
             scope.period_placeholder = messageService.get('label.select.period');
             if (!angular.isUndefined( scope.periods)) {
               if (scope.periods.length === 0)

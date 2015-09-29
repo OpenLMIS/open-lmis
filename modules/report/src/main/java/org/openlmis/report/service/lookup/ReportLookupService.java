@@ -721,6 +721,10 @@ public class ReportLookupService {
         return yearList;
     }
 
+    public Long getCurrentPeriodIdForVaccine(){
+        return processingPeriodMapper.getCurrentPeriodIdForVaccine();
+    }
+
     //New
     public List<FacilityLevelTree> getFacilityByLevel(Long programId, Long userId) {
 
