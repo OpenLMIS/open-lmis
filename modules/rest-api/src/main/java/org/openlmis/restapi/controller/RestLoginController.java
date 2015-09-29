@@ -18,16 +18,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @NoArgsConstructor
 public class RestLoginController extends BaseController {
 
-  @Autowired
-  private RestLoginService restLoginService;
+    @Autowired
+    private RestLoginService restLoginService;
 
-  @RequestMapping(value = "/rest-api/login", method = RequestMethod.POST, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> login(@RequestBody RestLoginRequest restLogin) {
-    try {
-      LoginInformation loginInformation = restLoginService.login(restLogin.getUsername(), restLogin.getPassword());
-      return RestResponse.response("userInformation", loginInformation);
-    } catch (BadCredentialsException e) {
-      return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+    @RequestMapping(value = "/rest-api/login", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity<RestResponse> login(@RequestBody RestLoginRequest restLogin) {
+        try {
+            LoginInformation loginInformation = restLoginService.login(restLogin.getUsername(), restLogin.getPassword());
+            return RestResponse.response("userInformation", loginInformation);
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
     }
-  }
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @JsonDeserialize
 public class RestLoginRequest {
 
-  private String username;
-  private String password;
+    private String username;
+    private String password;
 
 }

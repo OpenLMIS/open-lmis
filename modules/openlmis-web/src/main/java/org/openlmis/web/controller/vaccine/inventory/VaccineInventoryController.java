@@ -79,7 +79,7 @@ public class VaccineInventoryController extends BaseController {
     public ResponseEntity<OpenLmisResponse> credit(@RequestBody VaccineInventoryTransactionDTO dto, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         service.saveTransaction(dto, StockCardEntryType.CREDIT, userId);
-        return OpenLmisResponse.response("success", "Credit was successful!");
+        return OpenLmisResponse.response("success", "Receiving was successful!");
     }
 
     @RequestMapping(value = "stock/debit", method = PUT)
@@ -88,7 +88,7 @@ public class VaccineInventoryController extends BaseController {
     public ResponseEntity<OpenLmisResponse> debit(@RequestBody VaccineInventoryTransactionDTO dto, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         service.saveTransaction(dto, StockCardEntryType.DEBIT, userId);
-        return OpenLmisResponse.response("success", "Debit was successful!");
+        return OpenLmisResponse.response("success", "Issue was successful!");
     }
 
     @RequestMapping(value = "lot/create", method = PUT, headers = ACCEPT_JSON)
@@ -105,21 +105,11 @@ public class VaccineInventoryController extends BaseController {
 
     }
 
+    @RequestMapping(value = "lots/byProduct/{productId}", method = GET, headers = ACCEPT_JSON)
+//TODO:   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_LOT')")
+    public ResponseEntity getLotsByProductId(@PathVariable Long productId) {
 
-//    @RequestMapping(value = "test", method = PUT)
-//    public  ResponseEntity<OpenLmisResponse> test(@RequestBody LotOnHand lotOnHand,HttpServletRequest request )
-//    {
-//        lotOnHand.setCreatedBy(loggedInUserId(request));
-//        service.insertLotsOnHand(lotOnHand);
-//        return OpenLmisResponse.response("Lot", lotOnHand);
-//    }
-//
-//    @RequestMapping(value = "test", method = GET)
-//    public ResponseEntity<OpenLmisResponse> getLot(HttpServletRequest request)
-//    {
-//        LotOnHand lot=service.getLotOnHand(10L,12L);
-//        return OpenLmisResponse.response("LotOnHand",lot);
-//    }
-
+        return OpenLmisResponse.response("lots", service.getLotsByProductId(productId));
+    }
 
 }

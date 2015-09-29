@@ -290,7 +290,7 @@ public interface VaccineReportMapper {
           "order by pp.id asc")
   List<HashMap<String, Object>>vaccineUsageTrendByGeographicZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId, @Param("productCode") String productCode);
 
-  @Select("select * from geographic_zones where parentid is null")
-  GeographicZone getNationalZone();
+    @Select("select * from geographic_zones where parentid is null")
+    GeographicZone getNationalZone();
 
 }

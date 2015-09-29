@@ -22,10 +22,10 @@ import java.util.List;
 @Component
 public class ManufacturerRepository {
 
-  @Autowired
-  ManufacturerMapper mapper;
+    @Autowired
+    ManufacturerMapper mapper;
 
-  public List<Manufacturer> getAll(){
-    return mapper.getAll();
-  }
+    public List<Manufacturer> getAll() {
+        return mapper.getAll();
+    }
 }

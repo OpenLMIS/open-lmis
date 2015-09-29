@@ -34,37 +34,37 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @RequestMapping(value = "/demographic/estimate/")
 public class FacilityEstimateController extends BaseController {
 
-  @Autowired
-  AnnualFacilityDemographicEstimateService service;
+    @Autowired
+    AnnualFacilityDemographicEstimateService service;
 
-  @RequestMapping(value = "facilities", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
-  public ResponseEntity<OpenLmisResponse> get(@RequestParam("year") Integer year, @RequestParam("program") Long programId, HttpServletRequest request) {
-    return OpenLmisResponse.response("estimates", service.getEstimateForm(loggedInUserId(request), programId, year));
-  }
+    @RequestMapping(value = "facilities", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
+    public ResponseEntity<OpenLmisResponse> get(@RequestParam("year") Integer year, @RequestParam("program") Long programId, HttpServletRequest request) {
+        return OpenLmisResponse.response("estimates", service.getEstimateForm(loggedInUserId(request), programId, year));
+    }
 
-  @Transactional
-  @RequestMapping(value = "facilities", method = PUT, headers = ACCEPT_JSON )
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody EstimateForm form, HttpServletRequest request){
-    service.save(form, loggedInUserId(request));
-    return OpenLmisResponse.response("estimates", form);
-  }
+    @Transactional
+    @RequestMapping(value = "facilities", method = PUT, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DEMOGRAPHIC_ESTIMATES')")
+    public ResponseEntity<OpenLmisResponse> save(@RequestBody EstimateForm form, HttpServletRequest request) {
+        service.save(form, loggedInUserId(request));
+        return OpenLmisResponse.response("estimates", form);
+    }
 
-  @Transactional
-  @RequestMapping(value = "finalize/facilities.json", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'FINALIZE_DEMOGRAPHIC_ESTIMATES')")
-  public ResponseEntity<OpenLmisResponse> finalize(@RequestBody EstimateForm form, HttpServletRequest request){
-    service.finalize(form, loggedInUserId(request));
-    return OpenLmisResponse.response("estimates", form);
-  }
+    @Transactional
+    @RequestMapping(value = "finalize/facilities.json", method = PUT, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'FINALIZE_DEMOGRAPHIC_ESTIMATES')")
+    public ResponseEntity<OpenLmisResponse> finalize(@RequestBody EstimateForm form, HttpServletRequest request) {
+        service.finalize(form, loggedInUserId(request));
+        return OpenLmisResponse.response("estimates", form);
+    }
 
-  @Transactional
-  @RequestMapping(value = "undo-finalize/facilities.json", method = PUT, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UNLOCK_FINALIZED_DEMOGRAPHIC_ESTIMATES')")
-  public ResponseEntity<OpenLmisResponse> undoFinalize(@RequestBody EstimateForm form, HttpServletRequest request){
-    service.undoFinalize(form, loggedInUserId(request));
-    return OpenLmisResponse.response("estimates", form);
-  }
+    @Transactional
+    @RequestMapping(value = "undo-finalize/facilities.json", method = PUT, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UNLOCK_FINALIZED_DEMOGRAPHIC_ESTIMATES')")
+    public ResponseEntity<OpenLmisResponse> undoFinalize(@RequestBody EstimateForm form, HttpServletRequest request) {
+        service.undoFinalize(form, loggedInUserId(request));
+        return OpenLmisResponse.response("estimates", form);
+    }
 
 }

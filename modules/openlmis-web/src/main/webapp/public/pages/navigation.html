@@ -114,19 +114,23 @@
                openlmis-message="link.vaccine.inventory"></a>
             <div class="submenu">
               <ul>
-                <li>
+                <li ng-show="hasPermission('MANAGE_VACCINE_PRODUCTS_CONFIGURATION')">
+                  <a href="/public/pages/vaccine/inventory/index.html#/configuration"
+                     openlmis-message="link.vaccine.configuration"></a>
+                </li>
+                <li ng-show="hasPermission('VIEW_STOCK_ON_HAND')">
                   <a href="/public/pages/vaccine/inventory/index.html#/stock-on-hand"
                      openlmis-message="link.vaccine.stock.on.hand"></a>
                 </li>
-                <li>
+                <li ng-show="hasPermission('ADJUST_STOCK')">
                   <a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment"
                      openlmis-message="link.vaccine.stock.adjustment"></a>
                 </li>
-                <li>
-                  <a href="/public/pages/vaccine/index.html#/receive"
+                <li ng-show="hasPermission('RECEIVE_STOCK')">
+                  <a href="/public/pages/vaccine/inventory/index.html#/receive"
                       openlmis-message="link.vaccine.receive"></a>
                 </li>
-                <li>
+                <li ng-show="hasPermission('DISTRIBUTE_STOCK')">
                   <a href="/public/pages/vaccine/index.html#/distribute"
                       openlmis-message="link.vaccine.distribute"></a>
                 </li>
@@ -522,17 +526,17 @@
               <ul>
                   <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')" >
                     <a
-                      href="/public/pages/demographics/index.html#/list"
+                            href="/public/pages/demographics/index.html#/list"
                       openlmis-message="link.manage.demographic.categories"></a>
                   </li>
                   <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_ESTIMATES')">
                     <a
-                      href="/public/pages/demographics/index.html#/facility"
+                            href="/public/pages/demographics/index.html#/facility"
                       openlmis-message="link.manage.facility.demographic"></a>
                   </li>
                   <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')">
                     <a
-                      href="/public/pages/demographics/index.html#/district"
+                            href="/public/pages/demographics/index.html#/district"
                       openlmis-message="link.manage.district.demographic"></a>
                   </li>
                 </ul>

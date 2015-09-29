@@ -22,14 +22,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(value = "/vaccine/")
-public class ManufacturerController extends BaseController{
+public class ManufacturerController extends BaseController {
 
-  @Autowired
-  private ManufacturerService service;
+    @Autowired
+    private ManufacturerService service;
 
-  @RequestMapping(value = "manufacturers")
-  public ResponseEntity<OpenLmisResponse> getAll(){
-    return OpenLmisResponse.response("manufacturers", service.getAll());
-  }
+    @RequestMapping(value = "manufacturers")
+    public ResponseEntity<OpenLmisResponse> getAll() {
+        return OpenLmisResponse.response("manufacturers", service.getAll());
+    }
 
 }

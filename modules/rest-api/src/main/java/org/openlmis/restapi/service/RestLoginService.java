@@ -16,49 +16,46 @@ import org.springframework.stereotype.Service;
 @Service
 public class RestLoginService {
 
-  @Autowired
-  private UserAuthenticationService userAuthenticationService;
+    MessageService messageService = MessageService.getRequestInstance();
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private FacilityService facilityService;
 
-  @Autowired
-  private UserService userService;
-
-  @Autowired
-  private FacilityService facilityService;
-
-  MessageService messageService = MessageService.getRequestInstance();
-
-  public LoginInformation login(String username, String password) {
-    authenticateUser(username, password);
-    return getLoginInformation(username);
-  }
-
-  private UserToken authenticateUser(String username, String password) {
-    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-    String userName = (String) authenticationToken.getPrincipal();
-    String pass = (String) authenticationToken.getCredentials();
-
-    User user = new User();
-    user.setUserName(userName);
-    user.setPassword(pass);
-
-    UserToken userToken = userAuthenticationService.authenticateUser(user);
-
-    if (userToken.isAuthenticated()) {
-      return userToken;
-    } else {
-      throw new BadCredentialsException(messageService.message("error.authentication.failed"));
+    public LoginInformation login(String username, String password) {
+        authenticateUser(username, password);
+        return getLoginInformation(username);
     }
-  }
 
-  private LoginInformation getLoginInformation(String username) {
-    User user = userService.getByUserName(username);
-    Long facilityId = user.getFacilityId();
+    private UserToken authenticateUser(String username, String password) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+        String userName = (String) authenticationToken.getPrincipal();
+        String pass = (String) authenticationToken.getCredentials();
 
-    if (facilityId != null) {
-      Facility facility = facilityService.getById(facilityId);
-      return LoginInformation.prepareForREST(user, facility);
-    } else {
-      return LoginInformation.prepareForREST(user, null);
+        User user = new User();
+        user.setUserName(userName);
+        user.setPassword(pass);
+
+        UserToken userToken = userAuthenticationService.authenticateUser(user);
+
+        if (userToken.isAuthenticated()) {
+            return userToken;
+        } else {
+            throw new BadCredentialsException(messageService.message("error.authentication.failed"));
+        }
     }
-  }
+
+    private LoginInformation getLoginInformation(String username) {
+        User user = userService.getByUserName(username);
+        Long facilityId = user.getFacilityId();
+
+        if (facilityId != null) {
+            Facility facility = facilityService.getById(facilityId);
+            return LoginInformation.prepareForREST(user, facility);
+        } else {
+            return LoginInformation.prepareForREST(user, null);
+        }
+    }
 }

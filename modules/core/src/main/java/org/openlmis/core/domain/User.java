@@ -101,7 +101,7 @@ public class User extends BaseModel implements Importable {
     this(null, userName);
   }
 
-  public Boolean isMobileUser(){
+  public Boolean isMobileUser() {
     return this.isMobileUser;
   }
 

@@ -39,35 +39,33 @@ import static org.mockito.Mockito.when;
 @PrepareForTest(RestResponse.class)
 public class RestLoginControllerTest {
 
-  @InjectMocks
-  private RestLoginController restLoginController;
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+    @InjectMocks
+    private RestLoginController restLoginController;
+    @Mock
+    private RestLoginService restLoginService;
 
-  @Mock
-  private RestLoginService restLoginService;
+    @Test
+    public void shouldReturnUnauthorizedIfNotAuthenticated() {
+        when(restLoginService.login("username", "pass")).thenThrow(new BadCredentialsException("error"));
+        RestLoginRequest request = new RestLoginRequest();
+        request.setUsername("username");
+        request.setPassword("pass");
+        ResponseEntity<RestResponse> response = restLoginController.login(request);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
 
-  @Rule
-  public ExpectedException exception = ExpectedException.none();
+    @Test
+    public void shouldReturnStatusOKAndObjectContainingLoginInformation() {
+        LoginInformation loggedInUser = new LoginInformation();
+        when(restLoginService.login("username", "pass")).thenReturn(loggedInUser);
+        RestLoginRequest request = new RestLoginRequest();
+        request.setUsername("username");
+        request.setPassword("pass");
+        ResponseEntity<RestResponse> response = restLoginController.login(request);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(loggedInUser, response.getBody().getData().get("userInformation"));
 
-  @Test
-  public void shouldReturnUnauthorizedIfNotAuthenticated() {
-    when(restLoginService.login("username", "pass")).thenThrow(new BadCredentialsException("error"));
-    RestLoginRequest request = new RestLoginRequest();
-    request.setUsername("username");
-    request.setPassword("pass");
-    ResponseEntity<RestResponse> response = restLoginController.login(request);
-    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-  }
-
-  @Test
-  public void shouldReturnStatusOKAndObjectContainingLoginInformation() {
-    LoginInformation loggedInUser = new LoginInformation();
-    when(restLoginService.login("username", "pass")).thenReturn(loggedInUser);
-    RestLoginRequest request = new RestLoginRequest();
-    request.setUsername("username");
-    request.setPassword("pass");
-    ResponseEntity<RestResponse> response = restLoginController.login(request);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(loggedInUser, response.getBody().getData().get("userInformation"));
-
-  }
+    }
 }

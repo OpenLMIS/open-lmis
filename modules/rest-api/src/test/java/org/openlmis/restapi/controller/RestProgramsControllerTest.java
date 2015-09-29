@@ -34,36 +34,36 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @PrepareForTest(RestResponse.class)
 public class RestProgramsControllerTest {
 
-  @InjectMocks
-  private RestProgramsController restProgramsController;
+    @InjectMocks
+    private RestProgramsController restProgramsController;
 
-  @Mock
-  private RestProgramsService restProgramsService;
+    @Mock
+    private RestProgramsService restProgramsService;
 
-  @Mock
-  private MessageService messageService;
+    @Mock
+    private MessageService messageService;
 
-  @Test
-  public void shouldReturnBadRequestIfError() {
-    mockStatic(RestResponse.class);
-    DataException e = new DataException("error.facility.code.invalid");
-    when(restProgramsService.getAllProgramsWithProductsByFacilityCode("F10")).thenThrow(e);
-    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, "error.facility.code.invalid"), BAD_REQUEST);
-    when(RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
+    @Test
+    public void shouldReturnBadRequestIfError() {
+        mockStatic(RestResponse.class);
+        DataException e = new DataException("error.facility.code.invalid");
+        when(restProgramsService.getAllProgramsWithProductsByFacilityCode("F10")).thenThrow(e);
+        ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, "error.facility.code.invalid"), BAD_REQUEST);
+        when(RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
 
-    ResponseEntity<RestResponse> response = restProgramsController.getProgramWithProductsByFacility("F10");
-    assertEquals(expectedResponse, response);
-  }
+        ResponseEntity<RestResponse> response = restProgramsController.getProgramWithProductsByFacility("F10");
+        assertEquals(expectedResponse, response);
+    }
 
-  @Test
-  public void shouldReturnResponseWithListOfProgramsWithProducts() {
-    List<ProgramWithProducts> programsWithProducts = new ArrayList();
-    programsWithProducts.add(new ProgramWithProductsBuilder().build());
-    when(restProgramsService.getAllProgramsWithProductsByFacilityCode("F10")).thenReturn(programsWithProducts);
+    @Test
+    public void shouldReturnResponseWithListOfProgramsWithProducts() {
+        List<ProgramWithProducts> programsWithProducts = new ArrayList();
+        programsWithProducts.add(new ProgramWithProductsBuilder().build());
+        when(restProgramsService.getAllProgramsWithProductsByFacilityCode("F10")).thenReturn(programsWithProducts);
 
-    ResponseEntity<RestResponse> response = restProgramsController.getProgramWithProductsByFacility("F10");
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(programsWithProducts, response.getBody().getData().get("programsWithProducts"));
+        ResponseEntity<RestResponse> response = restProgramsController.getProgramWithProductsByFacility("F10");
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(programsWithProducts, response.getBody().getData().get("programsWithProducts"));
 
-  }
+    }
 }

@@ -82,9 +82,9 @@ public interface VaccineInventoryMapper {
     Integer insertLotsOnHand(LotOnHand lotOnHand);
 
     @Insert("insert into stock_card_entries " +
-            " (stockcardid, lotonhandid, type, quantity, adjustmentreason, createdby, createddate, modifiedby,modifieddate )" +
+            " (stockcardid, lotonhandid, type, quantity,  createdby, createddate, modifiedby,modifieddate )" +
             " values " +
-            " (#{stockCardId}, #{lotOnHandId}, #{type}::stockcardentrytype, #{quantity}, #{adjustmentReason},#{createdBy},NOW(),#{modifiedBy},NOW()) ")
+            " (#{stockCardId}, #{lotOnHandId}, #{type}, #{quantity},#{createdBy},NOW(),#{modifiedBy},NOW()) ")
     @Options(useGeneratedKeys = true)
     Integer insertStockCardEntry(StockCardEntry stockCardEntry);
 
@@ -107,5 +107,13 @@ public interface VaccineInventoryMapper {
             " values " +
             " (#{lotOnHandId},#{name},#{quantity},NOW(),#{createdBy},NOW(),#{modifiedBy},NOW())")
     Integer insertAdjustmentReasons(AdjustmentReason adjustmentReason);
+
+    @Select("SELECT *" +
+            " FROM lots" +
+            " WHERE productid = #{productId} ")
+    @Results({
+            @Result(property = "lotCode", column = "lotnumber"),
+    })
+    List<Lot> getLotsByProductId(@Param("productId") Long productId);
 
 }

@@ -26,40 +26,40 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class EstimateCategoryControllerTest {
 
-  @Mock
-  EstimateCategoryService service;
+    @Mock
+    EstimateCategoryService service;
 
-  @InjectMocks
-  EstimateCategoryController controller;
+    @InjectMocks
+    EstimateCategoryController controller;
 
-  @Test
-  public void shouldGetAll() throws Exception {
-    List<EstimateCategory> categories = new ArrayList<>();
-    when(service.getAll()).thenReturn(categories);
+    @Test
+    public void shouldGetAll() throws Exception {
+        List<EstimateCategory> categories = new ArrayList<>();
+        when(service.getAll()).thenReturn(categories);
 
-    ResponseEntity<OpenLmisResponse> result  = controller.getAll();
+        ResponseEntity<OpenLmisResponse> result = controller.getAll();
 
-    assertThat(categories, is(result.getBody().getData().get("estimate_categories")));
-  }
+        assertThat(categories, is(result.getBody().getData().get("estimate_categories")));
+    }
 
-  @Test
-  public void shouldGetById() throws Exception {
-    EstimateCategory category = new EstimateCategory();
-    when(service.getById(2L)).thenReturn(category);
+    @Test
+    public void shouldGetById() throws Exception {
+        EstimateCategory category = new EstimateCategory();
+        when(service.getById(2L)).thenReturn(category);
 
-    ResponseEntity<OpenLmisResponse> result = controller.getById(2L);
+        ResponseEntity<OpenLmisResponse> result = controller.getById(2L);
 
-    assertThat(category, is(result.getBody().getData().get("estimate_category")));
-  }
+        assertThat(category, is(result.getBody().getData().get("estimate_category")));
+    }
 
-  @Test
-  public void shouldSave() throws Exception {
-    doNothing().when(service).save(anyList());
-    EstimateCategory category = new EstimateCategory();
+    @Test
+    public void shouldSave() throws Exception {
+        doNothing().when(service).save(anyList());
+        EstimateCategory category = new EstimateCategory();
 
-    ResponseEntity<OpenLmisResponse> result = controller.save(category);
+        ResponseEntity<OpenLmisResponse> result = controller.save(category);
 
-    assertThat(category, is(result.getBody().getData().get("estimate_category")));
-    verify(service).save(anyList());
-  }
+        assertThat(category, is(result.getBody().getData().get("estimate_category")));
+        verify(service).save(anyList());
+    }
 }

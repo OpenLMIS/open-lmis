@@ -42,7 +42,6 @@ public interface ProcessingPeriodReportMapper {
     List<YearSchedulePeriodTree> getYearSchedulePeriodTree();
 
 
-
     @Select(" select  EXTRACT(YEAR FROM pp.startdate) as year, ps.name as groupname, pp.name as periodname, pp.id AS periodid, ps.id as groupid   \n" +
             " from processing_periods pp    \n" +
             " join processing_schedules ps on pp.scheduleid = ps.id  \n" +

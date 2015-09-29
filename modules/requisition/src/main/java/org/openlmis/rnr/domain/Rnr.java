@@ -44,6 +44,7 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @EqualsAndHashCode(callSuper = false)
 public class Rnr extends BaseModel {
 
+  public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
   private boolean emergency;
   private Facility facility;
   private Program program;
@@ -51,17 +52,12 @@ public class Rnr extends BaseModel {
   private RnrStatus status;
   private Money fullSupplyItemsSubmittedCost = new Money("0");
   private Money nonFullSupplyItemsSubmittedCost = new Money("0");
-
   private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
   private List<RegimenLineItem> regimenLineItems = new ArrayList<>();
   private List<EquipmentLineItem> equipmentLineItems = new ArrayList<>();
   private List<PatientQuantificationLineItem> patientQuantifications = new ArrayList<>();
-
   private BigDecimal allocatedBudget;
-
-  public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
-
   @Transient
   @JsonIgnore
   private List<RnrLineItem> allLineItems = new ArrayList<>();
@@ -88,6 +84,16 @@ public class Rnr extends BaseModel {
     fillActiveRegimenLineItems(regimens);
   }
 
+  public Rnr(Facility facility, Program program, ProcessingPeriod period) {
+    this.facility = facility;
+    this.program = program;
+    this.period = period;
+  }
+
+  public Rnr(Long id) {
+    this.id = id;
+  }
+
   private void fillActiveRegimenLineItems(List<Regimen> regimens) {
     for (Regimen regimen : regimens) {
       if (regimen.getActive()) {
@@ -98,16 +104,6 @@ public class Rnr extends BaseModel {
         regimenLineItems.add(regimenLineItem);
       }
     }
-  }
-
-  public Rnr(Facility facility, Program program, ProcessingPeriod period) {
-    this.facility = facility;
-    this.program = program;
-    this.period = period;
-  }
-
-  public Rnr(Long id) {
-    this.id = id;
   }
 
   public void add(RnrLineItem rnrLineItem, Boolean fullSupply) {

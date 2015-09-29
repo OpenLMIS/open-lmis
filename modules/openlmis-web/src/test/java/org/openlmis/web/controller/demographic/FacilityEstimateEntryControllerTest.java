@@ -29,45 +29,45 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityEstimateEntryControllerTest {
 
-  private static final Long USER_ID = 1L;
-  private static final String USER = "user";
-  @Mock
-  AnnualFacilityDemographicEstimateService service;
-  @InjectMocks
-  FacilityEstimateController controller;
-  private MockHttpServletRequest request;
+    private static final Long USER_ID = 1L;
+    private static final String USER = "user";
+    @Mock
+    AnnualFacilityDemographicEstimateService service;
+    @InjectMocks
+    FacilityEstimateController controller;
+    private MockHttpServletRequest request;
 
-  @Before
-  public void setUp() throws Exception {
-    request = new MockHttpServletRequest();
-    MockHttpSession session = new MockHttpSession();
-    session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
-    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER_ID);
+    @Before
+    public void setUp() throws Exception {
+        request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute(UserAuthenticationSuccessHandler.USER, USER);
+        session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER_ID);
 
-    request.setSession(session);
-  }
+        request.setSession(session);
+    }
 
-  @Test
-  public void shouldGet() throws Exception {
-    EstimateForm form = new EstimateForm();
-    form.setEstimateLineItems(new ArrayList<EstimateFormLineItem>());
-    when(service.getEstimateForm(1L, 2L, 2005)).thenReturn(form);
+    @Test
+    public void shouldGet() throws Exception {
+        EstimateForm form = new EstimateForm();
+        form.setEstimateLineItems(new ArrayList<EstimateFormLineItem>());
+        when(service.getEstimateForm(1L, 2L, 2005)).thenReturn(form);
 
-    ResponseEntity<OpenLmisResponse> response = controller.get(2005, 2L, request);
+        ResponseEntity<OpenLmisResponse> response = controller.get(2005, 2L, request);
 
-    assertThat(form, is(response.getBody().getData().get("estimates")));
-    verify(service).getEstimateForm(1L, 2L, 2005);
-  }
+        assertThat(form, is(response.getBody().getData().get("estimates")));
+        verify(service).getEstimateForm(1L, 2L, 2005);
+    }
 
-  @Test
-  public void shouldSave() throws Exception {
-    EstimateForm form = new EstimateForm();
-    form.setEstimateLineItems(new ArrayList<EstimateFormLineItem>());
-    doNothing().when(service).save(form, 1L);
+    @Test
+    public void shouldSave() throws Exception {
+        EstimateForm form = new EstimateForm();
+        form.setEstimateLineItems(new ArrayList<EstimateFormLineItem>());
+        doNothing().when(service).save(form, 1L);
 
-    ResponseEntity<OpenLmisResponse> response = controller.save(form, request);
+        ResponseEntity<OpenLmisResponse> response = controller.save(form, request);
 
-    assertThat(form, is(response.getBody().getData().get("estimates")));
-    verify(service).save(form, 1L);
-  }
+        assertThat(form, is(response.getBody().getData().get("estimates")));
+        verify(service).save(form, 1L);
+    }
 }

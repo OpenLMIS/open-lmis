@@ -31,19 +31,14 @@ import java.util.List;
 public class NotificationServices {
 
 
+    @Value("${mail.base.url}")
+    String baseURL;
   @Autowired
   private ConfigurationSettingService configService;
-
   @Autowired
   private EmailService emailService;
-
   @Autowired
   private ApproverService approverService;
-
-  @Value("${mail.base.url}")
-  String baseURL;
-
-
 
   public void notifyStatusChange(Rnr requisition)   {
 
@@ -73,9 +68,9 @@ public class NotificationServices {
             // iterate through the emails and send the email.
             // replace the template with the message
             for(User user : users){
-              if (user.isMobileUser()) {
-                continue;
-              }
+                if (user.isMobileUser()) {
+                    continue;
+                }
 
               SimpleMailMessage message = new SimpleMailMessage();
               String emailMessage = emailTemplate;

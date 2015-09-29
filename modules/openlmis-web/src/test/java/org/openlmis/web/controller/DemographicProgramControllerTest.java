@@ -43,105 +43,104 @@ import static org.openlmis.web.controller.ProgramController.PROGRAMS;
 @Category(UnitTests.class)
 public class DemographicProgramControllerTest {
 
-  public static final Long USER_ID = 1L;
-  @Mock
-  private ProgramService programService;
+    public static final Long USER_ID = 1L;
+    @InjectMocks
+    ProgramController controller;
+    @Mock
+    private ProgramService programService;
+    private MockHttpServletRequest httpServletRequest;
 
-  @InjectMocks
-  ProgramController controller;
-  private MockHttpServletRequest httpServletRequest;
+    @Before
+    public void init() {
+        initMocks(this);
+        httpServletRequest = new MockHttpServletRequest();
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        httpServletRequest.setSession(mockHttpSession);
+        mockHttpSession.setAttribute(USER, USER);
+        mockHttpSession.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER_ID);
 
-  @Before
-  public void init() {
-    initMocks(this);
-    httpServletRequest = new MockHttpServletRequest();
-    MockHttpSession mockHttpSession = new MockHttpSession();
-    httpServletRequest.setSession(mockHttpSession);
-    mockHttpSession.setAttribute(USER, USER);
-    mockHttpSession.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER_ID);
+    }
 
-  }
+    @Test
+    public void shouldGetListOfUserSupportedProgramsForAFacilityForGivenRights() {
+        Program program = new Program();
+        program.setPush(false);
+        List<Program> programs = new ArrayList<>(Arrays.asList(program));
 
-  @Test
-  public void shouldGetListOfUserSupportedProgramsForAFacilityForGivenRights() {
-    Program program = new Program();
-    program.setPush(false);
-    List<Program> programs = new ArrayList<>(Arrays.asList(program));
+        Long facilityId = 12345L;
 
-    Long facilityId = 12345L;
+        when(programService.getProgramsForUserByFacilityAndRights(facilityId, USER_ID, VIEW_REQUISITION)).thenReturn(programs);
 
-    when(programService.getProgramsForUserByFacilityAndRights(facilityId, USER_ID, VIEW_REQUISITION)).thenReturn(programs);
+        assertThat(programs, is(controller.getProgramsToViewRequisitions(facilityId, httpServletRequest)));
 
-    assertThat(programs, is(controller.getProgramsToViewRequisitions(facilityId, httpServletRequest)));
+    }
 
-  }
+    @Test
+    public void shouldGetListOfActiveProgramsForAUserWithCreateRequisitionRight() throws Exception {
 
-  @Test
-  public void shouldGetListOfActiveProgramsForAUserWithCreateRequisitionRight() throws Exception {
+        List<Program> expectedPrograms = new ArrayList<>();
 
-    List<Program> expectedPrograms = new ArrayList<>();
+        when(programService.getProgramForSupervisedFacilities(USER_ID, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(expectedPrograms);
 
-    when(programService.getProgramForSupervisedFacilities(USER_ID, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(expectedPrograms);
+        List<Program> result = controller.getProgramsForCreateOrAuthorizeRequisition(null, httpServletRequest);
 
-    List<Program> result = controller.getProgramsForCreateOrAuthorizeRequisition(null, httpServletRequest);
+        verify(programService).getProgramForSupervisedFacilities(USER_ID, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
+        assertThat(result, is(equalTo(expectedPrograms)));
+    }
 
-    verify(programService).getProgramForSupervisedFacilities(USER_ID, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
-    assertThat(result, is(equalTo(expectedPrograms)));
-  }
+    @Test
+    public void shouldGetListOfAllPullPrograms() throws Exception {
+        List<Program> expectedPrograms = new ArrayList<>();
 
-  @Test
-  public void shouldGetListOfAllPullPrograms() throws Exception {
-    List<Program> expectedPrograms = new ArrayList<>();
+        when(programService.getAllPullPrograms()).thenReturn(expectedPrograms);
 
-    when(programService.getAllPullPrograms()).thenReturn(expectedPrograms);
+        ResponseEntity<OpenLmisResponse> response = controller.getAllPullPrograms();
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllPullPrograms();
+        verify(programService).getAllPullPrograms();
+        List<Program> actual = (List<Program>) response.getBody().getData().get(PROGRAMS);
+        assertThat(actual, is(equalTo(expectedPrograms)));
+    }
 
-    verify(programService).getAllPullPrograms();
-    List<Program> actual = (List<Program>) response.getBody().getData().get(PROGRAMS);
-    assertThat(actual, is(equalTo(expectedPrograms)));
-  }
+    @Test
+    public void shouldGetListOfAllPrograms() throws Exception {
+        List<Program> expectedPrograms = new ArrayList<>();
 
-  @Test
-  public void shouldGetListOfAllPrograms() throws Exception {
-    List<Program> expectedPrograms = new ArrayList<>();
+        when(programService.getAll()).thenReturn(expectedPrograms);
 
-    when(programService.getAll()).thenReturn(expectedPrograms);
+        ResponseEntity<OpenLmisResponse> response = controller.getAllPrograms();
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllPrograms();
+        verify(programService).getAll();
+        List<Program> actual = (List<Program>) response.getBody().getData().get(PROGRAMS);
+        assertThat(actual, is(equalTo(expectedPrograms)));
+    }
 
-    verify(programService).getAll();
-    List<Program> actual = (List<Program>) response.getBody().getData().get(PROGRAMS);
-    assertThat(actual, is(equalTo(expectedPrograms)));
-  }
+    @Test
+    public void shouldGetProgramsForViewRightAndFacilityForUser() throws Exception {
 
-  @Test
-  public void shouldGetProgramsForViewRightAndFacilityForUser() throws Exception {
+        List<Program> expectedPrograms = new ArrayList<>();
+        Program pushProgram = new Program();
+        pushProgram.setPush(true);
+        Program pullProgram = new Program();
+        pullProgram.setPush(false);
+        expectedPrograms.add(pullProgram);
+        expectedPrograms.add(pushProgram);
+        when(programService.getProgramsForUserByFacilityAndRights(1L, USER_ID, VIEW_REQUISITION)).thenReturn(expectedPrograms);
 
-    List<Program> expectedPrograms = new ArrayList<>();
-    Program pushProgram = new Program();
-    pushProgram.setPush(true);
-    Program pullProgram = new Program();
-    pullProgram.setPush(false);
-    expectedPrograms.add(pullProgram);
-    expectedPrograms.add(pushProgram);
-    when(programService.getProgramsForUserByFacilityAndRights(1L, USER_ID, VIEW_REQUISITION)).thenReturn(expectedPrograms);
-
-    List<Program> result = controller.getProgramsToViewRequisitions(1L, httpServletRequest);
+        List<Program> result = controller.getProgramsToViewRequisitions(1L, httpServletRequest);
 
 
-    verify(programService).getProgramsForUserByFacilityAndRights(1L, USER_ID, VIEW_REQUISITION);
-    expectedPrograms.remove(pushProgram);
-    assertThat(result, is(equalTo(expectedPrograms)));
-  }
+        verify(programService).getProgramsForUserByFacilityAndRights(1L, USER_ID, VIEW_REQUISITION);
+        expectedPrograms.remove(pushProgram);
+        assertThat(result, is(equalTo(expectedPrograms)));
+    }
 
-  @Test
-  public void shouldGetProgramById() throws Exception {
-    Program expectedProgram = new Program();
-    when(programService.getById(1L)).thenReturn(expectedProgram);
-    ResponseEntity<OpenLmisResponse> response = controller.get(1L);
+    @Test
+    public void shouldGetProgramById() throws Exception {
+        Program expectedProgram = new Program();
+        when(programService.getById(1L)).thenReturn(expectedProgram);
+        ResponseEntity<OpenLmisResponse> response = controller.get(1L);
 
-    assertThat((Program) response.getBody().getData().get(PROGRAM), is(expectedProgram));
-    verify(programService).getById(1L);
-  }
+        assertThat((Program) response.getBody().getData().get(PROGRAM), is(expectedProgram));
+        verify(programService).getById(1L);
+    }
 }

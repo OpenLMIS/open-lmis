@@ -34,65 +34,61 @@ import static org.mockito.Mockito.when;
 @PrepareForTest(RestResponse.class)
 public class RestLoginServiceTest {
 
-  @InjectMocks
-  private RestLoginService restLoginService;
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+    @InjectMocks
+    private RestLoginService restLoginService;
+    @Mock
+    private UserService userService;
+    @Mock
+    private UserAuthenticationService userAuthenticationService;
+    @Mock
+    private FacilityService facilityService;
 
-  @Mock
-  private UserService userService;
+    @Test
+    public void shouldReturnLoginInformationIfUsernameAndPasswordAreCorrect() {
+        User user = new User();
+        user.setUserName("username");
+        user.setFacilityId(123L);
+        user.setFirstName("Charles");
+        user.setLastName("Xavier");
 
-  @Mock
-  private UserAuthenticationService userAuthenticationService;
+        Facility facility = new Facility();
+        facility.setCode("123");
+        facility.setName("health facility");
+        when(userAuthenticationService.authenticateUser(any(User.class))).thenReturn(new UserToken("username", 1L, true));
+        when(userService.getByUserName("username")).thenReturn(user);
+        when(facilityService.getById(123L)).thenReturn(facility);
 
-  @Mock
-  private FacilityService facilityService;
+        LoginInformation loginInformation = restLoginService.login("username", "password");
+        assertEquals("username", loginInformation.getUserName());
+        assertEquals("health facility", loginInformation.getFacilityName());
+        assertEquals("123", loginInformation.getFacilityCode());
+        assertEquals("Charles", loginInformation.getUserFirstName());
+        assertEquals("Xavier", loginInformation.getUserLastName());
+    }
 
-  @Rule
-  public ExpectedException exception = ExpectedException.none();
+    @Test
+    public void shouldReturnLoginInformationIfUserHasNoFacility() {
+        User user = new User();
+        user.setUserName("username");
+        user.setFirstName("Charles");
+        user.setLastName("Xavier");
 
-  @Test
-  public void shouldReturnLoginInformationIfUsernameAndPasswordAreCorrect() {
-    User user = new User();
-    user.setUserName("username");
-    user.setFacilityId(123L);
-    user.setFirstName("Charles");
-    user.setLastName("Xavier");
+        when(userAuthenticationService.authenticateUser(any(User.class))).thenReturn(new UserToken("username", 1L, true));
+        when(userService.getByUserName("username")).thenReturn(user);
+        LoginInformation loginInformation = restLoginService.login("username", "password");
+        assertEquals("username", loginInformation.getUserName());
+        assertEquals(null, loginInformation.getFacilityName());
+        assertEquals(null, loginInformation.getFacilityCode());
+        assertEquals("Charles", loginInformation.getUserFirstName());
+        assertEquals("Xavier", loginInformation.getUserLastName());
+    }
 
-    Facility facility = new Facility();
-    facility.setCode("123");
-    facility.setName("health facility");
-    when(userAuthenticationService.authenticateUser(any(User.class))).thenReturn(new UserToken("username", 1L, true));
-    when(userService.getByUserName("username")).thenReturn(user);
-    when(facilityService.getById(123L)).thenReturn(facility);
-
-    LoginInformation loginInformation = restLoginService.login("username", "password");
-    assertEquals("username", loginInformation.getUserName());
-    assertEquals("health facility", loginInformation.getFacilityName());
-    assertEquals("123", loginInformation.getFacilityCode());
-    assertEquals("Charles", loginInformation.getUserFirstName());
-    assertEquals("Xavier", loginInformation.getUserLastName());
-  }
-
-  @Test
-  public void shouldReturnLoginInformationIfUserHasNoFacility() {
-    User user = new User();
-    user.setUserName("username");
-    user.setFirstName("Charles");
-    user.setLastName("Xavier");
-
-    when(userAuthenticationService.authenticateUser(any(User.class))).thenReturn(new UserToken("username", 1L, true));
-    when(userService.getByUserName("username")).thenReturn(user);
-    LoginInformation loginInformation = restLoginService.login("username", "password");
-    assertEquals("username", loginInformation.getUserName());
-    assertEquals(null, loginInformation.getFacilityName());
-    assertEquals(null, loginInformation.getFacilityCode());
-    assertEquals("Charles", loginInformation.getUserFirstName());
-    assertEquals("Xavier", loginInformation.getUserLastName());
-  }
-
-  @Test
-  public void shouldThrowExceptionIfUsernameAndPasswordAreIncorrect() {
-    when(userAuthenticationService.authenticateUser(any(User.class))).thenReturn(new UserToken("username", null, false));
-    exception.expect(BadCredentialsException.class);
-    restLoginService.login("username", "password");
-  }
+    @Test
+    public void shouldThrowExceptionIfUsernameAndPasswordAreIncorrect() {
+        when(userAuthenticationService.authenticateUser(any(User.class))).thenReturn(new UserToken("username", null, false));
+        exception.expect(BadCredentialsException.class);
+        restLoginService.login("username", "password");
+    }
 }
