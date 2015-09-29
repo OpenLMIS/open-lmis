@@ -85,6 +85,7 @@ public interface VaccineInventoryMapper {
             " (stockcardid, lotonhandid, type, quantity,  createdby, createddate, modifiedby,modifieddate )" +
             " values " +
             " (#{stockCardId}, #{lotOnHandId}, #{type}, #{quantity}, #{createdBy},NOW(),#{modifiedBy},NOW()) ")
+
     @Options(useGeneratedKeys = true)
     Integer insertStockCardEntry(StockCardEntry stockCardEntry);
 

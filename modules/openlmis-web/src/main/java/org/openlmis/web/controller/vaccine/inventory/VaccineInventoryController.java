@@ -84,7 +84,7 @@ public class VaccineInventoryController extends BaseController {
     public ResponseEntity<OpenLmisResponse> credit(@RequestBody VaccineInventoryTransactionDTO dto, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         service.saveTransaction(dto, StockCardEntryType.CREDIT, userId);
-        return OpenLmisResponse.response("success", "Credit was successful!");
+        return OpenLmisResponse.response("success", "Receiving was successful!");
     }
 
     @RequestMapping(value = "stock/debit", method = PUT)
@@ -93,7 +93,7 @@ public class VaccineInventoryController extends BaseController {
     public ResponseEntity<OpenLmisResponse> debit(@RequestBody VaccineInventoryTransactionDTO dto, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         service.saveTransaction(dto, StockCardEntryType.DEBIT, userId);
-        return OpenLmisResponse.response("success", "Debit was successful!");
+        return OpenLmisResponse.response("success", "Issue was successful!");
     }
 
     @RequestMapping(value = "lot/create", method = PUT, headers = ACCEPT_JSON)

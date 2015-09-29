@@ -151,8 +151,8 @@
                                     <tbody>
                                     <tr ng-repeat="tp in targetPopulation">
                                         <td>{{tp.category_name}}</td>
-                                        <td class="number">{{tp.target_value_monthly}}</td>
-                                        <td class="number">{{tp.target_value_annual}}</td>
+                                        <td class="number">{{tp.target_value_monthly | number}}</td>
+                                        <td class="number">{{tp.target_value_annual | number}}</td>
 
                                     </tr>
 
@@ -189,10 +189,10 @@
                                     <tbody>
                                     <tr ng-repeat="ds in diseaseSurveillance">
                                         <td>{{ds.diseaseName}}</td>
-                                        <td class="number">{{ds == null ? 'nul' : ds.cases}}</td>
-                                        <td class="number">{{ds == null ? 'nul' :ds.cumulative}}</td>
-                                        <td class="number">{{ds == null ? 'nul' :ds.death}}</td>
-                                        <td class="number">{{ds == null ? 'nul' :ds.calculatedCumulativeDeaths}}</td>
+                                        <td class="number">{{ds == null ? 'nul' : ds.cases | number}}</td>
+                                        <td class="number">{{ds == null ? 'nul' :ds.cumulative | number}}</td>
+                                        <td class="number">{{ds == null ? 'nul' :ds.death | number}}</td>
+                                        <td class="number">{{ds == null ? 'nul' :ds.calculatedCumulativeDeaths | number}}</td>
                                     </tr>
 
                                     </tbody>
@@ -259,20 +259,20 @@
                                     <tr ng-repeat="vc in vaccineCoverage">
                                         <td style="text-align: center; vertical-align: middle;">{{vc.product_name}}</td>
                                         <td class="number">{{vc.display_name}}</td>
-                                        <td class="number">{{vc.within_male}}</td>
-                                        <td class="number">{{vc.within_female}}</td>
-                                        <td class="number">{{vc.within_total}}</td>
-                                        <td class="number">{{vc.within_coverage}}%</td>
-                                        <td class="number">{{vc.outside_male}}</td>
-                                        <td class="number">{{vc.outside_female}}</td>
-                                        <td class="number">{{vc.outside_total}}</td>
-                                        <td class="number">{{vc.within_outside_total}}</td>
-                                        <td class="number">{{vc.within_outside_coverage}}%</td>
-                                        <td class="number">{{vc.cum_within_total}}</td>
-                                        <td class="number">{{vc.cum_within_coverage}}%</td>
-                                        <td class="number">{{vc.cum_outside_total}}</td>
-                                        <td class="number">{{vc.cum_within_outside_total}}</td>
-                                        <td class="number">{{vc.cum_within_outside_coverage}}%</td>
+                                        <td class="number">{{vc.within_male | number}}</td>
+                                        <td class="number">{{vc.within_female | number}}</td>
+                                        <td class="number">{{vc.within_total | number}}</td>
+                                        <td class="number">{{vc.within_coverage | number:0}}%</td>
+                                        <td class="number">{{vc.outside_male | number}}</td>
+                                        <td class="number">{{vc.outside_female | number}}</td>
+                                        <td class="number">{{vc.outside_total | number}}</td>
+                                        <td class="number">{{vc.within_outside_total | number}}</td>
+                                        <td class="number">{{vc.within_outside_coverage | number:0}}%</td>
+                                        <td class="number">{{vc.cum_within_total | number}}</td>
+                                        <td class="number">{{vc.cum_within_coverage | number:0}}%</td>
+                                        <td class="number">{{vc.cum_outside_total | number}}</td>
+                                        <td class="number">{{vc.cum_within_outside_total | number}}</td>
+                                        <td class="number">{{vc.cum_within_outside_coverage | number:0}}%</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -304,9 +304,9 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="imz in immunizationSession">
-                                        <td>{{imz.fixedImmunizationSessions}}</td>
-                                        <td>{{imz.outreachImmunizationSessions}}</td>
-                                        <td>{{imz.outreachImmunizationSessionsCanceled}}</td>
+                                        <td class="number">{{imz.fixedImmunizationSessions | number}}</td>
+                                        <td class="number">{{imz.outreachImmunizationSessions | number}}</td>
+                                        <td class="number">{{imz.outreachImmunizationSessionsCanceled | number}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -345,7 +345,7 @@
                                     <thead class="gradient-header">
                                     <tr>
                                         <th rowspan="2" colspan="2" openlmis-message="label.age.group"></th>
-                                        <th colspan="3" openlmis-message="label.vitamin.supplementation">Vitamin Supplementation</th>
+                                        <th colspan="3" openlmis-message="label.vitamin.supplementation"></th>
                                     </tr>
                                     <tr>
                                         <th openlmis-message="label.male"></th>
@@ -357,9 +357,9 @@
                                     <tr ng-repeat="vs in vitaminSupplementation">
                                         <td style="vertical-align: middle; text-align: center">{{vs.vitaminName}}</td>
                                         <td>{{vs.ageGroup}}</td>
-                                        <td class="number">{{vs.maleValue}}</td>
-                                        <td class="number">{{vs.femaleValue}}</td>
-                                        <td class="number">{{vs.maleValue + vs.femaleValue}}</td>
+                                        <td class="number">{{vs.maleValue | number}}</td>
+                                        <td class="number">{{vs.femaleValue | number}}</td>
+                                        <td class="number">{{(vs.maleValue + vs.femaleValue) | number}}</td>
                                     </tr>
 
                                     </tbody>
@@ -408,8 +408,8 @@
                                     <tbody>
                                     <tr ng-repeat="vc in vaccination">
                                         <td>{{vc.product_name}}</td>
-                                        <td class="number">{{vc.opening_balance}}</td>
-                                        <td class="number">{{vc.quantity_received}}</td>
+                                        <td class="number">{{vc.opening_balance | number}}</td>
+                                        <td class="number">{{vc.quantity_received | number}}</td>
                                         <td class="number" ng-class="colorify(vc.quantity_issued)">
                                             <a ng-mouseover="renderGraph(vc.facility_code, vc.product_code)" href="" ns-popover
                                                ns-popover-template="amc"
@@ -432,10 +432,10 @@
 
                                         </td>
 
-                                        <td class="number">{{vc.days_stocked_out}}</td>
-                                        <td class="number">{{vc.children_immunized}}</td>
-                                        <td class="number">{{vc.usage_rate}}%</td>
-                                        <td class="number">{{vc.wastage_rate}}%</td>
+                                        <td class="number">{{vc.days_stocked_out | number}}</td>
+                                        <td class="number">{{vc.children_immunized | number}}</td>
+                                        <td class="number">{{vc.usage_rate | number:0}}%</td>
+                                        <td class="number">{{vc.wastage_rate | number:0}}%</td>
                                     </tr>
                                     </tbody>
                                     <tfoot>
@@ -482,12 +482,12 @@
                                     <tbody>
                                     <tr ng-repeat="sy in syringes">
                                         <td>{{sy.product_name}}</td>
-                                        <td class="number">{{sy.opening_balance}}</td>
-                                        <td class="number">{{sy.quantity_received}}</td>
-                                        <td class="number">{{sy.quantity_issued}}</td>
-                                        <td class="number">10</td>
-                                        <td class="number">240</td>
-                                        <td class="number">{{sy.days_stocked_out}}</td>
+                                        <td class="number">{{sy.opening_balance | number}}</td>
+                                        <td class="number">{{sy.quantity_received | number}}</td>
+                                        <td class="number">{{sy.quantity_issued | number}}</td>
+                                        <td class="number">{{ 10 | number}}</td>
+                                        <td class="number">{{20 | number}}</td>
+                                        <td class="number">{{sy.days_stocked_out | number}}</td>
                                     </tr>
 
                                     </tbody>
@@ -528,9 +528,9 @@
                                     <tbody>
                                     <tr ng-repeat="vit in vitamins">
                                         <td>{{vit.product_name}}</td>
-                                        <td class="number">{{vit.opening_balance}}</td>
-                                        <td class="number">{{vit.quantity_received}}</td>
-                                        <td class="number">{{vit.quantity_issued}}</td>
+                                        <td class="number">{{vit.opening_balance | number}}</td>
+                                        <td class="number">{{vit.quantity_received | number}}</td>
+                                        <td class="number">{{vit.quantity_issued | number}}</td>
                                         <td class="number">5</td>
                                         <td class="number">105</td>
                                     </tr>
@@ -574,11 +574,11 @@
                                     <tbody>
                                     <tr ng-repeat="vd in vaccination">
                                         <td style="width:100px">{{vd.product_name}}</td>
-                                        <td class="number">{{vd.expired}}</td>
-                                        <td class="number">{{vd.broken}}</td>
-                                        <td class="number">{{vd.cold_chain}}</td>
-                                        <td class="number">{{vd.other}}</td>
-                                        <td class="number">{{vd.quantity_discarded_unopened}}</td>
+                                        <td class="number">{{vd.expired | number}}</td>
+                                        <td class="number">{{vd.broken | number}}</td>
+                                        <td class="number">{{vd.cold_chain | number}}</td>
+                                        <td class="number">{{vd.other | number}}</td>
+                                        <td class="number">{{vd.quantity_discarded_unopened | number}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
