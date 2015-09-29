@@ -12,6 +12,7 @@
 package org.openlmis.web.controller.vaccine.inventory;
 
 
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.ProgramProductService;
@@ -19,10 +20,13 @@ import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.vaccine.domain.inventory.Lot;
+import org.openlmis.vaccine.domain.inventory.StockCard;
+import org.openlmis.vaccine.domain.inventory.StockCardEntry;
 import org.openlmis.vaccine.domain.inventory.StockCardEntryType;
 import org.openlmis.vaccine.dto.VaccineInventoryTransactionDTO;
 import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -30,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -110,6 +115,50 @@ public class VaccineInventoryController extends BaseController {
     public ResponseEntity getLotsByProductId(@PathVariable Long productId) {
 
         return OpenLmisResponse.response("lots", service.getLotsByProductId(productId));
+    }
+
+    @RequestMapping(value = "facilities/{facilityId}/programs/{programId}/stockCards", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity getStockCards(@PathVariable Long facilityId,
+                                        @PathVariable Long programId,
+                                        @RequestParam(value = "entries", defaultValue = "1")Integer entries,
+                                        @RequestParam(value = "countOnly", defaultValue = "false")Boolean countOnly)
+    {
+
+        List<StockCard> stockCards = service.getStockCards(facilityId, programId);
+        return getResponse(stockCards, entries, countOnly);
+    }
+
+    private ResponseEntity getResponse(List<StockCard> stockCards, Integer entries, Boolean countOnly)
+    {
+        if (stockCards == null)
+            return getNotFoundResponse();
+
+        else if (countOnly) {
+            return OpenLmisResponse.response("count", stockCards.size());
+        }
+
+        else {
+            for (StockCard stockCard : stockCards) {
+                filterEntries(stockCard, entries);
+            }
+            return OpenLmisResponse.response("stockCards", stockCards);
+        }
+    }
+
+    private ResponseEntity getNotFoundResponse()
+    {
+        return OpenLmisResponse.error("The specified stock card(s) do not exist." , HttpStatus.NOT_FOUND);
+    }
+
+    private void filterEntries(StockCard stockCard, Integer entryCount) {
+        List<StockCardEntry> entries = stockCard.getEntries();
+        if (entries != null) {
+            if (entryCount < 0) {
+                stockCard.setEntries(entries.subList(0, 1));
+            } else if (entryCount < entries.size()) {
+                stockCard.setEntries(entries.subList(0, entryCount));
+            }
+        }
     }
 
 }

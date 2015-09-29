@@ -231,6 +231,7 @@ public class VaccineInventoryService {
                     } else if (type == StockCardEntryType.CREDIT) {
                         existStockCard.setTotalQuantityOnHand(transaction.getQuantity() + newTotalQuantity);
                     } else if (type == StockCardEntryType.DEBIT) {
+
                         existStockCard.setTotalQuantityOnHand(newTotalQuantity - transaction.getQuantity());
                     }
                 }
@@ -242,4 +243,10 @@ public class VaccineInventoryService {
     public List<Lot> getLotsByProductId(Long productId) {
         return repository.getLotsByProductId(productId);
     }
+
+
+    public List<StockCard> getStockCards(Long facilityId, Long programId) {
+        return repository.getStockCards(facilityId, programId);
+    }
+
 }
