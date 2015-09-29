@@ -256,17 +256,17 @@
                                         <td class="number">{{vc.within_male | number}}</td>
                                         <td class="number">{{vc.within_female | number}}</td>
                                         <td class="number">{{vc.within_total | number}}</td>
-                                        <td class="number">{{vc.within_coverage | number}}%</td>
+                                        <td class="number">{{vc.within_coverage | number:0}}%</td>
                                         <td class="number">{{vc.outside_male | number}}</td>
                                         <td class="number">{{vc.outside_female | number}}</td>
                                         <td class="number">{{vc.outside_total | number}}</td>
                                         <td class="number">{{vc.within_outside_total | number}}</td>
-                                        <td class="number">{{vc.within_outside_coverage | number}}%</td>
+                                        <td class="number">{{vc.within_outside_coverage | number:0}}%</td>
                                         <td class="number">{{vc.cum_within_total | number}}</td>
-                                        <td class="number">{{vc.cum_within_coverage | number}}%</td>
+                                        <td class="number">{{vc.cum_within_coverage | number:0}}%</td>
                                         <td class="number">{{vc.cum_outside_total | number}}</td>
                                         <td class="number">{{vc.cum_within_outside_total | number}}</td>
-                                        <td class="number">{{vc.cum_within_outside_coverage | number}}%</td>
+                                        <td class="number">{{vc.cum_within_outside_coverage | number:0}}%</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -428,8 +428,8 @@
 
                                         <td class="number">{{vc.days_stocked_out | number}}</td>
                                         <td class="number">{{vc.children_immunized | number}}</td>
-                                        <td class="number">{{vc.usage_rate | number}}%</td>
-                                        <td class="number">{{vc.wastage_rate | number}}%</td>
+                                        <td class="number">{{vc.usage_rate | number:0}}%</td>
+                                        <td class="number">{{vc.wastage_rate | number:0}}%</td>
                                     </tr>
                                     </tbody>
                                     <tfoot>
