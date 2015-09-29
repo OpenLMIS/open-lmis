@@ -3,14 +3,14 @@ var OrderRequisitionLineItem2 = function(stockCards,report){
     $.extend(this, stockCards);
 
     OrderRequisitionLineItem2.prototype.getQuantityToRequest = function() {
-        var quantity = Math.ceil(this.getMaximumStock() - (Number(parseInt(this.stockOnHand)) / this.getTotalByVial()) );
+        var quantity = Math.ceil(this.getMaximumStock() - (Number(parseInt(this.stockOnHand,10)) / this.getTotalByVial()) );
         this.quantityRequested = quantity;
         return quantity;
 
     };
 
     OrderRequisitionLineItem2.prototype.getMaximumStock = function(){
-        var max= Math.ceil((Number(parseInt(this.overriddenisa) / this.getTotalByVial()) * Number(this.maxmonthsofstock)));
+        var max= Math.ceil((Number(parseInt(this.overriddenisa,10) / this.getTotalByVial()) * Number(this.maxmonthsofstock)));
         this.maximumStock = max;
         return max;
     };

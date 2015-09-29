@@ -2,14 +2,14 @@ function ViewVaccineOrderRequisitionController($scope, $window, VaccinePendingRe
     var program = programs;
     var facilit = facility;
 
-    $scope.pageSize = parseInt(10);
+    $scope.pageSize = parseInt(10,10);
 
     $scope.noRequisitions = false;
 
     var refreshPageLineItems = function () {
         VaccinePendingRequisitions.get({
-            facilityId: parseInt(facilit.id),
-            programId: parseInt(program[0].id)
+            facilityId: parseInt(facilit.id,10),
+            programId: parseInt(program[0].id,10)
         }, function (data) {
             $scope.pendingRequisition = data.pendingRequest;
             $scope.numberOfPages = Math.ceil($scope.pendingRequisition.length / $scope.pageSize) || 1;
@@ -125,17 +125,15 @@ function ViewVaccineOrderRequisitionController($scope, $window, VaccinePendingRe
         $scope.selectedSearchOption = searchOption;
     };
 
-    var updateItemOnSelectionChange = function (data) {
+   var updateItemOnSelectionChange = function (data) {
 
-        return $routeParams.id = data.entity.id;
+       // return $routeParams.id = data.entity.id;
 
     };
 
     $scope.distributeToFacility = function (row) {
 
-        $window.location = '/public/pages/vaccine/inventory/stock-movement/index.html#/stock-movement-view/'
-            + row.programId + '/' + row.periodId + '/' + row.facilityId + '/' + row.facilityName + '/' + row.id;
-
+        $window.location = '/public/pages/vaccine/inventory/stock-movement/index.html#/stock-movement-view/' + row.programId + '/' + row.periodId + '/' + row.facilityId + '/' + row.facilityName + '/' + row.id;
 
     };
 

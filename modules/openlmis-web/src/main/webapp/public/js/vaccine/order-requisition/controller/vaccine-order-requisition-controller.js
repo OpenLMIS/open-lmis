@@ -26,7 +26,7 @@ function VaccineOrderRequisitionController($scope,VaccineReport,VaccineOrderRequ
     };
 
 
-    loadStockCards(parseInt(82),parseInt(19077));
+    loadStockCards(parseInt(82,10),parseInt(19077,10));
 
 
     $scope.selectedType = 0;
@@ -58,14 +58,14 @@ function VaccineOrderRequisitionController($scope,VaccineReport,VaccineOrderRequ
         if ($routeParams.id !== undefined || $routeParams.facility !== undefined) {
 
             $scope.userFacilities = $routeParams.facility;
-            $scope.pageLineItems = _.findWhere(orderRequisitionLineItems, {facilityId: parseInt($routeParams.id)});
+            $scope.pageLineItems = _.findWhere(orderRequisitionLineItems, {facilityId: parseInt($routeParams.id,10)});
 
         } else {
             var userFacility = {};
             _.each(data.facilityList, function (data) {
                 userFacility = data;
             });
-            $scope.pageLineItems = _.findWhere($scope.report, {facilityId: parseInt(userFacility.id)});
+            $scope.pageLineItems = _.findWhere($scope.report, {facilityId: parseInt(userFacility.id,10)});
             $scope.userFacilities.push(userFacility.name);
         }
     });
@@ -74,14 +74,6 @@ function VaccineOrderRequisitionController($scope,VaccineReport,VaccineOrderRequ
         $scope.programs = data.programs;
     });
 
-
-    $scope.save = function () {
-        VaccineOrderRequisitionSave.update($scope.report, function () {
-            console.log($scope.report);
-
-            $scope.message = "msg.ivd.saved.successfully";
-        });
-    };
     $scope.submit = function () {
 
         var callBack = function (result) {
@@ -101,34 +93,7 @@ function VaccineOrderRequisitionController($scope,VaccineReport,VaccineOrderRequ
 
     };
 
-/*
 
-  $scope.submit = function () {
-
-        $scope.save().then(confirmAndSubmit);
-
-        function confirmAndSubmit() {
-            $scope.showSubmitErrors = true;
-            if (($scope.errorPages = $scope.pod.error(pageSize).errorPages)) {
-                $scope.message = undefined;
-                $scope.error = 'error.quantity.received.invalid';
-                return;
-            }
-
-            confirm().then(function () {
-                orderRequisitionLineItems.update({id: $routeParams.id, action: 'submit'}, function (data) {
-                    $scope.message = data.success;
-                    $scope.podAlreadySubmitted = true;
-                    $scope.message = 'Submitted Successfully';
-                    $scope.error = undefined;
-                }, function (response) {
-                    $scope.error = response.data.error;
-                });
-            });
-        }
-
-    };
-*/
     $scope.productFormChange = function () {
         $scope.selectedType = 1;
 
@@ -138,7 +103,7 @@ function VaccineOrderRequisitionController($scope,VaccineReport,VaccineOrderRequ
 
     $scope.cancel = function (){
         $location.path(' ');
-    }
+    };
 }
 
 VaccineOrderRequisitionController.resolve = {

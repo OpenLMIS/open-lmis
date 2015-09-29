@@ -58,14 +58,6 @@ function StockMovementController($scope, getData, facilityStockCards, $dialog, $
         $scope.facilities.push(facilitiesTo);
     });
 
-    var facilityName = undefined;
-
-    $scope.issueRequisition = function (row) {
-
-        facilityName = getData;
-
-    };
-
 
     $scope.pageSize = pageSize;
     $scope.pageLineItems = [];
@@ -102,9 +94,9 @@ function StockMovementController($scope, getData, facilityStockCards, $dialog, $
         var total = 0;
         c.sum = [];
 
-        this.x = parseInt(c.lots[1].dosesIssued);
-        this.y = parseInt(c.lots[0].dosesIssued);
-        this.c.amountRequested = parseInt(c.dosesRequested);
+        this.x = parseInt(c.lots[1].dosesIssued,10);
+        this.y = parseInt(c.lots[0].dosesIssued,10);
+        this.c.amountRequested = parseInt(c.dosesRequested,10);
         c.totalIssued = this.x + this.y;
         c.sum = this.c.amountRequested - c.totalIssued;
 
@@ -220,7 +212,7 @@ StockMovementController.resolve = {
                         });
                         stockCards.push(stockCard);
 
-                    })
+                    });
                 });
                 facilityStockCards.homeFacility = homeFacility;
                 facilityStockCards.stockCards = stockCards;

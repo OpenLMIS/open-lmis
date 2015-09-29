@@ -25,7 +25,7 @@ function StockMovementViewController($scope,$window,UpdateOrderRequisitionStatus
     $scope.facilities = [];
     $scope.date = new Date();
 
-    $scope.check = function (c, index) {
+ /*   $scope.check = function (c, index) {
         if (index != null) {
             var sum = 0;
             for (var x = 0; x < index; x++) {
@@ -66,26 +66,10 @@ function StockMovementViewController($scope,$window,UpdateOrderRequisitionStatus
         }
 
 
-    };
+    };*/
 
 
-    $scope.facilityName = {};
-
-    var facility2 = undefined;
-    var FacilityName = undefined;
-
-
-    $scope.issueRequisition = function (row) {
-        facility2 = row.facility;
-        $location.path('/stock-movement-view/' + facility2.id + '/' + facility2.name);
-
-        $scope.facilityName = facility2.name;
-        $scope.filter = {facility: facility2.id};
-
-    };
-
-
-    $scope.pageSize = parseInt(10);
+    $scope.pageSize = parseInt(10,10);
     var pageLineItems = [];
 
     $scope.homeFacility = $routeParams.facility;

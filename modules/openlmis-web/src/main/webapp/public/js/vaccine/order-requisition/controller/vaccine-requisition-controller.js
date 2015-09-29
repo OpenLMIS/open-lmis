@@ -9,8 +9,8 @@ function newVaccineOrderRequisitionController($scope,VaccineOrderRequisitionLast
         $scope.columns = data.columns;
     });
 
-    var id = parseInt($scope.programs[0].id);
-    var facilityId = parseInt($scope.facility.id);
+    var id = parseInt($scope.programs[0].id,10);
+    var facilityId = parseInt($scope.facility.id,10);
 
     $scope.requisitionTypes = [];
     $scope.requisitionTypes = [{id: '0', name: 'Unscheduled Reporting'}, {id: '1', name: 'Scheduled Reporting'}];
@@ -18,8 +18,8 @@ function newVaccineOrderRequisitionController($scope,VaccineOrderRequisitionLast
 
             VaccineOrderRequisitionReportPeriods.get({
 
-                facilityId: parseInt(facilityId),
-                programId: parseInt(id)
+                facilityId: parseInt(facilityId,10),
+                programId: parseInt(id,10)
             }, function (data) {
                 $scope.periodGridData = data.periods;
                 if ($scope.periodGridData.length > 0) {
@@ -27,7 +27,7 @@ function newVaccineOrderRequisitionController($scope,VaccineOrderRequisitionLast
                     $scope.periodGridData[0].showButton = true;
                 }else{
 
-                    VaccineOrderRequisitionLastReport.get({facilityId:parseInt(facilityId),programId:parseInt(id)}, function(data){
+                    VaccineOrderRequisitionLastReport.get({facilityId:parseInt(facilityId,10),programId:parseInt(id,10)}, function(data){
 
                         var lastReport = data.lastReport;
                         if(lastReport.status === 'ISSUED' && lastReport.emergency===false){

@@ -151,32 +151,21 @@
         $scope.programs = programs;
         $scope.facility = facility;
 
-        var id = parseInt($scope.programs[0].id);
-        var facilityId = parseInt($scope.facility.id);
+        var id = parseInt($scope.programs[0].id,10);
+        var facilityId = parseInt($scope.facility.id,10);
 
   $scope.search = function() {
 
       VaccineOrderRequisitionLastReport.get({
-          facilityId: parseInt(facilityId),
-          programId: parseInt(id)
+          facilityId: parseInt(facilityId,10),
+          programId: parseInt(id,10)
       }, function (data) {
 
           var lastReport = data.lastReport;
           $location.path('/create/' + lastReport.id);
 
-
-         /* if (lastReport.status === 'SUBMITTED' && lastReport.emergency === false) {
-              VaccineOrderRequisitionReportInitiateEmergency.get({
-                  periodId: lastReport.periodId,
-                  programId: lastReport.programId,
-                  facilityId: lastReport.facilityId
-              }, function (data) {
-                  $location.path('/create/' + data.report.id);
-              });
-
-          }*/
       });
-  }
+  };
 
 
     }
