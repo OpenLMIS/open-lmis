@@ -14,7 +14,6 @@ function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineU
 
     VaccineReportLegendContent.get({}, function(data){
         $scope.definitions = data.vaccineLegend;
-        //alert(JSON.stringify($scope.definitions))
         if(!isUndefined($scope.definitions)){
            $scope.consumptionLegend = _.findWhere($scope.definitions, {"name":"consumption.graph.legend"});
             $scope.sohLegend = _.findWhere($scope.definitions,{name:'soh.graph.legend'});
