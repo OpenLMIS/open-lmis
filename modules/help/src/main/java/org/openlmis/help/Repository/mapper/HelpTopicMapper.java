@@ -172,5 +172,15 @@ public interface HelpTopicMapper {
     })
     HelpTopic getSiteContent(@Param(value = "topicName")String topicName, @Param(value = "contentName") String  contentName);
 
+    @Select("SELECT chi.* \n" +
+            "FROM public.elmis_help_topic p\n" +
+            "JOIN public.elmis_help_topic  chi on p.id = chi.parent_help_topic_id\n" +
+            "WHERE p.name =  'Vaccine Report Legend'\n" )
+    @Results({
+            @Result(column = "parent_help_topic_id", property = "parentHelpTopic"),
+            @Result(column = "html_content", property = "htmlContent"),
+            @Result(column = "is_category", property = "category")
+    })
+    List<HelpTopic> getVaccineReportLegendContent();
 
 }

@@ -9,9 +9,25 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineUsageTrend, Period, messageService) {
+function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineUsageTrend, Period, messageService, VaccineReportLegendContent) {
+
+
+    VaccineReportLegendContent.get({}, function(data){
+        $scope.definitions = data.vaccineLegend;
+        //alert(JSON.stringify($scope.definitions))
+        if(!isUndefined($scope.definitions)){
+           $scope.consumptionLegend = _.findWhere($scope.definitions, {"name":"consumption.graph.legend"});
+            $scope.sohLegend = _.findWhere($scope.definitions,{name:'soh.graph.legend'});
+        }
+    });
+
 
     $scope.OnFilterChanged = function() {
+
+      /*  if(isUndefined($scope.filter.period) || $scope.filter.period == 0){
+            $scope.filter.period = $scope.filter.defaultPeriodId;
+
+        }*/
         // clear old data if there was any
         $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;

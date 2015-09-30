@@ -46,18 +46,9 @@
             </tab>
             <tab>
                 <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
-                <table class="table" style="width: 500px;">
-                    <thead>
-                    <tr class="gradient-header">
-                        <th openlmis-message="title.legend"></th>
-                        <th openlmis-message="title.definition"></th>
-                    </tr>
-                    </thead>
-                    <tr ng-repeat="def in definitions">
-                        <td>{{def.label}}</td>
-                        <td>{{def.definition}}</td>
-                    </tr>
-                </table>
+                <div ta-bind ng-model="consumptionLegend.htmlContent" style="width: 500px;">
+
+                </div>
 
             </tab>
         </tabset>
@@ -79,19 +70,8 @@
             </tab>
             <tab>
                 <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
-                <table class="table" style="width: 500px;">
-                    <thead>
-                    <tr class="gradient-header">
-                        <th openlmis-message="title.legend"></th>
-                        <th openlmis-message="title.definition"></th>
-                    </tr>
-                    </thead>
-                    <tr ng-repeat="def in definitions">
-                        <td>{{def.label}}</td>
-                        <td>{{def.definition}}</td>
-                    </tr>
-                </table>
-
+                <div ta-bind ng-model="sohLegend.htmlContent" style="width: 500px;">
+                </div>
             </tab>
         </tabset>
     </div>
