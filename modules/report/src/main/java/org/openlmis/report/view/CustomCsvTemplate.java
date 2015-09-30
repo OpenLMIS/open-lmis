@@ -78,8 +78,10 @@ public class CustomCsvTemplate extends AbstractView {
       int index = 0;
 
       for(JsonNode col: columns ){
-        String colValue = m.get(col.get("name").asText()).toString();
-        writer.write(colValue.toString());
+        if( m.containsKey(col.get("name").asText()) && m.get( col.get("name").asText() ) != null ) {
+          String colValue = m.get(col.get("name").asText()).toString();
+          writer.write( colValue.toString() );
+        }
         if(index < m.values().size() - 1){
           writer.write(",");
         }
