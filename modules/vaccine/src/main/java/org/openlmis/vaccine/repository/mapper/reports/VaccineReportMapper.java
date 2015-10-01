@@ -168,6 +168,7 @@ public interface VaccineReportMapper {
 
    @Select("select MAX(product_name) product_name,\n" +
            "MAX(display_name) display_name, \n" +
+           "MAX(display_order) display_order, \n" +
            "SUM(COALESCE(within_male, 0)) within_male, \n" +
            "SUM(COALESCE(within_female,0)) within_female, \n" +
            "SUM(COALESCE(within_total,0)) within_total, \n" +
@@ -185,7 +186,8 @@ public interface VaccineReportMapper {
            "from vw_vaccine_coverage \n" +
            "INNER JOIN vw_districts vd ON vd.district_id = geographic_zone_id\n" +
            "where period_id = #{periodId} and (vd.parent = #{zoneId} or vd.district_id = #{zoneId} or vd.region_id = #{zoneId} or vd.zone_id = #{zoneId} )\n" +
-           "group by product_code\n" )
+           "group by product_code\n" +
+           "order by display_order" )
   List<HashMap<String, Object>> getVaccineCoverageAggregateReportByGeoZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId);
 
   @Select("SELECT COALESCE(fixedimmunizationsessions, 0) fixedimmunizationsessions, COALESCE(outreachimmunizationsessions, 0) outreachimmunizationsessions, COALESCE(outreachimmunizationsessionscanceled, 0) outreachimmunizationsessionscanceled FROM vaccine_reports WHERE id = #{reportId} ")
@@ -241,6 +243,7 @@ public interface VaccineReportMapper {
   List<HashMap<String, Object>> vaccineUsageTrend(@Param("facilityCode")String facilityCode, @Param("productCode")String productCode);
 
   @Select("SELECT product_code,\n" +
+          "MAX(display_order) display_order," +
           "MAX(product_name) product_name,\n" +
           "sum(opening_balanace) opening_balance,\n" +
           "sum(quantity_received) quantity_received,\n" +
@@ -282,7 +285,8 @@ public interface VaccineReportMapper {
           "from vw_vaccine_stock_status \n" +
           "INNER JOIN vw_districts vd ON vd.district_id = geographic_zone_id\n" +
           "where  product_category_code = (select value from configuration_settings where key = #{productCategoryCode}) and period_id = #{periodId} and (vd.parent = #{zoneId} or vd.district_id = #{zoneId} or vd.region_id = #{zoneId} or vd.zone_id = #{zoneId} )\n" +
-          "group by product_code")
+          "group by product_code \n" +
+          "order by display_order")
   List<HashMap<String, Object>> getVaccinationAggregateByGeoZoneReport(@Param("productCategoryCode") String categoryCode, @Param("periodId")Long periodId, @Param("zoneId") Long zoneId);
   @Select("select COALESCE(fr.quantity_issued, 0) quantity_issued, COALESCE(fr.closing_balance, 0) closing_balance, pp.name period_name \n" +
           "from fn_vaccine_geozone_n_rnrs('Vaccine', #{periodId}::integer ,#{zoneId}::integer, #{productCode},4) fr\n" +
