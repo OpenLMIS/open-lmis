@@ -115,6 +115,10 @@ public class AnnualFacilityDemographicEstimateServiceTest {
       with(AnnualFacilityEstimateBuilder.id, 3L),
       with(AnnualFacilityEstimateBuilder.isFinal, true)));
 
+    when(repository.getEntryBy(facilityEstimateEntry.getYear(), facilityEstimateEntry.getFacilityId(), facilityEstimateEntry.getProgramId(), facilityEstimateEntry.getDemographicEstimateId()))
+      .thenReturn(facilityEstimateEntry);
+
+
     EstimateForm form = getDemographicEstimateFormForOneFacility(facilityEstimateEntry);
 
     facilityEstimateEntry.setIsFinal(true);

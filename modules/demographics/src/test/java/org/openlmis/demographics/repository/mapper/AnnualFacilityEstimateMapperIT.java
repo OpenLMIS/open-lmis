@@ -45,7 +45,7 @@ import static org.hamcrest.Matchers.notNullValue;
 @ContextConfiguration(locations = "classpath*:test-applicationContext-db.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class FacilityDemographicEstimateMapperIT {
+public class AnnualFacilityEstimateMapperIT {
 
   @Autowired
   AnnualFacilityEstimateMapper mapper;
@@ -66,7 +66,7 @@ public class FacilityDemographicEstimateMapperIT {
   private Program program;
 
   @Before
-  public void setup(){
+  public void setup() {
     facility = make(a(FacilityBuilder.defaultFacility));
     facilityMapper.insert(facility);
 
@@ -104,7 +104,6 @@ public class FacilityDemographicEstimateMapperIT {
   }
 
 
-
   @Test
   public void shouldUpdate() throws Exception {
     AnnualFacilityEstimateEntry estimate = createAFacilityDemographicEstimate();
@@ -128,5 +127,16 @@ public class FacilityDemographicEstimateMapperIT {
     List<AnnualFacilityEstimateEntry> list = mapper.getEstimatesForFacility(2005, facility.getId(), program.getId());
     assertThat(list.size(), is(1));
     assertThat(list.get(0).getValue(), is(estimate.getValue()));
+  }
+
+  @Test
+  public void shouldGetByYearProgramAndEstimate() throws Exception {
+    AnnualFacilityEstimateEntry estimate = createAFacilityDemographicEstimate();
+
+    mapper.insert(estimate);
+    AnnualFacilityEstimateEntry response = mapper.getEntryBy(estimate.getYear(), estimate.getFacilityId(), estimate.getProgramId(), estimate.getDemographicEstimateId());
+
+    assertThat(response, is(notNullValue()));
+    assertThat(response.getValue(), is(estimate.getValue()));
   }
 }

@@ -97,4 +97,13 @@ public class AnnualDistrictEstimateRepositoryTest {
 
     verify(mapper).undoFinalize(estimate);
   }
+
+  @Test
+  public void shouldGetByFacilityProgramYearAndCategory() throws Exception {
+
+    repository.getEntryBy(2005, 2L, 5L, 6L);
+
+    verify(mapper).getEntryBy(2005, 2L, 5L, 6L);
+  }
+
 }

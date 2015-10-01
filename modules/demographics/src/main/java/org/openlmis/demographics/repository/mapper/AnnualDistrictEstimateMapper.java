@@ -24,14 +24,14 @@ import java.util.List;
 public interface AnnualDistrictEstimateMapper {
 
   @Insert("insert into district_demographic_estimates " +
-          " (year, districtId, demographicEstimateId, programId , conversionFactor, value)" +
+    " (year, districtId, demographicEstimateId, programId , conversionFactor, value)" +
     " values " +
-          " (#{year}, #{districtId}, #{demographicEstimateId}, #{programId}, #{conversionFactor}, #{value}) ")
+    " (#{year}, #{districtId}, #{demographicEstimateId}, #{programId}, #{conversionFactor}, #{value}) ")
   @Options(flushCache = true, useGeneratedKeys = true)
   Integer insert(AnnualDistrictEstimateEntry estimate);
 
-    @Select("select * from district_demographic_estimates where id = #{id}")
-    AnnualDistrictEstimateEntry getById(@Param("id") Long id);
+  @Select("select * from district_demographic_estimates where id = #{id}")
+  AnnualDistrictEstimateEntry getById(@Param("id") Long id);
 
   @Update("update district_demographic_estimates " +
     " set " +
@@ -40,22 +40,26 @@ public interface AnnualDistrictEstimateMapper {
     "where id = #{id} ")
   Integer update(AnnualDistrictEstimateEntry estimate);
 
-    @Update("update district_demographic_estimates " +
-            " set " +
-            " isFinal = true" +
-            " where id = #{id} ")
-    Integer finalize(AnnualDistrictEstimateEntry estimate);
+  @Update("update district_demographic_estimates " +
+    " set " +
+    " isFinal = true" +
+    " where id = #{id} ")
+  Integer finalize(AnnualDistrictEstimateEntry estimate);
 
-    @Update("update district_demographic_estimates " +
-            " set " +
-            " isFinal = false" +
-            " where id = #{id} ")
-    Integer undoFinalize(AnnualDistrictEstimateEntry estimate);
+  @Update("update district_demographic_estimates " +
+    " set " +
+    " isFinal = false" +
+    " where id = #{id} ")
+  Integer undoFinalize(AnnualDistrictEstimateEntry estimate);
 
-    @Select("select * from district_demographic_estimates " +
-            " where " +
-            "     year = #{year} and districtId = #{districtId} and programId = #{programId}")
-    List<AnnualDistrictEstimateEntry> getEstimatesForDistrict(@Param("year") Integer year, @Param("districtId") Long districtId, @Param("programId") Long programId);
+  @Select("select * from district_demographic_estimates where year = #{year} and districtId = #{districtId} and programId = #{programId} and demographicEstimateId = #{demographicEstimateId}")
+  AnnualDistrictEstimateEntry getEntryBy(@Param("year") Integer year, @Param("districtId") Long districtId, @Param("programId") Long programId, @Param("demographicEstimateId")Long categoryId);
+
+
+  @Select("select * from district_demographic_estimates " +
+    " where " +
+    "     year = #{year} and districtId = #{districtId} and programId = #{programId}")
+  List<AnnualDistrictEstimateEntry> getEstimatesForDistrict(@Param("year") Integer year, @Param("districtId") Long districtId, @Param("programId") Long programId);
 
   @Select("select r.id as parentId, r.name as parentName, z.* from geographic_zones z join geographic_zones r on r.id = z.parentId " +
     "     where z.levelId = (select max(levelNumber) from geographic_levels) and z.parentId in (select gz.parentId from facilities ff join geographic_zones gz on gz.id = ff.geographicZoneId where ff.id  = Any(#{facilities}::INTEGER[]))" +
