@@ -1,0 +1,32 @@
+<div class="app-form" >
+    <form name="scan_package" ng-if="scan_afresh">
+        <div class='form-group'>
+            <!--<h3 openlmis-message="label.stock.arrivalheader">Package Arrival</h3>-->
+            <h3 >Package Arrival</h3>
+            <div class='form-row clearfix'>
+                <div class="form-cell horizontalFilters">
+                    <!--<h3 openlmis-message="label.stock.shipmentId">Package Arrival</h3>-->
+                    <label>Scan the Shipment Id</label>
+                    <div class="form-fields">
+                        <input ng-change="scanPackage()" type="text" class="form-control" ng-model="data.shipping_number" id="shipping_number" >
+                    </div>
+                </div>
+                <div class="form-cell horizontalFilters">
+                    <label>&nbsp;</label>
+                    <div class="form-fields">
+                        <!--<input class="btn btn-primary" type="button" value="Scan" ng-disabled="data.shipping_number ==''" ng-click="scanPackage()" id="scan_package_button"/>-->
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="text-error" ng-if="no_package && data.shipping_number">There is no information about this package</h4>
+            <h4 ng-if="loading_packages"> <img src ="/public/images/ajax-loader.gif"> Loading Packages Information ... </h4>
+
+
+        </div>
+    </form>
+    <div ng-include="'partials/receive/package_details.html'" ng-if="process_package"></div>
+
+    <div ng-include="'partials/receive/single_item.html'" ng-if="show_singleItem"></div>
+
+</div>

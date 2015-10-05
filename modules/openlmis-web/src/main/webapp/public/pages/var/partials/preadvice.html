@@ -1,0 +1,112 @@
+<script>
+    $("a#AllDefault").trigger("click");
+</script>
+<div class="col-md-12 app-form">
+    <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+            <li class="">
+                <a href="#pending" data-toggle="tab" ng-click="tabToggle('pending')">
+                    Pending
+                </a>
+            </li>
+            <li class="">
+                <a href="#received" data-toggle="tab" ng-click="tabToggle('received')">
+                   Received
+                </a>
+            </li>
+            <li >
+                <a href="#all" data-toggle="tab" id="AllDefault" ng-click="tabToggle('all')">
+                    All
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane" id="all">
+                <div xmlns="http://www.w3.org/1999/html" class="ng-scope">
+                    <h2>
+                        <span id="preAdviceLabelPending" ng-if="pending">Pending</span>
+                        <span id="preAdviceLabelReceived" ng-if="received" >Received</span>
+                        <span id="preAdviceLabelAll" ng-if="all" >All</span>
+                        <a id="preAdviceAddNew" href="#" role="button" data-toggle="modal" class="pull-right btn btn-primary" ng-click="toggleFormAndTable('addNew')" openlmis-message="button.add.new">Add New</a>
+                    </h2>
+
+                </div>
+                <!--ng-if="viewForm"-->
+                <!--ng-if="editForm"-->
+                <!--ng-if="viewTable"-->
+                <!--Add More Package form-->
+                <div class='form-row clearfix'  id="viewForm">
+                    <div  ng-include="'partials/preadvice/new.html'" ></div>
+                </div>
+                <!--Add More Package form-->
+                <div class='form-row clearfix'  id="editForm">
+                    <div  ng-include="'partials/preadvice/edit.html'"></div>
+                </div>
+                <!--Add More Package form-->
+                <div class='form-row clearfix'  id="viewTable">
+
+                    <table datatable="ng" class="table table-bordered" >
+                            <thead>
+                            <tr>
+                                <th  style="text-align: center">No.</th>
+                                <th  style="text-align: center">Shipping Number</th>
+                                <th  style="text-align: center">GTN</th>
+                                <th  style="text-align: center">Manufacturer</th>
+                                <th  style="text-align: center">Name</th>
+                                <th  style="text-align: center">Lot Number</th>
+                                <th  style="text-align: center">Number Of Doses</th>
+                                <th  style="text-align: center">Expiry</th>
+                                <th  style="text-align: center">status</th>
+                                <th  style="text-align: center">action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-if="filtering" ng-repeat="package in packagesJson | filter:{ derliverystatus:status} ">
+                                <td style="text-align: center">{{$index+1}}.</td>
+                                <td>{{package.shipmentnumber}}</td>
+                                <td>{{package.packaging.gtin}}</td>
+                                <td>{{package.packaging.manufacturename }}</td>
+                                <td>{{getVaccineName(package.productid) }}</td>
+                                <td>{{package.lotnumber}}</td>
+                                <td>{{package.numberofdoses}}</td>
+                                <td>{{package.expiredate | date:'yyyy-MM-dd'}}</td>
+                                <td>{{package.derliverystatus}}</td>
+                                <td>
+                                    &nbsp;
+                                    &nbsp;
+                                    <a  style="color:orange;cursor: pointer;" ng-click="editPackage(package.id,package)"><i class="icon-pencil "></i></a>
+                                    &nbsp;
+                                    &nbsp;
+                                    <a  style="color:red;cursor: pointer;" ng-click="deletePackage(package.id,package)"><i class="icon-trash"></i></a>
+                                </td>
+                            </tr>
+                            <tr ng-if="all" ng-repeat="package in packagesJson">
+
+                                <td style="text-align: center">{{$index+1}}.</td>
+                                <td>{{package.shipmentnumber}}</td>
+                                <td>{{package.packaging.gtin}}</td>
+                                <td>{{package.packaging.manufacturename }}</td>
+                                <td>{{getVaccineName(package.productid) }}</td>
+                                <td>{{package.lotnumber}}</td>
+                                <td>{{package.numberofdoses}}</td>
+                                <td>{{package.expiredate | date:'yyyy-MM-dd'}}</td>
+                                <td>{{package.derliverystatus}}</td>
+                                <td>
+                                    &nbsp;
+                                    &nbsp;
+                                    <a  style="color:orange;cursor: pointer;" ng-click="editPackage(package.id,package)"><i class="icon-pencil "></i></a>
+                                    &nbsp;
+                                    &nbsp;
+                                    <a  style="color:red;cursor: pointer;" ng-click="deletePackage(package.id,package)"><i class="icon-trash"></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

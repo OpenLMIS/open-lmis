@@ -1,0 +1,116 @@
+<div ng-controller="VaccineModuleController">
+    {{ManufaturePackages}}
+    <section id="package_arrival_1" ng-show="arrival_1">
+        <h3>Package Arrival</h3>
+        <form >
+            <table cellpadding="5" cellspacing="5">
+                <tr>
+                    <td>Scan the SSCC</td>
+                    <td><input type="text" name="scanned_sscc" ng-model="scannedPackage.sscc" id="scanned_sscc" /></td>
+                    <td><input type="submit" value="Scan" ng-click="scanningPackage(scannedPackage)" id="scan_sscc"/></td>
+                </tr>
+
+            </table>
+        </form>
+
+
+    </section>
+    <section id="package_arrival_2" ng-show="arrival_2">
+        <h3>Package Arrival</h3>
+        <table class="table table-responsive">
+            <tr>
+                <td>Receiving Package With SSCC:<span id="sscc_number">{{scannedPackage.sscc}}</span></td>
+
+                <td><input type="submit" value="cancel"  id="cancel"/></td>
+            </tr>
+        </table>
+
+        <table class="table table-responsive">
+            <tr>
+                <td>Package sent On: <span id="sent_date"></span></td>
+                <td style="text-align: right;">Enter Lot Number  <input type="text" name="" id="lot_number"/></td>
+                <td style="text-align: left;"><input type="submit" value="Scan"  id="scan_lotnumber"/></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <table class="table table-bordered table-responsive" border="1">
+                        <thead>
+                        <tr><th>GTN</th><th>Description</th><th>Manufacture</th><th>Lot</th><th>Expiry</th><th>Vials</th><th>Boxes</th><th>Doses</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1234454656</td>
+                            <td>PVC 13</td>
+                            <td>pitfizer</td>
+                            <td>j943111</td>
+                            <td>2017-02-28</td>
+                            <td>608000</td>
+                            <td>12160</td>
+                            <td>608000</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+        </table>
+
+    </section>
+
+    <section id="package_arrival_3" ng-show="arrival_3">
+        <h3>Package Arrival</h3>
+        <table class="table table-responsive">
+            <tr>
+                <td>Receiving Package With SSCC:<span id="sscc_number">0987626723633</span></td>
+
+                <td><input type="submit" value="cancel"  id="cancel"/></td>
+            </tr>
+        </table>
+
+        <table class="table table-responsive table-bordered" border="1" cellspacing="0" cellpadding="0">
+            <thead>
+            <tr><th>GTN</th><th>Description</th><th>Manufacture</th><th>Lot</th><th>Expiry</th><th>Vials</th><th>Boxes</th><th>Doses</th></tr>
+            </thead>
+            <tr>
+                <td>1234454656</td>
+                <td>PVC 13</td>
+                <td>pitfizer</td>
+                <td>j943111</td>
+                <td>2017-02-28</td>
+                <td>608000</td>
+                <td>12160</td>
+                <td>608000</td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td>Quantity Okay</td>
+                <td>Physical Damage</td>
+                <td>VVM Status</td>
+                <td>Temp moniotrs Status</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><select><option>1</option><option>2</option></select></td>
+                <td><select><option>1</option><option>2</option></select></td>
+                <td><select><option>1</option><option>2</option></select></td>
+                <td><select><option>1</option><option>2</option></select></td>
+                <td><input type="submit" value="Submit"  id="cancel"/></td>
+                <td><input type="button" value="cancel"  id="cancel"/></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>Comments and Observations</td>
+            </tr>
+            <tr>
+                <td><textarea></textarea></td>
+            </tr>
+        </table>
+
+    </section>
+
+</div>

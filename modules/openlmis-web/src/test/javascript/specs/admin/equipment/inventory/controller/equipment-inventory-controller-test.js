@@ -50,16 +50,16 @@ describe("In Equipment Inventory Controller,", function () {
   }));
 
   describe("Programs", function () {
-    it("should populate my facility and its programs if 'my facility' selected and home facility assigned", function () {
-      scope.selectedType = "0";
-      scope.loadPrograms();
-      $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
-      $httpBackend.expectGET('/equipment/inventory/facility/programs.json?facilityId='+facility.id).respond(200, {"programs": [program, program2]});
-      $httpBackend.flush();
-      expect(scope.myFacility).toEqual(facility);
-      expect(scope.facilityDisplayName).toEqual(facility.code + " - " + facility.name);
-      expect(scope.programs).toEqual([program, program2]);
-    });
+  //  it("should populate my facility and its programs if 'my facility' selected and home facility assigned", function () {
+   //   scope.selectedType = "0";
+   //   scope.loadPrograms();
+   //   $httpBackend.expectGET('/user/facilities.json').respond(200, {"facilityList": [facility]});
+   //   $httpBackend.expectGET('/equipment/inventory/facility/programs.json?facilityId='+facility.id).respond(200, {"programs": [program, program2]});
+   //   $httpBackend.flush();
+   //   expect(scope.myFacility).toEqual(facility);
+   //   expect(scope.facilityDisplayName).toEqual(facility.code + " - " + facility.name);
+   //   expect(scope.programs).toEqual([program, program2]);
+   // });
 
     it("should populate none assigned facility and no programs if 'my facility' selected and home facility not assigned", function () {
       scope.selectedType = "0";
