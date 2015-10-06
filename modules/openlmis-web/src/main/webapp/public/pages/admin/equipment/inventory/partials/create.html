@@ -178,7 +178,8 @@
           <div class="form-row clearfix">
             <div class="form-cell">
               <label for="isActive">
-                <input ng-model="inventory.isActive" name="isActive" id="isActive" type="checkbox" />
+                <input ng-model="inventory.isActive" name="isActive" id="isActive" type="checkbox"
+                       ng-checked="!badStatusSelected"/>
                 <span openlmis-message="label.equipment.is.active"></span>
               </label>
             </div>
