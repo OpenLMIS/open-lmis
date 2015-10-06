@@ -57,7 +57,7 @@ describe("In Equipment Inventory Controller,", function () {
       $httpBackend.expectGET('/equipment/inventory/facility/programs.json?facilityId='+facility.id).respond(200, {"programs": [program, program2]});
       $httpBackend.flush();
       expect(scope.myFacility).toEqual(facility);
-      expect(scope.facilityDisplayName).toEqual(facility.code + " - " + facility.name);
+      expect(scope.facilityDisplayName).toEqual(facility.name);
       expect(scope.programs).toEqual([program, program2]);
     });
 
