@@ -1,0 +1,67 @@
+<form name="receive_package">
+    <div class='form-group'>
+        <!--<h3 openlmis-message="label.stock.arrivalheader">Package Arrival</h3>-->
+        <h3 >Package Arrival</h3>
+
+
+        <div ng-include="'partials/receive/final_form.html'" ng-if="allChecked()"></div>
+
+        <div ng-include="'partials/receive/var.html'" ng-if="showReport"></div>
+
+        <div class='form-row clearfix' ng-if="!allChecked()">
+            <div class="form-cell horizontalFilters">
+                <!--<label openlmis-message="label.stock.lotnumber">Scan Lot Number</label>-->
+                <span><b>Receiving Package With Shipment Number:</b> {{ data.shipping_number }}</span>
+                <button class="btn btn-xs btn-warning pull-right" ng-click="cancelPackageProcessing()" type="button">Cancel</button>
+
+
+            </div>
+            <div class="pull-right span6" >
+                <label>Scan Lot Number</label>
+                <div class="row-fluid">
+                    <div class="form-fields span9">
+                        <input ng-change="scanLotNumber(lot_number)" type="text" class="form-control" ng-model="lot_number" id="lot_number_filed" >
+                    </div>
+                    <!--<div class="span3">-->
+                        <!--<input type="submit" class="btn btn-primary" type="submit" value="Scan" ng-click="scanLotNumber(lot_number)" id="scan_lot_number_button"/>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+        <h5 style="text-align: center" ng-if="loading_item && lot_number"> <img src ="/public/images/ajax-loader.gif"> Loading Item Information </h5>
+        <h5 class="text-danger" style="text-align: center;color: darkred" ng-if="error_loading_item"> There is no information about item with lot_number {{ lot_number }} </h5>
+
+        <div class='form-row clearfix'>
+            <div >
+                <table class="table-bordered table ng-scope" >
+                    <thead>
+                    <tr class="gradient-header">
+                        <th  style="text-align: center">GTN</th>
+                        <th  style="text-align: center">Item</th>
+                        <th  style="text-align: center">Lot</th>
+                        <th  style="text-align: center">Expiry</th>
+                        <th  style="text-align: center">Boxes</th>
+                        <th  style="text-align: center">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="packageDetails in data.processed_packages" style="background-color:{{ getcolor(packageDetails.derliverystatus) }}!important" >
+                        <td>{{packageDetails.packaging.gtin}}</td>
+                        <td>{{getVaccineName(packageDetails.productid)}}</td>
+                        <td>{{packageDetails.lotnumber}}</td>
+                        <td>{{packageDetails.expiredate  | date:'yyyy-MM-dd'}}</td>
+                        <td>{{ numberOfBoxes(packageDetails.packaging.dosespervial,packageDetails.packaging.vialsperbox,packageDetails.numberofdoses) }}</td>
+                        <td>{{ packageDetails.derliverystatus }}</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+            <div ></div>
+
+        </div>
+
+
+
+    </div>
+</form>
