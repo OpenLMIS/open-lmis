@@ -29,6 +29,12 @@ public class VarItemsRepository {
     public List<VarItems> getAll(){
         return mapper.getAll();
     }
+    public List<VarItems> getItemsByPackage(String shipmentnumber){
+        return mapper.getItemsByPackage(shipmentnumber);
+    }
+    public List<VarItems> getItemsByLot(String shipmentnumber,String lotnumber){
+        return mapper.getItemsByLot(shipmentnumber,lotnumber);
+    }
 
     public void update(VarItems var_items){
         mapper.update(var_items);

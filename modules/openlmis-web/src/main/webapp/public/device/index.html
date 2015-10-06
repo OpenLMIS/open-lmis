@@ -1,0 +1,81 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <!--<script src="js/queryScript.js"></script>-->
+</head>
+<body  style="width: 300px">
+<div class="contents">
+<h1 style="background-color:#E6E6FA;">VIMS</h1>
+</br>
+</br>
+</br>
+</br>
+</br>
+<form>
+    <fieldset>
+        <legend>Login</legend>
+        <table>
+            <tr>
+                <td>Username</td>
+                <td><input type="text" name="username"  id="username"/></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="password"  id="password"/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="button" value="login"  id="login" /></td>
+
+            </tr>
+            <tr  id="error">
+                <td colspan="2" style="color:red"><h4>Incorrect username or password</h4></td>
+            </tr>
+            <tr id="loading">
+                <td colspan="2"  ><img src="../images/ajax-loader.gif" alt=""/></td>
+            </tr>
+        </table>
+    </fieldset>
+</form>
+</div>
+<script>
+    $(document).ready(function(){
+        $("#error").hide();
+        $("#loading").hide();
+        $("#login").click(function(){
+            $("#loading").show();
+            var name = $("#username").val();
+            var password = $("#password").val();
+            var data = $.param({j_username: name, j_password: password});
+            $.ajax({
+                method: 'POST',
+                url: '/j_spring_security_check',
+                data: data,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            }).success(function(data) {
+                window.location.href = "/public/device/receive.html";
+//                alert(JSON.stringify(data));
+                $("#loading").hide();
+
+            }).error(function(data){
+                $("#loading").hide();
+                $("#error").show();
+            });
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

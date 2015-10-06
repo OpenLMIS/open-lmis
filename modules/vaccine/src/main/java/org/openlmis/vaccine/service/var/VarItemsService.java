@@ -29,6 +29,12 @@ public class VarItemsService {
     public List<VarItems> getAll(){
         return repository.getAll();
     }
+    public List<VarItems> getItemsByPackage(String shipmentnumber){
+        return repository.getItemsByPackage(shipmentnumber);
+    }
+    public List<VarItems> getItemsByLot(String shipmentnumber,String lotnumber){
+        return repository.getItemsByLot(shipmentnumber,lotnumber);
+    }
 
     public void save(VarItems var_items){
         if(var_items.getId() == null){

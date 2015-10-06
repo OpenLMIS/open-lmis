@@ -56,6 +56,10 @@ public interface VarDetailsMapper {
     @Select("select * from var_details where id = #{id}")
     VarDetails getById(@Param("id") Long id);
 
+
+    @Select("select * from var_details where airwaybill = #{airwaybill}")
+    List<VarDetails> getByPackageNumber(@Param("airwaybill") String airwaybill);
+
     @Delete("delete from var_details where id = #{id}")
     void deleteById(@Param("id") Long id);
 }

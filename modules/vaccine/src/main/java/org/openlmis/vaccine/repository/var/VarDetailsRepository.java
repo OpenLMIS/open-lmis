@@ -29,6 +29,9 @@ public class VarDetailsRepository {
     public List<VarDetails> getAll(){
         return mapper.getAll();
     }
+    public List<VarDetails> getByPackageNumber(String airwaybill){
+        return mapper.getByPackageNumber(airwaybill);
+    }
 
     public void update(VarDetails var_details){
         mapper.update(var_details);

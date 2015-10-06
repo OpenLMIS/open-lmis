@@ -55,6 +55,12 @@ public interface VarItemsMapper {
     @Select("select * from var_items where id = #{id}")
     VarItems getById(@Param("id") Long id);
 
+    @Select("select * from var_items where shipmentnumber = #{shipmentnumber}")
+    List<VarItems> getItemsByPackage(@Param("shipmentnumber") String shipmentnumber);
+
+    @Select("select * from var_items where shipmentnumber = #{shipmentnumber} and lotnumber = #{lotnumber}")
+    List<VarItems> getItemsByLot(@Param("shipmentnumber") String shipmentnumber,@Param("lotnumber") String lotnumber);
+
     @Delete("delete from var_items where id = #{id}")
     void deleteById(@Param("id") Long id);
 }

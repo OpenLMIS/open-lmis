@@ -183,9 +183,10 @@ vaccine.controller("StockModuleController",function($scope,$http,$location,$rout
     $scope.vaccinePackages = [];
     $scope.gtinSelect = false;
     $scope.pullPackaging = function(id){
+
         $scope.vaccinePackages = [];
         angular.forEach($scope.gtin_lookups,function(value){
-            if(value.productid === id){
+            if(value.productid == id){
                 $scope.vaccinePackages.push(value);
             }
         });

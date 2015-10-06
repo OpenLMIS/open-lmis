@@ -29,6 +29,9 @@ public class VarDetailsService {
     public List<VarDetails> getAll(){
         return repository.getAll();
     }
+    public List<VarDetails> getByPackageNumber(String airwaybill){
+        return repository.getByPackageNumber(airwaybill);
+    }
 
     public void save(VarDetails var_details){
         if(var_details.getId() == null){

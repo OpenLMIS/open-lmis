@@ -42,6 +42,17 @@ public class VarItemsController  extends BaseController {
         return OpenLmisResponse.response("var_items", service.getById(id));
     }
 
+    @RequestMapping(value="getByShipment/{shipmentnumber}")
+    public ResponseEntity<OpenLmisResponse> get(@PathVariable String shipmentnumber) {
+        return OpenLmisResponse.response("var_items", service.getItemsByPackage(shipmentnumber));
+    }
+
+    @RequestMapping(value="getByLot/{shipmentnumber}/{lotnumber}")
+    public ResponseEntity<OpenLmisResponse> get(@PathVariable String shipmentnumber,@PathVariable String lotnumber) {
+        return OpenLmisResponse.response("var_items", service.getItemsByLot(shipmentnumber, lotnumber));
+    }
+
+
     @RequestMapping(value="delete/{id}", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> delete(@PathVariable Long id) {
         try {

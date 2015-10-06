@@ -37,6 +37,11 @@ public class VarDetailsController extends BaseController {
     @Autowired
     private VarDetailsService service;
 
+    @RequestMapping(value="getByShipment/{airwaybill}")
+    public ResponseEntity<OpenLmisResponse> get(@PathVariable String airwaybill) {
+        return OpenLmisResponse.response("var_details", service.getByPackageNumber(airwaybill));
+    }
+
     @RequestMapping(value="get/{id}")
     public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
         return OpenLmisResponse.response("var_details", service.getById(id));
