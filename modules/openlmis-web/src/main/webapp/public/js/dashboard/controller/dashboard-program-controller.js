@@ -100,7 +100,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
                         productSummary.push(productTrend[1]);// last period
                         var total_facility_stocked_out = _.findWhere(productTrend, {'order': 1}).total_facilities_stocked_out;
 
-                        $scope.productsTrend.push({'code': productTrend[0].product_code, "sohTrend": $scope.sohValue, color: $scope.colorify(), 'facilityStockedOut': total_facility_stocked_out, 'productTrend': productTrend });
+                        $scope.productsTrend.push({'name':productTrend[0].name,'code': productTrend[0].product_code, "sohTrend": $scope.sohValue, color: $scope.colorify(), 'facilityStockedOut': total_facility_stocked_out, 'productTrend': productTrend });
 
                     });
                 }

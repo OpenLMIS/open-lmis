@@ -57,11 +57,12 @@ public interface ProcessingPeriodReportMapper {
 
     @Select("select distinct on (pp.startdate) pp.id, pp.scheduleId, \n" +
             "pp.startdate::date startdate, \n" +
-            "to_char(pp.startdate, 'Month') || '-'|| extract(year from pp.startdate) || '(' || pp.name || ')'  as Name\n" +
+            "psn.name as name\n" +
             "from requisitions r\n" +
             "inner join processing_periods pp on r.periodid = pp.id\n" +
+            "left outer join period_short_names psn on psn.id = pp.id\n" +
             "where pp.startdate < NOW()\n" +
-            "and r.programid = #{programId}\n" +
+            "and r.programid =  #{programId}\n" +
             "order by pp.startdate desc\n" +
             "limit (select COALESCE(value::integer, 4) from configuration_settings where key ='PROGRAM_VIEWABLE_MAX_LAST_PERIODS')\n")
     List<ProcessingPeriod> getLastPeriods(@Param("programId")Long programId);

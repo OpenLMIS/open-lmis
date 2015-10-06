@@ -116,7 +116,7 @@
             <div>
                 <div ng-repeat="trend in productsTrend">
                     <div style="padding: 10px 30px; border-bottom: solid 1px #EAEFF3">
-                        <div ns-popover ng-click="getProductSummary(trend.code)"
+                        <div style="text-align: center" ns-popover ng-click="getProductSummary(trend.code)"
                              ns-popover-template="product-summary"
                              ns-popover-trigger="click"
                              ns-popover-theme="ns-popover-tooltip-theme"
@@ -125,7 +125,7 @@
                              ns-popover-hide-on-inside-click="false"
                              ns-popover-hide-on-outside-click="true"
                              ns-popover-hide-on-button-click="true" style="cursor: pointer; padding: 10px 0px;">
-                            {{trend.code}}
+                            {{trend.name}}
                         </div>
                         <spark-line af-data="trend.sohTrend" af-option="sparkOption"></spark-line>
                         <div style="margin-top:5px; text-align: center">
