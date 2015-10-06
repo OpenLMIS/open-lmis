@@ -13,11 +13,15 @@
 apply plugin: 'idea'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'properties'
+apply plugin: 'sonar-runner'
 
 
 idea.project.languageLevel = '1.7'
 idea.project.jdkName = '1.7'
 
+repositories {
+    jcenter()
+}
 buildscript {
   repositories {
     mavenCentral()
@@ -29,7 +33,16 @@ buildscript {
     classpath "net.saliman:gradle-properties-plugin:1.4.2"
   }
 }
+sonarRunner {
+    sonarProperties {
+	  property "sonar.host.url", "$sonarServer"
+	  property "sonar.jdbc.url", "$sonarJdbc"
+	  property "sonar.projectName", "$sonarProject"
+      property "sonar.projectVersion", "$sonarProjectVersion"
+    }
+}
 subprojects {
+  apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'properties'
   idea {
@@ -38,7 +51,14 @@ subprojects {
       ext.jdkName = '1.7'
     }
   }
-  apply plugin: 'java'
+  
+  sonarRunner {
+    sonarProperties {
+	  property "sonar.junit.reportsPath", "$buildDir/test-results/"
+	  property "sonar.java.coveragePlugin", "cobertura"
+	  property "sonar.cobertura.reportPath", "$buildDir/reports/cobertura/coverage.xml"
+    }
+  }
 
   [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
