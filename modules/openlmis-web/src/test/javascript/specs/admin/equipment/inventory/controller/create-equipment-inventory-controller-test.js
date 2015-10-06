@@ -76,7 +76,7 @@ describe("In Create Equipment Inventory Controller,", function () {
         $httpBackend.flush();
         expect(scope.inventory.facility).toEqual(facility);
         expect(scope.inventory.facilityId).toEqual(facility.id);
-        expect(scope.facilityDisplayName).toEqual(scope.inventory.facility.name);
+        expect(scope.facilityDisplayName).toEqual(scope.inventory.facility.code + " - " + scope.inventory.facility.name);
       });
 
       it("should get supervised facilities, if supervised facilities was selected in previous screen", function () {
@@ -107,7 +107,7 @@ describe("In Create Equipment Inventory Controller,", function () {
         $httpBackend.flush();
         expect(scope.inventory.facility).toEqual(facility);
         expect(scope.inventory.facilityId).toEqual(facility.id);
-        expect(scope.facilityDisplayName).toEqual(scope.inventory.facility.name);
+        expect(scope.facilityDisplayName).toEqual(scope.inventory.facility.code + " - " + scope.inventory.facility.name);
       });
 
       it("should get supervised facilities, if supervised facilities was selected in previous screen", function () {
