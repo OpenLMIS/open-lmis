@@ -190,8 +190,7 @@ public interface DashboardMapper {
     )
     List<Product> getTracerProductsForProgram(@Param("programId")Long programId, @Param("limit")Long limit);*/
 
-    @Select("select r as order, product_code,\n" +
-            "psn.name as name,\n" +
+    @Select("select r as order, product_code, short_name as name,\n" +
             "beginning_balance,\n" +
             "quantity_received,\n" +
             "quantity_dispensed,\n" +
@@ -210,9 +209,7 @@ public interface DashboardMapper {
             "number_of_facilities_stocked_out_upper,\n" +
             "COALESCE(number_of_facilities_stocked_out_facility, 0) + COALESCE(number_of_facilities_stocked_out_upper, 0) as total_facilities_stocked_out,\n" +
             "price\n" +
-            "from fn_get_dashboard_summary_data(#{programId}::integer, #{periodId}::integer, #{userId}::integer)\n" +
-            "inner join products p on p.code = product_code\n" +
-            "left outer join product_short_names psn on psn.productid = p.id")
+            "from fn_get_dashboard_summary_data(#{programId}::integer, #{periodId}::integer, #{userId}::integer)")
     List<HashMap<String, Object>> getProgramPeriodTracerProductTrend(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("userId") Long userId);
 
 
