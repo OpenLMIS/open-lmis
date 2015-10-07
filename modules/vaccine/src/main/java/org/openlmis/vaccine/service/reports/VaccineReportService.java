@@ -280,6 +280,12 @@ public class VaccineReportService {
     }
     return repository.getVitaminSupplementationAggregateReport(periodId, zoneId);
   }
+  private List<HashMap<String, Object>> getDropOuts(Long reportId, Long facilityId, Long periodId, Long zoneId) {
+    if (facilityId != null && facilityId != 0) {
+      return repository.getDropOuts(reportId);
+    }
+    return repository.getAggregateDropOuts(periodId, zoneId);
+  }
 
   public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode, Long periodId, Long zoneId){
 
@@ -319,6 +325,7 @@ public class VaccineReportService {
     data.put("targetPopulation", getTargetPopulation(facilityId, periodId, zoneId));
     data.put("syringes", getSyringeAndSafetyBoxReport(reportId, facilityId, periodId, zoneId));
     data.put("vitamins", getVitaminsReport(reportId, facilityId, periodId, zoneId));
+    data.put("dropOuts", getDropOuts(reportId, facilityId, periodId, zoneId));
 
 
     return data;

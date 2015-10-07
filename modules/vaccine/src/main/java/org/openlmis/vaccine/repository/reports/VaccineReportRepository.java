@@ -149,6 +149,14 @@ public class VaccineReportRepository {
     return mapper.vaccineUsageTrendByGeographicZone(periodId, zoneId, productCode);
   }
 
+  public List<HashMap<String, Object>> getAggregateDropOuts(Long periodId, Long zoneId){
+    return mapper.getAggregateDropOuts(periodId, zoneId);
+  }
+
+  public List<HashMap<String, Object>> getDropOuts(Long reportId){
+    return mapper.getDropOuts(reportId);
+  }
+
   public GeographicZone getNationalZone() {
     return mapper.getNationalZone();
   }

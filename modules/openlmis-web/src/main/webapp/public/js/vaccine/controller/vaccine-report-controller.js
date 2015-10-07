@@ -58,6 +58,7 @@ function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineU
                     $scope.vitamins = $scope.data.vitamins;
                     $scope.targetPopulation = $scope.data.targetPopulation;
                     $scope.vitaminSupplementation = $scope.data.vitaminSupplementation;
+                    $scope.dropOuts = $scope.data.dropOuts;
                 }
             });
 

@@ -309,6 +309,54 @@ public interface VaccineReportMapper {
           "order by pp.id asc")
   List<HashMap<String, Object>>vaccineUsageTrendByGeographicZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId, @Param("productCode") String productCode);
 
+  @Select("select\n" +
+          "product_code, \n" +
+          "case when product_code = (select value from configuration_settings where key = ('VACCINE_DROPOUT_BCG')) then \n" +
+          "'BCG - MR ' \n" +
+          "else \n" +
+          "'DTP-HepB-Hib1/DTP-HepB-Hib3' \n" +
+          "end indicator,\n" +
+          "case when product_code = (select value from configuration_settings where key = ('VACCINE_DROPOUT_BCG')) then \n" +
+          " case when sum(bcg_1) > 0 then round((sum(bcg_1) - sum(mr_1))::double precision /sum(bcg_1)::double precision) * 100 else 0 end   \n" +
+          "else \n" +
+          " case when sum(dtp_1) > 0 then round((sum(dtp_1) - sum(dtp_3))::double precision /sum(dtp_3)::double precision) * 100 else 0 end  \n" +
+          "end dropout\n" +
+          "from vw_vaccine_coverage i\n" +
+          "join vw_districts d on i.geographic_zone_id = d.district_id\n" +
+          "join vaccine_reports vr on i.report_id = vr.id\n" +
+          "JOIN program_products pp ON pp.programid = vr.programid AND pp.productid = i.product_id\n" +
+          "JOIN product_categories pg ON pp.productcategoryid = pg.id\n" +
+          "where \n" +
+          " product_code in (select value from configuration_settings \n" +
+          " where key in ('VACCINE_DROPOUT_BCG','VACCINE_DROPOUT_MR','VACCINE_DROPOUT_DTP'))\n" +
+          "and i.period_id = #{periodId} and (d.parent = #{zoneId} or d.district_id = #{zoneId} or d.region_id = #{zoneId} or d.zone_id = #{zoneId} )\n" +
+          "group by 1\n" +
+          "order by 1,2")
+  List<HashMap<String, Object>> getAggregateDropOuts(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId);
+  @Select("select product_code, \n" +
+          "case when product_code = (select value from configuration_settings where key = ('VACCINE_DROPOUT_BCG')) then \n" +
+          "'BCG - MR ' \n" +
+          "else \n" +
+          "'DTP-HepB-Hib1/DTP-HepB-Hib3' \n" +
+          "end indicator,\n" +
+          "case when product_code = (select value from configuration_settings where key = ('VACCINE_DROPOUT_BCG')) then \n" +
+          " case when sum(bcg_1) > 0 then round((sum(bcg_1) - sum(mr_1))::double precision /sum(bcg_1)::double precision) * 100 else 0 end   \n" +
+          "else \n" +
+          " case when sum(dtp_1) > 0 then round((sum(dtp_1) - sum(dtp_3))::double precision /sum(dtp_3)::double precision) * 100 else 0 end  \n" +
+          "end dropout\n" +
+          "from vw_vaccine_coverage i\n" +
+          "join vw_districts d on i.geographic_zone_id = d.district_id\n" +
+          "join vaccine_reports vr on i.report_id = vr.id\n" +
+          "JOIN program_products pp ON pp.programid = vr.programid AND pp.productid = i.product_id\n" +
+          "JOIN product_categories pg ON pp.productcategoryid = pg.id\n" +
+          "where \n" +
+          " product_code in (select value from configuration_settings \n" +
+          " where key in ('VACCINE_DROPOUT_BCG','VACCINE_DROPOUT_MR','VACCINE_DROPOUT_DTP'))\n" +
+          "and report_id = #{reportId}\n" +
+          "group by 1\n" +
+          "order by 1,2")
+  List<HashMap<String, Object>> getDropOuts(@Param("reportId") Long reportId);
+
     @Select("select * from geographic_zones where parentid is null")
     GeographicZone getNationalZone();
 

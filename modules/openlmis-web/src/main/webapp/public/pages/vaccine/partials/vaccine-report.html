@@ -585,14 +585,14 @@
                                         <th colspan="6" style="text-align: center; vertical-align: middle" openlmis-message="label.vaccine.stock.doses"></th>
                                     </tr>
                                     <tr>
-                                        <th openlmis-message="label.antigen"></th>
+                                        <th openlmis-message="label.type.of.antigen"></th>
                                         <th openlmis-message="label.percent"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="drop in dropOuts">
-                                        <td style="width:100px">{{drop.name}}</td>
-                                        <td class="number">{{drop.percent | number}}</td>
+                                        <td>{{drop.indicator}}</td>
+                                        <td class="number">{{drop.dropout | number}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
