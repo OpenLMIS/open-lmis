@@ -156,37 +156,52 @@ public interface VaccineReportMapper {
           "group by product_code")
   List<AdverseEffectLineItem> getAdverseEffectAggregateReport(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId);
 
-  @Select("select product_name,display_name, COALESCE(within_male, 0) within_male, COALESCE(within_female,0) within_female, COALESCE(within_total,0) within_total, COALESCE(within_coverage, 0) within_coverage, \n" +
-          "COALESCE(outside_male, 0) outside_male, COALESCE(outside_female,0) outside_female, COALESCE(outside_total, 0) outside_total,\n" +
-          "COALESCE(within_outside_total, 0) within_outside_total, COALESCE(within_outside_coverage,0) within_outside_coverage,\n" +
-          " COALESCE(cum_within_total,0) cum_within_total, COALESCE(cum_within_coverage,0) cum_within_coverage,\n" +
-          "  COALESCE(cum_outside_total,0) cum_outside_total, COALESCE(cum_within_outside_total,0) cum_within_outside_total,\n" +
-          "   COALESCE(cum_within_outside_coverage ,0) cum_within_outside_coverage\n" +
-          "from vw_vaccine_coverage \n" +
-          "where report_id = #{reportId}")
+  @Select("select \n" +
+          "product_name,\n" +
+          "display_name, \n" +
+          "COALESCE(within_male, 0) within_male, \n" +
+          "COALESCE(within_female,0) within_female, \n" +
+          "COALESCE(within_total,0) within_total, \n" +
+          "COALESCE(within_coverage, 0) within_coverage,  \n" +
+          "COALESCE(outside_male, 0) outside_male, \n" +
+          "COALESCE(outside_female,0) outside_female, COALESCE(outside_total, 0) outside_total, \n" +
+          "COALESCE(within_outside_total, 0) within_outside_total, \n" +
+          "COALESCE(within_outside_coverage,0) within_outside_coverage, \n" +
+          "COALESCE(cum_within_total,0) cum_within_total, \n" +
+          "COALESCE(cum_within_coverage,0) cum_within_coverage, \n" +
+          "COALESCE(cum_outside_total,0) cum_outside_total, \n" +
+          "COALESCE(cum_within_outside_total,0) cum_within_outside_total, \n" +
+          "COALESCE(cum_within_outside_coverage ,0) cum_within_outside_coverage, \n" +
+          "case when dtp_1 > 0 then ((dtp_1 - dtp_3)::double precision / dtp_1::double precision) * 100 else 0 end dtp_dropout, \n" +
+          "case when bcg_1 > 0 then ((bcg_1 - mr_1)::double precision / bcg_1::double precision) * 100 else 0 end bcg_mr_dropout \n" +
+          "  from vw_vaccine_coverage  \n" +
+          "  where report_id = #{reportId}")
   List<HashMap<String, Object>> getVaccineCoverageReport(@Param("reportId")Long reportId);
 
-   @Select("select MAX(product_name) product_name,\n" +
-           "MAX(display_name) display_name, \n" +
-           "MAX(display_order) display_order, \n" +
-           "SUM(COALESCE(within_male, 0)) within_male, \n" +
-           "SUM(COALESCE(within_female,0)) within_female, \n" +
-           "SUM(COALESCE(within_total,0)) within_total, \n" +
-           "SUM(COALESCE(within_coverage, 0)) within_coverage, \n" +
-           "SUM(COALESCE(outside_male, 0)) outside_male, \n" +
-           "SUM(COALESCE(outside_female,0)) outside_female,\n" +
-           "SUM(COALESCE(outside_total, 0)) outside_total,\n" +
-           "SUM(COALESCE(within_outside_total, 0)) within_outside_total, \n" +
-           "SUM(COALESCE(within_outside_coverage,0)) within_outside_coverage,\n" +
-           "SUM(COALESCE(cum_within_total,0)) cum_within_total, \n" +
-           "SUM(COALESCE(cum_within_coverage,0)) cum_within_coverage,\n" +
-           "SUM(COALESCE(cum_outside_total,0)) cum_outside_total, \n" +
-           "SUM(COALESCE(cum_within_outside_total,0)) cum_within_outside_total,\n" +
-           "SUM(COALESCE(cum_within_outside_coverage ,0)) cum_within_outside_coverage\n" +
-           "from vw_vaccine_coverage \n" +
-           "INNER JOIN vw_districts vd ON vd.district_id = geographic_zone_id\n" +
+   @Select("select \n" +
+           "MAX(product_name) product_name,\n" +
+           "MAX(display_name) display_name,  \n" +
+           "MAX(display_order) display_order,  \n" +
+           "SUM(COALESCE(within_male, 0)) within_male,  \n" +
+           "SUM(COALESCE(within_female,0)) within_female,  \n" +
+           "SUM(COALESCE(within_total,0)) within_total,  \n" +
+           "SUM(COALESCE(within_coverage, 0)) within_coverage,  \n" +
+           "SUM(COALESCE(outside_male, 0)) outside_male,  \n" +
+           "SUM(COALESCE(outside_female,0)) outside_female, \n" +
+           "SUM(COALESCE(outside_total, 0)) outside_total, \n" +
+           "SUM(COALESCE(within_outside_total, 0)) within_outside_total,  \n" +
+           "SUM(COALESCE(within_outside_coverage,0)) within_outside_coverage, \n" +
+           "SUM(COALESCE(cum_within_total,0)) cum_within_total,  \n" +
+           "SUM(COALESCE(cum_within_coverage,0)) cum_within_coverage, \n" +
+           "SUM(COALESCE(cum_outside_total,0)) cum_outside_total,  \n" +
+           "SUM(COALESCE(cum_within_outside_total,0)) cum_within_outside_total, \n" +
+           "SUM(COALESCE(cum_within_outside_coverage ,0)) cum_within_outside_coverage, \n" +
+           "SUM(COALESCE(case when dtp_1 > 0 then ((dtp_1 - dtp_3)::double precision / dtp_1::double precision) * 100 else 0 end)) dtp_dropout, \n" +
+           "SUM(COALESCE(case when bcg_1 > 0 then ((bcg_1 - mr_1)::double precision / bcg_1::double precision) * 100 else 0 end)) bcg_mr_dropout \n" +
+           "from vw_vaccine_coverage  \n" +
+           "INNER JOIN vw_districts vd ON vd.district_id = geographic_zone_id \n" +
            "where period_id = #{periodId} and (vd.parent = #{zoneId} or vd.district_id = #{zoneId} or vd.region_id = #{zoneId} or vd.zone_id = #{zoneId} )\n" +
-           "group by product_code\n" +
+           "group by product_code \n" +
            "order by display_order" )
   List<HashMap<String, Object>> getVaccineCoverageAggregateReportByGeoZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId);
 
