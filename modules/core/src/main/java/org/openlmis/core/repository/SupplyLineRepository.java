@@ -10,12 +10,8 @@
 
 package org.openlmis.core.repository;
 
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.dto.SupplyDepot;
 import org.openlmis.core.repository.mapper.SupplyLineMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -65,8 +61,8 @@ public class SupplyLineRepository {
     return mapper.getSearchedSupplyLinesCount(searchParam, column);
   }
 
-  public List<SupplyDepot> getSupplyDepots(Long userId){
-    return mapper.getSupplyDepots(userId);
+  public List<Facility> getSupplyingFacilities(Long userId){
+    return mapper.getSupplyingFacilities(userId);
   }
 
   public SupplyLine getSupplyLineByFacilityProgram(Long facilityId, Long programId) {
