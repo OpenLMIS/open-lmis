@@ -17,9 +17,10 @@ angular.module('setting', ['openlmis', 'textAngular', 'ui.bootstrap', 'ui.bootst
     taOptions.toolbar = [
       ['h1', 'h2', 'h3'],
       ['bold', 'italics', 'underline'],['ul', 'ol',  'clear'],
-      ['html', 'insertImage', 'insertLink',],
+      ['html', 'insertImage', 'insertLink'],
       ['justifyLeft', 'justifyCenter', 'justifyRight']
     ];
+
     taOptions.classes = {
       focussed: 'focussed',
       toolbar: 'btn-toolbar',
