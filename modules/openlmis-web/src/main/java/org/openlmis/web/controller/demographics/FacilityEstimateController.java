@@ -55,7 +55,7 @@ public class FacilityEstimateController extends BaseController {
     @RequestMapping(value = "finalize/facilities.json", method = PUT, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'FINALIZE_DEMOGRAPHIC_ESTIMATES')")
     public ResponseEntity<OpenLmisResponse> finalize(@RequestBody EstimateForm form, HttpServletRequest request) {
-        service.finalize(form, loggedInUserId(request));
+        service.finalizeEstimate(form, loggedInUserId(request));
         return OpenLmisResponse.response("estimates", form);
     }
 

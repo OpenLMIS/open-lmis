@@ -12,6 +12,7 @@
 
 package org.openlmis.demographics.service;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RightName;
@@ -77,7 +78,7 @@ public class AnnualFacilityDemographicEstimateService {
     }
   }
 
-  public void finalize(EstimateForm form, Long userId) {
+  public void finalizeEstimate(EstimateForm form, Long userId) {
     this.save(form, userId);
     for(EstimateFormLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
       for (AnnualFacilityEstimateEntry est : ListUtil.emptyIfNull(dto.getFacilityEstimates())) {
@@ -86,7 +87,7 @@ public class AnnualFacilityDemographicEstimateService {
           est.setModifiedBy(userId);
           est.setModifiedDate(new Date());
           est.setIsFinal(true);
-          repository.finalize(est);
+          repository.finalizeEstimate(est);
         }
       }
     }
@@ -148,7 +149,7 @@ public class AnnualFacilityDemographicEstimateService {
 
   public List<AnnualFacilityEstimateEntry> getEstimateValuesForFacility(Long facilityId, Long programId, Integer year) {
     List<AnnualFacilityEstimateEntry> estimates = repository.getFacilityEstimateWithDetails(year, facilityId, programId);
-    if(estimates == null || estimates.size() == 0){
+    if(CollectionUtils.isEmpty(estimates)){
       Facility facility = facilityService.getById(facilityId);
       List<EstimateCategory> categories = estimateCategoryService.getAll();
       estimates = createDefaultEstimateEntries(categories, facility.getId(), programId, year, true);

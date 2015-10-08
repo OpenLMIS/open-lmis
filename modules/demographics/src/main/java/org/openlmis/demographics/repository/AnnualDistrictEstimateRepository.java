@@ -51,8 +51,8 @@ public class AnnualDistrictEstimateRepository {
     return mapper.getFacilityEstimateAggregate(year, districtId, programId);
   }
 
-  public void finalize(AnnualDistrictEstimateEntry est) {
-    mapper.finalize(est);
+  public void finalizeEstimate(AnnualDistrictEstimateEntry est) {
+    mapper.finalizeEstimate(est);
   }
 
   public void undoFinalize(AnnualDistrictEstimateEntry est) {

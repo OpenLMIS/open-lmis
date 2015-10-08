@@ -65,7 +65,7 @@ public class AnnualDistrictDemographicEstimateService {
     }
   }
 
-  public void finalize(EstimateForm form, Long userId) {
+  public void finalizeEstimate(EstimateForm form, Long userId) {
     this.save(form, userId);
     for(EstimateFormLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
       for (AnnualDistrictEstimateEntry est : ListUtil.emptyIfNull(dto.getDistrictEstimates())) {
@@ -74,7 +74,7 @@ public class AnnualDistrictDemographicEstimateService {
           est.setModifiedBy(userId);
           est.setModifiedDate(new Date());
           est.setIsFinal(true);
-          repository.finalize(est);
+          repository.finalizeEstimate(est);
         }
       }
     }
