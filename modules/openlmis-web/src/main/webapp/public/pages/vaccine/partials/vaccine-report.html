@@ -122,8 +122,8 @@
                                 <table ng-show="targetPopulation.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th>Demographics/Targets</th>
-                                        <th>Monthly</th>
+                                        <th style="text-align: center;" openlmis-message="label.demographics.targets"></th>
+                                        <th style="text-align: center;" openlmis-message="label.monthly"></th>
                                         <th>Annual</th>
                                     </tr>
                                     </thead>
@@ -159,10 +159,10 @@
                                     <thead class="gradient-header">
                                     <tr>
                                         <th></th>
-                                        <th openlmis-message="label.case.this.month"></th>
-                                        <th openlmis-message="label.cases.cumulative"></th>
-                                        <th openlmis-message="label.death.this.month"></th>
-                                        <th openlmis-message="label.death.cumulative"></th>
+                                        <th openlmis-message="label.case.this.month" style="text-align: center;"></th>
+                                        <th openlmis-message="label.cases.cumulative" style="text-align: center;"></th>
+                                        <th openlmis-message="label.death.this.month" style="text-align: center;"></th>
+                                        <th openlmis-message="label.death.cumulative" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
 
@@ -277,9 +277,9 @@
                                 <table ng-show="immunizationSession.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th openlmis-message="label.fixed.conducted"></th>
-                                        <th openlmis-message="label.outreach.conducted"></th>
-                                        <th openlmis-message="label.outreach.cancelled"></th>
+                                        <th openlmis-message="label.fixed.conducted" style="text-align: center;"></th>
+                                        <th openlmis-message="label.outreach.conducted" style="text-align: center;"></th>
+                                        <th openlmis-message="label.outreach.cancelled" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -294,7 +294,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="span6">
+                    <div class="span6" ng-show="showOtherActivities">
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.other.immunization.activities"></a></span>
@@ -328,9 +328,9 @@
                                         <th colspan="3" openlmis-message="label.vitamin.supplementation"></th>
                                     </tr>
                                     <tr>
-                                        <th openlmis-message="label.male"></th>
-                                        <th openlmis-message="label.female"></th>
-                                        <th openlmis-message="label.total.supplemented"></th>
+                                        <th openlmis-message="label.male" style="text-align: center;"></th>
+                                        <th openlmis-message="label.female" style="text-align: center;"></th>
+                                        <th openlmis-message="label.total.supplemented" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -373,16 +373,16 @@
                                     </tr>
                                     <tr>
                                         <th openlmis-message="label.type.of.antigen"></th>
-                                        <th openlmis-message="label.opening.balance.doses"></th>
-                                        <th openlmis-message="label.doses.of.vaccine.received"></th>
-                                        <th openlmis-message="label.doses.of.vaccine.used.during.vaccination"> </th>
-                                        <th openlmis-message="label.doses.discarded.unopened"></th>
-                                        <th openlmis-message="label.reasons.for.discarding.unopened.vial"></th>
-                                        <th openlmis-message="label.doses.of.vaccine.stock.on.hand"></th>
-                                        <th openlmis-message="label.no.of.days.stocked.out"></th>
-                                        <th openlmis-message="label.children.immunized"></th>
-                                        <th openlmis-message="label.usage.rate.formula"></th>
-                                        <th openlmis-message="label.wastage.rate.formula"></th>
+                                        <th openlmis-message="label.opening.balance.doses" style="text-align: center;"></th>
+                                        <th openlmis-message="label.doses.of.vaccine.received" style="text-align: center;"></th>
+                                        <th openlmis-message="label.doses.of.vaccine.used.during.vaccination" style="text-align: center;"> </th>
+                                        <th openlmis-message="label.doses.discarded.unopened" style="text-align: center;" ></th>
+                                        <th openlmis-message="label.reasons.for.discarding.unopened.vial" style="text-align: center;"></th>
+                                        <th openlmis-message="label.doses.of.vaccine.stock.on.hand" style="text-align: center;"></th>
+                                        <th openlmis-message="label.no.of.days.stocked.out" style="text-align: center;"></th>
+                                        <th openlmis-message="label.children.immunized" style="text-align: center;"></th>
+                                        <th openlmis-message="label.usage.rate.formula" style="text-align: center;"></th>
+                                        <th openlmis-message="label.wastage.rate.formula" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -451,12 +451,12 @@
                                     </tr>
                                     <tr>
                                         <th></th>
-                                        <th openlmis-message="label.opening.balance"></th>
-                                        <th openlmis-message="label.received"></th>
-                                        <th openlmis-message="label.used"></th>
-                                        <th openlmis-message="label.wastage"></th>
-                                        <th openlmis-message="label.stock.on.hand"></th>
-                                        <th openlmis-message="label.no.of.days.stocked.out"></th>
+                                        <th openlmis-message="label.opening.balance" style="text-align: center;"></th>
+                                        <th openlmis-message="label.received" style="text-align: center;"></th>
+                                        <th openlmis-message="label.used" style="text-align: center;"></th>
+                                        <th openlmis-message="label.wastage" style="text-align: center;"></th>
+                                        <th openlmis-message="label.stock.on.hand" style="text-align: center;"></th>
+                                        <th openlmis-message="label.no.of.days.stocked.out" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -465,8 +465,8 @@
                                         <td class="number">{{sy.opening_balance | number}}</td>
                                         <td class="number">{{sy.quantity_received | number}}</td>
                                         <td class="number">{{sy.quantity_issued | number}}</td>
-                                        <td class="number">{{ 10 | number}}</td>
-                                        <td class="number">{{20 | number}}</td>
+                                        <td class="number">{{ sy.quantity_wasted_other | number}}</td>
+                                        <td class="number">{{sy.closing_balance | number}}</td>
                                         <td class="number">{{sy.days_stocked_out | number}}</td>
                                     </tr>
 
@@ -498,11 +498,11 @@
                                     </tr>
                                     <tr>
                                         <th></th>
-                                        <th openlmis-message="label.opening.balance"></th>
-                                        <th openlmis-message="label.vitamin.A.received"></th>
-                                        <th openlmis-message="label.total.vitamin.A.administered"></th>
-                                        <th openlmis-message="label.wastage"></th>
-                                        <th openlmis-message="label.stock.on.hand"></th>
+                                        <th openlmis-message="label.opening.balance" style="text-align: center;"></th>
+                                        <th openlmis-message="label.vitamin.A.received" style="text-align: center;"></th>
+                                        <th openlmis-message="label.total.vitamin.A.administered" style="text-align: center;"></th>
+                                        <th openlmis-message="label.wastage" style="text-align: center;"></th>
+                                        <th openlmis-message="label.stock.on.hand" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -511,8 +511,8 @@
                                         <td class="number">{{vit.opening_balance | number}}</td>
                                         <td class="number">{{vit.quantity_received | number}}</td>
                                         <td class="number">{{vit.quantity_issued | number}}</td>
-                                        <td class="number">5</td>
-                                        <td class="number">105</td>
+                                        <td class="number">{{vit.quantity_wasted_other | number}}</td>
+                                        <td class="number">{{vit.closing_balance | number}}</td>
                                     </tr>
 
                                     </tbody>
@@ -544,11 +544,11 @@
                                     </tr>
                                     <tr>
                                         <th openlmis-message="label.type.of.antigen"></th>
-                                        <th openlmis-message="label.discarded.expired"></th>
-                                        <th openlmis-message="label.discarded.broken"></th>
-                                        <th openlmis-message="label.discarded.cold.chain.failure"> </th>
-                                        <th openlmis-message="label.discarded.other"></th>
-                                        <th openlmis-message="label.discarded.total"></th>
+                                        <th openlmis-message="label.discarded.expired" style="text-align: center;"></th>
+                                        <th openlmis-message="label.discarded.broken" style="text-align: center;"></th>
+                                        <th openlmis-message="label.discarded.cold.chain.failure" style="text-align: center;"> </th>
+                                        <th openlmis-message="label.discarded.other" style="text-align: center;"></th>
+                                        <th openlmis-message="label.discarded.total" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -586,7 +586,7 @@
                                     </tr>
                                     <tr>
                                         <th openlmis-message="label.type.of.antigen"></th>
-                                        <th openlmis-message="label.percent"></th>
+                                        <th openlmis-message="label.percent" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>

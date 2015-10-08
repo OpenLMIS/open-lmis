@@ -12,6 +12,7 @@
 function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineUsageTrend, Period, messageService, VaccineReportLegendContent) {
 
 
+    $scope.showOtherActivities = false;
     VaccineReportLegendContent.get({}, function(data){
         $scope.definitions = data.vaccineLegend;
         if(!isUndefined($scope.definitions)){
