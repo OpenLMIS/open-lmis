@@ -53,15 +53,32 @@ public class FacilityProgramProductService {
     return new FacilityProgramProduct(programProduct, facilityId, repository.getOverriddenIsa(programProduct.getId(), facilityId));
   }
 
-  public void insertISA(ProgramProductISA isa) {
-    repository.insertISA(isa);
+
+  public void insertISA(Long facilityId, ProgramProductISA isa)
+  {
+    repository.insertISA(facilityId, isa);
   }
 
-  public void updateISA(ProgramProductISA isa) {
+
+  public void deleteISA(Long facilityId, ProgramProductISA isa)
+  {
+    deleteISA(facilityId, isa.getProgramProductId());
+  }
+
+  public void deleteISA(Long facilityId, Long programProductId)
+  {
+    repository.deleteOverriddenIsa(programProductId, facilityId);
+  }
+
+
+
+  public void updateISA(ProgramProductISA isa)
+  {
     repository.updateISA(isa);
   }
 
-  public void saveOverriddenIsa(final Long facilityId, List<FacilityProgramProduct> products) {
+
+  public void saveFacilityProgramProductList(final Long facilityId, List<FacilityProgramProduct> products) {
     forAllDo(products, new Closure() {
       @Override
       public void execute(Object o) {

@@ -10,10 +10,12 @@
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ISABuilder;
 import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
@@ -28,7 +30,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,6 +46,7 @@ public class FacilityProgramProductMapperIT {
 
   @Autowired
   ProgramMapper programMapper;
+
   @Autowired
   ProductMapper productMapper;
 
@@ -74,23 +77,37 @@ public class FacilityProgramProductMapperIT {
   }
 
   @Test
-  public void shouldGetOverriddenIsaForProgramProductIdAndFacilityId() throws Exception {
-    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, facility.getId(), 34);
+  public void shouldGetOverriddenIsaForProgramProductIdAndFacilityId() throws Exception
+  {
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, facility.getId());
     mapper.insert(facilityProgramProduct);
 
-    Integer overriddenIsa = mapper.getOverriddenIsa(programProduct.getId(), facility.getId());
+    ISA isa = ISABuilder.build();
+    ProgramProductISA ppi = new ProgramProductISA(programProduct.getId(), isa);
+    mapper.insertISA(facility.getId(), ppi);
 
-    assertThat(overriddenIsa, is(34));
+    ISA overriddenIsa = mapper.getOverriddenIsa(programProduct.getId(), facility.getId());
+    assertTrue(ISABuilder.defaultIsaEquals(overriddenIsa));
   }
+
 
   @Test
-  public void shouldRemoveFacilityProductMapping() throws Exception {
-    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, facility.getId(), 34);
+  public void shouldRemoveOverriddenProgramProductISA() throws Exception
+  {
+    //Insert a FacilityProgramProduct
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, facility.getId());
     mapper.insert(facilityProgramProduct);
 
-    mapper.removeFacilityProgramProductMapping(programProduct.getId(), facility.getId());
+    //Add an overridden ISA to it
+    ISA isa = ISABuilder.build();
+    ProgramProductISA ppi = new ProgramProductISA(programProduct.getId(), isa);
+    mapper.insertISA(facility.getId(), ppi);
+    assertNotNull(mapper.getOverriddenIsa(programProduct.getId(), facility.getId()));
 
-    assertThat(mapper.getOverriddenIsa(programProduct.getId(), facility.getId()), is(nullValue()));
+    //Remove the ISA
+    mapper.deleteOverriddenIsa(programProduct.getId(), facility.getId());
+    assertNull(mapper.getOverriddenIsa(programProduct.getId(), facility.getId()));
   }
+
 
 }

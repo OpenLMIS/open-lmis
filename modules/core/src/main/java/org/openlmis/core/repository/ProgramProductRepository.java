@@ -11,16 +11,15 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.mapper.ProgramProductIsaMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductPriceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -43,6 +42,9 @@ public class ProgramProductRepository {
 
   @Autowired
   private ProgramProductPriceMapper programProductPriceMapper;
+
+  @Autowired
+  private ProgramProductIsaMapper programProductIsaMapper;
 
   public void save(ProgramProduct programProduct) {
     Long programId = programRepository.getIdByCode(programProduct.getProgram().getCode());
@@ -139,5 +141,15 @@ public class ProgramProductRepository {
 
   public List<ProgramProduct> getActiveByProgram(Long programId) {
     return mapper.getActiveByProgram(programId);
+  }
+
+  @Transactional
+  public void insertISA(ProgramProductISA programProductISA)
+  {
+    programProductIsaMapper.insert(programProductISA);
+  }
+
+  public void updateISA(ProgramProductISA programProductISA) {
+    programProductIsaMapper.update(programProductISA);
   }
 }

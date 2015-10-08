@@ -2,6 +2,7 @@
 --This view is intended to be used with a WHERE programid=X clause.
 --eg: SELECT * FROM vw_stock_cards WHERE programid = 5;
 
+
 DROP VIEW IF EXISTS vw_stock_cards;
 CREATE VIEW vw_stock_cards AS
 

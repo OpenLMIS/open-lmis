@@ -218,4 +218,15 @@ public class ProgramProductService {
       save(programProduct);
     }
   }
+
+    public void insertISA(ProgramProductISA isa)
+    {
+      programProductRepository.insertISA(isa);
+    }
+
+    public void updateISA(ProgramProductISA isa)
+    {
+      programProductRepository.updateISA(isa);
+    }
+
 }

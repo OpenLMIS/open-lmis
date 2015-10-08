@@ -10,10 +10,7 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.ProductCategory;
 import org.springframework.stereotype.Repository;
 
@@ -32,6 +29,9 @@ public interface ProductCategoryMapper {
     "(#{code}, #{name}, #{displayOrder}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
   @Options(useGeneratedKeys = true)
   public void insert(ProductCategory productCategory);
+
+  @Delete("DELETE FROM product_categories WHERE code=#{code}")
+  public void deleteByCode(String code);
 
   @Select("SELECT * FROM product_categories WHERE id = #{id}")
   public ProductCategory getById(Long id);

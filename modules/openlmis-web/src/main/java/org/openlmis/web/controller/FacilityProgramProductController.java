@@ -50,33 +50,30 @@ public class FacilityProgramProductController extends BaseController {
     return OpenLmisResponse.response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
   }
 
-  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = PUT, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/facility/{facilityId}/program/{programId}/isa", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public void overrideIsa(@PathVariable Long facilityId, @RequestBody FacilityProgramProductList products) {
-    service.saveOverriddenIsa(facilityId, products);
+  public void saveFacilityProgramProductList(@PathVariable Long facilityId, @RequestBody List<FacilityProgramProduct> /*FacilityProgramProductList*/ products) {
+    service.saveFacilityProgramProductList(facilityId, products);
   }
 
-  @RequestMapping(value = "/programProducts/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)
+
+  @RequestMapping(value = "/facility/{facilityId}/programProducts/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public void insertIsa(@PathVariable Long programProductId,
+  public void insertIsa(@PathVariable Long facilityId,
+                        @PathVariable Long programProductId,
                         @RequestBody ProgramProductISA programProductISA,
                         HttpServletRequest request) {
     programProductISA.setCreatedBy(loggedInUserId(request));
     programProductISA.setModifiedBy(loggedInUserId(request));
     programProductISA.setProgramProductId(programProductId);
-    service.insertISA(programProductISA);
+    service.insertISA(facilityId, programProductISA);
   }
 
-  @RequestMapping(value = "/programProducts/{programProductId}/isa/{isaId}", method = PUT, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/facility/{facilityId}/programProducts/{programProductId}/isa", method = DELETE, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
-  public void updateIsa(@PathVariable Long isaId,
-                        @PathVariable Long programProductId,
-                        @RequestBody ProgramProductISA programProductISA,
-                        HttpServletRequest request) {
-    programProductISA.setId(isaId);
-    programProductISA.setProgramProductId(programProductId);
-    programProductISA.setModifiedBy(loggedInUserId(request));
-    service.updateISA(programProductISA);
+  public void deleteIsa(@PathVariable Long facilityId, @PathVariable Long programProductId, HttpServletRequest request)
+  {
+    service.deleteISA(facilityId, programProductId);
   }
 
 

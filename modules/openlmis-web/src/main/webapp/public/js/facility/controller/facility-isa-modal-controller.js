@@ -1,0 +1,114 @@
+/*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ */
+function FacilityIsaModalController($scope, $rootScope, FacilityProgramProducts, ProgramProducts, $routeParams)
+{
+  function calculateIsa(product)
+  {
+    var _EMPTY = '--';
+    var population = $scope.$parent.facility.catchmentPopulation;
+
+    //Basic validation
+    if(isUndefined(population))
+    {
+      product.calculatedIsa = _EMPTY;
+      product.calculatedFacilityIsa = _EMPTY;
+      return;
+    }
+
+    //Try setting calculatedIsa
+    if(isUndefined(product.programProductIsa))
+    {
+      product.calculatedIsa = _EMPTY;
+    }
+    else
+    {
+      var isa = new ProgramProductISA();
+      isa.init(product.programProductIsa);
+      product.calculatedIsa = isa.calculate(population);
+    }
+
+    //Try setting calculatedFacilityIsa, which is based on an overriddenIsa value
+    if(isUndefined(product.overriddenIsa))
+    {
+      product.calculatedFacilityIsa = _EMPTY;
+    }
+    else
+    {
+      var isa = new ProgramProductISA();
+      isa.init(product.overriddenIsa);
+      product.calculatedFacilityIsa = isa.calculate(population);
+    }
+  }
+
+  //For each product in productList, set product.calculatedIsa and product.calculatedFacilityIsa
+  function calculateIsaValues(products)
+  {
+    $(products).each(function (index, product)
+    {
+      calculateIsa(product)
+    });
+  }
+
+  $scope.$on('showISAEditModal', function()
+  {
+    if(!$scope.currentProgram)
+      return;
+
+    $scope.currentProgramProducts = [];
+
+    function calculateISAAndShowModel()
+    {
+      calculateIsaValues($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]);
+      $scope.filteredProducts = $scope.currentProgramProducts = angular.copy($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]);
+      $scope.programProductsISAModal = true; //Show the modal
+    }
+
+    function successFunc(data)
+    {
+      $scope.$parent.facilityProgramProductsList[$scope.currentProgram.id] = data.programProductList;
+      calculateISAAndShowModel();
+    }
+
+    if ($routeParams.facilityId)
+      FacilityProgramProducts.get({programId: $scope.currentProgram.id, facilityId: $routeParams.facilityId}, successFunc, function (data) {});
+    else
+      ProgramProducts.get({programId: $scope.currentProgram.id}, successFunc, function (data) {});
+
+  });
+
+  $rootScope.$on('updateISA', function(event, data)
+  {
+    $scope.filteredProducts[data.index].overriddenIsa = data.isa;
+    calculateIsa( $scope.filteredProducts[data.index] );
+  });
+
+  $scope.closeISAModal = function () {
+    $scope.programProductsISAModal = false;
+  };
+
+
+  //If the user specified a search-string, filter $scope.filteredProducts accordingly
+  $scope.updateCurrentProgramProducts = function () {
+    $scope.filteredProducts = [];
+    $scope.query = $scope.query.trim();
+
+    if (!$scope.query.length) {
+      $scope.filteredProducts = $scope.currentProgramProducts;
+      return;
+    }
+
+    $($scope.currentProgramProducts).each(function (index, product) {
+      var searchString = $scope.query.toLowerCase();
+      if (product.product.primaryName.toLowerCase().indexOf(searchString) >= 0) {
+        $scope.filteredProducts.push(product);
+      }
+    });
+  };
+}
