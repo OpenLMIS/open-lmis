@@ -14,7 +14,6 @@ package org.openlmis.rnr.service;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.logging.ApplicationLogger;
 import org.openlmis.core.service.ApproverService;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.email.service.EmailService;
@@ -33,7 +32,7 @@ import java.util.List;
 @AllArgsConstructor
 public class NotificationServices {
 
-  private static Logger logger = LoggerFactory.getLogger(ApplicationLogger.class);
+  private static Logger LOGGER = LoggerFactory.getLogger(NotificationServices.class);
 
   @Value("${mail.base.url}")
   String baseURL;
@@ -92,7 +91,7 @@ public class NotificationServices {
         try {
           emailService.queueMessage(message);
         } catch (Exception exp) {
-          logger.error("Notification was not sent with the following exception ...", exp);
+          LOGGER.error("Notification was not sent due to the following exception ...", exp);
         }
       }
     }
