@@ -17,6 +17,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.logging.ApplicationLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -24,6 +27,8 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class FormulaOption {
+
+  private static Logger logger = LoggerFactory.getLogger(ApplicationLogger.class);
 
   private List<Formula> formulas;
 
@@ -33,7 +38,7 @@ public class FormulaOption {
       try{
         formulas = mapper.readValue(options, new TypeReference<List<Formula>>(){}  );
       } catch(Exception exp){
-
+        logger.error("Rnr formula option could not be parsed with the following exception", exp);
       }
     }
   }

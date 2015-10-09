@@ -12,12 +12,15 @@
 
 package org.openlmis.report.builder.helpers;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class RequisitionPredicateHelper {
 
   public static String multiProductFilterBy(String products, String productIdField, String tracerField){
-    if(products.equals("-1")){
+    if("-1".equals(products)){
       return String.format("%s = true", tracerField);
-    } else if(!products.equals("0") && !products.isEmpty()){
+    } else if(!"0".equals(products) && !products.isEmpty()){
       return String.format(" %2$s = ANY(array[ %1$s ]::INT[])", products, productIdField);
     }
     return null;
@@ -44,7 +47,7 @@ public class RequisitionPredicateHelper {
   }
 
   public static String rnrStatusFilteredBy(String field, String acceptedRnrStatuses){
-    return  field +" in ( " + acceptedRnrStatuses +" )";
+    return  String.format("%1$s in ( %2$s )", field , acceptedRnrStatuses );
   }
 
   public static String productFilteredBy(String field){
