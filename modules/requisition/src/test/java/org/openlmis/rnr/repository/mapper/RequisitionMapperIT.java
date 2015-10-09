@@ -202,6 +202,22 @@ public class RequisitionMapperIT {
   }
 
   @Test
+  public void shouldUpdateClientSubmittedTime() {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    Date clientSubmittedTime = new Date();
+    requisition.setClientSubmittedTime(clientSubmittedTime);
+
+    mapper.updateClientSubmittedTime(requisition);
+
+    Rnr updatedRequisition = mapper.getById(requisition.getId());
+
+    assertThat(updatedRequisition.getId(), is(requisition.getId()));
+    assertThat(updatedRequisition.getClientSubmittedTime() , is(clientSubmittedTime));
+
+  }
+
+  @Test
   public void shouldReturnRequisitionWithLineItemsByFacilityProgramAndPeriod() {
     Product fullSupplyProduct = insertProduct(true, "P1");
     Product nonFullSupplyProduct = insertProduct(false, "P2");

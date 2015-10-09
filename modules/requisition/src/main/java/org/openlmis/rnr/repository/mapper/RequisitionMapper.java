@@ -43,6 +43,11 @@ public interface RequisitionMapper {
       "WHERE id = #{id}"})
   void update(Rnr requisition);
 
+  @Update({"UPDATE requisitions SET",
+        "clientSubmittedTime = #{clientSubmittedTime}",
+        "WHERE id = #{id}"})
+  void updateClientSubmittedTime(Rnr requisition);
+
   @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
   @Results(value = {
       @Result(property = "id", column = "id"),

@@ -246,6 +246,11 @@ public class RequisitionService {
   }
 
   @Transactional
+  public void updateClientSubmittedTime(Rnr rnr) {
+     requisitionRepository.updateClientSubmittedTime(rnr);
+  }
+
+  @Transactional
   public Rnr authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
