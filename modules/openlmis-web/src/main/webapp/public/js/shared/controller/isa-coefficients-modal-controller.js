@@ -111,11 +111,11 @@ function ISACoefficientsModalController($scope, $rootScope)
     $scope.isaToEdit = null;
 
     var params = {};
-    params['programProductId'] = programProduct.id;
-    params['facilityId'] = facility.id;
+    params.programProductId = programProduct.id;
+    params.facilityId = facility.id;
 
     $scope.isaService.delete(params, undefined, successCallBack, {});
-  }
+  };
 
   $scope.saveProductISA = function()
   {
@@ -125,17 +125,17 @@ function ISACoefficientsModalController($scope, $rootScope)
     $scope.inputClass = false;
 
     var params = {};
-    params['programProductId'] = $scope.currentProgramProduct.id;
+    params.programProductId = $scope.currentProgramProduct.id;
 
     var saveFunction = $scope.isaService.save;
     if ($scope.isaToEdit.id && !facilityId())
     {
-      params['isaId'] = $scope.isaToEdit.id;
+      params.isaId = $scope.isaToEdit.id;
       saveFunction = $scope.isaService.update;
     }
 
     if(facilityId())
-      params['facilityId'] = facilityId();
+      params.facilityId = facilityId();
 
     saveFunction(params, $scope.isaToEdit, successCallBack, {});
   };

@@ -17,5 +17,5 @@ app.directive('isaCoefficientModal', function()
     templateUrl: '/public/pages/admin/program-product-isa/partials/ISACoefficientsModal.html',
 
     controller: ISACoefficientsModalController
-  }
+  };
 });

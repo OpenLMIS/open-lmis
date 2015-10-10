@@ -46,7 +46,7 @@ var ProgramProductISA = function (isa) {
 
   function getNumericDisplayVal(val)
   {
-    if(val==undefined || isNaN(val))
+    if( val === undefined || isNaN(val) )
       return '#';
     else
       return val;

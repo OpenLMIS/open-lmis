@@ -13,6 +13,7 @@ function FacilityIsaModalController($scope, $rootScope, FacilityProgramProducts,
   {
     var _EMPTY = '--';
     var population = $scope.$parent.facility.catchmentPopulation;
+    var isa;
 
     //Basic validation
     if(isUndefined(population))
@@ -29,7 +30,7 @@ function FacilityIsaModalController($scope, $rootScope, FacilityProgramProducts,
     }
     else
     {
-      var isa = new ProgramProductISA();
+      isa = new ProgramProductISA();
       isa.init(product.programProductIsa);
       product.calculatedIsa = isa.calculate(population);
     }
@@ -41,7 +42,7 @@ function FacilityIsaModalController($scope, $rootScope, FacilityProgramProducts,
     }
     else
     {
-      var isa = new ProgramProductISA();
+      isa = new ProgramProductISA();
       isa.init(product.overriddenIsa);
       product.calculatedFacilityIsa = isa.calculate(population);
     }
@@ -52,7 +53,7 @@ function FacilityIsaModalController($scope, $rootScope, FacilityProgramProducts,
   {
     $(products).each(function (index, product)
     {
-      calculateIsa(product)
+      calculateIsa(product);
     });
   }
 
