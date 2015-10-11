@@ -159,6 +159,10 @@ public interface OrderMapper {
 
   public class ViewOrderSearch {
 
+    private ViewOrderSearch(){
+
+    }
+
     @SuppressWarnings("UnusedDeclaration")
     public static String getOrderByCriteria(Map<String, Object> params){
       StringBuilder sql = new StringBuilder();
