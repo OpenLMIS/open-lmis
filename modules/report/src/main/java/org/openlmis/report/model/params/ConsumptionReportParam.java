@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 
 import java.util.Date;

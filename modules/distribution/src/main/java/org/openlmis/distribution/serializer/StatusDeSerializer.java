@@ -11,12 +11,10 @@
 package org.openlmis.distribution.serializer;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-
 import org.openlmis.distribution.domain.DistributionStatus;
 
 import java.io.IOException;

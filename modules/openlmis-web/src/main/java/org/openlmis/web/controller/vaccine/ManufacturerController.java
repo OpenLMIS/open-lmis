@@ -24,12 +24,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/vaccine/")
 public class ManufacturerController extends BaseController {
 
+    public static final String MANUFACTURERS = "manufacturers";
     @Autowired
     private ManufacturerService service;
 
-    @RequestMapping(value = "manufacturers")
+    @RequestMapping(value = MANUFACTURERS)
     public ResponseEntity<OpenLmisResponse> getAll() {
-        return OpenLmisResponse.response("manufacturers", service.getAll());
+        return OpenLmisResponse.response(MANUFACTURERS, service.getAll());
     }
 
 }

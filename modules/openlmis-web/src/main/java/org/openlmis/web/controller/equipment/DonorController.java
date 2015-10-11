@@ -34,13 +34,16 @@ import static org.openlmis.core.web.OpenLmisResponse.*;
 @RequestMapping(value="/donor/")
 public class DonorController extends BaseController {
 
+  public static final String DONOR = "donor";
+  public static final String DONORS = "donors";
+  
   @Autowired
   private DonorService donorService;
 
   @RequestMapping(value="list",method= GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DONOR, MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> getAll(){
-    return OpenLmisResponse.response("donors",donorService.getAllWithDetails());
+    return OpenLmisResponse.response(DONORS,donorService.getAllWithDetails());
   }
 
   @RequestMapping(value="insert.json",method=POST, headers = ACCEPT_JSON)
@@ -54,14 +57,14 @@ public class DonorController extends BaseController {
       return error(e, HttpStatus.BAD_REQUEST);
     }
     successResponse = success(String.format("Donor '%s' has been successfully saved", donor.getShortName()));
-    successResponse.getBody().addData("donor", donor);
+    successResponse.getBody().addData(DONOR, donor);
     return successResponse;
   }
 
   @RequestMapping(value="getDetails/{id}",method = GET,headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DONOR')")
   public ResponseEntity<OpenLmisResponse> getDetailsForDonor(@PathVariable(value="id") Long id){
-    return OpenLmisResponse.response("donor",donorService.getById(id));
+    return OpenLmisResponse.response(DONOR,donorService.getById(id));
   }
 
   @RequestMapping(value="remove/{id}",method = GET,headers = ACCEPT_JSON)

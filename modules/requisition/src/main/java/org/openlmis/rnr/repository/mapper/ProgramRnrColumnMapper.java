@@ -12,7 +12,6 @@ package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Program;
-import org.openlmis.rnr.domain.FormulaOption;
 import org.openlmis.rnr.domain.RnrColumn;
 import org.openlmis.rnr.domain.RnrColumnOption;
 import org.springframework.stereotype.Repository;

@@ -12,8 +12,6 @@
 
 package org.openlmis.report.builder;
 
-import org.apache.ibatis.type.JdbcType;
-
 import java.util.Map;
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
