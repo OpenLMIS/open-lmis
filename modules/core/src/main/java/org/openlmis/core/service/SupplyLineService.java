@@ -45,7 +45,7 @@ public class SupplyLineService {
   }
 
   public void save(SupplyLine supplyLine) {
-    //validateIfSupervisoryNodeIsTopmostNode(supplyLine);
+    validateIfSupervisoryNodeIsTopmostNode(supplyLine);
 
     if (supplyLine.getId() == null) {
       repository.insert(supplyLine);
