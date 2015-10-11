@@ -17,7 +17,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
-import org.openlmis.report.mapper.lookup.RequisitionGroupReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.dto.NameCount;
 import org.openlmis.report.model.report.MasterReport;
@@ -52,7 +51,7 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
     List<MasterReport> reportList = new ArrayList<MasterReport>();
     MasterReport report = new MasterReport();
-    report.details = reportMapper.getReport(filterCriteria, rowBounds, this.getUserId());
+    report.setDetails( reportMapper.getReport(filterCriteria, rowBounds, this.getUserId()));
     List<NameCount> summary = reportMapper.getReportSummary(filterCriteria, this.getUserId());
 
     // TODO: move this to other section of the application
@@ -93,7 +92,7 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
 
 
-    report.summary = summary;
+    report.setSummary( summary );
 
     reportList.add(report);
 
