@@ -33,7 +33,7 @@ function ListSettingController($scope, $location, Settings, SettingUpdator) {
   });
 
   $scope.saveSettings = function(){
-      SettingUpdator.post({}, $scope.settings, function (data){
+      SettingUpdator.post({}, $scope.settings, function (){
           $location.path('');
           $scope.$parent.message = "The configuration changes were successfully updated.";
           $scope.saveDisabled=true;

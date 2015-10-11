@@ -75,7 +75,7 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
     }
   };
 
-  $scope.onDrag = function($data, $event){
+  $scope.onDrag = function($data){
     if($scope.current_feature !== undefined){
       $scope.current_feature.properties.active = false;
     }

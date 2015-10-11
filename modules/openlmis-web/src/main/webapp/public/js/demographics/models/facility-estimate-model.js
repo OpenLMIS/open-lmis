@@ -14,8 +14,6 @@
         'conversionFactor': category.defaultConversionFactor,
         'value': 0
       };
-      console.log(programId);
-      console.log(categoryValue);
       this.facilityEstimates.push(categoryValue);
     }
     return categoryValue;

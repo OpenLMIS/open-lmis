@@ -117,7 +117,7 @@ function ReportMessageController($scope, SendMessagesReportAttachment, GetFacili
       reportParams: filterParamsWithZone
     };
 
-    SendMessagesReportAttachment.post(emailParam, function (data) {
+    SendMessagesReportAttachment.post(emailParam, function () {
       $scope.sent_confirmation = true;
     });
   };
@@ -126,7 +126,7 @@ function ReportMessageController($scope, SendMessagesReportAttachment, GetFacili
 
     var messages = constructMessage();
 
-    SendMessages.post({messages: messages}, function (data) {
+    SendMessages.post({messages: messages}, function () {
       $scope.sent_confirmation = true;
     });
   };

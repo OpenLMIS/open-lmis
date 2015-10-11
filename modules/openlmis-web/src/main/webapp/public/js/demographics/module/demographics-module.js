@@ -18,5 +18,4 @@ angular.module('demographics', ['openlmis','ngTable','ui.sortable' , 'ui.bootstr
         when('/facility', {controller:FacilityDemographicEstimateController, templateUrl:'partials/facility.html', resolve : BaseDemographicEstimateController.resolve }).
         when('/district', {controller:DistrictDemographicEstimateController, templateUrl:'partials/district.html', resolve : BaseDemographicEstimateController.resolve }).
       otherwise({redirectTo:'/list'});
-  }]).run(function ($rootScope, AuthorizationService) {
-  });
+  }]);

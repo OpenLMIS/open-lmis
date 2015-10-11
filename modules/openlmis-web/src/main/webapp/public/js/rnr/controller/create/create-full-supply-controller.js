@@ -74,7 +74,7 @@ function CreateFullSupplyController($scope, messageService) {
   $scope.unskipProducts = function(rnr){
 
     var selected = _.where(rnr.skippedLineItems, {unskip: true});
-    angular.forEach(selected, function(lineItem, index){
+    angular.forEach(selected, function(lineItem){
       lineItem.skipped = false;
       $scope.$parent.page[$scope.$parent.visibleTab].push( new RegularRnrLineItem(lineItem, rnr.numberOfMonths, rnr.programRnrColumnList, rnr.status));
     });

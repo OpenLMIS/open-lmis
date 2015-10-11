@@ -64,11 +64,11 @@ app.directive('setting', function ($compile, $http, $templateCache) {
     return templateLoader;
   };
 
-  var linker = function (scope, element, attrs) {
+  var linker = function (scope, element) {
     var loader = getTemplate(scope.content.valueType);
     var promise = loader.success(function (html) {
       element.html(html);
-    }).then(function (response) {
+    }).then(function () {
       element.replaceWith($compile(element.html())(scope));
     });
   };
