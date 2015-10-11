@@ -47,8 +47,6 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
     });
   };
 
-
-
   $scope.$watch('currentPage', function(){
     if($scope.isDirty()){
       $scope.save();
@@ -69,8 +67,6 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
       $scope.error = data.error;
     });
   };
-
-
 
   $scope.finalize = function(){
     var callBack = function (result) {

@@ -20,8 +20,6 @@ function DemographicEstimateCategoryFormController($scope, estimate_category, Sa
       });
     }
   };
-
-
 }
 
 DemographicEstimateCategoryFormController.resolve = {
