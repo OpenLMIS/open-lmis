@@ -79,7 +79,7 @@ public class MaintenanceLogService {
     EquipmentInventory equipmentInventory = equipmentInventoryRepository.getInventoryById(maintenanceRequest.getInventoryId());
     List<ServiceContract> serviceContracts = serviceContractRepository.getAllForEquipment(equipmentInventory.getEquipmentId());
     Long serviceContractId = null;
-    if (serviceContracts != null && serviceContracts.size() > 0) {
+    if (serviceContracts != null && !serviceContracts.isEmpty()) {
       serviceContractId = serviceContracts.get(0).getId();
     }
     MaintenanceLog log = new MaintenanceLog();

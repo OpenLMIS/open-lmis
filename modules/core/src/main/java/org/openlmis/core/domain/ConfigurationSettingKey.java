@@ -13,7 +13,12 @@
 package org.openlmis.core.domain;
 
 public class ConfigurationSettingKey {
+
   public static final String CSV_APPLY_QUOTES = "CSV_APPLY_QUOTES";
   public static final String CSV_LINE_SEPARATOR = "CSV_LINE_SEPARATOR";
   public static final String VENDOR_MAINTENANCE_REQUEST_EMAIL_TEMPLATE = "VENDOR_MAINTENANCE_REQUEST_EMAIL_TEMPLATE";
+
+  private ConfigurationSettingKey(){
+
+  }
 }
