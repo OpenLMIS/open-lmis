@@ -43,6 +43,8 @@ public class FacilityService {
   public static final String FACILITY_CATEGORY = "facilities";
   public static final String FACILITY_TITLE = "Facility";
   public static final String ERROR_FACILITY_CODE_INVALID = "error.facility.code.invalid";
+  public static final String SMS = "SMS";
+  public static final String EMAIL = "EMAIL";
 
   @Autowired
   private FacilityRepository facilityRepository;
@@ -65,7 +67,7 @@ public class FacilityService {
   @Autowired
   private EventService eventService;
 
-  private static final Logger logger = Logger.getLogger(FacilityService.class);
+  private static final Logger LOGGER = Logger.getLogger(FacilityService.class);
 
   @Transactional
   public void update(Facility facility) {
@@ -131,8 +133,8 @@ public class FacilityService {
 
   private boolean canUpdateVirtualFacilities(Facility newFacility, Facility oldFacility) {
     return (oldFacility == null ||
-      !(newFacility.getGeographicZone().getCode().equals(oldFacility.getGeographicZone().getCode())) ||
-      !(newFacility.getFacilityType().getCode().equals(oldFacility.getFacilityType().getCode()))
+        !(newFacility.getGeographicZone().getCode().equals(oldFacility.getGeographicZone().getCode())) ||
+        !(newFacility.getFacilityType().getCode().equals(oldFacility.getFacilityType().getCode()))
     );
   }
 
@@ -145,7 +147,7 @@ public class FacilityService {
         String content = facilityFeedDTO.getSerializedContents();
         eventService.notify(new Event(UUID.randomUUID().toString(), FACILITY_TITLE, DateTime.now(), "", content, FACILITY_CATEGORY));
       } catch (URISyntaxException e) {
-        logger.error("Unable to generate facility event", e);
+        LOGGER.error("Unable to generate facility event", e);
       }
     }
   }
@@ -188,7 +190,7 @@ public class FacilityService {
   }
 
   public List<Facility> searchBy(String searchParam, String columnName, Pagination pagination) {
-    return facilityRepository.searchBy(searchParam,columnName,pagination);
+    return facilityRepository.searchBy(searchParam, columnName, pagination);
   }
 
   public List<Facility> getEnabledWarehouses() {
@@ -238,38 +240,39 @@ public class FacilityService {
     return facility;
   }
 
-  public List<Facility> getCompleteListInRequisitionGroups(List<RequisitionGroup> requisitionGroups){
-      return facilityRepository.getAllInRequisitionGroups(requisitionGroups);
+  public List<Facility> getCompleteListInRequisitionGroups(List<RequisitionGroup> requisitionGroups) {
+    return facilityRepository.getAllInRequisitionGroups(requisitionGroups);
   }
-  
-  public List<FacilityContact> getContactList(Long facilityId, String type){
-    if(type.equalsIgnoreCase("SMS")){
+
+  public List<FacilityContact> getContactList(Long facilityId, String notificationMedium) {
+    if (SMS.equalsIgnoreCase(notificationMedium)) {
       return facilityRepository.getSmsContacts(facilityId);
     }
-    if(type.equalsIgnoreCase("EMAIL")){
+    if (EMAIL.equalsIgnoreCase(notificationMedium)) {
       return facilityRepository.getEmailContacts(facilityId);
     }
     return null;
   }
 
-  public List<FacilitySupervisor> getFacilitySupervisors(Long facilityId){
-      return facilityRepository.getFacilitySupervisors(facilityId);
+  public List<FacilitySupervisor> getFacilitySupervisors(Long facilityId) {
+    return facilityRepository.getFacilitySupervisors(facilityId);
   }
 
-  public List<FacilityImages> getFacilityImages(Long facilityId){
+  public List<FacilityImages> getFacilityImages(Long facilityId) {
     return facilityRepository.getFacilityImages(facilityId);
   }
+
   public List<Facility> getUserSupervisedFacilities(Long userId) {
     List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId);
     List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
     return facilityRepository.getAllInRequisitionGroups(requisitionGroups);
- }
+  }
 
- public List<Facility> getAllForGeographicZone(Long geographizZoneId){
-     return facilityRepository.getAllForGeographicZone(geographizZoneId);
- }
+  public List<Facility> getAllForGeographicZone(Long geographizZoneId) {
+    return facilityRepository.getAllForGeographicZone(geographizZoneId);
+  }
 
-  public Integer getFacilitiesCountBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled){
+  public Integer getFacilitiesCountBy(String searchParam, Long facilityTypeId, Long geoZoneId, Boolean virtualFacility, Boolean enabled) {
     return facilityRepository.getFacilitiesCountBy(searchParam, facilityTypeId, geoZoneId, virtualFacility, enabled);
   }
 
@@ -278,27 +281,27 @@ public class FacilityService {
   }
 
   public Integer getTotalSearchResultCountByColumnName(String searchParam, String columnName) {
-    if(columnName.equalsIgnoreCase("Facility"))
-    {
+    if (columnName.equalsIgnoreCase("Facility")) {
       return facilityRepository.getTotalSearchResultCount(searchParam);
     }
     return facilityRepository.getTotalSearchResultCountByGeographicZone(searchParam);
   }
 
-  public List<Facility> getFacilityByTypeAndRequisitionGroupId(Long facilityTypeId, Long rgroupId){
+  public List<Facility> getFacilityByTypeAndRequisitionGroupId(Long facilityTypeId, Long rgroupId) {
     return facilityRepository.getFacilityByTypeAndRequisitionGroupId(facilityTypeId, rgroupId);
   }
 
-    public List<FacilityGeoTreeDto> getGeoRegionFacilityTree(Long userId) {
-        return facilityRepository.getGeoRegionFacilityTree(userId);
-    }
+  public List<FacilityGeoTreeDto> getGeoRegionFacilityTree(Long userId) {
+    return facilityRepository.getGeoRegionFacilityTree(userId);
+  }
 
-    public List<FacilityGeoTreeDto> getGeoDistrictFacility(Long userId) {
-        return facilityRepository.getGeoDistrictFacility(userId);
-    }
-    public List<FacilityGeoTreeDto> getGeoFlatFacilityTree(Long userId) {
-        return facilityRepository.getGeoFlatFacilityTree(userId);
-    }
+  public List<FacilityGeoTreeDto> getGeoDistrictFacility(Long userId) {
+    return facilityRepository.getGeoDistrictFacility(userId);
+  }
+
+  public List<FacilityGeoTreeDto> getGeoFlatFacilityTree(Long userId) {
+    return facilityRepository.getGeoFlatFacilityTree(userId);
+  }
 
   public Facility getFacilityById(Long id) {
     Facility facility = facilityRepository.getById(id);
