@@ -12,7 +12,6 @@
 
 package org.openlmis.demographics.helpers;
 
-import lombok.NoArgsConstructor;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,8 +20,11 @@ import java.util.List;
  * This has to be either moved to a globally shared package or use a similar functionality from other libraries
  */
 @Deprecated
-@NoArgsConstructor
 public class ListUtil {
+
+  private ListUtil() {
+
+  }
 
   public static <T> List<T> emptyIfNull(List<T> list) {
     if (list == null) {

@@ -21,15 +21,19 @@ import java.util.Map;
 
 public class StringHelper {
 
-  public static boolean isBlank(Map<String, String[]> map, String key)  {
-    if(map.containsKey(key)){
+  private StringHelper() {
+
+  }
+
+  public static boolean isBlank(Map<String, String[]> map, String key) {
+    if (map.containsKey(key)) {
       return StringUtils.isBlank(map.get(key)[0]);
     }
     return true;
   }
 
-  public static String getValue(Map<String, String[]> map, String key){
-    if(!isBlank(map, key)){
+  public static String getValue(Map<String, String[]> map, String key) {
+    if (!isBlank(map, key)) {
       return map.get(key)[0];
     }
     return null;
@@ -43,7 +47,7 @@ public class StringHelper {
       str.append(",");
     }
     if (str.length() > 1) {
-      str.deleteCharAt(str.length()-1);
+      str.deleteCharAt(str.length() - 1);
     }
     str.append("}");
 

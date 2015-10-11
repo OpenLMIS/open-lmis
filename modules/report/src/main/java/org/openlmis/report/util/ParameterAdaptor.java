@@ -19,6 +19,10 @@ import java.util.Map;
 
 public class ParameterAdaptor {
 
+  private ParameterAdaptor(){
+
+  }
+
   public static <T> T parse( Map<String, String[]> params ,Class<T> type) {
 
     try {

@@ -18,6 +18,10 @@ import java.util.Map;
 
 public class SummaryQueryBuilder {
 
+  private SummaryQueryBuilder(){
+
+  }
+
   private static String getAggregateSelect(){
     return "select " +
       " li.productCode as code" +

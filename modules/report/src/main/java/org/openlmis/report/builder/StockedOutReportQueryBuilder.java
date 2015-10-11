@@ -24,6 +24,10 @@ import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.mul
 
 public class StockedOutReportQueryBuilder {
 
+  private StockedOutReportQueryBuilder(){
+
+  }
+
   public static String getQuery(Map params) {
     StockedOutReportParam filter = (StockedOutReportParam) params.get("filterCriteria");
     BEGIN();

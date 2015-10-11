@@ -19,7 +19,9 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 public class NonReportingFacilityQueryBuilder {
 
+  private NonReportingFacilityQueryBuilder(){
 
+  }
 
     public static String getQuery(Map params){
 
