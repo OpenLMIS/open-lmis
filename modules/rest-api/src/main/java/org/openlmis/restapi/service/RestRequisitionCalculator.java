@@ -74,14 +74,11 @@ public class RestRequisitionCalculator {
     List<ProcessingPeriod> periods = new ArrayList<ProcessingPeriod>();
     periods.add(period);
 
-    //ProcessingPeriod defaultPeriod = requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram);
     searchCriteria.setWithoutLineItems(true);
     searchCriteria.setUserId( userId );
     List<Rnr> list = requisitionService.getRequisitionsFor(searchCriteria, periods);
-    if(list != null && list.size() > 0){
-      if(list.get(0).getStatus() != RnrStatus.INITIATED && list.get(0).getStatus() != RnrStatus.SUBMITTED){
+    if(list != null && !list.isEmpty() && !list.get(0).preAuthorize()){
         throw new DataException("error.rnr.already.submitted.for.this.period");
-      }
     }
   }
 

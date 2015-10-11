@@ -67,7 +67,6 @@
                       <table   ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
                           <tbody>
                           <tr ng-repeat="row in datarows | orderBy:['facility','productMain','productIndex']">
-                              <!--<td style="width:10px" >{{row.no}}</td>-->
                               <td data-title="getLocalMessage('label.facility')" style="width:150px" >{{row.facility}}</td>
                               <td data-title="getLocalMessage('label.product.code')" style="width:50px" sortable="productCode" >{{ row.productCode }}</td>
                               <td data-title="getLocalMessage('label.product.name')" style="width:200px" sortable="product"  >{{ row.product }}</td>
