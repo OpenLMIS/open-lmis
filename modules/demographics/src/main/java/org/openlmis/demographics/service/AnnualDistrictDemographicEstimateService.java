@@ -45,19 +45,18 @@ public class AnnualDistrictDemographicEstimateService {
   private CommaSeparator commaSeparator;
 
 
-  public void save(EstimateForm estimateForm, Long userId){
-    for(EstimateFormLineItem dto: ListUtil.emptyIfNull(estimateForm.getEstimateLineItems())){
-      for(AnnualDistrictEstimateEntry estimate : ListUtil.emptyIfNull(dto.getDistrictEstimates())){
+  public void save(EstimateForm estimateForm, Long userId) {
+    for (EstimateFormLineItem dto : ListUtil.emptyIfNull(estimateForm.getEstimateLineItems())) {
+      for (AnnualDistrictEstimateEntry estimate : ListUtil.emptyIfNull(dto.getDistrictEstimates())) {
         AnnualDistrictEstimateEntry existingEstimateEntry = repository.getEntryBy(estimate.getYear(), estimate.getDistrictId(), estimate.getProgramId(), estimate.getDemographicEstimateId());
-        if( existingEstimateEntry != null  &&  ( !existingEstimateEntry.getId().equals(estimate.getId()) || existingEstimateEntry.getIsFinal() ) )
-        {
+        if (existingEstimateEntry != null && (!existingEstimateEntry.getId().equals(estimate.getId()) || existingEstimateEntry.getIsFinal())) {
           continue;
         }
         estimate.setDistrictId(dto.getId());
-        if(estimate.getId() == null){
+        if (estimate.getId() == null) {
           estimate.setCreatedBy(userId);
           repository.insert(estimate);
-        }else{
+        } else {
           estimate.setModifiedBy(userId);
           repository.update(estimate);
         }
@@ -67,10 +66,10 @@ public class AnnualDistrictDemographicEstimateService {
 
   public void finalizeEstimate(EstimateForm form, Long userId) {
     this.save(form, userId);
-    for(EstimateFormLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
+    for (EstimateFormLineItem dto : ListUtil.emptyIfNull(form.getEstimateLineItems())) {
       for (AnnualDistrictEstimateEntry est : ListUtil.emptyIfNull(dto.getDistrictEstimates())) {
         est.setDistrictId(dto.getId());
-        if(est.getId() != null){
+        if (est.getId() != null) {
           est.setModifiedBy(userId);
           est.setModifiedDate(new Date());
           est.setIsFinal(true);
@@ -81,10 +80,10 @@ public class AnnualDistrictDemographicEstimateService {
   }
 
   public void undoFinalize(EstimateForm form, Long userId) {
-    for(EstimateFormLineItem dto: ListUtil.emptyIfNull(form.getEstimateLineItems())) {
+    for (EstimateFormLineItem dto : ListUtil.emptyIfNull(form.getEstimateLineItems())) {
       for (AnnualDistrictEstimateEntry est : ListUtil.emptyIfNull(dto.getDistrictEstimates())) {
         est.setDistrictId(dto.getId());
-        if(est.getId() != null){
+        if (est.getId() != null) {
           est.setModifiedBy(userId);
           est.setModifiedDate(new Date());
           est.setIsFinal(false);
@@ -96,7 +95,7 @@ public class AnnualDistrictDemographicEstimateService {
 
   private List<AnnualDistrictEstimateEntry> getEmptyEstimateObjects(List<EstimateCategory> categories, Long districtId, Long programId, Integer year) {
     List<AnnualDistrictEstimateEntry> result = new ArrayList<>();
-    for(EstimateCategory category: categories){
+    for (EstimateCategory category : categories) {
       AnnualDistrictEstimateEntry estimate = new AnnualDistrictEstimateEntry();
       estimate.setYear(year);
       estimate.setDistrictId(districtId);
@@ -115,15 +114,15 @@ public class AnnualDistrictDemographicEstimateService {
     List<EstimateCategory> categories = estimateCategoryService.getAll();
     form.setEstimateLineItems(new ArrayList<EstimateFormLineItem>());
 
-    List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES );
+    List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES);
     String facilityIds = commaSeparator.commaSeparateIds(facilities);
 
-    List<EstimateFormLineItem> districts =  repository.getDistrictLineItems(facilityIds);
+    List<EstimateFormLineItem> districts = repository.getDistrictLineItems(facilityIds);
 
-    for(EstimateFormLineItem dto : districts){
+    for (EstimateFormLineItem dto : districts) {
       dto.setDistrictEstimates(repository.getDistrictEstimates(year, dto.getId(), programId));
       dto.setFacilityEstimates(repository.getFacilityEstimateAggregate(year, dto.getId(), programId));
-      if( dto.getDistrictEstimates().size() == 0 ){
+      if (dto.getDistrictEstimates().size() == 0) {
         dto.setDistrictEstimates(getEmptyEstimateObjects(categories, dto.getId(), programId, year));
       }
       form.getEstimateLineItems().add(dto);

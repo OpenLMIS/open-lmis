@@ -29,23 +29,27 @@ import static java.util.Arrays.asList;
 @RequestMapping(value = "/demographic/estimate/")
 public class EstimateCategoryController extends BaseController {
 
-    @Autowired
-    EstimateCategoryService service;
+  public static final String ESTIMATE_CATEGORIES = "estimate_categories";
 
-    @RequestMapping(value = "categories", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getAll() {
-        return OpenLmisResponse.response("estimate_categories", service.getAll());
-    }
+  public static final String ESTIMATE_CATEGORY = "estimate_category";
 
-    @RequestMapping(value = "category/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
-        return OpenLmisResponse.response("estimate_category", service.getById(id));
-    }
+  @Autowired
+  EstimateCategoryService service;
 
-    @RequestMapping(value = "category/save", method = RequestMethod.PUT, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> save(@RequestBody EstimateCategory category) {
-        service.save(asList(category));
-        return OpenLmisResponse.response("estimate_category", category);
-    }
+  @RequestMapping(value = "categories", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getAll() {
+    return OpenLmisResponse.response(ESTIMATE_CATEGORIES, service.getAll());
+  }
+
+  @RequestMapping(value = "category/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
+    return OpenLmisResponse.response(ESTIMATE_CATEGORY, service.getById(id));
+  }
+
+  @RequestMapping(value = "category/save", method = RequestMethod.PUT, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> save(@RequestBody EstimateCategory category) {
+    service.save(asList(category));
+    return OpenLmisResponse.response(ESTIMATE_CATEGORY, category);
+  }
 
 }
