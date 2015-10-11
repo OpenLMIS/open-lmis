@@ -13,10 +13,10 @@
 function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneList, GeographicLevels, SaveGeographicInfo) {
   $scope.features = [];
 
-  $scope.importFile = function (event) {
+  $scope.importFile = function () {
 
     var reader = new FileReader();
-    var fi = document.getElementById('jsonfile');
+    var fileInput = document.getElementById('jsonfile');
     reader.onload = function (fi) {
         $scope.json = JSON.parse(fi.target.result);
         $scope.json.features.forEach(function (feature) {
@@ -26,7 +26,7 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
       $scope.drawMap($scope.json);
       zoomAndCenterMap(leafletData, $scope);
     };
-    reader.readAsText(fi.files[0]);
+    reader.readAsText(fileInput.files[0]);
   };
 
   $scope.style = function(feature){
@@ -86,8 +86,6 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
       "type": "FeatureCollection",
       "features": $scope.features
     } );
-
-    console.info('I am here');
   };
 
   $scope.onDrop = function ($data, $event, zone) {
@@ -126,7 +124,7 @@ function GeographicZonesJsonController($scope, leafletData, FlatGeographicZoneLi
 
     // convert the format of the submission to the DTO format
     var features = [];
-    angular.forEach($scope.geographicZones, function(obj, index){
+    angular.forEach($scope.geographicZones, function(obj){
         if(obj.mapped){
           features.push({zoneId: obj.id, geoJsonId : obj.newId, geometry: JSON.stringify(obj.geometry) });
         }
