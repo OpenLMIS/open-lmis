@@ -12,156 +12,112 @@
 
 package org.openlmis.report.builder;
 
+import org.openlmis.report.model.params.NonReportingFacilityParam;
+
 import java.util.Map;
+
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
+import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class NonReportingFacilityQueryBuilder {
 
-  private NonReportingFacilityQueryBuilder(){
+  public static String getQuery(Map params) {
+    NonReportingFacilityParam nonReportingFacilityParam = (NonReportingFacilityParam) params.get("filterCriteria");
+    return getQueryString(nonReportingFacilityParam);
+  }
+
+  private static String getQueryString(NonReportingFacilityParam filterParam) {
+    BEGIN();
+    SELECT_DISTINCT("facilities.code, facilities.name");
+    SELECT_DISTINCT("gz.district_name as location");
+    SELECT_DISTINCT("ft.name as facilityType");
+
+    FROM("facilities");
+    INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
+    INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographiczoneid");
+    INNER_JOIN("facility_types ft on ft.id = facilities.typeid");
+    INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
+    INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
+    WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = cast( #{userId} as int4) and program_id = cast( #{filterCriteria.program} as int4))");
+    WHERE("facilities.id not in (select r.facilityid from requisitions r where r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')  and r.periodid = cast (#{filterCriteria.period} as int4) and r.programid = cast( #{filterCriteria.program} as int4) )");
+    writePredicates(filterParam);
+    ORDER_BY("name");
+    return SQL();
+  }
+
+  private static void writePredicates(NonReportingFacilityParam filterParams) {
+
+    WHERE(programIsFilteredBy("ps.programId"));
+    if (filterParams.getZone() != 0) {
+      WHERE(geoZoneIsFilteredBy("gz"));
+    }
+
+    if (filterParams.getFacilityType() != 0) {
+      WHERE(facilityTypeIsFilteredBy("facilities.typeId"));
+    }
 
   }
 
-    public static String getQuery(Map params){
 
-      Long userId = (Long) params.get("userId");
-      params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
+  public static String getTotalFacilities(Map params) {
+    NonReportingFacilityParam filterParams = (NonReportingFacilityParam) params.get("filterCriteria");
 
+    BEGIN();
+    SELECT("COUNT (*)");
+    FROM("facilities");
+    INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
+    INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
+    INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
+    INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
+    WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program})");
+    writePredicates(filterParams);
+    return SQL();
+  }
 
-      String period           = ((String[])params.get("period"))[0];
-      String zone   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
-      String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
-      String program          = ((String[])params.get("program"))[0];
-      String schedule         = ((String[])params.get("schedule"))[0];
-      return getQueryString(params, program , period , zone, facilityType, schedule, userId);
+  public static String getTotalNonReportingFacilities(Map params) {
 
-    }
+    NonReportingFacilityParam filterParams = (NonReportingFacilityParam) params.get("filterCriteria");
+    BEGIN();
+    SELECT("COUNT (*)");
+    FROM("facilities");
+    INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
+    INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
+    INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
+    INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and ps.programid = rgps.programid");
+    WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program})");
+    WHERE("facilities.id not in (select r.facilityid from requisitions r where  r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and r.periodid = cast( #{filterCriteria.period} as int4) and r.programid = cast(#{filterCriteria.program} as int4) )");
+    writePredicates(filterParams);
+    return SQL();
+  }
 
-     private static String getQueryString(Map params, String program , String period, String zone, String facilityType, String schedule, Long userId) {
-         BEGIN();
-         SELECT_DISTINCT("facilities.code, facilities.name");
-         SELECT_DISTINCT("gz.district_name as location");
-         SELECT_DISTINCT("ft.name as facilityType");
+  public static String getSummaryQuery(Map params) {
+    NonReportingFacilityParam filterParams = (NonReportingFacilityParam) params.get("filterCriteria");
 
-         FROM("facilities");
-         INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
-         INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographiczoneid");
-         INNER_JOIN("facility_types ft on ft.id = facilities.typeid");
-         INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
-         INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
-         WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = cast(" + userId+ " as int4) and program_id = cast(" + program + " as int4))");
-         WHERE("facilities.id not in (select r.facilityid from requisitions r where r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')  and r.periodid = cast (" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
-         writePredicates(program, period, zone, facilityType, schedule);
-         ORDER_BY(QueryHelpers.getSortOrder(params, "name"));
-         // cache the string query for debugging purposes
-         String strQuery = SQL();
-         return strQuery;
-     }
+    BEGIN();
+    SELECT("'Non Reporting Facilities' AS name");
+    SELECT("COUNT (*)");
+    FROM("facilities");
+    INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
+    INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
+    INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
+    INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
+    WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program})");
+    WHERE("facilities.id not in (select r.facilityid from requisitions r where  r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and r.periodid = cast( #{filterCriteria.period} as int4) and r.programid = cast(#{filterCriteria.program} as int4) )");
+    writePredicates(filterParams);
 
-     private static void writePredicates(String program, String period, String zone, String facilityType, String schedule) {
-
-         if(!zone.equals("0") && !zone.isEmpty() && !zone.endsWith( "undefined")){
-             WHERE(" (gz.district_id = " + zone + " or gz.zone_id = " + zone + " or gz.region_id = " + zone +" or gz.parent = " + zone + " )");
-         }
-
-         if(!facilityType.isEmpty() && !facilityType.endsWith( "undefined")){
-             WHERE("facilities.typeId = cast(" + facilityType+ " as int4)");
-         }
-
-         if(!program .isEmpty() && !program.endsWith("undefined")){
-            WHERE("ps.programId = cast(" + program+ " as int4)");
-         }
-
-         if(! schedule.isEmpty()  && !schedule.endsWith("undefined")){
-             WHERE("rgps.scheduleId = cast(" + schedule + " as int4)");
-         }
-     }
-
-
-
-
-    public static String getTotalFacilities(Map params){
-      Long userId = (Long) params.get("userId");
-      params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
-
-      String period           = ((String[])params.get("period"))[0];
-      String zone   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
-      String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
-      String program          = ((String[])params.get("program"))[0];
-      String schedule         = ((String[])params.get("schedule"))[0];
-String filerterValue =("user Id "+ userId+ " period "+ period + " facilityType "+facilityType+" program "+ program +" schedule "+ schedule);
-
-        BEGIN();
-        SELECT("COUNT (*)");
-        FROM("facilities");
-        INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
-        INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
-        INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
-        INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
-        WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = " + userId+ " and program_id = " + program + ")");
-        writePredicates(program, period, zone, facilityType, schedule);
-        return SQL();
-    }
-
-     public static String getTotalNonReportingFacilities(Map params){
-       Long userId = (Long) params.get("userId");
-       params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
-
-       String period           = ((String[])params.get("period"))[0];
-       String reportingGroup   = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
-       String facilityType     = params.containsKey("facilityType")? ((String[])params.get("facilityType"))[0] : "" ;
-       String program          = ((String[])params.get("program"))[0];
-       String schedule         = ((String[])params.get("schedule"))[0];
-
-         BEGIN();
-         SELECT("COUNT (*)");
-         FROM("facilities");
-         INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
-         INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
-         INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
-         INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and ps.programid = rgps.programid");
-         WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = " + userId+ " and program_id = " + program + ")");
-         WHERE("facilities.id not in (select r.facilityid from requisitions r where  r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
-         writePredicates(program, period, reportingGroup, facilityType, schedule);
-         return SQL();
-     }
-
-    public static String getSummaryQuery(Map params){
-      Long userId = (Long) params.get("userId");
-      params = (Map)( params.containsKey("filterCriteria")? params.get("filterCriteria") : params );
-
-
-      String period           = ((String[])params.get("period"))[0];
-      String zone             = params.containsKey("zone")? ((String[])params.get("zone"))[0]: "" ;
-      String facilityType     = params.containsKey("facilityType")? ((String[])params.get("ftype"))[0] : "" ;
-      String program          = ((String[])params.get("program"))[0];
-      String schedule         = ((String[])params.get("schedule"))[0];
-
-        BEGIN();
-        SELECT("'Non Reporting Facilities' AS name");
-        SELECT("COUNT (*)");
-        FROM("facilities");
-        INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
-        INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
-        INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id") ;
-        INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
-      WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = " + userId+ " and program_id = " + program + ")");
-        WHERE("facilities.id not in (select r.facilityid from requisitions r where  r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and r.periodid = cast(" + period + " as int4) and r.programid = cast(" + program + " as int4) )");
-        writePredicates(program, period, zone, facilityType,schedule);
-
-        String query = SQL();
-        RESET();
-        BEGIN();
-        SELECT("'Facilities required to report for this program' AS name");
-        SELECT("COUNT (*)");
-        FROM("facilities");
-        INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
-        INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id") ;
-        INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
-        INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
-      WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = " + userId+ " and program_id = " + program + ")");
-        writePredicates(program, period, zone, facilityType, schedule);
-        query += " UNION " + SQL();
-        return query;
-
-    }
+    String query = SQL();
+    RESET();
+    BEGIN();
+    SELECT("'Facilities required to report for this program' AS name");
+    SELECT("COUNT (*)");
+    FROM("facilities");
+    INNER_JOIN("vw_districts gz on gz.district_id = facilities.geographicZoneId");
+    INNER_JOIN("programs_supported ps on ps.facilityid = facilities.id");
+    INNER_JOIN("requisition_group_members rgm on rgm.facilityid = facilities.id");
+    INNER_JOIN("requisition_group_program_schedules rgps on rgps.requisitiongroupid = rgm.requisitiongroupid and ps.programid = rgps.programid");
+    WHERE("facilities.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program})");
+    writePredicates(filterParams);
+    query += " UNION " + SQL();
+    return query;
+  }
 }

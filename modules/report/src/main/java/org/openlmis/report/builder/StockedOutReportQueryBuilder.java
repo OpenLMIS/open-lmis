@@ -24,10 +24,6 @@ import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.mul
 
 public class StockedOutReportQueryBuilder {
 
-  private StockedOutReportQueryBuilder(){
-
-  }
-
   public static String getQuery(Map params) {
     StockedOutReportParam filter = (StockedOutReportParam) params.get("filterCriteria");
     BEGIN();
@@ -57,10 +53,7 @@ public class StockedOutReportQueryBuilder {
     }
     ORDER_BY("supplyingFacility asc, facility asc, product asc");
     // copy the sql over to a variable, this makes the debugging much more possible.
-    String sql = SQL();
-    return sql;
-
-
+    return SQL();
   }
 
 

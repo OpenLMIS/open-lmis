@@ -21,9 +21,7 @@ import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class AggregateConsumptionQueryBuilder {
 
-  private AggregateConsumptionQueryBuilder(){
 
-  }
 
 
   public static String getQuery(Map params) {

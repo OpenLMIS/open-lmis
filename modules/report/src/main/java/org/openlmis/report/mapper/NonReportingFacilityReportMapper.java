@@ -22,6 +22,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.report.builder.NonReportingFacilityQueryBuilder;
 import org.openlmis.report.model.dto.NameCount;
 import org.openlmis.report.model.dto.RequisitionGroup;
+import org.openlmis.report.model.params.NonReportingFacilityParam;
 import org.openlmis.report.model.report.NonReportingFacilityDetail;
 import org.springframework.stereotype.Repository;
 
@@ -34,41 +35,23 @@ public interface NonReportingFacilityReportMapper {
 
     @SelectProvider(type=NonReportingFacilityQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<NonReportingFacilityDetail> getReport(@Param("filterCriteria") Map params,
+    public List<NonReportingFacilityDetail> getReport(@Param("filterCriteria") NonReportingFacilityParam params,
                                                       @Param("RowBounds") RowBounds rowBounds,
                                                       @Param("userId") Long userId
     );
 
     @SelectProvider(type=NonReportingFacilityQueryBuilder.class, method="getSummaryQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<NameCount> getReportSummary(@Param("filterCriteria") Map params, @Param("userId") Long userId);
+    public List<NameCount> getReportSummary(@Param("filterCriteria") NonReportingFacilityParam params, @Param("userId") Long userId);
 
     // Gets the count of the total facility count under the selection criteria
     @SelectProvider(type=NonReportingFacilityQueryBuilder.class, method="getTotalFacilities")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<Integer> getTotalFacilities(@Param("filterCriteria") Map params, @Param("userId") Long userId);
+    public List<Integer> getTotalFacilities(@Param("filterCriteria") NonReportingFacilityParam params, @Param("userId") Long userId);
 
     // Gets the count of the total facility count that did not report under the selection criteria
     @SelectProvider(type=NonReportingFacilityQueryBuilder.class, method="getTotalNonReportingFacilities")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<Integer> getNonReportingTotalFacilities(@Param("filterCriteria") Map params, @Param("userId") Long userId);
-
-    //TODO: refactor this out to an appropriate class
-    @Select("SELECT id, name " +
-            "   FROM " +
-            "       facility_types where id = #{id}")
-    List<RequisitionGroup> getFacilityType(@Param("id")int id);
-
-    //TODO: refactor this out to an appropriate class
-    @Select("SELECT * " +
-            "   FROM " +
-            "       processing_periods where id = #{id}")
-    ProcessingPeriod getPeriodId(@Param("id")int id);
-
-    //TODO: refactor this out to an appropriate class
-    @Select("SELECT id, name " +
-            "   FROM " +
-            "       programs where id = #{id}")
-    List<RequisitionGroup> getProgram(@Param("id")int id);
+    public List<Integer> getNonReportingTotalFacilities(@Param("filterCriteria") NonReportingFacilityParam params, @Param("userId") Long userId);
 
 }

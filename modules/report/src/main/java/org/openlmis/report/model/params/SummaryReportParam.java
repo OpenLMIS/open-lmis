@@ -16,29 +16,35 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.report.annotations.RequiredParam;
 import org.openlmis.report.model.ReportParameter;
-
-import java.util.Date;
-
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-public class ConsumptionReportParam
-  extends BaseParam implements ReportParameter {
+public class SummaryReportParam
+    extends BaseParam implements ReportParameter {
 
-  private int yearFrom;
-  private int yearTo;
-  private int monthFrom;
-  private int monthTo;
+  @RequiredParam
+  private Long program;
 
-  private int facilityTypeId;
-  private int zoneId;
-  private int productId;
-  private int facilityId;
+  @RequiredParam
+  private Long schedule;
 
-  private Date startDate;
-  private Date endDate;
+  @RequiredParam
+  private Long period;
+
+  private Long zone;
+
+  private Long facilityType;
+
+  private Boolean disaggregated;
+
+  private Long productCategory;
+
+  private Long product;
+
+  private Long facility;
 
 }

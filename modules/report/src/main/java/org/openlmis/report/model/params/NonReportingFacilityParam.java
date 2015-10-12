@@ -10,41 +10,33 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.report.mapper;
+package org.openlmis.report.model.params;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.openlmis.report.annotations.RequiredParam;
+import org.openlmis.report.model.ReportParameter;
 
-import java.util.Map;
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+public class NonReportingFacilityParam
+    extends BaseParam implements ReportParameter {
 
-//@Component
-//@Data
-public class ResultSetMapper {
+  @RequiredParam
+  private Long program;
 
-    private QueryExecutor  queryExecutor;
+  @RequiredParam
+  private Long schedule;
 
-    @Autowired
-    public ResultSetMapper(QueryExecutor queryExecutor){
-        this.queryExecutor = queryExecutor;
-    }
+  @RequiredParam
+  private Long period;
 
-    public Map<String,Object> executeQuery(String query){
-        return queryExecutor.execute(query);
-    }
+  private Long zone;
 
-    @Repository
-    private interface QueryExecutor{
-
-        String  q="#{statement}";
-        @Select(q)
-        public Map<String , Object> execute(@Param(value = "statement") String statement);
-    }
-
+  private Long facilityType;
 
 }

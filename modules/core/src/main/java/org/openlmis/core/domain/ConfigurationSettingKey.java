@@ -17,6 +17,10 @@ public class ConfigurationSettingKey {
   public static final String CSV_APPLY_QUOTES = "CSV_APPLY_QUOTES";
   public static final String CSV_LINE_SEPARATOR = "CSV_LINE_SEPARATOR";
   public static final String VENDOR_MAINTENANCE_REQUEST_EMAIL_TEMPLATE = "VENDOR_MAINTENANCE_REQUEST_EMAIL_TEMPLATE";
+  public static final String ORDER_SUMMARY_SHOW_DISCREPANCY_SECTION = "ORDER_SUMMARY_SHOW_DISCREPANCY_SECTION";
+  public static final String ORDER_SUMMARY_SHOW_SIGNATURE_SPACE_FOR_CUSTOMER = "ORDER_SUMMARY_SHOW_SIGNATURE_SPACE_FOR_CUSTOMER";
+  public static final String ORDER_REPORT_TITLE = "ORDER_REPORT_TITLE";
+  public static final String ORDER_REPORT_ADDRESS = "ORDER_REPORT_ADDRESS";
 
   private ConfigurationSettingKey(){
 

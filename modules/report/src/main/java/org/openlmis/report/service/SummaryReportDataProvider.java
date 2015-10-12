@@ -16,6 +16,10 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.SummaryReportMapper;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.params.SummaryReportParam;
+import org.openlmis.report.model.report.SummaryReport;
+import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,32 +32,27 @@ public class SummaryReportDataProvider extends ReportDataProvider {
   @Autowired
   private SummaryReportMapper reportMapper;
 
+  @Autowired
+  private SelectedFilterHelper filterHelper;
+
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
     RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-    return reportMapper.getReport(filterCriteria, rowBounds);
+    return reportMapper.getReport(getParameter(filterCriteria), rowBounds);
+  }
+
+  private SummaryReportParam getParameter(Map params){
+    return ParameterAdaptor.parse(params, SummaryReportParam.class);
   }
 
   @Override
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getReport(filterCriteria, rowBounds);
+    return reportMapper.getReport(getParameter(filterCriteria), rowBounds);
   }
 
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
-    String facilityTypeId = params.get("facilityType")[0];
-    String facilityType = "";
-
-    if (facilityTypeId != null && !facilityTypeId.isEmpty()) {
-      if (facilityTypeId.equals("-1") || facilityTypeId.equals(""))
-        facilityType = "All Facility Types";
-      else
-        facilityType = params.get("facilityType")[0];
-    }
-
-    String finalFacilityType = facilityType;
-    return finalFacilityType + "\n";
-
+    return filterHelper.getProgramPeriodGeoZone(params);
   }
 }

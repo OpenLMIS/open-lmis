@@ -16,6 +16,8 @@ import org.openlmis.report.model.params.MailingLabelReportParam;
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
+import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.facilityTypeIsFilteredBy;
+import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.geoZoneIsFilteredBy;
 
 public class MailingLabelReportQueryBuilder {
 
@@ -36,19 +38,13 @@ public class MailingLabelReportQueryBuilder {
 
         if(filter != null){
            if (filter.getFacilityType() != 0) {
-                WHERE("F.typeid = "+ filter.getFacilityType());
+                WHERE( facilityTypeIsFilteredBy( "F.typeid"));
             }
             if(filter.getZone() != 0){
-                WHERE("(GZ.district_id = "+ filter.getZone() + " or GZ.region_id = " + filter.getZone()+ " or GZ.zone_id = " + filter.getZone() +" or GZ.parent = " + filter.getZone() +")");
+              WHERE(geoZoneIsFilteredBy("GZ"));
             }
             if (filter.getStatus() != null) {
                 WHERE("F.active = " + filter.getStatus().toString());
-            }
-            if(!filter.getOrderBy().trim().isEmpty()){
-                ORDER_BY(filter.getOrderBy()+ " "+filter.getSortOrder());
-            }
-            if (filter.getProgramId() != 0) {
-                WHERE("ps.programid = " + filter.getProgramId());
             }
         }
 

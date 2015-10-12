@@ -25,14 +25,11 @@ import org.openlmis.report.model.ReportParameter;
 public class MailingLabelReportParam
     extends BaseParam implements ReportParameter {
 
-  //top filters
   private Long facilityType;
   private Long zone;
   private Boolean status;
-  private String orderBy;
-  private String sortOrder;
   private String header;
-  private int programId;
+  private Long program;
 
   @Override
   public String toString() {
@@ -40,5 +37,3 @@ public class MailingLabelReportParam
   }
 
 }
-
-
