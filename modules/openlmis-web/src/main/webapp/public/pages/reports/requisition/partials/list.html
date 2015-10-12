@@ -1,0 +1,26 @@
+<div>
+    <h3>Requisition Report</h3>
+    <table class="table table-condensed table-bordered table-striped">
+        <tr class="gradient-header">
+            <th>index</th>
+            <th ng-click="sortType = 'name'; sortReverse = !sortReverse" class ="sortable sort-desc">name
+                <span ng-show="sortType != 'name'" class="icon-sort"></span>
+                <span ng-show="sortType == 'name' && !sortReverse" class="icon-sort-down"></span>
+                <span ng-show="sortType == 'name' && sortReverse" class="icon-sort-up"></span></th>
+            <th ng-click="sortType = 'age'; sortReverse = !sortReverse">age
+                <span ng-show="sortType != 'age'" class="icon-sort"></span>
+                <span ng-show="sortType == 'age' && !sortReverse" class="icon-sort-down"></span>
+                <span ng-show="sortType == 'age' && sortReverse" class="icon-sort-up"></span></th>
+            <th ng-click="sortType = 'money'; sortReverse = !sortReverse">money
+                <span ng-show="sortType != 'money'" class="icon-sort"></span>
+                <span ng-show="sortType == 'money' && !sortReverse" class="icon-sort-down"></span>
+                <span ng-show="sortType == 'money' && sortReverse" class="icon-sort-up"></span></th>
+        </tr>
+        <tr ng-repeat="row in requisitions| orderBy:sortType:sortReverse">
+            <td>{{$index+1}}</td>
+            <td>{{row.name}}</td>
+            <td>{{row.age}}</td>
+            <td>{{row.money}}</td>
+        </tr>
+    </table>
+</div>
