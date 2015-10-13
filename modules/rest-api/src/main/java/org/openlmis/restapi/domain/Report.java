@@ -46,6 +46,7 @@ public class Report {
   private Boolean emergency;
 
   private Date clientSubmittedTime;
+  private String clientSubmittedNotes;
 
   private List<PatientQuantificationLineItem> patientQuantifications;
 

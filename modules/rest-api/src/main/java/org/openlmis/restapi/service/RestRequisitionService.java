@@ -102,10 +102,19 @@ public class RestRequisitionService {
 
     requisitionService.save(rnr);
     updateClientSubmittedTime(report, rnr);
+    updateClientNotes(report, rnr);
 
     rnr = requisitionService.submit(rnr);
 
     return requisitionService.authorize(rnr);
+  }
+
+  private void updateClientNotes(Report report, Rnr rnr) {
+    String clientSubmittedNotes = report.getClientSubmittedNotes();
+    if (clientSubmittedNotes != null) {
+      rnr.setClientSubmittedNotes(clientSubmittedNotes);
+      requisitionService.updateClientSubmittedNotes(rnr);
+    }
   }
 
   private void updateClientSubmittedTime(Report report, Rnr rnr) {

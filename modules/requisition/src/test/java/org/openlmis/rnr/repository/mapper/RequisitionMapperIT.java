@@ -43,6 +43,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
@@ -215,6 +216,19 @@ public class RequisitionMapperIT {
     assertThat(updatedRequisition.getId(), is(requisition.getId()));
     assertThat(updatedRequisition.getClientSubmittedTime() , is(clientSubmittedTime));
 
+  }
+
+  @Test
+  public void shouldUpdateClientSubmittedNotes() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+    requisition.setClientSubmittedNotes("xyz");
+
+    mapper.updateClientSubmittedNotes(requisition);
+
+    Rnr updatedRequisition = mapper.getById(requisition.getId());
+
+    assertThat(updatedRequisition.getId(), is(requisition.getId()));
+    assertEquals("xyz", updatedRequisition.getClientSubmittedNotes());
   }
 
   @Test

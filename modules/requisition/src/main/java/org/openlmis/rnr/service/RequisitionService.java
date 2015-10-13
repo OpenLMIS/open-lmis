@@ -251,6 +251,11 @@ public class RequisitionService {
   }
 
   @Transactional
+  public void updateClientSubmittedNotes(Rnr rnr) {
+    requisitionRepository.updateClientSubmittedNotes(rnr);
+  }
+
+  @Transactional
   public Rnr authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 

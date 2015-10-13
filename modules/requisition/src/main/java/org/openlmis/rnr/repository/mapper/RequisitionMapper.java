@@ -217,6 +217,10 @@ public interface RequisitionMapper {
   @Select("select * from fn_delete_rnr( #{rnrId} )")
   String deleteRnR(@Param("rnrId")Integer rnrId);
 
+  @Update({"UPDATE requisitions SET",
+      "clientSubmittedNotes = #{clientSubmittedNotes}",
+      "WHERE id = #{id}"})
+  void updateClientSubmittedNotes(Rnr requisition);
 
   public class ApprovedRequisitionSearch {
 

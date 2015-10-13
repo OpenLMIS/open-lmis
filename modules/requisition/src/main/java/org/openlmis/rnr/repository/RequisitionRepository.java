@@ -303,4 +303,8 @@ public class RequisitionRepository {
   public String deleteRnR(Long rnrId) {
     return requisitionMapper.deleteRnR(rnrId.intValue());
   }
+
+  public void updateClientSubmittedNotes(Rnr rnr) {
+    requisitionMapper.updateClientSubmittedNotes(rnr);
+  }
 }
