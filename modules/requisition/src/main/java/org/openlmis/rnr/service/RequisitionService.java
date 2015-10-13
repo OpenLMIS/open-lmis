@@ -246,16 +246,6 @@ public class RequisitionService {
   }
 
   @Transactional
-  public void updateClientSubmittedTime(Rnr rnr) {
-     requisitionRepository.updateClientSubmittedTime(rnr);
-  }
-
-  @Transactional
-  public void updateClientSubmittedNotes(Rnr rnr) {
-    requisitionRepository.updateClientSubmittedNotes(rnr);
-  }
-
-  @Transactional
   public Rnr authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
@@ -667,6 +657,11 @@ public class RequisitionService {
 
   public Long getProgramId(Long rnrId) {
     return requisitionRepository.getProgramId(rnrId);
+  }
+
+  @Transactional
+  public void updateClientFields(Rnr rnr) {
+    requisitionRepository.updateClientFields(rnr);
   }
 }
 

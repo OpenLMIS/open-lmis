@@ -132,10 +132,6 @@ public class RequisitionRepository {
     }
   }
 
-  public void updateClientSubmittedTime(Rnr rnr) {
-    requisitionMapper.updateClientSubmittedTime(rnr);
-  }
-
   private void updateEquipmentLineItems(Rnr rnr) {
     for(EquipmentLineItem item : rnr.getEquipmentLineItems()){
       equipmentLineItemMapper.update(item);
@@ -304,7 +300,7 @@ public class RequisitionRepository {
     return requisitionMapper.deleteRnR(rnrId.intValue());
   }
 
-  public void updateClientSubmittedNotes(Rnr rnr) {
-    requisitionMapper.updateClientSubmittedNotes(rnr);
+  public void updateClientFields(Rnr rnr) {
+    requisitionMapper.updateClientFields(rnr);
   }
 }

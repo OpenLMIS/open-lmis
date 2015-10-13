@@ -101,30 +101,25 @@ public class RestRequisitionService {
     copyPatientQuantifications(rnr, report);
 
     requisitionService.save(rnr);
-    updateClientSubmittedTime(report, rnr);
-    updateClientNotes(report, rnr);
+
+    updateClientFields(report, rnr);
 
     rnr = requisitionService.submit(rnr);
 
     return requisitionService.authorize(rnr);
   }
 
-  private void updateClientNotes(Report report, Rnr rnr) {
-    String clientSubmittedNotes = report.getClientSubmittedNotes();
-    if (clientSubmittedNotes != null) {
-      rnr.setClientSubmittedNotes(clientSubmittedNotes);
-      requisitionService.updateClientSubmittedNotes(rnr);
-    }
-  }
-
-  private void updateClientSubmittedTime(Report report, Rnr rnr) {
-    //save app submitted time on database, used by report
-    //separated with save method keep the date won't be overwrited on web
+  private void updateClientFields(Report report, Rnr rnr) {
     Date clientSubmittedTime = report.getClientSubmittedTime();
     if (clientSubmittedTime != null) {
       rnr.setClientSubmittedTime(clientSubmittedTime);
-      requisitionService.updateClientSubmittedTime(rnr);
     }
+
+    String clientSubmittedNotes = report.getClientSubmittedNotes();
+    if (clientSubmittedNotes != null) {
+      rnr.setClientSubmittedNotes(clientSubmittedNotes);
+    }
+    requisitionService.updateClientFields(rnr);
   }
 
   @Transactional

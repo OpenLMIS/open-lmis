@@ -456,7 +456,7 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldUpdateClientSubmittedNotes() throws Exception {
     Rnr rnr = new Rnr();
-    requisitionRepository.updateClientSubmittedNotes(rnr);
-    verify(requisitionMapper).updateClientSubmittedNotes(rnr);
+    requisitionRepository.updateClientFields(rnr);
+    verify(requisitionMapper).updateClientFields(rnr);
   }
 }
