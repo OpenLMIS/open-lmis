@@ -13,11 +13,14 @@ package org.openlmis.core.repository;
 import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.ISA;
 import org.openlmis.core.domain.ProgramProductISA;
+import org.openlmis.core.domain.StockRequirements;
 import org.openlmis.core.repository.mapper.FacilityProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductIsaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * FacilityProgramProductRepository is repository class for FacilityProgramProduct related database operations.
@@ -49,6 +52,11 @@ public class FacilityProgramProductRepository {
   public ISA getOverriddenIsa(Long programProductId, Long facilityId)
   {
     return fppMapper.getOverriddenIsa(programProductId, facilityId);
+  }
+
+  public List<StockRequirements> getStockRequirements(Long programProductId, Long facilityId)
+  {
+    return null;
   }
 
   public void deleteOverriddenIsa(Long programProductId, Long facilityId)

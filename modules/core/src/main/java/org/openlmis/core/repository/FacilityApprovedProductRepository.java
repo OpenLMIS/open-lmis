@@ -53,6 +53,11 @@ public class FacilityApprovedProductRepository {
     return mapper.getAllBy(facilityTypeId, programId, searchParam, pagination);
   }
 
+  public List<FacilityTypeApprovedProduct> getAllByFacilityAndProgramId( Long facilityId, Long programId)
+  {
+    return mapper.getAllByFacilityAndProgramId(facilityId, programId);
+  }
+
   public Integer getTotalSearchResultCount(Long facilityTypeId, Long programId, String searchParam) {
     return mapper.getTotalSearchResultCount(facilityTypeId, programId, searchParam);
   }

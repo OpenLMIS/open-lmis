@@ -82,7 +82,7 @@ describe("ISA Controller", function () {
       scope.$parent.facilityProgramProductsList[scope.currentProgram.id] = null;
       scope.$broadcast('showISAEditModal');
       var programProductList = {programProductList: currentProducts};
-      httpBackend.expectGET('/facility/1/program/1/isa.json').respond(programProductList, 200);
+      httpBackend.expectGET('/facility/1/program/1.json').respond(programProductList, 200);
       scope.$apply();
       httpBackend.flush();
       expect(scope.$parent.facilityProgramProductsList[scope.currentProgram.id][0].calculatedIsa).toEqual("--");

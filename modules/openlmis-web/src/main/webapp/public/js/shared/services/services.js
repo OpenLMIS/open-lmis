@@ -229,7 +229,7 @@ services.factory('ProgramProducts', function ($resource) {
 });
 
 services.factory('FacilityProgramProducts', function ($resource) {
-  return $resource('/facility/:facilityId/program/:programId/isa.json', {}, {update: {method: 'POST'}});
+  return $resource('/facility/:facilityId/program/:programId.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('ProgramProductsISA', function ($resource) {

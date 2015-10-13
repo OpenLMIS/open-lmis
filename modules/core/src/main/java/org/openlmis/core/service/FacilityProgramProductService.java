@@ -11,15 +11,14 @@
 package org.openlmis.core.service;
 
 import org.apache.commons.collections.Closure;
-import org.openlmis.core.domain.FacilityProgramProduct;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductISA;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.openlmis.core.repository.FacilityProgramProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.forAllDo;
@@ -33,6 +32,12 @@ public class FacilityProgramProductService {
 
   @Autowired
   private FacilityProgramProductRepository repository;
+
+  @Autowired
+  private FacilityApprovedProductRepository facilityApprovedProductRepository;
+
+  @Autowired
+  private FacilityService facilityService;
 
   @Autowired
   ProgramProductService programProductService;
@@ -53,6 +58,51 @@ public class FacilityProgramProductService {
     return new FacilityProgramProduct(programProduct, facilityId, repository.getOverriddenIsa(programProduct.getId(), facilityId));
   }
 
+  public List<StockRequirements> getStockRequirements(final Long facilityId, Long programId)
+  {
+    //temporarily get facility in order to access its catchment population
+    Facility facility = facilityService.getById(facilityId);
+
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductRepository.getAllByFacilityAndProgramId(facilityId, programId);
+
+    LinkedList<StockRequirements> stockRequirements = new LinkedList<>();
+
+    List<FacilityProgramProduct> programProductsByProgram = getActiveProductsForProgramAndFacility(programId, facilityId);
+    for (FacilityProgramProduct facilityProgramProduct : programProductsByProgram)
+    {
+      StockRequirements requirements = new StockRequirements();
+      requirements.setFacilityId(facilityId);
+
+      //set our ISA to the most specific one possible
+      ISA facilityIsa = facilityProgramProduct.getOverriddenIsa();
+      if(facilityIsa != null)
+        requirements.setIsa(facilityIsa);
+      else if(facilityProgramProduct.getProgramProductIsa() != null)
+        requirements.setIsa(facilityProgramProduct.getProgramProductIsa().getIsa());
+
+      //set productId
+      Long productId = facilityProgramProduct.getProduct().getId();
+      requirements.setProductId(productId);
+
+      //set catchmentPopulation
+      requirements.setPopulation(facility.getCatchmentPopulation());
+
+      //set minStock, maxStock, and eop
+      for(FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts)
+      {
+        if(productId.equals(facilityTypeApprovedProduct.getProgramProduct().getProduct().getId()))
+        {
+          requirements.setMinMonthsOfStock(facilityTypeApprovedProduct.getMinMonthsOfStock());
+          requirements.setMaxMonthsOfStock(facilityTypeApprovedProduct.getMaxMonthsOfStock());
+          requirements.setEop(facilityTypeApprovedProduct.getEop());
+          break;
+        }
+      }
+      stockRequirements.add(requirements);
+    }
+
+    return stockRequirements;
+  }
 
   public void insertISA(Long facilityId, ProgramProductISA isa)
   {
@@ -77,8 +127,7 @@ public class FacilityProgramProductService {
     repository.updateISA(isa);
   }
 
-
-  public void saveFacilityProgramProductList(final Long facilityId, List<FacilityProgramProduct> products) {
+  public void save(final Long facilityId, List<FacilityProgramProduct> products) {
     forAllDo(products, new Closure() {
       @Override
       public void execute(Object o) {
