@@ -43,6 +43,11 @@ public interface RequisitionMapper {
       "WHERE id = #{id}"})
   void update(Rnr requisition);
 
+  @Update({"UPDATE requisitions SET",
+        "clientSubmittedTime = #{clientSubmittedTime}",
+        "WHERE id = #{id}"})
+  void updateClientSubmittedTime(Rnr requisition);
+
   @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
   @Results(value = {
       @Result(property = "id", column = "id"),
@@ -212,6 +217,10 @@ public interface RequisitionMapper {
   @Select("select * from fn_delete_rnr( #{rnrId} )")
   String deleteRnR(@Param("rnrId")Integer rnrId);
 
+  @Update({"UPDATE requisitions SET",
+      "clientSubmittedNotes = #{clientSubmittedNotes}",
+      "WHERE id = #{id}"})
+  void updateClientSubmittedNotes(Rnr requisition);
 
   public class ApprovedRequisitionSearch {
 

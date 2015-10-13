@@ -10,10 +10,12 @@
 
 package org.openlmis.rnr.repository;
 
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
-import org.openlmis.core.repository.mapper.BudgetFileColumnMapper;
 import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.rnr.domain.*;
@@ -128,6 +130,10 @@ public class RequisitionRepository {
       insertPatientQuantificationLineItems(rnr, rnr.getPatientQuantifications());
 
     }
+  }
+
+  public void updateClientSubmittedTime(Rnr rnr) {
+    requisitionMapper.updateClientSubmittedTime(rnr);
   }
 
   private void updateEquipmentLineItems(Rnr rnr) {
@@ -296,5 +302,9 @@ public class RequisitionRepository {
 
   public String deleteRnR(Long rnrId) {
     return requisitionMapper.deleteRnR(rnrId.intValue());
+  }
+
+  public void updateClientSubmittedNotes(Rnr rnr) {
+    requisitionMapper.updateClientSubmittedNotes(rnr);
   }
 }
