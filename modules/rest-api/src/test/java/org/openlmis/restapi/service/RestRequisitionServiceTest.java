@@ -150,16 +150,7 @@ public class RestRequisitionServiceTest {
     verify(requisitionService).updateClientFields(requisition);
     assertEquals("xyz", requisition.getClientSubmittedNotes());
   }
-
-  @Test
-  public void shouldNotUpdateClientSubmittedTimeWhenTimeIsNull() throws
-          Exception {
-    setUpRequisitionReportBeforeSubmit();
-
-    report.setClientSubmittedTime(null);
-    service.submitReport(report, 1L);
-    verify(requisitionService, never()).updateClientFields(requisition);
-  }
+  
   @Test
   public void shouldUpdateClientSubmittedTimeWhenTimeIsSet() throws
           Exception {

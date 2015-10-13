@@ -101,14 +101,11 @@ public class RestRequisitionService {
 
   private void updateClientFields(Report report, Rnr rnr) {
     Date clientSubmittedTime = report.getClientSubmittedTime();
-    if (clientSubmittedTime != null) {
-      rnr.setClientSubmittedTime(clientSubmittedTime);
-    }
+    rnr.setClientSubmittedTime(clientSubmittedTime);
 
     String clientSubmittedNotes = report.getClientSubmittedNotes();
-    if (clientSubmittedNotes != null) {
-      rnr.setClientSubmittedNotes(clientSubmittedNotes);
-    }
+    rnr.setClientSubmittedNotes(clientSubmittedNotes);
+
     requisitionService.updateClientFields(rnr);
   }
 

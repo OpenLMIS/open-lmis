@@ -1556,7 +1556,7 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldUpdateClientSubmittedNotes() throws Exception {
+  public void shouldUpdateClientSubmittedFields() throws Exception {
     Rnr rnr = new Rnr();
     requisitionService.updateClientFields(rnr);
     verify(requisitionRepository).updateClientFields(rnr);
