@@ -1,0 +1,30 @@
+<div ng-controller="VaccineModuleController">
+    <section id="package_arrival_1" >
+
+        <h3>Vaccine Arrival</h3>
+
+            <table cellspacing="10" class="table table-responsive" cellpadding="10">
+                <tr>
+                    <th>Target</th>
+                    <th>Expected Births</th>
+                    <th>Expected Pregnancies</th>
+                    <th>Surviving Infants</th>
+                    <th>Enter Lot Number</th>
+                    <th></th>
+                </tr>
+                <tr ng-repeat="destination in (destinations | filter:{name:destination_choice})">
+                    <td>{{destination.targets}}</td>
+                    <td>{{destination.expected_birth}}</td>
+                    <td>{{destination.expected_pregnancies}}</td>
+                    <td>{{destination.surviving_infants}}</td>
+                    <td><input name="lot_number" ng-model="scanned_package_lot" id="package_lot_number"></td>
+                    <td><input type="button" value="Scan" ng-click="scanningPackage(scanned_package_lot)" /></td>
+                </tr>
+            </table>
+
+        <div ng-if="message">{{message}}</div>
+
+
+    </section>
+
+</div>

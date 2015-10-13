@@ -1,0 +1,83 @@
+<div class="app-form" >
+
+    <form name="scan_package" ng-if="scan_afresh">
+        <div class='form-group'>
+            <!--<h3 openlmis-message="label.stock.arrivalheader">Package Arrival</h3>-->
+            <h3 >Package Arrival</h3>
+            <div class='form-row clearfix'>
+                <div class="form-cell horizontalFilters">
+                    <!--<h3 openlmis-message="label.stock.shipmentId">Package Arrival</h3>-->
+                    <label>Scan the Shipment Id</label>
+                    <div class="form-fields">
+                        <input type="text" class="form-control" ng-model="shipping_number" id="shipping_number" >
+                    </div>
+                </div>
+                <div class="form-cell horizontalFilters">
+                    <label>&nbsp;</label>
+                    <div class="form-fields">
+                        <input class="btn btn-primary" type="button" value="Scan" ng-click="scapPackage()" id="scan_package_button"/>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <form name="receive_package" ng-if="scan_lotnumber">
+        <div class='form-group'>
+            <!--<h3 openlmis-message="label.stock.arrivalheader">Package Arrival</h3>-->
+            <h3 >Package Arrival</h3>
+
+            <div class='form-row clearfix'>
+                <div class="form-cell horizontalFilters">
+                    <!--<label openlmis-message="label.stock.lotnumber">Scan Lot Number</label>-->
+                    <span><b>Receiving Package With Shipment Number:</b> {{filtering_shipping_number}}</span>
+
+
+                </div>
+                <div class="pull-right span6">
+                    <label>Scan Lot Number</label>
+                    <div class="row-fluid">
+                        <div class="form-fields span9">
+                            <input type="text" class="form-control" ng-model="lot_number" id="lot_number_filed" >
+                        </div>
+                        <div class="span3">
+                            <input class="btn btn-primary" type="submit" value="Scan" ng-click="scapLotNumber()" id="scan_lot_number_button"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class='form-row clearfix'>
+                <div >
+                    <table class="table-bordered table table-striped ng-scope" >
+                        <thead>
+                        <tr class="gradient-header">
+                            <th  style="text-align: center">GTN</th>
+                            <th  style="text-align: center">Item</th>
+                            <th  style="text-align: center">Lot</th>
+                            <th  style="text-align: center">Expiry</th>
+                            <th  style="text-align: center">Boxes</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="packageDetails in singlePackage = (packagesJson | filter:{shipment_id:filtering_shipping_number} )"  >
+                            <td>{{packageDetails.vaccine_packaging.gtin}}</td>
+                            <td>{{packageDetails.vaccine_packaging.vaccine.name}}</td>
+                            <td>{{packageDetails.lot_number}}</td>
+                            <td>{{packageDetails.expire_date  | date:'yyyy-MM-dd'}}</td>
+                            <td>{{ numberOfBoxes(packageDetails.vaccine_packaging.doses_per_vial,packageDetails.vaccine_packaging.vials_per_box,packageDetails.number_of_doses) }}</td>
+
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+                <div ></div>
+
+            </div>
+
+
+
+        </div>
+    </form>
+</div>

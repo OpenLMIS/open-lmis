@@ -28,8 +28,8 @@
     <div class="span2 form-inline">
       <input id="myFacilityRnr" type="radio" ng-model="selectedType" value="0" ng-checked="selectedType==0" ng-change="changeFacilityType();" />&nbsp;
       <label for="myFacilityRnr">
-        <strong openlmis-message="label.myFacility"></strong>
-        <br/>({{facilityDisplayName}})
+        <!--<strong openlmis-message="label.myFacility"></strong>-->
+        {{facilityDisplayName}}
       </label>
     </div>
     <div class="span4 form-inline">
@@ -72,7 +72,9 @@
   </div>
 
   <div ng-show="selectedProgram.id && selectedEquipmentType.id">
-    <a id="add-new-equipment-type" ng-href="#/create/{{selectedType}}/{{selectedProgram.id}}/{{selectedEquipmentType.id}}/{{currentPage}}" class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
+    <a ng-show="selectedType ==='0'" id="add-new-equipment-type"
+       ng-href="#/create/{{selectedType}}/{{selectedProgram.id}}/{{selectedEquipmentType.id}}/{{currentPage}}"
+       class="pull-right btn btn-primary" openlmis-message="button.add.new"></a>
 
     <br/>
     <br/>

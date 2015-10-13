@@ -1,0 +1,64 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div id="requisition-header" class="toggleFullScreen">
+
+    <div class="info-box padding2px">
+
+        <div class="requisition-head-block">
+            <div class="row-fluid" id="requisition-head-block">
+                <div class="span2">
+                    <strong id="orderNumberLabel">Store Name: </strong>&nbsp;<span
+                        id="orderId" ng-bind="report.facility.name"></span>
+                </div>
+                <div class="span2">
+                    <strong id="facilityLabel" openlmis-message="create.facility.operatedBy"></strong>: &nbsp;<span
+                        id="facilityCode" ng-bind="report.statusChanges[0].firstName + '  ' +report.statusChanges[0].lastName"></span>
+                </div>
+                <div class="span3">
+                    <strong id="orderDateTimeLabel" openlmis-message="label.order.date.time"> </strong>:&nbsp;<span
+                        id="orderCreatedDate" ng-bind="report.statusChanges[0].date | date:'dd-MM-yyyy'"></span>
+                </div>
+
+
+                <div class="span2">
+
+                   <div class="span6">
+                       <label>
+                           <input id="dose" type="radio" ng-model="selectedType" value="0" ng-change="productFormChange()">
+                           <Strong>Doses</Strong>
+
+                       </label>
+
+                   </div>
+                    <div class="span6">
+                        <label>
+
+                            <input id="vial" type="radio" ng-model="selectedType" value="1"  ng-change="productFormChange1()">
+                            <Strong>Vials</Strong>
+
+                        </label>
+
+                    </div>
+
+
+                </div>
+
+                <div class="span3 pull-right" ng-show="report.emergency">
+                    <strong id="UnscheduleLabel">Unscheduled Period </strong>:&nbsp;<span
+                        id="unscheduledLabel"> {{report.period.startDate | date:'dd-MM-yyyy'}} To  {{report.period.endDate | date:'dd-MM-yyyy'}}</span>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>

@@ -300,4 +300,9 @@ public class FacilityService {
         return facilityRepository.getGeoFlatFacilityTree(userId);
     }
 
+  public Facility getFacilityById(Long id) {
+    Facility facility = facilityRepository.getById(id);
+    facility.setSupportedPrograms(programSupportedService.getAllByFacilityId(id));
+    return facility;
+  }
 }

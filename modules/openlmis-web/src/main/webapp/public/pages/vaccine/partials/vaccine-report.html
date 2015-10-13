@@ -25,83 +25,68 @@
         max-width: none !important;
     }
     .tab-pane .ns-popover-tooltip{
-        border: none !important;
-        -webkit-box-shadow: none !important;
-        -moz-box-shadow: none !important;
-        box-shadow: none !important;
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
     }
 </style>
 <script type="text/ng-template" id="amc">
 
-            <div class="ns-popover-tooltip vaccine-report">
-                <tabset class="table">
-                    <tab>
-                        <tab-heading style="cursor: pointer;"><span openlmis-message="title.overview"></span></tab-heading>
-                        <div class="triangle"></div>
-                        <div class="ns-popover-tooltip vaccine-report">
-                            <a-float af-render="renderIt"  af-option="amcChartOption" af-data="amcChart" style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
-                        </div>
+    <div class="ns-popover-tooltip vaccine-report">
+        <tabset class="table">
+            <tab>
+                <tab-heading style="cursor: pointer;"><span openlmis-message="title.overview"></span></tab-heading>
+                <div class="triangle"></div>
+                <div class="ns-popover-tooltip vaccine-report">
+                    <a-float af-render="renderIt" af-option="amcChartOption" af-data="amcChart"
+                             style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
+                </div>
 
-                    </tab>
-                    <tab>
-                        <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
-                        <table class="table" style="width: 500px;">
-                            <thead>
-                            <tr class="gradient-header">
-                                <th openlmis-message="title.legend"></th>
-                                <th openlmis-message="title.definition"></th>
-                            </tr>
-                            </thead>
-                            <tr ng-repeat="def in definitions">
-                                <td>{{def.label}}</td>
-                                <td>{{def.definition}}</td>
-                            </tr>
-                        </table>
+            </tab>
+            <tab>
+                <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
+                <div ta-bind ng-model="consumptionLegend.htmlContent" style="width: 500px;">
 
-                    </tab>
-                </tabset>
-            </div>
+                </div>
+
+            </tab>
+        </tabset>
+    </div>
 
 </script>
 <script type="text/ng-template" id="soh">
-            <div class="ns-popover-tooltip vaccine-report">
-                  <tabset class="table">
-                      <tab>
-                          <tab-heading style="cursor: pointer;"><span openlmis-message="title.overview"></span></tab-heading>
-                          <div class="triangle"></div>
-                            <div class="ns-popover-tooltip vaccine-report">
-                                <a-float af-render="renderIt"  af-option="sohChartOption" af-data="sohChart" style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
-                                <div class="clearfix"></div>
-                            </div>
+    <div class="ns-popover-tooltip vaccine-report">
+        <tabset class="table">
+            <tab>
+                <tab-heading style="cursor: pointer;"><span openlmis-message="title.overview"></span></tab-heading>
+                <div class="triangle"></div>
+                <div class="ns-popover-tooltip vaccine-report">
+                    <a-float af-render="renderIt" af-option="sohChartOption" af-data="sohChart"
+                             style="height: 200px; text-align:left; width: 500px; margin-bottom: 15px;"></a-float>
+                    <div class="clearfix"></div>
+                </div>
 
-                      </tab>
-                      <tab>
-                          <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
-                          <table class="table" style="width: 500px;">
-                              <thead>
-                              <tr class="gradient-header">
-                                  <th openlmis-message="title.legend"></th>
-                                  <th openlmis-message="title.definition"></th>
-                              </tr>
-                              </thead>
-                              <tr ng-repeat="def in definitions">
-                                  <td>{{def.label}}</td>
-                                  <td>{{def.definition}}</td>
-                              </tr>
-                          </table>
-
-                      </tab>
-                  </tabset>
-            </div>
+            </tab>
+            <tab>
+                <tab-heading style="cursor: pointer;"><span openlmis-message="title.legend"></span></tab-heading>
+                <div ta-bind ng-model="sohLegend.htmlContent" style="width: 500px;">
+                </div>
+            </tab>
+        </tabset>
+    </div>
 
 
 </script>
 
-<h2 style="padding: 10px;"><span style="margin-left: 15px;" openlmis-message="title.monthly.vaccination.report"></span><span> {{period != null ? (' : '+period.name+' , '+period.stringYear) : ''}}</span></h2>
+<h2 style="padding: 10px;"><span style="margin-left: 15px;"
+                                 openlmis-message="title.monthly.vaccination.report"></span><span> {{period != null ? (' : '+period.name+' , '+period.stringYear) : ''}}</span>
+</h2>
 <div id="vaccine-report" class="vaccine-report app-form">
         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
             <div filter-container class="clearfix">
-                <vaccine-period-tree-filter required="true" class="form-cell horizontalFilters"></vaccine-period-tree-filter>
+                <vaccine-period-tree-filter required="true"
+                                            class="form-cell horizontalFilters"></vaccine-period-tree-filter>
                 <zone-filter class="form-cell horizontalFilters" stand-alone="true"></zone-filter>
                 <geo-facility-filter class="form-cell horizontalFilters"></geo-facility-filter>
 
@@ -137,8 +122,8 @@
                                 <table ng-show="targetPopulation.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th>Demographics/Targets</th>
-                                        <th>Monthly</th>
+                                        <th style="text-align: center;" openlmis-message="label.demographics.targets"></th>
+                                        <th style="text-align: center;" openlmis-message="label.monthly"></th>
                                         <th>Annual</th>
                                     </tr>
                                     </thead>
@@ -146,8 +131,8 @@
                                     <tbody>
                                     <tr ng-repeat="tp in targetPopulation">
                                         <td>{{tp.category_name}}</td>
-                                        <td class="number">{{tp.target_value_monthly}}</td>
-                                        <td class="number">{{tp.target_value_annual}}</td>
+                                        <td class="number">{{tp.target_value_monthly | number}}</td>
+                                        <td class="number">{{tp.target_value_annual | number}}</td>
 
                                     </tr>
 
@@ -174,20 +159,20 @@
                                     <thead class="gradient-header">
                                     <tr>
                                         <th></th>
-                                        <th openlmis-message="label.case.this.month"></th>
-                                        <th openlmis-message="label.cases.cumulative"></th>
-                                        <th openlmis-message="label.death.this.month"></th>
-                                        <th openlmis-message="label.death.cumulative"></th>
+                                        <th openlmis-message="label.case.this.month" style="text-align: center;"></th>
+                                        <th openlmis-message="label.cases.cumulative" style="text-align: center;"></th>
+                                        <th openlmis-message="label.death.this.month" style="text-align: center;"></th>
+                                        <th openlmis-message="label.death.cumulative" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
 
                                     <tbody>
                                     <tr ng-repeat="ds in diseaseSurveillance">
                                         <td>{{ds.diseaseName}}</td>
-                                        <td class="number">{{ds == null ? 'nul' : ds.cases}}</td>
-                                        <td class="number">{{ds == null ? 'nul' :ds.cumulative}}</td>
-                                        <td class="number">{{ds == null ? 'nul' :ds.death}}</td>
-                                        <td class="number">{{ds == null ? 'nul' :ds.calculatedCumulativeDeaths}}</td>
+                                        <td class="number">{{ds == null ? 'nul' : ds.cases | number}}</td>
+                                        <td class="number">{{ds == null ? 'nul' :ds.cumulative | number}}</td>
+                                        <td class="number">{{ds == null ? 'nul' :ds.death | number}}</td>
+                                        <td class="number">{{ds == null ? 'nul' :ds.calculatedCumulativeDeaths | number}}</td>
                                     </tr>
 
                                     </tbody>
@@ -217,7 +202,8 @@
                                 <table ng-show="vaccineCoverage.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th rowspan="3" style="text-align: center; vertical-align: middle;" openlmis-message="label.antigens"></th>
+                                        <th rowspan="3" style="text-align: center; vertical-align: middle;"
+                                            openlmis-message="label.antigens"></th>
                                         <th rowspan="3" style="text-align: center; vertical-align: middle" openlmis-message="label.doses"></th>
                                         <th colspan="9" style="text-align: center; vertical-align: middle" openlmis-message="label.monthly.vaccination"></th>
                                         <th colspan="5" style="text-align: center; vertical-align: middle" openlmis-message="label.cumulative.vaccination"></th>
@@ -251,22 +237,22 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="vc in vaccineCoverage">
-                                        <td style="text-align: center; vertical-align: middle;" >{{vc.product_name}}</td>
+                                        <td style="text-align: center; vertical-align: middle;">{{vc.product_name}}</td>
                                         <td class="number">{{vc.display_name}}</td>
-                                        <td class="number">{{vc.within_male}}</td>
-                                        <td class="number">{{vc.within_female}}</td>
-                                        <td class="number">{{vc.within_total}}</td>
-                                        <td class="number">{{vc.within_coverage}}%</td>
-                                        <td class="number">{{vc.outside_male}}</td>
-                                        <td class="number">{{vc.outside_female}}</td>
-                                        <td class="number">{{vc.outside_total}}</td>
-                                        <td class="number">{{vc.within_outside_total}}</td>
-                                        <td class="number">{{vc.within_outside_coverage}}%</td>
-                                        <td class="number">{{vc.cum_within_total}}</td>
-                                        <td class="number">{{vc.cum_within_coverage}}%</td>
-                                        <td class="number">{{vc.cum_outside_total}}</td>
-                                        <td class="number">{{vc.cum_within_outside_total}}</td>
-                                        <td class="number">{{vc.cum_within_outside_coverage}}%</td>
+                                        <td class="number">{{vc.within_male | number}}</td>
+                                        <td class="number">{{vc.within_female | number}}</td>
+                                        <td class="number">{{vc.within_total | number}}</td>
+                                        <td class="number">{{vc.within_coverage | number:0}}%</td>
+                                        <td class="number">{{vc.outside_male | number}}</td>
+                                        <td class="number">{{vc.outside_female | number}}</td>
+                                        <td class="number">{{vc.outside_total | number}}</td>
+                                        <td class="number">{{vc.within_outside_total | number}}</td>
+                                        <td class="number">{{vc.within_outside_coverage | number:0}}%</td>
+                                        <td class="number">{{vc.cum_within_total | number}}</td>
+                                        <td class="number">{{vc.cum_within_coverage | number:0}}%</td>
+                                        <td class="number">{{vc.cum_outside_total | number}}</td>
+                                        <td class="number">{{vc.cum_within_outside_total | number}}</td>
+                                        <td class="number">{{vc.cum_within_outside_coverage | number:0}}%</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -291,16 +277,16 @@
                                 <table ng-show="immunizationSession.length > 0" class="table-bordered table table-striped">
                                     <thead class="gradient-header">
                                     <tr>
-                                        <th openlmis-message="label.fixed.conducted"></th>
-                                        <th openlmis-message="label.outreach.conducted"></th>
-                                        <th openlmis-message="label.outreach.cancelled"></th>
+                                        <th openlmis-message="label.fixed.conducted" style="text-align: center;"></th>
+                                        <th openlmis-message="label.outreach.conducted" style="text-align: center;"></th>
+                                        <th openlmis-message="label.outreach.cancelled" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="imz in immunizationSession">
-                                        <td>{{imz.fixedImmunizationSessions}}</td>
-                                        <td>{{imz.outreachImmunizationSessions}}</td>
-                                        <td>{{imz.outreachImmunizationSessionsCanceled}}</td>
+                                        <td class="number">{{imz.fixedImmunizationSessions | number}}</td>
+                                        <td class="number">{{imz.outreachImmunizationSessions | number}}</td>
+                                        <td class="number">{{imz.outreachImmunizationSessionsCanceled | number}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -308,7 +294,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="span6">
+                    <div class="span6" ng-show="showOtherActivities">
                         <div class="accordion-section">
                             <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
                                 <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.other.immunization.activities"></a></span>
@@ -339,21 +325,21 @@
                                     <thead class="gradient-header">
                                     <tr>
                                         <th rowspan="2" colspan="2" openlmis-message="label.age.group"></th>
-                                        <th colspan="3" openlmis-message="label.vitamin.supplementation">Vitamin Supplementation</th>
+                                        <th colspan="3" openlmis-message="label.vitamin.supplementation"></th>
                                     </tr>
                                     <tr>
-                                        <th openlmis-message="label.male"></th>
-                                        <th openlmis-message="label.female"></th>
-                                        <th openlmis-message="label.total.supplemented"></th>
+                                        <th openlmis-message="label.male" style="text-align: center;"></th>
+                                        <th openlmis-message="label.female" style="text-align: center;"></th>
+                                        <th openlmis-message="label.total.supplemented" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="vs in vitaminSupplementation">
                                         <td style="vertical-align: middle; text-align: center">{{vs.vitaminName}}</td>
                                         <td>{{vs.ageGroup}}</td>
-                                        <td class="number">{{vs.maleValue}}</td>
-                                        <td class="number">{{vs.femaleValue}}</td>
-                                        <td class="number">{{vs.maleValue + vs.femaleValue}}</td>
+                                        <td class="number">{{vs.maleValue | number}}</td>
+                                        <td class="number">{{vs.femaleValue | number}}</td>
+                                        <td class="number">{{(vs.maleValue + vs.femaleValue) | number}}</td>
                                     </tr>
 
                                     </tbody>
@@ -387,23 +373,23 @@
                                     </tr>
                                     <tr>
                                         <th openlmis-message="label.type.of.antigen"></th>
-                                        <th openlmis-message="label.opening.balance.doses"></th>
-                                        <th openlmis-message="label.doses.of.vaccine.received"></th>
-                                        <th openlmis-message="label.doses.of.vaccine.used.during.vaccination"> </th>
-                                        <th openlmis-message="label.doses.discarded.unopened"></th>
-                                        <th openlmis-message="label.reasons.for.discarding.unopened.vial"></th>
-                                        <th openlmis-message="label.doses.of.vaccine.stock.on.hand"></th>
-                                        <th openlmis-message="label.no.of.days.stocked.out"></th>
-                                        <th openlmis-message="label.children.immunized"></th>
-                                        <th openlmis-message="label.usage.rate.formula"></th>
-                                        <th openlmis-message="label.wastage.rate.formula"></th>
+                                        <th openlmis-message="label.opening.balance.doses" style="text-align: center;"></th>
+                                        <th openlmis-message="label.doses.of.vaccine.received" style="text-align: center;"></th>
+                                        <th openlmis-message="label.doses.of.vaccine.used.during.vaccination" style="text-align: center;"> </th>
+                                        <th openlmis-message="label.doses.discarded.unopened" style="text-align: center;" ></th>
+                                        <th openlmis-message="label.reasons.for.discarding.unopened.vial" style="text-align: center;"></th>
+                                        <th openlmis-message="label.doses.of.vaccine.stock.on.hand" style="text-align: center;"></th>
+                                        <th openlmis-message="label.no.of.days.stocked.out" style="text-align: center;"></th>
+                                        <th openlmis-message="label.children.immunized" style="text-align: center;"></th>
+                                        <th openlmis-message="label.usage.rate.formula" style="text-align: center;"></th>
+                                        <th openlmis-message="label.wastage.rate.formula" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="vc in vaccination">
                                         <td>{{vc.product_name}}</td>
-                                        <td class="number">{{vc.opening_balance}}</td>
-                                        <td class="number">{{vc.quantity_received}}</td>
+                                        <td class="number">{{vc.opening_balance | number}}</td>
+                                        <td class="number">{{vc.quantity_received | number}}</td>
                                         <td class="number" ng-class="colorify(vc.quantity_issued)">
                                             <a ng-mouseover="renderGraph(vc.facility_code, vc.product_code)" href="" ns-popover
                                                ns-popover-template="amc"
@@ -426,10 +412,10 @@
 
                                         </td>
 
-                                        <td class="number">{{vc.days_stocked_out}}</td>
-                                        <td class="number">{{vc.children_immunized}}</td>
-                                        <td class="number">{{vc.usage_rate}}%</td>
-                                        <td class="number">{{vc.wastage_rate}}%</td>
+                                        <td class="number">{{vc.days_stocked_out | number}}</td>
+                                        <td class="number">{{vc.children_immunized | number}}</td>
+                                        <td class="number">{{vc.usage_rate | number:0}}%</td>
+                                        <td class="number">{{vc.wastage_rate | number:0}}%</td>
                                     </tr>
                                     </tbody>
                                     <tfoot>
@@ -465,23 +451,23 @@
                                     </tr>
                                     <tr>
                                         <th></th>
-                                        <th openlmis-message="label.opening.balance"></th>
-                                        <th openlmis-message="label.received"></th>
-                                        <th openlmis-message="label.used"></th>
-                                        <th openlmis-message="label.wastage"></th>
-                                        <th openlmis-message="label.stock.on.hand"></th>
-                                        <th openlmis-message="label.no.of.days.stocked.out"></th>
+                                        <th openlmis-message="label.opening.balance" style="text-align: center;"></th>
+                                        <th openlmis-message="label.received" style="text-align: center;"></th>
+                                        <th openlmis-message="label.used" style="text-align: center;"></th>
+                                        <th openlmis-message="label.wastage" style="text-align: center;"></th>
+                                        <th openlmis-message="label.stock.on.hand" style="text-align: center;"></th>
+                                        <th openlmis-message="label.no.of.days.stocked.out" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="sy in syringes">
                                         <td>{{sy.product_name}}</td>
-                                        <td class="number">{{sy.opening_balance}}</td>
-                                        <td class="number">{{sy.quantity_received}}</td>
-                                        <td class="number">{{sy.quantity_issued}}</td>
-                                        <td class="number">10</td>
-                                        <td class="number">240</td>
-                                        <td class="number">{{sy.days_stocked_out}}</td>
+                                        <td class="number">{{sy.opening_balance | number}}</td>
+                                        <td class="number">{{sy.quantity_received | number}}</td>
+                                        <td class="number">{{sy.quantity_issued | number}}</td>
+                                        <td class="number">{{ sy.quantity_wasted_other | number}}</td>
+                                        <td class="number">{{sy.closing_balance | number}}</td>
+                                        <td class="number">{{sy.days_stocked_out | number}}</td>
                                     </tr>
 
                                     </tbody>
@@ -512,21 +498,21 @@
                                     </tr>
                                     <tr>
                                         <th></th>
-                                        <th openlmis-message="label.opening.balance"></th>
-                                        <th openlmis-message="label.vitamin.A.received"></th>
-                                        <th openlmis-message="label.total.vitamin.A.administered"></th>
-                                        <th openlmis-message="label.wastage"></th>
-                                        <th openlmis-message="label.stock.on.hand"></th>
+                                        <th openlmis-message="label.opening.balance" style="text-align: center;"></th>
+                                        <th openlmis-message="label.vitamin.A.received" style="text-align: center;"></th>
+                                        <th openlmis-message="label.total.vitamin.A.administered" style="text-align: center;"></th>
+                                        <th openlmis-message="label.wastage" style="text-align: center;"></th>
+                                        <th openlmis-message="label.stock.on.hand" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="vit in vitamins">
                                         <td>{{vit.product_name}}</td>
-                                        <td class="number">{{vit.opening_balance}}</td>
-                                        <td class="number">{{vit.quantity_received}}</td>
-                                        <td class="number">{{vit.quantity_issued}}</td>
-                                        <td class="number">5</td>
-                                        <td class="number">105</td>
+                                        <td class="number">{{vit.opening_balance | number}}</td>
+                                        <td class="number">{{vit.quantity_received | number}}</td>
+                                        <td class="number">{{vit.quantity_issued | number}}</td>
+                                        <td class="number">{{vit.quantity_wasted_other | number}}</td>
+                                        <td class="number">{{vit.closing_balance | number}}</td>
                                     </tr>
 
                                     </tbody>
@@ -558,21 +544,55 @@
                                     </tr>
                                     <tr>
                                         <th openlmis-message="label.type.of.antigen"></th>
-                                        <th openlmis-message="label.discarded.expired"></th>
-                                        <th openlmis-message="label.discarded.broken"></th>
-                                        <th openlmis-message="label.discarded.cold.chain.failure"> </th>
-                                        <th openlmis-message="label.discarded.other"></th>
-                                        <th openlmis-message="label.discarded.total"></th>
+                                        <th openlmis-message="label.discarded.expired" style="text-align: center;"></th>
+                                        <th openlmis-message="label.discarded.broken" style="text-align: center;"></th>
+                                        <th openlmis-message="label.discarded.cold.chain.failure" style="text-align: center;"> </th>
+                                        <th openlmis-message="label.discarded.other" style="text-align: center;"></th>
+                                        <th openlmis-message="label.discarded.total" style="text-align: center;"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="vd in vaccination">
                                         <td style="width:100px">{{vd.product_name}}</td>
-                                        <td class="number">{{vd.expired}}</td>
-                                        <td class="number">{{vd.broken}}</td>
-                                        <td class="number">{{vd.cold_chain}}</td>
-                                        <td class="number">{{vd.other}}</td>
-                                        <td class="number">{{vd.quantity_discarded_unopened}}</td>
+                                        <td class="number">{{vd.expired | number}}</td>
+                                        <td class="number">{{vd.broken | number}}</td>
+                                        <td class="number">{{vd.cold_chain | number}}</td>
+                                        <td class="number">{{vd.other | number}}</td>
+                                        <td class="number">{{vd.quantity_discarded_unopened | number}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <div class="accordion-section">
+                            <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                                <span><b>+</b><a href="javascript:void(0);" openlmis-message="title.vaccine.dropout.rate"></a></span>
+                            </div>
+                            <div class="accordion-body" style="background-color: #ffffff">
+                                <table client-side-sort-pagination class="table table-bordered"
+                                       ng-show="vaccination == undefined || vaccination.length == 0">
+                                    <tr>
+                                        <td openlmis-message="label.report.no.data.to.show"></td>
+                                    </tr>
+                                </table>
+
+                                <table ng-show="vaccination.length > 0" class="table-bordered table table-striped">
+                                    <thead class="gradient-header">
+                                    <tr>
+                                        <th colspan="6" style="text-align: center; vertical-align: middle" openlmis-message="label.vaccine.stock.doses"></th>
+                                    </tr>
+                                    <tr>
+                                        <th openlmis-message="label.type.of.antigen"></th>
+                                        <th openlmis-message="label.percent" style="text-align: center;"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="drop in dropOuts">
+                                        <td>{{drop.indicator}}</td>
+                                        <td class="number">{{drop.dropout | number}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -670,7 +690,7 @@
                                         <td>{{ae.cases}}</td>
                                         <td>{{ae.batch}}</td>
                                         <td>{{ae.manufacturer}}</td>
-                                        <td>{{ae.expiry}}</td>
+                                        <td>{{ae.expiry | date : 'MMM, yyyy'}}</td>
                                         <td>{{ae.isInvestigated}}</td>
                                     </tr>
 

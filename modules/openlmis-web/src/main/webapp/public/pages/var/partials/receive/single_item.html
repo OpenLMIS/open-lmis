@@ -1,0 +1,166 @@
+<div class="app-form">
+    <form name="receive_package" novalidate>
+        <div class='form-group' style="margin-bottom: 0px">
+            <h3 >Confirm receiving Package</h3>
+            <!--SSCC-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Confirm Receiving Package With Lot Number: <span>{{ data.current_item.lotnumber }}</span>&nbsp;&nbsp;
+                        </label>
+                </div>
+            </div>
+            <div class='form-row clearfix' >
+                <table class="table-bordered table table-striped ng-scope" >
+
+                    <thead>
+                    <tr class="gradient-header">
+                        <th  style="text-align: center">GTN</th>
+                        <th  style="text-align: center">Description</th>
+                        <th  style="text-align: center">Lot</th>
+                        <th  style="text-align: center">Expiry</th>
+                        <th  style="text-align: center">Boxes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--<tr ng-repeat="subPackages in singlePackage">-->
+
+                    <tr>
+                        <td>{{data.current_item.packaging.gtin}}</td>
+                        <td>{{ getVaccineName(data.current_item.productid) }}</td>
+                        <td>{{data.current_item.lotnumber}}</td>
+                        <td>{{data.current_item.expiredate  | date:'yyyy-MM-dd'}}</td>
+                        <td>{{ numberOfBoxes(data.current_item.packaging.dosespervial,data.current_item.packaging.vialsperbox,data.current_item.numberofdoses)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-cell horizontalFilters">
+                <label class="labels" >Quantity Okay</label>
+
+                <div class="form-fields">
+                    <select class="input-large ng-pristine ng-valid" ng-model="condition.number_as_expected" required>
+                        <option selected="selected" value="Yes">Yes</option>
+                        <option  value="No">No</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-cell horizontalFilters" ng-if="condition.number_as_expected == 'No'">
+                <label class="labels" >Available Amount(Boxes)</label>
+                <div class="form-fields">
+                    <input type="number" class="form-control" ng-model="condition.number_recieved" >
+                </div>
+            </div>
+            <div class="form-cell horizontalFilters">
+                <label class="labels" >Physical Damage</label>
+
+                <div class="form-fields">
+                    <select class="input-large ng-pristine ng-valid" ng-model="condition.physical_damage" required>
+                        <option  value="Yes">Yes</option>
+                        <option  value="No">No</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-cell horizontalFilters" ng-if="condition.physical_damage == 'Yes'  ">
+                <label class="labels" >Damaged_amount(Boxes)</label>
+                <div class="form-fields">
+                    <input type="number" class="form-control" ng-model="condition.damaged_amount" >
+                </div>
+            </div>
+            <div class="form-cell horizontalFilters">
+                <label class="labels" >VVM Status</label>
+
+                <div class="form-fields">
+                    <select class="input-large ng-pristine ng-valid" ng-model="condition.vvm_status" required>
+                        <option selected="selected" value="I (Okey)">I (Okey)</option>
+                        <option  value="II (Okey)">II (Okey)</option>
+                        <option  value="III( Bad)">III( Bad)</option>
+                        <option  value="IV (Bad)">IV (Bad)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-cell horizontalFilters" ng-if="condition.vvm_status == 'III( Bad)' || condition.vvm_status == 'IV( Bad)'">
+                <label class="labels" >Boxes With Problems</label>
+                <div class="form-fields">
+                    <input type="number" class="form-control" ng-model="condition.boxes_with_problems" ng-change="createVVMS()" >
+                </div>
+            </div>
+            <div class="form-cell horizontalFilters">
+            <label class="labels" >Partial Boxes</label>
+
+            <div class="form-fields">
+                <select class="input-large ng-pristine ng-valid" ng-model="condition.partials" required>
+                    <option selected="selected" value="No">No</option>
+                    <option  value="Yes">Yes</option>
+                </select>
+            </div>
+        </div>
+            <div class="form-cell horizontalFilters" ng-if="condition.partials == 'Yes'  ">
+                <label class="labels" >Number of Partials(Boxes)</label>
+                <div class="form-fields">
+                    <input type="number" class="form-control" ng-model="condition.number_of_partials" ng-change="createParials()">
+                </div>
+            </div>
+         <table class="table table-bordered table-condensed" ng-if="condition.partials == 'Yes' && condition.number_of_partials != 0">
+             <tr><th colspan="3">Fill Details Of Partial Boxes</tr>
+             <tr>
+                 <th>Lot Number</th>
+                 <th>Box Number</th>
+                 <th>Available Amount</th>
+             </tr>
+             <tr ng-repeat="items in condition.parials_boxes">
+                 <td>{{ items.lotnumber }}</td>
+                 <td><input type="number" class="form-control input-sm" ng-model="items.box_number" ></td>
+                 <td><input type="number" class="form-control input-sm" ng-model="items.available_amount" ></td>
+             </tr>
+         </table>
+            <table class="table table-bordered table-condensed" ng-if="getVVMStatus()">
+                <tr><th colspan="4"> Fill the Details for Boxes With Problems</tr>
+             <tr >
+                 <th>Lot Number</th>
+                 <th>Box Number</th>
+                 <th>Alarm in Electronic Device</th>
+                 <th>Cold Chain Monitor</th>
+             </tr>
+             <tr ng-repeat="items in condition.problem_boxes">
+                 <td>{{ items.lotnumber }}</td>
+                 <td><input type="number" class="form-control input-sm" ng-model="items.box_number" ></td>
+                 <td>
+                     <select ng-model="items.alarm">
+                         <option value=">= 45">>= 45&#8451;</option>
+                         <option value=">= 30">>= 30&#8451;</option>
+                         <option value=">= 10">>= 10&#8451;</option>
+                         <option value="< -0.5">< -0.5&#8451;</option>
+                     </select>
+                 </td>
+                 <td>
+                     <select ng-model="items.cold_chain">
+                         <option value="A">A</option>
+                         <option value="B">B</option>
+                         <option value="C">C</option>
+                         <option value="D">D</option>
+                     </select>
+                 </td>
+             </tr>
+         </table>
+
+
+
+        </div>
+        <div class='clearfix'>
+            <div class="form-cell horizontalFilters">
+                <label>Additional Comments</label>
+                <textarea ng-model="condition.problems"></textarea>
+            </div>
+            <div class="form-cell horizontalFilters">
+                <label>&nbsp;</label>
+                <div class="form-fields">
+                    <input class="btn btn-primary" type="button" ng-disabled="receive_package.$invalid" value="Confirm"  id="confirm_package_button" ng-click="addSingleItem(condition,data.current_item)"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input class="btn btn-danger btn-sm" type="button" value="Cancel" ng-click="cancelConfirmation()"/>
+                </div>
+            </div>
+        </div>
+
+</form>
+</div>

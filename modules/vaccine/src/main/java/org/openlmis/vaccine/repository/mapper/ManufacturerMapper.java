@@ -21,6 +21,6 @@ import java.util.List;
 @Repository
 public interface ManufacturerMapper {
 
-  @Select("select * from manufacturers order by name")
-  List<Manufacturer> getAll();
+    @Select("select * from manufacturers order by name")
+    List<Manufacturer> getAll();
 }

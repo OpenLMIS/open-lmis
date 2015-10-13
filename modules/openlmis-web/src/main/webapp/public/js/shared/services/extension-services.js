@@ -1263,6 +1263,9 @@ services.factory('VaccineUsageTrend', function ($resource){
     return $resource('/vaccine/report/vaccine-usage-trend.json', {}, {});
 });
 
+services.factory('VaccineReportLegendContent', function ($resource) {
+    return $resource('/report_legend.json', {}, {});
+});
 
 services.factory("FacilityGeoTree",function($resource)  {
     return   $resource('/geoFacilityTree.json', {}, {});
@@ -1313,4 +1316,5 @@ services.factory('ELMISInterfaceSave', function ($resource) {
 services.factory('FacilitiesByLevel', function($resource){
     return $resource('/reports/facility-By-level.json',{},{});
 });
+
 

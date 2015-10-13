@@ -37,19 +37,15 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class RnrTemplateServiceTest {
 
+  private final static Long EXISTING_PROGRAM_ID = 1L;
   @Mock
   private RnrTemplateRepository repository;
-
   @Mock
   private ProgramService programService;
-
   @Mock
   private ConfigurationSettingService configService;
-
   @InjectMocks
   private RnrTemplateService service;
-  private final static Long EXISTING_PROGRAM_ID = 1L;
-
 
   @Test
   public void shouldFetchAllRnRColumns() throws Exception {

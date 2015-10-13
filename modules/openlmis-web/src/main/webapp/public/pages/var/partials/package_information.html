@@ -1,0 +1,48 @@
+
+<div class="app-form" ng-controller="StockPackageController">
+    <div class='form-group'>
+        <h3>Package Information</h3>
+        <!--SSCC-->
+        <div class='form-row clearfix' id="viewTable">
+
+            <div class='form-row clearfix'  ng-include="'partials/packaging/add.html'" ng-if="!showTable && !showEdit"  > </div>
+            <div class='form-row clearfix'  ng-include="'partials/packaging/edit.html'" ng-if="!showTable && showEdit"  > </div>
+            <div ng-if="showTable  && !showEdit">
+                <button style="margin-bottom: 5px" role="button" data-toggle="modal" class="pull-right btn btn-primary" ng-click="addNew()" openlmis-message="button.add.new">Add New</button>
+
+                <table datatable="ng" class="table-bordered table table-striped ng-scope table-responsive" >
+                <thead>
+                <tr class="gradient-header">
+                    <th>Item</th>
+                    <th>GTIN</th>
+                    <th>Manufacture</th>
+                    <th>Doses per Vial</th>
+                    <th>Vials per Box</th>
+                    <th>Boxes per Box</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="package in gtin_lookups">
+                    <td>{{ getVaccineName(package.productid) }}</td>
+                    <td>{{ package.gtin }}</td>
+                    <td>{{ package.manufacturename }}</td>
+                    <td>{{ package.dosespervial }}</td>
+                    <td>{{ package.vialsperbox }}</td>
+                    <td>{{ package.boxesperbox }}</td>
+                    <td>
+                        &nbsp;
+                        &nbsp;
+                        <a  style="color:orange;cursor: pointer;" ng-click="editPackageInfo(package.id,package)"><i class="icon-pencil "></i></a>
+                        &nbsp;
+                        &nbsp;
+                        <a  style="color:red;cursor: pointer;" ng-click="deletePackageInfo(package.id,package)"><i class="icon-trash"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            </div>
+        </div>
+    </div>
+</div>

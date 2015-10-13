@@ -22,12 +22,12 @@ import java.util.List;
 @Service
 public class ManufacturerService {
 
-  @Autowired
-  private ManufacturerRepository repository;
+    @Autowired
+    private ManufacturerRepository repository;
 
 
-  public List<Manufacturer> getAll(){
-    return repository.getAll();
-  }
+    public List<Manufacturer> getAll() {
+        return repository.getAll();
+    }
 
 }

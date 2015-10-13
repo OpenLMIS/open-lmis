@@ -683,9 +683,9 @@ public class ReportLookupService {
 
         Set<String> years = new HashSet<>();
         Set<Schedule> schedules = new HashSet<>();
-        for (YearSchedulePeriodTree periodTree: yearSchedulePeriodTree){
+        for (YearSchedulePeriodTree periodTree : yearSchedulePeriodTree) {
             years.add(periodTree.getYear());
-            schedules.add(new Schedule(periodTree.getGroupid(), periodTree.getGroupname(),null, null));
+            schedules.add(new Schedule(periodTree.getGroupid(), periodTree.getGroupname(), null, null));
         }
 
         List<YearSchedulePeriodTree> yearList = new ArrayList<>();
@@ -708,7 +708,7 @@ public class ReportLookupService {
                         scheduleObject.getChildren().add(period);
                     }
                 }
-                if (scheduleObject.getChildren().size() > 0){
+                if (scheduleObject.getChildren().size() > 0) {
 
                     yearObject.getChildren().add(scheduleObject);
                 }
@@ -719,6 +719,10 @@ public class ReportLookupService {
         }
 
         return yearList;
+    }
+
+    public Long getCurrentPeriodIdForVaccine(){
+        return processingPeriodMapper.getCurrentPeriodIdForVaccine();
     }
 
     //New

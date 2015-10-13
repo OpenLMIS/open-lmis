@@ -2,6 +2,18 @@ DO
 $$
 BEGIN
 
+INSERT INTO vaccine_order_requisition_master_columns(
+            id, name, description, label, indicator, displayorder, mandatory,
+            createdby, createddate, modifiedby, modifieddate)
+
+VALUES(1,'Product','Product Name','Product','P',1,TRUE,1,'2015-09-20 00:00:00',1,'2015-09-20 00:00:00'),
+(2,'Maximum Stock','Maximum Stock','Maximum Stock','M',2,TRUE,1,'2015-09-20 00:00:00',1,'2015-09-20 00:00:00'),
+(3,'Reorder Level','Reorder Level','Reorder Level','R',3,TRUE,1,'2015-09-20 00:00:00',1,'2015-09-20 00:00:00'),
+(4,'Stock Available','Stock Available','Stock Available','S',4,TRUE,1,'2015-09-20 00:00:00',1,'2015-09-20 00:00:00'),
+(5,'Amount Required','Amount Required','Amount Required','A',5,TRUE,1,'2015-09-20 00:00:00',1,'2015-09-20 00:00:00');
+
+
+
   INSERT INTO lots (productid, lotnumber, manufacturername, manufacturedate, expirationdate)
   VALUES ((SELECT id FROM products WHERE primaryname = 'BCG'),'A1','Manufacturer 1','2015-05-01 00:00:00','2016-05-01 00:00:00')
     ,((SELECT id FROM products WHERE primaryname = 'BCG'),'B1','Manufacturer 2','2015-06-01 00:00:00','2016-06-01 00:00:00')
@@ -124,5 +136,7 @@ BEGIN
     ,((SELECT id FROM stock_cards WHERE notes = 'Test stock card for OPV at Karatu DVS'),(SELECT loh.id FROM lots_on_hand loh JOIN stock_cards sc ON sc.id = loh.stockcardid JOIN lots l ON l.id = loh.lotid WHERE sc.notes = 'Test stock card for OPV at Karatu DVS' AND l.lotnumber = 'B2'),'DEBIT',10)
   ;
 
+
 END;
 $$
+

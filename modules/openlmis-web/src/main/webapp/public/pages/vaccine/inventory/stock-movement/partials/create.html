@@ -1,0 +1,163 @@
+<!--
+~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+~
+~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+~
+~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+~
+~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+-->
+
+<!DOCTYPE html>
+
+<style>
+    .table-rows td{
+       line-height: 79px;
+    }
+    .red {
+        color: red;
+    }
+    .blue{
+        color:blue;
+    }
+    .orange{
+        color:black;
+    }
+
+
+    .rnr-table .table-bordered  td.line {
+        border-bottom: 1px solid #ccc !important;
+        padding-bottom:4px !important;
+    }
+  /*  #nonFullSupplyFrozenTable {
+        width: 100px !important;
+    }
+
+    table #podTable .table.table-bordered{
+
+        width: 700px !important;
+    }
+    div .float-left .right-table {
+        width: 700px !important;
+        border: 0px !important;
+    } */
+
+</style>
+<div>
+    <ng-include src="'/public/pages/vaccine/inventory/stock-movement/partials/header.html'"></ng-include>
+
+    <form name="formDistribute">
+
+    <div class="rnr-table" tab-scroll bottom-offset="180" adjust-height>
+        <div  class="float-left left-table">
+
+            <table id="nonFullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
+
+
+                <thead>
+
+                <tr>
+                    <th class="col-{{column.name}}" ng-repeat="column in columns[0].fixed">
+                        <span openlmis-message="column.label"></span>
+                    </th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td class="productCategory" id="vaccine" colspan="{{columns[0].fixed.length}}">
+                        Vaccine
+                    </td>
+                </tr>
+                <tr  ng-repeat-start="c in pageLineItems" class="table-rows">
+
+                    <td  rowspan="{{c.lots.length}}" class="col-product cell-input  line" ><span class="cell-text">{{c.product.primaryName}}</span></td>
+                    <td  rowspan="{{c.lots.length}}" class="col-dosesRequested cell-input  line" ><span class="cell-text">{{c.dosesRequested}}</span></td>
+
+
+                </tr>
+                <tr ng-repeat-end ></tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="float-left right-table parent" custom-horizontal-scroll>
+
+
+            <table id="podTable" class="table table-bordered" fixed-table-header>
+
+                <thead>
+                    <tr>
+                        <th class="col-{{column.name}}" ng-repeat="column in columns[1].scrollable">
+                            <span openlmis-message="column.label"></span>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+              <tr>
+
+                    <td class="productCategory" id="vaccine" colspan="{{columns[1].scrollable.length}}">
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr ng-repeat-start="c in pageLineItems">
+                    <td rowspan="{{c.lots.length}}" class="col-quantityOnHand cell-input line" ><span class="cell-text">{{c.quantityOnHand}}</span></td>
+                    <td class="col-lot cell-input cell-text number"><span class="cell-text">{{c.lots[0].lotCode}}</span></td>
+                    <td class="col-lot cell-input cell-text number"><span class="cell-text">{{c.lots[0].expirationDate}}</span></td>
+                    <td class="col-lot cell-input cell-text number"><span class="cell-text">{{c.lots[0].quantityRemain}}</span></td>
+                    <td class="col-lot cell-input cell-text number"><span class="cell-text">{{c.lots[0].vvmStatus}}</span></td>
+                    <td class="cell-input col-general">
+                      <span class="cell-text">  <input numeric-validator="positiveInteger" maxlength="8" ng-model="c.lots[0].dosesIssued" ng-change="sumLots(c)" type="text" />
+                    </span></td>
+                    <td rowspan="{{c.lots.length}}" id="gap" class="col-gap cell-input  line" ><span class="cell-text {{(c.totalIssued < c.amountRequested)?'red':(c.sum == 0 )?'blue':'orange'}}"  ng-bind="c.sum | positive" ></span></td>
+
+                </tr>
+                <tr ng-repeat-end ng-repeat="lot in c.lots | orderBy : sortComment : true" ng-show="!$first">
+
+                    <td  class="col-lot cell-input cell-text number line"><span class="cell-text" style="text-height:20">{{lot.lotCode}}</span></td>
+                    <td   class="col-lot cell-input cell-text number line"><span class="cell-text">{{lot.expirationDate }}</span></td>
+                    <td    class="col-lot cell-input cell-text number line"><span class="cell-text">{{lot.quantityRemain}}</span></td>
+                    <td    class="col-lot cell-input cell-text number line"><span class="cell-text">{{lot.vvmStatus}}</span></td>
+                    <td    class="cell-input col-general line"><span class="cell-text  line"><input numeric-validator="positiveInteger"  ng-model="lot.dosesIssued" maxlength="8" type="text" ng-change="sumLots(c)"/></span></td>
+                    <td     rowspan="{{lot.length}}" ng-show="!$last"></td>
+
+                </tr>
+                <tr ng-repeat-end></tr>
+                </tbody>
+            </table>
+         </div>
+
+        <div class="clear-both"></div>
+
+    </div>
+
+    <openlmis-pagination ng-show="pageLineItems.length > 0" num-pages="numberOfPages" current-page="currentPage"
+                         max-size="10"
+                         error-pages="errorPages"></openlmis-pagination>
+
+
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+        <div class="form-cell button-row">
+            <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+                   openlmis-message="button.save" ng-click="save()"/>
+            <input id="submitButton" type="submit" id="submit-button" class="btn btn-primary save-button"
+                   openlmis-message="button.submit" ng-click="submit()"/>
+            <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                   ng-click="cancel()"/>
+
+        </div>
+
+        <div class="toolbar-error" id="saveErrorMsgDiv">
+            <span openlmis-message="error" ng-show="error"></span>&nbsp;
+            <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+        </div>
+        <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+    </div>
+    </form>
+
+</div>
+

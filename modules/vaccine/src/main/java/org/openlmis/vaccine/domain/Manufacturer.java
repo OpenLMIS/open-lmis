@@ -22,8 +22,8 @@ import org.openlmis.core.domain.BaseModel;
 @AllArgsConstructor
 public class Manufacturer extends BaseModel {
 
-  private String name;
+    private String name;
 
-  private String website;
+    private String website;
 
 }

@@ -37,7 +37,9 @@
         <td style="height: 35px" class="cell-input"><span class="cell-text">{{effect.productName}}</span></td>
         <td style="height: 35px" class="cell-input"><span
           class="cell-text">{{effect.date | date : 'dd MMM, yyyy'}}</span></td>
-        <td class="cell-input cell-text"><span class="cell-text"><span ng-repeat="m in manufacturers" ng-show="effect.manufacturer == m.id">{{m.name}}</span></span></td>
+        <td class="cell-input cell-text"><span class="cell-text"><span ng-repeat="m in manufacturers"
+                                                                       ng-show="effect.manufacturer == m.id">{{m.name}}</span></span>
+        </td>
         <td class="cell-input cell-text"><span class="cell-text">{{effect.batch}}</span></td>
         <td class="cell-input cell-text"><span class="cell-text">{{effect.expiry | date : 'MMM, yyyy'}}</span></td>
         <td class="number cell-input" style="text-align: right;"><span
@@ -114,8 +116,10 @@
               <span openlmis-message="label.vaccine.adverse.effect.manufacturer"></span>
               <span class="label-required"> *</span>
             </label>
-            <select id="manufacturer" ng-model="currentEffect.manufacturer" >
-              <option ng-selected="currentEffect.manufacturer == m.id" value="{{m.id}}" ng-repeat="m in manufacturers">{{m.name}}</option>
+            <select id="manufacturer" ng-model="currentEffect.manufacturer">
+              <option ng-selected="currentEffect.manufacturer == m.id" value="{{m.id}}" ng-repeat="m in manufacturers">
+                {{m.name}}
+              </option>
             </select>
           </div>
           <div class="span6">

@@ -8,9 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
+
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.apache.tools.ant.taskdefs.condition.Os
-import org.gradle.api.tasks.Exec
 
 apply plugin: 'jetty'
 apply plugin: 'war'
@@ -169,6 +169,7 @@ dependencies {
             project(':modules:distribution'),
             project(':modules:odk-api'),
             project(':modules:equipment'),
+            project(':modules:demographics'),
             project(':modules:vaccine'),
             project(':modules:help'),
             project(':modules:stock-management')
@@ -180,6 +181,16 @@ dependencies {
             project(path: ':modules:distribution', configuration: 'testFixtures'),
             project(path: ':modules:report', configuration: 'testFixtures'),
             project(path: ':modules:reporting', configuration: 'testFixtures')
+}
+
+sonarRunner {
+    sonarProperties {
+        properties["sonar.sources"] += 'src/main/webapp/public/js'
+        properties["sonar.sources"] += 'src/main/webapp/public/pages'
+        properties["sonar.sources"] += 'src/main/webapp/public/site'
+        properties["sonar.sources"] += 'src/main/webapp/public/less'
+        properties["sonar.tests"] += 'src/test/javascript/specs'
+    }
 }
 
 jettyRun {

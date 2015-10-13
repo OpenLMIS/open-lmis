@@ -49,34 +49,24 @@ import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 public class RestRequisitionService {
 
   public static final boolean EMERGENCY = false;
-
+  private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
   @Autowired
   private RequisitionService requisitionService;
-
   @Autowired
   private OrderService orderService;
-
   @Autowired
   private FacilityService facilityService;
-
   @Autowired
   private ProgramService programService;
-
   @Autowired
   private RnrTemplateService rnrTemplateService;
-
   @Autowired
   private RestRequisitionCalculator restRequisitionCalculator;
-
   @Autowired
   private ProcessingPeriodService processingPeriodService;
-
   @Autowired
   private FacilityApprovedProductService facilityApprovedProductService;
-
   private List<FacilityTypeApprovedProduct> nonFullSupplyFacilityApprovedProductByFacilityAndProgram;
-
-  private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
 
   @Transactional
   public Rnr submitReport(Report report, Long userId) {

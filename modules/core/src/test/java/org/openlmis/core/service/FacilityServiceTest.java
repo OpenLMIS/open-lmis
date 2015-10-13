@@ -95,6 +95,18 @@ public class FacilityServiceTest {
   @InjectMocks
   private FacilityService facilityService;
 
+  private static Matcher<Event> eventMatcher(final UUID uuid, final String title, final DateTime timestamp,
+                                             final String uri, final String content, final String category) {
+    return new ArgumentMatcher<Event>() {
+      @Override
+      public boolean matches(Object argument) {
+        Event event = (Event) argument;
+        return event.getUuid().equals(uuid.toString()) && event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
+                event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
+      }
+    };
+  }
+
   @Test
   public void shouldReturnNullIfUserIsNotAssignedAFacility() {
     when(facilityRepository.getHomeFacility(1L)).thenReturn(null);
@@ -142,18 +154,6 @@ public class FacilityServiceTest {
     verify(eventService).notify(argThat(eventMatcher(uuid, "Facility", dateTime, "",
       facilityFeedDTO.getSerializedContents(), "facilities")));
 
-  }
-
-  private static Matcher<Event> eventMatcher(final UUID uuid, final String title, final DateTime timestamp,
-                                             final String uri, final String content, final String category) {
-    return new ArgumentMatcher<Event>() {
-      @Override
-      public boolean matches(Object argument) {
-        Event event = (Event) argument;
-        return event.getUuid().equals(uuid.toString()) && event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
-          event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
-      }
-    };
   }
 
   @Test

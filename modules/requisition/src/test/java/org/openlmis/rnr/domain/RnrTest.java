@@ -46,10 +46,10 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 public class RnrTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();
-  private Rnr rnr;
   ProgramRnrTemplate rnrTemplate;
   RegimenTemplate regimenTemplate;
   List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
+  private Rnr rnr;
 
   @Before
   public void setUp() throws Exception {

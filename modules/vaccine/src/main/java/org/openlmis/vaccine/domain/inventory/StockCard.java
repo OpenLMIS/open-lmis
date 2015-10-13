@@ -39,4 +39,11 @@ public class StockCard extends BaseModel {
     List<StockCardEntry> entries;
 
     List<LotOnHand> lotsOnHand;
+
+
+    Integer overriddenisa;
+    Integer maxmonthsofstock;
+    Double minmonthsofstock;
+    Double eop;
+
 }

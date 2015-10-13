@@ -17,31 +17,31 @@ import java.util.List;
 @Service
 public class RestProgramsService {
 
-  @Autowired
-  private ProgramService programService;
+    @Autowired
+    private ProgramService programService;
 
-  @Autowired
-  private FacilityService facilityService;
+    @Autowired
+    private FacilityService facilityService;
 
-  @Autowired
-  private ProgramProductService programProductService;
+    @Autowired
+    private ProgramProductService programProductService;
 
-  public List<ProgramWithProducts> getAllProgramsWithProductsByFacilityCode(String facilityCode) {
-    Facility facility = facilityService.getFacilityByCode(facilityCode);
+    public List<ProgramWithProducts> getAllProgramsWithProductsByFacilityCode(String facilityCode) {
+        Facility facility = facilityService.getFacilityByCode(facilityCode);
 
-    List<ProgramWithProducts> programsWithProducts = new ArrayList();
-    for (Program program : programService.getByFacility(facility.getId())) {
-      ProgramWithProducts programWithProducts = new ProgramWithProducts();
-      programWithProducts.setProgramCode(program.getCode());
-      programWithProducts.setProgramName(program.getName());
-      List<Product> products = new ArrayList();
-      for (ProgramProduct programProduct: programProductService.getByProgram(program)) {
-        products.add(programProduct.getProduct());
-      }
-      programWithProducts.setProducts(products);
-      programsWithProducts.add(programWithProducts);
+        List<ProgramWithProducts> programsWithProducts = new ArrayList();
+        for (Program program : programService.getByFacility(facility.getId())) {
+            ProgramWithProducts programWithProducts = new ProgramWithProducts();
+            programWithProducts.setProgramCode(program.getCode());
+            programWithProducts.setProgramName(program.getName());
+            List<Product> products = new ArrayList();
+            for (ProgramProduct programProduct : programProductService.getByProgram(program)) {
+                products.add(programProduct.getProduct());
+            }
+            programWithProducts.setProducts(products);
+            programsWithProducts.add(programWithProducts);
+        }
+
+        return programsWithProducts;
     }
-
-    return programsWithProducts;
-  }
 }

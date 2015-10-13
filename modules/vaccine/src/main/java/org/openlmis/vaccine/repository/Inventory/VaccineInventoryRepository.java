@@ -73,4 +73,11 @@ public class VaccineInventoryRepository {
         return mapper.insertAdjustmentReasons(reason);
     }
 
+    public List<Lot> getLotsByProductId(Long productId) {
+        return mapper.getLotsByProductId(productId);
+    }
+
+    public List<StockCard> getStockCards(Long facilityId, Long programId) {
+        return mapper.getAllByFacilityAndProgram(facilityId, programId);
+    }
 }

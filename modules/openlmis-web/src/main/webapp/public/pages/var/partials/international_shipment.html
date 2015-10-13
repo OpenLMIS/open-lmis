@@ -1,0 +1,29 @@
+<h3>International Shipment</h3>
+{{ManufaturePackages}}
+<form id="international_shipment"  ng-controller="VaccineModuleController">
+        <table cellspacing="2">
+            <tr>
+                <td>SSCC</td>
+                <td><input type="text" name="sscc_imput" ng-model="shipment.scc" id="sscc_imput"/></td>
+                <td>Item</td>
+                <td><input type="text" name="item_input" ng-model="shipment.item" id="item_input"/></td>
+            </tr>
+            <tr>
+                <td>Manufacture Date</td>
+                <td><input type="text" name="manu_date_input" ng-model="shipment.manufacture_date" id="manu_date_input"/></td>
+                <td>Expiry Date</td>
+                <td><input type="text" name="exp_date_input" ng-model="shipment.expiry_date" id="exp_date_input"/></td>
+            </tr>
+            <tr>
+                <td>Lot Number</td>
+                <td><input type="text" name="lot_number" ng-model="shipment.lot_number" id="lot_number"/></td>
+                <td>Quantity(Numner of Doses)</td>
+                <td><input type="text" name="quanity_doses" ng-model="shipment.quantity_doses" id="quanity_doses"/></td>
+            </tr>
+            <tr>
+                <td ></td>
+                <td  style="text-align: right"><input type="submit" ng-click="internationalShipment(shipment)" value="Add" id="add"/></td>
+                <td colspan="2"><input type="button" value="Reset" ng-click="reset(shipment)" id="reset"/></td>
+            </tr>
+        </table>
+    </form>

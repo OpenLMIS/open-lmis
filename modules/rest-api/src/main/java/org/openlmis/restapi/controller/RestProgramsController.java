@@ -22,16 +22,16 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @NoArgsConstructor
 public class RestProgramsController extends BaseController {
 
-  @Autowired
-  private RestProgramsService programService;
+    @Autowired
+    private RestProgramsService programService;
 
-  @RequestMapping(value = "/rest-api/programs-with-products", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> getProgramWithProductsByFacility(@RequestParam String facilityCode) {
-    try {
-      List<ProgramWithProducts> programsWithProducts = programService.getAllProgramsWithProductsByFacilityCode(facilityCode);
-      return response("programsWithProducts", programsWithProducts);
-    } catch (DataException e) {
-      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+    @RequestMapping(value = "/rest-api/programs-with-products", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<RestResponse> getProgramWithProductsByFacility(@RequestParam String facilityCode) {
+        try {
+            List<ProgramWithProducts> programsWithProducts = programService.getAllProgramsWithProductsByFacilityCode(facilityCode);
+            return response("programsWithProducts", programsWithProducts);
+        } catch (DataException e) {
+            return error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
     }
-  }
 }

@@ -534,7 +534,7 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
           $scope.facilities = [];
         }
         $scope.facilities.unshift({
-          name: messageService.get('report.filter.select.facility')
+          name: messageService.get('report.filter.all.facilities')
         });
       });
     };
@@ -546,7 +546,7 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
 
         scope.facilities = [];
         scope.facilities.push({
-          name: messageService.get('report.filter.select.facility')
+          name: messageService.get('report.filter.all.facilities')
         });
 
         scope.filter.facility = (isUndefined($routeParams.facility) || $routeParams.facility === '') ? 0 : $routeParams.facility;
@@ -705,8 +705,8 @@ app.directive('vaccinePeriodTreeFilter', ['GetVaccineReportPeriodTree', '$routeP
         scope.$evalAsync(function() {
           //Load period tree
           GetVaccineReportPeriodTree.get({}, function(data) {
-            scope.periods = data.yearSchedulePeriod;
-
+            scope.periods = data.vaccinePeriods.periods;
+            scope.filter.defaultPeriodId = data.vaccinePeriods.currentPeriodId;
             scope.period_placeholder = messageService.get('label.select.period');
             if (!angular.isUndefined( scope.periods)) {
               if (scope.periods.length === 0)

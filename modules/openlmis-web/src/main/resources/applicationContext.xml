@@ -10,11 +10,11 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/mvc
@@ -75,6 +75,7 @@
     <import resource="classpath:/applicationContext-odkapi.xml"/>
     <import resource="classpath:/applicationContext-equipment.xml" />
     <import resource="classpath:/applicationContext-help.xml" />
+    <import resource="classpath:/applicationContext-demographics.xml"/>
     <import resource="classpath:/applicationContext-vaccine.xml" />
     <import resource="classpath:/applicationContext-stock-management.xml" />
 

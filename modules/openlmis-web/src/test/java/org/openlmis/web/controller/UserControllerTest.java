@@ -175,8 +175,8 @@ public class UserControllerTest {
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(responseUser, is(user));
-    assertThat(responseUser.getIsMobileUser(),is(true));
-    assertThat(responseUser.getVerified(),is(true));
+    assertThat(responseUser.getIsMobileUser(), is(true));
+    assertThat(responseUser.getVerified(), is(true));
   }
 
   @Test

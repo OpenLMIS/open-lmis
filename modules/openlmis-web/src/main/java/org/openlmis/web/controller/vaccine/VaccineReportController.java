@@ -11,21 +11,26 @@
  */
 package org.openlmis.web.controller.vaccine;
 
+import org.openlmis.core.domain.User;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.vaccine.domain.reports.VaccineReport;
+import org.openlmis.vaccine.dto.OrderRequisitionDTO;
 import org.openlmis.vaccine.service.reports.VaccineReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/vaccine/report/")
@@ -93,13 +98,25 @@ public class VaccineReportController extends BaseController {
 
     if (periodId == null || periodId == 0) return null;
 
-    return OpenLmisResponse.response("vaccineData", service.getMonthlyVaccineReport( facilityId, periodId, zoneId));
+    return OpenLmisResponse.response("vaccineData", service.getMonthlyVaccineReport(facilityId, periodId, zoneId));
 
   }
 
   @RequestMapping(value = "vaccine-usage-trend")
   public ResponseEntity<OpenLmisResponse> vaccineUsageTrend(@RequestParam("facilityCode") String facilityCode, @RequestParam("productCode") String productCode, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId){
+
     return OpenLmisResponse.response("vaccineUsageTrend", service.vaccineUsageTrend(facilityCode, productCode, periodId, zoneId));
   }
+
+
+
+  @RequestMapping(value = "/orderRequisition/downloadPDF", method = RequestMethod.GET)
+  public ModelAndView downloadPDF() {
+
+    List<OrderRequisitionDTO> listOrders = new ArrayList<OrderRequisitionDTO>();
+
+    return new ModelAndView("orderRequisitionPDF", "listOrders", listOrders);
+  }
+
 
 }

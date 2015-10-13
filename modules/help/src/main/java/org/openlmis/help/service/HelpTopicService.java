@@ -188,4 +188,8 @@ public class HelpTopicService {
         HelpTopic siteContent= this.repository.getSiteContent(contentName);
         return siteContent;
     }
+
+    public List<HelpTopic> getVaccineReportLegendContent(){
+        return this.repository.getVaccineReportLegend();
+    }
 }

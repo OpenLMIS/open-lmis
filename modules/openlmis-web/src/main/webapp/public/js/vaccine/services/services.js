@@ -126,7 +126,122 @@ services.factory('VaccineProgramProducts', function ($resource) {
   return $resource('/vaccine/inventory/programProducts/programId/:programId.json', {}, {});
 });
 
+services.factory('ProductLots', function ($resource) {
+  return $resource('/vaccine/inventory/lots/byProduct/:productId.json', {productId:'@productId'}, {});
+});
+
+services.factory('SaveVaccineInventoryReceived',function($resource){
+    return $resource('/vaccine/inventory/stock/credit.json',{},{update:{method:'PUT'}});
+});
+
+services.factory('SaveVaccineInventoryConfigurations',function($resource){
+    return $resource('/vaccine/inventory/configuration/save.json',{},{update:{method:'PUT'}});
+});
+
+services.factory('VaccineInventoryConfigurations',function($resource){
+    return $resource('/vaccine/inventory/configuration/getAll.json',{},{});
+});
+
 services.factory('ManufacturerList', function ($resource) {
   return $resource('/vaccine/manufacturers.json', {}, {});
 });
 
+
+
+//Vaccine Order Requisition STart services
+services.factory('VaccineIssueStock', function($resource){
+    return $resource('/vaccine/inventory/stock/debit.json',{}, update);
+});
+
+/*
+
+services.factory('VaccineSupervisedIvdPrograms', function ($resource) {
+    return $resource('/vaccine/orderRequisition/ivd-form/supervised-programs.json', {}, {});
+});
+*/
+
+services.factory('VaccineReportPrograms', function ($resource) {
+    return $resource('/vaccine/orderRequisition/programs.json', {}, {});
+});
+
+
+services.factory('VaccineOrderRequisitionReportPeriods', function ($resource) {
+    return $resource('/vaccine/orderRequisition/periods/:facilityId/:programId.json', {facilityId: '@facilityId', programId: '@programId'}, {});
+});
+
+services.factory('ViewOrderRequisitionVaccineReportPeriods', function ($resource) {
+    return $resource('/vaccine/orderRequisition/view-periods/:facilityId/:programId.json', {facilityId: '@facilityId', programId: '@programId'}, {});
+});
+
+
+services.factory('VaccineOrderRequisitionReportInitiate', function ($resource) {
+    return $resource('/vaccine/orderRequisition/initialize/:periodId/:programId/:facilityId.json', {facilityId: '@facilityId', programId: '@programId', periodId: '@periodId'}, {});
+});
+
+services.factory('VaccineOrderRequisitionReportInitiateEmergency', function ($resource) {
+    return $resource('/vaccine/orderRequisition/initializeEmergency/:periodId/:programId/:facilityId.json', {facilityId: '@facilityId', programId: '@programId', periodId: '@periodId'}, {});
+});
+
+
+services.factory('VaccineOrderRequisitionReport', function ($resource) {
+    return $resource('/vaccine/orderRequisition/get/:id.json', {id: '@id'}, {});
+});
+
+services.factory('UserHomeFacility', function ($resource) {
+    return $resource('/vaccine/orderRequisition/userHomeFacility.json', {}, {});
+});
+
+
+services.factory('UserPrograms', function ($resource) {
+    return $resource('/reports/user-programs.json', {}, {});
+});
+
+services.factory('VaccineOrderRequisitionSubmit', function ($resource) {
+    return $resource('/vaccine/orderRequisition/submit.json', {}, update);
+});
+
+
+services.factory('VaccineOrderRequisitionColumns', function ($resource) {
+    return $resource('/vaccine/columns/get/columns.json', {}, {});
+});
+
+services.factory('VaccinePendingRequisitions', function ($resource) {
+    return $resource('/vaccine/orderRequisition/getPendingRequest/:facilityId/:programId.json', {}, {});
+});
+
+// ENd VOR
+
+
+//ADDITIONAL
+
+services.factory('LoggedInUserDetails',function($resource){
+    return $resource('/vaccine/orderRequisition/loggedInUserDetails.json',{},{});
+});
+
+services.factory('ProgramForUserHomeFacility', function($resource){
+    return $resource('/vaccine/orderRequisition/order-requisition/programs.json',{},{});
+});
+
+services.factory('VaccineOrderRequisitionInsert', function($resource){
+    return $resource('/vaccine/orderRequisition/initialize/:programId/:facilityId.json',{programId:'@programId',facilityId:'@facilityId'},{});
+});
+
+services.factory('VaccineOrderRequisitionLastReport', function($resource){
+    return $resource('/vaccine/orderRequisition/lastReport/:facilityId/:programId.json',{facilityId:'@facilityId',programId:'@programId'},{});
+});
+
+services.factory('VaccineOrderRequisitionSave', function ($resource) {
+    return $resource('/vaccine/orderRequisition/save.json', {}, update);
+});
+
+services.factory('VaccineOrderRequisitionSubmit', function ($resource) {
+    return $resource('/vaccine/orderRequisition/submit.json', {}, update);
+});
+
+services.factory('VaccineHomeFacilityPrograms', function ($resource) {
+    return $resource('/vaccine/orderRequisition/programs.json', {}, {});
+});
+
+services.factory('UpdateOrderRequisitionStatus',function($resource){
+    return $resource('/vaccine/orderRequisition/updateOrderRequest/:orderId.json',{orderId:'@orderId'},{update:{method:'PUT'}});
+});

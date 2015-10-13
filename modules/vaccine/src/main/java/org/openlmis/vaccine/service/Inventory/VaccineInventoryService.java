@@ -97,7 +97,8 @@ public class VaccineInventoryService {
                 StockCard newStockCard = new StockCard();
                 newStockCard.setFacilityId(facilityId);
                 newStockCard.setProductId(productId);
-                newStockCard.setTotalQuantityOnHand(0L);
+                Long quantity = (transaction.getQuantity() != null) ? transaction.getQuantity() : 0L;
+                newStockCard.setTotalQuantityOnHand(quantity);
                 repository.insertStockCard(newStockCard);
 
                 Long lotSum = 0L;
@@ -222,10 +223,30 @@ public class VaccineInventoryService {
                         }
 
                     }
+                    existStockCard.setTotalQuantityOnHand(newTotalQuantity);
+                } else {
+                    if (type == StockCardEntryType.ADJUSTMENT) {
+                        existStockCard.setTotalQuantityOnHand(transaction.getQuantity());
+//                        TODO Insert Adjustment resons
+                    } else if (type == StockCardEntryType.CREDIT) {
+                        existStockCard.setTotalQuantityOnHand(transaction.getQuantity() + newTotalQuantity);
+                    } else if (type == StockCardEntryType.DEBIT) {
+
+                        existStockCard.setTotalQuantityOnHand(newTotalQuantity - transaction.getQuantity());
+                    }
                 }
-                existStockCard.setTotalQuantityOnHand(newTotalQuantity);
                 repository.updateStockCard(existStockCard);
             }
         }
     }
+
+    public List<Lot> getLotsByProductId(Long productId) {
+        return repository.getLotsByProductId(productId);
+    }
+
+
+    public List<StockCard> getStockCards(Long facilityId, Long programId) {
+        return repository.getStockCards(facilityId, programId);
+    }
+
 }

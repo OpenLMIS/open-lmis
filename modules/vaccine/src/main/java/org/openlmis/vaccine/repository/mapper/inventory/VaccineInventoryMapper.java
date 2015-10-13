@@ -82,9 +82,10 @@ public interface VaccineInventoryMapper {
     Integer insertLotsOnHand(LotOnHand lotOnHand);
 
     @Insert("insert into stock_card_entries " +
-            " (stockcardid, lotonhandid, type, quantity, adjustmentreason, createdby, createddate, modifiedby,modifieddate )" +
+            " (stockcardid, lotonhandid, type, quantity,  createdby, createddate, modifiedby,modifieddate )" +
             " values " +
-            " (#{stockCardId}, #{lotOnHandId}, #{type}::stockcardentrytype, #{quantity}, #{adjustmentReason},#{createdBy},NOW(),#{modifiedBy},NOW()) ")
+            " (#{stockCardId}, #{lotOnHandId}, #{type}, #{quantity}, #{createdBy},NOW(),#{modifiedBy},NOW()) ")
+
     @Options(useGeneratedKeys = true)
     Integer insertStockCardEntry(StockCardEntry stockCardEntry);
 
@@ -107,5 +108,48 @@ public interface VaccineInventoryMapper {
             " values " +
             " (#{lotOnHandId},#{name},#{quantity},NOW(),#{createdBy},NOW(),#{modifiedBy},NOW())")
     Integer insertAdjustmentReasons(AdjustmentReason adjustmentReason);
+
+    @Select("SELECT *" +
+            " FROM lots" +
+            " WHERE productid = #{productId} ")
+    @Results({
+            @Result(property = "lotCode", column = "lotnumber"),
+    })
+    List<Lot> getLotsByProductId(@Param("productId") Long productId);
+
+
+
+    @Select("SELECT *" +
+            " FROM vw_stock_cards" +
+            " WHERE facilityid = #{facilityId}" +
+            " AND programid = #{programId}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "product", column = "productId", javaType = Product.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
+            @Result(property = "entries", column = "id", javaType = List.class,
+                    many = @Many(select = "getEntries")),
+            @Result(property = "lotsOnHand", column = "id", javaType = List.class,
+                    many = @Many(select = "getLotsOnHand"))
+
+    })
+    List<StockCard> getAllByFacilityAndProgram(@Param("facilityId")Long facilityId, @Param("programId")Long programId);
+
+
+    @Select("SELECT *" +
+            " FROM stock_card_entries" +
+            " WHERE stockcardid = #{stockCardId}" +
+            " ORDER BY createddate DESC")
+    List<StockCardEntry> getEntries(@Param("stockCardId")Long stockCardId);
+
+    @Select("SELECT *" +
+            " FROM lots_on_hand" +
+            " WHERE stockcardid = #{stockCardId}")
+    @Results({
+            @Result(property = "lot", column = "lotId", javaType = Lot.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.inventory.LotDtoMapper.getById"))
+    })
+    List<LotOnHand> getLotsOnHand(@Param("stockCardId")Long stockCardId);
+
 
 }

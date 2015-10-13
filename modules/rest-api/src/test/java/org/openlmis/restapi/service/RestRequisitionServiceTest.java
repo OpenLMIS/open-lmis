@@ -79,38 +79,29 @@ public class RestRequisitionServiceTest {
   @Mock
   UserService userService;
   @Mock
-  private OrderService orderService;
-  @Mock
-  private FacilityService facilityService;
-
-  @Mock
-  private RnrTemplateService rnrTemplateService;
-
-  @Mock
-  private RestRequisitionCalculator restRequisitionCalculator;
-
-  @Mock
-  private ProcessingPeriodService periodService;
-
-  @Mock
   FacilityApprovedProductService facilityApprovedProductService;
-
   @InjectMocks
   RestRequisitionService service;
   Rnr requisition;
   Report report;
   User user;
-
   byte[] encodedCredentialsBytes;
-
-  @Mock
-  private ProgramService programService;
-
-  @Mock
-  private ProductService productService;
-
   String validProductCode;
   RnrLineItem rnrLineItem;
+  @Mock
+  private OrderService orderService;
+  @Mock
+  private FacilityService facilityService;
+  @Mock
+  private RnrTemplateService rnrTemplateService;
+  @Mock
+  private RestRequisitionCalculator restRequisitionCalculator;
+  @Mock
+  private ProcessingPeriodService periodService;
+  @Mock
+  private ProgramService programService;
+  @Mock
+  private ProductService productService;
 
   @Before
   public void setUp() throws Exception {

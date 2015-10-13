@@ -16,6 +16,7 @@ import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.vaccine.dto.ProgramColumnTemplateDTO;
 import org.openlmis.vaccine.service.VaccineColumnTemplateService;
+import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionsColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,8 @@ public class VaccineColumnTemplateController extends BaseController {
 
   @Autowired
   VaccineColumnTemplateService service;
+  @Autowired
+  VaccineOrderRequisitionsColumnService columnService;
 
   @RequestMapping(value = "get/{programId}")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable Long programId) {
@@ -40,4 +43,11 @@ public class VaccineColumnTemplateController extends BaseController {
     service.saveChanges(programColumnDTO.getColumns());
     return OpenLmisResponse.response("columns", service.getTemplate(programColumnDTO.getProgramId()));
   }
+
+  @RequestMapping(value = "get/columns")
+  public ResponseEntity<OpenLmisResponse>getAll(){
+
+    return OpenLmisResponse.response("columns",columnService.getAllColumns());
+  }
+
 }

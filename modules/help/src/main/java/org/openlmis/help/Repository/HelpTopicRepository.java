@@ -63,7 +63,7 @@ public class HelpTopicRepository {
         return this.mapper.loadRoleRootHelptopicList(loggedUserId);
     }
 public List<HelpTopic> loadChildrenOfHelpTopic(Long loggedUserId, HelpTopic parentHTopic) {
-    return this.mapper.getRoleHelpTopicChildrenList(loggedUserId,parentHTopic.getId());
+    return this.mapper.getRoleHelpTopicChildrenList(loggedUserId, parentHTopic.getId());
     }
 
     public void uploadHelpDocument(HelpDocument helpDocument) {
@@ -78,4 +78,8 @@ public List<HelpTopic> loadChildrenOfHelpTopic(Long loggedUserId, HelpTopic pare
       siteContent=this.mapper.getSiteContent(SiteConstantEnum.SITE_CONTENT.getValue(),contentName);
       return siteContent;
     }
+
+  public List<HelpTopic> getVaccineReportLegend(){
+      return this.mapper.getVaccineReportLegendContent();
+  }
 }
