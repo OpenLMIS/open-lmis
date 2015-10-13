@@ -1,0 +1,179 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<style>
+
+    table td.disabled, .rnr-table .table-bordered td.disabled {
+        background-color: #F0F0F0;
+
+    }
+    .table-rows td{
+        line-height: 79px;
+    }
+    .red {
+        color: red;
+    }
+    .blue{
+        color:blue;
+    }
+    .orange{
+        color:black;
+    }
+
+
+    .rnr-table .table-bordered  td.line {
+        border-bottom: 1px solid #ccc !important;
+        padding-bottom:4px !important;
+
+    }
+
+   .dosesIssued   input{
+        width: 140px !important;
+        font-size: 13px !important;
+       text-align: right !important;
+    }
+   #gap {
+       font-size: 16px !important;
+
+   }
+
+</style>
+
+<div>
+    <ng-include src="'/public/pages/vaccine/inventory/stock-movement/partials/header.html'"></ng-include>
+
+    <div class="rnr-table regimen-table" tab-scroll bottom-offset="180">
+        <table id="equipmentTable" fixed-table-header class="table table-bordered scrollable">
+            <thead>
+                <tr>
+
+                    <th class="col-product" >
+                        <div class="regimen-heading">
+                            <span openlmis-message="label.product"></span>
+                        </div>
+                    </th>
+
+                    <th class="col-batch" >
+                        <div class="regimen-heading">
+                            <span openlmis-message="header.batch.number"></span>
+                        </div>
+                    </th>
+
+                    <th class="col-quantityRemain" >
+                        <div class="regimen-heading">
+                            <span openlmis-message="header.soh.per.batch"></span>
+                        </div>
+                    </th>
+
+                    <th class="col-expiryDate" >
+                        <div class="regimen-heading">
+                            <span openlmis-message="label.expiryDate"></span>
+                        </div>
+                    </th>
+                    <th class="col-vvmStatus" >
+                        <div class="regimen-heading">
+                            <span openlmis-message="header.vvm.status"></span>
+                        </div>
+                    </th>
+
+                    <th class="col-dosesRequested" >
+                        <div class="regimen-heading">
+                            <span openlmis-message="header.doses.requested"></span>
+                        </div>
+                    </th>
+                    <th class="col-dosesIssued" >
+                        <div class="regimen-heading">
+                            <span openlmis-message="header.doses.issued"></span>
+                        </div>
+                    </th>
+
+                    <th class="col-gap" >
+                        <div class="regimen-heading">
+                            <span openlmis-message="header.gap"></span>
+                        </div>
+                    </th>
+
+
+                </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+                <td class="productCategory" id="vaccine" colspan="{{columns.length}}">
+                    Vaccine
+                </td>
+            </tr>
+
+            <tr ng-repeat-start="c in pageLineItems ">
+                <td  rowspan="{{check(c,null)}}" class="col-product cell-input  line" ><span class="cell-text">{{c.product.primaryName}}</span></td>
+
+                <td class="col-lotCode cell-input cell-text number"><span class="cell-text">{{c.lots[0].lotCode}}</span></td>
+                <td class="col-quantityRemain cell-input cell-text number"><span class="cell-text">{{c.lots[0].quantityRemain}}</span></td>
+
+                <td class="col-expirationDate cell-input cell-text number"><span class="cell-text">{{c.lots[0].expirationDate}}</span></td>
+
+                <td class="col-vvmStatus cell-input cell-text number"><span class="cell-text">{{c.lots[0].vvmStatus}}</span></td>
+                <td rowspan="{{check(c,null)}}" class="col-dosesRequested cell-input cell-text number line"><span class="cell-text">{{c.dosesRequested}}</span></td>
+
+                <td class="cell-input col-dosesIssued dosesIssued">
+                      <span class="cell-text">  <input numeric-validator="positiveInteger" maxlength="8" ng-model="c.lots[0].dosesIssued" ng-change="sumLots(c)" type="text" />
+                    </span></td>
+                <td rowspan="{{check(c,null)}}" id="gap" class="col-gap cell-input  line" ><span class="cell-text {{(c.totalIssued < c.amountRequested)?'red':(c.sum == 0 )?'blue':'orange'}}"  ng-bind="c.sum | positive" ></span></td>
+
+            </tr>
+            <tr  ng-repeat-end ng-repeat="lot in c.lots "  ng-show="!$first" ng-if="check(c,$index)">
+
+                <td  class="col-lotCode cell-input cell-text number line"><span class="cell-text" style="text-height:20">{{lot.lotCode}}</span></td>
+                <td    class="col-quantityRemain cell-input cell-text number line"><span class="cell-text">{{lot.quantityRemain}}</span></td>
+                <td   class="col-lot cell-input cell-text number line"><span class="cell-text">{{lot.expirationDate }}</span></td>
+                <td    class="col-expirationDate cell-input cell-text number line"><span class="cell-text">{{lot.vvmStatus}}</span></td>
+                <td    class="cell-input col-dosesIssued line dosesIssued"><span class="cell-text  line"><input numeric-validator="positiveInteger"  ng-model="lot.dosesIssued" class="large" maxlength="8" type="text" ng-change="sumLots(c)"/></span></td>
+                <td     rowspan="{{lot.length}}" ng-show="!$last"></td>
+
+            </tr>
+            <tr ng-repeat-end></tr>
+
+
+            </tbody>
+
+
+
+        </table>
+
+    </div>
+    <div class="clear-both"></div>
+    
+    <openlmis-pagination ng-show="pageLineItems.length > 0" num-pages="numberOfPages" current-page="currentPage"
+                         max-size="10"
+                         error-pages="errorPages"></openlmis-pagination>
+
+
+
+    <div form-toolbar id="action_buttons" class="action-buttons">
+        <div class="form-cell button-row">
+            <input id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
+                   openlmis-message="button.save" ng-click="save()"/>
+            <input id="submitButton" type="submit" id="submit-button" class="btn btn-primary save-button"
+                   openlmis-message="button.submit" ng-click="submit()"/>
+            <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                   ng-click="cancel()"/>
+
+        </div>
+
+        <div class="toolbar-error" id="saveErrorMsgDiv">
+            <span openlmis-message="error" ng-show="error"></span>&nbsp;
+            <span ng-show="errorProgram" ng-bind="errorProgram"></span>
+        </div>
+        <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
+    </div>
+
+
+
+</div>

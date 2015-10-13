@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -448,6 +449,19 @@ public class ReportLookupController extends BaseController {
         List<YearSchedulePeriodTree> yearSchedulePeriodTree = reportLookupService.getYearSchedulePeriodTree();
 
         return OpenLmisResponse.response("yearSchedulePeriod", yearSchedulePeriodTree);
+    }
+
+    @RequestMapping(value = "/vaccineYearSchedulePeriod", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getVaccineScheduleYearPeriod() {
+
+        List<YearSchedulePeriodTree> yearSchedulePeriodTree = reportLookupService.getVaccineYearSchedulePeriodTree();
+
+        Long currentPeriodId = reportLookupService.getCurrentPeriodIdForVaccine();
+        Map<String, Object> data = new HashMap<>(2);
+        data.put("currentPeriodId", currentPeriodId);
+        data.put("periods", yearSchedulePeriodTree);
+
+        return OpenLmisResponse.response("vaccinePeriods", data);
     }
 
     @RequestMapping(value = "/OrderFillRateSummary/program/{programId}/period/{periodId}/schedule/{scheduleId}/facilityTypeId/{facilityTypeId}/zone/{zoneId}/status/{status}/orderFillRateSummary", method = GET, headers = BaseController.ACCEPT_JSON)

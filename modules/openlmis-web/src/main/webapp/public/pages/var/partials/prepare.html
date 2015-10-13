@@ -1,0 +1,29 @@
+<div>
+    <section id="package_arrival_1" >
+
+        <h3>Vaccine Arrival</h3>
+
+        <table datatable="" cellspacing="10" class="table table-responsive" cellpadding="10">
+            <thead>
+            <th>Report Date</th>
+                <th>Shipment Number</th>
+                <th>Order Number</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="reports in data.reports | filter:{deliverystatus:'received'}">
+                <td>{{reports.estimatetimeofarrival | date:'yyyy MMM dd'}}</td>
+                <td>{{reports.airwaybill}}</td>
+                <td>{{reports.purchaseordernumber}}</td>
+                <td><input type="button" value="View Report" ng-click="viewReport(reports.awb_number)" /></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div ng-if="message">{{message}}</div>
+
+
+    </section>
+
+</div>

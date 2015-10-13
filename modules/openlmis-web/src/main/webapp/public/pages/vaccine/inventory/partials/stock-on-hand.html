@@ -10,7 +10,7 @@
 * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <!DOCTYPE html>
-
+<!--<ng-include src="/public/lib/angular-ui/bootstrap/ui-bootstrap-tpls-0.8.0.min.js"></ng-include>-->
 <script id="template/accordion/accordion.html" type="text/ng-template">
     <div class="accordion" ng-transclude></div>
 </script>
@@ -48,27 +48,27 @@
 </style>
 
 <div style="background-color: #f9f9f9; padding: 5px">
-    <accordion close-others="false">
-        <accordion-group class="green-haze" is-open="panel.Alerts">
-            <accordion-heading>
-                <div class="accordion-title">
-                    <div class="caption">
-                        <!--<i   class="flaticon-alert red" ng-class="{'_fadeIn':alert.notify,'_fadeOut':!alert.notify}"></i> -->
-                        <span class="icon-bullhorn white"></span>
-                        <span openlmis-message="title.notifications"></span>
-                        <!--<span style="width:20px; height:20px; border-radius:10px;background:#FF0000" class="glyphicon glyphicon-exclamation-sign" ng-class="{'_fadeIn':alert.notify,'_fadeOut':!alert.notify}">2</span>-->
-                        <span ng-show="dataRows.alert.length > 0"
-                              style="position:relative;font-size:0.8em;top:-6px;;background:#FF0000 !important; padding:4px 8px 4px 8px !important;border-radius:20px">{{dataRows.alert.length}}</span>
-                    </div>
-                    <div class="tools">
-                        <i ng-class="{'icon-minus-sign': panel.Alerts, 'icon-plus-sign': !panel.Alerts}"></i>
-                    </div>
-                </div>
-            </accordion-heading>
-            <valerts ng-model="data"></valerts>
-        </accordion-group>
-    </accordion>
-    <br/>
+    <!--<accordion close-others="false">-->
+    <!--<accordion-group class="green-haze" is-open="panel.Alerts">-->
+    <!--<accordion-heading>-->
+    <!--<div class="accordion-title">-->
+    <!--<div class="caption">-->
+    <!--&lt;!&ndash;<i   class="flaticon-alert red" ng-class="{'_fadeIn':alert.notify,'_fadeOut':!alert.notify}"></i> &ndash;&gt;-->
+    <!--<span class="icon-bullhorn white"></span>-->
+    <!--<span openlmis-message="title.notifications"></span>-->
+    <!--&lt;!&ndash;<span style="width:20px; height:20px; border-radius:10px;background:#FF0000" class="glyphicon glyphicon-exclamation-sign" ng-class="{'_fadeIn':alert.notify,'_fadeOut':!alert.notify}">2</span>&ndash;&gt;-->
+    <!--<span ng-show="dataRows.alert.length > 0"-->
+    <!--style="position:relative;font-size:0.8em;top:-6px;;background:#FF0000 !important; padding:4px 8px 4px 8px !important;border-radius:20px">{{dataRows.alert.length}}</span>-->
+    <!--</div>-->
+    <!--<div class="tools">-->
+    <!--<i ng-class="{'icon-minus-sign': panel.Alerts, 'icon-plus-sign': !panel.Alerts}"></i>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</accordion-heading>-->
+    <!--<valerts ng-model="data"></valerts>-->
+    <!--</accordion-group>-->
+    <!--</accordion>-->
+    <!--<br/>-->
 
     <div class="row-fluid">
         <div class="span12">
@@ -77,13 +77,18 @@
                      style="border: solid 1px #44b6ae !important;background: none repeat scroll 0% 0% #44b6ae !important;">
                     <i class="flaticon-pie2"></i>&nbsp;&nbsp; <span openlmis-message="title.stock.status"></span></div>
                 <!--Filter start here-->
-                <div class="clearfix"><br/></div>
                 <div ng-show="showProgram" style="margin-left:30px !important">
                     <select ng-model="selectedProgramId">
                         <option ng-repeat="program in userPrograms" value="{{program.id}}">{{program.name}}</option>
                     </select>
                 </div>
                 <div class="clearfix"><br/></div>
+                <div class="row-fluid">
+                    <div class="span4" style="margin-left:30px !important">
+                        <strong id="stock-date-label" openlmis-message="label.stock.adjustment.date.reported"> </strong>:&nbsp;
+                        <span id="stock-status-date" ng-bind="date | date:'dd-MM-yyyy'"></span>
+                    </div>
+                </div>
                 <div class="row-fluid" style="margin-left:30px !important">
                     <div class="span12">
                         <label openlmis-message="label.requisition.facilityType"></label>
@@ -167,10 +172,11 @@
 
     <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
-            <input ng-show="hasPermission('CREATE_REQUISITION')" ng-click="Requisition()" id="requisitionButton"
+            <input ng-show="false" ng-click="Requisition()" id="requisitionButton"
                    type="submit" id="requisition-button" class="btn btn-primary save-button"
                    openlmis-message="button.create.requisition"/>
-            <input id="adjustButton" type="submit" id="adjust-button" ng-click="Adjustment()"
+            <input ng-disabled='selectedType === "1"' id="adjustButton" type="submit" id="adjust-button"
+                   ng-click="Adjustment()"
                    class="btn btn-primary save-button"
                    openlmis-message="button.stock.adjustment"/>
 

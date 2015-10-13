@@ -18,7 +18,7 @@ function EquipmentInventoryController($scope, UserFacilityList, EquipmentInvento
       $scope.myFacility = data.facilityList[0];
       if ($scope.myFacility) {
         // Home facility found, show home facility
-        $scope.facilityDisplayName = $scope.myFacility.code + ' - ' + $scope.myFacility.name;
+        $scope.facilityDisplayName = $scope.myFacility.name;
 
         // Home facility found and my facility type selected, get home facility programs
         if ($scope.selectedType === "0") {

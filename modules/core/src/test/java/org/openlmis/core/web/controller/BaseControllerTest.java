@@ -16,9 +16,8 @@ import org.junit.experimental.categories.Category;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.service.MessageService;
-import org.openlmis.core.web.controller.BaseController;
-import org.openlmis.db.categories.UnitTests;
 import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.db.categories.UnitTests;
 import org.springframework.http.ResponseEntity;
 
 import static org.hamcrest.CoreMatchers.is;

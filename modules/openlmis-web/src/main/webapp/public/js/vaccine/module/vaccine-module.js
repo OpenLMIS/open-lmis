@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('vaccine', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap.modal', 'nsPopover', 'ui.bootstrap.dropdownToggle'])
+angular.module('vaccine', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap', 'nsPopover', 'textAngular'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/vaccine-report', {controller:VaccineReportPOCReportController, templateUrl:'partials/vaccine-report.html',reloadOnSearch:false}).

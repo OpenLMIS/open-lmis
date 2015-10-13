@@ -42,14 +42,27 @@ public interface ProcessingPeriodReportMapper {
     List<YearSchedulePeriodTree> getYearSchedulePeriodTree();
 
 
+    @Select(" select  EXTRACT(YEAR FROM pp.startdate) as year, ps.name as groupname, pp.name as periodname, pp.id AS periodid, ps.id as groupid   \n" +
+            " from processing_periods pp    \n" +
+            " join processing_schedules ps on pp.scheduleid = ps.id  \n" +
+            " join (select distinct programid, scheduleid from requisition_group_program_schedules) rps on rps.scheduleid = ps.id and rps.scheduleid = pp.scheduleid  \n" +
+            " where rps.programid in (select distinct programid from vaccine_reports)    \n" +
+            " order by year,groupname,pp.startdate  asc")
+    List<YearSchedulePeriodTree> getVaccineYearSchedulePeriodTree();
+
+    @Select("select max(periodid) periodid from vaccine_reports where status = 'SUBMITTED'")
+    Long getCurrentPeriodIdForVaccine();
+
+
 
     @Select("select distinct on (pp.startdate) pp.id, pp.scheduleId, \n" +
             "pp.startdate::date startdate, \n" +
-            "to_char(pp.startdate, 'Month') || '-'|| extract(year from pp.startdate) || '(' || pp.name || ')'  as Name\n" +
+            "psn.name as name\n" +
             "from requisitions r\n" +
             "inner join processing_periods pp on r.periodid = pp.id\n" +
+            "left outer join period_short_names psn on psn.id = pp.id\n" +
             "where pp.startdate < NOW()\n" +
-            "and r.programid = #{programId}\n" +
+            "and r.programid =  #{programId}\n" +
             "order by pp.startdate desc\n" +
             "limit (select COALESCE(value::integer, 4) from configuration_settings where key ='PROGRAM_VIEWABLE_MAX_LAST_PERIODS')\n")
     List<ProcessingPeriod> getLastPeriods(@Param("programId")Long programId);

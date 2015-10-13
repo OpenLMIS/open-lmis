@@ -9,11 +9,11 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<beans:beans xmlns="http://www.springframework.org/schema/security"
-             xmlns:beans="http://www.springframework.org/schema/beans"
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:context="http://www.springframework.org/schema/context"
              xmlns:mvc="http://www.springframework.org/schema/mvc"
+             xmlns="http://www.springframework.org/schema/security"
              xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
                         http://www.springframework.org/schema/security
@@ -41,6 +41,7 @@
   <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
   <http pattern="/rest-api/**" use-expressions="true" authentication-manager-ref="restAuthenticationManager">
+      <intercept-url pattern="/rest-api/login" access="permitAll" requires-channel="any"/>
     <intercept-url pattern="/rest-api/**" access="isAuthenticated()" requires-channel="any"/>
     <http-basic/>
   </http>
@@ -48,6 +49,8 @@
   <http pattern="/odk-api/**" security="none" />
 
   <http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint">
+      <intercept-url pattern="/health/ping" access="permitAll" requires-channel="any"/>
+      <intercept-url pattern="/release.json" access="permitAll" requires-channel="any"/>
     <intercept-url pattern="/j_spring_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="any"/>
     <intercept-url pattern="/favicon.ico" access="permitAll" requires-channel="any"/>
     <intercept-url pattern="/public/**" access="permitAll" requires-channel="any"/>

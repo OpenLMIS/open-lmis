@@ -246,18 +246,17 @@
                          ui-date-format="yy-mm-dd"
                          ng-required="supportedProgram.active == true"
                          ng-change="showConfirmDateChangeWindow(supportedProgram)"/>
-            <span class="field-error" ng-show="supportedProgram.active && !supportedProgram.startDate && showError"
-                  openlmis-message="create.facility.mandatoryStartDate">
-            </span>
+                    <span class="field-error" ng-show="supportedProgram.active && !supportedProgram.startDate && showError"
+                          openlmis-message="create.facility.mandatoryStartDate">
+                    </span>
                 </td>
                 <td>
                   <span ng-show="supportedProgram.program.push"  openlmis-message="label.allocate"></span>
                   <span ng-show="!supportedProgram.program.push" openlmis-message="label.request"></span>
-
-            <span>
-              (<a id="overrideIsa{{ supportedProgram.program.name }}" href=""
-                  ng-click="showISAEditModal(supportedProgram)" openlmis-message="link.modify.isa"></a>)
-            </span>
+                    <span>
+                      (<a id="overrideIsa{{ supportedProgram.program.name }}" href=""
+                          ng-click="showISAEditModal(supportedProgram)" openlmis-message="link.modify.isa"></a>)
+                    </span>
                 </td>
 
                 <td><a href="" class="close" id="remove{{$index}}"

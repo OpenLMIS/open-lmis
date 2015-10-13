@@ -10,11 +10,13 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('vaccine-inventory', ['openlmis', 'ngTable','ui.bootstrap.accordion','angularCombine','ui.bootstrap.modal','ui.bootstrap.pagination'])
+angular.module('vaccine-inventory', ['openlmis', 'ngTable','ui.bootstrap','angularCombine','ui.bootstrap.modal','ui.bootstrap.pagination'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/stock-on-hand', {controller:StockOnHandController, templateUrl:'partials/stock-on-hand.html',reloadOnSearch:false,resolve:StockOnHandController.resolve}).
-//  TODO    when('/stock-adjustment', {controller:StockAdjustmentController, templateUrl:'partials/stock-adjustment.html',resolve:StockAdjustmentController.resolve}).
+            when('/stock-adjustment', {controller:StockAdjustmentController, templateUrl:'partials/stock-adjustment.html',resolve:StockAdjustmentController.resolve}).
+            when('/receive', {controller:ReceiveStockController, templateUrl:'partials/receive-stock.html',reloadOnSearch:false,resolve:ReceiveStockController.resolve}).
+            when('/configuration', {controller:VaccineInventoryConfigurationController, templateUrl:'partials/configuration.html',reloadOnSearch:false,resolve:VaccineInventoryConfigurationController.resolve}).
             otherwise({redirectTo:'/stock-on-hand'});
     }]).run(function ($rootScope, AuthorizationService) {
 

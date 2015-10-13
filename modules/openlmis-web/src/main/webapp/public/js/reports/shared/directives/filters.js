@@ -534,7 +534,7 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
           $scope.facilities = [];
         }
         $scope.facilities.unshift({
-          name: messageService.get('report.filter.select.facility')
+          name: messageService.get('report.filter.all.facilities')
         });
       });
     };
@@ -546,7 +546,7 @@ app.directive('geoFacilityFilter', ['FacilitiesByGeographicZone', '$routeParams'
 
         scope.facilities = [];
         scope.facilities.push({
-          name: messageService.get('report.filter.select.facility')
+          name: messageService.get('report.filter.all.facilities')
         });
 
         scope.filter.facility = (isUndefined($routeParams.facility) || $routeParams.facility === '') ? 0 : $routeParams.facility;
@@ -660,8 +660,8 @@ app.directive('rmnchProductPeriodFilter', ['RmnchProducts', 'GetYearSchedulePeri
   }
 ]);
 
-app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams',
-  function(GetYearSchedulePeriodTree, $routeParams) {
+app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams','messageService',
+  function(GetYearSchedulePeriodTree, $routeParams, messageService) {
     return {
       restrict: 'E',
       require: '^filterContainer',
@@ -677,6 +677,41 @@ app.directive('periodTreeFilter', ['GetYearSchedulePeriodTree', '$routeParams',
           //Load period tree
           GetYearSchedulePeriodTree.get({}, function(data) {
             scope.periods = data.yearSchedulePeriod;
+          });
+
+          scope.period_placeholder = messageService.get('label.select.period');
+        });
+
+      },
+      templateUrl: 'filter-period-tree-template'
+    };
+  }
+]);
+
+
+app.directive('vaccinePeriodTreeFilter', ['GetVaccineReportPeriodTree', '$routeParams','messageService',
+  function(GetVaccineReportPeriodTree, $routeParams, messageService) {
+    return {
+      restrict: 'E',
+      require: '^filterContainer',
+      link: function(scope, elm, attr) {
+
+        if (attr.required) {
+          scope.requiredFilters.period = 'period';
+        }
+
+        scope.filter.period = (isUndefined($routeParams.period) || $routeParams.period === '') ? 0 : $routeParams.period;
+
+        scope.$evalAsync(function() {
+          //Load period tree
+          GetVaccineReportPeriodTree.get({}, function(data) {
+            scope.periods = data.vaccinePeriods.periods;
+            scope.filter.defaultPeriodId = data.vaccinePeriods.currentPeriodId;
+            scope.period_placeholder = messageService.get('label.select.period');
+            if (!angular.isUndefined( scope.periods)) {
+              if (scope.periods.length === 0)
+                scope.period_placeholder = messageService.get('report.filter.period.no.vaccine.record');
+            }
           });
         });
 

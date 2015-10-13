@@ -87,16 +87,15 @@
         </ul>
       </div>
     </li>
-    <li ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')">
+    <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('MANAGE_DISTRIBUTION') || hasPermission('VIEW_ORDER_REQUISITION') || hasPermission('VIEW_PENDING_REQUEST') || hasPermission('CREATE_ORDER_REQUISITION')">
       <a id="vaccine" href="" openlmis-message="link.vaccine"></a>
-
       <div class="submenu">
         <ul>
-          <li>
+          <li ng-show="hasPermission('CREATE_IVD')">
             <a href="/public/pages/vaccine/report/index.html"
                 openlmis-message="link.vaccine.create"></a>
           </li>
-          <li>
+          <li ng-show="hasPermission('VIEW_IVD')">
             <a href="/public/pages/vaccine/report/index.html#/view" openlmis-message="link.view.ivd"></a>
           </li>
           <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
@@ -110,20 +109,62 @@
                openlmis-message="link.vaccine.report"></a>
           </li>
 
+          <li  class="has-children">
+
+            <a href="javascript: void(0);"
+               openlmis-message="link.vaccine.request.form"></a>
+            <div class="submenu">
+              <ul>
+                <li ng-show="hasPermission('CREATE_ORDER_REQUISITION')">
+                  <a href="/public/pages/vaccine/order-requisition/index.html#/initiate"> Create / Submit</a>
+
+                </li>
+
+                <li ng-show="hasPermission('VIEW_PENDING_REQUEST')">
+                  <a href="/public/pages/vaccine/order-requisition/index.html#/view">View Pending</a>
+
+                </li>
+
+
+                <li ng-show="hasPermission('VIEW_ORDER_REQUISITION')">
+                  <a href="/public/pages/vaccine/order-requisition/index.html#/search">View</a>
+
+                </li>
+
+
+
+              </ul>
+
+
+            </div>
+
+
+          </li>
+
+
+
           <li class="has-children">
             <a href="javascript: void(0);"
                openlmis-message="link.vaccine.inventory"></a>
             <div class="submenu">
               <ul>
-                <li>
+                <li ng-show="hasPermission('MANAGE_VACCINE_PRODUCTS_CONFIGURATION')">
+                  <a href="/public/pages/vaccine/inventory/index.html#/configuration"
+                     openlmis-message="link.vaccine.configuration"></a>
+                </li>
+                <li ng-show="hasPermission('VIEW_STOCK_ON_HAND')">
                   <a href="/public/pages/vaccine/inventory/index.html#/stock-on-hand"
                      openlmis-message="link.vaccine.stock.on.hand"></a>
                 </li>
-                <li>
-                  <a href="/public/pages/vaccine/index.html#/receive"
+                <li ng-show="hasPermission('ADJUST_STOCK')">
+                  <a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment"
+                     openlmis-message="link.vaccine.stock.adjustment"></a>
+                </li>
+                <li ng-show="hasPermission('RECEIVE_STOCK')">
+                  <a href="/public/pages/vaccine/inventory/index.html#/receive"
                       openlmis-message="link.vaccine.receive"></a>
                 </li>
-                <li>
+                <li ng-show="hasPermission('DISTRIBUTE_STOCK')">
                   <a href="/public/pages/vaccine/index.html#/distribute"
                       openlmis-message="link.vaccine.distribute"></a>
                 </li>
@@ -148,6 +189,9 @@
                 <li class="beak"></li>
               </ul>
             </div>
+          </li>
+          <li>
+            <a href="/public/pages/var/index.html#/">VAR</a>
           </li>
 
         </ul>
@@ -502,31 +546,42 @@
                 </div>
             </li>
             <li class="has-children"  >
-              <a  id="vaccine-admin" openlmis-message="link.manage.vaccine"></a>
+              <a id="vaccine-admin" href="" openlmis-message="link.manage.vaccine"></a>
               <div class="submenu">
                 <ul>
-                  <li ng-show="hasPermission('MANAGE_VACCINE_SETTINGS')">
+                  <li ng-show="hasPermission('MANAGE_VACCINE_DISEASE_LIST')">
                     <a
-                        href="/public/pages/vaccine/admin/protocol/index.html#/disease"
+                        href="/public/pages/vaccine/admin/disease/index.html#/disease"
                         openlmis-message="link.manage.vaccine.diseases"></a>
                   </li>
+                  </ul>
+                </div>
+            </li>
+            <li class="has-children"  >
+            <a id="demographic-admin" href="" openlmis-message="link.manage.demographic.estimates"></a>
+            <div class="submenu">
+              <ul>
                   <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')" >
                     <a
-                      href="/public/pages/vaccine/demographics/index.html#/list"
+                            href="/public/pages/demographics/index.html#/list"
                       openlmis-message="link.manage.demographic.categories"></a>
                   </li>
                   <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_ESTIMATES')">
                     <a
-                      href="/public/pages/vaccine/demographics/index.html#/facility"
+                            href="/public/pages/demographics/index.html#/facility"
                       openlmis-message="link.manage.facility.demographic"></a>
                   </li>
                   <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')">
                     <a
-                      href="/public/pages/vaccine/demographics/index.html#/district"
+                            href="/public/pages/demographics/index.html#/district"
                       openlmis-message="link.manage.district.demographic"></a>
                   </li>
                 </ul>
               </div>
+            </li>
+            <li ng-show="hasPermission('MANAGE_CUSTOM_REPORTS')">
+              <a id='manageCustomReports' href="/public/pages/reports/custom/designer.html#/designer"
+                 openlmis-message="link.admin.manage.custom.reports"></a>
             </li>
             <li class="has-children" ng-show="hasPermission('CONFIGURE_HELP_CONTENT')">
                 <a id="manage-help-option"
@@ -546,10 +601,7 @@
                 </div>
             </li>
 
-          <li ng-show="hasPermission('MANAGE_CUSTOM_REPORTS')">
-            <a id='manageCustomReports' href="/public/pages/reports/custom/designer.html#/designer"
-               openlmis-message="link.admin.manage.custom.reports"></a>
-          </li>
+
 
           <li class="beak"></li>
         </ul>

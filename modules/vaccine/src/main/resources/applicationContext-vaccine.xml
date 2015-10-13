@@ -11,12 +11,12 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
+<beans xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/integration"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/integration">
 
     <context:annotation-config/>
     <context:spring-configured/>
@@ -24,5 +24,6 @@
     <context:component-scan base-package="org.openlmis.vaccine"/>
 
     <import resource="classpath:applicationContext-core.xml"/>
+    <import resource="classpath:applicationContext-stock-management.xml"/>
 
 </beans>

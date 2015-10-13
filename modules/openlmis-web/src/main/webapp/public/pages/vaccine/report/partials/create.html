@@ -13,43 +13,68 @@
 <div>
 
   <h2><span openlmis-message="label.vaccine.monthly.reporting"></span></h2>
-
   <div class="info-box padding2px">
     <div class="requisition-head-block">
       <div class="row-fluid">
-        <div class="span8" style="padding: 10px;">
-          <div class="row-fluid">
-            <div class="span4">
-              <strong id='facilityLabel' openlmis-message="label.facility"> </strong>:&nbsp;<span
-              id='facility' ng-bind="report.facility.code + ' - ' + report.facility.name"></span>
+        <div class="span5" style="padding: 10px;">
+          <div class="info-box" style="margin-bottom: 0px;" >
+            <div class="row-fluid">
+              <div class="span6">
+                <strong id='facilityLabel' openlmis-message="label.facility"> </strong>:&nbsp;<span
+                  id='facility' ng-bind="report.facility.code + ' - ' + report.facility.name"></span>
+              </div>
+              <div class="span6">
+                <strong id='operatedByLabel' openlmis-message="label.facility.operatedBy"></strong>: &nbsp;<span
+                  id='operatedBy' ng-bind="report.facility.operatedBy.text"></span>
+              </div>
             </div>
-            <div class="span4">
-              <strong id='operatedByLabel' openlmis-message="label.facility.operatedBy"></strong>: &nbsp;<span
-              id='operatedBy' ng-bind="report.facility.operatedBy.text"></span>
+            <div class="row-fluid">
+              <div class="span6">
+                <strong><span id='geographicZoneLabel'><span openlmis-message="label.district"></span></span>:
+                </strong><span
+                  id='geographicZone' ng-bind="report.facility.geographicZone.name"></span>
+              </div>
+              <div class="span6">
+                <strong><span id='parentLevelLabel'><span openlmis-message="label.region"></span></span>:
+                </strong><span
+                  id='parentLevel' ng-bind="report.facility.geographicZone.parent.name"></span>
+              </div>
+            </div>
+            <div class="row-fluid" style="padding-bottom: 10px">
+              <div class="span12">
+                <strong id='reportingPeriodLabel' openlmis-message="label.facility.reportingPeriod"></strong>:&nbsp;<span
+                  id='reportingPeriod' ng-bind="report.period.name"></span>
+              </div>
             </div>
           </div>
-          <div class="row-fluid">
-            <div class="span4">
-              <strong><span id='geographicZoneLabel'><span openlmis-message="label.district"></span></span>:
-              </strong><span
-              id='geographicZone' ng-bind="report.facility.geographicZone.name"></span>
-            </div>
-            <div class="span4">
-              <strong><span id='parentLevelLabel'><span openlmis-message="label.region"></span></span>:
-              </strong><span
-              id='parentLevel' ng-bind="report.facility.geographicZone.parent.name"></span>
-            </div>
-          </div>
-          <div class="row-fluid">
-            <div class="span4">
-              <strong id='reportingPeriodLabel' openlmis-message="label.facility.reportingPeriod"></strong>:&nbsp;<span
-              id='reportingPeriod' ng-bind="report.period.name"></span>
-            </div>
-          </div>
-
         </div>
-        <div class="span4">
-
+        <div class="span7" style="padding: 10px;">
+          <div class="row-fluid">
+            <table class="table" style="margin-bottom: 0;">
+              <thead>
+              <tr>
+                <th></th>
+                <th class="number" ng-repeat="r in report.facilityDemographicEstimates">
+                  {{r.category.name}}
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><strong>Monthly</strong></td>
+                <td class="number" ng-repeat="r in report.facilityDemographicEstimates">
+                  <span ng-show="!r.category.isPrimaryEstimate">{{r.value / 12 | number : 0}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Annual</strong></td>
+                <td class="number" ng-repeat="r in report.facilityDemographicEstimates">
+                  <span class="number" style="text-align: right" >{{r.value | number : 0}}</span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -57,9 +82,11 @@
   <hr/>
   <div class="rnr-tabs clearfix">
     <ul class="clearfix">
-      <li ng-show="tabVisibility.STOCK_STATUS_TAB" ng-class="{'selected': (visibleTab == 'stockMovement' || visibleTab == undefined)}">
-        <a href="" ng-click="visibleTab ='stockMovement'"><span
-          openlmis-message="label.vaccine.tab.stock.status"></span></a>
+      <li ng-show="tabVisibility.TARGET_TAB" ng-class="{'selected': (visibleTab == 'target' || visibleTab == undefined)}">
+        <a href="" ng-click="visibleTab = 'target'"><span openlmis-message="label.vaccine.tab.target"></span></a>
+      </li>
+      <li ng-show="tabVisibility.DISEASE_TRACKING_TAB" ng-class="{'selected': visibleTab == 'disease'}">
+        <a href="" ng-click="visibleTab = 'disease'"><span openlmis-message="label.vaccine.tab.disease"></span></a>
       </li>
       <li ng-show="tabVisibility.COVERAGE_TAB" ng-class="{'selected': (visibleTab == 'coverage')}">
         <a href="" ng-click="visibleTab = 'coverage'"><span openlmis-message="label.vaccine.tab.coverage"></span></a>
@@ -67,26 +94,25 @@
       <li ng-show="tabVisibility.VITAMIN_SUPPLEMENTATION_TAB" ng-class="{'selected': visibleTab == 'vitamin'}">
         <a href="" ng-click="visibleTab = 'vitamin'"><span openlmis-message="label.vaccine.tab.vitamin.supplementation"></span></a>
       </li>
-      <li ng-show="tabVisibility.DISEASE_TRACKING_TAB" ng-class="{'selected': visibleTab == 'disease'}">
-        <a href="" ng-click="visibleTab = 'disease'"><span openlmis-message="label.vaccine.tab.disease"></span></a>
+      <li ng-show="tabVisibility.STOCK_STATUS_TAB" ng-class="{'selected': (visibleTab == 'stockMovement' )}">
+        <a href="" ng-click="visibleTab ='stockMovement'"><span
+          openlmis-message="label.vaccine.tab.stock.status"></span></a>
+      </li>
+      <li ng-show="tabVisibility.COLD_CHAIN_TAB" ng-class="{'selected': visibleTab == 'coldChain'}">
+        <a href="" ng-click="visibleTab = 'coldChain'"><span openlmis-message="label.vaccine.tab.cold.chain"></span></a>
       </li>
       <li ng-show="tabVisibility.AEFI_REPORTING_TAB" ng-class="{'selected': visibleTab == 'incident'}">
         <a href="" ng-click="visibleTab = 'incident'"><span
           openlmis-message="label.vaccine.tab.adverse.effect.tracking"></span></a>
       </li>
-      <li ng-show="tabVisibility.COLD_CHAIN_TAB" ng-class="{'selected': visibleTab == 'coldChain'}">
-        <a href="" ng-click="visibleTab = 'coldChain'"><span openlmis-message="label.vaccine.tab.cold.chain"></span></a>
-      </li>
       <li ng-show="tabVisibility.CAMPAIGN_TAB" ng-class="{'selected': visibleTab == 'campaign'}">
         <a href="" ng-click="visibleTab = 'campaign'"><span openlmis-message="label.vaccine.tab.campaign"></span></a>
       </li>
-      <li ng-show="tabVisibility.TARGET_TAB" ng-class="{'selected': visibleTab == 'target'}">
-        <a href="" ng-click="visibleTab = 'target'"><span openlmis-message="label.vaccine.tab.target"></span></a>
-      </li>
+
     </ul>
 
   </div>
-  <span ng-show="visibleTab == 'stockMovement' || visibleTab == undefined">
+  <span ng-show="visibleTab == 'stockMovement' ">
     <ng-include src="'/public/pages/vaccine/report/partials/create/stock-movement.html'"></ng-include>
   </span>
   <span ng-show="visibleTab == 'coverage'">
@@ -107,7 +133,7 @@
   <span ng-show="visibleTab == 'campaign'">
       <ng-include src="'/public/pages/vaccine/report/partials/create/campaign.html'"></ng-include>
   </span>
-  <span ng-show="visibleTab == 'target'">
+  <span ng-show="visibleTab == 'target' || visibleTab == undefined">
       <ng-include src="'/public/pages/vaccine/report/partials/create/target.html'"></ng-include>
   </span>
 

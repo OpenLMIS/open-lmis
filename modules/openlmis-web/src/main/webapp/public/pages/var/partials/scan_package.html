@@ -1,0 +1,25 @@
+<div class="app-form" ng-controller="StockModuleController">
+
+  <form name="scan_package">
+        <div class='form-group'>
+            <!--<h3 openlmis-message="label.stock.arrivalheader">Package Arrival</h3>-->
+            <h3 >Package Arrival</h3>
+            <div class='form-row clearfix'>
+                    <div class="form-cell horizontalFilters">
+                        <!--<h3 openlmis-message="label.stock.shipmentId">Package Arrival</h3>-->
+                        <label>Scan the Shipment Id</label>
+                        <div class="form-fields">
+                            <input type="text" class="form-control" ng-model="shipping_number" id="shipping_number" >
+                        </div>
+                    </div>
+                    <div class="form-cell horizontalFilters">
+                        <label>&nbsp;</label>
+                        <div class="form-fields">
+                            <input class="btn btn-primary" type="button" value="Scan" id="scan_package_button"/>
+                        </div>
+                    </div>
+            </div>
+
+        </div>
+  </form>
+</div>

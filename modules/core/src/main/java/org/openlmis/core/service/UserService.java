@@ -12,10 +12,7 @@ package org.openlmis.core.service;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
@@ -39,33 +36,33 @@ public class UserService {
   static final String USER_EMAIL_INCORRECT = "user.email.incorrect";
   static final String PASSWORD_RESET_TOKEN_INVALID = "user.password.reset.token.invalid";
   static final String USER_USERNAME_INCORRECT = "user.username.incorrect";
-
-  public static String  getCommaSeparatedIds(List<Long> idList){
-
-    return idList == null ? "{}" : idList.toString().replace("[","").replace("]","").replace(", ",",");
-  }
-
   @Autowired
   private UserRepository userRepository;
-
   @Autowired
   private EmailService emailService;
-
   @Autowired
   private RoleAssignmentService roleAssignmentService;
-
   @Autowired
   private MessageService messageService;
+
+  public static String getCommaSeparatedIds(List<Long> idList) {
+
+    return idList == null ? "{}" : idList.toString().replace("[", "").replace("]", "").replace(", ", ",");
+  }
 
   @Transactional
   public void create(User user, String resetPasswordLink) {
     save(user);
-    sendUserCreationEmail(user, resetPasswordLink);
+    if (!user.isMobileUser()) {
+      sendUserCreationEmail(user, resetPasswordLink);
+    }
   }
 
   public void createUser(User user, String passwordResetLink) {
     save(user);
-    prepareForEmailNotification(user, passwordResetLink);
+    if (!user.isMobileUser()) {
+      prepareForEmailNotification(user, passwordResetLink);
+    }
   }
 
   @Transactional
@@ -239,4 +236,7 @@ public class UserService {
 
   }
 
+  public List<String> getSupervisoryRights(Long userId) {
+    return userRepository.getSupervisoryRights(userId);
+  }
 }

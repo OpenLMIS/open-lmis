@@ -114,9 +114,9 @@
     <div class="row">
         <div class="span2" style="border-right: solid 1px #EAEFF3">
             <div>
-                <div ng-repeat="trend in productsTrend">
+                <div ng-repeat="product in productsTrend">
                     <div style="padding: 10px 30px; border-bottom: solid 1px #EAEFF3">
-                        <div ns-popover ng-click="getProductSummary(trend.code)"
+                        <div style="text-align: center; cursor: pointer;" ns-popover ng-click="getProductSummary(product.code)"
                              ns-popover-template="product-summary"
                              ns-popover-trigger="click"
                              ns-popover-theme="ns-popover-tooltip-theme"
@@ -125,11 +125,11 @@
                              ns-popover-hide-on-inside-click="false"
                              ns-popover-hide-on-outside-click="true"
                              ns-popover-hide-on-button-click="true" style="cursor: pointer; padding: 10px 0px;">
-                            {{trend.code}}
+                            {{product.name}}
                         </div>
-                        <spark-line af-data="trend.sohTrend" af-option="sparkOption"></spark-line>
+                        <spark-line af-data="product.sohTrend" af-option="sparkOption"></spark-line>
                         <div style="margin-top:5px; text-align: center">
-                            <div ns-popover ng-click="getFacilitiesStockedOut(trend.code)"
+                            <div ns-popover ng-click="getFacilitiesStockedOut(product.code)"
                                  ns-popover-template="facilities-stock-out"
                                  ns-popover-trigger="click"
                                  ns-popover-theme="ns-popover-tooltip-theme"
@@ -138,8 +138,8 @@
                                  ns-popover-hide-on-inside-click="false"
                                  ns-popover-hide-on-outside-click="true"
                                  ns-popover-hide-on-button-click="true" style="cursor: pointer; padding: 10px 0px;">
-                                <span ng-class="trend.color"
-                                      style="  color:white; padding:2px 20px; border-radius:10px; font-size:12px;">{{trend.facilityStockedOut | number}}</span>
+                                <span ng-class="product.color"
+                                      style="  color:white; padding:2px 20px; border-radius:10px; font-size:12px;">{{product.facilityStockedOut | number}}</span>
                             </div>
 
                         </div>

@@ -1263,6 +1263,9 @@ services.factory('VaccineUsageTrend', function ($resource){
     return $resource('/vaccine/report/vaccine-usage-trend.json', {}, {});
 });
 
+services.factory('VaccineReportLegendContent', function ($resource) {
+    return $resource('/report_legend.json', {}, {});
+});
 
 services.factory("FacilityGeoTree",function($resource)  {
     return   $resource('/geoFacilityTree.json', {}, {});
@@ -1278,6 +1281,11 @@ services.factory('GetProgramPeriodTracerProductsTrend', function($resource) {
 
 services.factory('GetStockOutFacilitiesForProgramPeriodAndProductCode', function($resource) {
     return $resource('/dashboard/program/:programId/period/:periodId/product/:productCode/stocked-out-facilities.json', {}, {});
+});
+
+
+services.factory('GetVaccineReportPeriodTree',function ($resource){
+    return $resource('/reports/vaccineYearSchedulePeriod', {}, {});
 });
 
 services.factory("ELMISInterface",function($resource)  {
@@ -1308,4 +1316,5 @@ services.factory('ELMISInterfaceSave', function ($resource) {
 services.factory('FacilitiesByLevel', function($resource){
     return $resource('/reports/facility-By-level.json',{},{});
 });
+
 
