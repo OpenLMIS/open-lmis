@@ -1,24 +1,17 @@
-function RequisitionReportController($scope, RequisitionsForViewing) {
+function RequisitionReportController($scope, $filter, RequisitionReportService) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.loadUserSummary();
     });
 
     $scope.loadUserSummary = function () {
-    };
-    //var requisitionQueryParameters = {
-    //    facilityId: $scope.selectedFacilityId,
-    //    dateRangeStart: $scope.startDate,
-    //    dateRangeEnd: $scope.endDate
-    //};
-    //RequisitionsForViewing.get(requisitionQueryParameters, function (data) {
-    //    $scope.requisitions = data.rnr_list;
-    //}, function () {
-    //});
-    //
-    $scope.data = $scope.requisitions;
+        var requisitionQueryParameters = {
+            startTime:  '2015-09-26 00:00:00',
+            endTime: $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss')
+        };
 
-    $scope.requisitions = [
-        {name: "Moroni", age: 50, money: 100},
-        {name: "Name", age: 30, money: 80}
-    ];
+        RequisitionReportService.get(requisitionQueryParameters, function (data) {
+            $scope.requisitions = data.rnr_list;
+        }, function () {
+        });
+    };
 }

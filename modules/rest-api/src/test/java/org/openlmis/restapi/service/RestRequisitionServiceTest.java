@@ -41,6 +41,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -59,7 +60,6 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.PROGRAM_ID;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.openlmis.restapi.builder.ReportBuilder.*;
 import static org.openlmis.rnr.builder.RegimenLineItemBuilder.*;
-import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.remarks;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -103,6 +103,8 @@ public class RestRequisitionServiceTest {
   @Mock
   private ProductService productService;
 
+  private Facility facility;
+
   @Before
   public void setUp() throws Exception {
     validProductCode = "validProductCode";
@@ -122,36 +124,10 @@ public class RestRequisitionServiceTest {
 
   @Test
   public void shouldCreateAndSubmitARequisition() throws Exception {
-    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
-    List<RnrLineItem> products = asList(rnrLineItem);
-    requisition.setFullSupplyLineItems(products);
-    requisition.setProgram(new Program());
+    setUpRequisitionReportBeforeSubmit();
 
-    when(facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(any(Long.class), any(Long.class))).thenReturn(new ArrayList<FacilityTypeApprovedProduct>());
-
-    RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
-    requisition.setRegimenLineItems(asList(regimenLineItem));
-
-
-    report.setProducts(products);
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
     report.setRegimens(asList(reportRegimenLineItem));
-    Long facility_id = 5L;
-
-    ProgramSupported programSupported = make(a(defaultProgramSupported));
-    Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
-
-    when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
-    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
-    when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false, null)).thenReturn(requisition);
-    when(requisitionService.save(requisition)).thenReturn(requisition);
-    when(productService.getByCode(validProductCode)).thenReturn(new Product());
-    Rnr reportedRequisition = mock(Rnr.class);
-    whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
-    when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
-
-    when(requisitionService.submit(requisition)).thenReturn(requisition);
-
     service.submitReport(report, 1L);
 
     verify(facilityService).getOperativeFacilityByCode(DEFAULT_AGENT_CODE);
@@ -162,47 +138,39 @@ public class RestRequisitionServiceTest {
     assertThat(requisition.getRegimenLineItems().get(0).getPatientsStoppedTreatment(), is(5));
   }
 
+
+
   @Test
   public void shouldUpdateClientSubmittedNotesIfExists() throws Exception {
-    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
-    List<RnrLineItem> products = asList(rnrLineItem);
-    requisition.setFullSupplyLineItems(products);
-    requisition.setProgram(new Program());
+    setUpRequisitionReportBeforeSubmit();
 
-    when(facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(any(Long.class), any(Long.class))).thenReturn(new ArrayList<FacilityTypeApprovedProduct>());
-
-    RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
-    requisition.setRegimenLineItems(asList(regimenLineItem));
-
-
-    report.setProducts(products);
     report.setClientSubmittedNotes("xyz");
-
-    Long facility_id = 5L;
-
-    ProgramSupported programSupported = make(a(defaultProgramSupported));
-    Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
-
-    when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
-    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
-    when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false, null)).thenReturn(requisition);
-    when(requisitionService.save(requisition)).thenReturn(requisition);
-    when(productService.getByCode(validProductCode)).thenReturn(new Product());
-    Rnr reportedRequisition = mock(Rnr.class);
-    whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
-    when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
-
-    when(requisitionService.submit(requisition)).thenReturn(requisition);
-
     service.submitReport(report, 1L);
 
     verify(requisitionService).updateClientFields(requisition);
     assertEquals("xyz", requisition.getClientSubmittedNotes());
   }
 
-
   @Test
-  public void shouldCopyPatientQuantificationWhenReportHasData() throws Exception {
+  public void shouldNotUpdateClientSubmittedTimeWhenTimeIsNull() throws
+          Exception {
+    setUpRequisitionReportBeforeSubmit();
+
+    report.setClientSubmittedTime(null);
+    service.submitReport(report, 1L);
+    verify(requisitionService, never()).updateClientFields(requisition);
+  }
+  @Test
+  public void shouldUpdateClientSubmittedTimeWhenTimeIsSet() throws
+          Exception {
+    setUpRequisitionReportBeforeSubmit();
+
+    report.setClientSubmittedTime(new Date());
+    service.submitReport(report, 1L);
+    verify(requisitionService, times(1)).updateClientFields(requisition);
+  }
+  
+  private void setUpRequisitionReportBeforeSubmit() throws Exception {
     RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
     List<RnrLineItem> products = asList(rnrLineItem);
     requisition.setFullSupplyLineItems(products);
@@ -215,12 +183,10 @@ public class RestRequisitionServiceTest {
 
 
     report.setProducts(products);
-    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
-    report.setRegimens(asList(reportRegimenLineItem));
     Long facility_id = 5L;
 
     ProgramSupported programSupported = make(a(defaultProgramSupported));
-    Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
+    facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
 
     when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
@@ -232,12 +198,21 @@ public class RestRequisitionServiceTest {
     when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
 
     when(requisitionService.submit(requisition)).thenReturn(requisition);
+  }
+
+
+  @Test
+  public void shouldCopyPatientQuantificationWhenReportHasData() throws Exception {
+
+    setUpRequisitionReportBeforeSubmit();
 
     PatientQuantificationsBuilder patientQuantificationsBuilder = new PatientQuantificationsBuilder();
     List<PatientQuantificationLineItem> patientQuantifications = patientQuantificationsBuilder.addLineItem(new PatientQuantificationLineItem("newborn", new Integer(10))).
             addLineItem(new PatientQuantificationLineItem("adults", new Integer(5))).build();
-    report.setPatientQuantifications(patientQuantifications);
 
+    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
+    report.setRegimens(asList(reportRegimenLineItem));
+    report.setPatientQuantifications(patientQuantifications);
     service.submitReport(report, 1L);
 
     assertThat(requisition.getPatientQuantifications().get(0).getTotal(), is(10));
@@ -390,7 +365,8 @@ public class RestRequisitionServiceTest {
     long modifiedBy = 233L;
 
     Facility facility = make(a(defaultFacility, with(virtualFacility, false)));
-    Rnr rnr = make(a(defaultRequisition, with(RequisitionBuilder.facility, facility)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with
+            (RequisitionBuilder.facility, facility)));
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.approval.not.allowed");
@@ -412,7 +388,8 @@ public class RestRequisitionServiceTest {
 
     when(spyReport.getRequisition(requisitionId, modifiedBy)).thenReturn(requisitionFromReport);
     Facility facility = make(a(defaultFacility, with(virtualFacility, true)));
-    Rnr rnr = make(a(defaultRequisition, with(RequisitionBuilder.facility, facility)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with
+            (RequisitionBuilder.facility, facility)));
     when(requisitionService.getFullRequisitionById(requisitionFromReport.getId())).thenReturn(rnr);
 
     service.approve(spyReport, requisitionId, modifiedBy);
@@ -539,7 +516,9 @@ public class RestRequisitionServiceTest {
     Facility reportFacility = make(a(defaultFacility, with(virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(reportFacility);
 
-    Rnr rnr = make(a(defaultRequisition, with(facility, reportFacility)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with
+            (RequisitionBuilder.facility,
+            reportFacility)));
     rnr.setFullSupplyLineItems(asList(rnrLineItem1, rnrLineItem2));
 
     when(requisitionService.initiate(reportFacility, program, 3l, false, null)).thenReturn(rnr);
@@ -569,7 +548,9 @@ public class RestRequisitionServiceTest {
     Facility reportFacility = make(a(defaultFacility, with(virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(reportFacility);
 
-    Rnr rnr = make(a(defaultRequisition, with(facility, reportFacility), with(program, rnrProgram)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with
+            (RequisitionBuilder.facility,
+            reportFacility), with(RequisitionBuilder.program, rnrProgram)));
     rnr.setFullSupplyLineItems(asList(initiatedLineItem));
 
     when(requisitionService.initiate(reportFacility, rnrProgram, 3l, false, null)).thenReturn(rnr);
@@ -605,7 +586,9 @@ public class RestRequisitionServiceTest {
     Facility reportFacility = make(a(defaultFacility, with(virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(reportFacility);
 
-    Rnr rnr = make(a(defaultRequisition, with(facility, reportFacility), with(program, rnrProgram)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with
+            (RequisitionBuilder.facility,
+            reportFacility), with(RequisitionBuilder.program, rnrProgram)));
     rnr.setFullSupplyLineItems(asList(initiatedLineItem));
 
     when(requisitionService.initiate(reportFacility, rnrProgram, 3l, false, null)).thenReturn(rnr);

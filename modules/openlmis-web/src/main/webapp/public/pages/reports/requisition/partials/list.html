@@ -1,26 +1,38 @@
 <div>
     <h3>Requisition Report</h3>
+    <h4>Total : {{requisitions.length}} requisition(s)</h4>
     <table class="table table-condensed table-bordered table-striped">
         <tr class="gradient-header">
-            <th>index</th>
-            <th ng-click="sortType = 'name'; sortReverse = !sortReverse" class ="sortable sort-desc">name
-                <span ng-show="sortType != 'name'" class="icon-sort"></span>
-                <span ng-show="sortType == 'name' && !sortReverse" class="icon-sort-down"></span>
-                <span ng-show="sortType == 'name' && sortReverse" class="icon-sort-up"></span></th>
-            <th ng-click="sortType = 'age'; sortReverse = !sortReverse">age
-                <span ng-show="sortType != 'age'" class="icon-sort"></span>
-                <span ng-show="sortType == 'age' && !sortReverse" class="icon-sort-down"></span>
-                <span ng-show="sortType == 'age' && sortReverse" class="icon-sort-up"></span></th>
-            <th ng-click="sortType = 'money'; sortReverse = !sortReverse">money
-                <span ng-show="sortType != 'money'" class="icon-sort"></span>
-                <span ng-show="sortType == 'money' && !sortReverse" class="icon-sort-down"></span>
-                <span ng-show="sortType == 'money' && sortReverse" class="icon-sort-up"></span></th>
+            <th>Number</th>
+            <th ng-click="sortType = 'programName'; sortReverse = !sortReverse" class ="sortable sort-desc">Program Name
+                <span ng-show="sortType != 'programName'" class="icon-sort"></span>
+                <span ng-show="sortType == 'programName' && !sortReverse" class="icon-sort-down"></span>
+                <span ng-show="sortType == 'programName' && sortReverse" class="icon-sort-up"></span></th>
+            <th ng-click="sortType = 'facilityName'; sortReverse = !sortReverse">Facility Name
+                <span ng-show="sortType != 'facilityName'" class="icon-sort"></span>
+                <span ng-show="sortType == 'facilityName' && !sortReverse" class="icon-sort-down"></span>
+                <span ng-show="sortType == 'facilityName' && sortReverse" class="icon-sort-up"></span></th>
+            <th ng-click="sortType = 'submittedUser'; sortReverse = !sortReverse">Submitted User
+                <span ng-show="sortType != 'submittedUser'" class="icon-sort"></span>
+                <span ng-show="sortType == 'submittedUser' && !sortReverse" class="icon-sort-down"></span>
+                <span ng-show="sortType == 'submittedUser' && sortReverse" class="icon-sort-up"></span></th>
+            <th ng-click="sortType = 'clientSubmittedTimeString'; sortReverse = !sortReverse">Submitted Time
+                <span ng-show="sortType != 'clientSubmittedTimeString'" class="icon-sort"></span>
+                <span ng-show="sortType == 'clientSubmittedTimeString' && !sortReverse" class="icon-sort-down"></span>
+                <span ng-show="sortType == 'clientSubmittedTimeString' && sortReverse" class="icon-sort-up"></span></th>
+            <th ng-click="sortType = 'submittedDateString'; sortReverse = !sortReverse">Sync Time
+                <span ng-show="sortType != 'submittedDateString'" class="icon-sort"></span>
+                <span ng-show="sortType == 'submittedDateString' && !sortReverse" class="icon-sort-down"></span>
+                <span ng-show="sortType == 'submittedDateString' && sortReverse" class="icon-sort-up"></span></th>
+
         </tr>
         <tr ng-repeat="row in requisitions| orderBy:sortType:sortReverse">
             <td>{{$index+1}}</td>
-            <td>{{row.name}}</td>
-            <td>{{row.age}}</td>
-            <td>{{row.money}}</td>
+            <td>{{row.programName}}</td>
+            <td>{{row.facilityName}}</td>
+            <td>{{row.submittedUser}}</td>
+            <td>{{row.clientSubmittedTimeString}}</td>
+            <td>{{row.submittedDateString}}</td>
         </tr>
     </table>
 </div>
