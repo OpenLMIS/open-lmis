@@ -209,7 +209,7 @@ public class RequisitionMapperIT {
     Date clientSubmittedTime = new Date();
     requisition.setClientSubmittedTime(clientSubmittedTime);
 
-    mapper.updateClientSubmittedTime(requisition);
+    mapper.updateClientFields(requisition);
 
     Rnr updatedRequisition = mapper.getById(requisition.getId());
 
@@ -223,7 +223,7 @@ public class RequisitionMapperIT {
     Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     requisition.setClientSubmittedNotes("xyz");
 
-    mapper.updateClientSubmittedNotes(requisition);
+    mapper.updateClientFields(requisition);
 
     Rnr updatedRequisition = mapper.getById(requisition.getId());
 

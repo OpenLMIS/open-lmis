@@ -196,7 +196,7 @@ public class RestRequisitionServiceTest {
 
     service.submitReport(report, 1L);
 
-    verify(requisitionService).updateClientSubmittedNotes(requisition);
+    verify(requisitionService).updateClientFields(requisition);
     assertEquals("xyz", requisition.getClientSubmittedNotes());
   }
 
