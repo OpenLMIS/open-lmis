@@ -22,7 +22,7 @@
                     <div class="span2">
                             <span>
                             <label for='facilityLabel' openlmis-message="label.vaccine.stock.distributed.to"> </label>&nbsp;<span
-                                    id='facilityLabel' ng-bind="toFacilityName"></span>
+                                    id='facilityLabel' ng-model="stockCardsByCategory[0].toFacilityName" ng-bind="toFacilityName"></span>
                             </span>
                     </div>
 
@@ -32,18 +32,18 @@
                             <label for="issueDate2" openlmis-message="label.vaccine.issue.date"></label>
                              <input required id="issueDate2" type="text" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
                                     ui-date-format="dd-mm-yy"
-                                    readonly ng-model="issueDate"
+                                    readonly ng-model="stockCardsByCategory[0].issueDate"
                                     />
                         </span>
 
                     </div>
 
-                    <div class="span4" ng-init="currentEffect.curren==true">
+                    <div class="span4" ng-init="stockCardsByCategory[0].issueVoucher==true">
                         <label for="date">
                             <span openlmis-message="label.vaccine.stock.issue.voucher"></span>
 
                         </label>
-                        <input id="date" required type="text" ng-bind="value"   ng-model="currentEffect.curren"/>
+                        <input id="date" required type="text" ng-bind="value"   ng-model="stockCardsByCategory[0].issueVoucher"/>
                     </div>
 
 
