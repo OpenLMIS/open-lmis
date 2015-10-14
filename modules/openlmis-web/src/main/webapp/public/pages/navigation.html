@@ -109,6 +109,11 @@
                openlmis-message="link.vaccine.report"></a>
           </li>
 
+          <li>
+            <a href="/public/pages/vaccine/inventory/index.html#/vaccine-forecasting"
+               openlmis-message="link.vaccine.forecasting"></a>
+          </li>
+
           <li  class="has-children">
 
             <a href="javascript: void(0);"
@@ -116,12 +121,15 @@
             <div class="submenu">
               <ul>
                 <li ng-show="hasPermission('CREATE_ORDER_REQUISITION')">
-                  <a href="/public/pages/vaccine/order-requisition/index.html#/initiate"> Create / Submit</a>
+                  <a  href="/public/pages/vaccine/order-requisition/index.html#/initiate"> Create / Submit</a>
+                  <a  href="/public/pages/vaccine/inventory/index.html#/receive"
+                     openlmis-message="link.vaccine.receive"></a>
 
                 </li>
 
                 <li ng-show="hasPermission('VIEW_PENDING_REQUEST')">
                   <a href="/public/pages/vaccine/order-requisition/index.html#/view">View Pending</a>
+
 
                 </li>
 
@@ -130,8 +138,6 @@
                   <a href="/public/pages/vaccine/order-requisition/index.html#/search">View</a>
 
                 </li>
-
-
 
               </ul>
 

@@ -45,16 +45,18 @@
             <table id="podTable" class="table table-bordered" fixed-table-header>
                 <thead>
                 <tr>
-                    <th class="col-{{column.name}}" ng-repeat="column in columns">
-                        <span openlmis-message="column.label"></span>
-                    </th>
+                    <th class="col-product "><span openlmis-message="label.products"></span></th>
+                    <th class="col-maximumStock "><span openlmis-message="label.maximum.stock"></span></th>
+                    <th class="col-reOrderLevel"><span openlmis-message="label.reorder.level"></span></th>
+                    <th class="col-available"><span openlmis-message="label.stock.onhand"></span></th>
+                    <th class="col-quantityRequested"><span openlmis-message="label.quantity.requested"></span></th>
                 </tr>
                 </thead>
 
                 <tbody ng-repeat="(productCategory,lineItems) in report.LineItemViews">
 
                 <tr>
-                    <td class="productCategory" id="productCategory{{$index}}" colspan="{{columns.length}}"
+                    <td class="productCategory" id="productCategory{{$index}}" colspan="5"
                         ng-bind="productCategory">
 
                     </td>
@@ -111,7 +113,7 @@
                       <input id="submitButton" type="button" class="btn btn-primary submit-button" ng-click="submit()"
                              openlmis-message="button.submit" ng-disabled="selectedType==1"/> </span>
                 &nbsp;&nbsp;&nbsp;
-                <a id="printButton" class="btn btn-primary submit-button" ng-click="print('PDF')"
+               <span> <a id="printButton" class="btn btn-primary submit-button"  ng-click="print(report.id)"
                    openlmis-message="button.print"
                    target="_blank" ng-disabled="selectedType==1"></a>
                 </span>
