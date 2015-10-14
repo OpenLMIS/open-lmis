@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.utils.DateUtil;
 import org.openlmis.rnr.domain.PatientQuantificationLineItem;
 import org.openlmis.rnr.domain.RegimenLineItem;
 import org.openlmis.rnr.domain.Rnr;
@@ -45,7 +46,7 @@ public class Report {
   private Long periodId;
   private Boolean emergency;
 
-  private Date clientSubmittedTime;
+  private String clientSubmittedTime;
   private String clientSubmittedNotes;
 
   private List<PatientQuantificationLineItem> patientQuantifications;
@@ -54,6 +55,10 @@ public class Report {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
       throw new DataException("error.mandatory.fields.missing");
     }
+  }
+
+  public Date getClientSubmittedTime() {
+    return DateUtil.parseDate(clientSubmittedTime);
   }
 
   @JsonIgnore

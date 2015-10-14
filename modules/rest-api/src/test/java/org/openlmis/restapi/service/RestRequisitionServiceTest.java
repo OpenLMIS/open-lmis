@@ -41,7 +41,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -156,7 +155,7 @@ public class RestRequisitionServiceTest {
           Exception {
     setUpRequisitionReportBeforeSubmit();
 
-    report.setClientSubmittedTime(new Date());
+    report.setClientSubmittedTime("2015-09-10 12:00:00");
     service.submitReport(report, 1L);
     verify(requisitionService, times(1)).updateClientFields(requisition);
   }

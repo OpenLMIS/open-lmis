@@ -3,7 +3,7 @@ package org.openlmis.report.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.util.DateUtil;
+import org.openlmis.core.utils.DateUtil;
 
 import java.util.Date;
 
@@ -24,6 +24,7 @@ public class RequisitionDTO {
 	private String requisitionStatus;
 
 	public String getClientSubmittedTimeString() {
+
 		return DateUtil.formatDate(clientSubmittedTime);
 	}
 
