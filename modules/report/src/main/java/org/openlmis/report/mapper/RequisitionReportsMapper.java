@@ -31,7 +31,7 @@ public interface RequisitionReportsMapper {
                   "us.username submittedUser," +
                   "req.clientsubmittedtime clientSubmittedTime," +
                   "req.status requisitionStatus," +
-                  "us.modifieddate webSubmittedTime" +
+                  "req.modifieddate webSubmittedTime" +
           "  FROM requisitions req" +
           "  left join facilities fac" +
           "      on req.facilityid = fac.id" +
