@@ -19,10 +19,8 @@ import org.openlmis.report.Report;
 import org.openlmis.report.ReportManager;
 import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.report.*;
-import org.openlmis.report.model.report.vaccine.OrderRequisition;
 import org.openlmis.report.model.report.vaccine.ReplacementPlanSummary;
 import org.openlmis.report.service.*;
-import org.openlmis.report.service.lookup.OrderRequisitionDataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -605,18 +603,4 @@ public class InteractiveReportController extends BaseController {
         return new Pages(page, max, reportData);
     }
 
-
-    @RequestMapping(value = "/reportdata/orderRequisition", method = GET, headers = BaseController.ACCEPT_JSON)
-    public Pages getOrderRequisitionExportData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                               @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                               HttpServletRequest request) {
-
-        Report report = reportManager.getReportByKey("order_requisition_export");
-        report.getReportDataProvider().setUserId(loggedInUserId(request));
-        OrderRequisitionDataProvider provider = (OrderRequisitionDataProvider) report.getReportDataProvider();
-        List<OrderRequisition> pipelineExportData = (List<OrderRequisition>)
-                provider.getMainReportData(request.getParameterMap(), request.getParameterMap(), page, max);
-
-        return new Pages(page, max, pipelineExportData);
-    }
 }

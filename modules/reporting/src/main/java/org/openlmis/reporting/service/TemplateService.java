@@ -124,9 +124,9 @@ public class TemplateService {
       throw new DataException(messageService.message("report.template.extra.properties", jrParameter.getName()));
     }
     String displayName = jrParameter.getPropertiesMap().getProperty("displayName");
-    if (isBlank(displayName)) {
+   /* if (isBlank(displayName)) {
       throw new DataException(messageService.message("report.template.parameter.display.name.missing", jrParameter.getName()));
-    }
+    }*/
     TemplateParameter templateParameter = new TemplateParameter();
     templateParameter.setName(jrParameter.getName());
     templateParameter.setDisplayName(displayName);
