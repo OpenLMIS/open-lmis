@@ -26,16 +26,12 @@ import java.util.List;
 public interface RequisitionReportsMapper {
 
   @Select({"SELECT req.id id," +
-                  "req.facilityid facilityid," +
-                  "req.programid programid," +
                   "fac.name facilityName," +
-                  "fac.code facilityCode," +
                   "pro.name programName," +
-                  "pro.code programCode," +
                   "us.username submittedUser," +
                   "req.clientsubmittedtime clientSubmittedTime," +
                   "req.status requisitionStatus," +
-                  "us.modifieddate submittedDate" +
+                  "us.modifieddate webSubmittedTime" +
           "  FROM requisitions req" +
           "  left join facilities fac" +
           "      on req.facilityid = fac.id" +

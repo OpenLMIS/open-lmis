@@ -1317,4 +1317,6 @@ services.factory('FacilitiesByLevel', function($resource){
     return $resource('/reports/facility-By-level.json',{},{});
 });
 
-
+services.factory('RequisitionReportService', function($resource){
+    return $resource('/reports/requisition-report.json',{},{});
+});

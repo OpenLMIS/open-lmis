@@ -12,19 +12,13 @@ import java.util.Date;
 @AllArgsConstructor
 public class RequisitionDTO {
 	private Long id;
-	private Long programId;
 	private String programName;
-	private String programCode;
-
-	private Long facilityId;
 	private String facilityName;
-	private String facilityCode;
-
 	private String submittedUser;
-	private String submittedDateString;
+	private String webSubmittedTimeString;
 	private String clientSubmittedTimeString;
 
-	private Date submittedDate;
+	private Date webSubmittedTime;
 	private Date clientSubmittedTime;
 
 	private String requisitionStatus;
@@ -33,8 +27,8 @@ public class RequisitionDTO {
 		return DateUtil.formatDate(clientSubmittedTime);
 	}
 
-	public String getSubmittedDateString() {
-		return DateUtil.formatDate(submittedDate);
+	public String getWebSubmittedTimeString() {
+		return DateUtil.formatDate(webSubmittedTime);
 	}
 
 }
