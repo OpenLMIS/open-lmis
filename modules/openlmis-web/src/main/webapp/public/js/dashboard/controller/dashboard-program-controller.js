@@ -12,14 +12,7 @@
 
 function DashboardProgramController($scope,$routeParams,$timeout,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend, GetStockOutFacilitiesForProgramPeriodAndProductCode, DashboardReportingPerformance) {
     var dashboardMenuService = dashboardMenuServiceNew;
-    /*$scope.stockEfficiencyXValues = ['one','two','three','four','five','six'];
-    $scope.stocking = {openPanel:true};
-    $scope.piePoints = [{"data1": 70, "data2": 30, "data3": "100", "data4":"500"}];
-    $scope.pieColumns = [{"id": "data1", "type": "pie"}, {"id": "data2", "type": "pie"}, { "id": "data3", "type": "pie"  },{"id":"data4", "type":"pie"}];
-    $scope.barColumns = [{"id": "data1", "type": "bar"}, {"id": "data2", "type": "bar"}, { "id": "data3", "type": "bar"  },{"id":"data4", "type":"bar"}];
-    $scope.donutColumns = [{"id": "data1", "type": "donut"}, {"id": "data2", "type": "donut"}, { "id": "data3", "type": "donut"  },{"id":"data4", "type":"donut"}];
-
-    */    var  colors = ["bg-green", "bg-red","bg-blue"];
+    var  colors = ["bg-green", "bg-red","bg-blue"];
     /**
      * Returns Random color
      * @returns {string}
