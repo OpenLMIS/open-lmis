@@ -174,7 +174,7 @@
         </div>
         <div class="span10">
 
-            <div class="row-fluid" ng-repeat="product in productsTrend" ng-if="product.selected">
+            <div class="row-fluid" ng-repeat="product in productsTrend" ng-if="product.selected" >
                 <div class="span4" >
                     <accordion>
                         <accordion-group class="gray-cascade" is-open="product.consumptionChart.openPanel">
@@ -185,7 +185,7 @@
                                         <span >Consumption : {{product.name}}  </span>
                                     </div>
                                     <div class="tools">
-                                        <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="consumption-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme"></i>
+                                        <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="consumption-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
                                         <i  ng-class="{'icon-minus-sign': product.consumptionChart.openPanel, 'icon-plus-sign': !product.consumptionChart.openPanel}"></i>
                                     </div>
                                 </div>
@@ -222,7 +222,7 @@
                                         <span >Stock Efficiency : {{product.name}}</span>
                                     </div>
                                     <div class="tools">
-                                        <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme"></i>
+                                        <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
                                         <i  ng-class="{'icon-minus-sign': product.stockingEfficiencyChart.openPanel, 'icon-plus-sign': !product.stockingEfficiencyChart.openPanel}"></i>
                                     </div>
                                 </div>
