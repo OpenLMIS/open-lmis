@@ -219,6 +219,8 @@ public interface DashboardMapper {
             "from fn_get_dashboard_summary_data(#{programId}::integer, #{periodId}::integer, #{userId}::integer)")
     List<HashMap<String, Object>> getProgramPeriodTracerProductTrend(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("userId") Long userId);
 
+    @Select("Select * from fn_get_dashboard_reporting_summary_data(#{programId}::integer, #{periodId}::integer, #{userId}::integer)")
+    HashMap<String, Object> getDashboardReportingPerformance(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("userId") Long userId);
 
     @Select("SELECT\n" +
             "facilities.id facility_id,\n" +

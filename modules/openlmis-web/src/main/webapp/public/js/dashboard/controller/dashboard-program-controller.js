@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function DashboardProgramController($scope,$routeParams,$timeout,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend, GetStockOutFacilitiesForProgramPeriodAndProductCode) {
+function DashboardProgramController($scope,$routeParams,$timeout,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend, GetStockOutFacilitiesForProgramPeriodAndProductCode, DashboardReportingPerformance) {
     var dashboardMenuService = dashboardMenuServiceNew;
     /*$scope.stockEfficiencyXValues = ['one','two','three','four','five','six'];
     $scope.stocking = {openPanel:true};
@@ -79,13 +79,21 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
 
 
         $timeout(function(){
+            if(!isUndefined($scope.programId) && !isUndefined($scope.periodId)) {
+                DashboardReportingPerformance.get({
+                    programId: $scope.programId,
+                    periodId: $scope.periodId
+                }, function (data) {
+                    $scope.reportingPerformance = data.reportingPerformance;
+                });
+            }
 
-        getSohChartData();
-        }, 100);
+        getDashboardSummary();
+        }, 200);
 
     }
 
-    function getSohChartData(){
+    function getDashboardSummary(){
 
         $scope.productsTrend = [];
         var defaultProducts = 4;
