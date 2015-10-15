@@ -34,7 +34,7 @@ import static org.hamcrest.core.Is.is;
 @ContextConfiguration(locations = "classpath*:test-applicationContext-demographics.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class DemographicEstimateCategoryMapperIT {
+public class EstimateCategoryMapperIT {
 
   @Autowired
   EstimateCategoryMapper mapper;
@@ -72,7 +72,7 @@ public class DemographicEstimateCategoryMapperIT {
   public void shouldInsert() {
     EstimateCategory category = getNewDemographicEstimateCategory();
 
-    Integer result =  mapper.insert(category);
+    Integer result = mapper.insert(category);
     assertThat(category.getId(), is(notNullValue()));
     assertThat(result, is(1));
   }
@@ -80,7 +80,7 @@ public class DemographicEstimateCategoryMapperIT {
   @Test
   public void shouldUpdate() {
     EstimateCategory category = getNewDemographicEstimateCategory();
-    Integer result =  mapper.insert(category);
+    Integer result = mapper.insert(category);
     category.setName("a different name");
     category.setDescription("another description as well");
 

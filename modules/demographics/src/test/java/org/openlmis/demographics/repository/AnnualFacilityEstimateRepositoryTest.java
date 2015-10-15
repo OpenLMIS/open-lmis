@@ -78,8 +78,8 @@ public class AnnualFacilityEstimateRepositoryTest {
   }
 
   @Test
-  public void shouldGetFacilityList()throws Exception{
-    List<EstimateFormLineItem> lineItems= asList(make(a(EstimateFormLineItemBuilder.defaultDemographicEstimateLineItem)));
+  public void shouldGetFacilityList() throws Exception {
+    List<EstimateFormLineItem> lineItems = asList(make(a(EstimateFormLineItemBuilder.defaultDemographicEstimateLineItem)));
     when(mapper.getFacilityList(2L, "123")).thenReturn(lineItems);
 
     List<EstimateFormLineItem> response = repository.getFacilityList(2L, "123");
@@ -89,7 +89,7 @@ public class AnnualFacilityEstimateRepositoryTest {
   }
 
   @Test
-  public void shouldFinalize() throws Exception{
+  public void shouldFinalize() throws Exception {
     AnnualFacilityEstimateEntry estimate = make(an(AnnualFacilityEstimateBuilder.defaultAnnualFacilityEstimateEntry));
 
     repository.finalize(estimate);
@@ -98,12 +98,21 @@ public class AnnualFacilityEstimateRepositoryTest {
   }
 
   @Test
-  public void shouldUndoFinalize ()throws Exception{
+  public void shouldUndoFinalize() throws Exception {
     AnnualFacilityEstimateEntry estimate = make(an(AnnualFacilityEstimateBuilder.defaultAnnualFacilityEstimateEntry));
 
     repository.undoFinalize(estimate);
 
     verify(mapper).undoFinalize(estimate);
   }
+
+  @Test
+  public void shouldGetByFacilityProgramYearAndCategory() throws Exception {
+
+    repository.getEntryBy(2005, 2L, 5L, 6L);
+
+    verify(mapper).getEntryBy(2005, 2L, 5L, 6L);
+  }
+
 
 }

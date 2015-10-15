@@ -42,6 +42,10 @@ public class AnnualFacilityEstimateRepository {
     return mapper.update(estimate);
   }
 
+  public AnnualFacilityEstimateEntry getEntryBy(Integer year, Long facilityId, Long programId, Long categoryId){
+    return mapper.getEntryBy(year, facilityId, programId, categoryId);
+  }
+
   public List<EstimateFormLineItem> getFacilityList(Long programId, String requsitionGroupIds) {
     return mapper.getFacilityList(programId, requsitionGroupIds);
   }

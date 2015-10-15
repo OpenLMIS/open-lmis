@@ -23,61 +23,64 @@ import java.util.List;
 public interface AnnualFacilityEstimateMapper {
 
   @Insert("insert into facility_demographic_estimates " +
-          " (year, facilityId, demographicEstimateId, conversionFactor, programId , value)" +
+    " (year, facilityId, demographicEstimateId, conversionFactor, programId , value)" +
     " values " +
-          " (#{year}, #{facilityId}, #{demographicEstimateId}, #{conversionFactor}, #{programId}, #{value}) ")
+    " (#{year}, #{facilityId}, #{demographicEstimateId}, #{conversionFactor}, #{programId}, #{value}) ")
   @Options(flushCache = true, useGeneratedKeys = true)
   Integer insert(AnnualFacilityEstimateEntry estimate);
 
   @Update("update facility_demographic_estimates " +
-          " set " +
-          " conversionFactor = #{conversionFactor}," +
-          " value = #{value}, " +
-          " modifiedBy = #{modifiedBy}, " +
-          " modifiedDate = NOW()" +
-          " where id = #{id} ")
+    " set " +
+    " conversionFactor = #{conversionFactor}," +
+    " value = #{value}, " +
+    " modifiedBy = #{modifiedBy}, " +
+    " modifiedDate = NOW()" +
+    " where id = #{id} ")
   Integer update(AnnualFacilityEstimateEntry estimate);
 
-    @Update("update facility_demographic_estimates " +
-            " set " +
-            " isFinal = true, " +
-            " modifiedBy = #{modifiedBy}, " +
-            " modifiedDate = NOW()" +
-            " where id = #{id} ")
-    Integer finalize(AnnualFacilityEstimateEntry estimate);
+  @Select("select * from facility_demographic_estimates where year = #{year} and facilityId = #{facilityId} and programId = #{programId} and demographicEstimateId = #{demographicEstimateId}")
+  AnnualFacilityEstimateEntry getEntryBy(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("demographicEstimateId") Long categoryId);
 
-    @Update("update facility_demographic_estimates " +
-            " set " +
-            " isFinal = false, " +
-            " modifiedBy = #{modifiedBy}," +
-            " modifiedDate = NOW()" +
-            "where id = #{id} ")
-    Integer undoFinalize(AnnualFacilityEstimateEntry estimate);
+  @Update("update facility_demographic_estimates " +
+    " set " +
+    " isFinal = true, " +
+    " modifiedBy = #{modifiedBy}, " +
+    " modifiedDate = NOW()" +
+    " where id = #{id} ")
+  Integer finalize(AnnualFacilityEstimateEntry estimate);
 
-
-    @Select("select * from facility_demographic_estimates where year = #{year} and facilityId = #{facilityId} and programId = #{programId}")
-    List<AnnualFacilityEstimateEntry> getEstimatesForFacility(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
-
-
-    @Select("select s.* from facility_demographic_estimates s " +
-            " join demographic_estimate_categories c on c.id = s.demographicEstimateId " +
-            " where year = #{year} and facilityId = #{facilityId} " +
-            "   and programId = #{programId} " +
-            " order by c.id")
-    @Results(value = {
-            @Result(column = "demographicEstimateId", property = "demographicEstimateId"),
-            @Result(property = "category", column = "demographicEstimateId", one = @One(select = "org.openlmis.demographics.repository.mapper.EstimateCategoryMapper.getById"))
-    }
-    )
-    List<AnnualFacilityEstimateEntry> getEstimatesForFacilityWithDetails(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
+  @Update("update facility_demographic_estimates " +
+    " set " +
+    " isFinal = false, " +
+    " modifiedBy = #{modifiedBy}," +
+    " modifiedDate = NOW()" +
+    "where id = #{id} ")
+  Integer undoFinalize(AnnualFacilityEstimateEntry estimate);
 
 
-    @Select("select distinct f.name, f.id, f.code, gz.id as parentId, gz.name as parentName " +
-            " from facilities f " +
-            "     join geographic_zones gz on gz.id = f.geographicZoneId " +
-            "     join programs_supported ps on ps.facilityId = f.id  and ps.programId = #{programId} " +
-            "     join requisition_group_members m on m.facilityId = f.id " +
-            " where m.requisitionGroupId  = ANY(#{requisitionGroupIds}::INTEGER[]) " +
-            " order by gz.name, f.name")
-    List<EstimateFormLineItem> getFacilityList(@Param("programId") Long programId, @Param("requisitionGroupIds") String requsitionGroupIds);
+  @Select("select * from facility_demographic_estimates where year = #{year} and facilityId = #{facilityId} and programId = #{programId}")
+  List<AnnualFacilityEstimateEntry> getEstimatesForFacility(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+
+  @Select("select s.* from facility_demographic_estimates s " +
+    " join demographic_estimate_categories c on c.id = s.demographicEstimateId " +
+    " where year = #{year} and facilityId = #{facilityId} " +
+    "   and programId = #{programId} " +
+    " order by c.id")
+  @Results(value = {
+    @Result(column = "demographicEstimateId", property = "demographicEstimateId"),
+    @Result(property = "category", column = "demographicEstimateId", one = @One(select = "org.openlmis.demographics.repository.mapper.EstimateCategoryMapper.getById"))
+  }
+  )
+  List<AnnualFacilityEstimateEntry> getEstimatesForFacilityWithDetails(@Param("year") Integer year, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+
+  @Select("select distinct f.name, f.id, f.code, gz.id as parentId, gz.name as parentName " +
+    " from facilities f " +
+    "     join geographic_zones gz on gz.id = f.geographicZoneId " +
+    "     join programs_supported ps on ps.facilityId = f.id  and ps.programId = #{programId} " +
+    "     join requisition_group_members m on m.facilityId = f.id " +
+    " where m.requisitionGroupId  = ANY(#{requisitionGroupIds}::INTEGER[]) " +
+    " order by gz.name, f.name")
+  List<EstimateFormLineItem> getFacilityList(@Param("programId") Long programId, @Param("requisitionGroupIds") String requsitionGroupIds);
 }

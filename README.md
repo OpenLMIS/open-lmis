@@ -83,6 +83,22 @@ Running App on embedded Jetty server
 
 Once the system is running, you can access the home page at `http://localhost:9091/`. You can log into the default instance with: user: `Admin123`, pass: `Admin123`
 
+## Code analysis
+Analysis of Java and Javascript sources can be reported on and visualized using a SonarQube server and the included
+`sonarRunner` task.
+
+1. Install and run the SonarQube server.
+2. Configure the Sonar properties in `gradle.properties` to point to your Sonar server and database.
+3. Build the project and run the analysis:
+  * Basic analysis:  `gradle build sonarRunner`
+  * With coverage reports install the Sonar Cobertura plugin and run cobertura report before sonar analysis.
+     e.g. `gradle build cobertura sonarRunner`
+
+### Server setup
+See [SonarQube.org](http://www.sonarqube.org/) for official documentation.  For more information on how the OpenLMIS
+  project configures SonarQube see the
+  [OpenLMIS sonar-configuration](https://github.com/OpenLMIS/sonar-configuration) repository.
+
 ## Issues
 1. You may encounter a `java.lang.OutOfMemoryError: PermGen space`. This is a result of not enough memory for the Jetty JVM. One way to fix this is to export the following (or include in `$HOME/.bash_profile` or `$HOME/.profile` or `$HOME/.bashrc` or `$HOME/.zshrc`, depending on your shell).
 

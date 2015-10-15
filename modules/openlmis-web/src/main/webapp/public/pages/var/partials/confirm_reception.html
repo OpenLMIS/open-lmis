@@ -1,0 +1,102 @@
+<div class="app-form">
+    <form name="receive_package">
+        <div class='form-group'>
+            <h3 >Confirm receiving Package</h3>
+            <!--SSCC-->
+            <div class='form-row clearfix'>
+                <div class="form-cell">
+                    <label>Confirm Receiving Package With Lot Number: <span>{{lot_number}}</span>&nbsp;&nbsp;
+                        <input class="btn btn-danger btn-sm" type="button" value="Cancel" ng-click="cancelConfirmation()"/></label>
+                </div>
+            </div>
+            </br>
+            <div class='form-row clearfix' >
+                <table class="table-bordered table table-striped ng-scope" >
+
+                    <thead>
+                    <tr class="gradient-header">
+                        <th  style="text-align: center">GTN</th>
+                        <th  style="text-align: center">Description</th>
+                        <th  style="text-align: center">Lot</th>
+                        <th  style="text-align: center">Expiry</th>
+                        <th  style="text-align: center">Boxes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--<tr ng-repeat="subPackages in singlePackage">-->
+
+                    <tr ng-repeat="packageDetails in filteredPackage = (packagesJson | filter:{lot_number:lot_number})">
+                        <td>{{packageDetails.vaccine_packaging.gtin}}</td>
+                        <td>{{packageDetails.vaccine_packaging.manufacturer.description}}</td>
+                        <td>{{packageDetails.lot_number}}</td>
+                        <td>{{packageDetails.expire_date  | date:'yyyy-MM-dd'}}</td>
+                        <td>{{ numberOfBoxes(packageDetails.vaccine_packaging.doses_per_vial,packageDetails.vaccine_packaging.vials_per_box,packageDetails.number_of_doses)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-cell horizontalFilters">
+                <label class="labels" >Quantity Okay</label>
+
+                <div class="form-fields">
+                    <select class="input-large ng-pristine ng-valid" ng-model="condition.quantity">
+                        <option selected="selected" value="Yes">Yes</option>
+                        <option  value="No">No</option>
+                        <!-- ngRepeat: value in zones.children -->
+                    </select>
+                </div>
+            </div>
+            <div class="form-cell horizontalFilters">
+                <label class="labels" >Physical Damage</label>
+
+                <div class="form-fields">
+                    <select class="input-large ng-pristine ng-valid" ng-model="condition.physical_damage">
+                        <option  value="None">None</option>
+                        <option  value="Damaged">Damaged</option>
+                        <!-- ngRepeat: value in zones.children -->
+                    </select>
+                </div>
+            </div>
+            <div class="form-cell horizontalFilters">
+                <label class="labels" >VVM Status</label>
+
+                <div class="form-fields">
+                    <select class="input-large ng-pristine ng-valid" ng-model="condition.vvmstatus">
+                        <option selected="selected" value="Good">Good</option>
+                        <option  value="Normal">Normal</option>
+                        <option  value="Bad">Bad</option>
+                        <!-- ngRepeat: value in zones.children -->
+                    </select>
+                </div>
+            </div>  <div class="form-cell horizontalFilters">
+                <label class="labels" >Temp Monitors</label>
+
+                <div class="form-fields">
+                    <select class="input-large ng-pristine ng-valid" ng-model="condition.temp_monitors">
+                        <option selected="selected" value="Good">Good</option>
+                        <option  value="Normal">Normal</option>
+                        <option  value="Bad">Bad</option>
+                        <!-- ngRepeat: value in zones.children -->
+                    </select>
+                </div>
+            </div>
+
+        </div>
+        <div class='clearfix'>
+            <div class="form-cell horizontalFilters">
+                <label></label>
+                <textarea ng-model="condition.problems"></textarea>
+            </div>
+            <div class="form-cell horizontalFilters">
+                <label>&nbsp;</label>
+                <div class="form-fields">
+                    <input class="btn btn-primary" type="button" value="Confirm"  id="confirm_package_button"/>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    </form>
+</div>

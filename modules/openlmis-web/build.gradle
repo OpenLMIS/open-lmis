@@ -145,7 +145,7 @@ task cleanWorkspace(type: Delete) {
 }
 
 build.doLast {
-    //karmaRun.execute()
+    karmaRun.execute()
     jsHint.execute()
     cleanWorkspace.execute()
 }
@@ -181,6 +181,16 @@ dependencies {
             project(path: ':modules:distribution', configuration: 'testFixtures'),
             project(path: ':modules:report', configuration: 'testFixtures'),
             project(path: ':modules:reporting', configuration: 'testFixtures')
+}
+
+sonarRunner {
+    sonarProperties {
+        properties["sonar.sources"] += 'src/main/webapp/public/js'
+        properties["sonar.sources"] += 'src/main/webapp/public/pages'
+        properties["sonar.sources"] += 'src/main/webapp/public/site'
+        properties["sonar.sources"] += 'src/main/webapp/public/less'
+        properties["sonar.tests"] += 'src/test/javascript/specs'
+    }
 }
 
 jettyRun {

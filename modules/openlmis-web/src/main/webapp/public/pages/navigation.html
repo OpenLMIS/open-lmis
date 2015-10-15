@@ -196,6 +196,9 @@
               </ul>
             </div>
           </li>
+          <li>
+            <a href="/public/pages/var/index.html#/">VAR</a>
+          </li>
 
         </ul>
       </div>
@@ -582,6 +585,10 @@
                 </ul>
               </div>
             </li>
+            <li ng-show="hasPermission('MANAGE_CUSTOM_REPORTS')">
+              <a id='manageCustomReports' href="/public/pages/reports/custom/designer.html#/designer"
+                 openlmis-message="link.admin.manage.custom.reports"></a>
+            </li>
             <li class="has-children" ng-show="hasPermission('CONFIGURE_HELP_CONTENT')">
                 <a id="manage-help-option"
                    href="/public/pages/help/helpTopic/index.html"
@@ -600,10 +607,7 @@
                 </div>
             </li>
 
-          <li ng-show="hasPermission('MANAGE_CUSTOM_REPORTS')">
-            <a id='manageCustomReports' href="/public/pages/reports/custom/designer.html#/designer"
-               openlmis-message="link.admin.manage.custom.reports"></a>
-          </li>
+
 
           <li class="beak"></li>
         </ul>

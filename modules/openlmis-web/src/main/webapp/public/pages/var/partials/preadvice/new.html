@@ -1,0 +1,141 @@
+<form name="international_shipment">
+    <div class="row-fluid">
+        <div class="span6">
+            <div class='form-group'>
+                <!--<h3 openlmis-message="label.basicInformation">International Shipment</h3>-->
+                <h3 >International Shipment</h3>
+                <!--SSCC-->
+                <div class='form-row clearfix'>
+                    <div class="form-cell">
+                        <label>Shipment Id</label>
+                        <div class="form-field">
+                            <input ng-change="fillFromShipment(package.shipment_id)" type="text" class="form-control" ng-model="package.shipment_id">
+                        </div>
+                    </div>
+                </div>
+                <div class='form-row clearfix'>
+                    <div class="form-cell">
+                        <label>Order Number</label>
+                        <div class="form-field">
+                            <input type="text" class="form-control" ng-model="package.order_number">
+                        </div>
+                    </div>
+                </div>
+                <!--Item-->
+                <div class='form-row clearfix'>
+                    <div class="form-cell">
+                        <label>Item</label>
+                        <div class="form-field">
+                            <select  class="form-control" ng-model="package.vaccine_id"  ng-change="pullPackaging(package.vaccine_id)">
+                                <option ng-repeat="vaccine in vaccines" value="{{vaccine.id}}">{{vaccine.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class='form-row clearfix' ng-if="gtinSelect">
+                    <!--vaccine_packagings-->
+                    <div class="form-cell">
+                        <label>GTIN</label>
+                        <div class="form-field">
+                            <select  class="form-control" ng-model="package.vaccine_packaging_id" >
+                                <option ng-repeat="vaccine in vaccinePackages"  value="{{vaccine.id}}">{{ vaccine.gtin }}( {{ vaccine.dosespervial }} Dose per Vial )</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!--Manufacture Date-->
+                <div class='form-row clearfix'>
+                    <div class="form-cell">
+                        <label>Manufacture Date</label>
+                        <div class="form-field">
+                            <input type="text" class="form-control" ng-model="package.manufacture_date" ui-date="{dateFormat: 'yy-mm-dd', changeYear: true}">
+                        </div>
+                    </div>
+                </div>
+                <!--Expiry Date-->
+                <div class='form-row clearfix'>
+                    <div class="form-cell">
+                        <label>Expiry Date</label>
+                        <div class="form-field">
+                            <input type="text" class="form-control" ng-model="package.expiry_date" ui-date="{dateFormat: 'yy-mm-dd', changeYear: true}">
+                        </div>
+                    </div>
+                </div>
+                <!--Lot Number-->
+                <div class='form-row clearfix'>
+                    <div class="form-cell">
+                        <label>Lot Number</label>
+                        <div class="form-field">
+                            <input type="text" ng-model="package.lot_number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <!--Quantity(Number of Doses)-->
+                <div class='form-row clearfix'>
+                    <div class="form-cell">
+                        <label>Quantity(Number of Doses)</label>
+                        <div class="form-field">
+                            <input type="text" ng-model="package.number_of_doses" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span6">
+            <div class='form-group'>
+                <!--<h3 openlmis-message="label.basicInformation">International Shipment</h3>-->
+                <h3 >Flight Details</h3>
+                <!--SSCC-->
+                <div class='form-row clearfix'>
+                    <div class="form-cell">
+                        <label>AWB Number</label>
+                        <div class="form-field">
+                            <input ng-change="fillFromAWB(package.awb_number)" type="text" class="form-control" ng-model="package.awb_number">
+                        </div>
+                    </div>
+                </div>
+                <!--Item-->
+                <div class='form-row clearfix'>
+                    <div class="form-cell">
+                        <label>Flight Number</label>
+                        <div class="form-field">
+                               <input type="text" class="form-control" ng-model="package.flight_number">
+                            </div>
+                    </div>
+                </div>
+                <!--Manufacture Date-->
+                <div class='form-row clearfix'>
+                    <div class="form-cell">
+                        <label>Destination Airport</label>
+                        <div class="form-field">
+                            <input type="text" class="form-control" ng-model="package.airport">
+                        </div>
+                    </div>
+                </div>
+
+                <div class='form-row clearfix'>
+                    <!--vaccine_packagings-->
+                    <div class="form-cell">
+                        <label>Expected Date of Arrival</label>
+                        <div class="form-field">
+                            <input type="text" class="form-control" ng-model="package.arrival_date" ui-date="{dateFormat: 'yy-mm-dd', changeYear: true}">                        </div>
+                        </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-cell horizontalFilters">
+        <label>&nbsp;</label>
+        <div class="form-fields">
+            <input class="btn btn-danger" type="button" value="Cancel" ng-click="cancelAddPackage(package)" id="cancel_package_package"/>
+        </div>
+    </div><div class="form-cell horizontalFilters">
+    <label>&nbsp;</label>
+    <div class="form-fields">
+        <input class="btn btn-primary" type="button" value="Add" ng-click="addPackage(package)" id="add_package_button"/>
+    </div>
+</div>
+</form>

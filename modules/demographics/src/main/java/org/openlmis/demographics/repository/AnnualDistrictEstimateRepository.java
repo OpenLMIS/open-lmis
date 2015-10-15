@@ -43,6 +43,10 @@ public class AnnualDistrictEstimateRepository {
     return mapper.getDistrictLineItems(facilityIds);
   }
 
+  public AnnualDistrictEstimateEntry getEntryBy(Integer year, Long districtId, Long programId, Long categoryId){
+    return mapper.getEntryBy(year, districtId, programId, categoryId);
+  }
+
   public List<AnnualFacilityEstimateEntry> getFacilityEstimateAggregate(Integer year, Long districtId, Long programId) {
     return mapper.getFacilityEstimateAggregate(year, districtId, programId);
   }

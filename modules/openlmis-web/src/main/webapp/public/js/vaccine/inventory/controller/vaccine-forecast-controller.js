@@ -26,22 +26,20 @@ function VaccineForecastingController($scope){
                 "maximumStock": "20",
                 "productCategoryId": 100,
                 "productCategoryName": "Vaccine"
-            }
-            ,
-
+            },
             {
                 "productId": 2413,
-                "productName":"PCV",
+                "productName":"ADS 0.05ml",
                 "annualNeeds": 500,
                 "quarterlyNeed": 200,
                 "reOrderLevel": "150",
                 "bufferStock": "50",
                 "maximumStock": "20",
                 "productCategoryId": 100,
-                "productCategoryName": "Safety Boxes"
+                "productCategoryName": "Safety Injection Equipment"
             }
         ]
-    }
+    };
 
 
 }

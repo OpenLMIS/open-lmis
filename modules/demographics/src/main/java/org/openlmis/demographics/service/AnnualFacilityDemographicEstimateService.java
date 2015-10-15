@@ -57,7 +57,11 @@ public class AnnualFacilityDemographicEstimateService {
   public void save(EstimateForm estimateForm, Long userId){
     for(EstimateFormLineItem dto: ListUtil.emptyIfNull(estimateForm.getEstimateLineItems())){
       for(AnnualFacilityEstimateEntry estimate: ListUtil.emptyIfNull(dto.getFacilityEstimates())){
-        if(estimate.getIsFinal()){
+
+        AnnualFacilityEstimateEntry existingEstimateEntry = repository.getEntryBy(estimate.getYear(), estimate.getFacilityId(), estimate.getProgramId(), estimate.getDemographicEstimateId());
+
+        if( existingEstimateEntry != null  &&  ( !existingEstimateEntry.getId().equals(estimate.getId()) || existingEstimateEntry.getIsFinal() ) )
+        {
           continue;
         }
         estimate.setFacilityId(dto.getId());
