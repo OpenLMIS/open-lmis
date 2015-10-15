@@ -20,6 +20,11 @@ import java.util.List;
 public class InventoryTransaction extends BaseModel {
 
     Long facilityId;
+    Long toFacilityId;
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    @JsonDeserialize(using=DateDeserializer.class)
+    Date initiatedDate;
 
     Long productId;
 
@@ -30,4 +35,12 @@ public class InventoryTransaction extends BaseModel {
     String notes;
 
     List<LotOnHandTransaction> lots;
+
+    //For stock Movement line Item
+    private String issueVoucher;
+    private String issueDate;
+    private Long dosesRequested;
+    private Long gap;
+    private String toFacilityName;
+    private Long productCategoryId;
 }

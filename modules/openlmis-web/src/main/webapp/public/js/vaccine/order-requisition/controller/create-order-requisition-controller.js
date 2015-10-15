@@ -1,4 +1,4 @@
-function CreateVaccineOrderRequisition($scope, $dialog, $window, $routeParams, report, VaccineOrderRequisitionColumns, VaccineOrderRequisitionSubmit, $location) {
+function CreateVaccineOrderRequisition($scope, $dialog, $window,report, VaccineOrderRequisitionSubmit, $location) {
 
     $scope.report = new VaccineOrderRequisition(report);
 
@@ -17,18 +17,12 @@ function CreateVaccineOrderRequisition($scope, $dialog, $window, $routeParams, r
 
     };
 
-    VaccineOrderRequisitionColumns.get({}, function (data) {
-        $scope.columns = data.columns;
-    });
-
-    $scope.print = function (type) {
-        var params = jQuery.param($routeParams);
+    $scope.print = function (reportId) {
 
         VaccineOrderRequisitionSubmit.update($scope.report, function () {
                 });
-        var url = '/reports/download/order_requisition_export/' + type + '?' + params;
-        $window.open(url, '_blank');
-
+            var url = '/vaccine/orderRequisition/'+ reportId+'/print';
+            $window.open(url, '_blank');
     };
 
     $scope.submit = function () {
