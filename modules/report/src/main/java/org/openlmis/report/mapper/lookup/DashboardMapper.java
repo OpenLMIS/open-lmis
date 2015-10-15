@@ -204,11 +204,18 @@ public interface DashboardMapper {
             "quantity_approved,\n" +
             "quantity_expired_facility,\n" +
             "quantity_expired_upper,\n" +
+            "startdate,\n" +
+            "number_of_facilities_understocked,\n" +
+            "number_of_facilities_adquatelystocked,\n" +
+            "number_of_facilities_overstocked,\n" +
             "COALESCE(quantity_expired_facility,0)+COALESCE(quantity_expired_upper,0) as quantity_expired_total,\n" +
             "number_of_facilities_stocked_out_facility,\n" +
             "number_of_facilities_stocked_out_upper,\n" +
             "COALESCE(number_of_facilities_stocked_out_facility, 0) + COALESCE(number_of_facilities_stocked_out_upper, 0) as total_facilities_stocked_out,\n" +
-            "price\n" +
+            "COALESCE(quantity_lost_facility, 0) + COALESCE(quantity_lost_upper, 0) as total_quantity_lost,\n" +
+            "COALESCE(quantity_damaged_facility, 0) + COALESCE(quantity_damaged_upper, 0) as total_quantity_damaged,\n" +
+            "COALESCE(quantity_expired_facility, 0) + COALESCE(quantity_expired_upper, 0) as total_quantity_expired," +
+            "price \n" +
             "from fn_get_dashboard_summary_data(#{programId}::integer, #{periodId}::integer, #{userId}::integer)")
     List<HashMap<String, Object>> getProgramPeriodTracerProductTrend(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("userId") Long userId);
 
