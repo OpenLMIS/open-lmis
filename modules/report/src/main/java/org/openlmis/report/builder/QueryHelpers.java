@@ -18,9 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class QueryHelpers {
-    private QueryHelpers(){
-
-    }
 
     public static String getSortOrder(Map params, String defaultColumn){
         String sortOrder = "";

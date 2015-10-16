@@ -46,9 +46,7 @@ public class OrderCsvHelper {
 
   private String lineSeparator = "\r\n";
 
-  private Boolean apply_quotes_setting = false;
-
-  private Boolean initated = false;
+  private Boolean configurationLoaded = false;
 
   @Autowired
   ConfigurationSettingService configSettingService;
@@ -101,10 +99,15 @@ public class OrderCsvHelper {
   }
 
   private void writeCsvLineItem(Order order, RnrLineItem rnrLineItem, List<OrderFileColumn> orderFileColumns, Writer writer, int counter) throws IOException {
-    if(!initated){
+    boolean encloseValuesWithQuotes = false;
+    if(!configurationLoaded){
+      // allow the user to control what line separator to use from the administrative pages
+      // this value was different between a windows and linux target systems.
+      // this could have been written better.
       lineSeparator = StringEscapeUtils.unescapeJava(configSettingService.getConfigurationStringValue(ConfigurationSettingKey.CSV_LINE_SEPARATOR));
-      apply_quotes_setting = configSettingService.getBoolValue(ConfigurationSettingKey.CSV_APPLY_QUOTES);
-      initated = true;
+      // setting to enclose or not to enclose values in quotes.
+      encloseValuesWithQuotes = configSettingService.getBoolValue(ConfigurationSettingKey.CSV_APPLY_QUOTES);
+      configurationLoaded = true;
     }
     JXPathContext orderContext = JXPathContext.newContext(order);
     JXPathContext lineItemContext = JXPathContext.newContext(rnrLineItem);
@@ -119,7 +122,7 @@ public class OrderCsvHelper {
       if (columnValue instanceof Date) {
         columnValue = forPattern(orderFileColumn.getFormat()).print(((Date) columnValue).getTime());
       }
-      if(apply_quotes_setting) {
+      if(encloseValuesWithQuotes) {
         writer.write("\"" + (columnValue).toString() + "\"");
       }else{
         writer.write((columnValue).toString());
