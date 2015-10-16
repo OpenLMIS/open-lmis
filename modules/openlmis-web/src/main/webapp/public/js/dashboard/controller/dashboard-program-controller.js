@@ -10,9 +10,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function DashboardProgramController($scope,$routeParams,$timeout,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend, GetStockOutFacilitiesForProgramPeriodAndProductCode) {
+function DashboardProgramController($scope,$routeParams,$timeout,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend, GetStockOutFacilitiesForProgramPeriodAndProductCode, DashboardReportingPerformance) {
     var dashboardMenuService = dashboardMenuServiceNew;
-
     var  colors = ["bg-green", "bg-red","bg-blue"];
     /**
      * Returns Random color
@@ -33,8 +32,8 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
 
             dashboardMenuService.addTab("'"+program.name+"'",'/public/pages/dashboard/index_new.html#/dashboard-new?programId='+program.id,program.name,false, program.id);
         });
-        dashboardMenuService.addTab('Facility','/public/pages/dashboard/index_new.html#/dashboard-new?facilityId=0','Facility',false, 'Facility');
-        dashboardMenuService.addTab('Notification','/public/pages/dashboard/index_new.html#/dashboard-new?notificationId=0','Notification',false, 'Notification');
+        dashboardMenuService.addTab('Facility','/public/pages/dashboard/index_new.html#/dashboard-new?facilityId=0',messageService.get('label.facility'),false, messageService.get('label.facility'));
+        dashboardMenuService.addTab('Notification','/public/pages/dashboard/index_new.html#/dashboard-new?notificationId=0',messageService.get('label.notification'),false, messageService.get('label.notification'));
         $scope.dashboardTabs = dashboardMenuService.tabs;
 
             if(!isUndefined($routeParams.programId)){
@@ -73,16 +72,25 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
 
 
         $timeout(function(){
+            if(!isUndefined($scope.programId) && !isUndefined($scope.periodId)) {
+                DashboardReportingPerformance.get({
+                    programId: $scope.programId,
+                    periodId: $scope.periodId
+                }, function (data) {
+                    $scope.reportingPerformance = data.reportingPerformance;
+                });
+            }
 
-        getSohChartData();
-        }, 100);
+        getDashboardSummary();
+        }, 200);
 
     }
 
-    function getSohChartData(){
+    function getDashboardSummary(){
 
         $scope.productsTrend = [];
-
+        var defaultProducts = 4;
+        var count = 0;
         if(!isUndefined($scope.programId) && !isUndefined($scope.periodId)){
             GetProgramPeriodTracerProductsTrend.get({programId: $scope.programId, periodId: $scope.periodId,  limit: 5}, function(data){
                 $scope.tracerProducts = data.tracerProducts;
@@ -92,22 +100,51 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
                 if(!isUndefined($scope.tracerProducts)){
 
                     angular.forEach( $scope.tracerProducts , function(productTrend){
-                        var productSummary = [];
-
+                        count = count + 1;
+                       // var productSummary = [];
                         $scope.sohValue = _.pluck(productTrend,'quantity_dispensed').reverse();
+                        $scope.amcValues = _.pluck(productTrend, 'amc').reverse();
+                        $scope.overStockedValues = _.pluck(productTrend, 'number_of_facilities_overstocked').reverse();
+                        $scope.adequetlyStockedValues = _.pluck(productTrend, 'number_of_facilities_adquatelystocked').reverse();
+                        $scope.understockedValues = _.pluck(productTrend, 'number_of_facilities_understocked').reverse();
+                        $scope.stockedout = _.pluck(productTrend, 'total_facilities_stocked_out').reverse();
+                        $scope.quantityLost = _.pluck(productTrend, 'total_quantity_lost').reverse();
+                        $scope.quantityDamaged = _.pluck(productTrend, 'total_quantity_damaged').reverse();
+                        $scope.quantityExpired = _.pluck(productTrend, 'total_quantity_expired').reverse();
+                        $scope.periods = _.pluck(productTrend, 'startdate').reverse();
 
-                        productSummary.push(productTrend[0]);//this period
-                        productSummary.push(productTrend[1]);// last period
                         var total_facility_stocked_out = _.findWhere(productTrend, {'order': 1}).total_facilities_stocked_out;
 
-                        $scope.productsTrend.push({'name':productTrend[0].name,'code': productTrend[0].product_code, "sohTrend": $scope.sohValue, color: $scope.colorify(), 'facilityStockedOut': total_facility_stocked_out, 'productTrend': productTrend });
+                        $scope.productsTrend.push({'name':productTrend[0].name,'code': productTrend[0].product_code,
+                            "sohTrend": $scope.sohValue,
+                            'consumption':$scope.sohValue.toString(),
+                            'amc': $scope.amcValues.toString(),
+                            'overStocked': $scope.overStockedValues.toString(),
+                            'adequetlyStocked' : $scope.adequetlyStockedValues.toString(),
+                            'understocked': $scope.understockedValues.toString(),
+                            'stockedout': $scope.stockedout.toString(),
+                            'quantityLost': $scope.quantityLost.toString(),
+                            'quantityDamaged': $scope.quantityDamaged.toString(),
+                            'quantityExpired': $scope.quantityExpired.toString(),
+                            'periods': $scope.periods.toString(),
+                            color: $scope.colorify(),
+                            'facilityStockedOut': total_facility_stocked_out,
+                            'productTrend': productTrend,
+                            'consumptionChart': {openPanel:true},
+                            'stockingEfficiencyChart': {openPanel:true},
+                            'lossesAndAdjustmentChart': {openPanel:true},
+                            'selected': count <= defaultProducts? true: false
+
+                        });
 
                     });
                 }
+
             });
         }
 
     }
+
 
     /**
      * A simple popover placement adjustment based on the current index position.
@@ -124,7 +161,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
 
     /**
      * Function that extracts product trends for this period and last period.
-     * It uses $scope.productsTrend to get the product by code and get productTrend property which holds all trends for the all periods.
+     * It uses $scope.productsTrend to get the product by code and get productTrend property which holds all trends for all periods.
      *
      * @param code
      */

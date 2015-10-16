@@ -3,20 +3,21 @@ package org.openlmis.web.controller.vaccine;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
+import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.ProgramProductService;
-import org.openlmis.core.service.ProgramService;
-import org.openlmis.core.service.UserService;
+import org.openlmis.core.service.*;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.report.util.Constants;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
+import org.openlmis.vaccine.domain.inventory.StockMovement;
+import org.openlmis.vaccine.service.Inventory.VaccineInventoryService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionLineItemService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionsColumnService;
@@ -31,7 +32,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 
@@ -39,6 +42,7 @@ import static org.openlmis.core.web.OpenLmisResponse.error;
 import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.openlmis.core.web.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static java.lang.System.out;
 
 
 @Controller
@@ -47,6 +51,8 @@ public class VaccineOrderRequisitionController extends BaseController {
     public static final String VaccineOrderRequisition = "orderRequisition";
     public static final String OrderRequisitionColumns = "columns";
     private static final String PROGRAM_PRODUCT_LIST = "programProductList";
+    private static final String PRINT_ORDER_REQUISITION = "Print Order Requisition";
+    private static final String PRINT_ISSUE_STOCK = "Print Issue report";
 
     @Autowired
     VaccineOrderRequisitionService service;
@@ -55,7 +61,6 @@ public class VaccineOrderRequisitionController extends BaseController {
     FacilityService facilityService;
     @Autowired
     VaccineOrderRequisitionLineItemService lineItemService;
-    private static final String PRINT_OR = "test";
     @Autowired
     TemplateService templateService;
     @Autowired
@@ -69,6 +74,12 @@ public class VaccineOrderRequisitionController extends BaseController {
     private JasperReportsViewFactory jasperReportsViewFactory;
     @Autowired
     UserService userService;
+
+    @Autowired
+    VaccineInventoryService inventoryService;
+
+    @Autowired
+    ConfigurationSettingService settingService;
 
 
     @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
@@ -156,29 +167,6 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
 
-    @RequestMapping(value = "orderRequisition/{id}/print", method = GET, headers = ACCEPT_PDF)
-    public ModelAndView print(@PathVariable Long id) throws JRException, IOException, ClassNotFoundException {
-        Template podPrintTemplate = templateService.getByName(PRINT_OR);
-        JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(podPrintTemplate);
-        Map<String, Object> map = new HashMap<>();
-        map.put("format", "pdf");
-
-        Locale currentLocale = messageService.getCurrentLocale();
-        map.put(JRParameter.REPORT_LOCALE, currentLocale);
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
-        map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
-
-        Resource reportResource = new ClassPathResource("reports");
-        Resource imgResource = new ClassPathResource("images");
-
-        String separator = System.getProperty("file.separator");
-        map.put("subreport_dir", reportResource.getFile().getAbsolutePath() + separator);
-       // map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
-        map.put("order_id", id.intValue());
-        return new ModelAndView(jasperView, map);
-    }
-
-
     @RequestMapping(value = "getPendingRequest/{facilityId}/{programId}", method = RequestMethod.GET,headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getPendingRequest(@PathVariable  Long facilityId,@PathVariable Long programId,HttpServletRequest request){
 
@@ -213,19 +201,6 @@ public class VaccineOrderRequisitionController extends BaseController {
         return response("report", orderRequisition);
     }
 
-
-
-/*
-
-    @RequestMapping(value = "/orderRequisitions", method = GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
-    public ResponseEntity<OpenLmisResponse> getRequisitionsForView(RequisitionSearchCriteria criteria, HttpServletRequest request) {
-        criteria.setUserId(loggedInUserId(request));
-        return response("Order_list", prepareForView(requisitionService.get(criteria)));
-    }
-*/
-
-
     @RequestMapping(value = "programs.json", method = RequestMethod.GET)
     public ResponseEntity<OpenLmisResponse> getProgramsForConfiguration() {
         return response("programs", programService.getAllIvdPrograms());
@@ -248,13 +223,61 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
 
-
-
     @RequestMapping(value = "/{programId}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getProgramProductsByProgram(@PathVariable Long programId) {
         List<ProgramProduct> programProductsByProgram = programProductService.getByProgram(new Program(programId));
         return response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
     }
+
+    @RequestMapping(value = "{id}/print", method = GET, headers = ACCEPT_JSON)
+    public ModelAndView printOrder(@PathVariable Long id) throws JRException, IOException, ClassNotFoundException {
+        Template orPrintTemplate = templateService.getByName(PRINT_ORDER_REQUISITION);
+
+        JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(orPrintTemplate);
+        Map<String, Object> map = new HashMap<>();
+        map.put("format", "pdf");
+
+        Locale currentLocale = messageService.getCurrentLocale();
+        map.put(JRParameter.REPORT_LOCALE, currentLocale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
+        map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
+        Resource reportResource = new ClassPathResource("report");
+        Resource imgResource = new ClassPathResource("images");
+        ConfigurationSetting configuration = settingService.getByKey(Constants.OPERATOR_NAME);
+        map.put(Constants.OPERATOR_NAME, configuration.getValue());
+
+        String separator = System.getProperty("file.separator");
+        map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
+        map.put("ORDER_ID", id.intValue());
+
+        return new ModelAndView(jasperView, map);
+    }
+
+
+    @RequestMapping(value = "issue/print", method = GET, headers = ACCEPT_JSON)
+    public ModelAndView printIssueStock() throws JRException, IOException, ClassNotFoundException {
+        Template orPrintTemplate = templateService.getByName(PRINT_ISSUE_STOCK);
+        StockMovement stockMovement = inventoryService.getLastStockMovement();
+        JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(orPrintTemplate);
+        Map<String, Object> map = new HashMap<>();
+        map.put("format", "pdf");
+
+        Locale currentLocale = messageService.getCurrentLocale();
+        map.put(JRParameter.REPORT_LOCALE, currentLocale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
+        map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
+        Resource reportResource = new ClassPathResource("report");
+        Resource imgResource = new ClassPathResource("images");
+        ConfigurationSetting configuration = settingService.getByKey(Constants.OPERATOR_NAME);
+        map.put(Constants.OPERATOR_NAME, configuration.getValue());
+
+        String separator = System.getProperty("file.separator");
+        map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
+        map.put("ISSUE_ID", stockMovement.getId().intValue());
+
+        return new ModelAndView(jasperView, map);
+    }
+
 
 
 }

@@ -148,7 +148,6 @@ services.factory('ManufacturerList', function ($resource) {
 
 
 
-//Vaccine Order Requisition STart services
 services.factory('VaccineIssueStock', function($resource){
     return $resource('/vaccine/inventory/stock/debit.json',{}, update);
 });
@@ -209,10 +208,6 @@ services.factory('VaccinePendingRequisitions', function ($resource) {
     return $resource('/vaccine/orderRequisition/getPendingRequest/:facilityId/:programId.json', {}, {});
 });
 
-// ENd VOR
-
-
-//ADDITIONAL
 
 services.factory('LoggedInUserDetails',function($resource){
     return $resource('/vaccine/orderRequisition/loggedInUserDetails.json',{},{});
@@ -244,4 +239,8 @@ services.factory('VaccineHomeFacilityPrograms', function ($resource) {
 
 services.factory('UpdateOrderRequisitionStatus',function($resource){
     return $resource('/vaccine/orderRequisition/updateOrderRequest/:orderId.json',{orderId:'@orderId'},{update:{method:'PUT'}});
+});
+
+services.factory('VaccineLastStockMovement', function ($resource) {
+    return $resource('/vaccine/inventory/stock/lastReport.json', {}, {});
 });

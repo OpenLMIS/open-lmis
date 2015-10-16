@@ -42,8 +42,8 @@ ALTER TABLE ONLY gtin_lookups
 -- Name: TABLE var_items; Schema: public; Owner: postgres
 --
 
-DROP SEQUENCE IF EXISTS public.var_items_id_seq;
 DROP TABLE IF EXISTS var_items;
+DROP SEQUENCE IF EXISTS public.var_items_id_seq;
 CREATE TABLE var_items (
     id integer NOT NULL,
     vardetailsid integer NOT NULL,
@@ -94,9 +94,9 @@ ALTER TABLE ONLY var_items
 -- Name: var_details; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
 --
 
-DROP SEQUENCE IF EXISTS  public.var_details_id_seq;
 DROP TABLE IF EXISTS  public.var_details;
 
+DROP SEQUENCE IF EXISTS  public.var_details_id_seq;
 CREATE TABLE var_details (
     id integer NOT NULL,
     awbnumber character varying(255),
@@ -148,8 +148,8 @@ ALTER TABLE ONLY var_details
 -- Name: var_item_alarms; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
 --
 
-DROP SEQUENCE IF EXISTS  public.var_item_alarms_id_seq;
 DROP TABLE IF EXISTS  public.var_item_alarms;
+DROP SEQUENCE IF EXISTS  public.var_item_alarms_id_seq;
 
 CREATE TABLE var_item_alarms (
     id integer NOT NULL,
@@ -192,8 +192,8 @@ ALTER TABLE ONLY var_item_alarms
 -- Name: var_item_partials; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
 --
 
-DROP SEQUENCE  IF EXISTS public.var_item_partials_id_seq;
 DROP TABLE  IF EXISTS public.var_item_partials;
+DROP SEQUENCE  IF EXISTS public.var_item_partials_id_seq;
 
 CREATE TABLE var_item_partials (
     id integer NOT NULL,

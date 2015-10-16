@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-var dashboard = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart','ui.chart','ngTable','nsPopover']).config(['$routeProvider', function ($routeProvider) {
+var dashboard = angular.module('dashboard',['openlmis', 'ui.calendar', 'ui.bootstrap','easypiechart','ui.chart','ngTable','nsPopover','gridshore.c3js.chart']).config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
         when('/dashboard', {controller: AdminDashboardController, templateUrl: 'partials/dashboard.html', resolve : ResolveDashboardFormData}).

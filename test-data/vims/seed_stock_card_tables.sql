@@ -13,7 +13,6 @@ VALUES(1,'Product','Product Name','Product','P',1,TRUE,1,'2015-09-20 00:00:00',1
 (5,'Amount Required','Amount Required','Amount Required','A',5,TRUE,1,'2015-09-20 00:00:00',1,'2015-09-20 00:00:00');
 
 
-
   INSERT INTO lots (productid, lotnumber, manufacturername, manufacturedate, expirationdate)
   VALUES ((SELECT id FROM products WHERE primaryname = 'BCG'),'A1','Manufacturer 1','2015-05-01 00:00:00','2016-05-01 00:00:00')
     ,((SELECT id FROM products WHERE primaryname = 'BCG'),'B1','Manufacturer 2','2015-06-01 00:00:00','2016-06-01 00:00:00')
