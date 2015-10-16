@@ -127,7 +127,7 @@ ProgramProductController.resolve = {
     var deferred = $q.defer();
 
     $timeout(function () {
-      Programs.get({type: 'push'}, function (data) {
+      Programs.get({type: ''}, function (data) {
         deferred.resolve(data.programs);
       }, function () {
         location.path('/');
