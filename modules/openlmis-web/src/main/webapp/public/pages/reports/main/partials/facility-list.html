@@ -22,7 +22,7 @@
                 <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
                 <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
                 <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')" class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
-                <a id="mailing-button" href="#list" ng-click="exportReport('mailing-list')" class='btn-small btn-info'>Mailing Label</a>
+                <a id="mailing-button" href="#facility-list" ng-click="exportReport('mailing-list')" class='btn-small btn-info'>Mailing Label</a>
               </div>
         </div>
         <div>
@@ -35,7 +35,7 @@
                       <div class="form-cell horizontalFilters">
                             <label class="labels">Status</label>
                             <div class="form-field">
-                                <select ng-model="filter.status" ng-change="filterChanged()" style="width:200px;" name="status"   >
+                                <select ng-select2 ng-model="filter.status" ng-change="filterChanged()" style="width:200px;" name="status"   >
                                     <option  ng-repeat="option in statuses" value="{{ option.value }}" ng-selected="filter.status == option.value">{{ option.name }}</option>
                                 </select>
                             </div>

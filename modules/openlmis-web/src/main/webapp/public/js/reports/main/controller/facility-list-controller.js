@@ -14,16 +14,15 @@ function ListFacilitiesController($scope, FacilityList, ngTableParams) {
 
 
     $scope.OnFilterChanged = function(){
-        FacilityList.get($scope.filter, function(data) {
+        FacilityList.get($scope.getSanitizedParameter(), function(data) {
             $scope.data = data.pages.rows;
             $scope.paramsChanged($scope.tableParams);
         });
     };
 
     $scope.statuses = [
-        {'name': 'All'},
-        {'name': 'Active', 'value': "TRUE"},
-        {'name': 'Inactive', 'value': "FALSE"}
+        {'name': 'Active', 'value': "true"},
+        {'name': 'Inactive', 'value': "false"}
     ];
 
 
