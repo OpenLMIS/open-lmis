@@ -28,11 +28,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.restapi.response.RestResponse.ERROR;
-import static org.openlmis.restapi.response.RestResponse.error;
+import static org.openlmis.restapi.response.RestResponse.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static org.springframework.http.HttpStatus.CREATED;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -50,11 +48,12 @@ public class RestStockCardControllerTest {
   private StockCard stockCard;
   private List<StockEvent> stockEventList;
   private Long facilityId;
+  private long userId;
 
   @Before
   public void setUp() throws Exception {
     principal = mock(Principal.class);
-    when(principal.getName()).thenReturn("1");
+    when(principal.getName()).thenReturn("123");
     mockStatic(RestResponse.class);
   }
 
@@ -62,15 +61,15 @@ public class RestStockCardControllerTest {
   public void shouldReturnStatusOKIfNoException() throws Exception {
     setupStockData();
 
-    when(restStockCardService.adjustStock(facilityId, stockEventList, 1L)).thenReturn(stockCard);
-    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(RestStockCardController.STOCK_CARD_ID, stockCard.getId()), HttpStatus.OK);
-    when(RestResponse.response(RestStockCardController.STOCK_CARD_ID, stockCard.getId(), HttpStatus.OK)).thenReturn(expectedResponse);
+    String successMsg = "msg.stockmanagement.adjuststocksuccess";
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(SUCCESS, successMsg), HttpStatus.OK);
+    when(RestResponse.success(successMsg)).thenReturn(expectedResponse);
 
     ResponseEntity<RestResponse> response = restStockCardController.adjustStock(facilityId, stockEventList, principal);
 
-    verify(restStockCardService).adjustStock(facilityId, stockEventList, 1L);
+    verify(restStockCardService).adjustStock(facilityId, stockEventList, userId);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat((Long) response.getBody().getData().get(RestStockCardController.STOCK_CARD_ID), is(stockCard.getId()));
+    assertThat(response.getBody().getSuccess(), is(successMsg));
   }
 
   @Test
@@ -78,7 +77,7 @@ public class RestStockCardControllerTest {
     setupStockData();
 
     DataException dataException = new DataException("invalid data");
-    when(restStockCardService.adjustStock(facilityId, stockEventList, 1L)).thenThrow(dataException);
+    doThrow(dataException).when(restStockCardService).adjustStock(facilityId, stockEventList, userId);
 
     ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, "invalid data"), HttpStatus.BAD_REQUEST);
     when(error(dataException.getOpenLmisMessage(), HttpStatus.BAD_REQUEST)).thenReturn(expectedResponse);
@@ -95,5 +94,6 @@ public class RestStockCardControllerTest {
     stockCard.setId(123L);
     stockEventList = new ArrayList<>();
     facilityId = 100L;
+    userId = 123L;
   }
 }

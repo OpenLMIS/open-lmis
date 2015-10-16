@@ -1,14 +1,18 @@
 package org.openlmis.restapi.service;
 
+import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.StockAdjustmentReasonRepository;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.stockmanagement.domain.StockCard;
+import org.openlmis.stockmanagement.domain.StockCardEntry;
+import org.openlmis.stockmanagement.domain.StockCardEntryType;
 import org.openlmis.stockmanagement.dto.StockEvent;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RestStockCardService {
@@ -25,22 +29,38 @@ public class RestStockCardService {
   @Autowired
   private StockCardService stockCardService;
 
-  public StockCard adjustStock(Long facilityId, List<StockEvent> stockEventList, Long loggedInUserId) {
+  public List<StockCardEntry> adjustStock(Long facilityId, List<StockEvent> stockEventList, Long userId) {
     if (!validFacility(facilityId)) {
       throw new DataException("error.facility.unknown");
     }
+    List<StockCardEntry> entries = new ArrayList<>();
 
     for (StockEvent stockEvent: stockEventList) {
       String errorInStockEvent = validateStockEvent(stockEvent);
       if (errorInStockEvent != null) {
         throw new DataException(errorInStockEvent);
       }
+      StockCard stockCard = stockCardService.getOrCreateStockCard(facilityId, stockEvent.getProductCode());
 
-      stockCardService.getOrCreateStockCard(facilityId, stockEvent.getProductCode());
+      if (stockCard == null) {
+        throw new DataException("error.stockmanagement.adjuststockfailed");
+      }
+
+      StockAdjustmentReason stockAdjustmentReason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(stockEvent.getReasonName());
+
+      long quantity = stockEvent.getQuantity();
+      quantity = stockAdjustmentReason.getAdditive() ? quantity : quantity * -1;
+
+      StockCardEntry entry = new StockCardEntry(stockCard, StockCardEntryType.ADJUSTMENT, quantity);
+      entry.setAdjustmentReason(stockAdjustmentReason);
+      entry.setCreatedBy(userId);
+      entry.setModifiedBy(userId);
+      entries.add(entry);
     }
-
-    return null;
+    stockCardService.addStockCardEntries(entries);
+    return entries;
   }
+
 
   private boolean validFacility(Long facilityId) {
     return facilityRepository.getById(facilityId) != null;

@@ -19,7 +19,7 @@
 
     <import resource="classpath:/applicationContext-requisition.xml"/>
     <import resource="classpath:applicationContext-vaccine.xml"/>
-    <context:component-scan base-package="org.openlmis.restapi"/>
+  <context:component-scan base-package="org.openlmis.restapi"/>
 
     <bean id="restAuthenticationManager" class="org.springframework.security.authentication.ProviderManager">
         <constructor-arg>

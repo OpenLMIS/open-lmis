@@ -27,7 +27,8 @@ dependencies {
             project(':modules:vaccine'),
             project(':modules:stock-management')
 
-    testCompile  project(path: ':modules:requisition', configuration: 'testFixtures')
+    testCompile  project(path: ':modules:requisition', configuration: 'testFixtures'),
+            project(path: ':modules:stock-management', configuration: 'testFixtures')
 
     configurations {
         testFixtures {
