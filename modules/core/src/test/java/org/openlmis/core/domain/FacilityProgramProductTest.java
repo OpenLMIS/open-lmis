@@ -12,6 +12,7 @@ package org.openlmis.core.domain;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openlmis.core.builder.ISABuilder;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -100,16 +102,21 @@ public class FacilityProgramProductTest {
     assertThat(facilityProgramProduct.calculateIsa(420L, 3), is(46));
   }
 
+
+
   @Test
-  public void shouldReturnOverriddenIsaIfOverriddenISANotNull() throws Exception {
+  public void shouldReturnOverriddenIsaAmountIfOverriddenISANotNull() throws Exception {
     ProgramProduct programProduct = new ProgramProduct();
     programProduct.setProduct(new Product());
     programProduct.getProduct().setPackSize(7);
 
-    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, 98);
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L);
+    assertNull(facilityProgramProduct.calculateIsa(420L, 5));
 
-    assertThat(facilityProgramProduct.calculateIsa(420L, 5), is(70));
+    facilityProgramProduct.setOverriddenIsa(ISABuilder.build());
+    assertNotNull(facilityProgramProduct.calculateIsa(420L, 5));
   }
+
 
   @Test
   public void shouldSetIdealQuantityAsNullIfNoISADefined() throws Exception {
@@ -145,7 +152,7 @@ public class FacilityProgramProductTest {
 
     facilityProgramProduct.setProgramProductIsa(programProductISA);
 
-    assertThat(facilityProgramProduct.getWhoRatio(productCode), is(1234D));
+    assertThat(facilityProgramProduct.getWhoRatio(/*productCode*/), is(1234D));
   }
 
   @Test
@@ -157,9 +164,10 @@ public class FacilityProgramProductTest {
     when(product.getCode()).thenReturn(productCode);
     facilityProgramProduct.setProduct(product);
 
-    assertThat(facilityProgramProduct.getWhoRatio(productCode), is(nullValue()));
+    assertThat(facilityProgramProduct.getWhoRatio(), is(nullValue()));
   }
 
+  /*
   @Test
   public void shouldReturnNullWhoRatioIfProductCodeInvalid() throws Exception {
     String productCode = "BCG";
@@ -175,7 +183,7 @@ public class FacilityProgramProductTest {
     facilityProgramProduct.setProgramProductIsa(programProductISA);
 
     assertThat(facilityProgramProduct.getWhoRatio("invalidProductCode"), is(nullValue()));
-  }
+  } */
 
 
   @Test
@@ -184,9 +192,9 @@ public class FacilityProgramProductTest {
     Product product = new Product();
     product.setActive(true);
     FacilityProgramProduct programProductActive = new FacilityProgramProduct(new ProgramProduct(new Program(), product, 10, true),
-      facilityId, 100);
+      facilityId, null);
     FacilityProgramProduct programProductInactive = new FacilityProgramProduct(new ProgramProduct(new Program(), product, 10, false)
-      , facilityId, 100);
+      , facilityId, null);
 
     List<FacilityProgramProduct> activeFacilityProgramProducts = FacilityProgramProduct.filterActiveProducts(asList(programProductActive, programProductInactive));
 

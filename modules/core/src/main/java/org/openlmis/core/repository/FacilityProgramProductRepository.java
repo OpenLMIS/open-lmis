@@ -11,11 +11,16 @@
 package org.openlmis.core.repository;
 
 import org.openlmis.core.domain.FacilityProgramProduct;
+import org.openlmis.core.domain.ISA;
 import org.openlmis.core.domain.ProgramProductISA;
+import org.openlmis.core.domain.StockRequirements;
 import org.openlmis.core.repository.mapper.FacilityProgramProductMapper;
 import org.openlmis.core.repository.mapper.ProgramProductIsaMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * FacilityProgramProductRepository is repository class for FacilityProgramProduct related database operations.
@@ -25,30 +30,45 @@ import org.springframework.stereotype.Repository;
 public class FacilityProgramProductRepository {
 
   @Autowired
-  ProgramProductIsaMapper programProductIsaMapper;
+  ProgramProductIsaMapper ppiMapper;
 
   @Autowired
-  FacilityProgramProductMapper mapper;
+  FacilityProgramProductMapper fppMapper;
 
-  public void insertISA(ProgramProductISA programProductISA) {
-    programProductIsaMapper.insert(programProductISA);
+  @Transactional
+  public void insertISA(Long facilityId, ProgramProductISA isa)
+  {
+    fppMapper.insertISA(facilityId, isa);
   }
 
   public void updateISA(ProgramProductISA programProductISA) {
-    programProductIsaMapper.update(programProductISA);
+    ppiMapper.update(programProductISA);
   }
 
   public ProgramProductISA getIsaByProgramProductId(Long programProductId) {
-    return programProductIsaMapper.getIsaByProgramProductId(programProductId);
+    return ppiMapper.getIsaByProgramProductId(programProductId);
   }
 
-  public Integer getOverriddenIsa(Long programProductId, Long facilityId) {
-    return mapper.getOverriddenIsa(programProductId, facilityId);
+  public ISA getOverriddenIsa(Long programProductId, Long facilityId)
+  {
+    return fppMapper.getOverriddenIsa(programProductId, facilityId);
   }
 
-  public void save(FacilityProgramProduct product) {
-    mapper.removeFacilityProgramProductMapping(product.getId(), product.getFacilityId());
-    mapper.insert(product);
+  public List<StockRequirements> getStockRequirements(Long programProductId, Long facilityId)
+  {
+    return null;
+  }
+
+  public void deleteOverriddenIsa(Long programProductId, Long facilityId)
+  {
+    fppMapper.deleteOverriddenIsa(programProductId, facilityId);
+  }
+
+  @Transactional
+  public void save(FacilityProgramProduct fpp) {
+    fppMapper.removeFacilityProgramProduct(fpp.getId(), fpp.getFacilityId());
+    fppMapper.insert(fpp);
+    fppMapper.insertISA(fpp.getId(), fpp.getProgramProductIsa());
   }
 
 }

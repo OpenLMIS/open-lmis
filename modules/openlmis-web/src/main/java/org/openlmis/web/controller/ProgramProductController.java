@@ -13,6 +13,7 @@ package org.openlmis.web.controller;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
@@ -22,14 +23,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
 import static org.openlmis.core.web.OpenLmisResponse.response;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * This controller handles endpoint related to listing products for a given program.
@@ -69,5 +72,29 @@ public class ProgramProductController extends BaseController {
     response.getBody().addData("pagination", pagination);
     return response;
   }
+
+
+  @RequestMapping(value = "/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
+  public void insertIsa(@PathVariable Long programProductId,
+                        @RequestBody ProgramProductISA programProductISA,
+                        HttpServletRequest request) {
+    programProductISA.setCreatedBy(loggedInUserId(request));
+    programProductISA.setModifiedBy(loggedInUserId(request));
+    programProductISA.setProgramProductId(programProductId);
+    service.insertISA(programProductISA);
+  }
+
+    @RequestMapping(value = "/{programProductId}/isa/{isaId}", method = PUT, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PROGRAM_PRODUCT')")
+    public void updateIsa(@PathVariable Long isaId,
+            @PathVariable Long programProductId,
+            @RequestBody ProgramProductISA programProductISA,
+            HttpServletRequest request) {
+      programProductISA.getIsa().setId(isaId);
+      programProductISA.setProgramProductId(programProductId);
+      programProductISA.setModifiedBy(loggedInUserId(request));
+      service.updateISA(programProductISA);
+    }
 }
 

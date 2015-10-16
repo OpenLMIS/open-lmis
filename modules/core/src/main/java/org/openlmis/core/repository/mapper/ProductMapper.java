@@ -69,6 +69,9 @@ public interface ProductMapper {
   @Options(useGeneratedKeys = true)
   Long insert(Product product);
 
+  @Delete("DELETE FROM products WHERE code=#{code}")
+  public void deleteByCode(String code);
+
   @Select("SELECT * FROM dosage_Units WHERE LOWER(code) = LOWER(#{code})")
   DosageUnit getDosageUnitByCode(String code);
 

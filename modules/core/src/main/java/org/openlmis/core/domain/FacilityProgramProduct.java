@@ -38,12 +38,18 @@ public class FacilityProgramProduct extends ProgramProduct {
 
   Long facilityId;
 
-  Integer overriddenIsa;
+  ISA overriddenIsa;
 
-  public FacilityProgramProduct(ProgramProduct programProduct, Long facilityId, Integer overriddenIsa) {
+  public FacilityProgramProduct(ProgramProduct programProduct, Long facilityId)
+  {
+    this(programProduct, facilityId, null);
+  }
+
+  public FacilityProgramProduct(ProgramProduct programProduct, Long facilityId, ISA isa)
+  {
     super(programProduct);
     this.facilityId = facilityId;
-    this.overriddenIsa = overriddenIsa;
+    this.overriddenIsa = isa;
   }
 
   @JsonIgnore
@@ -54,26 +60,33 @@ public class FacilityProgramProduct extends ProgramProduct {
     return null;
   }
 
-  public Integer calculateIsa(Long population, Integer numberOfMonthsInPeriod) {
+  public Integer calculateIsa(Long population, Integer numberOfMonthsInPeriod)
+  {
+    if(population == null)
+      return null;
+
     Integer idealQuantity;
     if (this.overriddenIsa != null)
-      idealQuantity = this.overriddenIsa;
-    else if (this.programProductIsa == null || population == null)
-      return null;
-    else
+      idealQuantity = this.overriddenIsa.calculate(population);
+    else if (this.programProductIsa != null)
       idealQuantity = this.programProductIsa.calculate(population);
+    else
+      return null;
 
     idealQuantity = Math.round(idealQuantity * ((float) numberOfMonthsInPeriod / this.getProduct().getPackSize()));
     return idealQuantity < 0 ? 0 : idealQuantity;
   }
 
+
   @JsonIgnore
-  public Double getWhoRatio(String productCode) {
-    ProgramProductISA programProductIsa = this.getProgramProductIsa();
-    if (this.getProduct().getCode().equals(productCode) && programProductIsa != null) {
+  public Double getWhoRatio()
+  {
+    if(this.overriddenIsa != null)
+      return overriddenIsa.getWhoRatio();
+    else if(this.programProductIsa != null)
       return programProductIsa.getWhoRatio();
-    }
-    return null;
+    else
+      return null;
   }
 
   public static List<FacilityProgramProduct> filterActiveProducts(List<FacilityProgramProduct> programProducts) {

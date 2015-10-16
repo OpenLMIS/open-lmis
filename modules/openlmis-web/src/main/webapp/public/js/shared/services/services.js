@@ -229,11 +229,17 @@ services.factory('ProgramProducts', function ($resource) {
 });
 
 services.factory('FacilityProgramProducts', function ($resource) {
-  return $resource('/facility/:facilityId/program/:programId/isa.json', {}, {update: {method: 'PUT'}});
+  return $resource('/facility/:facilityId/program/:programId.json', {}, {update: {method: 'PUT'}});
 });
 
 services.factory('ProgramProductsISA', function ($resource) {
   return $resource('/programProducts/:programProductId/isa/:isaId.json', {isaId: '@isaId'}, update);
+});
+
+services.factory('FacilityProgramProductsISA', function ($resource)
+{
+  //return $resource('/facility/:facilityId/programProducts/:programProductId/isa/:isaId.json', {isaId: '@isaId', facilityId: '@facilityId'}, update);
+  return $resource('/facility/:facilityId/programProducts/:programProductId/isa.json', {}, update);
 });
 
 services.factory('AllocationProgramProducts', function ($resource) {
