@@ -12,6 +12,19 @@
 
 function DashboardProgramController($scope,$routeParams,$timeout,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend, GetStockOutFacilitiesForProgramPeriodAndProductCode, DashboardReportingPerformance) {
     var dashboardMenuService = dashboardMenuServiceNew;
+   /* $scope.slideTransitionInterval = 20000;
+
+    $scope.totalItems = 64;
+    $scope.currentPage = 4;
+    $scope.maxSize = 5;
+
+    $scope.setPage = function (pageNo) {
+        $scope.currentPage = pageNo;
+    };
+
+    $scope.bigTotalItems = 175;
+    $scope.bigCurrentPage = 1;*/
+
     var  colors = ["bg-green", "bg-red","bg-blue"];
     /**
      * Returns Random color
