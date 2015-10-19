@@ -1,5 +1,6 @@
 package org.openlmis.restapi.service;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
@@ -11,10 +12,13 @@ import org.openlmis.stockmanagement.domain.StockCardEntryType;
 import org.openlmis.stockmanagement.dto.StockEvent;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
+@NoArgsConstructor
 public class RestStockCardService {
 
   @Autowired
