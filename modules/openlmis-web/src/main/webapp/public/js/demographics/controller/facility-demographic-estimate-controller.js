@@ -11,29 +11,7 @@
  */
 function FacilityDemographicEstimateController($scope, $dialog, $filter, rights, categories, years, programs, FacilityDemographicEstimates, SaveFacilityDemographicEstimates, FinalizeFacilityDemographicEstimates, UndoFinalizeFacilityDemographicEstimates) {
 
-  $scope.currentPage = 1;
-  $scope.pageSize = 10;
-
-  $scope.categories = categories;
-  $scope.rights = rights;
-  $scope.years = years;
-  $scope.programs = programs;
-
-
-  $scope.isDirty = function(){
-    return $scope.$dirty;
-  };
-
-  $scope.hasPermission = function (permission) {
-    return ($scope.rights.indexOf(permission) >= 0);
-  };
-
-  $scope.showParent = function(index){
-    if(index > 0){
-      return ($scope.form.estimateLineItems[index].parentName != $scope.form.estimateLineItems[index - 1].parentName);
-    }
-    return true;
-  };
+  $.extend(this, new BaseDemographicEstimateController($scope, rights, categories, programs , years, $filter));
 
   $scope.bindEstimates = function(data){
     $scope.lineItems = [];
@@ -69,8 +47,6 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
     });
   };
 
-
-
   $scope.$watch('currentPage', function(){
     if($scope.isDirty()){
       $scope.save();
@@ -85,14 +61,12 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
   });
 
   $scope.save = function(){
-    SaveFacilityDemographicEstimates.update($scope.form, function(data){
+    SaveFacilityDemographicEstimates.update($scope.form, function(){
       $scope.message = "message.facility.demographic.estimates.saved";
     }, function(data){
       $scope.error = data.error;
     });
   };
-
-
 
   $scope.finalize = function(){
     var callBack = function (result) {
@@ -140,7 +114,7 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
     // default to the current year
     $scope.year = Number( $filter('date')(new Date(), 'yyyy') );
     // when the available program is only 1, default to this program.
-    if(programs.length == 1){
+    if(programs.length === 1){
       $scope.program = programs[0].id;
     }
     $scope.onParamChanged();
@@ -149,40 +123,3 @@ function FacilityDemographicEstimateController($scope, $dialog, $filter, rights,
   $scope.init();
 }
 
-FacilityDemographicEstimateController.resolve = {
-
-  categories: function ($q, $timeout, DemographicEstimateCategories) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      DemographicEstimateCategories.get({}, function (data) {
-        deferred.resolve(data.estimate_categories);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  }, years: function ($q, $timeout, OperationYears) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      OperationYears.get({}, function (data) {
-        deferred.resolve(data.years);
-      });
-    }, 100);
-    return deferred.promise;
-  }, programs: function($q, $timeout, DemographicEstimatePrograms){
-      var deferred = $q.defer();
-      $timeout(function(){
-        DemographicEstimatePrograms.get({}, function(data){
-          deferred.resolve(data.programs);
-        });
-      },100);
-    return deferred.promise;
-  }, rights: function ($q, $timeout, UserSupervisoryRights) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      UserSupervisoryRights.get({}, function (data) {
-          deferred.resolve(data.rights);
-        }, {});
-    }, 100);
-    return deferred.promise;
-  }
-
-};

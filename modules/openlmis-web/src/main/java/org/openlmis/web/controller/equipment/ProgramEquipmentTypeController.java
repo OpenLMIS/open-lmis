@@ -34,6 +34,9 @@ import java.util.Date;
 @RequestMapping(value = "/equipment/program-equipment/")
 public class ProgramEquipmentTypeController extends BaseController {
 
+  public static final String PROGRAM_EQUIPMENT = "programEquipment";
+  public static final String PROGRAM_EQUIPMENTS = "programEquipments";
+
   @Autowired
   ProgramEquipmentTypeService programEquipmentTypeService;
 
@@ -67,14 +70,14 @@ public class ProgramEquipmentTypeController extends BaseController {
     }
 
     successResponse = OpenLmisResponse.success("Program Equipment association successfully saved.");
-    successResponse.getBody().addData("programEquipment", programEquipmentType);
+    successResponse.getBody().addData(PROGRAM_EQUIPMENT, programEquipmentType);
     return successResponse;
   }
 
   @RequestMapping(value = "getByProgram/{programId}",method = RequestMethod.GET,headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getProgramEquipmentByProgram(@PathVariable(value="programId") Long programId){
-    return OpenLmisResponse.response("programEquipments", programEquipmentTypeService.getByProgramId(programId));
+    return OpenLmisResponse.response(PROGRAM_EQUIPMENTS, programEquipmentTypeService.getByProgramId(programId));
   }
 
     @RequestMapping(value="remove/{programEquipmentId}")

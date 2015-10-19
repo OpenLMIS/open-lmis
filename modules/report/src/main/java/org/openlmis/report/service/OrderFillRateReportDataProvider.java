@@ -51,7 +51,7 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
 
         List<MasterReport> reportList = new ArrayList<MasterReport>();
         MasterReport report = new MasterReport();
-        report.details = reportMapper.getReport(filterCriteria, rowBounds, this.getUserId());
+        report.setDetails( reportMapper.getReport(filterCriteria, rowBounds, this.getUserId()));
         List<OrderFillRateReport> summary = reportMapper.getReportSummary(filterCriteria, this.getUserId());
         String facility = (!StringHelper.isBlank(filterCriteria, "facility")) ? (filterCriteria.get("facility"))[0] : "";
 
@@ -85,7 +85,7 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
 
         summary.add(0, percentage);
 
-        report.summary = summary;
+        report.setSummary(summary);
 
         reportList.add(report);
 

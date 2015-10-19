@@ -12,6 +12,7 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.core.domain.ConfigurationSettingKey;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ConfigurationSettingService;
@@ -19,7 +20,6 @@ import org.openlmis.core.service.FacilityService;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.domain.MaintenanceRequest;
-import org.openlmis.equipment.domain.ServiceContract;
 import org.openlmis.equipment.domain.Vendor;
 import org.openlmis.equipment.dto.Log;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
@@ -33,7 +33,13 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class MaintenanceRequestService  {
+public class MaintenanceRequestService {
+
+  private static final String USER = "user";
+  private static final String REQUEST = "request";
+  private static final String VENDOR = "vendor";
+  private static final String FACILITY = "facility";
+  private static final String EQUIPMENT = "equipment";
 
   @Autowired
   private MaintenanceRequestRepository repository;
@@ -45,92 +51,81 @@ public class MaintenanceRequestService  {
   ServiceContractRepository serviceContractRepository;
 
   @Autowired
+  EmailService emailService;
+
+  @Autowired
   VendorUserService vendorUserService;
 
   @Autowired
   VendorService vendorService;
 
   @Autowired
-  EmailService emailService;
-
-  @Autowired
   FacilityService facilityService;
-
 
   @Autowired
   ConfigurationSettingService settingService;
 
 
-  public List<MaintenanceRequest> getAll(){
+  public List<MaintenanceRequest> getAll() {
     return repository.getAll();
   }
 
-  public List<MaintenanceRequest> getAllForFacility(Long facilityId){
+  public List<MaintenanceRequest> getAllForFacility(Long facilityId) {
     return repository.getAllForFacility(facilityId);
   }
 
-  public List<MaintenanceRequest> getAllForVendor(Long vendorId){
+  public List<MaintenanceRequest> getAllForVendor(Long vendorId) {
     return repository.getAllForVendor(vendorId);
   }
 
-  public List<MaintenanceRequest> getOutstandingForVendor(Long vendorId){
+  public List<MaintenanceRequest> getOutstandingForVendor(Long vendorId) {
     return repository.getOutstandingForVendor(vendorId);
   }
 
-  public List<MaintenanceRequest> getOutstandingForUser(Long userId){
+  public List<MaintenanceRequest> getOutstandingForUser(Long userId) {
     return repository.getOutstandingForUser(userId);
   }
 
-  public MaintenanceRequest getById(Long id){
+  public MaintenanceRequest getById(Long id) {
     return repository.getById(id);
   }
 
-  public void save(MaintenanceRequest request){
-    if(request.getId() == null){
+  public void save(MaintenanceRequest request) {
+    if (!request.hasId()) {
       repository.insert(request);
-
       notifyVendor(request);
-
-    }else{
+    } else {
       repository.update(request);
     }
   }
 
   private void notifyVendor(MaintenanceRequest request) {
     EquipmentInventory equipmentInventory = equipmentInventoryRepository.getInventoryById(request.getInventoryId());
+    Vendor vendor = vendorService.getById(request.getVendorId());
 
-    //TODO: check if this service contract is applicable for this specific facility.
-    List<ServiceContract> serviceContracts = serviceContractRepository.getAllForEquipment(equipmentInventory.getEquipmentId());
-    Long serviceContractId = null;
-
-    Vendor vendor  = vendorService.getById(request.getVendorId());
-
-    //TODO: why the first contract?
-    //check if this contract is active, unexpired and that the vendor is the same as one in the request.
-    if (serviceContracts != null && serviceContracts.size() > 0) {
-      serviceContractId = serviceContracts.get(0).getId();
-    }
     Facility facility = facilityService.getById(request.getFacilityId());
     Map model = new HashMap();
-    model.put("request", request);
-    model.put("vendor", vendor);
-    model.put("facility", facility);
-    model.put("equipment", equipmentInventory);
+    model.put(REQUEST, request);
+    model.put(VENDOR, vendor);
+    model.put(FACILITY, facility);
+    model.put(EQUIPMENT, equipmentInventory);
 
     List<User> users = vendorUserService.getAllUsersForVendor(request.getUserId());
-    String template = settingService.getConfigurationStringValue("VENDOR_MAINTENANCE_REQUEST_EMAIL_TEMPLATE");
+
+    String template = settingService.getConfigurationStringValue(ConfigurationSettingKey.VENDOR_MAINTENANCE_REQUEST_EMAIL_TEMPLATE);
+
     String vendorEmailSubject = "A new maintenance request submitted";
-    for(User user: users){
-      if(model.containsKey("user")){
-        model.remove("user");
+    for (User user : users) {
+      if (model.containsKey(USER)) {
+        model.remove(USER);
       }
-      model.put("user", user);
-      emailService.queueHtmlMessage(user.getEmail(), vendorEmailSubject, template,model);
+      model.put(USER, user);
+      emailService.queueHtmlMessage(user.getEmail(), vendorEmailSubject, template, model);
     }
 
   }
 
-  public List<Log> getFullHistory(Long inventoryId){
+  public List<Log> getFullHistory(Long inventoryId) {
     return repository.getFullHistory(inventoryId);
   }
 }

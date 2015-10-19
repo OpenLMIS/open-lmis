@@ -36,6 +36,8 @@ import java.util.List;
 @RequestMapping(value = "/vaccine/report/")
 public class VaccineReportController extends BaseController {
 
+  public static final String PERIODS = "periods";
+  public static final String REPORT = "report";
   @Autowired
   VaccineReportService service;
 
@@ -52,13 +54,13 @@ public class VaccineReportController extends BaseController {
   @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> getPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request){
-    return OpenLmisResponse.response("periods", service.getPeriodsFor(facilityId, programId, new Date()));
+    return OpenLmisResponse.response(PERIODS, service.getPeriodsFor(facilityId, programId, new Date()));
   }
 
   @RequestMapping(value = "view-periods/{facilityId}/{programId}", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_IVD')")
   public ResponseEntity<OpenLmisResponse> getViewPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request){
-    return OpenLmisResponse.response("periods", service.getReportedPeriodsFor(facilityId, programId));
+    return OpenLmisResponse.response(PERIODS, service.getReportedPeriodsFor(facilityId, programId));
   }
 
   @RequestMapping(value = "initialize/{facilityId}/{programId}/{periodId}")
@@ -69,27 +71,27 @@ public class VaccineReportController extends BaseController {
     @PathVariable Long periodId,
     HttpServletRequest request
   ){
-    return OpenLmisResponse.response("report", service.initialize(facilityId, programId, periodId, loggedInUserId(request)));
+    return OpenLmisResponse.response(REPORT, service.initialize(facilityId, programId, periodId, loggedInUserId(request)));
   }
 
   @RequestMapping(value = "get/{id}.json", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD, VIEW_IVD')")
   public ResponseEntity<OpenLmisResponse> getReport(@PathVariable Long id, HttpServletRequest request){
-    return OpenLmisResponse.response("report", service.getById(id));
+    return OpenLmisResponse.response(REPORT, service.getById(id));
   }
 
   @RequestMapping(value = "save")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineReport report, HttpServletRequest request){
     service.save(report);
-    return OpenLmisResponse.response("report", report);
+    return OpenLmisResponse.response(REPORT, report);
   }
 
   @RequestMapping(value = "submit")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody VaccineReport report, HttpServletRequest request){
     service.submit(report, loggedInUserId(request));
-    return OpenLmisResponse.response("report", report);
+    return OpenLmisResponse.response(REPORT, report);
   }
 
   @RequestMapping(value = "vaccine-monthly-report")
@@ -107,8 +109,6 @@ public class VaccineReportController extends BaseController {
 
     return OpenLmisResponse.response("vaccineUsageTrend", service.vaccineUsageTrend(facilityCode, productCode, periodId, zoneId));
   }
-
-
 
   @RequestMapping(value = "/orderRequisition/downloadPDF", method = RequestMethod.GET)
   public ModelAndView downloadPDF() {

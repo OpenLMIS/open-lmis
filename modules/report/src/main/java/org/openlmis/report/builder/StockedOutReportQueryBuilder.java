@@ -53,10 +53,7 @@ public class StockedOutReportQueryBuilder {
     }
     ORDER_BY("supplyingFacility asc, facility asc, product asc");
     // copy the sql over to a variable, this makes the debugging much more possible.
-    String sql = SQL();
-    return sql;
-
-
+    return SQL();
   }
 
 

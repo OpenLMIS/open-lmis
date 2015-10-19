@@ -160,7 +160,6 @@ public class VaccineReportService {
       startDate = lastRequest.getPeriod().getStartDate();
     }
 
-    Long lastPeriodId = lastRequest == null ? null : lastRequest.getPeriodId();
     List<ReportStatusDTO> results = new ArrayList<>();
     // find all periods that are after this period, and before today.
 

@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/vaccine/config/")
 public class ConfigurationController {
 
+  public static final String VISIBILITIES = "visibilities";
+
   @Autowired
   VaccineIvdTabVisibilityService service;
 
@@ -33,12 +35,12 @@ public class ConfigurationController {
     VaccineServiceConfigDTO dto = new VaccineServiceConfigDTO();
     dto.setTabVisibilitySettings(service.getVisibilityForProgram(programId));
     dto.setProgramId(programId);
-    return OpenLmisResponse.response("visibilities", dto);
+    return OpenLmisResponse.response(VISIBILITIES, dto);
   }
 
   @RequestMapping(value = "save-tab-visibility")
   public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineServiceConfigDTO settings) {
     service.save(settings.getTabVisibilitySettings(), settings.getProgramId());
-    return OpenLmisResponse.response("visibilities", settings);
+    return OpenLmisResponse.response(VISIBILITIES, settings);
   }
 }

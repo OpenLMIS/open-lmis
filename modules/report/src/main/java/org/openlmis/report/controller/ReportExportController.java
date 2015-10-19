@@ -33,6 +33,7 @@ public class ReportExportController extends BaseController {
 
 
   public static final String USER_ID = "USER_ID";
+  public static final String FACILITY_MAILING_LIST = "facility_mailing_list";
   @Autowired
   public ReportManager reportManager;
   @Autowired
@@ -99,7 +100,7 @@ public class ReportExportController extends BaseController {
     , HttpServletRequest request
     , HttpServletResponse response
   ) {
-    showReport("facility_mailing_list", outputOption, request, response);
+    showReport(FACILITY_MAILING_LIST, outputOption, request, response);
   }
 
 

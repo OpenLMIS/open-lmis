@@ -29,7 +29,7 @@ public class VaccineIvdTabVisibilityService {
 
   public List<VaccineIvdTabVisibility> getVisibilityForProgram(Long programId){
     List<VaccineIvdTabVisibility> visibilities = repository.getVisibilityForProgram(programId);
-    if(emptyIfNull(visibilities).size() == 0){
+    if(emptyIfNull(visibilities).isEmpty()){
       return repository.getAllVisibilityConfiguration();
     }
     return visibilities;
@@ -37,7 +37,7 @@ public class VaccineIvdTabVisibilityService {
 
   public void save(List<VaccineIvdTabVisibility> visibilities, Long programId){
     for(VaccineIvdTabVisibility visibility : visibilities){
-      if(visibility.getId() == null){
+      if(!visibility.hasId()){
         visibility.setProgramId(programId);
         repository.insert(visibility);
       }else{

@@ -25,7 +25,7 @@ function CreateServiceTypeController($scope, $routeParams, $location, ServiceTyp
     }
 
     $scope.save = function () {
-        SaveServiceType.save($scope.current, function (data) {
+        SaveServiceType.save($scope.current, function () {
             // success
           $scope.$parent.message = 'Your changes have been saved';
               $location.path('');

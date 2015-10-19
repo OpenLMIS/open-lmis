@@ -11,16 +11,11 @@
 package org.openlmis.core.domain;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.aspectj.lang.annotation.Aspect;
 import org.openlmis.core.serializer.MoneyDeSerializer;
-import org.openlmis.core.serializer.MoneySerializer;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 
 import java.math.BigDecimal;
 
@@ -61,7 +56,7 @@ public class Money extends Number {
     return value.compareTo(other.value);
   }
 
-  public BigDecimal toDecimal(){
+  public BigDecimal toDecimal() {
     return value;
   }
 
@@ -82,7 +77,7 @@ public class Money extends Number {
 
   @Override
   public float floatValue() {
-    return  value.floatValue();
+    return value.floatValue();
   }
 
   @Override

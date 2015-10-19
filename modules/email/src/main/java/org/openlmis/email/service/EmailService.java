@@ -15,6 +15,8 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.openlmis.email.domain.OpenlmisEmailMessage;
 import org.openlmis.email.repository.EmailNotificationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +43,9 @@ import java.util.concurrent.Future;
 @Service
 @NoArgsConstructor
 public class EmailService {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
+
 
   private Boolean mailSendingFlag;
 
@@ -110,7 +115,7 @@ public class EmailService {
       Velocity.evaluate(context, writer, "velocity", template);
     }catch(Exception exp)
     {
-
+      LOGGER.error("Velocity had some errors generating this email. The exception was .... ", exp);
     }
     repository.queueMessage(to, writer.toString(), subject, true);
   }

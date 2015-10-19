@@ -40,6 +40,8 @@ import static java.lang.Integer.parseInt;
 @RequestMapping(value="/equipment/manage/")
 public class EquipmentController extends BaseController {
 
+  public static final String EQUIPMENT = "equipment";
+  public static final String EQUIPMENTS = "equipments";
   @Autowired
   private EquipmentService service;
 
@@ -50,14 +52,14 @@ public class EquipmentController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getEquipmentById(@RequestParam("id") Long Id){
 
-    return OpenLmisResponse.response("equipment", service.getById(Id));
+    return OpenLmisResponse.response(EQUIPMENT, service.getById(Id));
   }
 
     @RequestMapping(method = RequestMethod.GET, value = "type-and-id")
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
     public ResponseEntity<OpenLmisResponse> getEquipmentByTypeAndId(@RequestParam("id") Long Id, @RequestParam("equipmentTypeId") Long equipmentTypeId){
 
-        return OpenLmisResponse.response("equipment", service.getByTypeAndId(Id,equipmentTypeId));
+        return OpenLmisResponse.response(EQUIPMENT, service.getByTypeAndId(Id,equipmentTypeId));
 
     }
 
@@ -74,14 +76,14 @@ public class EquipmentController extends BaseController {
       {
           List<ColdChainEquipment> equipments=service.getAllCCE(equipmentTypeId,pagination);
           pagination.setTotalRecords(service.getCCECountByType(equipmentTypeId));
-          ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("equipments",equipments);
+          ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(EQUIPMENTS,equipments);
           response.getBody().addData("pagination", pagination);
           return response;
       }
         else{
           List<Equipment> equipments=service.getByType(equipmentTypeId, pagination);
           pagination.setTotalRecords(service.getEquipmentsCountByType(equipmentTypeId));
-          ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("equipments",equipments);
+          ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(EQUIPMENTS,equipments);
           response.getBody().addData("pagination", pagination);
           return response;
       }
@@ -92,7 +94,7 @@ public class EquipmentController extends BaseController {
       " or @permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')" +
       " or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
   public ResponseEntity<OpenLmisResponse> getListByType(@RequestParam("equipmentTypeId") Long equipmentTypeId){
-    return OpenLmisResponse.response("equipments", service.getAllByType(equipmentTypeId));
+    return OpenLmisResponse.response(EQUIPMENTS, service.getAllByType(equipmentTypeId));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "typesByProgram/{programId}", headers = ACCEPT_JSON)
@@ -139,7 +141,7 @@ public class EquipmentController extends BaseController {
           return OpenLmisResponse.error("Duplicate Code Exists in DB.", HttpStatus.BAD_REQUEST);
         }
       response = OpenLmisResponse.success(messageService.message("message.equipment.list.saved"));
-      response.getBody().addData("equipment", equipment);
+      response.getBody().addData(EQUIPMENT, equipment);
       return response;
       }
 

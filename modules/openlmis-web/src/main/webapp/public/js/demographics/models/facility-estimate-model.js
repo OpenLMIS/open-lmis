@@ -4,11 +4,14 @@
     var categoryValue = _.findWhere(this.facilityEstimates, {
       'demographicEstimateId': category.id
     });
+
     if (angular.isUndefined(categoryValue)) {
+      var programId = (this.facilityEstimates !== undefined && this.facilityEstimates.length > 0)? this.facilityEstimates[0].programId: undefined;
       categoryValue = {
         'demographicEstimateId': category.id,
+        'programId': programId,
         'year': year,
-        'conversionFactor': category.defaultConverstionFactor,
+        'conversionFactor': category.defaultConversionFactor,
         'value': 0
       };
       this.facilityEstimates.push(categoryValue);

@@ -17,5 +17,5 @@ include "modules:core", "modules:authentication",
         "modules:requisition","modules:email","modules:rest-api","test-modules:webservice-test",
         "modules:shipment","test-modules:functional-tests","test-modules:test-core","modules:migration",
         "modules:reporting",
-        "modules:odk-api", "modules:equipment", "modules:help",
+        "modules:equipment", "modules:help",
         "modules:demographics", "modules:vaccine", "modules:stock-management"

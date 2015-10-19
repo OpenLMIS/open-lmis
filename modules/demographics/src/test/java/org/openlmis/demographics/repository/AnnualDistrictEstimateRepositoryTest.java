@@ -84,9 +84,9 @@ public class AnnualDistrictEstimateRepositoryTest {
   public void shouldFinalize() throws Exception {
     AnnualDistrictEstimateEntry estimate = make(an(AnnualDistrictEstimateBuilder.defaultAnnualDistrictEstimateEntry));
 
-    repository.finalize(estimate);
+    repository.finalizeEstimate(estimate);
 
-    verify(mapper).finalize(estimate);
+    verify(mapper).finalizeEstimate(estimate);
   }
 
   @Test

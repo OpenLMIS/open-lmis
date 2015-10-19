@@ -12,13 +12,12 @@
 
 package org.openlmis.report.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Date;
 
@@ -28,69 +27,69 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Facility {
 
-    private Integer id;
+  private Integer id;
 
-    private String code;
+  private String code;
 
-    private String name;
+  private String name;
 
-    private String description;
+  private String description;
 
-    private String gln;
+  private String gln;
 
-    private String mainPhone;
+  private String mainPhone;
 
-    private String fax;
+  private String fax;
 
-    private String address1;
+  private String address1;
 
-    private String address2;
+  private String address2;
 
-    private Integer geographicZoneId;
+  private Integer geographicZoneId;
 
-    private Integer typeId;
+  private Integer typeId;
 
-    private Long catchmentPopulation;
+  private Long catchmentPopulation;
 
-    private Double latitude;
+  private Double latitude;
 
-    private Double longitude;
+  private Double longitude;
 
-    private Double altitude;
+  private Double altitude;
 
-    private Integer operatedById;
+  private Integer operatedById;
 
-    private Double coldStorageGrossCapacity;
+  private Double coldStorageGrossCapacity;
 
-    private Double coldStorageNetCapacity;
+  private Double coldStorageNetCapacity;
 
-    private Boolean suppliesOthers;
+  private Boolean suppliesOthers;
 
-    private Boolean sdp;
+  private Boolean sdp;
 
-    private Boolean hasElectricity;
+  private Boolean hasElectricity;
 
-    private Boolean online;
+  private Boolean online;
 
-    private Boolean hasElectronicScc;
+  private Boolean hasElectronicScc;
 
-    private Boolean hasElectronicDar;
+  private Boolean hasElectronicDar;
 
-    private Boolean active;
+  private Boolean active;
 
-    private Date goLiveDate;
+  private Date goLiveDate;
 
-    private Date goDownDate;
+  private Date goDownDate;
 
-    private Boolean satellite;
+  private Boolean satellite;
 
-    private Integer satelliteParentId;
+  private Integer satelliteParentId;
 
-    private String comment;
+  private String comment;
 
-    private Boolean dataReportable;
+  private Boolean dataReportable;
 }
