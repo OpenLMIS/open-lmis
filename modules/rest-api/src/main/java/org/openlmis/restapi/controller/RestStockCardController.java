@@ -28,8 +28,6 @@ public class RestStockCardController extends BaseController {
   @Autowired
   private RestStockCardService restStockCardService;
 
-  public static final String STOCK_CARD_IDS = "stockCardIds";
-
   @RequestMapping(value = "/rest-api/facilities/{facilityId}/stockCards", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity adjustStock(@PathVariable long facilityId,
                                     @RequestBody(required=true) List<StockEvent> events,
