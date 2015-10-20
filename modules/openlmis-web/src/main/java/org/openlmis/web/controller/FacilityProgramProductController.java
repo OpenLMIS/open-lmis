@@ -68,10 +68,10 @@ public class FacilityProgramProductController extends BaseController {
 
   @ApiOperation(value = "Returns the Minimum Stock, Maximum Stock, and re-order levels, along with ancillary data, for the active products at the specified facility's program.", notes = "")
   @RequestMapping(value = "/facility/{facilityId}/program/{programId}/stockRequirements", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getStockRequirements(@PathVariable Long facilityId, @PathVariable Long programId)
+  public ResponseEntity<Object> getStockRequirements(@PathVariable Long facilityId, @PathVariable Long programId)
   {
     String JSON =  StockRequirements.getJSONArray(service.getStockRequirements(facilityId, programId));
-    return OpenLmisResponse.response( "FacilityStockRequirements" , JSON );
+    return OpenLmisResponse.response( JSON );
   }
 
   @RequestMapping(value = "/facility/{facilityId}/programProducts/{programProductId}/isa", method = POST, headers = ACCEPT_JSON)

@@ -67,57 +67,57 @@ public class StockRequirements
     StringBuilder builder = new StringBuilder();
     builder.append("{");
 
-      builder.append("facilityId: ");
+      builder.append("\"facilityId\": ");
       builder.append(facilityId);
 
-      builder.append(", productId: ");
+      builder.append(", \"productId\": ");
       builder.append(productId);
 
-      builder.append(", population: ");
+      builder.append(", \"population\": ");
       builder.append(population);
 
-      builder.append(", minMonthsOfStock: ");
+      builder.append(", \"minMonthsOfStock\": ");
       builder.append(minMonthsOfStock);
-      builder.append(", maxMonthsOfStock: ");
+      builder.append(", \"maxMonthsOfStock\": ");
       builder.append(maxMonthsOfStock);
-      builder.append(", eop: ");
+      builder.append(", \"eop\": ");
       builder.append(eop);
 
-      builder.append(", isaCoefficients: {");
+      builder.append(", \"isaCoefficients\": {");
       if(isa != null) {
-        builder.append("whoRatio: ");
+        builder.append("\"whoRatio\": ");
         builder.append(isa.whoRatio);
 
-        builder.append(", dosesPerYear: ");
+        builder.append(", \"dosesPerYear\": ");
         builder.append(isa.dosesPerYear);
 
-        builder.append(", wastageFactor: ");
+        builder.append(", \"wastageFactor\": ");
         builder.append(isa.wastageFactor);
 
-        builder.append(", bufferPercentage: ");
+        builder.append(", \"bufferPercentage\": ");
         builder.append(isa.bufferPercentage);
 
-        builder.append(", minimumValue: ");
+        builder.append(", \"minimumValue\": ");
         builder.append(isa.minimumValue);
 
-        builder.append(", maximumValue: ");
+        builder.append(", \"maximumValue\": ");
         builder.append(isa.maximumValue);
 
-        builder.append(", adjustmentValue: ");
+        builder.append(", \"adjustmentValue\": ");
         builder.append(isa.adjustmentValue);
       }
       builder.append("}");
 
-    builder.append(", isaValue: ");
+    builder.append(", \"isaValue\": ");
     builder.append(getIsaValue());
 
-    builder.append(", MinimumStock: ");
+    builder.append(", \"MinimumStock\": ");
     builder.append(getMinimumStock());
 
-    builder.append(", MaximumStock: ");
+    builder.append(", \"MaximumStock\": ");
     builder.append(getMaximumStock());
 
-    builder.append(", ReorderLevel: ");
+    builder.append(", \"ReorderLevel\": ");
     builder.append(getReorderLevel());
 
     builder.append("}");
