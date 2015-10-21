@@ -85,7 +85,7 @@ public class StockRequirements
 
       builder.append(", \"isaCoefficients\": {");
       if(isa != null) {
-        builder.append("\"whoRatio\": ");
+        builder.append("\"whoRatio\": "); //whoRatio equals "target population percentage"
         builder.append(isa.whoRatio);
 
         builder.append(", \"dosesPerYear\": ");
@@ -97,14 +97,14 @@ public class StockRequirements
         builder.append(", \"bufferPercentage\": ");
         builder.append(isa.bufferPercentage);
 
+        builder.append(", \"adjustmentValue\": ");
+        builder.append(isa.adjustmentValue);
+
         builder.append(", \"minimumValue\": ");
         builder.append(isa.minimumValue);
 
         builder.append(", \"maximumValue\": ");
         builder.append(isa.maximumValue);
-
-        builder.append(", \"adjustmentValue\": ");
-        builder.append(isa.adjustmentValue);
       }
       builder.append("}");
 

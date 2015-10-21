@@ -9,43 +9,33 @@
  */
 function FacilityIsaModalController($scope, $rootScope, FacilityProgramProducts, ProgramProducts, $routeParams)
 {
-  function calculateIsa(product)
+
+  //Set product.programProductIsa
+  function calculateAndSetProgramProductIsa(product)
+  {
+    product.calculatedIsa = getISA(product.programProductIsa);
+  }
+
+  //Set product.calculatedFacilityIsa, which is intended to override product.programProductIsa
+  function calculateAndSetFacilityIsa(product)
+  {
+    product.calculatedFacilityIsa = getISA(product.overriddenIsa);
+  }
+
+  //Return an ISA value based on the specified isaCoefficients
+  function getISA(isaCoefficients)
   {
     var _EMPTY = '--';
     var population = $scope.$parent.facility.catchmentPopulation;
     var isa;
 
     //Basic validation
-    if(isUndefined(population))
-    {
-      product.calculatedIsa = _EMPTY;
-      product.calculatedFacilityIsa = _EMPTY;
-      return;
-    }
+    if( isUndefined(population) || isUndefined(isaCoefficients) )
+      return  _EMPTY;
 
-    //Try setting calculatedIsa
-    if(isUndefined(product.programProductIsa))
-    {
-      product.calculatedIsa = _EMPTY;
-    }
-    else
-    {
-      isa = new ProgramProductISA();
-      isa.init(product.programProductIsa);
-      product.calculatedIsa = isa.calculate(population);
-    }
-
-    //Try setting calculatedFacilityIsa, which is based on an overriddenIsa value
-    if(isUndefined(product.overriddenIsa))
-    {
-      product.calculatedFacilityIsa = _EMPTY;
-    }
-    else
-    {
-      isa = new ProgramProductISA();
-      isa.init(product.overriddenIsa);
-      product.calculatedFacilityIsa = isa.calculate(population);
-    }
+    isa = new ProgramProductISA();
+    isa.init(isaCoefficients);
+    return isa.calculate(population);
   }
 
   //For each product in productList, set product.calculatedIsa and product.calculatedFacilityIsa
@@ -53,7 +43,8 @@ function FacilityIsaModalController($scope, $rootScope, FacilityProgramProducts,
   {
     $(products).each(function (index, product)
     {
-      calculateIsa(product);
+      calculateAndSetProgramProductIsa(product);
+      calculateAndSetFacilityIsa(product);
     });
   }
 
@@ -87,7 +78,8 @@ function FacilityIsaModalController($scope, $rootScope, FacilityProgramProducts,
   $rootScope.$on('updateISA', function(event, data)
   {
     $scope.filteredProducts[data.index].overriddenIsa = data.isa;
-    calculateIsa( $scope.filteredProducts[data.index] );
+    //calculateAndSetProgramProductIsa( $scope.filteredProducts[data.index] );
+    calculateAndSetFacilityIsa( $scope.filteredProducts[data.index] );
   });
 
   $scope.closeISAModal = function () {
