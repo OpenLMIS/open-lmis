@@ -50,7 +50,7 @@ public class VaccineReportRepositoryTest {
   @Test
   public void shouldUpdate() throws Exception {
     VaccineReport report = new VaccineReport();
-    repository.update(report);
+    repository.update(report, 2L);
     verify(mapper).update(report);
   }
 
