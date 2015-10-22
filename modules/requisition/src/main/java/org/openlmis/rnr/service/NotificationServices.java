@@ -13,6 +13,7 @@ package org.openlmis.rnr.service;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ConfigurationSettingKey;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ApproverService;
 import org.openlmis.core.service.ConfigurationSettingService;
@@ -32,7 +33,7 @@ import java.util.List;
 @AllArgsConstructor
 public class NotificationServices {
 
-  private static Logger LOGGER = LoggerFactory.getLogger(NotificationServices.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(NotificationServices.class);
 
   @Value("${mail.base.url}")
   String baseURL;
@@ -48,7 +49,7 @@ public class NotificationServices {
 
   public void notifyStatusChange(Rnr requisition) {
 
-    String emailTemplate = configService.getByKey("EMAIL_TEMPLATE_APPROVAL").getValue();
+    String emailTemplate = configService.getByKey(ConfigurationSettingKey.EMAIL_TEMPLATE_APPROVAL).getValue();
 
     List<User> users = null;
     // find out which email to send it to
@@ -65,6 +66,7 @@ public class NotificationServices {
         users = approverService.getNextApprovers(requisition.getId());
         break;
       case RELEASED:
+      default:
         break;
     }
 
@@ -77,7 +79,7 @@ public class NotificationServices {
         SimpleMailMessage message = new SimpleMailMessage();
         String emailMessage = emailTemplate;
 
-        String approvalURL = String.format("%1$s/public/pages/logistics/rnr/index.html#/rnr-for-approval/%2$s/%3$4?supplyType=full-supply&page=1", baseURL, requisition.getId(), requisition.getProgram().getId());
+        String approvalURL = String.format("%1$s/public/pages/logistics/rnr/index.html#/rnr-for-approval/%2$s/%3$s?supplyType=full-supply&page=1", baseURL, requisition.getId(), requisition.getProgram().getId());
 
         emailMessage = emailMessage.replaceAll("\\{facility_name\\}", requisition.getFacility().getName());
         emailMessage = emailMessage.replaceAll("\\{approver_name\\}", user.getFirstName() + " " + user.getLastName());
@@ -85,7 +87,7 @@ public class NotificationServices {
         emailMessage = emailMessage.replaceAll("\\{link\\}", approvalURL);
 
         message.setText(emailMessage);
-        message.setSubject(configService.getByKey("EMAIL_SUBJECT_APPROVAL").getValue());
+        message.setSubject(configService.getByKey(ConfigurationSettingKey.EMAIL_SUBJECT_APPROVAL).getValue());
         message.setTo(user.getEmail());
 
         try {

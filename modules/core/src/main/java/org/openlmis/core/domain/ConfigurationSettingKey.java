@@ -22,6 +22,8 @@ public class ConfigurationSettingKey {
   public static final String ORDER_REPORT_TITLE = "ORDER_REPORT_TITLE";
   public static final String ORDER_REPORT_ADDRESS = "ORDER_REPORT_ADDRESS";
   public static final String LOGIN_SUCCESS_DEFAULT_LANDING_PAGE = "LOGIN_SUCCESS_DEFAULT_LANDING_PAGE";
+  public static final String EMAIL_SUBJECT_APPROVAL = "EMAIL_SUBJECT_APPROVAL";
+  public static final String EMAIL_TEMPLATE_APPROVAL = "EMAIL_TEMPLATE_APPROVAL";
 
   private ConfigurationSettingKey(){
 
