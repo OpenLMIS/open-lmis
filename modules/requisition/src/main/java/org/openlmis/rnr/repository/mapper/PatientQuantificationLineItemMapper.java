@@ -1,4 +1,4 @@
-package org.openlmis.rnr.repository;
+package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.PatientQuantificationLineItem;

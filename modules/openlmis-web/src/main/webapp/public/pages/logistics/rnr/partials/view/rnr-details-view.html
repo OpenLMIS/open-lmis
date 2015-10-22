@@ -68,17 +68,17 @@
                         </span>
                     </li>
                     </ul>
-                    <div class="type-checkbox">Data de Requisicao:</div>
+                    <div class="type-checkbox">Data de Requisicao: {{ rnr.submittedDate | date:"MM/dd/yyyy"}}</div>
                 </td>
             </tr>
             <tr>
                 <td tag="col2" class="border-all-thin">
-                Health Facility:
+                Health Facility: {{rnr.facility.name}}
                 </td>
                 <td tag="col3" class="border-all-thin" width="246px">Provincia:</td>
                 <td tag="col4" class="border-all-thin" width="90px"></td>
-                <td tag="col5-8" class="border-all-thin" colspan="4">Periodo:</td>
-                <td tag="col9-10" class="border-all-thin" colspan="2">Ate:</td>
+                <td tag="col5-8" class="border-all-thin" colspan="4">Periodo: {{rnr.period.stringStartDate}}</td>
+                <td tag="col9-10" class="border-all-thin" colspan="2">Ate: {{rnr.period.stringEndDate}}</td>
             </tr>
             <tr>
 
@@ -96,7 +96,7 @@
 
                 <td class="border-all-thin">Nivel de Qualificacao do ResponsaveI Clinico:</td>
                 <td class="border-all-thin">N de Consultas Externas Realizadas:</td>
-                <td class="border-all-thin"> </td>
+                <td class="border-all-thin">{{rnr.patientQuantifications[0].total}}</td>
                 <td class="border-all-thin"  width="70px">N de Kits Recebido</td>
                 <td class="border-all-thin"> </td>
                 <td class="border-all-thin">US</td>
@@ -151,49 +151,21 @@
                 <td tag="col9" class="border-all-thin" width="86px">I-SF</td>
             </tr>
         </table>
-        <div class="view-table-spacing"></div>
-        <table class="view-table border-all-bold view-table-cell-scrolling">
-            <tr>
-                <td tag="col1" class="border-all-thin" width="60px">&nbsp;</td>
-                <td tag="col2" class="border-all-thin" width="318px"></td>
-                <td tag="col3" class="border-all-thin" width="80px"></td>
-                <td tag="col4" class="border-all-thin" width="80px"></td>
-                <td tag="col5" class="border-all-thin" width="80px"></td>
-                <td tag="col6" class="border-all-thin" width="90px"></td>
-                <td tag="col7" class="border-all-thin" width="70px"></td>
-                <td tag="col8" class="border-all-thin" width="70px"></td>
-                <td tag="col9" class="border-all-thin" width="86px"></td>
-                <td tag="col10" class="border-all-thin" width="70px"></td>
-                <td tag="col11" class="border-all-thin" width="90px"></td>
-                <td tag="col12" class="border-all-thin" width="90px"></td>
-            </tr>
-            <tr>
-                <td tag="col1" class="border-all-thin" width="60px">&nbsp;</td>
-                <td tag="col2" class="border-all-thin" width="318px"></td>
-                <td tag="col3" class="border-all-thin" width="80px"></td>
-                <td tag="col4" class="border-all-thin" width="80px"></td>
-                <td tag="col5" class="border-all-thin" width="80px"></td>
-                <td tag="col6" class="border-all-thin" width="90px"></td>
-                <td tag="col7" class="border-all-thin" width="70px"></td>
-                <td tag="col8" class="border-all-thin" width="70px"></td>
-                <td tag="col9" class="border-all-thin" width="86px"></td>
-                <td tag="col10" class="border-all-thin" width="70px"></td>
-                <td tag="col11" class="border-all-thin" width="90px"></td>
-                <td tag="col12" class="border-all-thin" width="90px"></td>
-            </tr>
-            <tr>
-                <td tag="col1" class="border-all-thin" width="60px">&nbsp;</td>
-                <td tag="col2" class="border-all-thin" width="318px"></td>
-                <td tag="col3" class="border-all-thin" width="80px"></td>
-                <td tag="col4" class="border-all-thin" width="80px"></td>
-                <td tag="col5" class="border-all-thin" width="80px"></td>
-                <td tag="col6" class="border-all-thin" width="90px"></td>
-                <td tag="col7" class="border-all-thin" width="70px"></td>
-                <td tag="col8" class="border-all-thin" width="70px"></td>
-                <td tag="col9" class="border-all-thin" width="86px"></td>
-                <td tag="col10" class="border-all-thin" width="70px"></td>
-                <td tag="col11" class="border-all-thin" width="90px"></td>
-                <td tag="col12" class="border-all-thin" width="90px"></td>
+        <div class="view-table-spacing "></div>
+        <table class="view-table border-all-bold view-table-cell-scrolling text-align-center" >
+            <tr ng-repeat="rnrItem in rnr.fullSupplyLineItems">
+                <td tag="col1" class="border-all-thin" width="60px">{{rnrItem.productCode}}</td>
+                <td tag="col2" class="border-all-thin" width="318px">{{rnrItem.product}}</td>
+                <td tag="col3" class="border-all-thin" width="80px">{{rnrItem.beginningBalance}}</td>
+                <td tag="col4" class="border-all-thin" width="80px">{{rnrItem.quantityReceived}}</td>
+                <td tag="col5" class="border-all-thin" width="80px">{{rnrItem.quantityDispensed}}</td>
+                <td tag="col6" class="border-all-thin" width="90px">{{rnrItem.beginningBalance + rnrItem.quantityReceived - rnrItem.quantityDispensed}}</td>
+                <td tag="col7" class="border-all-thin" width="70px"> - </td>
+                <td tag="col8" class="border-all-thin" width="70px">{{rnrItem.stockInHand}}</td>
+                <td tag="col9" class="border-all-thin" width="86px">{{rnrItem.totalLossesAndAdjustments}}</td>
+                <td tag="col10" class="border-all-thin" width="70px">{{rnrItem.calculatedOrderQuantity}}</td>
+                <td tag="col11" class="border-all-thin" width="90px">{{rnrItem.quantityRequested}}</td>
+                <td tag="col12" class="border-all-thin" width="90px">{{rnrItem.quantityApproved}}</td>
             </tr>
         </table>
         <div class="view-table-spacing"></div>
