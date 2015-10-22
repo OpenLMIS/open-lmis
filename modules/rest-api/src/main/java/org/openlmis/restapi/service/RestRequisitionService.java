@@ -303,4 +303,8 @@ public class RestRequisitionService {
       }
     }
   }
+
+  public List<Report> getRequisitionsByFacilityAndProgram(String facilityCode, String programCode) {
+    return null;
+  }
 }
