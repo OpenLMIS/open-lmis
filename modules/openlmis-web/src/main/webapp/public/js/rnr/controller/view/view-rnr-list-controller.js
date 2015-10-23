@@ -93,6 +93,9 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
     navigateBackService.setData(data);
 
     var url = "requisition/";
+    if ($scope.selectedItems[0].programName === "VIA ESSENTIAL") {
+      url = "view-requisition-via/";
+    }
     url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
     $location.url(url);
   };

@@ -1,5 +1,5 @@
 
-<table cellpadding="0" cellspacing="0">
+<table cellpadding="0" cellspacing="0" class="view-table" align="center">
     <tr>
         <td class="left-block width-28">
             <div class="width-28">
@@ -24,7 +24,7 @@
         </td>
         <td>
 
-        <table class="view-table border-all-bold">
+        <table class="border-all-bold">
             <tr>
                 <td tag="col1" class="border-all-thin background-black" width="28px" rowspan="4">
                     <div class="width-28 banner-text">
@@ -106,7 +106,7 @@
             </tr>
         </table>
         <div class="view-table-spacing"></div>
-        <table class="view-table border-all-bold text-align-center">
+        <table class="border-all-bold text-align-center">
             <tr>
                 <td tag="col1" class="border-all-thin" width="60px" rowspan="4">FNM</td>
                 <td tag="col2" class="border-all-thin" width="318px" rowspan="4">
@@ -152,15 +152,15 @@
             </tr>
         </table>
         <div class="view-table-spacing "></div>
-        <table class="view-table border-all-bold view-table-cell-scrolling text-align-center" >
-            <tr ng-repeat="rnrItem in rnr.fullSupplyLineItems">
-                <td tag="col1" class="border-all-thin" width="60px">{{rnrItem.productCode}}</td>
+        <table class="border-all-bold view-table-cell-scrolling text-align-center" >
+            <tr ng-repeat="rnrItem in rnrItemsVisible">
+                <td tag="col1" class="border-all-thin" width="60px">{{rnrItem.productCode}}&nbsp;</td>
                 <td tag="col2" class="border-all-thin" width="318px">{{rnrItem.product}}</td>
                 <td tag="col3" class="border-all-thin" width="80px">{{rnrItem.beginningBalance}}</td>
                 <td tag="col4" class="border-all-thin" width="80px">{{rnrItem.quantityReceived}}</td>
                 <td tag="col5" class="border-all-thin" width="80px">{{rnrItem.quantityDispensed}}</td>
-                <td tag="col6" class="border-all-thin" width="90px">{{rnrItem.beginningBalance + rnrItem.quantityReceived - rnrItem.quantityDispensed}}</td>
-                <td tag="col7" class="border-all-thin" width="70px"> - </td>
+                <td tag="col6" class="border-all-thin" width="90px"><span ng-if="rnrItem.productCode">{{rnrItem.beginningBalance + rnrItem.quantityReceived - rnrItem.quantityDispensed}}</span></td>
+                <td tag="col7" class="border-all-thin" width="70px"><span ng-if="rnrItem.productCode"> - </span></td>
                 <td tag="col8" class="border-all-thin" width="70px">{{rnrItem.stockInHand}}</td>
                 <td tag="col9" class="border-all-thin" width="86px">{{rnrItem.totalLossesAndAdjustments}}</td>
                 <td tag="col10" class="border-all-thin" width="70px">{{rnrItem.calculatedOrderQuantity}}</td>
@@ -169,7 +169,7 @@
             </tr>
         </table>
         <div class="view-table-spacing"></div>
-        <table class="view-table border-all-bold sign-box">
+            <table class="border-all-bold sign-box">
             <tr>
                 <td width="50%">Elaborado por:</td>
                 <td width="50%">Visto do Responsavel Clinico:</td>
@@ -177,5 +177,10 @@
         </table>
         </td>
     </tr>
+    <tr>
+        <td></td>
+        <td class="text-align-right"><openlmis-pagination num-pages="numPages" current-page="currentPage" max-size="4"></openlmis-pagination></td>
+    </tr>
 </table>
+
 
