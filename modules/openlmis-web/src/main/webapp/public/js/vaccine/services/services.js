@@ -244,3 +244,15 @@ services.factory('UpdateOrderRequisitionStatus',function($resource){
 services.factory('VaccineLastStockMovement', function ($resource) {
     return $resource('/vaccine/inventory/stock/lastReport.json', {}, {});
 });
+
+services.factory('FacilityDistributed', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/getDistributed.json', {}, {});
+});
+
+services.factory('SaveDistribution', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/save.json', {}, {save:{method:'POST'}});
+});
+
+services.factory('DistributedFacilities', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/getDistributed.json', {}, {});
+});
