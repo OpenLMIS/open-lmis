@@ -46,6 +46,7 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.FacilityBuilder.name;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
@@ -182,6 +183,30 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getFullSupplyLineItems().size(), is(1));
     assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(1));
     assertThat(fetchedRequisition.getAllocatedBudget(), is(new BigDecimal(123.45).setScale(2, RoundingMode.FLOOR)));
+  }
+
+  @Test
+  public void shouldGetRequisitionsByFacilityAndProgram() {
+    String facilityCode = "F10";
+    String programCode = "MMIA";
+
+    Facility queryFacility = new Facility(facility.getId());
+    queryFacility.setCode(facilityCode);
+
+    Program queryProgram = new Program(program.getId());
+    queryProgram.setCode(programCode);
+
+    Rnr requisition = new Rnr(queryFacility, queryProgram, processingPeriod1, false, MODIFIED_BY, 1L);
+    mapper.insert(requisition);
+
+    List<Rnr> rnrList = mapper.getRequisitionsWithLineItemsByFacilityAndProgram(queryFacility, queryProgram);
+    assertThat(rnrList.size(), is(1));
+
+    Facility anotherFacility = new Facility(122L);
+    facility.setCode(FACILITY_CODE);
+
+    rnrList = mapper.getRequisitionsWithLineItemsByFacilityAndProgram(anotherFacility, queryProgram);
+    assertThat(rnrList, is(nullValue()));
   }
 
   @Test

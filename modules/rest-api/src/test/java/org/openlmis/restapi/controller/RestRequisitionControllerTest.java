@@ -226,7 +226,7 @@ public class RestRequisitionControllerTest {
     String facilityCode = "F1";
     String programCode = "MMIA";
 
-    List<Report> expectedRequisitions = new ArrayList<>();
+    List<Rnr> expectedRequisitions = new ArrayList<>();
     when(service.getRequisitionsByFacilityAndProgram(facilityCode, programCode)).thenReturn(expectedRequisitions);
     String requisitionsKey = "requisitions";
     ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(requisitionsKey, expectedRequisitions), OK);
@@ -234,7 +234,7 @@ public class RestRequisitionControllerTest {
 
     ResponseEntity<RestResponse> response = controller.getRequisitionsByFacilityAndProgram(facilityCode, programCode);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat((List<Report>) response.getBody().getData().get(requisitionsKey), is(expectedRequisitions));
+    assertThat((List<Rnr>) response.getBody().getData().get(requisitionsKey), is(expectedRequisitions));
   }
 
   @Test

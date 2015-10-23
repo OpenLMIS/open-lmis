@@ -143,7 +143,7 @@ public class RequisitionRepositoryTest {
     PatientQuantificationsBuilder patientQuantificationsBuilder = new PatientQuantificationsBuilder();
     List<PatientQuantificationLineItem> patientQuantifications = patientQuantificationsBuilder
             .addLineItem(lineItem1).addLineItem(lineItem2).build();
-    rnr.setPatientQuantifications(patientQuantifications);
+    rnr.setPatientQuantificationLineItems(patientQuantifications);
     rnr.setId(123L);
 
     requisitionRepository.update(rnr);

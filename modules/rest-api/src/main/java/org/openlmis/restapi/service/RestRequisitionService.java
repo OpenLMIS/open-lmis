@@ -209,7 +209,7 @@ public class RestRequisitionService {
   private void copyPatientQuantifications(Rnr rnr, Report report) {
     if (report.getPatientQuantifications() != null) {
       List<PatientQuantificationLineItem> patientQuantifications = new ArrayList();
-      rnr.setPatientQuantifications(patientQuantifications);
+      rnr.setPatientQuantificationLineItems(patientQuantifications);
       for (PatientQuantificationLineItem regimenLineItem : report.getPatientQuantifications()) {
         patientQuantifications.add(regimenLineItem);
       }
@@ -304,7 +304,17 @@ public class RestRequisitionService {
     }
   }
 
-  public List<Report> getRequisitionsByFacilityAndProgram(String facilityCode, String programCode) {
-    return null;
+  public List<Rnr> getRequisitionsByFacilityAndProgram(String facilityCode, String programCode) {
+    Facility facility = facilityService.getFacilityByCode(facilityCode);
+    if (facility == null) {
+      throw new DataException("error.facility.unknown");
+    }
+
+    Program program = programService.getByCode(programCode);
+    if (program == null) {
+      throw new DataException("program.code.invalid");
+    }
+
+    return requisitionService.getRequisitionsByFacilityAndProgram(facility, program);
   }
 }
