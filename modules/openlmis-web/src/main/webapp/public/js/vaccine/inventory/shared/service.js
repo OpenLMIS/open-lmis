@@ -240,3 +240,82 @@ services.factory('StockCardsForProgramByCategory', function($resource,VaccineOrd
 services.factory('RequisitionForFacility', function ($resource) {
     return $resource('/vaccine/orderRequisition/getAllBy/:programId/:periodId/:facilityId.json', {facilityId: '@facilityId', programId: '@programId'}, {});
 });
+
+services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,VaccineReportFacilities,StockCards,DistributedFacilities){
+     var programId;
+     var facilityId;
+     var allSupervisedFacilities;
+     var stockCards;
+     var distributions;
+
+     function get(pId,fId) {
+         var deferred =$q.defer();
+                     $timeout(function(){
+                         if(!isNaN(pId)){
+                            VaccineReportFacilities.get({programId:pId},function(data){
+                                allSupervisedFacilities=data.facilities;
+                                StockCards.get({facilityId:fId},function(data){
+                                    stockCards=data.stockCards;
+                                    DistributedFacilities.get(function(data){
+                                        distributions=data.Distributions;
+                                        allSupervisedFacilities.forEach(function(facility){
+
+                                             facility.productsToIssue=[];
+                                             var facilityDistribution=_.findWhere(distributions,{toFacilityId:facility.id});
+                                             if(facilityDistribution !=undefined)
+                                             {
+                                                facility.status=facilityDistribution.status;
+                                             }
+                                             stockCards.forEach(function(stockCard){
+                                                 var product={};
+                                                 var distributedProduct
+                                                 if(facilityDistribution !=undefined)
+                                                 {
+                                                     distributedProduct=_.findWhere(facilityDistribution.lineItems,{productId:stockCard.product.id});
+                                                     console.log(JSON.stringify(distributedProduct));
+                                                 }
+                                                 product.name=stockCard.product.primaryName;
+                                                 product.productId=stockCard.product.id;
+                                                 product.totalQuantityOnHand=stockCard.totalQuantityOnHand;
+                                                 product.quantity=(distributedProduct===undefined)?0:distributedProduct.quantity;
+                                                 if(stockCard.lotsOnHand !== undefined && stockCard.lotsOnHand.length >0)
+                                                 {
+                                                      product.lots=[];
+                                                      stockCard.lotsOnHand.forEach(function(lot){
+                                                          var lotOnHand={};
+                                                          var distributedLot;
+                                                          if(distributedProduct !== undefined)
+                                                          {
+                                                             distributedLot=_.findWhere(distributedProduct.lots,{lotId:lot.lot.id});
+//                                                             console.log(distributedLot);
+                                                          }
+                                                          lotOnHand.lotId=lot.lot.id;
+                                                          lotOnHand.lotCode=lot.lot.lotCode;
+                                                          lotOnHand.quantityOnHand=lot.quantityOnHand;
+                                                          lotOnHand.quantity=(distributedLot === undefined)?0:distributedLot.quantity;
+                                                          lotOnHand.vvmStatus=lot.vvmStatus;
+                                                          lotOnHand.expirationDate=lot.lot.expirationDate;
+                                                          product.lots.push(lotOnHand);
+                                                      });
+                                                 }
+                                                 facility.productsToIssue.push(product);
+                                             });
+                                        });
+
+                                    });
+
+                                    deferred.resolve(allSupervisedFacilities);
+                                });
+                             });
+                         }
+
+                     },100);
+          return deferred.promise;
+
+       }
+     return {
+       get: get,
+      };
+
+
+});
