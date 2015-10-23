@@ -196,7 +196,10 @@ public class RequisitionMapperIT {
     Program queryProgram = new Program(program.getId());
     queryProgram.setCode(programCode);
 
-    Rnr requisition = new Rnr(queryFacility, queryProgram, processingPeriod1, false, MODIFIED_BY, 1L);
+    Rnr requisition = new Rnr(queryFacility, queryProgram, processingPeriod1, false, MODIFIED_BY, 4L);
+    requisition.setAllocatedBudget(new BigDecimal(123.45));
+    requisition.setStatus(INITIATED);
+
     mapper.insert(requisition);
 
     List<Rnr> rnrList = mapper.getRequisitionsWithLineItemsByFacilityAndProgram(queryFacility, queryProgram);
@@ -206,7 +209,7 @@ public class RequisitionMapperIT {
     facility.setCode(FACILITY_CODE);
 
     rnrList = mapper.getRequisitionsWithLineItemsByFacilityAndProgram(anotherFacility, queryProgram);
-    assertThat(rnrList, is(nullValue()));
+    assertThat(rnrList.size(), is(0));
   }
 
   @Test

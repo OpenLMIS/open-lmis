@@ -127,7 +127,7 @@ public class RequisitionRepository {
     if (!(rnr.getStatus() == AUTHORIZED || rnr.getStatus() == IN_APPROVAL)) {
       updateRegimenLineItems(rnr);
       updateEquipmentLineItems(rnr);
-      insertPatientQuantificationLineItems(rnr, rnr.getPatientQuantificationLineItems());
+      insertPatientQuantificationLineItems(rnr, rnr.getPatientQuantifications());
     }
   }
 

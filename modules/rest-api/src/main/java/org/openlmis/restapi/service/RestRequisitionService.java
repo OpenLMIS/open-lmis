@@ -209,7 +209,7 @@ public class RestRequisitionService {
   private void copyPatientQuantifications(Rnr rnr, Report report) {
     if (report.getPatientQuantifications() != null) {
       List<PatientQuantificationLineItem> patientQuantifications = new ArrayList();
-      rnr.setPatientQuantificationLineItems(patientQuantifications);
+      rnr.setPatientQuantifications(patientQuantifications);
       for (PatientQuantificationLineItem regimenLineItem : report.getPatientQuantifications()) {
         patientQuantifications.add(regimenLineItem);
       }

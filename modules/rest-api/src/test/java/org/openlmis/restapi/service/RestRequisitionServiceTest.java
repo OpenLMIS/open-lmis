@@ -206,8 +206,8 @@ public class RestRequisitionServiceTest {
     report.setPatientQuantifications(patientQuantifications);
     service.submitReport(report, 1L);
 
-    assertThat(requisition.getPatientQuantificationLineItems().get(0).getTotal(), is(10));
-    assertThat(requisition.getPatientQuantificationLineItems().get(1).getTotal(), is(5));
+    assertThat(requisition.getPatientQuantifications().get(0).getTotal(), is(10));
+    assertThat(requisition.getPatientQuantifications().get(1).getTotal(), is(5));
   }
 
   @Test

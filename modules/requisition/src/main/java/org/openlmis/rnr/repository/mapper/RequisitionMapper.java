@@ -122,7 +122,7 @@ public interface RequisitionMapper {
           many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
       @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
-      @Result(property = "patientQuantificationLineItems", javaType = List.class, column = "id",
+      @Result(property = "patientQuantifications", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
       @Result(property = "period", column = "periodId", javaType = ProcessingPeriod.class,
           one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
