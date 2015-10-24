@@ -40,6 +40,7 @@ describe("NavigationController", function () {
 
   describe("go online", function () {
     it("should take user to root if currently on offline home page and network is connected", function () {
+      $httpBackend.expectGET('/settings/LOGIN_SUCCESS_DEFAULT_LANDING_PAGE.json').respond(200, { settings: { value: '/public/pages/dashboard/index.html' } });
       $httpBackend.expectGET("/locales.json").respond(200, {locales: ['en', 'pt']});
       spyOn($location, 'absUrl').andReturn("/public/pages/offline.html");
       spyOn($location, 'path');
@@ -52,6 +53,7 @@ describe("NavigationController", function () {
     });
 
     it("should take user to online version of app if network is connected", function () {
+      $httpBackend.expectGET('/settings/LOGIN_SUCCESS_DEFAULT_LANDING_PAGE.json').respond(200, { settings: { value: '/public/pages/dashboard/index.html' } });
       $httpBackend.expectGET("/locales.json").respond(200, {locales: ['en', 'pt']});
       spyOn($location, 'absUrl').andReturn("/page/offline.html#/list");
       spyOn($location, 'path');
@@ -64,6 +66,7 @@ describe("NavigationController", function () {
     });
 
     it("should set offline flag and not change URI if network is disconnected", function () {
+      $httpBackend.expectGET('/settings/LOGIN_SUCCESS_DEFAULT_LANDING_PAGE.json').respond(200, { settings: { value: '/public/pages/dashboard/index.html' } });
       $httpBackend.expectGET("/locales.json").respond(200, {locales: undefined});
       window = {location: "/pages/test"};
 
