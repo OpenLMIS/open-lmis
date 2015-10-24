@@ -130,7 +130,7 @@
 
     <ng-include src="'/public/pages/dashboard/shared/dashboard-header_new.html'"></ng-include>
     <div class="reporting-header">
-        <span style="background-color: #078f97; color: #fff;"><span openlmis-message="title.dashboard.reporting.rate"></span></span>
+        <span style="margin-right: 10px; font-size: 1.2em;"><span openlmis-message="title.dashboard.reporting.rate"></span></span>
         <span><span>Total:</span> {{reportingPerformance.total}}</span>
         <span><span>Expected To Report:</span> {{reportingPerformance.expected}}</span>
         <span><span>Ever Reported:</span> {{reportingPerformance.ever}}</span>
@@ -196,8 +196,8 @@
             <h4>Limit the maximum visible buttons</h4>
             <pagination total-items="bigTotalItems" page="bigCurrentPage" max-size="maxSize" class="pagination-small" boundary-links="true"></pagination>
             <pagination total-items="bigTotalItems" page="bigCurrentPage" max-size="maxSize" class="pagination-small" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
--->
-            <pre>Page: {{bigCurrentPage}} / {{numPages}}</pre>
+
+            <pre>Page: {{bigCurrentPage}} / {{numPages}}</pre>-->
         </div>
         <div class="span10">
 
@@ -222,9 +222,9 @@
                                     <c3chart bindto-id="{{product.name}}_consumption_chart">
                                         <chart-axes values-x="x" />
                                         <chart-axis >
-                                            <chart-axis-x axis-position="outer-center" axis-label="Period"
+                                            <chart-axis-x axis-position="outer-center" axis-label="Period" axis-height="40"
                                                           axis-type="category" >
-                                                <chart-axis-x-tick tick-rotate="50" />
+                                                <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
                                         </chart-axis>
 
@@ -240,8 +240,79 @@
                                 </accordion-group>
                             </accordion>
                         </slide>
-                        <slide>second slide</slide>
-                        <slide>third slide</slide>
+                        <slide>
+                            <accordion>
+                                <accordion-group class="gray-cascade" is-open="product.consumptionChart.openPanel">
+                                    <accordion-heading >
+                                        <div class="accordion-title">
+                                            <div class="caption">
+
+                                                <span >Top Dispensed : {{product.name}}  </span>
+                                            </div>
+                                            <div class="tools">
+                                                <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="consumption-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                                                <i  ng-class="{'icon-minus-sign': product.consumptionChart.openPanel, 'icon-plus-sign': !product.consumptionChart.openPanel}"></i>
+                                            </div>
+                                        </div>
+                                    </accordion-heading>
+                                    <c3chart bindto-id="{{product.name}}_dispensed_chart">
+                                        <chart-axes values-x="x" />
+                                        <chart-axis >
+                                            <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
+                                                          axis-type="category" >
+                                                <!--<chart-axis-x-tick tick-rotate="50" />-->
+                                            </chart-axis-x>
+                                        </chart-axis>
+
+                                        <chart-column column-id="Dispensed"
+                                                      column-values="{{product.topDispensed.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="amc"
+                                                      column-values="{{product.topAmc.values}}"
+                                                      column-type="line"/>
+                                        <chart-column column-id="x"
+                                                      column-values="{{product.topDispensed.districts}}"/>
+                                    </c3chart>
+                                </accordion-group>
+                            </accordion>
+                        </slide>
+                        <slide>
+
+                            <accordion>
+                                <accordion-group class="gray-cascade" is-open="product.consumptionChart.openPanel">
+                                    <accordion-heading >
+                                        <div class="accordion-title">
+                                            <div class="caption">
+
+                                                <span >Top Facility Dispensed : {{product.name}}  </span>
+                                            </div>
+                                            <div class="tools">
+                                                <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="consumption-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                                                <i  ng-class="{'icon-minus-sign': product.consumptionChart.openPanel, 'icon-plus-sign': !product.consumptionChart.openPanel}"></i>
+                                            </div>
+                                        </div>
+                                    </accordion-heading>
+                                    <c3chart bindto-id="{{product.name}}_facility_dispensed_chart">
+                                        <chart-axes values-x="x" />
+                                        <chart-axis >
+                                            <chart-axis-x axis-position="outer-center" axis-label="Facility" axis-height="40"
+                                                          axis-type="category" >
+                                                <!--<chart-axis-x-tick tick-rotate="50" />-->
+                                            </chart-axis-x>
+                                        </chart-axis>
+
+                                        <chart-column column-id="Dispensed"
+                                                      column-values="{{product.topFacilityDispensed.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="amc"
+                                                      column-values="{{product.topFacilityAmc.values}}"
+                                                      column-type="line"/>
+                                        <chart-column column-id="x"
+                                                      column-values="{{product.topFacilityDispensed.facilities}}"/>
+                                    </c3chart>
+                                </accordion-group>
+                            </accordion>
+                        </slide>
 
                     </carousel>
 
@@ -265,9 +336,9 @@
                                     <c3chart bindto-id="{{product.name}}_stockingefficiency_chart">
                                         <chart-axes values-x="x" />
                                         <chart-axis >
-                                            <chart-axis-x axis-position="outer-center" axis-label="Period"
+                                            <chart-axis-x axis-position="outer-center" axis-label="Period" axis-height="40"
                                                           axis-type="category" >
-                                                <chart-axis-x-tick tick-rotate="50" />
+                                                <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
                                         </chart-axis>
 
@@ -289,8 +360,170 @@
                                 </accordion-group>
                             </accordion>
                         </slide>
-                        <slide>second slide</slide>
-                        <slide>third slide</slide>
+                        <slide>
+                            <accordion>
+                                <accordion-group class="gray-cascade" is-open="product.stockingEfficiencyChart.openPanel">
+                                    <accordion-heading >
+                                        <div class="accordion-title">
+                                            <div class="caption">
+
+                                                <span >Top District Stocked out : {{product.name}}  </span>
+                                            </div>
+                                            <div class="tools">
+                                                <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                                                <i  ng-class="{'icon-minus-sign': product.stockingEfficiencyChart.openPanel, 'icon-plus-sign': !product.stockingEfficiencyChart.openPanel}"></i>
+                                            </div>
+                                        </div>
+                                    </accordion-heading>
+                                    <c3chart bindto-id="{{product.name}}__district_stockedout_chart">
+                                        <chart-axes values-x="x" />
+                                        <chart-axis >
+                                            <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
+                                                          axis-type="category" >
+                                                <!--<chart-axis-x-tick tick-rotate="50" />-->
+                                            </chart-axis-x>
+                                        </chart-axis>
+                                        <chart-column column-id="Stocked Out"
+                                                      column-values="{{product.topStockedOut.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="x"
+                                                      column-values="{{product.topStockedOut.districts}}"/>
+                                    </c3chart>
+                                </accordion-group>
+                            </accordion>
+                        </slide>
+                        <slide>
+                            <accordion>
+                                <accordion-group class="gray-cascade" is-open="product.stockingEfficiencyChart.openPanel">
+                                    <accordion-heading >
+                                        <div class="accordion-title">
+                                            <div class="caption">
+
+                                                <span >Top District Over stocked : {{product.name}}  </span>
+                                            </div>
+                                            <div class="tools">
+                                                <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                                                <i  ng-class="{'icon-minus-sign': product.stockingEfficiencyChart.openPanel, 'icon-plus-sign': !product.stockingEfficiencyChart.openPanel}"></i>
+                                            </div>
+                                        </div>
+                                    </accordion-heading>
+                                    <c3chart bindto-id="{{product.name}}_district_overstocked_chart">
+                                        <chart-axes values-x="x" />
+                                        <chart-axis >
+                                            <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
+                                                          axis-type="category" >
+                                                <!--<chart-axis-x-tick tick-rotate="50" />-->
+                                            </chart-axis-x>
+                                        </chart-axis>
+
+                                        <chart-column column-id="Over Stocked"
+                                                      column-values="{{product.topOverstocked.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="x"
+                                                      column-values="{{product.topOverstocked.districts}}"/>
+                                    </c3chart>
+                                </accordion-group>
+                            </accordion>
+                        </slide>
+                        <slide>
+                            <accordion>
+                                <accordion-group class="gray-cascade" is-open="product.stockingEfficiencyChart.openPanel">
+                                    <accordion-heading >
+                                        <div class="accordion-title">
+                                            <div class="caption">
+
+                                                <span >Top District Adequetly stocked out : {{product.name}}  </span>
+                                            </div>
+                                            <div class="tools">
+                                                <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                                                <i  ng-class="{'icon-minus-sign': product.stockingEfficiencyChart.openPanel, 'icon-plus-sign': !product.stockingEfficiencyChart.openPanel}"></i>
+                                            </div>
+                                        </div>
+                                    </accordion-heading>
+                                    <c3chart bindto-id="{{product.name}}_district_adequately_stockedout_chart">
+                                        <chart-axes values-x="x" />
+                                        <chart-axis >
+                                            <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
+                                                          axis-type="category" >
+                                                <!--<chart-axis-x-tick tick-rotate="50" />-->
+                                            </chart-axis-x>
+                                        </chart-axis>
+
+                                        <chart-column column-id="Adequetly Stocked"
+                                                      column-values="{{product.topAdequatelystocked.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="x"
+                                                      column-values="{{product.topAdequatelystocked.districts}}"/>
+                                    </c3chart>
+                                </accordion-group>
+                            </accordion>
+                        </slide>
+                        <slide>
+                            <accordion>
+                                <accordion-group class="gray-cascade" is-open="product.stockingEfficiencyChart.openPanel">
+                                    <accordion-heading >
+                                        <div class="accordion-title">
+                                            <div class="caption">
+
+                                                <span >Top District Understocked : {{product.name}}  </span>
+                                            </div>
+                                            <div class="tools">
+                                                <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                                                <i  ng-class="{'icon-minus-sign': product.stockingEfficiencyChart.openPanel, 'icon-plus-sign': !product.stockingEfficiencyChart.openPanel}"></i>
+                                            </div>
+                                        </div>
+                                    </accordion-heading>
+                                    <c3chart bindto-id="{{product.name}}_district_understocked_chart">
+                                        <chart-axes values-x="x" />
+                                        <chart-axis >
+                                            <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
+                                                          axis-type="category" >
+                                                <!--<chart-axis-x-tick tick-rotate="50" />-->
+                                            </chart-axis-x>
+                                        </chart-axis>
+
+                                        <chart-column column-id="Understocked"
+                                                      column-values="{{product.topUnderstocked.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="x"
+                                                      column-values="{{product.topUnderstocked.districts}}"/>
+                                    </c3chart>
+                                </accordion-group>
+                            </accordion>
+                        </slide>
+                       <!-- <slide>
+                            <accordion>
+                                <accordion-group class="gray-cascade" is-open="product.stockingEfficiencyChart.openPanel">
+                                    <accordion-heading >
+                                        <div class="accordion-title">
+                                            <div class="caption">
+
+                                                <span >Top Facility Stocked out : {{product.name}}  </span>
+                                            </div>
+                                            <div class="tools">
+                                                <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                                                <i  ng-class="{'icon-minus-sign': product.stockingEfficiencyChart.openPanel, 'icon-plus-sign': !product.stockingEfficiencyChart.openPanel}"></i>
+                                            </div>
+                                        </div>
+                                    </accordion-heading>
+                                    <c3chart bindto-id="{{product.name}}_facility_stockedout_chart">
+                                        <chart-axes values-x="x" />
+                                        <chart-axis >
+                                            <chart-axis-x axis-position="outer-center" axis-label="Facility" axis-height="40"
+                                                          axis-type="category" >
+                                                &lt;!&ndash;<chart-axis-x-tick tick-rotate="50" />&ndash;&gt;
+                                            </chart-axis-x>
+                                        </chart-axis>
+
+                                        <chart-column column-id="Over Stocked"
+                                                      column-values="{{product.topFacilityOnhand.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="x"
+                                                      column-values="{{product.topFacilityOnhand.facilities}}"/>
+                                    </c3chart>
+                                </accordion-group>
+                            </accordion>
+                        </slide>-->
                     </carousel>
                 </div>
                 <div class="span4">
@@ -313,9 +546,9 @@
                                     <c3chart bindto-id="{{product.name}}_losses_and_adjustment_chart">
                                         <chart-axes values-x="x" />
                                         <chart-axis >
-                                            <chart-axis-x axis-position="outer-center" axis-label="Period"
+                                            <chart-axis-x axis-position="outer-center" axis-label="Period" axis-height="40"
                                                           axis-type="category" >
-                                                <chart-axis-x-tick tick-rotate="50" />
+                                                <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
                                         </chart-axis>
 
@@ -334,8 +567,116 @@
                                 </accordion-group>
                             </accordion>
                         </slide>
-                        <slide>second slide</slide>
-                        <slide>third slide</slide>
+                        <slide>
+                            <accordion>
+                                <accordion-group class="gray-cascade" is-open="product.lossesAndAdjustmentChart.openPanel">
+                                    <accordion-heading >
+                                        <div class="accordion-title">
+                                            <div class="caption">
+
+                                                <span >Top losses : {{product.name}}  </span>
+                                            </div>
+                                            <div class="tools">
+                                                <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                                                <i  ng-class="{'icon-minus-sign': product.lossesAndAdjustmentChart.openPanel, 'icon-plus-sign': !product.lossesAndAdjustmentChart.openPanel}"></i>
+                                            </div>
+                                        </div>
+                                    </accordion-heading>
+                                    <c3chart bindto-id="{{product.name}}_lost_chart">
+                                        <chart-axes values-x="x" />
+                                        <chart-axis >
+                                            <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
+                                                          axis-type="category" >
+                                                <!--<chart-axis-x-tick tick-rotate="50" />-->
+                                            </chart-axis-x>
+                                        </chart-axis>
+
+                                        <chart-column column-id="Lost"
+                                                      column-values="{{product.topLost.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="Quantity Damaged"
+                                                      column-values="{{product.topDamaged.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="Quantity Expired"
+                                                      column-values="{{product.topExpired.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="x"
+                                                      column-values="{{product.topLost.districts}}"/>
+                                    </c3chart>
+                                </accordion-group>
+                            </accordion>
+                        </slide>
+                        <slide>
+                            <accordion>
+                                <accordion-group class="gray-cascade" is-open="product.lossesAndAdjustmentChart.openPanel">
+                                    <accordion-heading >
+                                        <div class="accordion-title">
+                                            <div class="caption">
+
+                                                <span >Top Facility losses : {{product.name}}  </span>
+                                            </div>
+                                            <div class="tools">
+                                                <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                                                <i  ng-class="{'icon-minus-sign': product.lossesAndAdjustmentChart.openPanel, 'icon-plus-sign': !product.lossesAndAdjustmentChart.openPanel}"></i>
+                                            </div>
+                                        </div>
+                                    </accordion-heading>
+                                    <c3chart bindto-id="{{product.name}}_facility_lost_chart">
+                                        <chart-axes values-x="x" />
+                                        <chart-axis >
+                                            <chart-axis-x axis-position="outer-center" axis-label="Facility" axis-height="40"
+                                                          axis-type="category" >
+                                                <!--<chart-axis-x-tick tick-rotate="50" />-->
+                                            </chart-axis-x>
+                                        </chart-axis>
+
+                                        <chart-column column-id="Lost"
+                                                      column-values="{{product.topFacilityLost.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="Quantity Damaged"
+                                                      column-values="{{product.topFacilityDamaged.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="Quantity Expired"
+                                                      column-values="{{product.topFacilityExpired.values}}"
+                                                      column-type="bar"/>
+                                        <chart-column column-id="x"
+                                                      column-values="{{product.topFacilityLost.facilities}}"/>
+                                    </c3chart>
+                                </accordion-group>
+                            </accordion>
+                        </slide>
+                        <slide>
+                            <accordion>
+                                <accordion-group class="gray-cascade" is-open="product.lossesAndAdjustmentChart.openPanel">
+                                    <accordion-heading >
+                                        <div class="accordion-title">
+                                            <div class="caption">
+
+                                                <span >Top Facility Fill rate : {{product.name}}   </span>
+                                            </div>
+                                            <div class="tools">
+                                                <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="losses-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
+                                                <i  ng-class="{'icon-minus-sign': product.lossesAndAdjustmentChart.openPanel, 'icon-plus-sign': !product.lossesAndAdjustmentChart.openPanel}"></i>
+                                            </div>
+                                        </div>
+                                    </accordion-heading>
+                                    <table style="width:100%; margin: 10px">
+                                        <tr>
+                                            <td style="width: 33%" ng-repeat="itemFillRate in product.topFacilityFillrate">
+                                                <span class="easychart" style="height: 75px" easypiechart options="getFIllRateOption(itemFillRate.indicator_value)"   percent="itemFillRate.indicator_value">
+                                                <span class="easychart-percent" ng-bind="itemFillRate.indicator_value"></span>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 33%" ng-repeat="itemFillRate in product.topFacilityFillrate">
+                                                <div style="width: 60%; padding-left: 20px;">{{itemFillRate.facilityname}}</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </accordion-group>
+                            </accordion>
+                        </slide>
                     </carousel>
                 </div>
             </div>
