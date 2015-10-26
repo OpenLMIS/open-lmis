@@ -177,7 +177,9 @@ public class DashboardLookupService {
     public List<HashMap<String, Object>> getProgramPeriodTracerProductsTrend(Long programId, Long periodId, Long userId, Long limit) {
         return dashboardMapper.getProgramPeriodTracerProductTrend(programId, periodId, userId);
     }
-
+    public HashMap<String, Object> getDashboardReportingPerformance(Long programId, Long periodId, Long userId) {
+        return dashboardMapper.getDashboardReportingPerformance(programId, periodId, userId);
+    }
     public List<HashMap<String, Object>> getFacilitiesStockedOut(Long programId, Long periodId, String productCode) {
         return dashboardMapper.getFacilityStockedOut(programId, periodId, productCode);
     }

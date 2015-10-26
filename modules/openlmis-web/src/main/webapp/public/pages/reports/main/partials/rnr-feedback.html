@@ -1,0 +1,91 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="row-fluid sortable ui-sortable">
+    <div class="box span12">
+        <div class="box-header">
+            <h2 openlmis-message="report.title.rnr.feedback"><i class="icon-edit"></i><span class="break"></span></h2>
+            <div class="box-icon">
+                <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+                <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+                <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')" class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+            </div>
+        </div>
+
+      <div >
+        <div class="row-fluid">
+          <div class="sidebar">
+                    <div class="app-form" style="padding: 5px;">
+                        <form ng-submit="filterGrid()"  name="filterForm" novalidate>
+
+                            <div filter-container class="clearfix">
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Order Type:  </label>
+                                    <select  class="input-large" name="orderType" ng-model="filter.orderType" ng-change="filterChanged()" ng-options="option.name as option.value for option in orderTypes">
+                                    </select>
+                                </div>
+                              <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                              <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+                              <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+                              <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+                              <zone-filter class="form-cell horizontalFilters"></zone-filter>
+                              <facility-type-filter class="form-cell horizontalFilters" ></facility-type-filter>
+                              <facility-filter class="form-cell horizontalFilters" required="true"></facility-filter>
+                              <product-filter class="form-cell horizontalFilters"></product-filter>
+
+                            </div>
+                        </form>
+                        <span class="label-required">*</span> <span id="requiredMsgDiv" ng-bind="message" ng-show="showMessage"/>
+                    </div>
+                </div>
+              <div class="content-body">
+                  <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                      <tr>
+                          <td>No data to show under selected filters</td>
+                      </tr>
+                  </table>
+                  <div ng-show="datarows.length > 0">
+
+                      <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
+                      <br />
+                      <span ng-repeat="summary in summaries">
+                           <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
+                       </span>
+                      </div>
+
+                      <table   ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                          <tbody>
+                          <tr ng-repeat="row in datarows | orderBy:['facility','productMain','productIndex']">
+                              <td data-title="getLocalMessage('label.facility')" style="width:150px" >{{row.facility}}</td>
+                              <td data-title="getLocalMessage('label.product.code')" style="width:50px" sortable="productCode" >{{ row.productCode }}</td>
+                              <td data-title="getLocalMessage('label.product.name')" style="width:200px" sortable="product"  >{{ row.product }}</td>
+                              <td data-title="getLocalMessage('label.unit')" style="width:80px" sortable="unit"  >{{ row.unit }}</td>
+                              <td data-title="getLocalMessage('label.beginning.balance')" class="number" style="{{ row.productIndex == 0 && row.err_open_balance == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="beginningBalance"  >{{ row.productIndex == 0 && (row.beginningBalance | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.quantity.received')" class="number" style="{{ row.productIndex == 0 && row.err_qty_received == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="totalQuantityReceived"  >{{ row.productIndex == 0 && (row.totalQuantityReceived | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.quantity.dispensed')" class="number" style="width:80px" sortable="totalQuantityDispensed"  >{{ row.productIndex == 0 && (row.totalQuantityDispensed | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.adjustments')" class="number" style="width:80px" sortable="adjustments"  >{{ row.productIndex == 0 && (row.adjustments | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.physical.count')" class="number" style="{{ row.productIndex == 0 && row.err_qty_stockinhand == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="physicalCount"  >{{ row.productIndex == 0 && (row.physicalCount | number) || '' }}</td>
+                              <td data-title="getLocalMessage('label.adjusted.amc')" class="number" style="width:80px" sortable="adjustedAMC"  >{{ row.productIndex == 0 && (row.adjustedAMC | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.new.eop')" class="number" style="width:80px" sortable="newEOP"  >{{ row.productIndex == 0 && (row.newEOP | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.quantity.ordered')" class="number" style="{{ row.productIndex == 0 && row.err_qty_required == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="orderQuantity"  >{{ row.productIndex == 0 && (row.orderQuantity | number) || ''}}</td>
+                              <td data-title="getLocalMessage('label.quantity.supplied')" class="number" style="width:80px" sortable="quantitySupplied"  >{{ row.quantitySupplied | number }}</td>
+                             </tr>
+                          </tbody>
+                      </table>
+                  </div>
+               </div>
+          </div>
+    </div>
+  </div>
+</div>

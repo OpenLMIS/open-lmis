@@ -1279,6 +1279,10 @@ services.factory('GetProgramPeriodTracerProductsTrend', function($resource) {
     return $resource('/dashboard/program/:programId/period/:periodId/tracer-products-trend.json', {}, {});
 });
 
+services.factory('DashboardReportingPerformance', function($resource) {
+    return $resource('/dashboard/program/:programId/period/:periodId/reporting-performance.json', {}, {});
+});
+
 services.factory('GetStockOutFacilitiesForProgramPeriodAndProductCode', function($resource) {
     return $resource('/dashboard/program/:programId/period/:periodId/product/:productCode/stocked-out-facilities.json', {}, {});
 });

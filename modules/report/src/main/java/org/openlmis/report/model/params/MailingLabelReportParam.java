@@ -16,24 +16,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.ReportParameter;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 public class MailingLabelReportParam
-  extends BaseParam implements ReportParameter {
+    extends BaseParam implements ReportParameter {
 
-  //top filters
   private Long facilityType;
   private Long zone;
   private Boolean status;
-  private String orderBy;
-  private String sortOrder;
   private String header;
-  private int programId;
+  private Long program;
 
   @Override
   public String toString() {
@@ -41,5 +37,3 @@ public class MailingLabelReportParam
   }
 
 }
-
-

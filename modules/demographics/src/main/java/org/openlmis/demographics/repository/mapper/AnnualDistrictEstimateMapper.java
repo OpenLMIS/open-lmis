@@ -44,7 +44,7 @@ public interface AnnualDistrictEstimateMapper {
     " set " +
     " isFinal = true" +
     " where id = #{id} ")
-  Integer finalize(AnnualDistrictEstimateEntry estimate);
+  Integer finalizeEstimate(AnnualDistrictEstimateEntry estimate);
 
   @Update("update district_demographic_estimates " +
     " set " +

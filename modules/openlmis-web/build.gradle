@@ -167,7 +167,6 @@ dependencies {
             project(':modules:reporting'),
             project(':modules:report'),
             project(':modules:distribution'),
-            project(':modules:odk-api'),
             project(':modules:equipment'),
             project(':modules:demographics'),
             project(':modules:vaccine'),

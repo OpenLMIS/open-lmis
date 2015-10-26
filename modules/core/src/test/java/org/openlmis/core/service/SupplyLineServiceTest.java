@@ -84,13 +84,13 @@ public class SupplyLineServiceTest {
     assertThat(returnedSupplyLine, is(supplyLine));
   }
 
-//  @Test
-//  public void shouldThrowErrorIfSupervisoryNodeIsNotTheParentNode() {
-//    when(supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId())).thenThrow(new DataException("Supervising Node is not the Top node"));
-//    expectedEx.expect(DataException.class);
-//    expectedEx.expectMessage("Supervising Node is not the Top node");
-//    service.save(supplyLine);
-//  }
+  @Test
+  public void shouldThrowErrorIfSupervisoryNodeIsNotTheParentNode() {
+    when(supervisoryNodeRepository.getSupervisoryNodeParentId(supplyLine.getSupervisoryNode().getId())).thenThrow(new DataException("Supervising Node is not the Top node"));
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("Supervising Node is not the Top node");
+    service.save(supplyLine);
+  }
 
   @Test
   public void shouldInsertSupplyLineIfDoesNotExist() throws Exception {

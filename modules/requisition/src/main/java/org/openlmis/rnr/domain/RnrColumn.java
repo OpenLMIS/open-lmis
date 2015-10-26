@@ -10,12 +10,11 @@
 
 package org.openlmis.rnr.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class RnrColumn extends Column {
   }
 
   @SuppressWarnings(value = "unused")
-  public void setOptions(String opt){
+  public void setOptions(String opt) {
     this.options = new FormulaOption(opt);
   }
 

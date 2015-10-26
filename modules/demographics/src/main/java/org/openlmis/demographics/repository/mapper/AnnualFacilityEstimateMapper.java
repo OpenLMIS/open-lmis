@@ -47,7 +47,7 @@ public interface AnnualFacilityEstimateMapper {
     " modifiedBy = #{modifiedBy}, " +
     " modifiedDate = NOW()" +
     " where id = #{id} ")
-  Integer finalize(AnnualFacilityEstimateEntry estimate);
+  Integer finalizeEstimate(AnnualFacilityEstimateEntry estimate);
 
   @Update("update facility_demographic_estimates " +
     " set " +

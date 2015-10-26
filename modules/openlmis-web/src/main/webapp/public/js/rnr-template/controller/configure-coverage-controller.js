@@ -36,7 +36,7 @@ function ConfigureCoverageController($scope, $routeParams, DemographicEstimateCa
   };
 
   $scope.$parent.saveProtocols = function(){
-    SaveVaccineProductDose.update($scope.protocol, function(data){
+    SaveVaccineProductDose.update($scope.protocol, function(){
       $scope.$parent.message = 'label.vaccine.settings.coverage.configuration.saved';
     });
   };

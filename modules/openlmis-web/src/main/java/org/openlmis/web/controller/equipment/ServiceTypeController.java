@@ -31,19 +31,22 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class ServiceTypeController extends BaseController {
 
 
+  public static final String SERVICE_TYPE = "service_type";
+  public static final String SERVICE_TYPES = "service_types";
+
   @Autowired
   private ServiceTypeService service;
 
   @RequestMapping(method = GET, value = "list")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS') or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
   public ResponseEntity<OpenLmisResponse> getAll(){
-    return  OpenLmisResponse.response("service_types", service.getAll());
+    return  OpenLmisResponse.response(SERVICE_TYPES, service.getAll());
   }
 
   @RequestMapping(method = GET, value = "id")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getById( @RequestParam("id") Long id){
-    return  OpenLmisResponse.response("service_type", service.getById(id));
+    return  OpenLmisResponse.response(SERVICE_TYPE, service.getById(id));
   }
 
 
@@ -52,7 +55,7 @@ public class ServiceTypeController extends BaseController {
   public ResponseEntity<OpenLmisResponse> save(@RequestBody ServiceType type){
     service.save(type);
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("message.equipment.service.type.saved");
-    response.getBody().addData("service_type", type);
+    response.getBody().addData(SERVICE_TYPE, type);
     return response;
   }
 }

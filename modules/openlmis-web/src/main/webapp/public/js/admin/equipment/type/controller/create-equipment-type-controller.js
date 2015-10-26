@@ -29,7 +29,7 @@ function CreateEquipmentTypeController($scope, $routeParams, $location, Equipmen
     // clear the error message
     $scope.error = undefined;
 
-    var onSuccess = function(data){
+    var onSuccess = function(){
       $scope.$parent.message = 'Your changes have been saved!';
       $location.path('');
     };

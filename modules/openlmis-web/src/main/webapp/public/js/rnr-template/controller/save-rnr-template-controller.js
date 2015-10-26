@@ -61,7 +61,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   };
 
   $scope.saveProgram = function(){
-    UpdateProgram.update($scope.program, function(data){
+    UpdateProgram.update($scope.program, function(){
       $scope.$parent.message = messageService.get("template.save.success");
       $scope.error = "";
       $scope.errorMap = undefined;
@@ -79,10 +79,6 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
       rnrColumn.position = index + 1;
     });
   }
-
-//  $scope.sources.forEach(function (source) {
-//    source.description = messageService.get(source.description);
-//  });
 
 
   $scope.setArithmeticValidationMessageShown = function () {

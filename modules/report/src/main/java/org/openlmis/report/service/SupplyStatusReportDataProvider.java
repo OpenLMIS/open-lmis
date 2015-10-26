@@ -47,7 +47,6 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
   }
 
   @Override
-  @Transactional
   public List<? extends ReportData> getMainReportData(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
     return reportMapper.getSupplyStatus(getParam(filterCriteria), rowBounds, this.getUserId());
@@ -60,7 +59,6 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
   }
 
   @Override
-  @Transactional
   public String getFilterSummary(Map<String, String[]> params) {
     return filterHelper.getSelectedFilterString(params);
   }

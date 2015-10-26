@@ -92,15 +92,6 @@
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
-                    <property name="reportKey" value="average_consumption"/>
-                    <property name="template" value="average-consumption.jasper"/>
-                    <property name="reportDataProvider" ref="averageConsumptionReportDataProvider"/>
-                    <property name="id" value="RP-Avg-Consumption-Reporting"/>
-                    <property name="name" value="Average Consumption Reporting"/>
-                    <property name="title" value="report.title.consumption.average.by.product"/>
-                    <property name="version" value="1.0"/>
-                </bean>
-                <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="adjustment_summary"/>
                     <property name="template" value="adjustment-summary.jasper"/>
                     <property name="reportDataProvider" ref="adjustmentSummaryReportDataProvider"/>
@@ -390,16 +381,6 @@
                     <property name="id" value="RP-replacement-plan"/>
                     <property name="name" value="Annual Replacement Plan Summary"/>
                     <property name="title" value="report.title.annual.replacement.plan.summary"/>
-                    <property name="version" value="1.0"/>
-                </bean>
-
-                <bean class="org.openlmis.report.Report">
-                    <property name="reportKey" value="order_requisition_export"/>
-                    <property name="template" value="order-requisition-summary.jasper"/>
-                    <property name="reportDataProvider" ref="orderRequisitionDataProvider"/>
-                    <property name="id" value="RP-replacement-plan"/>
-                    <property name="name" value="Vaccine Order Requisition "/>
-                    <property name="title" value="Vaccine Order Requisition"/>
                     <property name="version" value="1.0"/>
                 </bean>
 

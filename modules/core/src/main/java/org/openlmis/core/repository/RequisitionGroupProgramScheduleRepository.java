@@ -67,9 +67,9 @@ public class RequisitionGroupProgramScheduleRepository {
 
   private void validateProgramType(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {
     Program program = programRepository.getById(requisitionGroupProgramSchedule.getProgram().getId());
-//    if (program.isPush()) {
-//      throw new DataException("error.program.type.not.supported.requisitions");
-//    }
+    if (program.getPush()) {
+      throw new DataException("error.program.type.not.supported.requisitions");
+    }
   }
 
   public void update(RequisitionGroupProgramSchedule requisitionGroupProgramSchedule) {

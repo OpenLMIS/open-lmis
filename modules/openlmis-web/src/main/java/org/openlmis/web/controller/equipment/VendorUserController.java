@@ -35,19 +35,22 @@ import static org.openlmis.core.web.OpenLmisResponse.success;
 @RequestMapping(value = "/equipment/vendor-user/")
 public class VendorUserController extends BaseController {
 
+  public static final String VENDOR_USER = "vendorUser";
+  public static final String USERS = "users";
+
   @Autowired
   private VendorUserService vendorUserService;
 
   @RequestMapping(value = "getAllUsersForVendor/{vendorId}", method = RequestMethod.GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getAllUsersForVendor(@PathVariable(value = "vendorId") Long vendorId) {
-    return OpenLmisResponse.response("users", vendorUserService.getAllUsersForVendor(vendorId));
+    return OpenLmisResponse.response(USERS, vendorUserService.getAllUsersForVendor(vendorId));
   }
 
   @RequestMapping(value = "getAllUsersAvailableForVendor", method = RequestMethod.GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> getAllUsersAvailableForVendor() {
-    return OpenLmisResponse.response("users", vendorUserService.getAllUsersAvailableForVendor());
+    return OpenLmisResponse.response(USERS, vendorUserService.getAllUsersAvailableForVendor());
   }
 
   @RequestMapping(value="saveNewUserForVendor", method = RequestMethod.POST,headers = ACCEPT_JSON)
@@ -61,7 +64,7 @@ public class VendorUserController extends BaseController {
       return OpenLmisResponse.error(e, HttpStatus.BAD_REQUEST);
     }
     ResponseEntity<OpenLmisResponse>  successResponse = OpenLmisResponse.success( messageService.message("message.equipment.vendor.associated.with.user"));
-    successResponse.getBody().addData("vendorUser", vendorUser);
+    successResponse.getBody().addData(VENDOR_USER, vendorUser);
     return successResponse;
   }
 

@@ -37,6 +37,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping(value = "/equipment/vendor/")
 public class VendorController extends BaseController {
 
+  public static final String VENDOR = "vendor";
+
   @Autowired
   private VendorService service;
 
@@ -47,7 +49,7 @@ public class VendorController extends BaseController {
 
   @RequestMapping(method = GET, value = "id")
   public ResponseEntity<OpenLmisResponse> getById(@RequestParam("id") Long id) {
-    return OpenLmisResponse.response("vendor", service.getById(id));
+    return OpenLmisResponse.response(VENDOR, service.getById(id));
   }
 
 
@@ -59,7 +61,7 @@ public class VendorController extends BaseController {
       return OpenLmisResponse.error("error.equipment.vendor.code.duplicate", HttpStatus.BAD_REQUEST);
     }
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("message.equipment.successfully.saved.vendor");
-    response.getBody().addData("vendor", vendor);
+    response.getBody().addData(VENDOR, vendor);
     return response;
   }
 

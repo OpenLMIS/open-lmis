@@ -117,7 +117,7 @@ public class AnnualDistrictEstimateMapperIT {
     AnnualDistrictEstimateEntry annualDistrictEstimateEntry = createDistrictDemographicEstimate();
     mapper.insert(annualDistrictEstimateEntry);
 
-    Integer result = mapper.finalize(annualDistrictEstimateEntry);
+    Integer result = mapper.finalizeEstimate(annualDistrictEstimateEntry);
     assertThat(result, is(1));
     // check if the value is actually saved here.
     assertThat(mapper.getById(annualDistrictEstimateEntry.getId()).getIsFinal(), is(true));
