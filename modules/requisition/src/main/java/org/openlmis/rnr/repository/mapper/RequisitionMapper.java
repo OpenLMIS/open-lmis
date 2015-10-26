@@ -107,10 +107,9 @@ public interface RequisitionMapper {
   Rnr getRequisitionWithLineItems(@Param("facility") Facility facility, @Param("program") Program program, @Param("period") ProcessingPeriod period);
 
   @Select({"SELECT * FROM requisitions r",
-      "WHERE facilityId = #{facility.id} AND programId= #{program.id}"}
+      "WHERE facilityId = #{facility.id}"}
       )
   @Results(value = {
-      @Result(property = "emergency", column = "emergency"),
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "program.id", column = "programId"),
       @Result(property = "period.id", column = "periodId"),
@@ -129,7 +128,7 @@ public interface RequisitionMapper {
       @Result(property = "clientSubmittedTime", column = "clientSubmittedTime"),
       @Result(property = "clientSubmittedNotes", column = "clientSubmittedNotes")
   })
-  List<Rnr> getRequisitionsWithLineItemsByFacilityAndProgram(@Param("facility") Facility facility, @Param("program") Program program);
+  List<Rnr> getRequisitionsWithLineItemsByFacility(@Param("facility") Facility facility);
 
   @Select({"SELECT * FROM requisitions R",
       "WHERE facilityId = #{facilityId}",

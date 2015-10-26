@@ -642,42 +642,22 @@ public class RestRequisitionServiceTest {
 
   @Test
   public void shouldThrowExceptionIfFacilityCodeIsInvalid() throws Exception {
-    Program program = new Program();
-    program.setCode(PROGRAM_CODE);
-    program.setId(12L);
-    when(programService.getByCode(PROGRAM_CODE)).thenReturn(program);
-
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.facility.unknown");
-    service.getRequisitionsByFacilityAndProgram("invalid_code", PROGRAM_CODE);
+    service.getRequisitionsByFacility("invalid_code");
   }
 
   @Test
-  public void shouldThrowExceptionIfProgramCodeIsInvalid() throws Exception {
-
-    when(facilityService.getFacilityByCode(FACILITY_CODE)).thenReturn(new Facility());
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("program.code.invalid");
-    service.getRequisitionsByFacilityAndProgram(FACILITY_CODE, "invalid_program");
-  }
-
-  @Test
-  public void shouldGetRequisitionsIfFacilityAndProgramIsValid() {
-    Program program = new Program();
-    program.setCode(PROGRAM_CODE);
-    program.setId(12L);
-
+  public void shouldGetRequisitionsIfFacilityIsValid() {
     Facility facility = new Facility();
     facility.setCode(FACILITY_CODE);
     facility.setId(120L);
 
     when(facilityService.getFacilityByCode(FACILITY_CODE)).thenReturn(facility);
-    when(programService.getByCode(PROGRAM_CODE)).thenReturn(program);
 
-    service.getRequisitionsByFacilityAndProgram(FACILITY_CODE, PROGRAM_CODE);
+    service.getRequisitionsByFacility(FACILITY_CODE);
 
-    verify(requisitionService).getRequisitionsByFacilityAndProgram(facility, program);
+    verify(requisitionService).getRequisitionsByFacility(facility);
   }
 
   private List<RnrColumn> getRnrColumns() {

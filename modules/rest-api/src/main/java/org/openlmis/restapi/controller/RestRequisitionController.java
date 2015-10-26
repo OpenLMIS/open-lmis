@@ -92,10 +92,9 @@ public class RestRequisitionController extends BaseController {
   }
 
   @RequestMapping(value="/rest-api/requisitions", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> getRequisitionsByFacilityAndProgram(@RequestParam(value="facilityCode") String facilityCode,
-                                                                          @RequestParam(value="programCode") String programCode) {
+  public ResponseEntity<RestResponse> getRequisitionsByFacility(@RequestParam(value="facilityCode") String facilityCode) {
     try {
-      return response("requisitions", restRequisitionService.getRequisitionsByFacilityAndProgram(facilityCode, programCode), OK);
+      return response("requisitions", restRequisitionService.getRequisitionsByFacility(facilityCode), OK);
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

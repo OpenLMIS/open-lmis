@@ -224,15 +224,14 @@ public class RestRequisitionControllerTest {
   @Test
   public void shouldReturnSuccessCodeAndRequisitionListIfNoException() {
     String facilityCode = "F1";
-    String programCode = "MMIA";
 
     List<Rnr> expectedRequisitions = new ArrayList<>();
-    when(service.getRequisitionsByFacilityAndProgram(facilityCode, programCode)).thenReturn(expectedRequisitions);
+    when(service.getRequisitionsByFacility(facilityCode)).thenReturn(expectedRequisitions);
     String requisitionsKey = "requisitions";
     ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(requisitionsKey, expectedRequisitions), OK);
     when(RestResponse.response(requisitionsKey, expectedRequisitions, HttpStatus.OK)).thenReturn(expectedResponse);
 
-    ResponseEntity<RestResponse> response = controller.getRequisitionsByFacilityAndProgram(facilityCode, programCode);
+    ResponseEntity<RestResponse> response = controller.getRequisitionsByFacility(facilityCode);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat((List<Rnr>) response.getBody().getData().get(requisitionsKey), is(expectedRequisitions));
   }
@@ -240,15 +239,14 @@ public class RestRequisitionControllerTest {
   @Test
   public void shouldReturnErrorIfCodeAndRequisitionThrowsException() {
     String facilityCode = "F1";
-    String programCode = "MMIA";
 
     DataException exception = new DataException("some error");
-    doThrow(exception).when(service).getRequisitionsByFacilityAndProgram(facilityCode, programCode);
+    doThrow(exception).when(service).getRequisitionsByFacility(facilityCode);
 
     ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, messageService.message("some error")), BAD_REQUEST);
     when(error(exception.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
 
-    ResponseEntity<RestResponse> response = controller.getRequisitionsByFacilityAndProgram(facilityCode, programCode);
+    ResponseEntity<RestResponse> response = controller.getRequisitionsByFacility(facilityCode);
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
   }
 

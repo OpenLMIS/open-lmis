@@ -304,17 +304,12 @@ public class RestRequisitionService {
     }
   }
 
-  public List<Rnr> getRequisitionsByFacilityAndProgram(String facilityCode, String programCode) {
+  public List<Rnr> getRequisitionsByFacility(String facilityCode) {
     Facility facility = facilityService.getFacilityByCode(facilityCode);
     if (facility == null) {
       throw new DataException("error.facility.unknown");
     }
 
-    Program program = programService.getByCode(programCode);
-    if (program == null) {
-      throw new DataException("program.code.invalid");
-    }
-
-    return requisitionService.getRequisitionsByFacilityAndProgram(facility, program);
+    return requisitionService.getRequisitionsByFacility(facility);
   }
 }
