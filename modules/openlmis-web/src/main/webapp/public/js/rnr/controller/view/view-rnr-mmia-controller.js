@@ -1,3 +1,3 @@
-function ViewRnrDetailController($scope, Requisitions) {
+function ViewRnrMmiaController($scope, Requisitions) {
 
 }
