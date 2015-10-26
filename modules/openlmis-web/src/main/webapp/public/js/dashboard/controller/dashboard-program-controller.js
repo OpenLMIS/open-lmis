@@ -10,9 +10,10 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function DashboardProgramController($scope,$routeParams,$timeout,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend, GetStockOutFacilitiesForProgramPeriodAndProductCode, DashboardReportingPerformance, DashboardDistrictStockSummary, DashboardFacilityStockSummary) {
+function DashboardProgramController($scope,$routeParams,$timeout,$filter,messageService, dashboardMenuServiceNew, UserSupervisedActivePrograms, GetLastPeriods, GetProgramPeriodTracerProductsTrend, GetStockOutFacilitiesForProgramPeriodAndProductCode, DashboardReportingPerformance, DashboardDistrictStockSummary, DashboardFacilityStockSummary) {
     var dashboardMenuService = dashboardMenuServiceNew;
     $scope.slideTransitionInterval = 20000;
+
 
     /* $scope.totalItems = 64;
     $scope.currentPage = 4;
@@ -77,26 +78,14 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
     var options ={};
     $scope.getFIllRateOption = function(fillRate){
 
-        if(fillRate <= 0){
+        if(fillRate >= 0 && fillRate <=50){
             barColor = barColors[0];
-        }else if(fillRate > 0 && fillRate <= 50){
+        }else if(fillRate > 50 && fillRate <= 70){
             barColor = barColors[1];
         }else{
             barColor = barColors[2];
         }
-  //  alert('fillrate '+fillRate)
-      /*  angular.forEach(itemFillRateColors, function(item){
-            if(fillRate <= item.maxRange && fillRate >= item.minRange){
-                barColor = item.color;
-            }
-        });*/
-        /*$.each(itemFillRateColors, function(index, item){
-            if(fillRate <= item.maxRange && fillRate >= item.minRange){
-                barColor = item.color;
-            }
-        });*/
-    //    alert('options '+JSON.stringify({animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth}))
-        //options = {animate:3000, barColor: barColor, scaleColor: $scaleColor, lineWidth: $lineWidth};
+
         options.animate = 3000;
         options.barColor = barColor;
         options.scaleColor = $scaleColor;
@@ -150,7 +139,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
                 var groupByProduct = _.groupBy(stockSummary, function(record){return record.productcode;});
 
                 angular.forEach(groupByProduct, function(product){
-                    var groupByStock = _.groupBy(product, function(prd){return prd.indicator});
+                    var groupByStock = _.groupBy(product, function(prd){return prd.indicator;});
                     $scope.districtStockStatus[product[0].productcode] = groupByStock;
                 });
 
@@ -170,7 +159,7 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
                 var groupByProduct = _.groupBy(stockStatus, function(record){return record.productcode;});
 
                 angular.forEach(groupByProduct, function(product){
-                    var groupByStock = _.groupBy(product, function(prd){return prd.indicator});
+                    var groupByStock = _.groupBy(product, function(prd){return prd.indicator;});
                     $scope.facilityStockStatus[product[0].productcode] = groupByStock;
                 });
 
@@ -179,6 +168,10 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
             });
         }
     }
+
+    $scope.formatValue = function (value, ratio, id) {
+        return $filter('number')(value);
+    };
 
     function getFacilityStatusByCodeAndIndicator(code, indicator){
         if(isUndefined($scope.facilityStockStatus) || isUndefined($scope.facilityStockStatus[code])) return null;
@@ -191,12 +184,8 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
 
 
     function getDistrictStatusByCodeAndIndicator(code, indicator){
-       // alert('district summary '+JSON.stringify($scope.districtStockStatus))
         if(isUndefined($scope.districtStockStatus) || isUndefined($scope.districtStockStatus[code])) return null;
-
         return {'values': _.pluck($scope.districtStockStatus[code][indicator], 'indicator_value').toString(), 'districts': _.pluck($scope.districtStockStatus[code][indicator], 'geographiczonename').toString() } ;
-
-
     }
 
     function getDashboardSummary(){
@@ -216,7 +205,6 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
 
                     angular.forEach( $scope.tracerProducts , function(productTrend){
                         count = count + 1;
-                       // var productSummary = [];
                         $scope.sohValue = _.pluck(productTrend,'quantity_dispensed');
                         $scope.amcValues = _.pluck(productTrend, 'amc');
                         $scope.overStockedValues = _.pluck(productTrend, 'number_of_facilities_overstocked');
@@ -226,27 +214,11 @@ function DashboardProgramController($scope,$routeParams,$timeout,messageService,
                         $scope.quantityLost = _.pluck(productTrend, 'total_quantity_lost');
                         $scope.quantityDamaged = _.pluck(productTrend, 'total_quantity_damaged');
                         $scope.quantityExpired = _.pluck(productTrend, 'total_quantity_expired');
-                        //alert('periods '+ JSON.stringify(_.pluck(productTrend, 'startdate')))
                         $scope.periods = _.pluck(productTrend, 'startdate').toString();
 
                         var total_facility_stocked_out = _.findWhere(productTrend, {'order': 1}).total_facilities_stocked_out;
                         var productCode = productTrend[0].product_code;
-                        var shortname = productTrend[0].shortname;
-                 /*       if(!isUndefined($scope.stockStatus[productCode])){
-                            $scope.topDispensed = {'value': _.pluck($scope.stockStatus[productCode]['DISPENSED'], 'indicator_value').toString(), 'districts': _.pluck($scope.stockStatus[productCode]['DISPENSED'], 'geographiczonename').toString() } ;
-                            $scope.topAMC = {'value': _.pluck($scope.stockStatus[productCode]['AMC'], 'indicator_value').toString(), 'districts': _.pluck($scope.stockStatus[productCode]['AMC'], 'geographiczonename').toString() } ;
-                            $scope.topExpired = {'value': _.pluck($scope.stockStatus[productCode]['EXPIRED'], 'indicator_value').toString(), 'districts': _.pluck($scope.stockStatus[productCode]['EXPIRED'], 'geographiczonename').toString() } ;
-                            $scope.topDamaged = {'value': _.pluck($scope.stockStatus[productCode]['DAMAGED'], 'indicator_value').toString(), 'districts': _.pluck($scope.stockStatus[productCode]['DAMAGED'], 'geographiczonename').toString() } ;
-                            $scope.topOverstocked = {'value': _.pluck($scope.stockStatus[productCode]['OVERSTOCKED'], 'indicator_value').toString(), 'districts': _.pluck($scope.stockStatus[productCode]['OVERSTOCKED'], 'geographiczonename').toString() } ;
-                            $scope.topUnderstocked = {'value': _.pluck($scope.stockStatus[productCode]['UNDERSTOCKED'], 'indicator_value').toString(), 'districts': _.pluck($scope.stockStatus[productCode]['UNDERSTOCKED'], 'geographiczonename').toString() } ;
-                            $scope.topAdequatelystocked = {'value': _.pluck($scope.stockStatus[productCode]['ADEQUATELYSTOCKED'], 'indicator_value').toString(), 'districts': _.pluck($scope.stockStatus[productCode]['ADEQUATELYSTOCKED'], 'geographiczonename').toString() } ;
-                            $scope.topStockedOut = {'value': _.pluck($scope.stockStatus[productCode]['STOCKEDOUT'], 'indicator_value').toString(), 'districts': _.pluck($scope.stockStatus[productCode]['STOCKEDOUT'], 'geographiczonename').toString() } ;
-                            $scope.topLost = {'value': _.pluck($scope.stockStatus[productCode]['LOST'], 'indicator_value').toString(), 'districts': _.pluck($scope.stockStatus[productCode]['LOST'], 'geographiczonename').toString() } ;
 
-                        }else{
-                            $scope.topDispensed = $scope.topStockedOut = $scope.topLost = null;
-                        }*/
-                       // alert('code '+productCode+' '+JSON)
                         $scope.productsTrend.push({'name':productTrend[0].name,'code': productCode,
                             "sohTrend": $scope.sohValue,
                             'consumption':$scope.sohValue.toString(),

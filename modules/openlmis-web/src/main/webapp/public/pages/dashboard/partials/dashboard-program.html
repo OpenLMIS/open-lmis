@@ -220,12 +220,16 @@
                                         </div>
                                     </accordion-heading>
                                     <c3chart bindto-id="{{product.name}}_consumption_chart">
+                                        <chart-tooltip value-format-function="formatValue" />
                                         <chart-axes values-x="x" />
                                         <chart-axis >
                                             <chart-axis-x axis-position="outer-center" axis-label="Period" axis-height="40"
                                                           axis-type="category" >
                                                 <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
+                                            <chart-axis-y>
+                                                <chart-axis-y-tick tick-format-function="formatValue" />
+                                            </chart-axis-y>
                                         </chart-axis>
 
                                         <chart-column column-id="Consumption"
@@ -256,12 +260,16 @@
                                         </div>
                                     </accordion-heading>
                                     <c3chart bindto-id="{{product.name}}_dispensed_chart">
+                                        <chart-tooltip value-format-function="formatValue" />
                                         <chart-axes values-x="x" />
                                         <chart-axis >
                                             <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
                                                           axis-type="category" >
                                                 <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
+                                            <chart-axis-y>
+                                                <chart-axis-y-tick tick-format-function="formatValue" />
+                                            </chart-axis-y>
                                         </chart-axis>
 
                                         <chart-column column-id="Dispensed"
@@ -293,12 +301,16 @@
                                         </div>
                                     </accordion-heading>
                                     <c3chart bindto-id="{{product.name}}_facility_dispensed_chart">
+                                        <chart-tooltip value-format-function="formatValue" />
                                         <chart-axes values-x="x" />
                                         <chart-axis >
                                             <chart-axis-x axis-position="outer-center" axis-label="Facility" axis-height="40"
                                                           axis-type="category" >
                                                 <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
+                                            <chart-axis-y>
+                                                <chart-axis-y-tick tick-format-function="formatValue" />
+                                            </chart-axis-y>
                                         </chart-axis>
 
                                         <chart-column column-id="Dispensed"
@@ -334,12 +346,16 @@
                                         </div>
                                     </accordion-heading>
                                     <c3chart bindto-id="{{product.name}}_stockingefficiency_chart">
+                                        <chart-tooltip value-format-function="formatValue" />
                                         <chart-axes values-x="x" />
                                         <chart-axis >
                                             <chart-axis-x axis-position="outer-center" axis-label="Period" axis-height="40"
                                                           axis-type="category" >
                                                 <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
+                                            <chart-axis-y>
+                                                <chart-axis-y-tick tick-format-function="formatValue" />
+                                            </chart-axis-y>
                                         </chart-axis>
 
                                         <chart-column column-id="Over Stocked"
@@ -376,12 +392,16 @@
                                         </div>
                                     </accordion-heading>
                                     <c3chart bindto-id="{{product.name}}__district_stockedout_chart">
+                                        <chart-tooltip value-format-function="formatValue" />
                                         <chart-axes values-x="x" />
                                         <chart-axis >
                                             <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
                                                           axis-type="category" >
                                                 <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
+                                            <chart-axis-y>
+                                                <chart-axis-y-tick tick-format-function="formatValue" />
+                                            </chart-axis-y>
                                         </chart-axis>
                                         <chart-column column-id="Stocked Out"
                                                       column-values="{{product.topStockedOut.values}}"
@@ -408,12 +428,16 @@
                                         </div>
                                     </accordion-heading>
                                     <c3chart bindto-id="{{product.name}}_district_overstocked_chart">
+                                        <chart-tooltip value-format-function="formatValue" />
                                         <chart-axes values-x="x" />
                                         <chart-axis >
                                             <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
                                                           axis-type="category" >
                                                 <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
+                                            <chart-axis-y>
+                                                <chart-axis-y-tick tick-format-function="formatValue" />
+                                            </chart-axis-y>
                                         </chart-axis>
 
                                         <chart-column column-id="Over Stocked"
@@ -441,12 +465,16 @@
                                         </div>
                                     </accordion-heading>
                                     <c3chart bindto-id="{{product.name}}_district_adequately_stockedout_chart">
+                                        <chart-tooltip value-format-function="formatValue" />
                                         <chart-axes values-x="x" />
                                         <chart-axis >
                                             <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
                                                           axis-type="category" >
                                                 <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
+                                            <chart-axis-y>
+                                                <chart-axis-y-tick tick-format-function="formatValue" />
+                                            </chart-axis-y>
                                         </chart-axis>
 
                                         <chart-column column-id="Adequetly Stocked"
@@ -474,12 +502,16 @@
                                         </div>
                                     </accordion-heading>
                                     <c3chart bindto-id="{{product.name}}_district_understocked_chart">
+                                        <chart-tooltip value-format-function="formatValue" />
                                         <chart-axes values-x="x" />
                                         <chart-axis >
                                             <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
                                                           axis-type="category" >
                                                 <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
+                                            <chart-axis-y>
+                                                <chart-axis-y-tick tick-format-function="formatValue" />
+                                            </chart-axis-y>
                                         </chart-axis>
 
                                         <chart-column column-id="Understocked"
@@ -491,39 +523,6 @@
                                 </accordion-group>
                             </accordion>
                         </slide>
-                       <!-- <slide>
-                            <accordion>
-                                <accordion-group class="gray-cascade" is-open="product.stockingEfficiencyChart.openPanel">
-                                    <accordion-heading >
-                                        <div class="accordion-title">
-                                            <div class="caption">
-
-                                                <span >Top Facility Stocked out : {{product.name}}  </span>
-                                            </div>
-                                            <div class="tools">
-                                                <i  ng-class="'icon-info-sign'" ns-popover ns-popover-template="stocking-chart-info" ns-popover-trigger="mouseenter" ns-popover-theme="ns-popover-tooltip-theme" ns-popover-placement="bottom|right"></i>
-                                                <i  ng-class="{'icon-minus-sign': product.stockingEfficiencyChart.openPanel, 'icon-plus-sign': !product.stockingEfficiencyChart.openPanel}"></i>
-                                            </div>
-                                        </div>
-                                    </accordion-heading>
-                                    <c3chart bindto-id="{{product.name}}_facility_stockedout_chart">
-                                        <chart-axes values-x="x" />
-                                        <chart-axis >
-                                            <chart-axis-x axis-position="outer-center" axis-label="Facility" axis-height="40"
-                                                          axis-type="category" >
-                                                &lt;!&ndash;<chart-axis-x-tick tick-rotate="50" />&ndash;&gt;
-                                            </chart-axis-x>
-                                        </chart-axis>
-
-                                        <chart-column column-id="Over Stocked"
-                                                      column-values="{{product.topFacilityOnhand.values}}"
-                                                      column-type="bar"/>
-                                        <chart-column column-id="x"
-                                                      column-values="{{product.topFacilityOnhand.facilities}}"/>
-                                    </c3chart>
-                                </accordion-group>
-                            </accordion>
-                        </slide>-->
                     </carousel>
                 </div>
                 <div class="span4">
@@ -544,12 +543,16 @@
                                         </div>
                                     </accordion-heading>
                                     <c3chart bindto-id="{{product.name}}_losses_and_adjustment_chart">
+                                        <chart-tooltip value-format-function="formatValue" />
                                         <chart-axes values-x="x" />
                                         <chart-axis >
                                             <chart-axis-x axis-position="outer-center" axis-label="Period" axis-height="40"
                                                           axis-type="category" >
                                                 <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
+                                            <chart-axis-y>
+                                                <chart-axis-y-tick tick-format-function="formatValue" />
+                                            </chart-axis-y>
                                         </chart-axis>
 
                                         <chart-column column-id="Quantity Lost"
@@ -585,10 +588,14 @@
                                     <c3chart bindto-id="{{product.name}}_lost_chart">
                                         <chart-axes values-x="x" />
                                         <chart-axis >
+                                            <chart-tooltip value-format-function="formatValue" />
                                             <chart-axis-x axis-position="outer-center" axis-label="District" axis-height="40"
                                                           axis-type="category" >
                                                 <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
+                                            <chart-axis-y>
+                                                <chart-axis-y-tick tick-format-function="formatValue" />
+                                            </chart-axis-y>
                                         </chart-axis>
 
                                         <chart-column column-id="Lost"
@@ -622,12 +629,16 @@
                                         </div>
                                     </accordion-heading>
                                     <c3chart bindto-id="{{product.name}}_facility_lost_chart">
+                                        <chart-tooltip value-format-function="formatValue" />
                                         <chart-axes values-x="x" />
                                         <chart-axis >
                                             <chart-axis-x axis-position="outer-center" axis-label="Facility" axis-height="40"
                                                           axis-type="category" >
                                                 <!--<chart-axis-x-tick tick-rotate="50" />-->
                                             </chart-axis-x>
+                                            <chart-axis-y>
+                                                <chart-axis-y-tick tick-format-function="formatValue" />
+                                            </chart-axis-y>
                                         </chart-axis>
 
                                         <chart-column column-id="Lost"
